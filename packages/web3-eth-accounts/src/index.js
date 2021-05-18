@@ -22,7 +22,6 @@
 
 'use strict';
 
-var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
@@ -39,7 +38,7 @@ var Common = require('ethereumjs-common').default;
 
 
 var isNot = function(value) {
-    return (_.isUndefined(value) || _.isNull(value));
+    return (typeof value === 'undefined') || value == null;
 };
 
 var Accounts = function Accounts() {
@@ -87,7 +86,7 @@ var Accounts = function Accounts() {
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
-    _.each(_ethereumCall, function(method) {
+    _ethereumCall.forEach( (method) => {
         method.attachToObject(_this._ethereumCall);
         method.setRequestManager(_this._requestManager);
     });
@@ -157,7 +156,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
+            var transaction = helpers.formatters.inputCallFormatter(Object.assign({},tx));
             transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
@@ -254,7 +253,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
+        return signed({ ...tx, chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]});
     });
 };
 
@@ -336,7 +335,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
 
 
-    if (_.isObject(message)) {
+    if (typeof message === 'object' && !!message) {
         return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
@@ -346,7 +345,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 
     if (args.length >= 4) {
         preFixed = args.slice(-1)[0];
-        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+        preFixed = typeof preFixed === 'boolean' ? !!preFixed : false;
 
         return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
@@ -357,11 +356,11 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 
-    if (!_.isString(password)) {
+    if (!typeof password === 'string') {
         throw new Error('No password given.');
     }
 
-    var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+    var json = (typeof v3Keystore === 'object' && !!v3Keystore) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
     if (json.version !== 3) {
         throw new Error('Not a valid V3 wallet');
@@ -470,7 +469,7 @@ function Wallet(accounts) {
 
 Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
-    if (_.has(this, pointer)) {
+    if (this.hasOwnProperty(pointer)) {
         return this._findSafeIndex(pointer + 1);
     } else {
         return pointer;
@@ -499,7 +498,7 @@ Wallet.prototype.create = function(numberOfAccounts, entropy) {
 
 Wallet.prototype.add = function(account) {
 
-    if (_.isString(account)) {
+    if (typeof account == 'string') {
         account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {
