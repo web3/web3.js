@@ -1,6 +1,4 @@
-import chai from 'chai';
-import Iban from '../';
-const assert = chai.assert;
+import Iban from '../../src/index';
 
 const tests = [
     { direct: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', address: '0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8'}
@@ -10,7 +8,7 @@ describe('lib/web3/iban', function () {
     describe('Iban.toAddress()', function () {
         tests.forEach(function (test) {
             it('shoud transform iban to address: ' +  test.address, function () {
-                assert.deepEqual(Iban.toAddress(test.direct), test.address);
+                expect(Iban.toAddress(test.direct)).toBe(test.address);
             });
         });
     });
@@ -18,7 +16,7 @@ describe('lib/web3/iban', function () {
         tests.forEach(function (test) {
             it('shoud transform iban to address: ' +  test.address, function () {
                 var iban = new Iban(test.direct);
-                assert.deepEqual(iban.toAddress(), test.address);
+                expect(iban.toAddress()).toBe(test.address);
             });
         });
     });

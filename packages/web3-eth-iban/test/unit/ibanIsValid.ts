@@ -1,6 +1,4 @@
-import chai from 'chai';
-import Iban from '../';
-const assert = chai.assert;
+import Iban from '../../src/index';
 
 const tests = [
     { obj: function () {}, is: false},
@@ -27,7 +25,8 @@ describe('lib/web3/iban', function () {
     describe('isValid', function () {
         tests.forEach(function (test) {
             it('shoud test if value ' + test.obj + ' is iban: ' + test.is, function () {
-                assert.equal(Iban.isValid(test.obj), test.is);
+                // @ts-ignore
+                expect(Iban.isValid(test.obj)).toBe(test.is);
             });
         });
     });
