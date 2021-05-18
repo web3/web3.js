@@ -21,7 +21,7 @@ yarn add web3-eth-iban
 ## Usage
 
 ```js
-const Web3EthIban = require('web3-eth-iban');
+import Web3EthIban from 'web3-eth-iban';
 
 const iban = new Web3EthIban('XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3');
 iban.toAddress() > '0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B';
