@@ -38,6 +38,28 @@ export default class Web3Eth {
     }
 
     /**
+     * Returns the current client version
+     * @param {object} rpcOptions RPC options
+     * @param {number} rpcOptions.id ID used to identify request
+     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @returns {Promise} Client version
+     */
+     async getClientVersion(
+        rpcOptions?: HttpRpcOptions
+    ): Promise<EthStringResult> {
+        try {
+            return await this._requestManager.send({
+                ...rpcOptions,
+                method: 'web3_clientVersion',
+                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+                params: [],
+            });
+        } catch (error) {
+            throw Error(`Error getting client version: ${error.message}`);
+        }
+    }
+
+    /**
      * Returns Keccak-256 (not the standardized SHA3-256) of the given data
      * @param {string} data Data to convert into SHA3 hash
      * @param {object} rpcOptions RPC options
@@ -52,12 +74,78 @@ export default class Web3Eth {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
-                method: 'eth_sha3',
+                method: 'web3_sha3',
                 jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
                 params: [data],
             });
         } catch (error) {
             throw Error(`Error getting sha3 hash: ${error.message}`);
+        }
+    }
+
+    /**
+     * Returns the current network version
+     * @param {object} rpcOptions RPC options
+     * @param {number} rpcOptions.id ID used to identify request
+     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @returns {Promise} Current network version
+     */
+     async getNetworkVersion(
+        rpcOptions?: HttpRpcOptions
+    ): Promise<EthStringResult> {
+        try {
+            return await this._requestManager.send({
+                ...rpcOptions,
+                method: 'net_version',
+                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+                params: [],
+            });
+        } catch (error) {
+            throw Error(`Error getting network version: ${error.message}`);
+        }
+    }
+
+    /**
+     * Returns true if client is actively listening for network connections
+     * @param {object} rpcOptions RPC options
+     * @param {number} rpcOptions.id ID used to identify request
+     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @returns {Promise} true if currently listening, otherwise false
+     */
+     async getNetworkListening(
+        rpcOptions?: HttpRpcOptions
+    ): Promise<EthBooleanResult> {
+        try {
+            return await this._requestManager.send({
+                ...rpcOptions,
+                method: 'net_listening',
+                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+                params: [],
+            });
+        } catch (error) {
+            throw Error(`Error getting network listening: ${error.message}`);
+        }
+    }
+
+    /**
+     * Returns number of peers currently connected to the client
+     * @param {object} rpcOptions RPC options
+     * @param {number} rpcOptions.id ID used to identify request
+     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @returns {Promise} true if currently listening, otherwise false
+     */
+     async getNetworkPeerCount(
+        rpcOptions?: HttpRpcOptions
+    ): Promise<EthBooleanResult> {
+        try {
+            return await this._requestManager.send({
+                ...rpcOptions,
+                method: 'net_peerCount',
+                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+                params: [],
+            });
+        } catch (error) {
+            throw Error(`Error getting network peer count: ${error.message}`);
         }
     }
 

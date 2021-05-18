@@ -28,12 +28,48 @@ export const testConfig: TestConfig = {
     expectedRpcId: expectedRpcId,
     methods: [
         {
+            name: 'getClientVersion',
+            rpcMethod: 'web3_clientVersion',
+            parameters: [],
+            expectedResult: {
+                ...expectedResultBase,
+                result: "Mist/v0.9.3/darwin/go1.4.1"
+            },
+        },
+        {
             name: 'getSha3',
-            rpcMethod: 'eth_sha3',
+            rpcMethod: 'web3_sha3',
             parameters: ['0x68656c6c6f20776f726c64'],
             expectedResult: {
                 ...expectedResultBase,
                 result: '0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad',
+            },
+        },
+        {
+            name: 'getNetworkVersion',
+            rpcMethod: 'net_version',
+            parameters: [],
+            expectedResult: {
+                ...expectedResultBase,
+                result: '1',
+            },
+        },
+        {
+            name: 'getNetworkListening',
+            rpcMethod: 'net_listening',
+            parameters: [],
+            expectedResult: {
+                ...expectedResultBase,
+                result: '1',
+            },
+        },
+        {
+            name: 'getNetworkPeerCount',
+            rpcMethod: 'net_peerCount',
+            parameters: [],
+            expectedResult: {
+                ...expectedResultBase,
+                result: '0x2',
             },
         },
         {
