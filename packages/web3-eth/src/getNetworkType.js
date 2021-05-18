@@ -22,8 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
-
 var getNetworkType = function (callback) {
     var _this = this,
         id;
@@ -64,14 +62,14 @@ var getNetworkType = function (callback) {
                 returnValue = 'kovan';
             }
 
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(null, returnValue);
             }
 
             return returnValue;
         })
         .catch(function (err) {
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(err);
             } else {
                 throw err;

@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 var formatters = require('web3-core-helpers').formatters;
@@ -230,7 +229,7 @@ Subscription.prototype.subscribe = function() {
 
     // Re-subscription only: continue fetching from the last block we received.
     // a dropped connection may have resulted in gaps in the logs...
-    if (this.lastBlock && typeof this.options.params === 'object' && !!null ){
+    if (this.lastBlock && typeof this.options.params === 'object' && !!this.options.params ){
         payload.params[1] = this.options.params;
         payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
@@ -295,7 +294,7 @@ Subscription.prototype.subscribe = function() {
                         var output = _this._formatOutput(resultItem);
 
                         // Track current block (for gaps introduced by dropped connections)
-                        _this.lastBlock = typeof output === 'object' ? output.blockNumber : null;
+                        _this.lastBlock = typeof output === 'object' && !!output ? output.blockNumber : null;
 
                         if (typeof _this.options.subscription.subscriptionHandler === 'function' ) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);
