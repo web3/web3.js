@@ -25,42 +25,39 @@
 
 import utils from 'web3-utils';
 import BigNumber from 'bn.js';
-import {IndirectOptions} from './types';
+import { IndirectOptions } from '../types';
 
-
-const leftPad = function (string: string, bytes: number) {
-    let result = string;
-    while (result.length < bytes * 2) {
-        result = '0' + result;
-    }
-    return result;
-};
+function leftPad(string: string, bytes: number) {
+  let result = string;
+  while (result.length < bytes * 2) {
+    result = `0${result}`;
+  }
+  return result;
+}
 
 /**
- * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
- * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
+ * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and
+ * transforming the letters to numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
  *
  * @method iso13616Prepare
  * @param {String} iban the IBAN
  * @returns {String} the prepared IBAN
  */
-const iso13616Prepare = function (iban: string): string {
-    const A = 'A'.charCodeAt(0);
-    const Z = 'Z'.charCodeAt(0);
+function iso13616Prepare(iban: string): string {
+  const A = 'A'.charCodeAt(0);
+  const Z = 'Z'.charCodeAt(0);
+  let _iban = iban.toUpperCase();
+  _iban = _iban.substr(4) + _iban.substr(0, 4);
 
-    iban = iban.toUpperCase();
-    iban = iban.substr(4) + iban.substr(0,4);
-
-    return iban.split('').map(function(n) {
-        const code = n.charCodeAt(0);
-        if (code >= A && code <= Z) {
-            // A = 10, B = 11, ... Z = 35
-            return code - A + 10;
-        } else {
-            return n;
-        }
-    }).join('');
-};
+  return _iban.split('').map((n) => {
+    const code = n.charCodeAt(0);
+    if (code >= A && code <= Z) {
+      // A = 10, B = 11, ... Z = 35
+      return code - A + 10;
+    }
+    return n;
+  }).join('');
+}
 
 /**
  * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
@@ -69,17 +66,17 @@ const iso13616Prepare = function (iban: string): string {
  * @param {String} iban
  * @returns {Number}
  */
-const mod9710 = function (iban: string): number {
-    let remainder = iban;
-    let block: string;
+function mod9710(iban: string): number {
+  let remainder = iban;
+  let block: string;
 
-    while (remainder.length > 2){
-        block = remainder.slice(0, 9);
-        remainder = parseInt(block, 10) % 97 + remainder.slice(block.length);
-    }
+  while (remainder.length > 2) {
+    block = remainder.slice(0, 9);
+    remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
+  }
 
-    return parseInt(remainder, 10) % 97;
-};
+  return parseInt(remainder, 10) % 97;
+}
 
 /**
  * This prototype should be used to create iban object from iban correct string
@@ -89,8 +86,8 @@ const mod9710 = function (iban: string): number {
 class Iban {
     _iban: string;
 
-    constructor (iban: string) {
-        this._iban = iban;
+    constructor(iban: string) {
+      this._iban = iban;
     }
 
     /**
@@ -100,14 +97,14 @@ class Iban {
      * @param {String} iban address
      * @return {String} the ethereum address
      */
-    static toAddress (ib: string): string {
-        const iban = new Iban(ib);
+    static toAddress(ib: string): string {
+      const iban = new Iban(ib);
 
-        if(!iban.isDirect()) {
-            throw new Error('IBAN is indirect and can\'t be converted');
-        }
+      if (!iban.isDirect()) {
+        throw new Error('IBAN is indirect and can\'t be converted');
+      }
 
-        return iban.toAddress();
+      return iban.toAddress();
     }
 
     /**
@@ -117,8 +114,8 @@ class Iban {
      * @param {String} address
      * @return {String} the IBAN address
      */
-    static toIban (address: string): string {
-        return Iban.fromAddress(address).toString();
+    static toIban(address: string): string {
+      return Iban.fromAddress(address).toString();
     }
 
     /**
@@ -128,35 +125,37 @@ class Iban {
      * @param {String} address
      * @return {Iban} the IBAN object
      */
-    static fromAddress (address: string): Iban {
-        if(!utils.isAddress(address)){
-            throw new Error('Provided address is not a valid address: '+ address);
-        }
+    static fromAddress(address: string): Iban {
+      if (!utils.isAddress(address)) {
+        throw new Error(`Provided address is not a valid address: ${address}`);
+      }
 
-        address = address.replace('0x','').replace('0X','');
+      const _address = address.replace('0x', '').replace('0X', '');
 
-        const asBn = new BigNumber(address, 16);
-        const base36 = asBn.toString(36);
-        const padded = leftPad(base36, 15);
-        return Iban.fromBban(padded.toUpperCase());
+      const asBn = new BigNumber(_address, 16);
+      const base36 = asBn.toString(36);
+      const padded = leftPad(base36, 15);
+      return Iban.fromBban(padded.toUpperCase());
     }
 
     /**
      * Convert the passed BBAN to an IBAN for this country specification.
-     * Please note that <i>"generation of the IBAN shall be the exclusive responsibility of the bank/branch servicing the account"</i>.
-     * This method implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
+     * Please note that <i>"generation of the IBAN shall be the exclusive responsibility
+     * of the bank/branch servicing the account"</i>.
+     * This method implements the preferred algorithm described in
+     * http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
      *
      * @method fromBban
      * @param {String} bban the BBAN to convert to IBAN
      * @returns {Iban} the IBAN object
      */
-    static fromBban (bban: string): Iban {
-        const countryCode = 'XE';
+    static fromBban(bban: string): Iban {
+      const countryCode = 'XE';
 
-        const remainder = mod9710(iso13616Prepare(countryCode + '00' + bban));
-        const checkDigit = ('0' + (98 - remainder)).slice(-2);
+      const remainder = mod9710(iso13616Prepare(`${countryCode}00${bban}`));
+      const checkDigit = (`0${98 - remainder}`).slice(-2);
 
-        return new Iban(countryCode + checkDigit + bban);
+      return new Iban(countryCode + checkDigit + bban);
     }
 
     /**
@@ -166,8 +165,8 @@ class Iban {
      * @param {Object} options, required options are "institution" and "identifier"
      * @return {Iban} the IBAN object
      */
-    static createIndirect (options: IndirectOptions): Iban {
-        return Iban.fromBban('ETH' + options.institution + options.identifier);
+    static createIndirect(options: IndirectOptions): Iban {
+      return Iban.fromBban(`ETH${options.institution}${options.identifier}`);
     }
 
     /**
@@ -177,10 +176,10 @@ class Iban {
      * @param {String} iban string
      * @return {Boolean} true if it is valid IBAN
      */
-    static isValid (iban: string): boolean {
-        const i = new Iban(iban);
-        return i.isValid();
-    };
+    static isValid(iban: string): boolean {
+      const i = new Iban(iban);
+      return i.isValid();
+    }
 
     /**
      * Should be called to check if iban is correct
@@ -188,10 +187,10 @@ class Iban {
      * @method isValid
      * @returns {Boolean} true if it is, otherwise false
      */
-    isValid (): boolean {
-        return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-            mod9710(iso13616Prepare(this._iban)) === 1;
-    };
+    isValid(): boolean {
+      return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban)
+            && mod9710(iso13616Prepare(this._iban)) === 1;
+    }
 
     /**
      * Should be called to check if iban number is direct
@@ -199,9 +198,9 @@ class Iban {
      * @method isDirect
      * @returns {Boolean} true if it is, otherwise false
      */
-    isDirect (): boolean {
-        return this._iban.length === 34 || this._iban.length === 35;
-    };
+    isDirect(): boolean {
+      return this._iban.length === 34 || this._iban.length === 35;
+    }
 
     /**
      * Should be called to check if iban number if indirect
@@ -209,9 +208,9 @@ class Iban {
      * @method isIndirect
      * @returns {Boolean} true if it is, otherwise false
      */
-    isIndirect (): boolean {
-        return this._iban.length === 20;
-    };
+    isIndirect(): boolean {
+      return this._iban.length === 20;
+    }
 
     /**
      * Should be called to get iban checksum
@@ -220,9 +219,9 @@ class Iban {
      * @method checksum
      * @returns {String} checksum
      */
-    checksum (): string {
-        return this._iban.substr(2, 2);
-    };
+    checksum(): string {
+      return this._iban.substr(2, 2);
+    }
 
     /**
      * Should be called to get institution identifier
@@ -231,9 +230,9 @@ class Iban {
      * @method institution
      * @returns {String} institution identifier
      */
-    institution (): string {
-        return this.isIndirect() ? this._iban.substr(7, 4) : '';
-    };
+    institution(): string {
+      return this.isIndirect() ? this._iban.substr(7, 4) : '';
+    }
 
     /**
      * Should be called to get client identifier within institution
@@ -242,9 +241,9 @@ class Iban {
      * @method client
      * @returns {String} client identifier
      */
-    client (): string {
-        return this.isIndirect() ? this._iban.substr(11) : '';
-    };
+    client(): string {
+      return this.isIndirect() ? this._iban.substr(11) : '';
+    }
 
     /**
      * Should be called to get client direct address
@@ -252,19 +251,19 @@ class Iban {
      * @method toAddress
      * @returns {String} ethereum address
      */
-    toAddress (): string {
-        if (this.isDirect()) {
-            const base36 = this._iban.substr(4);
-            const asBn = new BigNumber(base36, 36);
-            return utils.toChecksumAddress(asBn.toString(16, 20));
-        }
+    toAddress(): string {
+      if (this.isDirect()) {
+        const base36 = this._iban.substr(4);
+        const asBn = new BigNumber(base36, 36);
+        return utils.toChecksumAddress(asBn.toString(16, 20));
+      }
 
-        return '';
-    };
+      return '';
+    }
 
-    toString (): string {
-        return this._iban;
-    };
+    toString(): string {
+      return this._iban;
+    }
 }
 
 export default Iban;
