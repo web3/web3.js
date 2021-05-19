@@ -15,7 +15,7 @@ describe('constructs a Web3Eth instance with expected properties', () => {
         expect(web3Eth.packageName).toBe('eth');
     });
 
-    it('should construct with expected providerUrl', () => {
+    it('should construct with expected packageName', () => {
         web3EthOptions.packageName = 'foobar';
         const web3Eth = new Web3Eth(web3EthOptions);
         expect(web3Eth.packageName).toBe('foobar');
