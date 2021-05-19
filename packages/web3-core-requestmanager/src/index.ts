@@ -64,4 +64,15 @@ export default class Web3RequestManager {
             throw Error(`Error sending: ${error.message}`);
         }
     }
+
+    // TODO get rid of anys
+    async subscribe(options: any): Promise<any> {
+        try {
+            if (this.provider === undefined)
+                throw Error('No provider initialized');
+            return this.provider.subscribe(options);
+        } catch (error) {
+            throw Error(`Error subscribing: ${error.message}`);
+        }
+    }
 }

@@ -1,11 +1,13 @@
 export interface ProviderOptions {
-    providerUrl: string
+    providerUrl: string;
 }
 
 export interface IWeb3Provider {
-    providerUrl: string
-    setProvider: (providerUrl: string) => void
+    providerUrl: string;
+    setProvider: (providerUrl: string) => void;
     // TODO get rid of anys
-    send: (options: any) => Promise<any>
-    disconnect?: () => void
+    send: (options: any) => Promise<any>;
+    // TODO get rid of anys
+    subsribe: (options: any) => Promise<any>;
+    disconnect: () => void;
 }
