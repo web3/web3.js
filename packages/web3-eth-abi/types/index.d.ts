@@ -40,3 +40,6 @@ export class AbiCoder {
         topics: string[]
     ): { [key: string]: string };
 }
+
+declare const coder: AbiCoder;
+export default coder;
