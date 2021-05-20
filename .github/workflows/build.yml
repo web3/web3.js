@@ -5,10 +5,18 @@ on:
             - "1.x"
         tags:
             - v1*
+        paths-ignore:
+            - "docs/**"
+            - "assets/**"
+            - "**.md"
     pull_request:
         branches:
             - "1.x"
         types: [opened, reopened, synchronize]
+        paths-ignore:
+            - "docs/**"
+            - "assets/**"
+            - "**.md"
 jobs:
     lint:
         runs-on: ubuntu-latest
