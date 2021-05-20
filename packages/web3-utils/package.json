@@ -20,7 +20,6 @@
         "ethjs-unit": "0.1.6",
         "number-to-bn": "1.7.0",
         "randombytes": "^2.1.0",
-        "underscore": "1.12.1",
         "utf8": "3.0.0"
     },
     "devDependencies": {

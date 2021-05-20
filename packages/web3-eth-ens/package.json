@@ -16,7 +16,6 @@
     "dependencies": {
         "content-hash": "^2.5.2",
         "eth-ens-namehash": "2.0.8",
-        "underscore": "1.12.1",
         "web3-core": "1.3.6",
         "web3-core-helpers": "1.3.6",
         "web3-core-promievent": "1.3.6",

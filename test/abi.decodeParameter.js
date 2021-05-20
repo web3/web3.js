@@ -348,10 +348,9 @@ describe('lib/solidity/coder', function () {
                 var result = coder.decodeParameters(t.types, t.values);
 
                 var resultArray = [];
-                for (var key in result) {
-                       if(isFinite(key)) 
-                            resultArray.push(result[key]);
-                }
+                Object.keys(result).map(key => {
+                     if(isFinite(key)) resultArray.push(result[key])
+              });
 
 
 

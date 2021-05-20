@@ -101,7 +101,6 @@
         "@types/bignumber.js": "^4.0.2",
         "@types/bn.js": "^4.11.6",
         "@types/node": "^12.12.68",
-        "@types/underscore": "^1.10.24",
         "babel-loader": "^8.1.0",
         "bignumber.js": "^9.0.1",
         "bn.js": "^4.11.9",
@@ -132,7 +131,6 @@
         "sandboxed-module": "^2.0.4",
         "ts-node": "^9.0.0",
         "typescript": "^3.9.7",
-        "underscore": "1.12.1",
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
         "webpack-cli": "^3.3.12"

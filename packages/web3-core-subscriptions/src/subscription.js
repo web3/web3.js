@@ -26,7 +26,7 @@ var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 var formatters = require('web3-core-helpers').formatters;
 
-function identity(value) {
+function identity(value) { //used to return the exact same replica of the value given to it as the argument
     return value;
 }
 

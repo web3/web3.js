@@ -179,7 +179,6 @@ Method.prototype.formatOutput = function (result) {
 Method.prototype.toPayload = function (args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
-    //check if last args is a function, if so pop it out.
     
     var params = this.formatInput(args);
     this.validateArgs(params);

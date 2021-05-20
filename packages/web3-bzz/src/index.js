@@ -22,7 +22,6 @@
 
 "use strict";
 
-
 var swarm = require("swarm-js");
 
 
