@@ -1,14 +1,22 @@
 import axios, { AxiosInstance } from 'axios';
 import Web3ProviderBase from 'web3-providers-base';
-import { ProviderOptions, IWeb3Provider } from 'web3-providers-base/types';
-
-import { HttpRpcOptions, HttpRpcResponse } from '../types';
+import {
+    ProviderOptions,
+    IWeb3Provider,
+    BaseRpcOptions,
+    BaseRpcResponse,
+} from 'web3-providers-base/types';
+import { EventEmitter } from 'events';
+import { SubscriptionOptions } from '../types';
 
 export default class Web3ProvidersHttp
     extends Web3ProviderBase
     implements IWeb3Provider
 {
     private _httpClient: AxiosInstance;
+    private _subscriptions: {
+        [subscriptionId: number]: ReturnType<typeof setTimeout>;
+    } = {};
 
     constructor(options: ProviderOptions) {
         super(options);
@@ -47,7 +55,7 @@ export default class Web3ProvidersHttp
         }
     }
 
-    async send(options: HttpRpcOptions): Promise<HttpRpcResponse> {
+    async send(options: BaseRpcOptions): Promise<BaseRpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
@@ -63,6 +71,49 @@ export default class Web3ProvidersHttp
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
+        }
+    }
+
+    subscribe(options: SubscriptionOptions): {
+        eventEmitter: EventEmitter;
+        subscriptionId: number;
+    } {
+        try {
+            if (this._httpClient === undefined)
+                throw Error('No HTTP client initiliazed');
+            const eventEmitter = new EventEmitter();
+            const subscriptionId = Math.floor(
+                Math.random() * Number.MAX_SAFE_INTEGER
+            ); // generate random integer
+            this._subscribe(options, eventEmitter, subscriptionId);
+            return { eventEmitter, subscriptionId };
+        } catch (error) {
+            throw Error(`Error subscribing: ${error.message}`);
+        }
+    }
+
+    private async _subscribe(
+        options: SubscriptionOptions,
+        eventEmitter: EventEmitter,
+        subscriptionId: number
+    ) {
+        try {
+            const response = await this.send(options);
+            eventEmitter.emit('response', response);
+            this._subscriptions[subscriptionId] = setTimeout(
+                () => this._subscribe(options, eventEmitter, subscriptionId),
+                options.milisecondsBetweenRequests || 1000
+            );
+        } catch (error) {
+            throw Error(`Error subscribing: ${error.message}`);
+        }
+    }
+
+    unsubscribe(subscriptionId: number) {
+        try {
+            clearTimeout(this._subscriptions[subscriptionId]);
+        } catch (error) {
+            throw Error(`Error unsubscribing: ${error.message}`);
         }
     }
 }
