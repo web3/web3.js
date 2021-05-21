@@ -16,29 +16,17 @@ describe('Web3ProvidersHttp.subscribe', () => {
     const expectedResult = {
         id: subscribeOptions.id,
         jsonrpc: subscribeOptions.jsonrpc,
-        result: '0x1',
+        result: '0x0',
     };
-    const expectedNumResponses = 2;
+    const expectedNumResponses = 3;
 
-    let web3ProvidersHttpSendSpy: jest.SpyInstance;
     let web3ProvidersHttp: Web3ProvidersHttp;
 
     beforeAll(() => {
-        Web3ProvidersHttp.prototype.send = jest.fn();
-        // @ts-ignore mockReturnValue added by jest
-        Web3ProvidersHttp.prototype.send.mockReturnValue(expectedResult);
-        web3ProvidersHttpSendSpy = jest.spyOn(
-            Web3ProvidersHttp.prototype,
-            'send'
-        );
-
         web3ProvidersHttp = new Web3ProvidersHttp(providerOptions);
     });
 
-    // TODO Could make use of jest.useFakeTimers, but
-    // implemting that functionality does not emit the responses
-    // as expected, therefore the tests fail
-    it('should receive response expectedNumResponses', (done) => {
+    it('should receive expectedNumResponses', (done) => {
         const responses: any[] = [];
         const { eventEmitter, subscriptionId } =
             web3ProvidersHttp.subscribe(subscribeOptions);
@@ -50,9 +38,6 @@ describe('Web3ProvidersHttp.subscribe', () => {
         setTimeout(() => {
             web3ProvidersHttp.unsubscribe(subscriptionId);
             expect(responses.length).toBe(expectedNumResponses);
-            expect(web3ProvidersHttpSendSpy).toHaveBeenCalledTimes(
-                expectedNumResponses
-            );
             done();
         }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
     });
