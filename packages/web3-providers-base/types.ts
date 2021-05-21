@@ -8,7 +8,7 @@ export interface BaseRpcOptions {
     id?: number;
     jsonrpc: string;
     method: string;
-    params: (string|number)[];
+    params: (string | number)[];
 }
 
 export interface BaseRpcResponse {

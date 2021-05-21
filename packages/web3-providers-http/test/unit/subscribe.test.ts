@@ -2,6 +2,8 @@ import { ProviderOptions } from 'web3-providers-base/types';
 
 import Web3ProvidersHttp from '../../src/index';
 
+jest.useFakeTimers();
+
 describe('Web3ProvidersHttp.subscribe', () => {
     const providerOptions: ProviderOptions = {
         providerUrl: 'http://127.0.0.1:8545',
@@ -36,8 +38,6 @@ describe('Web3ProvidersHttp.subscribe', () => {
     });
 
     it('should call Web3ProvidersHttp.send 3 times', async () => {
-        jest.useFakeTimers();
-
         const { eventEmitter, subscriptionId } =
             web3ProvidersHttp.subscribe(subscribeOptions);
         expect(typeof subscriptionId).toBe('number');
@@ -48,6 +48,6 @@ describe('Web3ProvidersHttp.subscribe', () => {
             expect(web3ProvidersHttpSendSpy).toHaveBeenCalledTimes(
                 expectedNumResponses
             );
-        }, 1);
+        }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
     });
 });
