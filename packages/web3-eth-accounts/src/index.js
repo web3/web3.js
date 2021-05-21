@@ -160,7 +160,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
+            transaction.chainId = transaction.chainId;
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
 
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
