@@ -1,11 +1,11 @@
-import { HttpRpcResponse } from 'web3-providers-http/types';
+import { BaseRpcResponse } from 'web3-providers-base/types';
 import { DEFAULT_ACCOUNTS } from '../constants';
 
 interface Method {
     name: string;
     rpcMethod: string;
     parameters?: any[];
-    expectedResult: HttpRpcResponse;
+    expectedResult: BaseRpcResponse;
 }
 
 interface TestConfig {
