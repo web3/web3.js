@@ -1,4 +1,4 @@
-import { HttpRpcResponse } from 'web3-providers-http/types';
+import { BaseRpcResponse } from 'web3-providers-base/types';
 import Web3RequestManager from 'web3-core-requestmanager';
 
 import Web3Eth from '../../src';
@@ -8,8 +8,8 @@ let web3Eth: Web3Eth;
 let web3RequestManagerSendSpy: jest.SpyInstance;
 
 function checkForExpected(
-    expectedResult: HttpRpcResponse,
-    actualResult: HttpRpcResponse,
+    expectedResult: BaseRpcResponse,
+    actualResult: BaseRpcResponse,
     expectedSendParameters: any
 ) {
     expect(actualResult).toMatchObject(expectedResult);
