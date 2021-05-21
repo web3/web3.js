@@ -20,21 +20,13 @@ import {
 } from '../types';
 
 export default class Web3Eth {
-    private _packageName: string;
-
     private _requestManager: Web3RequestManager;
-
     private _DEFAULT_JSON_RPC_VERSION = '2.0';
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
             providerUrl: options.providerUrl,
         });
-        this._packageName = options.packageName || 'eth';
-    }
-
-    get packageName() {
-        return this._packageName;
     }
 
     /**
