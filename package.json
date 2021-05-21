@@ -22,6 +22,7 @@
   "scripts": {
     "build": "yarn clean && lerna run build --stream",
     "clean": "lerna run clean",
+    "ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion'",
     "lint": "lerna run lint --stream --parallel",
     "test": "lerna run test --stream --parallel",
     "prepare": "husky install"
