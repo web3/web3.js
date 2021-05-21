@@ -14,6 +14,12 @@ export type EthLog = {
     topics: string[];
 };
 
+/**
+ * @param to is optional when creating a new contract
+ * @param gas optional, default set by node 90,000
+ * @param gasPrice optional, default to be determined by node
+ * @param data optional, but required if {to} is not provided
+ */
 export type EthTransaction = {
     from: string;
     to?: string;
