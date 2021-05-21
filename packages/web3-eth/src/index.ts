@@ -1,5 +1,5 @@
 import Web3RequestManager from 'web3-core-requestmanager';
-import { HttpRpcOptions } from 'web3-providers-http/types';
+import { BaseRpcOptions } from 'web3-providers-base/types';
 
 import {
     Web3EthOptions,
@@ -45,7 +45,7 @@ export default class Web3Eth {
      * @returns {Promise} Client version
      */
     async getClientVersion(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -69,7 +69,7 @@ export default class Web3Eth {
      */
     async getSha3(
         data: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -91,7 +91,7 @@ export default class Web3Eth {
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -113,7 +113,7 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
@@ -135,7 +135,7 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkPeerCount(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
@@ -157,7 +157,7 @@ export default class Web3Eth {
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -178,7 +178,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Object with sync status data or false when not syncing
      */
-    async getSyncing(rpcOptions?: HttpRpcOptions): Promise<EthSyncingResult> {
+    async getSyncing(rpcOptions?: BaseRpcOptions): Promise<EthSyncingResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -198,7 +198,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} The current coinbase address
      */
-    async getCoinbase(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getCoinbase(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -218,7 +218,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if the client is mining, otherwise false
      */
-    async getMining(rpcOptions?: HttpRpcOptions): Promise<EthBooleanResult> {
+    async getMining(rpcOptions?: BaseRpcOptions): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -238,7 +238,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Number of hashes per second
      */
-    async getHashRate(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getHashRate(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -258,7 +258,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current gas price in wei
      */
-    async getGasPrice(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getGasPrice(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -278,7 +278,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of addresses owned by the client
      */
-    async getAccounts(rpcOptions?: HttpRpcOptions): Promise<EthAccountsResult> {
+    async getAccounts(rpcOptions?: BaseRpcOptions): Promise<EthAccountsResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -299,7 +299,7 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing current block number client is on
      */
     async getBlockNumber(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -325,7 +325,7 @@ export default class Web3Eth {
     async getBalance(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -353,7 +353,7 @@ export default class Web3Eth {
         address: string,
         storagePosition: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -379,7 +379,7 @@ export default class Web3Eth {
     async getTransactionCount(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -403,7 +403,7 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByHash(
         blockHash: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -429,7 +429,7 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -455,7 +455,7 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockHash(
         blockHash: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -481,7 +481,7 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -509,7 +509,7 @@ export default class Web3Eth {
     async getCode(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -535,7 +535,7 @@ export default class Web3Eth {
     async sign(
         address: string,
         message: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -566,7 +566,7 @@ export default class Web3Eth {
      */
     async signTransaction(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -597,7 +597,7 @@ export default class Web3Eth {
      */
     async sendTransaction(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -621,7 +621,7 @@ export default class Web3Eth {
      */
     async sendRawTransaction(
         rawTransaction: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -654,7 +654,7 @@ export default class Web3Eth {
      */
     async call(
         transaction: EthCallTransaction,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -685,7 +685,7 @@ export default class Web3Eth {
      */
     async estimateGas(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -711,7 +711,7 @@ export default class Web3Eth {
     async getBlockByHash(
         blockHash: string,
         returnFullTxs: boolean,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
@@ -737,7 +737,7 @@ export default class Web3Eth {
     async getBlockByNumber(
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
@@ -761,7 +761,7 @@ export default class Web3Eth {
      */
     async getTransactionByHash(
         txHash: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthTransactionResult> {
         try {
             return await this._requestManager.send({
@@ -787,7 +787,7 @@ export default class Web3Eth {
     async getTransactionByBlockHashAndIndex(
         blockHash: string,
         transactionIndex: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthTransactionResult> {
         try {
             return await this._requestManager.send({
@@ -815,7 +815,7 @@ export default class Web3Eth {
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         transactionIndex: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthTransactionResult> {
         try {
             return await this._requestManager.send({
@@ -841,7 +841,7 @@ export default class Web3Eth {
      */
     async getTransactionReceipt(
         txHash: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthTransactionReceiptResult> {
         try {
             return await this._requestManager.send({
@@ -867,7 +867,7 @@ export default class Web3Eth {
     async getUncleByBlockHashAndIndex(
         blockHash: string,
         uncleIndex: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
@@ -895,7 +895,7 @@ export default class Web3Eth {
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         uncleIndex: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBlockResult> {
         try {
             return await this._requestManager.send({
@@ -919,7 +919,7 @@ export default class Web3Eth {
      * @returns {Promise} A list of available compilers
      */
     async getCompilers(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringArrayResult> {
         try {
             return await this._requestManager.send({
@@ -943,7 +943,7 @@ export default class Web3Eth {
      */
     async compileSolidity(
         sourceCode: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthCompiledSolidityResult> {
         try {
             return await this._requestManager.send({
@@ -969,7 +969,7 @@ export default class Web3Eth {
      */
     async compileLLL(
         sourceCode: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -993,7 +993,7 @@ export default class Web3Eth {
      */
     async compileSerpent(
         sourceCode: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -1023,7 +1023,7 @@ export default class Web3Eth {
      */
     async newFilter(
         filter: EthFilter,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -1045,7 +1045,7 @@ export default class Web3Eth {
      * @returns {Promise} Filter id
      */
     async newBlockFilter(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -1067,7 +1067,7 @@ export default class Web3Eth {
      * @returns {Promise} Filter id
      */
     async newPendingTransactionFilter(
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthStringResult> {
         try {
             return await this._requestManager.send({
@@ -1093,7 +1093,7 @@ export default class Web3Eth {
      */
     async uninstallFilter(
         filterId: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
@@ -1117,7 +1117,7 @@ export default class Web3Eth {
      */
     async getFilterChanges(
         filterId: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthLogResult> {
         try {
             return await this._requestManager.send({
@@ -1141,7 +1141,7 @@ export default class Web3Eth {
      */
     async getFilterLogs(
         filterId: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthLogResult> {
         try {
             return await this._requestManager.send({
@@ -1164,7 +1164,7 @@ export default class Web3Eth {
      */
     async getLogs(
         filter: EthFilter,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthLogResult> {
         try {
             return await this._requestManager.send({
@@ -1185,7 +1185,7 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
-    async getWork(rpcOptions?: HttpRpcOptions): Promise<EthStringArrayResult> {
+    async getWork(rpcOptions?: BaseRpcOptions): Promise<EthStringArrayResult> {
         try {
             return await this._requestManager.send({
                 ...rpcOptions,
@@ -1212,7 +1212,7 @@ export default class Web3Eth {
         nonce: string,
         powHash: string,
         digest: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
@@ -1238,7 +1238,7 @@ export default class Web3Eth {
     async submitHashRate(
         hashRate: string,
         clientId: string,
-        rpcOptions?: HttpRpcOptions
+        rpcOptions?: BaseRpcOptions
     ): Promise<EthBooleanResult> {
         try {
             return await this._requestManager.send({
