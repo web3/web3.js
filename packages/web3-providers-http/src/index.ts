@@ -109,9 +109,15 @@ export default class Web3ProvidersHttp
         }
     }
 
-    unsubscribe(subscriptionId: number) {
+    unsubscribe(eventEmitter: EventEmitter, subscriptionId: number) {
         try {
+            if (!this._subscriptions[subscriptionId])
+                throw Error(
+                    `Subscription with id: ${subscriptionId} does not exist`
+                );
             clearTimeout(this._subscriptions[subscriptionId]);
+            eventEmitter.emit('unsubscribed');
+            delete this._subscriptions[subscriptionId];
         } catch (error) {
             throw Error(`Error unsubscribing: ${error.message}`);
         }
