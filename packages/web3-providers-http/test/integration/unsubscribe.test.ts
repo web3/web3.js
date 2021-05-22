@@ -30,14 +30,13 @@ describe('Web3ProvidersHttp.unsubscribe', () => {
         const responses: any[] = [];
         const { eventEmitter, subscriptionId } =
             web3ProvidersHttp.subscribe(subscribeOptions);
-        expect(typeof subscriptionId).toBe('number');
         eventEmitter.on('response', (response) => {
             expect(response).toMatchObject(expectedResult);
             responses.push(response);
         });
         // Unsubscribe after giving enough time to receive expectedNumResponses
         setTimeout(() => {
-            web3ProvidersHttp.unsubscribe(subscriptionId);
+            web3ProvidersHttp.unsubscribe(eventEmitter, subscriptionId);
         }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
         // Wait time it would take to receive expectedNumResponses + 1
         // to verify unsubscribing worked

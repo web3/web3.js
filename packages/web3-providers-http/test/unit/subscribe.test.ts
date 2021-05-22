@@ -1,4 +1,5 @@
 import { ProviderOptions } from 'web3-providers-base/types';
+import { EventEmitter } from 'events';
 
 import Web3ProvidersHttp from '../../src/index';
 
@@ -18,7 +19,6 @@ describe('Web3ProvidersHttp.subscribe', () => {
         jsonrpc: subscribeOptions.jsonrpc,
         result: '0x1',
     };
-    const expectedNumResponses = 2;
 
     let web3ProvidersHttpSendSpy: jest.SpyInstance;
     let web3ProvidersHttp: Web3ProvidersHttp;
@@ -35,25 +35,15 @@ describe('Web3ProvidersHttp.subscribe', () => {
         web3ProvidersHttp = new Web3ProvidersHttp(providerOptions);
     });
 
-    // TODO Could make use of jest.useFakeTimers, but
-    // implemting that functionality does not emit the responses
-    // as expected, therefore the tests fail
-    it('should receive response expectedNumResponses', (done) => {
-        const responses: any[] = [];
+    it('should return eventEmitter and subscriptionId', (done) => {
         const { eventEmitter, subscriptionId } =
             web3ProvidersHttp.subscribe(subscribeOptions);
         expect(typeof subscriptionId).toBe('number');
-        eventEmitter.on('response', (response) => {
-            expect(response).toMatchObject(expectedResult);
-            responses.push(response);
-        });
+        expect(eventEmitter instanceof EventEmitter).toBeTruthy();
+        // Giving enough time for subscription to be initialized
         setTimeout(() => {
-            web3ProvidersHttp.unsubscribe(subscriptionId);
-            expect(responses.length).toBe(expectedNumResponses);
-            expect(web3ProvidersHttpSendSpy).toHaveBeenCalledTimes(
-                expectedNumResponses
-            );
+            web3ProvidersHttp.unsubscribe(eventEmitter, subscriptionId);
             done();
-        }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
+        }, 1000);
     });
 });

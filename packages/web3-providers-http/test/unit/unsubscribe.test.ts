@@ -35,30 +35,27 @@ describe('Web3ProvidersHttp.unsubscribe', () => {
         web3ProvidersHttp = new Web3ProvidersHttp(providerOptions);
     });
 
-    // TODO Could make use of jest.useFakeTimers, but
-    // implemting that functionality does not emit the responses
-    // as expected, therefore the tests fail
-    it('should receive response expectedNumResponses', (done) => {
-        const responses: any[] = [];
+    it('should unsubscribe and receive unsubscribe event', (done) => {
         const { eventEmitter, subscriptionId } =
             web3ProvidersHttp.subscribe(subscribeOptions);
-        expect(typeof subscriptionId).toBe('number');
-        eventEmitter.on('response', (response) => {
-            expect(response).toMatchObject(expectedResult);
-            responses.push(response);
-        });
-        // Unsubscribe after giving enough time to receive expectedNumResponses
-        setTimeout(() => {
-            web3ProvidersHttp.unsubscribe(subscriptionId);
-        }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
-        // Wait time it would take to receive expectedNumResponses + 1
-        // to verify unsubscribing worked
-        setTimeout(() => {
-            expect(responses.length).toBe(expectedNumResponses);
-            expect(web3ProvidersHttpSendSpy).toHaveBeenCalledTimes(
-                expectedNumResponses
-            );
+        // If event is not emitted, test will error because done is never called
+        eventEmitter.on('unsubscribed', () => {
             done();
-        }, (expectedNumResponses + 1) * subscribeOptions.milisecondsBetweenRequests);
+        });
+        // Giving enough time for subscription to be initialized
+        setTimeout(() => {
+            web3ProvidersHttp.unsubscribe(eventEmitter, subscriptionId);
+        }, 1000);
+    });
+
+    it('should error because subscriptionId does not exist', async () => {
+        jest.useFakeTimers();
+        const { eventEmitter, subscriptionId } =
+            await web3ProvidersHttp.subscribe(subscribeOptions);
+        expect(() => {
+            web3ProvidersHttp.unsubscribe(eventEmitter, 420);
+        }).toThrowError(
+            'Error unsubscribing: Subscription with id: 420 does not exist'
+        );
     });
 });

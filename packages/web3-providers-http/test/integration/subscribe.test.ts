@@ -18,7 +18,7 @@ describe('Web3ProvidersHttp.subscribe', () => {
         jsonrpc: subscribeOptions.jsonrpc,
         result: '0x0',
     };
-    const expectedNumResponses = 3;
+    const expectedNumResponses = 2;
 
     let web3ProvidersHttp: Web3ProvidersHttp;
 
@@ -26,17 +26,16 @@ describe('Web3ProvidersHttp.subscribe', () => {
         web3ProvidersHttp = new Web3ProvidersHttp(providerOptions);
     });
 
-    it('should receive expectedNumResponses', (done) => {
+    it('should receive expectedNumResponses', async (done) => {
         const responses: any[] = [];
         const { eventEmitter, subscriptionId } =
-            web3ProvidersHttp.subscribe(subscribeOptions);
-        expect(typeof subscriptionId).toBe('number');
+            await web3ProvidersHttp.subscribe(subscribeOptions);
         eventEmitter.on('response', (response) => {
             expect(response).toMatchObject(expectedResult);
             responses.push(response);
         });
         setTimeout(() => {
-            web3ProvidersHttp.unsubscribe(subscriptionId);
+            web3ProvidersHttp.unsubscribe(eventEmitter, subscriptionId);
             expect(responses.length).toBe(expectedNumResponses);
             done();
         }, expectedNumResponses * subscribeOptions.milisecondsBetweenRequests);
