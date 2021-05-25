@@ -1,5 +1,6 @@
 import { BaseRpcResponse } from 'web3-providers-base/types';
 import { DEFAULT_ACCOUNTS } from '../constants';
+import { BlockTags } from '../../types';
 
 interface Method {
     name: string;
@@ -121,7 +122,7 @@ export const testConfig: TestConfig = {
         {
             name: 'getBalance',
             rpcMethod: 'eth_getBalance',
-            parameters: [DEFAULT_ACCOUNTS[0], 'latest'],
+            parameters: [DEFAULT_ACCOUNTS[0], BlockTags.latest],
             expectedResult: {
                 ...expectedResultBase,
                 result: '0x0234c8a3397aab58',
@@ -133,7 +134,7 @@ export const testConfig: TestConfig = {
             parameters: [
                 '0x295a70b2de5e3953354a6a8344e616ed314d7251',
                 '0x0',
-                'latest',
+                BlockTags.latest,
             ],
             expectedResult: {
                 ...expectedResultBase,
@@ -143,7 +144,7 @@ export const testConfig: TestConfig = {
         {
             name: 'getTransactionCount',
             rpcMethod: 'eth_getTransactionCount',
-            parameters: [DEFAULT_ACCOUNTS[0], 'latest'],
+            parameters: [DEFAULT_ACCOUNTS[0], BlockTags.latest],
             expectedResult: { ...expectedResultBase, result: '0x1' },
         },
         {
@@ -179,7 +180,7 @@ export const testConfig: TestConfig = {
             rpcMethod: 'eth_getCode',
             parameters: [
                 '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-                'latest',
+                BlockTags.latest,
             ],
             expectedResult: {
                 ...expectedResultBase,

@@ -1,6 +1,15 @@
 import { HttpRpcResponse } from 'web3-providers-http/types';
 
-export type BlockIdentifier = number | 'latest' | 'earliest' | 'pending';
+export enum BlockTags {
+    latest = 'latest',
+    earliest = 'earliest',
+    pending = 'pending',
+}
+
+/**
+ * @param BlockIdentifier If string is passed, it must be a hex string
+ */
+export type BlockIdentifier = number | string | BlockTags;
 
 export type EthLog = {
     removed: boolean;
@@ -14,6 +23,12 @@ export type EthLog = {
     topics: string[];
 };
 
+/**
+ * @param to is optional when creating a new contract
+ * @param gas optional, default set by node 90,000
+ * @param gasPrice optional, default to be determined by node
+ * @param data optional, but required if {to} is not provided
+ */
 export type EthTransaction = {
     from: string;
     to?: string;
