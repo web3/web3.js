@@ -3,16 +3,13 @@ import { HttpRpcResponse } from 'web3-providers-http/types';
 export enum BlockTags {
     latest = 'latest',
     earliest = 'earliest',
-    pending = 'pending'
+    pending = 'pending',
 }
 
 /**
  * @param BlockIdentifier If string is passed, it must be a hex string
  */
-export type BlockIdentifier =
-    | number
-    | string
-    | BlockTags
+export type BlockIdentifier = number | string | BlockTags;
 
 export type EthLog = {
     removed: boolean;
