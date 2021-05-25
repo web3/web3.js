@@ -308,7 +308,7 @@ export default class Web3Eth {
     /**
      * Returns the balance of the account of given address
      * @param {string} address Address to get balance of
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -335,7 +335,7 @@ export default class Web3Eth {
      * Returns the value from a storage position at a given address
      * @param {string} address Address of storage to query
      * @param {string} storagePosition Hex string representing position in storage to retrieve
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -362,7 +362,7 @@ export default class Web3Eth {
     /**
      * Returns the number of transactions sent from an address
      * @param {string} address Address to get transaction count of
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -413,7 +413,7 @@ export default class Web3Eth {
 
     /**
      * Returns the number of transactions in a block from a block matching the given block number
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -465,7 +465,7 @@ export default class Web3Eth {
 
     /**
      * Returns the number of uncles in a block from a block matching the given block number
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -492,7 +492,7 @@ export default class Web3Eth {
     /**
      * Returns code at a given address
      * @param {string} address Address to get code at
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -638,7 +638,7 @@ export default class Web3Eth {
      * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
      * @param {string} transaction.value Hex string representing number of Wei to send to {to}
      * @param {string} transaction.data Hash of the method signature and encoded parameters
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -669,7 +669,7 @@ export default class Web3Eth {
      * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
      * @param {string} transaction.value Hex string representing number of Wei to send to {to} (optional)
      * @param {string} transaction.data Hash of the method signature and encoded parameters (optional)
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
      * @param {string} rpcOptions.jsonrpc JSON RPC version
@@ -719,7 +719,7 @@ export default class Web3Eth {
 
     /**
      * Returns information about a block by number
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
@@ -797,7 +797,7 @@ export default class Web3Eth {
 
     /**
      * Returns information about a transaction by block number and transaction index position
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {string} transactionIndex Hex string representing index of transaction to return
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
@@ -877,7 +877,7 @@ export default class Web3Eth {
 
     /**
      * Returns information about a uncle of a block by number and uncle index position
-     * @param {string|number} blockIdentifier Integer block number or "latest", "earliest", "pending"
+     * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {string} uncleIndex Index of uncle to retrieve
      * @param {object} rpcOptions RPC options
      * @param {number} rpcOptions.id ID used to identify request
