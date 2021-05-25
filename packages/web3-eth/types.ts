@@ -1,6 +1,9 @@
 import { HttpRpcResponse } from 'web3-providers-http/types';
 
-export type BlockIdentifier = number | 'latest' | 'earliest' | 'pending';
+/**
+ * @param BlockIdentifier If string is passed, it must be a hex string
+ */
+export type BlockIdentifier = number | string | 'latest' | 'earliest' | 'pending';
 
 export type EthLog = {
     removed: boolean;
