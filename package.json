@@ -135,8 +135,5 @@
         "webpack": "^4.44.2",
         "webpack-cli": "^3.3.12"
     },
-    "dependencies": {
-        "@ethereumjs/common": "^2.2.0",
-        "@ethereumjs/tx": "^3.1.4"
-    }
+    "dependencies": {}
 }
