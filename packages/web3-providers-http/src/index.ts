@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import Web3ProviderBase from 'web3-providers-base';
-import {ProviderOptions, IWeb3Provider} from 'web3-providers-base/types';
+import { ProviderOptions, IWeb3Provider } from 'web3-providers-base/types';
 
 import { HttpRpcOptions, HttpRpcResponse } from '../types';
 

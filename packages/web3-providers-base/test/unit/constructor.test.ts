@@ -1,7 +1,7 @@
 import Web3ProviderBase from '../../src/index'
 import {ProviderOptions} from '../../types'
 
-describe('constructs a Web3Eth instance with expected properties', () => {
+describe('constructs a Web3ProvidersBase instance with expected properties', () => {
     let providerOptions: ProviderOptions
 
     beforeEach(() => {
