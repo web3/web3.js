@@ -55,6 +55,10 @@ export default class Web3ProvidersHttp
         }
     }
 
+    supportsSubscriptions() {
+        return true;
+    }
+
     async send(options: BaseRpcOptions): Promise<BaseRpcResponse> {
         try {
             if (this._httpClient === undefined)
