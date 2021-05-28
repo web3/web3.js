@@ -82,7 +82,7 @@ export default class Web3ProvidersHttp
 
     async send(
         rpcOptions: RpcOptions,
-        httpOptions: HttpOptions
+        httpOptions?: HttpOptions
     ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
@@ -90,7 +90,7 @@ export default class Web3ProvidersHttp
             const response = await this._httpClient.post(
                 '',
                 rpcOptions,
-                httpOptions
+                httpOptions || {}
             );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {

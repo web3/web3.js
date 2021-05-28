@@ -32,9 +32,9 @@ export type EthLog = {
 export type EthTransaction = {
     from: string;
     to?: string;
-    gas?: BigInt;
-    gasPrice?: BigInt;
-    value?: BigInt;
+    gas?: string;
+    gasPrice?: string;
+    value?: string;
     data?: string;
     nonce?: number;
 };

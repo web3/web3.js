@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import { HttpOptions } from 'web3-providers-http/types';
+import { EthFilter, EthTransaction } from 'web3-eth/types';
 
 export type HexString = string;
 export type NumberString = string;
@@ -20,7 +21,11 @@ export interface RpcOptions {
     id: number;
     jsonrpc: string;
     method: string;
-    params: (HexString | number)[];
+    params: (HexString | number | EthTransaction | boolean | EthFilter)[];
+}
+
+export interface PartialRpcOptions extends Partial<RpcOptions> {
+    method: string;
 }
 
 export interface CallOptions {
@@ -28,13 +33,6 @@ export interface CallOptions {
     rpcOptions?: Partial<RpcOptions>;
     returnType?: ReturnTypes;
     subscribe?: boolean;
-}
-
-export interface PartialRpcOptions {
-    id?: number;
-    jsonrpc?: string;
-    method: string;
-    params?: (HexString | number)[];
 }
 
 export interface SendOptions extends CallOptions {

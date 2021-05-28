@@ -23,6 +23,8 @@ export default class Web3RequestManager {
 
     providerProtocol: ProviderProtocol = ProviderProtocol.UNKNOWN;
 
+    private static _DEFAULT_JSON_RPC_VERSION = '2.0';
+
     constructor(providerOptions: ProviderOptions) {
         switch (
             Web3RequestManager.detectProviderProtocol(
@@ -62,12 +64,14 @@ export default class Web3RequestManager {
         }
     }
 
-    private _defaultRpcOptions(rpcOptions: PartialRpcOptions): RpcOptions {
+    private static _defaultRpcOptions(
+        rpcOptions: PartialRpcOptions
+    ): RpcOptions {
         return {
             id:
                 rpcOptions.id ||
                 Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
-            jsonrpc: rpcOptions.jsonrpc || '2.0',
+            jsonrpc: rpcOptions.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
             method: rpcOptions.method,
             params: rpcOptions.params || [],
         };
@@ -75,13 +79,13 @@ export default class Web3RequestManager {
 
     async send(
         rpcOptions: PartialRpcOptions,
-        providerCallOptions: ProviderCallOptions
+        providerCallOptions?: ProviderCallOptions
     ): Promise<RpcResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
             return this.provider.send(
-                this._defaultRpcOptions(rpcOptions),
+                Web3RequestManager._defaultRpcOptions(rpcOptions),
                 providerCallOptions
             );
         } catch (error) {

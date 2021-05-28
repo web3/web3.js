@@ -21,7 +21,6 @@ import {
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;
-    private _DEFAULT_JSON_RPC_VERSION = '2.0';
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
@@ -36,21 +35,6 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Client version
      */
-    // async getClientVersion(
-    //     rpcOptions?: BaseRpcOptions
-    // ): Promise<EthStringResult> {
-    //     try {
-    //         return await this._requestManager.send({
-    //             ...rpcOptions,
-    //             method: 'web3_clientVersion',
-    //             jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-    //             params: [],
-    //         });
-    //     } catch (error) {
-    //         throw Error(`Error getting client version: ${error.message}`);
-    //     }
-    // }
-
     async getClientVersion(
         callOptions?: CallOptions
     ): Promise<EthStringResult> {
@@ -77,15 +61,17 @@ export default class Web3Eth {
      */
     async getSha3(
         data: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'web3_sha3',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [data],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'web3_sha3',
+                    params: [data],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting sha3 hash: ${error.message}`);
         }
@@ -99,15 +85,16 @@ export default class Web3Eth {
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_version',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'net_version',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting network version: ${error.message}`);
         }
@@ -121,15 +108,16 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_listening',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'net_listening',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting network listening: ${error.message}`);
         }
@@ -143,15 +131,16 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkPeerCount(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_peerCount',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'net_peerCount',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting network peer count: ${error.message}`);
         }
@@ -165,15 +154,16 @@ export default class Web3Eth {
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_protocolVersion',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_protocolVersion',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting protocol version: ${error.message}`);
         }
@@ -186,14 +176,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Object with sync status data or false when not syncing
      */
-    async getSyncing(rpcOptions?: BaseRpcOptions): Promise<EthSyncingResult> {
+    async getSyncing(callOptions?: CallOptions): Promise<EthSyncingResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_syncing',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_syncing',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
         }
@@ -206,14 +197,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} The current coinbase address
      */
-    async getCoinbase(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
+    async getCoinbase(callOptions?: CallOptions): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_coinbase',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_coinbase',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting coinbase address: ${error.message}`);
         }
@@ -226,14 +218,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if the client is mining, otherwise false
      */
-    async getMining(rpcOptions?: BaseRpcOptions): Promise<EthBooleanResult> {
+    async getMining(callOptions?: CallOptions): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_mining',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_mining',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting mining status: ${error.message}`);
         }
@@ -246,14 +239,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Number of hashes per second
      */
-    async getHashRate(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
+    async getHashRate(callOptions?: CallOptions): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_hashrate',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_hashrate',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting hash rate: ${error.message}`);
         }
@@ -266,14 +260,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current gas price in wei
      */
-    async getGasPrice(rpcOptions?: BaseRpcOptions): Promise<EthStringResult> {
+    async getGasPrice(callOptions?: CallOptions): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_gasPrice',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_gasPrice',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting gas price: ${error.message}`);
         }
@@ -286,14 +281,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of addresses owned by the client
      */
-    async getAccounts(rpcOptions?: BaseRpcOptions): Promise<EthAccountsResult> {
+    async getAccounts(callOptions?: CallOptions): Promise<EthAccountsResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_accounts',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_accounts',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting accounts: ${error.message}`);
         }
@@ -306,16 +302,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current block number client is on
      */
-    async getBlockNumber(
-        rpcOptions?: BaseRpcOptions
-    ): Promise<EthStringResult> {
+    async getBlockNumber(callOptions?: CallOptions): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_blockNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_blockNumber',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting block number: ${error.message}`);
         }
@@ -333,15 +328,17 @@ export default class Web3Eth {
     async getBalance(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBalance',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getBalance',
+                    params: [address, blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting balance: ${error.message}`);
         }
@@ -361,15 +358,17 @@ export default class Web3Eth {
         address: string,
         storagePosition: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getStorageAt',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, storagePosition, blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getStorageAt',
+                    params: [address, storagePosition, blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting storage value: ${error.message}`);
         }
@@ -387,15 +386,17 @@ export default class Web3Eth {
     async getTransactionCount(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionCount',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getTransactionCount',
+                    params: [address, blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting transaction count: ${error.message}`);
         }
@@ -411,15 +412,17 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByHash(
         blockHash: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockTransactionCountByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getBlockTransactionCountByHash',
+                    params: [blockHash],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by hash: ${error.message}`
@@ -437,15 +440,17 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockTransactionCountByNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getBlockTransactionCountByNumber',
+                    params: [blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by number: ${error.message}`
@@ -463,15 +468,17 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockHash(
         blockHash: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleCountByBlockHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getUncleCountByBlockHash',
+                    params: [blockHash],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by hash: ${error.message}`
@@ -489,15 +496,17 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleCountByBlockNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getUncleCountByBlockNumber',
+                    params: [blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by number: ${error.message}`
@@ -517,15 +526,17 @@ export default class Web3Eth {
     async getCode(
         address: string,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getCode',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getCode',
+                    params: [address, blockIdentifier],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting code at address: ${error.message}`);
         }
@@ -543,15 +554,17 @@ export default class Web3Eth {
     async sign(
         address: string,
         message: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sign',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, message],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_sign',
+                    params: [address, message],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error signing message: ${error.message}`);
         }
@@ -574,15 +587,17 @@ export default class Web3Eth {
      */
     async signTransaction(
         transaction: EthTransaction,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_signTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [{ ...transaction }],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_signTransaction',
+                    params: [transaction],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error signing transaction: ${error.message}`);
         }
@@ -605,15 +620,17 @@ export default class Web3Eth {
      */
     async sendTransaction(
         transaction: EthTransaction,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sendTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [{ ...transaction }],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_sendTransaction',
+                    params: [transaction],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error sending transaction: ${error.message}`);
         }
@@ -629,15 +646,17 @@ export default class Web3Eth {
      */
     async sendRawTransaction(
         rawTransaction: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sendRawTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [rawTransaction],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_sendRawTransaction',
+                    params: [rawTransaction],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error sending raw transaction: ${error.message}`);
         }
@@ -662,15 +681,17 @@ export default class Web3Eth {
      */
     async call(
         transaction: EthCallTransaction,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_call',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [transaction],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_call',
+                    params: [transaction],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error sending call transaction: ${error.message}`);
         }
@@ -693,15 +714,17 @@ export default class Web3Eth {
      */
     async estimateGas(
         transaction: EthTransaction,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_estimateGas',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [transaction],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_estimateGas',
+                    params: [transaction],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting gas estimate: ${error.message}`);
         }
@@ -719,15 +742,17 @@ export default class Web3Eth {
     async getBlockByHash(
         blockHash: string,
         returnFullTxs: boolean,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBlockResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, returnFullTxs],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getBlockByHash',
+                    params: [blockHash, returnFullTxs],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting block by hash: ${error.message}`);
         }
@@ -745,15 +770,17 @@ export default class Web3Eth {
     async getBlockByNumber(
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBlockResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockByNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, returnFullTxs],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getBlockByNumber',
+                    params: [blockIdentifier, returnFullTxs],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting block by number: ${error.message}`);
         }
@@ -769,15 +796,17 @@ export default class Web3Eth {
      */
     async getTransactionByHash(
         txHash: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthTransactionResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [txHash],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getTransactionByHash',
+                    params: [txHash],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting transaction by hash: ${error.message}`);
         }
@@ -795,15 +824,17 @@ export default class Web3Eth {
     async getTransactionByBlockHashAndIndex(
         blockHash: string,
         transactionIndex: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthTransactionResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByBlockHashAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, transactionIndex],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getTransactionByBlockHashAndIndex',
+                    params: [blockHash, transactionIndex],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting transaction by block hash and index: ${error.message}`
@@ -823,15 +854,17 @@ export default class Web3Eth {
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         transactionIndex: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthTransactionResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByBlockNumberAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, transactionIndex],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getTransactionByBlockNumberAndIndex',
+                    params: [blockIdentifier, transactionIndex],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting transaction by block number and index: ${error.message}`
@@ -849,15 +882,17 @@ export default class Web3Eth {
      */
     async getTransactionReceipt(
         txHash: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthTransactionReceiptResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionReceipt',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [txHash],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getTransactionReceipt',
+                    params: [txHash],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting transaction reciept: ${error.message}`);
         }
@@ -875,15 +910,17 @@ export default class Web3Eth {
     async getUncleByBlockHashAndIndex(
         blockHash: string,
         uncleIndex: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBlockResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleByBlockHashAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, uncleIndex],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getUncleByBlockHashAndIndex',
+                    params: [blockHash, uncleIndex],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting uncle by block hash and index: ${error.message}`
@@ -903,15 +940,17 @@ export default class Web3Eth {
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         uncleIndex: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBlockResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleByBlockNumberAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, uncleIndex],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getUncleByBlockNumberAndIndex',
+                    params: [blockIdentifier, uncleIndex],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting uncle by block number and index: ${error.message}`
@@ -927,15 +966,16 @@ export default class Web3Eth {
      * @returns {Promise} A list of available compilers
      */
     async getCompilers(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringArrayResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getCompilers',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getCompilers',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting compilers: ${error.message}`);
         }
@@ -951,15 +991,17 @@ export default class Web3Eth {
      */
     async compileSolidity(
         sourceCode: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthCompiledSolidityResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileSolidity',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_compileSolidity',
+                    params: [sourceCode],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting compiling solidity code: ${error.message}`
@@ -977,15 +1019,17 @@ export default class Web3Eth {
      */
     async compileLLL(
         sourceCode: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileLLL',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_compileLLL',
+                    params: [sourceCode],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting compiling LLL code: ${error.message}`);
         }
@@ -1001,15 +1045,17 @@ export default class Web3Eth {
      */
     async compileSerpent(
         sourceCode: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileSerpent',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_compileSerpent',
+                    params: [sourceCode],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error getting compiling serpent code: ${error.message}`
@@ -1031,15 +1077,17 @@ export default class Web3Eth {
      */
     async newFilter(
         filter: EthFilter,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filter],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_newFilter',
+                    params: [filter],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error creating filter: ${error.message}`);
         }
@@ -1052,16 +1100,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Filter id
      */
-    async newBlockFilter(
-        rpcOptions?: BaseRpcOptions
-    ): Promise<EthStringResult> {
+    async newBlockFilter(callOptions?: CallOptions): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newBlockFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_newBlockFilter',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error creating block filter: ${error.message}`);
         }
@@ -1075,15 +1122,16 @@ export default class Web3Eth {
      * @returns {Promise} Filter id
      */
     async newPendingTransactionFilter(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newPendingTransactionFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_newPendingTransactionFilter',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(
                 `Error creating pending transaction filter: ${error.message}`
@@ -1101,15 +1149,17 @@ export default class Web3Eth {
      */
     async uninstallFilter(
         filterId: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_uninstallFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_uninstallFilter',
+                    params: [filterId],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error uninstalling filter: ${error.message}`);
         }
@@ -1125,15 +1175,17 @@ export default class Web3Eth {
      */
     async getFilterChanges(
         filterId: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthLogResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getFilterChanges',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getFilterChanges',
+                    params: [filterId],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
@@ -1149,15 +1201,17 @@ export default class Web3Eth {
      */
     async getFilterLogs(
         filterId: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthLogResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getFilterLogs',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getFilterLogs',
+                    params: [filterId],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
@@ -1172,15 +1226,17 @@ export default class Web3Eth {
      */
     async getLogs(
         filter: EthFilter,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthLogResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getLogs',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filter],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getLogs',
+                    params: [filter],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting logs: ${error.message}`);
         }
@@ -1193,14 +1249,15 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
-    async getWork(rpcOptions?: BaseRpcOptions): Promise<EthStringArrayResult> {
+    async getWork(callOptions?: CallOptions): Promise<EthStringArrayResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getWork',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_getWork',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting work: ${error.message}`);
         }
@@ -1220,15 +1277,17 @@ export default class Web3Eth {
         nonce: string,
         powHash: string,
         digest: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_submitWork',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [nonce, powHash, digest],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_submitWork',
+                    params: [nonce, powHash, digest],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error submitting work: ${error.message}`);
         }
@@ -1246,15 +1305,17 @@ export default class Web3Eth {
     async submitHashRate(
         hashRate: string,
         clientId: string,
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthBooleanResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_submitHashRate',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [hashRate, clientId],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'eth_submitHashRate',
+                    params: [hashRate, clientId],
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error submitting hash rate: ${error.message}`);
         }
