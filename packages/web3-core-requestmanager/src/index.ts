@@ -1,5 +1,13 @@
 import Web3ProviderHttp from 'web3-providers-http';
-import { ProviderOptions } from 'web3-providers-base/types';
+import {
+    CallOptions,
+    ProviderOptions,
+    ProviderCallOptions,
+    RpcOptions,
+    RpcResponse,
+    SendOptions,
+    PartialRpcOptions,
+} from 'web3-providers-base/types';
 
 // TODO Make eslint happy
 /* eslint-disable */
@@ -54,12 +62,28 @@ export default class Web3RequestManager {
         }
     }
 
-    // TODO get rid of anys
-    async send(options: any): Promise<any> {
+    private _defaultRpcOptions(rpcOptions: PartialRpcOptions): RpcOptions {
+        return {
+            id:
+                rpcOptions.id ||
+                Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+            jsonrpc: rpcOptions.jsonrpc || '2.0',
+            method: rpcOptions.method,
+            params: rpcOptions.params || [],
+        };
+    }
+
+    async send(
+        rpcOptions: PartialRpcOptions,
+        providerCallOptions: ProviderCallOptions
+    ): Promise<RpcResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.send(options);
+            return this.provider.send(
+                this._defaultRpcOptions(rpcOptions),
+                providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
         }

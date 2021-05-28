@@ -1,5 +1,5 @@
 import Web3RequestManager from 'web3-core-requestmanager';
-import { BaseRpcOptions } from 'web3-providers-base/types';
+import { CallOptions } from 'web3-providers-base/types';
 
 import {
     Web3EthOptions,
@@ -36,16 +36,32 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Client version
      */
+    // async getClientVersion(
+    //     rpcOptions?: BaseRpcOptions
+    // ): Promise<EthStringResult> {
+    //     try {
+    //         return await this._requestManager.send({
+    //             ...rpcOptions,
+    //             method: 'web3_clientVersion',
+    //             jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
+    //             params: [],
+    //         });
+    //     } catch (error) {
+    //         throw Error(`Error getting client version: ${error.message}`);
+    //     }
+    // }
+
     async getClientVersion(
-        rpcOptions?: BaseRpcOptions
+        callOptions?: CallOptions
     ): Promise<EthStringResult> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'web3_clientVersion',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            return await this._requestManager.send(
+                {
+                    ...callOptions?.rpcOptions,
+                    method: 'web3_clientVersion',
+                },
+                callOptions?.providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }

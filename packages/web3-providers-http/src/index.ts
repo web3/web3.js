@@ -4,10 +4,12 @@ import {
     ProviderOptions,
     IWeb3Provider,
     BaseRpcOptions,
-    BaseRpcResponse,
+    RpcResponse,
+    CallOptions,
+    RpcOptions,
 } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
-import { SubscriptionOptions } from '../types';
+import { HttpOptions, SubscriptionOptions } from '../types';
 
 export default class Web3ProvidersHttp
     extends Web3ProviderBase
@@ -59,19 +61,37 @@ export default class Web3ProvidersHttp
         return true;
     }
 
-    async send(options: BaseRpcOptions): Promise<BaseRpcResponse> {
+    // async send(options: BaseRpcOptions): Promise<RpcResponse> {
+    //     try {
+    //         if (this._httpClient === undefined)
+    //             throw Error('No HTTP client initiliazed');
+    //         const response = await this._httpClient.post('', {
+    //             id:
+    //                 options.id ||
+    //                 Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+    //             jsonrpc: options.jsonrpc || '2.0',
+    //             method: options.method,
+    //             params: options.params,
+    //         });
+
+    //         return response.data.data ? response.data.data : response.data;
+    //     } catch (error) {
+    //         throw Error(`Error sending: ${error.message}`);
+    //     }
+    // }
+
+    async send(
+        rpcOptions: RpcOptions,
+        httpOptions: HttpOptions
+    ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
-            const response = await this._httpClient.post('', {
-                id:
-                    options.id ||
-                    Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
-                jsonrpc: options.jsonrpc || '2.0',
-                method: options.method,
-                params: options.params,
-            });
-
+            const response = await this._httpClient.post(
+                '',
+                rpcOptions,
+                httpOptions
+            );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
