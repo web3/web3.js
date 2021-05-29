@@ -1,5 +1,10 @@
 import Web3RequestManager from 'web3-core-requestmanager';
-import { CallOptions } from 'web3-providers-base/types';
+import {
+    CallOptions,
+    RpcResponse,
+    SubscriptionResponse,
+    RpcParams
+} from 'web3-providers-base/types';
 
 import {
     Web3EthOptions,
@@ -28,6 +33,23 @@ export default class Web3Eth {
         });
     }
 
+    private _sendOrSubscribe(
+        method: string,
+        params: RpcParams,
+        callOptions?: CallOptions
+    ): Promise<RpcResponse | SubscriptionResponse> {
+        return this._requestManager[
+            callOptions?.subscribe ? 'subscribe' : 'send'
+        ](
+            {
+                ...callOptions?.rpcOptions,
+                method,
+                params
+            },
+            callOptions?.providerCallOptions
+        );
+    }
+
     /**
      * Returns the current client version
      * @param {object} rpcOptions RPC options
@@ -37,14 +59,12 @@ export default class Web3Eth {
      */
     async getClientVersion(
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'web3_clientVersion',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'web3_clientVersion',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
@@ -62,15 +82,12 @@ export default class Web3Eth {
     async getSha3(
         data: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'web3_sha3',
-                    params: [data],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'web3_sha3',
+                [data],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting sha3 hash: ${error.message}`);
@@ -86,14 +103,12 @@ export default class Web3Eth {
      */
     async getNetworkVersion(
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'net_version',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'net_version',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting network version: ${error.message}`);
@@ -109,14 +124,12 @@ export default class Web3Eth {
      */
     async getNetworkListening(
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult> {
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'net_listening',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'net_listening',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting network listening: ${error.message}`);
@@ -132,14 +145,12 @@ export default class Web3Eth {
      */
     async getNetworkPeerCount(
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult> {
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'net_peerCount',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'net_peerCount',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting network peer count: ${error.message}`);
@@ -155,14 +166,12 @@ export default class Web3Eth {
      */
     async getProtocolVersion(
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_protocolVersion',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_protocolVersion',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting protocol version: ${error.message}`);
@@ -176,14 +185,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Object with sync status data or false when not syncing
      */
-    async getSyncing(callOptions?: CallOptions): Promise<EthSyncingResult> {
+    async getSyncing(callOptions?: CallOptions): Promise<EthSyncingResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_syncing',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_syncing',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
@@ -197,14 +204,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} The current coinbase address
      */
-    async getCoinbase(callOptions?: CallOptions): Promise<EthStringResult> {
+    async getCoinbase(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_coinbase',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_coinbase',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting coinbase address: ${error.message}`);
@@ -218,14 +223,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if the client is mining, otherwise false
      */
-    async getMining(callOptions?: CallOptions): Promise<EthBooleanResult> {
+    async getMining(callOptions?: CallOptions): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_mining',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_mining',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting mining status: ${error.message}`);
@@ -239,14 +242,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Number of hashes per second
      */
-    async getHashRate(callOptions?: CallOptions): Promise<EthStringResult> {
+    async getHashRate(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_hashrate',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_hashrate',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting hash rate: ${error.message}`);
@@ -260,14 +261,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current gas price in wei
      */
-    async getGasPrice(callOptions?: CallOptions): Promise<EthStringResult> {
+    async getGasPrice(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_gasPrice',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_gasPrice',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting gas price: ${error.message}`);
@@ -281,14 +280,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of addresses owned by the client
      */
-    async getAccounts(callOptions?: CallOptions): Promise<EthAccountsResult> {
+    async getAccounts(callOptions?: CallOptions): Promise<EthAccountsResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_accounts',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_accounts',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting accounts: ${error.message}`);
@@ -302,14 +299,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current block number client is on
      */
-    async getBlockNumber(callOptions?: CallOptions): Promise<EthStringResult> {
+    async getBlockNumber(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_blockNumber',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_blockNumber',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting block number: ${error.message}`);
@@ -329,15 +324,12 @@ export default class Web3Eth {
         address: string,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getBalance',
-                    params: [address, blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getBalance',
+                [address, blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting balance: ${error.message}`);
@@ -359,15 +351,12 @@ export default class Web3Eth {
         storagePosition: string,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getStorageAt',
-                    params: [address, storagePosition, blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getStorageAt',
+                [address, storagePosition, blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting storage value: ${error.message}`);
@@ -387,15 +376,12 @@ export default class Web3Eth {
         address: string,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getTransactionCount',
-                    params: [address, blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getTransactionCount',
+                [address, blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting transaction count: ${error.message}`);
@@ -413,15 +399,12 @@ export default class Web3Eth {
     async getBlockTransactionCountByHash(
         blockHash: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getBlockTransactionCountByHash',
-                    params: [blockHash],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getBlockTransactionCountByHash',
+                [blockHash],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -441,15 +424,12 @@ export default class Web3Eth {
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getBlockTransactionCountByNumber',
-                    params: [blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getBlockTransactionCountByNumber',
+                [blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -469,15 +449,12 @@ export default class Web3Eth {
     async getUncleCountByBlockHash(
         blockHash: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getUncleCountByBlockHash',
-                    params: [blockHash],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getUncleCountByBlockHash',
+                [blockHash],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -497,15 +474,12 @@ export default class Web3Eth {
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getUncleCountByBlockNumber',
-                    params: [blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getUncleCountByBlockNumber',
+                [blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -527,15 +501,12 @@ export default class Web3Eth {
         address: string,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getCode',
-                    params: [address, blockIdentifier],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getCode',
+                [address, blockIdentifier],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting code at address: ${error.message}`);
@@ -555,15 +526,12 @@ export default class Web3Eth {
         address: string,
         message: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_sign',
-                    params: [address, message],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_sign',
+                [address, message],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error signing message: ${error.message}`);
@@ -588,15 +556,12 @@ export default class Web3Eth {
     async signTransaction(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_signTransaction',
-                    params: [transaction],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_signTransaction',
+                [transaction],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error signing transaction: ${error.message}`);
@@ -621,15 +586,12 @@ export default class Web3Eth {
     async sendTransaction(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_sendTransaction',
-                    params: [transaction],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_sendTransaction',
+                [transaction],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error sending transaction: ${error.message}`);
@@ -647,15 +609,12 @@ export default class Web3Eth {
     async sendRawTransaction(
         rawTransaction: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_sendRawTransaction',
-                    params: [rawTransaction],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_sendRawTransaction',
+                [rawTransaction],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error sending raw transaction: ${error.message}`);
@@ -682,15 +641,12 @@ export default class Web3Eth {
     async call(
         transaction: EthCallTransaction,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_call',
-                    params: [transaction],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_call',
+                [transaction],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error sending call transaction: ${error.message}`);
@@ -715,15 +671,12 @@ export default class Web3Eth {
     async estimateGas(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_estimateGas',
-                    params: [transaction],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_estimateGas',
+                [transaction],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting gas estimate: ${error.message}`);
@@ -743,15 +696,12 @@ export default class Web3Eth {
         blockHash: string,
         returnFullTxs: boolean,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult> {
+    ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getBlockByHash',
-                    params: [blockHash, returnFullTxs],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getBlockByHash',
+                [blockHash, returnFullTxs],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting block by hash: ${error.message}`);
@@ -771,15 +721,12 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult> {
+    ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getBlockByNumber',
-                    params: [blockIdentifier, returnFullTxs],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getBlockByNumber',
+                [blockIdentifier, returnFullTxs],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting block by number: ${error.message}`);
@@ -797,15 +744,12 @@ export default class Web3Eth {
     async getTransactionByHash(
         txHash: string,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult> {
+    ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getTransactionByHash',
-                    params: [txHash],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getTransactionByHash',
+                [txHash],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting transaction by hash: ${error.message}`);
@@ -825,15 +769,12 @@ export default class Web3Eth {
         blockHash: string,
         transactionIndex: string,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult> {
+    ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getTransactionByBlockHashAndIndex',
-                    params: [blockHash, transactionIndex],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getTransactionByBlockHashAndIndex',
+                [blockHash, transactionIndex],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -855,15 +796,12 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         transactionIndex: string,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult> {
+    ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getTransactionByBlockNumberAndIndex',
-                    params: [blockIdentifier, transactionIndex],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getTransactionByBlockNumberAndIndex',
+                [blockIdentifier, transactionIndex],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -883,15 +821,12 @@ export default class Web3Eth {
     async getTransactionReceipt(
         txHash: string,
         callOptions?: CallOptions
-    ): Promise<EthTransactionReceiptResult> {
+    ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getTransactionReceipt',
-                    params: [txHash],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getTransactionReceipt',
+                [txHash],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting transaction reciept: ${error.message}`);
@@ -911,15 +846,12 @@ export default class Web3Eth {
         blockHash: string,
         uncleIndex: string,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult> {
+    ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getUncleByBlockHashAndIndex',
-                    params: [blockHash, uncleIndex],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getUncleByBlockHashAndIndex',
+                [blockHash, uncleIndex],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -941,15 +873,12 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         uncleIndex: string,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult> {
+    ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getUncleByBlockNumberAndIndex',
-                    params: [blockIdentifier, uncleIndex],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getUncleByBlockNumberAndIndex',
+                [blockIdentifier, uncleIndex],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -967,14 +896,12 @@ export default class Web3Eth {
      */
     async getCompilers(
         callOptions?: CallOptions
-    ): Promise<EthStringArrayResult> {
+    ): Promise<EthStringArrayResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getCompilers',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getCompilers',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting compilers: ${error.message}`);
@@ -992,15 +919,12 @@ export default class Web3Eth {
     async compileSolidity(
         sourceCode: string,
         callOptions?: CallOptions
-    ): Promise<EthCompiledSolidityResult> {
+    ): Promise<EthCompiledSolidityResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_compileSolidity',
-                    params: [sourceCode],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_compileSolidity',
+                [sourceCode],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -1020,15 +944,12 @@ export default class Web3Eth {
     async compileLLL(
         sourceCode: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_compileLLL',
-                    params: [sourceCode],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_compileLLL',
+                [sourceCode],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting compiling LLL code: ${error.message}`);
@@ -1046,15 +967,12 @@ export default class Web3Eth {
     async compileSerpent(
         sourceCode: string,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_compileSerpent',
-                    params: [sourceCode],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_compileSerpent',
+                [sourceCode],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -1078,15 +996,12 @@ export default class Web3Eth {
     async newFilter(
         filter: EthFilter,
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_newFilter',
-                    params: [filter],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_newFilter',
+                [filter],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error creating filter: ${error.message}`);
@@ -1100,14 +1015,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Filter id
      */
-    async newBlockFilter(callOptions?: CallOptions): Promise<EthStringResult> {
+    async newBlockFilter(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_newBlockFilter',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_newBlockFilter',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error creating block filter: ${error.message}`);
@@ -1123,14 +1036,12 @@ export default class Web3Eth {
      */
     async newPendingTransactionFilter(
         callOptions?: CallOptions
-    ): Promise<EthStringResult> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_newPendingTransactionFilter',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_newPendingTransactionFilter',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(
@@ -1150,15 +1061,12 @@ export default class Web3Eth {
     async uninstallFilter(
         filterId: string,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult> {
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_uninstallFilter',
-                    params: [filterId],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_uninstallFilter',
+                [filterId],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error uninstalling filter: ${error.message}`);
@@ -1176,15 +1084,12 @@ export default class Web3Eth {
     async getFilterChanges(
         filterId: string,
         callOptions?: CallOptions
-    ): Promise<EthLogResult> {
+    ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getFilterChanges',
-                    params: [filterId],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getFilterChanges',
+                [filterId],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
@@ -1202,15 +1107,12 @@ export default class Web3Eth {
     async getFilterLogs(
         filterId: string,
         callOptions?: CallOptions
-    ): Promise<EthLogResult> {
+    ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getFilterLogs',
-                    params: [filterId],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getFilterLogs',
+                [filterId],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
@@ -1227,15 +1129,12 @@ export default class Web3Eth {
     async getLogs(
         filter: EthFilter,
         callOptions?: CallOptions
-    ): Promise<EthLogResult> {
+    ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getLogs',
-                    params: [filter],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getLogs',
+                [filter],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting logs: ${error.message}`);
@@ -1249,14 +1148,12 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
-    async getWork(callOptions?: CallOptions): Promise<EthStringArrayResult> {
+    async getWork(callOptions?: CallOptions): Promise<EthStringArrayResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_getWork',
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_getWork',
+                [],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error getting work: ${error.message}`);
@@ -1278,15 +1175,12 @@ export default class Web3Eth {
         powHash: string,
         digest: string,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult> {
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_submitWork',
-                    params: [nonce, powHash, digest],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_submitWork',
+                [nonce, powHash, digest],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error submitting work: ${error.message}`);
@@ -1306,15 +1200,12 @@ export default class Web3Eth {
         hashRate: string,
         clientId: string,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult> {
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send(
-                {
-                    ...callOptions?.rpcOptions,
-                    method: 'eth_submitHashRate',
-                    params: [hashRate, clientId],
-                },
-                callOptions?.providerCallOptions
+            return await this._sendOrSubscribe(
+                'eth_submitHashRate',
+                [hashRate, clientId],
+                callOptions
             );
         } catch (error) {
             throw Error(`Error submitting hash rate: ${error.message}`);

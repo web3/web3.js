@@ -7,6 +7,8 @@ import {
     RpcResponse,
     CallOptions,
     RpcOptions,
+    SubscriptionResponse,
+    ProviderCallOptions,
 } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
 import { HttpOptions, SubscriptionOptions } from '../types';
@@ -90,7 +92,7 @@ export default class Web3ProvidersHttp
             const response = await this._httpClient.post(
                 '',
                 rpcOptions,
-                httpOptions || {}
+                httpOptions?.axiosConfig || {}
             );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
@@ -98,10 +100,10 @@ export default class Web3ProvidersHttp
         }
     }
 
-    subscribe(options: SubscriptionOptions): {
-        eventEmitter: EventEmitter;
-        subscriptionId: number;
-    } {
+    subscribe(
+        rpcOptions: RpcOptions,
+        httpOptions?: HttpOptions
+    ): SubscriptionResponse {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
@@ -109,7 +111,12 @@ export default class Web3ProvidersHttp
             const subscriptionId = Math.floor(
                 Math.random() * Number.MAX_SAFE_INTEGER
             ); // generate random integer
-            this._subscribe(options, eventEmitter, subscriptionId);
+            this._subscribe(
+                rpcOptions,
+                eventEmitter,
+                subscriptionId,
+                httpOptions
+            );
             return { eventEmitter, subscriptionId };
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
@@ -117,16 +124,23 @@ export default class Web3ProvidersHttp
     }
 
     private async _subscribe(
-        options: SubscriptionOptions,
+        rpcOptions: RpcOptions,
         eventEmitter: EventEmitter,
-        subscriptionId: number
+        subscriptionId: number,
+        httpOptions?: HttpOptions
     ) {
         try {
-            const response = await this.send(options);
+            const response = await this.send(rpcOptions, httpOptions);
             eventEmitter.emit('response', response);
             this._subscriptions[subscriptionId] = setTimeout(
-                () => this._subscribe(options, eventEmitter, subscriptionId),
-                options.milisecondsBetweenRequests || 1000
+                () =>
+                    this._subscribe(
+                        rpcOptions,
+                        eventEmitter,
+                        subscriptionId,
+                        httpOptions
+                    ),
+                httpOptions?.milisecondsBetweenRequests || 1000
             );
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);

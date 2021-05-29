@@ -5,6 +5,7 @@ import { EthFilter, EthTransaction } from 'web3-eth/types';
 export type HexString = string;
 export type NumberString = string;
 export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
+export type RpcParams = (HexString | number | EthTransaction | boolean | EthFilter)[];
 
 export enum ReturnTypes {
     HexString,
@@ -21,11 +22,12 @@ export interface RpcOptions {
     id: number;
     jsonrpc: string;
     method: string;
-    params: (HexString | number | EthTransaction | boolean | EthFilter)[];
+    params: RpcParams;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
     method: string;
+    params: RpcParams;
 }
 
 export interface CallOptions {
@@ -53,6 +55,11 @@ export interface RpcResponse {
         | any;
 }
 
+export interface SubscriptionResponse {
+    eventEmitter: EventEmitter;
+    subscriptionId: number;
+}
+
 export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
@@ -60,10 +67,10 @@ export interface IWeb3Provider {
         rpcOptions: RpcOptions,
         providerCallOptions: ProviderCallOptions
     ) => Promise<RpcResponse>;
-    subscribe: (options: BaseRpcOptions) => {
-        eventEmitter: EventEmitter;
-        subscriptionId: number;
-    };
+    subscribe: (
+        rpcOptions: RpcOptions,
+        providerCallOptions: ProviderCallOptions
+    ) => SubscriptionResponse;
     unsubscribe?: (eventEmitter: EventEmitter, subscriptionId: number) => void;
     disconnect?: () => void;
 }

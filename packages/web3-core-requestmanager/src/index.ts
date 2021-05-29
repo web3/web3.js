@@ -7,6 +7,7 @@ import {
     RpcResponse,
     SendOptions,
     PartialRpcOptions,
+    SubscriptionResponse,
 } from 'web3-providers-base/types';
 
 // TODO Make eslint happy
@@ -73,7 +74,7 @@ export default class Web3RequestManager {
                 Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
             jsonrpc: rpcOptions.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
             method: rpcOptions.method,
-            params: rpcOptions.params || [],
+            params: rpcOptions.params,
         };
     }
 
@@ -93,12 +94,17 @@ export default class Web3RequestManager {
         }
     }
 
-    // TODO get rid of anys
-    async subscribe(options: any): Promise<any> {
+    async subscribe(
+        rpcOptions: PartialRpcOptions,
+        providerCallOptions?: ProviderCallOptions
+    ): Promise<SubscriptionResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.subscribe(options);
+            return this.provider.subscribe(
+                Web3RequestManager._defaultRpcOptions(rpcOptions),
+                providerCallOptions
+            );
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
         }
