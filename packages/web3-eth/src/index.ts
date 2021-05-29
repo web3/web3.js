@@ -1743,7 +1743,7 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getLogs',
                 [
                     {
@@ -1758,6 +1758,19 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        ['logIndex', 'transactionIndex', 'blockNumber'],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting logs: ${error.message}`);
         }
