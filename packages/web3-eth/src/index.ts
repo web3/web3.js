@@ -3,7 +3,7 @@ import {
     CallOptions,
     RpcResponse,
     SubscriptionResponse,
-    RpcParams
+    RpcParams,
 } from 'web3-providers-base/types';
 
 import {
@@ -44,7 +44,7 @@ export default class Web3Eth {
             {
                 ...callOptions?.rpcOptions,
                 method,
-                params
+                params,
             },
             callOptions?.providerCallOptions
         );
@@ -105,11 +105,7 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'net_version',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('net_version', [], callOptions);
         } catch (error) {
             throw Error(`Error getting network version: ${error.message}`);
         }
@@ -185,13 +181,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Object with sync status data or false when not syncing
      */
-    async getSyncing(callOptions?: CallOptions): Promise<EthSyncingResult | SubscriptionResponse> {
+    async getSyncing(
+        callOptions?: CallOptions
+    ): Promise<EthSyncingResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_syncing',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_syncing', [], callOptions);
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
         }
@@ -204,13 +198,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} The current coinbase address
      */
-    async getCoinbase(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
+    async getCoinbase(
+        callOptions?: CallOptions
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_coinbase',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_coinbase', [], callOptions);
         } catch (error) {
             throw Error(`Error getting coinbase address: ${error.message}`);
         }
@@ -223,13 +215,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} true if the client is mining, otherwise false
      */
-    async getMining(callOptions?: CallOptions): Promise<EthBooleanResult | SubscriptionResponse> {
+    async getMining(
+        callOptions?: CallOptions
+    ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_mining',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_mining', [], callOptions);
         } catch (error) {
             throw Error(`Error getting mining status: ${error.message}`);
         }
@@ -242,13 +232,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Number of hashes per second
      */
-    async getHashRate(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
+    async getHashRate(
+        callOptions?: CallOptions
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_hashrate',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_hashrate', [], callOptions);
         } catch (error) {
             throw Error(`Error getting hash rate: ${error.message}`);
         }
@@ -261,13 +249,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current gas price in wei
      */
-    async getGasPrice(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
+    async getGasPrice(
+        callOptions?: CallOptions
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_gasPrice',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_gasPrice', [], callOptions);
         } catch (error) {
             throw Error(`Error getting gas price: ${error.message}`);
         }
@@ -280,13 +266,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of addresses owned by the client
      */
-    async getAccounts(callOptions?: CallOptions): Promise<EthAccountsResult | SubscriptionResponse> {
+    async getAccounts(
+        callOptions?: CallOptions
+    ): Promise<EthAccountsResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_accounts',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_accounts', [], callOptions);
         } catch (error) {
             throw Error(`Error getting accounts: ${error.message}`);
         }
@@ -299,7 +283,9 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Hex string representing current block number client is on
      */
-    async getBlockNumber(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
+    async getBlockNumber(
+        callOptions?: CallOptions
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_blockNumber',
@@ -1015,7 +1001,9 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Filter id
      */
-    async newBlockFilter(callOptions?: CallOptions): Promise<EthStringResult | SubscriptionResponse> {
+    async newBlockFilter(
+        callOptions?: CallOptions
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_newBlockFilter',
@@ -1148,13 +1136,11 @@ export default class Web3Eth {
      * @param {string} rpcOptions.jsonrpc JSON RPC version
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
-    async getWork(callOptions?: CallOptions): Promise<EthStringArrayResult | SubscriptionResponse> {
+    async getWork(
+        callOptions?: CallOptions
+    ): Promise<EthStringArrayResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
-                'eth_getWork',
-                [],
-                callOptions
-            );
+            return await this._sendOrSubscribe('eth_getWork', [], callOptions);
         } catch (error) {
             throw Error(`Error getting work: ${error.message}`);
         }
