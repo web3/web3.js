@@ -12,6 +12,15 @@ export type RpcParams = (
     | boolean
     | EthFilter
 )[];
+export type RpcResponseResult =
+    | string
+    | number
+    | boolean
+    | (string | number)[]
+    | { [key: string]: string | number }
+    | BigInt
+    | null
+    | any;
 
 export enum ReturnTypes {
     HexString,
@@ -50,15 +59,7 @@ export interface SendOptions extends CallOptions {
 export interface RpcResponse {
     id: number;
     jsonrpc: string;
-    result:
-        | string
-        | number
-        | boolean
-        | (string | number)[]
-        | { [key: string]: string | number }
-        | BigInt
-        | null
-        | any;
+    result: RpcResponseResult;
 }
 
 export interface SubscriptionResponse {

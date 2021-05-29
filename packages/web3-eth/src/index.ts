@@ -2,6 +2,7 @@ import Web3RequestManager from 'web3-core-requestmanager';
 import {
     CallOptions,
     RpcResponse,
+    RpcResponseResult,
     SubscriptionResponse,
     RpcParams,
     HexString,
@@ -23,19 +24,23 @@ import {
     EthCompiledSolidityResult,
     EthLogResult,
     EthFilter,
-    ValidInput,
+    ValidTypes,
+    ValidTypesEnum,
 } from '../types';
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;
+    private _defaultReturnType: ValidTypes;
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
             providerUrl: options.providerUrl,
         });
+        this._defaultReturnType =
+            options.returnType || ValidTypesEnum.HexString;
     }
 
-    private static _formatInput(input: ValidInput): HexString {
+    private static _formatInput(input: ValidTypes): HexString {
         let formattedInput;
         switch (typeof input) {
             case 'number':
@@ -57,6 +62,55 @@ export default class Web3Eth {
                 );
         }
         return formattedInput;
+    }
+
+    private static _formatOutput(
+        output: ValidTypes,
+        desiredType: ValidTypes
+    ): ValidTypes {
+        // Short circuit if output and desiredType are HexString
+        if (
+            desiredType === ValidTypesEnum.HexString &&
+            typeof output === 'string' &&
+            /0x[0-9A-Fa-f]/i.test(output)
+        ) {
+            return output;
+        }
+        // Doing this allows us to assume we're always converting
+        // from HexString to desiredType
+        let formattedOutput: ValidTypes = this._formatInput(output);
+        switch (desiredType) {
+            case ValidTypesEnum.number:
+                formattedOutput = parseInt(formattedOutput, 16);
+                break;
+            case ValidTypesEnum.NumberString:
+                formattedOutput = BigInt(formattedOutput).toString();
+                break;
+            case ValidTypesEnum.BigInt:
+                formattedOutput = BigInt(formattedOutput);
+                break;
+            default:
+                throw Error(
+                    `Provided desiredType: ${desiredType} is not supported`
+                );
+        }
+        return formattedOutput;
+    }
+
+    private static _formatOutputHelper(
+        rpcResponseResult: RpcResponseResult,
+        formattableProperties: string[],
+        desiredType: ValidTypes
+    ): RpcResponseResult {
+        let formattedResponseResult = rpcResponseResult;
+        for (const formattableProperty of formattableProperties) {
+            formattedResponseResult[formattableProperty] =
+                Web3Eth._formatOutput(
+                    rpcResponseResult[formattableProperty],
+                    desiredType
+                );
+        }
+        return formattedResponseResult;
     }
 
     private _sendOrSubscribe(
@@ -87,11 +141,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'web3_clientVersion',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -132,7 +199,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe('net_version', [], callOptions);
+            let response = await this._sendOrSubscribe(
+                'net_version',
+                [],
+                callOptions
+            );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting network version: ${error.message}`);
         }
@@ -168,13 +252,26 @@ export default class Web3Eth {
      */
     async getNetworkPeerCount(
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult | SubscriptionResponse> {
+    ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'net_peerCount',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting network peer count: ${error.message}`);
         }
@@ -191,11 +288,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_protocolVersion',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting protocol version: ${error.message}`);
         }
@@ -212,7 +322,28 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthSyncingResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe('eth_syncing', [], callOptions);
+            let response = await this._sendOrSubscribe(
+                'eth_syncing',
+                [],
+                callOptions
+            );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                // @ts-ignore We verify result exists, but TypeScript complains:
+                // Property 'result' does not exist on type 'SubscriptionResponse'
+                if (response.result !== false) {
+                    response = {
+                        ...response,
+                        result: Web3Eth._formatOutputHelper(
+                            // @ts-ignore
+                            response.result,
+                            ['startingBlock', 'currentBlock', 'highestBlock'],
+                            this._defaultReturnType
+                        ),
+                    };
+                }
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
         }
@@ -263,7 +394,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe('eth_hashrate', [], callOptions);
+            let response = await this._sendOrSubscribe(
+                'eth_hashrate',
+                [],
+                callOptions
+            );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting hash rate: ${error.message}`);
         }
@@ -280,7 +428,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe('eth_gasPrice', [], callOptions);
+            let response = await this._sendOrSubscribe(
+                'eth_gasPrice',
+                [],
+                callOptions
+            );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting gas price: ${error.message}`);
         }
@@ -314,11 +479,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_blockNumber',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting block number: ${error.message}`);
         }
@@ -339,11 +517,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getBalance',
                 [address, Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting balance: ${error.message}`);
         }
@@ -361,12 +552,12 @@ export default class Web3Eth {
      */
     async getStorageAt(
         address: HexString,
-        storagePosition: ValidInput,
+        storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getStorageAt',
                 [
                     address,
@@ -375,6 +566,19 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting storage value: ${error.message}`);
         }
@@ -395,11 +599,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getTransactionCount',
                 [address, Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting transaction count: ${error.message}`);
         }
@@ -419,11 +636,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getBlockTransactionCountByHash',
                 [blockHash],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by hash: ${error.message}`
@@ -444,11 +674,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getBlockTransactionCountByNumber',
                 [Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by number: ${error.message}`
@@ -470,11 +713,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getUncleCountByBlockHash',
                 [blockHash],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by hash: ${error.message}`
@@ -495,11 +751,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getUncleCountByBlockNumber',
                 [Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by number: ${error.message}`
@@ -673,9 +942,8 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Discuss formatting result type
     /**
-     * TODO Result is probably more than hex string, or perhpas should be decoded
-     *
      * Executes a new message call immediately without creating a transaction on the block chain
      * @param {object} transaction Ethereum transaction
      * @param {string} transaction.from Address transaction will be sent from
@@ -741,7 +1009,7 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_estimateGas',
                 [
                     {
@@ -762,6 +1030,19 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting gas estimate: ${error.message}`);
         }
@@ -782,11 +1063,33 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getBlockByHash',
                 [blockHash, returnFullTxs],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'number',
+                            'nonce',
+                            'difficulty',
+                            'totalDifficulty',
+                            'size',
+                            'gasLimit',
+                            'gasUsed',
+                            'timestamp',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting block by hash: ${error.message}`);
         }
@@ -807,11 +1110,33 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getBlockByNumber',
                 [Web3Eth._formatInput(blockIdentifier), returnFullTxs],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'number',
+                            'nonce',
+                            'difficulty',
+                            'totalDifficulty',
+                            'size',
+                            'gasLimit',
+                            'gasUsed',
+                            'timestamp',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting block by number: ${error.message}`);
         }
@@ -830,11 +1155,32 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getTransactionByHash',
                 [txHash],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'blockNumber',
+                            'gas',
+                            'gasPrice',
+                            'nonce',
+                            'transactionIndex',
+                            'values',
+                            'v',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting transaction by hash: ${error.message}`);
         }
@@ -851,15 +1197,36 @@ export default class Web3Eth {
      */
     async getTransactionByBlockHashAndIndex(
         blockHash: HexString,
-        transactionIndex: ValidInput,
+        transactionIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getTransactionByBlockHashAndIndex',
                 [blockHash, Web3Eth._formatInput(transactionIndex)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'blockNumber',
+                            'gas',
+                            'gasPrice',
+                            'nonce',
+                            'transactionIndex',
+                            'values',
+                            'v',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting transaction by block hash and index: ${error.message}`
@@ -878,11 +1245,11 @@ export default class Web3Eth {
      */
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        transactionIndex: ValidInput,
+        transactionIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getTransactionByBlockNumberAndIndex',
                 [
                     Web3Eth._formatInput(blockIdentifier),
@@ -890,6 +1257,27 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'blockNumber',
+                            'gas',
+                            'gasPrice',
+                            'nonce',
+                            'transactionIndex',
+                            'values',
+                            'v',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting transaction by block number and index: ${error.message}`
@@ -910,11 +1298,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getTransactionReceipt',
                 [txHash],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        ['blockNumber', 'cumulativeGasUsed', 'gasUsed'],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting transaction reciept: ${error.message}`);
         }
@@ -931,15 +1332,37 @@ export default class Web3Eth {
      */
     async getUncleByBlockHashAndIndex(
         blockHash: HexString,
-        uncleIndex: ValidInput,
+        uncleIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getUncleByBlockHashAndIndex',
                 [blockHash, Web3Eth._formatInput(uncleIndex)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'number',
+                            'nonce',
+                            'difficulty',
+                            'totalDifficulty',
+                            'size',
+                            'gasLimit',
+                            'gasUsed',
+                            'timestamp',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting uncle by block hash and index: ${error.message}`
@@ -958,11 +1381,11 @@ export default class Web3Eth {
      */
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        uncleIndex: ValidInput,
+        uncleIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getUncleByBlockNumberAndIndex',
                 [
                     Web3Eth._formatInput(blockIdentifier),
@@ -970,6 +1393,28 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        [
+                            'number',
+                            'nonce',
+                            'difficulty',
+                            'totalDifficulty',
+                            'size',
+                            'gasLimit',
+                            'gasUsed',
+                            'timestamp',
+                        ],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error getting uncle by block number and index: ${error.message}`
@@ -1088,7 +1533,7 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_newFilter',
                 [
                     {
@@ -1103,6 +1548,19 @@ export default class Web3Eth {
                 ],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error creating filter: ${error.message}`);
         }
@@ -1119,11 +1577,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_newBlockFilter',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error creating block filter: ${error.message}`);
         }
@@ -1140,11 +1611,24 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_newPendingTransactionFilter',
                 [],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutput(
+                        // @ts-ignore We verify result exists, but TypeScript complains:
+                        // Property 'result' does not exist on type 'SubscriptionResponse'
+                        response.result,
+                        callOptions?.returnType || this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(
                 `Error creating pending transaction filter: ${error.message}`
@@ -1161,7 +1645,7 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
      */
     async uninstallFilter(
-        filterId: ValidInput,
+        filterId: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
@@ -1184,15 +1668,28 @@ export default class Web3Eth {
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterChanges(
-        filterId: ValidInput,
+        filterId: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getFilterChanges',
                 [Web3Eth._formatInput(filterId)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        ['logIndex', 'transactionIndex', 'blockNumber'],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
@@ -1207,15 +1704,28 @@ export default class Web3Eth {
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterLogs(
-        filterId: ValidInput,
+        filterId: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthLogResult | SubscriptionResponse> {
         try {
-            return await this._sendOrSubscribe(
+            let response = await this._sendOrSubscribe(
                 'eth_getFilterLogs',
                 [Web3Eth._formatInput(filterId)],
                 callOptions
             );
+            // Check if not SubscriptionResponse
+            if (response.hasOwnProperty('result')) {
+                response = {
+                    ...response,
+                    result: Web3Eth._formatOutputHelper(
+                        // @ts-ignore
+                        response.result,
+                        ['logIndex', 'transactionIndex', 'blockNumber'],
+                        this._defaultReturnType
+                    ),
+                };
+            }
+            return response;
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
@@ -1281,7 +1791,7 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitWork(
-        nonce: ValidInput,
+        nonce: ValidTypes,
         powHash: HexString,
         digest: HexString,
         callOptions?: CallOptions
@@ -1307,8 +1817,8 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitHashRate(
-        hashRate: ValidInput,
-        clientId: ValidInput,
+        hashRate: ValidTypes,
+        clientId: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {

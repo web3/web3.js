@@ -1,15 +1,24 @@
-import { HexString, NumberString } from 'web3-providers-base/types';
-import { HttpRpcResponse } from 'web3-providers-http/types';
+import {
+    HexString,
+    NumberString,
+    RpcResponse,
+} from 'web3-providers-base/types';
 
 export enum BlockTags {
     latest = 'latest',
     earliest = 'earliest',
     pending = 'pending',
 }
+export enum ValidTypesEnum {
+    number = 'number',
+    HexString = 'HexString',
+    NumberString = 'NumberString',
+    BigInt = 'BigInt',
+}
 
-export type ValidInput = number | HexString | NumberString | BigInt;
+export type ValidTypes = number | HexString | NumberString | BigInt;
 
-export type BlockIdentifier = ValidInput | BlockTags;
+export type BlockIdentifier = ValidTypes | BlockTags;
 
 export type EthLog = {
     removed: boolean;
@@ -32,11 +41,11 @@ export type EthLog = {
 export type EthTransaction = {
     from: HexString;
     to?: HexString;
-    gas?: ValidInput;
-    gasPrice?: ValidInput;
-    value?: ValidInput;
+    gas?: ValidTypes;
+    gasPrice?: ValidTypes;
+    value?: ValidTypes;
     data?: HexString;
-    nonce?: ValidInput;
+    nonce?: ValidTypes;
 };
 
 export type EthMinedTransaction = {
@@ -122,25 +131,26 @@ export type EthFilter = {
 export interface Web3EthOptions {
     packageName?: string;
     providerUrl: string;
+    returnType?: ValidTypes;
 }
 
 export interface EthCallTransaction extends EthTransaction {
     to: string;
 }
 
-export interface EthStringResult extends HttpRpcResponse {
+export interface EthStringResult extends RpcResponse {
     result: string;
 }
 
-export interface EthStringArrayResult extends HttpRpcResponse {
+export interface EthStringArrayResult extends RpcResponse {
     result: string[];
 }
 
-export interface EthBooleanResult extends HttpRpcResponse {
+export interface EthBooleanResult extends RpcResponse {
     result: boolean;
 }
 
-export interface EthSyncingResult extends HttpRpcResponse {
+export interface EthSyncingResult extends RpcResponse {
     result:
         | {
               startingBlock: string;
@@ -150,26 +160,26 @@ export interface EthSyncingResult extends HttpRpcResponse {
         | false;
 }
 
-export interface EthAccountsResult extends HttpRpcResponse {
+export interface EthAccountsResult extends RpcResponse {
     result: string[];
 }
 
-export interface EthBlockResult extends HttpRpcResponse {
+export interface EthBlockResult extends RpcResponse {
     result: EthBlock | null;
 }
 
-export interface EthTransactionResult extends HttpRpcResponse {
+export interface EthTransactionResult extends RpcResponse {
     result: EthMinedTransaction | null;
 }
 
-export interface EthTransactionReceiptResult extends HttpRpcResponse {
+export interface EthTransactionReceiptResult extends RpcResponse {
     result: EthTransactionReceipt | null;
 }
 
-export interface EthCompiledSolidityResult extends HttpRpcResponse {
+export interface EthCompiledSolidityResult extends RpcResponse {
     result: EthCompiledSolidity;
 }
 
-export interface EthLogResult extends HttpRpcResponse {
+export interface EthLogResult extends RpcResponse {
     result: EthLog[];
 }
