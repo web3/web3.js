@@ -930,14 +930,14 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockHashAndIndex(
-        blockHash: string,
-        uncleIndex: string,
+        blockHash: HexString,
+        uncleIndex: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getUncleByBlockHashAndIndex',
-                [blockHash, uncleIndex],
+                [blockHash, Web3Eth._formatInput(uncleIndex)],
                 callOptions
             );
         } catch (error) {
@@ -958,13 +958,16 @@ export default class Web3Eth {
      */
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        uncleIndex: string,
+        uncleIndex: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getUncleByBlockNumberAndIndex',
-                [blockIdentifier, uncleIndex],
+                [
+                    Web3Eth._formatInput(blockIdentifier),
+                    Web3Eth._formatInput(uncleIndex),
+                ],
                 callOptions
             );
         } catch (error) {
@@ -1004,7 +1007,7 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSolidity(
-        sourceCode: string,
+        sourceCode: HexString,
         callOptions?: CallOptions
     ): Promise<EthCompiledSolidityResult | SubscriptionResponse> {
         try {
@@ -1029,7 +1032,7 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileLLL(
-        sourceCode: string,
+        sourceCode: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -1052,7 +1055,7 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSerpent(
-        sourceCode: string,
+        sourceCode: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -1087,7 +1090,17 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_newFilter',
-                [filter],
+                [
+                    {
+                        ...filter,
+                        fromBlock: filter.fromBlock
+                            ? Web3Eth._formatInput(filter.fromBlock)
+                            : undefined,
+                        toBlock: filter.toBlock
+                            ? Web3Eth._formatInput(filter.toBlock)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -1148,13 +1161,13 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
      */
     async uninstallFilter(
-        filterId: string,
+        filterId: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_uninstallFilter',
-                [filterId],
+                [Web3Eth._formatInput(filterId)],
                 callOptions
             );
         } catch (error) {
@@ -1171,13 +1184,13 @@ export default class Web3Eth {
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterChanges(
-        filterId: string,
+        filterId: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthLogResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getFilterChanges',
-                [filterId],
+                [Web3Eth._formatInput(filterId)],
                 callOptions
             );
         } catch (error) {
@@ -1194,13 +1207,13 @@ export default class Web3Eth {
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterLogs(
-        filterId: string,
+        filterId: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthLogResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getFilterLogs',
-                [filterId],
+                [Web3Eth._formatInput(filterId)],
                 callOptions
             );
         } catch (error) {
@@ -1222,7 +1235,17 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_getLogs',
-                [filter],
+                [
+                    {
+                        ...filter,
+                        fromBlock: filter.fromBlock
+                            ? Web3Eth._formatInput(filter.fromBlock)
+                            : undefined,
+                        toBlock: filter.toBlock
+                            ? Web3Eth._formatInput(filter.toBlock)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -1258,15 +1281,15 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitWork(
-        nonce: string,
-        powHash: string,
-        digest: string,
+        nonce: ValidInput,
+        powHash: HexString,
+        digest: HexString,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_submitWork',
-                [nonce, powHash, digest],
+                [Web3Eth._formatInput(nonce), powHash, digest],
                 callOptions
             );
         } catch (error) {
@@ -1284,14 +1307,17 @@ export default class Web3Eth {
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitHashRate(
-        hashRate: string,
-        clientId: string,
+        hashRate: ValidInput,
+        clientId: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_submitHashRate',
-                [hashRate, clientId],
+                [
+                    Web3Eth._formatInput(hashRate),
+                    Web3Eth._formatInput(clientId),
+                ],
                 callOptions
             );
         } catch (error) {

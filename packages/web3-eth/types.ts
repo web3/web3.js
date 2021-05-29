@@ -114,9 +114,9 @@ export type EthCompiledSolidity = {
 export type EthFilter = {
     fromBlock?: BlockIdentifier;
     toBlock?: BlockIdentifier;
-    address?: string;
-    topics?: string | null | string[][];
-    blochHash?: string;
+    address?: HexString;
+    topics?: HexString | null | HexString[][];
+    blockHash?: HexString;
 };
 
 export interface Web3EthOptions {
