@@ -4,6 +4,7 @@ import {
     RpcResponse,
     SubscriptionResponse,
     RpcParams,
+    HexString,
 } from 'web3-providers-base/types';
 
 import {
@@ -22,6 +23,7 @@ import {
     EthCompiledSolidityResult,
     EthLogResult,
     EthFilter,
+    ValidInput,
 } from '../types';
 
 export default class Web3Eth {
@@ -31,6 +33,30 @@ export default class Web3Eth {
         this._requestManager = new Web3RequestManager({
             providerUrl: options.providerUrl,
         });
+    }
+
+    private static _formatInput(input: ValidInput): HexString {
+        let formattedInput;
+        switch (typeof input) {
+            case 'number':
+                formattedInput = input.toString(16);
+                break;
+            case 'string':
+                // Test if hexadecimal, possibly prefixed with 0x
+                /(?:0x)?[0-9A-Fa-f]/i.test(input)
+                    ? (formattedInput =
+                          input.substr(0, 2) === '0x' ? input : `0x${input}`)
+                    : // If not hexidecimal, assume it's a number string and convert
+                      (formattedInput = `0x${BigInt(input).toString(16)}`);
+                break;
+            case 'bigint':
+                formattedInput = `0x${BigInt(input).toString(16)}`;
+            default:
+                throw Error(
+                    `Provided input: ${input} is not a valid type (number, HexString, NumberString, or BigInt)`
+                );
+        }
+        return formattedInput;
     }
 
     private _sendOrSubscribe(
@@ -71,6 +97,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Discuss input format
     /**
      * Returns Keccak-256 (not the standardized SHA3-256) of the given data
      * @param {string} data Data to convert into SHA3 hash
@@ -307,14 +334,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing current balance in wei
      */
     async getBalance(
-        address: string,
+        address: HexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getBalance',
-                [address, blockIdentifier],
+                [address, Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -333,15 +360,19 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing value at {storagePosition}
      */
     async getStorageAt(
-        address: string,
-        storagePosition: string,
+        address: HexString,
+        storagePosition: ValidInput,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getStorageAt',
-                [address, storagePosition, blockIdentifier],
+                [
+                    address,
+                    Web3Eth._formatInput(storagePosition),
+                    Web3Eth._formatInput(blockIdentifier),
+                ],
                 callOptions
             );
         } catch (error) {
@@ -359,14 +390,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of transactions sent by {address}
      */
     async getTransactionCount(
-        address: string,
+        address: HexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getTransactionCount',
-                [address, blockIdentifier],
+                [address, Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -374,6 +405,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Discuss input format
     /**
      * Returns the number of transactions in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query transaction count of
@@ -383,7 +415,7 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of transactions in block
      */
     async getBlockTransactionCountByHash(
-        blockHash: string,
+        blockHash: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -414,7 +446,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_getBlockTransactionCountByNumber',
-                [blockIdentifier],
+                [Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -424,6 +456,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Discuss input format
     /**
      * Returns the number of uncles in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query
@@ -433,7 +466,7 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of uncles in block
      */
     async getUncleCountByBlockHash(
-        blockHash: string,
+        blockHash: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -464,7 +497,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_getUncleCountByBlockNumber',
-                [blockIdentifier],
+                [Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -484,14 +517,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing the code at {address}
      */
     async getCode(
-        address: string,
+        address: HexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getCode',
-                [address, blockIdentifier],
+                [address, Web3Eth._formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -499,6 +532,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Discuss input format
     /**
      * Calculates an Ethereum specific signature
      * @param {string} address Address to use to sign {data}
@@ -509,8 +543,8 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing signed message
      */
     async sign(
-        address: string,
-        message: string,
+        address: HexString,
+        message: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -546,7 +580,23 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_signTransaction',
-                [transaction],
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? Web3Eth._formatInput(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? Web3Eth._formatInput(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? Web3Eth._formatInput(transaction.nonce)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -576,7 +626,23 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_sendTransaction',
-                [transaction],
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? Web3Eth._formatInput(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? Web3Eth._formatInput(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? Web3Eth._formatInput(transaction.nonce)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -593,7 +659,7 @@ export default class Web3Eth {
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendRawTransaction(
-        rawTransaction: string,
+        rawTransaction: HexString,
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
@@ -631,7 +697,23 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_call',
-                [transaction],
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? Web3Eth._formatInput(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? Web3Eth._formatInput(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? Web3Eth._formatInput(transaction.nonce)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -661,7 +743,23 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_estimateGas',
-                [transaction],
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? Web3Eth._formatInput(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? Web3Eth._formatInput(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? Web3Eth._formatInput(transaction.nonce)
+                            : undefined,
+                    },
+                ],
                 callOptions
             );
         } catch (error) {
@@ -679,7 +777,7 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByHash(
-        blockHash: string,
+        blockHash: HexString,
         returnFullTxs: boolean,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
@@ -711,7 +809,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_getBlockByNumber',
-                [blockIdentifier, returnFullTxs],
+                [Web3Eth._formatInput(blockIdentifier), returnFullTxs],
                 callOptions
             );
         } catch (error) {
@@ -728,7 +826,7 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByHash(
-        txHash: string,
+        txHash: HexString,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
@@ -752,14 +850,14 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockHashAndIndex(
-        blockHash: string,
-        transactionIndex: string,
+        blockHash: HexString,
+        transactionIndex: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getTransactionByBlockHashAndIndex',
-                [blockHash, transactionIndex],
+                [blockHash, Web3Eth._formatInput(transactionIndex)],
                 callOptions
             );
         } catch (error) {
@@ -780,13 +878,16 @@ export default class Web3Eth {
      */
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        transactionIndex: string,
+        transactionIndex: ValidInput,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
             return await this._sendOrSubscribe(
                 'eth_getTransactionByBlockNumberAndIndex',
-                [blockIdentifier, transactionIndex],
+                [
+                    Web3Eth._formatInput(blockIdentifier),
+                    Web3Eth._formatInput(transactionIndex),
+                ],
                 callOptions
             );
         } catch (error) {
@@ -805,7 +906,7 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no receipt was found
      */
     async getTransactionReceipt(
-        txHash: string,
+        txHash: HexString,
         callOptions?: CallOptions
     ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
         try {

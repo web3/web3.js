@@ -1,3 +1,4 @@
+import { HexString, NumberString } from 'web3-providers-base/types';
 import { HttpRpcResponse } from 'web3-providers-http/types';
 
 export enum BlockTags {
@@ -6,10 +7,9 @@ export enum BlockTags {
     pending = 'pending',
 }
 
-/**
- * @param BlockIdentifier If string is passed, it must be a hex string
- */
-export type BlockIdentifier = number | string | BlockTags;
+export type ValidInput = number | HexString | NumberString | BigInt;
+
+export type BlockIdentifier = ValidInput | BlockTags;
 
 export type EthLog = {
     removed: boolean;
@@ -30,13 +30,13 @@ export type EthLog = {
  * @param data optional, but required if {to} is not provided
  */
 export type EthTransaction = {
-    from: string;
-    to?: string;
-    gas?: string;
-    gasPrice?: string;
-    value?: string;
-    data?: string;
-    nonce?: number;
+    from: HexString;
+    to?: HexString;
+    gas?: ValidInput;
+    gasPrice?: ValidInput;
+    value?: ValidInput;
+    data?: HexString;
+    nonce?: ValidInput;
 };
 
 export type EthMinedTransaction = {
