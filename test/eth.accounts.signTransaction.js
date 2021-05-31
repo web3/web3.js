@@ -76,11 +76,6 @@ var tests = [
             s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
             // signature from eth_signTransaction
             oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
-            // for gasPrice = 0
-            // rawTransaction: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
-            // transactionHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a",
-            // messageHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a"
-            // for gasPrice = 1
             rawTransaction: "0xf85f8001827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808026a074dcecc6b8ad09ca09882ac1088eac145e799f56ea3f5b5fe8fcb52bbd3ea4f7a03d49e02af9c239b1b8aea8a7ac9162862dec03207f9f59bc38a4f2b9e42077a9",
             transactionHash: "0xfe1f3da48513409d62210b76d3493190fed19e4d54f0aa4283715184bff68e0b",
             messageHash: "0xfe1f3da48513409d62210b76d3493190fed19e4d54f0aa4283715184bff68e0b"
@@ -129,11 +124,6 @@ var tests = [
         s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         // signature from eth_signTransaction
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
-        // for gasPrice = 0
-        // rawTransaction: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
-        // transactionHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a",
-        // messageHash: "0xb0c5e2c6b29eeb0b9c1d63eaa8b0f93c02ead18ae01cb7fc795b0612d3e9d55a"
-        // for gasPrice = 10
         rawTransaction: "0xf85f800a827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808025a03cbfff5b8ef4588b930ecbf9b85388795875edf814dfc6c71884f99b6d7555cca057142e729c1c83bfccb2785e629fc32dffb2e613df565e78e119aa4694cb1df9",
         transactionHash: "0x247533e8b3d12185a871fca5503b7e86f2fecef4a43ded244d5c18ec6b6b057f",
         messageHash: "0x247533e8b3d12185a871fca5503b7e86f2fecef4a43ded244d5c18ec6b6b057f"
