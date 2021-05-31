@@ -383,6 +383,17 @@ Released with 1.0.0-beta.37 code base.
 
 - Accidental commit (yarn-error.log) (#4062)
 
+## [1.4.0]
+
+### Added
+
+- Berlin Transaction Support (#4083)
+
+### Changed
+
+### Removes
+
+
 ## [Unreleased]
 
-## [1.3.7]
+## [1.4.1]
