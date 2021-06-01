@@ -1,4 +1,4 @@
-import { ProviderOptions } from 'web3-providers-base/types';
+import { ProviderOptions, RpcOptions } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
 
 import Web3ProvidersHttp from '../../src/index';
@@ -7,16 +7,15 @@ describe('Web3ProvidersHttp.subscribe', () => {
     const providerOptions: ProviderOptions = {
         providerUrl: 'http://127.0.0.1:8545',
     };
-    const subscribeOptions = {
+    const rpcOptions: RpcOptions = {
         id: 42,
         jsonrpc: '2.0',
         method: 'eth_blockNumber',
         params: [],
-        milisecondsBetweenRequests: 1000,
     };
     const expectedResult = {
-        id: subscribeOptions.id,
-        jsonrpc: subscribeOptions.jsonrpc,
+        id: rpcOptions.id,
+        jsonrpc: rpcOptions.jsonrpc,
         result: '0x1',
     };
 
@@ -37,7 +36,7 @@ describe('Web3ProvidersHttp.subscribe', () => {
 
     it('should return eventEmitter and subscriptionId', (done) => {
         const { eventEmitter, subscriptionId } =
-            web3ProvidersHttp.subscribe(subscribeOptions);
+            web3ProvidersHttp.subscribe(rpcOptions);
         expect(typeof subscriptionId).toBe('number');
         expect(eventEmitter instanceof EventEmitter).toBeTruthy();
         // Giving enough time for subscription to be initialized

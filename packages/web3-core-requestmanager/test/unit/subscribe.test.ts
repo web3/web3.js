@@ -3,13 +3,13 @@ import Web3ProviderHttp from 'web3-providers-http';
 
 import Web3RequestManager from '../../src/index';
 
-describe('Web3RequestManager.send', () => {
-    it('should call Web3ProviderHttp.send', async () => {
+describe('Web3RequestManager.subscribe', () => {
+    it('should call Web3ProviderHttp.subscribe', async () => {
         // Replace method so network call isn't made
-        Web3ProviderHttp.prototype.send = jest.fn();
-        const web3ProviderHttpSendSpy = jest.spyOn(
+        Web3ProviderHttp.prototype.subscribe = jest.fn();
+        const web3ProviderHttpSubscribeSpy = jest.spyOn(
             Web3ProviderHttp.prototype,
-            'send'
+            'subscribe'
         );
         const providerOptions = {
             providerUrl: 'http://127.0.0.1:8545',
@@ -21,9 +21,9 @@ describe('Web3RequestManager.send', () => {
             params: ['bar'],
         };
         const web3RequestManager = new Web3RequestManager(providerOptions);
-        await web3RequestManager.send(rpcOptions);
-        expect(web3ProviderHttpSendSpy).toHaveBeenCalledTimes(1);
-        expect(web3ProviderHttpSendSpy).toHaveBeenCalledWith(
+        await web3RequestManager.subscribe(rpcOptions);
+        expect(web3ProviderHttpSubscribeSpy).toHaveBeenCalledTimes(1);
+        expect(web3ProviderHttpSubscribeSpy).toHaveBeenCalledWith(
             rpcOptions,
             undefined
         );

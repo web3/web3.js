@@ -76,9 +76,11 @@ export default class Web3Eth {
         ) {
             return output;
         }
+
         // Doing this allows us to assume we're always converting
         // from HexString to desiredType
         let formattedOutput: ValidTypes = this._formatInput(output);
+
         switch (desiredType) {
             case ValidTypesEnum.number:
                 formattedOutput = parseInt(formattedOutput, 16);

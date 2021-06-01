@@ -1,11 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
-import { RpcOptions } from 'web3-providers-base/types';
+import { RpcOptions, SubscriptionResponse } from 'web3-providers-base/types';
 
 export interface HttpOptions {
     axiosConfig?: AxiosRequestConfig;
-    milisecondsBetweenRequests?: number;
+    subscriptionOptions?: SubscriptionOptions;
 }
 
-export interface SubscriptionOptions extends RpcOptions {
+export interface SubscriptionOptions {
     milisecondsBetweenRequests?: number;
 }
