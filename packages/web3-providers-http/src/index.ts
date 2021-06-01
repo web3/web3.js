@@ -3,15 +3,12 @@ import Web3ProviderBase from 'web3-providers-base';
 import {
     ProviderOptions,
     IWeb3Provider,
-    BaseRpcOptions,
     RpcResponse,
-    CallOptions,
     RpcOptions,
     SubscriptionResponse,
-    ProviderCallOptions,
 } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
-import { HttpOptions, SubscriptionOptions } from '../types';
+import { HttpOptions } from '../types';
 
 export default class Web3ProvidersHttp
     extends Web3ProviderBase
@@ -24,12 +21,12 @@ export default class Web3ProvidersHttp
 
     constructor(options: ProviderOptions) {
         super(options);
-        this._httpClient = Web3ProvidersHttp.createHttpClient(
+        this._httpClient = Web3ProvidersHttp._createHttpClient(
             options.providerUrl
         );
     }
 
-    static validateProviderUrl(providerUrl: string): boolean {
+    private static _validateProviderUrl(providerUrl: string): boolean {
         try {
             return (
                 typeof providerUrl !== 'string' ||
@@ -40,9 +37,9 @@ export default class Web3ProvidersHttp
         }
     }
 
-    static createHttpClient(baseUrl: string): AxiosInstance {
+    private static _createHttpClient(baseUrl: string): AxiosInstance {
         try {
-            if (!Web3ProvidersHttp.validateProviderUrl(baseUrl))
+            if (!Web3ProvidersHttp._validateProviderUrl(baseUrl))
                 throw Error('Invalid HTTP(S) URL provided');
             return axios.create({ baseURL: baseUrl });
         } catch (error) {
@@ -52,7 +49,7 @@ export default class Web3ProvidersHttp
 
     setProvider(providerUrl: string) {
         try {
-            this._httpClient = Web3ProvidersHttp.createHttpClient(providerUrl);
+            this._httpClient = Web3ProvidersHttp._createHttpClient(providerUrl);
             super.providerUrl = providerUrl;
         } catch (error) {
             throw Error(`Failed to set provider: ${error.message}`);
@@ -62,25 +59,6 @@ export default class Web3ProvidersHttp
     supportsSubscriptions() {
         return true;
     }
-
-    // async send(options: BaseRpcOptions): Promise<RpcResponse> {
-    //     try {
-    //         if (this._httpClient === undefined)
-    //             throw Error('No HTTP client initiliazed');
-    //         const response = await this._httpClient.post('', {
-    //             id:
-    //                 options.id ||
-    //                 Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
-    //             jsonrpc: options.jsonrpc || '2.0',
-    //             method: options.method,
-    //             params: options.params,
-    //         });
-
-    //         return response.data.data ? response.data.data : response.data;
-    //     } catch (error) {
-    //         throw Error(`Error sending: ${error.message}`);
-    //     }
-    // }
 
     async send(
         rpcOptions: RpcOptions,
@@ -140,7 +118,8 @@ export default class Web3ProvidersHttp
                         subscriptionId,
                         httpOptions
                     ),
-                httpOptions?.milisecondsBetweenRequests || 1000
+                httpOptions?.subscriptionOptions?.milisecondsBetweenRequests ||
+                    1000
             );
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
