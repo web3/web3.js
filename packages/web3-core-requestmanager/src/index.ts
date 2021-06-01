@@ -1,23 +1,14 @@
 import Web3ProviderHttp from 'web3-providers-http';
 import {
-    CallOptions,
     ProviderOptions,
     ProviderCallOptions,
     RpcOptions,
     RpcResponse,
-    SendOptions,
     PartialRpcOptions,
     SubscriptionResponse,
 } from 'web3-providers-base/types';
 
-// TODO Make eslint happy
-/* eslint-disable */
-enum ProviderProtocol {
-    UNKNOWN,
-    HTTP,
-    WS,
-    IPC,
-}
+import { ProviderProtocol } from '../types';
 
 export default class Web3RequestManager {
     provider: Web3ProviderHttp | undefined;
