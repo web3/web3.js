@@ -34,7 +34,7 @@ var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('@ethereumjs/tx').Transaction;
+var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 
 
@@ -138,8 +138,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         transactionOptions = {},
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
-    callback = callback || function() {
-    };
+    callback = callback || function() {};
 
     if (!tx) {
         error = new Error('No transaction object given!');
@@ -162,7 +161,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.chainId = transaction.chainId;
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
-
+            
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
@@ -172,7 +171,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    'petersburg'
+                    transaction.hardfork || "berlin"
                 );
 
                 delete transaction.networkId;
@@ -185,7 +184,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || 'petersburg'
+                        transaction.common.hardfork || "berlin",
                     );
 
                     delete transaction.common;
@@ -201,19 +200,19 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
+            console.log({transactionOptions})
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
 
-            var ethTx = Transaction.fromTxData(transaction, transactionOptions);
+            var ethTx = TransactionFactory.fromTxData(transaction, transactionOptions);
             var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
             var validationErrors = signedTx.validate(true);
 
             if (validationErrors.length > 0) {
                 let errorString = 'Signer Error: '
                 for(const validationError of validationErrors) {
-                    errorString = `${errorString} ${validationError}.`
+                    errorString += `${errorString} ${validationError}.`
                 }
                 throw new Error(errorString);
             }

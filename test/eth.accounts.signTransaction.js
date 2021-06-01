@@ -12,7 +12,7 @@ var common = {
         networkId: 1,
         chainId: 1,
     },
-    harfork: 'petersburg',
+    harfork: 'istanbul',
 };
 
 var commonBerlin = {
@@ -27,8 +27,11 @@ var commonBerlin = {
 
 var accessList = [
     {
-      address: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
-      storageKeys: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55'
+      address: '0x0000000000000000000000000000000000000101',
+      storageKeys: [
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "0x00000000000000000000000000000000000000000000000000000000000060a7"
+      ]
     }
 ];
 
@@ -482,25 +485,25 @@ var tests = [
             chainId: 1,
             nonce: 0,
             gasPrice: "20000000000",
-            gas: 21000,
+            gas: 27200,
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
             data: "",
+            type: "0x01",
             common: commonBerlin,
             accessList: accessList
         },
         // signature from eth_signTransaction
-        rawTransaction: "0xf868808504a817c80082520894f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008026a0afa02d193471bb974081585daabf8a751d4decbb519604ac7df612cc11e9226da04bf1bd55e82cebb2b09ed39bbffe35107ea611fa212c2d9a1f1ada4952077118",
-        oldSignature: "0xf868808504a817c80082520894f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008026a0afa02d193471bb974081585daabf8a751d4decbb519604ac7df612cc11e9226da04bf1bd55e82cebb2b09ed39bbffe35107ea611fa212c2d9a1f1ada4952077118",
-        transactionHash: "0xab0f71614c37231d71ae521ce188a9c7c9d5e976124a91f62f9f125348dd0326",
-        messageHash: "0xab0f71614c37231d71ae521ce188a9c7c9d5e976124a91f62f9f125348dd0326"
+        rawTransaction: "0x01f8c601808504a817c800826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a07a49fff8f639e42af36704b16e30fd95823d9ab7e71bf7c231e397dec2c5427ca0773bfdc5e911eedc0470325727426cff3c65329be4701005cd4ea620aacfa335",
+        oldSignature: "0x01f8c601808504a817c800826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a07a49fff8f639e42af36704b16e30fd95823d9ab7e71bf7c231e397dec2c5427ca0773bfdc5e911eedc0470325727426cff3c65329be4701005cd4ea620aacfa335",
+        transactionHash: "0xbac5b9b1d381034a2eaee9d574acaff42b39dc3bc236a6022928828bdb189b92",
+        messageHash: "0xbac5b9b1d381034a2eaee9d574acaff42b39dc3bc236a6022928828bdb189b92"
     },
 ];
 
 describe("eth", function () {
     describe("accounts", function () {
-
         // For each test
         tests.forEach(function (test, i) {
             if (test.error) {
@@ -572,7 +575,6 @@ describe("eth", function () {
                     .then(function (tx) {
                         assert.isObject(tx);
                         assert.isString(tx.rawTransaction);
-
                         done();
                     });
                 });
@@ -711,10 +713,12 @@ describe("eth", function () {
 
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
-
                     testAccount.signTransaction(test.transaction).then(function (tx) {
                         assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     })
                 });
             }
