@@ -27,7 +27,7 @@ var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
+var RLP = require("eth-lib/lib/rlp"); // jshint ignore:line
 var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
@@ -200,7 +200,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-            console.log({transactionOptions})
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }

@@ -12,7 +12,7 @@ var common = {
         networkId: 1,
         chainId: 1,
     },
-    harfork: 'istanbul',
+    hardfork: 'istanbul',
 };
 
 var commonBerlin = {
@@ -490,7 +490,6 @@ var tests = [
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
             value: "1000000000",
             data: "",
-            type: "0x01",
             common: commonBerlin,
             accessList: accessList
         },
