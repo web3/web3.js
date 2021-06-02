@@ -15,6 +15,6 @@ describe('constructs a PLACEHOLDER instance with expected properties', () => {
         // expect(web3ProviderBase).toMatchObject({
         //     _providerUrl: providerOptions.providerUrl
         // })
-        expect(true).toBeTruthy()
+        expect(true).toBeTruthy();
     });
 });
