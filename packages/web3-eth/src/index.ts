@@ -48,14 +48,20 @@ export default class Web3Eth {
                 break;
             case 'string':
                 // Test if hexadecimal, possibly prefixed with 0x
-                /(?:0x)?[0-9A-Fa-f]/i.test(input)
-                    ? (formattedInput =
-                          input.substr(0, 2) === '0x' ? input : `0x${input}`)
-                    : // If not hexidecimal, assume it's a number string and convert
-                      (formattedInput = `0x${BigInt(input).toString(16)}`);
+                if (/^(?:0x)?[0-9A-Fa-f]+/i.test(input)) {
+                    formattedInput =
+                        input.substr(0, 2) === '0x' ? input : `0x${input}`;
+                    // Test if number string
+                } else if (/^[0-9]+/i.test(input)) {
+                    formattedInput = `0x${BigInt(input).toString(16)}`;
+                } else {
+                    // Just a string, don't format
+                    formattedInput = input;
+                }
                 break;
             case 'bigint':
                 formattedInput = `0x${BigInt(input).toString(16)}`;
+                break;
             default:
                 throw Error(
                     `Provided input: ${input} is not a valid type (number, HexString, NumberString, or BigInt)`
@@ -72,7 +78,7 @@ export default class Web3Eth {
         if (
             desiredType === ValidTypesEnum.HexString &&
             typeof output === 'string' &&
-            /0x[0-9A-Fa-f]/i.test(output)
+            /^0x[0-9A-Fa-f]+/i.test(output)
         ) {
             return output;
         }
@@ -85,6 +91,9 @@ export default class Web3Eth {
             case ValidTypesEnum.number:
                 formattedOutput = parseInt(formattedOutput, 16);
                 break;
+            case ValidTypesEnum.HexString:
+                // formattedOutput is already converted to HexString
+                break;
             case ValidTypesEnum.NumberString:
                 formattedOutput = BigInt(formattedOutput).toString();
                 break;
@@ -93,7 +102,7 @@ export default class Web3Eth {
                 break;
             default:
                 throw Error(
-                    `Provided desiredType: ${desiredType} is not supported`
+                    `Error formatting output, provided desiredType: ${desiredType} is not supported`
                 );
         }
         return formattedOutput;
@@ -106,11 +115,22 @@ export default class Web3Eth {
     ): RpcResponseResult {
         let formattedResponseResult = rpcResponseResult;
         for (const formattableProperty of formattableProperties) {
-            formattedResponseResult[formattableProperty] =
-                Web3Eth._formatOutput(
-                    rpcResponseResult[formattableProperty],
-                    desiredType
-                );
+            if (Array.isArray(rpcResponseResult)) {
+                // rpcResponseResult is an array of results
+                // e.g. an array of filter changes or logs
+                for (const result of rpcResponseResult) {
+                    result[formattableProperty] = Web3Eth._formatOutput(
+                        result[formattableProperty],
+                        desiredType
+                    );
+                }
+            } else {
+                formattedResponseResult[formattableProperty] =
+                    Web3Eth._formatOutput(
+                        rpcResponseResult[formattableProperty],
+                        desiredType
+                    );
+            }
         }
         return formattedResponseResult;
     }
@@ -143,24 +163,11 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthStringResult | SubscriptionResponse> {
         try {
-            let response = await this._sendOrSubscribe(
+            return await this._sendOrSubscribe(
                 'web3_clientVersion',
                 [],
                 callOptions
             );
-            // Check if not SubscriptionResponse
-            if (response.hasOwnProperty('result')) {
-                response = {
-                    ...response,
-                    result: Web3Eth._formatOutput(
-                        // @ts-ignore We verify result exists, but TypeScript complains:
-                        // Property 'result' does not exist on type 'SubscriptionResponse'
-                        response.result,
-                        callOptions?.returnType || this._defaultReturnType
-                    ),
-                };
-            }
-            return response;
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -1175,7 +1182,7 @@ export default class Web3Eth {
                             'gasPrice',
                             'nonce',
                             'transactionIndex',
-                            'values',
+                            'value',
                             'v',
                         ],
                         this._defaultReturnType
@@ -1221,7 +1228,7 @@ export default class Web3Eth {
                             'gasPrice',
                             'nonce',
                             'transactionIndex',
-                            'values',
+                            'value',
                             'v',
                         ],
                         this._defaultReturnType
@@ -1272,7 +1279,7 @@ export default class Web3Eth {
                             'gasPrice',
                             'nonce',
                             'transactionIndex',
-                            'values',
+                            'value',
                             'v',
                         ],
                         this._defaultReturnType
@@ -1661,6 +1668,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Polling method for a filter, which returns an array of logs which occurred since last poll
      * @param {string} filterid Id of filter to retrieve changes from
@@ -1697,6 +1705,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching filter with given id
      * @param {string} filterid Id of filter to retrieve
@@ -1733,6 +1742,7 @@ export default class Web3Eth {
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching a given filter object
      * @param {object} rpcOptions RPC options
