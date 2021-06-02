@@ -478,6 +478,7 @@ var tests = [
         error: true
     },
     {
+        // test #23
         address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
         iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
         privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
@@ -494,10 +495,10 @@ var tests = [
             accessList: accessList
         },
         // signature from eth_signTransaction
-        rawTransaction: "0x01f8c601808504a817c800826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a07a49fff8f639e42af36704b16e30fd95823d9ab7e71bf7c231e397dec2c5427ca0773bfdc5e911eedc0470325727426cff3c65329be4701005cd4ea620aacfa335",
+        rawTransaction: "0xf868808504a817c800826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008026a05eb9910092aa52e5ac721f144813d250d6ec445ca8e9c83ac7e60308192d4385a04c17fe1820ac6ee546ff69289de9b1e30ca14d0f261f084a2e02ee03abeb8780",
         oldSignature: "0x01f8c601808504a817c800826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a07a49fff8f639e42af36704b16e30fd95823d9ab7e71bf7c231e397dec2c5427ca0773bfdc5e911eedc0470325727426cff3c65329be4701005cd4ea620aacfa335",
-        transactionHash: "0xbac5b9b1d381034a2eaee9d574acaff42b39dc3bc236a6022928828bdb189b92",
-        messageHash: "0xbac5b9b1d381034a2eaee9d574acaff42b39dc3bc236a6022928828bdb189b92"
+        transactionHash: "0xbc64492479c458424eb3d4694b82c274978fe552859a3b1f872763926ff5313d",
+        messageHash: "0xbc64492479c458424eb3d4694b82c274978fe552859a3b1f872763926ff5313d"
     },
 ];
 
@@ -518,6 +519,9 @@ describe("eth", function () {
                     .catch(function (err) {
                         assert.instanceOf(err, Error);
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -535,6 +539,9 @@ describe("eth", function () {
                         assert.equal(tx.rawTransaction, test.rawTransaction, "rawtx failed");
                         done();
                     })
+                    .catch(e => {
+                        console.log(i, e)
+                    });
                 });
 
                 it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function(done) {
@@ -549,6 +556,9 @@ describe("eth", function () {
                     testAccount.signTransaction(transaction).then(function (tx) {
                         assert.equal(tx.rawTransaction, test.rawTransaction);
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -575,6 +585,9 @@ describe("eth", function () {
                         assert.isObject(tx);
                         assert.isString(tx.rawTransaction);
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -602,6 +615,9 @@ describe("eth", function () {
                         assert.isString(tx.rawTransaction);
 
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -629,6 +645,9 @@ describe("eth", function () {
                         assert.isString(tx.rawTransaction);
 
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -656,6 +675,9 @@ describe("eth", function () {
                         assert.isString(tx.rawTransaction);
 
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
@@ -704,6 +726,9 @@ describe("eth", function () {
                         assert.isString(tx.rawTransaction);
 
                         done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
                     });
                 });
 
