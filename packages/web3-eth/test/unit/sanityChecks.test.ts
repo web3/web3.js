@@ -1,4 +1,8 @@
-import { BaseRpcResponse } from 'web3-providers-base/types';
+import {
+    PartialRpcOptions,
+    ProviderCallOptions,
+    RpcResponse,
+} from 'web3-providers-base/types';
 import Web3RequestManager from 'web3-core-requestmanager';
 
 import Web3Eth from '../../src';
@@ -8,13 +12,15 @@ let web3Eth: Web3Eth;
 let web3RequestManagerSendSpy: jest.SpyInstance;
 
 function checkForExpected(
-    expectedResult: BaseRpcResponse,
-    actualResult: BaseRpcResponse,
-    expectedSendParameters: any
+    expectedResult: RpcResponse,
+    actualResult: RpcResponse,
+    rpcOptions: PartialRpcOptions,
+    callOptions: ProviderCallOptions
 ) {
     expect(actualResult).toMatchObject(expectedResult);
     expect(web3RequestManagerSendSpy).toHaveBeenCalledWith(
-        expectedSendParameters
+        rpcOptions,
+        callOptions
     );
 }
 
@@ -44,9 +50,8 @@ for (const method of testConfig.methods) {
             const result = await web3Eth[method.name](
                 ...(method.parameters || [])
             );
-            const expectedSendParameters = {
+            const rpcOptions = {
                 method: method.rpcMethod,
-                jsonrpc: '2.0',
                 params: method.parameters || [],
             };
             Array.isArray(result)
@@ -54,13 +59,15 @@ for (const method of testConfig.methods) {
                       checkForExpected(
                           method.expectedResult,
                           methodResult,
-                          expectedSendParameters
+                          rpcOptions,
+                          method.callOptions
                       );
                   })
                 : checkForExpected(
                       method.expectedResult,
                       result,
-                      expectedSendParameters
+                      rpcOptions,
+                      method.callOptions
                   );
         });
 
@@ -70,9 +77,8 @@ for (const method of testConfig.methods) {
                 ...(method.parameters || []),
                 testConfig.expectedRpcId
             );
-            const expectedSendParameters = {
+            const rpcOptions = {
                 method: method.rpcMethod,
-                jsonrpc: '2.0',
                 params: method.parameters || [],
             };
             Array.isArray(result)
@@ -80,13 +86,15 @@ for (const method of testConfig.methods) {
                       checkForExpected(
                           method.expectedResult,
                           methodResult,
-                          expectedSendParameters
+                          rpcOptions,
+                          method.callOptions
                       );
                   })
                 : checkForExpected(
                       method.expectedResult,
                       result,
-                      expectedSendParameters
+                      rpcOptions,
+                      method.callOptions
                   );
         });
     });

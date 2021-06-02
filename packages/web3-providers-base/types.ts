@@ -4,7 +4,7 @@ import { EthFilter, EthTransaction } from 'web3-eth/types';
 
 export type HexString = string;
 export type NumberString = string;
-export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
+export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | HexString
     | number

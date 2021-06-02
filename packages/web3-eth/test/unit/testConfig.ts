@@ -1,4 +1,4 @@
-import { BaseRpcResponse } from 'web3-providers-base/types';
+import { ProviderCallOptions, RpcResponse } from 'web3-providers-base/types';
 import { DEFAULT_ACCOUNTS } from '../constants';
 import { BlockTags } from '../../types';
 
@@ -6,7 +6,8 @@ interface Method {
     name: string;
     rpcMethod: string;
     parameters?: any[];
-    expectedResult: BaseRpcResponse;
+    callOptions?: ProviderCallOptions;
+    expectedResult: RpcResponse;
 }
 
 interface TestConfig {
@@ -31,7 +32,6 @@ export const testConfig: TestConfig = {
         {
             name: 'getClientVersion',
             rpcMethod: 'web3_clientVersion',
-            parameters: [],
             expectedResult: {
                 ...expectedResultBase,
                 result: 'Mist/v0.9.3/darwin/go1.4.1',
@@ -52,7 +52,7 @@ export const testConfig: TestConfig = {
             parameters: [],
             expectedResult: {
                 ...expectedResultBase,
-                result: '1',
+                result: '0x1',
             },
         },
         {
@@ -61,7 +61,7 @@ export const testConfig: TestConfig = {
             parameters: [],
             expectedResult: {
                 ...expectedResultBase,
-                result: '1',
+                result: '0x1',
             },
         },
         {
@@ -76,12 +76,19 @@ export const testConfig: TestConfig = {
         {
             name: 'getProtocolVersion',
             rpcMethod: 'eth_protocolVersion',
-            expectedResult: { ...expectedResultBase, result: '54' },
+            expectedResult: { ...expectedResultBase, result: '0x36' },
         },
         {
             name: 'getSyncing',
             rpcMethod: 'eth_syncing',
-            expectedResult: { ...expectedResultBase, result: true },
+            expectedResult: {
+                ...expectedResultBase,
+                result: {
+                    startingBlock: '0x384',
+                    currentBlock: '0x386',
+                    highestBlock: '0x454',
+                },
+            },
         },
         {
             name: 'getCoinbase',
