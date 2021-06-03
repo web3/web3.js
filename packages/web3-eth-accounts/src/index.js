@@ -293,10 +293,17 @@ function _validateTransactionForSigning(tx) {
 
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
+    // Determine if the transaction is typed or not
     var {values, isTyped} = decodeUnknownTxType(rawTx);
+    // This is very hacky but an interim solution until we remove eth-lib
+    // Only thing stopping us from removing eth-lib is the new ethereumjs/tx setup requires txOpts
+    // That makes things a bit tricky for users.
+    // ----
+    // The following removes EIP-2930 related tx information from the rlp decoded tx.
     if (isTyped) {
-        delete values[0]; // tx type
-        delete values[6]; //
+        // EIP-2930
+        values.shift() // remove chainId
+        delete values.splice(6,1); // remove accessList
     }
     var signature = Account.encodeSignature(values.slice(6, 9));
     var recovery = Bytes.toNumber(values[6]);
