@@ -28,13 +28,14 @@ var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
 var RLP = require("eth-lib/lib/rlp"); // jshint ignore:line
+var {decodeUnknownTxType} = require("./helpers");
 var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var {TransactionFactory} = require('@ethereumjs/tx');
+var {TransactionFactory, Transaction, FeeMarketEIP1559Transaction, AccessListEIP2930Transaction} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 
 
@@ -159,8 +160,12 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = transaction.chainId;
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
+            transaction.type = "0x0"; // default to legacy
+            if (transaction.accessList) {
+                // EIP-2930
+                transaction.type = "0x01"
+            }
             
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
@@ -221,7 +226,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             var transactionHash = utils.keccak256(rawTransaction);
 
             var result = {
-                messageHash: '0x' + Buffer.from(signedTx.hash(false)).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
                 v: '0x' + Buffer.from(signedTx.v).toString('hex'),
                 r: '0x' + Buffer.from(signedTx.r).toString('hex'),
                 s: '0x' + Buffer.from(signedTx.s).toString('hex'),
@@ -286,10 +291,13 @@ function _validateTransactionForSigning(tx) {
     return;
 }
 
-
 /* jshint ignore:start */
-Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
+Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
+    var {values, isTyped} = decodeUnknownTxType(rawTx);
+    if (isTyped) {
+        delete values[0]; // tx type
+        delete values[6]; //
+    }
     var signature = Account.encodeSignature(values.slice(6, 9));
     var recovery = Bytes.toNumber(values[6]);
     var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
