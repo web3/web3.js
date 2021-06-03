@@ -24,7 +24,7 @@ var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var Hash = require("eth-lib/lib/hash");
+var { hash } = require('ethereumjs-util');
 var ethereumBloomFilters = require('ethereum-bloom-filters');
 
 
@@ -494,7 +494,7 @@ var sha3 = function (value) {
         value = hexToBytes(value);
     }
 
-    var returnValue = Hash.keccak256(value); // jshint ignore:line
+    var returnValue = hash.keccak256(value); // jshint ignore:line
 
     if(returnValue === SHA3_NULL_S) {
         return null;
@@ -503,7 +503,7 @@ var sha3 = function (value) {
     }
 };
 // expose the under the hood keccak256
-sha3._Hash = Hash;
+sha3._Hash = hash;
 
 /**
  * @method sha3Raw

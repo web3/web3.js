@@ -25,10 +25,8 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
+var { hash, rlp, intToHex } = require('ethereumjs-util');
 var Account = require('eth-lib/lib/account');
-var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
@@ -289,13 +287,13 @@ function _validateTransactionForSigning(tx) {
 
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
+    var values = rlp.decode(rawTx);
     var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
+    var recovery = parseInt(values[6].slice(2), 16);
+    var extraData = recovery < 35 ? [] : [intToHex((recovery - 35) >> 1), '0x', '0x'];
     var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
+    var signingDataHex = rlp.encode(signingData);
+    return Account.recover(hash.keccak256(signingDataHex), signature);
 };
 /* jshint ignore:end */
 
@@ -306,7 +304,7 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return Hash.keccak256s(ethMessage);
+    return hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
