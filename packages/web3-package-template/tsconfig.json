@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.build.json",
+    "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig.json to read more about this file */
+        "outDir": "./lib",
+        "composite": true
+    },
+    "include": ["./src/**/*", "./types.ts"],
+    "exclude": [
+        "./node_modules",
+        "./**/*.spec.ts",
+        "./**/*.test.ts",
+        "./**/lib/**/*",
+        "./jest.config.js"
+    ]
+}
