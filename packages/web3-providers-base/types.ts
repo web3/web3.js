@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import { HttpOptions } from 'web3-providers-http/types';
 import { EthFilter, EthTransaction } from 'web3-eth/types';
+import { HexString, ValidTypesEnum } from 'web3-utils/types';
 
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
@@ -39,7 +40,7 @@ export interface PartialRpcOptions extends Partial<RpcOptions> {
 export interface CallOptions {
     providerCallOptions?: ProviderCallOptions;
     rpcOptions?: Partial<RpcOptions>;
-    returnType?: ReturnTypes;
+    returnType?: ValidTypesEnum;
     subscribe?: boolean;
 }
 
