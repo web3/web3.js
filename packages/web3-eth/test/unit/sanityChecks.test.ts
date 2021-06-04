@@ -30,7 +30,7 @@ for (const method of testConfig.methods) {
             Web3RequestManager.prototype.send = jest.fn();
             // @ts-ignore mockReturnValue added by jest
             Web3RequestManager.prototype.send.mockReturnValue(
-                method.expectedResult
+                method.defaultExpectedResult
             );
             web3RequestManagerSendSpy = jest.spyOn(
                 Web3RequestManager.prototype,
@@ -57,14 +57,14 @@ for (const method of testConfig.methods) {
             Array.isArray(result)
                 ? result.forEach((methodResult) => {
                       checkForExpected(
-                          method.expectedResult,
+                          method.defaultExpectedResult,
                           methodResult,
                           rpcOptions,
                           method.callOptions
                       );
                   })
                 : checkForExpected(
-                      method.expectedResult,
+                      method.defaultExpectedResult,
                       result,
                       rpcOptions,
                       method.callOptions
@@ -84,14 +84,14 @@ for (const method of testConfig.methods) {
             Array.isArray(result)
                 ? result.forEach((methodResult) => {
                       checkForExpected(
-                          method.expectedResult,
+                          method.defaultExpectedResult,
                           methodResult,
                           rpcOptions,
                           method.callOptions
                       );
                   })
                 : checkForExpected(
-                      method.expectedResult,
+                      method.defaultExpectedResult,
                       result,
                       rpcOptions,
                       method.callOptions

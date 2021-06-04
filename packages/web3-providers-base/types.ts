@@ -2,8 +2,6 @@ import { EventEmitter } from 'events';
 import { HttpOptions } from 'web3-providers-http/types';
 import { EthFilter, EthTransaction } from 'web3-eth/types';
 
-export type HexString = string;
-export type NumberString = string;
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | HexString
@@ -21,13 +19,6 @@ export type RpcResponseResult =
     | BigInt
     | null
     | any;
-
-export enum ReturnTypes {
-    HexString,
-    Number,
-    NumberString,
-    BigInt,
-}
 
 export interface ProviderOptions {
     providerUrl: string;

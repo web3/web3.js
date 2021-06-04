@@ -1,22 +1,11 @@
-import {
-    HexString,
-    NumberString,
-    RpcResponse,
-} from 'web3-providers-base/types';
+import { RpcResponse } from 'web3-providers-base/types';
+import { HexString, ValidTypes, ValidTypesEnum } from 'web3-utils/types';
 
 export enum BlockTags {
     latest = 'latest',
     earliest = 'earliest',
     pending = 'pending',
 }
-export enum ValidTypesEnum {
-    number = 'number',
-    HexString = 'HexString',
-    NumberString = 'NumberString',
-    BigInt = 'BigInt',
-}
-
-export type ValidTypes = number | HexString | NumberString | BigInt;
 
 export type BlockIdentifier = ValidTypes | BlockTags;
 
@@ -131,7 +120,7 @@ export type EthFilter = {
 export interface Web3EthOptions {
     packageName?: string;
     providerUrl: string;
-    returnType?: ValidTypes;
+    returnType?: ValidTypesEnum;
 }
 
 export interface EthCallTransaction extends EthTransaction {

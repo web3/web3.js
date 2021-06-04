@@ -2,11 +2,11 @@ import Web3RequestManager from 'web3-core-requestmanager';
 import {
     CallOptions,
     RpcResponse,
-    RpcResponseResult,
     SubscriptionResponse,
     RpcParams,
-    HexString,
 } from 'web3-providers-base/types';
+import { formatInput, formatOutput, formatRpcResultArray } from 'web3-utils';
+import { HexString, ValidTypes, ValidTypesEnum } from 'web3-utils/types';
 
 import {
     Web3EthOptions,
@@ -24,13 +24,11 @@ import {
     EthCompiledSolidityResult,
     EthLogResult,
     EthFilter,
-    ValidTypes,
-    ValidTypesEnum,
 } from '../types';
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;
-    private _defaultReturnType: ValidTypes;
+    private _defaultReturnType: ValidTypesEnum;
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
@@ -38,101 +36,6 @@ export default class Web3Eth {
         });
         this._defaultReturnType =
             options.returnType || ValidTypesEnum.HexString;
-    }
-
-    private static _formatInput(input: ValidTypes): HexString {
-        let formattedInput;
-        switch (typeof input) {
-            case 'number':
-                formattedInput = input.toString(16);
-                break;
-            case 'string':
-                // Test if hexadecimal, possibly prefixed with 0x
-                if (/^(?:0x)?[0-9A-Fa-f]+/i.test(input)) {
-                    formattedInput =
-                        input.substr(0, 2) === '0x' ? input : `0x${input}`;
-                    // Test if number string
-                } else if (/^[0-9]+/i.test(input)) {
-                    formattedInput = `0x${BigInt(input).toString(16)}`;
-                } else {
-                    // Just a string, don't format
-                    formattedInput = input;
-                }
-                break;
-            case 'bigint':
-                formattedInput = `0x${BigInt(input).toString(16)}`;
-                break;
-            default:
-                throw Error(
-                    `Provided input: ${input} is not a valid type (number, HexString, NumberString, or BigInt)`
-                );
-        }
-        return formattedInput;
-    }
-
-    private static _formatOutput(
-        output: ValidTypes,
-        desiredType: ValidTypes
-    ): ValidTypes {
-        // Short circuit if output and desiredType are HexString
-        if (
-            desiredType === ValidTypesEnum.HexString &&
-            typeof output === 'string' &&
-            /^0x[0-9A-Fa-f]+/i.test(output)
-        ) {
-            return output;
-        }
-
-        // Doing this allows us to assume we're always converting
-        // from HexString to desiredType
-        let formattedOutput: ValidTypes = this._formatInput(output);
-
-        switch (desiredType) {
-            case ValidTypesEnum.number:
-                formattedOutput = parseInt(formattedOutput, 16);
-                break;
-            case ValidTypesEnum.HexString:
-                // formattedOutput is already converted to HexString
-                break;
-            case ValidTypesEnum.NumberString:
-                formattedOutput = BigInt(formattedOutput).toString();
-                break;
-            case ValidTypesEnum.BigInt:
-                formattedOutput = BigInt(formattedOutput);
-                break;
-            default:
-                throw Error(
-                    `Error formatting output, provided desiredType: ${desiredType} is not supported`
-                );
-        }
-        return formattedOutput;
-    }
-
-    private static _formatOutputHelper(
-        rpcResponseResult: RpcResponseResult,
-        formattableProperties: string[],
-        desiredType: ValidTypes
-    ): RpcResponseResult {
-        let formattedResponseResult = rpcResponseResult;
-        for (const formattableProperty of formattableProperties) {
-            if (Array.isArray(rpcResponseResult)) {
-                // rpcResponseResult is an array of results
-                // e.g. an array of filter changes or logs
-                for (const result of rpcResponseResult) {
-                    result[formattableProperty] = Web3Eth._formatOutput(
-                        result[formattableProperty],
-                        desiredType
-                    );
-                }
-            } else {
-                formattedResponseResult[formattableProperty] =
-                    Web3Eth._formatOutput(
-                        rpcResponseResult[formattableProperty],
-                        desiredType
-                    );
-            }
-        }
-        return formattedResponseResult;
     }
 
     private _sendOrSubscribe(
@@ -217,7 +120,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -272,7 +175,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -306,7 +209,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -343,7 +246,7 @@ export default class Web3Eth {
                 if (response.result !== false) {
                     response = {
                         ...response,
-                        result: Web3Eth._formatOutputHelper(
+                        result: formatRpcResultArray(
                             // @ts-ignore
                             response.result,
                             ['startingBlock', 'currentBlock', 'highestBlock'],
@@ -412,7 +315,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -446,7 +349,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -497,7 +400,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -528,14 +431,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getBalance',
-                [address, Web3Eth._formatInput(blockIdentifier)],
+                [address, formatInput(blockIdentifier)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -570,8 +473,8 @@ export default class Web3Eth {
                 'eth_getStorageAt',
                 [
                     address,
-                    Web3Eth._formatInput(storagePosition),
-                    Web3Eth._formatInput(blockIdentifier),
+                    formatInput(storagePosition),
+                    formatInput(blockIdentifier),
                 ],
                 callOptions
             );
@@ -579,7 +482,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -610,14 +513,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getTransactionCount',
-                [address, Web3Eth._formatInput(blockIdentifier)],
+                [address, formatInput(blockIdentifier)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -654,7 +557,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -685,14 +588,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getBlockTransactionCountByNumber',
-                [Web3Eth._formatInput(blockIdentifier)],
+                [formatInput(blockIdentifier)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -731,7 +634,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -762,14 +665,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getUncleCountByBlockNumber',
-                [Web3Eth._formatInput(blockIdentifier)],
+                [formatInput(blockIdentifier)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -802,7 +705,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_getCode',
-                [address, Web3Eth._formatInput(blockIdentifier)],
+                [address, formatInput(blockIdentifier)],
                 callOptions
             );
         } catch (error) {
@@ -862,16 +765,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? Web3Eth._formatInput(transaction.gas)
+                            ? formatInput(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            ? formatInput(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? Web3Eth._formatInput(transaction.value)
+                            ? formatInput(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? Web3Eth._formatInput(transaction.nonce)
+                            ? formatInput(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -908,16 +811,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? Web3Eth._formatInput(transaction.gas)
+                            ? formatInput(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            ? formatInput(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? Web3Eth._formatInput(transaction.value)
+                            ? formatInput(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? Web3Eth._formatInput(transaction.nonce)
+                            ? formatInput(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -978,16 +881,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? Web3Eth._formatInput(transaction.gas)
+                            ? formatInput(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            ? formatInput(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? Web3Eth._formatInput(transaction.value)
+                            ? formatInput(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? Web3Eth._formatInput(transaction.nonce)
+                            ? formatInput(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -1024,16 +927,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? Web3Eth._formatInput(transaction.gas)
+                            ? formatInput(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? Web3Eth._formatInput(transaction.gasPrice)
+                            ? formatInput(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? Web3Eth._formatInput(transaction.value)
+                            ? formatInput(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? Web3Eth._formatInput(transaction.nonce)
+                            ? formatInput(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -1043,7 +946,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -1081,7 +984,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1121,14 +1024,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getBlockByNumber',
-                [Web3Eth._formatInput(blockIdentifier), returnFullTxs],
+                [formatInput(blockIdentifier), returnFullTxs],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1173,7 +1076,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1212,14 +1115,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getTransactionByBlockHashAndIndex',
-                [blockHash, Web3Eth._formatInput(transactionIndex)],
+                [blockHash, formatInput(transactionIndex)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1260,17 +1163,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getTransactionByBlockNumberAndIndex',
-                [
-                    Web3Eth._formatInput(blockIdentifier),
-                    Web3Eth._formatInput(transactionIndex),
-                ],
+                [formatInput(blockIdentifier), formatInput(transactionIndex)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1316,7 +1216,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         ['blockNumber', 'cumulativeGasUsed', 'gasUsed'],
@@ -1347,14 +1247,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getUncleByBlockHashAndIndex',
-                [blockHash, Web3Eth._formatInput(uncleIndex)],
+                [blockHash, formatInput(uncleIndex)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1396,17 +1296,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getUncleByBlockNumberAndIndex',
-                [
-                    Web3Eth._formatInput(blockIdentifier),
-                    Web3Eth._formatInput(uncleIndex),
-                ],
+                [formatInput(blockIdentifier), formatInput(uncleIndex)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         [
@@ -1548,10 +1445,10 @@ export default class Web3Eth {
                     {
                         ...filter,
                         fromBlock: filter.fromBlock
-                            ? Web3Eth._formatInput(filter.fromBlock)
+                            ? formatInput(filter.fromBlock)
                             : undefined,
                         toBlock: filter.toBlock
-                            ? Web3Eth._formatInput(filter.toBlock)
+                            ? formatInput(filter.toBlock)
                             : undefined,
                     },
                 ],
@@ -1561,7 +1458,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -1595,7 +1492,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -1629,7 +1526,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutput(
+                    result: formatOutput(
                         // @ts-ignore We verify result exists, but TypeScript complains:
                         // Property 'result' does not exist on type 'SubscriptionResponse'
                         response.result,
@@ -1660,7 +1557,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_uninstallFilter',
-                [Web3Eth._formatInput(filterId)],
+                [formatInput(filterId)],
                 callOptions
             );
         } catch (error) {
@@ -1684,14 +1581,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getFilterChanges',
-                [Web3Eth._formatInput(filterId)],
+                [formatInput(filterId)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         ['logIndex', 'transactionIndex', 'blockNumber'],
@@ -1721,14 +1618,14 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getFilterLogs',
-                [Web3Eth._formatInput(filterId)],
+                [formatInput(filterId)],
                 callOptions
             );
             // Check if not SubscriptionResponse
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         ['logIndex', 'transactionIndex', 'blockNumber'],
@@ -1761,10 +1658,10 @@ export default class Web3Eth {
                     {
                         ...filter,
                         fromBlock: filter.fromBlock
-                            ? Web3Eth._formatInput(filter.fromBlock)
+                            ? formatInput(filter.fromBlock)
                             : undefined,
                         toBlock: filter.toBlock
-                            ? Web3Eth._formatInput(filter.toBlock)
+                            ? formatInput(filter.toBlock)
                             : undefined,
                     },
                 ],
@@ -1774,7 +1671,7 @@ export default class Web3Eth {
             if (response.hasOwnProperty('result')) {
                 response = {
                     ...response,
-                    result: Web3Eth._formatOutputHelper(
+                    result: formatRpcResultArray(
                         // @ts-ignore
                         response.result,
                         ['logIndex', 'transactionIndex', 'blockNumber'],
@@ -1824,7 +1721,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_submitWork',
-                [Web3Eth._formatInput(nonce), powHash, digest],
+                [formatInput(nonce), powHash, digest],
                 callOptions
             );
         } catch (error) {
@@ -1849,10 +1746,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_submitHashRate',
-                [
-                    Web3Eth._formatInput(hashRate),
-                    Web3Eth._formatInput(clientId),
-                ],
+                [formatInput(hashRate), formatInput(clientId)],
                 callOptions
             );
         } catch (error) {

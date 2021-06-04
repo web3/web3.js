@@ -1,7 +1,7 @@
 {
-    "name": "web3-eth",
+    "name": "web3-utils",
     "version": "4.0.0",
-    "description": "Ethereum RPC wrappers for Web3 4.x.x",
+    "description": "Utilities for Web3 4.x.x",
     "main": "src/index.ts",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
@@ -26,14 +26,10 @@
         "eslint": "^7.24.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.22.1",
-        "ethereumjs-util": "^7.0.10",
         "jest": "^26.6.3",
-        "prettier": "2.3.0",
+        "prettier": "^2.3.0",
         "ts-jest": "^26.5.4",
-        "typescript": "^4.2.4"
-    },
-    "dependencies": {
-        "web3-core-requestmanager": "^4.0.0",
-        "web3-utils": "^4.0.0"
+        "typescript": "^4.2.4",
+        "web3-providers-base": "^1.0.0"
     }
 }
