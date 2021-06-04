@@ -539,7 +539,11 @@ export const testConfig: TestConfig = {
                 },
             },
             testOutputFormatter: true,
-            formattableProperties: ['blockNumber', 'cumulativeGasUsed', 'gasUsed'],
+            formattableProperties: [
+                'blockNumber',
+                'cumulativeGasUsed',
+                'gasUsed',
+            ],
         },
         {
             name: 'getUncleByBlockHashAndIndex',
@@ -596,10 +600,7 @@ export const testConfig: TestConfig = {
         {
             name: 'getUncleByBlockNumberAndIndex',
             rpcMethod: 'eth_getUncleByBlockNumberAndIndex',
-            parameters: [
-                '0x29c',
-                '0x0'
-            ],
+            parameters: ['0x29c', '0x0'],
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: {
@@ -790,7 +791,11 @@ export const testConfig: TestConfig = {
                 ],
             },
             testOutputFormatter: true,
-            formattableProperties: ['logIndex', 'transactionIndex', 'blockNumber'],
+            formattableProperties: [
+                'logIndex',
+                'transactionIndex',
+                'blockNumber',
+            ],
         },
         {
             name: 'getFilterLogs',
@@ -816,7 +821,11 @@ export const testConfig: TestConfig = {
                 ],
             },
             testOutputFormatter: true,
-            formattableProperties: ['logIndex', 'transactionIndex', 'blockNumber'],
+            formattableProperties: [
+                'logIndex',
+                'transactionIndex',
+                'blockNumber',
+            ],
         },
         {
             name: 'getLogs',
@@ -848,7 +857,11 @@ export const testConfig: TestConfig = {
                 ],
             },
             testOutputFormatter: true,
-            formattableProperties: ['logIndex', 'transactionIndex', 'blockNumber'],
+            formattableProperties: [
+                'logIndex',
+                'transactionIndex',
+                'blockNumber',
+            ],
         },
         {
             name: 'getWork',
