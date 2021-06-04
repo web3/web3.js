@@ -14,8 +14,7 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please create dependabot alerts to make github aware of vulnerabilities.
+Recommended remedies will be applied.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+The 'Security' tab located at the top of your repository should guide you to the 'create a dependabot alert' option. Supply as much information as possible to help with remediation and/or further support. Recommended 'remediation' measures should be labeled with exact modifications needed for your bug. 
