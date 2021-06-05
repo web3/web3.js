@@ -24,6 +24,7 @@ import {
     EthCompiledSolidityResult,
     EthLogResult,
     EthFilter,
+    BlockTags,
 } from '../types';
 
 export default class Web3Eth {
@@ -53,6 +54,10 @@ export default class Web3Eth {
             },
             callOptions?.providerCallOptions
         );
+    }
+
+    private static _isBlockTag(value: BlockIdentifier): boolean {
+        return Object.values(BlockTags).includes(value as BlockTags);
     }
 
     /**
@@ -431,7 +436,12 @@ export default class Web3Eth {
         try {
             let response = await this._sendOrSubscribe(
                 'eth_getBalance',
-                [address, formatInput(blockIdentifier)],
+                [
+                    address,
+                    Web3Eth._isBlockTag(blockIdentifier)
+                        ? (blockIdentifier as BlockTags)
+                        : formatInput(blockIdentifier),
+                ],
                 callOptions
             );
             // Check if not SubscriptionResponse
@@ -1746,7 +1756,7 @@ export default class Web3Eth {
         try {
             return await this._sendOrSubscribe(
                 'eth_submitHashRate',
-                [formatInput(hashRate), formatInput(clientId)],
+                [formatInput(hashRate, 32), formatInput(clientId)],
                 callOptions
             );
         } catch (error) {

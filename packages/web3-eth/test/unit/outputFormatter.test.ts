@@ -49,11 +49,14 @@ describe('Web3Eth Output Formatter Tests', () => {
                 for (const validType in ValidTypesEnum) {
                     describe(`Return type: ${validType}`, () => {
                         it('should call method with desired return type', async () => {
+                            const parameters = method.parameters
+                                ? Object.values(method.parameters)
+                                : [];
                             const callOptions = { returnType: validType };
 
                             // @ts-ignore tsc doesn't like that we're arbitrarily calling methods
                             const result = await web3Eth[method.name](
-                                ...(method.parameters || []),
+                                ...parameters,
                                 callOptions
                             );
                             Array.isArray(result)
@@ -64,7 +67,7 @@ describe('Web3Eth Output Formatter Tests', () => {
                                           ValidTypesEnum[
                                               validType as ValidTypesEnum
                                           ],
-                                          method.formattableProperties
+                                          method.formattableOutputProperties
                                       );
                                   })
                                 : checkForExpected(
@@ -73,7 +76,7 @@ describe('Web3Eth Output Formatter Tests', () => {
                                       ValidTypesEnum[
                                           validType as ValidTypesEnum
                                       ],
-                                      method.formattableProperties
+                                      method.formattableOutputProperties
                                   );
                         });
                     });

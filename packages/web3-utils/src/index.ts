@@ -1,24 +1,24 @@
 import { RpcResponseResult } from 'web3-providers-base/types';
+import {setLengthLeft, toBuffer} from 'ethereumjs-util'
 
 import { ValidTypes, ValidTypesEnum, HexString } from '../types';
 
-export function formatInput(input: ValidTypes): HexString {
+export function formatInput(input: ValidTypes, byteLength?: number): HexString {
     let formattedInput;
     switch (typeof input) {
         case 'number':
-            formattedInput = input.toString(16);
+            formattedInput = `0x${input.toString(16)}`;
             break;
         case 'string':
-            if (/^(?:0x)?[0-9A-Fa-f]+/i.test(input)) {
+            if (/^[1-9]+/i.test(input)) {
+                // Number string
+                formattedInput = `0x${BigInt(input).toString(16)}`;
+            } else if (/(?:0x)?[0-9A-Fa-f]+/i.test(input)) {
                 // Hex string, possibly prefixed with 0x
                 formattedInput =
                     input.substr(0, 2) === '0x' ? input : `0x${input}`;
-            } else if (/^[0-9]+/i.test(input)) {
-                // Number string
-                formattedInput = `0x${BigInt(input).toString(16)}`;
             } else {
-                // Just a string, don't format
-                formattedInput = input;
+                throw Error(`Cannot convert arbitrary string: ${input}`);
             }
             break;
         case 'bigint':
@@ -28,6 +28,11 @@ export function formatInput(input: ValidTypes): HexString {
             throw Error(
                 `Provided input: ${input} is not a valid type (number, HexString, NumberString, or BigInt)`
             );
+    }
+    if (byteLength && formattedInput.length < byteLength) {
+        const bufferInput = toBuffer(formattedInput)
+        const paddedBufferInput = setLengthLeft(bufferInput, 32)
+        formattedInput = `0x${paddedBufferInput.toString('hex')}`
     }
     return formattedInput;
 }

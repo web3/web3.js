@@ -1,6 +1,7 @@
 import {
     PartialRpcOptions,
     ProviderCallOptions,
+    RpcParams,
     RpcResponse,
 } from 'web3-providers-base/types';
 import Web3RequestManager from 'web3-core-requestmanager';
@@ -46,13 +47,14 @@ for (const method of testConfig.methods) {
         });
 
         it('should get expected result - default RPC parameters', async () => {
+            const parameters = method.parameters
+                ? Object.values(method.parameters)
+                : [];
             // @ts-ignore tsc doesn't like that we're arbitrarily calling methods
-            const result = await web3Eth[method.name](
-                ...(method.parameters || [])
-            );
+            const result = await web3Eth[method.name](...parameters);
             const rpcOptions = {
                 method: method.rpcMethod,
-                params: method.parameters || [],
+                params: parameters as RpcParams,
             };
             Array.isArray(result)
                 ? result.forEach((methodResult) => {
@@ -72,14 +74,17 @@ for (const method of testConfig.methods) {
         });
 
         it('should get expected result - id RPC parameter', async () => {
+            const parameters = method.parameters
+                ? Object.values(method.parameters)
+                : [];
             // @ts-ignore tsc doesn't like that we're arbitrarily calling methods
             const result = await web3Eth[method.name](
-                ...(method.parameters || []),
+                ...parameters,
                 testConfig.expectedRpcId
             );
             const rpcOptions = {
                 method: method.rpcMethod,
-                params: method.parameters || [],
+                params: parameters as RpcParams,
             };
             Array.isArray(result)
                 ? result.forEach((methodResult) => {

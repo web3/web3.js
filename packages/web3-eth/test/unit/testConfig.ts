@@ -5,7 +5,7 @@ import { BlockTags } from '../../types';
 interface Method {
     name: string;
     rpcMethod: string;
-    parameters?: {[key: string]: any};
+    parameters?: any;
     callOptions?: ProviderCallOptions;
     defaultExpectedResult: RpcResponse;
     testInputFormatter?: true;
@@ -45,7 +45,7 @@ export const testConfig: TestConfig = {
             name: 'getSha3',
             rpcMethod: 'web3_sha3',
             parameters: {
-                data: '0x68656c6c6f20776f726c64'
+                data: '0x68656c6c6f20776f726c64',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -149,7 +149,7 @@ export const testConfig: TestConfig = {
             rpcMethod: 'eth_getBalance',
             parameters: {
                 address: DEFAULT_ACCOUNTS[0],
-                blockIdentifier: BlockTags.latest
+                blockIdentifier: '0x2a',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -157,7 +157,7 @@ export const testConfig: TestConfig = {
             },
             testInputFormatter: true,
             testOutputFormatter: true,
-            formattableInputProperties: ['blockIdentifier']
+            formattableInputProperties: ['blockIdentifier'],
         },
         {
             name: 'getStorageAt',
@@ -165,7 +165,7 @@ export const testConfig: TestConfig = {
             parameters: {
                 address: '0x295a70b2de5e3953354a6a8344e616ed314d7251',
                 storagePosition: '0x0',
-                blockIdentifier: BlockTags.latest,
+                blockIdentifier: '0x2a',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -173,25 +173,26 @@ export const testConfig: TestConfig = {
             },
             testInputFormatter: true,
             testOutputFormatter: true,
-            formattableInputProperties: ['storagePosition', 'blockIdentifer']
+            formattableInputProperties: ['storagePosition', 'blockIdentifier'],
         },
         {
             name: 'getTransactionCount',
             rpcMethod: 'eth_getTransactionCount',
             parameters: {
                 address: DEFAULT_ACCOUNTS[0],
-                blockIdentifier: BlockTags.latest
+                blockIdentifier: '0x2a',
             },
             defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
             testInputFormatter: true,
             testOutputFormatter: true,
-            formattableInputProperties: ['blockIdentifier']
+            formattableInputProperties: ['blockIdentifier'],
         },
         {
             name: 'getBlockTransactionCountByHash',
             rpcMethod: 'eth_getBlockTransactionCountByHash',
             parameters: {
-                blockHash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+                blockHash:
+                    '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
             },
             defaultExpectedResult: { ...expectedResultBase, result: '0xb' },
             testOutputFormatter: true,
@@ -199,17 +200,18 @@ export const testConfig: TestConfig = {
         {
             name: 'getBlockTransactionCountByNumber',
             rpcMethod: 'eth_getBlockTransactionCountByNumber',
-            parameters: {blockIdentifier: '0xe8'},
+            parameters: { blockIdentifier: '0xe8' },
             defaultExpectedResult: { ...expectedResultBase, result: '0xb' },
             testInputFormatter: true,
             testOutputFormatter: true,
-            formattableInputProperties: ['blockIdentifier']
+            formattableInputProperties: ['blockIdentifier'],
         },
         {
             name: 'getUncleCountByBlockHash',
             rpcMethod: 'eth_getUncleCountByBlockHash',
             parameters: {
-                blockHash: '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+                blockHash:
+                    '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
             },
             defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
             testOutputFormatter: true,
@@ -217,131 +219,133 @@ export const testConfig: TestConfig = {
         {
             name: 'getUncleCountByBlockNumber',
             rpcMethod: 'eth_getUncleCountByBlockNumber',
-            parameters: {blockIdentifier: '0xe8'},
+            parameters: { blockIdentifier: '0xe8' },
             defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
             testInputFormatter: true,
             testOutputFormatter: true,
-            formattableInputProperties: ['blockIdentifier']
+            formattableInputProperties: ['blockIdentifier'],
         },
         {
             name: 'getCode',
             rpcMethod: 'eth_getCode',
             parameters: {
                 address: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-                blockIdentifer: BlockTags.latest,
+                blockIdentifier: '0x42',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: '0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056',
             },
             testInputFormatter: true,
-            formattableInputProperties: ['blockIdentifier']
+            formattableInputProperties: ['blockIdentifier'],
         },
         {
             name: 'sign',
             rpcMethod: 'eth_sign',
             parameters: {
                 address: DEFAULT_ACCOUNTS[0],
-                message: '0xc0ffe'
+                message: '0xc0ffe',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: '0x00b227ebf7f1964350a49c00ec38d5177b3103a3daad188300fa54f3cd715c8d3750404dbdfa16154ea65e92f9278773bcac80f98e245eb9b5f1c0a25bca9f8600',
             },
         },
-        {
-            name: 'signTransaction',
-            rpcMethod: 'eth_signTransaction',
-            parameters: {
-                transaction: {
-                    from: DEFAULT_ACCOUNTS[0],
-                    to: DEFAULT_ACCOUNTS[1],
-                    gas: '0x76c0',
-                    gasPrice: '0x9184e72a000',
-                    value: '0x1',
-                    nonce: '0x1'
-                },
-            },
-            defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
-            testInputFormatter: true,
-            formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce']
-        },
-        {
-            name: 'sendTransaction',
-            rpcMethod: 'eth_sendTransaction',
-            parameters: {
-                transaction: {
-                    from: DEFAULT_ACCOUNTS[0],
-                    to: DEFAULT_ACCOUNTS[1],
-                    gas: '0x76c0',
-                    gasPrice: '0x9184e72a000',
-                    value: '0x1',
-                    nonce: '0x1',
-                },
-            },
-            defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
-            testInputFormatter: true,
-            formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce']
-        },
+        // {
+        //     name: 'signTransaction',
+        //     rpcMethod: 'eth_signTransaction',
+        //     parameters: {
+        //         transaction: {
+        //             from: DEFAULT_ACCOUNTS[0],
+        //             to: DEFAULT_ACCOUNTS[1],
+        //             gas: '0x76c0',
+        //             gasPrice: '0x9184e72a000',
+        //             value: '0x1',
+        //             nonce: '0x1',
+        //         },
+        //     },
+        //     defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
+        //     testInputFormatter: true,
+        //     formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce'],
+        // },
+        // {
+        //     name: 'sendTransaction',
+        //     rpcMethod: 'eth_sendTransaction',
+        //     parameters: {
+        //         transaction: {
+        //             from: DEFAULT_ACCOUNTS[0],
+        //             to: DEFAULT_ACCOUNTS[1],
+        //             gas: '0x76c0',
+        //             gasPrice: '0x9184e72a000',
+        //             value: '0x1',
+        //             nonce: '0x1',
+        //         },
+        //     },
+        //     defaultExpectedResult: { ...expectedResultBase, result: '0x1' },
+        //     testInputFormatter: true,
+        //     formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce'],
+        // },
         {
             name: 'sendRawTransaction',
             rpcMethod: 'eth_sendRawTransaction',
             parameters: {
-                rawTransaction: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+                rawTransaction:
+                    '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
             },
         },
-        {
-            name: 'call',
-            rpcMethod: 'eth_call',
-            parameters: {
-                transaction: {
-                    from: DEFAULT_ACCOUNTS[0],
-                    to: DEFAULT_ACCOUNTS[1],
-                    gas: '0x76c0',
-                    gasPrice: '0x9184e72a000',
-                    value: '0x1',
-                    data: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
-                    nonce: '0x1'
-                },
-            },
-            defaultExpectedResult: {
-                ...expectedResultBase,
-                result: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
-            },
-            testInputFormatter: true,
-            formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce']
-        },
-        {
-            name: 'estimateGas',
-            rpcMethod: 'eth_estimateGas',
-            parameters: {
-                transaction: {
-                    from: DEFAULT_ACCOUNTS[0],
-                    to: DEFAULT_ACCOUNTS[1],
-                    gas: '0x76c0',
-                    gasPrice: '0x9184e72a000',
-                    value: '0x1',
-                    data: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
-                    nonce: '0x1'
-                },
-            },
-            defaultExpectedResult: {
-                ...expectedResultBase,
-                result: '0x5208',
-            },
-            testInputFormatter: true,
-            testOutputFormatter: true,
-            formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce']
-        },
+        // {
+        //     name: 'call',
+        //     rpcMethod: 'eth_call',
+        //     parameters: {
+        //         transaction: {
+        //             from: DEFAULT_ACCOUNTS[0],
+        //             to: DEFAULT_ACCOUNTS[1],
+        //             gas: '0x76c0',
+        //             gasPrice: '0x9184e72a000',
+        //             value: '0x1',
+        //             data: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+        //             nonce: '0x1',
+        //         },
+        //     },
+        //     defaultExpectedResult: {
+        //         ...expectedResultBase,
+        //         result: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
+        //     },
+        //     testInputFormatter: true,
+        //     formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce'],
+        // },
+        // {
+        //     name: 'estimateGas',
+        //     rpcMethod: 'eth_estimateGas',
+        //     parameters: {
+        //         transaction: {
+        //             from: DEFAULT_ACCOUNTS[0],
+        //             to: DEFAULT_ACCOUNTS[1],
+        //             gas: '0x76c0',
+        //             gasPrice: '0x9184e72a000',
+        //             value: '0x1',
+        //             data: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+        //             nonce: '0x1',
+        //         },
+        //     },
+        //     defaultExpectedResult: {
+        //         ...expectedResultBase,
+        //         result: '0x5208',
+        //     },
+        //     testInputFormatter: true,
+        //     testOutputFormatter: true,
+        //     formattableInputProperties: ['gas', 'gasPrice', 'value', 'nonce'],
+        // },
         {
             name: 'getBlockByHash',
             rpcMethod: 'eth_getBlockByHash',
             parameters: {
-                blockHash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+                blockHash:
+                    '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
                 returnFullTxs: false,
             },
             defaultExpectedResult: {
@@ -394,7 +398,7 @@ export const testConfig: TestConfig = {
             rpcMethod: 'eth_getBlockByNumber',
             parameters: {
                 blockIdentifier: '0x1b4',
-                returnFullTxs: true
+                returnFullTxs: true,
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -484,7 +488,8 @@ export const testConfig: TestConfig = {
             name: 'getTransactionByBlockHashAndIndex',
             rpcMethod: 'eth_getTransactionByBlockHashAndIndex',
             parameters: {
-                blockHash: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
+                blockHash:
+                    '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
                 transactionIndex: '0x0',
             },
             defaultExpectedResult: {
@@ -525,7 +530,7 @@ export const testConfig: TestConfig = {
             rpcMethod: 'eth_getTransactionByBlockNumberAndIndex',
             parameters: {
                 blockIdentifier: '0x29c',
-                transactionIndex: '0x0'
+                transactionIndex: '0x0',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -595,7 +600,8 @@ export const testConfig: TestConfig = {
             name: 'getUncleByBlockHashAndIndex',
             rpcMethod: 'eth_getUncleByBlockHashAndIndex',
             parameters: {
-                blockHash: '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
+                blockHash:
+                    '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
                 uncleIndex: '0x0',
             },
             defaultExpectedResult: {
@@ -650,7 +656,7 @@ export const testConfig: TestConfig = {
             rpcMethod: 'eth_getUncleByBlockNumberAndIndex',
             parameters: {
                 blockIdentifier: '0x29c',
-                uncleIndex: '0x0'
+                uncleIndex: '0x0',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -711,7 +717,8 @@ export const testConfig: TestConfig = {
             name: 'compileSolidity',
             rpcMethod: 'eth_compileSolidity',
             parameters: {
-                sourceCode: 'contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }',
+                sourceCode:
+                    'contract test { function multiply(uint a) returns(uint d) {   return a * 7;   } }',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
@@ -754,7 +761,7 @@ export const testConfig: TestConfig = {
         {
             name: 'compileLLL',
             rpcMethod: 'eth_compileLLL',
-            parameters: { sourceCode: '(returnlll (suicide (caller)))'},
+            parameters: { sourceCode: '(returnlll (suicide (caller)))' },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: '0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056',
@@ -763,38 +770,38 @@ export const testConfig: TestConfig = {
         {
             name: 'compileSerpent',
             rpcMethod: 'eth_compileSerpent',
-            parameters: { sourceCode: '/* some serpent */'},
+            parameters: { sourceCode: '/* some serpent */' },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: '0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056',
             },
         },
-        {
-            name: 'newFilter',
-            rpcMethod: 'eth_newFilter',
-            parameters: {
-                filter: {
-                    fromBlock: '0x1',
-                    toBlock: '0x2',
-                    address: '0x8888f1f195afa192cfee860698584c030f4c9db1',
-                    topics: [
-                        '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-                        null,
-                        [
-                            '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-                            '0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
-                        ],
-                    ],
-                },
-            },
-            defaultExpectedResult: {
-                ...expectedResultBase,
-                result: '0x1',
-            },
-            testInputFormatter: true,
-            testOutputFormatter: true,
-            formattableInputProperties: ['fromBlock', 'toBlock']
-        },
+        // {
+        //     name: 'newFilter',
+        //     rpcMethod: 'eth_newFilter',
+        //     parameters: {
+        //         filter: {
+        //             fromBlock: '0x1',
+        //             toBlock: '0x2',
+        //             address: '0x8888f1f195afa192cfee860698584c030f4c9db1',
+        //             topics: [
+        //                 '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        //                 null,
+        //                 [
+        //                     '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        //                     '0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+        //                 ],
+        //             ],
+        //         },
+        //     },
+        //     defaultExpectedResult: {
+        //         ...expectedResultBase,
+        //         result: '0x1',
+        //     },
+        //     testInputFormatter: true,
+        //     testOutputFormatter: true,
+        //     formattableInputProperties: ['fromBlock', 'toBlock'],
+        // },
         {
             name: 'newBlockFilter',
             rpcMethod: 'eth_newBlockFilter',
@@ -816,18 +823,18 @@ export const testConfig: TestConfig = {
         {
             name: 'uninstallFilter',
             rpcMethod: 'eth_uninstallFilter',
-            parameters: { filterId: '0xb'},
+            parameters: { filterId: '0xb' },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: true,
             },
             testInputFormatter: true,
-            formattableInputProperties: ['filterId']
+            formattableInputProperties: ['filterId'],
         },
         {
             name: 'getFilterChanges',
             rpcMethod: 'eth_getFilterChanges',
-            parameters: { filterId: '0x16'},
+            parameters: { filterId: '0x16' },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: [
@@ -859,7 +866,7 @@ export const testConfig: TestConfig = {
         {
             name: 'getFilterLogs',
             rpcMethod: 'eth_getFilterLogs',
-            parameters: { filterId: '0x16'},
+            parameters: { filterId: '0x16' },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: [
@@ -888,44 +895,44 @@ export const testConfig: TestConfig = {
                 'blockNumber',
             ],
         },
-        {
-            name: 'getLogs',
-            rpcMethod: 'eth_getLogs',
-            parameters: {
-                filter: {
-                    topics: [
-                        '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-                    ],
-                },
-            },
-            defaultExpectedResult: {
-                ...expectedResultBase,
-                result: [
-                    {
-                        logIndex: '0x1',
-                        blockNumber: '0x1b4',
-                        blockHash:
-                            '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
-                        transactionHash:
-                            '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
-                        transactionIndex: '0x0',
-                        address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000000',
-                        topics: [
-                            '0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5',
-                        ],
-                    },
-                ],
-            },
-            testInputFormatter: true,
-            testOutputFormatter: true,
-            formattableInputProperties: ['fromBlock', 'toBlock'],
-            formattableOutputProperties: [
-                'logIndex',
-                'transactionIndex',
-                'blockNumber',
-            ],
-        },
+        // {
+        //     name: 'getLogs',
+        //     rpcMethod: 'eth_getLogs',
+        //     parameters: {
+        //         filter: {
+        //             topics: [
+        //                 '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        //             ],
+        //         },
+        //     },
+        //     defaultExpectedResult: {
+        //         ...expectedResultBase,
+        //         result: [
+        //             {
+        //                 logIndex: '0x1',
+        //                 blockNumber: '0x1b4',
+        //                 blockHash:
+        //                     '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+        //                 transactionHash:
+        //                     '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+        //                 transactionIndex: '0x0',
+        //                 address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+        //                 data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+        //                 topics: [
+        //                     '0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5',
+        //                 ],
+        //             },
+        //         ],
+        //     },
+        //     testInputFormatter: true,
+        //     testOutputFormatter: true,
+        //     formattableInputProperties: ['fromBlock', 'toBlock'],
+        //     formattableOutputProperties: [
+        //         'logIndex',
+        //         'transactionIndex',
+        //         'blockNumber',
+        //     ],
+        // },
         {
             name: 'getWork',
             rpcMethod: 'eth_getWork',
@@ -942,8 +949,9 @@ export const testConfig: TestConfig = {
             name: 'submitWork',
             rpcMethod: 'eth_submitWork',
             parameters: {
-                nonce: '0x0000000000000001',
-                powHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+                nonce: '0x2a',
+                powHash:
+                    '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
                 digest: '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
             },
             defaultExpectedResult: {
@@ -951,21 +959,23 @@ export const testConfig: TestConfig = {
                 result: true,
             },
             testInputFormatter: true,
-            formattableInputProperties: ['nonce']
+            formattableInputProperties: ['nonce'],
         },
         {
             name: 'submitHashRate',
             rpcMethod: 'eth_submitHashRate',
             parameters: {
-                hashRate: '0x0000000000000000000000000000000000000000000000000000000000500000',
-                clientId: '0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c',
+                hashRate:
+                    '0x0000000000000000000000000000000000000000000000000000000000500000',
+                clientId:
+                    '0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c',
             },
             defaultExpectedResult: {
                 ...expectedResultBase,
                 result: true,
             },
             testInputFormatter: true,
-            formattableInputProperties: ['hashRate', 'clientId']
+            formattableInputProperties: ['hashRate'],
         },
     ],
 };
