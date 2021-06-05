@@ -1,5 +1,5 @@
 import { RpcResponseResult } from 'web3-providers-base/types';
-import {setLengthLeft, toBuffer} from 'ethereumjs-util'
+import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
 import { ValidTypes, ValidTypesEnum, HexString } from '../types';
 
@@ -30,9 +30,9 @@ export function formatInput(input: ValidTypes, byteLength?: number): HexString {
             );
     }
     if (byteLength && formattedInput.length < byteLength) {
-        const bufferInput = toBuffer(formattedInput)
-        const paddedBufferInput = setLengthLeft(bufferInput, 32)
-        formattedInput = `0x${paddedBufferInput.toString('hex')}`
+        const bufferInput = toBuffer(formattedInput);
+        const paddedBufferInput = setLengthLeft(bufferInput, 32);
+        formattedInput = `0x${paddedBufferInput.toString('hex')}`;
     }
     return formattedInput;
 }
