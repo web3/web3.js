@@ -25,8 +25,7 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var { hash, rlp, intToHex } = require('ethereumjs-util');
-var Account = require('eth-lib/lib/account');
+var { hash, rlp, intToHex, Address } = require('ethereumjs-util');
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
@@ -39,6 +38,49 @@ var Common = require('ethereumjs-common').default;
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
+
+var flattenBytes = function(a) {
+    return "0x" + a.reduce((r,s) => r + s.slice(2), "");
+}
+
+var encodeSignature = function([v, r, s]) {
+    return flattenBytes([r,s,v]);
+}
+
+var signAccount = function(hash, privateKey) {
+ const signature = secp256k1
+    .keyFromPrivate(new Buffer(privateKey.slice(2), "hex"))
+    .sign(new Buffer(hash.slice(2), "hex"), {canonical: true});
+  return encodeSignature([
+    Nat.fromString(Bytes.fromNumber(addToV + signature.recoveryParam)),
+    Bytes.pad(32, Bytes.fromNat("0x" + signature.r.toString(16))),
+    Bytes.pad(32, Bytes.fromNat("0x" + signature.s.toString(16)))]);
+}
+
+var decodeSignature = function(hex) {
+    return  [
+        Bytes.slice(64, Bytes.length(hex), hex),
+        Bytes.slice(0, 32, hex),
+        Bytes.slice(32, 64, hex)
+    ]
+}
+
+var createAccount = function() {
+    const innerHex = keccak256(Bytes.concat(Bytes.random(32), entropy || Bytes.random(32)));
+    const middleHex = Bytes.concat(Bytes.concat(Bytes.random(32), innerHex), Bytes.random(32));
+    const privateKey = keccak256(middleHex);
+    return { address: Address.fromPrivateKey(privateKey), privateKey }
+}
+
+const recoverAccount = (hash, signature) => {
+    const vals = decodeSignature(signature);
+    const vrs = {v: Bytes.toNumber(vals[0]), r:vals[1].slice(2), s:vals[2].slice(2)};
+    const ecPublicKey = secp256k1.recoverPubKey(new Buffer(hash.slice(2), "hex"), vrs, vrs.v < 2 ? vrs.v : 1 - (vrs.v % 2)); // because odd vals mean v=0... sadly that means v=0 means v=1... I hate that
+    const publicKey = "0x" + ecPublicKey.encode("hex", false).slice(2);
+    const publicHash = keccak256(publicKey);
+    const address = toChecksum("0x" + publicHash.slice(-40));
+    return address;
+}
 
 var Accounts = function Accounts() {
     var _this = this;
@@ -114,7 +156,7 @@ Accounts.prototype._addAccountFunctions = function(account) {
 };
 
 Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
+    return this._addAccountFunctions(createAccount(entropy || utils.randomHex(32)));
 };
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
@@ -127,7 +169,7 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
         throw new Error("Private key must be 32 bytes long");
     }
 
-    return this._addAccountFunctions(Account.fromPrivate(privateKey));
+    return this._addAccountFunctions(Address.fromPrivateKey(privateKey));
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
@@ -288,12 +330,12 @@ function _validateTransactionForSigning(tx) {
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = rlp.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
+    var signature = flattenBytes(values.slice(6, 9));
     var recovery = parseInt(values[6].slice(2), 16);
     var extraData = recovery < 35 ? [] : [intToHex((recovery - 35) >> 1), '0x', '0x'];
     var signingData = values.slice(0, 6).concat(extraData);
     var signingDataHex = rlp.encode(signingData);
-    return Account.recover(hash.keccak256(signingDataHex), signature);
+    return recoverAccount(hash.keccak256(signingDataHex), signature);
 };
 /* jshint ignore:end */
 
@@ -318,8 +360,8 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     }
 
     var hash = this.hashMessage(data);
-    var signature = Account.sign(hash, privateKey);
-    var vrs = Account.decodeSignature(signature);
+    var signature = signAccount(hash, privateKey);
+    var vrs = decodeSignature(signature);
     return {
         message: data,
         messageHash: hash,
@@ -335,7 +377,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 
 
     if (_.isObject(message)) {
-        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
+        return this.recover(message.messageHash, encodeSignature([message.v, message.r, message.s]), true);
     }
 
     if (!preFixed) {
@@ -346,9 +388,9 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
         preFixed = args.slice(-1)[0];
         preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
 
-        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+        return this.recover(message, encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
-    return Account.recover(message, signature);
+    return recoverAccount(message, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
