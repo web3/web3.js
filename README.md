@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
+  <img src="assets/https://github.com/orgs/octodocs-test/sso?authorization_request=AZSCKtL4U8yX1H3sCQIVnVgmjmon5fWxks5YrqhJgah0b2tlbl9pZM4EuMz4/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
 # web3.js - Ethereum JavaScript API
