@@ -297,20 +297,17 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOpt
     var {values, isTyped} = decodeUnknownTxType(rawTx);
     // This is very hacky but an interim solution until we remove eth-lib
     // Only thing stopping us from removing eth-lib is the new ethereumjs/tx setup requires txOpts
-    // That makes things a bit tricky for users.
-    // ----
-    // The following removes EIP-2930 related tx information from the rlp decoded tx.
+    // Requiring txOpts makes the devEx unfavorable.
     if (isTyped) {
-        // EIP-2930
-        values.shift() // remove chainId
-        delete values.splice(6,1); // remove accessList
+        
+    } else {
+        var signature = Account.encodeSignature(values.slice(6, 9));
+        var recovery = Bytes.toNumber(values[6]);
+        var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
+        var signingData = values.slice(0, 6).concat(extraData);
+        var signingDataHex = RLP.encode(signingData);
+        return Account.recover(Hash.keccak256(signingDataHex), signature);
     }
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-    var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
 /* jshint ignore:end */
 
