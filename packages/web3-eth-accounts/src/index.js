@@ -294,20 +294,8 @@ function _validateTransactionForSigning(tx) {
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
     // Determine if the transaction is typed or not
-    var {values, isTyped} = decodeUnknownTxType(rawTx);
-    // This is very hacky but an interim solution until we remove eth-lib
-    // Only thing stopping us from removing eth-lib is the new ethereumjs/tx setup requires txOpts
-    // Requiring txOpts makes the devEx unfavorable.
-    if (isTyped) {
-        
-    } else {
-        var signature = Account.encodeSignature(values.slice(6, 9));
-        var recovery = Bytes.toNumber(values[6]);
-        var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-        var signingData = values.slice(0, 6).concat(extraData);
-        var signingDataHex = RLP.encode(signingData);
-        return Account.recover(Hash.keccak256(signingDataHex), signature);
-    }
+    const tx = decodeUnknownTxType(rawTx);
+    return tx.getSenderAddress().toString("hex");
 };
 /* jshint ignore:end */
 
