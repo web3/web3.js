@@ -126,9 +126,9 @@ RequestManager.prototype.setProvider = function (provider, net) {
         });
 
         // notify all subscriptions about the error condition
-        this.provider.on('error', function error(error) {
+        this.provider.on('error', function error(e) {
             _this.subscriptions.forEach(function (subscription) {
-                subscription.callback(error);
+                subscription.callback(e);
             });
         });
 
