@@ -15,12 +15,11 @@ function decodeUnknownTxType(rawTx, txOptions = {}) {
                     eips: [2930],
                     hardfork: "berlin",
                     chain: {
-                    networkId: chainId,
-                    genesis: {},
-                    hardforks: ["berlin"],
-                    bootstrapNodes: []
+                        networkId: chainId,
+                        genesis: {},
+                        hardforks: ["berlin"],
+                        bootstrapNodes: []
                     }
-                    // const required = ['networkId', 'genesis', 'hardforks', 'bootstrapNodes']
                 })
                 return AccessListEIP2930Transaction.fromSerializedTx(data, txOptions);
             default:
