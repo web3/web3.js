@@ -115,7 +115,7 @@ export default class Web3Eth {
                 string,
                 [string],
                 CallOptions | undefined
-            ] = ['web3_clientVersion', [data], callOptions];
+            ] = ['web3_sha3', [data], callOptions];
             return callOptions?.subscribe
                 ? await this._subscribe(...requestParameters)
                 : await this._send(...requestParameters);
@@ -466,7 +466,7 @@ export default class Web3Eth {
                 [HexString, HexString],
                 CallOptions | undefined
             ] = [
-                'net_version',
+                'eth_getBalance',
                 [
                     address,
                     Web3Eth._isBlockTag(blockIdentifier)
@@ -1297,11 +1297,11 @@ export default class Web3Eth {
         callOptions?: CallOptions
     ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'eth_getTransactionReceipt',
-                [txHash],
-                callOptions,
-            ];
+            const requestParameters: [
+                string,
+                [HexString],
+                CallOptions | undefined
+            ] = ['eth_getTransactionReceipt', [txHash], callOptions];
 
             if (callOptions?.subscribe)
                 return await this._subscribe(...requestParameters);
@@ -1841,7 +1841,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_submitWork',
-                [formatInput(nonce), powHash, digest],
+                [formatInput(nonce, 8), powHash, digest],
                 callOptions,
             ];
             return callOptions?.subscribe

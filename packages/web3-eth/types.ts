@@ -127,6 +127,10 @@ export interface EthCallTransaction extends EthTransaction {
     to: string;
 }
 
+export interface Web3EthResult extends RpcResponse {
+    result: ValidTypes;
+}
+
 export interface EthStringResult extends RpcResponse {
     result: string;
 }

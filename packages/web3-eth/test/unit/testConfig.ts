@@ -11,6 +11,7 @@ interface Method {
     testInputFormatter?: true;
     testOutputFormatter?: true;
     formattableInputProperties?: string[];
+    formattablePropertyByteLengths?: { [key: string]: number };
     formattableOutputProperties?: string[];
 }
 
@@ -960,6 +961,7 @@ export const testConfig: TestConfig = {
             },
             testInputFormatter: true,
             formattableInputProperties: ['nonce'],
+            formattablePropertyByteLengths: { nonce: 8 },
         },
         {
             name: 'submitHashRate',
@@ -976,6 +978,7 @@ export const testConfig: TestConfig = {
             },
             testInputFormatter: true,
             formattableInputProperties: ['hashRate'],
+            formattablePropertyByteLengths: { hashRate: 32 },
         },
     ],
 };

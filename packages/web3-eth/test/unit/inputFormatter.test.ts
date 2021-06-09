@@ -18,14 +18,18 @@ function checkForExpected(
     rpcMethod: string,
     originalParameters: any,
     desiredType: ValidTypesEnum,
-    formattableProperties: string[] = []
+    formattableProperties: string[] = [],
+    formattablePropertyByteLengths: { [key: string]: number } = {}
 ) {
     for (const formattableProperty of formattableProperties) {
         const convertedParameter = formatOutput(
             originalParameters[formattableProperty],
             desiredType
         );
-        const formattedParameter = formatInput(convertedParameter, 32);
+        const formattedParameter = formatInput(
+            convertedParameter,
+            formattablePropertyByteLengths[formattableProperty]
+        );
         originalParameters[formattableProperty] = formattedParameter;
         expect(web3RequestManagerSendSpy).toBeCalledWith(
             {
@@ -72,7 +76,8 @@ describe('Web3Eth Input Formatter Tests', () => {
                                 method.rpcMethod,
                                 method.parameters,
                                 ValidTypesEnum[validType as ValidTypesEnum],
-                                method.formattableInputProperties
+                                method.formattableInputProperties,
+                                method.formattablePropertyByteLengths
                             );
                         });
                     });
