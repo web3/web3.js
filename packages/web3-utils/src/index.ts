@@ -31,7 +31,7 @@ export function formatInput(input: ValidTypes, byteLength?: number): HexString {
     }
     if (byteLength && formattedInput.length < byteLength) {
         const bufferInput = toBuffer(formattedInput);
-        const paddedBufferInput = setLengthLeft(bufferInput, 32);
+        const paddedBufferInput = setLengthLeft(bufferInput, byteLength);
         formattedInput = `0x${paddedBufferInput.toString('hex')}`;
     }
     return formattedInput;

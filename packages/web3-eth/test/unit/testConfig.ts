@@ -950,7 +950,7 @@ export const testConfig: TestConfig = {
             name: 'submitWork',
             rpcMethod: 'eth_submitWork',
             parameters: {
-                nonce: '0x2a',
+                nonce: '0x000000000000002a',
                 powHash:
                     '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
                 digest: '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
