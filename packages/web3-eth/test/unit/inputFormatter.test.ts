@@ -22,15 +22,25 @@ function checkForExpected(
     formattablePropertyByteLengths: { [key: string]: number } = {}
 ) {
     for (const formattableProperty of formattableProperties) {
-        const convertedParameter = formatOutput(
-            originalParameters[formattableProperty],
-            desiredType
-        );
+        const convertedParameter = originalParameters.filter
+            ? formatOutput(
+                  originalParameters.filter[formattableProperty],
+                  desiredType
+              )
+            : formatOutput(
+                  originalParameters[formattableProperty],
+                  desiredType
+              );
         const formattedParameter = formatInput(
             convertedParameter,
             formattablePropertyByteLengths[formattableProperty]
         );
-        originalParameters[formattableProperty] = formattedParameter;
+
+        if (originalParameters.filter) {
+            originalParameters.filter[formattableProperty] = formattedParameter;
+        } else {
+            originalParameters[formattableProperty] = formattedParameter;
+        }
         expect(web3RequestManagerSendSpy).toBeCalledWith(
             {
                 method: rpcMethod,
