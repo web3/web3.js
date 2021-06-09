@@ -27,15 +27,12 @@ var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
-var RLP = require("eth-lib/lib/rlp"); // jshint ignore:line
-var {decodeUnknownTxType} = require("./helpers");
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var {TransactionFactory, Transaction, FeeMarketEIP1559Transaction, AccessListEIP2930Transaction} = require('@ethereumjs/tx');
+var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 
 
@@ -208,7 +205,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
-
             var ethTx = TransactionFactory.fromTxData(transaction, transactionOptions);
             var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
             var validationErrors = signedTx.validate(true);
@@ -293,8 +289,9 @@ function _validateTransactionForSigning(tx) {
 
 /* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
-    // Determine if the transaction is typed or not
-    const tx = decodeUnknownTxType(rawTx);
+    // Rely on EthereumJs/tx to determine the type of transaction
+    const data = Buffer.from(rawTx.slice(2), "hex")
+    const tx = TransactionFactory.fromSerializedData(data);
     return tx.getSenderAddress().toString("hex");
 };
 /* jshint ignore:end */
