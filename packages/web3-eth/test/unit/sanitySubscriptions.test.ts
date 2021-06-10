@@ -11,6 +11,11 @@ import { testConfig } from './testConfig';
 let web3RequestManagerSubscribeSpy: jest.SpyInstance;
 let web3Eth: Web3Eth;
 
+/**
+ * This test suite verifes that {Web3RequestManager.subscribe} is called
+ * with the expected parameters when {callOptions.subscribe} = true
+ */
+
 function checkForExpected(rpcOptions: PartialRpcOptions) {
     expect(web3RequestManagerSubscribeSpy).toHaveBeenCalledWith(
         rpcOptions,

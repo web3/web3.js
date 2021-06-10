@@ -9,6 +9,12 @@ import { testConfig } from './testConfig';
 let web3Eth: Web3Eth;
 let web3RequestManagerSendSpy: jest.SpyInstance;
 
+/**
+ * This test suite verifies that each method in {Web3Eth} returns
+ * {formattableProperties} as the specified {callOptions.returnType} for
+ * each possible {ValidTypesEnum}
+ */
+
 function checkForExpected(
     expectedResult: RpcResponse,
     actualResult: RpcResponse,

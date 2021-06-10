@@ -12,6 +12,13 @@ import { testConfig } from './testConfig';
 let web3Eth: Web3Eth;
 let web3RequestManagerSendSpy: jest.SpyInstance;
 
+/**
+ * This test suite verifies that each method in {testConfig} exists on the
+ * {Web3Eth} class, that {Web3RequestManager.send} is called with
+ * the expected parameters, and the the correct response is returned
+ * from each method defined in {Web3Eth}
+ */
+
 function checkForExpected(
     expectedResult: RpcResponse,
     actualResult: RpcResponse,
@@ -62,14 +69,14 @@ for (const method of testConfig.methods) {
                           method.defaultExpectedResult,
                           methodResult,
                           rpcOptions,
-                          method.callOptions
+                          undefined
                       );
                   })
                 : checkForExpected(
                       method.defaultExpectedResult,
                       result,
                       rpcOptions,
-                      method.callOptions
+                      undefined
                   );
         });
 
@@ -92,14 +99,14 @@ for (const method of testConfig.methods) {
                           method.defaultExpectedResult,
                           methodResult,
                           rpcOptions,
-                          method.callOptions
+                          undefined
                       );
                   })
                 : checkForExpected(
                       method.defaultExpectedResult,
                       result,
                       rpcOptions,
-                      method.callOptions
+                      undefined
                   );
         });
     });
