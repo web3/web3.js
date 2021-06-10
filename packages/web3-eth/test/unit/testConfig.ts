@@ -1,12 +1,10 @@
-import { ProviderCallOptions, RpcResponse } from 'web3-providers-base/types';
+import { RpcResponse } from 'web3-providers-base/types';
 import { DEFAULT_ACCOUNTS } from '../constants';
-import { BlockTags } from '../../types';
 
 interface Method {
     name: string;
     rpcMethod: string;
     parameters?: any;
-    callOptions?: ProviderCallOptions;
     defaultExpectedResult: RpcResponse;
     testInputFormatter?: true;
     testOutputFormatter?: true;
