@@ -5,7 +5,7 @@ import {
     SubscriptionResponse,
     RpcParams,
 } from 'web3-providers-base/types';
-import { formatInput, formatOutput, formatRpcResultArray } from 'web3-utils';
+import { toHex, formatOutput, formatRpcResultArray } from 'web3-utils';
 import { HexString, ValidTypes, ValidTypesEnum } from 'web3-utils/types';
 
 import {
@@ -471,7 +471,7 @@ export default class Web3Eth {
                     address,
                     Web3Eth._isBlockTag(blockIdentifier)
                         ? (blockIdentifier as BlockTags)
-                        : formatInput(blockIdentifier),
+                        : toHex(blockIdentifier),
                 ],
                 callOptions,
             ];
@@ -514,11 +514,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getStorageAt',
-                [
-                    address,
-                    formatInput(storagePosition),
-                    formatInput(blockIdentifier),
-                ],
+                [address, toHex(storagePosition), toHex(blockIdentifier)],
                 callOptions,
             ];
 
@@ -558,7 +554,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionCount',
-                [address, formatInput(blockIdentifier)],
+                [address, toHex(blockIdentifier)],
                 callOptions,
             ];
 
@@ -637,7 +633,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getBlockTransactionCountByNumber',
-                [formatInput(blockIdentifier)],
+                [toHex(blockIdentifier)],
                 callOptions,
             ];
 
@@ -714,7 +710,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getUncleCountByBlockNumber',
-                [formatInput(blockIdentifier)],
+                [toHex(blockIdentifier)],
                 callOptions,
             ];
 
@@ -754,11 +750,7 @@ export default class Web3Eth {
                 string,
                 [HexString, HexString],
                 CallOptions | undefined
-            ] = [
-                'eth_getCode',
-                [address, formatInput(blockIdentifier)],
-                callOptions,
-            ];
+            ] = ['eth_getCode', [address, toHex(blockIdentifier)], callOptions];
             return callOptions?.subscribe
                 ? await this._subscribe(...requestParameters)
                 : await this._send(...requestParameters);
@@ -826,16 +818,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? formatInput(transaction.gas)
+                            ? toHex(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? formatInput(transaction.gasPrice)
+                            ? toHex(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? formatInput(transaction.value)
+                            ? toHex(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? formatInput(transaction.nonce)
+                            ? toHex(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -879,16 +871,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? formatInput(transaction.gas)
+                            ? toHex(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? formatInput(transaction.gasPrice)
+                            ? toHex(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? formatInput(transaction.value)
+                            ? toHex(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? formatInput(transaction.nonce)
+                            ? toHex(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -959,16 +951,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? formatInput(transaction.gas)
+                            ? toHex(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? formatInput(transaction.gasPrice)
+                            ? toHex(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? formatInput(transaction.value)
+                            ? toHex(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? formatInput(transaction.nonce)
+                            ? toHex(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -1012,16 +1004,16 @@ export default class Web3Eth {
                     {
                         ...transaction,
                         gas: transaction.gas
-                            ? formatInput(transaction.gas)
+                            ? toHex(transaction.gas)
                             : undefined,
                         gasPrice: transaction.gasPrice
-                            ? formatInput(transaction.gasPrice)
+                            ? toHex(transaction.gasPrice)
                             : undefined,
                         value: transaction.value
-                            ? formatInput(transaction.value)
+                            ? toHex(transaction.value)
                             : undefined,
                         nonce: transaction.nonce
-                            ? formatInput(transaction.nonce)
+                            ? toHex(transaction.nonce)
                             : undefined,
                     },
                 ],
@@ -1110,7 +1102,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getBlockByNumber',
-                [formatInput(blockIdentifier), returnFullTxs],
+                [toHex(blockIdentifier), returnFullTxs],
                 callOptions,
             ];
 
@@ -1203,7 +1195,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionByBlockHashAndIndex',
-                [blockHash, formatInput(transactionIndex)],
+                [blockHash, toHex(transactionIndex)],
                 callOptions,
             ];
 
@@ -1254,7 +1246,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionByBlockNumberAndIndex',
-                [formatInput(blockIdentifier), formatInput(transactionIndex)],
+                [toHex(blockIdentifier), toHex(transactionIndex)],
                 callOptions,
             ];
 
@@ -1340,7 +1332,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getUncleByBlockHashAndIndex',
-                [blockHash, formatInput(uncleIndex)],
+                [blockHash, toHex(uncleIndex)],
                 callOptions,
             ];
 
@@ -1392,7 +1384,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_getUncleByBlockNumberAndIndex',
-                [formatInput(blockIdentifier), formatInput(uncleIndex)],
+                [toHex(blockIdentifier), toHex(uncleIndex)],
                 callOptions,
             ];
 
@@ -1556,10 +1548,10 @@ export default class Web3Eth {
                     {
                         ...filter,
                         fromBlock: filter.fromBlock
-                            ? formatInput(filter.fromBlock)
+                            ? toHex(filter.fromBlock)
                             : undefined,
                         toBlock: filter.toBlock
-                            ? formatInput(filter.toBlock)
+                            ? toHex(filter.toBlock)
                             : undefined,
                     },
                 ],
@@ -1664,7 +1656,7 @@ export default class Web3Eth {
                 string,
                 [HexString],
                 CallOptions | undefined
-            ] = ['eth_uninstallFilter', [formatInput(filterId)], callOptions];
+            ] = ['eth_uninstallFilter', [toHex(filterId)], callOptions];
             return callOptions?.subscribe
                 ? await this._subscribe(...requestParameters)
                 : await this._send(...requestParameters);
@@ -1691,7 +1683,7 @@ export default class Web3Eth {
                 string,
                 [HexString],
                 CallOptions | undefined
-            ] = ['eth_getFilterChanges', [formatInput(filterId)], callOptions];
+            ] = ['eth_getFilterChanges', [toHex(filterId)], callOptions];
 
             if (callOptions?.subscribe)
                 return await this._subscribe(...requestParameters);
@@ -1727,7 +1719,7 @@ export default class Web3Eth {
                 string,
                 [HexString],
                 CallOptions | undefined
-            ] = ['eth_getFilterLogs', [formatInput(filterId)], callOptions];
+            ] = ['eth_getFilterLogs', [toHex(filterId)], callOptions];
 
             if (callOptions?.subscribe)
                 return await this._subscribe(...requestParameters);
@@ -1768,10 +1760,10 @@ export default class Web3Eth {
                     {
                         ...filter,
                         fromBlock: filter.fromBlock
-                            ? formatInput(filter.fromBlock)
+                            ? toHex(filter.fromBlock)
                             : undefined,
                         toBlock: filter.toBlock
-                            ? formatInput(filter.toBlock)
+                            ? toHex(filter.toBlock)
                             : undefined,
                     },
                 ],
@@ -1841,7 +1833,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_submitWork',
-                [formatInput(nonce, 8), powHash, digest],
+                [toHex(nonce, 8), powHash, digest],
                 callOptions,
             ];
             return callOptions?.subscribe
@@ -1873,7 +1865,7 @@ export default class Web3Eth {
                 CallOptions | undefined
             ] = [
                 'eth_submitHashRate',
-                [formatInput(hashRate, 32), formatInput(clientId)],
+                [toHex(hashRate, 32), toHex(clientId)],
                 callOptions,
             ];
             return callOptions?.subscribe

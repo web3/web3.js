@@ -1,5 +1,5 @@
 import { ValidTypesEnum } from 'web3-utils/types';
-import { formatInput, formatOutput } from 'web3-utils';
+import { toHex, formatOutput } from 'web3-utils';
 import Web3RequestManager from 'web3-core-requestmanager';
 
 import Web3Eth from '../../src';
@@ -31,7 +31,7 @@ function checkForExpected(
                   originalParameters[formattableProperty],
                   desiredType
               );
-        const formattedParameter = formatInput(
+        const formattedParameter = toHex(
             convertedParameter,
             formattablePropertyByteLengths[formattableProperty]
         );
