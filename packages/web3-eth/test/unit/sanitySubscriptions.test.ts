@@ -12,7 +12,10 @@ let web3RequestManagerSubscribeSpy: jest.SpyInstance;
 let web3Eth: Web3Eth;
 
 function checkForExpected(rpcOptions: PartialRpcOptions) {
-    expect(web3RequestManagerSubscribeSpy).toHaveBeenCalledWith(rpcOptions, undefined);
+    expect(web3RequestManagerSubscribeSpy).toHaveBeenCalledWith(
+        rpcOptions,
+        undefined
+    );
 }
 
 for (const method of testConfig.methods) {
