@@ -5,7 +5,9 @@ interface TestCase {
     inputType: ValidTypesEnum | 'Array';
     shouldError?: true;
     errorMessage?: string;
-    formattedInputs?: { [key: string]: ValidTypes | any[] };
+    formattedInputs?: {
+        [key: string]: ValidTypes | any[] | { [key: string]: any };
+    };
     formattableProperties?: string[];
 }
 
@@ -332,6 +334,46 @@ export const testConfig: TestConfig = {
                         propertyThree: BigInt('0xabc'),
                     },
                 ],
+            },
+        },
+        {
+            input: {
+                propertyOne: 42,
+                propertyTwo: '13',
+                propertyThree: '0xabc',
+            },
+            inputType: 'Array',
+            formattableProperties: [
+                'propertyOne',
+                'propertyTwo',
+                'propertyThree',
+            ],
+            formattedInputs: {
+                Number: {
+                    propertyOne: 42,
+                    propertyTwo: 13,
+                    propertyThree: 2748,
+                },
+                HexString: {
+                    propertyOne: '2a',
+                    propertyTwo: 'd',
+                    propertyThree: 'abc',
+                },
+                PrefixedHexString: {
+                    propertyOne: '0x2a',
+                    propertyTwo: '0xd',
+                    propertyThree: '0xabc',
+                },
+                NumberString: {
+                    propertyOne: '42',
+                    propertyTwo: '13',
+                    propertyThree: '2748',
+                },
+                BigInt: {
+                    propertyOne: BigInt(42),
+                    propertyTwo: BigInt('13'),
+                    propertyThree: BigInt('0xabc'),
+                },
             },
         },
     ],
