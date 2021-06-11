@@ -292,7 +292,8 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOpt
     // Rely on EthereumJs/tx to determine the type of transaction
     const data = Buffer.from(rawTx.slice(2), "hex")
     const tx = TransactionFactory.fromSerializedData(data);
-    return tx.getSenderAddress().toString("hex");
+    //update checksum
+    return utils.toChecksumAddress(tx.getSenderAddress().toString("hex"));
 };
 /* jshint ignore:end */
 

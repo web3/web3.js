@@ -738,7 +738,7 @@ describe("eth", function () {
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
                     testAccount.signTransaction(test.transaction).then(function (tx) {
-                        assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address.toLowerCase());
+                        assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
                         done();
                     })
                     .catch(e => {
