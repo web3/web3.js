@@ -3,6 +3,7 @@ import { toHex, formatOutput } from '../../src';
 
 describe('Should convert each testConfig.testCases to a hex string', () => {
     for (const testCase of testConfig.testCases) {
+        if (testCase.inputType === 'Array') continue;
         it(
             testCase.shouldError
                 ? `Should error because ${testCase.input} is an unsupported type`
@@ -10,12 +11,15 @@ describe('Should convert each testConfig.testCases to a hex string', () => {
             () => {
                 if (testCase.shouldError) {
                     expect(() => {
+                        // @ts-ignore Already checking that testCase.input is not an array
                         toHex(testCase.input);
-                    }).toThrowError(testCase.errorMessage || 'cheese');
+                    }).toThrowError(testCase.errorMessage);
                 } else {
+                    // @ts-ignore Already checking that testCase.input is not an array
                     const hexInput = toHex(testCase.input);
                     const convertedInput = formatOutput(
                         hexInput,
+                        // @ts-ignore Already checking that testCase.input is not an array
                         testCase.inputType
                     );
                     expect(convertedInput).toBe(

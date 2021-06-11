@@ -3,33 +3,17 @@ import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
 import { ValidTypes, ValidTypesEnum, HexString } from '../types';
 
-function padHex(hexString: HexString, byteLength: number): HexString {
-    const bufferInput = toBuffer(hexString);
-    const paddedBufferInput = setLengthLeft(bufferInput, byteLength);
-    return `0x${paddedBufferInput.toString('hex')}`;
-}
-
-export function toHex(input: ValidTypes, byteLength?: number): HexString {
-    let hexInput;
+function determineValidType(input: ValidTypes): ValidTypesEnum {
     switch (typeof input) {
         case 'number':
-            if (input < 0)
-                throw Error(`Cannot convert number less than 0: ${input}`);
-            if (input % 1 !== 0) throw Error(`Cannot convert float: ${input}`);
-            hexInput = `0x${input.toString(16)}`;
-            break;
+            return ValidTypesEnum.Number;
         case 'string':
             if (/^[1-9]+$/i.test(input)) {
-                // Input is a number string
-
-                const parsedHexString = BigInt(input).toString(16);
-                if (parsedHexString.substr(0, 1) === '-')
-                    throw Error(`Cannot convert number less than 0: ${input}`);
-
-                hexInput = `0x${parsedHexString}`;
+                // Input is number string
+                return ValidTypesEnum.NumberString;
             } else if (/^(?:0x)?[0-9A-Fa-f]+$/i.test(input)) {
                 // Input is a hex string, possibly prefixed with 0x
-                hexInput = input.substr(0, 2) === '0x' ? input : `0x${input}`;
+                return ValidTypesEnum.HexString;
             } else {
                 if (input.substr(0, 1) === '-')
                     throw Error(`Cannot convert number less than 0: ${input}`);
@@ -37,9 +21,47 @@ export function toHex(input: ValidTypes, byteLength?: number): HexString {
                     throw Error(`Cannot convert float: ${input}`);
                 throw Error(`Cannot convert arbitrary string: ${input}`);
             }
-            break;
         case 'bigint':
-            const parsedHexString = BigInt(input).toString(16);
+            return ValidTypesEnum.BigInt;
+        default:
+            throw Error(
+                `Provided input: ${input} is not a valid type (${Object.keys(
+                    ValidTypesEnum
+                ).map((validType) => `${validType} `)})`
+            );
+    }
+}
+
+function padHex(hexString: HexString, byteLength: number): HexString {
+    const bufferInput = toBuffer(hexString);
+    const paddedBufferInput = setLengthLeft(bufferInput, byteLength);
+    return `0x${paddedBufferInput.toString('hex')}`;
+}
+
+export function toHex(input: ValidTypes, byteLength?: number): HexString {
+    let hexInput: HexString;
+    let parsedHexString: HexString;
+    switch (determineValidType(input)) {
+        case ValidTypesEnum.Number:
+            if (input < 0)
+                throw Error(`Cannot convert number less than 0: ${input}`);
+            if ((input as number) % 1 !== 0)
+                throw Error(`Cannot convert float: ${input}`);
+            hexInput = `0x${input.toString(16)}`;
+            break;
+        case ValidTypesEnum.NumberString:
+            parsedHexString = BigInt(input as string).toString(16);
+            if (parsedHexString.substr(0, 1) === '-')
+                throw Error(`Cannot convert number less than 0: ${input}`);
+
+            hexInput = `0x${parsedHexString}`;
+            break;
+        case ValidTypesEnum.HexString:
+            // @ts-ignore
+            hexInput = input.substr(0, 2) === '0x' ? input : `0x${input}`;
+            break;
+        case ValidTypesEnum.BigInt:
+            parsedHexString = input.toString(16);
             if (parsedHexString.substr(0, 1) === '-')
                 throw Error(`Cannot convert number less than 0: ${input}`);
 
