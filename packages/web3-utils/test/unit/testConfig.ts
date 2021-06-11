@@ -230,9 +230,14 @@ export const testConfig: TestConfig = {
                     propertyThree: '0xabc',
                 },
                 {
-                    propertyOne: 67,
-                    propertyTwo: '45',
-                    propertyThree: '0xc0ff3',
+                    propertyOne: 42,
+                    propertyTwo: '13',
+                    propertyThree: '0xabc',
+                },
+                {
+                    propertyOne: 42,
+                    propertyTwo: '13',
+                    propertyThree: '0xabc',
                 },
             ],
             inputType: 'Array',
@@ -249,9 +254,14 @@ export const testConfig: TestConfig = {
                         propertyThree: 2748,
                     },
                     {
-                        propertyOne: 67,
-                        propertyTwo: 45,
-                        propertyThree: 790515,
+                        propertyOne: 42,
+                        propertyTwo: 13,
+                        propertyThree: 2748,
+                    },
+                    {
+                        propertyOne: 42,
+                        propertyTwo: 13,
+                        propertyThree: 2748,
                     },
                 ],
                 HexString: [
@@ -261,9 +271,14 @@ export const testConfig: TestConfig = {
                         propertyThree: 'abc',
                     },
                     {
-                        propertyOne: '43',
-                        propertyTwo: '2d',
-                        propertyThree: 'c0ff3',
+                        propertyOne: '2a',
+                        propertyTwo: 'd',
+                        propertyThree: 'abc',
+                    },
+                    {
+                        propertyOne: '2a',
+                        propertyTwo: 'd',
+                        propertyThree: 'abc',
                     },
                 ],
                 PrefixedHexString: [
@@ -273,9 +288,14 @@ export const testConfig: TestConfig = {
                         propertyThree: '0xabc',
                     },
                     {
-                        propertyOne: '0x43',
-                        propertyTwo: '0x2d',
-                        propertyThree: '0xc0ff3',
+                        propertyOne: '0x2a',
+                        propertyTwo: '0xd',
+                        propertyThree: '0xabc',
+                    },
+                    {
+                        propertyOne: '0x2a',
+                        propertyTwo: '0xd',
+                        propertyThree: '0xabc',
                     },
                 ],
                 NumberString: [
@@ -285,9 +305,14 @@ export const testConfig: TestConfig = {
                         propertyThree: '2748',
                     },
                     {
-                        propertyOne: '67',
-                        propertyTwo: '45',
-                        propertyThree: '790515',
+                        propertyOne: '42',
+                        propertyTwo: '13',
+                        propertyThree: '2748',
+                    },
+                    {
+                        propertyOne: '42',
+                        propertyTwo: '13',
+                        propertyThree: '2748',
                     },
                 ],
                 BigInt: [
@@ -297,9 +322,14 @@ export const testConfig: TestConfig = {
                         propertyThree: BigInt('0xabc'),
                     },
                     {
-                        propertyOne: BigInt(67),
-                        propertyTwo: BigInt('45'),
-                        propertyThree: BigInt('0xc0ff3'),
+                        propertyOne: BigInt(42),
+                        propertyTwo: BigInt('13'),
+                        propertyThree: BigInt('0xabc'),
+                    },
+                    {
+                        propertyOne: BigInt(42),
+                        propertyTwo: BigInt('13'),
+                        propertyThree: BigInt('0xabc'),
                     },
                 ],
             },

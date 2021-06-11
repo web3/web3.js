@@ -19,7 +19,6 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
                 return ValidTypesEnum.Number;
             case 'string':
                 if (/^[1-9]+$/i.test(input)) {
-                    // Input is number string
                     return ValidTypesEnum.NumberString;
                 } else if (/^[0-9A-Fa-f]+$/i.test(input)) {
                     return ValidTypesEnum.HexString;
@@ -77,9 +76,6 @@ export function toHex(
                 break;
             case ValidTypesEnum.NumberString:
                 parsedHexString = BigInt(input as string).toString(16);
-                if (parsedHexString.substr(0, 1) === '-')
-                    throw Error(`Cannot convert number less than 0: ${input}`);
-
                 hexInput = `0x${parsedHexString}`;
                 break;
             case ValidTypesEnum.HexString:
@@ -129,7 +125,7 @@ export function formatOutput(
                 formattedOutput = formattedOutput.substr(2);
                 break;
             case ValidTypesEnum.PrefixedHexString:
-                // formattedOutput is already converted to HexString
+                // formattedOutput has already been converted to PrefixedHexString
                 break;
             case ValidTypesEnum.NumberString:
                 formattedOutput = BigInt(formattedOutput).toString();
