@@ -22,9 +22,7 @@ describe('Should convert each testConfig.testCases to a hex string', () => {
                         // @ts-ignore Already checking that testCase.input is not an array
                         testCase.inputType
                     );
-                    expect(convertedInput).toBe(
-                        testCase.expectedFormattedInput || testCase.input
-                    );
+                    expect(convertedInput).toBe(testCase.input);
                 }
             }
         );

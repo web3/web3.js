@@ -5,7 +5,6 @@ interface TestCase {
     inputType: ValidTypesEnum | 'Array';
     shouldError?: true;
     errorMessage?: string;
-    expectedFormattedInput?: ValidTypes;
     formattedInputs?: { [key: string]: ValidTypes | any[] };
     formattableProperties?: string[];
 }
@@ -21,7 +20,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 42,
-                HexString: '0x2a',
+                HexString: '2a',
+                PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
             },
@@ -31,7 +31,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 0,
-                HexString: '0x0',
+                HexString: '0',
+                PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
             },
@@ -41,7 +42,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 1,
-                HexString: '0x1',
+                HexString: '1',
+                PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
@@ -60,41 +62,44 @@ export const testConfig: TestConfig = {
         },
         {
             input: '0x1',
-            inputType: ValidTypesEnum.HexString,
+            inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 1,
-                HexString: '0x1',
+                HexString: '1',
+                PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
         },
         {
             input: '0x01',
-            inputType: ValidTypesEnum.HexString,
-            expectedFormattedInput: '0x01',
+            inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 1,
-                HexString: '0x01',
+                HexString: '01',
+                PrefixedHexString: '0x01',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
         },
         {
             input: '0x0',
-            inputType: ValidTypesEnum.HexString,
+            inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 0,
-                HexString: '0x0',
+                HexString: '0',
+                PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
             },
         },
         {
             input: '0xabc',
-            inputType: ValidTypesEnum.HexString,
+            inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 2748,
-                HexString: '0xabc',
+                HexString: 'abc',
+                PrefixedHexString: '0xabc',
                 NumberString: '2748',
                 BigInt: BigInt(2748),
             },
@@ -102,10 +107,10 @@ export const testConfig: TestConfig = {
         {
             input: '01',
             inputType: ValidTypesEnum.HexString,
-            expectedFormattedInput: '0x01',
             formattedInputs: {
                 Number: 1,
-                HexString: '0x01',
+                HexString: '01',
+                PrefixedHexString: '0x01',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
@@ -113,10 +118,10 @@ export const testConfig: TestConfig = {
         {
             input: 'abc',
             inputType: ValidTypesEnum.HexString,
-            expectedFormattedInput: '0xabc',
             formattedInputs: {
                 Number: 2748,
-                HexString: '0xabc',
+                HexString: 'abc',
+                PrefixedHexString: '0xabc',
                 NumberString: '2748',
                 BigInt: BigInt(2748),
             },
@@ -131,14 +136,15 @@ export const testConfig: TestConfig = {
             input: '0xxyz',
             shouldError: true,
             errorMessage: 'Cannot convert arbitrary string: 0xxyz',
-            inputType: ValidTypesEnum.HexString,
+            inputType: ValidTypesEnum.PrefixedHexString,
         },
         {
             input: '42',
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 42,
-                HexString: '0x2a',
+                HexString: '2a',
+                PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
             },
@@ -148,7 +154,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 0,
-                HexString: '0x0',
+                HexString: '0',
+                PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
             },
@@ -158,7 +165,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 1,
-                HexString: '0x1',
+                HexString: '1',
+                PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
@@ -180,7 +188,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 42,
-                HexString: '0x2a',
+                HexString: '2a',
+                PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
             },
@@ -190,7 +199,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 0,
-                HexString: '0x0',
+                HexString: '0',
+                PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
             },
@@ -200,7 +210,8 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 1,
-                HexString: '0x1',
+                HexString: '1',
+                PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
             },
@@ -244,6 +255,18 @@ export const testConfig: TestConfig = {
                     },
                 ],
                 HexString: [
+                    {
+                        propertyOne: '2a',
+                        propertyTwo: 'd',
+                        propertyThree: 'abc',
+                    },
+                    {
+                        propertyOne: '43',
+                        propertyTwo: '2d',
+                        propertyThree: 'c0ff3',
+                    },
+                ],
+                PrefixedHexString: [
                     {
                         propertyOne: '0x2a',
                         propertyTwo: '0xd',
