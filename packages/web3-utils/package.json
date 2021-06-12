@@ -15,7 +15,9 @@
         "build": "yarn clean && yarn compile",
         "clean": "rimraf lib",
         "compile": "tsc --build",
-        "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0"
+        "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
+        "test": "jest",
+        "test:unit": "jest ./test/unit"
     },
     "devDependencies": {
         "@types/jest": "^26.0.22",

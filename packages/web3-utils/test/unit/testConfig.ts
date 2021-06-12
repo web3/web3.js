@@ -1,12 +1,12 @@
 import { ValidTypes, ValidTypesEnum } from '../../types';
 
 interface TestCase {
-    input: ValidTypes | { [key: string]: any };
+    input: ValidTypes | null | { [key: string]: any };
     inputType: ValidTypesEnum | 'Array';
     shouldError?: true;
     errorMessage?: string;
     formattedInputs?: {
-        [key: string]: ValidTypes | any[] | { [key: string]: any };
+        [key: string]: ValidTypes | any[] | null | { [key: string]: any };
     };
     formattableProperties?: string[];
 }
@@ -225,6 +225,17 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
         },
         {
+            input: null,
+            inputType: ValidTypesEnum.BigInt,
+            formattedInputs: {
+                Number: null,
+                HexString: null,
+                PrefixedHexString: null,
+                NumberString: null,
+                BigInt: null,
+            },
+        },
+        {
             input: [
                 {
                     propertyOne: 42,
@@ -372,6 +383,198 @@ export const testConfig: TestConfig = {
                 BigInt: {
                     propertyOne: BigInt(42),
                     propertyTwo: BigInt('13'),
+                    propertyThree: BigInt('0xabc'),
+                },
+            },
+        },
+        {
+            input: {
+                propertyOne: 42,
+                propertyTwo: '13',
+                propertyThree: '0xabc',
+            },
+            inputType: 'Array',
+            formattableProperties: [
+                'propertyOne',
+                'propertyTwo',
+                'propertyThree',
+            ],
+            formattedInputs: {
+                Number: {
+                    propertyOne: 42,
+                    propertyTwo: 13,
+                    propertyThree: 2748,
+                },
+                HexString: {
+                    propertyOne: '2a',
+                    propertyTwo: 'd',
+                    propertyThree: 'abc',
+                },
+                PrefixedHexString: {
+                    propertyOne: '0x2a',
+                    propertyTwo: '0xd',
+                    propertyThree: '0xabc',
+                },
+                NumberString: {
+                    propertyOne: '42',
+                    propertyTwo: '13',
+                    propertyThree: '2748',
+                },
+                BigInt: {
+                    propertyOne: BigInt(42),
+                    propertyTwo: BigInt('13'),
+                    propertyThree: BigInt('0xabc'),
+                },
+            },
+        },
+        {
+            input: [
+                {
+                    propertyOne: 42,
+                    propertyTwo: null,
+                    propertyThree: '0xabc',
+                },
+                {
+                    propertyOne: 42,
+                    propertyTwo: null,
+                    propertyThree: '0xabc',
+                },
+                {
+                    propertyOne: 42,
+                    propertyTwo: null,
+                    propertyThree: '0xabc',
+                },
+            ],
+            inputType: 'Array',
+            formattableProperties: [
+                'propertyOne',
+                'propertyTwo',
+                'propertyThree',
+            ],
+            formattedInputs: {
+                Number: [
+                    {
+                        propertyOne: 42,
+                        propertyTwo: null,
+                        propertyThree: 2748,
+                    },
+                    {
+                        propertyOne: 42,
+                        propertyTwo: null,
+                        propertyThree: 2748,
+                    },
+                    {
+                        propertyOne: 42,
+                        propertyTwo: null,
+                        propertyThree: 2748,
+                    },
+                ],
+                HexString: [
+                    {
+                        propertyOne: '2a',
+                        propertyTwo: null,
+                        propertyThree: 'abc',
+                    },
+                    {
+                        propertyOne: '2a',
+                        propertyTwo: null,
+                        propertyThree: 'abc',
+                    },
+                    {
+                        propertyOne: '2a',
+                        propertyTwo: null,
+                        propertyThree: 'abc',
+                    },
+                ],
+                PrefixedHexString: [
+                    {
+                        propertyOne: '0x2a',
+                        propertyTwo: null,
+                        propertyThree: '0xabc',
+                    },
+                    {
+                        propertyOne: '0x2a',
+                        propertyTwo: null,
+                        propertyThree: '0xabc',
+                    },
+                    {
+                        propertyOne: '0x2a',
+                        propertyTwo: null,
+                        propertyThree: '0xabc',
+                    },
+                ],
+                NumberString: [
+                    {
+                        propertyOne: '42',
+                        propertyTwo: null,
+                        propertyThree: '2748',
+                    },
+                    {
+                        propertyOne: '42',
+                        propertyTwo: null,
+                        propertyThree: '2748',
+                    },
+                    {
+                        propertyOne: '42',
+                        propertyTwo: null,
+                        propertyThree: '2748',
+                    },
+                ],
+                BigInt: [
+                    {
+                        propertyOne: BigInt(42),
+                        propertyTwo: null,
+                        propertyThree: BigInt('0xabc'),
+                    },
+                    {
+                        propertyOne: BigInt(42),
+                        propertyTwo: null,
+                        propertyThree: BigInt('0xabc'),
+                    },
+                    {
+                        propertyOne: BigInt(42),
+                        propertyTwo: null,
+                        propertyThree: BigInt('0xabc'),
+                    },
+                ],
+            },
+        },
+        {
+            input: {
+                propertyOne: 42,
+                propertyTwo: null,
+                propertyThree: '0xabc',
+            },
+            inputType: 'Array',
+            formattableProperties: [
+                'propertyOne',
+                'propertyTwo',
+                'propertyThree',
+            ],
+            formattedInputs: {
+                Number: {
+                    propertyOne: 42,
+                    propertyTwo: null,
+                    propertyThree: 2748,
+                },
+                HexString: {
+                    propertyOne: '2a',
+                    propertyTwo: null,
+                    propertyThree: 'abc',
+                },
+                PrefixedHexString: {
+                    propertyOne: '0x2a',
+                    propertyTwo: null,
+                    propertyThree: '0xabc',
+                },
+                NumberString: {
+                    propertyOne: '42',
+                    propertyTwo: null,
+                    propertyThree: '2748',
+                },
+                BigInt: {
+                    propertyOne: BigInt(42),
+                    propertyTwo: null,
                     propertyThree: BigInt('0xabc'),
                 },
             },

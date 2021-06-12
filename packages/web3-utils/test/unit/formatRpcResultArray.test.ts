@@ -28,6 +28,8 @@ describe('Should convert each testConfig.testCases that is an array of objects',
                             );
                             if (testCase.formattedInputs) {
                                 expect(convertedInput).toMatchObject(
+                                    // @ts-ignore Complain that test.formattedInputs can be
+                                    // null instead of an array or object
                                     testCase.formattedInputs[
                                         ValidTypesEnum[
                                             validType as ValidTypesEnum

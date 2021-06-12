@@ -110,7 +110,8 @@ export function formatOutput(
     desiredType: ValidTypesEnum
 ): ValidTypes {
     try {
-        if (determineValidType(output) === desiredType) return output;
+        if (output === null || determineValidType(output) === desiredType)
+            return output;
 
         // Doing this allows us to assume we're always converting
         // from HexString to desiredType

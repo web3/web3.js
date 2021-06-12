@@ -3,7 +3,10 @@ import { toHex, formatOutput } from '../../src';
 
 describe('Should convert each testConfig.testCases to a hex string', () => {
     for (const testCase of testConfig.testCases) {
+        // Array of results is handled by formatRpcResultArray
         if (testCase.inputType === 'Array') continue;
+        // null tests are for formatOutput and formatRpcResultArray tests
+        if (testCase.input === null) continue;
         it(
             testCase.shouldError
                 ? `Should error because ${testCase.input} is an unsupported type`
