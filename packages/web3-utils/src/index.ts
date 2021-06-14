@@ -1,12 +1,7 @@
 import { RpcResponseResult } from 'web3-providers-base/types';
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
-import {
-    ValidTypes,
-    ValidTypesEnum,
-    HexString,
-    PrefixedHexString,
-} from '../types';
+import { ValidTypes, ValidTypesEnum, PrefixedHexString } from '../types';
 
 function determineValidType(input: ValidTypes): ValidTypesEnum {
     try {
@@ -18,10 +13,8 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
                     throw Error(`Cannot convert float: ${input}`);
                 return ValidTypesEnum.Number;
             case 'string':
-                if (/^[1-9]+$/i.test(input)) {
+                if (/^[0-9]+$/i.test(input)) {
                     return ValidTypesEnum.NumberString;
-                } else if (/^[0-9A-Fa-f]+$/i.test(input)) {
-                    return ValidTypesEnum.HexString;
                 } else if (/^0x[0-9A-Fa-f]+$/i.test(input)) {
                     return ValidTypesEnum.PrefixedHexString;
                 } else {
@@ -51,7 +44,10 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
     }
 }
 
-function padHex(hexString: HexString, byteLength: number): HexString {
+function padHex(
+    hexString: PrefixedHexString,
+    byteLength: number
+): PrefixedHexString {
     try {
         const bufferInput = toBuffer(hexString);
         const paddedBufferInput = setLengthLeft(bufferInput, byteLength);
@@ -68,8 +64,8 @@ export function toHex(
     byteLength?: number
 ): PrefixedHexString {
     try {
-        let hexInput: HexString;
-        let parsedHexString: HexString;
+        let hexInput: PrefixedHexString;
+        let parsedHexString: PrefixedHexString;
         switch (determineValidType(input)) {
             case ValidTypesEnum.Number:
                 hexInput = `0x${input.toString(16)}`;
@@ -77,9 +73,6 @@ export function toHex(
             case ValidTypesEnum.NumberString:
                 parsedHexString = BigInt(input as string).toString(16);
                 hexInput = `0x${parsedHexString}`;
-                break;
-            case ValidTypesEnum.HexString:
-                hexInput = `0x${input}`;
                 break;
             case ValidTypesEnum.PrefixedHexString:
                 hexInput = input as string;
@@ -114,16 +107,12 @@ export function formatOutput(
             return output;
 
         // Doing this allows us to assume we're always converting
-        // from HexString to desiredType
+        // from PrefixedHexString to desiredType
         let formattedOutput: ValidTypes = toHex(output);
 
         switch (desiredType) {
             case ValidTypesEnum.Number:
                 formattedOutput = parseInt(formattedOutput, 16);
-                break;
-            case ValidTypesEnum.HexString:
-                // formattedOutput is prefixed
-                formattedOutput = formattedOutput.substr(2);
                 break;
             case ValidTypesEnum.PrefixedHexString:
                 // formattedOutput has already been converted to PrefixedHexString

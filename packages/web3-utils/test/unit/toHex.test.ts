@@ -10,7 +10,7 @@ describe('Should convert each testConfig.testCases to a hex string', () => {
         it(
             testCase.shouldError
                 ? `Should error because ${testCase.input} is an unsupported type`
-                : `${testCase.input} should be converted to hex string`,
+                : `${testCase.input} (input type: ${testCase.inputType}) should be converted to hex string`,
             () => {
                 if (testCase.shouldError) {
                     expect(() => {

@@ -1,5 +1,9 @@
 import { RpcResponse } from 'web3-providers-base/types';
-import { HexString, ValidTypes, ValidTypesEnum } from 'web3-utils/types';
+import {
+    PrefixedHexString,
+    ValidTypes,
+    ValidTypesEnum,
+} from 'web3-utils/types';
 
 export enum BlockTags {
     latest = 'latest',
@@ -28,12 +32,12 @@ export type EthLog = {
  * @param data optional, but required if {to} is not provided
  */
 export type EthTransaction = {
-    from: HexString;
-    to?: HexString;
+    from: PrefixedHexString;
+    to?: PrefixedHexString;
     gas?: ValidTypes;
     gasPrice?: ValidTypes;
     value?: ValidTypes;
-    data?: HexString;
+    data?: PrefixedHexString;
     nonce?: ValidTypes;
 };
 
@@ -112,9 +116,9 @@ export type EthCompiledSolidity = {
 export type EthFilter = {
     fromBlock?: BlockIdentifier;
     toBlock?: BlockIdentifier;
-    address?: HexString;
-    topics?: HexString | null | HexString[][];
-    blockHash?: HexString;
+    address?: PrefixedHexString;
+    topics?: PrefixedHexString | null | PrefixedHexString[][];
+    blockHash?: PrefixedHexString;
 };
 
 export interface Web3EthOptions {

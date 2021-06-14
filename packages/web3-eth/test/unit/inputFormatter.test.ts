@@ -11,7 +11,7 @@ let web3RequestManagerSendSpy: jest.SpyInstance;
 /**
  * This test suite is a bit convoluted, but it's testing to make sure
  * that the expected {method.formattableInputProperties} are being formatted
- * from any {ValidTypes} to {HexString} before being passed to {Web3RequestManager.send}
+ * from any {ValidTypes} to {PrefixedHexString} before being passed to {Web3RequestManager.send}
  */
 
 function checkForExpected(
@@ -71,7 +71,7 @@ describe('Web3Eth Input Formatter Tests', () => {
             if (method.testInputFormatter) {
                 for (const validType in ValidTypesEnum) {
                     describe(`Return type: ${validType}`, () => {
-                        it('should convert expected formattable parameters to HexString', async () => {
+                        it('should convert expected formattable parameters to PrefixedHexString', async () => {
                             const parameters = method.parameters
                                 ? Object.values(method.parameters)
                                 : [];

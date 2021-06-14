@@ -22,7 +22,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 42,
-                HexString: '2a',
                 PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
@@ -33,7 +32,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 0,
-                HexString: '0',
                 PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
@@ -44,7 +42,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.Number,
             formattedInputs: {
                 Number: 1,
-                HexString: '1',
                 PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
@@ -67,7 +64,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 1,
-                HexString: '1',
                 PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
@@ -78,7 +74,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 1,
-                HexString: '01',
                 PrefixedHexString: '0x01',
                 NumberString: '1',
                 BigInt: BigInt(1),
@@ -89,7 +84,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 0,
-                HexString: '0',
                 PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
@@ -100,39 +94,10 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.PrefixedHexString,
             formattedInputs: {
                 Number: 2748,
-                HexString: 'abc',
                 PrefixedHexString: '0xabc',
                 NumberString: '2748',
                 BigInt: BigInt(2748),
             },
-        },
-        {
-            input: '01',
-            inputType: ValidTypesEnum.HexString,
-            formattedInputs: {
-                Number: 1,
-                HexString: '01',
-                PrefixedHexString: '0x01',
-                NumberString: '1',
-                BigInt: BigInt(1),
-            },
-        },
-        {
-            input: 'abc',
-            inputType: ValidTypesEnum.HexString,
-            formattedInputs: {
-                Number: 2748,
-                HexString: 'abc',
-                PrefixedHexString: '0xabc',
-                NumberString: '2748',
-                BigInt: BigInt(2748),
-            },
-        },
-        {
-            input: 'xyz',
-            shouldError: true,
-            errorMessage: 'Cannot convert arbitrary string: xyz',
-            inputType: ValidTypesEnum.HexString,
         },
         {
             input: '0xxyz',
@@ -145,7 +110,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 42,
-                HexString: '2a',
                 PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
@@ -156,7 +120,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 0,
-                HexString: '0',
                 PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
@@ -167,7 +130,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.NumberString,
             formattedInputs: {
                 Number: 1,
-                HexString: '1',
                 PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
@@ -190,7 +152,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 42,
-                HexString: '2a',
                 PrefixedHexString: '0x2a',
                 NumberString: '42',
                 BigInt: BigInt(42),
@@ -201,7 +162,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 0,
-                HexString: '0',
                 PrefixedHexString: '0x0',
                 NumberString: '0',
                 BigInt: BigInt(0),
@@ -212,7 +172,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: 1,
-                HexString: '1',
                 PrefixedHexString: '0x1',
                 NumberString: '1',
                 BigInt: BigInt(1),
@@ -229,7 +188,6 @@ export const testConfig: TestConfig = {
             inputType: ValidTypesEnum.BigInt,
             formattedInputs: {
                 Number: null,
-                HexString: null,
                 PrefixedHexString: null,
                 NumberString: null,
                 BigInt: null,
@@ -275,23 +233,6 @@ export const testConfig: TestConfig = {
                         propertyOne: 42,
                         propertyTwo: 13,
                         propertyThree: 2748,
-                    },
-                ],
-                HexString: [
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: 'd',
-                        propertyThree: 'abc',
-                    },
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: 'd',
-                        propertyThree: 'abc',
-                    },
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: 'd',
-                        propertyThree: 'abc',
                     },
                 ],
                 PrefixedHexString: [
@@ -365,11 +306,6 @@ export const testConfig: TestConfig = {
                     propertyTwo: 13,
                     propertyThree: 2748,
                 },
-                HexString: {
-                    propertyOne: '2a',
-                    propertyTwo: 'd',
-                    propertyThree: 'abc',
-                },
                 PrefixedHexString: {
                     propertyOne: '0x2a',
                     propertyTwo: '0xd',
@@ -404,11 +340,6 @@ export const testConfig: TestConfig = {
                     propertyOne: 42,
                     propertyTwo: 13,
                     propertyThree: 2748,
-                },
-                HexString: {
-                    propertyOne: '2a',
-                    propertyTwo: 'd',
-                    propertyThree: 'abc',
                 },
                 PrefixedHexString: {
                     propertyOne: '0x2a',
@@ -467,23 +398,6 @@ export const testConfig: TestConfig = {
                         propertyOne: 42,
                         propertyTwo: null,
                         propertyThree: 2748,
-                    },
-                ],
-                HexString: [
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: null,
-                        propertyThree: 'abc',
-                    },
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: null,
-                        propertyThree: 'abc',
-                    },
-                    {
-                        propertyOne: '2a',
-                        propertyTwo: null,
-                        propertyThree: 'abc',
                     },
                 ],
                 PrefixedHexString: [
@@ -556,11 +470,6 @@ export const testConfig: TestConfig = {
                     propertyOne: 42,
                     propertyTwo: null,
                     propertyThree: 2748,
-                },
-                HexString: {
-                    propertyOne: '2a',
-                    propertyTwo: null,
-                    propertyThree: 'abc',
                 },
                 PrefixedHexString: {
                     propertyOne: '0x2a',

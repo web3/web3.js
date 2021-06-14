@@ -6,7 +6,11 @@ import {
     RpcParams,
 } from 'web3-providers-base/types';
 import { toHex, formatOutput, formatRpcResultArray } from 'web3-utils';
-import { HexString, ValidTypes, ValidTypesEnum } from 'web3-utils/types';
+import {
+    PrefixedHexString,
+    ValidTypes,
+    ValidTypesEnum,
+} from 'web3-utils/types';
 
 import {
     Web3EthOptions,
@@ -36,7 +40,7 @@ export default class Web3Eth {
             providerUrl: options.providerUrl,
         });
         this._defaultReturnType =
-            options.returnType || ValidTypesEnum.HexString;
+            options.returnType || ValidTypesEnum.PrefixedHexString;
     }
 
     private _send(
@@ -456,14 +460,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing current balance in wei
      */
     async getBalance(
-        address: HexString,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getBalance',
@@ -502,7 +506,7 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing value at {storagePosition}
      */
     async getStorageAt(
-        address: HexString,
+        address: PrefixedHexString,
         storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
@@ -510,7 +514,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString, HexString],
+                [PrefixedHexString, PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getStorageAt',
@@ -543,14 +547,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of transactions sent by {address}
      */
     async getTransactionCount(
-        address: HexString,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionCount',
@@ -583,13 +587,13 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of transactions in block
      */
     async getBlockTransactionCountByHash(
-        blockHash: HexString,
+        blockHash: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getBlockTransactionCountByHash',
@@ -629,7 +633,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getBlockTransactionCountByNumber',
@@ -664,13 +668,13 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing number of uncles in block
      */
     async getUncleCountByBlockHash(
-        blockHash: HexString,
+        blockHash: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getUncleCountByBlockHash', [blockHash], callOptions];
 
@@ -706,7 +710,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getUncleCountByBlockNumber',
@@ -741,14 +745,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing the code at {address}
      */
     async getCode(
-        address: HexString,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getCode', [address, toHex(blockIdentifier)], callOptions];
             return callOptions?.subscribe
@@ -770,14 +774,14 @@ export default class Web3Eth {
      * @returns {Promise} Hex string representing signed message
      */
     async sign(
-        address: HexString,
-        message: HexString,
+        address: PrefixedHexString,
+        message: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_sign', [address, message], callOptions];
             return callOptions?.subscribe
@@ -903,13 +907,13 @@ export default class Web3Eth {
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendRawTransaction(
-        rawTransaction: HexString,
+        rawTransaction: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_sendRawTransaction', [rawTransaction], callOptions];
             return callOptions?.subscribe
@@ -1045,14 +1049,14 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByHash(
-        blockHash: HexString,
+        blockHash: PrefixedHexString,
         returnFullTxs: boolean,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, boolean],
+                [PrefixedHexString, boolean],
                 CallOptions | undefined
             ] = ['eth_getBlockByHash', [blockHash, returnFullTxs], callOptions];
 
@@ -1098,7 +1102,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString, boolean],
+                [PrefixedHexString, boolean],
                 CallOptions | undefined
             ] = [
                 'eth_getBlockByNumber',
@@ -1140,13 +1144,13 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByHash(
-        txHash: HexString,
+        txHash: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getTransactionByHash', [txHash], callOptions];
 
@@ -1184,14 +1188,14 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockHashAndIndex(
-        blockHash: HexString,
+        blockHash: PrefixedHexString,
         transactionIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthTransactionResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionByBlockHashAndIndex',
@@ -1242,7 +1246,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getTransactionByBlockNumberAndIndex',
@@ -1285,13 +1289,13 @@ export default class Web3Eth {
      * @returns {Promise} A transaction object or {null} when no receipt was found
      */
     async getTransactionReceipt(
-        txHash: HexString,
+        txHash: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getTransactionReceipt', [txHash], callOptions];
 
@@ -1321,14 +1325,14 @@ export default class Web3Eth {
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockHashAndIndex(
-        blockHash: HexString,
+        blockHash: PrefixedHexString,
         uncleIndex: ValidTypes,
         callOptions?: CallOptions
     ): Promise<EthBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getUncleByBlockHashAndIndex',
@@ -1380,7 +1384,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_getUncleByBlockNumberAndIndex',
@@ -1448,13 +1452,13 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSolidity(
-        sourceCode: HexString,
+        sourceCode: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<EthCompiledSolidityResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_compileSolidity', [sourceCode], callOptions];
             return callOptions?.subscribe
@@ -1476,13 +1480,13 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileLLL(
-        sourceCode: HexString,
+        sourceCode: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_compileLLL', [sourceCode], callOptions];
             return callOptions?.subscribe
@@ -1502,13 +1506,13 @@ export default class Web3Eth {
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSerpent(
-        sourceCode: HexString,
+        sourceCode: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<Web3EthResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_compileSerpent', [sourceCode], callOptions];
             return callOptions?.subscribe
@@ -1654,7 +1658,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_uninstallFilter', [toHex(filterId)], callOptions];
             return callOptions?.subscribe
@@ -1681,7 +1685,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getFilterChanges', [toHex(filterId)], callOptions];
 
@@ -1717,7 +1721,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString],
+                [PrefixedHexString],
                 CallOptions | undefined
             ] = ['eth_getFilterLogs', [toHex(filterId)], callOptions];
 
@@ -1822,14 +1826,14 @@ export default class Web3Eth {
      */
     async submitWork(
         nonce: ValidTypes,
-        powHash: HexString,
-        digest: HexString,
+        powHash: PrefixedHexString,
+        digest: PrefixedHexString,
         callOptions?: CallOptions
     ): Promise<EthBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString, HexString],
+                [PrefixedHexString, PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_submitWork',
@@ -1861,7 +1865,7 @@ export default class Web3Eth {
         try {
             const requestParameters: [
                 string,
-                [HexString, HexString],
+                [PrefixedHexString, PrefixedHexString],
                 CallOptions | undefined
             ] = [
                 'eth_submitHashRate',
