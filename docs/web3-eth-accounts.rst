@@ -152,20 +152,20 @@ Parameters
 1. ``tx`` - ``Object``: The transaction object as follows:
     - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`.
     - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId() <net-getid>`.
-    - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
+    - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty whƒdefaen deploying a contract.
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.getGasPrice() <eth-gasprice>`
     - ``gas`` - ``String``: The gas provided by the transaction.
     - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
-    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``berlin``.
     - ``common`` - ``Object``: (optional) The common object
         - ``customChain`` - ``Object``: The custom chain properties
             - ``name`` - ``string``: (optional) The name of the chain
             - ``networkId`` - ``number``: Network ID of the custom chain
             - ``chainId`` - ``number``: Chain ID of the custom chain
         - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
-        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, ``istanbul``, or ``berlin``
 2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
