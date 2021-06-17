@@ -148,13 +148,17 @@ export function formatRpcResultArray(
                 // rpcResponseResult is an array of results
                 // e.g. an array of filter changes or logs
                 for (const result of rpcResponseResult) {
+                    // @ts-ignore We're indexing result as an object, not an array
                     result[formattableProperty] = formatOutput(
+                        // @ts-ignore We're indexing result as an object, not an array
                         result[formattableProperty],
                         desiredType
                     );
                 }
             } else {
+                // @ts-ignore We're indexing result as an object, not an array
                 formattedResponseResult[formattableProperty] = formatOutput(
+                    // @ts-ignore We're indexing result as an object, not an array
                     rpcResponseResult[formattableProperty],
                     desiredType
                 );

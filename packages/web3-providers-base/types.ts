@@ -18,8 +18,7 @@ export type RpcResponseResult =
     | (string | number)[]
     | { [key: string]: string | number }
     | BigInt
-    | null
-    | any;
+    | null;
 
 export interface ProviderOptions {
     providerUrl: string;
