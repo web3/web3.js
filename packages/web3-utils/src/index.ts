@@ -1,4 +1,3 @@
-import { RpcResponseResult } from 'web3-providers-base/types';
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
 import { ValidTypes, ValidTypesEnum, PrefixedHexString } from '../types';
@@ -64,6 +63,8 @@ export function toHex(
     byteLength?: number
 ): PrefixedHexString {
     try {
+        if (input === null) throw Error('Cannot convert null input');
+
         let hexInput: PrefixedHexString;
         let parsedHexString: PrefixedHexString;
         switch (determineValidType(input)) {
@@ -137,10 +138,10 @@ export function formatOutput(
 }
 
 export function formatRpcResultArray(
-    rpcResponseResult: RpcResponseResult,
+    rpcResponseResult: any,
     formattableProperties: string[],
     desiredType: ValidTypesEnum
-): RpcResponseResult {
+): any {
     try {
         let formattedResponseResult = rpcResponseResult;
         for (const formattableProperty of formattableProperties) {
@@ -148,17 +149,13 @@ export function formatRpcResultArray(
                 // rpcResponseResult is an array of results
                 // e.g. an array of filter changes or logs
                 for (const result of rpcResponseResult) {
-                    // @ts-ignore We're indexing result as an object, not an array
                     result[formattableProperty] = formatOutput(
-                        // @ts-ignore We're indexing result as an object, not an array
                         result[formattableProperty],
                         desiredType
                     );
                 }
             } else {
-                // @ts-ignore We're indexing result as an object, not an array
                 formattedResponseResult[formattableProperty] = formatOutput(
-                    // @ts-ignore We're indexing result as an object, not an array
                     rpcResponseResult[formattableProperty],
                     desiredType
                 );

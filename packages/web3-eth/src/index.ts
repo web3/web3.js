@@ -29,6 +29,15 @@ import {
     EthLogResult,
     EthFilter,
     BlockTags,
+    RpcStringResult,
+    RpcPrefixedHexStringResult,
+    RpcValidTypeResult,
+    RpcBooleanResult,
+    RpcSyncingResult,
+    RpcAccountsResult,
+    RpcBlockResult,
+    RpcTransactionResult,
+    RpcTransactionReceiptResult,
 } from '../types';
 
 export default class Web3Eth {
@@ -86,7 +95,7 @@ export default class Web3Eth {
      */
     async getClientVersion(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'web3_clientVersion',
@@ -101,7 +110,6 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss input format
     /**
      * Returns Keccak-256 (not the standardized SHA3-256) of the given data
      * @param {string} data Data to convert into SHA3 hash
@@ -113,7 +121,7 @@ export default class Web3Eth {
     async getSha3(
         data: string,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -137,7 +145,7 @@ export default class Web3Eth {
      */
     async getNetworkVersion(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'net_version',
@@ -169,7 +177,7 @@ export default class Web3Eth {
      */
     async getNetworkListening(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'net_listening',
@@ -193,7 +201,7 @@ export default class Web3Eth {
      */
     async getNetworkPeerCount(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'net_peerCount',
@@ -225,7 +233,7 @@ export default class Web3Eth {
      */
     async getProtocolVersion(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_protocolVersion',
@@ -257,7 +265,7 @@ export default class Web3Eth {
      */
     async getSyncing(
         callOptions?: CallOptions
-    ): Promise<EthSyncingResult | SubscriptionResponse> {
+    ): Promise<RpcSyncingResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_syncing',
@@ -270,12 +278,14 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
-                    // @ts-ignore
-                    response.result,
-                    ['startingBlock', 'currentBlock', 'highestBlock'],
-                    this._defaultReturnType
-                ),
+                result:
+                    typeof response.result === 'boolean'
+                        ? response.result
+                        : formatRpcResultArray(
+                              response.result,
+                              ['startingBlock', 'currentBlock', 'highestBlock'],
+                              this._defaultReturnType
+                          ),
             };
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
@@ -291,7 +301,7 @@ export default class Web3Eth {
      */
     async getCoinbase(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_coinbase',
@@ -315,7 +325,7 @@ export default class Web3Eth {
      */
     async getMining(
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult | SubscriptionResponse> {
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_mining',
@@ -339,7 +349,7 @@ export default class Web3Eth {
      */
     async getHashRate(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_hashrate',
@@ -371,7 +381,7 @@ export default class Web3Eth {
      */
     async getGasPrice(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_gasPrice',
@@ -403,7 +413,7 @@ export default class Web3Eth {
      */
     async getAccounts(
         callOptions?: CallOptions
-    ): Promise<EthAccountsResult | SubscriptionResponse> {
+    ): Promise<RpcAccountsResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_accounts',
@@ -427,7 +437,7 @@ export default class Web3Eth {
      */
     async getBlockNumber(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_blockNumber',
@@ -463,7 +473,7 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -510,7 +520,7 @@ export default class Web3Eth {
         storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -522,16 +532,9 @@ export default class Web3Eth {
                 callOptions,
             ];
 
-            if (callOptions?.subscribe)
-                return await this._subscribe(...requestParameters);
-            const response = await this._send(...requestParameters);
-            return {
-                ...response,
-                result: formatOutput(
-                    response.result,
-                    callOptions?.returnType || this._defaultReturnType
-                ),
-            };
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting storage value: ${error.message}`);
         }
@@ -550,7 +553,7 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -577,7 +580,6 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss input format
     /**
      * Returns the number of transactions in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query transaction count of
@@ -589,7 +591,7 @@ export default class Web3Eth {
     async getBlockTransactionCountByHash(
         blockHash: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -629,7 +631,7 @@ export default class Web3Eth {
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -658,7 +660,6 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss input format
     /**
      * Returns the number of uncles in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query
@@ -670,7 +671,7 @@ export default class Web3Eth {
     async getUncleCountByBlockHash(
         blockHash: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -706,7 +707,7 @@ export default class Web3Eth {
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -748,7 +749,7 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -763,7 +764,6 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss input format
     /**
      * Calculates an Ethereum specific signature
      * @param {string} address Address to use to sign {data}
@@ -777,7 +777,7 @@ export default class Web3Eth {
         address: PrefixedHexString,
         message: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -810,7 +810,7 @@ export default class Web3Eth {
     async signTransaction(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -863,7 +863,7 @@ export default class Web3Eth {
     async sendTransaction(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -909,7 +909,7 @@ export default class Web3Eth {
     async sendRawTransaction(
         rawTransaction: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -924,7 +924,7 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss formatting result type
+    // TODO Discuss formatting result
     /**
      * Executes a new message call immediately without creating a transaction on the block chain
      * @param {object} transaction Ethereum transaction
@@ -943,7 +943,7 @@ export default class Web3Eth {
     async call(
         transaction: EthCallTransaction,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcResponse | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -996,7 +996,7 @@ export default class Web3Eth {
     async estimateGas(
         transaction: EthTransaction,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1052,7 +1052,7 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         returnFullTxs: boolean,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult | SubscriptionResponse> {
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1098,7 +1098,7 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult | SubscriptionResponse> {
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1146,7 +1146,7 @@ export default class Web3Eth {
     async getTransactionByHash(
         txHash: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult | SubscriptionResponse> {
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1191,7 +1191,7 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         transactionIndex: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult | SubscriptionResponse> {
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1242,7 +1242,7 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         transactionIndex: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthTransactionResult | SubscriptionResponse> {
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1291,7 +1291,7 @@ export default class Web3Eth {
     async getTransactionReceipt(
         txHash: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<EthTransactionReceiptResult | SubscriptionResponse> {
+    ): Promise<RpcTransactionReceiptResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,

@@ -13,17 +13,19 @@ export enum BlockTags {
 
 export type BlockIdentifier = ValidTypes | BlockTags;
 
-export type EthLog = {
-    removed: boolean;
-    logIndex: string | null;
-    transactionIndex: string | null;
-    transactionHash: string | null;
-    blockHash: string | null;
-    blockNumber: string | null;
-    address: string;
-    data: string;
-    topics: string[];
-};
+export type EthLog =
+    | PrefixedHexString[]
+    | {
+          removed: boolean;
+          logIndex: ValidTypes | null;
+          transactionIndex: ValidTypes | null;
+          transactionHash: PrefixedHexString | null;
+          blockHash: PrefixedHexString | null;
+          blockNumber: ValidTypes | null;
+          address: PrefixedHexString;
+          data: PrefixedHexString;
+          topics: PrefixedHexString[];
+      };
 
 /**
  * @param to is optional when creating a new contract
@@ -127,16 +129,97 @@ export interface Web3EthOptions {
     returnType?: ValidTypesEnum;
 }
 
-export interface EthCallTransaction extends EthTransaction {
-    to: string;
+export interface RpcStringResult extends RpcResponse {
+    result: string;
 }
 
-export interface Web3EthResult extends RpcResponse {
+export interface RpcPrefixedHexStringResult extends RpcResponse {
+    result: PrefixedHexString;
+}
+
+export interface RpcValidTypeResult extends RpcResponse {
     result: ValidTypes;
 }
 
-export interface EthStringResult extends RpcResponse {
-    result: string;
+export interface RpcBooleanResult extends RpcResponse {
+    result: boolean;
+}
+
+export interface RpcSyncingResult extends RpcResponse {
+    result:
+        | boolean
+        | {
+              startingBlock: ValidTypes;
+              currentBlock: ValidTypes;
+              highestBlock: ValidTypes;
+          };
+}
+
+export interface RpcAccountsResult extends RpcResponse {
+    result: PrefixedHexString[];
+}
+
+export interface RpcBlockResult extends RpcResponse {
+    result: null | {
+        number: ValidTypes | null;
+        hash: PrefixedHexString | null;
+        parentHash: PrefixedHexString;
+        nonce: ValidTypes | null;
+        sha3Uncles: PrefixedHexString;
+        logsBloom: PrefixedHexString | null;
+        transactionsRoot: PrefixedHexString;
+        stateRoot: PrefixedHexString;
+        receiptsRoot: PrefixedHexString;
+        miner: PrefixedHexString;
+        difficulty: ValidTypes;
+        totalDifficulty: ValidTypes;
+        extraData: PrefixedHexString;
+        size: ValidTypes;
+        gasLimit: ValidTypes;
+        gasUsed: ValidTypes;
+        timestamp: ValidTypes;
+        transactions: PrefixedHexString[];
+        uncles: PrefixedHexString[];
+    };
+}
+
+export interface RpcTransactionResult extends RpcResponse {
+    result: null | {
+        blockHash: PrefixedHexString | null;
+        blockNumber: ValidTypes | null;
+        from: PrefixedHexString;
+        gas: ValidTypes;
+        gasPrice: ValidTypes;
+        hash: PrefixedHexString;
+        input: PrefixedHexString;
+        nonce: ValidTypes;
+        to: PrefixedHexString | null;
+        transactionIndex: ValidTypes | null;
+        value: ValidTypes;
+        v: ValidTypes;
+        r: PrefixedHexString;
+        s: PrefixedHexString;
+    };
+}
+
+export interface RpcTransactionReceiptResult extends RpcResponse {
+    result: null | {
+        transactionHash: PrefixedHexString;
+        transactionIndex: ValidTypes;
+        blockHash: PrefixedHexString;
+        blockNumber: ValidTypes;
+        from: PrefixedHexString;
+        to: PrefixedHexString | null;
+        cumulativeGasUsed: ValidTypes;
+        gasUsed: ValidTypes;
+        contractAddress: PrefixedHexString | null;
+        logs: EthLog[];
+        logsBloom: PrefixedHexString;
+    };
+}
+
+export interface EthCallTransaction extends EthTransaction {
+    to: string;
 }
 
 export interface EthStringArrayResult extends RpcResponse {
