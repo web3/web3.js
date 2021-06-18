@@ -199,14 +199,14 @@ export const testConfig: TestConfig = {
                 propertyTwo: '13',
                 propertyThree: {
                     propertyFour: '0xabc',
-                    propertyFive: '0xaaa'
+                    propertyFive: '0xaaa',
                 },
             },
             inputType: 'Object',
             formattableProperties: [
                 'propertyOne',
                 'propertyTwo',
-                {'propertyThree': ['propertyFour', 'propertyFive']},
+                { propertyThree: ['propertyFour', 'propertyFive'] },
             ],
             formattedInputs: {
                 Number: {
@@ -214,7 +214,7 @@ export const testConfig: TestConfig = {
                     propertyTwo: 13,
                     propertyThree: {
                         propertyFour: 2748,
-                        propertyFive: 2730
+                        propertyFive: 2730,
                     },
                 },
                 PrefixedHexString: {
@@ -222,7 +222,7 @@ export const testConfig: TestConfig = {
                     propertyTwo: '0xd',
                     propertyThree: {
                         propertyFour: '0xabc',
-                        propertyFive: '0xaaa'
+                        propertyFive: '0xaaa',
                     },
                 },
                 NumberString: {
@@ -230,7 +230,7 @@ export const testConfig: TestConfig = {
                     propertyTwo: '13',
                     propertyThree: {
                         propertyFour: '2748',
-                        propertyFive: '2730'
+                        propertyFive: '2730',
                     },
                 },
                 BigInt: {
@@ -238,7 +238,7 @@ export const testConfig: TestConfig = {
                     propertyTwo: BigInt('13'),
                     propertyThree: {
                         propertyFour: BigInt('0xabc'),
-                        propertyFive: BigInt('0xaaa')
+                        propertyFive: BigInt('0xaaa'),
                     },
                 },
             },
