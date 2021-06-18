@@ -5,7 +5,7 @@ import {
     SubscriptionResponse,
     RpcParams,
 } from 'web3-providers-base/types';
-import { toHex, formatOutput, formatRpcResultArray } from 'web3-utils';
+import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {
     PrefixedHexString,
     ValidTypes,
@@ -302,10 +302,10 @@ export default class Web3Eth {
                 result:
                     typeof response.result === 'boolean'
                         ? response.result
-                        : formatRpcResultArray(
+                        : formatOutputObject(
                               response.result,
                               ['startingBlock', 'currentBlock', 'highestBlock'],
-                              this._defaultReturnType
+                              callOptions?.returnType || this._defaultReturnType
                           ),
             };
         } catch (error) {
@@ -1167,17 +1167,27 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'number',
-                        'nonce',
                         'difficulty',
                         'totalDifficulty',
                         'size',
                         'gasLimit',
                         'gasUsed',
                         'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
                     ],
                     callOptions?.returnType || this._defaultReturnType
                 ),
@@ -1221,17 +1231,27 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'number',
-                        'nonce',
                         'difficulty',
                         'totalDifficulty',
                         'size',
                         'gasLimit',
                         'gasUsed',
                         'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
                     ],
                     callOptions?.returnType || this._defaultReturnType
                 ),
@@ -1269,7 +1289,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'blockNumber',
@@ -1322,7 +1342,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'blockNumber',
@@ -1377,7 +1397,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'blockNumber',
@@ -1426,13 +1446,20 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'transactionIndex',
                         'blockNumber',
                         'cumulativeGasUsed',
                         'gasUsed',
+                        {
+                            logs: [
+                                'logIndex',
+                                'transactionIndex',
+                                'blockNumber',
+                            ],
+                        },
                         'status',
                     ],
                     callOptions?.returnType || this._defaultReturnType
@@ -1477,17 +1504,27 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'number',
-                        'nonce',
                         'difficulty',
                         'totalDifficulty',
                         'size',
                         'gasLimit',
                         'gasUsed',
                         'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
                     ],
                     callOptions?.returnType || this._defaultReturnType
                 ),
@@ -1533,17 +1570,27 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     [
                         'number',
-                        'nonce',
                         'difficulty',
                         'totalDifficulty',
                         'size',
                         'gasLimit',
                         'gasUsed',
                         'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
                     ],
                     callOptions?.returnType || this._defaultReturnType
                 ),
@@ -1866,7 +1913,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     ['logIndex', 'transactionIndex', 'blockNumber'],
                     callOptions?.returnType || this._defaultReturnType
@@ -1906,7 +1953,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     ['logIndex', 'transactionIndex', 'blockNumber'],
                     callOptions?.returnType || this._defaultReturnType
@@ -1959,7 +2006,7 @@ export default class Web3Eth {
             const response = await this._send(...requestParameters);
             return {
                 ...response,
-                result: formatRpcResultArray(
+                result: formatOutputObject(
                     response.result,
                     ['logIndex', 'transactionIndex', 'blockNumber'],
                     callOptions?.returnType || this._defaultReturnType
