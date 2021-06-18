@@ -390,11 +390,6 @@ Released with 1.0.0-beta.37 code base.
 - Berlin Transaction Support (#4083)
 - When signing a transaction, common object now defaults to berlin instead of petersburg
 
-### Changed
-
-### Removes
-
-
 ## [Unreleased]
 
 ## [1.4.1]
