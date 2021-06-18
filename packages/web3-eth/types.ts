@@ -43,63 +43,37 @@ export type EthTransaction = {
     nonce?: ValidTypes;
 };
 
+/**
+ * @param gas eth_call consumes zero gas, but this parameter may be needed by some executions
+ */
+export type EthCallTransaction = {
+    from: PrefixedHexString;
+    to: PrefixedHexString;
+    gas?: ValidTypes;
+    gasPrice?: ValidTypes;
+    value?: ValidTypes;
+    data?: PrefixedHexString;
+};
+
 export type EthMinedTransaction = {
-    blockHash: string | null;
-    blockNumber: string | null;
-    from: string;
-    gas: string;
-    gasPrice: string;
-    hash: string;
-    input: string;
-    nonce: string;
-    to: string | null;
-    transactionIndex: string | null;
-    value: string;
-    v: string;
-    r: string;
-    s: string;
+    blockHash: PrefixedHexString | null;
+    blockNumber: ValidTypes | null;
+    from: PrefixedHexString;
+    gas: ValidTypes;
+    gasPrice: ValidTypes;
+    hash: PrefixedHexString;
+    input: PrefixedHexString;
+    nonce: ValidTypes;
+    to: PrefixedHexString | null;
+    transactionIndex: ValidTypes | null;
+    value: ValidTypes;
+    v: ValidTypes;
+    r: PrefixedHexString;
+    s: PrefixedHexString;
 };
 
-export type EthBlock = {
-    number: string | null;
-    hash: string | null;
-    parentHash: string;
-    nonce: string | null;
-    sha3Uncles: string;
-    logsBloom: string | null;
-    transactionsRoot: string;
-    stateRoot: string;
-    receiptsRoot: string;
-    miner: string;
-    difficulty: string;
-    totalDifficulty: string;
-    extraData: string;
-    size: string;
-    gasLimit: string;
-    gasUsed: string;
-    timestamp: string;
-    transactions: EthMinedTransaction[];
-    uncles: string[];
-    root?: string;
-    status?: string;
-};
-
-export type EthTransactionReceipt = {
-    transactionHash: string;
-    transactionIndex: string;
-    blockHash: string;
-    blockNumber: string;
-    from: string;
-    to: string | null;
-    cumulativeGasUsed: string;
-    gasUsed: string;
-    contractAdress: string | null;
-    logs: EthLog[];
-    logsBloom: string;
-};
-
-export type EthCompiledSolidity = {
-    code: string;
+export type CompiledSolidity = {
+    code: PrefixedHexString;
     info: {
         source: string;
         language: string;
@@ -164,7 +138,7 @@ export interface RpcBlockResult extends RpcResponse {
         number: ValidTypes | null;
         hash: PrefixedHexString | null;
         parentHash: PrefixedHexString;
-        nonce: ValidTypes | null;
+        nonce: PrefixedHexString | null;
         sha3Uncles: PrefixedHexString;
         logsBloom: PrefixedHexString | null;
         transactionsRoot: PrefixedHexString;
@@ -178,7 +152,7 @@ export interface RpcBlockResult extends RpcResponse {
         gasLimit: ValidTypes;
         gasUsed: ValidTypes;
         timestamp: ValidTypes;
-        transactions: PrefixedHexString[];
+        transactions: EthMinedTransaction[] | PrefixedHexString[];
         uncles: PrefixedHexString[];
     };
 }
@@ -215,51 +189,19 @@ export interface RpcTransactionReceiptResult extends RpcResponse {
         contractAddress: PrefixedHexString | null;
         logs: EthLog[];
         logsBloom: PrefixedHexString;
+        root?: PrefixedHexString;
+        status?: ValidTypes;
     };
 }
 
-export interface EthCallTransaction extends EthTransaction {
-    to: string;
-}
-
-export interface EthStringArrayResult extends RpcResponse {
+export interface RpcStringArrayResult extends RpcResponse {
     result: string[];
 }
 
-export interface EthBooleanResult extends RpcResponse {
-    result: boolean;
+export interface RpcCompiledSolidityResult extends RpcResponse {
+    result: CompiledSolidity;
 }
 
-export interface EthSyncingResult extends RpcResponse {
-    result:
-        | {
-              startingBlock: string;
-              currentBlock: string;
-              highestBlock: string;
-          }
-        | false;
-}
-
-export interface EthAccountsResult extends RpcResponse {
-    result: string[];
-}
-
-export interface EthBlockResult extends RpcResponse {
-    result: EthBlock | null;
-}
-
-export interface EthTransactionResult extends RpcResponse {
-    result: EthMinedTransaction | null;
-}
-
-export interface EthTransactionReceiptResult extends RpcResponse {
-    result: EthTransactionReceipt | null;
-}
-
-export interface EthCompiledSolidityResult extends RpcResponse {
-    result: EthCompiledSolidity;
-}
-
-export interface EthLogResult extends RpcResponse {
-    result: EthLog[];
+export interface RpcLogResult extends RpcResponse {
+    result: EthLog;
 }

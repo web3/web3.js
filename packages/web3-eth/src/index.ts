@@ -15,18 +15,7 @@ import {
 import {
     Web3EthOptions,
     EthTransaction,
-    EthCallTransaction,
     BlockIdentifier,
-    Web3EthResult,
-    EthSyncingResult,
-    EthBooleanResult,
-    EthAccountsResult,
-    EthBlockResult,
-    EthTransactionResult,
-    EthTransactionReceiptResult,
-    EthStringArrayResult,
-    EthCompiledSolidityResult,
-    EthLogResult,
     EthFilter,
     BlockTags,
     RpcStringResult,
@@ -38,6 +27,10 @@ import {
     RpcBlockResult,
     RpcTransactionResult,
     RpcTransactionReceiptResult,
+    RpcStringArrayResult,
+    RpcCompiledSolidityResult,
+    RpcLogResult,
+    EthCallTransaction,
 } from '../types';
 
 export default class Web3Eth {
@@ -963,9 +956,6 @@ export default class Web3Eth {
                         value: transaction.value
                             ? toHex(transaction.value)
                             : undefined,
-                        nonce: transaction.nonce
-                            ? toHex(transaction.nonce)
-                            : undefined,
                     },
                 ],
                 callOptions,
@@ -1306,7 +1296,13 @@ export default class Web3Eth {
                 ...response,
                 result: formatRpcResultArray(
                     response.result,
-                    ['blockNumber', 'cumulativeGasUsed', 'gasUsed'],
+                    [
+                        'transactionIndex',
+                        'blockNumber',
+                        'cumulativeGasUsed',
+                        'gasUsed',
+                        'status',
+                    ],
                     callOptions?.returnType || this._defaultReturnType
                 ),
             };
@@ -1328,7 +1324,7 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         uncleIndex: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult | SubscriptionResponse> {
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1380,7 +1376,7 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         uncleIndex: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthBlockResult | SubscriptionResponse> {
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1428,7 +1424,7 @@ export default class Web3Eth {
      */
     async getCompilers(
         callOptions?: CallOptions
-    ): Promise<EthStringArrayResult | SubscriptionResponse> {
+    ): Promise<RpcStringArrayResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_getCompilers',
@@ -1454,7 +1450,7 @@ export default class Web3Eth {
     async compileSolidity(
         sourceCode: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<EthCompiledSolidityResult | SubscriptionResponse> {
+    ): Promise<RpcCompiledSolidityResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1482,7 +1478,7 @@ export default class Web3Eth {
     async compileLLL(
         sourceCode: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1508,7 +1504,7 @@ export default class Web3Eth {
     async compileSerpent(
         sourceCode: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1540,7 +1536,7 @@ export default class Web3Eth {
     async newFilter(
         filter: EthFilter,
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1586,7 +1582,7 @@ export default class Web3Eth {
      */
     async newBlockFilter(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_newBlockFilter',
@@ -1618,7 +1614,7 @@ export default class Web3Eth {
      */
     async newPendingTransactionFilter(
         callOptions?: CallOptions
-    ): Promise<Web3EthResult | SubscriptionResponse> {
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_newPendingTransactionFilter',
@@ -1654,7 +1650,7 @@ export default class Web3Eth {
     async uninstallFilter(
         filterId: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult | SubscriptionResponse> {
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1681,7 +1677,7 @@ export default class Web3Eth {
     async getFilterChanges(
         filterId: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthLogResult | SubscriptionResponse> {
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1717,7 +1713,7 @@ export default class Web3Eth {
     async getFilterLogs(
         filterId: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthLogResult | SubscriptionResponse> {
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1752,7 +1748,7 @@ export default class Web3Eth {
     async getLogs(
         filter: EthFilter,
         callOptions?: CallOptions
-    ): Promise<EthLogResult | SubscriptionResponse> {
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1799,7 +1795,7 @@ export default class Web3Eth {
      */
     async getWork(
         callOptions?: CallOptions
-    ): Promise<EthStringArrayResult | SubscriptionResponse> {
+    ): Promise<RpcStringArrayResult | SubscriptionResponse> {
         try {
             const requestParameters: [string, [], CallOptions | undefined] = [
                 'eth_getWork',
@@ -1829,7 +1825,7 @@ export default class Web3Eth {
         powHash: PrefixedHexString,
         digest: PrefixedHexString,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult | SubscriptionResponse> {
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
@@ -1861,7 +1857,7 @@ export default class Web3Eth {
         hashRate: ValidTypes,
         clientId: ValidTypes,
         callOptions?: CallOptions
-    ): Promise<EthBooleanResult | SubscriptionResponse> {
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
             const requestParameters: [
                 string,
