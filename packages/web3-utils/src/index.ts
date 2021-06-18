@@ -172,7 +172,7 @@ export function formatOutputObject(
         return formattedOutputObject;
     } catch (error) {
         throw Error(
-            `Error formatting output array to ${desiredType}: ${error.message}`
+            `Error formatting output object properties to ${desiredType}: ${error.message}`
         );
     }
 }
