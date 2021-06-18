@@ -3,9 +3,9 @@ import { toHex, formatOutput } from '../../src';
 
 describe('Should convert each testConfig.testCases to a hex string', () => {
     for (const testCase of testConfig.testCases) {
-        // Array of results is handled by formatRpcResultArray
+        // Array of results is handled by formatOutputObject
         if (testCase.inputType === 'Object') continue;
-        // null tests are for formatOutput and formatRpcResultArray tests
+        // null tests are for formatOutput and formatOutputObject tests
         if (testCase.input === null) continue;
         it(
             testCase.shouldError

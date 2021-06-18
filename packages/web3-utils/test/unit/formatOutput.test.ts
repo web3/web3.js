@@ -5,7 +5,7 @@ import { ValidTypesEnum } from '../../types';
 describe('Should convert each testConfig.testCases to each {ValidTypesEnum}', () => {
     for (const testCase of testConfig.testCases) {
         for (const validType in ValidTypesEnum) {
-            // Array of results is handled by formatRpcResultArray
+            // Array of results is handled by formatOutputObject
             if (testCase.inputType === 'Object') continue;
             describe(`Desired type: ${validType}`, () => {
                 it(

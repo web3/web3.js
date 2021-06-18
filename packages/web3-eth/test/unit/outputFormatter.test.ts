@@ -1,6 +1,6 @@
 import { RpcResponse } from 'web3-providers-base/types';
 import { ValidTypesEnum } from 'web3-utils/types';
-import { formatOutput, formatRpcResultArray } from 'web3-utils';
+import { formatOutput, formatOutputObject } from 'web3-utils';
 import Web3RequestManager from 'web3-core-requestmanager';
 
 import Web3Eth from '../../src';
@@ -22,7 +22,7 @@ function checkForExpected(
     formattableProperties?: string[]
 ) {
     let formattedResult = formattableProperties
-        ? formatRpcResultArray(
+        ? formatOutputObject(
               expectedResult.result,
               formattableProperties,
               expectedReturnType
