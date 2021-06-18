@@ -11,14 +11,6 @@ export type RpcParams = (
     | boolean
     | EthFilter
 )[];
-export type RpcResponseResult =
-    | string
-    | number
-    | boolean
-    | (string | number)[]
-    | { [key: string]: string | number }
-    | BigInt
-    | null;
 
 export interface ProviderOptions {
     providerUrl: string;
@@ -50,7 +42,7 @@ export interface SendOptions extends CallOptions {
 export interface RpcResponse {
     id: number;
     jsonrpc: string;
-    result: RpcResponseResult;
+    result: any;
 }
 
 export interface SubscriptionResponse {

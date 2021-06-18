@@ -171,7 +171,6 @@ export const testConfig: TestConfig = {
                 result: '0x000000000000000000000000000000000000000000000000000000000000162e',
             },
             testInputFormatter: true,
-            testOutputFormatter: true,
             formattableInputProperties: ['storagePosition', 'blockIdentifier'],
         },
         {
