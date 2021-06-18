@@ -137,38 +137,42 @@ export function formatOutput(
     }
 }
 
-export function formatRpcResultArray(
-    rpcResponseResult: any,
-    formattableProperties: string[],
+export function formatOutputObject(
+    outputObject: { [key: string]: any },
+    formattableProperties: (string | { [key: string]: string[] })[],
     desiredType: ValidTypesEnum
 ): any {
     try {
-        let formattedResponseResult = rpcResponseResult;
+        if (outputObject === null) return outputObject;
+
+        const formattedOutputObject = { ...outputObject };
         for (const formattableProperty of formattableProperties) {
-            if (Array.isArray(rpcResponseResult)) {
-                // rpcResponseResult is an array of results
-                // e.g. an array of filter changes or logs
-                for (const result of rpcResponseResult) {
-                    // @ts-ignore We're indexing result as an object, not an array
-                    result[formattableProperty] = formatOutput(
-                        // @ts-ignore We're indexing result as an object, not an array
-                        result[formattableProperty],
+            if (
+                typeof formattableProperty === 'object' &&
+                formattableProperty !== null
+            ) {
+                const outputObjectProperty =
+                    Object.keys(formattableProperty)[0];
+                formattedOutputObject[outputObjectProperty] =
+                    formatOutputObject(
+                        formattedOutputObject[outputObjectProperty],
+                        formattableProperty[outputObjectProperty],
+                        desiredType
+                    );
+            } else {
+                if (formattedOutputObject[formattableProperty] !== undefined) {
+                    formattedOutputObject[formattableProperty] = formatOutput(
+                        formattedOutputObject[formattableProperty],
                         desiredType
                     );
                 }
-            } else {
-                // @ts-ignore We're indexing result as an object, not an array
-                formattedResponseResult[formattableProperty] = formatOutput(
-                    // @ts-ignore We're indexing result as an object, not an array
-                    rpcResponseResult[formattableProperty],
-                    desiredType
-                );
             }
         }
-        return formattedResponseResult;
+
+        return formattedOutputObject;
     } catch (error) {
         throw Error(
-            `Error formatting rpc result array to ${desiredType}: ${error.message}`
+            `Error formatting output object properties to ${desiredType}: ${error.message}`
         );
     }
 }
