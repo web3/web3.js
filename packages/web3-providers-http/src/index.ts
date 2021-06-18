@@ -40,6 +40,7 @@ export default class Web3ProvidersHttp extends Web3ProviderBase implements IWeb3
   }
 
   async send(options: HttpRpcOptions): Promise<HttpRpcResponse> {
+    //CHANGE THIS FUNCTION
     try {
       if (this._httpClient === undefined) throw Error('No HTTP client initiliazed');
       const response = await this._httpClient.post('', {
