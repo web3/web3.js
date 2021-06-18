@@ -1,11 +1,11 @@
 import { testConfig } from './testConfig';
-import { formatRpcResultArray } from '../../src';
+import { formatOutputObject } from '../../src';
 import { ValidTypesEnum } from '../../types';
 
 describe('Should convert each testConfig.testCases that is an array of objects', () => {
     for (const testCase of testConfig.testCases) {
         for (const validType in ValidTypesEnum) {
-            if (testCase.inputType !== 'Array') continue;
+            if (testCase.inputType !== 'Object') continue;
             describe(`Desired type: ${validType}`, () => {
                 it(
                     testCase.shouldError
@@ -14,15 +14,15 @@ describe('Should convert each testConfig.testCases that is an array of objects',
                     () => {
                         if (testCase.shouldError) {
                             expect(() => {
-                                formatRpcResultArray(
-                                    testCase.input,
+                                formatOutputObject(
+                                    testCase.input as { [key: string]: any },
                                     testCase.formattableProperties || [],
                                     ValidTypesEnum[validType as ValidTypesEnum]
                                 );
                             }).toThrowError(testCase.errorMessage);
                         } else {
-                            const convertedInput = formatRpcResultArray(
-                                testCase.input,
+                            const convertedInput = formatOutputObject(
+                                testCase.input as { [key: string]: any },
                                 testCase.formattableProperties || [],
                                 ValidTypesEnum[validType as ValidTypesEnum]
                             );

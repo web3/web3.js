@@ -2,13 +2,13 @@ import { ValidTypes, ValidTypesEnum } from '../../types';
 
 interface TestCase {
     input: ValidTypes | null | { [key: string]: any };
-    inputType: ValidTypesEnum | 'Array';
+    inputType: ValidTypesEnum | 'Object';
     shouldError?: true;
     errorMessage?: string;
     formattedInputs?: {
         [key: string]: ValidTypes | any[] | null | { [key: string]: any };
     };
-    formattableProperties?: string[];
+    formattableProperties?: (string | { [key: string]: any })[];
 }
 
 interface TestConfig {
@@ -194,98 +194,53 @@ export const testConfig: TestConfig = {
             },
         },
         {
-            input: [
-                {
-                    propertyOne: 42,
-                    propertyTwo: '13',
-                    propertyThree: '0xabc',
+            input: {
+                propertyOne: 42,
+                propertyTwo: '13',
+                propertyThree: {
+                    propertyFour: '0xabc',
+                    propertyFive: '0xaaa'
                 },
-                {
-                    propertyOne: 42,
-                    propertyTwo: '13',
-                    propertyThree: '0xabc',
-                },
-                {
-                    propertyOne: 42,
-                    propertyTwo: '13',
-                    propertyThree: '0xabc',
-                },
-            ],
-            inputType: 'Array',
+            },
+            inputType: 'Object',
             formattableProperties: [
                 'propertyOne',
                 'propertyTwo',
-                'propertyThree',
+                {'propertyThree': ['propertyFour', 'propertyFive']},
             ],
             formattedInputs: {
-                Number: [
-                    {
-                        propertyOne: 42,
-                        propertyTwo: 13,
-                        propertyThree: 2748,
+                Number: {
+                    propertyOne: 42,
+                    propertyTwo: 13,
+                    propertyThree: {
+                        propertyFour: 2748,
+                        propertyFive: 2730
                     },
-                    {
-                        propertyOne: 42,
-                        propertyTwo: 13,
-                        propertyThree: 2748,
+                },
+                PrefixedHexString: {
+                    propertyOne: '0x2a',
+                    propertyTwo: '0xd',
+                    propertyThree: {
+                        propertyFour: '0xabc',
+                        propertyFive: '0xaaa'
                     },
-                    {
-                        propertyOne: 42,
-                        propertyTwo: 13,
-                        propertyThree: 2748,
+                },
+                NumberString: {
+                    propertyOne: '42',
+                    propertyTwo: '13',
+                    propertyThree: {
+                        propertyFour: '2748',
+                        propertyFive: '2730'
                     },
-                ],
-                PrefixedHexString: [
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: '0xd',
-                        propertyThree: '0xabc',
+                },
+                BigInt: {
+                    propertyOne: BigInt(42),
+                    propertyTwo: BigInt('13'),
+                    propertyThree: {
+                        propertyFour: BigInt('0xabc'),
+                        propertyFive: BigInt('0xaaa')
                     },
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: '0xd',
-                        propertyThree: '0xabc',
-                    },
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: '0xd',
-                        propertyThree: '0xabc',
-                    },
-                ],
-                NumberString: [
-                    {
-                        propertyOne: '42',
-                        propertyTwo: '13',
-                        propertyThree: '2748',
-                    },
-                    {
-                        propertyOne: '42',
-                        propertyTwo: '13',
-                        propertyThree: '2748',
-                    },
-                    {
-                        propertyOne: '42',
-                        propertyTwo: '13',
-                        propertyThree: '2748',
-                    },
-                ],
-                BigInt: [
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: BigInt('13'),
-                        propertyThree: BigInt('0xabc'),
-                    },
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: BigInt('13'),
-                        propertyThree: BigInt('0xabc'),
-                    },
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: BigInt('13'),
-                        propertyThree: BigInt('0xabc'),
-                    },
-                ],
+                },
             },
         },
         {
@@ -294,7 +249,7 @@ export const testConfig: TestConfig = {
                 propertyTwo: '13',
                 propertyThree: '0xabc',
             },
-            inputType: 'Array',
+            inputType: 'Object',
             formattableProperties: [
                 'propertyOne',
                 'propertyTwo',
@@ -321,136 +276,6 @@ export const testConfig: TestConfig = {
                     propertyTwo: BigInt('13'),
                     propertyThree: BigInt('0xabc'),
                 },
-            },
-        },
-        {
-            input: {
-                propertyOne: 42,
-                propertyTwo: '13',
-                propertyThree: '0xabc',
-            },
-            inputType: 'Array',
-            formattableProperties: [
-                'propertyOne',
-                'propertyTwo',
-                'propertyThree',
-            ],
-            formattedInputs: {
-                Number: {
-                    propertyOne: 42,
-                    propertyTwo: 13,
-                    propertyThree: 2748,
-                },
-                PrefixedHexString: {
-                    propertyOne: '0x2a',
-                    propertyTwo: '0xd',
-                    propertyThree: '0xabc',
-                },
-                NumberString: {
-                    propertyOne: '42',
-                    propertyTwo: '13',
-                    propertyThree: '2748',
-                },
-                BigInt: {
-                    propertyOne: BigInt(42),
-                    propertyTwo: BigInt('13'),
-                    propertyThree: BigInt('0xabc'),
-                },
-            },
-        },
-        {
-            input: [
-                {
-                    propertyOne: 42,
-                    propertyTwo: null,
-                    propertyThree: '0xabc',
-                },
-                {
-                    propertyOne: 42,
-                    propertyTwo: null,
-                    propertyThree: '0xabc',
-                },
-                {
-                    propertyOne: 42,
-                    propertyTwo: null,
-                    propertyThree: '0xabc',
-                },
-            ],
-            inputType: 'Array',
-            formattableProperties: [
-                'propertyOne',
-                'propertyTwo',
-                'propertyThree',
-            ],
-            formattedInputs: {
-                Number: [
-                    {
-                        propertyOne: 42,
-                        propertyTwo: null,
-                        propertyThree: 2748,
-                    },
-                    {
-                        propertyOne: 42,
-                        propertyTwo: null,
-                        propertyThree: 2748,
-                    },
-                    {
-                        propertyOne: 42,
-                        propertyTwo: null,
-                        propertyThree: 2748,
-                    },
-                ],
-                PrefixedHexString: [
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: null,
-                        propertyThree: '0xabc',
-                    },
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: null,
-                        propertyThree: '0xabc',
-                    },
-                    {
-                        propertyOne: '0x2a',
-                        propertyTwo: null,
-                        propertyThree: '0xabc',
-                    },
-                ],
-                NumberString: [
-                    {
-                        propertyOne: '42',
-                        propertyTwo: null,
-                        propertyThree: '2748',
-                    },
-                    {
-                        propertyOne: '42',
-                        propertyTwo: null,
-                        propertyThree: '2748',
-                    },
-                    {
-                        propertyOne: '42',
-                        propertyTwo: null,
-                        propertyThree: '2748',
-                    },
-                ],
-                BigInt: [
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: null,
-                        propertyThree: BigInt('0xabc'),
-                    },
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: null,
-                        propertyThree: BigInt('0xabc'),
-                    },
-                    {
-                        propertyOne: BigInt(42),
-                        propertyTwo: null,
-                        propertyThree: BigInt('0xabc'),
-                    },
-                ],
             },
         },
         {
@@ -459,7 +284,7 @@ export const testConfig: TestConfig = {
                 propertyTwo: null,
                 propertyThree: '0xabc',
             },
-            inputType: 'Array',
+            inputType: 'Object',
             formattableProperties: [
                 'propertyOne',
                 'propertyTwo',

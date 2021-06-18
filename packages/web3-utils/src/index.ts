@@ -152,7 +152,7 @@ export function formatOutputObject(
                 formattableProperty !== null
             ) {
                 const outputObjectProperty =
-                    Object.keys(formattableProperty)[0];
+                Object.keys(formattableProperty)[0];
                 formattedOutputObject[outputObjectProperty] =
                     formatOutputObject(
                         formattedOutputObject[outputObjectProperty],
