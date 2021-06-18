@@ -1,4 +1,3 @@
-import { RpcResponseResult } from 'web3-providers-base/types';
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
 import { ValidTypes, ValidTypesEnum, PrefixedHexString } from '../types';
@@ -64,6 +63,8 @@ export function toHex(
     byteLength?: number
 ): PrefixedHexString {
     try {
+        if (input === null) throw Error('Cannot convert null input');
+
         let hexInput: PrefixedHexString;
         let parsedHexString: PrefixedHexString;
         switch (determineValidType(input)) {
@@ -137,10 +138,10 @@ export function formatOutput(
 }
 
 export function formatRpcResultArray(
-    rpcResponseResult: RpcResponseResult,
+    rpcResponseResult: any,
     formattableProperties: string[],
     desiredType: ValidTypesEnum
-): RpcResponseResult {
+): any {
     try {
         let formattedResponseResult = rpcResponseResult;
         for (const formattableProperty of formattableProperties) {
