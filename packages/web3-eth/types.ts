@@ -203,5 +203,5 @@ export interface RpcCompiledSolidityResult extends RpcResponse {
 }
 
 export interface RpcLogResult extends RpcResponse {
-    result: EthLog;
+    result: EthLog[];
 }

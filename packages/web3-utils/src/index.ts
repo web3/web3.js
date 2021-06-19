@@ -138,38 +138,51 @@ export function formatOutput(
 }
 
 export function formatOutputObject(
-    outputObject: { [key: string]: any },
+    outputObject: { [key: string]: any } | { [key: string]: any }[],
     formattableProperties: (string | { [key: string]: string[] })[],
     desiredType: ValidTypesEnum
 ): any {
     try {
-        if (outputObject === null) return outputObject;
+        let formattedOutput;
 
-        const formattedOutputObject = { ...outputObject };
-        for (const formattableProperty of formattableProperties) {
-            if (
-                typeof formattableProperty === 'object' &&
-                formattableProperty !== null
-            ) {
-                const outputObjectProperty =
-                    Object.keys(formattableProperty)[0];
-                formattedOutputObject[outputObjectProperty] =
-                    formatOutputObject(
-                        formattedOutputObject[outputObjectProperty],
+        if (outputObject === null || Object.keys(outputObject).length === 0)
+            return outputObject;
+
+        if (Array.isArray(outputObject)) {
+            formattedOutput = [...outputObject];
+            outputObject.forEach(
+                (output, index) =>
+                    (formattedOutput[index] = formatOutputObject(
+                        output,
+                        formattableProperties,
+                        desiredType
+                    ))
+            );
+        } else {
+            formattedOutput = { ...outputObject };
+            for (const formattableProperty of formattableProperties) {
+                if (
+                    typeof formattableProperty === 'object' &&
+                    formattableProperty !== null
+                ) {
+                    const outputObjectProperty =
+                        Object.keys(formattableProperty)[0];
+                    formattedOutput[outputObjectProperty] = formatOutputObject(
+                        formattedOutput[outputObjectProperty],
                         formattableProperty[outputObjectProperty],
                         desiredType
                     );
-            } else {
-                if (formattedOutputObject[formattableProperty] !== undefined) {
-                    formattedOutputObject[formattableProperty] = formatOutput(
-                        formattedOutputObject[formattableProperty],
-                        desiredType
-                    );
+                } else {
+                    if (formattedOutput[formattableProperty] !== undefined) {
+                        formattedOutput[formattableProperty] = formatOutput(
+                            formattedOutput[formattableProperty],
+                            desiredType
+                        );
+                    }
                 }
             }
         }
-
-        return formattedOutputObject;
+        return formattedOutput;
     } catch (error) {
         throw Error(
             `Error formatting output object properties to ${desiredType}: ${error.message}`
