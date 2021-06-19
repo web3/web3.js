@@ -1,51 +1,107 @@
 import Web3RequestManager from 'web3-core-requestmanager';
-import { HttpRpcOptions } from 'web3-providers-http/types';
+import {
+    CallOptions,
+    RpcResponse,
+    SubscriptionResponse,
+    RpcParams,
+} from 'web3-providers-base/types';
+import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
+import {
+    PrefixedHexString,
+    ValidTypes,
+    ValidTypesEnum,
+} from 'web3-utils/types';
 
 import {
     Web3EthOptions,
     EthTransaction,
-    EthCallTransaction,
     BlockIdentifier,
-    EthStringResult,
-    EthSyncingResult,
-    EthBooleanResult,
-    EthAccountsResult,
-    EthBlockResult,
-    EthTransactionResult,
-    EthTransactionReceiptResult,
-    EthStringArrayResult,
-    EthCompiledSolidityResult,
-    EthLogResult,
     EthFilter,
+    BlockTags,
+    RpcStringResult,
+    RpcPrefixedHexStringResult,
+    RpcValidTypeResult,
+    RpcBooleanResult,
+    RpcSyncingResult,
+    RpcAccountsResult,
+    RpcBlockResult,
+    RpcTransactionResult,
+    RpcTransactionReceiptResult,
+    RpcStringArrayResult,
+    RpcCompiledSolidityResult,
+    RpcLogResult,
+    EthCallTransaction,
 } from '../types';
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;
-    private _DEFAULT_JSON_RPC_VERSION = '2.0';
+    private _defaultReturnType: ValidTypesEnum;
 
     constructor(options: Web3EthOptions) {
         this._requestManager = new Web3RequestManager({
             providerUrl: options.providerUrl,
         });
+        this._defaultReturnType =
+            options.returnType || ValidTypesEnum.PrefixedHexString;
+    }
+
+    private _send(
+        method: string,
+        params: RpcParams,
+        callOptions?: CallOptions
+    ): Promise<RpcResponse> {
+        return this._requestManager.send(
+            {
+                ...callOptions?.rpcOptions,
+                method,
+                params,
+            },
+            callOptions?.providerCallOptions
+        );
+    }
+
+    private _subscribe(
+        method: string,
+        params: RpcParams,
+        callOptions?: CallOptions
+    ): Promise<SubscriptionResponse> {
+        return this._requestManager.subscribe(
+            {
+                ...callOptions?.rpcOptions,
+                method,
+                params,
+            },
+            callOptions?.providerCallOptions
+        );
+    }
+
+    private static _isBlockTag(value: BlockIdentifier): boolean {
+        return Object.values(BlockTags).includes(value as BlockTags);
     }
 
     /**
      * Returns the current client version
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Client version
      */
     async getClientVersion(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'web3_clientVersion',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'web3_clientVersion',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -54,22 +110,28 @@ export default class Web3Eth {
     /**
      * Returns Keccak-256 (not the standardized SHA3-256) of the given data
      * @param {string} data Data to convert into SHA3 hash
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} SHA3 hash of {data}
      */
     async getSha3(
         data: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'web3_sha3',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [data],
-            });
+            const requestParameters: [
+                string,
+                [string],
+                CallOptions | undefined
+            ] = ['web3_sha3', [data], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting sha3 hash: ${error.message}`);
         }
@@ -77,21 +139,35 @@ export default class Web3Eth {
 
     /**
      * Returns the current network version
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_version',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'net_version',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting network version: ${error.message}`);
         }
@@ -99,21 +175,27 @@ export default class Web3Eth {
 
     /**
      * Returns true if client is actively listening for network connections
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBooleanResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_listening',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'net_listening',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting network listening: ${error.message}`);
         }
@@ -121,21 +203,35 @@ export default class Web3Eth {
 
     /**
      * Returns number of peers currently connected to the client
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkPeerCount(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBooleanResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'net_peerCount',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'net_peerCount',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting network peer count: ${error.message}`);
         }
@@ -143,21 +239,35 @@ export default class Web3Eth {
 
     /**
      * Returns the current ethereum protocol version
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_protocolVersion',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_protocolVersion',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting protocol version: ${error.message}`);
         }
@@ -165,19 +275,39 @@ export default class Web3Eth {
 
     /**
      * Returns an object with data about the sync status or false when not syncing
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Object with sync status data or false when not syncing
      */
-    async getSyncing(rpcOptions?: HttpRpcOptions): Promise<EthSyncingResult> {
+    async getSyncing(
+        callOptions?: CallOptions
+    ): Promise<RpcSyncingResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_syncing',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_syncing',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result:
+                    typeof response.result === 'boolean'
+                        ? response.result
+                        : formatOutputObject(
+                              response.result,
+                              ['startingBlock', 'currentBlock', 'highestBlock'],
+                              callOptions?.returnType || this._defaultReturnType
+                          ),
+            };
         } catch (error) {
             throw Error(`Error getting syncing status: ${error.message}`);
         }
@@ -185,19 +315,27 @@ export default class Web3Eth {
 
     /**
      * Returns the client's coinbase address
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} The current coinbase address
      */
-    async getCoinbase(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getCoinbase(
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_coinbase',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_coinbase',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting coinbase address: ${error.message}`);
         }
@@ -205,19 +343,27 @@ export default class Web3Eth {
 
     /**
      * Returns true if client is actively mining new blocks
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} true if the client is mining, otherwise false
      */
-    async getMining(rpcOptions?: HttpRpcOptions): Promise<EthBooleanResult> {
+    async getMining(
+        callOptions?: CallOptions
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_mining',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_mining',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting mining status: ${error.message}`);
         }
@@ -225,19 +371,35 @@ export default class Web3Eth {
 
     /**
      * Returns the number of hashes per second that the node is mining with
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Number of hashes per second
      */
-    async getHashRate(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getHashRate(
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_hashrate',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_hashrate',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting hash rate: ${error.message}`);
         }
@@ -245,19 +407,35 @@ export default class Web3Eth {
 
     /**
      * Returns the current price per gas in wei
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing current gas price in wei
      */
-    async getGasPrice(rpcOptions?: HttpRpcOptions): Promise<EthStringResult> {
+    async getGasPrice(
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_gasPrice',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_gasPrice',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting gas price: ${error.message}`);
         }
@@ -265,19 +443,27 @@ export default class Web3Eth {
 
     /**
      * Returns a list of addresses owned by client.
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Array of addresses owned by the client
      */
-    async getAccounts(rpcOptions?: HttpRpcOptions): Promise<EthAccountsResult> {
+    async getAccounts(
+        callOptions?: CallOptions
+    ): Promise<RpcAccountsResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_accounts',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_accounts',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting accounts: ${error.message}`);
         }
@@ -285,21 +471,35 @@ export default class Web3Eth {
 
     /**
      * Returns the number of most recent block
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing current block number client is on
      */
     async getBlockNumber(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_blockNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_blockNumber',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting block number: ${error.message}`);
         }
@@ -309,23 +509,46 @@ export default class Web3Eth {
      * Returns the balance of the account of given address
      * @param {string} address Address to get balance of
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing current balance in wei
      */
     async getBalance(
-        address: string,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBalance',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getBalance',
+                [
+                    address,
+                    Web3Eth._isBlockTag(blockIdentifier)
+                        ? (blockIdentifier as BlockTags)
+                        : toHex(blockIdentifier),
+                ],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting balance: ${error.message}`);
         }
@@ -336,24 +559,35 @@ export default class Web3Eth {
      * @param {string} address Address of storage to query
      * @param {string} storagePosition Hex string representing position in storage to retrieve
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing value at {storagePosition}
      */
     async getStorageAt(
-        address: string,
-        storagePosition: string,
+        address: PrefixedHexString,
+        storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getStorageAt',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, storagePosition, blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getStorageAt',
+                [address, toHex(storagePosition), toHex(blockIdentifier)],
+                callOptions,
+            ];
+
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting storage value: ${error.message}`);
         }
@@ -363,23 +597,41 @@ export default class Web3Eth {
      * Returns the number of transactions sent from an address
      * @param {string} address Address to get transaction count of
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing number of transactions sent by {address}
      */
     async getTransactionCount(
-        address: string,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionCount',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getTransactionCount',
+                [address, toHex(blockIdentifier)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting transaction count: ${error.message}`);
         }
@@ -388,22 +640,40 @@ export default class Web3Eth {
     /**
      * Returns the number of transactions in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query transaction count of
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing number of transactions in block
      */
     async getBlockTransactionCountByHash(
-        blockHash: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        blockHash: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockTransactionCountByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getBlockTransactionCountByHash',
+                [blockHash],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by hash: ${error.message}`
@@ -414,22 +684,40 @@ export default class Web3Eth {
     /**
      * Returns the number of transactions in a block from a block matching the given block number
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing number of transactions in block
      */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockTransactionCountByNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getBlockTransactionCountByNumber',
+                [toHex(blockIdentifier)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting transaction count for block by number: ${error.message}`
@@ -440,22 +728,36 @@ export default class Web3Eth {
     /**
      * Returns the number of uncles in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing number of uncles in block
      */
     async getUncleCountByBlockHash(
-        blockHash: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        blockHash: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleCountByBlockHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getUncleCountByBlockHash', [blockHash], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by hash: ${error.message}`
@@ -466,22 +768,40 @@ export default class Web3Eth {
     /**
      * Returns the number of uncles in a block from a block matching the given block number
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing number of uncles in block
      */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleCountByBlockNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getUncleCountByBlockNumber',
+                [toHex(blockIdentifier)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting uncle count for block by number: ${error.message}`
@@ -493,23 +813,29 @@ export default class Web3Eth {
      * Returns code at a given address
      * @param {string} address Address to get code at
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing the code at {address}
      */
     async getCode(
-        address: string,
+        address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getCode',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, blockIdentifier],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getCode', [address, toHex(blockIdentifier)], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting code at address: ${error.message}`);
         }
@@ -519,23 +845,29 @@ export default class Web3Eth {
      * Calculates an Ethereum specific signature
      * @param {string} address Address to use to sign {data}
      * @param {string} message Message to sign
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing signed message
      */
     async sign(
-        address: string,
-        message: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        address: PrefixedHexString,
+        message: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sign',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [address, message],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_sign', [address, message], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error signing message: ${error.message}`);
         }
@@ -551,22 +883,48 @@ export default class Web3Eth {
      * @param {string} transaction.value Hex string representing number of Wei to send to {to}
      * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
      * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing signed message
      */
     async signTransaction(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_signTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [{ ...transaction }],
-            });
+            const requestParameters: [
+                string,
+                [EthTransaction],
+                CallOptions | undefined
+            ] = [
+                'eth_signTransaction',
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? toHex(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? toHex(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? toHex(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? toHex(transaction.nonce)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error signing transaction: ${error.message}`);
         }
@@ -582,22 +940,48 @@ export default class Web3Eth {
      * @param {string} transaction.value Hex string representing number of Wei to send to {to}
      * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
      * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendTransaction(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sendTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [{ ...transaction }],
-            });
+            const requestParameters: [
+                string,
+                [EthTransaction],
+                CallOptions | undefined
+            ] = [
+                'eth_sendTransaction',
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? toHex(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? toHex(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? toHex(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? toHex(transaction.nonce)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error sending transaction: ${error.message}`);
         }
@@ -606,30 +990,35 @@ export default class Web3Eth {
     /**
      * Submits a previously signed transaction object to the network
      * @param {string} rawTransaction Hex string representing previously signed transaction
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendRawTransaction(
-        rawTransaction: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        rawTransaction: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_sendRawTransaction',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [rawTransaction],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_sendRawTransaction', [rawTransaction], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error sending raw transaction: ${error.message}`);
         }
     }
 
+    // TODO Discuss formatting result
     /**
-     * TODO Result is probably more than hex string, or perhpas should be decoded
-     *
      * Executes a new message call immediately without creating a transaction on the block chain
      * @param {object} transaction Ethereum transaction
      * @param {string} transaction.from Address transaction will be sent from
@@ -639,22 +1028,45 @@ export default class Web3Eth {
      * @param {string} transaction.value Hex string representing number of Wei to send to {to}
      * @param {string} transaction.data Hash of the method signature and encoded parameters
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing return value of executed contract
      */
     async call(
         transaction: EthCallTransaction,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcResponse | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_call',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [transaction],
-            });
+            const requestParameters: [
+                string,
+                [EthTransaction],
+                CallOptions | undefined
+            ] = [
+                'eth_call',
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? toHex(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? toHex(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? toHex(transaction.value)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error sending call transaction: ${error.message}`);
         }
@@ -670,22 +1082,56 @@ export default class Web3Eth {
      * @param {string} transaction.value Hex string representing number of Wei to send to {to} (optional)
      * @param {string} transaction.data Hash of the method signature and encoded parameters (optional)
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Hex string representing estimated amount of gas to be used
      */
     async estimateGas(
         transaction: EthTransaction,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_estimateGas',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [transaction],
-            });
+            const requestParameters: [
+                string,
+                [EthTransaction],
+                CallOptions | undefined
+            ] = [
+                'eth_estimateGas',
+                [
+                    {
+                        ...transaction,
+                        gas: transaction.gas
+                            ? toHex(transaction.gas)
+                            : undefined,
+                        gasPrice: transaction.gasPrice
+                            ? toHex(transaction.gasPrice)
+                            : undefined,
+                        value: transaction.value
+                            ? toHex(transaction.value)
+                            : undefined,
+                        nonce: transaction.nonce
+                            ? toHex(transaction.nonce)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting gas estimate: ${error.message}`);
         }
@@ -695,23 +1141,57 @@ export default class Web3Eth {
      * Returns information about a block by hash
      * @param {string} blockHash Hash of block to get information for
      * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByHash(
-        blockHash: string,
+        blockHash: PrefixedHexString,
         returnFullTxs: boolean,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBlockResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, returnFullTxs],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, boolean],
+                CallOptions | undefined
+            ] = ['eth_getBlockByHash', [blockHash, returnFullTxs], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'number',
+                        'difficulty',
+                        'totalDifficulty',
+                        'size',
+                        'gasLimit',
+                        'gasUsed',
+                        'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting block by hash: ${error.message}`);
         }
@@ -721,23 +1201,61 @@ export default class Web3Eth {
      * Returns information about a block by number
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByNumber(
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBlockResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getBlockByNumber',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, returnFullTxs],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, boolean],
+                CallOptions | undefined
+            ] = [
+                'eth_getBlockByNumber',
+                [toHex(blockIdentifier), returnFullTxs],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'number',
+                        'difficulty',
+                        'totalDifficulty',
+                        'size',
+                        'gasLimit',
+                        'gasUsed',
+                        'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting block by number: ${error.message}`);
         }
@@ -746,22 +1264,45 @@ export default class Web3Eth {
     /**
      * Returns the information about a transaction requested by transaction hash
      * @param {string} txHash Hash of transaction to retrieve
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByHash(
-        txHash: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthTransactionResult> {
+        txHash: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByHash',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [txHash],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getTransactionByHash', [txHash], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'blockNumber',
+                        'gas',
+                        'gasPrice',
+                        'nonce',
+                        'transactionIndex',
+                        'value',
+                        'v',
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting transaction by hash: ${error.message}`);
         }
@@ -771,23 +1312,50 @@ export default class Web3Eth {
      * Returns information about a transaction by block hash and transaction index position
      * @param {string} blockHash Hash of block to get transactions of
      * @param {string} transactionIndex Hex string representing index of transaction to return
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockHashAndIndex(
-        blockHash: string,
-        transactionIndex: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthTransactionResult> {
+        blockHash: PrefixedHexString,
+        transactionIndex: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByBlockHashAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, transactionIndex],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getTransactionByBlockHashAndIndex',
+                [blockHash, toHex(transactionIndex)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'blockNumber',
+                        'gas',
+                        'gasPrice',
+                        'nonce',
+                        'transactionIndex',
+                        'value',
+                        'v',
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting transaction by block hash and index: ${error.message}`
@@ -799,23 +1367,50 @@ export default class Web3Eth {
      * Returns information about a transaction by block number and transaction index position
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {string} transactionIndex Hex string representing index of transaction to return
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        transactionIndex: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthTransactionResult> {
+        transactionIndex: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcTransactionResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionByBlockNumberAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, transactionIndex],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getTransactionByBlockNumberAndIndex',
+                [toHex(blockIdentifier), toHex(transactionIndex)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'blockNumber',
+                        'gas',
+                        'gasPrice',
+                        'nonce',
+                        'transactionIndex',
+                        'value',
+                        'v',
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting transaction by block number and index: ${error.message}`
@@ -826,22 +1421,50 @@ export default class Web3Eth {
     /**
      * Returns the receipt of a transaction by transaction hash
      * @param {string} txHash Hash of transaction to get receipt of
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A transaction object or {null} when no receipt was found
      */
     async getTransactionReceipt(
-        txHash: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthTransactionReceiptResult> {
+        txHash: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcTransactionReceiptResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getTransactionReceipt',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [txHash],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getTransactionReceipt', [txHash], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'transactionIndex',
+                        'blockNumber',
+                        'cumulativeGasUsed',
+                        'gasUsed',
+                        {
+                            logs: [
+                                'logIndex',
+                                'transactionIndex',
+                                'blockNumber',
+                            ],
+                        },
+                        'status',
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting transaction reciept: ${error.message}`);
         }
@@ -851,23 +1474,61 @@ export default class Web3Eth {
      * Returns information about a uncle of a block by hash and uncle index position
      * @param {string} blockHash Hash of block to get uncles of
      * @param {string} uncleIndex Index of uncle to retrieve
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockHashAndIndex(
-        blockHash: string,
-        uncleIndex: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBlockResult> {
+        blockHash: PrefixedHexString,
+        uncleIndex: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleByBlockHashAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockHash, uncleIndex],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getUncleByBlockHashAndIndex',
+                [blockHash, toHex(uncleIndex)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'number',
+                        'difficulty',
+                        'totalDifficulty',
+                        'size',
+                        'gasLimit',
+                        'gasUsed',
+                        'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting uncle by block hash and index: ${error.message}`
@@ -879,23 +1540,61 @@ export default class Web3Eth {
      * Returns information about a uncle of a block by number and uncle index position
      * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
      * @param {string} uncleIndex Index of uncle to retrieve
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
-        uncleIndex: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBlockResult> {
+        uncleIndex: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcBlockResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getUncleByBlockNumberAndIndex',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [blockIdentifier, uncleIndex],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_getUncleByBlockNumberAndIndex',
+                [toHex(blockIdentifier), toHex(uncleIndex)],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    [
+                        'number',
+                        'difficulty',
+                        'totalDifficulty',
+                        'size',
+                        'gasLimit',
+                        'gasUsed',
+                        'timestamp',
+                        {
+                            transactions: [
+                                'blockNumber',
+                                'gas',
+                                'gasPrice',
+                                'nonce',
+                                'transactionIndex',
+                                'value',
+                                'v',
+                            ],
+                        },
+                    ],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error getting uncle by block number and index: ${error.message}`
@@ -905,21 +1604,27 @@ export default class Web3Eth {
 
     /**
      * Returns a list of available compilers in the client
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} A list of available compilers
      */
     async getCompilers(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringArrayResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcStringArrayResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getCompilers',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_getCompilers',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting compilers: ${error.message}`);
         }
@@ -928,22 +1633,28 @@ export default class Web3Eth {
     /**
      * Returns compiled solidity code
      * @param {string} sourceCode Solidity code to be compiled
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSolidity(
-        sourceCode: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthCompiledSolidityResult> {
+        sourceCode: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcCompiledSolidityResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileSolidity',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_compileSolidity', [sourceCode], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(
                 `Error getting compiling solidity code: ${error.message}`
@@ -954,22 +1665,28 @@ export default class Web3Eth {
     /**
      * Returns compiled LLL code
      * @param {string} sourceCode LLL code to be compiled
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} compiled {sourceCode}
      */
     async compileLLL(
-        sourceCode: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        sourceCode: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileLLL',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_compileLLL', [sourceCode], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting compiling LLL code: ${error.message}`);
         }
@@ -978,22 +1695,28 @@ export default class Web3Eth {
     /**
      * Returns compiled serpent code
      * @param {string} sourceCode Serpent code to be compiled
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} compiled {sourceCode}
      */
     async compileSerpent(
-        sourceCode: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        sourceCode: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_compileSerpent',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [sourceCode],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_compileSerpent', [sourceCode], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(
                 `Error getting compiling serpent code: ${error.message}`
@@ -1008,22 +1731,50 @@ export default class Web3Eth {
      * @param {string|number} filter.toBlock End filter at integer block number or "latest", "earliest", "pending"
      * @param {string|string[]} filter.address: Contract address or list of addresses from which logs should originate
      * @param {string[]} filter.topics Topics to use for filtering (optional)
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Filter id
      */
     async newFilter(
         filter: EthFilter,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filter],
-            });
+            const requestParameters: [
+                string,
+                [EthFilter],
+                CallOptions | undefined
+            ] = [
+                'eth_newFilter',
+                [
+                    {
+                        ...filter,
+                        fromBlock: filter.fromBlock
+                            ? toHex(filter.fromBlock)
+                            : undefined,
+                        toBlock: filter.toBlock
+                            ? toHex(filter.toBlock)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error creating filter: ${error.message}`);
         }
@@ -1031,21 +1782,35 @@ export default class Web3Eth {
 
     /**
      * Creates a filter in the node, to notify when a new block arrives
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Filter id
      */
     async newBlockFilter(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newBlockFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_newBlockFilter',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error creating block filter: ${error.message}`);
         }
@@ -1053,21 +1818,35 @@ export default class Web3Eth {
 
     /**
      * Creates a filter in the node, to notify when new pending transactions arrive
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Filter id
      */
     async newPendingTransactionFilter(
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthStringResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_newPendingTransactionFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_newPendingTransactionFilter',
+                [],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutput(
+                    response.result,
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(
                 `Error creating pending transaction filter: ${error.message}`
@@ -1078,93 +1857,161 @@ export default class Web3Eth {
     /**
      * Uninstalls a filter with given id. Should always be called when watch is no longer needed
      * @param {string} filterId Id of filter to uninstall from node
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
      */
     async uninstallFilter(
-        filterId: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBooleanResult> {
+        filterId: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_uninstallFilter',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_uninstallFilter', [toHex(filterId)], callOptions];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error uninstalling filter: ${error.message}`);
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Polling method for a filter, which returns an array of logs which occurred since last poll
      * @param {string} filterid Id of filter to retrieve changes from
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterChanges(
-        filterId: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthLogResult> {
+        filterId: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getFilterChanges',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getFilterChanges', [toHex(filterId)], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    ['logIndex', 'transactionIndex', 'blockNumber'],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching filter with given id
      * @param {string} filterid Id of filter to retrieve
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterLogs(
-        filterId: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthLogResult> {
+        filterId: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getFilterLogs',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filterId],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString],
+                CallOptions | undefined
+            ] = ['eth_getFilterLogs', [toHex(filterId)], callOptions];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    ['logIndex', 'transactionIndex', 'blockNumber'],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting filter changes: ${error.message}`);
         }
     }
 
+    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching a given filter object
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getLogs(
         filter: EthFilter,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthLogResult> {
+        callOptions?: CallOptions
+    ): Promise<RpcLogResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getLogs',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [filter],
-            });
+            const requestParameters: [
+                string,
+                [EthFilter],
+                CallOptions | undefined
+            ] = [
+                'eth_getLogs',
+                [
+                    {
+                        ...filter,
+                        fromBlock: filter.fromBlock
+                            ? toHex(filter.fromBlock)
+                            : undefined,
+                        toBlock: filter.toBlock
+                            ? toHex(filter.toBlock)
+                            : undefined,
+                    },
+                ],
+                callOptions,
+            ];
+
+            if (callOptions?.subscribe)
+                return await this._subscribe(...requestParameters);
+            const response = await this._send(...requestParameters);
+            return {
+                ...response,
+                result: formatOutputObject(
+                    response.result,
+                    ['logIndex', 'transactionIndex', 'blockNumber'],
+                    callOptions?.returnType || this._defaultReturnType
+                ),
+            };
         } catch (error) {
             throw Error(`Error getting logs: ${error.message}`);
         }
@@ -1172,19 +2019,27 @@ export default class Web3Eth {
 
     /**
      * Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”)
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
-    async getWork(rpcOptions?: HttpRpcOptions): Promise<EthStringArrayResult> {
+    async getWork(
+        callOptions?: CallOptions
+    ): Promise<RpcStringArrayResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_getWork',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [],
-            });
+            const requestParameters: [string, [], CallOptions | undefined] = [
+                'eth_getWork',
+                [],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error getting work: ${error.message}`);
         }
@@ -1195,24 +2050,34 @@ export default class Web3Eth {
      * @param {string} nonce Hex string representing found nonce (64 bits)
      * @param {string} powHash Hex string representing POW hash (256 bits)
      * @param {string} digest Hex string representing mix digest (256 bits)
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitWork(
-        nonce: string,
-        powHash: string,
-        digest: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBooleanResult> {
+        nonce: ValidTypes,
+        powHash: PrefixedHexString,
+        digest: PrefixedHexString,
+        callOptions?: CallOptions
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_submitWork',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [nonce, powHash, digest],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_submitWork',
+                [toHex(nonce, 8), powHash, digest],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error submitting work: ${error.message}`);
         }
@@ -1222,23 +2087,33 @@ export default class Web3Eth {
      * Used for submitting mining hashrate
      * @param {string} hashRate Hex string representing desired hash rate (32 bytes)
      * @param {string} clientId Hex string representing ID identifying the client
-     * @param {object} rpcOptions RPC options
-     * @param {number} rpcOptions.id ID used to identify request
-     * @param {string} rpcOptions.jsonrpc JSON RPC version
+     * @param {object} callOptions
+     * @param {object} callOptions.providerCallOptions Varies based on provider type (e.g. HttpOptions)
+     * @param {object} callOptions.rpcOptions
+     * @param {number} callOptions.rpcOptions.id (Optional) Id to pass along with RPC request. Gets returned by RPC node
+     * @param {string} callOptions.rpcOptions.jsonrpc (Optional) Version of JSON RPC version
+     * @param {string} callOptions.returnType (Optional) Desired return type of formattable outputs
+     * @param {boolean} callOptions.subscribe (Optional) If true, returns Node.js EventEmitter and polls
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitHashRate(
-        hashRate: string,
-        clientId: string,
-        rpcOptions?: HttpRpcOptions
-    ): Promise<EthBooleanResult> {
+        hashRate: ValidTypes,
+        clientId: ValidTypes,
+        callOptions?: CallOptions
+    ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            return await this._requestManager.send({
-                ...rpcOptions,
-                method: 'eth_submitHashRate',
-                jsonrpc: rpcOptions?.jsonrpc || this._DEFAULT_JSON_RPC_VERSION,
-                params: [hashRate, clientId],
-            });
+            const requestParameters: [
+                string,
+                [PrefixedHexString, PrefixedHexString],
+                CallOptions | undefined
+            ] = [
+                'eth_submitHashRate',
+                [toHex(hashRate, 32), toHex(clientId)],
+                callOptions,
+            ];
+            return callOptions?.subscribe
+                ? await this._subscribe(...requestParameters)
+                : await this._send(...requestParameters);
         } catch (error) {
             throw Error(`Error submitting hash rate: ${error.message}`);
         }
