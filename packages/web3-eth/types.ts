@@ -1,4 +1,9 @@
-import { HttpRpcResponse } from 'web3-providers-http/types';
+import { RpcResponse } from 'web3-providers-base/types';
+import {
+    PrefixedHexString,
+    ValidTypes,
+    ValidTypesEnum,
+} from 'web3-utils/types';
 
 export enum BlockTags {
     latest = 'latest',
@@ -6,22 +11,21 @@ export enum BlockTags {
     pending = 'pending',
 }
 
-/**
- * @param BlockIdentifier If string is passed, it must be a hex string
- */
-export type BlockIdentifier = number | string | BlockTags;
+export type BlockIdentifier = ValidTypes | BlockTags;
 
-export type EthLog = {
-    removed: boolean;
-    logIndex: string | null;
-    transactionIndex: string | null;
-    transactionHash: string | null;
-    blockHash: string | null;
-    blockNumber: string | null;
-    address: string;
-    data: string;
-    topics: string[];
-};
+export type EthLog =
+    | PrefixedHexString[]
+    | {
+          removed: boolean;
+          logIndex: ValidTypes | null;
+          transactionIndex: ValidTypes | null;
+          transactionHash: PrefixedHexString | null;
+          blockHash: PrefixedHexString | null;
+          blockNumber: ValidTypes | null;
+          address: PrefixedHexString;
+          data: PrefixedHexString;
+          topics: PrefixedHexString[];
+      };
 
 /**
  * @param to is optional when creating a new contract
@@ -30,72 +34,46 @@ export type EthLog = {
  * @param data optional, but required if {to} is not provided
  */
 export type EthTransaction = {
-    from: string;
-    to?: string;
-    gas?: BigInt;
-    gasPrice?: BigInt;
-    value?: BigInt;
-    data?: string;
-    nonce?: number;
+    from: PrefixedHexString;
+    to?: PrefixedHexString;
+    gas?: ValidTypes;
+    gasPrice?: ValidTypes;
+    value?: ValidTypes;
+    data?: PrefixedHexString;
+    nonce?: ValidTypes;
+};
+
+/**
+ * @param gas eth_call consumes zero gas, but this parameter may be needed by some executions
+ */
+export type EthCallTransaction = {
+    from: PrefixedHexString;
+    to: PrefixedHexString;
+    gas?: ValidTypes;
+    gasPrice?: ValidTypes;
+    value?: ValidTypes;
+    data?: PrefixedHexString;
 };
 
 export type EthMinedTransaction = {
-    blockHash: string | null;
-    blockNumber: string | null;
-    from: string;
-    gas: string;
-    gasPrice: string;
-    hash: string;
-    input: string;
-    nonce: string;
-    to: string | null;
-    transactionIndex: string | null;
-    value: string;
-    v: string;
-    r: string;
-    s: string;
+    blockHash: PrefixedHexString | null;
+    blockNumber: ValidTypes | null;
+    from: PrefixedHexString;
+    gas: ValidTypes;
+    gasPrice: ValidTypes;
+    hash: PrefixedHexString;
+    input: PrefixedHexString;
+    nonce: ValidTypes;
+    to: PrefixedHexString | null;
+    transactionIndex: ValidTypes | null;
+    value: ValidTypes;
+    v: ValidTypes;
+    r: PrefixedHexString;
+    s: PrefixedHexString;
 };
 
-export type EthBlock = {
-    number: string | null;
-    hash: string | null;
-    parentHash: string;
-    nonce: string | null;
-    sha3Uncles: string;
-    logsBloom: string | null;
-    transactionsRoot: string;
-    stateRoot: string;
-    receiptsRoot: string;
-    miner: string;
-    difficulty: string;
-    totalDifficulty: string;
-    extraData: string;
-    size: string;
-    gasLimit: string;
-    gasUsed: string;
-    timestamp: string;
-    transactions: EthMinedTransaction[];
-    uncles: string[];
-    root?: string;
-    status?: string;
-};
-
-export type EthTransactionReceipt = {
-    transactionHash: string;
-    transactionIndex: string;
-    blockHash: string;
-    blockNumber: string;
-    from: string;
-    to: string | null;
-    cumulativeGasUsed: string;
-    gasUsed: string;
-    contractAdress: string | null;
-    logs: EthLog[];
-    logsBloom: string;
-};
-
-export type EthCompiledSolidity = {
-    code: string;
+export type CompiledSolidity = {
+    code: PrefixedHexString;
     info: {
         source: string;
         language: string;
@@ -114,62 +92,116 @@ export type EthCompiledSolidity = {
 export type EthFilter = {
     fromBlock?: BlockIdentifier;
     toBlock?: BlockIdentifier;
-    address?: string;
-    topics?: string | null | string[][];
-    blochHash?: string;
+    address?: PrefixedHexString;
+    topics?: PrefixedHexString | null | PrefixedHexString[][];
+    blockHash?: PrefixedHexString;
 };
 
 export interface Web3EthOptions {
     packageName?: string;
     providerUrl: string;
+    returnType?: ValidTypesEnum;
 }
 
-export interface EthCallTransaction extends EthTransaction {
-    to: string;
-}
-
-export interface EthStringResult extends HttpRpcResponse {
+export interface RpcStringResult extends RpcResponse {
     result: string;
 }
 
-export interface EthStringArrayResult extends HttpRpcResponse {
-    result: string[];
+export interface RpcPrefixedHexStringResult extends RpcResponse {
+    result: PrefixedHexString;
 }
 
-export interface EthBooleanResult extends HttpRpcResponse {
+export interface RpcValidTypeResult extends RpcResponse {
+    result: ValidTypes;
+}
+
+export interface RpcBooleanResult extends RpcResponse {
     result: boolean;
 }
 
-export interface EthSyncingResult extends HttpRpcResponse {
+export interface RpcSyncingResult extends RpcResponse {
     result:
+        | boolean
         | {
-              startingBlock: string;
-              currentBlock: string;
-              highestBlock: string;
-          }
-        | false;
+              startingBlock: ValidTypes;
+              currentBlock: ValidTypes;
+              highestBlock: ValidTypes;
+          };
 }
 
-export interface EthAccountsResult extends HttpRpcResponse {
+export interface RpcAccountsResult extends RpcResponse {
+    result: PrefixedHexString[];
+}
+
+export interface RpcBlockResult extends RpcResponse {
+    result: null | {
+        number: ValidTypes | null;
+        hash: PrefixedHexString | null;
+        parentHash: PrefixedHexString;
+        nonce: PrefixedHexString | null;
+        sha3Uncles: PrefixedHexString;
+        logsBloom: PrefixedHexString | null;
+        transactionsRoot: PrefixedHexString;
+        stateRoot: PrefixedHexString;
+        receiptsRoot: PrefixedHexString;
+        miner: PrefixedHexString;
+        difficulty: ValidTypes;
+        totalDifficulty: ValidTypes;
+        extraData: PrefixedHexString;
+        size: ValidTypes;
+        gasLimit: ValidTypes;
+        gasUsed: ValidTypes;
+        timestamp: ValidTypes;
+        transactions: EthMinedTransaction[] | PrefixedHexString[];
+        uncles: PrefixedHexString[];
+    };
+}
+
+export interface RpcTransactionResult extends RpcResponse {
+    result: null | {
+        blockHash: PrefixedHexString | null;
+        blockNumber: ValidTypes | null;
+        from: PrefixedHexString;
+        gas: ValidTypes;
+        gasPrice: ValidTypes;
+        hash: PrefixedHexString;
+        input: PrefixedHexString;
+        nonce: ValidTypes;
+        to: PrefixedHexString | null;
+        transactionIndex: ValidTypes | null;
+        value: ValidTypes;
+        v: ValidTypes;
+        r: PrefixedHexString;
+        s: PrefixedHexString;
+    };
+}
+
+export interface RpcTransactionReceiptResult extends RpcResponse {
+    result: null | {
+        transactionHash: PrefixedHexString;
+        transactionIndex: ValidTypes;
+        blockHash: PrefixedHexString;
+        blockNumber: ValidTypes;
+        from: PrefixedHexString;
+        to: PrefixedHexString | null;
+        cumulativeGasUsed: ValidTypes;
+        gasUsed: ValidTypes;
+        contractAddress: PrefixedHexString | null;
+        logs: EthLog[];
+        logsBloom: PrefixedHexString;
+        root?: PrefixedHexString;
+        status?: ValidTypes;
+    };
+}
+
+export interface RpcStringArrayResult extends RpcResponse {
     result: string[];
 }
 
-export interface EthBlockResult extends HttpRpcResponse {
-    result: EthBlock | null;
+export interface RpcCompiledSolidityResult extends RpcResponse {
+    result: CompiledSolidity;
 }
 
-export interface EthTransactionResult extends HttpRpcResponse {
-    result: EthMinedTransaction | null;
-}
-
-export interface EthTransactionReceiptResult extends HttpRpcResponse {
-    result: EthTransactionReceipt | null;
-}
-
-export interface EthCompiledSolidityResult extends HttpRpcResponse {
-    result: EthCompiledSolidity;
-}
-
-export interface EthLogResult extends HttpRpcResponse {
+export interface RpcLogResult extends RpcResponse {
     result: EthLog[];
 }
