@@ -24,9 +24,11 @@
     "clean": "lerna run clean",
     "ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion'",
     "lint": "lerna run lint --stream --parallel",
+    "lint:check": "lerna run lint:check --stream --parallel",
     "test": "lerna run test --stream --parallel",
     "test:unit": "lerna run test:unit --stream --parallel",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "yarn build"
   },
   "devDependencies": {
     "eslint": "^7.24.0",

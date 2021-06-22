@@ -6,9 +6,9 @@ import {
     RpcResponse,
     RpcOptions,
     SubscriptionResponse,
+    HttpOptions,
 } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
-import { HttpOptions } from '../types';
 
 export default class Web3ProvidersHttp
     extends Web3ProviderBase

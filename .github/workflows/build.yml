@@ -54,4 +54,6 @@ jobs:
             - run: yarn
               if: steps.cache-deps.outputs.cache-hit != 'true'
 
+            - run: yarn build
+
             - run: yarn test:unit

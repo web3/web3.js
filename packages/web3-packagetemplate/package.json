@@ -2,20 +2,19 @@
     "name": "web3-packagetemplate",
     "version": "1.0.0",
     "description": "Package template for Web3 4.x.x",
-    "main": "src/index.ts",
+    "main": "lib/src/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
     "license": "LGPL-3.0",
     "files": [
-        "lib/**/*.d.ts",
-        "lib/**/*.js",
-        "lib/**/*.js.map"
+        "lib/**/*"
     ],
     "scripts": {
         "build": "yarn clean && yarn compile",
         "clean": "rimraf lib",
         "compile": "tsc --build",
         "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
+        "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "test": "jest",
         "test:integration": "jest ./test/integration",
         "test:unit": "jest ./test/unit"
