@@ -6,7 +6,7 @@ import {
     RpcResponse,
     RpcOptions,
     SubscriptionResponse,
-    HttpOptions
+    HttpOptions,
 } from 'web3-providers-base/types';
 import { EventEmitter } from 'events';
 
