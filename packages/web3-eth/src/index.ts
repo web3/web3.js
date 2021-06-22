@@ -4,20 +4,6 @@ import {
     RpcResponse,
     SubscriptionResponse,
     RpcParams,
-} from 'web3-providers-base/types';
-import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
-import {
-    PrefixedHexString,
-    ValidTypes,
-    ValidTypesEnum,
-} from 'web3-utils/types';
-
-import {
-    Web3EthOptions,
-    EthTransaction,
-    BlockIdentifier,
-    EthFilter,
-    BlockTags,
     RpcStringResult,
     RpcPrefixedHexStringResult,
     RpcValidTypeResult,
@@ -30,8 +16,19 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
-    EthCallTransaction,
-} from '../types';
+} from 'web3-providers-base/types';
+import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
+import {
+    PrefixedHexString,
+    EthTransaction,
+    BlockIdentifier,
+    EthFilter,
+    BlockTags,
+    ValidTypes,
+    ValidTypesEnum,
+} from 'web3-utils/types';
+
+import { Web3EthOptions, EthCallTransaction } from '../types';
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;

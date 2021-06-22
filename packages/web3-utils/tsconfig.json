@@ -3,7 +3,8 @@
     "compilerOptions": {
         /* Visit https://aka.ms/tsconfig.json to read more about this file */
         "outDir": "./lib",
-        "composite": true
+        "composite": true,
+        "tsBuildInfoFile": "./buildcache/tsconfig.tsbuildinfo"
     },
     "include": ["./src/**/*", "./types.ts"],
     "exclude": [
