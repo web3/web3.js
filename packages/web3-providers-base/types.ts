@@ -7,7 +7,7 @@ import {
     EthTransaction,
     EthMinedTransaction,
     EthLog,
-    CompiledSolidity
+    CompiledSolidity,
 } from 'web3-utils/types';
 import { AxiosRequestConfig } from 'axios';
 
