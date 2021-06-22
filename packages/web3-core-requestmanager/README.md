@@ -2,18 +2,21 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Utils
+# web3.js - Request Manager
 
 ## Installation
 
 ```bash
-yarn add web3-utils
+yarn add web3-core-requestmanager
 ```
 
 ## Package.json Scripts
 
 -   `build`: Runs `yarn clean` and `yarn compile`
--   `clean`: Uses `rimraf` to remove `lib/`
+-   `clean`: Uses `rimraf` to remove `lib/` and `buildcache/`
 -   `compile`: Uses `tsc` to build package and depedenent packages
--   `lint`: Uses `eslint` to lint package
--   `test`: Uses `jest` to run tests
+-   `lint`: Uses `prettier` and `eslint` to lint package
+-   `lint:check`: Uses prettier and `eslint` to check if package has been linted
+-   `test`: Uses `jest` to run all tests
+-   `test:integration`: Uses `jest` to run tests under `/test/integration`
+-   `test:unit`: Uses `jest` to run tests under `/test/unit`
