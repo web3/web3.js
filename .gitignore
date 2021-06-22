@@ -21,4 +21,5 @@ migrations/
 truffle-config.js
 test/config/ensAddresses.json
 */**/lib
+*/**/buildcache
 yarn-error.log
