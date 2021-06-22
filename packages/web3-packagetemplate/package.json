@@ -1,7 +1,7 @@
 {
-    "name": "PLACEHOLDER",
+    "name": "web3-packagetemplate",
     "version": "1.0.0",
-    "description": "Ethereum PLACEHOLDER class for Web3 4.x.x",
+    "description": "Package template for Web3 4.x.x",
     "main": "src/index.ts",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
