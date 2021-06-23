@@ -3,7 +3,7 @@ import {
     CallOptions,
     PartialRpcOptions,
     RpcParams,
-} from 'web3-providers-base/types';
+} from 'web3-providers-base/lib/types';
 
 import Web3Eth from '../../src';
 import { testConfig } from './testConfig';

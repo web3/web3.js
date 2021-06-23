@@ -1,5 +1,5 @@
-import { RpcResponse } from 'web3-providers-base/types';
-import { ValidTypesEnum } from 'web3-utils/types';
+import { RpcResponse } from 'web3-providers-base/lib/types';
+import { ValidTypesEnum } from 'web3-utils/lib/types';
 import { formatOutput, formatOutputObject } from 'web3-utils';
 import Web3RequestManager from 'web3-core-requestmanager';
 

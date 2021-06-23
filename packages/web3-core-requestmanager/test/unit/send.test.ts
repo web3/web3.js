@@ -1,4 +1,4 @@
-import { PartialRpcOptions, RpcOptions } from 'web3-providers-base/types';
+import { PartialRpcOptions, RpcOptions } from 'web3-providers-base/lib/types';
 import Web3ProviderHttp from 'web3-providers-http';
 
 import Web3RequestManager from '../../src/index';

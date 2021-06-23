@@ -3,7 +3,7 @@ import {
     ProviderCallOptions,
     RpcParams,
     RpcResponse,
-} from 'web3-providers-base/types';
+} from 'web3-providers-base/lib/types';
 import Web3RequestManager from 'web3-core-requestmanager';
 
 import Web3Eth from '../../src';

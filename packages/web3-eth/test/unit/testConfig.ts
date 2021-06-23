@@ -1,4 +1,4 @@
-import { RpcResponse } from 'web3-providers-base/types';
+import { RpcResponse } from 'web3-providers-base/lib/types';
 import { DEFAULT_ACCOUNTS } from '../constants';
 
 interface Method {
