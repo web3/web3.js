@@ -1,6 +1,4 @@
 var assert = require('assert');
-var EJSCommon = require('ethereumjs-common');
-var EJSTx = require('ethereumjs-tx');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
@@ -223,7 +221,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
             assert.fail()
         } catch (err) {
-            assert(err.message.includes('gas limit is too low'));
+            assert(err.message.includes('gasLimit is too low'));
         }
     })
 

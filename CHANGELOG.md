@@ -383,6 +383,3 @@ Released with 1.0.0-beta.37 code base.
 
 - Accidental commit (yarn-error.log) (#4062)
 
-## [Unreleased]
-
-## [1.3.7]
