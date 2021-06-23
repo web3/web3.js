@@ -1,7 +1,21 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
-    "paths": {}
+    "paths": {
+      "web3-core-requestmanager/*": ["./packages/web3-core-requestmanager/src/*"],
+      "web3-eth/*": ["./packages/web3-eth/src/*"],
+      "web3-packagetemplate/*": ["./packages/web3-packagetemplate/src/*"],
+      "web3-providers-base/*": ["./packages/web3-providers-base/src/*"],
+      "web3-providers-http/*": ["./packages/web3-providers-http/src/*"],
+      "web3-utils/*": ["./packages/web3-utils/src/*"]
+    }
   },
-  "references": []
+  "references": [
+    {"path": "./packages/web3-core-requestmanager"},
+    {"path": "./packages/web3-eth"},
+    {"path": "./packages/web3-packagetemplate"},
+    {"path": "./packages/web3-providers-base"},
+    {"path": "./packages/web3-providers-http"},
+    {"path": "./packages/web3-utils"}
+  ]
 }

@@ -1,6 +1,6 @@
 import { testConfig } from './testConfig';
 import { formatOutputObject } from '../../src';
-import { ValidTypesEnum } from '../../types';
+import { ValidTypesEnum } from '../../src/types';
 
 describe('Should convert each testConfig.testCases that is an array of objects', () => {
     for (const testCase of testConfig.testCases) {

@@ -16,7 +16,7 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
-} from 'web3-providers-base/types';
+} from 'web3-providers-base/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {
     PrefixedHexString,
@@ -26,9 +26,9 @@ import {
     BlockTags,
     ValidTypes,
     ValidTypesEnum,
-} from 'web3-utils/types';
+} from 'web3-utils/lib/types';
 
-import { Web3EthOptions, EthCallTransaction } from '../types';
+import { Web3EthOptions, EthCallTransaction } from './types';
 
 export default class Web3Eth {
     private _requestManager: Web3RequestManager;

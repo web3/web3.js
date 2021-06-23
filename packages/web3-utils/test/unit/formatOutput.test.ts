@@ -1,6 +1,6 @@
 import { testConfig } from './testConfig';
 import { formatOutput } from '../../src';
-import { ValidTypesEnum } from '../../types';
+import { ValidTypesEnum } from '../../src/types';
 
 describe('Should convert each testConfig.testCases to each {ValidTypesEnum}', () => {
     for (const testCase of testConfig.testCases) {
