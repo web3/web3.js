@@ -8,7 +8,7 @@ import {
     EthMinedTransaction,
     EthLog,
     CompiledSolidity,
-} from 'web3-utils/types';
+} from 'web3-utils/lib/types';
 import { AxiosRequestConfig } from 'axios';
 
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions

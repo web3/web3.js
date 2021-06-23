@@ -1,5 +1,5 @@
 import Web3ProviderBase from '../../src/index';
-import { ProviderOptions } from '../../types';
+import { ProviderOptions } from '../../src/types';
 
 describe('constructs a Web3ProvidersBase instance with expected properties', () => {
     let providerOptions: ProviderOptions;

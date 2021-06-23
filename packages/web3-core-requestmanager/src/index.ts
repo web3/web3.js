@@ -6,9 +6,9 @@ import {
     RpcResponse,
     PartialRpcOptions,
     SubscriptionResponse,
-} from 'web3-providers-base/types';
+} from 'web3-providers-base/lib/types';
 
-import { ProviderProtocol } from '../types';
+import { ProviderProtocol } from './types';
 
 export default class Web3RequestManager {
     provider: Web3ProviderHttp | undefined;
