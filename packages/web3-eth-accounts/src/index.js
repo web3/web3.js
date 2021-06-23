@@ -27,15 +27,13 @@ var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
+var {TransactionFactory} = require('@ethereumjs/tx');
+var Common = require('@ethereumjs/common').default;
 
 
 var isNot = function(value) {
@@ -138,8 +136,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         transactionOptions = {},
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
-    callback = callback || function() {
-    };
+    callback = callback || function() {};
 
     if (!tx) {
         error = new Error('No transaction object given!');
@@ -158,12 +155,16 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         try {
             var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
-
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            transaction.gasLimit = transaction.gasLimit || transaction.gas;
+            transaction.type = "0x0"; // default to legacy
+            if (transaction.accessList) {
+                // EIP-2930
+                transaction.type = "0x01"
+            }
+            
+            // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
                     'mainnet',
@@ -172,7 +173,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    'petersburg'
+                    transaction.hardfork || "berlin"
                 );
 
                 delete transaction.networkId;
@@ -185,7 +186,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || 'petersburg'
+                        transaction.common.hardfork || "berlin",
                     );
 
                     delete transaction.common;
@@ -201,30 +202,30 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
+            var ethTx = TransactionFactory.fromTxData(transaction, transactionOptions);
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var validationErrors = signedTx.validate(true);
 
-            var ethTx = new Transaction(transaction, transactionOptions);
-
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
+            if (validationErrors.length > 0) {
+                let errorString = 'Signer Error: '
+                for(const validationError of validationErrors) {
+                    errorString += `${errorString} ${validationError}.`
+                }
+                throw new Error(errorString);
             }
 
-            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rlpEncoded = signedTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
             var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
+                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
+                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
+                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -261,7 +262,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 function _validateTransactionForSigning(tx) {
     if (tx.common && (tx.chain && tx.hardfork)) {
         return new Error(
-            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+            'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.'
         );
     }
 
@@ -286,16 +287,13 @@ function _validateTransactionForSigning(tx) {
     return;
 }
 
-
 /* jshint ignore:start */
-Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-    var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
+Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
+    // Rely on EthereumJs/tx to determine the type of transaction
+    const data = Buffer.from(rawTx.slice(2), "hex")
+    const tx = TransactionFactory.fromSerializedData(data);
+    //update checksum
+    return utils.toChecksumAddress(tx.getSenderAddress().toString("hex"));
 };
 /* jshint ignore:end */
 
