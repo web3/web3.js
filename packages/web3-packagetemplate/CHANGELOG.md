@@ -34,13 +34,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
-
-## [1.0.1]
-
-### Added
-
--   `CHANGELOG.md` (#4132)
-
-### Fixed
-
--   Update mentions of `PLACEHOLDER` in `README.md`, and added missing scripts (#4131)
