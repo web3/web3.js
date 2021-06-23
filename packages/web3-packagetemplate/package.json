@@ -1,6 +1,6 @@
 {
     "name": "web3-packagetemplate",
-    "version": "1.0.0",
+    "version": "1.0.0-alpha.0",
     "description": "Package template for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
