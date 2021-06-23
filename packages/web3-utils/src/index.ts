@@ -1,6 +1,6 @@
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
-import { ValidTypes, ValidTypesEnum, PrefixedHexString } from '../types';
+import { ValidTypes, ValidTypesEnum, PrefixedHexString } from './types';
 
 function determineValidType(input: ValidTypes): ValidTypesEnum {
     try {

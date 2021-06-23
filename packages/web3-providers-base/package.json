@@ -2,7 +2,7 @@
     "name": "web3-providers-base",
     "version": "1.0.0",
     "description": "Ethereum provider base class for Web3 4.x.x",
-    "main": "lib/src/index.js",
+    "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
     "license": "LGPL-3.0",

@@ -1,4 +1,4 @@
-import { ProviderOptions } from 'web3-providers-base/types';
+import { ProviderOptions } from 'web3-providers-base/lib/types';
 
 import Web3ProvidersHttp from '../../src/index';
 

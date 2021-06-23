@@ -7,7 +7,7 @@ import {
     RpcOptions,
     SubscriptionResponse,
     HttpOptions,
-} from 'web3-providers-base/types';
+} from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
 export default class Web3ProvidersHttp

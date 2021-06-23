@@ -1,4 +1,4 @@
-import { ValidTypes, ValidTypesEnum } from '../../types';
+import { ValidTypes, ValidTypesEnum } from '../../src/types';
 
 interface TestCase {
     input: ValidTypes | null | { [key: string]: any };

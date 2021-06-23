@@ -1,4 +1,4 @@
-import { ProviderOptions, RpcOptions } from 'web3-providers-base/types';
+import { ProviderOptions, RpcOptions } from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
 import Web3ProvidersHttp from '../../src/index';
