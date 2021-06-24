@@ -392,8 +392,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-### Removes
-
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh`
 
 ## [Unreleased]
 
