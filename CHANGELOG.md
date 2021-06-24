@@ -390,6 +390,10 @@ Released with 1.0.0-beta.37 code base.
 - Berlin Transaction Support (#4083)
 - When signing a transaction, common object now defaults to berlin instead of petersburg
 
+### Changed
+
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
+
 ## [Unreleased]
 
 ## [1.4.1]
