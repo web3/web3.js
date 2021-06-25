@@ -81,7 +81,17 @@ var Accounts = function Accounts() {
             }, function() {
                 return 'latest';
             }]
-        })
+        }),
+        new Method({
+            name: 'getBlockByNumber',
+            call: 'eth_getBlockByNumber',
+            params: 2,
+            inputFormatter: [function(blockNumber) {
+                return blockNumber ? utils.toHex(blockNumber) : 'latest'
+            }, function() {
+                return false
+            }]
+        }),
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
@@ -162,6 +172,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             if (transaction.accessList) {
                 // EIP-2930
                 transaction.type = "0x01"
+            } else if (transaction.maxPriorityFeePerGas || transaction.maxFeePerGas) {
+                // EIP-1559
+                transaction.type = "0x02"
             }
             
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
@@ -173,7 +186,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    transaction.hardfork || "berlin"
+                    transaction.hardfork || "london"
                 );
 
                 delete transaction.networkId;
@@ -186,7 +199,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || "berlin",
+                        transaction.common.hardfork || "london",
                     );
 
                     delete transaction.common;
@@ -241,21 +254,41 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
 
     // Resolve immediately if nonce, chainId, price and signing options are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
+    if (
+        tx.nonce !== undefined &&
+        tx.chainId !== undefined &&
+        (
+            tx.gasPrice !== undefined ||
+            (
+                tx.maxFeePerGas !== undefined &&
+                tx.maxPriorityFeePerGas !== undefined
+            )
+        ) &&
+        hasTxSigningOptions
+    ) {
         return Promise.resolve(signed(tx));
     }
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
+        // isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
+        _handleTxPricing(tx),
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
     ]).then(function(args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
+        return signed(_.extend(
+            tx,
+            {
+                chainId: args[0],
+                nonce: args[2],
+                networkId: args[3],
+                ...args[1] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+            }
+        ));
     });
 };
 
@@ -285,6 +318,30 @@ function _validateTransactionForSigning(tx) {
     }
 
     return;
+}
+
+function _handleTxPricing(tx) {
+    new Promise((resolve, reject) => {
+        try {
+            Promise.all([
+                _this._ethereumCall.getBlockByNumber(),
+                _this._ethereumCall.getGasPrice()
+            ]).then(responses => {
+                const [block, gasPrice] = responses;
+                if (block && block.baseFee) {
+                    // Taken from https://github.com/ethers-io/ethers.js/blob/c5bca7767e3f3d43e3d0bd3c9e9420321ee9907a/packages/abstract-provider/src.ts/index.ts#L228
+                    resolve({
+                        maxFeePerGas: tx.maxFeePerGas || utils.toHex(utils.toBN(block.baseFee).mul(2)),
+                        maxPriorityFeePerGas: tx.maxPriorityFeePerGas || '0x1'
+                    });
+                } else {
+                    resolve({ gasPrice });
+                }
+            })
+        } catch (error) {
+            reject(e)
+        }
+    })
 }
 
 /* jshint ignore:start */
