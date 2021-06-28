@@ -339,7 +339,7 @@ function _handleTxPricing(tx) {
                 }
             })
         } catch (error) {
-            reject(e)
+            reject(error)
         }
     })
 }
