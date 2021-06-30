@@ -169,12 +169,12 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
             transaction.type = "0x0"; // default to legacy
-            if (transaction.accessList) {
-                // EIP-2930
-                transaction.type = "0x01"
-            } else if (transaction.maxPriorityFeePerGas || transaction.maxFeePerGas) {
+            if (transaction.maxPriorityFeePerGas || transaction.maxFeePerGas) {
                 // EIP-1559
                 transaction.type = "0x02"
+            } else if (transaction.accessList) {
+                // EIP-2930
+                transaction.type = "0x01"
             }
             
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
