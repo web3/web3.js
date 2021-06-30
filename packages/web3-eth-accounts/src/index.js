@@ -272,9 +272,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        _handleTxPricing(tx),
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
-        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
+        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
+        _handleTxPricing(tx)
     ]).then(function(args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
@@ -283,9 +283,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             tx,
             {
                 chainId: args[0],
-                nonce: args[2],
-                networkId: args[3],
-                ...args[1] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+                nonce: args[1],
+                networkId: args[2],
+                ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
             }
         ));
     });
