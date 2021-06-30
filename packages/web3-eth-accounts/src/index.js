@@ -168,14 +168,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
-            transaction.type = "0x0"; // default to legacy
-            if (transaction.maxPriorityFeePerGas || transaction.maxFeePerGas) {
-                // EIP-1559
-                transaction.type = "0x02"
-            } else if (transaction.accessList) {
-                // EIP-2930
-                transaction.type = "0x01"
-            }
+            transaction.type = _handleTxType(transaction);
             
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
@@ -317,6 +310,24 @@ function _validateTransactionForSigning(tx) {
     }
 
     return;
+}
+
+function _handleTxType(tx) {
+    let txType = tx.type !== undefined ? utils.toHex(tx.type) : '0x0';
+    // Taken from https://github.com/ethers-io/ethers.js/blob/2a7ce0e72a1e0c9469e10392b0329e75e341cf18/packages/abstract-signer/src.ts/index.ts#L215
+    const hasEip1559 = (tx.maxFeePerGas !== undefined || tx.maxPriorityFeePerGas !== undefined);
+    if (tx.gasPrice !== undefined && (tx.type === '0x02' || hasEip1559))
+        throw Error("eip-1559 transactions don't support gasPrice");
+    if ((tx.type === '0x01' || tx.type === '0x0') && hasEip1559)
+        throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
+    
+    if (hasEip1559) {
+        txType = '0x02';
+    } else if (tx.accessList) {
+        txType = '0x01';
+    }
+    
+    return txType
 }
 
 function _handleTxPricing(tx) {
