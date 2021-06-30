@@ -327,12 +327,16 @@ function _handleTxPricing(tx) {
                 _this._ethereumCall.getGasPrice()
             ]).then(responses => {
                 const [block, gasPrice] = responses;
-                if (block && block.baseFee) {
-                    // Taken from https://github.com/ethers-io/ethers.js/blob/c5bca7767e3f3d43e3d0bd3c9e9420321ee9907a/packages/abstract-provider/src.ts/index.ts#L228
-                    resolve({
-                        maxFeePerGas: tx.maxFeePerGas || utils.toHex(utils.toBN(block.baseFee).mul(2)),
-                        maxPriorityFeePerGas: tx.maxPriorityFeePerGas || '0x1'
-                    });
+                if (block && block.baseFeePerGas) {
+                    // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
+                    const maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                    const maxFeePerGas = tx.maxFeePerGas ||
+                        utils.toHex(
+                            utils.toBN(block.baseFeePerGas)
+                                .mul(2)
+                                .add(utils.toBN(maxPriorityFeePerGas))
+                        );
+                    resolve({ maxFeePerGas, maxPriorityFeePerGas });
                 } else {
                     resolve({ gasPrice });
                 }
