@@ -339,16 +339,30 @@ function _handleTxPricing(tx) {
             ]).then(responses => {
                 const [block, gasPrice] = responses;
                 if (block && block.baseFeePerGas) {
+                    // The network supports EIP-1559
+
                     // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
-                    const maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
-                    const maxFeePerGas = tx.maxFeePerGas ||
-                        utils.toHex(
-                            utils.toBN(block.baseFeePerGas)
-                                .mul(2)
-                                .add(utils.toBN(maxPriorityFeePerGas))
-                        );
+                    let maxPriorityFeePerGas, maxFeePerGas;
+
+                    if (tx.gasPrice) {
+                        // Using legacy gasPrice property on an eip-1559 network,
+                        // so use gasPrice as both fee properties
+                        maxPriorityFeePerGas = tx.gasPrice;
+                        maxFeePerGas = tx.gasPrice;
+                        delete tx.gasPrice;
+                    } else {
+                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                        maxFeePerGas = tx.maxFeePerGas ||
+                            utils.toHex(
+                                utils.toBN(block.baseFeePerGas)
+                                    .mul(2)
+                                    .add(utils.toBN(maxPriorityFeePerGas))
+                            );
+                    }
                     resolve({ maxFeePerGas, maxPriorityFeePerGas });
                 } else {
+                    if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
+                        throw Error("Network doesn't support eip-1559")
                     resolve({ gasPrice });
                 }
             })
