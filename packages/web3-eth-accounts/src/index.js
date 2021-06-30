@@ -272,7 +272,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        // isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
         _handleTxPricing(tx),
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
