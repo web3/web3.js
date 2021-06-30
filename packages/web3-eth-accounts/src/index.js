@@ -359,7 +359,7 @@ function _handleTxPricing(_this, tx) {
                             maxFeePerGas = tx.maxFeePerGas ||
                                 utils.toHex(
                                     utils.toBN(block.baseFeePerGas)
-                                        .mul(2)
+                                        .mul(utils.toBN(2))
                                         .add(utils.toBN(maxPriorityFeePerGas))
                                 );
                         }
