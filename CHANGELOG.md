@@ -390,19 +390,3 @@ Released with 1.0.0-beta.37 code base.
 
 - Removed bzz and shh api (#3909)
 - Accidental commit (yarn-error.log) (#4062)
-
-## [1.3.6]
-
-### Changes
-
-
-### Removes
-
-
-## [1.4.0]
-
-### Added
-
-
-### Changed
-
