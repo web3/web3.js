@@ -7,11 +7,19 @@ on:
         tags:
             - v1*
             - v3*
+        paths-ignore:
+            - "docs/**"
+            - "assets/**"
+            - "**.md"
     pull_request:
         branches:
             - "1.x"
             - "3.x"
         types: [opened, reopened, synchronize]
+        paths-ignore:
+            - "docs/**"
+            - "assets/**"
+            - "**.md"
 jobs:
     lint:
         runs-on: ubuntu-latest
