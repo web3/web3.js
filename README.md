@@ -61,7 +61,6 @@ let web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
-    shh: ... ,
     utils: ...,
     ...
 }
