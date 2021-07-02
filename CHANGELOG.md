@@ -349,8 +349,6 @@ Released with 1.0.0-beta.37 code base.
 - Deprecation of bzz warning (#3872)
 - Deprecation of shh warning (#3888)
 
-## [Unreleased]
-
 ## [1.3.5]
 
 ### Added
@@ -359,6 +357,7 @@ Released with 1.0.0-beta.37 code base.
 - Added description to documentation on how to connect using a remote node provider (#3884)
 - Added Security risk warning to docs for `web3.utils.soliditySha3` (#3908)
 - `.nvmrc` file using Node.js version `v.14.15.1` (#3817)
+- Add commitment to semantic versioning since version `1.3.0` and onwards (#3961)
 
 ### Changed
 
@@ -377,17 +376,23 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - `regenerator-runtime` dev dependency was added to `web3-eth2-beaconchain` to fix failing tests3
+- Berlin Transaction Support (#4083)
+- When signing a transaction, common object now defaults to berlin instead of petersburg
 
 ### Changed
 
 - Updates the use of `hexToNumber` to `outputBigNumberFormatter` (which returns a number string instead of a number) (#3976)
 - Update `e2e.ganahce.core.sh` to point to ChainSafe's fork of `ganache-core` (#3976)
+- Bump `underscore` package from `1.9.1` to `1.12.1` (#4051)
+- Bump `@ensdomains/ens` package from `^0.4.5` to `^0.6.0` (#4059)
+- Bump `ethers` package from `^5.0.18` to `^5.1.4` (#4059)
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
 
 ### Removed
 
 - Removed bzz and shh api (#3909)
+- Accidental commit (yarn-error.log) (#4062)
 
 ## [Unreleased]
 
 ## [3.0.1]
-
