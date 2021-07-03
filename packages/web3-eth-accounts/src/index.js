@@ -322,9 +322,21 @@ function _handleTxType(tx) {
     if ((tx.type === '0x1' || tx.type === '0x0') && hasEip1559)
         throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
     
-    if (hasEip1559 || (tx.common &&  tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'london')) {
+    if (
+        hasEip1559 ||
+        (
+            (tx.common &&  tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'london') ||
+            tx.hardfork.toLowerCase() === 'london'
+        )
+    ) {
         txType = '0x2';
-    } else if (tx.accessList || (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'berlin')) {
+    } else if (
+        tx.accessList ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'berlin') ||
+            tx.hardfork.toLowerCase() === 'berlin'
+        )
+    ) {
         txType = '0x1';
     }
     
