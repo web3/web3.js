@@ -325,8 +325,8 @@ function _handleTxType(tx) {
     if (
         hasEip1559 ||
         (
-            (tx.common &&  tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'london') ||
-            tx.hardfork.toLowerCase() === 'london'
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'london') ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === 'london')
         )
     ) {
         txType = '0x2';
@@ -334,7 +334,7 @@ function _handleTxType(tx) {
         tx.accessList ||
         (
             (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'berlin') ||
-            tx.hardfork.toLowerCase() === 'berlin'
+            (tx.hardfork && tx.hardfork.toLowerCase() === 'berlin')
         )
     ) {
         txType = '0x1';
