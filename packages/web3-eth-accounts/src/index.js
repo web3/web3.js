@@ -321,9 +321,9 @@ function _handleTxType(tx) {
     if ((tx.type === '0x01' || tx.type === '0x0') && hasEip1559)
         throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
     
-    if (hasEip1559) {
+    if (hasEip1559 || tx.common.hardfork.toLowerCase() === 'london') {
         txType = '0x02';
-    } else if (tx.accessList) {
+    } else if (tx.accessList || tx.common.hardfork.toLowerCase() === 'berlin') {
         txType = '0x01';
     }
     
