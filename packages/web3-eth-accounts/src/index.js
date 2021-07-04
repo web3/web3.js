@@ -154,7 +154,6 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         try {
             var transaction = helpers.formatters.inputCallFormatter(Object.assign({},tx));
-            transaction.to = transaction.data || '0x';
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
