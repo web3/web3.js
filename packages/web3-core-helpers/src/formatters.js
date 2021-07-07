@@ -239,7 +239,7 @@ var outputTransactionFormatter = function (tx) {
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = utils.hexToNumber(tx.nonce);
     tx.gas = utils.hexToNumber(tx.gas);
-    if (tx.gasPrice !== null)
+    if (tx.gasPrice)
         tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     if (tx.maxFeePerGas)
         tx.maxFeePerGas = outputBigNumberFormatter(tx.maxFeePerGas);
