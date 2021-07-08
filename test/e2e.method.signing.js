@@ -155,7 +155,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             to:       destination,
             value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
             gas: web3.utils.toHex(21000),
-            type: 1
+            type: web3.utils.toHex(1)
         };
 
         web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
@@ -192,7 +192,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             to:       destination,
             value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
             gas: web3.utils.toHex(21000),
-            type: 2
+            type: web3.utils.toHex(2)
         };
 
         web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
@@ -214,12 +214,8 @@ describe('transaction and message signing [ @E2E ]', function() {
             accessList: []
         };
 
-        console.log('txObject', txObject)
-
         web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
-            console.log(err)
             const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
-            console.log(receipt);
             assert(receipt.status === true);
             done();
         });
