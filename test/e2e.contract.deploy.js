@@ -47,15 +47,11 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('returns an instance', async function(){
-            try {
-                var instance = await basic
+            var instance = await basic
                 .deploy()
                 .send({from: accounts[0]});
 
-                assert(web3.utils.isAddress(instance.options.address));
-            } catch (error) {
-                console.log(error)
-            }
+            assert(web3.utils.isAddress(instance.options.address));
         });
 
         // Clients reject this kind of OOG is early because
@@ -77,15 +73,9 @@ describe('contract.deploy [ @E2E ]', function() {
         // while running the code. A contractAddress is set on the
         // receipt, but the status will be false.
         it('errors on OOG reached while running EVM', async function(){
-            let estimate;
-            try {
-                estimate = await basic
+            const estimate = await basic
                 .deploy()
                 .estimateGas({from: accounts[0]})
-            } catch (err) {
-                assert(err.message.includes(maxFeeLessThanBaseFee));
-                return
-            }
 
             const gas = estimate - 1000;
 
@@ -126,7 +116,6 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
-                console.log(err)
                 assert(
                     err.message.includes(couldNotBeStoredMessage) ||
                     err.message.includes(revertMessage)
