@@ -333,7 +333,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
 
 
-    if (typeof message === 'object' && !!message) {
+    if (!!message && typeof message === 'object') {
         return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
@@ -358,7 +358,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
         throw new Error('No password given.');
     }
 
-    var json = (typeof v3Keystore === 'object' && !!v3Keystore) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+    var json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
     if (json.version !== 3) {
         throw new Error('Not a valid V3 wallet');

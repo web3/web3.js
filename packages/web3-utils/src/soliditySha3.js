@@ -179,7 +179,7 @@ var _processSolidityEncodePackedArgs = function (arg) {
     var hexArg, arraySize;
 
     // if type is given
-    if (typeof arg === 'object' && !!arg && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+    if (!!arg && typeof arg === 'object' && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
         type = arg.hasOwnProperty('t') ? arg.t : arg.type;
         value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 

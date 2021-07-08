@@ -200,7 +200,7 @@ var inputTransactionFormatter = function (options) {
     options = _txInputFormatter(options);
 
     // check from, only if not number, or object
-    if (!(typeof options.from === 'number') && !(typeof options.from === 'object' && !!options.from)) {
+    if (!(typeof options.from === 'number') && !(!!options.from && typeof options.from === 'object')) {
         options.from = options.from || (this ? this.defaultAccount : null);
 
         if (!options.from && !(typeof options.from === 'number')) {

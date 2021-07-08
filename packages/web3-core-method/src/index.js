@@ -206,8 +206,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         intervalId = null,
         lastBlock = null,
         receiptJSON = '',
-        gasProvided = ((typeof payload.params[0] === 'object' && !!payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
-        isContractDeployment = (typeof payload.params[0] === 'object' && !!payload.params[0]) &&
+        gasProvided = ((!!payload.params[0] && typeof payload.params[0] === 'object') && payload.params[0].gas) ? payload.params[0].gas : null,
+        isContractDeployment = (!!payload.params[0] && typeof payload.params[0] === 'object') &&
             payload.params[0].data &&
             payload.params[0].from &&
             !payload.params[0].to,
@@ -595,7 +595,7 @@ var getWallet = function (from, accounts) {
         wallet = accounts.wallet[from];
 
         // is account given
-    } else if (typeof from === 'object' && !!from && from.address && from.privateKey) {
+    } else if (!!from && typeof from === 'object' && from.address && from.privateKey) {
         wallet = from;
 
         // search in wallet for address
@@ -706,7 +706,7 @@ Method.prototype.buildCall = function () {
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
                     var tx = payload.params[0];
-                    wallet = getWallet((typeof tx === 'object' && !!tx) ? tx.from : null, method.accounts);
+                    wallet = getWallet((!!tx && typeof tx === 'object') ? tx.from : null, method.accounts);
 
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
@@ -769,7 +769,7 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx && typeof payload.params[0] === 'object' && !!payload.params[0] && typeof payload.params[0].gasPrice === 'undefined') {
+        if (isSendTx && !!payload.params[0] && typeof payload.params[0] === 'object' && typeof payload.params[0].gasPrice === 'undefined') {
 
             var getGasPrice = (new Method({
                 name: 'getGasPrice',

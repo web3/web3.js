@@ -76,11 +76,11 @@ var Contract = function Contract(jsonInterface, address, options) {
     this.options = {};
 
     var lastArg = args[args.length - 1];
-    if(typeof lastArg === 'object' && !!lastArg && !Array.isArray(lastArg)) {
+    if(!!lastArg && typeof lastArg === 'object' && !Array.isArray(lastArg)) {
         options = lastArg;
 
         this.options = { ...this.options, ...this._getOrSetDefaultOptions(options)};
-        if(typeof address === 'object' && !!address) {
+        if(!!address && typeof address === 'object') {
             address = null;
         }
     }
@@ -325,7 +325,7 @@ Contract.setProvider = function(provider, accounts) {
  * @return {Function} the callback
  */
 Contract.prototype._getCallback = function getCallback(args) {
-    if (args && typeof args[args.length - 1] === 'function' && !!args[args.length- 1 ]) {
+    if (args && !!args[args.length- 1 ] && typeof args[args.length - 1] === 'function') {
         return args.pop(); // modify the args array!
     }
 };
@@ -634,7 +634,7 @@ Contract.prototype._generateEventOptions = function() {
     var callback = this._getCallback(args);
 
     // get the options
-    var options = (typeof args[args.length - 1]) === 'object' && !!args[args.length - 1] ? args.pop() : {};
+    var options = (!!args[args.length - 1] && typeof args[args.length - 1]) === 'object' ? args.pop() : {};
 
     var eventName = (typeof args[0] === 'string') ? args[0] : 'allevents';
     var event = (eventName.toLowerCase() === 'allevents') ? {
@@ -847,7 +847,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
         processedArgs.defaultBlock = args.pop();
 
     // get the options
-    processedArgs.options = (typeof args[args.length - 1]) === 'object' && !!args[args.length - 1] ? args.pop() : {};
+    processedArgs.options = (!!args[args.length - 1] && typeof args[args.length - 1]) === 'object' ? args.pop() : {};
 
     // get the generateRequest argument for batch requests
     processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;

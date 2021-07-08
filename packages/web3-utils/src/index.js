@@ -43,8 +43,8 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
     /*jshint maxcomplexity: 10 */
 
     // add data if given
-    if(typeof error === 'object' && !!error && !(error instanceof Error) &&  error.data) {
-        if(typeof error.data === 'object' && !!error.data || Array.isArray(error.data)) {
+    if(!!error && typeof error === 'object' && !(error instanceof Error) &&  error.data) {
+        if(!!error.data && typeof error.data === 'object' || Array.isArray(error.data)) {
             error.data = JSON.stringify(error.data, null, 2);
         }
 
@@ -93,7 +93,7 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
  * @return {String} full function/event name
  */
 var _jsonInterfaceMethodToString = function (json) {
-    if (typeof json === 'object' && !!json && json.name && json.name.indexOf('(') !== -1) {
+    if (!!json && typeof json === 'object' && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
 

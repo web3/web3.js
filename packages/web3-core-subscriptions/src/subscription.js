@@ -229,7 +229,7 @@ Subscription.prototype.subscribe = function() {
 
     // Re-subscription only: continue fetching from the last block we received.
     // a dropped connection may have resulted in gaps in the logs...
-    if (this.lastBlock && typeof this.options.params === 'object' && !!this.options.params ){
+    if (this.lastBlock && !!this.options.params && typeof this.options.params === 'object'){
         payload.params[1] = this.options.params;
         payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
@@ -243,7 +243,7 @@ Subscription.prototype.subscribe = function() {
     this.options.params = payload.params[1];
 
     // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && typeof payload.params[1] === 'object' && !!payload.params[1] && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+    if(payload.params[0] === 'logs' && !!payload.params[1] && typeof payload.params[1] === 'object' && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         // send the subscription request
 
         // copy the params to avoid race-condition with deletion below this block
@@ -294,7 +294,7 @@ Subscription.prototype.subscribe = function() {
                         var output = _this._formatOutput(resultItem);
 
                         // Track current block (for gaps introduced by dropped connections)
-                        _this.lastBlock = typeof output === 'object' && !!output ? output.blockNumber : null;
+                        _this.lastBlock = !!output && typeof output === 'object' ? output.blockNumber : null;
 
                         if (typeof _this.options.subscription.subscriptionHandler === 'function' ) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);

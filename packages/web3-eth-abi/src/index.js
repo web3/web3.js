@@ -27,7 +27,7 @@ var utils = require('web3-utils');
 var EthersAbiCoder = require('@ethersproject/abi').AbiCoder;
 var ParamType = require('@ethersproject/abi').ParamType;
 var ethersAbiCoder = new EthersAbiCoder(function (type, value) {
-    if (type.match(/^u?int/) && !Array.isArray(value) && (!(typeof value === 'object' && !!value) || value.constructor.name !== 'BN')) {
+    if (type.match(/^u?int/) && !Array.isArray(value) && (!(!!value && typeof value === 'object') || value.constructor.name !== 'BN')) {
         return value.toString();
     }
     return value;
@@ -366,7 +366,7 @@ ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
 
         returnValue[i] = decodedValue;
 
-        if ((typeof output === 'function' || typeof output === 'object' && !!output) && output.name) {
+        if ((typeof output === 'function' || !!output && typeof output === 'object') && output.name) {
             returnValue[output.name] = decodedValue;
         }
 
