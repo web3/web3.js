@@ -15,6 +15,7 @@ describe('contract.deploy [ @E2E ]', function() {
     // Error message variants
     var revertMessage = "revert";
     var couldNotBeStoredMessage = "code couldn't be stored";
+    var maxFeeLessThanBaseFee = "max fee per gas less than block base fee";
     var creationWithoutDataMessage = "contract creation without any data provided";
 
     var basicOptions = {
@@ -81,11 +82,11 @@ describe('contract.deploy [ @E2E ]', function() {
             try {
                 await basic
                     .deploy()
-                    .send({from: accounts[0], gas: gas, type: '0x1'});
+                    .send({from: accounts[0], gas: gas});
 
                 assert.fail();
             } catch(err){
-                assert(err.message.includes(couldNotBeStoredMessage));
+                assert(err.message.includes(maxFeeLessThanBaseFee));
                 assert(err.receipt.status === false);
             }
         });
