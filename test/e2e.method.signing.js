@@ -129,6 +129,99 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
+    it('accounts.signTransaction, (EIP-2930, accessList specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gas: web3.utils.toHex(21000),
+            accessList: []
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
+    it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gas: web3.utils.toHex(21000),
+            type: 1
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gas: web3.utils.toHex(21000),
+            maxFeePerGas: '0x59682F00', // 1.5 Gwei
+            maxPriorityFeePerGas: '0x1DCD6500' // .5 Gwei
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
+    it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gas: web3.utils.toHex(21000),
+            type: 2
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(done){
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txObject = {
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gas: web3.utils.toHex(21000),
+            maxFeePerGas: '0x59682F00', // 1.5 Gwei
+            accessList: []
+        };
+
+        web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
+            const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+            console.log(receipt);
+            assert(receipt.status === true);
+            done();
+        });
+    });
+
     it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(){
         const source = wallet[0].address;
         const destination = wallet[1].address;
