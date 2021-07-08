@@ -86,7 +86,11 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
-                assert(err.message.includes(couldNotBeStoredMessage) || err.message.includes(maxFeeLessThanBaseFee));
+                if (err.message.includes(maxFeeLessThanBaseFee)) {
+                    assert(err.message.includes(maxFeeLessThanBaseFee));    
+                } else {
+                    assert(err.message.includes(couldNotBeStoredMessage));
+                }
                 assert(err.receipt.status === false);
             }
         });
