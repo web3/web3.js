@@ -131,7 +131,10 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('accounts.signTransaction, (EIP-2930, accessList specified)', function(done){
         // ganache does not support EIP-2930
-        if (process.env.GANACHE || global.window ) done();
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -152,7 +155,10 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(done){
         // ganache does not support EIP-2930
-        if (process.env.GANACHE || global.window ) done();
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -173,7 +179,10 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(done){
         // ganache does not support EIP-1559
-        if (process.env.GANACHE || global.window ) done();
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -195,7 +204,10 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(done){
         // ganache does not support EIP-1559
-        if (process.env.GANACHE || global.window ) done();
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -216,7 +228,10 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(done){
         // ganache does not support EIP-1559
-        if (process.env.GANACHE || global.window ) done();
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
         
         const source = wallet[0].address;
         const destination = wallet[1].address;
