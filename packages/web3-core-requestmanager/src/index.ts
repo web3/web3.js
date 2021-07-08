@@ -6,7 +6,7 @@ import {
     RpcResponse,
     PartialRpcOptions,
     SubscriptionResponse,
-} from 'web3-providers-base/lib/types';
+} from 'web3-providers-base/src/types';
 
 import { ProviderProtocol } from './types';
 
@@ -69,33 +69,44 @@ export default class Web3RequestManager {
         };
     }
 
-    async send(
-        rpcOptions: PartialRpcOptions,
-        providerCallOptions?: ProviderCallOptions
-    ): Promise<RpcResponse> {
+    async send(providerCallOptions: ProviderCallOptions, rpcOptions?: PartialRpcOptions): Promise<RpcResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.send(
-                Web3RequestManager._defaultRpcOptions(rpcOptions),
-                providerCallOptions
-            );
+            switch (this.providerProtocol) {
+                case ProviderProtocol.WS:
+                    // TODO
+                    throw Error('Provider protocol not implemented');
+                case ProviderProtocol.IPC:
+                    // TODO
+                    throw Error('Provider protocol not implemented');
+                default:
+                    // this.providerProtocol is assumed to be ProviderProtocol.HTTP
+                    return rpcOptions ?
+                        this.provider.send(
+                            providerCallOptions,
+                            Web3RequestManager._defaultRpcOptions(rpcOptions)
+                        ) :
+                        this.provider.send(providerCallOptions);
+            }
+
+            
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
         }
     }
 
     async subscribe(
-        rpcOptions: PartialRpcOptions,
-        providerCallOptions?: ProviderCallOptions
+        providerCallOptions: ProviderCallOptions,
+        rpcOptions?: PartialRpcOptions
     ): Promise<SubscriptionResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.subscribe(
-                Web3RequestManager._defaultRpcOptions(rpcOptions),
-                providerCallOptions
-            );
+            return rpcOptions? this.provider.subscribe(
+                providerCallOptions,
+                Web3RequestManager._defaultRpcOptions(rpcOptions)
+            ):  this.provider.subscribe(providerCallOptions);
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
         }

@@ -60,18 +60,33 @@ export default class Web3ProvidersHttp
         return true;
     }
 
+    // async send(
+    //     rpcOptions?: RpcOptions,
+    //     httpOptions?: HttpOptions
+    // ): Promise<RpcResponse> {
     async send(
-        rpcOptions: RpcOptions,
-        httpOptions?: HttpOptions
+        httpOptions: HttpOptions,
+        rpcOptions?: RpcOptions
     ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
-            const response = await this._httpClient.post(
+            // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
+            const response = await this._httpClient[httpOptions.method || 'post'](
                 '',
-                rpcOptions,
-                httpOptions?.axiosConfig || {}
+                rpcOptions || {},
+                {
+                    ...httpOptions.axiosConfig,
+                    url: httpOptions.url,
+                    params: httpOptions.params || undefined
+                    data: httpOptions.data || undefined
+                }
             );
+            // const response = await this._httpClient.post(
+            //     '',
+            //     rpcOptions || {},
+            //     httpOptions?.axiosConfig || {}
+            // );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
@@ -79,7 +94,7 @@ export default class Web3ProvidersHttp
     }
 
     subscribe(
-        rpcOptions: RpcOptions,
+        rpcOptions?: RpcOptions,
         httpOptions?: HttpOptions
     ): SubscriptionResponse {
         try {
@@ -90,7 +105,7 @@ export default class Web3ProvidersHttp
                 Math.random() * Number.MAX_SAFE_INTEGER
             ); // generate random integer
             this._subscribe(
-                rpcOptions,
+                rpcOptions || {},
                 eventEmitter,
                 subscriptionId,
                 httpOptions

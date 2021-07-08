@@ -8,10 +8,10 @@ import {
     EthMinedTransaction,
     EthLog,
     CompiledSolidity,
-} from 'web3-utils/lib/types';
+} from 'web3-utils/src/types';
 import { AxiosRequestConfig } from 'axios';
 
-export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
+export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | PrefixedHexString
     | number
@@ -24,12 +24,20 @@ export interface ProviderOptions {
     providerUrl: string;
 }
 
+// export interface HttpOptions {
+//     axiosConfig?: AxiosRequestConfig;
+//     subscriptionConfig?: SubscriptionConfig;
+// }
 export interface HttpOptions {
+    url: string;
+    method: 'get' | 'post';
+    params: any;
+    data: any;
     axiosConfig?: AxiosRequestConfig;
-    subscriptionOptions?: SubscriptionOptions;
+    subscriptionConfig?: SubscriptionConfig;
 }
 
-export interface SubscriptionOptions {
+export interface SubscriptionConfig {
     milisecondsBetweenRequests?: number;
 }
 
@@ -46,7 +54,7 @@ export interface PartialRpcOptions extends Partial<RpcOptions> {
 }
 
 export interface CallOptions {
-    providerCallOptions?: ProviderCallOptions;
+    providerCallOptions: ProviderCallOptions;
     rpcOptions?: Partial<RpcOptions>;
     returnType?: ValidTypesEnum;
     subscribe?: boolean;

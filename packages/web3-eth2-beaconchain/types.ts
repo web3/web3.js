@@ -1,4 +1,5 @@
 import { HttpRpcResponse } from 'web3-providers-http/types';
+import { altair, phase0 } from "@chainsafe/lodestar-types";
 
 export interface Web3EthOptions {
     packageName?: string;
@@ -28,3 +29,9 @@ export type Status =
     | 'exited_slashed'
     | 'withdrawal_possible'
     | 'withdrawal_done';
+
+export type AttestationData = phase0.AttestationData;
+export type AttesterSlashing = phase0.AttesterSlashing;
+export type ProposerSlashing = phase0.ProposerSlashing;
+export type SyncCommittee = altair.SyncCommittee;
+export type SignedVoluntaryExit = altair.SignedVoluntaryExit;

@@ -21,6 +21,7 @@
         "test:unit": "jest ./test/unit"
     },
     "devDependencies": {
+        "@chainsafe/lodestar-types": "^0.26.0",
         "@types/jest": "^26.0.22",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
