@@ -86,8 +86,8 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
-                console.log('THIS', err)
-                assert(err.includes(couldNotBeStoredMessage));
+                console.log('THIS', err.message)
+                assert(err.message.includes(couldNotBeStoredMessage));
                 assert(err.receipt.status === false);
             }
         });
