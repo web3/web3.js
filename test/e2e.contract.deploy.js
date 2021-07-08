@@ -20,8 +20,7 @@ describe('contract.deploy [ @E2E ]', function() {
     var basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
-        gas: 4000000,
-        type: '0x1'
+        gas: 4000000
     };
 
     var revertsOptions = {
@@ -82,7 +81,7 @@ describe('contract.deploy [ @E2E ]', function() {
             try {
                 await basic
                     .deploy()
-                    .send({from: accounts[0], gas: gas});
+                    .send({from: accounts[0], gas: gas, type: '0x1'});
 
                 assert.fail();
             } catch(err){
