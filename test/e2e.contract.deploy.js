@@ -47,11 +47,15 @@ describe('contract.deploy [ @E2E ]', function() {
         })
 
         it('returns an instance', async function(){
-            var instance = await basic
+            try {
+                var instance = await basic
                 .deploy()
                 .send({from: accounts[0]});
 
-            assert(web3.utils.isAddress(instance.options.address));
+                assert(web3.utils.isAddress(instance.options.address));
+            } catch (error) {
+                console.log(error)
+            }
         });
 
         // Clients reject this kind of OOG is early because
@@ -122,6 +126,7 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
+                console.log(err)
                 assert(
                     err.message.includes(couldNotBeStoredMessage) ||
                     err.message.includes(revertMessage)
