@@ -711,6 +711,7 @@ Method.prototype.buildCall = function () {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
+                        var tx = JSON.parse(JSON.stringify(tx));
                         delete tx.from;
 
                         if (method.defaultChain && !tx.chain) {
