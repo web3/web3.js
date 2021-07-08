@@ -36,7 +36,7 @@ var Common = require('@ethereumjs/common').default;
 
 
 var isNot = function(value) {
-    return (typeof value === 'undefined') || value == null;
+    return (typeof value === 'undefined') || value === null;
 };
 
 var Accounts = function Accounts() {
@@ -467,7 +467,7 @@ function Wallet(accounts) {
 
 Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
-    if (this != null && this.hasOwnProperty(pointer)) {
+    if (this.hasOwnProperty(pointer)) {
         return this._findSafeIndex(pointer + 1);
     } else {
         return pointer;
@@ -496,7 +496,7 @@ Wallet.prototype.create = function(numberOfAccounts, entropy) {
 
 Wallet.prototype.add = function(account) {
 
-    if (typeof account == 'string') {
+    if (typeof account === 'string') {
         account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {

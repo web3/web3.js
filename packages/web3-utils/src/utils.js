@@ -231,7 +231,7 @@ var hexToNumber = function (value) {
         return value;
     }
 
-    if (typeof value == 'string' && !isHexStrict(value)) {
+    if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
 
@@ -248,7 +248,7 @@ var hexToNumber = function (value) {
 var hexToNumberString = function (value) {
     if (!value) return value;
 
-    if (typeof value == 'string' && !isHexStrict(value)) {
+    if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
 

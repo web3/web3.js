@@ -76,11 +76,11 @@ var Contract = function Contract(jsonInterface, address, options) {
     this.options = {};
 
     var lastArg = args[args.length - 1];
-    if(typeof lastArg == 'object' && !!lastArg && !Array.isArray(lastArg)) {
+    if(typeof lastArg === 'object' && !!lastArg && !Array.isArray(lastArg)) {
         options = lastArg;
 
         this.options = { ...this.options, ...this._getOrSetDefaultOptions(options)};
-        if(typeof address == 'object' && !!address) {
+        if(typeof address === 'object' && !!address) {
             address = null;
         }
     }

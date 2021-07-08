@@ -711,21 +711,21 @@ Method.prototype.buildCall = function () {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        delete txOptions.from;
+                        delete tx.from;
 
-                        if (method.defaultChain && !txOptions.chain) {
-                            txOptions.chain = method.defaultChain;
+                        if (method.defaultChain && !tx.chain) {
+                            tx.chain = method.defaultChain;
                         }
 
-                        if (method.defaultHardfork && !txOptions.hardfork) {
-                            txOptions.hardfork = method.defaultHardfork;
+                        if (method.defaultHardfork && !tx.hardfork) {
+                            tx.hardfork = method.defaultHardfork;
                         }
 
-                        if (method.defaultCommon && !txOptions.common) {
-                            txOptions.common = method.defaultCommon;
+                        if (method.defaultCommon && !tx.common) {
+                            tx.common = method.defaultCommon;
                         }
 
-                        method.accounts.signTransaction(txOptions, wallet.privateKey)
+                        method.accounts.signTransaction(tx, wallet.privateKey)
                             .then(sendSignedTx)
                             .catch(function (err) {
                                 if (typeof defer.eventEmitter.listeners === 'function' && defer.eventEmitter.listeners('error').length) {
