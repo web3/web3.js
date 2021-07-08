@@ -73,9 +73,13 @@ describe('contract.deploy [ @E2E ]', function() {
         // while running the code. A contractAddress is set on the
         // receipt, but the status will be false.
         it('errors on OOG reached while running EVM', async function(){
-            const estimate = await basic
+            try {
+                const estimate = await basic
                 .deploy()
                 .estimateGas({from: accounts[0]})
+            } catch (err) {
+                assert(err.message.includes(maxFeeLessThanBaseFee));
+            }
 
             const gas = estimate - 1000;
 
@@ -86,7 +90,7 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
-                // assert(err.message.includes(couldNotBeStoredMessage) || err.message.includes(maxFeeLessThanBaseFee));
+                assert(err.message.includes(couldNotBeStoredMessage));
                 assert(err.receipt.status === false);
             }
         });
