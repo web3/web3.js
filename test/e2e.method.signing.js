@@ -214,6 +214,8 @@ describe('transaction and message signing [ @E2E ]', function() {
             accessList: []
         };
 
+        console.log('txObject', txObject)
+
         web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey, async function(err, signed){
             console.log(err)
             const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
