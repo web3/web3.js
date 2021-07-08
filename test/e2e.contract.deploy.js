@@ -80,6 +80,7 @@ describe('contract.deploy [ @E2E ]', function() {
                 .estimateGas({from: accounts[0]})
             } catch (err) {
                 assert(err.message.includes(maxFeeLessThanBaseFee));
+                return
             }
 
             const gas = estimate - 1000;
