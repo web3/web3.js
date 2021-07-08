@@ -86,6 +86,7 @@ describe('contract.deploy [ @E2E ]', function() {
 
                 assert.fail();
             } catch(err){
+                console.log(err)
                 assert(err.message.includes(maxFeeLessThanBaseFee));
                 assert(err.receipt.status === false);
             }
