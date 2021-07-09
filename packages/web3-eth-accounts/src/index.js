@@ -272,15 +272,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(
-            tx,
-            {
-                chainId: args[0],
-                nonce: args[1],
-                networkId: args[2],
-                ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
-            }
-        ));
+        
         return signed({
             ...tx,
             chainId: args[0],
