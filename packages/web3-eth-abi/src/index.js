@@ -22,13 +22,12 @@
  */
 
 var Buffer = require('buffer').Buffer;
-var _ = require('underscore');
 var utils = require('web3-utils');
 
 var EthersAbiCoder = require('@ethersproject/abi').AbiCoder;
 var ParamType = require('@ethersproject/abi').ParamType;
 var ethersAbiCoder = new EthersAbiCoder(function (type, value) {
-    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
+    if (type.match(/^u?int/) && !Array.isArray(value) && (!(!!value && typeof value === 'object') || value.constructor.name !== 'BN')) {
         return value.toString();
     }
     return value;
@@ -52,7 +51,7 @@ var ABICoder = function () {
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
-    if (_.isObject(functionName)) {
+    if (typeof functionName === 'function' || typeof functionName === 'object' && functionName) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
@@ -67,7 +66,7 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
-    if (_.isObject(functionName)) {
+    if (typeof functionName === 'function' || typeof functionName === 'object' && functionName) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
@@ -367,7 +366,7 @@ ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
 
         returnValue[i] = decodedValue;
 
-        if (_.isObject(output) && output.name) {
+        if ((typeof output === 'function' || !!output && typeof output === 'object') && output.name) {
             returnValue[output.name] = decodedValue;
         }
 
@@ -388,7 +387,7 @@ ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     var _this = this;
-    topics = _.isArray(topics) ? topics : [topics];
+    topics = Array.isArray(topics) ? topics : [topics];
 
     data = data || '';
 
