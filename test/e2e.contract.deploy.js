@@ -15,13 +15,13 @@ describe('contract.deploy [ @E2E ]', function() {
     // Error message variants
     var revertMessage = "revert";
     var couldNotBeStoredMessage = "code couldn't be stored";
-    var maxFeeLessThanBaseFee = "max fee per gas less than block base fee";
     var creationWithoutDataMessage = "contract creation without any data provided";
 
     var basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
-        gas: 4000000
+        gas: 4000000,
+        type: '0x1'
     };
 
     var revertsOptions = {
