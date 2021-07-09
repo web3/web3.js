@@ -23,7 +23,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
@@ -121,7 +120,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
         return '0x0';
     }
 
-    return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
+    return (utils.isHexStrict(blockNumber)) ? ((typeof blockNumber === 'string') ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
 
 /**
@@ -201,10 +200,10 @@ var inputTransactionFormatter = function (options) {
     options = _txInputFormatter(options);
 
     // check from, only if not number, or object
-    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
+    if (!(typeof options.from === 'number') && !(!!options.from && typeof options.from === 'object')) {
         options.from = options.from || (this ? this.defaultAccount : null);
 
-        if (!options.from && !_.isNumber(options.from)) {
+        if (!options.from && !(typeof options.from === 'number')) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
@@ -274,7 +273,7 @@ var outputTransactionReceiptFormatter = function (receipt) {
     receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
     receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
 
-    if (_.isArray(receipt.logs)) {
+    if (Array.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
@@ -311,9 +310,9 @@ var outputBlockFormatter = function (block) {
     if (block.totalDifficulty)
         block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
-    if (_.isArray(block.transactions)) {
+    if (Array.isArray(block.transactions)) {
         block.transactions.forEach(function (item) {
-            if (!_.isString(item))
+            if (!(typeof item === 'string'))
                 return outputTransactionFormatter(item);
         });
     }
@@ -358,13 +357,13 @@ var inputLogFormatter = function (options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function (topic) {
-        return (_.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+        return (Array.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     toTopic = null;
 
     if (options.address) {
-        options.address = (_.isArray(options.address)) ? options.address.map(function (addr) {
+        options.address = (Array.isArray(options.address)) ? options.address.map(function (addr) {
             return inputAddressFormatter(addr);
         }) : inputAddressFormatter(options.address);
     }
@@ -424,7 +423,7 @@ var inputPostFormatter = function (post) {
         post.priority = utils.numberToHex(post.priority);
 
     // fallback
-    if (!_.isArray(post.topics)) {
+    if (!Array.isArray(post.topics)) {
         post.topics = post.topics ? [post.topics] : [];
     }
 

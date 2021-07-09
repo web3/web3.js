@@ -2,7 +2,6 @@ var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../packages/web3');
 var Accounts = require("./../packages/web3-eth-accounts");
 var chai = require('chai');
-var _ = require('underscore');
 var assert = chai.assert;
 
 var common = {
@@ -35,7 +34,7 @@ var accessList = [
     }
 ];
 
-var clone = function (object) { return object ? _.clone(object) : []; };
+var clone = function (object) { return object ? Object.assign({},object) : []; };
 
 var tests = [
     {
