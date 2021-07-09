@@ -827,6 +827,8 @@ Contract.prototype._createTxObject =  function _createTxObject(){
         txObject._deployData = this.deployData;
     }
 
+    console.log('txObject', txObject)
+
     return txObject;
 };
 
