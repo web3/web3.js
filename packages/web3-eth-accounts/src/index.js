@@ -339,8 +339,6 @@ function _handleTxType(tx) {
     ) {
         txType = '0x1';
     }
-
-    console.log('TX TYPE', txType)
     
     return txType
 }
