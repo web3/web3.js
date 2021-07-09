@@ -81,9 +81,7 @@ var Contract = function Contract(jsonInterface, address, options) {
     if(_.isObject(lastArg) && !_.isArray(lastArg)) {
         options = lastArg;
 
-        console.log('options', options)
         this.options = _.extend(this.options, this._getOrSetDefaultOptions(options));
-        console.log('this.options', this.options)
         if(_.isObject(address)) {
             address = null;
         }
@@ -366,7 +364,7 @@ Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(opt
     options.gasPrice = gasPrice || this.options.gasPrice;
     options.gas = options.gas || options.gasLimit || this.options.gas;
     // options.type = options.type || this.options.type || undefined;
-    options.type = '0x0';
+    options.type = '0x1';
 
     // TODO replace with only gasLimit?
     delete options.gasLimit;
