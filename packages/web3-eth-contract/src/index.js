@@ -363,6 +363,7 @@ Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(opt
     options.from = from || this.options.from;
     options.gasPrice = gasPrice || this.options.gasPrice;
     options.gas = options.gas || options.gasLimit || this.options.gas;
+    options.type = '0x1';
 
     // TODO replace with only gasLimit?
     delete options.gasLimit;
