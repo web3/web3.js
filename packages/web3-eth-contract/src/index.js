@@ -364,7 +364,7 @@ Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(opt
     options.gasPrice = gasPrice || this.options.gasPrice;
     options.gas = options.gas || options.gasLimit || this.options.gas;
     options.maxPriorityFeePerGas = options.maxPriorityFeePerGas || this.options.maxPriorityFeePerGas || null;
-    options.maxFeePerGas = options.maxFeePerGas || this.options.gas || null;
+    options.maxFeePerGas = options.maxFeePerGas || this.options.maxFeePerGas || null;
 
     console.log('OPTIONS', options)
 
