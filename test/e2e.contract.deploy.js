@@ -20,22 +20,19 @@ describe('contract.deploy [ @E2E ]', function() {
     var basicOptions = {
         data: Basic.bytecode,
         gasPrice: '1',
-        gas: 4000000,
-        type: '0x1'
+        gas: 4000000
     };
 
     var revertsOptions = {
         data: Reverts.bytecode,
         gasPrice: '1',
-        gas: 4000000,
-        type: '0x1'
+        gas: 4000000
     }
 
     var noBytecodeOptions = {
         data: '0x',
         gasPrice: '1',
-        gas: 4000000,
-        type: '0x1'
+        gas: 4000000
     }
 
     describe('http', function() {
