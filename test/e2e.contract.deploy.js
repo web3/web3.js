@@ -21,21 +21,21 @@ describe('contract.deploy [ @E2E ]', function() {
         data: Basic.bytecode,
         gasPrice: '1',
         gas: 4000000,
-        type: '0x0'
+        type: '0x1'
     };
 
     var revertsOptions = {
         data: Reverts.bytecode,
         gasPrice: '1',
         gas: 4000000,
-        type: '0x0'
+        type: '0x1'
     }
 
     var noBytecodeOptions = {
         data: '0x',
         gasPrice: '1',
         gas: 4000000,
-        type: '0x0'
+        type: '0x1'
     }
 
     describe('http', function() {
