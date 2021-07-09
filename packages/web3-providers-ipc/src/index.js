@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var oboe = require('oboe');
 
@@ -45,7 +44,7 @@ var IpcProvider = function IpcProvider(path, net) {
         var id = null;
 
         // get the id which matches the returned id
-        if(_.isArray(result)) {
+        if(Array.isArray(result)) {
             result.forEach(function(load){
                 if(_this.responseCallbacks[load.id])
                     id = load.id;
@@ -57,7 +56,7 @@ var IpcProvider = function IpcProvider(path, net) {
         // notification
         if(!id && result.method.indexOf('_subscription') !== -1) {
             _this.notificationCallbacks.forEach(function(callback){
-                if(_.isFunction(callback))
+                if(typeof callback === 'function')
                     callback(result);
             });
 

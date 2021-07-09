@@ -20,7 +20,6 @@
  * @date 2017
  */
 
-var _ = require('underscore');
 var BN = require('bn.js');
 var utils = require('./utils.js');
 
@@ -172,7 +171,7 @@ var _solidityPack = function (type, value, arraySize) {
 var _processSolidityEncodePackedArgs = function (arg) {
     /*jshint maxcomplexity:false */
 
-    if(_.isArray(arg)) {
+    if(Array.isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
@@ -180,7 +179,7 @@ var _processSolidityEncodePackedArgs = function (arg) {
     var hexArg, arraySize;
 
     // if type is given
-    if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+    if (!!arg && typeof arg === 'object' && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
         type = arg.hasOwnProperty('t') ? arg.t : arg.type;
         value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 
@@ -200,7 +199,7 @@ var _processSolidityEncodePackedArgs = function (arg) {
     }
 
     // get the array size
-    if(_.isArray(value)) {
+    if(Array.isArray(value)) {
         arraySize = _parseTypeNArray(type);
         if(arraySize && value.length !== arraySize) {
             throw new Error(type +' is not matching the given array '+ JSON.stringify(value));
@@ -210,7 +209,7 @@ var _processSolidityEncodePackedArgs = function (arg) {
     }
 
 
-    if (_.isArray(value)) {
+    if (Array.isArray(value)) {
         hexArg = value.map(function (val) {
             return _solidityPack(type, val, arraySize).toString('hex').replace('0x','');
         });
@@ -233,7 +232,7 @@ var soliditySha3 = function () {
 
     var args = Array.prototype.slice.call(arguments);
 
-    var hexArgs = _.map(args, _processSolidityEncodePackedArgs);
+    var hexArgs = args.map(_processSolidityEncodePackedArgs);
 
     // console.log(args, hexArgs);
     // console.log('0x'+ hexArgs.join(''));
@@ -248,7 +247,7 @@ var soliditySha3 = function () {
  * @return {Object} the sha3
  */
 var soliditySha3Raw = function () {
-    return utils.sha3Raw('0x'+ _.map(Array.prototype.slice.call(arguments), _processSolidityEncodePackedArgs).join(''));
+    return utils.sha3Raw('0x'+ Array.prototype.slice.call(arguments).map(_processSolidityEncodePackedArgs).join(''));
 };
 
 /**
@@ -262,7 +261,7 @@ var encodePacked = function () {
 
     var args = Array.prototype.slice.call(arguments);
 
-    var hexArgs = _.map(args, _processSolidityEncodePackedArgs);
+    var hexArgs = args.map(_processSolidityEncodePackedArgs);
 
     return '0x'+ hexArgs.join('').toLowerCase();
 };
