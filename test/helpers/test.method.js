@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
 var FakeIpcProvider = require('./FakeIpcProvider');
@@ -30,7 +29,7 @@ var useLocalWallet = function (test, provider, web3) {
 var runTests = function (obj, method, tests) {
     var objName;
 
-    if(_.isArray(obj)) {
+    if(Array.isArray(obj)) {
         objName = obj.join('.');
     } else {
         objName = obj;
@@ -98,7 +97,7 @@ var runTests = function (obj, method, tests) {
 
                     if(test.error) {
                         if (obj) {
-                            if(_.isArray(obj)) {
+                            if(Array.isArray(obj)) {
                                 w3 = web3[obj[0]][obj[1]];
                             } else {
                                 w3 = web3[obj];
@@ -126,7 +125,7 @@ var runTests = function (obj, method, tests) {
                     } else {
 
                         if (obj) {
-                            if(_.isArray(obj)) {
+                            if(Array.isArray(obj)) {
                                 w3 = web3[obj[0]][obj[1]];
                             } else {
                                 w3 = web3[obj];
@@ -204,7 +203,7 @@ var runTests = function (obj, method, tests) {
 
                     if(test.error) {
                         if (obj) {
-                            if(_.isArray(obj)) {
+                            if(Array.isArray(obj)) {
                                 w3 = web3[obj[0]][obj[1]];
                             } else {
                                 w3 = web3[obj];
@@ -233,7 +232,7 @@ var runTests = function (obj, method, tests) {
 
                         // when
                         if (obj) {
-                            if(_.isArray(obj)) {
+                            if(Array.isArray(obj)) {
                                 w3 = web3[obj[0]][obj[1]];
                             } else {
                                 w3 = web3[obj];
