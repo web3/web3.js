@@ -394,9 +394,15 @@ Released with 1.0.0-beta.37 code base.
 
 - Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
 
+## [1.4.1]
+
+### Removes
+
+- Removing the underscore package 
+
 ## [Unreleased]
 
-## [1.4.1]
+## [1.5.0]
 
 ### Added
 

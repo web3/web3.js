@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var swarm = require("swarm-js");
 
 
@@ -52,7 +51,7 @@ if (typeof ethereum !== 'undefined' && ethereum.bzz) {
 
 Bzz.prototype.setProvider = function(provider) {
     // is ethereum provider
-    if(_.isObject(provider) && _.isString(provider.bzz)) {
+    if(!!provider && typeof provider === 'object' && typeof provider.bzz === 'string') {
         provider = provider.bzz;
     // is no string, set default
     }
@@ -61,7 +60,7 @@ Bzz.prototype.setProvider = function(provider) {
     // }
 
 
-    if(_.isString(provider)) {
+    if(typeof provider === 'string') {
         this.currentProvider = provider;
     } else {
         this.currentProvider = null;
