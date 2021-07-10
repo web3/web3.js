@@ -21,7 +21,6 @@
 
 
 const { callbackify } = require('util');
-var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Jsonrpc = require('./jsonrpc.js');
 var BatchManager = require('./batch.js');
@@ -207,7 +206,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
             return callback(err);
         }
 
-        if (!_.isArray(results)) {
+        if (!Array.isArray(results)) {
             return callback(errors.InvalidResponse(results));
         }
 
