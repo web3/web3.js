@@ -364,8 +364,6 @@ Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(opt
     options.maxPriorityFeePerGas = options.maxPriorityFeePerGas || this.options.maxPriorityFeePerGas || null;
     options.maxFeePerGas = options.maxFeePerGas || this.options.maxFeePerGas || null;
 
-    console.log('OPTIONS', options)
-
     // TODO replace with only gasLimit?
     delete options.gasLimit;
 
@@ -827,7 +825,7 @@ Contract.prototype._createTxObject =  function _createTxObject(){
         txObject._deployData = this.deployData;
     }
 
-    console.log('txObject', txObject)
+    // console.log('txObject', txObject)
 
     return txObject;
 };
