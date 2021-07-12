@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var core = require('web3-core');
 var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
@@ -42,23 +41,23 @@ var formatter = helpers.formatters;
 
 
 var blockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionFromBlockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
 };
 
 var getBlockTransactionCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
 
@@ -279,6 +278,8 @@ var Eth = function Eth() {
 
 
     this.clearSubscriptions = _this._requestManager.clearSubscriptions.bind(_this._requestManager);
+
+    this.removeSubscriptionById = _this._requestManager.removeSubscription.bind(_this._requestManager);
 
     // add net
     this.net = new Net(this);
@@ -586,7 +587,7 @@ var Eth = function Eth() {
                             this.emit('data', output);
                         }
 
-                        if (_.isFunction(this.callback)) {
+                        if (typeof this.callback === 'function') {
                             this.callback(null, output, this);
                         }
                     }
@@ -602,14 +603,14 @@ var Eth = function Eth() {
                             this._isSyncing = true;
                             this.emit('changed', _this._isSyncing);
 
-                            if (_.isFunction(this.callback)) {
+                            if (typeof this.callback === 'function') {
                                 this.callback(null, _this._isSyncing, this);
                             }
 
                             setTimeout(function () {
                                 _this.emit('data', output);
 
-                                if (_.isFunction(_this.callback)) {
+                                if (typeof _this.callback === 'function') {
                                     _this.callback(null, output, _this);
                                 }
                             }, 0);
@@ -617,7 +618,7 @@ var Eth = function Eth() {
                             // fire sync status
                         } else {
                             this.emit('data', output);
-                            if (_.isFunction(_this.callback)) {
+                            if ( typeof _this.callback === 'function') {
                                 this.callback(null, output, this);
                             }
 
@@ -628,7 +629,7 @@ var Eth = function Eth() {
                                     _this._isSyncing = false;
                                     _this.emit('changed', _this._isSyncing);
 
-                                    if (_.isFunction(_this.callback)) {
+                                    if ( typeof _this.callback === 'function') {
                                         _this.callback(null, _this._isSyncing, _this);
                                     }
                                 }

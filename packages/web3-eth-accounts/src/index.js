@@ -22,24 +22,21 @@
 
 'use strict';
 
-var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
+var {TransactionFactory} = require('@ethereumjs/tx');
+var Common = require('@ethereumjs/common').default;
 
 
 var isNot = function(value) {
-    return (_.isUndefined(value) || _.isNull(value));
+    return (typeof value === 'undefined') || value === null;
 };
 
 var Accounts = function Accounts() {
@@ -87,7 +84,7 @@ var Accounts = function Accounts() {
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
-    _.each(_ethereumCall, function(method) {
+    _ethereumCall.forEach( (method) => {
         method.attachToObject(_this._ethereumCall);
         method.setRequestManager(_this._requestManager);
     });
@@ -138,8 +135,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         transactionOptions = {},
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
-    callback = callback || function() {
-    };
+    callback = callback || function() {};
 
     if (!tx) {
         error = new Error('No transaction object given!');
@@ -157,13 +153,17 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
+            var transaction = helpers.formatters.inputCallFormatter(Object.assign({},tx));
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
-
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            transaction.gasLimit = transaction.gasLimit || transaction.gas;
+            transaction.type = "0x0"; // default to legacy
+            if (transaction.accessList) {
+                // EIP-2930
+                transaction.type = "0x01"
+            }
+            
+            // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
                     'mainnet',
@@ -172,7 +172,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    'petersburg'
+                    transaction.hardfork || "berlin"
                 );
 
                 delete transaction.networkId;
@@ -185,7 +185,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || 'petersburg'
+                        transaction.common.hardfork || "berlin",
                     );
 
                     delete transaction.common;
@@ -201,30 +201,30 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
+            var ethTx = TransactionFactory.fromTxData(transaction, transactionOptions);
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var validationErrors = signedTx.validate(true);
 
-            var ethTx = new Transaction(transaction, transactionOptions);
-
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
+            if (validationErrors.length > 0) {
+                let errorString = 'Signer Error: '
+                for(const validationError of validationErrors) {
+                    errorString += `${errorString} ${validationError}.`
+                }
+                throw new Error(errorString);
             }
 
-            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rlpEncoded = signedTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
             var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
+                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
+                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
+                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -254,14 +254,14 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
+        return signed({ ...tx, chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]});
     });
 };
 
 function _validateTransactionForSigning(tx) {
     if (tx.common && (tx.chain && tx.hardfork)) {
         return new Error(
-            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+            'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.'
         );
     }
 
@@ -286,16 +286,13 @@ function _validateTransactionForSigning(tx) {
     return;
 }
 
-
 /* jshint ignore:start */
-Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-    var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
+Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
+    // Rely on EthereumJs/tx to determine the type of transaction
+    const data = Buffer.from(rawTx.slice(2), "hex")
+    const tx = TransactionFactory.fromSerializedData(data);
+    //update checksum
+    return utils.toChecksumAddress(tx.getSenderAddress().toString("hex"));
 };
 /* jshint ignore:end */
 
@@ -336,7 +333,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
 
 
-    if (_.isObject(message)) {
+    if (!!message && typeof message === 'object') {
         return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
@@ -346,7 +343,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 
     if (args.length >= 4) {
         preFixed = args.slice(-1)[0];
-        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+        preFixed = typeof preFixed === 'boolean' ? !!preFixed : false;
 
         return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
@@ -357,11 +354,11 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 
-    if (!_.isString(password)) {
+    if (!(typeof password === 'string')) {
         throw new Error('No password given.');
     }
 
-    var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+    var json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
     if (json.version !== 3) {
         throw new Error('Not a valid V3 wallet');
@@ -470,7 +467,7 @@ function Wallet(accounts) {
 
 Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
-    if (_.has(this, pointer)) {
+    if (this.hasOwnProperty(pointer)) {
         return this._findSafeIndex(pointer + 1);
     } else {
         return pointer;
@@ -499,7 +496,7 @@ Wallet.prototype.create = function(numberOfAccounts, entropy) {
 
 Wallet.prototype.add = function(account) {
 
-    if (_.isString(account)) {
+    if (typeof account === 'string') {
         account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {

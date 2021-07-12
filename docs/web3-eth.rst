@@ -1534,7 +1534,7 @@ Example
 
 .. code-block:: javascript
 
-    var Tx = require('ethereumjs-tx').Transaction;
+    var Tx = require('@ethereumjs/tx').Transaction;
     var privateKey = Buffer.from('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex');
 
     var rawTx = {
