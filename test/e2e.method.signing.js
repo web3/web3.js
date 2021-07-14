@@ -126,7 +126,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('accounts.signTransaction, (with callback, nonce not specified)', function(donedone){
+    it('accounts.signTransaction, (with callback, nonce not specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -150,7 +150,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-2930, accessList specified)', function(donedone){
+    it('accounts.signTransaction, (EIP-2930, accessList specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -174,7 +174,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(donedone){
+    it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -198,7 +198,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(donedone){
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -223,7 +223,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(donedone){
+    it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -247,7 +247,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(donedone){
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(done){
         // ganache does not support eth_signTransaction
         if (process.env.GANACHE || global.window ) {
             done();
@@ -554,9 +554,9 @@ describe('transaction and message signing [ @E2E ]', function() {
 
         const recovered = await web3.eth.personal.ecRecover(message, signature);
         assert.equal(accounts[1].toLowerCase(), recovered.toLowerCase());
-    })done;
+    });
 
-    it('eth.accounts.sign', async function(){
+    it('eth.accounts.sign', async function(done){
         if (process.env.GANACHE || global.window ) {
             done();
             return
