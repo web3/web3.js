@@ -19,19 +19,19 @@ describe('contract.deploy [ @E2E ]', function() {
 
     var basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '0x3B9ACA00',
+        gasPrice: '1000000000', // Default gasPrice set by Geth
         gas: 4000000
     };
 
     var revertsOptions = {
         data: Reverts.bytecode,
-        gasPrice: '0x3B9ACA00',
+        gasPrice: '1000000000', // Default gasPrice set by Geth
         gas: 4000000
     }
 
     var noBytecodeOptions = {
         data: '0x',
-        gasPrice: '0x3B9ACA00',
+        gasPrice: '1000000000', // Default gasPrice set by Geth
         gas: 4000000
     }
 
