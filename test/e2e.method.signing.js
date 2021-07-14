@@ -33,9 +33,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         instance = await basic.deploy().send({from: accounts[0]});
     });
 
-    it('sendSignedTransaction (with eth.signTransaction)', async function(){
+    it('sendSignedTransaction (with eth.signTransaction)', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const destination = wallet[1].address;
         const source = accounts[0]; // Unlocked geth-dev account
@@ -57,9 +60,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('sendSignedTransaction (accounts.signTransaction with signing options)', async function(){
+    it('sendSignedTransaction (accounts.signTransaction with signing options)', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -94,9 +100,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('sendSignedTransaction (accounts.signTransaction / without signing options)', async function(){
+    it('sendSignedTransaction (accounts.signTransaction / without signing options)', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -117,9 +126,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         assert(receipt.status === true);
     });
 
-    it('accounts.signTransaction, (with callback, nonce not specified)', function(done){
+    it('accounts.signTransaction, (with callback, nonce not specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -138,9 +150,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-2930, accessList specified)', function(done){
+    it('accounts.signTransaction, (EIP-2930, accessList specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -159,9 +174,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(done){
+    it('accounts.signTransaction, (EIP-2930, type 1 specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -180,9 +198,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(done){
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -202,9 +223,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(done){
+    it('accounts.signTransaction, (EIP-1559, type 2 specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -223,9 +247,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(done){
+    it('accounts.signTransaction, (EIP-1559, maxFeePerGas and accessList specified)', function(donedone){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -246,9 +273,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         });
     });
 
-    it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(){
+    it('accounts.signTransaction errors when common, chain and hardfork all defined', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -274,9 +304,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
-    it('accounts.signTransaction errors when chain specified without hardfork', async function(){
+    it('accounts.signTransaction errors when chain specified without hardfork', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -300,9 +333,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
-    it('accounts.signTransaction errors when hardfork specified without chain', async function(){
+    it('accounts.signTransaction errors when hardfork specified without chain', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -326,9 +362,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     });
 
-    it('accounts.signTransaction errors when tx signing is invalid', async function(){
+    it('accounts.signTransaction errors when tx signing is invalid', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const source = wallet[0].address;
         const destination = wallet[1].address;
@@ -354,9 +393,12 @@ describe('transaction and message signing [ @E2E ]', function() {
         }
     })
 
-    it('accounts.signTransaction errors when no transaction is passed', async function(){
+    it('accounts.signTransaction errors when no transaction is passed', async function(done){
         // ganache does not support eth_signTransaction
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         try {
             await web3.eth.accounts.signTransaction(undefined, wallet[0].privateKey);
@@ -495,9 +537,12 @@ describe('transaction and message signing [ @E2E ]', function() {
             })
     });
 
-    it('eth.personal.sign', async function(){
+    it('eth.personal.sign', async function(done){
         // ganache does not support eth_sign
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const message = 'hello';
 
@@ -509,10 +554,13 @@ describe('transaction and message signing [ @E2E ]', function() {
 
         const recovered = await web3.eth.personal.ecRecover(message, signature);
         assert.equal(accounts[1].toLowerCase(), recovered.toLowerCase());
-    });
+    })done;
 
     it('eth.accounts.sign', async function(){
-        if (process.env.GANACHE || global.window ) return
+        if (process.env.GANACHE || global.window ) {
+            done();
+            return
+        }
 
         const message = 'hello';
 
