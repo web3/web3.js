@@ -11,7 +11,7 @@ import {
 } from 'web3-utils/src/types';
 import { AxiosRequestConfig } from 'axios';
 
-export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
+export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | PrefixedHexString
     | number
@@ -19,6 +19,11 @@ export type RpcParams = (
     | boolean
     | EthFilter
 )[];
+
+export interface AxiosRequestUserConfig {
+    timeout?: number;
+    timeoutErrorMessage?: string;
+}
 
 export interface ProviderOptions {
     providerUrl: string;
@@ -182,8 +187,8 @@ export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
     send: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
+        providerCallOptions: ProviderCallOptions,
+        rpcOptions?: RpcOptions
     ) => Promise<RpcResponse>;
     subscribe: (
         rpcOptions: RpcOptions,

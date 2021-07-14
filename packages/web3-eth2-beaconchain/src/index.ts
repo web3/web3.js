@@ -1,21 +1,22 @@
-import Web3RequestManager from 'web3-core-requestmanager';
-import { StateId, Status, AttestationData, AttesterSlashing, Web3EthOptions, EthStringResult, ProposerSlashing, SyncCommittee, SignedVoluntaryExit } from '../types';
+import {
+    StateId,
+    Status,
+    AttestationData,
+    AttesterSlashing,
+    Web3EthOptions,
+    ProposerSlashing,
+    SyncCommittee,
+    SignedVoluntaryExit,
+} from '../types';
 import {
     CallOptions,
     RpcResponse,
     SubscriptionResponse,
     ProviderCallOptions,
     HttpOptions,
-    ProviderConfigs
+    RpcStringResult,
+    AxiosRequestUserConfig,
 } from 'web3-providers-base/lib/types';
-
-import { AxiosRequestConfig } from 'axios'; // dont import axios, web33 shouldnt care
-
-type userConfig = {
-
-};
-type Web3Eth2Result = any;
-type HttpParams = object;
 
 export default class Web3Beacon {
     private _requestManager: Web3RequestManager;
@@ -43,16 +44,23 @@ export default class Web3Beacon {
      * @returns {Promise} Genesis object
      */
     async getGenesis(
-        callOptions?: Partial<CallOptions>
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+        callOptions?: Partial<CallOptions>,
+        axiosRequestUserConfig?: AxiosRequestUserConfig
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             const filledCallOptions = {
                 ...callOptions,
                 providerCallOptions: {
-                    ...callOptions?.providerCallOptions,
+                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: 'genesis',
                     method: 'get',
-                }
+                    //fill with user config options
+                    //axiosconfig needs to be included if user wants to change http options
+                    axiosConfig: {
+                        ...callOptions?.providerCallOptions?.axiosConfig,
+                        ...axiosRequestUserConfig,
+                    },
+                },
             };
 
             return callOptions?.subscribe
@@ -72,7 +80,7 @@ export default class Web3Beacon {
     async getStateRoot(
         stateId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${stateId}/root`,
@@ -611,7 +619,7 @@ export default class Web3Beacon {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/sync_committees`,
                 method: 'POST',
-                data: [syncCommittee]
+                data: [syncCommittee],
             };
 
             return callOptions?.subscribe

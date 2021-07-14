@@ -72,16 +72,14 @@ export default class Web3ProvidersHttp
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
-            const response = await this._httpClient[httpOptions.method || 'post'](
-                '',
-                rpcOptions || {},
-                {
-                    ...httpOptions.axiosConfig,
-                    url: httpOptions.url,
-                    params: httpOptions.params || undefined
-                    data: httpOptions.data || undefined
-                }
-            );
+            const response = await this._httpClient[
+                httpOptions.method || 'post'
+            ]('', rpcOptions || {}, {
+                ...httpOptions.axiosConfig,
+                url: httpOptions.url,
+                params: httpOptions.params || undefined,
+                data: httpOptions.data || undefined,
+            });
             // const response = await this._httpClient.post(
             //     '',
             //     rpcOptions || {},

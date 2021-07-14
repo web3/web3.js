@@ -1,14 +1,11 @@
-import { HttpRpcResponse } from 'web3-providers-http/types';
-import { altair, phase0 } from "@chainsafe/lodestar-types";
+import { altair, phase0 } from '@chainsafe/lodestar-types';
 
 export interface Web3EthOptions {
     packageName?: string;
     providerUrl: string;
 }
 
-export interface EthStringResult extends HttpRpcResponse {
-    result: string;
-}
+
 
 export type PrefixedHexString = string;
 export type Slot = number;

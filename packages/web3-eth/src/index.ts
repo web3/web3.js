@@ -16,6 +16,7 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
+    RpcOptions,
 } from 'web3-providers-base/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {
