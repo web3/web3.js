@@ -12,14 +12,27 @@ describe('method.send [ @E2E ]', function () {
 
     var basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '1000000000', // Default gasPrice set by Geth
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000
     };
 
     describe('http', function () {
         before(async function () {
             web3 = new Web3('http://localhost:8545');
+
+            
+            var testAcctPass = "left-hand-of-darkness";
+            const account = await web3.eth.personal.newAccount(testAcctPass);
+            await web3.eth.personal.unlockAccount(account, testAcctPass, 1000000);
+
+            const weiBalance = web3.utils.toWei('1000', 'ether');
             accounts = await web3.eth.getAccounts();
+            await web3.eth.sendTransaction({
+                 from: accounts[0],
+                 to: account,
+                 value: weiBalance
+               });
+            
 
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
             instance = await basic.deploy().send({from: accounts[0]});
