@@ -12,7 +12,7 @@ describe('transaction and message signing [ @E2E ]', function() {
 
     const basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '1000000000', // Default gasPrice set by Geth
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000
     };
 
@@ -445,7 +445,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             from: wallet[0],
             to: instance.options.address,
             data: data,
-            gasPrice: '1000000000',
+            gasPrice: 1000000000, // Default gasPrice set by Geth
             gas: 4000000
         }
 
