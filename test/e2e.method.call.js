@@ -13,13 +13,13 @@ describe('method.call [ @E2E ]', function () {
 
     var basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '1',
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000
     };
 
     var miscOptions = {
         data: Misc.bytecode,
-        gasPrice: '1',
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000
     };
 

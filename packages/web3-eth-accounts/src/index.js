@@ -297,14 +297,24 @@ function _validateTransactionForSigning(tx) {
         );
     }
 
-    if (!tx.gas && !tx.gasLimit) {
+    if (
+        (!tx.gas && !tx.gasLimit) &&
+        (!tx.maxPriorityFeePerGas && !tx.maxFeePerGas)
+    ) {
         return new Error('"gas" is missing');
     }
 
-    if (tx.nonce < 0 ||
-        tx.gas < 0 ||
-        tx.gasPrice < 0 ||
-        tx.chainId < 0) {
+    if (tx.gas && tx.gasPrice) {
+        if (tx.gas < 0 || tx.gasPrice < 0) {
+            return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+        }
+    } else {
+        if (tx.maxPriorityFeePerGas < 0 || tx.maxFeePerGas < 0) {
+            return new Error('maxPriorityFeePerGas or maxFeePerGas is lower than 0');
+        }
+    }
+
+    if (tx.nonce < 0 || tx.chainId < 0) {
         return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
     }
 

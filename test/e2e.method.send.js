@@ -12,24 +12,28 @@ describe('method.send [ @E2E ]', function () {
 
     var basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '1',
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000
     };
 
     describe('http', function () {
         before(async function () {
             web3 = new Web3('http://localhost:8545');
-            accounts = await web3.eth.getAccounts();
 
+            accounts = await web3.eth.getAccounts();
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
-            instance = await basic.deploy().send({from: accounts[0]});
+
+            var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
+
+            instance = await basic.deploy().send({from: accounts[0], nonce: nonceVal});
         });
 
         it('returns a receipt', async function () {
+            var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
             var receipt = await instance
                 .methods
                 .setValue('1')
-                .send({from: accounts[0]});
+                .send({from: accounts[0], nonceVal});
 
             assert(receipt.status === true);
             assert(web3.utils.isHexStrict(receipt.transactionHash));
@@ -37,10 +41,11 @@ describe('method.send [ @E2E ]', function () {
 
         it('errors on OOG', async function () {
             try {
+                var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
                 await instance
                     .methods
                     .setValue('1')
-                    .send({from: accounts[0], gas: 100});
+                    .send({from: accounts[0], gas: 100, nonce: nonceVal});
 
                 assert.fail();
 
@@ -114,16 +119,19 @@ describe('method.send [ @E2E ]', function () {
 
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
-
+            
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
-            instance = await basic.deploy().send({from: accounts[0]});
+
+            var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
+            instance = await basic.deploy().send({from: accounts[0], nonce: nonceVal });
         })
 
         it('returns a receipt', async function () {
+            var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
             var receipt = await instance
                 .methods
                 .setValue('1')
-                .send({from: accounts[0]});
+                .send({from: accounts[0], nonce: nonceVal});
 
             assert(receipt.status === true);
             assert(web3.utils.isHexStrict(receipt.transactionHash));
@@ -131,10 +139,11 @@ describe('method.send [ @E2E ]', function () {
 
         it('errors on OOG', async function () {
             try {
+                var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
                 await instance
                     .methods
                     .setValue('1')
-                    .send({from: accounts[0], gas: 100});
+                    .send({from: accounts[0], gas: 100, nonce: nonceVal});
 
                 assert.fail();
 
