@@ -383,6 +383,21 @@ Released with 1.0.0-beta.37 code base.
 
 - Accidental commit (yarn-error.log) (#4062)
 
-## [Unreleased]
+## [1.4.0]
 
-## [1.3.7]
+### Added
+
+- Berlin Transaction Support (#4083)
+- When signing a transaction, common object now defaults to berlin instead of petersburg
+
+### Changed
+
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
+
+## [1.4.1]
+
+### Removes
+
+- Removing the underscore package 
+
+## [Unreleased]
