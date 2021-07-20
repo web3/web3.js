@@ -306,7 +306,7 @@ function _validateTransactionForSigning(tx) {
 
     if (tx.gas && tx.gasPrice) {
         if (tx.gas < 0 || tx.gasPrice < 0) {
-            return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+            return new Error('Gas or gasPrice is lower than 0');
         }
     } else {
         if (tx.maxPriorityFeePerGas < 0 || tx.maxFeePerGas < 0) {
