@@ -315,7 +315,7 @@ function _validateTransactionForSigning(tx) {
     }
 
     if (tx.nonce < 0 || tx.chainId < 0) {
-        return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+        return new Error('Nonce or chainId is lower than 0');
     }
 
     return;
