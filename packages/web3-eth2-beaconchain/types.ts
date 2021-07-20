@@ -5,8 +5,6 @@ export interface Web3EthOptions {
     providerUrl: string;
 }
 
-
-
 export type PrefixedHexString = string;
 export type Slot = number;
 export type StateId =

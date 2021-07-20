@@ -7,6 +7,7 @@ import {
     RpcOptions,
     SubscriptionResponse,
     HttpOptions,
+    CallOptions
 } from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
@@ -65,20 +66,19 @@ export default class Web3ProvidersHttp
     //     httpOptions?: HttpOptions
     // ): Promise<RpcResponse> {
     async send(
-        httpOptions: HttpOptions,
-        rpcOptions?: RpcOptions
+        callOptions: CallOptions
     ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
-                httpOptions.method || 'post'
-            ]('', rpcOptions || {}, {
-                ...httpOptions.axiosConfig,
-                url: httpOptions.url,
-                params: httpOptions.params || undefined,
-                data: httpOptions.data || undefined,
+                callOptions.providerCallOptions.method || 'post'
+            ]('', callOptions.rpcOptions || {}, {
+                ...callOptions.providerCallOptions.axiosConfig,
+                url: callOptions.providerCallOptions.url,
+                params: callOptions.providerCallOptions.params || undefined,
+                data: callOptions.providerCallOptions.data || undefined,
             });
             // const response = await this._httpClient.post(
             //     '',
@@ -92,8 +92,8 @@ export default class Web3ProvidersHttp
     }
 
     subscribe(
-        rpcOptions?: RpcOptions,
-        httpOptions?: HttpOptions
+        httpOptions: HttpOptions,
+        rpcOptions?: RpcOptions
     ): SubscriptionResponse {
         try {
             if (this._httpClient === undefined)

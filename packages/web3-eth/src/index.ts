@@ -45,8 +45,7 @@ export default class Web3Eth {
 
     private _send(callOptions: CallOptions): Promise<RpcResponse> {
         return this._requestManager.send(
-            callOptions.providerCallOptions,
-            callOptions?.rpcOptions
+            callOptions
         );
     }
 
@@ -54,8 +53,7 @@ export default class Web3Eth {
         callOptions: CallOptions
     ): Promise<SubscriptionResponse> {
         return this._requestManager.subscribe(
-            callOptions.providerCallOptions,
-            callOptions?.rpcOptions
+            callOptions
         );
     }
 

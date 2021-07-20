@@ -1,3 +1,4 @@
+import Web3RequestManager from 'web3-core-requestmanager';
 import {
     StateId,
     Status,
@@ -45,7 +46,6 @@ export default class Web3Beacon {
      */
     async getGenesis(
         callOptions?: Partial<CallOptions>,
-        axiosRequestUserConfig?: AxiosRequestUserConfig
     ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             const filledCallOptions = {
@@ -53,13 +53,7 @@ export default class Web3Beacon {
                 providerCallOptions: {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: 'genesis',
-                    method: 'get',
-                    //fill with user config options
-                    //axiosconfig needs to be included if user wants to change http options
-                    axiosConfig: {
-                        ...callOptions?.providerCallOptions?.axiosConfig,
-                        ...axiosRequestUserConfig,
-                    },
+                    method: 'get'
                 },
             };
 
@@ -106,7 +100,7 @@ export default class Web3Beacon {
     async getStateFork(
         state_id: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/root`,
@@ -130,7 +124,7 @@ export default class Web3Beacon {
     async getFinalityCheckpoints(
         state_id: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/finality_checkpoints`,
@@ -158,7 +152,7 @@ export default class Web3Beacon {
         callOptions: CallOptions,
         id?: [string],
         status?: [Status]
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/validators`,
@@ -185,7 +179,7 @@ export default class Web3Beacon {
         state_id: StateId,
         validator_id: string,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/validators/${validator_id}`,
@@ -211,7 +205,7 @@ export default class Web3Beacon {
         state_id: string,
         callOptions: CallOptions,
         id?: [string]
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/validator_balances`,
@@ -242,7 +236,7 @@ export default class Web3Beacon {
         epoch?: string,
         index?: string,
         slot?: string
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/committee`,
@@ -269,7 +263,7 @@ export default class Web3Beacon {
         state_id: string,
         callOptions: CallOptions,
         epoch?: string
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `states/${state_id}/sync_committees`,
@@ -296,7 +290,7 @@ export default class Web3Beacon {
         callOptions: CallOptions,
         slot: string,
         parent_root: string
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `headers`,
@@ -321,7 +315,7 @@ export default class Web3Beacon {
     async getBlockHeadersById(
         blockId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `headers/${blockId}`,
@@ -350,7 +344,7 @@ export default class Web3Beacon {
     async postBlock(
         signedBeaconBlock: StateId, //type BeaconBlock
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `blocks`,
@@ -375,7 +369,7 @@ export default class Web3Beacon {
     async getBlockV1(
         blockId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `blocks/${blockId}`,
@@ -399,7 +393,7 @@ export default class Web3Beacon {
     async getBlockV2(
         blockId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `/eth/v2/beacon/blocks/${blockId}`,
@@ -423,7 +417,7 @@ export default class Web3Beacon {
     async getBlockRoot(
         blockId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `blocks/${blockId}/root`,
@@ -447,7 +441,7 @@ export default class Web3Beacon {
     async getBlockAttestations(
         blockId: StateId,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `blocks/${blockId}/root`,
@@ -473,7 +467,7 @@ export default class Web3Beacon {
         slot: String,
         comitteeIndex: String,
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/attestations`,
@@ -499,7 +493,7 @@ export default class Web3Beacon {
     async postPoolAttestations(
         callOptions: CallOptions,
         attestation: AttestationData
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/attestations`,
@@ -522,7 +516,7 @@ export default class Web3Beacon {
 
     async getAttesterSlashings(
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/attester_slashings`,
@@ -545,7 +539,7 @@ export default class Web3Beacon {
     async postAttesterSlashings(
         callOptions: CallOptions,
         attesterSlashings: AttesterSlashing
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/attester_slashings`,
@@ -568,7 +562,7 @@ export default class Web3Beacon {
 
     async getProposerSlashings(
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/proposer_slashings`,
@@ -591,7 +585,7 @@ export default class Web3Beacon {
     async postProposerSlashings(
         callOptions: CallOptions,
         proposerSlashings: ProposerSlashing
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/proposer_slashings`,
@@ -614,7 +608,7 @@ export default class Web3Beacon {
     async postSyncCommittees(
         callOptions: CallOptions,
         syncCommittee: SyncCommittee
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/sync_committees`,
@@ -637,7 +631,7 @@ export default class Web3Beacon {
 
     async getVoluntaryExits(
         callOptions: CallOptions
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/voluntary_exits`,
@@ -660,7 +654,7 @@ export default class Web3Beacon {
     async PostVoluntaryExits(
         callOptions: CallOptions,
         signedVoluntaryExit: SignedVoluntaryExit
-    ): Promise<Web3Eth2Result | SubscriptionResponse> {
+    ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
             callOptions.providerCallOptions.axiosConfig = {
                 url: `pool/voluntary_exits`,
