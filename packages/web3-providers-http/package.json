@@ -33,6 +33,6 @@
     },
     "dependencies": {
         "axios": "^0.21.1",
-        "web3-providers-base": "^1.0.0"
+        "web3-providers-base": "1.0.0-alpha.1"
     }
 }
