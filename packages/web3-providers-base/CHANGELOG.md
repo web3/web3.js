@@ -34,3 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [1.0.0-alpha.0]
+
+Initial alpha release
+
+## [1.0.0-alpha.1]
+
+### Changed
+
+-   Update version to `1.0.0-alpha.1` for `web3-providers-base`
+-   Update version to `4.0.0-alpha.0` for `web3-utils` in `web3-providers-base`
