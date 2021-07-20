@@ -7892,6 +7892,13 @@ wcwidth@^1.0.0:
   dependencies:
     defaults "^1.0.3"
 
+web3-utils@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-4.0.0.tgz#a2c60e6050cd0f113212a4081000d0f8aff7b2c9"
+  integrity sha512-QfXuXeJHNsXSdCJFcuVhuj/rg0vcV/zpnglImKIcXwNewgKnEaJ012wKfTJ9hlq1CTpVuCXDjYmwuEA6XfT/wg==
+  dependencies:
+    ethereumjs-util "^7.0.10"
+
 webidl-conversions@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-5.0.0.tgz#ae59c8a00b121543a2acc65c0434f57b0fc11aff"
