@@ -238,7 +238,14 @@ var outputTransactionFormatter = function (tx) {
         tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
     tx.nonce = utils.hexToNumber(tx.nonce);
     if (tx.gas) tx.gas = outputBigNumberFormatter(tx.gas);
-    if (tx.gasPrice) tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
+    if (tx.gasPrice)
+        tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
+    if (tx.maxFeePerGas)
+        tx.maxFeePerGas = outputBigNumberFormatter(tx.maxFeePerGas);
+    if (tx.maxPriorityFeePerGas)
+        tx.maxPriorityFeePerGas = outputBigNumberFormatter(tx.maxPriorityFeePerGas);
+    if (tx.type)
+        tx.type = utils.hexToNumber(tx.type);
     if (tx.value) tx.value = outputBigNumberFormatter(tx.value);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
