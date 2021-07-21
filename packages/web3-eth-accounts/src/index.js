@@ -355,8 +355,8 @@ function _handleTxPricing(_this, tx) {
     return new Promise((resolve, reject) => {
         try {
             if (tx.type < '0x2' && tx.gasPrice !== undefined) {
-                // gasPrice already set, return
-                resolve()
+                // Legacy transaction, return provided gasPrice
+                resolve({ gasPrice: tx.gasPrice })
             } else {
                 Promise.all([
                     _this._ethereumCall.getBlockByNumber(),
