@@ -30,8 +30,6 @@
 
 "use strict";
 
-
-var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
@@ -78,11 +76,11 @@ var Contract = function Contract(jsonInterface, address, options) {
     this.options = {};
 
     var lastArg = args[args.length - 1];
-    if(_.isObject(lastArg) && !_.isArray(lastArg)) {
+    if(!!lastArg && typeof lastArg === 'object' && !Array.isArray(lastArg)) {
         options = lastArg;
 
-        this.options = _.extend(this.options, this._getOrSetDefaultOptions(options));
-        if(_.isObject(address)) {
+        this.options = { ...this.options, ...this._getOrSetDefaultOptions(options)};
+        if(!!address && typeof address === 'object') {
             address = null;
         }
     }
@@ -327,7 +325,7 @@ Contract.setProvider = function(provider, accounts) {
  * @return {Function} the callback
  */
 Contract.prototype._getCallback = function getCallback(args) {
-    if (args && _.isFunction(args[args.length - 1])) {
+    if (args && !!args[args.length- 1 ] && typeof args[args.length - 1] === 'function') {
         return args.pop(); // modify the args array!
     }
 };
@@ -391,7 +389,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
     });
 
     // use given topics
-    if(_.isArray(options.topics)) {
+    if(Array.isArray(options.topics)) {
         result.topics = options.topics;
 
     // create topics based on filter
@@ -417,7 +415,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
                 // TODO: https://github.com/ethereum/web3.js/issues/344
                 // TODO: deal properly with components
 
-                if (_.isArray(value)) {
+                if (Array.isArray(value)) {
                     return value.map(function (v) {
                         return abi.encodeParameter(i.type, v);
                     });
@@ -517,7 +515,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
             return ((methodSignature === 'constructor' && json.type === methodSignature) ||
                 ((json.signature === methodSignature || json.signature === methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
         }).map(function (json) {
-            var inputLength = (_.isArray(json.inputs)) ? json.inputs.length : 0;
+            var inputLength = (Array.isArray(json.inputs)) ? json.inputs.length : 0;
 
             if (inputLength !== args.length) {
                 throw new Error('The number of arguments is not matching the methods required number. You need to pass '+ inputLength +' arguments.');
@@ -526,7 +524,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
             if (json.type === 'function') {
                 signature = json.signature;
             }
-            return _.isArray(json.inputs) ? json.inputs : [];
+            return Array.isArray(json.inputs) ? json.inputs : [];
         }).map(function (inputs) {
             return abi.encodeParameters(inputs, args).replace('0x','');
         })[0] || '';
@@ -606,7 +604,7 @@ Contract.prototype.deploy = function(options, callback){
         throw errors.ContractMissingDeployDataError();
     }
 
-    var constructor = _.find(this.options.jsonInterface, function (method) {
+    var constructor = this.options.jsonInterface.find((method) => {
         return (method.type === 'constructor');
     }) || {};
     constructor.signature = 'constructor';
@@ -636,9 +634,9 @@ Contract.prototype._generateEventOptions = function() {
     var callback = this._getCallback(args);
 
     // get the options
-    var options = (_.isObject(args[args.length - 1])) ? args.pop() : {};
+    var options = (!!args[args.length - 1] && typeof args[args.length - 1]) === 'object' ? args.pop() : {};
 
-    var eventName = (_.isString(args[0])) ? args[0] : 'allevents';
+    var eventName = (typeof args[0] === 'string') ? args[0] : 'allevents';
     var event = (eventName.toLowerCase() === 'allevents') ? {
             name: 'ALLEVENTS',
             jsonInterface: this.options.jsonInterface
@@ -698,7 +696,7 @@ Contract.prototype.once = function(event, options, callback) {
     // don't return as once shouldn't provide "on"
     this._on(event, options, function (err, res, sub) {
         sub.unsubscribe();
-        if(_.isFunction(callback)){
+        if(typeof callback === 'function'){
             callback(err, res, sub);
         }
     });
@@ -745,7 +743,7 @@ Contract.prototype._on = function(){
                     this.emit('data', output);
                 }
 
-                if (_.isFunction(this.callback)) {
+                if (typeof this.callback === 'function') {
                     this.callback(null, output, this);
                 }
             }
@@ -845,11 +843,11 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
     processedArgs.callback = this._parent._getCallback(args);
 
     // get block number to use for call
-    if(processedArgs.type === 'call' && args[args.length - 1] !== true && (_.isString(args[args.length - 1]) || isFinite(args[args.length - 1])))
+    if(processedArgs.type === 'call' && args[args.length - 1] !== true && (typeof args[args.length - 1] === 'string' || isFinite(args[args.length - 1])))
         processedArgs.defaultBlock = args.pop();
 
     // get the options
-    processedArgs.options = (_.isObject(args[args.length - 1])) ? args.pop() : {};
+    processedArgs.options = (!!args[args.length - 1] && typeof args[args.length - 1]) === 'object' ? args.pop() : {};
 
     // get the generateRequest argument for batch requests
     processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;
@@ -951,7 +949,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 return utils._fireError(errors.ContractNoFromAddressDefinedError(), defer.eventEmitter, defer.reject, args.callback);
             }
 
-            if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
+            if (typeof this._method.payable === 'boolean' && !this._method.payable && args.options.value && args.options.value > 0) {
                 return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
             }
 
@@ -959,10 +957,10 @@ Contract.prototype._executeMethod = function _executeMethod(){
             // make sure receipt logs are decoded
             var extraFormatters = {
                 receiptFormatter: function (receipt) {
-                    if (_.isArray(receipt.logs)) {
+                    if (Array.isArray(receipt.logs)) {
 
                         // decode logs
-                        var events = _.map(receipt.logs, function(log) {
+                        var events = receipt.logs.map((log) => {
                             return _this._parent._decodeEventABI.call({
                                 name: 'ALLEVENTS',
                                 jsonInterface: _this._parent.options.jsonInterface

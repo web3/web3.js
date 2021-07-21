@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var BN = require('bn.js');
 var BigNumber = require('bignumber.js');
 var chai = require('chai');
@@ -183,7 +182,7 @@ describe('web3.soliditySha3', function () {
         test.values.forEach(function (value) {
             it('should hash "'+ JSON.stringify(value) +'" into "'+ test.expected +'"', function() {
 
-                if(value.error || _.isArray(value)) {
+                if(value.error || Array.isArray(value)) {
                     assert.throws(utils.soliditySha3.bind(null, value));
                 } else {
                     assert.deepEqual(utils.soliditySha3(value), test.expected);

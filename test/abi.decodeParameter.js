@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
 var coder = require('../packages/web3-eth-abi');
@@ -349,10 +348,10 @@ describe('lib/solidity/coder', function () {
                 var result = coder.decodeParameters(t.types, t.values);
 
                 var resultArray = [];
-                _.each(result, function (res, key) {
-                    if(_.isFinite(key))
-                        resultArray.push(res);
-                });
+                Object.keys(result).map(key => {
+                     if(isFinite(key)) resultArray.push(result[key])
+              });
+
 
 
 
