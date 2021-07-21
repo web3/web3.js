@@ -400,4 +400,7 @@ Released with 1.0.0-beta.37 code base.
 
 - Removing the underscore package 
 
+### Changed
+ - Docs are being updated  
+
 ## [Unreleased]
