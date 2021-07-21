@@ -33,7 +33,7 @@ var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
-
+var HardForks = require('@ethereumjs/common').Hardfork;
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -178,7 +178,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    transaction.hardfork || "london"
+                    transaction.hardfork || HardForks.London
                 );
 
                 delete transaction.networkId;
@@ -191,7 +191,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || "london",
+                        transaction.common.hardfork || HardForks.London,
                     );
 
                     delete transaction.common;
@@ -333,16 +333,16 @@ function _handleTxType(tx) {
     if (
         hasEip1559 ||
         (
-            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'london') ||
-            (tx.hardfork && tx.hardfork.toLowerCase() === 'london')
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
         )
     ) {
         txType = '0x2';
     } else if (
         tx.accessList ||
         (
-            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === 'berlin') ||
-            (tx.hardfork && tx.hardfork.toLowerCase() === 'berlin')
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
         )
     ) {
         txType = '0x1';
