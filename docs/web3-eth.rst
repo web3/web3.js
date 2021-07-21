@@ -1421,7 +1421,7 @@ Parameters
     - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
     - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
     - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
-    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transcation. 
+    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction. 
     - ``maxFeePerGas`` - ``Number|String|BN|BigNumber``: (optional) The maximum fee per gas that the transaction is willing to pay in total
     - ``maxPriorityFeePerGas`` - ``Number|String|BN|BigNumber`` (optional) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
     - ``accessList`` - ``List of hexstrings`` (optional) a list of addresses and storage keys that the transaction plans to access
