@@ -401,10 +401,11 @@ Released with 1.0.0-beta.37 code base.
 - Removing the underscore package 
 
 ### Changed
- - Grammar fix and updated Swarm and Whisper doc links
- - Remove deprecation notice for HttpProvider (#4008)
+ - Grammar fix (4088) and updated Swarm (#4151)and Whisper doc links (#4170)
+ - Removed deprecation notice for HttpProvider (#4008)
  - Nonce added to send options in documentation and types (#4052)
  - Updated Solidity example to modern syntax (#4147)
  - Changing web3 connection example from lets to const (#3967)
+ - Updated the documentation for the transaction object to include EIP-2718 and EIP-1559 options
 
 ## [Unreleased]
