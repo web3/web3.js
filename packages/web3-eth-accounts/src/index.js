@@ -33,7 +33,7 @@ var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
-
+var HardForks = require('@ethereumjs/common').Hardfork;
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -80,7 +80,17 @@ var Accounts = function Accounts() {
             }, function() {
                 return 'latest';
             }]
-        })
+        }),
+        new Method({
+            name: 'getBlockByNumber',
+            call: 'eth_getBlockByNumber',
+            params: 2,
+            inputFormatter: [function(blockNumber) {
+                return blockNumber ? utils.toHex(blockNumber) : 'latest'
+            }, function() {
+                return false
+            }]
+        }),
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
@@ -157,11 +167,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
-            transaction.type = "0x0"; // default to legacy
-            if (transaction.accessList) {
-                // EIP-2930
-                transaction.type = "0x01"
-            }
+            if (transaction.type === '0x1' && transaction.accessList === undefined) transaction.accessList = []
             
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
@@ -172,7 +178,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    transaction.hardfork || "berlin"
+                    transaction.hardfork || HardForks.London
                 );
 
                 delete transaction.networkId;
@@ -185,7 +191,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || "berlin",
+                        transaction.common.hardfork || HardForks.London,
                     );
 
                     delete transaction.common;
@@ -238,23 +244,42 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
     }
 
+    tx.type = _handleTxType(tx);
 
     // Resolve immediately if nonce, chainId, price and signing options are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
+    if (
+        tx.nonce !== undefined &&
+        tx.chainId !== undefined &&
+        (
+            tx.gasPrice !== undefined ||
+            (
+                tx.maxFeePerGas !== undefined &&
+                tx.maxPriorityFeePerGas !== undefined
+            )
+        ) &&
+        hasTxSigningOptions
+    ) {
         return Promise.resolve(signed(tx));
     }
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
-        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
+        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
+        _handleTxPricing(_this, tx)
     ]).then(function(args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed({ ...tx, chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]});
+    
+    return signed({
+            ...tx,
+            chainId: args[0],
+            nonce: args[1],
+            networkId: args[2],
+            ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+        });
     });
 };
 
@@ -272,18 +297,118 @@ function _validateTransactionForSigning(tx) {
         );
     }
 
-    if (!tx.gas && !tx.gasLimit) {
+    if (
+        (!tx.gas && !tx.gasLimit) &&
+        (!tx.maxPriorityFeePerGas && !tx.maxFeePerGas)
+    ) {
         return new Error('"gas" is missing');
     }
 
-    if (tx.nonce < 0 ||
-        tx.gas < 0 ||
-        tx.gasPrice < 0 ||
-        tx.chainId < 0) {
-        return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+    if (tx.gas && tx.gasPrice) {
+        if (tx.gas < 0 || tx.gasPrice < 0) {
+            return new Error('Gas or gasPrice is lower than 0');
+        }
+    } else {
+        if (tx.maxPriorityFeePerGas < 0 || tx.maxFeePerGas < 0) {
+            return new Error('maxPriorityFeePerGas or maxFeePerGas is lower than 0');
+        }
+    }
+
+    if (tx.nonce < 0 || tx.chainId < 0) {
+        return new Error('Nonce or chainId is lower than 0');
     }
 
     return;
+}
+
+function _handleTxType(tx) {
+    // Taken from https://github.com/ethers-io/ethers.js/blob/2a7ce0e72a1e0c9469e10392b0329e75e341cf18/packages/abstract-signer/src.ts/index.ts#L215
+    const hasEip1559 = (tx.maxFeePerGas !== undefined || tx.maxPriorityFeePerGas !== undefined);
+
+    let txType;
+
+    if (tx.type !== undefined) {
+        txType = utils.toHex(tx.type)
+    } else if (tx.type === undefined && hasEip1559) {
+        txType = '0x2'
+    } else {
+        txType = '0x0'
+    }
+
+    if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
+        throw Error("eip-1559 transactions don't support gasPrice");
+    if ((txType === '0x1' || txType === '0x0') && hasEip1559)
+        throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
+    
+    if (
+        hasEip1559 ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
+        )
+    ) {
+        txType = '0x2';
+    } else if (
+        tx.accessList ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
+        )
+    ) {
+        txType = '0x1';
+    }
+    
+    return txType
+}
+
+function _handleTxPricing(_this, tx) {
+    return new Promise((resolve, reject) => {
+        try {
+            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+                // Legacy transaction, return provided gasPrice
+                resolve({ gasPrice: tx.gasPrice })
+            } else {
+                Promise.all([
+                    _this._ethereumCall.getBlockByNumber(),
+                    _this._ethereumCall.getGasPrice()
+                ]).then(responses => {
+                    const [block, gasPrice] = responses;
+                    if (
+                        (tx.type === '0x2') &&
+                        block && block.baseFeePerGas
+                    ) {
+                        // The network supports EIP-1559
+    
+                        // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
+                        let maxPriorityFeePerGas, maxFeePerGas;
+    
+                        if (tx.gasPrice) {
+                            // Using legacy gasPrice property on an eip-1559 network,
+                            // so use gasPrice as both fee properties
+                            maxPriorityFeePerGas = tx.gasPrice;
+                            maxFeePerGas = tx.gasPrice;
+                            delete tx.gasPrice;
+                        } else {
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxFeePerGas = tx.maxFeePerGas ||
+                                utils.toHex(
+                                    utils.toBN(block.baseFeePerGas)
+                                        .mul(utils.toBN(2))
+                                        .add(utils.toBN(maxPriorityFeePerGas))
+                                );
+                        }
+                        resolve({ maxFeePerGas, maxPriorityFeePerGas });
+                    } else {
+                        if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
+                            throw Error("Network doesn't support eip-1559")
+                        resolve({ gasPrice });
+                    }
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
 
 /* jshint ignore:start */
