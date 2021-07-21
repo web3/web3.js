@@ -401,3 +401,9 @@ Released with 1.0.0-beta.37 code base.
 - Removing the underscore package 
 
 ## [Unreleased]
+
+## [1.5.0]
+
+### Added
+
+- London transaction support (#4155)
