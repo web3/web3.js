@@ -322,9 +322,19 @@ function _validateTransactionForSigning(tx) {
 }
 
 function _handleTxType(tx) {
-    let txType = tx.type !== undefined ? utils.toHex(tx.type) : '0x0';
     // Taken from https://github.com/ethers-io/ethers.js/blob/2a7ce0e72a1e0c9469e10392b0329e75e341cf18/packages/abstract-signer/src.ts/index.ts#L215
     const hasEip1559 = (tx.maxFeePerGas !== undefined || tx.maxPriorityFeePerGas !== undefined);
+
+    let txType;
+
+    if (tx.type !== undefined) {
+        txType = utils.toHex(tx.type)
+    } else if (tx.type === undefined && hasEip1559) {
+        txType = '0x2'
+    } else {
+        txType = '0x0'
+    }
+
     if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
         throw Error("eip-1559 transactions don't support gasPrice");
     if ((txType === '0x1' || txType === '0x0') && hasEip1559)
