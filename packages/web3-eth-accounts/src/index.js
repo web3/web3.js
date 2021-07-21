@@ -354,15 +354,9 @@ function _handleTxType(tx) {
 function _handleTxPricing(_this, tx) {
     return new Promise((resolve, reject) => {
         try {
-            if (
-                (
-                    tx.type === undefined ||
-                    tx.type === '0x0' ||
-                    tx.type === '0x1'
-                ) && tx.gasPrice !== undefined)
-            {
-                // Legacy transaction, return provided gasPrice
-                resolve({ gasPrice: tx.gasPrice })
+            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+                // gasPrice already set, return
+                resolve()
             } else {
                 Promise.all([
                     _this._ethereumCall.getBlockByNumber(),
@@ -370,8 +364,7 @@ function _handleTxPricing(_this, tx) {
                 ]).then(responses => {
                     const [block, gasPrice] = responses;
                     if (
-                        (tx.type !== '0x0' && 
-                        tx.type !== '0x1') &&
+                        (tx.type === '0x2') &&
                         block && block.baseFeePerGas
                     ) {
                         // The network supports EIP-1559
