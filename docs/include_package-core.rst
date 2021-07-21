@@ -84,7 +84,7 @@ Value
 
 ``Object`` with the following providers:
 
-    - ``Object`` - ``HttpProvider``: The HTTP provider is **deprecated**, as it won't work for subscriptions.
+    - ``Object`` - ``HttpProvider``: HTTP provider, does not support subscriptions.
     - ``Object`` - ``WebsocketProvider``: The Websocket provider is the standard for usage in legacy browsers.
     - ``Object`` - ``IpcProvider``: The IPC provider is used node.js dapps when running a local node. Gives the most secure connection.
 

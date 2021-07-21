@@ -402,5 +402,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
  - Docs are being updated  
+ - Remove deprecation notice for HttpProvider (#4008)
 
 ## [Unreleased]
