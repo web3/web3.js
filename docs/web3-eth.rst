@@ -236,8 +236,10 @@ The default hardfork property can be one of the following:
 - ``"constantinople"`` - ``String``
 - ``"petersburg"`` - ``String``
 - ``"istanbul"`` - ``String``
+- ``"berlin"`` - ``String``
+- ``"london"`` - ``String``
 
-Default is ``"petersburg"``
+Default is ``"london"``
 
 
 -------
@@ -247,7 +249,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.defaultHardfork;
-    > "petersburg"
+    > "london"
 
     // set the default block
     web3.eth.defaultHardfork = 'istanbul';
@@ -318,7 +320,7 @@ The default common property does contain the following ``Common`` object:
     - ``networkId`` - ``number``: Network ID of the custom chain
     - ``chainId`` - ``number``: Chain ID of the custom chain
 - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
-- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, ``istanbul``, ``berlin``, or ``london``
 
 
 Default is ``undefined``.
@@ -1419,17 +1421,21 @@ Parameters
     - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
     - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
     - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
+    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction. 
+    - ``maxFeePerGas`` - ``Number|String|BN``: (optional, defaulted to ``(2 * block.baseFeePerGas) + maxPriorityFeePerGas``) The maximum fee per gas that the transaction is willing to pay in total
+    - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``1 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
+    - ``accessList`` - ``List of hexstrings`` (optional) a list of addresses and storage keys that the transaction plans to access
     - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
     - ``nonce`` - ``Number``: (optional) Integer of the nonce. This allows to overwrite your own pending transactions that use the same nonce.
     - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
-    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``london``.
     - ``common`` - ``Object``: (optional) The common object
         - ``customChain`` - ``Object``: The custom chain properties
             - ``name`` - ``string``: (optional) The name of the chain
             - ``networkId`` - ``number``: Network ID of the custom chain
             - ``chainId`` - ``number``: Chain ID of the custom chain
         - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
-        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, ``istanbul``, ``berlin``, or ``london``
 
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
