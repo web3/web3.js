@@ -751,19 +751,6 @@ Returns
 - ``Array of numbers`` gasUsedRatio  - An array of block gas used ratios. These are calculated as the ratio of gasUsed and gasLimit.
 - ``Array of strings`` reward  - An array of effective priority fee per gas data points from a single block. All zeroes are returned if the block is empty.
 
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    web3.eth.getGasPrice()
-    .then(console.log);
-    > "20000000000"
-
-
 ------------------------------------------------------------------------------
 
 
