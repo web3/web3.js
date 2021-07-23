@@ -749,7 +749,7 @@ Returns
 - ``Number`` oldestBlock  - Lowest number block of the returned range.
 - ``Array of strings`` baseFeePerGas  - An array of block base fees per gas. This includes the next block after the newest of the returned range, because this value can be derived from the newest block. Zeroes are returned for pre-EIP-1559 blocks.
 - ``Array of numbers`` gasUsedRatio  - An array of block gas used ratios. These are calculated as the ratio of gasUsed and gasLimit.
-- ``Array of strings`` reward  - An array of effective priority fee per gas data points from a single block. All zeroes are returned if the block is empty.
+- ``Array of string arrays`` reward  - An array of effective priority fee per gas data points from a single block. All zeroes are returned if the block is empty.
 
 ------------------------------------------------------------------------------
 
