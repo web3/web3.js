@@ -150,8 +150,8 @@ export class Eth {
     ): Promise<string>;
 
     getFeeHistory(
-        blockCount: number,
-        newestBlock: string,
+        blockCount: number | BigNumber | BN | string,
+        lastBlock: number | BigNumber | BN | string,
         rewardPercentiles: number[],
         callback?: (error: Error, feeHistory: FeeHistoryResult) => void
     ): Promise<FeeHistoryResult>;
@@ -448,8 +448,8 @@ export interface StorageProof {
 }
 
 export interface FeeHistoryResult {
-    oldestBlock: string;
     baseFeePerGas: string[];
     gasUsedRatio: number[];
+    oldestBlock: number;
     reward: string[][];
 }
