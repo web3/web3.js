@@ -146,13 +146,13 @@ export class Eth {
     ): Promise<number>;
 
     getGasPrice(
-        blockCount: number,
-        newestBlock: string,
-        rewardPercentiles: number[],
         callback?: (error: Error, gasPrice: string) => void
     ): Promise<string>;
 
     getFeeHistory(
+        blockCount: number,
+        newestBlock: string,
+        rewardPercentiles: number[],
         callback?: (error: Error, feeHistory: FeeHistoryResult) => void
     ): Promise<FeeHistoryResult>;
 
