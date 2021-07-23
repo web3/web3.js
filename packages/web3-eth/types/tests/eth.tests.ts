@@ -180,9 +180,13 @@ eth.getGasPrice();
 eth.getGasPrice((error: Error, gasPrice: string) => {});
 
 // $ExpectType Promise<FeeHistoryResult>
-eth.getFeeHistory();
+eth.getFeeHistory(
+    4, "0xA30953", []
+);
 // $ExpectType Promise<FeeHistoryResult>
-eth.getFeeHistory((error: Error, feeHistory: FeeHistoryResult) => {});
+eth.getFeeHistory(
+    4, "0xA30953", [],
+    (error: Error, feeHistory: FeeHistoryResult) => {});
 
 // $ExpectType Promise<string[]>
 eth.getAccounts();
