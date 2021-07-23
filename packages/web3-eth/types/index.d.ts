@@ -146,8 +146,15 @@ export class Eth {
     ): Promise<number>;
 
     getGasPrice(
+        blockCount: number,
+        newestBlock: string,
+        rewardPercentiles: number[],
         callback?: (error: Error, gasPrice: string) => void
     ): Promise<string>;
+
+    getFeeHistory(
+        callback?: (error: Error, feeHistory: FeeHistoryResult) => void
+    ): Promise<FeeHistoryResult>;
 
     getAccounts(
         callback?: (error: Error, accounts: string[]) => void
@@ -438,4 +445,11 @@ export interface StorageProof {
     key: string;
     value: string;
     proof: string[];
+}
+
+export interface FeeHistoryResult {
+    oldestBlock: string;
+    baseFeePerGas: string[];
+    gasUsedRatio: number[];
+    reward: string[][];
 }

@@ -386,6 +386,11 @@ var Eth = function Eth() {
             outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
+            name: 'getFeeHistory',
+            call: 'eth_feeHistory',
+            params: 3,
+        }),
+        new Method({
             name: 'getAccounts',
             call: 'eth_accounts',
             params: 0,
