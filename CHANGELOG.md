@@ -407,6 +407,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - London transaction support (#4155)
+- RPC support `eth_feehistory` call
 
 ### Changed
  - Grammar fix (#4088) and updated Swarm (#4151)and Whisper doc links (#4170)
