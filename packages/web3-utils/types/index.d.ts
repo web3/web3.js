@@ -178,6 +178,7 @@ export interface Utils {
     testTopic(bloom: string, topic: string): boolean;
     getSignatureParameters(signature: string): {r: string; s: string; v: number};
     stripHexPrefix(str: string): string;
+    toNumber(value: number | string | BN): number;
 }
 
 export interface Units {

@@ -521,6 +521,17 @@ var sha3Raw = function(value) {
     return value;
 };
 
+/**
+ * Auto converts any given value into it's hex representation,
+ * then converts hex to number.
+ *
+ * @method toNumber
+ * @param {String|Number|BN} value
+ * @return {Number}
+ */
+var toNumber = function(value) {
+    return typeof value === 'number' ? value : hexToNumber(toHex(value));
+}
 
 module.exports = {
     BN: BN,
@@ -550,5 +561,6 @@ module.exports = {
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
     sha3: sha3,
-    sha3Raw: sha3Raw
+    sha3Raw: sha3Raw,
+    toNumber: toNumber
 };
