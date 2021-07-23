@@ -122,6 +122,7 @@ export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
 export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
 export function stripHexPrefix(str: string): string;
+export function toNumber(value: number | string | BN): number;
 
 // interfaces
 export interface Utils {
