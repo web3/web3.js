@@ -737,7 +737,7 @@ Parameters
 
 1. ``String|Number|BN|BigNumber`` - Number of blocks in the requested range. Between 1 and 1024 blocks can be requested in a single query. Less than requested may be returned if not all blocks are available.
 2. ``String|Number|BN|BigNumber`` - Highest number block of the requested range.
-3. ``Array of numbers`` - (optional) A monotonically increasing list of percentile values to sample from each block's effective priority fees per gas in ascending order, weighted by gas used. Example: `["0", "25", "50", "75", "100"]` or `["0", "0.5", "1", "1.5", "3", "80"]`
+3. ``Array of numbers`` - A monotonically increasing list of percentile values to sample from each block's effective priority fees per gas in ascending order, weighted by gas used. Example: `["0", "25", "50", "75", "100"]` or `["0", "0.5", "1", "1.5", "3", "80"]`
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
