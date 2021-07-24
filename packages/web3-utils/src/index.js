@@ -436,5 +436,7 @@ module.exports = {
     isTopicInBloom: utils.isTopicInBloom,
     isInBloom: utils.isInBloom,
 
-    compareBlockNumbers: compareBlockNumbers
+    compareBlockNumbers: compareBlockNumbers,
+
+    toNumber: utils.toNumber
 };
