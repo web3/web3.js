@@ -837,6 +837,8 @@ Parameters
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
     * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the transaction in wei.
+    * ``nonce`` - ``Number`` (optional): the nonce number of transaction
+
 2. ``callback`` - ``Function`` (optional): This callback will be fired first with the "transactionHash", or with an error object as the first argument.
 
 -------

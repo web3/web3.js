@@ -125,6 +125,7 @@ export interface SendOptions {
     gasPrice?: string;
     gas?: number;
     value?: number | string | BN;
+    nonce?: number;
 }
 
 export interface EstimateGasOptions {
