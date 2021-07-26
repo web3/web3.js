@@ -236,8 +236,10 @@ The default hardfork property can be one of the following:
 - ``"constantinople"`` - ``String``
 - ``"petersburg"`` - ``String``
 - ``"istanbul"`` - ``String``
+- ``"berlin"`` - ``String``
+- ``"london"`` - ``String``
 
-Default is ``"petersburg"``
+Default is ``"london"``
 
 
 -------
@@ -247,7 +249,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.defaultHardfork;
-    > "petersburg"
+    > "london"
 
     // set the default block
     web3.eth.defaultHardfork = 'istanbul';
@@ -318,7 +320,7 @@ The default common property does contain the following ``Common`` object:
     - ``networkId`` - ``number``: Network ID of the custom chain
     - ``chainId`` - ``number``: Chain ID of the custom chain
 - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
-- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+- ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, ``istanbul``, ``berlin``, or ``london``
 
 
 Default is ``undefined``.
@@ -711,6 +713,43 @@ Example
     .then(console.log);
     > "20000000000"
 
+
+------------------------------------------------------------------------------
+
+.. _eth-feehistory:
+
+
+getFeeHistory
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.getFeeHistory(blockCount, newestBlock, rewardPercentiles, [callback])
+
+Transaction fee history
+Returns base fee per gas and transaction effective priority fee per gas history for the requested block range if available. 
+The range between headBlock-4 and headBlock is guaranteed to be available while retrieving data from the pending block and older
+history are optional to support. For pre-EIP-1559 blocks the gas prices are returned as rewards and zeroes are returned for the base fee per gas.
+
+----------
+Parameters
+----------
+
+1. ``String|Number|BN|BigNumber`` - Number of blocks in the requested range. Between 1 and 1024 blocks can be requested in a single query. Less than requested may be returned if not all blocks are available.
+2. ``String|Number|BN|BigNumber`` - Highest number block of the requested range.
+3. ``Array of numbers`` - A monotonically increasing list of percentile values to sample from each block's effective priority fees per gas in ascending order, weighted by gas used. Example: `["0", "25", "50", "75", "100"]` or `["0", "0.5", "1", "1.5", "3", "80"]`
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Object`` - Fee history for the returned block range. The object:
+
+- ``Number`` oldestBlock  - Lowest number block of the returned range.
+- ``Array of strings`` baseFeePerGas  - An array of block base fees per gas. This includes the next block after the newest of the returned range, because this value can be derived from the newest block. Zeroes are returned for pre-EIP-1559 blocks.
+- ``Array of numbers`` gasUsedRatio  - An array of block gas used ratios. These are calculated as the ratio of gasUsed and gasLimit.
+- ``Array of string arrays`` reward  - An array of effective priority fee per gas data points from a single block. All zeroes are returned if the block is empty.
 
 ------------------------------------------------------------------------------
 
@@ -1419,17 +1458,21 @@ Parameters
     - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
     - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
     - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
+    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction. 
+    - ``maxFeePerGas`` - ``Number|String|BN``: (optional, defaulted to ``(2 * block.baseFeePerGas) + maxPriorityFeePerGas``) The maximum fee per gas that the transaction is willing to pay in total
+    - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``1 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
+    - ``accessList`` - ``List of hexstrings`` (optional) a list of addresses and storage keys that the transaction plans to access
     - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
     - ``nonce`` - ``Number``: (optional) Integer of the nonce. This allows to overwrite your own pending transactions that use the same nonce.
     - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
-    - ``hardfork`` - ``String``: (optional) Defaults to ``petersburg``.
+    - ``hardfork`` - ``String``: (optional) Defaults to ``london``.
     - ``common`` - ``Object``: (optional) The common object
         - ``customChain`` - ``Object``: The custom chain properties
             - ``name`` - ``string``: (optional) The name of the chain
             - ``networkId`` - ``number``: Network ID of the custom chain
             - ``chainId`` - ``number``: Chain ID of the custom chain
         - ``baseChain`` - ``string``: (optional) ``mainnet``, ``goerli``, ``kovan``, ``rinkeby``, or ``ropsten``
-        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, or ``istanbul``
+        - ``hardfork`` - ``string``: (optional) ``chainstart``, ``homestead``, ``dao``, ``tangerineWhistle``, ``spuriousDragon``, ``byzantium``, ``constantinople``, ``petersburg``, ``istanbul``, ``berlin``, or ``london``
 
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
