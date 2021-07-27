@@ -1,20 +1,22 @@
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
+import Web3ProviderWS from '../../src/index';
+import { WebSocketOptions } from '../../src/types';
 
-describe('constructs a PLACEHOLDER instance with expected properties', () => {
-    // let providerOptions: ProviderOptions
+
+describe('Web3ProviderWS Tests', () => {
+    let providerOptions: WebSocketOptions;
 
     beforeEach(() => {
-        // providerOptions = {
-        //     providerUrl: 'http://127.0.0.1:8545'
-        // }
+        providerOptions = {
+            providerUrl: 'wss://127.0.0.1:8545',
+        };
     });
 
-    it('should construct with expected properties', () => {
-        // const web3ProviderBase = new Web3ProviderBase(providerOptions)
-        // expect(web3ProviderBase).toMatchObject({
-        //     _providerUrl: providerOptions.providerUrl
-        // })
-        expect(true).toBeTruthy();
+    it('should error because invalid WS address', () => {
+        providerOptions.providerUrl = 'http://127.0.0.1:8545';
+        expect( () => {
+             new Web3ProviderWS(providerOptions);
+
+        }).toThrowError('Invalid WebSocket URL provided');
     });
+
 });
