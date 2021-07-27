@@ -8,7 +8,7 @@ import {
     EthMinedTransaction,
     EthLog,
     CompiledSolidity,
-} from 'web3-utils/lib/types';
+} from 'web3-utils/src/types';
 import { AxiosRequestConfig } from 'axios';
 
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
@@ -20,16 +20,29 @@ export type RpcParams = (
     | EthFilter
 )[];
 
+export interface AxiosRequestUserConfig {
+    timeout?: number;
+    timeoutErrorMessage?: string;
+}
+
 export interface ProviderOptions {
     providerUrl: string;
 }
 
+// export interface HttpOptions {
+//     axiosConfig?: AxiosRequestConfig;
+//     subscriptionConfig?: SubscriptionConfig;
+// }
 export interface HttpOptions {
+    url: string;
+    method: 'get' | 'post';
+    params: any;
+    data: any;
     axiosConfig?: AxiosRequestConfig;
-    subscriptionOptions?: SubscriptionOptions;
+    subscriptionConfig?: SubscriptionConfig;
 }
 
-export interface SubscriptionOptions {
+export interface SubscriptionConfig {
     milisecondsBetweenRequests?: number;
 }
 
@@ -46,7 +59,7 @@ export interface PartialRpcOptions extends Partial<RpcOptions> {
 }
 
 export interface CallOptions {
-    providerCallOptions?: ProviderCallOptions;
+    providerCallOptions: ProviderCallOptions;
     rpcOptions?: Partial<RpcOptions>;
     returnType?: ValidTypesEnum;
     subscribe?: boolean;
@@ -173,14 +186,8 @@ export interface SubscriptionResponse {
 export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
-    send: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
-    ) => Promise<RpcResponse>;
-    subscribe: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
-    ) => SubscriptionResponse;
+    send: (callOptions: CallOptions) => Promise<RpcResponse>;
+    subscribe: (callOptions: CallOptions) => SubscriptionResponse;
     unsubscribe?: (eventEmitter: EventEmitter, subscriptionId: number) => void;
     disconnect?: () => void;
 }

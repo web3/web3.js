@@ -16,6 +16,7 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
+    RpcOptions,
 } from 'web3-providers-base/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {
@@ -42,34 +43,14 @@ export default class Web3Eth {
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
 
-    private _send(
-        method: string,
-        params: RpcParams,
-        callOptions?: CallOptions
-    ): Promise<RpcResponse> {
-        return this._requestManager.send(
-            {
-                ...callOptions?.rpcOptions,
-                method,
-                params,
-            },
-            callOptions?.providerCallOptions
-        );
+    private _send(callOptions: CallOptions): Promise<RpcResponse> {
+        return this._requestManager.send(callOptions);
     }
 
     private _subscribe(
-        method: string,
-        params: RpcParams,
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<SubscriptionResponse> {
-        return this._requestManager.subscribe(
-            {
-                ...callOptions?.rpcOptions,
-                method,
-                params,
-            },
-            callOptions?.providerCallOptions
-        );
+        return this._requestManager.subscribe(callOptions);
     }
 
     private static _isBlockTag(value: BlockIdentifier): boolean {
@@ -88,17 +69,16 @@ export default class Web3Eth {
      * @returns {Promise} Client version
      */
     async getClientVersion(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'web3_clientVersion',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'web3_clientVersion',
+            };
+
             return callOptions?.subscribe
-                ? await this._subscribe(...requestParameters)
-                : await this._send(...requestParameters);
+                ? await this._subscribe(callOptions)
+                : await this._send(callOptions);
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -118,17 +98,17 @@ export default class Web3Eth {
      */
     async getSha3(
         data: string,
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            const requestParameters: [
-                string,
-                [string],
-                CallOptions | undefined
-            ] = ['web3_sha3', [data], callOptions];
+            callOptions.rpcOptions = {
+                method: 'web3_sha3',
+                params: [data],
+            };
+
             return callOptions?.subscribe
-                ? await this._subscribe(...requestParameters)
-                : await this._send(...requestParameters);
+                ? await this._subscribe(callOptions)
+                : await this._send(callOptions);
         } catch (error) {
             throw Error(`Error getting sha3 hash: ${error.message}`);
         }
@@ -146,18 +126,15 @@ export default class Web3Eth {
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'net_version',
-                [],
-                callOptions,
-            ];
-
+            callOptions.rpcOptions = {
+                method: 'net_version',
+            };
             if (callOptions?.subscribe)
-                return await this._subscribe(...requestParameters);
-            const response = await this._send(...requestParameters);
+                return await this._subscribe(callOptions);
+            const response = await this._send(callOptions);
             return {
                 ...response,
                 result: formatOutput(
@@ -182,17 +159,15 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'net_listening',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'net_listening',
+            };
             return callOptions?.subscribe
-                ? await this._subscribe(...requestParameters)
-                : await this._send(...requestParameters);
+                ? await this._subscribe(callOptions)
+                : await this._send(callOptions);
         } catch (error) {
             throw Error(`Error getting network listening: ${error.message}`);
         }
@@ -210,18 +185,16 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkPeerCount(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'net_peerCount',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'net_peerCount',
+            };
 
             if (callOptions?.subscribe)
-                return await this._subscribe(...requestParameters);
-            const response = await this._send(...requestParameters);
+                return await this._subscribe(callOptions);
+            const response = await this._send(callOptions);
             return {
                 ...response,
                 result: formatOutput(
@@ -246,18 +219,16 @@ export default class Web3Eth {
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcValidTypeResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'eth_protocolVersion',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'eth_protocolVersion',
+            };
 
             if (callOptions?.subscribe)
-                return await this._subscribe(...requestParameters);
-            const response = await this._send(...requestParameters);
+                return await this._subscribe(callOptions);
+            const response = await this._send(callOptions);
             return {
                 ...response,
                 result: formatOutput(
@@ -282,18 +253,16 @@ export default class Web3Eth {
      * @returns {Promise} Object with sync status data or false when not syncing
      */
     async getSyncing(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcSyncingResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'eth_syncing',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'eth_syncing',
+            };
 
             if (callOptions?.subscribe)
-                return await this._subscribe(...requestParameters);
-            const response = await this._send(...requestParameters);
+                return await this._subscribe(callOptions);
+            const response = await this._send(callOptions);
             return {
                 ...response,
                 result:
@@ -322,17 +291,15 @@ export default class Web3Eth {
      * @returns {Promise} The current coinbase address
      */
     async getCoinbase(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcPrefixedHexStringResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'eth_coinbase',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'eth_coinbase',
+            };
             return callOptions?.subscribe
-                ? await this._subscribe(...requestParameters)
-                : await this._send(...requestParameters);
+                ? await this._subscribe(callOptions)
+                : await this._send(callOptions);
         } catch (error) {
             throw Error(`Error getting coinbase address: ${error.message}`);
         }
@@ -350,17 +317,15 @@ export default class Web3Eth {
      * @returns {Promise} true if the client is mining, otherwise false
      */
     async getMining(
-        callOptions?: CallOptions
+        callOptions: CallOptions
     ): Promise<RpcBooleanResult | SubscriptionResponse> {
         try {
-            const requestParameters: [string, [], CallOptions | undefined] = [
-                'eth_mining',
-                [],
-                callOptions,
-            ];
+            callOptions.rpcOptions = {
+                method: 'eth_mining',
+            };
             return callOptions?.subscribe
-                ? await this._subscribe(...requestParameters)
-                : await this._send(...requestParameters);
+                ? await this._subscribe(callOptions)
+                : await this._send(callOptions);
         } catch (error) {
             throw Error(`Error getting mining status: ${error.message}`);
         }

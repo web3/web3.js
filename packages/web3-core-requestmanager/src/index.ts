@@ -6,7 +6,8 @@ import {
     RpcResponse,
     PartialRpcOptions,
     SubscriptionResponse,
-} from 'web3-providers-base/lib/types';
+    CallOptions,
+} from 'web3-providers-base/src/types';
 
 import { ProviderProtocol } from './types';
 
@@ -69,33 +70,56 @@ export default class Web3RequestManager {
         };
     }
 
-    async send(
-        rpcOptions: PartialRpcOptions,
-        providerCallOptions?: ProviderCallOptions
-    ): Promise<RpcResponse> {
+    async send(callOptions: CallOptions): Promise<RpcResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.send(
-                Web3RequestManager._defaultRpcOptions(rpcOptions),
-                providerCallOptions
-            );
+            switch (this.providerProtocol) {
+                case ProviderProtocol.WS:
+                    // TODO
+                    throw Error('Provider protocol not implemented');
+                case ProviderProtocol.IPC:
+                    // TODO
+                    throw Error('Provider protocol not implemented');
+                default:
+                    // this.providerProtocol is assumed to be ProviderProtocol.HTTP
+                    // return callOptions.rpcOptions
+                    //     ? this.provider.send(
+                    //           //Checks if RPC options exist
+                    //           callOptions.providerCallOptions,
+                    //           Web3RequestManager._defaultRpcOptions(callOptions.rpcOptions)
+                    //       )
+                    //     : this.provider.send(callOptions.providerCallOptions);
+
+                    const defaultedCallOptions: CallOptions = {
+                        ...callOptions,
+                        rpcOptions: callOptions.rpcOptions
+                            ? Web3RequestManager._defaultRpcOptions(
+                                  callOptions.rpcOptions
+                              )
+                            : undefined,
+                    };
+
+                    return this.provider.send(defaultedCallOptions);
+            }
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
         }
     }
 
     async subscribe(
-        rpcOptions: PartialRpcOptions,
-        providerCallOptions?: ProviderCallOptions
+        providerCallOptions: ProviderCallOptions,
+        rpcOptions?: PartialRpcOptions
     ): Promise<SubscriptionResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
-            return this.provider.subscribe(
-                Web3RequestManager._defaultRpcOptions(rpcOptions),
-                providerCallOptions
-            );
+            return rpcOptions
+                ? this.provider.subscribe(
+                      providerCallOptions,
+                      Web3RequestManager._defaultRpcOptions(rpcOptions)
+                  )
+                : this.provider.subscribe(providerCallOptions);
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
         }
