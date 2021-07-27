@@ -19,6 +19,12 @@
         "test:integration": "jest ./test/integration",
         "test:unit": "jest ./test/unit"
     },
+    "dependencies": {
+        "@types/node": "^16.4.3",
+        "@types/websocket": "^1.0.3",
+        "web3-providers-base": "1.0.0-alpha.1",
+        "websocket": "^1.0.32"
+    },
     "devDependencies": {
         "@types/jest": "^26.0.22",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
