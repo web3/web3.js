@@ -19,7 +19,7 @@ registryAddress
 The ``registryAddress`` property can be used to define a custom registry address when you are connected to an unknown chain.
 
 .. note::
-   If no address is defined will it try to detect the registry on the chain you are currently connected with and on the call of ``setProvider`` in the Eth module will it keep the defined address and use it for the ENS module.
+   It will use the address defined in ``setProvider`` of the Eth module for use with the ENS module. If no address is defined it will try to detect the registry on the chain you are currently connected to.
 
 -------
 Returns
