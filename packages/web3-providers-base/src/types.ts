@@ -11,7 +11,7 @@ import {
 } from 'web3-utils/src/types';
 import { AxiosRequestConfig } from 'axios';
 
-export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
+export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | PrefixedHexString
     | number
