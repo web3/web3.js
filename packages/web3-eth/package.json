@@ -31,7 +31,7 @@
         "typescript": "^4.2.4"
     },
     "dependencies": {
-        "web3-core-requestmanager": "^4.0.0",
+        "web3-core-requestmanager": "4.0.0-alpha.0",
         "web3-utils": "^4.0.0"
     }
 }
