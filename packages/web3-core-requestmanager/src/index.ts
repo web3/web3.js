@@ -70,9 +70,7 @@ export default class Web3RequestManager {
         };
     }
 
-    async send(
-        callOptions: CallOptions
-    ): Promise<RpcResponse> {
+    async send(callOptions: CallOptions): Promise<RpcResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
@@ -95,8 +93,12 @@ export default class Web3RequestManager {
 
                     const defaultedCallOptions: CallOptions = {
                         ...callOptions,
-                        rpcOptions: callOptions.rpcOptions ? Web3RequestManager._defaultRpcOptions(callOptions.rpcOptions) : undefined
-                    }
+                        rpcOptions: callOptions.rpcOptions
+                            ? Web3RequestManager._defaultRpcOptions(
+                                  callOptions.rpcOptions
+                              )
+                            : undefined,
+                    };
 
                     return this.provider.send(defaultedCallOptions);
             }

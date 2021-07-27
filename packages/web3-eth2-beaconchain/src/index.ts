@@ -45,16 +45,24 @@ export default class Web3Beacon {
      * @returns {Promise} Genesis object
      */
     async getGenesis(
-        callOptions?: Partial<CallOptions>,
+        callOptions?: Partial<CallOptions>
     ): Promise<RpcStringResult | SubscriptionResponse> {
+        // if (callOptions.method){ //check if its http
+            const providerCallOptions = callOptions?.providerCallOptions
+        // }
         try {
             const filledCallOptions = {
                 ...callOptions,
                 providerCallOptions: {
-                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
+                    ...providerCallOptions,
                     url: 'genesis',
                     method: 'get'
-                },
+                }
+                // httpOptions: {
+                //     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
+                //     url: 'genesis',
+                //     method: 'get',
+                // },
             };
 
             return callOptions?.subscribe
@@ -73,17 +81,21 @@ export default class Web3Beacon {
 
     async getStateRoot(
         stateId: StateId,
-        callOptions: CallOptions
+        callOptions?: Partial<CallOptions>
     ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${stateId}/root`,
-                method: 'get',
+            const filledCallOptions = {
+                ...callOptions,
+                providerCallOptions: {
+                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
+                    url: `states/${stateId}/root`,
+                    method: 'get',
+                },
             };
 
             return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+                ? await this._subscribe(filledCallOptions.ProviderCallOptions)
+                : await this._send(filledCallOptions.ProviderCallOptions);
         } catch (error) {
             throw Error(
                 `Error getting state root from state Id: ${error.message}`
@@ -93,23 +105,27 @@ export default class Web3Beacon {
 
     /**
      * Returns Fork object for state with given 'stateId'.
-     * @param {StateId} state_id State
+     * @param {StateId} stateId State
      * @returns {Promise} Fork object
      */
 
     async getStateFork(
-        state_id: StateId,
+        stateId: StateId,
         callOptions: CallOptions
     ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/root`,
-                method: 'get',
+            const filledCallOptions = {
+                ...callOptions,
+                providerCallOptions: {
+                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
+                    url: `states/${stateId}/fork`,
+                    method: 'get',
+                },
             };
 
             return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+                ? await this._subscribe(filledCallOptions.providerCallOptions)
+                : await this._send(filledCallOptions.providerCallOptions);
         } catch (error) {
             throw Error(`Error getting state fork from Id: ${error.message}`);
         }
@@ -117,23 +133,27 @@ export default class Web3Beacon {
 
     /**
      * Get finality checkpoints for state with given 'stateId'. In case finality is not yet achieved, checkpoint should return epoch 0 and ZERO_HASH as root.
-     * @param {StateId} state_id State
+     * @param {StateId} stateId State
      * @returns {Promise} Finality checkpoints
      */
 
     async getFinalityCheckpoints(
-        state_id: StateId,
+        stateId: StateId,
         callOptions: CallOptions
     ): Promise<RpcStringResult | SubscriptionResponse> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/finality_checkpoints`,
-                method: 'get',
+            const filledCallOptions = {
+                ...callOptions,
+                providerCallOptions: {
+                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
+                    url: `states/${stateId}/finality_checkpoints`,
+                    method: 'get',
+                },
             };
 
             return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+                ? await this._subscribe(filledCallOptions.providerCallOptions.providerCallOptions)
+                : await this._send(filledCallOptions.providerCallOptions.providerCallOptions);
         } catch (error) {
             throw Error(`Error getting finality checkpoints: ${error.message}`);
         }

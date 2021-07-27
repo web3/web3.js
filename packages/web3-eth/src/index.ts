@@ -44,17 +44,13 @@ export default class Web3Eth {
     }
 
     private _send(callOptions: CallOptions): Promise<RpcResponse> {
-        return this._requestManager.send(
-            callOptions
-        );
+        return this._requestManager.send(callOptions);
     }
 
     private _subscribe(
         callOptions: CallOptions
     ): Promise<SubscriptionResponse> {
-        return this._requestManager.subscribe(
-            callOptions
-        );
+        return this._requestManager.subscribe(callOptions);
     }
 
     private static _isBlockTag(value: BlockIdentifier): boolean {

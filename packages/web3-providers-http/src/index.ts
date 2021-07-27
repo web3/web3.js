@@ -7,7 +7,7 @@ import {
     RpcOptions,
     SubscriptionResponse,
     HttpOptions,
-    CallOptions
+    CallOptions,
 } from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
@@ -65,36 +65,26 @@ export default class Web3ProvidersHttp
     //     rpcOptions?: RpcOptions,
     //     httpOptions?: HttpOptions
     // ): Promise<RpcResponse> {
-    async send(
-        callOptions: CallOptions
-    ): Promise<RpcResponse> {
+    async send(callOptions: CallOptions): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
-                callOptions.providerCallOptions.method || 'post'
+                callOptions.providerCallOptions?.method || 'post'
             ]('', callOptions.rpcOptions || {}, {
-                ...callOptions.providerCallOptions.axiosConfig,
-                url: callOptions.providerCallOptions.url,
-                params: callOptions.providerCallOptions.params || undefined,
-                data: callOptions.providerCallOptions.data || undefined,
+                ...callOptions.providerCallOptions?.axiosConfig,
+                url: callOptions.providerCallOptions?.url,
+                params: callOptions.providerCallOptions?.params || undefined,
+                data: callOptions.providerCallOptions?.data || undefined,
             });
-            // const response = await this._httpClient.post(
-            //     '',
-            //     rpcOptions || {},
-            //     httpOptions?.axiosConfig || {}
-            // );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
         }
     }
 
-    subscribe(
-        httpOptions: HttpOptions,
-        rpcOptions?: RpcOptions
-    ): SubscriptionResponse {
+    subscribe(callOptions: CallOptions): SubscriptionResponse {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
@@ -102,12 +92,13 @@ export default class Web3ProvidersHttp
             const subscriptionId = Math.floor(
                 Math.random() * Number.MAX_SAFE_INTEGER
             ); // generate random integer
-            this._subscribe(
-                rpcOptions || {},
-                eventEmitter,
-                subscriptionId,
-                httpOptions
-            );
+            this._subscribe(callOptions, eventEmitter, subscriptionId);
+            // this._subscribe(
+            //     rpcOptions || {},
+            //     eventEmitter,
+            //     subscriptionId,
+            //     httpOptions
+            // );
             return { eventEmitter, subscriptionId };
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);
@@ -115,24 +106,18 @@ export default class Web3ProvidersHttp
     }
 
     private async _subscribe(
-        rpcOptions: RpcOptions,
+        callOptions: CallOptions,
         eventEmitter: EventEmitter,
-        subscriptionId: number,
-        httpOptions?: HttpOptions
+        subscriptionId: number
     ) {
         try {
-            const response = await this.send(rpcOptions, httpOptions);
+            const response = await this.send(callOptions);
             eventEmitter.emit('response', response);
             this._subscriptions[subscriptionId] = setTimeout(
                 () =>
-                    this._subscribe(
-                        rpcOptions,
-                        eventEmitter,
-                        subscriptionId,
-                        httpOptions
-                    ),
-                httpOptions?.subscriptionOptions?.milisecondsBetweenRequests ||
-                    1000
+                    this._subscribe(callOptions, eventEmitter, subscriptionId),
+                callOptions.providerCallOptions?.subscriptionConfig
+                    ?.milisecondsBetweenRequests || 1000
             );
         } catch (error) {
             throw Error(`Error subscribing: ${error.message}`);

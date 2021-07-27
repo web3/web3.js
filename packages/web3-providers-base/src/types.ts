@@ -186,14 +186,8 @@ export interface SubscriptionResponse {
 export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
-    send: (
-        providerCallOptions: ProviderCallOptions,
-        rpcOptions?: RpcOptions
-    ) => Promise<RpcResponse>;
-    subscribe: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
-    ) => SubscriptionResponse;
+    send: (callOptions: CallOptions) => Promise<RpcResponse>;
+    subscribe: (callOptions: CallOptions) => SubscriptionResponse;
     unsubscribe?: (eventEmitter: EventEmitter, subscriptionId: number) => void;
     disconnect?: () => void;
 }
