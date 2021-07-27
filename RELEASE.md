@@ -25,14 +25,14 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 1. `git checkout 4.x`: Verify you are on the `4.x` base branch
 2. `git checkout -b release/package-name/bumped-version`: Checkout a branch with the `package-name` and `bumped-version` e.g. `git checkout -b release/web3-packagetemplate/1.0.1`
 3. `yarn`: Verify all dependencies have been installed
-4. `yarn build`: Build each package
-5. `cd packages/package-name`: `cd` into the package to be released
-6. Update the version number in the `package.json`
-7. `git add package.json && git commit -m 'Release version-number'`: Commit the version bump, commit message should be `'Release version-number'` e.g. `Release 1.0.0`
+4. `cd packages/package-name`: `cd` into the package to be released
+5. Update the version number in the `package.json`
+6. Run `yarn lint` from project root: `yarn --cwd ../../ lint`
+7. `git add package.json && git commit -m 'Release package-name@version-number'`: Commit the version bump, commit message should be `'Release package-name@version-number'` e.g. `Release web3-packagetemplate@1.0.0`
 8. `git tag package-name@version-number`: Tag the commit with package name and bumped version, e.g. `web3-packagetemplate@1.0.1`
 9. `git push origin release/package-name/bumped-version`: Push release branch to `origin`
 10. `git push --tags`: Push release tag created in `Step 8` to `origin`
-11. Create a draft release on Github similar to [this](https://github.com/ChainSafe/web3.js/releases/tag/web3-packagetemplate%401.0.1)
+11. Create a draft release on Github similar to [this](https://github.com/ChainSafe/web3.js/releases/tag/web3-providers-base%401.0.0-alpha.1)
     - When creating the release, select the tag created in `step 8` (`packagename@version-number`)
     - Release title should also be `packagename@version-number`
     - In the release description, copy all entries in `CHANGELOG.md` for the version being released
