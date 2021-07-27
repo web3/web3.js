@@ -1,6 +1,6 @@
 {
     "name": "web3-core-requestmanager",
-    "version": "4.0.0",
+    "version": "4.0.0-alpha.0",
     "description": "Internal packages used to manage requests for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
