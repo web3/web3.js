@@ -72,16 +72,12 @@ export default class Web3ProvidersHttp
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
                 callOptions.providerCallOptions?.method || 'post'
-            ](
-                '',
-                callOptions.rpcOptions || {},
-                {
-                    ...callOptions.providerCallOptions?.axiosConfig,
-                    url: callOptions.providerCallOptions?.url,
-                    params: callOptions.providerCallOptions?.params || undefined,
-                    data: callOptions.providerCallOptions?.data || undefined,
-                }
-            );
+            ]('', callOptions.rpcOptions || {}, {
+                ...callOptions.providerCallOptions?.axiosConfig,
+                url: callOptions.providerCallOptions?.url,
+                params: callOptions.providerCallOptions?.params || undefined,
+                data: callOptions.providerCallOptions?.data || undefined,
+            });
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);

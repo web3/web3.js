@@ -25,9 +25,7 @@ export default class Web3Beacon {
         });
     }
 
-    private _send(
-        callOptions: Partial<CallOptions>
-    ): Promise<RpcResponse> {
+    private _send(callOptions: Partial<CallOptions>): Promise<RpcResponse> {
         return this._requestManager.send(callOptions);
     }
 
@@ -45,7 +43,7 @@ export default class Web3Beacon {
         callOptions?: Partial<CallOptions>
     ): Promise<RpcStringResult | SubscriptionResponse> {
         // if (callOptions.method){ //check if its http
-            // const providerCallOptions = callOptions?.providerCallOptions
+        // const providerCallOptions = callOptions?.providerCallOptions
         // }
         try {
             const filledCallOptions: Partial<CallOptions> = {
@@ -53,8 +51,8 @@ export default class Web3Beacon {
                 providerCallOptions: {
                     ...callOptions?.providerCallOptions,
                     url: 'genesis',
-                    method: 'get'
-                }
+                    method: 'get',
+                },
                 // httpOptions: {
                 //     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                 //     url: 'genesis',

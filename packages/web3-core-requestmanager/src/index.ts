@@ -108,7 +108,9 @@ export default class Web3RequestManager {
         }
     }
 
-    async subscribe(callOptions: Partial<CallOptions>): Promise<SubscriptionResponse> {
+    async subscribe(
+        callOptions: Partial<CallOptions>
+    ): Promise<SubscriptionResponse> {
         try {
             if (this.provider === undefined)
                 throw Error('No provider initialized');
