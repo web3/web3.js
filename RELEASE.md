@@ -41,3 +41,4 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 14. When sufficient approvals have been met, merge the pull request
 15. Publish draft release created in `Step 11`
 16. Run `npm publish` in the package directory to publish to NPM
+    - If a tag is needed, such as `alpha`, use `npm publish --tag alpha`
