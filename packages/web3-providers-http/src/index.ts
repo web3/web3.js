@@ -65,26 +65,30 @@ export default class Web3ProvidersHttp
     //     rpcOptions?: RpcOptions,
     //     httpOptions?: HttpOptions
     // ): Promise<RpcResponse> {
-    async send(callOptions: CallOptions): Promise<RpcResponse> {
+    async send(callOptions: Partial<CallOptions>): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
                 callOptions.providerCallOptions?.method || 'post'
-            ]('', callOptions.rpcOptions || {}, {
-                ...callOptions.providerCallOptions?.axiosConfig,
-                url: callOptions.providerCallOptions?.url,
-                params: callOptions.providerCallOptions?.params || undefined,
-                data: callOptions.providerCallOptions?.data || undefined,
-            });
+            ](
+                '',
+                callOptions.rpcOptions || {},
+                {
+                    ...callOptions.providerCallOptions?.axiosConfig,
+                    url: callOptions.providerCallOptions?.url,
+                    params: callOptions.providerCallOptions?.params || undefined,
+                    data: callOptions.providerCallOptions?.data || undefined,
+                }
+            );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             throw Error(`Error sending: ${error.message}`);
         }
     }
 
-    subscribe(callOptions: CallOptions): SubscriptionResponse {
+    subscribe(callOptions: Partial<CallOptions>): SubscriptionResponse {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
@@ -106,7 +110,7 @@ export default class Web3ProvidersHttp
     }
 
     private async _subscribe(
-        callOptions: CallOptions,
+        callOptions: Partial<CallOptions>,
         eventEmitter: EventEmitter,
         subscriptionId: number
     ) {

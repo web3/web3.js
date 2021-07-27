@@ -11,7 +11,7 @@ import {
 } from 'web3-utils/src/types';
 import { AxiosRequestConfig } from 'axios';
 
-export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
+export type ProviderCallOptions = HttpOptions; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
     | PrefixedHexString
     | number
@@ -36,8 +36,8 @@ export interface ProviderOptions {
 export interface HttpOptions {
     url: string;
     method: 'get' | 'post';
-    params: any;
-    data: any;
+    params?: any;
+    data?: any;
     axiosConfig?: AxiosRequestConfig;
     subscriptionConfig?: SubscriptionConfig;
 }
@@ -60,7 +60,7 @@ export interface PartialRpcOptions extends Partial<RpcOptions> {
 
 export interface CallOptions {
     providerCallOptions: ProviderCallOptions;
-    rpcOptions?: Partial<RpcOptions>;
+    rpcOptions?: PartialRpcOptions;
     returnType?: ValidTypesEnum;
     subscribe?: boolean;
 }
@@ -186,8 +186,8 @@ export interface SubscriptionResponse {
 export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
-    send: (callOptions: CallOptions) => Promise<RpcResponse>;
-    subscribe: (callOptions: CallOptions) => SubscriptionResponse;
+    send: (callOptions: Partial<CallOptions>) => Promise<RpcResponse>;
+    subscribe: (callOptions: Partial<CallOptions>) => SubscriptionResponse;
     unsubscribe?: (eventEmitter: EventEmitter, subscriptionId: number) => void;
     disconnect?: () => void;
 }
