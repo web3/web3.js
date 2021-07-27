@@ -1,6 +1,6 @@
 {
     "name": "web3-providers-http",
-    "version": "4.0.0",
+    "version": "4.0.0-alpha.0",
     "description": "Ethereum HTTP provider for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",

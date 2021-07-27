@@ -32,6 +32,6 @@
     },
     "dependencies": {
         "web3-providers-base": "1.0.0-alpha.1",
-        "web3-providers-http": "^4.0.0"
+        "web3-providers-http": "4.0.0-alpha.0"
     }
 }
