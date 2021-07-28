@@ -1,7 +1,6 @@
 import { w3cwebsocket } from 'websocket';
 import { WebSocketOptions, WSErrors, WSStatus } from './types';
 import Web3ProviderBase from 'web3-providers-base';
-import { EventEmitter } from 'events'
 
 export default class Web3ProviderWS extends Web3ProviderBase {
     private webSocketConnection?: w3cwebsocket;
@@ -22,7 +21,6 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.requestQueue = new Map();
         this.responseQueue = new Map();
         this.reconnecting = false;
-
     }
 
     connect() {
@@ -70,13 +68,20 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             id = payload[0].id;
         }
 
-        if (this.webSocketConnection.readyState === this.webSocketConnection.CONNECTING || this.reconnecting) {
+        if (
+            this.webSocketConnection.readyState ===
+                this.webSocketConnection.CONNECTING ||
+            this.reconnecting
+        ) {
             this.requestQueue.set(id, request);
 
             return;
         }
 
-        if (this.webSocketConnection.readyState !== this.webSocketConnection.OPEN) {
+        if (
+            this.webSocketConnection.readyState !==
+            this.webSocketConnection.OPEN
+        ) {
             this.requestQueue.delete(id);
 
             //this.emit(WSStatus.ERROR, WSErrors.ConnectionNotOpenError);
@@ -92,6 +97,5 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             //this.emit(WSStatus.ERROR, error.message);
             this.responseQueue.delete(id);
         }
-    };
-
+    }
 }
