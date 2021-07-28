@@ -14,7 +14,6 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "underscore": "1.12.1",
         "web3-eth-iban": "3.0.0-rc.5",
         "web3-utils": "3.0.0-rc.5"
     },

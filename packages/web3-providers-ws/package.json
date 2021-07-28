@@ -15,7 +15,6 @@
   "main": "lib/index.js",
   "dependencies": {
     "eventemitter3": "4.0.4",
-    "underscore": "1.12.1",
     "web3-core-helpers": "3.0.0-rc.5",
     "websocket": "^1.0.32"
   },

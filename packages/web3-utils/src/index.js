@@ -21,8 +21,6 @@
  * @date 2017
  */
 
-
-var _ = require('underscore');
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
@@ -45,28 +43,28 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
     /*jshint maxcomplexity: 10 */
 
     // add data if given
-    if(_.isObject(error) && !(error instanceof Error) &&  error.data) {
-        if(_.isObject(error.data) || _.isArray(error.data)) {
+    if(!!error && typeof error === 'object' && !(error instanceof Error) &&  error.data) {
+        if(!!error.data && typeof error.data === 'object' || Array.isArray(error.data)) {
             error.data = JSON.stringify(error.data, null, 2);
         }
 
         error = error.message +"\n"+ error.data;
     }
 
-    if(_.isString(error)) {
+    if(typeof error === 'string') {
         error = new Error(error);
     }
 
-    if (_.isFunction(callback)) {
+    if (typeof callback === 'function') {
         callback(error, optionalData);
     }
-    if (_.isFunction(reject)) {
+    if (typeof reject === 'function') {
         // suppress uncatched error if an error listener is present
         // OR suppress uncatched error if an callback listener is present
         if (
             emitter &&
-            (_.isFunction(emitter.listeners) &&
-            emitter.listeners('error').length) || _.isFunction(callback)
+            (typeof emitter.listeners === 'function' &&
+            emitter.listeners('error').length) || typeof callback === 'function'
         ) {
             emitter.catch(function(){});
         }
@@ -76,7 +74,7 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
         }, 1);
     }
 
-    if(emitter && _.isFunction(emitter.emit)) {
+    if(emitter && typeof emitter.emit === 'function') {
         // emit later, to be able to return emitter
         setTimeout(function () {
             emitter.emit('error', error, optionalData);
@@ -95,7 +93,7 @@ var _fireError = function (error, emitter, reject, callback, optionalData) {
  * @return {String} full function/event name
  */
 var _jsonInterfaceMethodToString = function (json) {
-    if (_.isObject(json) && json.name && json.name.indexOf('(') !== -1) {
+    if (!!json && typeof json === 'object' && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
 
@@ -126,7 +124,7 @@ var _flattenTypes = function(includeTuple, puts)
             if (arrayBracket >= 0) { suffix = param.type.substring(arrayBracket); }
             var result = _flattenTypes(includeTuple, param.components);
             // console.log("result should have things: " + result)
-            if(_.isArray(result) && includeTuple) {
+            if(Array.isArray(result) && includeTuple) {
                 // console.log("include tuple word, and its an array. joining...: " + result.types)
                 types.push('tuple(' + result.join(',') + ')' + suffix);
             }
@@ -244,7 +242,7 @@ var getUnitValue = function (unit) {
 var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    if(!utils.isBN(number) && !_.isString(number)) {
+    if(!utils.isBN(number) && !(typeof number === 'string')) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
@@ -276,7 +274,7 @@ var fromWei = function(number, unit) {
 var toWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    if(!utils.isBN(number) && !_.isString(number)) {
+    if(!utils.isBN(number) && !(typeof number === 'string')) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
@@ -379,7 +377,6 @@ module.exports = {
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     randomHex: randomHex,
-    _: _,
     BN: utils.BN,
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,
@@ -439,5 +436,7 @@ module.exports = {
     isTopicInBloom: utils.isTopicInBloom,
     isInBloom: utils.isInBloom,
 
-    compareBlockNumbers: compareBlockNumbers
+    compareBlockNumbers: compareBlockNumbers,
+
+    toNumber: utils.toNumber
 };

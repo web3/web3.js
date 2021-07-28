@@ -15,7 +15,6 @@
     "main": "lib/index.js",
     "dependencies": {
         "@ethersproject/transactions": "^5.0.0-beta.135",
-        "underscore": "1.12.1",
         "web3-core-helpers": "3.0.0-rc.5",
         "web3-core-promievent": "3.0.0-rc.5",
         "web3-core-subscriptions": "3.0.0-rc.5",
