@@ -8,3 +8,15 @@ export type WebSocketOptions = ProviderOptions & {
     requestOptions?: object;
     clientConfig?: IClientConfig;
 };
+
+export enum WSStatus {
+    DATA = 'data',
+    CLOSE = 'close',
+    ERROR = 'error',
+    CONNECT = 'connect',
+    RECONNECT = 'reconnect'
+}
+
+export enum WSErrors {
+    ConnectionNotOpenError = 'ConnectionNotOpenError'
+}
