@@ -20,7 +20,6 @@
  * @date 2017
  */
 
-var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
@@ -232,7 +231,7 @@ var hexToNumber = function (value) {
         return value;
     }
 
-    if (_.isString(value) && !isHexStrict(value)) {
+    if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
 
@@ -249,7 +248,7 @@ var hexToNumber = function (value) {
 var hexToNumberString = function (value) {
     if (!value) return value;
 
-    if (_.isString(value) && !isHexStrict(value)) {
+    if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
 
@@ -265,7 +264,7 @@ var hexToNumberString = function (value) {
  * @return {String}
  */
 var numberToHex = function (value) {
-    if (_.isNull(value) || _.isUndefined(value)) {
+    if ((value === null || value === undefined)) {
         return value;
     }
 
@@ -339,7 +338,7 @@ var toHex = function (value, returnType) {
         return returnType ? 'address' : '0x'+ value.toLowerCase().replace(/^0x/i,'');
     }
 
-    if (_.isBoolean(value)) {
+    if (typeof value === 'boolean' ) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
@@ -347,12 +346,12 @@ var toHex = function (value, returnType) {
         return '0x' + value.toString('hex');
     }
 
-    if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
+    if (typeof value === 'object' && !!value && !isBigNumber(value) && !isBN(value)) {
         return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
     }
 
     // if its a negative number, pass it through numberToHex
-    if (_.isString(value)) {
+    if (typeof value === 'string') {
         if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
             return returnType ? 'int256' : numberToHex(value);
         } else if(value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
@@ -374,7 +373,7 @@ var toHex = function (value, returnType) {
  * @returns {Boolean}
  */
 var isHexStrict = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-)?0x[0-9a-f]*$/i.test(hex));
 };
 
 /**
@@ -385,7 +384,7 @@ var isHexStrict = function (hex) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
+    return ((typeof hex === 'string' || typeof hex === 'number') && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 };
 
 /**
@@ -522,6 +521,17 @@ var sha3Raw = function(value) {
     return value;
 };
 
+/**
+ * Auto converts any given value into it's hex representation,
+ * then converts hex to number.
+ *
+ * @method toNumber
+ * @param {String|Number|BN} value
+ * @return {Number}
+ */
+var toNumber = function(value) {
+    return typeof value === 'number' ? value : hexToNumber(toHex(value));
+}
 
 module.exports = {
     BN: BN,
@@ -551,5 +561,6 @@ module.exports = {
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
     sha3: sha3,
-    sha3Raw: sha3Raw
+    sha3Raw: sha3Raw,
+    toNumber: toNumber
 };

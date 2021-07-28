@@ -22,24 +22,21 @@
 
 'use strict';
 
-var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var Hash = require('eth-lib/lib/hash');
-var RLP = require('eth-lib/lib/rlp');// jshint ignore:line
-var Bytes = require('eth-lib/lib/bytes');// jshint ignore:line
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var Transaction = require('ethereumjs-tx').Transaction;
-var Common = require('ethereumjs-common').default;
-
+var {TransactionFactory} = require('@ethereumjs/tx');
+var Common = require('@ethereumjs/common').default;
+var HardForks = require('@ethereumjs/common').Hardfork;
 
 var isNot = function(value) {
-    return (_.isUndefined(value) || _.isNull(value));
+    return (typeof value === 'undefined') || value === null;
 };
 
 var Accounts = function Accounts() {
@@ -83,11 +80,21 @@ var Accounts = function Accounts() {
             }, function() {
                 return 'latest';
             }]
-        })
+        }),
+        new Method({
+            name: 'getBlockByNumber',
+            call: 'eth_getBlockByNumber',
+            params: 2,
+            inputFormatter: [function(blockNumber) {
+                return blockNumber ? utils.toHex(blockNumber) : 'latest'
+            }, function() {
+                return false
+            }]
+        }),
     ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
-    _.each(_ethereumCall, function(method) {
+    _ethereumCall.forEach( (method) => {
         method.attachToObject(_this._ethereumCall);
         method.setRequestManager(_this._requestManager);
     });
@@ -138,8 +145,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         transactionOptions = {},
         hasTxSigningOptions = !!(tx && ((tx.chain && tx.hardfork) || tx.common));
 
-    callback = callback || function() {
-    };
+    callback = callback || function() {};
 
     if (!tx) {
         error = new Error('No transaction object given!');
@@ -157,13 +163,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            var transaction = helpers.formatters.inputCallFormatter(_.clone(tx));
-            transaction.to = transaction.to || '0x';
+            var transaction = helpers.formatters.inputCallFormatter(Object.assign({},tx));
             transaction.data = transaction.data || '0x';
             transaction.value = transaction.value || '0x';
-            transaction.chainId = utils.numberToHex(transaction.chainId);
-
-            // Because tx has no ethereumjs-tx signing options we use fetched vals.
+            transaction.gasLimit = transaction.gasLimit || transaction.gas;
+            if (transaction.type === '0x1' && transaction.accessList === undefined) transaction.accessList = []
+            
+            // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
                     'mainnet',
@@ -172,7 +178,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                         networkId: transaction.networkId,
                         chainId: transaction.chainId
                     },
-                    'petersburg'
+                    transaction.hardfork || HardForks.London
                 );
 
                 delete transaction.networkId;
@@ -185,7 +191,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                             networkId: transaction.common.customChain.networkId,
                             chainId: transaction.common.customChain.chainId
                         },
-                        transaction.common.hardfork || 'petersburg'
+                        transaction.common.hardfork || HardForks.London,
                     );
 
                     delete transaction.common;
@@ -201,30 +207,30 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
                     delete transaction.hardfork;
                 }
             }
-
             if (privateKey.startsWith('0x')) {
                 privateKey = privateKey.substring(2);
             }
+            var ethTx = TransactionFactory.fromTxData(transaction, transactionOptions);
+            var signedTx = ethTx.sign(Buffer.from(privateKey, 'hex'));
+            var validationErrors = signedTx.validate(true);
 
-            var ethTx = new Transaction(transaction, transactionOptions);
-
-            ethTx.sign(Buffer.from(privateKey, 'hex'));
-
-            var validationResult = ethTx.validate(true);
-
-            if (validationResult !== '') {
-                throw new Error('Signer Error: ' + validationResult);
+            if (validationErrors.length > 0) {
+                let errorString = 'Signer Error: '
+                for(const validationError of validationErrors) {
+                    errorString += `${errorString} ${validationError}.`
+                }
+                throw new Error(errorString);
             }
 
-            var rlpEncoded = ethTx.serialize().toString('hex');
+            var rlpEncoded = signedTx.serialize().toString('hex');
             var rawTransaction = '0x' + rlpEncoded;
             var transactionHash = utils.keccak256(rawTransaction);
 
             var result = {
-                messageHash: '0x' + Buffer.from(ethTx.hash(false)).toString('hex'),
-                v: '0x' + Buffer.from(ethTx.v).toString('hex'),
-                r: '0x' + Buffer.from(ethTx.r).toString('hex'),
-                s: '0x' + Buffer.from(ethTx.s).toString('hex'),
+                messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
+                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
+                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
+                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -238,30 +244,49 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
     }
 
+    tx.type = _handleTxType(tx);
 
     // Resolve immediately if nonce, chainId, price and signing options are provided
-    if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined && hasTxSigningOptions) {
+    if (
+        tx.nonce !== undefined &&
+        tx.chainId !== undefined &&
+        (
+            tx.gasPrice !== undefined ||
+            (
+                tx.maxFeePerGas !== undefined &&
+                tx.maxPriorityFeePerGas !== undefined
+            )
+        ) &&
+        hasTxSigningOptions
+    ) {
         return Promise.resolve(signed(tx));
     }
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
         isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
-        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1
+        isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
+        _handleTxPricing(_this, tx)
     ]).then(function(args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-        return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2], networkId: args[3]}));
+    
+    return signed({
+            ...tx,
+            chainId: args[0],
+            nonce: args[1],
+            networkId: args[2],
+            ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+        });
     });
 };
 
 function _validateTransactionForSigning(tx) {
     if (tx.common && (tx.chain && tx.hardfork)) {
         return new Error(
-            'Please provide the ethereumjs-common object or the chain and hardfork property but not all together.'
+            'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.'
         );
     }
 
@@ -272,30 +297,127 @@ function _validateTransactionForSigning(tx) {
         );
     }
 
-    if (!tx.gas && !tx.gasLimit) {
+    if (
+        (!tx.gas && !tx.gasLimit) &&
+        (!tx.maxPriorityFeePerGas && !tx.maxFeePerGas)
+    ) {
         return new Error('"gas" is missing');
     }
 
-    if (tx.nonce < 0 ||
-        tx.gas < 0 ||
-        tx.gasPrice < 0 ||
-        tx.chainId < 0) {
-        return new Error('Gas, gasPrice, nonce or chainId is lower than 0');
+    if (tx.gas && tx.gasPrice) {
+        if (tx.gas < 0 || tx.gasPrice < 0) {
+            return new Error('Gas or gasPrice is lower than 0');
+        }
+    } else {
+        if (tx.maxPriorityFeePerGas < 0 || tx.maxFeePerGas < 0) {
+            return new Error('maxPriorityFeePerGas or maxFeePerGas is lower than 0');
+        }
+    }
+
+    if (tx.nonce < 0 || tx.chainId < 0) {
+        return new Error('Nonce or chainId is lower than 0');
     }
 
     return;
 }
 
+function _handleTxType(tx) {
+    // Taken from https://github.com/ethers-io/ethers.js/blob/2a7ce0e72a1e0c9469e10392b0329e75e341cf18/packages/abstract-signer/src.ts/index.ts#L215
+    const hasEip1559 = (tx.maxFeePerGas !== undefined || tx.maxPriorityFeePerGas !== undefined);
+
+    let txType;
+
+    if (tx.type !== undefined) {
+        txType = utils.toHex(tx.type)
+    } else if (tx.type === undefined && hasEip1559) {
+        txType = '0x2'
+    } else {
+        txType = '0x0'
+    }
+
+    if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
+        throw Error("eip-1559 transactions don't support gasPrice");
+    if ((txType === '0x1' || txType === '0x0') && hasEip1559)
+        throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
+    
+    if (
+        hasEip1559 ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
+        )
+    ) {
+        txType = '0x2';
+    } else if (
+        tx.accessList ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
+        )
+    ) {
+        txType = '0x1';
+    }
+    
+    return txType
+}
+
+function _handleTxPricing(_this, tx) {
+    return new Promise((resolve, reject) => {
+        try {
+            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+                // Legacy transaction, return provided gasPrice
+                resolve({ gasPrice: tx.gasPrice })
+            } else {
+                Promise.all([
+                    _this._ethereumCall.getBlockByNumber(),
+                    _this._ethereumCall.getGasPrice()
+                ]).then(responses => {
+                    const [block, gasPrice] = responses;
+                    if (
+                        (tx.type === '0x2') &&
+                        block && block.baseFeePerGas
+                    ) {
+                        // The network supports EIP-1559
+    
+                        // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
+                        let maxPriorityFeePerGas, maxFeePerGas;
+    
+                        if (tx.gasPrice) {
+                            // Using legacy gasPrice property on an eip-1559 network,
+                            // so use gasPrice as both fee properties
+                            maxPriorityFeePerGas = tx.gasPrice;
+                            maxFeePerGas = tx.gasPrice;
+                            delete tx.gasPrice;
+                        } else {
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxFeePerGas = tx.maxFeePerGas ||
+                                utils.toHex(
+                                    utils.toBN(block.baseFeePerGas)
+                                        .mul(utils.toBN(2))
+                                        .add(utils.toBN(maxPriorityFeePerGas))
+                                );
+                        }
+                        resolve({ maxFeePerGas, maxPriorityFeePerGas });
+                    } else {
+                        if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
+                            throw Error("Network doesn't support eip-1559")
+                        resolve({ gasPrice });
+                    }
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 
 /* jshint ignore:start */
-Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    var values = RLP.decode(rawTx);
-    var signature = Account.encodeSignature(values.slice(6, 9));
-    var recovery = Bytes.toNumber(values[6]);
-    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
-    var signingData = values.slice(0, 6).concat(extraData);
-    var signingDataHex = RLP.encode(signingData);
-    return Account.recover(Hash.keccak256(signingDataHex), signature);
+Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOptions = {}) {
+    // Rely on EthereumJs/tx to determine the type of transaction
+    const data = Buffer.from(rawTx.slice(2), "hex")
+    const tx = TransactionFactory.fromSerializedData(data);
+    //update checksum
+    return utils.toChecksumAddress(tx.getSenderAddress().toString("hex"));
 };
 /* jshint ignore:end */
 
@@ -336,7 +458,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
 
 
-    if (_.isObject(message)) {
+    if (!!message && typeof message === 'object') {
         return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
@@ -346,7 +468,7 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 
     if (args.length >= 4) {
         preFixed = args.slice(-1)[0];
-        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+        preFixed = typeof preFixed === 'boolean' ? !!preFixed : false;
 
         return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
@@ -357,11 +479,11 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
 Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 
-    if (!_.isString(password)) {
+    if (!(typeof password === 'string')) {
         throw new Error('No password given.');
     }
 
-    var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+    var json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
     if (json.version !== 3) {
         throw new Error('Not a valid V3 wallet');
@@ -470,7 +592,7 @@ function Wallet(accounts) {
 
 Wallet.prototype._findSafeIndex = function(pointer) {
     pointer = pointer || 0;
-    if (_.has(this, pointer)) {
+    if (this.hasOwnProperty(pointer)) {
         return this._findSafeIndex(pointer + 1);
     } else {
         return pointer;
@@ -499,7 +621,7 @@ Wallet.prototype.create = function(numberOfAccounts, entropy) {
 
 Wallet.prototype.add = function(account) {
 
-    if (_.isString(account)) {
+    if (typeof account === 'string') {
         account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {
