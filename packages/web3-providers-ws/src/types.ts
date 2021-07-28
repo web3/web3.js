@@ -14,9 +14,9 @@ export enum WSStatus {
     CLOSE = 'close',
     ERROR = 'error',
     CONNECT = 'connect',
-    RECONNECT = 'reconnect'
+    RECONNECT = 'reconnect',
 }
 
 export enum WSErrors {
-    ConnectionNotOpenError = 'ConnectionNotOpenError'
+    ConnectionNotOpenError = 'ConnectionNotOpenError',
 }
