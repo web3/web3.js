@@ -18,7 +18,7 @@ export interface WebSocketOptions extends ProviderOptions {
 }
 
 export enum WSStatus {
-    DATA =  'Data ',
+    DATA = 'Data ',
     CLOSE = 'Close ',
     ERROR = 'Error ',
     CONNECT = 'Connect ',
@@ -26,11 +26,9 @@ export enum WSStatus {
 }
 
 export enum WSErrors {
-    ConnectionTimeout =                     'Connection Timeout ',
-    ConnectionNotOpenError =                'Connection Not Open Error ',
-    PendingRequestsOnReconnectingError =    'Pending Requests On Reconnecting Error ',
+    ConnectionTimeout = 'Connection Timeout ',
+    ConnectionNotOpenError = 'Connection Not Open Error ',
+    PendingRequestsOnReconnectingError = 'Pending Requests On Reconnecting Error ',
     MaxAttemptsReachedOnReconnectingError = 'Max Attempts Reached On Reconnecting Error ',
-    InvalidConnection =                     'Invalid Connection ',
+    InvalidConnection = 'Invalid Connection ',
 }
-
-

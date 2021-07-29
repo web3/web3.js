@@ -39,11 +39,11 @@ export default class Web3ProviderWS extends Web3ProviderBase {
 
         if (!this.options.reconnectOptions)
             this.options.reconnectOptions = {
-                    auto: false,
-                    delay: 5000,
-                    maxAttempts: 5,
-                    onTimeout: false,
-                };
+                auto: false,
+                delay: 5000,
+                maxAttempts: 5,
+                onTimeout: false,
+            };
     }
 
     getEventEmitter() {
@@ -117,7 +117,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                     clearTimeout(this.lastChunkTimeout);
 
                 this.lastChunkTimeout = setTimeout(() => {
-                    if (this.options.reconnectOptions &&
+                    if (
+                        this.options.reconnectOptions &&
                         this.options.reconnectOptions.auto &&
                         this.options.reconnectOptions.onTimeout
                     ) {
@@ -162,10 +163,12 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             });
         }
 
-        if (this.options.reconnectOptions && (
-            !this.options.reconnectOptions.maxAttempts ||
-            this.reconnectAttempts < this.options.reconnectOptions.maxAttempts
-        )) {
+        if (
+            this.options.reconnectOptions &&
+            (!this.options.reconnectOptions.maxAttempts ||
+                this.reconnectAttempts <
+                    this.options.reconnectOptions.maxAttempts)
+        ) {
             setTimeout(() => {
                 this.reconnectAttempts++;
                 this.removeSocketListeners();
@@ -254,7 +257,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
     }
 
     private onClose(event: any) {
-        if (this.options.reconnectOptions &&
+        if (
+            this.options.reconnectOptions &&
             this.options.reconnectOptions.auto &&
             (![1000, 1001].includes(event.code) || event.wasClean === false)
         ) {
