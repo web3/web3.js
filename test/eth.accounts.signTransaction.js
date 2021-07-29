@@ -973,9 +973,6 @@ describe("eth", function () {
                 });
 
                 it("recoverTransaction, must recover signature", function(done) {
-<<<<<<< HEAD
-                    var ethAccounts = new Accounts();
-=======
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
@@ -991,7 +988,6 @@ describe("eth", function () {
                     });
 
                     var ethAccounts = new Accounts(web3);
->>>>>>> 3.x
 
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
