@@ -421,7 +421,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Updates the use of `hexToNumber` to `outputBigNumberFormatter` (which returns a number string instead of a number) (#3976)
-- Update `e2e.ganahce.core.sh` to point to ChainSafe's fork of `ganache-core` (#3976)
+- Revert changes to `e2e.ganahce.core.sh` (#4207)
 
 ### Removed
 
