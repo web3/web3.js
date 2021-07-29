@@ -14,7 +14,6 @@ import {
     RpcResponse,
     SubscriptionResponse,
     ApiResponse,
-    ApiResponse,
 } from 'web3-providers-base/src/types';
 
 export default class Web3Beacon {
@@ -533,7 +532,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/attestations`,
                     method: 'get',
-                    params: { slot, comitteeIndex}
+                    params: { slot, comitteeIndex },
                 },
             };
 
@@ -564,7 +563,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/attestations`,
                     method: 'post',
-                    data: attestation
+                    data: attestation,
                 },
             };
 
@@ -590,7 +589,7 @@ export default class Web3Beacon {
                 providerCallOptions: {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/attester_slashings`,
-                    method: 'post'
+                    method: 'post',
                 },
             };
 
@@ -619,7 +618,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/attester_slashings`,
                     method: 'post',
-                    data: attesterSlashings
+                    data: attesterSlashings,
                 },
             };
 
@@ -645,7 +644,7 @@ export default class Web3Beacon {
                 providerCallOptions: {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/proposer_slashings`,
-                    method: 'get'
+                    method: 'get',
                 },
             };
 
@@ -665,7 +664,7 @@ export default class Web3Beacon {
 
     async postProposerSlashings(
         proposerSlashings: ProposerSlashing,
-        callOptions?: Partial<CallOptions>,
+        callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
             const filledCallOptions: Partial<CallOptions> = {
@@ -674,7 +673,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/proposer_slashings`,
                     method: 'post',
-                    data: {proposerSlashings}
+                    data: { proposerSlashings },
                 },
             };
 
@@ -703,7 +702,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/sync_committees`,
                     method: 'post',
-                    data: {syncCommittee}
+                    data: { syncCommittee },
                 },
             };
 
@@ -729,7 +728,7 @@ export default class Web3Beacon {
                 providerCallOptions: {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/voluntary_exits`,
-                    method: 'get'
+                    method: 'get',
                 },
             };
 
@@ -758,7 +757,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `pool/voluntary_exits`,
                     method: 'post',
-                    data: { signedVoluntaryExit }
+                    data: { signedVoluntaryExit },
                 },
             };
 
