@@ -3,15 +3,18 @@ import {
     StateId,
     Status,
     AttestationData,
+    BeaconBlock,
     AttesterSlashing,
     Web3EthOptions,
     ProposerSlashing,
     SyncCommittee,
     SignedVoluntaryExit,
+    ValidatorIndex,
+    Slot,
+    BlockId,
 } from '../types';
 import {
     CallOptions,
-    RpcResponse,
     SubscriptionResponse,
     ApiResponse,
 } from 'web3-providers-base/src/types';
@@ -62,7 +65,7 @@ export default class Web3Beacon {
 
     /**
      * Calculates HashTreeRoot for state with given 'stateId'. If stateId is root, same value will be returned.
-     * @param {StateId} stateId state
+     * @param {StateId } stateId Can either be a State, slot or hex encoded stateRoot with 0x prefix
      * @returns {Promise} HashTreeRoot
      */
 
@@ -92,7 +95,7 @@ export default class Web3Beacon {
 
     /**
      * Returns Fork object for state with given 'stateId'.
-     * @param {StateId} stateId State
+     * @param {StateId  } stateId Can be either be a State, slot or hex encoded stateRoot with 0x prefix
      * @returns {Promise} Fork object
      */
 
@@ -120,7 +123,7 @@ export default class Web3Beacon {
 
     /**
      * Get finality checkpoints for state with given 'stateId'. In case finality is not yet achieved, checkpoint should return epoch 0 and ZERO_HASH as root.
-     * @param {StateId} stateId State
+     * @param {StateId} stateId Can either be a State, slot or hex encoded stateRoot with 0x prefix
      * @returns {Promise} Finality checkpoints
      */
 
@@ -148,8 +151,8 @@ export default class Web3Beacon {
 
     /**
      * Get validator from state by id
-     * @param {StateId} stateId State
-     * @param {[String]} ids Array of ids
+     * @param {StateId} stateId Can either be a State, slot or hex encoded stateRoot with 0x prefix
+     * @param {[string]} ids Array of ids
      * @param {[Status]} status Array of validator status specifications
      * @returns {Promise} data of the validator specified
      */
@@ -157,7 +160,7 @@ export default class Web3Beacon {
     async getValidators(
         stateId: StateId,
         callOptions?: Partial<CallOptions>,
-        id?: [String],
+        id?: [string],
         status?: [Status]
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -184,14 +187,14 @@ export default class Web3Beacon {
 
     /**
      * Returns filterable list of validators with their balance, status and index.
-     * @param {StateId} stateId State identifier
-     * @param {String} validatorId Either hex encoded public key or validator index
+     * @param {StateId} stateId Can either be a State, slot or hex encoded stateRoot with 0x prefix
+     * @param {ValidatorIndex | string } validatorId Either hex encoded public key or validator index
      * @returns {Promise} data of the validator specified
      */
 
     async getValidatorById(
         stateId: StateId,
-        validatorId: Hex | ValidatorIndex,
+        validatorId: string | ValidatorIndex,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -214,15 +217,15 @@ export default class Web3Beacon {
 
     /**
      * Returns filterable list of validators with their balance, status and index.
-     * @param {State} stateId State
-     * @param {[Hex | ValidatorIndex]} id Array of either hex encoded public keys or validator index
+     * @param {State} stateId Can be either a State, slot or hex encoded stateRoot with 0x prefix
+     * @param {[string | ValidatorIndex]} id Array of either hex encoded public keys or validator indexes
      * @returns {Promise} Balance of the validator specified
      */
 
     async getValidatorBalances(
-        stateId: String,
+        stateId: StateId,
         callOptions?: Partial<CallOptions>,
-        id?: [String]
+        id?: [string]
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
             const filledCallOptions: Partial<CallOptions> = {
@@ -245,15 +248,15 @@ export default class Web3Beacon {
 
     /**
      * Get the committees for the given state
-     * @param {State | Slot | hex} stateId State
-     * @param {String} epoch Fetch committees for the given epoch
-     * @param {String} index Restrict returned values to those matching the supplied committee index
-     * @param {String} slot Restrict returned values to those matching the supplied slot
+     * @param {State} stateId Can be either a State, slot or hex encoded stateRoot with 0x prefix
+     * @param {string} epoch Fetch committees for the given epoch
+     * @param {string} index Restrict returned values to those matching the supplied committee index
+     * @param {string} slot Restrict returned values to those matching the supplied slot
      * @returns {Promise} Comittees
      */
 
     async getCommittees(
-        stateId: string,
+        stateId: StateId,
         callOptions?: Partial<CallOptions>,
         epoch?: string,
         index?: string,
@@ -279,13 +282,13 @@ export default class Web3Beacon {
 
     /**
      * Get the sync committees for the given state.
-     * @param {State | Slot | Hex} stateId State
-     * @param {String} epoch Epoch
+     * @param {State} stateId State
+     * @param {string} epoch Epoch
      * @returns {Promise} Sync committees
      */
 
     async getSyncCommittees(
-        stateId: string,
+        stateId: StateId,
         callOptions?: Partial<CallOptions>,
         epoch?: string
     ): Promise<ApiResponse | SubscriptionResponse> {
@@ -310,14 +313,14 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block headers matching given query. By default it will fetch current head slot blocks.
-     * @param {Slot} slot Slot
+     * @param {string} slot Restrict returned values to those matching the supplied slot
      * @param {string} parentRoot parent root
      * @returns {Promise} Block header
      */
 
     async getBlockHeaders(
-        slot: Slot,
-        parentRoot: String,
+        slot?: Slot,
+        parentRoot?: string,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -327,7 +330,7 @@ export default class Web3Beacon {
                     ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
                     url: `headers`,
                     method: 'get',
-                    params: { slot },
+                    params: { slot, parentRoot },
                 },
             };
 
@@ -341,12 +344,12 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block header for given block id.
-     * @param {StateId | Slot | Hex } blockId Block Id
+     * @param {StateId} blockId Block Id
      * @returns {Promise} Block header
      */
 
     async getBlockHeadersById(
-        blockId: StateId,
+        blockId: BlockId,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -403,12 +406,12 @@ export default class Web3Beacon {
 
     /**
      * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {StateId | Slot | Hex } blockId Block Id
+     * @param {StateId} blockId Block Id
      * @returns {Promise} SignedBeaconBlock Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
      */
 
     async getBlockV1(
-        blockId: StateId | Slot | Hex,
+        blockId: BlockId,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -431,12 +434,12 @@ export default class Web3Beacon {
 
     /**
      * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {StateId | Slot | Hex} blockId Block Id
+     * @param {StateId} blockId Block Id
      * @returns {Promise} Retrieves block details for given block id. Depending on Accept header it can be returned either as json or as bytes serialized by SSZ
      */
 
     async getBlockV2(
-        blockId: StateId | Slot | Hex,
+        blockId: BlockId,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -459,12 +462,12 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block root of beaconBlock
-     * @param {StateId | Slot | Hex } blockId Block Id
+     * @param {BlockId} blockId Block Id
      * @returns {Promise} Block Root
      */
 
     async getBlockRoot(
-        blockId: StateId,
+        blockId: BlockId,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -487,12 +490,12 @@ export default class Web3Beacon {
 
     /**
      * Retrieves attestation included in requested block.
-     * @param {StateId | Slot | Hex} blockId Block Id
+     * @param {StateId} blockId Block Id
      * @returns {Promise} SignedBeaconBlock
      */
 
     async getBlockAttestations(
-        blockId: StateId | Slot | Hex,
+        blockId: BlockId,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
@@ -515,14 +518,14 @@ export default class Web3Beacon {
 
     /**
      *Get Attestations from operations pool
-     * @param {string} slot
+     * @param {string} slot Restrict returned values to those matching the supplied slot
      * @param {string} comitteeIndex
      * @returns {Promise} SignedBeaconBlock
      */
 
     async getPoolAttestations(
-        slot: String,
-        comitteeIndex: String,
+        slot?: string,
+        comitteeIndex?: string,
         callOptions?: Partial<CallOptions>
     ): Promise<ApiResponse | SubscriptionResponse> {
         try {
