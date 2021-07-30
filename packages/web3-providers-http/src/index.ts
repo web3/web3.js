@@ -4,9 +4,8 @@ import {
     ProviderOptions,
     IWeb3Provider,
     RpcResponse,
-    RpcOptions,
-    SubscriptionResponse,
-    HttpOptions,
+    RequestArguments,
+    PollingInfo,
 } from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
@@ -15,8 +14,8 @@ export default class Web3ProvidersHttp
     implements IWeb3Provider
 {
     private _httpClient: AxiosInstance;
-    private _subscriptions: {
-        [subscriptionId: number]: ReturnType<typeof setTimeout>;
+    private _polls: {
+        [pollingId: number]: ReturnType<typeof setTimeout>;
     } = {};
 
     constructor(options: ProviderOptions) {
@@ -57,86 +56,82 @@ export default class Web3ProvidersHttp
     }
 
     supportsSubscriptions() {
-        return true;
+        return false;
     }
 
-    async send(
-        rpcOptions: RpcOptions,
-        httpOptions?: HttpOptions
-    ): Promise<RpcResponse> {
+    async request(args: RequestArguments): Promise<RpcResponse | PollingInfo> {
+        return args.providerOptions?.poll
+            ? this._poll(args)
+            : await this._request(args);
+    }
+
+    cancelPoll(pollingInfo: PollingInfo) {
+        try {
+            if (!this._polls[pollingInfo.pollingId])
+                throw Error(
+                    `Poll with id: ${pollingInfo.pollingId} does not exist`
+                );
+            clearTimeout(this._polls[pollingInfo.pollingId]);
+            pollingInfo.eventEmitter.emit('cancelled');
+            delete this._polls[pollingInfo.pollingId];
+        } catch (error) {
+            throw Error(`Error cancelling poll: ${error.message}`);
+        }
+    }
+
+    private async _request(args: RequestArguments): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
+            const arrayParams =
+                args.params === undefined || Array.isArray(args.params)
+                    ? args.params || []
+                    : Object.values(args.params);
             const response = await this._httpClient.post(
-                '',
-                rpcOptions,
-                httpOptions?.axiosConfig || {}
+                '', // URL path
+                {
+                    ...args.rpcOptions,
+                    method: args.method,
+                    params: arrayParams,
+                },
+                args.providerOptions?.axiosConfig || {}
             );
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
-            throw Error(`Error sending: ${error.message}`);
+            // TODO Fancy error detection that complies with EIP1193 defined errors
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
+            throw Error(error.message);
         }
     }
 
-    subscribe(
-        rpcOptions: RpcOptions,
-        httpOptions?: HttpOptions
-    ): SubscriptionResponse {
+    private _poll(args: RequestArguments): PollingInfo {
         try {
             if (this._httpClient === undefined)
-                throw Error('No HTTP client initiliazed');
-            const eventEmitter = new EventEmitter();
-            const subscriptionId = Math.floor(
-                Math.random() * Number.MAX_SAFE_INTEGER
-            ); // generate random integer
-            this._subscribe(
-                rpcOptions,
-                eventEmitter,
-                subscriptionId,
-                httpOptions
-            );
-            return { eventEmitter, subscriptionId };
+                throw Error('No HTTP client initiliazed'); // Is checked in _request, but short circuiting here
+            const pollingInfo = {
+                eventEmitter: new EventEmitter(),
+                pollingId: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER), // generate random integer
+            };
+            this._pollInterval(args, pollingInfo);
+            return pollingInfo;
         } catch (error) {
-            throw Error(`Error subscribing: ${error.message}`);
+            throw Error(error.message);
         }
     }
 
-    private async _subscribe(
-        rpcOptions: RpcOptions,
-        eventEmitter: EventEmitter,
-        subscriptionId: number,
-        httpOptions?: HttpOptions
+    private async _pollInterval(
+        args: RequestArguments,
+        pollingInfo: PollingInfo
     ) {
         try {
-            const response = await this.send(rpcOptions, httpOptions);
-            eventEmitter.emit('response', response);
-            this._subscriptions[subscriptionId] = setTimeout(
-                () =>
-                    this._subscribe(
-                        rpcOptions,
-                        eventEmitter,
-                        subscriptionId,
-                        httpOptions
-                    ),
-                httpOptions?.subscriptionOptions?.milisecondsBetweenRequests ||
-                    1000
+            const response = await this._request(args);
+            pollingInfo.eventEmitter.emit('response', response);
+            this._polls[pollingInfo.pollingId] = setTimeout(
+                () => this._pollInterval(args, pollingInfo),
+                args.providerOptions?.pollingInterval || 1000
             );
         } catch (error) {
-            throw Error(`Error subscribing: ${error.message}`);
-        }
-    }
-
-    unsubscribe(eventEmitter: EventEmitter, subscriptionId: number) {
-        try {
-            if (!this._subscriptions[subscriptionId])
-                throw Error(
-                    `Subscription with id: ${subscriptionId} does not exist`
-                );
-            clearTimeout(this._subscriptions[subscriptionId]);
-            eventEmitter.emit('unsubscribed');
-            delete this._subscriptions[subscriptionId];
-        } catch (error) {
-            throw Error(`Error unsubscribing: ${error.message}`);
+            throw Error(error.message);
         }
     }
 }

@@ -24,11 +24,6 @@ export interface ProviderOptions {
     providerUrl: string;
 }
 
-export interface HttpOptions {
-    axiosConfig?: AxiosRequestConfig;
-    subscriptionOptions?: SubscriptionOptions;
-}
-
 export interface SubscriptionOptions {
     milisecondsBetweenRequests?: number;
 }
@@ -36,8 +31,6 @@ export interface SubscriptionOptions {
 export interface RpcOptions {
     id: number;
     jsonrpc: string;
-    method: string;
-    params: RpcParams;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
@@ -173,14 +166,25 @@ export interface SubscriptionResponse {
 export interface IWeb3Provider {
     providerUrl: string;
     setProvider: (providerUrl: string) => void;
-    send: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
-    ) => Promise<RpcResponse>;
-    subscribe: (
-        rpcOptions: RpcOptions,
-        providerCallOptions: ProviderCallOptions
-    ) => SubscriptionResponse;
-    unsubscribe?: (eventEmitter: EventEmitter, subscriptionId: number) => void;
+    request: (args: RequestArguments) => Promise<RpcResponse | PollingInfo>;
+    cancelPoll?: (pollingInfo: PollingInfo) => void;
     disconnect?: () => void;
+}
+
+export interface RequestArguments {
+    readonly method: string;
+    readonly params?: readonly unknown[] | object;
+    rpcOptions?: RpcOptions;
+    providerOptions?: HttpOptions;
+}
+
+export interface HttpOptions {
+    axiosConfig?: AxiosRequestConfig;
+    poll?: boolean;
+    pollingInterval?: number;
+}
+
+export interface PollingInfo {
+    eventEmitter: EventEmitter;
+    pollingId: number;
 }
