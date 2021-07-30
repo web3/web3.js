@@ -5,6 +5,8 @@ import {
     WSStatus,
     ReconnectOptions,
     RequestItem,
+    JsonRpcPayload,
+    JsonRpcResponse,
 } from './types';
 import Web3ProviderBase from 'web3-providers-base';
 import { EventEmitter } from 'events';
@@ -29,8 +31,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         super(options);
         this.options = options;
         this.webSocketConnection = undefined;
-        this.requestQueue = new Map();
-        this.responseQueue = new Map();
+        this.requestQueue = new Map<string, RequestItem>();
+        this.responseQueue = new Map<string, RequestItem>();
         this.reconnecting = false;
         this.reconnectAttempts = 0;
 
@@ -134,8 +136,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                     );
 
                     if (this.requestQueue.size > 0) {
-                        this.requestQueue.forEach((request: any, key: any) => {
-                            request.callback(WSErrors.ConnectionTimeout+this.options.customTimeout);
+                        this.requestQueue.forEach((request: RequestItem, key: string) => {
+                            request.callback( new Error(WSErrors.ConnectionTimeout+this.options.customTimeout) , undefined);
                             this.requestQueue.delete(key);
                         });
                     }
@@ -158,8 +160,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.reconnecting = true;
 
         if (this.responseQueue.size > 0) {
-            this.responseQueue.forEach((request: any, key: any) => {
-                request.callback(WSErrors.PendingRequestsOnReconnectingError);
+            this.responseQueue.forEach((request: RequestItem, key: string) => {
+                request.callback(new Error(WSErrors.PendingRequestsOnReconnectingError), undefined);
                 this.responseQueue.delete(key);
             });
         }
@@ -190,10 +192,10 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.reconnecting = false;
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach((request, key) => {
+            this.requestQueue.forEach((request: RequestItem, key: string) => {
                 if(request.callback)
                     request.callback(
-                        WSErrors.MaxAttemptsReachedOnReconnectingError, null
+                        new Error(WSErrors.MaxAttemptsReachedOnReconnectingError), undefined
                     );
                 this.requestQueue.delete(key);
             });
@@ -238,7 +240,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                     let requestItem = this.responseQueue.get(id);
 
                     if (requestItem?.callback !== undefined) {
-                        requestItem.callback(false, result);
+                        requestItem.callback(undefined, result);
                     }
 
                     this.responseQueue.delete(id);
@@ -253,7 +255,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.reconnecting = false;
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach((request: any, key: any) => {
+            this.requestQueue.forEach((request: RequestItem, key: string) => {
                 this.send(request.payload, request.callback);
                 this.requestQueue.delete(key);
             });
@@ -273,15 +275,15 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.eventsManager.emit(WSStatus.CLOSE, event);
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach((request: any, key: any) => {
-                request.callback(WSErrors.ConnectionNotOpenError);
+            this.requestQueue.forEach((request: RequestItem, key: string) => {
+                request.callback(new Error(WSErrors.ConnectionNotOpenError), undefined);
                 this.requestQueue.delete(key);
             });
         }
 
         if (this.responseQueue.size > 0) {
-            this.responseQueue.forEach((request: any, key: any) => {
-                request.callback(WSErrors.InvalidConnection);
+            this.responseQueue.forEach((request: RequestItem, key: string) => {
+                request.callback( new Error(WSErrors.InvalidConnection), undefined);
                 this.responseQueue.delete(key);
             });
         }
@@ -290,7 +292,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         //this.removeAllListeners();
     }
 
-    supportsSubscriptions() {
+    supportsSubscriptions(): boolean {
         return true;
     }
 
@@ -322,7 +324,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.webSocketConnection.close(code || 1000, reason);
     }
 
-    send(payload: any, callback: any) {
+    send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 
@@ -338,7 +340,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                 this.webSocketConnection.CONNECTING ||
             this.reconnecting
         ) {
-            this.requestQueue.set(id, request);
+            this.requestQueue.set(id as string, request);
 
             return;
         }
@@ -347,25 +349,25 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             this.webSocketConnection.readyState !==
             this.webSocketConnection.OPEN
         ) {
-            this.requestQueue.delete(id);
+            this.requestQueue.delete(id as string);
 
             this.eventsManager.emit(
                 WSStatus.ERROR,
                 WSErrors.ConnectionNotOpenError
             );
-            request.callback(WSErrors.ConnectionNotOpenError);
+            request.callback(new Error(WSErrors.ConnectionNotOpenError), undefined);
             return;
         }
 
-        this.responseQueue.set(id, request);
-        this.requestQueue.delete(id);
+        this.responseQueue.set(id as string, request);
+        this.requestQueue.delete(id as string);
 
         try {
             this.webSocketConnection.send(JSON.stringify(request.payload));
         } catch (error) {
-            request.callback(error);
+            request.callback(error, undefined);
             this.eventsManager.emit(WSStatus.ERROR, error.message);
-            this.responseQueue.delete(id);
+            this.responseQueue.delete(id as string);
         }
     }
 
