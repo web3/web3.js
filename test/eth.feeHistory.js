@@ -8,7 +8,7 @@ var methodCall = 'eth_feeHistory';
 var tests = [
     {
         args: [4, "0xA30953", []],
-        formattedArgs: [4, "0xA30953", []],
+        formattedArgs: [4, "0xa30953", []],
         result: {
             "baseFeePerGas": [
             "0xa",
