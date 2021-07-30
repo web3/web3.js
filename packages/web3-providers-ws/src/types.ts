@@ -15,6 +15,9 @@ export interface WebSocketOptions extends ProviderOptions {
     clientConfig?: IClientConfig;
     customTimeout?: number;
     reconnectOptions?: ReconnectOptions;
+    timeout?: number;
+    reconnectDelay?: number;
+    origin?: string;
 }
 
 export enum WSStatus {
@@ -31,4 +34,16 @@ export enum WSErrors {
     PendingRequestsOnReconnectingError = 'Pending Requests On Reconnecting Error ',
     MaxAttemptsReachedOnReconnectingError = 'Max Attempts Reached On Reconnecting Error ',
     InvalidConnection = 'Invalid Connection ',
+}
+
+export interface RequestItem {
+    payload: JsonRpcPayload;
+    callback: (error: any, result: any) => void;
+}
+
+export interface JsonRpcPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
 }
