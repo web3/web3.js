@@ -49,11 +49,11 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             };
     }
 
-    getEventEmitter() : EventEmitter {
+    getEventEmitter(): EventEmitter {
         return this.eventsManager;
     }
 
-    private addSocketListeners() : void  {
+    private addSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
                 'Cannot addSocketListeners because of Invalid webSocketConnection'
@@ -73,7 +73,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         );
     }
 
-    private removeSocketListeners() : void {
+    private removeSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
                 'Cannot removeSocketListeners because of Invalid webSocketConnection'
@@ -93,7 +93,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         );
     }
 
-    private parseResponse(inData: any) : any {
+    private parseResponse(inData: any): any {
         let returnValues: any = [];
 
         // DE-CHUNKER
@@ -136,10 +136,18 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                     );
 
                     if (this.requestQueue.size > 0) {
-                        this.requestQueue.forEach((request: RequestItem, key: string) => {
-                            request.callback( new Error(WSErrors.ConnectionTimeout+this.options.customTimeout) , undefined);
-                            this.requestQueue.delete(key);
-                        });
+                        this.requestQueue.forEach(
+                            (request: RequestItem, key: string) => {
+                                request.callback(
+                                    new Error(
+                                        WSErrors.ConnectionTimeout +
+                                            this.options.customTimeout
+                                    ),
+                                    undefined
+                                );
+                                this.requestQueue.delete(key);
+                            }
+                        );
                     }
                 }, this.options.customTimeout);
 
@@ -161,7 +169,10 @@ export default class Web3ProviderWS extends Web3ProviderBase {
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach((request: RequestItem, key: string) => {
-                request.callback(new Error(WSErrors.PendingRequestsOnReconnectingError), undefined);
+                request.callback(
+                    new Error(WSErrors.PendingRequestsOnReconnectingError),
+                    undefined
+                );
                 this.responseQueue.delete(key);
             });
         }
@@ -193,9 +204,12 @@ export default class Web3ProviderWS extends Web3ProviderBase {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach((request: RequestItem, key: string) => {
-                if(request.callback)
+                if (request.callback)
                     request.callback(
-                        new Error(WSErrors.MaxAttemptsReachedOnReconnectingError), undefined
+                        new Error(
+                            WSErrors.MaxAttemptsReachedOnReconnectingError
+                        ),
+                        undefined
                     );
                 this.requestQueue.delete(key);
             });
@@ -217,7 +231,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    private onMessage(e: any) : void {
+    private onMessage(e: any): void {
         this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
             (result: any) => {
                 if (
@@ -236,7 +250,6 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                 }
 
                 if (id && this.responseQueue.has(id)) {
-                    
                     let requestItem = this.responseQueue.get(id);
 
                     if (requestItem?.callback !== undefined) {
@@ -249,7 +262,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         );
     }
 
-    private onConnect() : void  {
+    private onConnect(): void {
         this.eventsManager.emit(WSStatus.CONNECT);
         this.reconnectAttempts = 0;
         this.reconnecting = false;
@@ -262,7 +275,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    private onClose(event: any) : void  {
+    private onClose(event: any): void {
         if (
             this.options.reconnectOptions &&
             this.options.reconnectOptions.auto &&
@@ -276,14 +289,20 @@ export default class Web3ProviderWS extends Web3ProviderBase {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach((request: RequestItem, key: string) => {
-                request.callback(new Error(WSErrors.ConnectionNotOpenError), undefined);
+                request.callback(
+                    new Error(WSErrors.ConnectionNotOpenError),
+                    undefined
+                );
                 this.requestQueue.delete(key);
             });
         }
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach((request: RequestItem, key: string) => {
-                request.callback( new Error(WSErrors.InvalidConnection), undefined);
+                request.callback(
+                    new Error(WSErrors.InvalidConnection),
+                    undefined
+                );
                 this.responseQueue.delete(key);
             });
         }
@@ -296,7 +315,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         return true;
     }
 
-    connect() : void  {
+    connect(): void {
         try {
             this.webSocketConnection = new w3cwebsocket(
                 this.options.providerUrl,
@@ -313,7 +332,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    disconnect(code: number, reason: string) : void  {
+    disconnect(code: number, reason: string): void {
         this.removeSocketListeners();
 
         if (!this.webSocketConnection)
@@ -324,7 +343,10 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.webSocketConnection.close(code || 1000, reason);
     }
 
-    send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void {
+    send(
+        payload: JsonRpcPayload,
+        callback: (error: Error | null, result?: JsonRpcResponse) => void
+    ): void {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 
@@ -355,7 +377,10 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                 WSStatus.ERROR,
                 WSErrors.ConnectionNotOpenError
             );
-            request.callback(new Error(WSErrors.ConnectionNotOpenError), undefined);
+            request.callback(
+                new Error(WSErrors.ConnectionNotOpenError),
+                undefined
+            );
             return;
         }
 
@@ -371,7 +396,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    reset() : void {
+    reset(): void {
         this.responseQueue.clear();
         this.requestQueue.clear();
 
