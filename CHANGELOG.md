@@ -419,3 +419,8 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.5.1]
+
+### Added
+
+- `maxPriorityFeePerGas` and `maxFeePerGas` now included in `_txInputFormatter` (#4217)
+- If `maxPriorityFeePerGas` of `maxFeePerGas` present `_txInputFormatter` deletes `tx.gasPrice` (fixes #4211) (#4217)
