@@ -157,6 +157,10 @@ var _txInputFormatter = function (options) {
     if (options.gas || options.gasLimit) {
         options.gas = options.gas || options.gasLimit;
     }
+    
+    if (options.maxPriorityFeePerGas || options.maxFeePerGas) {
+        delete options.gasPrice;
+    }
 
     ['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
