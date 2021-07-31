@@ -416,11 +416,13 @@ Released with 1.0.0-beta.37 code base.
  - Changing web3 connection example from lets to const (#3967)
  - Updated the documentation for the transaction object to include EIP-2718 and EIP-1559 options (#4188)
 
-## [Unreleased]
-
 ## [1.5.1]
 
 ### Added
 
 - `maxPriorityFeePerGas` and `maxFeePerGas` now included in `_txInputFormatter` (#4217)
 - If `maxPriorityFeePerGas` of `maxFeePerGas` present `_txInputFormatter` deletes `tx.gasPrice` (fixes #4211) (#4217)
+
+## [Unreleased]
+
+## [1.5.2]
