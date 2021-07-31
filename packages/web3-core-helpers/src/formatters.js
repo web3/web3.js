@@ -158,7 +158,7 @@ var _txInputFormatter = function (options) {
         options.gas = options.gas || options.gasLimit;
     }
 
-    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
+    ['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function (key) {
         options[key] = utils.numberToHex(options[key]);
