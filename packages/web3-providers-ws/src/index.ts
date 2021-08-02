@@ -268,10 +268,12 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.reconnecting = false;
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach(async (request: RequestItem, key: string) => {
-                await this.request(request.payload, request.callback);
-                this.requestQueue.delete(key);
-            });
+            this.requestQueue.forEach(
+                async (request: RequestItem, key: string) => {
+                    await this.request(request.payload, request.callback);
+                    this.requestQueue.delete(key);
+                }
+            );
         }
     }
 
