@@ -25,7 +25,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
     private reconnectAttempts: number;
 
     constructor(options: WebSocketOptions) {
-        if (!Web3ProviderWS._validateProviderUrl(options.providerUrl))
+        if (!Web3ProviderWS.validateProviderUrl(options.providerUrl))
             throw Error('Invalid WebSocket URL provided');
 
         super(options);
@@ -183,14 +183,14 @@ export default class Web3ProviderWS extends Web3ProviderBase {
                 this.reconnectAttempts <
                     this.options.reconnectOptions.maxAttempts)
         ) {
-            setTimeout(() => {
+            setTimeout(async () => {
                 this.reconnectAttempts++;
                 this.removeSocketListeners();
                 this.eventsManager.emit(
                     WSStatus.RECONNECT,
                     this.reconnectAttempts
                 );
-                this.connect();
+                await this.connect();
             }, this.options.reconnectOptions.delay);
 
             return;
@@ -216,7 +216,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    private static _validateProviderUrl(providerUrl: string): boolean {
+    private static validateProviderUrl(providerUrl: string): boolean {
         try {
             return (
                 typeof providerUrl !== 'string' ||
@@ -268,8 +268,8 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.reconnecting = false;
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach((request: RequestItem, key: string) => {
-                this.send(request.payload, request.callback);
+            this.requestQueue.forEach(async (request: RequestItem, key: string) => {
+                await this.request(request.payload, request.callback);
                 this.requestQueue.delete(key);
             });
         }
@@ -315,7 +315,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         return true;
     }
 
-    connect(): void {
+    async connect(): Promise<void> {
         try {
             this.webSocketConnection = new w3cwebsocket(
                 this.options.providerUrl,
@@ -332,7 +332,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    disconnect(code: number, reason: string): void {
+    async disconnect(code: number, reason: string): Promise<void> {
         this.removeSocketListeners();
 
         if (!this.webSocketConnection)
@@ -343,10 +343,10 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         this.webSocketConnection.close(code || 1000, reason);
     }
 
-    send(
+    async request(
         payload: JsonRpcPayload,
         callback: (error: Error | null, result?: JsonRpcResponse) => void
-    ): void {
+    ): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 
@@ -363,7 +363,6 @@ export default class Web3ProviderWS extends Web3ProviderBase {
             this.reconnecting
         ) {
             this.requestQueue.set(id as string, request);
-
             return;
         }
 
@@ -396,7 +395,7 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         }
     }
 
-    reset(): void {
+    async reset(): Promise<void> {
         this.responseQueue.clear();
         this.requestQueue.clear();
 
