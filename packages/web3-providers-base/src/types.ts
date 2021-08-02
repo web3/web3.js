@@ -24,10 +24,6 @@ export interface ProviderOptions {
     providerUrl: string;
 }
 
-export interface SubscriptionOptions {
-    milisecondsBetweenRequests?: number;
-}
-
 export interface RpcOptions {
     id: number;
     jsonrpc: string;
@@ -176,6 +172,7 @@ export interface RequestArguments {
     readonly params?: readonly unknown[] | object;
     rpcOptions?: RpcOptions;
     providerOptions?: HttpOptions;
+    returnType?: ValidTypesEnum;
 }
 
 export interface HttpOptions {
