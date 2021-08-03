@@ -39,6 +39,23 @@ describe('method.send [ @E2E ]', function () {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
+        it('returns a receipt (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', async function () {
+            var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
+            var receipt = await web3.eth.sendTransaction({
+                to: accounts[1],
+                from: accounts[0],
+                nonce: nonceVal,
+                value: web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+                gas: web3.utils.toHex(21000),
+                maxFeePerGas: '0x59682F00', // 1.5 Gwei
+                maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
+                type: '0x2'
+            })
+
+            assert(receipt.status === true);
+            assert(web3.utils.isHexStrict(receipt.transactionHash));
+        });
+
         it('errors on OOG', async function () {
             try {
                 var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
