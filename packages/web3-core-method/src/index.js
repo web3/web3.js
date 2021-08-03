@@ -28,6 +28,7 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
+var HardForks = require('@ethereumjs/common').Hardfork;
 
 var EthersTransactionUtils = require('@ethersproject/transactions');
 
@@ -770,19 +771,15 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx && !!payload.params[0] && typeof payload.params[0] === 'object' && typeof payload.params[0].gasPrice === 'undefined') {
+        if (isSendTx 
+            && !!payload.params[0]
+            && typeof payload.params[0] === 'object'
+        ) {
+            if (typeof payload.params[0].type === 'undefined') 
+                payload.params[0].type = _handleTxType(payload.params[0]);
 
-            var getGasPrice = (new Method({
-                name: 'getGasPrice',
-                call: 'eth_gasPrice',
-                params: 0
-            })).createFunction(method.requestManager);
-
-            getGasPrice(function (err, gasPrice) {
-
-                if (gasPrice) {
-                    payload.params[0].gasPrice = gasPrice;
-                }
+            _handleTxPricing(method, payload.params[0]).then(txPricing => {
+                payload.params[0] = {...payload.params[0], ...txPricing};
 
                 if (isSendTx) {
                     setTimeout(() => {
@@ -791,8 +788,7 @@ Method.prototype.buildCall = function () {
                 }
 
                 sendRequest(payload, method);
-            });
-
+            })
         } else {
             if (isSendTx) {
                 setTimeout(() => {
@@ -818,6 +814,112 @@ Method.prototype.buildCall = function () {
     send.request = this.request.bind(this);
     return send;
 };
+
+function _handleTxType(tx) {
+    // Taken from https://github.com/ethers-io/ethers.js/blob/2a7ce0e72a1e0c9469e10392b0329e75e341cf18/packages/abstract-signer/src.ts/index.ts#L215
+    const hasEip1559 = (tx.maxFeePerGas !== undefined || tx.maxPriorityFeePerGas !== undefined);
+
+    let txType;
+
+    if (tx.type !== undefined) {
+        txType = utils.toHex(tx.type)
+    } else if (tx.type === undefined && hasEip1559) {
+        txType = '0x2'
+    } else {
+        txType = '0x0'
+    }
+
+    if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
+        throw Error("eip-1559 transactions don't support gasPrice");
+    if ((txType === '0x1' || txType === '0x0') && hasEip1559)
+        throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
+    
+    if (
+        hasEip1559 ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
+        )
+    ) {
+        txType = '0x2';
+    } else if (
+        tx.accessList ||
+        (
+            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
+            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
+        )
+    ) {
+        txType = '0x1';
+    }
+    
+    return txType
+}
+
+function _handleTxPricing(method, tx) {
+    return new Promise((resolve, reject) => {
+        try {
+            var getBlockByNumber = (new Method({
+                name: 'getBlockByNumber',
+                call: 'eth_getBlockByNumber',
+                params: 2,
+                inputFormatter: [function(blockNumber) {
+                    return blockNumber ? utils.toHex(blockNumber) : 'latest'
+                }, function() {
+                    return false
+                }]
+            })).createFunction(method.requestManager);
+            var getGasPrice = (new Method({
+                name: 'getGasPrice',
+                call: 'eth_gasPrice',
+                params: 0
+            })).createFunction(method.requestManager);
+
+            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+                // Legacy transaction, return provided gasPrice
+                resolve({ gasPrice: tx.gasPrice })
+            } else {
+                Promise.all([
+                    getBlockByNumber(),
+                    getGasPrice()
+                ]).then(responses => {
+                    const [block, gasPrice] = responses;
+                    if (
+                        (tx.type === '0x2') &&
+                        block && block.baseFeePerGas
+                    ) {
+                        // The network supports EIP-1559
+    
+                        // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
+                        let maxPriorityFeePerGas, maxFeePerGas;
+    
+                        if (tx.gasPrice) {
+                            // Using legacy gasPrice property on an eip-1559 network,
+                            // so use gasPrice as both fee properties
+                            maxPriorityFeePerGas = tx.gasPrice;
+                            maxFeePerGas = tx.gasPrice;
+                            delete tx.gasPrice;
+                        } else {
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxFeePerGas = tx.maxFeePerGas ||
+                                utils.toHex(
+                                    utils.toBN(block.baseFeePerGas)
+                                        .mul(utils.toBN(2))
+                                        .add(utils.toBN(maxPriorityFeePerGas))
+                                );
+                        }
+                        resolve({ maxFeePerGas, maxPriorityFeePerGas });
+                    } else {
+                        if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
+                            throw Error("Network doesn't support eip-1559")
+                        resolve({ gasPrice });
+                    }
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 
 /**
  * Returns the revert reason string if existing or otherwise false.
