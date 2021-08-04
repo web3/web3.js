@@ -919,7 +919,7 @@ function _handleTxPricing(method, tx) {
                     } else {
                         if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
                             throw Error("Network doesn't support eip-1559")
-                        resolve({ gasPrice });
+                        resolve({ gasPrice: utils.toHex(gasPrice) });
                     }
                 })
             }
