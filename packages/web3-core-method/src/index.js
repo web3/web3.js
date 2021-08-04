@@ -707,7 +707,6 @@ Method.prototype.buildCall = function () {
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
                     var tx = payload.params[0];
-                    console.log("payload", payload, "tx", tx)
                     wallet = getWallet((!!tx && typeof tx === 'object') ? tx.from : null, method.accounts);
 
 
@@ -749,7 +748,6 @@ Method.prototype.buildCall = function () {
                     // ETH_SIGN
                 } else if (payload.method === 'eth_sign') {
                     var data = payload.params[1];
-                    console.log("parload", payload,  "data", data) 
                     wallet = getWallet(payload.params[0], method.accounts);
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
@@ -784,11 +782,15 @@ Method.prototype.buildCall = function () {
                 )
             )
         ) {
+            console.log('debug1', payload)
             if (typeof payload.params[0].type === 'undefined') 
                 payload.params[0].type = _handleTxType(payload.params[0]);
+            console.log('debug2', payload)
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
                 payload.params[0] = {...payload.params[0], ...txPricing};
+
+                console.log('debug3', payload)
 
                 if (isSendTx) {
                     setTimeout(() => {
@@ -797,6 +799,8 @@ Method.prototype.buildCall = function () {
                 }
 
                 sendRequest(payload, method);
+
+                console.log('debug4', payload)
             })
         } else {
             if (isSendTx) {
