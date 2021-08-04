@@ -90,7 +90,7 @@ export interface PromiEvent<T> extends Promise<T> {
         type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
         handler: (error: Error | TransactionReceipt | string | object) => void
     ): PromiEvent<T>;
-    
+
     on(
         type: 'sending',
         handler: (payload: object) => void
