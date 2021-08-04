@@ -774,6 +774,13 @@ Method.prototype.buildCall = function () {
         if (isSendTx 
             && !!payload.params[0]
             && typeof payload.params[0] === 'object'
+            && (
+                typeof payload.params[0].gasPrice === 'undefined'
+                && (
+                    typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
+                    || typeof payload.params[0].maxFeePerGas === 'undefined'
+                )
+            )
         ) {
             if (typeof payload.params[0].type === 'undefined') 
                 payload.params[0].type = _handleTxType(payload.params[0]);
