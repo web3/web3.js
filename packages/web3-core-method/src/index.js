@@ -707,6 +707,7 @@ Method.prototype.buildCall = function () {
                 // ETH_SENDTRANSACTION
                 if (payload.method === 'eth_sendTransaction') {
                     var tx = payload.params[0];
+                    console.log("payload", payload, "tx", tx)
                     wallet = getWallet((!!tx && typeof tx === 'object') ? tx.from : null, method.accounts);
 
 
@@ -748,6 +749,7 @@ Method.prototype.buildCall = function () {
                     // ETH_SIGN
                 } else if (payload.method === 'eth_sign') {
                     var data = payload.params[1];
+                    console.log("parload", payload,  "data", data) 
                     wallet = getWallet(payload.params[0], method.accounts);
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
