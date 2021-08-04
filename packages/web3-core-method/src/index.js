@@ -784,7 +784,6 @@ Method.prototype.buildCall = function () {
         ) {
             if (typeof payload.params[0].type === 'undefined') 
                 payload.params[0].type = _handleTxType(payload.params[0]);
-                if (payload.params[0].type === '0x0') delete payload.params[0].type
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
                 payload.params[0] = {...payload.params[0], ...txPricing};
@@ -919,7 +918,7 @@ function _handleTxPricing(method, tx) {
                     } else {
                         if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
                             throw Error("Network doesn't support eip-1559")
-                        resolve({ gasPrice: utils.toHex(gasPrice) });
+                        resolve({ gasPrice });
                     }
                 })
             }
