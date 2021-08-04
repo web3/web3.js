@@ -786,7 +786,6 @@ Method.prototype.buildCall = function () {
                 payload.params[0].type = _handleTxType(payload.params[0]);
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
-                console.log('txPricing', txPricing)
                 payload.params[0] = {...payload.params[0], ...txPricing};
 
                 if (isSendTx) {
