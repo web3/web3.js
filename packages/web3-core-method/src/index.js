@@ -786,11 +786,13 @@ Method.prototype.buildCall = function () {
             if (typeof payload.params[0].type === 'undefined') 
                 payload.params[0].type = _handleTxType(payload.params[0]);
             console.log('debug2', payload)
+            if (payload.params[0].type === '0x0') delete payload.params[0].type;
+            console.log('debug3', payload)
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
                 payload.params[0] = {...payload.params[0], ...txPricing};
 
-                console.log('debug3', payload)
+                console.log('debug4', payload)
 
                 if (isSendTx) {
                     setTimeout(() => {
@@ -800,7 +802,7 @@ Method.prototype.buildCall = function () {
 
                 sendRequest(payload, method);
 
-                console.log('debug4', payload)
+                console.log('debug5', payload)
             })
         } else {
             if (isSendTx) {
