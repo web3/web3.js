@@ -783,7 +783,7 @@ Method.prototype.buildCall = function () {
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
-
+                console.log("DEBUG2::gasPrice", payload);
                 if (isSendTx) {
                     setTimeout(() => {
                         defer.eventEmitter.emit('sending', payload);
