@@ -779,7 +779,7 @@ Method.prototype.buildCall = function () {
             })).createFunction(method.requestManager);
 
             getGasPrice(function (err, gasPrice) {
-
+                console.log("DEBUG1::gasPrice", gasPrice)
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
                 }
