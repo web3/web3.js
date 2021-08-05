@@ -771,7 +771,11 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx && !!payload.params[0] && typeof payload.params[0] === 'object' && typeof payload.params[0].gasPrice === 'undefined') {
+        if (isSendTx
+            && !!payload.params[0]
+            && typeof payload.params[0] === 'object'
+            && typeof payload.params[0].gasPrice === 'undefined'
+        ) {
 
             var getGasPrice = (new Method({
                 name: 'getGasPrice',
@@ -805,41 +809,43 @@ Method.prototype.buildCall = function () {
         }
 
         // Send the actual transaction
-        // if (isSendTx
-        //     && payload.params !== 'eth_sendRawTransaction'
-        //     && !!payload.params[0]
-        //     && typeof payload.params[0] === 'object'
-        //     && (
-        //         typeof payload.params[0].gasPrice === 'undefined'
-        //         && (
-        //             typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
-        //             || typeof payload.params[0].maxFeePerGas === 'undefined'
-        //         )
-        //     )
-        // ) {
-        //     if (typeof payload.params[0].type === 'undefined') 
-        //         payload.params[0].type = _handleTxType(payload.params[0]);
+        if (isSendTx
+            && !!payload.params[0]
+            && typeof payload.params[0] === 'object'
+            && typeof payload.params[0].gasPrice === 'undefined'
+            // && (
+            //     typeof payload.params[0].gasPrice === 'undefined'
+            //     && (
+            //         typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
+            //         || typeof payload.params[0].maxFeePerGas === 'undefined'
+            //     )
+            // )
+        ) {
+            // if (typeof payload.params[0].type === 'undefined') 
+            //     payload.params[0].type = _handleTxType(payload.params[0]);
 
-        //     _handleTxPricing(method, payload.params[0]).then(txPricing => {
-        //         payload.params[0] = {...payload.params[0], ...txPricing};
+            _handleTxPricing(method, payload.params[0]).then(txPricing => {
+                console.log('debug1', payload)
+                payload.params[0] = {...payload.params[0], ...txPricing};
+                console.log('debug2', payload)
 
-        //         if (isSendTx) {
-        //             setTimeout(() => {
-        //                 defer.eventEmitter.emit('sending', payload);
-        //             }, 0);
-        //         }
+                if (isSendTx) {
+                    setTimeout(() => {
+                        defer.eventEmitter.emit('sending', payload);
+                    }, 0);
+                }
 
-        //         sendRequest(payload, method);
-        //     })
-        // } else {
-        //     if (isSendTx) {
-        //         setTimeout(() => {
-        //             defer.eventEmitter.emit('sending', payload);
-        //         }, 0);
-        //     }
+                sendRequest(payload, method);
+            })
+        } else {
+            if (isSendTx) {
+                setTimeout(() => {
+                    defer.eventEmitter.emit('sending', payload);
+                }, 0);
+            }
 
-        //     sendRequest(payload, method);
-        // }
+            sendRequest(payload, method);
+        }
 
         if (isSendTx) {
             setTimeout(() => {
@@ -900,63 +906,64 @@ function _handleTxType(tx) {
 function _handleTxPricing(method, tx) {
     return new Promise((resolve, reject) => {
         try {
-            var getBlockByNumber = (new Method({
-                name: 'getBlockByNumber',
-                call: 'eth_getBlockByNumber',
-                params: 2,
-                inputFormatter: [function(blockNumber) {
-                    return blockNumber ? utils.toHex(blockNumber) : 'latest'
-                }, function() {
-                    return false
-                }]
-            })).createFunction(method.requestManager);
+            // var getBlockByNumber = (new Method({
+            //     name: 'getBlockByNumber',
+            //     call: 'eth_getBlockByNumber',
+            //     params: 2,
+            //     inputFormatter: [function(blockNumber) {
+            //         return blockNumber ? utils.toHex(blockNumber) : 'latest'
+            //     }, function() {
+            //         return false
+            //     }]
+            // })).createFunction(method.requestManager);
             var getGasPrice = (new Method({
                 name: 'getGasPrice',
                 call: 'eth_gasPrice',
                 params: 0
             })).createFunction(method.requestManager);
 
-            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
-                // Legacy transaction, return provided gasPrice
-                resolve({ gasPrice: tx.gasPrice })
-            } else {
+            // if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+            //     // Legacy transaction, return provided gasPrice
+            //     resolve({ gasPrice: tx.gasPrice })
+            // } else {
                 Promise.all([
-                    getBlockByNumber(),
+                    // getBlockByNumber(),
                     getGasPrice()
                 ]).then(responses => {
-                    const [block, gasPrice] = responses;
-                    if (
-                        (tx.type === '0x2') &&
-                        block && block.baseFeePerGas
-                    ) {
-                        // The network supports EIP-1559
+                    const [gasPrice] = responses;
+                    // const [block, gasPrice] = responses;
+                    // if (
+                    //     (tx.type === '0x2') &&
+                    //     block && block.baseFeePerGas
+                    // ) {
+                    //     // The network supports EIP-1559
     
-                        // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
-                        let maxPriorityFeePerGas, maxFeePerGas;
+                    //     // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
+                    //     let maxPriorityFeePerGas, maxFeePerGas;
     
-                        if (tx.gasPrice) {
-                            // Using legacy gasPrice property on an eip-1559 network,
-                            // so use gasPrice as both fee properties
-                            maxPriorityFeePerGas = tx.gasPrice;
-                            maxFeePerGas = tx.gasPrice;
-                            delete tx.gasPrice;
-                        } else {
-                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
-                            maxFeePerGas = tx.maxFeePerGas ||
-                                utils.toHex(
-                                    utils.toBN(block.baseFeePerGas)
-                                        .mul(utils.toBN(2))
-                                        .add(utils.toBN(maxPriorityFeePerGas))
-                                );
-                        }
-                        resolve({ maxFeePerGas, maxPriorityFeePerGas });
-                    } else {
-                        if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
-                            throw Error("Network doesn't support eip-1559")
+                    //     if (tx.gasPrice) {
+                    //         // Using legacy gasPrice property on an eip-1559 network,
+                    //         // so use gasPrice as both fee properties
+                    //         maxPriorityFeePerGas = tx.gasPrice;
+                    //         maxFeePerGas = tx.gasPrice;
+                    //         delete tx.gasPrice;
+                    //     } else {
+                    //         maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                    //         maxFeePerGas = tx.maxFeePerGas ||
+                    //             utils.toHex(
+                    //                 utils.toBN(block.baseFeePerGas)
+                    //                     .mul(utils.toBN(2))
+                    //                     .add(utils.toBN(maxPriorityFeePerGas))
+                    //             );
+                    //     }
+                    //     resolve({ maxFeePerGas, maxPriorityFeePerGas });
+                    // } else {
+                        // if (tx.maxPriorityFeePerGas || tx.maxFeePerGas)
+                        //     throw Error("Network doesn't support eip-1559")
                         resolve({ gasPrice });
-                    }
+                    // }
                 })
-            }
+            // }
         } catch (error) {
             reject(error)
         }
