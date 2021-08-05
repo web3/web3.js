@@ -771,23 +771,19 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx
-            && payload.params !== 'eth_sendRawTransaction'
-            && !!payload.params[0]
-            && typeof payload.params[0] === 'object'
-            && (
-                typeof payload.params[0].gasPrice === 'undefined'
-                && (
-                    typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
-                    || typeof payload.params[0].maxFeePerGas === 'undefined'
-                )
-            )
-        ) {
-            if (typeof payload.params[0].type === 'undefined') 
-                payload.params[0].type = _handleTxType(payload.params[0]);
+        if (isSendTx && !!payload.params[0] && typeof payload.params[0] === 'object' && typeof payload.params[0].gasPrice === 'undefined') {
 
-            _handleTxPricing(method, payload.params[0]).then(txPricing => {
-                payload.params[0] = {...payload.params[0], ...txPricing};
+            var getGasPrice = (new Method({
+                name: 'getGasPrice',
+                call: 'eth_gasPrice',
+                params: 0
+            })).createFunction(method.requestManager);
+
+            getGasPrice(function (err, gasPrice) {
+
+                if (gasPrice) {
+                    payload.params[0].gasPrice = gasPrice;
+                }
 
                 if (isSendTx) {
                     setTimeout(() => {
@@ -796,7 +792,8 @@ Method.prototype.buildCall = function () {
                 }
 
                 sendRequest(payload, method);
-            })
+            });
+
         } else {
             if (isSendTx) {
                 setTimeout(() => {
@@ -806,6 +803,43 @@ Method.prototype.buildCall = function () {
 
             sendRequest(payload, method);
         }
+
+        // Send the actual transaction
+        // if (isSendTx
+        //     && payload.params !== 'eth_sendRawTransaction'
+        //     && !!payload.params[0]
+        //     && typeof payload.params[0] === 'object'
+        //     && (
+        //         typeof payload.params[0].gasPrice === 'undefined'
+        //         && (
+        //             typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
+        //             || typeof payload.params[0].maxFeePerGas === 'undefined'
+        //         )
+        //     )
+        // ) {
+        //     if (typeof payload.params[0].type === 'undefined') 
+        //         payload.params[0].type = _handleTxType(payload.params[0]);
+
+        //     _handleTxPricing(method, payload.params[0]).then(txPricing => {
+        //         payload.params[0] = {...payload.params[0], ...txPricing};
+
+        //         if (isSendTx) {
+        //             setTimeout(() => {
+        //                 defer.eventEmitter.emit('sending', payload);
+        //             }, 0);
+        //         }
+
+        //         sendRequest(payload, method);
+        //     })
+        // } else {
+        //     if (isSendTx) {
+        //         setTimeout(() => {
+        //             defer.eventEmitter.emit('sending', payload);
+        //         }, 0);
+        //     }
+
+        //     sendRequest(payload, method);
+        // }
 
         if (isSendTx) {
             setTimeout(() => {
