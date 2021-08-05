@@ -771,63 +771,26 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        // if (isSendTx
-        //     && !!payload.params[0]
-        //     && typeof payload.params[0] === 'object'
-        //     && typeof payload.params[0].gasPrice === 'undefined'
-        // ) {
-
-        //     var getGasPrice = (new Method({
-        //         name: 'getGasPrice',
-        //         call: 'eth_gasPrice',
-        //         params: 0
-        //     })).createFunction(method.requestManager);
-
-        //     getGasPrice(function (err, gasPrice) {
-
-        //         if (gasPrice) {
-        //             payload.params[0].gasPrice = gasPrice;
-        //         }
-
-        //         if (isSendTx) {
-        //             setTimeout(() => {
-        //                 defer.eventEmitter.emit('sending', payload);
-        //             }, 0);
-        //         }
-
-        //         sendRequest(payload, method);
-        //     });
-
-        // } else {
-        //     if (isSendTx) {
-        //         setTimeout(() => {
-        //             defer.eventEmitter.emit('sending', payload);
-        //         }, 0);
-        //     }
-
-        //     sendRequest(payload, method);
-        // }
-
-        // Send the actual transaction
         if (isSendTx
             && !!payload.params[0]
             && typeof payload.params[0] === 'object'
             && typeof payload.params[0].gasPrice === 'undefined'
-            // && (
-            //     typeof payload.params[0].gasPrice === 'undefined'
-            //     && (
-            //         typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
-            //         || typeof payload.params[0].maxFeePerGas === 'undefined'
-            //     )
-            // )
         ) {
-            // if (typeof payload.params[0].type === 'undefined') 
-            //     payload.params[0].type = _handleTxType(payload.params[0]);
 
-            _handleTxPricing(method, payload.params[0]).then(txPricing => {
-                console.log('debug1', payload)
-                payload.params[0] = {...payload.params[0], ...txPricing};
-                console.log('debug2', payload)
+            var getGasPrice = (new Method({
+                name: 'getGasPrice',
+                call: 'eth_gasPrice',
+                params: 0
+            })).createFunction(method.requestManager);
+
+            getGasPrice(function (err, gasPrice) {
+                console.log('debug1', gasPrice, payload)
+
+                if (gasPrice) {
+                    payload.params[0].gasPrice = gasPrice;
+                }
+
+                console.log('debug2', gasPrice, payload)
 
                 if (isSendTx) {
                     setTimeout(() => {
@@ -836,7 +799,8 @@ Method.prototype.buildCall = function () {
                 }
 
                 sendRequest(payload, method);
-            })
+            });
+
         } else {
             if (isSendTx) {
                 setTimeout(() => {
@@ -847,11 +811,50 @@ Method.prototype.buildCall = function () {
             sendRequest(payload, method);
         }
 
-        if (isSendTx) {
-            setTimeout(() => {
-                defer.eventEmitter.emit('sent', payload);
-            }, 0);
-        }
+        // Send the actual transaction
+        // if (isSendTx
+        //     && !!payload.params[0]
+        //     && typeof payload.params[0] === 'object'
+        //     && typeof payload.params[0].gasPrice === 'undefined'
+        //     // && (
+        //     //     typeof payload.params[0].gasPrice === 'undefined'
+        //     //     && (
+        //     //         typeof payload.params[0].maxPriorityFeePerGas === 'undefined'
+        //     //         || typeof payload.params[0].maxFeePerGas === 'undefined'
+        //     //     )
+        //     // )
+        // ) {
+        //     // if (typeof payload.params[0].type === 'undefined') 
+        //     //     payload.params[0].type = _handleTxType(payload.params[0]);
+
+        //     _handleTxPricing(method, payload.params[0]).then(txPricing => {
+        //         console.log('debug1', payload)
+        //         payload.params[0] = {...payload.params[0], ...txPricing};
+        //         console.log('debug2', payload)
+
+        //         if (isSendTx) {
+        //             setTimeout(() => {
+        //                 defer.eventEmitter.emit('sending', payload);
+        //             }, 0);
+        //         }
+
+        //         sendRequest(payload, method);
+        //     })
+        // } else {
+        //     if (isSendTx) {
+        //         setTimeout(() => {
+        //             defer.eventEmitter.emit('sending', payload);
+        //         }, 0);
+        //     }
+
+        //     sendRequest(payload, method);
+        // }
+
+        // if (isSendTx) {
+        //     setTimeout(() => {
+        //         defer.eventEmitter.emit('sent', payload);
+        //     }, 0);
+        // }
 
         return defer.eventEmitter;
     };
