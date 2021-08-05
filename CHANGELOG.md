@@ -424,4 +424,5 @@ Released with 1.0.0-beta.37 code base.
 
 - `maxPriorityFeePerGas` and `maxFeePerGas` now included in `_txInputFormatter` (#4217)
 - If `maxPriorityFeePerGas` of `maxFeePerGas` present `_txInputFormatter` deletes `tx.gasPrice` (fixes #4211) (#4217)
+- Add block tag support (e.g. `latest`, `pending`, `earliest`) to `getFeeHistory` (#4224)
 - Support for EIP-1559 to `web3.eth.sendTransaction` (#4220)
