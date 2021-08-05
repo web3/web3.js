@@ -771,7 +771,8 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx 
+        if (isSendTx
+            && payload.params !== 'eth_sendRawTransaction'
             && !!payload.params[0]
             && typeof payload.params[0] === 'object'
             && (
@@ -786,7 +787,6 @@ Method.prototype.buildCall = function () {
                 payload.params[0].type = _handleTxType(payload.params[0]);
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
-                
                 payload.params[0] = {...payload.params[0], ...txPricing};
 
                 if (isSendTx) {
