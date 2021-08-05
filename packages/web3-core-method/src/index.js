@@ -771,42 +771,42 @@ Method.prototype.buildCall = function () {
         };
 
         // Send the actual transaction
-        if (isSendTx
-            && !!payload.params[0]
-            && typeof payload.params[0] === 'object'
-            && typeof payload.params[0].gasPrice === 'undefined'
-        ) {
+        // if (isSendTx
+        //     && !!payload.params[0]
+        //     && typeof payload.params[0] === 'object'
+        //     && typeof payload.params[0].gasPrice === 'undefined'
+        // ) {
 
-            var getGasPrice = (new Method({
-                name: 'getGasPrice',
-                call: 'eth_gasPrice',
-                params: 0
-            })).createFunction(method.requestManager);
+        //     var getGasPrice = (new Method({
+        //         name: 'getGasPrice',
+        //         call: 'eth_gasPrice',
+        //         params: 0
+        //     })).createFunction(method.requestManager);
 
-            getGasPrice(function (err, gasPrice) {
+        //     getGasPrice(function (err, gasPrice) {
 
-                if (gasPrice) {
-                    payload.params[0].gasPrice = gasPrice;
-                }
+        //         if (gasPrice) {
+        //             payload.params[0].gasPrice = gasPrice;
+        //         }
 
-                if (isSendTx) {
-                    setTimeout(() => {
-                        defer.eventEmitter.emit('sending', payload);
-                    }, 0);
-                }
+        //         if (isSendTx) {
+        //             setTimeout(() => {
+        //                 defer.eventEmitter.emit('sending', payload);
+        //             }, 0);
+        //         }
 
-                sendRequest(payload, method);
-            });
+        //         sendRequest(payload, method);
+        //     });
 
-        } else {
-            if (isSendTx) {
-                setTimeout(() => {
-                    defer.eventEmitter.emit('sending', payload);
-                }, 0);
-            }
+        // } else {
+        //     if (isSendTx) {
+        //         setTimeout(() => {
+        //             defer.eventEmitter.emit('sending', payload);
+        //         }, 0);
+        //     }
 
-            sendRequest(payload, method);
-        }
+        //     sendRequest(payload, method);
+        // }
 
         // Send the actual transaction
         if (isSendTx
