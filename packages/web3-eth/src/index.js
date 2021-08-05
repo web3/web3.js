@@ -389,7 +389,7 @@ var Eth = function Eth() {
             name: 'getFeeHistory',
             call: 'eth_feeHistory',
             params: 3,
-            inputFormatter: [utils.toNumber, formatter.inputBlockNumberFormatter, function(value) {return value}]
+            inputFormatter: [utils.toNumber, formatter.inputBlockNumberFormatter, null]
         }),
         new Method({
             name: 'getAccounts',
