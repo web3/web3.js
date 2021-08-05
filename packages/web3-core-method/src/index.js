@@ -929,7 +929,7 @@ function _handleTxPricing(method, tx) {
                         resolve({ gasPrice });
                     }
                 })
-            // }
+            }
         } catch (error) {
             reject(error)
         }
