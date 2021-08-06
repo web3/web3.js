@@ -14,7 +14,7 @@ import {
     RpcCompiledSolidityResult,
     RpcLogResult,
     RequestArguments,
-    IWeb3Provider
+    IWeb3Provider,
 } from 'web3-core-types/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {

@@ -4,9 +4,7 @@ import Web3ProviderHttp from 'web3-providers-http';
 import { ClientProtocol } from './types';
 
 export default function web3Provider(web3Client: string): IWeb3Provider {
-    switch (
-        detectClientProtocol(web3Client)
-    ) {
+    switch (detectClientProtocol(web3Client)) {
         case ClientProtocol.HTTP:
             return new Web3ProviderHttp(web3Client);
         case ClientProtocol.WS:

@@ -6,8 +6,7 @@ import {
 } from 'web3-core-types/lib/types';
 import { EventEmitter } from 'events';
 
-export default class Web3ProvidersHttp implements IWeb3Provider
-{
+export default class Web3ProvidersHttp implements IWeb3Provider {
     private _httpClient: AxiosInstance;
 
     web3Client: string;
