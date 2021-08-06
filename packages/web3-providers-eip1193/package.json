@@ -1,5 +1,5 @@
 {
-    "name": "web3-providers-1193",
+    "name": "web3-providers-eip1193",
     "version": "1.0.0-alpha.0",
     "description": "Ethereum EIP-1193 provider for Web3 4.x.x",
     "main": "lib/index.js",

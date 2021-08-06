@@ -1,5 +1,6 @@
-import { Web3Client, IWeb3Provider } from 'web3-core-types/lib/types';
+import { Web3Client, Eip1193Provider, IWeb3Provider } from 'web3-core-types/lib/types';
 import Web3ProviderHttp from 'web3-providers-http';
+import Web3ProvidersEip1193 from 'web3-providers-eip1193';
 
 import { ClientProtocol } from './types';
 
@@ -8,8 +9,7 @@ export default function initWeb3Provider(
 ): IWeb3Provider {
     switch (detectClientProtocol(web3Client)) {
         case ClientProtocol.Eip1193:
-            // TODO
-            throw Error('Provider protocol not implemented');
+            return new Web3ProvidersEip1193(web3Client as Eip1193Provider)
         case ClientProtocol.HTTP:
             return new Web3ProviderHttp(web3Client as string);
         case ClientProtocol.WS:
