@@ -8,6 +8,8 @@ import {
     Eip1193Provider,
     ProviderConnectInfo,
     Web3Client,
+    ProviderRpcError,
+    ProviderMessage,
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProvidersEip1193
@@ -72,6 +74,30 @@ export default class Web3ProvidersEip1193
             Web3ProviderEvents.Connect,
             (connectInfo: ProviderConnectInfo) => {
                 super.emit(Web3ProviderEvents.Connect, connectInfo);
+            }
+        );
+        this.web3Client.on(
+            Web3ProviderEvents.Disconnect,
+            (error: ProviderRpcError) => {
+                super.emit(Web3ProviderEvents.Disconnect, error);
+            }
+        );
+        this.web3Client.on(
+            Web3ProviderEvents.ChainChanged,
+            (chainId: string) => {
+                super.emit(Web3ProviderEvents.ChainChanged, chainId);
+            }
+        );
+        this.web3Client.on(
+            Web3ProviderEvents.AccountsChanged,
+            (accounts: string[]) => {
+                super.emit(Web3ProviderEvents.AccountsChanged, accounts);
+            }
+        );
+        this.web3Client.on(
+            Web3ProviderEvents.Message,
+            (providerMessage: ProviderMessage) => {
+                super.emit(Web3ProviderEvents.Message, providerMessage);
             }
         );
     }
