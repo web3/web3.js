@@ -6,6 +6,7 @@ import {
     RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
+    Web3Client
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProvidersHttp
@@ -25,31 +26,28 @@ export default class Web3ProvidersHttp
         this._connectToClient();
     }
 
-    private static _validateProviderUrl(providerUrl: string): boolean {
+    private static _validateClientUrl(web3Client: Web3Client): boolean {
         try {
-            return (
-                typeof providerUrl !== 'string' ||
-                /^http(s)?:\/\//i.test(providerUrl)
-            );
+            return typeof web3Client === 'string' ? /^http(s)?:\/\//i.test(web3Client) : false
         } catch (error) {
-            throw Error(`Failed to validate provider string: ${error.message}`);
+            throw Error(`Failed to validate client url: ${error.message}`);
         }
     }
 
-    private static _createHttpClient(baseUrl: string): AxiosInstance {
+    private static _createHttpClient(web3Client: Web3Client): AxiosInstance {
         try {
-            if (!Web3ProvidersHttp._validateProviderUrl(baseUrl))
+            if (!Web3ProvidersHttp._validateClientUrl(web3Client))
                 throw Error('Invalid HTTP(S) URL provided');
-            return axios.create({ baseURL: baseUrl });
+            return axios.create({ baseURL: (web3Client as string) });
         } catch (error) {
             throw Error(`Failed to create HTTP client: ${error.message}`);
         }
     }
 
-    setWeb3Client(web3Client: string) {
+    setWeb3Client(web3Client: Web3Client) {
         try {
             this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
-            this.web3Client = web3Client;
+            this.web3Client = (web3Client as string);
             this._connectToClient();
         } catch (error) {
             throw Error(`Failed to set web3 client: ${error.message}`);
@@ -95,7 +93,7 @@ export default class Web3ProvidersHttp
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;
                 // TODO replace with ProviderRpcError
-                this.emit('disconnect', { code: 4900 });
+                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
             }
             // TODO Fancy error detection that complies with EIP1193 defined errors
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
@@ -106,7 +104,7 @@ export default class Web3ProvidersHttp
     private async _connectToClient() {
         try {
             const chainId = await this._getChainId();
-            this.emit('connect', { chainId });
+            this.emit(Web3ProviderEvents.Connect, { chainId });
             this._connected = true;
 
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged-1
@@ -114,7 +112,7 @@ export default class Web3ProvidersHttp
                 this._clientChainId !== undefined &&
                 chainId !== this._clientChainId
             ) {
-                this.emit('chainChanged', chainId);
+                this.emit(Web3ProviderEvents.ChainChanged, chainId);
             }
             this._clientChainId = chainId;
         } catch (error) {

@@ -124,6 +124,18 @@ export type ProviderEventListenerChainChanged = (chainId: string) => void;
 export type ProviderEventListenerAccountsChanged = (accounts: string[]) => void;
 export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
 
+export type Web3Client =
+    | string
+    | Eip1193Provider
+
+export interface Eip1193Provider {
+    request: (args: RequestArguments) => Promise<RpcResponse>;
+    on: (
+        web3ProviderEvents: Web3ProviderEvents,
+        listener: ProviderEventListener
+    ) => this;
+}
+
 export interface ProviderConnectInfo {
     readonly chainId: string;
 }
@@ -162,14 +174,9 @@ export interface RpcResponse {
     result: any;
 }
 
-export interface IWeb3Provider {
-    web3Client: string;
-    setWeb3Client: (web3Client: string) => void;
-    request: (args: RequestArguments) => Promise<RpcResponse>;
-    on: (
-        web3ProviderEvents: Web3ProviderEvents,
-        listener: ProviderEventListener
-    ) => IWeb3Provider;
+export interface IWeb3Provider extends Eip1193Provider {
+    web3Client: Web3Client;
+    setWeb3Client: (web3Client: Web3Client) => void;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {

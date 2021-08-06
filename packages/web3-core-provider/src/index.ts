@@ -1,12 +1,15 @@
-import { IWeb3Provider } from 'web3-core-types/lib/types';
+import { Web3Client, IWeb3Provider } from 'web3-core-types/lib/types';
 import Web3ProviderHttp from 'web3-providers-http';
 
 import { ClientProtocol } from './types';
 
-export default function initWeb3Provider(web3Client: string): IWeb3Provider {
+export default function initWeb3Provider(web3Client: Web3Client): IWeb3Provider {
     switch (detectClientProtocol(web3Client)) {
+        case ClientProtocol.Eip1193:
+            // TODO
+            throw Error('Provider protocol not implemented');
         case ClientProtocol.HTTP:
-            return new Web3ProviderHttp(web3Client);
+            return new Web3ProviderHttp((web3Client as string));
         case ClientProtocol.WS:
             // TODO
             throw Error('Provider protocol not implemented');
@@ -14,19 +17,19 @@ export default function initWeb3Provider(web3Client: string): IWeb3Provider {
             // TODO
             throw Error('Provider protocol not implemented');
         default:
-            // TODO figure out if possible to support generic provider
-            // could be anything supporting EIP1193's request method
             throw Error('Provider protocol not supported');
     }
 }
 
-function detectClientProtocol(web3Client: string): ClientProtocol {
+function detectClientProtocol(web3Client: Web3Client): ClientProtocol {
     try {
-        if (/^http(s)?:\/\//i.test(web3Client)) {
+        if (typeof web3Client === 'object' && web3Client.request !== undefined) {
+            return ClientProtocol.Eip1193;
+        } else if (typeof web3Client === 'string' && /^http(s)?:\/\//i.test(web3Client)) {
             return ClientProtocol.HTTP;
-        } else if (/^ws(s)?:\/\//i.test(web3Client)) {
+        } else if (typeof web3Client === 'string' && /^ws(s)?:\/\//i.test(web3Client)) {
             return ClientProtocol.WS;
-        } else if (/^ipc:\/\//i.test(web3Client)) {
+        } else if (typeof web3Client === 'string' && /^ipc:\/\//i.test(web3Client)) {
             return ClientProtocol.IPC;
         }
         return ClientProtocol.UNKNOWN;
