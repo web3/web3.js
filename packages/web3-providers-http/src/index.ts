@@ -6,7 +6,7 @@ import {
     RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
-    Web3Client
+    Web3Client,
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProvidersHttp
@@ -28,7 +28,9 @@ export default class Web3ProvidersHttp
 
     private static _validateClientUrl(web3Client: Web3Client): boolean {
         try {
-            return typeof web3Client === 'string' ? /^http(s)?:\/\//i.test(web3Client) : false
+            return typeof web3Client === 'string'
+                ? /^http(s)?:\/\//i.test(web3Client)
+                : false;
         } catch (error) {
             throw Error(`Failed to validate client url: ${error.message}`);
         }
@@ -38,7 +40,7 @@ export default class Web3ProvidersHttp
         try {
             if (!Web3ProvidersHttp._validateClientUrl(web3Client))
                 throw Error('Invalid HTTP(S) URL provided');
-            return axios.create({ baseURL: (web3Client as string) });
+            return axios.create({ baseURL: web3Client as string });
         } catch (error) {
             throw Error(`Failed to create HTTP client: ${error.message}`);
         }
@@ -47,7 +49,7 @@ export default class Web3ProvidersHttp
     setWeb3Client(web3Client: Web3Client) {
         try {
             this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
-            this.web3Client = (web3Client as string);
+            this.web3Client = web3Client as string;
             this._connectToClient();
         } catch (error) {
             throw Error(`Failed to set web3 client: ${error.message}`);

@@ -124,9 +124,7 @@ export type ProviderEventListenerChainChanged = (chainId: string) => void;
 export type ProviderEventListenerAccountsChanged = (accounts: string[]) => void;
 export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
 
-export type Web3Client =
-    | string
-    | Eip1193Provider
+export type Web3Client = string | Eip1193Provider;
 
 export interface Eip1193Provider {
     request: (args: RequestArguments) => Promise<RpcResponse>;
