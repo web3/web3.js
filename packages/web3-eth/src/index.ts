@@ -1,4 +1,4 @@
-import web3Provider from 'web3-core-provider';
+import initWeb3Provider from 'web3-core-provider';
 import {
     RpcResponse,
     RpcStringResult,
@@ -35,7 +35,7 @@ export default class Web3Eth {
     provider: IWeb3Provider;
 
     constructor(options: Web3EthOptions) {
-        this.provider = web3Provider(options.web3Client);
+        this.provider = initWeb3Provider(options.web3Client);
         this._defaultReturnType =
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
@@ -117,8 +117,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -177,8 +175,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -212,8 +208,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -246,8 +240,6 @@ export default class Web3Eth {
                 method: 'eth_syncing',
                 params: [],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -337,8 +329,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -371,8 +361,6 @@ export default class Web3Eth {
                 method: 'eth_gasPrice',
                 params: [],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -432,8 +420,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -475,8 +461,6 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                 ],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -557,8 +541,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -593,8 +575,6 @@ export default class Web3Eth {
                 method: 'eth_getBlockTransactionCountByHash',
                 params: [blockHash],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -637,8 +617,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -675,8 +653,6 @@ export default class Web3Eth {
                 method: 'eth_getUncleCountByBlockHash',
                 params: [blockHash],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -718,8 +694,6 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                 ],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1019,8 +993,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -1057,8 +1029,6 @@ export default class Web3Eth {
                 method: 'eth_getBlockByHash',
                 params: [blockHash, returnFullTxs],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1122,8 +1092,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutputObject(
@@ -1179,8 +1147,6 @@ export default class Web3Eth {
                 params: [txHash],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutputObject(
@@ -1226,8 +1192,6 @@ export default class Web3Eth {
                 method: 'eth_getTransactionByBlockHashAndIndex',
                 params: [blockHash, toHex(transactionIndex)],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1282,8 +1246,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutputObject(
@@ -1329,8 +1291,6 @@ export default class Web3Eth {
                 method: 'eth_getTransactionReceipt',
                 params: [txHash],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1382,8 +1342,6 @@ export default class Web3Eth {
                 method: 'eth_getUncleByBlockHashAndIndex',
                 params: [blockHash, toHex(uncleIndex)],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1448,8 +1406,6 @@ export default class Web3Eth {
                     toHex(uncleIndex),
                 ],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1632,8 +1588,6 @@ export default class Web3Eth {
                 ],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -1667,8 +1621,6 @@ export default class Web3Eth {
                 params: [],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutput(
@@ -1701,8 +1653,6 @@ export default class Web3Eth {
                 method: 'eth_newPendingTransactionFilter',
                 params: [],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1769,8 +1719,6 @@ export default class Web3Eth {
                 params: [toHex(filterId)],
             });
 
-            if (response.hasOwnProperty('eventEmitter')) return response;
-
             return {
                 ...response,
                 result: formatOutputObject(
@@ -1807,8 +1755,6 @@ export default class Web3Eth {
                 method: 'eth_getFilterLogs',
                 params: [toHex(filterId)],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,
@@ -1855,8 +1801,6 @@ export default class Web3Eth {
                     },
                 ],
             });
-
-            if (response.hasOwnProperty('eventEmitter')) return response;
 
             return {
                 ...response,

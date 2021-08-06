@@ -19,6 +19,14 @@ export enum ValidTypesEnum {
     BigInt = 'BigInt',
 }
 
+export enum Web3ProviderEvents {
+    Connect = 'connect',
+    Disconnect = 'disconnect',
+    ChainChanged = 'chainChanged',
+    AccountsChanged = 'accountsChanged',
+    Message = 'message',
+}
+
 export type EthFilter = {
     fromBlock?: BlockIdentifier;
     toBlock?: BlockIdentifier;
@@ -92,6 +100,7 @@ export type CompiledSolidity = {
 };
 
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
+
 export type RpcParams = (
     | PrefixedHexString
     | number
@@ -99,6 +108,34 @@ export type RpcParams = (
     | boolean
     | EthFilter
 )[];
+
+export type ProviderEventListener =
+    | ProviderEventListenerConnect
+    | ProviderEventListenerDisconnect
+    | ProviderEventListenerChainChanged
+    | ProviderEventListenerAccountsChanged
+    | ProviderEventListenerMessage;
+
+export type ProviderEventListenerConnect = (
+    connectInfo: ProviderConnectInfo
+) => void;
+export type ProviderEventListenerDisconnect = (error: ProviderRpcError) => void;
+export type ProviderEventListenerChainChanged = (chainId: string) => void;
+export type ProviderEventListenerAccountsChanged = (accounts: string[]) => void;
+export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
+
+export interface ProviderConnectInfo {
+    readonly chainId: string;
+}
+export interface ProviderRpcError extends Error {
+    message: string;
+    code: number;
+    data?: unknown;
+}
+export interface ProviderMessage {
+    readonly type: string;
+    readonly data: unknown;
+}
 
 export interface RpcOptions {
     id: number;
@@ -129,6 +166,10 @@ export interface IWeb3Provider {
     web3Client: string;
     setWeb3Client: (web3Client: string) => void;
     request: (args: RequestArguments) => Promise<RpcResponse>;
+    on: (
+        web3ProviderEvents: Web3ProviderEvents,
+        listener: ProviderEventListener
+    ) => IWeb3Provider;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
