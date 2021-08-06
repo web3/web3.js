@@ -11,7 +11,7 @@ import {
 import Web3ProviderBase from 'web3-providers-base';
 import { EventEmitter } from 'events';
 
-export default class Web3ProviderWS extends Web3ProviderBase {
+export default class Web3ProviderWS {
     private webSocketConnection?: w3cwebsocket;
     private options: WebSocketOptions;
 
@@ -28,7 +28,6 @@ export default class Web3ProviderWS extends Web3ProviderBase {
         if (!Web3ProviderWS.validateProviderUrl(options.providerUrl))
             throw Error('Invalid WebSocket URL provided');
 
-        super(options);
         this.options = options;
         this.webSocketConnection = undefined;
         this.requestQueue = new Map<string, RequestItem>();
