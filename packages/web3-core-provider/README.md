@@ -2,12 +2,12 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Request Manager
+# web3.js - Core Provider
 
 ## Installation
 
 ```bash
-yarn add web3-core-requestmanager
+yarn add web3-core-provider
 ```
 
 ## Package.json Scripts

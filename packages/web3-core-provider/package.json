@@ -1,7 +1,7 @@
 {
-    "name": "web3-core-requestmanager",
-    "version": "4.0.0-alpha.0",
-    "description": "Internal packages used to manage requests for Web3 4.x.x",
+    "name": "web3-core-provider",
+    "version": "1.0.0-alpha.0",
+    "description": "Initilizes and provides access to a Web3 Provider for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",

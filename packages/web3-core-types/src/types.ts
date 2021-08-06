@@ -1,15 +1,95 @@
 import { EventEmitter } from 'events';
-import {
-    PrefixedHexString,
-    ValidTypes,
-    ValidTypesEnum,
-    EthFilter,
-    EthTransaction,
-    EthMinedTransaction,
-    EthLog,
-    CompiledSolidity,
-} from 'web3-utils/lib/types';
 import { AxiosRequestConfig } from 'axios';
+
+export type PrefixedHexString = string;
+export type NumberString = string;
+export type ValidTypes = number | PrefixedHexString | NumberString | BigInt;
+export type BlockIdentifier = ValidTypes | BlockTags;
+
+export enum BlockTags {
+    latest = 'latest',
+    earliest = 'earliest',
+    pending = 'pending',
+}
+
+export enum ValidTypesEnum {
+    Number = 'Number',
+    PrefixedHexString = 'PrefixedHexString',
+    NumberString = 'NumberString',
+    BigInt = 'BigInt',
+}
+
+export type EthFilter = {
+    fromBlock?: BlockIdentifier;
+    toBlock?: BlockIdentifier;
+    address?: PrefixedHexString;
+    topics?: PrefixedHexString | null | PrefixedHexString[][];
+    blockHash?: PrefixedHexString;
+};
+
+/**
+ * @param to is optional when creating a new contract
+ * @param gas optional, default set by node 90,000
+ * @param gasPrice optional, default to be determined by node
+ * @param data optional, but required if {to} is not provided
+ */
+export type EthTransaction = {
+    from: PrefixedHexString;
+    to?: PrefixedHexString;
+    gas?: ValidTypes;
+    gasPrice?: ValidTypes;
+    value?: ValidTypes;
+    data?: PrefixedHexString;
+    nonce?: ValidTypes;
+};
+
+export type EthMinedTransaction = {
+    blockHash: PrefixedHexString | null;
+    blockNumber: ValidTypes | null;
+    from: PrefixedHexString;
+    gas: ValidTypes;
+    gasPrice: ValidTypes;
+    hash: PrefixedHexString;
+    input: PrefixedHexString;
+    nonce: ValidTypes;
+    to: PrefixedHexString | null;
+    transactionIndex: ValidTypes | null;
+    value: ValidTypes;
+    v: ValidTypes;
+    r: PrefixedHexString;
+    s: PrefixedHexString;
+};
+
+export type EthLog =
+    | PrefixedHexString[]
+    | {
+          removed: boolean;
+          logIndex: ValidTypes | null;
+          transactionIndex: ValidTypes | null;
+          transactionHash: PrefixedHexString | null;
+          blockHash: PrefixedHexString | null;
+          blockNumber: ValidTypes | null;
+          address: PrefixedHexString;
+          data: PrefixedHexString;
+          topics: PrefixedHexString[];
+      };
+
+export type CompiledSolidity = {
+    code: PrefixedHexString;
+    info: {
+        source: string;
+        language: string;
+        languageVersion: string;
+        compilerVersion: string;
+        abiDefinition: any[];
+        userDoc: {
+            methods: { [key: string]: any };
+        };
+        developerDoc: {
+            methods: { [key: string]: any };
+        };
+    };
+};
 
 export type ProviderCallOptions = HttpOptions | undefined; // HttpOptions | WsOptions | IpcOptions
 export type RpcParams = (
@@ -20,13 +100,35 @@ export type RpcParams = (
     | EthFilter
 )[];
 
-export interface ProviderOptions {
-    providerUrl: string;
-}
-
 export interface RpcOptions {
     id: number;
     jsonrpc: string;
+}
+
+export interface HttpOptions {
+    axiosConfig?: AxiosRequestConfig;
+    poll?: boolean;
+    pollingInterval?: number;
+}
+
+export interface RequestArguments {
+    readonly method: string;
+    readonly params?: readonly unknown[] | object;
+    rpcOptions?: RpcOptions;
+    providerOptions?: HttpOptions;
+    returnType?: ValidTypesEnum;
+}
+
+export interface RpcResponse {
+    id: number;
+    jsonrpc: string;
+    result: any;
+}
+
+export interface IWeb3Provider {
+    web3Client: string;
+    setWeb3Client: (web3Client: string) => void;
+    request: (args: RequestArguments) => Promise<RpcResponse>;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
@@ -43,12 +145,6 @@ export interface CallOptions {
 
 export interface SendOptions extends CallOptions {
     rpcOptions: PartialRpcOptions;
-}
-
-export interface RpcResponse {
-    id: number;
-    jsonrpc: string;
-    result: any;
 }
 
 export interface RpcStringResult extends RpcResponse {
@@ -157,31 +253,4 @@ export interface RpcLogResult extends RpcResponse {
 export interface SubscriptionResponse {
     eventEmitter: EventEmitter;
     subscriptionId: number;
-}
-
-export interface IWeb3Provider {
-    providerUrl: string;
-    setProvider: (providerUrl: string) => void;
-    request: (args: RequestArguments) => Promise<RpcResponse | PollingInfo>;
-    cancelPoll?: (pollingInfo: PollingInfo) => void;
-    disconnect?: () => void;
-}
-
-export interface RequestArguments {
-    readonly method: string;
-    readonly params?: readonly unknown[] | object;
-    rpcOptions?: RpcOptions;
-    providerOptions?: HttpOptions;
-    returnType?: ValidTypesEnum;
-}
-
-export interface HttpOptions {
-    axiosConfig?: AxiosRequestConfig;
-    poll?: boolean;
-    pollingInterval?: number;
-}
-
-export interface PollingInfo {
-    eventEmitter: EventEmitter;
-    pollingId: number;
 }

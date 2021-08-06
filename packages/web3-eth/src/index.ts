@@ -1,4 +1,4 @@
-import Web3RequestManager from 'web3-core-requestmanager';
+import web3Provider from 'web3-core-provider';
 import {
     RpcResponse,
     RpcStringResult,
@@ -13,9 +13,9 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
-    PollingInfo,
     RequestArguments,
-} from 'web3-providers-base/lib/types';
+    IWeb3Provider
+} from 'web3-core-types/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 import {
     PrefixedHexString,
@@ -30,13 +30,12 @@ import {
 import { Web3EthOptions, EthCallTransaction } from './types';
 
 export default class Web3Eth {
-    private _requestManager: Web3RequestManager;
     private _defaultReturnType: ValidTypesEnum;
 
+    provider: IWeb3Provider;
+
     constructor(options: Web3EthOptions) {
-        this._requestManager = new Web3RequestManager({
-            providerUrl: options.providerUrl,
-        });
+        this.provider = web3Provider(options.web3Client);
         this._defaultReturnType =
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
@@ -58,9 +57,9 @@ export default class Web3Eth {
     //  */
     async getClientVersion(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcStringResult | PollingInfo> {
+    ): Promise<RpcStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'web3_clientVersion',
                 params: [],
@@ -85,9 +84,9 @@ export default class Web3Eth {
     async getSha3(
         data: string,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'web3_clientVersion',
                 params: [data],
@@ -110,9 +109,9 @@ export default class Web3Eth {
     //  */
     async getNetworkVersion(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'net_version',
                 params: [],
@@ -145,9 +144,9 @@ export default class Web3Eth {
     //  */
     async getNetworkListening(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBooleanResult | PollingInfo> {
+    ): Promise<RpcBooleanResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'net_listening',
                 params: [],
@@ -170,9 +169,9 @@ export default class Web3Eth {
     //  */
     async getNetworkPeerCount(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'net_peerCount',
                 params: [],
@@ -205,9 +204,9 @@ export default class Web3Eth {
     //  */
     async getProtocolVersion(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_protocolVersion',
                 params: [],
@@ -240,9 +239,9 @@ export default class Web3Eth {
     //  */
     async getSyncing(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcSyncingResult | PollingInfo> {
+    ): Promise<RpcSyncingResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_syncing',
                 params: [],
@@ -280,9 +279,9 @@ export default class Web3Eth {
     //  */
     async getCoinbase(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_coinbase',
                 params: [],
@@ -305,9 +304,9 @@ export default class Web3Eth {
     //  */
     async getMining(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBooleanResult | PollingInfo> {
+    ): Promise<RpcBooleanResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_mining',
                 params: [],
@@ -330,9 +329,9 @@ export default class Web3Eth {
     //  */
     async getHashRate(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_hashrate',
                 params: [],
@@ -365,9 +364,9 @@ export default class Web3Eth {
     //  */
     async getGasPrice(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_gasPrice',
                 params: [],
@@ -400,9 +399,9 @@ export default class Web3Eth {
     //  */
     async getAccounts(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcAccountsResult | PollingInfo> {
+    ): Promise<RpcAccountsResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_accounts',
                 params: [],
@@ -425,9 +424,9 @@ export default class Web3Eth {
     //  */
     async getBlockNumber(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_blockNumber',
                 params: [],
@@ -464,9 +463,9 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBalance',
                 params: [
@@ -510,9 +509,9 @@ export default class Web3Eth {
         storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getStorageAt',
                 params: [
@@ -545,9 +544,9 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionCount',
                 params: [
@@ -587,9 +586,9 @@ export default class Web3Eth {
     async getBlockTransactionCountByHash(
         blockHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockTransactionCountByHash',
                 params: [blockHash],
@@ -626,9 +625,9 @@ export default class Web3Eth {
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockTransactionCountByNumber',
                 params: [
@@ -669,9 +668,9 @@ export default class Web3Eth {
     async getUncleCountByBlockHash(
         blockHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleCountByBlockHash',
                 params: [blockHash],
@@ -708,9 +707,9 @@ export default class Web3Eth {
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleCountByBlockNumber',
                 params: [
@@ -753,9 +752,9 @@ export default class Web3Eth {
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getCode',
                 params: [
@@ -787,9 +786,9 @@ export default class Web3Eth {
         address: PrefixedHexString,
         message: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sign',
                 params: [address, message],
@@ -821,9 +820,9 @@ export default class Web3Eth {
     async signTransaction(
         transaction: EthTransaction,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_signTransaction',
                 params: [
@@ -871,9 +870,9 @@ export default class Web3Eth {
     async sendTransaction(
         transaction: EthTransaction,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sendTransaction',
                 params: [
@@ -914,9 +913,9 @@ export default class Web3Eth {
     async sendRawTransaction(
         rawTransaction: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sendRawTransaction',
                 params: [rawTransaction],
@@ -949,9 +948,9 @@ export default class Web3Eth {
     async call(
         transaction: EthCallTransaction,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcResponse | PollingInfo> {
+    ): Promise<RpcResponse> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_call',
                 params: [
@@ -996,9 +995,9 @@ export default class Web3Eth {
     async estimateGas(
         transaction: EthTransaction,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_estimateGas',
                 params: [
@@ -1051,9 +1050,9 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         returnFullTxs: boolean,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBlockResult | PollingInfo> {
+    ): Promise<RpcBlockResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockByHash',
                 params: [blockHash, returnFullTxs],
@@ -1110,9 +1109,9 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBlockResult | PollingInfo> {
+    ): Promise<RpcBlockResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockByNumber',
                 params: [
@@ -1172,9 +1171,9 @@ export default class Web3Eth {
     async getTransactionByHash(
         txHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcTransactionResult | PollingInfo> {
+    ): Promise<RpcTransactionResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByHash',
                 params: [txHash],
@@ -1220,9 +1219,9 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         transactionIndex: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcTransactionResult | PollingInfo> {
+    ): Promise<RpcTransactionResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByBlockHashAndIndex',
                 params: [blockHash, toHex(transactionIndex)],
@@ -1270,9 +1269,9 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         transactionIndex: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcTransactionResult | PollingInfo> {
+    ): Promise<RpcTransactionResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByBlockNumberAndIndex',
                 params: [
@@ -1323,9 +1322,9 @@ export default class Web3Eth {
     async getTransactionReceipt(
         txHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcTransactionReceiptResult | PollingInfo> {
+    ): Promise<RpcTransactionReceiptResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionReceipt',
                 params: [txHash],
@@ -1376,9 +1375,9 @@ export default class Web3Eth {
         blockHash: PrefixedHexString,
         uncleIndex: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBlockResult | PollingInfo> {
+    ): Promise<RpcBlockResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleByBlockHashAndIndex',
                 params: [blockHash, toHex(uncleIndex)],
@@ -1437,9 +1436,9 @@ export default class Web3Eth {
         blockIdentifier: BlockIdentifier,
         uncleIndex: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBlockResult | PollingInfo> {
+    ): Promise<RpcBlockResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleByBlockNumberAndIndex',
                 params: [
@@ -1499,9 +1498,9 @@ export default class Web3Eth {
     //  */
     async getCompilers(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcStringArrayResult | PollingInfo> {
+    ): Promise<RpcStringArrayResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getCompilers',
                 params: [],
@@ -1526,9 +1525,9 @@ export default class Web3Eth {
     async compileSolidity(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcCompiledSolidityResult | PollingInfo> {
+    ): Promise<RpcCompiledSolidityResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileSolidity',
                 params: [sourceCode],
@@ -1555,9 +1554,9 @@ export default class Web3Eth {
     async compileLLL(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileLLL',
                 params: [sourceCode],
@@ -1582,9 +1581,9 @@ export default class Web3Eth {
     async compileSerpent(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcPrefixedHexStringResult | PollingInfo> {
+    ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileSerpent',
                 params: [sourceCode],
@@ -1615,9 +1614,9 @@ export default class Web3Eth {
     async newFilter(
         filter: EthFilter,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newFilter',
                 params: [
@@ -1660,9 +1659,9 @@ export default class Web3Eth {
     //  */
     async newBlockFilter(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newBlockFilter',
                 params: [],
@@ -1695,9 +1694,9 @@ export default class Web3Eth {
     //  */
     async newPendingTransactionFilter(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcValidTypeResult | PollingInfo> {
+    ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newPendingTransactionFilter',
                 params: [],
@@ -1734,9 +1733,9 @@ export default class Web3Eth {
     async uninstallFilter(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBooleanResult | PollingInfo> {
+    ): Promise<RpcBooleanResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_uninstallFilter',
                 params: [toHex(filterId)],
@@ -1762,9 +1761,9 @@ export default class Web3Eth {
     async getFilterChanges(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcLogResult | PollingInfo> {
+    ): Promise<RpcLogResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getFilterChanges',
                 params: [toHex(filterId)],
@@ -1801,9 +1800,9 @@ export default class Web3Eth {
     async getFilterLogs(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcLogResult | PollingInfo> {
+    ): Promise<RpcLogResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getFilterLogs',
                 params: [toHex(filterId)],
@@ -1839,9 +1838,9 @@ export default class Web3Eth {
     async getLogs(
         filter: EthFilter,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcLogResult | PollingInfo> {
+    ): Promise<RpcLogResult> {
         try {
-            const response = await this._requestManager.request({
+            const response = await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getLogs',
                 params: [
@@ -1885,9 +1884,9 @@ export default class Web3Eth {
     //  */
     async getWork(
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcStringArrayResult | PollingInfo> {
+    ): Promise<RpcStringArrayResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getWork',
                 params: [],
@@ -1916,9 +1915,9 @@ export default class Web3Eth {
         powHash: PrefixedHexString,
         digest: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBooleanResult | PollingInfo> {
+    ): Promise<RpcBooleanResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_submitWork',
                 params: [toHex(nonce, 8), powHash, digest],
@@ -1945,9 +1944,9 @@ export default class Web3Eth {
         hashRate: ValidTypes,
         clientId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
-    ): Promise<RpcBooleanResult | PollingInfo> {
+    ): Promise<RpcBooleanResult> {
         try {
-            return await this._requestManager.request({
+            return await this.provider.request({
                 ...requestArguments,
                 method: 'eth_submitHashRate',
                 params: [toHex(hashRate, 32), toHex(clientId)],

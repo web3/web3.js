@@ -1,4 +1,4 @@
-export enum ProviderProtocol {
+export enum ClientProtocol {
     UNKNOWN,
     HTTP,
     WS,

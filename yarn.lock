@@ -7892,6 +7892,19 @@ wcwidth@^1.0.0:
   dependencies:
     defaults "^1.0.3"
 
+web3-core-requestmanager@4.0.0-alpha.0:
+  version "4.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/web3-core-requestmanager/-/web3-core-requestmanager-4.0.0-alpha.0.tgz#199539ab46ab243514ded4dcf7ac136673d02f26"
+  integrity sha512-7i10kYOO4KTw6k30jV4Ak416RaMNATepLTtQrPYU/DxVLR0TDagziQ9k2S1y0zDR4X3sNgy/FzExITcacStLLw==
+  dependencies:
+    web3-providers-base "1.0.0-alpha.1"
+    web3-providers-http "4.0.0-alpha.0"
+
+web3-providers-base@1.0.0-alpha.1:
+  version "1.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/web3-providers-base/-/web3-providers-base-1.0.0-alpha.1.tgz#ec1564fae2162a9717ead38bfd7e66f28b4de837"
+  integrity sha512-acMI1SqSAFCNZjmucM7vpA7DiYHe8C4fvkFH51n9XkqCMfwsIKp8wYcQOCh6vJQe8kH5X0gqz1yZSSjBbt/JzQ==
+
 web3-utils@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-4.0.0.tgz#a2c60e6050cd0f113212a4081000d0f8aff7b2c9"
