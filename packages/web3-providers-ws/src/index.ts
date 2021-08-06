@@ -219,7 +219,7 @@ export default class Web3ProviderWS {
         try {
             return (
                 typeof providerUrl !== 'string' ||
-                /^(wss?:\/\/)([0-9]{1,3}(?:\.[0-9]{1,3}){3}|(?=[^\/]{1,254}(?![^\/]))(?:(?=[a-zA-Z0-9-]{1,63}\.)(?:xn--+)?[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,63}):([0-9]{1,5})$/i.test(
+                /^ws(s)?:\/\//i.test(
                     providerUrl
                 )
             );
