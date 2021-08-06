@@ -63,6 +63,10 @@ export default class Web3ProvidersHttp
         return super.on(web3ProviderEvents, listener);
     }
 
+    supportsSubscriptions() {
+        return false;
+    }
+
     async request(args: RequestArguments): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
@@ -88,6 +92,11 @@ export default class Web3ProvidersHttp
 
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
+            if (error.code === 'ECONNREFUSED' && this._connected) {
+                this._connected = false;
+                // TODO replace with ProviderRpcError
+                this.emit('disconnect', { code: 4900 });
+            }
             // TODO Fancy error detection that complies with EIP1193 defined errors
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
             throw Error(error.message);
