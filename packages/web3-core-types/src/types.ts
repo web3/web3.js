@@ -175,6 +175,7 @@ export interface RpcResponse {
 export interface IWeb3Provider extends Eip1193Provider {
     web3Client: Web3Client;
     setWeb3Client: (web3Client: Web3Client) => void;
+    supportsSubscriptions?: () => boolean;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
