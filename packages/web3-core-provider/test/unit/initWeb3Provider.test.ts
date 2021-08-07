@@ -36,7 +36,7 @@ describe('Instantiates correct provider for varying provided clients', () => {
         // Web3ProviderHttp makes a request to get chainId of
         // connected client upon instantiation, so we mock the reponse
         // @ts-ignore mockReturnValue added by jest
-        Web3ProvidersHttp.prototype.request.mockReturnValue('0x0');
+        Web3ProvidersHttp.prototype.request.mockReturnValue('0x1');
 
         const httpClient = 'http://127.0.0.1:8545';
         const web3ProvidersHttp: IWeb3Provider = initWeb3Provider(httpClient);

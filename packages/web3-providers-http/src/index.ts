@@ -46,6 +46,37 @@ export default class Web3ProvidersHttp
         }
     }
 
+    private async _connectToClient() {
+        try {
+            const chainId = await this._getChainId();
+            this.emit(Web3ProviderEvents.Connect, { chainId });
+            this._connected = true;
+
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged-1
+            if (
+                this._clientChainId !== undefined &&
+                chainId !== this._clientChainId
+            ) {
+                this.emit(Web3ProviderEvents.ChainChanged, chainId);
+            }
+            this._clientChainId = chainId;
+        } catch (error) {
+            throw Error(`Error connecting to client: ${error.message}\n${error.stack}`);
+        }
+    }
+
+    private async _getChainId(): Promise<string> {
+        try {
+            const result = await this.request({
+                method: 'eth_chainId',
+                params: [],
+            });
+            return result.result;
+        } catch (error) {
+            throw Error(`Error getting chain id: ${error.message}`);
+        }
+    }
+
     setWeb3Client(web3Client: Web3Client) {
         try {
             this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
@@ -101,32 +132,5 @@ export default class Web3ProvidersHttp
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
             throw Error(error.message);
         }
-    }
-
-    private async _connectToClient() {
-        try {
-            const chainId = await this._getChainId();
-            this.emit(Web3ProviderEvents.Connect, { chainId });
-            this._connected = true;
-
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged-1
-            if (
-                this._clientChainId !== undefined &&
-                chainId !== this._clientChainId
-            ) {
-                this.emit(Web3ProviderEvents.ChainChanged, chainId);
-            }
-            this._clientChainId = chainId;
-        } catch (error) {
-            throw Error(`Error connecting to client: ${error.message}`);
-        }
-    }
-
-    private async _getChainId(): Promise<string> {
-        const result = await this.request({
-            method: 'eth_chainId',
-            params: [],
-        });
-        return result.result;
     }
 }
