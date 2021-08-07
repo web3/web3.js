@@ -1,6 +1,6 @@
-import Web3ProvidersHttp from "web3-providers-http"
+import Web3ProvidersHttp from 'web3-providers-http';
 
-import Web3Eth from "../../src";
+import Web3Eth from '../../src';
 
 describe('getMining', () => {
     let web3ProvidersHttpRequestSpy: jest.SpyInstance;
@@ -10,8 +10,8 @@ describe('getMining', () => {
         const chainIdResult = {
             id: 42,
             jsonrpc: '2.0',
-            result: '0x1'
-        }
+            result: '0x1',
+        };
 
         Web3ProvidersHttp.prototype.request = jest.fn();
         web3ProvidersHttpRequestSpy = jest.spyOn(
@@ -23,13 +23,13 @@ describe('getMining', () => {
         // @ts-ignore mockReturnValueOnce added by jest
         Web3ProvidersHttp.prototype.request.mockReturnValueOnce(chainIdResult);
         web3Eth = new Web3Eth({ web3Client: 'http://127.0.0.1:8545' });
-    })
+    });
 
     it('should make request with expected requestArguments', async () => {
         const expectedResult = {
             id: 42,
             jsonrpc: '2.0',
-            result: true
+            result: true,
         };
         // @ts-ignore mockReturnValueOnce added by jest
         Web3ProvidersHttp.prototype.request.mockReturnValueOnce(expectedResult);
@@ -38,7 +38,7 @@ describe('getMining', () => {
         expect(result).toStrictEqual(expectedResult);
         expect(web3ProvidersHttpRequestSpy).toHaveBeenCalledWith({
             method: 'eth_mining',
-            params: []
-        })
-    })
-})
+            params: [],
+        });
+    });
+});

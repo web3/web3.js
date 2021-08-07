@@ -61,7 +61,9 @@ export default class Web3ProvidersHttp
             }
             this._clientChainId = chainId;
         } catch (error) {
-            throw Error(`Error connecting to client: ${error.message}\n${error.stack}`);
+            throw Error(
+                `Error connecting to client: ${error.message}\n${error.stack}`
+            );
         }
     }
 
