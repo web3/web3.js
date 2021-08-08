@@ -2,8 +2,8 @@ import { DEFAULT_ACCOUNTS } from '../constants';
 
 const baseExpectedResult = {
     id: 42,
-    jsonrpc: '2.0'
-}
+    jsonrpc: '2.0',
+};
 
 export const testsNoParams = [
     {
@@ -12,7 +12,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: 'Mist/v0.9.3/darwin/go1.4.1',
-        }
+        },
     },
     {
         name: 'getNetworkVersion',
@@ -20,7 +20,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: '0x1',
-        }
+        },
     },
     {
         name: 'getNetworkListening',
@@ -28,7 +28,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: true,
-        }
+        },
     },
     {
         name: 'getNetworkPeerCount',
@@ -36,11 +36,11 @@ export const testsNoParams = [
         formatOutput: true,
         expectedResult: {
             ...baseExpectedResult,
-                result: '0x1',
+            result: '0x1',
         },
         expectedResultPrefixedHexString: {
             ...baseExpectedResult,
-                result: '0x1',
+            result: '0x1',
         },
         expectedResultNumber: {
             ...baseExpectedResult,
@@ -53,7 +53,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(1),
-        }
+        },
     },
     {
         name: 'getProtocolVersion',
@@ -61,11 +61,11 @@ export const testsNoParams = [
         formatOutput: true,
         expectedResult: {
             ...baseExpectedResult,
-                result: '0x36',
+            result: '0x36',
         },
         expectedResultPrefixedHexString: {
             ...baseExpectedResult,
-                result: '0x36',
+            result: '0x36',
         },
         expectedResultNumber: {
             ...baseExpectedResult,
@@ -78,7 +78,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(54),
-        }
+        },
     },
     {
         name: 'getSyncing',
@@ -121,9 +121,9 @@ export const testsNoParams = [
             result: {
                 startingBlock: BigInt(900),
                 currentBlock: BigInt(902),
-                highestBlock: BigInt(1108)
+                highestBlock: BigInt(1108),
             },
-        }
+        },
     },
     {
         name: 'getCoinbase',
@@ -131,7 +131,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
-        }
+        },
     },
     {
         name: 'getMining',
@@ -139,7 +139,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: true,
-        }
+        },
     },
     {
         name: 'getHashRate',
@@ -164,7 +164,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getGasPrice',
@@ -189,7 +189,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(8049999872),
-        }
+        },
     },
     {
         name: 'getAccounts',
@@ -197,7 +197,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: DEFAULT_ACCOUNTS,
-        }
+        },
     },
     {
         name: 'getBlockNumber',
@@ -222,7 +222,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(1207),
-        }
+        },
     },
     {
         name: 'getCompilers',
@@ -230,7 +230,7 @@ export const testsNoParams = [
         expectedResult: {
             ...baseExpectedResult,
             result: ['solidity', 'lll', 'serpent'],
-        }
+        },
     },
     {
         name: 'newBlockFilter',
@@ -255,7 +255,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(1),
-        }
+        },
     },
     {
         name: 'newPendingTransactionFilter',
@@ -280,7 +280,7 @@ export const testsNoParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(1),
-        }
+        },
     },
     {
         name: 'getWork',
@@ -292,8 +292,8 @@ export const testsNoParams = [
                 '0x5EED00000000000000000000000000005EED0000000000000000000000000000',
                 '0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000',
             ],
-        }
-    }
+        },
+    },
 ];
 
 export const testsHasParams = [
@@ -303,8 +303,8 @@ export const testsHasParams = [
         params: ['0x68656c6c6f20776f726c64'],
         expectedResult: {
             ...baseExpectedResult,
-            result: '0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad'
-        }
+            result: '0x47173285a8d7341e5e972fc677286384f802f8ef42a5ec5f03bbfa254cb01fad',
+        },
     },
     {
         name: 'getBalance',
@@ -313,7 +313,7 @@ export const testsHasParams = [
         params: [DEFAULT_ACCOUNTS[0], '0x2a'],
         paramsPrefixedHexString: [DEFAULT_ACCOUNTS[0], '0x2a'],
         paramsNumber: [DEFAULT_ACCOUNTS[0], 42],
-        paramsNumberString: [DEFAULT_ACCOUNTS[0],'42'],
+        paramsNumberString: [DEFAULT_ACCOUNTS[0], '42'],
         paramsBigInt: [DEFAULT_ACCOUNTS[0], BigInt(42)],
         formatOutput: true,
         expectedResult: {
@@ -335,94 +335,77 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getStorageAt',
         method: 'eth_getStorageAt',
         formatInput: true,
-        params: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '0x0',
-            '0x2a'
-        ],
+        params: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', '0x0', '0x2a'],
         paramsPrefixedHexString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             '0x0',
-            '0x2a'
+            '0x2a',
         ],
-        paramsNumber: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            0,
-            42
-        ],
+        paramsNumber: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', 0, 42],
         paramsNumberString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             '0',
-            '42'
+            '42',
         ],
         paramsBigInt: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             BigInt(0),
-            BigInt(42)
+            BigInt(42),
         ],
         supportsBlockTags: true,
         paramslatest: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             '0x0',
-            'latest'
+            'latest',
         ],
         paramspending: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             '0x0',
-            'pending'
+            'pending',
         ],
         paramsearliest: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
             '0x0',
-            'earliest'
+            'earliest',
         ],
         expectedResult: {
             ...baseExpectedResult,
             result: '0x38a',
-        }
+        },
     },
     {
         name: 'getTransactionCount',
         method: 'eth_getTransactionCount',
         formatInput: true,
-        params: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '0x2a'
-        ],
+        params: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', '0x2a'],
         paramsPrefixedHexString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '0x2a'
+            '0x2a',
         ],
-        paramsNumber: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            42
-        ],
+        paramsNumber: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', 42],
         paramsNumberString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '42'
+            '42',
         ],
         paramsBigInt: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            BigInt(42)
+            BigInt(42),
         ],
         supportsBlockTags: true,
-        paramslatest: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'latest'
-        ],
+        paramslatest: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', 'latest'],
         paramspending: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'pending'
+            'pending',
         ],
         paramsearliest: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'earliest'
+            'earliest',
         ],
         formatOutput: true,
         expectedResult: {
@@ -444,12 +427,14 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getBlockTransactionCountByHash',
         method: 'eth_getBlockTransactionCountByHash',
-        params: ['0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'],
+        params: [
+            '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+        ],
         formatOutput: true,
         expectedResult: {
             ...baseExpectedResult,
@@ -470,7 +455,7 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getBlockTransactionCountByNumber',
@@ -505,12 +490,14 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getUncleCountByBlockHash',
         method: 'eth_getUncleCountByBlockHash',
-        params: ['0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238'],
+        params: [
+            '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+        ],
         formatOutput: true,
         expectedResult: {
             ...baseExpectedResult,
@@ -531,7 +518,7 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getUncleCountByBlockNumber',
@@ -566,52 +553,40 @@ export const testsHasParams = [
         expectedResultBigInt: {
             ...baseExpectedResult,
             result: BigInt(906),
-        }
+        },
     },
     {
         name: 'getCode',
         method: 'eth_getCode',
         formatInput: true,
-        params: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '0x2a'
-        ],
+        params: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', '0x2a'],
         paramsPrefixedHexString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '0x2a'
+            '0x2a',
         ],
-        paramsNumber: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            42
-        ],
+        paramsNumber: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', 42],
         paramsNumberString: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            '42'
+            '42',
         ],
         paramsBigInt: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            BigInt(42)
+            BigInt(42),
         ],
         supportsBlockTags: true,
-        paramslatest: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'latest'
-        ],
+        paramslatest: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', 'latest'],
         paramspending: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'pending'
+            'pending',
         ],
         paramsearliest: [
             '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            'earliest'
-        ]
+            'earliest',
+        ],
     },
     {
         name: 'sign',
         method: 'eth_sign',
-        params: [
-            '0x295a70b2de5e3953354a6a8344e616ed314d7251',
-            "Don't blink"
-        ],
+        params: ['0x295a70b2de5e3953354a6a8344e616ed314d7251', "Don't blink"],
     },
 ];

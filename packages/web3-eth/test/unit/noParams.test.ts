@@ -24,14 +24,18 @@ for (const testNoParams of testsNoParams) {
             // Web3ProviderHttp makes a request to get chainId of
             // connected client upon instantiation, so we mock the reponse
             // @ts-ignore mockReturnValueOnce added by jest
-            Web3ProvidersHttp.prototype.request.mockReturnValueOnce(chainIdResult);
+            Web3ProvidersHttp.prototype.request.mockReturnValueOnce(
+                chainIdResult
+            );
             web3Eth = new Web3Eth({ web3Client: 'http://127.0.0.1:8545' });
         });
 
         it('should make request with expected requestArguments', async () => {
             // @ts-ignore mockReturnValueOnce added by jest
-            Web3ProvidersHttp.prototype.request.mockReturnValueOnce(testNoParams.expectedResult);
-    
+            Web3ProvidersHttp.prototype.request.mockReturnValueOnce(
+                testNoParams.expectedResult
+            );
+
             // @ts-ignore
             const result = await web3Eth[testNoParams.name]();
             expect(result).toStrictEqual(testNoParams.expectedResult);
@@ -41,7 +45,7 @@ for (const testNoParams of testsNoParams) {
             });
         });
 
-        if(testNoParams.formatOutput) {
+        if (testNoParams.formatOutput) {
             describe('Output formatting', () => {
                 for (const validType in ValidTypesEnum) {
                     it(`should convert RPC result to ${validType}`, async () => {
@@ -50,14 +54,18 @@ for (const testNoParams of testsNoParams) {
                             // @ts-ignore
                             testNoParams[`expectedResult${validType}`]
                         );
-            
+
                         // @ts-ignore
                         const result = await web3Eth[testNoParams.name]({
                             returnType: validType,
                         });
                         // @ts-ignore
-                        expect(result).toStrictEqual(testNoParams[`expectedResult${validType}`]);
-                        expect(web3ProvidersHttpRequestSpy).toHaveBeenCalledWith({
+                        expect(result).toStrictEqual(
+                            testNoParams[`expectedResult${validType}`]
+                        );
+                        expect(
+                            web3ProvidersHttpRequestSpy
+                        ).toHaveBeenCalledWith({
                             method: testNoParams.method,
                             params: [],
                         });
@@ -67,4 +75,3 @@ for (const testNoParams of testsNoParams) {
         }
     });
 }
-
