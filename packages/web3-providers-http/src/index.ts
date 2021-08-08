@@ -90,10 +90,10 @@ export default class Web3ProvidersHttp
     }
 
     on(
-        web3ProviderEvents: Web3ProviderEvents,
+        web3ProviderEvent: Web3ProviderEvents,
         listener: ProviderEventListener
     ): this {
-        return super.on(web3ProviderEvents, listener);
+        return super.on(web3ProviderEvent, listener);
     }
 
     supportsSubscriptions() {
