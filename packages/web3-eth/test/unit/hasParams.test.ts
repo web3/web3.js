@@ -58,6 +58,7 @@ for (const testHasParams of testsHasParams) {
 
                         // @ts-ignore
                         const result = await web3Eth[testHasParams.name](
+                            // @ts-ignore
                             ...testHasParams[`params${validType}`]
                         );
                         expect(result).toStrictEqual(
@@ -85,6 +86,7 @@ for (const testHasParams of testsHasParams) {
 
                         // @ts-ignore
                         const result = await web3Eth[testHasParams.name](
+                            // @ts-ignore
                             ...testHasParams[`params${blockTag}`]
                         );
                         expect(result).toStrictEqual(
@@ -117,8 +119,8 @@ for (const testHasParams of testsHasParams) {
                             ...testHasParams.params,
                             { returnType: validType }
                         );
-                        // @ts-ignore
                         expect(result).toStrictEqual(
+                            // @ts-ignore
                             testHasParams[`expectedResult${validType}`]
                         );
                         expect(

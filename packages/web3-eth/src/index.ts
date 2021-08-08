@@ -640,19 +640,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Signs a transaction that can be submitted to the network at a later time using with sendRawTransaction
-    //  * @param {object} transaction Ethereum transaction
-    //  * @param {string} transaction.from Address transaction will be sent from
-    //  * @param {string} transaction.to Address transaction is directed towards (optional when creating new contract)
-    //  * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
-    //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
-    //  * @param {string} transaction.value Hex string representing number of Wei to send to {to}
-    //  * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
-    //  * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing signed message
-    //  */
+    /**
+     * Signs a transaction that can be submitted to the network at a later time using with sendRawTransaction
+     * @param {object} transaction Ethereum transaction
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing signed message
+     */
     async signTransaction(
         transaction: EthTransaction,
         requestArguments?: Partial<RequestArguments>
@@ -684,19 +677,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Submits a transaction object to the provider to be sign and sent to the network
-    //  * @param {object} transaction Ethereum transaction
-    //  * @param {string} transaction.from Address transaction will be sent from
-    //  * @param {string} transaction.to Address transaction is directed towards (optional when creating new contract)
-    //  * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
-    //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
-    //  * @param {string} transaction.value Hex string representing number of Wei to send to {to}
-    //  * @param {string} transaction.data Hex string representing compiled code of a contract or the hash of the invoked method signature and encoded parameters
-    //  * @param {string} transaction.nonce Can be used to overwrite pending transactions that use the same nonce
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
-    //  */
+    /**
+     * Submits a transaction object to the provider to be sign and sent to the network
+     * @param {object} transaction Ethereum transaction
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
+     */
     async sendTransaction(
         transaction: EthTransaction,
         requestArguments?: Partial<RequestArguments>
@@ -728,12 +714,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Submits a previously signed transaction object to the network
-    //  * @param {string} rawTransaction Hex string representing previously signed transaction
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
-    //  */
+    /**
+     * Submits a previously signed transaction object to the network
+     * @param {string} rawTransaction Hex string representing previously signed transaction
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
+     */
     async sendRawTransaction(
         rawTransaction: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -749,22 +735,17 @@ export default class Web3Eth {
         }
     }
 
-    // // TODO Discuss formatting result
-    // /**
-    //  * Executes a new message call immediately without creating a transaction on the block chain
-    //  * @param {object} transaction Ethereum transaction
-    //  * @param {string} transaction.from Address transaction will be sent from
-    //  * @param {string} transaction.to Address transaction is directed towards
-    //  * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
-    //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
-    //  * @param {string} transaction.value Hex string representing number of Wei to send to {to}
-    //  * @param {string} transaction.data Hash of the method signature and encoded parameters
-    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing return value of executed contract
-    //  */
+    // TODO Discuss formatting result
+    /**
+     * Executes a new message call immediately without creating a transaction on the block chain
+     * @param {object} transaction Ethereum transaction
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing return value of executed contract
+     */
     async call(
         transaction: EthCallTransaction,
+        blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcResponse> {
         try {
@@ -784,6 +765,9 @@ export default class Web3Eth {
                             ? toHex(transaction.value)
                             : undefined,
                     },
+                    Web3Eth._isBlockTag(blockIdentifier)
+                        ? (blockIdentifier as BlockTags)
+                        : toHex(blockIdentifier),
                 ],
             });
         } catch (error) {
@@ -791,21 +775,16 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Generates and returns an estimate of how much gas is necessary to allow the transaction to complete
-    //  * @param {object} transaction Ethereum transaction
-    //  * @param {string} transaction.from Address transaction will be sent from (optional)
-    //  * @param {string} transaction.to Address transaction is directed towards (optional)
-    //  * @param {string} transaction.gas Hex string representing gas to provide for transaction (ETH node defaults to 90,000)
-    //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
-    //  * @param {string} transaction.value Hex string representing number of Wei to send to {to} (optional)
-    //  * @param {string} transaction.data Hash of the method signature and encoded parameters (optional)
-    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing estimated amount of gas to be used
-    //  */
+    /**
+     * Generates and returns an estimate of how much gas is necessary to allow the transaction to complete
+     * @param {object} transaction Ethereum transaction
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing estimated amount of gas to be used
+     */
     async estimateGas(
         transaction: EthTransaction,
+        blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
@@ -828,6 +807,9 @@ export default class Web3Eth {
                             ? toHex(transaction.nonce)
                             : undefined,
                     },
+                    Web3Eth._isBlockTag(blockIdentifier)
+                        ? (blockIdentifier as BlockTags)
+                        : toHex(blockIdentifier),
                 ],
             });
 
@@ -843,13 +825,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a block by hash
-    //  * @param {string} blockHash Hash of block to get information for
-    //  * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A block object or null when no block was found
-    //  */
+    /**
+     * Returns information about a block by hash
+     * @param {string} blockHash Hash of block to get information for
+     * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A block object or null when no block was found
+     */
     async getBlockByHash(
         blockHash: PrefixedHexString,
         returnFullTxs: boolean,
@@ -894,13 +876,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a block by number
-    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-    //  * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A block object or null when no block was found
-    //  */
+    /**
+     * Returns information about a block by number
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A block object or null when no block was found
+     */
     async getBlockByNumber(
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
