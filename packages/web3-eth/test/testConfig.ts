@@ -946,11 +946,11 @@ export const testConfig: TestConfig = {
         //         rpcMethod: 'eth_getWork',
         //         defaultExpectedResult: {
         //             ...expectedResultBase,
-        //             result: [
-        //                 '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-        //                 '0x5EED00000000000000000000000000005EED0000000000000000000000000000',
-        //                 '0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000',
-        //             ],
+                    // result: [
+                    //     '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+                    //     '0x5EED00000000000000000000000000005EED0000000000000000000000000000',
+                    //     '0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000',
+                    // ],
         //         },
         //     },
         //     {

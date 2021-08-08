@@ -308,11 +308,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns a list of addresses owned by client.
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Array of addresses owned by the client
-    //  */
+    /**
+     * Returns a list of addresses owned by client.
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Array of addresses owned by the client
+     */
     async getAccounts(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcAccountsResult> {
@@ -327,11 +327,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of most recent block
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing current block number client is on
-    //  */
+    /**
+     * Returns the number of most recent block
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Current block number client is on
+     */
     async getBlockNumber(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcValidTypeResult> {
@@ -354,13 +354,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the balance of the account of given address
-    //  * @param {string} address Address to get balance of
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing current balance in wei
-    //  */
+    /**
+     * Returns the balance of the account of given address
+     * @param {string} address Address to get balance of
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing current balance in wei
+     */
     async getBalance(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
@@ -390,14 +390,14 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the value from a storage position at a given address
-    //  * @param {string} address Address of storage to query
-    //  * @param {string} storagePosition Hex string representing position in storage to retrieve
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing value at {storagePosition}
-    //  */
+    /**
+     * Returns the value from a storage position at a given address
+     * @param {string} address Address of storage to query
+     * @param {string|number|BigInt} storagePosition Position in storage to retrieve
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing value at {storagePosition}
+     */
     async getStorageAt(
         address: PrefixedHexString,
         storagePosition: ValidTypes,
@@ -421,13 +421,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of transactions sent from an address
-    //  * @param {string} address Address to get transaction count of
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing number of transactions sent by {address}
-    //  */
+    /**
+     * Returns the number of transactions sent from an address
+     * @param {string} address Address to get transaction count of
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise<string|number|BigInt>} Number of transactions sent by {address}
+     */
     async getTransactionCount(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
@@ -457,12 +457,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of transactions in a block from a block matching the given block hash
-    //  * @param {string} blockHash Hash of block to query transaction count of
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing number of transactions in block
-    //  */
+    /**
+     * Returns the number of transactions in a block from a block matching the given block hash
+     * @param {string} blockHash Hash of block to query transaction count of
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing number of transactions in block
+     */
     async getBlockTransactionCountByHash(
         blockHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -488,12 +488,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of transactions in a block from a block matching the given block number
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing number of transactions in block
-    //  */
+    /**
+     * Returns the number of transactions in a block from a block matching the given block number
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing number of transactions in block
+     */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
@@ -523,12 +523,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of uncles in a block from a block matching the given block hash
-    //  * @param {string} blockHash Hash of block to query
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing number of uncles in block
-    //  */
+    /**
+     * Returns the number of uncles in a block from a block matching the given block hash
+     * @param {string} blockHash Hash of block to query
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing number of uncles in block
+     */
     async getUncleCountByBlockHash(
         blockHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -554,12 +554,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the number of uncles in a block from a block matching the given block number
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing number of uncles in block
-    //  */
+    /**
+     * Returns the number of uncles in a block from a block matching the given block number
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing number of uncles in block
+     */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
         requestArguments?: Partial<RequestArguments>
@@ -589,13 +589,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns code at a given address
-    //  * @param {string} address Address to get code at
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing the code at {address}
-    //  */
+    /**
+     * Returns code at a given address
+     * @param {string} address Address to get code at
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing the code at {address}
+     */
     async getCode(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
@@ -617,13 +617,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Calculates an Ethereum specific signature
-    //  * @param {string} address Address to use to sign {data}
-    //  * @param {string} message Message to sign
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Hex string representing signed message
-    //  */
+    /**
+     * Calculates an Ethereum specific signature
+     * @param {string} address Address to use to sign {data}
+     * @param {string} message Message to sign
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Hex string representing signed message
+     */
     async sign(
         address: PrefixedHexString,
         message: PrefixedHexString,
@@ -759,7 +759,7 @@ export default class Web3Eth {
     //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
     //  * @param {string} transaction.value Hex string representing number of Wei to send to {to}
     //  * @param {string} transaction.data Hash of the method signature and encoded parameters
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
+    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
     //  * @param {object} requestArguments (Optional)
     //  * @returns {Promise} Hex string representing return value of executed contract
     //  */
@@ -800,7 +800,7 @@ export default class Web3Eth {
     //  * @param {string} transaction.gasPrice Hex string representing price paid for each unit of gas in Wei (ETH node will determine if not provided)
     //  * @param {string} transaction.value Hex string representing number of Wei to send to {to} (optional)
     //  * @param {string} transaction.data Hash of the method signature and encoded parameters (optional)
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
+    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
     //  * @param {object} requestArguments (Optional)
     //  * @returns {Promise} Hex string representing estimated amount of gas to be used
     //  */
@@ -896,7 +896,7 @@ export default class Web3Eth {
 
     // /**
     //  * Returns information about a block by number
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
+    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
     //  * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
     //  * @param {object} requestArguments (Optional)
     //  * @returns {Promise} A block object or null when no block was found
@@ -1032,7 +1032,7 @@ export default class Web3Eth {
 
     // /**
     //  * Returns information about a transaction by block number and transaction index position
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
+    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
     //  * @param {string} transactionIndex Hex string representing index of transaction to return
     //  * @param {object} requestArguments (Optional)
     //  * @returns {Promise} A transaction object or {null} when no transaction was found
@@ -1175,7 +1175,7 @@ export default class Web3Eth {
 
     // /**
     //  * Returns information about a uncle of a block by number and uncle index position
-    //  * @param {string|number} blockIdentifier Integer or hex string representing block number, or "latest", "earliest", "pending"
+    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
     //  * @param {string} uncleIndex Index of uncle to retrieve
     //  * @param {object} requestArguments (Optional)
     //  * @returns {Promise} A block object or null when no block was found
@@ -1231,11 +1231,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns a list of available compilers in the client
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A list of available compilers
-    //  */
+    /**
+     * Returns a list of available compilers in the client
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A list of available compilers
+     */
     async getCompilers(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringArrayResult> {
@@ -1360,11 +1360,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Creates a filter in the node, to notify when a new block arrives
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Filter id
-    //  */
+    /**
+     * Creates a filter in the node, to notify when a new block arrives
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Filter id
+     */
     async newBlockFilter(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcValidTypeResult> {
@@ -1387,11 +1387,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Creates a filter in the node, to notify when new pending transactions arrive
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Filter id
-    //  */
+    /**
+     * Creates a filter in the node, to notify when new pending transactions arrive
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Filter id
+     */
     async newPendingTransactionFilter(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcValidTypeResult> {
@@ -1539,11 +1539,11 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”)
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
-    //  */
+    /**
+     * Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”)
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
+     */
     async getWork(
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringArrayResult> {

@@ -39,7 +39,7 @@ describe('getAccounts', () => {
         expect(result).toStrictEqual(expectedResult);
         expect(web3ProvidersHttpRequestSpy).toHaveBeenCalledWith({
             method: 'eth_accounts',
-            params: [],
+            params: [DEFAULT_ACCOUNTS],
         });
     });
 });
