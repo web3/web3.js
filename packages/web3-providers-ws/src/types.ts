@@ -36,11 +36,6 @@ export enum WSErrors {
     InvalidConnection = 'Invalid Connection ',
 }
 
-export interface RequestItem {
-    payload: JsonRpcPayload;
-    callback: (error: any, result: any) => void;
-}
-
 export interface JsonRpcPayload {
     jsonrpc: string;
     method: string;
