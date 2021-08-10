@@ -325,7 +325,7 @@ export default class Web3ProviderWS extends events.EventEmitter {
         }
     }
 
-    async disconnect(code: number, reason: string): Promise<void> {
+    async disconnect(code?: number, reason?: string): Promise<void> {
         this.removeSocketListeners();
 
         if (!this.webSocketConnection)
@@ -362,10 +362,6 @@ export default class Web3ProviderWS extends events.EventEmitter {
             this.requestQueue.delete(id as string);
 
             this.emit(WSStatus.ERROR, WSErrors.ConnectionNotOpenError);
-            this.emit(
-                WSStatus.ERROR,
-                new Error(WSErrors.ConnectionNotOpenError)
-            );
             return;
         }
 
