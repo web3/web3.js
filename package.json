@@ -113,7 +113,7 @@
         "crypto-js": "^3.3.0",
         "decache": "^4.6.0",
         "dependency-check": "^4.1.0",
-        "ethers": "^5.1.4",
+        "ethers": "^5.4.4",
         "ganache-cli": "^6.12.0",
         "jshint": "^2.12.0",
         "karma": "^5.2.3",
