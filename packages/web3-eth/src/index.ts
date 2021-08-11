@@ -1104,13 +1104,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a uncle of a block by hash and uncle index position
-    //  * @param {string} blockHash Hash of block to get uncles of
-    //  * @param {string} uncleIndex Index of uncle to retrieve
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A block object or null when no block was found
-    //  */
+    /**
+     * Returns information about a uncle of a block by hash and uncle index position
+     * @param {string} blockHash Hash of block to get uncles of
+     * @param {string} uncleIndex Index of uncle to retrieve
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A block object or null when no block was found
+     */
     async getUncleByBlockHashAndIndex(
         blockHash: PrefixedHexString,
         uncleIndex: ValidTypes,
@@ -1157,13 +1157,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a uncle of a block by number and uncle index position
-    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-    //  * @param {string} uncleIndex Index of uncle to retrieve
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A block object or null when no block was found
-    //  */
+    /**
+     * Returns information about a uncle of a block by number and uncle index position
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {string} uncleIndex Index of uncle to retrieve
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A block object or null when no block was found
+     */
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         uncleIndex: ValidTypes,
@@ -1234,12 +1234,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns compiled solidity code
-    //  * @param {string} sourceCode Solidity code to be compiled
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} compiled {sourceCode}
-    //  */
+    /**
+     * Returns compiled solidity code
+     * @param {string} sourceCode Solidity code to be compiled
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} compiled {sourceCode}
+     */
     async compileSolidity(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -1257,12 +1257,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns compiled LLL code
-    //  * @param {string} sourceCode LLL code to be compiled
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} compiled {sourceCode}
-    //  */
+    /**
+     * Returns compiled LLL code
+     * @param {string} sourceCode LLL code to be compiled
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} compiled {sourceCode}
+     */
     async compileLLL(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -1278,12 +1278,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns compiled serpent code
-    //  * @param {string} sourceCode Serpent code to be compiled
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} compiled {sourceCode}
-    //  */
+    /**
+     * Returns compiled serpent code
+     * @param {string} sourceCode Serpent code to be compiled
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} compiled {sourceCode}
+     */
     async compileSerpent(
         sourceCode: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -1301,16 +1301,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Creates a filter object, based on filter options, to notify when the state changes (logs)
-    //  * @param {object} filter Filter to be created
-    //  * @param {string|number} filter.fromBlock Start filter at integer block number or "latest", "earliest", "pending"
-    //  * @param {string|number} filter.toBlock End filter at integer block number or "latest", "earliest", "pending"
-    //  * @param {string|string[]} filter.address: Contract address or list of addresses from which logs should originate
-    //  * @param {string[]} filter.topics Topics to use for filtering (optional)
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Filter id
-    //  */
+    /**
+     * Creates a filter object, based on filter options, to notify when the state changes (logs)
+     * @param {object} filter Filter to be created
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Filter id
+     */
     async newFilter(
         filter: EthFilter,
         requestArguments?: Partial<RequestArguments>
@@ -1400,12 +1396,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Uninstalls a filter with given id. Should always be called when watch is no longer needed
-    //  * @param {string} filterId Id of filter to uninstall from node
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
-    //  */
+    /**
+     * Uninstalls a filter with given id. Should always be called when watch is no longer needed
+     * @param {string} filterId Id of filter to uninstall from node
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
+     */
     async uninstallFilter(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
@@ -1421,13 +1417,13 @@ export default class Web3Eth {
         }
     }
 
-    // // TODO Formatting output could be intensive since {response} is an array of results
-    // /**
-    //  * Polling method for a filter, which returns an array of logs which occurred since last poll
-    //  * @param {string} filterid Id of filter to retrieve changes from
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
-    //  */
+    // TODO Formatting output could be intensive since {response} is an array of results
+    /**
+     * Polling method for a filter, which returns an array of logs which occurred since last poll
+     * @param {string} filterid Id of filter to retrieve changes from
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
+     */
     async getFilterChanges(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
@@ -1452,13 +1448,13 @@ export default class Web3Eth {
         }
     }
 
-    // // TODO Formatting output could be intensive since {response} is an array of results
-    // /**
-    //  * Returns an array of all logs matching filter with given id
-    //  * @param {string} filterid Id of filter to retrieve
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
-    //  */
+    // TODO Formatting output could be intensive since {response} is an array of results
+    /**
+     * Returns an array of all logs matching filter with given id
+     * @param {string} filterid Id of filter to retrieve
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
+     */
     async getFilterLogs(
         filterId: ValidTypes,
         requestArguments?: Partial<RequestArguments>
@@ -1483,12 +1479,12 @@ export default class Web3Eth {
         }
     }
 
-    // // TODO Formatting output could be intensive since {response} is an array of results
-    // /**
-    //  * Returns an array of all logs matching a given filter object
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
-    //  */
+    // TODO Formatting output could be intensive since {response} is an array of results
+    /**
+     * Returns an array of all logs matching a given filter object
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
+     */
     async getLogs(
         filter: EthFilter,
         requestArguments?: Partial<RequestArguments>
@@ -1542,14 +1538,14 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Used for submitting a proof-of-work solution
-    //  * @param {string} nonce Hex string representing found nonce (64 bits)
-    //  * @param {string} powHash Hex string representing POW hash (256 bits)
-    //  * @param {string} digest Hex string representing mix digest (256 bits)
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Returns true if the provided solution is valid, otherwise false
-    //  */
+    /**
+     * Used for submitting a proof-of-work solution
+     * @param {string} nonce Hex string representing found nonce (64 bits)
+     * @param {string} powHash Hex string representing POW hash (256 bits)
+     * @param {string} digest Hex string representing mix digest (256 bits)
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Returns true if the provided solution is valid, otherwise false
+     */
     async submitWork(
         nonce: ValidTypes,
         powHash: PrefixedHexString,
@@ -1567,13 +1563,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Used for submitting mining hashrate
-    //  * @param {string} hashRate Hex string representing desired hash rate (32 bytes)
-    //  * @param {string} clientId Hex string representing ID identifying the client
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} Returns true if the provided solution is valid, otherwise false
-    //  */
+    /**
+     * Used for submitting mining hashrate
+     * @param {string} hashRate Hex string representing desired hash rate (32 bytes)
+     * @param {string} clientId Hex string representing ID identifying the client
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} Returns true if the provided solution is valid, otherwise false
+     */
     async submitHashRate(
         hashRate: ValidTypes,
         clientId: ValidTypes,

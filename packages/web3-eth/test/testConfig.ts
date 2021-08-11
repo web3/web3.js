@@ -722,40 +722,40 @@ export const testConfig: TestConfig = {
         //         },
         //         defaultExpectedResult: {
         //             ...expectedResultBase,
-        //             result: {
-        //                 code: '0x605880600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b603d6004803590602001506047565b8060005260206000f35b60006007820290506053565b91905056',
-        //                 info: {
-        //                     source: 'contract test {\n   function multiply(uint a) constant returns(uint d) {\n       return a * 7;\n   }\n}\n',
-        //                     language: 'Solidity',
-        //                     languageVersion: '0',
-        //                     compilerVersion: '0.9.19',
-        //                     abiDefinition: [
-        //                         {
-        //                             constant: true,
-        //                             inputs: [
-        //                                 {
-        //                                     name: 'a',
-        //                                     type: 'uint256',
-        //                                 },
-        //                             ],
-        //                             name: 'multiply',
-        //                             outputs: [
-        //                                 {
-        //                                     name: 'd',
-        //                                     type: 'uint256',
-        //                                 },
-        //                             ],
-        //                             type: 'function',
-        //                         },
-        //                     ],
-        //                     userDoc: {
-        //                         methods: {},
+        // result: {
+        //     code: '0x605880600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b603d6004803590602001506047565b8060005260206000f35b60006007820290506053565b91905056',
+        //     info: {
+        //         source: 'contract test {\n   function multiply(uint a) constant returns(uint d) {\n       return a * 7;\n   }\n}\n',
+        //         language: 'Solidity',
+        //         languageVersion: '0',
+        //         compilerVersion: '0.9.19',
+        //         abiDefinition: [
+        //             {
+        //                 constant: true,
+        //                 inputs: [
+        //                     {
+        //                         name: 'a',
+        //                         type: 'uint256',
         //                     },
-        //                     developerDoc: {
-        //                         methods: {},
+        //                 ],
+        //                 name: 'multiply',
+        //                 outputs: [
+        //                     {
+        //                         name: 'd',
+        //                         type: 'uint256',
         //                     },
-        //                 },
+        //                 ],
+        //                 type: 'function',
         //             },
+        //         ],
+        //         userDoc: {
+        //             methods: {},
+        //         },
+        //         developerDoc: {
+        //             methods: {},
+        //         },
+        //     },
+        // },
         //         },
         //     },
         //     {
@@ -779,21 +779,21 @@ export const testConfig: TestConfig = {
         //     {
         //         name: 'newFilter',
         //         rpcMethod: 'eth_newFilter',
-        //         parameters: {
-        //             filter: {
-        //                 fromBlock: '0x1',
-        //                 toBlock: '0x2',
-        //                 address: '0x8888f1f195afa192cfee860698584c030f4c9db1',
-        //                 topics: [
-        //                     '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-        //                     null,
-        //                     [
-        //                         '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
-        //                         '0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
-        //                     ],
-        //                 ],
-        //             },
-        //         },
+        // parameters: {
+        //     filter: {
+        //         fromBlock: '0x1',
+        //         toBlock: '0x2',
+        //         address: '0x8888f1f195afa192cfee860698584c030f4c9db1',
+        //         topics: [
+        //             '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        //             null,
+        //             [
+        //                 '0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        //                 '0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+        //             ],
+        //         ],
+        //     },
+        // },
         //         defaultExpectedResult: {
         //             ...expectedResultBase,
         //             result: '0x1',
@@ -837,22 +837,22 @@ export const testConfig: TestConfig = {
         //         parameters: { filterId: '0x16' },
         //         defaultExpectedResult: {
         //             ...expectedResultBase,
-        //             result: [
-        //                 {
-        //                     logIndex: '0x1',
-        //                     blockNumber: '0x1b4',
-        //                     blockHash:
-        //                         '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
-        //                     transactionHash:
-        //                         '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
-        //                     transactionIndex: '0x0',
-        //                     address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
-        //                     data: '0x0000000000000000000000000000000000000000000000000000000000000000',
-        //                     topics: [
-        //                         '0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5',
-        //                     ],
-        //                 },
-        //             ],
+        // result: [
+        //     {
+        //         logIndex: '0x1',
+        //         blockNumber: '0x1b4',
+        //         blockHash:
+        //             '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+        //         transactionHash:
+        //             '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+        //         transactionIndex: '0x0',
+        //         address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+        //         data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+        //         topics: [
+        //             '0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5',
+        //         ],
+        //     },
+        // ],
         //         },
         //         testInputFormatter: true,
         //         testOutputFormatter: true,
