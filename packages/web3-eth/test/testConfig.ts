@@ -573,21 +573,21 @@ export const testConfig: TestConfig = {
         //         },
         //         defaultExpectedResult: {
         //             ...expectedResultBase,
-        //             result: {
-        //                 transactionHash:
-        //                     '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
-        //                 transactionIndex: '0x1',
-        //                 blockNumber: '0xb',
-        //                 blockHash:
-        //                     '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
-        //                 cumulativeGasUsed: '0x33bc',
-        //                 gasUsed: '0x4dc',
-        //                 contractAddress:
-        //                     '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
-        //                 logs: [],
-        //                 logsBloom: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
-        //                 status: '0x1',
-        //             },
+        // result: {
+        //     transactionHash:
+        //         '0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238',
+        //     transactionIndex: '0x1',
+        //     blockNumber: '0xb',
+        //     blockHash:
+        //         '0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b',
+        //     cumulativeGasUsed: '0x33bc',
+        //     gasUsed: '0x4dc',
+        //     contractAddress:
+        //         '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+        //     logs: [],
+        //     logsBloom: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+        //     status: '0x1',
+        // },
         //         },
         //         testOutputFormatter: true,
         //         formattableOutputProperties: [

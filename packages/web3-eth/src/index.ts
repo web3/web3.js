@@ -932,12 +932,12 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the information about a transaction requested by transaction hash
-    //  * @param {string} txHash Hash of transaction to retrieve
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A transaction object or {null} when no transaction was found
-    //  */
+    /**
+     * Returns the information about a transaction requested by transaction hash
+     * @param {string} txHash Hash of transaction to retrieve
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A transaction object or {null} when no transaction was found
+     */
     async getTransactionByHash(
         txHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
@@ -970,13 +970,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a transaction by block hash and transaction index position
-    //  * @param {string} blockHash Hash of block to get transactions of
-    //  * @param {string} transactionIndex Hex string representing index of transaction to return
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A transaction object or {null} when no transaction was found
-    //  */
+    /**
+     * Returns information about a transaction by block hash and transaction index position
+     * @param {string} blockHash Hash of block to get transactions of
+     * @param {string} transactionIndex Index of transaction to return
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A transaction object or {null} when no transaction was found
+     */
     async getTransactionByBlockHashAndIndex(
         blockHash: PrefixedHexString,
         transactionIndex: ValidTypes,
@@ -1012,13 +1012,13 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns information about a transaction by block number and transaction index position
-    //  * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-    //  * @param {string} transactionIndex Hex string representing index of transaction to return
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A transaction object or {null} when no transaction was found
-    //  */
+    /**
+     * Returns information about a transaction by block number and transaction index position
+     * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
+     * @param {string} transactionIndex Index of transaction to return
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A transaction object or {null} when no transaction was found
+     */
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         transactionIndex: ValidTypes,
@@ -1059,12 +1059,14 @@ export default class Web3Eth {
         }
     }
 
-    // /**
-    //  * Returns the receipt of a transaction by transaction hash
-    //  * @param {string} txHash Hash of transaction to get receipt of
-    //  * @param {object} requestArguments (Optional)
-    //  * @returns {Promise} A transaction object or {null} when no receipt was found
-    //  */
+    // TODO Check if effectiveGasPrice should be included in
+    // output formatting
+    /**
+     * Returns the receipt of a transaction by transaction hash
+     * @param {string} txHash Hash of transaction to get receipt of
+     * @param {object} requestArguments (Optional)
+     * @returns {Promise} A transaction object or {null} when no receipt was found
+     */
     async getTransactionReceipt(
         txHash: PrefixedHexString,
         requestArguments?: Partial<RequestArguments>
