@@ -1565,8 +1565,8 @@ export default class Web3Eth {
 
     /**
      * Used for submitting mining hashrate
-     * @param {string} hashRate Hex string representing desired hash rate (32 bytes)
-     * @param {string} clientId Hex string representing ID identifying the client
+     * @param {string} hashRate Desired hash rate (32 bytes)
+     * @param {string} clientId ID identifying the client
      * @param {object} requestArguments (Optional)
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
