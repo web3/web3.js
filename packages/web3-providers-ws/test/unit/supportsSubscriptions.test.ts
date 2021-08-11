@@ -1,4 +1,3 @@
-
 import Web3ProviderWS from '../../src/index';
 import { WebSocketOptions } from '../../src/types';
 

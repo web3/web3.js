@@ -1,10 +1,9 @@
 import { ProviderOptions, RpcOptions } from 'web3-providers-base/lib/types';
 import { EventEmitter } from 'events';
 
-
 import Web3ProviderWS from '../../src/index';
 import { JsonRpcResponse, WebSocketOptions, WSStatus } from '../../src/types';
-
+import { doesNotMatch } from 'assert/strict';
 
 describe('Web3ProvidersWS.request', () => {
     const providerOptions: WebSocketOptions = {
@@ -17,24 +16,24 @@ describe('Web3ProvidersWS.request', () => {
         method: 'eth_blockNumber',
         params: [],
     };
-
-    it('should return RpcResponse', async () => {
+    jest.setTimeout(30000);
+    it('should return RpcResponse', async (done) => {
+        //jest.useFakeTimers();
         const web3ProvidersWS = new Web3ProviderWS(providerOptions);
-        const eventEmitterWS: EventEmitter = web3ProvidersWS.getEventEmitter();
 
-        eventEmitterWS.on(WSStatus.DATA, (data: any) => {
+        const callback = jest.fn();
+
+        web3ProvidersWS.on(WSStatus.DATA, (data: any) => {
             console.log(JSON.stringify(data));
-        });
-        
-        web3ProvidersWS.connect();
-
-        web3ProvidersWS.request(rpcOptions, (error: Error | null, data: JsonRpcResponse | void) => {
-            if(error)
-                console.log(JSON.stringify(error));
-
-            if(data)
-                console.log(JSON.stringify(data));
+            callback();
         });
 
+        await web3ProvidersWS.connect();
+        await new Promise((r) => setTimeout(r, 5000));
+        await web3ProvidersWS.request(rpcOptions);
+
+        //expect(callback).toBeCalledTimes(1);
+
+        done();
     });
 });
