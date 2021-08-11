@@ -2,7 +2,7 @@ import Web3ProvidersHttp from 'web3-providers-http';
 import { ValidTypesEnum, BlockTags } from 'web3-core-types/src/types';
 
 import Web3Eth from '../../src';
-import { testsHasParams } from './testConfig2';
+import { testsHasParams } from './testConfig';
 
 for (const testHasParams of testsHasParams) {
     describe(testHasParams.name, () => {
