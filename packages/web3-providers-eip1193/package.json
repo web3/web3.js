@@ -1,7 +1,7 @@
 {
-    "name": "web3-eth",
-    "version": "4.0.0-alpha.0",
-    "description": "Ethereum RPC wrappers for Web3 4.x.x",
+    "name": "web3-providers-eip1193",
+    "version": "1.0.0-alpha.0",
+    "description": "Ethereum EIP-1193 provider for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
@@ -16,6 +16,7 @@
         "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "test": "jest",
+        "test:integration": "jest ./test/integration",
         "test:unit": "jest ./test/unit"
     },
     "devDependencies": {
@@ -26,14 +27,9 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.22.1",
         "jest": "^26.6.3",
-        "prettier": "2.3.0",
+        "prettier": "^2.3.0",
         "ts-jest": "^26.5.4",
         "typescript": "^4.2.4",
-        "web3-core-types": "1.0.0-alpha.0",
-        "web3-providers-http": "4.0.0-alpha.0"
-    },
-    "dependencies": {
-        "web3-core-provider": "1.0.0-alpha.0",
-        "web3-utils": "^4.0.0"
+        "web3-core-types": "1.0.0-alpha.0"
     }
 }

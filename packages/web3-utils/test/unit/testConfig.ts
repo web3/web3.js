@@ -1,4 +1,4 @@
-import { ValidTypes, ValidTypesEnum } from '../../src/types';
+import { ValidTypes, ValidTypesEnum } from 'web3-core-types/src/types';
 
 interface TestCase {
     input: ValidTypes | null | { [key: string]: any };
