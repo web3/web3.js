@@ -17,7 +17,6 @@ export type EthCallTransaction = {
 };
 
 export interface Web3EthOptions {
-    packageName?: string;
-    providerUrl: string;
+    web3Client: string;
     returnType?: ValidTypesEnum;
 }

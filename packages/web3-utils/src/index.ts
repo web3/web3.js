@@ -1,7 +1,17 @@
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
 
-import { ValidTypes, ValidTypesEnum, PrefixedHexString } from './types';
+import {
+    ValidTypes,
+    ValidTypesEnum,
+    PrefixedHexString,
+} from 'web3-core-types/lib/types';
 
+/**
+ * Used to determine ValidTypesEnum value of {input}
+ *
+ * @param input Input to determine type of
+ * @returns ValidTypesEnum value
+ */
 function determineValidType(input: ValidTypes): ValidTypesEnum {
     try {
         switch (typeof input) {
@@ -43,6 +53,13 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
     }
 }
 
+/**
+ * Pads {hexString} to desired {byteLength}
+ *
+ * @param hexString Hex string to pad
+ * @param byteLength Length to pad {hexString} to
+ * @returns Padded hex string
+ */
 function padHex(
     hexString: PrefixedHexString,
     byteLength: number
@@ -58,6 +75,13 @@ function padHex(
     }
 }
 
+/**
+ * Convert value of ValidTypes to hex string
+ *
+ * @param input Input to convert to hex string
+ * @param byteLength Desired byte length of return hex string, will be padded to comply
+ * @returns Hex string
+ */
 export function toHex(
     input: ValidTypes,
     byteLength?: number
@@ -99,6 +123,13 @@ export function toHex(
     }
 }
 
+/**
+ * Formated {output} into {desiredType}
+ *
+ * @param output Data to format into {desiredType}
+ * @param desiredType A ValidTypesEnum value
+ * @returns Formatted {output}
+ */
 export function formatOutput(
     output: ValidTypes,
     desiredType: ValidTypesEnum
@@ -137,6 +168,15 @@ export function formatOutput(
     }
 }
 
+/**
+ * Formated {outputObject} into {desiredType} (supports objects with nested objects)
+ *
+ * @param outputObject Data to format into {desiredType}
+ * @param formattableProperties List of properties to format to {desiredType}, passing an object
+ * within the array implies that the property is a nested object within {outputObject}
+ * @param desiredType A ValidTypesEnum value
+ * @returns Formatted {outputObject}
+ */
 export function formatOutputObject(
     outputObject: { [key: string]: any } | { [key: string]: any }[],
     formattableProperties: (string | { [key: string]: string[] })[],
