@@ -183,17 +183,6 @@ export interface PartialRpcOptions extends Partial<RpcOptions> {
     params: RpcParams;
 }
 
-export interface CallOptions {
-    providerCallOptions?: ProviderCallOptions;
-    rpcOptions?: Partial<RpcOptions>;
-    returnType?: ValidTypesEnum;
-    subscribe?: boolean;
-}
-
-export interface SendOptions extends CallOptions {
-    rpcOptions: PartialRpcOptions;
-}
-
 export interface RpcStringResult extends RpcResponse {
     result: string;
 }
