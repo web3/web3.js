@@ -3,7 +3,7 @@ import {
     RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
-} from 'web3-core-types/lib/types';
+} from 'web3-core-types/src/types';
 import Web3ProvidersHttp from 'web3-providers-http';
 
 import initWeb3Provider from '../../src/index';

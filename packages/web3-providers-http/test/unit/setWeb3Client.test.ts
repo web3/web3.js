@@ -1,4 +1,5 @@
-import { Web3ProviderEvents } from '../../../web3-core-types/lib/types';
+import { Web3ProviderEvents } from 'web3-core-types/src/types';
+
 import Web3ProvidersHttp from '../../src/index';
 
 describe('Web3ProvidersHttp.setWeb3Client', () => {

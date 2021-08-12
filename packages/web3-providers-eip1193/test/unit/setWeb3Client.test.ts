@@ -4,7 +4,7 @@ import {
     ProviderEventListener,
     RequestArguments,
     Web3ProviderEvents,
-} from 'web3-core-types/lib/types';
+} from 'web3-core-types/src/types';
 
 import Web3ProvidersEip1193 from '../../src/index';
 

@@ -14,9 +14,7 @@
         "clean": "rimraf lib && rimraf buildcache",
         "compile": "tsc --build",
         "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
-        "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0",
-        "test": "jest",
-        "test:unit": "jest ./test/unit"
+        "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0"
     },
     "devDependencies": {
         "@types/jest": "^26.0.22",

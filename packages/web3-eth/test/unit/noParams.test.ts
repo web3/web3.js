@@ -59,8 +59,8 @@ for (const testNoParams of testsNoParams) {
                         const result = await web3Eth[testNoParams.name]({
                             returnType: validType,
                         });
-                        // @ts-ignore
                         expect(result).toStrictEqual(
+                            // @ts-ignore
                             testNoParams[`expectedResult${validType}`]
                         );
                         expect(
