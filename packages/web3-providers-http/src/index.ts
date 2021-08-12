@@ -26,6 +26,12 @@ export default class Web3ProvidersHttp
         this._connectToClient();
     }
 
+    /**
+     * Determines whether {web3Client} is a valid HTTP client URL
+     *
+     * @param web3Client To be validated
+     * @returns true if valid
+     */
     private static _validateClientUrl(web3Client: Web3Client): boolean {
         try {
             return typeof web3Client === 'string'
@@ -36,6 +42,12 @@ export default class Web3ProvidersHttp
         }
     }
 
+    /**
+     * Creates axios instance from {web3Client} URL
+     *
+     * @param web3Client Client URL to send requests to
+     * @returns AxiosInstance
+     */
     private static _createHttpClient(web3Client: Web3Client): AxiosInstance {
         try {
             if (!Web3ProvidersHttp._validateClientUrl(web3Client))
@@ -46,6 +58,10 @@ export default class Web3ProvidersHttp
         }
     }
 
+    /**
+     * Checks if connection to client is possible by requesting
+     * client's chainId
+     */
     private async _connectToClient() {
         try {
             const chainId = await this._getChainId();
@@ -67,6 +83,11 @@ export default class Web3ProvidersHttp
         }
     }
 
+    /**
+     * Makes chainId RPC request
+     *
+     * @returns ChainId string
+     */
     private async _getChainId(): Promise<string> {
         try {
             const result = await this.request({
@@ -79,6 +100,11 @@ export default class Web3ProvidersHttp
         }
     }
 
+    /**
+     * Validates and initializes provider using {web3Client}
+     *
+     * @param web3Client New client to set for provider instance
+     */
     setWeb3Client(web3Client: Web3Client) {
         try {
             this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
@@ -89,6 +115,13 @@ export default class Web3ProvidersHttp
         }
     }
 
+    /**
+     * Wrapper for EventEmitter's .on
+     *
+     * @param web3ProviderEvents Any valid EIP-1193 provider event
+     * @param listener Function to be called when event is emitted
+     * @returns
+     */
     on(
         web3ProviderEvent: Web3ProviderEvents,
         listener: ProviderEventListener
@@ -96,10 +129,21 @@ export default class Web3ProvidersHttp
         return super.on(web3ProviderEvent, listener);
     }
 
+    /**
+     * Shows that this package does not support subscriptions
+     *
+     * @returns false
+     */
     supportsSubscriptions() {
         return false;
     }
 
+    /**
+     * Makes an Axios POST request using provided {args}
+     *
+     * @param args RPC options, request params, AxiosConfig
+     * @returns
+     */
     async request(args: RequestArguments): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)

@@ -8,6 +8,13 @@ import Web3ProvidersEip1193 from 'web3-providers-eip1193';
 
 import { ClientProtocol } from './types';
 
+/**
+ * Detects protocol for provided {web3Client}, and instantiates
+ * corresponding provider package
+ *
+ * @param web3Client Client passed to provider package for instantiation
+ * @returns void
+ */
 export default function initWeb3Provider(
     web3Client: Web3Client
 ): IWeb3Provider {
@@ -27,6 +34,12 @@ export default function initWeb3Provider(
     }
 }
 
+/**
+ * Detects protocol of provided client
+ *
+ * @param web3Client Client to be used for provider instantiation
+ * @returns ClientProtocol enum value
+ */
 function detectClientProtocol(web3Client: Web3Client): ClientProtocol {
     try {
         if (
