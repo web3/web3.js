@@ -40,13 +40,19 @@ export default class Web3Eth {
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
 
+    /**
+     * Checks if {value} is a BlockTags
+     *
+     * @param {number|string|BigInt} value Value to check if valid BlockTags
+     * @returns {boolean} True if value is BlockTags
+     */
     private static _isBlockTag(value: BlockIdentifier): boolean {
         return Object.values(BlockTags).includes(value as BlockTags);
     }
 
     /**
      * Returns the current client version
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Client version
      */
     async getClientVersion(
@@ -66,7 +72,7 @@ export default class Web3Eth {
     /**
      * Returns Keccak-256 (not the standardized SHA3-256) of the given data
      * @param {string} data Data to convert into SHA3 hash
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} SHA3 hash of {data}
      */
     async getSha3(
@@ -86,7 +92,7 @@ export default class Web3Eth {
 
     /**
      * Returns the current network version
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
@@ -113,7 +119,7 @@ export default class Web3Eth {
 
     /**
      * Returns true if client is actively listening for network connections
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
@@ -132,8 +138,8 @@ export default class Web3Eth {
 
     /**
      * Returns number of peers currently connected to the client
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} number of connected peers
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of connected peers
      */
     async getNetworkPeerCount(
         requestArguments?: Partial<RequestArguments>
@@ -159,7 +165,7 @@ export default class Web3Eth {
 
     /**
      * Returns the current ethereum protocol version
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
@@ -186,7 +192,7 @@ export default class Web3Eth {
 
     /**
      * Returns an object with data about the sync status or false when not syncing
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Object with sync status data or false when not syncing
      */
     async getSyncing(
@@ -218,7 +224,7 @@ export default class Web3Eth {
 
     /**
      * Returns the client's coinbase address
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} The current coinbase address
      */
     async getCoinbase(
@@ -237,7 +243,7 @@ export default class Web3Eth {
 
     /**
      * Returns true if client is actively mining new blocks
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} true if the client is mining, otherwise false
      */
     async getMining(
@@ -256,7 +262,7 @@ export default class Web3Eth {
 
     /**
      * Returns the number of hashes per second that the node is mining with
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Number of hashes per second
      */
     async getHashRate(
@@ -283,8 +289,8 @@ export default class Web3Eth {
 
     /**
      * Returns the current price per gas in wei
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing current gas price in wei
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Current gas price in wei
      */
     async getGasPrice(
         requestArguments?: Partial<RequestArguments>
@@ -310,7 +316,7 @@ export default class Web3Eth {
 
     /**
      * Returns a list of addresses owned by client.
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of addresses owned by the client
      */
     async getAccounts(
@@ -329,7 +335,7 @@ export default class Web3Eth {
 
     /**
      * Returns the number of most recent block
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Current block number client is on
      */
     async getBlockNumber(
@@ -358,8 +364,8 @@ export default class Web3Eth {
      * Returns the balance of the account of given address
      * @param {string} address Address to get balance of
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing current balance in wei
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Current balance in wei
      */
     async getBalance(
         address: PrefixedHexString,
@@ -395,7 +401,7 @@ export default class Web3Eth {
      * @param {string} address Address of storage to query
      * @param {string|number|BigInt} storagePosition Position in storage to retrieve
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Hex string representing value at {storagePosition}
      */
     async getStorageAt(
@@ -425,8 +431,8 @@ export default class Web3Eth {
      * Returns the number of transactions sent from an address
      * @param {string} address Address to get transaction count of
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise<string|number|BigInt>} Number of transactions sent by {address}
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of transactions sent by {address}
      */
     async getTransactionCount(
         address: PrefixedHexString,
@@ -460,8 +466,8 @@ export default class Web3Eth {
     /**
      * Returns the number of transactions in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query transaction count of
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing number of transactions in block
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of transactions in block
      */
     async getBlockTransactionCountByHash(
         blockHash: PrefixedHexString,
@@ -491,8 +497,8 @@ export default class Web3Eth {
     /**
      * Returns the number of transactions in a block from a block matching the given block number
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing number of transactions in block
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of transactions in block
      */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
@@ -526,8 +532,8 @@ export default class Web3Eth {
     /**
      * Returns the number of uncles in a block from a block matching the given block hash
      * @param {string} blockHash Hash of block to query
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing number of uncles in block
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of uncles in block
      */
     async getUncleCountByBlockHash(
         blockHash: PrefixedHexString,
@@ -557,8 +563,8 @@ export default class Web3Eth {
     /**
      * Returns the number of uncles in a block from a block matching the given block number
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing number of uncles in block
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Number of uncles in block
      */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
@@ -593,7 +599,7 @@ export default class Web3Eth {
      * Returns code at a given address
      * @param {string} address Address to get code at
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Hex string representing the code at {address}
      */
     async getCode(
@@ -621,7 +627,7 @@ export default class Web3Eth {
      * Calculates an Ethereum specific signature
      * @param {string} address Address to use to sign {data}
      * @param {string} message Message to sign
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Hex string representing signed message
      */
     async sign(
@@ -643,7 +649,7 @@ export default class Web3Eth {
     /**
      * Signs a transaction that can be submitted to the network at a later time using with sendRawTransaction
      * @param {object} transaction Ethereum transaction
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Hex string representing signed message
      */
     async signTransaction(
@@ -680,7 +686,7 @@ export default class Web3Eth {
     /**
      * Submits a transaction object to the provider to be sign and sent to the network
      * @param {object} transaction Ethereum transaction
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendTransaction(
@@ -717,7 +723,7 @@ export default class Web3Eth {
     /**
      * Submits a previously signed transaction object to the network
      * @param {string} rawTransaction Hex string representing previously signed transaction
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Transaction hash or zero hash if the transaction is not yet available
      */
     async sendRawTransaction(
@@ -735,12 +741,11 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Discuss formatting result
     /**
      * Executes a new message call immediately without creating a transaction on the block chain
      * @param {object} transaction Ethereum transaction
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Hex string representing return value of executed contract
      */
     async call(
@@ -779,8 +784,8 @@ export default class Web3Eth {
      * Generates and returns an estimate of how much gas is necessary to allow the transaction to complete
      * @param {object} transaction Ethereum transaction
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} Hex string representing estimated amount of gas to be used
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Estimated amount of gas to be used
      */
     async estimateGas(
         transaction: EthTransaction,
@@ -829,7 +834,7 @@ export default class Web3Eth {
      * Returns information about a block by hash
      * @param {string} blockHash Hash of block to get information for
      * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByHash(
@@ -880,7 +885,7 @@ export default class Web3Eth {
      * Returns information about a block by number
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
      * @param {boolean} returnFullTxs If true it returns the full transaction objects, if false returns only the hashes of the transactions
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A block object or null when no block was found
      */
     async getBlockByNumber(
@@ -935,7 +940,7 @@ export default class Web3Eth {
     /**
      * Returns the information about a transaction requested by transaction hash
      * @param {string} txHash Hash of transaction to retrieve
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByHash(
@@ -974,7 +979,7 @@ export default class Web3Eth {
      * Returns information about a transaction by block hash and transaction index position
      * @param {string} blockHash Hash of block to get transactions of
      * @param {string} transactionIndex Index of transaction to return
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockHashAndIndex(
@@ -1016,7 +1021,7 @@ export default class Web3Eth {
      * Returns information about a transaction by block number and transaction index position
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
      * @param {string} transactionIndex Index of transaction to return
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A transaction object or {null} when no transaction was found
      */
     async getTransactionByBlockNumberAndIndex(
@@ -1064,7 +1069,7 @@ export default class Web3Eth {
     /**
      * Returns the receipt of a transaction by transaction hash
      * @param {string} txHash Hash of transaction to get receipt of
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A transaction object or {null} when no receipt was found
      */
     async getTransactionReceipt(
@@ -1108,7 +1113,7 @@ export default class Web3Eth {
      * Returns information about a uncle of a block by hash and uncle index position
      * @param {string} blockHash Hash of block to get uncles of
      * @param {string} uncleIndex Index of uncle to retrieve
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockHashAndIndex(
@@ -1161,7 +1166,7 @@ export default class Web3Eth {
      * Returns information about a uncle of a block by number and uncle index position
      * @param {string|number|BigInt} blockIdentifier Block number, or "latest", "earliest", "pending"
      * @param {string} uncleIndex Index of uncle to retrieve
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A block object or null when no block was found
      */
     async getUncleByBlockNumberAndIndex(
@@ -1217,7 +1222,7 @@ export default class Web3Eth {
 
     /**
      * Returns a list of available compilers in the client
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A list of available compilers
      */
     async getCompilers(
@@ -1237,8 +1242,8 @@ export default class Web3Eth {
     /**
      * Returns compiled solidity code
      * @param {string} sourceCode Solidity code to be compiled
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} compiled {sourceCode}
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Compiled {sourceCode}
      */
     async compileSolidity(
         sourceCode: PrefixedHexString,
@@ -1260,8 +1265,8 @@ export default class Web3Eth {
     /**
      * Returns compiled LLL code
      * @param {string} sourceCode LLL code to be compiled
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} compiled {sourceCode}
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Compiled {sourceCode}
      */
     async compileLLL(
         sourceCode: PrefixedHexString,
@@ -1281,8 +1286,8 @@ export default class Web3Eth {
     /**
      * Returns compiled serpent code
      * @param {string} sourceCode Serpent code to be compiled
-     * @param {object} requestArguments (Optional)
-     * @returns {Promise} compiled {sourceCode}
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
+     * @returns {Promise} Compiled {sourceCode}
      */
     async compileSerpent(
         sourceCode: PrefixedHexString,
@@ -1304,7 +1309,7 @@ export default class Web3Eth {
     /**
      * Creates a filter object, based on filter options, to notify when the state changes (logs)
      * @param {object} filter Filter to be created
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Filter id
      */
     async newFilter(
@@ -1342,7 +1347,7 @@ export default class Web3Eth {
 
     /**
      * Creates a filter in the node, to notify when a new block arrives
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Filter id
      */
     async newBlockFilter(
@@ -1369,7 +1374,7 @@ export default class Web3Eth {
 
     /**
      * Creates a filter in the node, to notify when new pending transactions arrive
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Filter id
      */
     async newPendingTransactionFilter(
@@ -1399,7 +1404,7 @@ export default class Web3Eth {
     /**
      * Uninstalls a filter with given id. Should always be called when watch is no longer needed
      * @param {string} filterId Id of filter to uninstall from node
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Returns true if filter was successfully uninstalled, otherwise false
      */
     async uninstallFilter(
@@ -1417,11 +1422,10 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Polling method for a filter, which returns an array of logs which occurred since last poll
      * @param {string} filterid Id of filter to retrieve changes from
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterChanges(
@@ -1448,11 +1452,10 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching filter with given id
      * @param {string} filterid Id of filter to retrieve
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getFilterLogs(
@@ -1479,10 +1482,9 @@ export default class Web3Eth {
         }
     }
 
-    // TODO Formatting output could be intensive since {response} is an array of results
     /**
      * Returns an array of all logs matching a given filter object
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of log objects, or an empty array if nothing has changed since last poll
      */
     async getLogs(
@@ -1521,7 +1523,7 @@ export default class Web3Eth {
 
     /**
      * Returns the hash of the current block, the seedHash, and the boundary condition to be met (“target”)
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
     async getWork(
@@ -1543,7 +1545,7 @@ export default class Web3Eth {
      * @param {string} nonce Hex string representing found nonce (64 bits)
      * @param {string} powHash Hex string representing POW hash (256 bits)
      * @param {string} digest Hex string representing mix digest (256 bits)
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitWork(
@@ -1567,7 +1569,7 @@ export default class Web3Eth {
      * Used for submitting mining hashrate
      * @param {string} hashRate Desired hash rate (32 bytes)
      * @param {string} clientId ID identifying the client
-     * @param {object} requestArguments (Optional)
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Returns true if the provided solution is valid, otherwise false
      */
     async submitHashRate(
