@@ -153,6 +153,7 @@ export interface RpcOptions {
 }
 
 export interface HttpOptions {
+    ethVersion: number;
     axiosConfig?: AxiosRequestConfig;
     poll?: boolean;
     pollingInterval?: number;

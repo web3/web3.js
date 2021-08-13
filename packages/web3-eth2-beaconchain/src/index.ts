@@ -8,6 +8,7 @@ import {
     ProposerSlashing,
     SyncCommittee,
     SignedVoluntaryExit,
+    BeaconBlock,
 } from './types';
 import {
     RpcResponse,
@@ -27,7 +28,6 @@ import {
     IWeb3Provider,
 } from 'web3-core-types/lib/types';
 import { ValidTypesEnum } from 'web3-utils/lib/types';
-import { BeaconBlock } from '@chainsafe/lodestar-types/lib/allForks/types';
 
 export default class Web3Beacon {
     private _defaultReturnType: ValidTypesEnum;

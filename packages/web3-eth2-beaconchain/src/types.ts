@@ -47,3 +47,5 @@ export type AttesterSlashing = phase0.AttesterSlashing;
 export type ProposerSlashing = phase0.ProposerSlashing;
 export type SyncCommittee = altair.SyncCommittee;
 export type SignedVoluntaryExit = altair.SignedVoluntaryExit;
+export type BeaconBlock = phase0.BeaconBlock;
+export type BlockIdentifier = phase0.BlockIdentifier;
