@@ -67,10 +67,8 @@ export default class Web3ProvidersHttp
         return false;
     }
 
-    async request(args: RequestArguments): Promise<RpcResponse> {
+    private async _eth1Request(args: RequestArguments): Promise<RpcResponse> {
         try {
-            if (this._httpClient === undefined)
-                throw Error('No HTTP client initiliazed');
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
                     ? args.params || []
@@ -84,6 +82,65 @@ export default class Web3ProvidersHttp
                 },
                 args.providerOptions?.axiosConfig || {}
             );
+            // If the above call was successful, then we're connected
+            // to the client, and should emit accordingly (EIP-1193)
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
+            if (this._connected === false) this._connectToClient();
+            return response.data.data ? response.data.data : response.data;
+        } catch (error) {
+            if (error.code === 'ECONNREFUSED' && this._connected) {
+                this._connected = false;
+                // TODO replace with ProviderRpcError
+                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
+            }
+            throw Error(error.message);
+        }
+    }
+
+    private async _eth2Request(args: RequestArguments): Promise<RpcResponse> {
+        try {
+            // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
+            const response = await this._httpClient[
+                args.providerOptions.AxiosRequestConfig.method || 'post'
+            ]('', args?.rpcOptions || {}, {
+                ...args?.providerOptions?.axiosConfig,
+            });
+            // If the above call was successful, then we're connected
+            // to the client, and should emit accordingly (EIP-1193)
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
+            if (this._connected === false) this._connectToClient();
+            return response.data.data ? response.data.data : response.data;
+        } catch (error) {
+            if (error.code === 'ECONNREFUSED' && this._connected) {
+                this._connected = false;
+                // TODO replace with ProviderRpcError
+                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
+            }
+            throw Error(error.message);
+        }
+    }
+
+    async request(args: RequestArguments): Promise<RpcResponse> {
+        try {
+            if (this._httpClient === undefined)
+                throw Error('No HTTP client initiliazed');
+
+            return args.providerOptions.ethVersion === 1
+                ? await this._eth1Request(args)
+                : await this._eth2Request(args);
+            // const arrayParams =
+            //     args.params === undefined || Array.isArray(args.params)
+            //         ? args.params || []
+            //         : Object.values(args.params);
+            // const response = await this._httpClient.post(
+            //     '', // URL path
+            //     {
+            //         ...args.rpcOptions,
+            //         method: args.method,
+            //         params: arrayParams,
+            //     },
+            //     args.providerOptions?.axiosConfig || {}
+            // );
 
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)
@@ -92,11 +149,6 @@ export default class Web3ProvidersHttp
 
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
-            if (error.code === 'ECONNREFUSED' && this._connected) {
-                this._connected = false;
-                // TODO replace with ProviderRpcError
-                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
-            }
             // TODO Fancy error detection that complies with EIP1193 defined errors
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
             throw Error(error.message);

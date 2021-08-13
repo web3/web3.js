@@ -1,4 +1,3 @@
-import Web3RequestManager from 'web3-core-requestmanager';
 import initWeb3Provider from 'web3-core-provider';
 import {
     StateId,
@@ -27,9 +26,8 @@ import {
     RequestArguments,
     IWeb3Provider,
 } from 'web3-core-types/lib/types';
-import {
-    ValidTypesEnum
-} from 'web3-utils/lib/types';
+import { ValidTypesEnum } from 'web3-utils/lib/types';
+import { BeaconBlock } from '@chainsafe/lodestar-types/lib/allForks/types';
 
 export default class Web3Beacon {
     private _defaultReturnType: ValidTypesEnum;
@@ -44,6 +42,7 @@ export default class Web3Beacon {
 
     /**
      * Retrieve details of the chain's genesis which can be used to identify chain.
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Genesis object
      */
     async getGenesis(
@@ -56,9 +55,9 @@ export default class Web3Beacon {
                     ...requestArguments?.providerOptions,
                     axiosConfig: {
                         url: `genesis`,
-                        method:'get'
-                    }
-                }
+                        method: 'get',
+                    },
+                },
             });
         } catch (error) {
             throw Error(`Error getting genesis: ${error.message}`);
@@ -68,6 +67,7 @@ export default class Web3Beacon {
     /**
      * Calculates HashTreeRoot for state with given 'stateId'. If stateId is root, same value will be returned.
      * @param {StateId} stateId state
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} HashTreeRoot
      */
 
@@ -82,9 +82,10 @@ export default class Web3Beacon {
                     ...requestArguments?.providerOptions,
                     axiosConfig: {
                         url: `states/${stateId}/root`,
-                        method:'get'
-                    }
-                }
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
             });
         } catch (error) {
             throw Error(
@@ -96,26 +97,26 @@ export default class Web3Beacon {
     /**
      * Returns Fork object for state with given 'stateId'.
      * @param {StateId} stateId State
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Fork object
      */
 
     async getStateFork(
         stateId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            const filledCallOptions = {
-                ...callOptions,
-                providerCallOptions: {
-                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
-                    url: `states/${stateId}/fork`,
-                    method: 'get',
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/fork`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
                 },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(filledCallOptions.providerCallOptions)
-                : await this._send(filledCallOptions.providerCallOptions);
+            });
         } catch (error) {
             throw Error(`Error getting state fork from Id: ${error.message}`);
         }
@@ -124,26 +125,26 @@ export default class Web3Beacon {
     /**
      * Get finality checkpoints for state with given 'stateId'. In case finality is not yet achieved, checkpoint should return epoch 0 and ZERO_HASH as root.
      * @param {StateId} stateId State
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Finality checkpoints
      */
 
     async getFinalityCheckpoints(
         stateId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            const filledCallOptions = {
-                ...callOptions,
-                providerCallOptions: {
-                    ...callOptions?.providerCallOptions, //If its either HttpOptions, WSoptions, IPCOptions,
-                    url: `states/${stateId}/finality_checkpoints`,
-                    method: 'get',
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/finality_checkpoints`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
                 },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(filledCallOptions.providerCallOptions.providerCallOptions)
-                : await this._send(filledCallOptions.providerCallOptions.providerCallOptions);
+            });
         } catch (error) {
             throw Error(`Error getting finality checkpoints: ${error.message}`);
         }
@@ -158,21 +159,24 @@ export default class Web3Beacon {
      */
 
     async getValidators(
-        state_id: StateId,
-        callOptions: CallOptions,
+        stateId: StateId,
+        requestArguments?: Partial<RequestArguments>,
         id?: [string],
         status?: [Status]
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/validators`,
-                method: 'get',
-                params: { id, status },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/validators`,
+                        method: 'get',
+                        params: { id, status },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting validators: ${error.message}`);
         }
@@ -186,19 +190,22 @@ export default class Web3Beacon {
      */
 
     async getValidatorById(
-        state_id: StateId,
+        stateId: StateId,
         validator_id: string,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/validators/${validator_id}`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/validators/${validator_id}`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting validator by Id: ${error.message}`);
         }
@@ -212,20 +219,23 @@ export default class Web3Beacon {
      */
 
     async getValidatorBalances(
-        state_id: string,
-        callOptions: CallOptions,
+        stateId: string,
+        requestArguments?: Partial<RequestArguments>,
         id?: [string]
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/validator_balances`,
-                method: 'get',
-                params: { id },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/validator_balances`,
+                        method: 'get',
+                        params: { id },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting validator balance: ${error.message}`);
         }
@@ -233,7 +243,7 @@ export default class Web3Beacon {
 
     /**
      * Get the committees for the given state
-     * @param {string} state_id State
+     * @param {string} stateId State
      * @param {string} epoch Fetch committees for the given epoch
      * @param {string} index Restrict returned values to those matching the supplied committee index
      * @param {string} slot Restrict returned values to those matching the supplied slot
@@ -241,22 +251,25 @@ export default class Web3Beacon {
      */
 
     async getCommittees(
-        state_id: string,
-        callOptions: CallOptions,
+        stateId: string,
+        requestArguments?: Partial<RequestArguments>,
         epoch?: string,
         index?: string,
         slot?: string
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/committee`,
-                method: 'get',
-                params: { epoch, index, slot },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/committee`,
+                        method: 'get',
+                        params: { epoch, index, slot },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting Committees: ${error.message}`);
         }
@@ -270,20 +283,23 @@ export default class Web3Beacon {
      */
 
     async getSyncCommittees(
-        state_id: string,
-        callOptions: CallOptions,
+        stateId: string,
+        requestArguments?: Partial<RequestArguments>,
         epoch?: string
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `states/${state_id}/sync_committees`,
-                method: 'get',
-                params: { epoch },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `states/${stateId}/sync_committees`,
+                        method: 'get',
+                        params: { epoch },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -297,20 +313,23 @@ export default class Web3Beacon {
      */
 
     async getBlockHeaders(
-        callOptions: CallOptions,
         slot: string,
-        parent_root: string
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        parent_root: string,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `headers`,
-                method: 'get',
-                params: { slot, parent_root },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `headers`,
+                        method: 'get',
+                        params: { slot, parent_root },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
         }
@@ -318,23 +337,26 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block header for given block id.
-     * @param {StateId} blockId Block Id
+     * @param {BlockIdentifier} blockId Block Id
      * @returns {Promise} Block header
      */
 
     async getBlockHeadersById(
-        blockId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        blockId: BlockIdentifier,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `headers/${blockId}`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `headers/${blockId}`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting block header by id: ${error.message}`);
         }
@@ -347,24 +369,27 @@ export default class Web3Beacon {
      * and a successful response (20X) only indicates that the broadcast has been successful.
      * The beacon node is expected to integrate the new block into its state, and therefore validate the block internally,
      * however blocks which fail the validation are still broadcast but a different status code is returned (202)
-     * @param {StateId} blockId Block Id
+     * @param {BeaconBlock} signedBeaconBlock Beacon Block
      * @returns {Promise} Response code
      */
 
     async postBlock(
-        signedBeaconBlock: StateId, //type BeaconBlock
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        signedBeaconBlock: BeaconBlock,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `blocks`,
-                method: 'POST',
-                data: { signedBeaconBlock },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `blocks`,
+                        method: 'post',
+                        data: { signedBeaconBlock },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error publishing block: ${error.message}`);
         }
@@ -372,47 +397,26 @@ export default class Web3Beacon {
 
     /**
      * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {StateId} blockId Block Id
+     * @param {BlockIdentifier} blockId Block Id
      * @returns {Promise} SignedBeaconBlock
      */
 
-    async getBlockV1(
-        blockId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+    async getBlock(
+        blockId: BlockIdentifier,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `blocks/${blockId}`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
-        } catch (error) {
-            throw Error(`Error getting block by block Id: ${error.message}`);
-        }
-    }
-
-    /**
-     * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {StateId} blockId Block Id
-     * @returns {Promise} SignedBeaconBlock
-     */
-
-    async getBlockV2(
-        blockId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
-        try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `/eth/v2/beacon/blocks/${blockId}`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `blocks/${blockId}`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting block by block Id: ${error.message}`);
         }
@@ -420,23 +424,26 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block root of beaconBlock
-     * @param {StateId} blockId Block Id
+     * @param {BlockIdentifier} blockId Block Id
      * @returns {Promise} Block Root
      */
 
     async getBlockRoot(
-        blockId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        blockId: BlockIdentifier,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `blocks/${blockId}/root`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `blocks/${blockId}/root`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting block root: ${error.message}`);
         }
@@ -449,20 +456,23 @@ export default class Web3Beacon {
      */
 
     async getBlockAttestations(
-        blockId: StateId,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        blockId: BlockIdentifier,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `blocks/${blockId}/root`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `blocks/${blockId}/attestations`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
-            throw Error(`Error getting block root: ${error.message}`);
+            throw Error(`Error getting block attestations: ${error.message}`);
         }
     }
 
@@ -474,20 +484,23 @@ export default class Web3Beacon {
      */
 
     async getPoolAttestations(
-        slot: String,
-        comitteeIndex: String,
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>,
+        slot?: String,
+        comitteeIndex?: String
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/attestations`,
-                method: 'get',
-                params: { slot, comitteeIndex },
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/attestations`,
+                        method: 'get',
+                        data: { slot, comitteeIndex },
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(
                 `Error getting attestations from pool: ${error.message}`
@@ -501,19 +514,22 @@ export default class Web3Beacon {
      */
 
     async postPoolAttestations(
-        callOptions: CallOptions,
-        attestation: AttestationData
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        attestation: AttestationData,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/attestations`,
-                method: 'get',
-                data: [attestation],
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/attestations`,
+                        method: 'post',
+                        data: attestation,
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -525,17 +541,20 @@ export default class Web3Beacon {
      */
 
     async getAttesterSlashings(
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/attester_slashings`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/attester_slashings`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -547,19 +566,22 @@ export default class Web3Beacon {
      */
 
     async postAttesterSlashings(
-        callOptions: CallOptions,
-        attesterSlashings: AttesterSlashing
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        attesterSlashings: AttesterSlashing,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/attester_slashings`,
-                method: 'POST',
-                data: attesterSlashings,
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/attester_slashings`,
+                        method: 'post',
+                        data: attesterSlashings,
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -571,17 +593,20 @@ export default class Web3Beacon {
      */
 
     async getProposerSlashings(
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/proposer_slashings`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/proposer_slashings`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -593,18 +618,22 @@ export default class Web3Beacon {
      */
 
     async postProposerSlashings(
-        callOptions: CallOptions,
-        proposerSlashings: ProposerSlashing
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        proposerSlashings: ProposerSlashing,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/proposer_slashings`,
-                method: 'POST',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/proposer_slashings`,
+                        method: 'post',
+                        data: proposerSlashings,
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -616,19 +645,22 @@ export default class Web3Beacon {
      */
 
     async postSyncCommittees(
-        callOptions: CallOptions,
-        syncCommittee: SyncCommittee
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        syncCommittee: SyncCommittee,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/sync_committees`,
-                method: 'POST',
-                data: [syncCommittee],
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/sync_committees`,
+                        method: 'post',
+                        data: syncCommittee,
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
         }
@@ -640,17 +672,20 @@ export default class Web3Beacon {
      */
 
     async getVoluntaryExits(
-        callOptions: CallOptions
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/voluntary_exits`,
-                method: 'get',
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/voluntary_exits`,
+                        method: 'get',
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error getting voluntary exits: ${error.message}`);
         }
@@ -662,19 +697,22 @@ export default class Web3Beacon {
      */
 
     async PostVoluntaryExits(
-        callOptions: CallOptions,
-        signedVoluntaryExit: SignedVoluntaryExit
-    ): Promise<RpcStringResult | SubscriptionResponse> {
+        signedVoluntaryExit: SignedVoluntaryExit,
+        requestArguments?: Partial<RequestArguments>
+    ): Promise<RpcStringResult> {
         try {
-            callOptions.providerCallOptions.axiosConfig = {
-                url: `pool/voluntary_exits`,
-                method: 'POST',
-                data: signedVoluntaryExit,
-            };
-
-            return callOptions?.subscribe
-                ? await this._subscribe(callOptions.providerCallOptions)
-                : await this._send(callOptions.providerCallOptions);
+            return await this.provider.request({
+                ...requestArguments,
+                providerOptions: {
+                    ...requestArguments?.providerOptions,
+                    axiosConfig: {
+                        url: `pool/voluntary_exits`,
+                        method: 'post',
+                        data: signedVoluntaryExit,
+                    },
+                    ethVersion: 2,
+                },
+            });
         } catch (error) {
             throw Error(`Error posting voluntary exits: ${error.message}`);
         }
