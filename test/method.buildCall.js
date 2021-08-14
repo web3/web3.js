@@ -209,8 +209,7 @@ describe('lib/web3/method', function () {
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     data: '0xa123456',
-                    gasPrice: '0x1234567453543456321456321',
-                    type: '0x0'
+                    gasPrice: '0x1234567453543456321456321'
                 }]);
 
                 done();
