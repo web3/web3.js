@@ -782,8 +782,8 @@ Method.prototype.buildCall = function () {
                 )
             )
         ) {
-            if (typeof payload.params[0].type === 'undefined') 
-                payload.params[0].type = _handleTxType(payload.params[0]);
+            // if (typeof payload.params[0].type === 'undefined') 
+                // payload.params[0].type = _handleTxType(payload.params[0]);
 
             _handleTxPricing(method, payload.params[0]).then(txPricing => {
                 if (txPricing.gasPrice !== undefined) {
