@@ -840,8 +840,6 @@ function _handleTxType(tx) {
         txType = utils.toHex(tx.type)
     } else if (tx.type === undefined && hasEip1559) {
         txType = '0x2'
-    } else {
-        txType = '0x0'
     }
 
     if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
