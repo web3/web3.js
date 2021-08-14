@@ -428,3 +428,7 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.5.2]
+
+### Fixed
+
+- `type: 0x0` was being added to legacy transaction when using `eth.sendTransaction` or `eth_sendRawTransaction` (#4241)
