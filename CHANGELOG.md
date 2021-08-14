@@ -431,4 +431,5 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
-- `type: 0x0` was being added to legacy transaction when using `eth.sendTransaction`, `eth.sendRawTransaction`, of `eth.signTransaction` (#4241)
+- Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
+- `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
