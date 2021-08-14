@@ -13,7 +13,7 @@ Please read the [documentation][docs] for more.
 ### Node.js
 
 ```bash
-npm install web3-eth-contract
+
 ```
 
 ## Usage
