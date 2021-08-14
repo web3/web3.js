@@ -887,7 +887,10 @@ function _handleTxPricing(method, tx) {
                 params: 0
             })).createFunction(method.requestManager);
 
-            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+            if ((
+                tx.type === undefined || tx.type < '0x2')
+                && tx.gasPrice !== undefined
+            ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
             } else {
