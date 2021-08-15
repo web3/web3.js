@@ -28,7 +28,6 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var HardForks = require('@ethereumjs/common').Hardfork;
 
 var EthersTransactionUtils = require('@ethersproject/transactions');
 
