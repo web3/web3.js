@@ -331,8 +331,6 @@ function _handleTxType(tx) {
         txType = utils.toHex(tx.type)
     } else if (tx.type === undefined && hasEip1559) {
         txType = '0x2'
-    } else {
-        txType = '0x0'
     }
 
     if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
@@ -364,7 +362,10 @@ function _handleTxType(tx) {
 function _handleTxPricing(_this, tx) {
     return new Promise((resolve, reject) => {
         try {
-            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+            if (
+                (tx.type === undefined || tx.type < '0x2')
+                && tx.gasPrice !== undefined
+            ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
             } else {

@@ -210,7 +210,7 @@ describe('lib/web3/method', function () {
                     to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     data: '0xa123456',
                     gasPrice: '0x1234567453543456321456321',
-                    type: '0x0'
+                    type: '0x2'
                 }]);
 
                 done();
@@ -221,7 +221,8 @@ describe('lib/web3/method', function () {
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                type: '0x2'
             });
 
         });

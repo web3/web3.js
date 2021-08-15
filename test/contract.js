@@ -2678,8 +2678,8 @@ var runTests = function(contractFactory) {
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: addressLowercase,
                     from: addressLowercase,
-                    gasPrice: '0x45656456456456',
-                    type: '0x0'
+                    maxPriorityFeePerGas: '0x3B9ACA00',
+                    maxFeePerGas: '0x3b9aca0e'
                 }]);
 
                 done();

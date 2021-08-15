@@ -68,8 +68,7 @@ var tests = [{
         from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         value: "0x11f71f76bb1",
-        gasPrice: "0x1234567",
-        type: "0x0"
+        gasPrice: "0x1234567"
     }],
     result3: '0x1234567'
 },{
