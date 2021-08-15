@@ -425,11 +425,13 @@ Released with 1.0.0-beta.37 code base.
 - Add block tag support (e.g. `latest`, `pending`, `earliest`) to `getFeeHistory` (#4224)
 - Support for EIP-1559 to `web3.eth.sendTransaction` (#4220)
 
-## [Unreleased]
-
 ## [1.5.2]
 
 ### Fixed
 
 - Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
 - `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
+
+## [Unreleased]
+
+## [1.5.3]
