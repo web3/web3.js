@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
@@ -138,12 +138,12 @@ export default class Web3ProvidersHttp
         return false;
     }
 
-    private async _eth2Request(args: RequestArguments): Promise<RpcResponse> {
+    private async _eth2Request(args: RequestArguments): Promise<AxiosResponse> {
         try {
             // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
-                // @ts-ignore tsc
-                args.providerOptions.AxiosRequestConfig.method || 'post'
+                // @ts-ignore tsc will suggest that it can't be some of the methods like 'GET'
+                args?.providerOptions?.AxiosRequestConfig?.method || 'post'
             ]('', args?.rpcOptions || {}, {
                 ...args?.providerOptions?.axiosConfig,
             });
@@ -162,7 +162,7 @@ export default class Web3ProvidersHttp
         }
     }
 
-     private async _eth1Request(args: RequestArguments): Promise<RpcResponse> {
+    private async _eth1Request(args: RequestArguments): Promise<AxiosResponse> {
         try {
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
@@ -191,7 +191,7 @@ export default class Web3ProvidersHttp
             throw Error(error.message);
         }
     }
-    
+
     /**
      * Makes an Axios POST request using provided {args}
      *
@@ -203,10 +203,10 @@ export default class Web3ProvidersHttp
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
 
-            const response = args?.providerOptions?.ethVersion === 2
-                ? await this._eth2Request(args)
-                : await this._eth1Request(args);
-            if (this._connected === false) this._connectToClient();
+            const response =
+                args?.ethVersion === 2
+                    ? await this._eth2Request(args)
+                    : await this._eth1Request(args);
 
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)

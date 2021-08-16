@@ -22,7 +22,6 @@ export interface Web3EthOptions {
     returnType?: ValidTypesEnum;
 }
 
-export type PrefixedHexString = string;
 export type Slot = number;
 export type StateId =
     | 'head'
@@ -42,10 +41,32 @@ export type Status =
     | 'withdrawal_possible'
     | 'withdrawal_done';
 
+export type Method =
+    | 'get'
+    | 'GET'
+    | 'delete'
+    | 'DELETE'
+    | 'head'
+    | 'HEAD'
+    | 'options'
+    | 'OPTIONS'
+    | 'post'
+    | 'POST'
+    | 'put'
+    | 'PUT'
+    | 'patch'
+    | 'PATCH'
+    | 'purge'
+    | 'PURGE'
+    | 'link'
+    | 'LINK'
+    | 'unlink'
+    | 'UNLINK';
+
+export type BlockId = 'head' | 'genesis' | 'finalized' | string | number;
 export type AttestationData = phase0.AttestationData;
 export type AttesterSlashing = phase0.AttesterSlashing;
 export type ProposerSlashing = phase0.ProposerSlashing;
 export type SyncCommittee = altair.SyncCommittee;
 export type SignedVoluntaryExit = altair.SignedVoluntaryExit;
 export type BeaconBlock = phase0.BeaconBlock;
-export type BlockIdentifier = phase0.BlockIdentifier;

@@ -9,21 +9,10 @@ import {
     SyncCommittee,
     SignedVoluntaryExit,
     BeaconBlock,
+    BlockId
 } from './types';
 import {
-    RpcResponse,
     RpcStringResult,
-    RpcPrefixedHexStringResult,
-    RpcValidTypeResult,
-    RpcBooleanResult,
-    RpcSyncingResult,
-    RpcAccountsResult,
-    RpcBlockResult,
-    RpcTransactionResult,
-    RpcTransactionReceiptResult,
-    RpcStringArrayResult,
-    RpcCompiledSolidityResult,
-    RpcLogResult,
     RequestArguments,
     IWeb3Provider,
 } from 'web3-core-types/lib/types';
@@ -49,15 +38,18 @@ export default class Web3Beacon {
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
+            const providerOptions = {
+                ...requestArguments?.providerOptions,
+                axiosConfig: {
+                    ...requestArguments?.providerOptions?.axiosConfig,
+                    url: `genesis`,
+                    method: 'get',
+                },
+            }
             return await this.provider.request({
                 ...requestArguments,
-                providerOptions: {
-                    ...requestArguments?.providerOptions,
-                    axiosConfig: {
-                        url: `genesis`,
-                        method: 'get',
-                    },
-                },
+                providerOptions,
+                ethVersion: 2
             });
         } catch (error) {
             throw Error(`Error getting genesis: ${error.message}`);
@@ -76,16 +68,18 @@ export default class Web3Beacon {
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
+            const providerOptions = {
+                ...requestArguments?.providerOptions,
+                axiosConfig: {
+                    url: `states/${stateId}/root`,
+                    method: 'get',
+                },
+            }
+
             return await this.provider.request({
                 ...requestArguments,
-                providerOptions: {
-                    ...requestArguments?.providerOptions,
-                    axiosConfig: {
-                        url: `states/${stateId}/root`,
-                        method: 'get',
-                    },
-                    ethVersion: 2,
-                },
+                providerOptions,
+                ethVersion: 2
             });
         } catch (error) {
             throw Error(
@@ -106,16 +100,18 @@ export default class Web3Beacon {
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
+            const providerOptions = {
+                ...requestArguments?.providerOptions,
+                axiosConfig: {
+                    url: `states/${stateId}/fork`,
+                    method: 'get',
+                },
+            }
+
             return await this.provider.request({
                 ...requestArguments,
-                providerOptions: {
-                    ...requestArguments?.providerOptions,
-                    axiosConfig: {
-                        url: `states/${stateId}/fork`,
-                        method: 'get',
-                    },
-                    ethVersion: 2,
-                },
+                providerOptions,
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting state fork from Id: ${error.message}`);
@@ -142,8 +138,8 @@ export default class Web3Beacon {
                         url: `states/${stateId}/finality_checkpoints`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting finality checkpoints: ${error.message}`);
@@ -152,7 +148,7 @@ export default class Web3Beacon {
 
     /**
      * Get validator from state by id
-     * @param {StateId} state_id State
+     * @param {StateId} stateId State
      * @param {string} id Array of ids
      * @param {Status} status Validator status specification
      * @returns {Promise} data of the validator specified
@@ -174,8 +170,8 @@ export default class Web3Beacon {
                         method: 'get',
                         params: { id, status },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting validators: ${error.message}`);
@@ -184,7 +180,7 @@ export default class Web3Beacon {
 
     /**
      * Returns filterable list of validators with their balance, status and index.
-     * @param {StateId} state_id State
+     * @param {StateId} stateId State
      * @param {string} validator_id Either hex encoded public key or validator index
      * @returns {Promise} data of the validator specified
      */
@@ -203,8 +199,8 @@ export default class Web3Beacon {
                         url: `states/${stateId}/validators/${validator_id}`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting validator by Id: ${error.message}`);
@@ -213,7 +209,7 @@ export default class Web3Beacon {
 
     /**
      * Returns filterable list of validators with their balance, status and index.
-     * @param {string} state_id State
+     * @param {string} stateId State
      * @param {string} id Array of either hex encoded public keys or validator index
      * @returns {Promise} Balance of the validator specified
      */
@@ -233,8 +229,8 @@ export default class Web3Beacon {
                         method: 'get',
                         params: { id },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting validator balance: ${error.message}`);
@@ -267,8 +263,8 @@ export default class Web3Beacon {
                         method: 'get',
                         params: { epoch, index, slot },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting Committees: ${error.message}`);
@@ -277,7 +273,7 @@ export default class Web3Beacon {
 
     /**
      * Get the sync committees for the given state.
-     * @param {string} state_id State
+     * @param {string} stateId State
      * @param {string} epoch Epoch
      * @returns {Promise} Sync committees
      */
@@ -297,8 +293,8 @@ export default class Web3Beacon {
                         method: 'get',
                         params: { epoch },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
@@ -327,8 +323,8 @@ export default class Web3Beacon {
                         method: 'get',
                         params: { slot, parent_root },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
@@ -337,12 +333,12 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block header for given block id.
-     * @param {BlockIdentifier} blockId Block Id
+     * @param {BlockId} blockId Block Id
      * @returns {Promise} Block header
      */
 
     async getBlockHeadersById(
-        blockId: BlockIdentifier,
+        blockId: BlockId,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -354,8 +350,8 @@ export default class Web3Beacon {
                         url: `headers/${blockId}`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting block header by id: ${error.message}`);
@@ -387,8 +383,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: { signedBeaconBlock },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error publishing block: ${error.message}`);
@@ -397,12 +393,12 @@ export default class Web3Beacon {
 
     /**
      * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {BlockIdentifier} blockId Block Id
+     * @param {BlockId} blockId Block Id
      * @returns {Promise} SignedBeaconBlock
      */
 
     async getBlock(
-        blockId: BlockIdentifier,
+        blockId: BlockId,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -414,8 +410,8 @@ export default class Web3Beacon {
                         url: `blocks/${blockId}`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting block by block Id: ${error.message}`);
@@ -424,12 +420,12 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block root of beaconBlock
-     * @param {BlockIdentifier} blockId Block Id
+     * @param {BlockId} blockId Block Id
      * @returns {Promise} Block Root
      */
 
     async getBlockRoot(
-        blockId: BlockIdentifier,
+        blockId: BlockId,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -441,8 +437,8 @@ export default class Web3Beacon {
                         url: `blocks/${blockId}/root`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting block root: ${error.message}`);
@@ -456,7 +452,7 @@ export default class Web3Beacon {
      */
 
     async getBlockAttestations(
-        blockId: BlockIdentifier,
+        blockId: BlockId,
         requestArguments?: Partial<RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -468,8 +464,8 @@ export default class Web3Beacon {
                         url: `blocks/${blockId}/attestations`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting block attestations: ${error.message}`);
@@ -498,8 +494,8 @@ export default class Web3Beacon {
                         method: 'get',
                         data: { slot, comitteeIndex },
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(
@@ -527,8 +523,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: attestation,
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -552,8 +548,8 @@ export default class Web3Beacon {
                         url: `pool/attester_slashings`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -579,8 +575,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: attesterSlashings,
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -604,8 +600,8 @@ export default class Web3Beacon {
                         url: `pool/proposer_slashings`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -631,8 +627,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: proposerSlashings,
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -658,8 +654,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: syncCommittee,
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting attestations to pool: ${error.message}`);
@@ -683,8 +679,8 @@ export default class Web3Beacon {
                         url: `pool/voluntary_exits`,
                         method: 'get',
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error getting voluntary exits: ${error.message}`);
@@ -710,8 +706,8 @@ export default class Web3Beacon {
                         method: 'post',
                         data: signedVoluntaryExit,
                     },
-                    ethVersion: 2,
                 },
+                ethVersion: 2,
             });
         } catch (error) {
             throw Error(`Error posting voluntary exits: ${error.message}`);
