@@ -434,7 +434,6 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.5.3]
 ### Changed
 
 - ethers from 5.1.4 to 5.4.4 (#4231)
