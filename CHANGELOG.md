@@ -434,3 +434,4 @@ Released with 1.0.0-beta.37 code base.
 - ethers from 5.1.4 to 5.4.4 (#4231)
 - karma from 5.2.3 to 6.3.4 (#4231)
 - lerna from 3.22.1 to 4.0.0 (#4231)
+- Droped build tests in CI for Node v8 and v10, and added support for Node v14
