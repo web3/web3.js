@@ -7,9 +7,9 @@ import {
     JsonRpcPayload,
     JsonRpcResponse,
 } from './types';
-import events, { EventEmitter } from 'events';
+import { EventEmitter } from 'events';
 
-export default class Web3ProviderWS extends events.EventEmitter {
+export default class Web3ProviderWS extends EventEmitter {
     private webSocketConnection?: w3cwebsocket;
     private options: WebSocketOptions;
 
