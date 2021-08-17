@@ -7,7 +7,7 @@
 ## Installation
 
 ```bash
-yarn add web3-packagetemplate
+yarn add web3-providers-ws
 ```
 
 ## Package.json Scripts
