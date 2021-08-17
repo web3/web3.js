@@ -1,4 +1,4 @@
-import { request, w3cwebsocket } from 'websocket';
+import { w3cwebsocket } from 'websocket';
 import {
     WebSocketOptions,
     WSErrors,
