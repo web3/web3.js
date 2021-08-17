@@ -6,9 +6,6 @@ import { JsonRpcResponse, WebSocketOptions, WSStatus } from '../../src/types';
 import { doesNotMatch } from 'assert/strict';
 
 describe('Web3ProvidersWS.request', () => {
-    const providerOptions: WebSocketOptions = {
-        providerUrl: 'ws://127.0.0.1:8546',
-    };
 
     const rpcOptions: RpcOptions = {
         id: 1,
@@ -19,8 +16,7 @@ describe('Web3ProvidersWS.request', () => {
     jest.setTimeout(30000);
     it('should return RpcResponse', async (done) => {
         //jest.useFakeTimers();
-        const web3ProvidersWS = new Web3ProviderWS(providerOptions);
-
+        const web3ProvidersWS = new Web3ProviderWS('ws://127.0.0.1:8546');
         const callback = jest.fn();
 
         web3ProvidersWS.on(WSStatus.DATA, (data: any) => {
