@@ -140,13 +140,13 @@ export default class Web3ProvidersHttp
 
     private async _eth2Request(args: RequestArguments): Promise<AxiosResponse> {
         try {
-            // @ts-ignore tsc doesn't understand httpOptions.method || 'post'
             const response = await this._httpClient[
-                // @ts-ignore tsc will suggest that it can't be some of the methods like 'GET'
-                args?.providerOptions?.AxiosRequestConfig?.method || 'post'
-            ]('', args?.rpcOptions || {}, {
-                ...args?.providerOptions?.axiosConfig,
-            });
+                (args.providerOptions?.httpMethod as 'get' | 'post') || 'get'
+            ](
+                args.method, // URL path
+                args.params || {},
+                args.providerOptions?.axiosConfig || {}
+            );
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
@@ -204,7 +204,7 @@ export default class Web3ProvidersHttp
                 throw Error('No HTTP client initiliazed');
 
             const response =
-                args?.ethVersion === 2
+                args.ethVersion === 2
                     ? await this._eth2Request(args)
                     : await this._eth1Request(args);
 

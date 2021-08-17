@@ -156,6 +156,7 @@ export interface HttpOptions {
     axiosConfig?: AxiosRequestConfig;
     poll?: boolean;
     pollingInterval?: number;
+    httpMethod: 'get' | 'post';
 }
 
 export interface RequestArguments {
@@ -164,14 +165,13 @@ export interface RequestArguments {
     rpcOptions?: RpcOptions;
     providerOptions?: HttpOptions;
     returnType?: ValidTypesEnum;
-    ethVersion?: number;
+    ethVersion?: 2;
 }
 
 export interface JsonResponse {
-    data: object | [object],
-    code: number,
-    message?: string
-
+    data: object | [object];
+    code: number;
+    message?: string;
 }
 
 export interface RpcResponse {
