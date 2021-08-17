@@ -6,7 +6,6 @@ import { JsonRpcResponse, WebSocketOptions, WSStatus } from '../../src/types';
 import { doesNotMatch } from 'assert/strict';
 
 describe('Web3ProvidersWS.request', () => {
-
     const rpcOptions: RpcOptions = {
         id: 1,
         jsonrpc: '2.0',

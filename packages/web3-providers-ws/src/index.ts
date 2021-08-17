@@ -3,7 +3,7 @@ import {
     WebSocketOptions,
     WSErrors,
     WSStatus,
-    ReconnectOptions
+    ReconnectOptions,
 } from './types';
 import { EventEmitter } from 'events';
 import {
@@ -12,7 +12,10 @@ import {
     Web3Client,
 } from 'web3-core-types/lib/types';
 
-export default class Web3ProviderWS extends EventEmitter implements IWeb3Provider{
+export default class Web3ProviderWS
+    extends EventEmitter
+    implements IWeb3Provider
+{
     web3Client: string;
 
     private webSocketConnection?: w3cwebsocket;
@@ -32,7 +35,6 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
             throw Error('Invalid WebSocket URL provided');
 
         this.web3Client = web3Client;
-        
 
         this.webSocketConnection = undefined;
         this.requestQueue = new Map<number, RequestArguments>();
@@ -40,33 +42,31 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         this.reconnecting = false;
         this.reconnectAttempts = 0;
 
-        if (options !== undefined) 
-            this.options = options;
-        else
-            this.options = {};
+        if (options !== undefined) this.options = options;
+        else this.options = {};
 
         this.setWeb3Client(web3Client);
     }
 
-/**
- * Validates and initializes provider using {web3Client}
- *
- * @param web3Client New client to set for provider instance
- */
+    /**
+     * Validates and initializes provider using {web3Client}
+     *
+     * @param web3Client New client to set for provider instance
+     */
     setWeb3Client(web3Client: Web3Client) {
         try {
             this.web3Client = web3Client as string;
 
-        if (!this.options.customTimeout) 
-            this.options.customTimeout = 1000 * 15;
-    
-        if (!this.options.reconnectOptions)
-            this.options.reconnectOptions = {
-                auto: false,
-                delay: 5000,
-                maxAttempts: 5,
-                onTimeout: false,
-            };
+            if (!this.options.customTimeout)
+                this.options.customTimeout = 1000 * 15;
+
+            if (!this.options.reconnectOptions)
+                this.options.reconnectOptions = {
+                    auto: false,
+                    delay: 5000,
+                    maxAttempts: 5,
+                    onTimeout: false,
+                };
 
             this.connect();
         } catch (error) {
@@ -74,13 +74,13 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
- /**
- * This function adds the required socket listeners
- *
- * @method _addSocketListeners
- *
- * @returns {void}
- */
+    /**
+     * This function adds the required socket listeners
+     *
+     * @method _addSocketListeners
+     *
+     * @returns {void}
+     */
     private addSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
@@ -101,13 +101,13 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         );
     }
 
-/**
- * This function removes all socket listeners
- *
- * @method _removeSocketListeners
- *
- * @returns {void}
- */
+    /**
+     * This function removes all socket listeners
+     *
+     * @method _removeSocketListeners
+     *
+     * @returns {void}
+     */
     private removeSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
@@ -128,15 +128,15 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         );
     }
 
-/**
- * This function will parse the response and make an array out of it.
- *
- * @method _parseResponse
- *
- * @param {String} data
- *
- * @returns {Array}
- */
+    /**
+     * This function will parse the response and make an array out of it.
+     *
+     * @method _parseResponse
+     *
+     * @param {String} data
+     *
+     * @returns {Array}
+     */
     private parseResponse(inData: string): any {
         let returnValues: any = [];
 
@@ -208,13 +208,13 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         return returnValues;
     }
 
-/**
- * This function removes the listeners and reconnects to the socket.
- *
- * @method reconnect
- *
- * @returns {void}
- */
+    /**
+     * This function removes the listeners and reconnects to the socket.
+     *
+     * @method reconnect
+     *
+     * @returns {void}
+     */
     private reconnect(): void {
         this.reconnecting = true;
 
@@ -269,16 +269,15 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
-
-/**
- * This function is used to validate web socket provider URL.
- *
- * @method validateProviderUrl
- *
- * @param {String} providerUrl
- * 
- * @returns {boolean}
- */
+    /**
+     * This function is used to validate web socket provider URL.
+     *
+     * @method validateProviderUrl
+     *
+     * @param {String} providerUrl
+     *
+     * @returns {boolean}
+     */
     private static validateProviderUrl(providerUrl: string): boolean {
         try {
             return (
@@ -292,15 +291,15 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
-/**
- * This is listener for the `data` event of the underlying WebSocket object
- *
- * @method onMessage
- * 
- * @param {any} e
- *
- * @returns {void}
- */
+    /**
+     * This is listener for the `data` event of the underlying WebSocket object
+     *
+     * @method onMessage
+     *
+     * @param {any} e
+     *
+     * @returns {void}
+     */
     private onMessage(e: any): void {
         this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
             (result: any) => {
@@ -330,13 +329,13 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         );
     }
 
-/**
- * This is listener for the `open` event of the underlying WebSocket object
- *
- * @method onConnect
- *
- * @returns {void}
- */
+    /**
+     * This is listener for the `open` event of the underlying WebSocket object
+     *
+     * @method onConnect
+     *
+     * @returns {void}
+     */
     private onConnect(): void {
         this.emit(WSStatus.CONNECT);
         this.reconnectAttempts = 0;
@@ -352,15 +351,15 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
-/**
- * This is listener for the `close` event of the underlying WebSocket object
- *
- * @method onClose
- *
- * @param {any} event
- * 
- * @returns {void}
- */
+    /**
+     * This is listener for the `close` event of the underlying WebSocket object
+     *
+     * @method onClose
+     *
+     * @param {any} event
+     *
+     * @returns {void}
+     */
     private onClose(event: any): void {
         if (
             this.options.reconnectOptions &&
@@ -402,33 +401,41 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         this.removeSocketListeners();
     }
 
-/**
- * This function returns the status of Subscriptions boolean.
- *
- * @method supportsSubscriptions
- *
- * @returns {boolean}
- */
+    /**
+     * This function returns the status of Subscriptions boolean.
+     *
+     * @method supportsSubscriptions
+     *
+     * @returns {boolean}
+     */
     supportsSubscriptions(): boolean {
         return true;
     }
 
-/**
- * This function creates w3cwebsocket client and adds Listeners.
- *
- * @method connect
- *
- * @returns {void}
- */
-    connect(): void{
+    /**
+     * This function creates w3cwebsocket client and adds Listeners.
+     *
+     * @method connect
+     *
+     * @returns {void}
+     */
+    connect(): void {
         try {
             this.webSocketConnection = new w3cwebsocket(
                 this.web3Client,
-                (this.options && this.options.protocol ? this.options.protocol : undefined),
+                this.options && this.options.protocol
+                    ? this.options.protocol
+                    : undefined,
                 undefined,
-                (this.options && this.options.headers ? this.options.headers : undefined),
-                (this.options && this.options.requestOptions ? this.options.requestOptions : undefined),
-                (this.options && this.options.clientConfig ? this.options.clientConfig : undefined)
+                this.options && this.options.headers
+                    ? this.options.headers
+                    : undefined,
+                this.options && this.options.requestOptions
+                    ? this.options.requestOptions
+                    : undefined,
+                this.options && this.options.clientConfig
+                    ? this.options.clientConfig
+                    : undefined
             );
 
             this.addSocketListeners();
@@ -437,17 +444,16 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
-
-/**
- *  This function closes the current connection with the given code and reason arguments
- *
- * @method disconnect
- *
- * @param {number} code
- * @param {string} reason
- *
- * @returns {void}
- */
+    /**
+     *  This function closes the current connection with the given code and reason arguments
+     *
+     * @method disconnect
+     *
+     * @param {number} code
+     * @param {string} reason
+     *
+     * @returns {void}
+     */
     async disconnect(code?: number, reason?: string): Promise<void> {
         this.removeSocketListeners();
 
@@ -459,20 +465,20 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         this.webSocketConnection.close(code || 1000, reason);
     }
 
-/**
- * This function is used to send request if provider is connected  else if the provider is connecting it will add request to the queue.
- *
- * @method request
- *
- * @param {RequestArguments} request
- *
- * @returns {RpcResponse} This function always returns undefined as result is emitted in events for web socket
- */
+    /**
+     * This function is used to send request if provider is connected  else if the provider is connecting it will add request to the queue.
+     *
+     * @method request
+     *
+     * @param {RequestArguments} request
+     *
+     * @returns {RpcResponse} This function always returns undefined as result is emitted in events for web socket
+     */
     async request(request: RequestArguments): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 
-        if(request.rpcOptions===undefined)
+        if (request.rpcOptions === undefined)
             throw new Error('RpcOptions not defined');
 
         let id = request.rpcOptions.id;
@@ -511,13 +517,13 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         }
     }
 
- /**
- * This function resets the requests queues and removed listeners
- *
- * @method reset
- *
- * @returns {void}
- */
+    /**
+     * This function resets the requests queues and removed listeners
+     *
+     * @method reset
+     *
+     * @returns {void}
+     */
     async reset(): Promise<void> {
         this.responseQueue.clear();
         this.requestQueue.clear();
