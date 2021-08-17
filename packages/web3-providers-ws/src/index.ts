@@ -3,20 +3,18 @@ import {
     WebSocketOptions,
     WSErrors,
     WSStatus,
-    ReconnectOptions,
-    JsonRpcResponse,
+    ReconnectOptions
 } from './types';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
-    RpcResponse,
     RequestArguments,
-    Web3ProviderEvents,
-    ProviderEventListener,
     Web3Client,
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProviderWS extends EventEmitter implements IWeb3Provider{
+    web3Client: string;
+
     private webSocketConnection?: w3cwebsocket;
     private options: WebSocketOptions;
 
@@ -28,20 +26,40 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
     private reconnecting: boolean;
     private reconnectAttempts: number;
 
-    constructor(options: WebSocketOptions) {
+    constructor(web3Client: string, options?: WebSocketOptions) {
         super();
-        if (!Web3ProviderWS.validateProviderUrl(options.providerUrl))
+        if (!Web3ProviderWS.validateProviderUrl(web3Client))
             throw Error('Invalid WebSocket URL provided');
 
-        this.options = options;
+        this.web3Client = web3Client;
+        
+
         this.webSocketConnection = undefined;
         this.requestQueue = new Map<number, RequestArguments>();
         this.responseQueue = new Map<number, RequestArguments>();
         this.reconnecting = false;
         this.reconnectAttempts = 0;
 
-        if (!this.options.customTimeout) this.options.customTimeout = 1000 * 15;
+        if (options !== undefined) 
+            this.options = options;
+        else
+            this.options = {};
 
+        this.setWeb3Client(web3Client);
+    }
+
+/**
+ * Validates and initializes provider using {web3Client}
+ *
+ * @param web3Client New client to set for provider instance
+ */
+    setWeb3Client(web3Client: Web3Client) {
+        try {
+            this.web3Client = web3Client as string;
+
+        if (!this.options.customTimeout) 
+            this.options.customTimeout = 1000 * 15;
+    
         if (!this.options.reconnectOptions)
             this.options.reconnectOptions = {
                 auto: false,
@@ -49,6 +67,11 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
                 maxAttempts: 5,
                 onTimeout: false,
             };
+
+            this.connect();
+        } catch (error) {
+            throw Error(`Failed to set web3 client: ${error.message}`);
+        }
     }
 
  /**
@@ -214,11 +237,11 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
                 this.reconnectAttempts <
                     this.options.reconnectOptions.maxAttempts)
         ) {
-            setTimeout(async () => {
+            setTimeout(() => {
                 this.reconnectAttempts++;
                 this.removeSocketListeners();
                 this.emit(WSStatus.RECONNECT, this.reconnectAttempts);
-                await this.connect();
+                this.connect();
             }, this.options.reconnectOptions.delay);
 
             return;
@@ -390,15 +413,22 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
         return true;
     }
 
-    async connect(): Promise<void> {
+/**
+ * This function creates w3cwebsocket client and adds Listeners.
+ *
+ * @method connect
+ *
+ * @returns {void}
+ */
+    connect(): void{
         try {
             this.webSocketConnection = new w3cwebsocket(
-                this.options.providerUrl,
-                this.options.protocol,
+                this.web3Client,
+                (this.options && this.options.protocol ? this.options.protocol : undefined),
                 undefined,
-                this.options.headers,
-                this.options.requestOptions,
-                this.options.clientConfig
+                (this.options && this.options.headers ? this.options.headers : undefined),
+                (this.options && this.options.requestOptions ? this.options.requestOptions : undefined),
+                (this.options && this.options.clientConfig ? this.options.clientConfig : undefined)
             );
 
             this.addSocketListeners();
@@ -409,7 +439,7 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
 
 
 /**
- *  Tis function closes the current connection with the given code and reason arguments
+ *  This function closes the current connection with the given code and reason arguments
  *
  * @method disconnect
  *
@@ -436,7 +466,7 @@ export default class Web3ProviderWS extends EventEmitter implements IWeb3Provide
  *
  * @param {RequestArguments} request
  *
- * @returns {void}
+ * @returns {RpcResponse} This function always returns undefined as result is emitted in events for web socket
  */
     async request(request: RequestArguments): Promise<void> {
         if (!this.webSocketConnection)
