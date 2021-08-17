@@ -2,14 +2,15 @@ import { request, w3cwebsocket } from 'websocket';
 import {
     WebSocketOptions,
     WSErrors,
-    WSStatus,
     ReconnectOptions,
+    WSStatus,
 } from './types';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
     RequestArguments,
     Web3Client,
+    Web3ProviderEvents,
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProviderWS
@@ -175,7 +176,7 @@ export default class Web3ProviderWS
                     }
 
                     this.emit(
-                        WSStatus.ERROR,
+                        WSStatus.Error, // TODO: Fancy errors
                         WSErrors.ConnectionTimeout + this.options.customTimeout
                     );
 
@@ -183,7 +184,7 @@ export default class Web3ProviderWS
                         this.requestQueue.forEach(
                             (request: RequestArguments, key: number) => {
                                 this.emit(
-                                    WSStatus.ERROR,
+                                    WSStatus.Error, // TODO: Fancy errors,
                                     new Error(
                                         WSErrors.ConnectionTimeout +
                                             this.options.customTimeout
@@ -222,7 +223,7 @@ export default class Web3ProviderWS
             this.responseQueue.forEach(
                 (request: RequestArguments, key: number) => {
                     this.emit(
-                        WSStatus.ERROR,
+                        WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.PendingRequestsOnReconnectingError),
                         request
                     );
@@ -240,7 +241,7 @@ export default class Web3ProviderWS
             setTimeout(() => {
                 this.reconnectAttempts++;
                 this.removeSocketListeners();
-                this.emit(WSStatus.RECONNECT, this.reconnectAttempts);
+                this.emit(WSStatus.Reconnect, this.reconnectAttempts);
                 this.connect();
             }, this.options.reconnectOptions.delay);
 
@@ -248,7 +249,7 @@ export default class Web3ProviderWS
         }
 
         this.emit(
-            WSStatus.ERROR,
+            WSStatus.Error, // TODO: Fancy errors,
             new Error(WSErrors.MaxAttemptsReachedOnReconnectingError)
         );
         this.reconnecting = false;
@@ -257,7 +258,7 @@ export default class Web3ProviderWS
             this.requestQueue.forEach(
                 (request: RequestArguments, key: number) => {
                     this.emit(
-                        WSStatus.ERROR,
+                        WSStatus.Error, // TODO: Fancy errors,
                         new Error(
                             WSErrors.MaxAttemptsReachedOnReconnectingError
                         ),
@@ -307,7 +308,7 @@ export default class Web3ProviderWS
                     result.method &&
                     result.method.indexOf('_subscription') !== -1
                 ) {
-                    this.emit(WSStatus.DATA, result);
+                    this.emit(Web3ProviderEvents.Message, result);
                     return;
                 }
 
@@ -321,7 +322,7 @@ export default class Web3ProviderWS
                 if (id && this.responseQueue.has(id)) {
                     let requestItem = this.responseQueue.get(id);
 
-                    this.emit(WSStatus.DATA, result, requestItem);
+                    this.emit(Web3ProviderEvents.Message, result, requestItem);
 
                     this.responseQueue.delete(id);
                 }
@@ -337,7 +338,7 @@ export default class Web3ProviderWS
      * @returns {void}
      */
     private onConnect(): void {
-        this.emit(WSStatus.CONNECT);
+        this.emit(Web3ProviderEvents.Connect);
         this.reconnectAttempts = 0;
         this.reconnecting = false;
 
@@ -370,13 +371,13 @@ export default class Web3ProviderWS
             return;
         }
 
-        this.emit(WSStatus.CLOSE, event);
+        this.emit(Web3ProviderEvents.Disconnect, event);
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
                 (request: RequestArguments, key: number) => {
                     this.emit(
-                        WSStatus.ERROR,
+                        WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.ConnectionNotOpenError),
                         request
                     );
@@ -389,7 +390,7 @@ export default class Web3ProviderWS
             this.responseQueue.forEach(
                 (request: RequestArguments, key: number) => {
                     this.emit(
-                        WSStatus.ERROR,
+                        WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.InvalidConnection),
                         request
                     );
@@ -502,7 +503,11 @@ export default class Web3ProviderWS
         ) {
             this.requestQueue.delete(id);
 
-            this.emit(WSStatus.ERROR, WSErrors.ConnectionNotOpenError, request);
+            this.emit(
+                WSStatus.Error, // TODO: Fancy errors
+                WSErrors.ConnectionNotOpenError,
+                request
+            );
             return;
         }
 
@@ -512,7 +517,11 @@ export default class Web3ProviderWS
         try {
             this.webSocketConnection.send(JSON.stringify(request));
         } catch (error) {
-            this.emit(WSStatus.ERROR, error, request);
+            this.emit(
+                WSStatus.Error, // TODO: Fancy errors
+                error,
+                request
+            );
             this.responseQueue.delete(id);
         }
     }
