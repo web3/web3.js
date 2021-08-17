@@ -370,7 +370,7 @@ export default class Web3Beacon {
                 params: signedBeaconBlock,
                 providerOptions: {
                     ...requestArguments?.providerOptions,
-                    httpMethod: 'post'
+                    httpMethod: 'post',
                 },
                 ethVersion: 2,
             });
