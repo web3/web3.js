@@ -1,6 +1,5 @@
 import { OutgoingHttpHeaders } from 'http';
 import { IClientConfig } from 'websocket';
-import { ProviderOptions } from '../../web3-providers-base/lib/types';
 
 export type ReconnectOptions = {
     auto: boolean;
@@ -8,8 +7,7 @@ export type ReconnectOptions = {
     maxAttempts: number;
     onTimeout: boolean;
 };
-export interface WebSocketOptions extends ProviderOptions {
-    providerUrl: string;
+export interface WebSocketOptions {
     protocol?: string;
     headers?: OutgoingHttpHeaders;
     requestOptions?: object;
