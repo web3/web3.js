@@ -5,6 +5,7 @@ import {
 } from 'web3-core-types/lib/types';
 import Web3ProvidersHttp from 'web3-providers-http';
 import Web3ProvidersEip1193 from 'web3-providers-eip1193';
+import Web3ProviderWS from 'web3-providers-ws';
 
 import { ClientProtocol } from './types';
 
@@ -24,8 +25,7 @@ export default function initWeb3Provider(
         case ClientProtocol.HTTP:
             return new Web3ProvidersHttp(web3Client as string);
         case ClientProtocol.WS:
-            // TODO
-            throw Error('Provider protocol not implemented');
+            return new Web3ProviderWS(web3Client as string);
         case ClientProtocol.IPC:
             // TODO
             throw Error('Provider protocol not implemented');
