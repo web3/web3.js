@@ -9,6 +9,7 @@ export type ReconnectOptions = {
     onTimeout: boolean;
 };
 export interface WebSocketOptions extends ProviderOptions {
+    providerUrl: string;
     protocol?: string;
     headers?: OutgoingHttpHeaders;
     requestOptions?: object;

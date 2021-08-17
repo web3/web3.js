@@ -44,6 +44,13 @@ export default class Web3ProviderWS extends EventEmitter {
             };
     }
 
+ /**
+ * This function adds the required socket listeners
+ *
+ * @method _addSocketListeners
+ *
+ * @returns {void}
+ */
     private addSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
@@ -64,6 +71,13 @@ export default class Web3ProviderWS extends EventEmitter {
         );
     }
 
+/**
+ * This function removes all socket listeners
+ *
+ * @method _removeSocketListeners
+ *
+ * @returns {void}
+ */
     private removeSocketListeners(): void {
         if (!this.webSocketConnection)
             throw new Error(
@@ -84,7 +98,16 @@ export default class Web3ProviderWS extends EventEmitter {
         );
     }
 
-    private parseResponse(inData: any): any {
+/**
+ * This function will parse the response and make an array out of it.
+ *
+ * @method _parseResponse
+ *
+ * @param {String} data
+ *
+ * @returns {Array}
+ */
+    private parseResponse(inData: string): any {
         let returnValues: any = [];
 
         // DE-CHUNKER
@@ -155,6 +178,13 @@ export default class Web3ProviderWS extends EventEmitter {
         return returnValues;
     }
 
+/**
+ * This function removes the listeners and reconnects to the socket.
+ *
+ * @method reconnect
+ *
+ * @returns {void}
+ */
     private reconnect(): void {
         this.reconnecting = true;
 
@@ -209,6 +239,16 @@ export default class Web3ProviderWS extends EventEmitter {
         }
     }
 
+
+/**
+ * This function is used to validate web socket provider URL.
+ *
+ * @method validateProviderUrl
+ *
+ * @param {String} providerUrl
+ * 
+ * @returns {boolean}
+ */
     private static validateProviderUrl(providerUrl: string): boolean {
         try {
             return (
@@ -222,6 +262,15 @@ export default class Web3ProviderWS extends EventEmitter {
         }
     }
 
+/**
+ * This is listener for the `data` event of the underlying WebSocket object
+ *
+ * @method onMessage
+ * 
+ * @param {any} e
+ *
+ * @returns {void}
+ */
     private onMessage(e: any): void {
         this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
             (result: any) => {
@@ -251,6 +300,13 @@ export default class Web3ProviderWS extends EventEmitter {
         );
     }
 
+/**
+ * This is listener for the `open` event of the underlying WebSocket object
+ *
+ * @method onConnect
+ *
+ * @returns {void}
+ */
     private onConnect(): void {
         this.emit(WSStatus.CONNECT);
         this.reconnectAttempts = 0;
@@ -266,6 +322,15 @@ export default class Web3ProviderWS extends EventEmitter {
         }
     }
 
+/**
+ * This is listener for the `close` event of the underlying WebSocket object
+ *
+ * @method onClose
+ *
+ * @param {any} event
+ * 
+ * @returns {void}
+ */
     private onClose(event: any): void {
         if (
             this.options.reconnectOptions &&
@@ -307,6 +372,13 @@ export default class Web3ProviderWS extends EventEmitter {
         this.removeSocketListeners();
     }
 
+/**
+ * This function returns the status of Subscriptions boolean.
+ *
+ * @method supportsSubscriptions
+ *
+ * @returns {boolean}
+ */
     supportsSubscriptions(): boolean {
         return true;
     }
@@ -328,6 +400,17 @@ export default class Web3ProviderWS extends EventEmitter {
         }
     }
 
+
+/**
+ *  Tis function closes the current connection with the given code and reason arguments
+ *
+ * @method disconnect
+ *
+ * @param {number} code
+ * @param {string} reason
+ *
+ * @returns {void}
+ */
     async disconnect(code?: number, reason?: string): Promise<void> {
         this.removeSocketListeners();
 
@@ -339,6 +422,15 @@ export default class Web3ProviderWS extends EventEmitter {
         this.webSocketConnection.close(code || 1000, reason);
     }
 
+/**
+ * This function is used to send request if provider is connected  else if the provider is connecting it will add request to the queue.
+ *
+ * @method send
+ *
+ * @param {JsonRpcPayload} request
+ *
+ * @returns {void}
+ */
     async request(request: JsonRpcPayload): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
@@ -379,6 +471,13 @@ export default class Web3ProviderWS extends EventEmitter {
         }
     }
 
+ /**
+ * This function resets the requests queues and removed listeners
+ *
+ * @method reset
+ *
+ * @returns {void}
+ */
     async reset(): Promise<void> {
         this.responseQueue.clear();
         this.requestQueue.clear();
