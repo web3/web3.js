@@ -19,14 +19,7 @@ export interface WebSocketOptions {
     origin?: string;
 }
 
-export enum WSStatus {
-    DATA = 'Data ',
-    CLOSE = 'Close ',
-    ERROR = 'Error ',
-    CONNECT = 'Connect ',
-    RECONNECT = 'Reconnect ',
-}
-
+// TODO: Fancy errors
 export enum WSErrors {
     ConnectionTimeout = 'Connection Timeout ',
     ConnectionNotOpenError = 'Connection Not Open Error ',
@@ -35,11 +28,9 @@ export enum WSErrors {
     InvalidConnection = 'Invalid Connection ',
 }
 
-export interface JsonRpcPayload {
-    jsonrpc: string;
-    method: string;
-    params: any[];
-    id: string | number;
+export enum WSStatus {
+    Error = 'Error ',
+    Reconnect = 'Reconnect ',
 }
 
 export interface JsonRpcResponse {
