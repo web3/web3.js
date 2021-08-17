@@ -4,17 +4,24 @@ import {
     WSErrors,
     WSStatus,
     ReconnectOptions,
-    JsonRpcPayload,
     JsonRpcResponse,
 } from './types';
 import { EventEmitter } from 'events';
+import {
+    IWeb3Provider,
+    RpcResponse,
+    RequestArguments,
+    Web3ProviderEvents,
+    ProviderEventListener,
+    Web3Client,
+} from 'web3-core-types/lib/types';
 
-export default class Web3ProviderWS extends EventEmitter {
+export default class Web3ProviderWS extends EventEmitter implements IWeb3Provider{
     private webSocketConnection?: w3cwebsocket;
     private options: WebSocketOptions;
 
-    private requestQueue: Map<string, JsonRpcPayload>;
-    private responseQueue: Map<string, JsonRpcPayload>;
+    private requestQueue: Map<number, RequestArguments>;
+    private responseQueue: Map<number, RequestArguments>;
     private lastChunk: any;
     private lastChunkTimeout!: NodeJS.Timeout;
 
@@ -28,8 +35,8 @@ export default class Web3ProviderWS extends EventEmitter {
 
         this.options = options;
         this.webSocketConnection = undefined;
-        this.requestQueue = new Map<string, JsonRpcPayload>();
-        this.responseQueue = new Map<string, JsonRpcPayload>();
+        this.requestQueue = new Map<number, RequestArguments>();
+        this.responseQueue = new Map<number, RequestArguments>();
         this.reconnecting = false;
         this.reconnectAttempts = 0;
 
@@ -151,7 +158,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
                     if (this.requestQueue.size > 0) {
                         this.requestQueue.forEach(
-                            (request: JsonRpcPayload, key: string) => {
+                            (request: RequestArguments, key: number) => {
                                 this.emit(
                                     WSStatus.ERROR,
                                     new Error(
@@ -190,7 +197,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach(
-                (request: JsonRpcPayload, key: string) => {
+                (request: RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.ERROR,
                         new Error(WSErrors.PendingRequestsOnReconnectingError),
@@ -225,7 +232,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                (request: JsonRpcPayload, key: string) => {
+                (request: RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.ERROR,
                         new Error(
@@ -314,7 +321,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                async (request: JsonRpcPayload, key: string) => {
+                async (request: RequestArguments, key: number) => {
                     await this.request(request);
                     this.requestQueue.delete(key);
                 }
@@ -345,7 +352,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                (request: JsonRpcPayload, key: string) => {
+                (request: RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.ERROR,
                         new Error(WSErrors.ConnectionNotOpenError),
@@ -358,7 +365,7 @@ export default class Web3ProviderWS extends EventEmitter {
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach(
-                (request: JsonRpcPayload, key: string) => {
+                (request: RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.ERROR,
                         new Error(WSErrors.InvalidConnection),
@@ -425,20 +432,23 @@ export default class Web3ProviderWS extends EventEmitter {
 /**
  * This function is used to send request if provider is connected  else if the provider is connecting it will add request to the queue.
  *
- * @method send
+ * @method request
  *
- * @param {JsonRpcPayload} request
+ * @param {RequestArguments} request
  *
  * @returns {void}
  */
-    async request(request: JsonRpcPayload): Promise<void> {
+    async request(request: RequestArguments): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 
-        let id = request.id;
+        if(request.rpcOptions===undefined)
+            throw new Error('RpcOptions not defined');
+
+        let id = request.rpcOptions.id;
 
         if (Array.isArray(request)) {
-            id = request[0].id;
+            id = request[0].rpcOptions.id;
         }
 
         if (
@@ -446,7 +456,7 @@ export default class Web3ProviderWS extends EventEmitter {
                 this.webSocketConnection.CONNECTING ||
             this.reconnecting
         ) {
-            this.requestQueue.set(id as string, request);
+            this.requestQueue.set(id, request);
             return;
         }
 
@@ -454,20 +464,20 @@ export default class Web3ProviderWS extends EventEmitter {
             this.webSocketConnection.readyState !==
             this.webSocketConnection.OPEN
         ) {
-            this.requestQueue.delete(id as string);
+            this.requestQueue.delete(id);
 
             this.emit(WSStatus.ERROR, WSErrors.ConnectionNotOpenError, request);
             return;
         }
 
-        this.responseQueue.set(id as string, request);
-        this.requestQueue.delete(id as string);
+        this.responseQueue.set(id, request);
+        this.requestQueue.delete(id);
 
         try {
             this.webSocketConnection.send(JSON.stringify(request));
         } catch (error) {
             this.emit(WSStatus.ERROR, error, request);
-            this.responseQueue.delete(id as string);
+            this.responseQueue.delete(id);
         }
     }
 
