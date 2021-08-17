@@ -2,7 +2,6 @@ import { request, w3cwebsocket } from 'websocket';
 import {
     WebSocketOptions,
     WSErrors,
-    ReconnectOptions,
     WSStatus,
 } from './types';
 import { EventEmitter } from 'events';
