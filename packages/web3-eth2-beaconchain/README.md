@@ -2,12 +2,12 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - PLACEHOLDER
+# web3.js - Beaconchain
 
 ## Installation
 
 ```bash
-yarn add web3-PLACEHOLDER
+yarn add web3-eth2-beaconchain
 ```
 
 ## Package.json Scripts

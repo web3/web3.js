@@ -168,12 +168,6 @@ export interface RequestArguments {
     ethVersion?: 2;
 }
 
-export interface JsonResponse {
-    data: object | [object];
-    code: number;
-    message?: string;
-}
-
 export interface RpcResponse {
     id: number;
     jsonrpc: string;
