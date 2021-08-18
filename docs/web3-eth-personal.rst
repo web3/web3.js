@@ -293,7 +293,7 @@ unlockAccount
 
 .. code-block:: javascript
 
-    web3.eth.personal.unlockAccount(address, password, unlockDuraction [, callback])
+    web3.eth.personal.unlockAccount(address, password, unlockDuration [, callback])
 
 Signs data using a specific account.
 
