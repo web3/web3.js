@@ -39,7 +39,6 @@ export type Status =
     | 'withdrawal_possible'
     | 'withdrawal_done';
 
-
 export type BlockId = 'head' | 'genesis' | 'finalized' | string;
 export type AttestationData = phase0.AttestationData;
 export type AttesterSlashing = phase0.AttesterSlashing;

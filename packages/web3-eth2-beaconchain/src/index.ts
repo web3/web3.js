@@ -580,7 +580,7 @@ export default class Web3Beacon {
 
     /**
      * Submit SignedVoluntaryExit object to node's pool
-     * @param {SignedVoluntaryExit} signedVoluntaryExit 
+     * @param {SignedVoluntaryExit} signedVoluntaryExit
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} returns a response code
      */
