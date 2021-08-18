@@ -22,13 +22,11 @@ export interface Web3EthOptions {
     returnType?: ValidTypesEnum;
 }
 
-export type Slot = number;
 export type StateId =
     | 'head'
     | 'genesis'
     | 'finalized'
     | 'justified'
-    | Slot
     | PrefixedHexString;
 export type Status =
     | 'pending_initialized'
@@ -41,29 +39,8 @@ export type Status =
     | 'withdrawal_possible'
     | 'withdrawal_done';
 
-export type Method =
-    | 'get'
-    | 'GET'
-    | 'delete'
-    | 'DELETE'
-    | 'head'
-    | 'HEAD'
-    | 'options'
-    | 'OPTIONS'
-    | 'post'
-    | 'POST'
-    | 'put'
-    | 'PUT'
-    | 'patch'
-    | 'PATCH'
-    | 'purge'
-    | 'PURGE'
-    | 'link'
-    | 'LINK'
-    | 'unlink'
-    | 'UNLINK';
 
-export type BlockId = 'head' | 'genesis' | 'finalized' | string | number;
+export type BlockId = 'head' | 'genesis' | 'finalized' | string;
 export type AttestationData = phase0.AttestationData;
 export type AttesterSlashing = phase0.AttesterSlashing;
 export type ProposerSlashing = phase0.ProposerSlashing;
