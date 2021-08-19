@@ -1,14 +1,11 @@
 import { Web3Error } from './types';
 
 export enum CoreErrorNames {
+    // Constant
     unsupportedError = 'unsupportedError',
 }
 
-interface CoreErrorsConfig {
-    errors: Record<CoreErrorNames, Web3Error>;
-}
-
-export const CoreErrors = {
+export const CoreErrors: Record<CoreErrorNames, Web3Error> = {
     unsupportedError: {
         code: 1,
         name: 'unsupportedError',
