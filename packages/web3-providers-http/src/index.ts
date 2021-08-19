@@ -8,6 +8,9 @@ import {
     ProviderEventListener,
     Web3Client,
 } from 'web3-core-types/lib/types';
+import Web3CoreLogger from 'web3-core-logger';
+
+import { Web3ProvidersHttpErrorsConfig, Web3ProvidersHttpErrorNames } from './errors';
 
 export default class Web3ProvidersHttp
     extends EventEmitter
@@ -16,14 +19,16 @@ export default class Web3ProvidersHttp
     private _httpClient: AxiosInstance;
     private _clientChainId: string | undefined;
     private _connected = false;
+    private _logger: Web3CoreLogger;
 
     web3Client: string;
 
     constructor(web3Client: string) {
         super();
-        this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
+        this._httpClient = this._createHttpClient(web3Client);
         this.web3Client = web3Client;
         this._connectToClient();
+        this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
     }
 
     /**
@@ -32,12 +37,20 @@ export default class Web3ProvidersHttp
      * @param web3Client To be validated
      * @returns true if valid
      */
-    private static _validateClientUrl(web3Client: Web3Client): boolean {
+    private _validateClientUrl(web3Client: Web3Client): boolean {
         try {
             return typeof web3Client === 'string'
                 ? /^http(s)?:\/\//i.test(web3Client)
                 : false;
         } catch (error) {
+            this._logger.makeError(
+                Web3ProvidersHttpErrorNames.invalidClientUrl,
+                {
+                    msg: 'Provided web3Client failed validation',
+                    reason: error.message,
+                    params: { web3Client }
+                }
+            )
             throw Error(`Failed to validate client url: ${error.message}`);
         }
     }
@@ -48,9 +61,9 @@ export default class Web3ProvidersHttp
      * @param web3Client Client URL to send requests to
      * @returns AxiosInstance
      */
-    private static _createHttpClient(web3Client: Web3Client): AxiosInstance {
+    private _createHttpClient(web3Client: Web3Client): AxiosInstance {
         try {
-            if (!Web3ProvidersHttp._validateClientUrl(web3Client))
+            if (!this._validateClientUrl(web3Client))
                 throw Error('Invalid HTTP(S) URL provided');
             return axios.create({ baseURL: web3Client as string });
         } catch (error) {
@@ -107,7 +120,7 @@ export default class Web3ProvidersHttp
      */
     setWeb3Client(web3Client: Web3Client) {
         try {
-            this._httpClient = Web3ProvidersHttp._createHttpClient(web3Client);
+            this._httpClient = this._createHttpClient(web3Client);
             this.web3Client = web3Client as string;
             this._connectToClient();
         } catch (error) {
