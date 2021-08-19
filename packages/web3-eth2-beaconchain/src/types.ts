@@ -1,7 +1,6 @@
 import { altair, phase0 } from '@chainsafe/lodestar-types';
 import {
     PrefixedHexString,
-    ValidTypes,
     ValidTypesEnum,
 } from 'web3-utils/lib/types';
 
