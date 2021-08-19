@@ -9,25 +9,24 @@ export default class Web3CoreLogger {
         this._packageErrorConfig = packageErrorConfig;
         this._errorsCollective = {
             ...CoreErrors,
-            ...packageErrorConfig.errors
-        }
+            ...packageErrorConfig.errors,
+        };
     }
 
     makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
         try {
             if (!this._errorsCollective.hasOwnProperty(web3ErrorName))
-                this.makeError(
-                    CoreErrorNames.unsupportedError,
-                    {
-                        msg: 'Provided error does not exist in CoreErrors or provided Web3PackageErrorConfig',
-                        params: { web3ErrorName, errorDetails}
-                    }
-                );
+                this.makeError(CoreErrorNames.unsupportedError, {
+                    msg: 'Provided error does not exist in CoreErrors or provided Web3PackageErrorConfig',
+                    params: { web3ErrorName, errorDetails },
+                });
 
-            return Error(this._makeErrorString({
-                ...this._errorsCollective[web3ErrorName],
-                ...errorDetails
-            }));
+            return Error(
+                this._makeErrorString({
+                    ...this._errorsCollective[web3ErrorName],
+                    ...errorDetails,
+                })
+            );
         } catch (error) {
             // TODO
             throw Error('');

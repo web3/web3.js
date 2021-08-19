@@ -2,11 +2,11 @@ import { Web3Error, Web3PackageErrorConfig } from 'web3-core-logger/src/types';
 import packageVersion from './_version';
 
 export enum Web3ProvidersHttpErrorNames {
-    invalidClientUrl = 'invalidClientUrl'
+    invalidClientUrl = 'invalidClientUrl',
 }
 
 interface Web3ProvidersHttpErrorsConfig extends Web3PackageErrorConfig {
-    errors: Record<Web3ProvidersHttpErrorNames, Web3Error>
+    errors: Record<Web3ProvidersHttpErrorNames, Web3Error>;
 }
 
 export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
@@ -15,7 +15,7 @@ export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
     errors: {
         invalidClientUrl: {
             code: 1,
-            name: 'invalidClientUrl'
+            name: 'invalidClientUrl',
         },
     },
 };

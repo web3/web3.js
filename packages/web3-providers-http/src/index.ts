@@ -10,7 +10,10 @@ import {
 } from 'web3-core-types/lib/types';
 import Web3CoreLogger from 'web3-core-logger';
 
-import { Web3ProvidersHttpErrorsConfig, Web3ProvidersHttpErrorNames } from './errors';
+import {
+    Web3ProvidersHttpErrorsConfig,
+    Web3ProvidersHttpErrorNames,
+} from './errors';
 
 export default class Web3ProvidersHttp
     extends EventEmitter
@@ -48,9 +51,9 @@ export default class Web3ProvidersHttp
                 {
                     msg: 'Provided web3Client failed validation',
                     reason: error.message,
-                    params: { web3Client }
+                    params: { web3Client },
                 }
-            )
+            );
             throw Error(`Failed to validate client url: ${error.message}`);
         }
     }
