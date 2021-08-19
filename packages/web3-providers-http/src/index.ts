@@ -28,10 +28,10 @@ export default class Web3ProvidersHttp
 
     constructor(web3Client: string) {
         super();
+        this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
         this._httpClient = this._createHttpClient(web3Client);
         this.web3Client = web3Client;
         this._connectToClient();
-        this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
     }
 
     /**
@@ -40,21 +40,23 @@ export default class Web3ProvidersHttp
      * @param web3Client To be validated
      * @returns true if valid
      */
-    private _validateClientUrl(web3Client: Web3Client): boolean {
+    private _validateClientUrl(web3Client: Web3Client) {
         try {
-            return typeof web3Client === 'string'
-                ? /^http(s)?:\/\//i.test(web3Client)
-                : false;
-        } catch (error) {
-            this._logger.makeError(
+            if (
+                typeof web3Client === 'string' &&
+                /^http(s)?:\/\//i.test(web3Client)
+            )
+                return;
+
+            throw this._logger.makeError(
                 Web3ProvidersHttpErrorNames.invalidClientUrl,
                 {
-                    msg: 'Provided web3Client failed validation',
-                    reason: error.message,
+                    msg: 'Provided web3Client is an invalid HTTP(S) URL',
                     params: { web3Client },
                 }
             );
-            throw Error(`Failed to validate client url: ${error.message}`);
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -66,11 +68,10 @@ export default class Web3ProvidersHttp
      */
     private _createHttpClient(web3Client: Web3Client): AxiosInstance {
         try {
-            if (!this._validateClientUrl(web3Client))
-                throw Error('Invalid HTTP(S) URL provided');
+            this._validateClientUrl(web3Client);
             return axios.create({ baseURL: web3Client as string });
         } catch (error) {
-            throw Error(`Failed to create HTTP client: ${error.message}`);
+            throw error;
         }
     }
 
@@ -183,6 +184,7 @@ export default class Web3ProvidersHttp
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
             if (this._connected === false) this._connectToClient();
 
+            // TODO Code smell
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
             if (error.code === 'ECONNREFUSED' && this._connected) {

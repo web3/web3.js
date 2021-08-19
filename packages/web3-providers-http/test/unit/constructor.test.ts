@@ -32,7 +32,14 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
             // @ts-ignore - Ignore invalid type
             new Web3ProvidersHttp({});
         }).toThrowError(
-            'Failed to create HTTP client: Invalid HTTP(S) URL provided'
+            [
+                'packageName: web3-providers-http',
+                'packageVersion: 4.0.0-alpha.0',
+                'code: 1',
+                'name: invalidClientUrl',
+                'msg: Provided web3Client is an invalid HTTP(S) URL',
+                'params: {"web3Client":{}}',
+            ].join('\n')
         );
     });
 
