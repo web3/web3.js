@@ -423,19 +423,11 @@ export default class Web3ProviderWS
         try {
             this.webSocketConnection = new w3cwebsocket(
                 this.web3Client,
-                this.options && this.options.protocol
-                    ? this.options.protocol
-                    : undefined,
+                this.options?.protocol,
                 undefined,
-                this.options && this.options.headers
-                    ? this.options.headers
-                    : undefined,
-                this.options && this.options.requestOptions
-                    ? this.options.requestOptions
-                    : undefined,
-                this.options && this.options.clientConfig
-                    ? this.options.clientConfig
-                    : undefined
+                this.options?.headers,
+                this.options?.requestOptions,
+                this.options?.clientConfig
             );
 
             this.addSocketListeners();
