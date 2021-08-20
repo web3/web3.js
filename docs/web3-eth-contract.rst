@@ -689,7 +689,7 @@ Returns
 - ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
 - ``Function`` - :ref:`send <contract-send>`: Will send a transaction to the smart contract and execute its method (Can alter the smart contract state).
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
-- ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
+- ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be sent using a transaction, call the method or passing into another smart contracts method as argument.
 
 -------
 Example
