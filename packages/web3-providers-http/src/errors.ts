@@ -3,6 +3,8 @@ import packageVersion from './_version';
 
 export enum Web3ProvidersHttpErrorNames {
     invalidClientUrl = 'invalidClientUrl',
+    noHttpClient = 'noHttpClient',
+    connectionRefused = 'connectionRefused',
 }
 
 interface Web3ProvidersHttpErrorsConfig extends Web3PackageErrorConfig {
@@ -16,6 +18,17 @@ export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
         invalidClientUrl: {
             code: 1,
             name: 'invalidClientUrl',
+            msg: 'Provided web3Client is an invalid HTTP(S) URL',
+        },
+        noHttpClient: {
+            code: 2,
+            name: 'noHttpClient',
+            msg: 'No HTTP client has be initialized',
+        },
+        connectionRefused: {
+            code: 3,
+            name: 'connectionRefused',
+            msg: 'Unable to make connection with HTTP client',
         },
     },
 };

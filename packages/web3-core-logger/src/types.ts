@@ -1,5 +1,4 @@
 export interface Web3ErrorDetails {
-    msg?: string;
     reason?: string;
     params?: object;
 }
@@ -7,6 +6,7 @@ export interface Web3ErrorDetails {
 export interface Web3Error extends Web3ErrorDetails {
     readonly code: number;
     readonly name: string;
+    readonly msg: string;
 }
 
 export interface Web3PackageErrorConfig {

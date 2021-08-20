@@ -51,7 +51,6 @@ export default class Web3ProvidersHttp
             throw this._logger.makeError(
                 Web3ProvidersHttpErrorNames.invalidClientUrl,
                 {
-                    msg: 'Provided web3Client is an invalid HTTP(S) URL',
                     params: { web3Client },
                 }
             );
@@ -164,7 +163,9 @@ export default class Web3ProvidersHttp
     async request(args: RequestArguments): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
-                throw Error('No HTTP client initiliazed');
+                throw this._logger.makeError(
+                    Web3ProvidersHttpErrorNames.noHttpClient
+                );
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
                     ? args.params || []
@@ -187,6 +188,15 @@ export default class Web3ProvidersHttp
             // TODO Code smell
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
+            // Check if Axios error
+            if (error.code === 'ECONNREFUSED')
+                throw this._logger.makeError(
+                    Web3ProvidersHttpErrorNames.connectionRefused,
+                    {
+                        params: { clientUrl: this.web3Client },
+                    }
+                );
+
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;
                 // TODO replace with ProviderRpcError
