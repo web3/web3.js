@@ -172,10 +172,11 @@ export interface RpcResponse {
     result: any;
 }
 
-export interface IWeb3Provider extends Eip1193Provider {
+export interface IWeb3Provider {
     web3Client: Web3Client;
     setWeb3Client: (web3Client: Web3Client) => void;
     supportsSubscriptions?: () => boolean;
+    request: (args: RequestArguments) => Promise<RpcResponse>;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {
