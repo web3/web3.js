@@ -4,8 +4,6 @@ import {
     IWeb3Provider,
     RpcResponse,
     RequestArguments,
-    Web3ProviderEvents,
-    ProviderEventListener,
     Web3Client,
 } from 'web3-core-types/lib/types';
 import Web3CoreLogger from 'web3-core-logger';
@@ -20,8 +18,6 @@ export default class Web3ProvidersHttp
     implements IWeb3Provider
 {
     private _httpClient: AxiosInstance;
-    private _clientChainId: string | undefined;
-    private _connected = false;
     private _logger: Web3CoreLogger;
 
     web3Client: string;
@@ -31,7 +27,6 @@ export default class Web3ProvidersHttp
         this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
         this._httpClient = this._createHttpClient(web3Client);
         this.web3Client = web3Client;
-        this._connectToClient();
     }
 
     /**
@@ -75,48 +70,6 @@ export default class Web3ProvidersHttp
     }
 
     /**
-     * Checks if connection to client is possible by requesting
-     * client's chainId
-     */
-    private async _connectToClient() {
-        try {
-            const chainId = await this._getChainId();
-            this.emit(Web3ProviderEvents.Connect, { chainId });
-            this._connected = true;
-
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#chainchanged-1
-            if (
-                this._clientChainId !== undefined &&
-                chainId !== this._clientChainId
-            ) {
-                this.emit(Web3ProviderEvents.ChainChanged, chainId);
-            }
-            this._clientChainId = chainId;
-        } catch (error) {
-            throw Error(
-                `Error connecting to client: ${error.message}\n${error.stack}`
-            );
-        }
-    }
-
-    /**
-     * Makes chainId RPC request
-     *
-     * @returns ChainId string
-     */
-    private async _getChainId(): Promise<string> {
-        try {
-            const result = await this.request({
-                method: 'eth_chainId',
-                params: [],
-            });
-            return result.result;
-        } catch (error) {
-            throw Error(`Error getting chain id: ${error.message}`);
-        }
-    }
-
-    /**
      * Validates and initializes provider using {web3Client}
      *
      * @param web3Client New client to set for provider instance
@@ -125,24 +78,9 @@ export default class Web3ProvidersHttp
         try {
             this._httpClient = this._createHttpClient(web3Client);
             this.web3Client = web3Client as string;
-            this._connectToClient();
         } catch (error) {
-            throw Error(`Failed to set web3 client: ${error.message}`);
+            throw error;
         }
-    }
-
-    /**
-     * Wrapper for EventEmitter's .on
-     *
-     * @param web3ProviderEvents Any valid EIP-1193 provider event
-     * @param listener Function to be called when event is emitted
-     * @returns
-     */
-    on(
-        web3ProviderEvent: Web3ProviderEvents,
-        listener: ProviderEventListener
-    ): this {
-        return super.on(web3ProviderEvent, listener);
     }
 
     /**
@@ -180,11 +118,6 @@ export default class Web3ProvidersHttp
                 args.providerOptions?.axiosConfig || {}
             );
 
-            // If the above call was successful, then we're connected
-            // to the client, and should emit accordingly (EIP-1193)
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
-            if (this._connected === false) this._connectToClient();
-
             // TODO Code smell
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
@@ -197,14 +130,7 @@ export default class Web3ProvidersHttp
                     }
                 );
 
-            if (error.code === 'ECONNREFUSED' && this._connected) {
-                this._connected = false;
-                // TODO replace with ProviderRpcError
-                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
-            }
-            // TODO Fancy error detection that complies with EIP1193 defined errors
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
-            throw Error(error.message);
+            throw Error(error);
         }
     }
 }
