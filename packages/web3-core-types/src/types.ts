@@ -173,7 +173,6 @@ export interface RpcResponse {
 }
 
 export interface IWeb3Provider {
-    web3Client: Web3Client;
     setWeb3Client: (web3Client: Web3Client) => void;
     supportsSubscriptions?: () => boolean;
     request: (args: RequestArguments) => Promise<RpcResponse>;

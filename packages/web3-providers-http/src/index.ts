@@ -19,14 +19,13 @@ export default class Web3ProvidersHttp
 {
     private _httpClient: AxiosInstance;
     private _logger: Web3CoreLogger;
-
-    web3Client: string;
+    private _web3Client: string;
 
     constructor(web3Client: string) {
         super();
         this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
         this._httpClient = this._createHttpClient(web3Client);
-        this.web3Client = web3Client;
+        this._web3Client = web3Client;
     }
 
     /**
@@ -77,7 +76,7 @@ export default class Web3ProvidersHttp
     setWeb3Client(web3Client: Web3Client) {
         try {
             this._httpClient = this._createHttpClient(web3Client);
-            this.web3Client = web3Client as string;
+            this._web3Client = web3Client as string;
         } catch (error) {
             throw error;
         }
@@ -126,7 +125,7 @@ export default class Web3ProvidersHttp
                 throw this._logger.makeError(
                     Web3ProvidersHttpErrorNames.connectionRefused,
                     {
-                        params: { clientUrl: this.web3Client },
+                        params: { clientUrl: this._web3Client },
                     }
                 );
 
