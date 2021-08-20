@@ -17,7 +17,6 @@ export default class Web3CoreLogger {
         try {
             if (!this._errorsCollective.hasOwnProperty(web3ErrorName))
                 this.makeError(CoreErrorNames.unsupportedError, {
-                    msg: 'Provided error does not exist in CoreErrors or provided Web3PackageErrorConfig',
                     params: { web3ErrorName, errorDetails },
                 });
 
