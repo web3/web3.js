@@ -1,5 +1,6 @@
 import { CoreErrors, CoreErrorNames } from './errors';
 import { Web3PackageErrorConfig, Web3Error, Web3ErrorDetails } from './types';
+import packageVersion from './_version';
 
 export default class Web3CoreLogger {
     private _packageErrorConfig: Web3PackageErrorConfig;
@@ -35,6 +36,7 @@ export default class Web3CoreLogger {
     private _makeErrorString(web3Error: Web3Error): string {
         try {
             const errorPieces = [
+                `loggerVersion: ${packageVersion}`,
                 `packageName: ${this._packageErrorConfig.packageName}`,
                 `packageVersion: ${this._packageErrorConfig.packageVersion}`,
             ];
