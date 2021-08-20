@@ -1,9 +1,5 @@
 import { w3cwebsocket } from 'websocket';
-import {
-    WebSocketOptions,
-    WSErrors,
-    WSStatus,
-} from './types';
+import { WebSocketOptions, WSErrors, WSStatus } from './types';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
