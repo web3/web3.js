@@ -9,15 +9,12 @@ export default class Web3CoreLogger {
     constructor(packageErrorConfig: Web3PackageErrorConfig) {
         this._packageErrorConfig = packageErrorConfig;
 
-        Object.keys(CoreErrors).forEach(errorName => {
+        Object.keys(CoreErrors).forEach((errorName) => {
             if (packageErrorConfig.errors.hasOwnProperty(errorName))
-                throw this.makeError(
-                    CoreErrorNames.duplicateErrorName,
-                    {
-                        params: { errorName }
-                    }
-                )
-        })
+                throw this.makeError(CoreErrorNames.duplicateErrorName, {
+                    params: { errorName },
+                });
+        });
 
         this._errorsCollective = {
             ...CoreErrors,
@@ -35,7 +32,7 @@ export default class Web3CoreLogger {
             return Error(
                 this._makeErrorString({
                     ...this._errorsCollective[web3ErrorName],
-                    ...errorDetails
+                    ...errorDetails,
                 })
             );
         } catch (error) {
