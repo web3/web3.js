@@ -145,7 +145,9 @@ export default class Web3ProvidersHttp
      * @param args RPC options, request params, AxiosConfig
      * @returns
      */
-    private async _eth2Request(args: Eth2RequestArguments): Promise<AxiosResponse> {
+    private async _eth2Request(
+        args: Eth2RequestArguments
+    ): Promise<AxiosResponse> {
         try {
             const response = await this._httpClient[
                 (args.providerOptions?.httpMethod as 'get' | 'post') || 'get'
@@ -175,7 +177,9 @@ export default class Web3ProvidersHttp
      * @param args RPC options, request params, AxiosConfig
      * @returns
      */
-    private async _eth1Request(args: Eth1RequestArguments): Promise<AxiosResponse> {
+    private async _eth1Request(
+        args: Eth1RequestArguments
+    ): Promise<AxiosResponse> {
         try {
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
@@ -211,17 +215,18 @@ export default class Web3ProvidersHttp
      * @param args RPC options, request params, AxiosConfig
      * @returns
      */
-    async request(args: Eth1RequestArguments | Eth2RequestArguments): Promise<RpcResponse> {
+    async request(
+        args: Eth1RequestArguments | Eth2RequestArguments
+    ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
 
             const eth1 = args as Eth1RequestArguments;
             const eth2 = args as Eth2RequestArguments;
-            const response =
-                eth2.endpoint
-                    ? await this._eth2Request(eth2)
-                    : await this._eth1Request(eth1);
+            const response = eth2.endpoint
+                ? await this._eth2Request(eth2)
+                : await this._eth1Request(eth1);
 
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)
