@@ -29,6 +29,8 @@ import {
 
 import { Web3EthOptions, EthCallTransaction } from './types';
 
+// TODO Test if removing try/catch throws unhandled promise error
+
 export default class Web3Eth {
     private _defaultReturnType: ValidTypesEnum;
 
@@ -65,7 +67,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting client version: ${error.message}`);
+            throw error;
         }
     }
 
@@ -86,7 +88,7 @@ export default class Web3Eth {
                 params: [data],
             });
         } catch (error) {
-            throw Error(`Error getting sha3 hash: ${error.message}`);
+            throw error;
         }
     }
 
@@ -113,7 +115,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting network version: ${error.message}`);
+            throw error;
         }
     }
 
@@ -132,7 +134,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting network listening: ${error.message}`);
+            throw error;
         }
     }
 
@@ -159,7 +161,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting network peer count: ${error.message}`);
+            throw error;
         }
     }
 
@@ -186,7 +188,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting protocol version: ${error.message}`);
+            throw error;
         }
     }
 
@@ -218,7 +220,7 @@ export default class Web3Eth {
                           ),
             };
         } catch (error) {
-            throw Error(`Error getting syncing status: ${error.message}`);
+            throw error;
         }
     }
 
@@ -237,7 +239,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting coinbase address: ${error.message}`);
+            throw error;
         }
     }
 
@@ -256,7 +258,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting mining status: ${error.message}`);
+            throw error;
         }
     }
 
@@ -283,7 +285,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting hash rate: ${error.message}`);
+            throw error;
         }
     }
 
@@ -310,7 +312,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting gas price: ${error.message}`);
+            throw error;
         }
     }
 
@@ -329,7 +331,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting accounts: ${error.message}`);
+            throw error;
         }
     }
 
@@ -356,7 +358,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting block number: ${error.message}`);
+            throw error;
         }
     }
 
@@ -392,7 +394,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting balance: ${error.message}`);
+            throw error;
         }
     }
 
@@ -423,7 +425,7 @@ export default class Web3Eth {
                 ],
             });
         } catch (error) {
-            throw Error(`Error getting storage value: ${error.message}`);
+            throw error;
         }
     }
 
@@ -459,7 +461,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting transaction count: ${error.message}`);
+            throw error;
         }
     }
 
@@ -488,9 +490,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting transaction count for block by hash: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -523,9 +523,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting transaction count for block by number: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -554,9 +552,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting uncle count for block by hash: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -589,9 +585,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting uncle count for block by number: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -619,7 +613,7 @@ export default class Web3Eth {
                 ],
             });
         } catch (error) {
-            throw Error(`Error getting code at address: ${error.message}`);
+            throw error;
         }
     }
 
@@ -642,7 +636,7 @@ export default class Web3Eth {
                 params: [address, message],
             });
         } catch (error) {
-            throw Error(`Error signing message: ${error.message}`);
+            throw error;
         }
     }
 
@@ -679,7 +673,7 @@ export default class Web3Eth {
                 ],
             });
         } catch (error) {
-            throw Error(`Error signing transaction: ${error.message}`);
+            throw error;
         }
     }
 
@@ -716,7 +710,7 @@ export default class Web3Eth {
                 ],
             });
         } catch (error) {
-            throw Error(`Error sending transaction: ${error.message}`);
+            throw error;
         }
     }
 
@@ -737,7 +731,7 @@ export default class Web3Eth {
                 params: [rawTransaction],
             });
         } catch (error) {
-            throw Error(`Error sending raw transaction: ${error.message}`);
+            throw error;
         }
     }
 
@@ -776,7 +770,7 @@ export default class Web3Eth {
                 ],
             });
         } catch (error) {
-            throw Error(`Error sending call transaction: ${error.message}`);
+            throw error;
         }
     }
 
@@ -826,7 +820,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting gas estimate: ${error.message}`);
+            throw error;
         }
     }
 
@@ -877,7 +871,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting block by hash: ${error.message}`);
+            throw error;
         }
     }
 
@@ -933,7 +927,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting block by number: ${error.message}`);
+            throw error;
         }
     }
 
@@ -971,7 +965,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting transaction by hash: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1011,9 +1005,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting transaction by block hash and index: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1058,9 +1050,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting transaction by block number and index: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1105,7 +1095,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting transaction reciept: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1156,9 +1146,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting uncle by block hash and index: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1214,9 +1202,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error getting uncle by block number and index: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1235,7 +1221,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting compilers: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1256,9 +1242,7 @@ export default class Web3Eth {
                 params: [sourceCode],
             });
         } catch (error) {
-            throw Error(
-                `Error getting compiling solidity code: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1279,7 +1263,7 @@ export default class Web3Eth {
                 params: [sourceCode],
             });
         } catch (error) {
-            throw Error(`Error getting compiling LLL code: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1300,9 +1284,7 @@ export default class Web3Eth {
                 params: [sourceCode],
             });
         } catch (error) {
-            throw Error(
-                `Error getting compiling serpent code: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1341,7 +1323,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error creating filter: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1368,7 +1350,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error creating block filter: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1395,9 +1377,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(
-                `Error creating pending transaction filter: ${error.message}`
-            );
+            throw error;
         }
     }
 
@@ -1418,7 +1398,7 @@ export default class Web3Eth {
                 params: [toHex(filterId)],
             });
         } catch (error) {
-            throw Error(`Error uninstalling filter: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1448,7 +1428,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting filter changes: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1478,7 +1458,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting filter changes: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1517,7 +1497,7 @@ export default class Web3Eth {
                 ),
             };
         } catch (error) {
-            throw Error(`Error getting logs: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1536,7 +1516,7 @@ export default class Web3Eth {
                 params: [],
             });
         } catch (error) {
-            throw Error(`Error getting work: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1561,7 +1541,7 @@ export default class Web3Eth {
                 params: [toHex(nonce, 8), powHash, digest],
             });
         } catch (error) {
-            throw Error(`Error submitting work: ${error.message}`);
+            throw error;
         }
     }
 
@@ -1584,7 +1564,7 @@ export default class Web3Eth {
                 params: [toHex(hashRate, 32), toHex(clientId)],
             });
         } catch (error) {
-            throw Error(`Error submitting hash rate: ${error.message}`);
+            throw error;
         }
     }
 }
