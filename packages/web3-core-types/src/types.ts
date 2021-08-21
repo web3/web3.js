@@ -127,7 +127,7 @@ export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
 export type Web3Client = string | Eip1193Provider;
 
 export interface Eip1193Provider {
-    request: (args: RequestArguments) => Promise<RpcResponse>;
+    request: (args: Eth1RequestArguments | any) => Promise<RpcResponse>;
     on: (
         web3ProviderEvents: Web3ProviderEvents,
         listener: ProviderEventListener
@@ -159,13 +159,20 @@ export interface HttpOptions {
     httpMethod: 'get' | 'post';
 }
 
-export interface RequestArguments {
+export interface Eth1RequestArguments {
     readonly method: string;
     readonly params?: readonly unknown[] | object;
     rpcOptions?: RpcOptions;
     providerOptions?: HttpOptions;
     returnType?: ValidTypesEnum;
-    ethVersion?: 2;
+}
+
+export interface Eth2RequestArguments {
+    readonly endpoint: string;
+    readonly params?: readonly unknown[] | object;
+    rpcOptions?: RpcOptions;
+    providerOptions?: HttpOptions;
+    returnType?: ValidTypesEnum;
 }
 
 export interface RpcResponse {
