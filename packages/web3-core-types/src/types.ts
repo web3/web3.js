@@ -127,7 +127,9 @@ export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
 export type Web3Client = string | Eip1193Provider;
 
 export interface Eip1193Provider {
-    request: (args: Eth1RequestArguments | Eth2RequestArguments) => Promise<RpcResponse>;
+    request: (
+        args: Eth1RequestArguments | Eth2RequestArguments
+    ) => Promise<RpcResponse>;
     on: (
         web3ProviderEvents: Web3ProviderEvents,
         listener: ProviderEventListener

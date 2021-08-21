@@ -221,7 +221,7 @@ export default class Web3ProvidersHttp
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
-            
+
             const response = args.hasOwnProperty('endpoint')
                 ? await this._eth2Request(args as Eth2RequestArguments)
                 : await this._eth1Request(args as Eth1RequestArguments);
