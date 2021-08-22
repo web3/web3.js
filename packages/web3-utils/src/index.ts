@@ -1,10 +1,14 @@
 import { setLengthLeft, toBuffer } from 'ethereumjs-util';
-
 import {
     ValidTypes,
     ValidTypesEnum,
     PrefixedHexString,
 } from 'web3-core-types/lib/types';
+import Web3CoreLogger from 'web3-core-logger';
+
+import { Web3UtilsErrorsConfig, Web3UtilsErrorNames } from './errors';
+
+const logger = new Web3CoreLogger(Web3UtilsErrorsConfig);
 
 /**
  * Used to determine ValidTypesEnum value of {input}
@@ -17,9 +21,21 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
         switch (typeof input) {
             case 'number':
                 if (input < 0)
-                    throw Error(`Cannot convert number less than 0: ${input}`);
+                    throw logger.makeError(
+                        Web3UtilsErrorNames.invalidInput,
+                        {
+                            params: { input },
+                            reason: 'Cannot convert number less than 0'
+                        }
+                    );
                 if ((input as number) % 1 !== 0)
-                    throw Error(`Cannot convert float: ${input}`);
+                    throw logger.makeError(
+                        Web3UtilsErrorNames.invalidInput,
+                        {
+                            params: { input },
+                            reason: 'Cannot convert decimals'
+                        }
+                    );
                 return ValidTypesEnum.Number;
             case 'string':
                 if (/^[0-9]+$/i.test(input)) {
@@ -28,28 +44,52 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
                     return ValidTypesEnum.PrefixedHexString;
                 } else {
                     if (input.substr(0, 1) === '-')
-                        throw Error(
-                            `Cannot convert number less than 0: ${input}`
+                        throw logger.makeError(
+                            Web3UtilsErrorNames.invalidInput,
+                            {
+                                params: { input },
+                                reason: 'Cannot convert number less than 0'
+                            }
                         );
                     if (input.includes('.'))
-                        throw Error(`Cannot convert float: ${input}`);
-                    throw Error(`Cannot convert arbitrary string: ${input}`);
+                        throw logger.makeError(
+                            Web3UtilsErrorNames.invalidInput,
+                            {
+                                params: { input },
+                                reason: 'Cannot convert decimals'
+                            }
+                        );
+                    throw logger.makeError(
+                        Web3UtilsErrorNames.invalidInput,
+                        {
+                            params: { input },
+                            reason: 'Cannot convert arbitrary string'
+                        }
+                    );
                 }
             case 'bigint':
                 if (input.toString(16).substr(0, 1) === '-')
-                    throw Error(`Cannot convert number less than 0: ${input}`);
+                    throw logger.makeError(
+                        Web3UtilsErrorNames.invalidInput,
+                        {
+                            params: { input },
+                            reason: 'Cannot convert number less than 0'
+                        }
+                    );
                 return ValidTypesEnum.BigInt;
             default:
-                throw Error(
-                    `Provided input: ${input} is not a valid type (${Object.keys(
-                        ValidTypesEnum
-                    ).map((validType) => `${validType} `)})`
+                throw logger.makeError(
+                    Web3UtilsErrorNames.invalidInput,
+                    {
+                        params: { input },
+                        reason: `Provided input is not of valid types: ${Object.keys(
+                            ValidTypesEnum
+                        ).map((validType) => `${validType} `)})`
+                    }
                 );
         }
     } catch (error) {
-        throw Error(
-            `Error determining valid type for ${input}: ${error.message}`
-        );
+        throw error;
     }
 }
 
@@ -69,9 +109,7 @@ function padHex(
         const paddedBufferInput = setLengthLeft(bufferInput, byteLength);
         return `0x${paddedBufferInput.toString('hex')}`;
     } catch (error) {
-        throw Error(
-            `Error padding ${hexString} to ${byteLength} bytes: ${error.message}`
-        );
+        throw error;
     }
 }
 
@@ -87,7 +125,13 @@ export function toHex(
     byteLength?: number
 ): PrefixedHexString {
     try {
-        if (input === null) throw Error('Cannot convert null input');
+        if (input === null) throw logger.makeError(
+            Web3UtilsErrorNames.invalidInput,
+            {
+                params: { input },
+                reason: 'Cannot convert null input'
+            }
+        );
 
         let hexInput: PrefixedHexString;
         let parsedHexString: PrefixedHexString;
@@ -107,19 +151,21 @@ export function toHex(
                 hexInput = `0x${parsedHexString}`;
                 break;
             default:
-                throw Error(
-                    `Provided input: ${input} is not a valid type (${Object.keys(
-                        ValidTypesEnum
-                    ).map((validType) => `${validType} `)})`
+                throw logger.makeError(
+                    Web3UtilsErrorNames.invalidInput,
+                    {
+                        params: { input },
+                        reason: `Provided input is not of valid types: ${Object.keys(
+                            ValidTypesEnum
+                        ).map((validType) => `${validType} `)})`
+                    }
                 );
         }
         return byteLength && hexInput.length < byteLength
             ? padHex(hexInput, byteLength)
             : hexInput;
     } catch (error) {
-        throw Error(
-            `Error converting ${input} to hex string: ${error.message}`
-        );
+        throw error;
     }
 }
 
@@ -156,15 +202,19 @@ export function formatOutput(
                 formattedOutput = BigInt(formattedOutput);
                 break;
             default:
-                throw Error(
-                    `Error formatting output, provided desiredType: ${desiredType} is not supported`
+                throw logger.makeError(
+                    Web3UtilsErrorNames.invalidInput,
+                    {
+                        params: { desiredType },
+                        reason: `Desired type is not of valid types: ${Object.keys(
+                            ValidTypesEnum
+                        ).map((validType) => `${validType} `)})`
+                    }
                 );
         }
         return formattedOutput;
     } catch (error) {
-        throw Error(
-            `Error formatting output ${output} to ${desiredType}: ${error.message}`
-        );
+        throw error;
     }
 }
 
@@ -224,8 +274,6 @@ export function formatOutputObject(
         }
         return formattedOutput;
     } catch (error) {
-        throw Error(
-            `Error formatting output object properties to ${desiredType}: ${error.message}`
-        );
+        throw error;
     }
 }

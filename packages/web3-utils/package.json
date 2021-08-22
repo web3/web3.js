@@ -32,6 +32,7 @@
         "web3-core-types": "1.0.0-alpha.0"
     },
     "dependencies": {
-        "ethereumjs-util": "^7.0.10"
+        "ethereumjs-util": "^7.0.10",
+        "web3-core-logger": "1.0.0-alpha.0"
     }
 }
