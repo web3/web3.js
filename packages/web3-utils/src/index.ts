@@ -21,21 +21,15 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
         switch (typeof input) {
             case 'number':
                 if (input < 0)
-                    throw logger.makeError(
-                        Web3UtilsErrorNames.invalidInput,
-                        {
-                            params: { input },
-                            reason: 'Cannot convert number less than 0'
-                        }
-                    );
+                    throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                        params: { input },
+                        reason: 'Cannot convert number less than 0',
+                    });
                 if ((input as number) % 1 !== 0)
-                    throw logger.makeError(
-                        Web3UtilsErrorNames.invalidInput,
-                        {
-                            params: { input },
-                            reason: 'Cannot convert decimals'
-                        }
-                    );
+                    throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                        params: { input },
+                        reason: 'Cannot convert decimals',
+                    });
                 return ValidTypesEnum.Number;
             case 'string':
                 if (/^[0-9]+$/i.test(input)) {
@@ -48,7 +42,7 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
                             Web3UtilsErrorNames.invalidInput,
                             {
                                 params: { input },
-                                reason: 'Cannot convert number less than 0'
+                                reason: 'Cannot convert number less than 0',
                             }
                         );
                     if (input.includes('.'))
@@ -56,37 +50,28 @@ function determineValidType(input: ValidTypes): ValidTypesEnum {
                             Web3UtilsErrorNames.invalidInput,
                             {
                                 params: { input },
-                                reason: 'Cannot convert decimals'
+                                reason: 'Cannot convert decimals',
                             }
                         );
-                    throw logger.makeError(
-                        Web3UtilsErrorNames.invalidInput,
-                        {
-                            params: { input },
-                            reason: 'Cannot convert arbitrary string'
-                        }
-                    );
+                    throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                        params: { input },
+                        reason: 'Cannot convert arbitrary string',
+                    });
                 }
             case 'bigint':
                 if (input.toString(16).substr(0, 1) === '-')
-                    throw logger.makeError(
-                        Web3UtilsErrorNames.invalidInput,
-                        {
-                            params: { input },
-                            reason: 'Cannot convert number less than 0'
-                        }
-                    );
+                    throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                        params: { input },
+                        reason: 'Cannot convert number less than 0',
+                    });
                 return ValidTypesEnum.BigInt;
             default:
-                throw logger.makeError(
-                    Web3UtilsErrorNames.invalidInput,
-                    {
-                        params: { input },
-                        reason: `Provided input is not of valid types: ${Object.keys(
-                            ValidTypesEnum
-                        ).map((validType) => `${validType} `)})`
-                    }
-                );
+                throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                    params: { input },
+                    reason: `Provided input is not of valid types: ${Object.keys(
+                        ValidTypesEnum
+                    ).map((validType) => `${validType} `)})`,
+                });
         }
     } catch (error) {
         throw error;
@@ -125,13 +110,11 @@ export function toHex(
     byteLength?: number
 ): PrefixedHexString {
     try {
-        if (input === null) throw logger.makeError(
-            Web3UtilsErrorNames.invalidInput,
-            {
+        if (input === null)
+            throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
                 params: { input },
-                reason: 'Cannot convert null input'
-            }
-        );
+                reason: 'Cannot convert null input',
+            });
 
         let hexInput: PrefixedHexString;
         let parsedHexString: PrefixedHexString;
@@ -151,15 +134,12 @@ export function toHex(
                 hexInput = `0x${parsedHexString}`;
                 break;
             default:
-                throw logger.makeError(
-                    Web3UtilsErrorNames.invalidInput,
-                    {
-                        params: { input },
-                        reason: `Provided input is not of valid types: ${Object.keys(
-                            ValidTypesEnum
-                        ).map((validType) => `${validType} `)})`
-                    }
-                );
+                throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                    params: { input },
+                    reason: `Provided input is not of valid types: ${Object.keys(
+                        ValidTypesEnum
+                    ).map((validType) => `${validType} `)})`,
+                });
         }
         return byteLength && hexInput.length < byteLength
             ? padHex(hexInput, byteLength)
@@ -202,15 +182,12 @@ export function formatOutput(
                 formattedOutput = BigInt(formattedOutput);
                 break;
             default:
-                throw logger.makeError(
-                    Web3UtilsErrorNames.invalidInput,
-                    {
-                        params: { desiredType },
-                        reason: `Desired type is not of valid types: ${Object.keys(
-                            ValidTypesEnum
-                        ).map((validType) => `${validType} `)})`
-                    }
-                );
+                throw logger.makeError(Web3UtilsErrorNames.invalidInput, {
+                    params: { desiredType },
+                    reason: `Desired type is not of valid types: ${Object.keys(
+                        ValidTypesEnum
+                    ).map((validType) => `${validType} `)})`,
+                });
         }
         return formattedOutput;
     } catch (error) {

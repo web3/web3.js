@@ -13,7 +13,10 @@ import {
 } from 'web3-core-types/lib/types';
 import Web3CoreLogger from 'web3-core-logger';
 
-import { Web3ProvidersEip1193ErrorsConfig, Web3ProvidersEip1193ErrorNames } from './errors';
+import {
+    Web3ProvidersEip1193ErrorsConfig,
+    Web3ProvidersEip1193ErrorNames,
+} from './errors';
 
 export default class Web3ProvidersEip1193
     extends EventEmitter
@@ -45,9 +48,9 @@ export default class Web3ProvidersEip1193
             throw this._logger.makeError(
                 Web3ProvidersEip1193ErrorNames.invalidClient,
                 {
-                    params: { web3Client }
+                    params: { web3Client },
                 }
-            )
+            );
         } catch (error) {
             throw error;
         }
