@@ -11,15 +11,20 @@ import {
     ProviderRpcError,
     ProviderMessage,
 } from 'web3-core-types/lib/types';
+import Web3CoreLogger from 'web3-core-logger';
+
+import { Web3ProvidersEip1193ErrorsConfig, Web3ProvidersEip1193ErrorNames } from './errors';
 
 export default class Web3ProvidersEip1193
     extends EventEmitter
     implements IWeb3Provider
 {
-    web3Client: Eip1193Provider;
+    private _logger: Web3CoreLogger;
+    private _web3Client: Eip1193Provider;
 
     constructor(web3Client: Eip1193Provider) {
         super();
+        this._logger = new Web3CoreLogger(Web3ProvidersEip1193ErrorsConfig);
         this.setWeb3Client(web3Client);
     }
 
@@ -29,14 +34,22 @@ export default class Web3ProvidersEip1193
      * @param web3Client To be validated
      * @returns true if valid
      */
-    private static _validateClient(web3Client: Web3Client): boolean {
+    private _validateClient(web3Client: Web3Client) {
         try {
-            return (
+            if (
                 typeof web3Client === 'object' &&
                 web3Client.request !== undefined
-            );
+            )
+                return;
+
+            throw this._logger.makeError(
+                Web3ProvidersEip1193ErrorNames.invalidClient,
+                {
+                    params: { web3Client }
+                }
+            )
         } catch (error) {
-            throw Error(`Failed to validate client: ${error.message}`);
+            throw error;
         }
     }
 
@@ -47,12 +60,11 @@ export default class Web3ProvidersEip1193
      */
     setWeb3Client(web3Client: Web3Client) {
         try {
-            if (!Web3ProvidersEip1193._validateClient(web3Client))
-                throw Error('Invalid EIP-1193 client provided');
-            this.web3Client = web3Client as Eip1193Provider;
+            this._validateClient(web3Client);
+            this._web3Client = web3Client as Eip1193Provider;
             this._setEventListeners();
         } catch (error) {
-            throw Error(`Failed to set web3 client: ${error.message}`);
+            throw error;
         }
     }
 
@@ -82,13 +94,11 @@ export default class Web3ProvidersEip1193
                 args.params === undefined || Array.isArray(args.params)
                     ? args.params || []
                     : Object.values(args.params);
-            return await this.web3Client.request({
+            return await this._web3Client.request({
                 method: args.method,
                 params: arrayParams,
             });
         } catch (error) {
-            // TODO Fancy error detection that complies with EIP1193 defined errors
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
             throw Error(error.message);
         }
     }
@@ -99,31 +109,31 @@ export default class Web3ProvidersEip1193
      * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
      */
     private _setEventListeners() {
-        this.web3Client.on(
+        this._web3Client.on(
             Web3ProviderEvents.Connect,
             (connectInfo: ProviderConnectInfo) => {
                 super.emit(Web3ProviderEvents.Connect, connectInfo);
             }
         );
-        this.web3Client.on(
+        this._web3Client.on(
             Web3ProviderEvents.Disconnect,
             (error: ProviderRpcError) => {
                 super.emit(Web3ProviderEvents.Disconnect, error);
             }
         );
-        this.web3Client.on(
+        this._web3Client.on(
             Web3ProviderEvents.ChainChanged,
             (chainId: string) => {
                 super.emit(Web3ProviderEvents.ChainChanged, chainId);
             }
         );
-        this.web3Client.on(
+        this._web3Client.on(
             Web3ProviderEvents.AccountsChanged,
             (accounts: string[]) => {
                 super.emit(Web3ProviderEvents.AccountsChanged, accounts);
             }
         );
-        this.web3Client.on(
+        this._web3Client.on(
             Web3ProviderEvents.Message,
             (providerMessage: ProviderMessage) => {
                 super.emit(Web3ProviderEvents.Message, providerMessage);
