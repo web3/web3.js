@@ -216,22 +216,25 @@ export default class Web3ProvidersHttp
      * @returns
      */
     async request(
-        args: Eth1RequestArguments | Eth2RequestArguments
-    ): Promise<RpcResponse> {
+        args: (Eth1RequestArguments | Eth2RequestArguments)
+    ): Promise<RpcResponse | any> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
 
-            const response = args.hasOwnProperty('endpoint')
-                ? await this._eth2Request(args as Eth2RequestArguments)
-                : await this._eth1Request(args as Eth1RequestArguments);
+
+            const eth1 = args as Eth1RequestArguments;
+            const eth2 = args as Eth2RequestArguments;
+            const response = eth2.endpoint
+                ? await this._eth2Request(eth2)
+                : await this._eth1Request(eth1);
 
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
             if (this._connected === false) this._connectToClient();
 
-            return response.data.data ? response.data.data : response.data;
+            // return response.data.data ? response.data.data : response.data;
         } catch (error) {
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;
