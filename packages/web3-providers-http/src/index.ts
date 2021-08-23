@@ -233,7 +233,7 @@ export default class Web3ProvidersHttp
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
             if (this._connected === false) this._connectToClient();
 
-            // return response.data.data ? response.data.data : response.data;
+            return response.data.data ? response.data.data : response.data;
         } catch (error) {
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;
