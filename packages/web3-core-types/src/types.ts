@@ -161,13 +161,13 @@ export interface HttpOptions {
 
 interface RequestArguments {
     readonly params?: readonly unknown[] | object;
-    rpcOptions?: RpcOptions;
     providerOptions?: HttpOptions;
     returnType?: ValidTypesEnum;
 }
 
 export interface Eth1RequestArguments extends RequestArguments {
     readonly method: string;
+    rpcOptions?: RpcOptions;
 }
 
 export interface Eth2RequestArguments extends RequestArguments {

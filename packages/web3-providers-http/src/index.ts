@@ -216,12 +216,11 @@ export default class Web3ProvidersHttp
      * @returns
      */
     async request(
-        args: (Eth1RequestArguments | Eth2RequestArguments)
+        args: Eth1RequestArguments | Eth2RequestArguments
     ): Promise<RpcResponse | any> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
-
 
             const eth1 = args as Eth1RequestArguments;
             const eth2 = args as Eth2RequestArguments;
