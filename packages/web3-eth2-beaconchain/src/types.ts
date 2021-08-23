@@ -1,5 +1,5 @@
 import { altair, phase0 } from '@chainsafe/lodestar-types';
-import { PrefixedHexString, ValidTypesEnum } from 'web3-utils/lib/types';
+import { ValidTypesEnum } from 'web3-utils/lib/types';
 
 export interface Web3EthOptions {
     web3Client: string;
