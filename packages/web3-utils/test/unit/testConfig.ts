@@ -50,13 +50,31 @@ export const testConfig: TestConfig = {
         {
             input: -1,
             shouldError: true,
-            errorMessage: 'Cannot convert number less than 0: -1',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":-1}',
+                'reason: Cannot convert number less than 0',
+            ].join('\n'),
             inputType: ValidTypesEnum.Number,
         },
         {
             input: 4.2,
             shouldError: true,
-            errorMessage: 'Cannot convert float: 4.2',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":4.2}',
+                'reason: Cannot convert decimals',
+            ].join('\n'),
             inputType: ValidTypesEnum.Number,
         },
         {
@@ -102,7 +120,16 @@ export const testConfig: TestConfig = {
         {
             input: '0xxyz',
             shouldError: true,
-            errorMessage: 'Cannot convert arbitrary string: 0xxyz',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":"0xxyz"}',
+                'reason: Cannot convert arbitrary string',
+            ].join('\n'),
             inputType: ValidTypesEnum.PrefixedHexString,
         },
         {
@@ -138,13 +165,31 @@ export const testConfig: TestConfig = {
         {
             input: '-1',
             shouldError: true,
-            errorMessage: 'Cannot convert number less than 0: -1',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":"-1"}',
+                'reason: Cannot convert number less than 0',
+            ].join('\n'),
             inputType: ValidTypesEnum.NumberString,
         },
         {
             input: '4.2',
             shouldError: true,
-            errorMessage: 'Cannot convert float: 4.2',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":"4.2"}',
+                'reason: Cannot convert decimals',
+            ].join('\n'),
             inputType: ValidTypesEnum.NumberString,
         },
         {
@@ -180,7 +225,16 @@ export const testConfig: TestConfig = {
         {
             input: BigInt(-1),
             shouldError: true,
-            errorMessage: 'Cannot convert number less than 0: -1',
+            errorMessage: [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-utils',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidInput',
+                'msg: Cannot convert provided input to prefiex hex string',
+                'params: {"input":"-1n"}',
+                'reason: Cannot convert number less than 0',
+            ].join('\n'),
             inputType: ValidTypesEnum.BigInt,
         },
         {
