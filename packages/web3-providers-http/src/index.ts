@@ -217,7 +217,7 @@ export default class Web3ProvidersHttp
      */
     async request(
         args: Eth1RequestArguments | Eth2RequestArguments
-    ): Promise<RpcResponse | any> {
+    ): Promise<RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
