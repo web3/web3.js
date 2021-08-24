@@ -20,8 +20,8 @@ export default class Web3CoreLogger {
 
         this._errorsCollective = {
             ...this._errorsCollective,
-            ...packageErrorConfig.errors
-        }
+            ...packageErrorConfig.errors,
+        };
     }
 
     makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
@@ -85,12 +85,9 @@ export default class Web3CoreLogger {
 
             const errorString = errorPieces.join('\n');
             if (errorString === undefined)
-                this.makeError(
-                    CoreErrorNames.failedToCreateErrorString,
-                    {
-                        params: { errorPieces }
-                    }
-                )
+                this.makeError(CoreErrorNames.failedToCreateErrorString, {
+                    params: { errorPieces },
+                });
 
             return errorString;
         } catch (error) {

@@ -3,7 +3,7 @@ import { Web3Error } from './types';
 export enum CoreErrorNames {
     unsupportedError = 'unsupportedError',
     duplicateErrorName = 'duplicateErrorName',
-    failedToCreateErrorString = 'failedToCreateErrorString'
+    failedToCreateErrorString = 'failedToCreateErrorString',
 }
 
 export const CoreErrors: Record<CoreErrorNames, Web3Error> = {
