@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
     RpcResponse,
+    Eth2RpcResponse,
     Eth1RequestArguments,
     Eth2RequestArguments,
     Web3ProviderEvents,
@@ -217,7 +218,7 @@ export default class Web3ProvidersHttp
      */
     async request(
         args: Eth1RequestArguments | Eth2RequestArguments
-    ): Promise<RpcResponse> {
+    ): Promise<RpcResponse | Eth2RpcResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');

@@ -180,6 +180,8 @@ export interface RpcResponse {
     result: any;
 }
 
+export type Eth2RpcResponse = { [key: string]: any } | { [key: string]: any }[];
+
 export interface IWeb3Provider extends Eip1193Provider {
     web3Client: Web3Client;
     setWeb3Client: (web3Client: Web3Client) => void;
