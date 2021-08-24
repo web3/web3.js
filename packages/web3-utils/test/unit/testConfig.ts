@@ -1,4 +1,7 @@
 import { ValidTypes, ValidTypesEnum } from 'web3-core-types/src/types';
+import Web3LoggerVersion from 'web3-core-logger/src/_version';
+
+import Version from '../../src/_version';
 
 interface TestCase {
     input: ValidTypes | null | { [key: string]: any };
@@ -51,9 +54,9 @@ export const testConfig: TestConfig = {
             input: -1,
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',
@@ -66,9 +69,9 @@ export const testConfig: TestConfig = {
             input: 4.2,
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',
@@ -121,9 +124,9 @@ export const testConfig: TestConfig = {
             input: '0xxyz',
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',
@@ -166,9 +169,9 @@ export const testConfig: TestConfig = {
             input: '-1',
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',
@@ -181,9 +184,9 @@ export const testConfig: TestConfig = {
             input: '4.2',
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',
@@ -226,9 +229,9 @@ export const testConfig: TestConfig = {
             input: BigInt(-1),
             shouldError: true,
             errorMessage: [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-utils',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidInput',
                 'msg: Cannot convert provided input to prefiex hex string',

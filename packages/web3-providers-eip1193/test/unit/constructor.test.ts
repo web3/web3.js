@@ -3,8 +3,10 @@ import {
     RequestArguments,
     Web3ProviderEvents,
 } from 'web3-core-types/src/types';
+import Web3LoggerVersion from 'web3-core-logger/src/_version';
 
 import Web3ProvidersEip1193 from '../../src/index';
+import Version from '../../src/_version';
 
 describe('constructs a Web3ProvidersEip1193 instance with expected properties', () => {
     it('should instantiate successfully', () => {
@@ -30,9 +32,9 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             new Web3ProvidersEip1193({});
         }).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-providers-eip1193',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidClient',
                 'msg: Provided web3Client is an invalid EIP-1193 client',

@@ -6,8 +6,10 @@ import {
     Eip1193Provider,
 } from 'web3-core-types/src/types';
 import Web3ProvidersHttp from 'web3-providers-http';
+import Web3LoggerVersion from 'web3-core-logger/src/_version';
 
 import initWeb3Provider from '../../src/index';
+import Version from '../../src/_version';
 
 describe('Instantiates correct provider for varying provided clients', () => {
     it('should instantiate Eip1193 provider', () => {
@@ -50,9 +52,9 @@ describe('Instantiates correct provider for varying provided clients', () => {
     it('should throw not implemented error for WebSocket client', () => {
         expect(() => initWeb3Provider('ws://127.0.0.1:8545')).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-core-provider',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: protocolNotImplemented',
                 'msg: Detected protocol of provided web3Client is not implemented',
@@ -64,9 +66,9 @@ describe('Instantiates correct provider for varying provided clients', () => {
     it('should throw not implemented error for IPC client', () => {
         expect(() => initWeb3Provider('ipc://geth.ipc')).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-core-provider',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: protocolNotImplemented',
                 'msg: Detected protocol of provided web3Client is not implemented',
@@ -78,9 +80,9 @@ describe('Instantiates correct provider for varying provided clients', () => {
     it('should throw protocol not support error', () => {
         expect(() => initWeb3Provider('foobar')).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-core-provider',
-                'packageVersion: 1.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 2',
                 'name: protocolNotSupported',
                 'msg: Detected protocol of provided web3Client is not supported',

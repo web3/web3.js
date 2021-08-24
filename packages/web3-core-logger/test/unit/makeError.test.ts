@@ -1,4 +1,5 @@
 import Web3CoreLogger from '../../src/index';
+import Version from '../../src/_version';
 
 describe('Web3CoreLogger', () => {
     const testErrorConfig = {
@@ -31,7 +32,7 @@ describe('Web3CoreLogger', () => {
         expect(error).toStrictEqual(
             new Error(
                 [
-                    'loggerVersion: 1.0.0-alpha.0',
+                    `loggerVersion: ${Version}`,
                     `packageName: ${testErrorConfig.packageName}`,
                     `packageVersion: ${testErrorConfig.packageVersion}`,
                     `code: ${testErrorConfig.errors.testError1.code}`,
@@ -49,9 +50,9 @@ describe('Web3CoreLogger', () => {
             web3CoreLogger.makeError('fakeErrorName');
         }).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
-                'packageName: testPackage',
-                'packageVersion: 1.0.0',
+                `loggerVersion: ${Version}`,
+                `packageName: ${testErrorConfig.packageName}`,
+                `packageVersion: ${testErrorConfig.packageVersion}`,
                 'code: 1',
                 'name: unsupportedError',
                 'msg: Provided error does not exist in CoreErrors or provided Web3PackageErrorConfig',

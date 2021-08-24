@@ -1,4 +1,7 @@
+import Web3LoggerVersion from 'web3-core-logger/src/_version';
+
 import Web3ProvidersHttp from '../../src/index';
+import Version from '../../src/_version';
 
 describe('constructs a Web3ProvidersHttp instance with expected properties', () => {
     let web3ProvidersHttpRequestSpy: jest.SpyInstance;
@@ -32,8 +35,9 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
             new Web3ProvidersHttp({});
         }).toThrowError(
             [
+                `loggerVersion: ${Web3LoggerVersion}`,
                 'packageName: web3-providers-http',
-                'packageVersion: 4.0.0-alpha.0',
+                `packageVersion: ${Version}`,
                 'code: 1',
                 'name: invalidClientUrl',
                 'msg: Provided web3Client is an invalid HTTP(S) URL',

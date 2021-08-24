@@ -1,4 +1,5 @@
 import Web3CoreLogger from '../../src/index';
+import Version from '../../src/_version';
 
 describe('Web3CoreLogger', () => {
     it('should successfully construct an instance', () => {
@@ -35,7 +36,7 @@ describe('Web3CoreLogger', () => {
             new Web3CoreLogger(testErrorConfig);
         }).toThrowError(
             [
-                'loggerVersion: 1.0.0-alpha.0',
+                `loggerVersion: ${Version}`,
                 'packageName: testPackage',
                 'packageVersion: 1.0.0',
                 'code: 2',
