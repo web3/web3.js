@@ -46,7 +46,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             ) => eip1193Provider,
         });
 
-        const response = await web3ProvidersEip1193.web3Client.request({
+        const response = await web3ProvidersEip1193.request({
             method: 'foo',
         });
         expect(response).toBe(expectedResponse);
@@ -57,7 +57,15 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             // @ts-ignore - Ignore invalid type
             web3ProvidersEip1193.setWeb3Client({});
         }).toThrowError(
-            'Failed to set web3 client: Invalid EIP-1193 client provided'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-providers-eip1193',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidClient',
+                'msg: Provided web3Client is an invalid EIP-1193 client',
+                'params: {"web3Client":{}}',
+            ].join('\n')
         );
     });
 

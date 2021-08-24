@@ -7,7 +7,7 @@ import {
 import Web3ProvidersEip1193 from '../../src/index';
 
 describe('constructs a Web3ProvidersEip1193 instance with expected properties', () => {
-    it('should instantiate with expected properties', () => {
+    it('should instantiate successfully', () => {
         const eip1193Provider = {
             request: async (args: RequestArguments) => {
                 return {
@@ -21,8 +21,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
                 listener: ProviderEventListener
             ) => eip1193Provider,
         };
-        const web3ProvidersEip1193 = new Web3ProvidersEip1193(eip1193Provider);
-        expect(web3ProvidersEip1193.web3Client).toBe(eip1193Provider);
+        new Web3ProvidersEip1193(eip1193Provider);
     });
 
     it('should fail to instantiate with invalid client error', () => {
@@ -30,7 +29,15 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             // @ts-ignore - Ignore invalid type
             new Web3ProvidersEip1193({});
         }).toThrowError(
-            'Failed to set web3 client: Invalid EIP-1193 client provided'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-providers-eip1193',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: invalidClient',
+                'msg: Provided web3Client is an invalid EIP-1193 client',
+                'params: {"web3Client":{}}',
+            ].join('\n')
         );
     });
 });

@@ -30,7 +30,6 @@ describe('Web3ProvidersHttp.setWeb3Client', () => {
         const updatedClient = 'http://mycoolclient.ninja';
         const web3ProvidersHttp = new Web3ProvidersHttp(oldClient);
         web3ProvidersHttp.setWeb3Client(updatedClient);
-        expect(web3ProvidersHttp.web3Client).toBe(updatedClient);
     });
 
     it('should fail to set new client with invalid client error', () => {
@@ -39,7 +38,15 @@ describe('Web3ProvidersHttp.setWeb3Client', () => {
             // @ts-ignore - Ignore invalid type
             web3ProvidersHttp.setWeb3Client({});
         }).toThrowError(
-            'Failed to create HTTP client: Invalid HTTP(S) URL provided'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-providers-http',
+                'packageVersion: 4.0.0-alpha.0',
+                'code: 1',
+                'name: invalidClientUrl',
+                'msg: Provided web3Client is an invalid HTTP(S) URL',
+                'params: {"web3Client":{}}',
+            ].join('\n')
         );
     });
 

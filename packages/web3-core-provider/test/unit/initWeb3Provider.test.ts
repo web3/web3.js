@@ -3,7 +3,7 @@ import {
     RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
-    Eip1193Provider
+    Eip1193Provider,
 } from 'web3-core-types/src/types';
 import Web3ProvidersHttp from 'web3-providers-http';
 
@@ -24,8 +24,7 @@ describe('Instantiates correct provider for varying provided clients', () => {
                 listener: ProviderEventListener
             ) => Eip1193Provider,
         };
-        const web3ProvidersEip1193 =
-            initWeb3Provider(Eip1193Provider);
+        const web3ProvidersEip1193 = initWeb3Provider(Eip1193Provider);
         expect(web3ProvidersEip1193.setWeb3Client).not.toBe(undefined);
         // TODO
         // @ts-ignore tsc sees web3ProvidersEip1193 only as IWeb3Provider
@@ -50,19 +49,43 @@ describe('Instantiates correct provider for varying provided clients', () => {
 
     it('should throw not implemented error for WebSocket client', () => {
         expect(() => initWeb3Provider('ws://127.0.0.1:8545')).toThrowError(
-            'Provider protocol not implemented'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-core-provider',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: protocolNotImplemented',
+                'msg: Detected protocol of provided web3Client is not implemented',
+                'params: {"web3Client":"ws://127.0.0.1:8545"}',
+            ].join('\n')
         );
     });
 
     it('should throw not implemented error for IPC client', () => {
         expect(() => initWeb3Provider('ipc://geth.ipc')).toThrowError(
-            'Provider protocol not implemented'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-core-provider',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 1',
+                'name: protocolNotImplemented',
+                'msg: Detected protocol of provided web3Client is not implemented',
+                'params: {"web3Client":"ipc://geth.ipc"}',
+            ].join('\n')
         );
     });
 
     it('should throw protocol not support error', () => {
         expect(() => initWeb3Provider('foobar')).toThrowError(
-            'Provider protocol not supported'
+            [
+                'loggerVersion: 1.0.0-alpha.0',
+                'packageName: web3-core-provider',
+                'packageVersion: 1.0.0-alpha.0',
+                'code: 2',
+                'name: protocolNotSupported',
+                'msg: Detected protocol of provided web3Client is not supported',
+                'params: {"web3Client":"foobar"}',
+            ].join('\n')
         );
     });
 });

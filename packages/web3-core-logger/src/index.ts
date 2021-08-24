@@ -54,11 +54,39 @@ export default class Web3CoreLogger {
 
             for (const property in web3Error) {
                 const value = web3Error[property as keyof typeof web3Error];
-                errorPieces.push(
-                    typeof value === 'object' && value !== null
-                        ? `params: ${JSON.stringify(value)}`
-                        : `${property}: ${value}`
-                );
+
+                let formattedValue;
+                if (typeof value === 'object' && value !== null) {
+                    try {
+                        formattedValue = `params: ${JSON.stringify(value)}`;
+                    } catch (error) {
+                        if (
+                            error.message ===
+                            'Do not know how to serialize a BigInt'
+                        ) {
+                            // JSON.stringify doesn't work with BigInts
+                            // so we check each property in value for type === 'bigint'
+                            // then cast to string, so we can call JSON.stringify successfully
+                            for (const key of Object.keys(value)) {
+                                // @ts-ignore
+                                // No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
+                                if (typeof value[key] === 'bigint') {
+                                    // @ts-ignore
+                                    // No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
+                                    value[key] = `${value[key].toString()}n`;
+                                }
+                            }
+
+                            formattedValue = `params: ${JSON.stringify(value)}`;
+                        } else {
+                            throw error;
+                        }
+                    }
+                } else {
+                    formattedValue = `${property}: ${value}`;
+                }
+
+                errorPieces.push(formattedValue);
             }
 
             const errorString = errorPieces.join('\n');
