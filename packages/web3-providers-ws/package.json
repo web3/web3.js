@@ -1,7 +1,7 @@
 {
-    "name": "web3-core-provider",
-    "version": "1.0.0-alpha.0",
-    "description": "Initilizes and provides access to a Web3 Provider for Web3 4.x.x",
+    "name": "web3-providers-ws",
+    "version": "4.0.0-alpha.0",
+    "description": "Ethereum WS provider for Web3 4.x.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
@@ -16,7 +16,14 @@
         "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "test": "jest",
+        "test:integration": "jest ./test/integration",
         "test:unit": "jest ./test/unit"
+    },
+    "dependencies": {
+        "@types/node": "^16.4.3",
+        "@types/websocket": "^1.0.3",
+        "web3-providers-base": "1.0.0-alpha.1",
+        "websocket": "^1.0.32"
     },
     "devDependencies": {
         "@types/jest": "^26.0.22",
@@ -30,11 +37,5 @@
         "ts-jest": "^26.5.4",
         "typescript": "^4.2.4",
         "web3-core-types": "1.0.0-alpha.0"
-    },
-    "dependencies": {
-        "web3-providers-base": "1.0.0-alpha.1",
-        "web3-providers-http": "4.0.0-alpha.0",
-        "web3-providers-eip1193": "1.0.0-alpha.0",
-        "web3-providers-ws": "4.0.0-alpha.0"
     }
 }
