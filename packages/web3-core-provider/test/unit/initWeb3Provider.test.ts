@@ -5,6 +5,7 @@ import {
     ProviderEventListener,
 } from 'web3-core-types/src/types';
 import Web3ProvidersHttp from 'web3-providers-http';
+import Web3ProvidersWS from 'web3-providers-ws';
 
 import initWeb3Provider from '../../src/index';
 
@@ -47,10 +48,15 @@ describe('Instantiates correct provider for varying provided clients', () => {
         expect(web3ProvidersHttp.supportsSubscriptions).not.toBe(undefined);
     });
 
-    it('should throw not implemented error for WebSocket client', () => {
-        expect(() => initWeb3Provider('ws://127.0.0.1:8545')).toThrowError(
-            'Provider protocol not implemented'
-        );
+    it('should instantiate WebSocket provider', () => {
+        const wsClient = 'ws://127.0.0.1:8545';
+        const Web3ProviderWS: IWeb3Provider = initWeb3Provider(wsClient);
+
+        expect(Web3ProviderWS.web3Client).toBe(wsClient);
+        expect(Web3ProviderWS.setWeb3Client).not.toBe(undefined);
+        expect(Web3ProviderWS.on).not.toBe(undefined);
+        expect(Web3ProviderWS.request).not.toBe(undefined);
+        expect(Web3ProviderWS.supportsSubscriptions).not.toBe(undefined);
     });
 
     it('should throw not implemented error for IPC client', () => {
