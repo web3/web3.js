@@ -116,15 +116,15 @@ export default class Web3Beacon {
      * Get a list of validators from state
      * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix.
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @param {[string]} id (Optional) Array of ids, Either a hex string encoded public key (with 0x prefix) or validator index
+     * @param {string[]} id (Optional) Array of ids, Either a hex string encoded public key (with 0x prefix) or validator index
      * @param {Status} status (Optional) Validator status specification https://hackmd.io/ofFJ5gOmQpu1jjHilHbdQQ
      * @returns {Promise} Array of the validators specified with balance, status and index
      */
 
     async getValidators(
         stateId: StateId,
-        id?: [string],
-        status?: [Status],
+        id?: string[],
+        status?: Status[],
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -165,13 +165,13 @@ export default class Web3Beacon {
      * Get Validator states from state
      * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @param {[string]} id (Optional) Array of either hex string encoded public keys or validator index
+     * @param {string[]} id (Optional) Array of either hex string encoded public keys or validator index
      * @returns {Promise} Returns filterable array of validators with their balance, status and index.
      */
 
     async getValidatorBalances(
         stateId: StateId,
-        id?: [string],
+        id?: string[],
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
