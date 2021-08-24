@@ -4,7 +4,6 @@ import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
     Eth1RequestArguments,
-    Eth2RequestArguments,
     Web3Client,
     Web3ProviderEvents,
 } from 'web3-core-types/lib/types';
