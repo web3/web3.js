@@ -9,23 +9,27 @@ export default class Web3CoreLogger {
     constructor(packageErrorConfig: Web3PackageErrorConfig) {
         this._packageErrorConfig = packageErrorConfig;
 
+        // If user passes duplicate error names,
+        // this will override the user's errors with CoreErrors
+        this._errorsCollective = {
+            ...packageErrorConfig.errors,
+            ...CoreErrors,
+        };
+
+        // We still check for duplicate errors,
+        // so that the user is aware
         Object.keys(CoreErrors).forEach((errorName) => {
             if (packageErrorConfig.errors.hasOwnProperty(errorName))
                 throw this.makeError(CoreErrorNames.duplicateErrorName, {
-                    params: { errorName },
+                    params: { duplicateError: errorName },
                 });
         });
-
-        this._errorsCollective = {
-            ...CoreErrors,
-            ...packageErrorConfig.errors,
-        };
     }
 
     makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
         try {
             if (!this._errorsCollective.hasOwnProperty(web3ErrorName))
-                this.makeError(CoreErrorNames.unsupportedError, {
+                throw this.makeError(CoreErrorNames.unsupportedError, {
                     params: { web3ErrorName, errorDetails },
                 });
 
@@ -36,8 +40,7 @@ export default class Web3CoreLogger {
                 })
             );
         } catch (error) {
-            // TODO
-            throw Error('');
+            throw error;
         }
     }
 
@@ -65,7 +68,7 @@ export default class Web3CoreLogger {
 
             return errorString;
         } catch (error) {
-            throw Error('Failed to create error string');
+            throw error;
         }
     }
 }
