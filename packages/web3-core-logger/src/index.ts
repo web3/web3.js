@@ -8,22 +8,20 @@ export default class Web3CoreLogger {
 
     constructor(packageErrorConfig: Web3PackageErrorConfig) {
         this._packageErrorConfig = packageErrorConfig;
+        this._errorsCollective = CoreErrors;
 
-        // If user passes duplicate error names,
-        // this will override the user's errors with CoreErrors
-        this._errorsCollective = {
-            ...packageErrorConfig.errors,
-            ...CoreErrors,
-        };
-
-        // We still check for duplicate errors,
-        // so that the user is aware
-        Object.keys(CoreErrors).forEach((errorName) => {
+        // Check for name collisions
+        for (const errorName of Object.keys(CoreErrors)) {
             if (packageErrorConfig.errors.hasOwnProperty(errorName))
                 throw this.makeError(CoreErrorNames.duplicateErrorName, {
                     params: { duplicateError: errorName },
                 });
-        });
+        }
+
+        this._errorsCollective = {
+            ...this._errorsCollective,
+            ...packageErrorConfig.errors
+        }
     }
 
     makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
@@ -68,11 +66,7 @@ export default class Web3CoreLogger {
                             // so we check each property in value for type === 'bigint'
                             // then cast to string, so we can call JSON.stringify successfully
                             for (const key of Object.keys(value)) {
-                                // @ts-ignore
-                                // No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
                                 if (typeof value[key] === 'bigint') {
-                                    // @ts-ignore
-                                    // No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
                                     value[key] = `${value[key].toString()}n`;
                                 }
                             }
@@ -91,8 +85,12 @@ export default class Web3CoreLogger {
 
             const errorString = errorPieces.join('\n');
             if (errorString === undefined)
-                // TODO
-                throw Error('Failed to create error string');
+                this.makeError(
+                    CoreErrorNames.failedToCreateErrorString,
+                    {
+                        params: { errorPieces }
+                    }
+                )
 
             return errorString;
         } catch (error) {

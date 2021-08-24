@@ -3,6 +3,7 @@ import { Web3Error } from './types';
 export enum CoreErrorNames {
     unsupportedError = 'unsupportedError',
     duplicateErrorName = 'duplicateErrorName',
+    failedToCreateErrorString = 'failedToCreateErrorString'
 }
 
 export const CoreErrors: Record<CoreErrorNames, Web3Error> = {
@@ -15,5 +16,10 @@ export const CoreErrors: Record<CoreErrorNames, Web3Error> = {
         code: 2,
         name: 'duplicateErrorName',
         msg: 'Error defined in Web3PackageErrorConfig.errors has the same name as an error in CoreErrors',
+    },
+    failedToCreateErrorString: {
+        code: 3,
+        name: 'failedToCreateErrorString',
+        msg: 'Unable to create error string for unknown reason',
     },
 };

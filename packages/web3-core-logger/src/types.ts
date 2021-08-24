@@ -1,6 +1,6 @@
 export interface Web3ErrorDetails {
     reason?: string;
-    params?: object;
+    params?: {[key: string]: any};
 }
 
 export interface Web3Error extends Web3ErrorDetails {
