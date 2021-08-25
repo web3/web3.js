@@ -463,6 +463,7 @@ export default class Web3ProviderWS
      * @returns {RpcResponse} This function always returns undefined as result is emitted in events for web socket
      */
     //TODO: need to add ws support for Eth2 requests
+    // @ts-ignore
     async request(request: Eth1RequestArguments): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');

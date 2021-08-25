@@ -20,7 +20,7 @@ import {
 
 export default class Web3ProvidersEip1193
     extends EventEmitter
-    implements IWeb3Provider
+    implements Eip1193Provider
 {
     private _logger: Web3CoreLogger;
     private _web3Client: Eip1193Provider;

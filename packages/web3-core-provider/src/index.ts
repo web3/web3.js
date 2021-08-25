@@ -25,7 +25,7 @@ const web3CoreLogger = new Web3CoreLogger(Web3CoreProviderErrorsConfig);
  */
 export default function initWeb3Provider(
     web3Client: Web3Client
-): IWeb3Provider {
+): IWeb3Provider | Eip1193Provider {
     try {
         switch (detectClientProtocol(web3Client)) {
             case ClientProtocol.Eip1193:

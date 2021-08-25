@@ -182,12 +182,9 @@ export interface RpcResponse {
 
 export type Eth2RpcResponse = { [key: string]: any } | { [key: string]: any }[];
 export interface IWeb3Provider {
-
-export interface IWeb3Provider extends Eip1193Provider {
-    web3Client: Web3Client;
     setWeb3Client: (web3Client: Web3Client) => void;
     supportsSubscriptions?: () => boolean;
-    request: (args: RequestArguments) => Promise<RpcResponse>;
+    request: (args: Eth1RequestArguments | Eth2RequestArguments) => Promise<RpcResponse | Eth2RpcResponse>;
 }
 
 export interface PartialRpcOptions extends Partial<RpcOptions> {

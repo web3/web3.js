@@ -6,7 +6,6 @@ import {
     Eth2RpcResponse,
     Eth1RequestArguments,
     Eth2RequestArguments,
-    Web3ProviderEvents,
     Web3Client,
 } from 'web3-core-types/lib/types';
 import Web3CoreLogger from 'web3-core-logger';
@@ -111,18 +110,19 @@ export default class Web3ProvidersHttp
                 args.params || {},
                 args.providerOptions?.axiosConfig || {}
             );
-            // If the above call was successful, then we're connected
-            // to the client, and should emit accordingly (EIP-1193)
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
-            if (this._connected === false) this._connectToClient();
+
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
-            if (error.code === 'ECONNREFUSED' && this._connected) {
-                this._connected = false;
-                // TODO replace with ProviderRpcError
-                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
-            }
-            throw Error(error.message);
+            // Check if Axios error
+            if (error.code === 'ECONNREFUSED')
+                throw this._logger.makeError(
+                    Web3ProvidersHttpErrorNames.connectionRefused,
+                    {
+                        params: { clientUrl: this._web3Client },
+                    }
+                );
+            
+            throw error;
         }
     }
 
@@ -153,18 +153,19 @@ export default class Web3ProvidersHttp
                 },
                 args.providerOptions?.axiosConfig || {}
             );
-            // If the above call was successful, then we're connected
-            // to the client, and should emit accordingly (EIP-1193)
-            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
-            if (this._connected === false) this._connectToClient();
+
             return response.data.data ? response.data.data : response.data;
         } catch (error) {
-            if (error.code === 'ECONNREFUSED' && this._connected) {
-                this._connected = false;
-                // TODO replace with ProviderRpcError
-                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
-            }
-            throw Error(error.message);
+            // Check if Axios error
+            if (error.code === 'ECONNREFUSED')
+                throw this._logger.makeError(
+                    Web3ProvidersHttpErrorNames.connectionRefused,
+                    {
+                        params: { clientUrl: this._web3Client },
+                    }
+                );
+            
+            throw error;
         }
     }
 
@@ -187,19 +188,9 @@ export default class Web3ProvidersHttp
                 ? await this._eth2Request(eth2)
                 : await this._eth1Request(eth1);
 
-            // TODO Code smell
-            return response.data.data ? response.data.data : response.data;
+            return response;
         } catch (error) {
-            // Check if Axios error
-            if (error.code === 'ECONNREFUSED')
-                throw this._logger.makeError(
-                    Web3ProvidersHttpErrorNames.connectionRefused,
-                    {
-                        params: { clientUrl: this._web3Client },
-                    }
-                );
-
-            throw Error(error);
+            throw error;
         }
     }
 }

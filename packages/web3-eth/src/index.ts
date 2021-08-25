@@ -37,7 +37,7 @@ export default class Web3Eth {
     provider: IWeb3Provider;
 
     constructor(options: Web3EthOptions) {
-        this.provider = initWeb3Provider(options.web3Client);
+        this.provider = (initWeb3Provider(options.web3Client) as IWeb3Provider);
         this._defaultReturnType =
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
@@ -61,11 +61,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'web3_clientVersion',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -82,11 +82,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'web3_sha3',
                 params: [data],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -101,11 +101,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'net_version',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -128,11 +128,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'net_listening',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -147,11 +147,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'net_peerCount',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -174,11 +174,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_protocolVersion',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -201,11 +201,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcSyncingResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_syncing',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -233,11 +233,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_coinbase',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -252,11 +252,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_mining',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -271,11 +271,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_hashrate',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -298,11 +298,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_gasPrice',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -325,11 +325,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcAccountsResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_accounts',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -344,11 +344,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_blockNumber',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -375,7 +375,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBalance',
                 params: [
@@ -384,7 +384,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -413,7 +413,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getStorageAt',
                 params: [
@@ -423,7 +423,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -442,7 +442,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionCount',
                 params: [
@@ -451,7 +451,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -476,11 +476,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockTransactionCountByHash',
                 params: [blockHash],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -505,7 +505,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockTransactionCountByNumber',
                 params: [
@@ -513,7 +513,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -538,11 +538,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleCountByBlockHash',
                 params: [blockHash],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -567,7 +567,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleCountByBlockNumber',
                 params: [
@@ -575,7 +575,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -602,7 +602,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getCode',
                 params: [
@@ -611,7 +611,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -630,11 +630,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sign',
                 params: [address, message],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -651,7 +651,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_signTransaction',
                 params: [
@@ -671,7 +671,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -688,7 +688,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sendTransaction',
                 params: [
@@ -708,7 +708,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -725,11 +725,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_sendRawTransaction',
                 params: [rawTransaction],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -748,7 +748,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcResponse> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_call',
                 params: [
@@ -768,7 +768,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -787,7 +787,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_estimateGas',
                 params: [
@@ -810,7 +810,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -837,11 +837,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockByHash',
                 params: [blockHash, returnFullTxs],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -888,7 +888,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getBlockByNumber',
                 params: [
@@ -897,7 +897,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     returnFullTxs,
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -942,11 +942,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByHash',
                 params: [txHash],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -982,11 +982,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByBlockHashAndIndex',
                 params: [blockHash, toHex(transactionIndex)],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1022,7 +1022,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionByBlockNumberAndIndex',
                 params: [
@@ -1031,7 +1031,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     toHex(transactionIndex),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1067,11 +1067,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionReceiptResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getTransactionReceipt',
                 params: [txHash],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1112,11 +1112,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleByBlockHashAndIndex',
                 params: [blockHash, toHex(uncleIndex)],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1163,7 +1163,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getUncleByBlockNumberAndIndex',
                 params: [
@@ -1172,7 +1172,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     toHex(uncleIndex),
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1215,11 +1215,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringArrayResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getCompilers',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1236,11 +1236,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcCompiledSolidityResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileSolidity',
                 params: [sourceCode],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1257,11 +1257,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileLLL',
                 params: [sourceCode],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1278,11 +1278,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_compileSerpent',
                 params: [sourceCode],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1299,7 +1299,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newFilter',
                 params: [
@@ -1313,7 +1313,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1336,11 +1336,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newBlockFilter',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1363,11 +1363,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_newPendingTransactionFilter',
                 params: [],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1392,11 +1392,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_uninstallFilter',
                 params: [toHex(filterId)],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1413,11 +1413,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getFilterChanges',
                 params: [toHex(filterId)],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1443,11 +1443,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getFilterLogs',
                 params: [toHex(filterId)],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1472,7 +1472,7 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
-            const response = await this.provider.request({
+            const response = (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getLogs',
                 params: [
@@ -1486,7 +1486,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            });
+            }) as RpcResponse);
 
             return {
                 ...response,
@@ -1510,11 +1510,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringArrayResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_getWork',
                 params: [],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1535,11 +1535,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_submitWork',
                 params: [toHex(nonce, 8), powHash, digest],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
@@ -1558,11 +1558,11 @@ export default class Web3Eth {
         requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
-            return await this.provider.request({
+            return (await this.provider.request({
                 ...requestArguments,
                 method: 'eth_submitHashRate',
                 params: [toHex(hashRate, 32), toHex(clientId)],
-            });
+            }) as RpcResponse);
         } catch (error) {
             throw error;
         }
