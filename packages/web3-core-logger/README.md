@@ -38,29 +38,38 @@ A package that utilizes `web3-core-logger` requires the following:
     -   Should look similar to:
 
     ```javascript
-    import { Web3Error } from './types';
+    import { Web3Error, Web3PackageErrorConfig } from 'web3-core-logger/src/types';
+    import packageVersion from './_version';
 
-    export enum CoreErrorNames {
-        unsupportedError = 'unsupportedError',
-        duplicateErrorName = 'duplicateErrorName',
-        failedToCreateErrorString = 'failedToCreateErrorString',
+    export enum Web3ProvidersHttpErrorNames {
+        invalidClientUrl = 'invalidClientUrl',
+        noHttpClient = 'noHttpClient',
+        connectionRefused = 'connectionRefused',
     }
 
-    export const CoreErrors: Record<CoreErrorNames, Web3Error> = {
-        unsupportedError: {
-            code: 1,
-            name: 'unsupportedError',
-            msg: 'Provided error does not exist in CoreErrors or provided Web3PackageErrorConfig',
-        },
-        duplicateErrorName: {
-            code: 2,
-            name: 'duplicateErrorName',
-            msg: 'Error defined in Web3PackageErrorConfig.errors has the same name as an error in CoreErrors',
-        },
-        failedToCreateErrorString: {
-            code: 3,
-            name: 'failedToCreateErrorString',
-            msg: 'Unable to create error string for unknown reason',
+    interface Web3ProvidersHttpErrorsConfig extends Web3PackageErrorConfig {
+        errors: Record<Web3ProvidersHttpErrorNames, Web3Error>;
+    }
+
+    export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
+        packageName: 'web3-providers-http',
+        packageVersion,
+        errors: {
+            invalidClientUrl: {
+                code: 1,
+                name: 'invalidClientUrl',
+                msg: 'Provided web3Client is an invalid HTTP(S) URL',
+            },
+            noHttpClient: {
+                code: 2,
+                name: 'noHttpClient',
+                msg: 'No HTTP client has be initialized',
+            },
+            connectionRefused: {
+                code: 3,
+                name: 'connectionRefused',
+                msg: 'Unable to make connection with HTTP client',
+            },
         },
     };
     ```
@@ -80,19 +89,44 @@ Putting all this together looks like:
 
 ```javascript
 import Web3CoreLogger from 'web3-core-logger';
-import { MyErrorsConfig, MyErrorNames } from './errors';
 
-const logger = new Web3CoreLogger(MyErrorsConfig);
+import {
+    Web3ProvidersHttpErrorsConfig,
+    Web3ProvidersHttpErrorNames,
+} from './errors';
 
-function myFunc(arg1: string) {
-    try {
-        if (typeof arg1 !== 'string')
-            throw logger.makeError(MyErrorNames.invalidArgumentType, {
-                reason: 'arg1 has not of type string',
-                params: { arg1 },
-            });
-    } catch (error) {
-        throw error;
+// Class is simplified for the sake of this usage example
+export default class Web3ProvidersHttp {
+    private _logger: Web3CoreLogger;
+
+    constructor(web3Client: string) {
+        this._logger = new Web3CoreLogger(Web3ProvidersHttpErrorsConfig);
+        this._validateClientUrl(web3Client);
+    }
+
+    /**
+     * Determines whether {web3Client} is a valid HTTP client URL
+     *
+     * @param web3Client To be validated
+     * @returns true if valid
+     */
+    private _validateClientUrl(web3Client: Web3Client) {
+        try {
+            if (
+                typeof web3Client === 'string' &&
+                /^http(s)?:\/\//i.test(web3Client)
+            )
+                return;
+
+            throw this._logger.makeError(
+                Web3ProvidersHttpErrorNames.invalidClientUrl,
+                {
+                    params: { web3Client },
+                }
+            );
+        } catch (error) {
+            throw error;
+        }
     }
 }
 ```
