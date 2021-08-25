@@ -37,7 +37,7 @@ export default class Web3Eth {
     provider: IWeb3Provider;
 
     constructor(options: Web3EthOptions) {
-        this.provider = (initWeb3Provider(options.web3Client) as IWeb3Provider);
+        this.provider = initWeb3Provider(options.web3Client) as IWeb3Provider;
         this._defaultReturnType =
             options.returnType || ValidTypesEnum.PrefixedHexString;
     }
@@ -65,7 +65,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'web3_clientVersion',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -86,7 +86,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'web3_sha3',
                 params: [data],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -105,7 +105,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'net_version',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -132,7 +132,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'net_listening',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -151,7 +151,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'net_peerCount',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -178,7 +178,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_protocolVersion',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -205,7 +205,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_syncing',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -237,7 +237,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_coinbase',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -256,7 +256,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_mining',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -275,7 +275,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_hashrate',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -302,7 +302,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_gasPrice',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -329,7 +329,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_accounts',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -348,7 +348,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_blockNumber',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -384,7 +384,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -423,7 +423,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -451,7 +451,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -480,7 +480,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getBlockTransactionCountByHash',
                 params: [blockHash],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -513,7 +513,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -542,7 +542,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getUncleCountByBlockHash',
                 params: [blockHash],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -575,7 +575,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -611,7 +611,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -634,7 +634,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_sign',
                 params: [address, message],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -671,7 +671,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -708,7 +708,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -729,7 +729,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_sendRawTransaction',
                 params: [rawTransaction],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -768,7 +768,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -810,7 +810,7 @@ export default class Web3Eth {
                         ? (blockIdentifier as BlockTags)
                         : toHex(blockIdentifier),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -841,7 +841,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getBlockByHash',
                 params: [blockHash, returnFullTxs],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -897,7 +897,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     returnFullTxs,
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -946,7 +946,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getTransactionByHash',
                 params: [txHash],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -986,7 +986,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getTransactionByBlockHashAndIndex',
                 params: [blockHash, toHex(transactionIndex)],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1031,7 +1031,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     toHex(transactionIndex),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1071,7 +1071,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getTransactionReceipt',
                 params: [txHash],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1116,7 +1116,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getUncleByBlockHashAndIndex',
                 params: [blockHash, toHex(uncleIndex)],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1172,7 +1172,7 @@ export default class Web3Eth {
                         : toHex(blockIdentifier),
                     toHex(uncleIndex),
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1219,7 +1219,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getCompilers',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1240,7 +1240,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_compileSolidity',
                 params: [sourceCode],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1261,7 +1261,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_compileLLL',
                 params: [sourceCode],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1282,7 +1282,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_compileSerpent',
                 params: [sourceCode],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1313,7 +1313,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1340,7 +1340,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_newBlockFilter',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1367,7 +1367,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_newPendingTransactionFilter',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1396,7 +1396,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_uninstallFilter',
                 params: [toHex(filterId)],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1417,7 +1417,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getFilterChanges',
                 params: [toHex(filterId)],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1447,7 +1447,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getFilterLogs',
                 params: [toHex(filterId)],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1486,7 +1486,7 @@ export default class Web3Eth {
                             : undefined,
                     },
                 ],
-            }) as RpcResponse);
+            })) as RpcResponse;
 
             return {
                 ...response,
@@ -1514,7 +1514,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_getWork',
                 params: [],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1539,7 +1539,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_submitWork',
                 params: [toHex(nonce, 8), powHash, digest],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }
@@ -1562,7 +1562,7 @@ export default class Web3Eth {
                 ...requestArguments,
                 method: 'eth_submitHashRate',
                 params: [toHex(hashRate, 32), toHex(clientId)],
-            }) as RpcResponse);
+            })) as RpcResponse;
         } catch (error) {
             throw error;
         }

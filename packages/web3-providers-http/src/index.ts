@@ -121,7 +121,7 @@ export default class Web3ProvidersHttp
                         params: { clientUrl: this._web3Client },
                     }
                 );
-            
+
             throw error;
         }
     }
@@ -164,7 +164,7 @@ export default class Web3ProvidersHttp
                         params: { clientUrl: this._web3Client },
                     }
                 );
-            
+
             throw error;
         }
     }
