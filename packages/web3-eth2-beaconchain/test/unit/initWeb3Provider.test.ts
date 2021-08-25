@@ -23,7 +23,6 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
 
     it('should instantiate with expected properties', () => {
         const expectedClient = 'http://127.0.0.1:8545';
-        const web3ProvidersHttp = new Web3ProvidersHttp(expectedClient);
-        expect(web3ProvidersHttp.web3Client).toBe(expectedClient);
+        new Web3ProvidersHttp(expectedClient);
     });
 });
