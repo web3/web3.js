@@ -130,3 +130,15 @@ export default class Web3ProvidersHttp {
     }
 }
 ```
+
+The above would produce an error message as such:
+
+```javascript
+loggerVersion: 1.0.0-alpha.0
+packageName: web3-providers-http
+packageVersion: 4.0.0-alpha.0
+code: 1
+name: invalidClientUrl
+msg: Provided web3Client is an invalid HTTP(S) URL
+params: {"web3Client":{}}
+```
