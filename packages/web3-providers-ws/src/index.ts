@@ -503,7 +503,9 @@ export default class Web3ProviderWS
         this.requestQueue.delete(id);
 
         try {
-            this.webSocketConnection.send(JSON.stringify( {...request, ...request.rpcOptions}));
+            this.webSocketConnection.send(
+                JSON.stringify({ ...request, ...request.rpcOptions })
+            );
         } catch (error) {
             this.emit(
                 WSStatus.Error, // TODO: Fancy errors

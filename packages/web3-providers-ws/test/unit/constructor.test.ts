@@ -11,20 +11,16 @@ describe('Web3ProviderWS Tests', () => {
     });
 
     it('should create instance of Web3ProviderWS', async (done) => {
-        
-        let isConnected = (status: boolean) =>{
+        let isConnected = (status: boolean) => {
             expect(status).toBeTruthy();
             provider.disconnect(0);
             done();
-        }
+        };
 
         provider = new Web3ProviderWS('ws://127.0.0.1:8545');
 
         provider.on(Web3ProviderEvents.Connect, () => {
             isConnected(true);
         });
-        
     });
-    
 });
-

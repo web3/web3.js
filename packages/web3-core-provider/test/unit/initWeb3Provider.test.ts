@@ -51,8 +51,8 @@ describe('Instantiates correct provider for varying provided clients', () => {
     it('should instantiate WebSocket provider', (done) => {
         const wsClient = 'ws://127.0.0.1:8545';
         const Web3ProviderWS: IWeb3Provider = initWeb3Provider(wsClient);
-        
-        let isConnected = (status: boolean) =>{
+
+        let isConnected = (status: boolean) => {
             expect(status).toBeTruthy();
             expect(Web3ProviderWS.web3Client).toBe(wsClient);
             expect(Web3ProviderWS.setWeb3Client).not.toBe(undefined);
@@ -62,12 +62,11 @@ describe('Instantiates correct provider for varying provided clients', () => {
 
             (Web3ProviderWS as Web3ProvidersWS).disconnect(0);
             done();
-        }
+        };
 
         Web3ProviderWS.on(Web3ProviderEvents.Connect, () => {
             isConnected(true);
         });
-        
     });
 
     it('should throw not implemented error for IPC client', () => {
