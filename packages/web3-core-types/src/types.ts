@@ -127,7 +127,7 @@ export type ProviderEventListenerMessage = (message: ProviderMessage) => void;
 export type Web3Client = string | Eip1193Provider;
 
 export interface Eip1193Provider {
-    request: (args: RequestArguments) => Promise<any>;
+    request: (args: Eth1RequestArguments | any) => Promise<any>;
     on: (
         web3ProviderEvents: Web3ProviderEvents,
         listener: ProviderEventListener
@@ -156,14 +156,22 @@ export interface HttpOptions {
     axiosConfig?: AxiosRequestConfig;
     poll?: boolean;
     pollingInterval?: number;
+    httpMethod: 'get' | 'post';
 }
 
-export interface RequestArguments {
-    readonly method: string;
+interface RequestArguments {
     readonly params?: readonly unknown[] | object;
-    rpcOptions?: RpcOptions;
     providerOptions?: HttpOptions;
     returnType?: ValidTypesEnum;
+}
+
+export interface Eth1RequestArguments extends RequestArguments {
+    readonly method: string;
+    rpcOptions?: RpcOptions;
+}
+
+export interface Eth2RequestArguments extends RequestArguments {
+    readonly endpoint: string;
 }
 
 export interface RpcResponse {
@@ -171,6 +179,8 @@ export interface RpcResponse {
     jsonrpc: string;
     result: any;
 }
+
+export type Eth2RpcResponse = { [key: string]: any } | { [key: string]: any }[];
 
 export interface IWeb3Provider extends Eip1193Provider {
     web3Client: Web3Client;

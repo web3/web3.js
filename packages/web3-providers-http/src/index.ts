@@ -1,9 +1,11 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
     RpcResponse,
-    RequestArguments,
+    Eth2RpcResponse,
+    Eth1RequestArguments,
+    Eth2RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
     Web3Client,
@@ -94,6 +96,8 @@ export default class Web3ProvidersHttp
                 method: 'eth_chainId',
                 params: [],
             });
+            // @ts-ignore Will be removed in subsequent PR
+            // that removes EIP-1193 from this package
             return result.result;
         } catch (error) {
             throw Error(`Error getting chain id: ${error.message}`);
@@ -139,15 +143,47 @@ export default class Web3ProvidersHttp
     }
 
     /**
-     * Makes an Axios POST request using provided {args}
+     * Makes an Axios GET or POST request using provided {args} for the eth2 API
      *
      * @param args RPC options, request params, AxiosConfig
      * @returns
      */
-    async request(args: RequestArguments): Promise<RpcResponse> {
+    private async _eth2Request(
+        args: Eth2RequestArguments
+    ): Promise<AxiosResponse> {
         try {
-            if (this._httpClient === undefined)
-                throw Error('No HTTP client initiliazed');
+            const response = await this._httpClient[
+                (args.providerOptions?.httpMethod as 'get' | 'post') || 'get'
+            ](
+                args.endpoint, // URL path
+                args.params || {},
+                args.providerOptions?.axiosConfig || {}
+            );
+            // If the above call was successful, then we're connected
+            // to the client, and should emit accordingly (EIP-1193)
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
+            if (this._connected === false) this._connectToClient();
+            return response.data.data ? response.data.data : response.data;
+        } catch (error) {
+            if (error.code === 'ECONNREFUSED' && this._connected) {
+                this._connected = false;
+                // TODO replace with ProviderRpcError
+                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
+            }
+            throw Error(error.message);
+        }
+    }
+
+    /**
+     * Makes an Axios POST request using provided {args} for JSON RPC requests
+     *
+     * @param args RPC options, request params, AxiosConfig
+     * @returns
+     */
+    private async _eth1Request(
+        args: Eth1RequestArguments
+    ): Promise<AxiosResponse> {
+        try {
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
                     ? args.params || []
@@ -161,6 +197,39 @@ export default class Web3ProvidersHttp
                 },
                 args.providerOptions?.axiosConfig || {}
             );
+            // If the above call was successful, then we're connected
+            // to the client, and should emit accordingly (EIP-1193)
+            // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
+            if (this._connected === false) this._connectToClient();
+            return response.data.data ? response.data.data : response.data;
+        } catch (error) {
+            if (error.code === 'ECONNREFUSED' && this._connected) {
+                this._connected = false;
+                // TODO replace with ProviderRpcError
+                this.emit(Web3ProviderEvents.Disconnect, { code: 4900 });
+            }
+            throw Error(error.message);
+        }
+    }
+
+    /**
+     * Makes an Axios POST request using provided {args}
+     *
+     * @param args RPC options, request params, AxiosConfig
+     * @returns
+     */
+    async request(
+        args: Eth1RequestArguments | Eth2RequestArguments
+    ): Promise<RpcResponse | Eth2RpcResponse> {
+        try {
+            if (this._httpClient === undefined)
+                throw Error('No HTTP client initiliazed');
+
+            const eth1 = args as Eth1RequestArguments;
+            const eth2 = args as Eth2RequestArguments;
+            const response = eth2.endpoint
+                ? await this._eth2Request(eth2)
+                : await this._eth1Request(eth1);
 
             // If the above call was successful, then we're connected
             // to the client, and should emit accordingly (EIP-1193)

@@ -3,7 +3,7 @@ import { WebSocketOptions, WSErrors, WSStatus } from './types';
 import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
-    RequestArguments,
+    Eth1RequestArguments,
     Web3Client,
     Web3ProviderEvents,
 } from 'web3-core-types/lib/types';
@@ -17,8 +17,8 @@ export default class Web3ProviderWS
     private webSocketConnection?: w3cwebsocket;
     private options: WebSocketOptions;
 
-    private requestQueue: Map<number, RequestArguments>;
-    private responseQueue: Map<number, RequestArguments>;
+    private requestQueue: Map<number, Eth1RequestArguments>;
+    private responseQueue: Map<number, Eth1RequestArguments>;
     private lastChunk: any;
     private lastChunkTimeout!: NodeJS.Timeout;
 
@@ -33,8 +33,8 @@ export default class Web3ProviderWS
         this.web3Client = web3Client;
 
         this.webSocketConnection = undefined;
-        this.requestQueue = new Map<number, RequestArguments>();
-        this.responseQueue = new Map<number, RequestArguments>();
+        this.requestQueue = new Map<number, Eth1RequestArguments>();
+        this.responseQueue = new Map<number, Eth1RequestArguments>();
         this.reconnecting = false;
         this.reconnectAttempts = 0;
 
@@ -177,7 +177,7 @@ export default class Web3ProviderWS
 
                     if (this.requestQueue.size > 0) {
                         this.requestQueue.forEach(
-                            (request: RequestArguments, key: number) => {
+                            (request: Eth1RequestArguments, key: number) => {
                                 this.emit(
                                     WSStatus.Error, // TODO: Fancy errors,
                                     new Error(
@@ -216,7 +216,7 @@ export default class Web3ProviderWS
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach(
-                (request: RequestArguments, key: number) => {
+                (request: Eth1RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.PendingRequestsOnReconnectingError),
@@ -251,7 +251,7 @@ export default class Web3ProviderWS
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                (request: RequestArguments, key: number) => {
+                (request: Eth1RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.Error, // TODO: Fancy errors,
                         new Error(
@@ -339,7 +339,7 @@ export default class Web3ProviderWS
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                async (request: RequestArguments, key: number) => {
+                async (request: Eth1RequestArguments, key: number) => {
                     await this.request(request);
                     this.requestQueue.delete(key);
                 }
@@ -370,7 +370,7 @@ export default class Web3ProviderWS
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                (request: RequestArguments, key: number) => {
+                (request: Eth1RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.ConnectionNotOpenError),
@@ -383,7 +383,7 @@ export default class Web3ProviderWS
 
         if (this.responseQueue.size > 0) {
             this.responseQueue.forEach(
-                (request: RequestArguments, key: number) => {
+                (request: Eth1RequestArguments, key: number) => {
                     this.emit(
                         WSStatus.Error, // TODO: Fancy errors,
                         new Error(WSErrors.InvalidConnection),
@@ -458,11 +458,12 @@ export default class Web3ProviderWS
      *
      * @method request
      *
-     * @param {RequestArguments} request
+     * @param {Eth1RequestArguments} request
      *
      * @returns {RpcResponse} This function always returns undefined as result is emitted in events for web socket
      */
-    async request(request: RequestArguments): Promise<void> {
+    //TODO: need to add ws support for Eth2 requests
+    async request(request: Eth1RequestArguments): Promise<void> {
         if (!this.webSocketConnection)
             throw new Error('WebSocket connection is undefined');
 

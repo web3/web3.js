@@ -1,5 +1,6 @@
 import initWeb3Provider from 'web3-core-provider';
 import {
+    Eth1RequestArguments,
     RpcResponse,
     RpcStringResult,
     RpcPrefixedHexStringResult,
@@ -13,7 +14,6 @@ import {
     RpcStringArrayResult,
     RpcCompiledSolidityResult,
     RpcLogResult,
-    RequestArguments,
     IWeb3Provider,
 } from 'web3-core-types/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
@@ -56,7 +56,7 @@ export default class Web3Eth {
      * @returns {Promise} Client version
      */
     async getClientVersion(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringResult> {
         try {
             return await this.provider.request({
@@ -77,7 +77,7 @@ export default class Web3Eth {
      */
     async getSha3(
         data: string,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -96,7 +96,7 @@ export default class Web3Eth {
      * @returns {Promise} Current network version
      */
     async getNetworkVersion(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -123,7 +123,7 @@ export default class Web3Eth {
      * @returns {Promise} true if currently listening, otherwise false
      */
     async getNetworkListening(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
             return await this.provider.request({
@@ -142,7 +142,7 @@ export default class Web3Eth {
      * @returns {Promise} Number of connected peers
      */
     async getNetworkPeerCount(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -169,7 +169,7 @@ export default class Web3Eth {
      * @returns {Promise} The current ethereum protocol version
      */
     async getProtocolVersion(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -196,7 +196,7 @@ export default class Web3Eth {
      * @returns {Promise} Object with sync status data or false when not syncing
      */
     async getSyncing(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcSyncingResult> {
         try {
             const response = await this.provider.request({
@@ -228,7 +228,7 @@ export default class Web3Eth {
      * @returns {Promise} The current coinbase address
      */
     async getCoinbase(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -247,7 +247,7 @@ export default class Web3Eth {
      * @returns {Promise} true if the client is mining, otherwise false
      */
     async getMining(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
             return await this.provider.request({
@@ -266,7 +266,7 @@ export default class Web3Eth {
      * @returns {Promise} Number of hashes per second
      */
     async getHashRate(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -293,7 +293,7 @@ export default class Web3Eth {
      * @returns {Promise} Current gas price in wei
      */
     async getGasPrice(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -320,7 +320,7 @@ export default class Web3Eth {
      * @returns {Promise} Array of addresses owned by the client
      */
     async getAccounts(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcAccountsResult> {
         try {
             return await this.provider.request({
@@ -339,7 +339,7 @@ export default class Web3Eth {
      * @returns {Promise} Current block number client is on
      */
     async getBlockNumber(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -370,7 +370,7 @@ export default class Web3Eth {
     async getBalance(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -408,7 +408,7 @@ export default class Web3Eth {
         address: PrefixedHexString,
         storagePosition: ValidTypes,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -437,7 +437,7 @@ export default class Web3Eth {
     async getTransactionCount(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -471,7 +471,7 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByHash(
         blockHash: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -502,7 +502,7 @@ export default class Web3Eth {
      */
     async getBlockTransactionCountByNumber(
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -537,7 +537,7 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockHash(
         blockHash: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -568,7 +568,7 @@ export default class Web3Eth {
      */
     async getUncleCountByBlockNumber(
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -605,7 +605,7 @@ export default class Web3Eth {
     async getCode(
         address: PrefixedHexString,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -633,7 +633,7 @@ export default class Web3Eth {
     async sign(
         address: PrefixedHexString,
         message: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -654,7 +654,7 @@ export default class Web3Eth {
      */
     async signTransaction(
         transaction: EthTransaction,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -691,7 +691,7 @@ export default class Web3Eth {
      */
     async sendTransaction(
         transaction: EthTransaction,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -728,7 +728,7 @@ export default class Web3Eth {
      */
     async sendRawTransaction(
         rawTransaction: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -751,7 +751,7 @@ export default class Web3Eth {
     async call(
         transaction: EthCallTransaction,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcResponse> {
         try {
             return await this.provider.request({
@@ -790,7 +790,7 @@ export default class Web3Eth {
     async estimateGas(
         transaction: EthTransaction,
         blockIdentifier: BlockIdentifier,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -840,7 +840,7 @@ export default class Web3Eth {
     async getBlockByHash(
         blockHash: PrefixedHexString,
         returnFullTxs: boolean,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
             const response = await this.provider.request({
@@ -891,7 +891,7 @@ export default class Web3Eth {
     async getBlockByNumber(
         blockIdentifier: BlockIdentifier,
         returnFullTxs: boolean,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
             const response = await this.provider.request({
@@ -945,7 +945,7 @@ export default class Web3Eth {
      */
     async getTransactionByHash(
         txHash: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
             const response = await this.provider.request({
@@ -985,7 +985,7 @@ export default class Web3Eth {
     async getTransactionByBlockHashAndIndex(
         blockHash: PrefixedHexString,
         transactionIndex: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
             const response = await this.provider.request({
@@ -1027,7 +1027,7 @@ export default class Web3Eth {
     async getTransactionByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         transactionIndex: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionResult> {
         try {
             const response = await this.provider.request({
@@ -1074,7 +1074,7 @@ export default class Web3Eth {
      */
     async getTransactionReceipt(
         txHash: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcTransactionReceiptResult> {
         try {
             const response = await this.provider.request({
@@ -1119,7 +1119,7 @@ export default class Web3Eth {
     async getUncleByBlockHashAndIndex(
         blockHash: PrefixedHexString,
         uncleIndex: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
             const response = await this.provider.request({
@@ -1172,7 +1172,7 @@ export default class Web3Eth {
     async getUncleByBlockNumberAndIndex(
         blockIdentifier: BlockIdentifier,
         uncleIndex: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBlockResult> {
         try {
             const response = await this.provider.request({
@@ -1226,7 +1226,7 @@ export default class Web3Eth {
      * @returns {Promise} A list of available compilers
      */
     async getCompilers(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringArrayResult> {
         try {
             return await this.provider.request({
@@ -1247,7 +1247,7 @@ export default class Web3Eth {
      */
     async compileSolidity(
         sourceCode: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcCompiledSolidityResult> {
         try {
             return await this.provider.request({
@@ -1270,7 +1270,7 @@ export default class Web3Eth {
      */
     async compileLLL(
         sourceCode: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -1291,7 +1291,7 @@ export default class Web3Eth {
      */
     async compileSerpent(
         sourceCode: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcPrefixedHexStringResult> {
         try {
             return await this.provider.request({
@@ -1314,7 +1314,7 @@ export default class Web3Eth {
      */
     async newFilter(
         filter: EthFilter,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -1351,7 +1351,7 @@ export default class Web3Eth {
      * @returns {Promise} Filter id
      */
     async newBlockFilter(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -1378,7 +1378,7 @@ export default class Web3Eth {
      * @returns {Promise} Filter id
      */
     async newPendingTransactionFilter(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcValidTypeResult> {
         try {
             const response = await this.provider.request({
@@ -1409,7 +1409,7 @@ export default class Web3Eth {
      */
     async uninstallFilter(
         filterId: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
             return await this.provider.request({
@@ -1430,7 +1430,7 @@ export default class Web3Eth {
      */
     async getFilterChanges(
         filterId: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
             const response = await this.provider.request({
@@ -1460,7 +1460,7 @@ export default class Web3Eth {
      */
     async getFilterLogs(
         filterId: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
             const response = await this.provider.request({
@@ -1489,7 +1489,7 @@ export default class Web3Eth {
      */
     async getLogs(
         filter: EthFilter,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcLogResult> {
         try {
             const response = await this.provider.request({
@@ -1527,7 +1527,7 @@ export default class Web3Eth {
      * @returns {Promise} Array of work info (in order: current block header pow-hash, seed hash used for the DAG, and boundary condition (“target”), 2^256 / difficulty)
      */
     async getWork(
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcStringArrayResult> {
         try {
             return await this.provider.request({
@@ -1552,7 +1552,7 @@ export default class Web3Eth {
         nonce: ValidTypes,
         powHash: PrefixedHexString,
         digest: PrefixedHexString,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
             return await this.provider.request({
@@ -1575,7 +1575,7 @@ export default class Web3Eth {
     async submitHashRate(
         hashRate: ValidTypes,
         clientId: ValidTypes,
-        requestArguments?: Partial<RequestArguments>
+        requestArguments?: Partial<Eth1RequestArguments>
     ): Promise<RpcBooleanResult> {
         try {
             return await this.provider.request({
