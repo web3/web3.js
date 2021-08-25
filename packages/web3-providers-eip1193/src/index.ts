@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events';
 import {
-    IWeb3Provider,
     RpcResponse,
     Eth1RequestArguments,
     Web3ProviderEvents,
