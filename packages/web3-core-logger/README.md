@@ -28,16 +28,16 @@ yarn add web3-core-logger
 A package that utilizes `web3-core-logger` requires the following:
 
 -   `_version.ts` This specifies the version of the package you're adding the logger to
-    -   This is included an error messages
+    -   This is included in error messages
     -   File should look like:
-    ```javascript
+    ```typescript
     export default '1.0.0';
     ```
 -   `errors.ts` Config file the specifies errors related to your package
 
     -   Should look similar to:
 
-    ```javascript
+    ```typescript
     import { Web3Error, Web3PackageErrorConfig } from 'web3-core-logger/src/types';
     import packageVersion from './_version';
 
@@ -81,13 +81,13 @@ You should import the `enum` of error names that is specified in `errors.ts`, in
 To create an error using the logger, use the `Web3CoreLogger.makeError` method. The parameters for this method are:
 
 -   `web3ErrorName` This is one of names specified in the `enum` mentioned above
--   `errorDetails` An optional parameters that allows you to pass configurable details such as:
+-   `errorDetails` An optional parameter that allows you to pass configurable details such as:
     -   `reason` A `string` that you can add additional context to from the method that's creating the error
     -   `params` An `object` that specifies the name of parameters and the corresponding values that have been passed to the method creating the error
 
 Putting all this together looks like:
 
-```javascript
+```typescript
 import Web3CoreLogger from 'web3-core-logger';
 
 import {
@@ -133,8 +133,8 @@ export default class Web3ProvidersHttp {
 
 The above would produce an error message as such:
 
-```javascript
-loggerVersion: 1.0.0-alpha.0
+```typescript
+loggerVersion: 1.0.0
 packageName: web3-providers-http
 packageVersion: 4.0.0-alpha.0
 code: 1
