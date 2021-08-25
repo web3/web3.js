@@ -55,4 +55,6 @@ jobs:
 
             - run: yarn build
 
+            - run: yarn run ganache-cli
+
             - run: yarn test:unit
