@@ -96,6 +96,8 @@ export default class Web3ProvidersHttp
                 method: 'eth_chainId',
                 params: [],
             });
+            // @ts-ignore Will be removed in subsequent PR
+            // that removes EIP-1193 from this package
             return result.result;
         } catch (error) {
             throw Error(`Error getting chain id: ${error.message}`);
