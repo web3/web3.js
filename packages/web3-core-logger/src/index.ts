@@ -26,7 +26,7 @@ export default class Web3CoreLogger {
 
     /**
      * Creates an instace of Error using provided {web3ErrorName} and {errorDetails}
-     * 
+     *
      * @param web3ErrorName Name of error from {CoreErrors} or {Web3PackageErrorConfig}
      * @param errorDetails Additional details to include in error message
      * @returns Error instance
@@ -51,7 +51,7 @@ export default class Web3CoreLogger {
 
     /**
      * Creates a string with provided error parameters
-     * 
+     *
      * @param web3Error An object containing error details
      * @returns Error string
      */
