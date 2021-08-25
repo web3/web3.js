@@ -48,7 +48,8 @@ Batch.prototype.add = function (request) {
 Batch.prototype.execute = function () {
     var requests = this.requests;
     this.requestManager.sendBatch(requests, function (err, results) {
-        results = results.sort((a, b) => (a.id > b.id) ? 1 : -1) || [];
+        // Sort by ids as results may be returned out of order.
+        results = (results || []).sort((a, b) => (a.id > b.id) ? 1 : -1);
         requests.map(function (request, index) {
             return results[index] || {};
         }).forEach(function (result, index) {
