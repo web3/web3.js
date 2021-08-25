@@ -6,6 +6,7 @@ import {
 import Web3ProvidersHttp from 'web3-providers-http';
 import Web3ProvidersEip1193 from 'web3-providers-eip1193';
 import Web3CoreLogger from 'web3-core-logger';
+import Web3ProviderWS from 'web3-providers-ws';
 
 import {
     Web3CoreProviderErrorsConfig,
@@ -32,13 +33,7 @@ export default function initWeb3Provider(
             case ClientProtocol.HTTP:
                 return new Web3ProvidersHttp(web3Client as string);
             case ClientProtocol.WS:
-                // TODO
-                throw web3CoreLogger.makeError(
-                    Web3CoreProviderErrorNames.protocolNotImplemented,
-                    {
-                        params: { web3Client },
-                    }
-                );
+                return new Web3ProviderWS(web3Client as string);
             case ClientProtocol.IPC:
                 // TODO
                 throw web3CoreLogger.makeError(

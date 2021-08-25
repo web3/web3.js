@@ -1,7 +1,7 @@
 {
-    "name": "web3-core-provider",
-    "version": "1.0.0-alpha.0",
-    "description": "Initilizes and provides access to a Web3 Provider for Web3 4.x.x",
+    "name": "web3-eth2-beaconchain",
+    "version": "4.0.0-alpha.0",
+    "description": "Ethereum Web3 eth2 beacon class for Web3 4.x.x",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
@@ -19,6 +19,7 @@
         "test:unit": "jest ./test/unit"
     },
     "devDependencies": {
+        "@chainsafe/lodestar-types": "^0.26.0",
         "@types/jest": "^26.0.22",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
@@ -32,10 +33,7 @@
         "web3-core-types": "1.0.0-alpha.0"
     },
     "dependencies": {
-        "web3-providers-base": "1.0.0-alpha.1",
-        "web3-providers-http": "4.0.0-alpha.0",
-        "web3-providers-eip1193": "1.0.0-alpha.0",
-        "web3-core-logger": "1.0.0-alpha.0",
-        "web3-providers-ws": "4.0.0-alpha.0"
+        "web3-utils": "^4.0.0",
+        "web3-core-provider": "1.0.0-alpha.0"
     }
 }

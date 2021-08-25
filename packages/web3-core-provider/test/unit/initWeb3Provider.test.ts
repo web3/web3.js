@@ -1,12 +1,13 @@
 import {
     IWeb3Provider,
-    RequestArguments,
+    Eth1RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
     Eip1193Provider,
 } from 'web3-core-types/src/types';
 import Web3ProvidersHttp from 'web3-providers-http';
 import Web3LoggerVersion from 'web3-core-logger/src/_version';
+import Web3ProvidersWS from 'web3-providers-ws';
 
 import initWeb3Provider from '../../src/index';
 import Version from '../../src/_version';
@@ -14,7 +15,7 @@ import Version from '../../src/_version';
 describe('Instantiates correct provider for varying provided clients', () => {
     it('should instantiate Eip1193 provider', () => {
         const Eip1193Provider: Eip1193Provider = {
-            request: async (args: RequestArguments) => {
+            request: async (args: Eth1RequestArguments) => {
                 return {
                     id: 1,
                     jsonrpc: '2.0',
@@ -49,18 +50,15 @@ describe('Instantiates correct provider for varying provided clients', () => {
         expect(web3ProvidersHttp.supportsSubscriptions).not.toBe(undefined);
     });
 
-    it('should throw not implemented error for WebSocket client', () => {
-        expect(() => initWeb3Provider('ws://127.0.0.1:8545')).toThrowError(
-            [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-core-provider',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: protocolNotImplemented',
-                'msg: Detected protocol of provided web3Client is not implemented',
-                'params: {"web3Client":"ws://127.0.0.1:8545"}',
-            ].join('\n')
-        );
+    it('should instantiate WebSocket provider', () => {
+        const wsClient = 'ws://127.0.0.1:8545';
+        const Web3ProviderWS: IWeb3Provider = initWeb3Provider(wsClient);
+
+        expect(Web3ProviderWS.web3Client).toBe(wsClient);
+        expect(Web3ProviderWS.setWeb3Client).not.toBe(undefined);
+        expect(Web3ProviderWS.on).not.toBe(undefined);
+        expect(Web3ProviderWS.request).not.toBe(undefined);
+        expect(Web3ProviderWS.supportsSubscriptions).not.toBe(undefined);
     });
 
     it('should throw not implemented error for IPC client', () => {

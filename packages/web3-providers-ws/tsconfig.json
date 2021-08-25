@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.build.json",
+    "compilerOptions": {
+        /* Visit https://aka.ms/tsconfig.json to read more about this file */
+        "rootDir": "./src",
+        "outDir": "./lib",
+        "composite": true,
+        "tsBuildInfoFile": "./buildcache/tsconfig.tsbuildinfo"
+    },
+    "include": ["src"]
+}

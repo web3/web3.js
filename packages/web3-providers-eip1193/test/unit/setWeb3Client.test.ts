@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import {
     Eip1193Provider,
     ProviderEventListener,
-    RequestArguments,
+    Eth1RequestArguments,
     Web3ProviderEvents,
 } from 'web3-core-types/src/types';
 import Web3LoggerVersion from 'web3-core-logger/src/_version';
@@ -16,7 +16,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
 
     beforeAll(() => {
         eip1193Provider = {
-            request: async (args: RequestArguments) => {
+            request: async (args: Eth1RequestArguments) => {
                 return {
                     id: 1,
                     jsonrpc: '2.0',
@@ -39,7 +39,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             result: [],
         };
         web3ProvidersEip1193.setWeb3Client({
-            request: async (args: RequestArguments) => {
+            request: async (args: Eth1RequestArguments) => {
                 return expectedResponse;
             },
             on: (
@@ -77,7 +77,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
                 super();
             }
 
-            async request(args: RequestArguments) {
+            async request(args: Eth1RequestArguments) {
                 return {
                     id: 1,
                     jsonrpc: '2.0',
