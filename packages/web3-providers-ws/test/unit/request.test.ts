@@ -5,12 +5,12 @@ import Web3ProviderWS from '../../src/index';
 import { WebSocketOptions } from '../../src/types';
 import { doesNotMatch } from 'assert/strict';
 import {
-    RequestArguments,
+    Eth1RequestArguments,
     Web3ProviderEvents,
 } from 'web3-core-types/lib/types';
 
 describe('Web3ProvidersWS.request', () => {
-    const request: RequestArguments = {
+    const request: Eth1RequestArguments = {
         rpcOptions: { id: 1, jsonrpc: '2.0' },
         method: 'eth_blockNumber',
         params: [],

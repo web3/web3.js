@@ -1,6 +1,6 @@
 import {
     ProviderEventListener,
-    RequestArguments,
+    Eth1RequestArguments,
     Web3ProviderEvents,
 } from 'web3-core-types/src/types';
 
@@ -12,7 +12,7 @@ describe('Web3ProvidersEip1193.request', () => {
 
     beforeAll(() => {
         const eip1193Provider = {
-            request: async (args: RequestArguments) => {
+            request: async (args: Eth1RequestArguments) => {
                 return {
                     id: 1,
                     jsonrpc: '2.0',

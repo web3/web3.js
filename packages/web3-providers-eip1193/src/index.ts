@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import {
     IWeb3Provider,
     RpcResponse,
-    RequestArguments,
+    Eth1RequestArguments,
     Web3ProviderEvents,
     ProviderEventListener,
     Eip1193Provider,
@@ -76,7 +76,7 @@ export default class Web3ProvidersEip1193
      * @param args Request params
      * @returns RpcResponse
      */
-    async request(args: RequestArguments): Promise<RpcResponse> {
+    async request(args: Eth1RequestArguments): Promise<RpcResponse> {
         try {
             const arrayParams =
                 args.params === undefined || Array.isArray(args.params)
