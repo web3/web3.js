@@ -11,10 +11,10 @@ export default class Web3CoreLogger {
         this._errorsCollective = CoreErrors;
 
         // Check for name collisions
-        for (const errorName of Object.keys(CoreErrors)) {
-            if (packageErrorConfig.errors.hasOwnProperty(errorName))
+        for (const coreError of Object.keys(CoreErrors)) {
+            if (packageErrorConfig.errors.hasOwnProperty(coreError))
                 throw this.makeError(CoreErrorNames.duplicateErrorName, {
-                    params: { duplicateError: errorName },
+                    params: { duplicateError: coreError },
                 });
         }
 
