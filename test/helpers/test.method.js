@@ -70,6 +70,14 @@ var runTests = function (obj, method, tests) {
                         });
                     }
 
+                    if (test.call3) {
+                        provider.injectResult(clone(test.result3));
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.jsonrpc, '2.0');
+                            assert.equal(payload.method, test.call3);
+                            assert.deepEqual(payload.params, test.formattedArgs3 || []);
+                        });
+                    }
 
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
@@ -198,6 +206,14 @@ var runTests = function (obj, method, tests) {
                         });
                     }
 
+                    if (test.call3) {
+                        provider.injectResult(clone(test.result3));
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.jsonrpc, '2.0');
+                            assert.equal(payload.method, test.call3);
+                            assert.deepEqual(payload.params, test.formattedArgs3 || []);
+                        });
+                    }
 
                     var args = clone(test.args);
 
