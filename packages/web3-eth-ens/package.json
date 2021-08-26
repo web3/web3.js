@@ -26,6 +26,6 @@
     "devDependencies": {
         "dtslint": "^3.4.1",
         "typescript": "^3.9.5",
-        "web3-eth": "1.4.0"
+        "web3-eth": "1.5.2"
     }
 }
