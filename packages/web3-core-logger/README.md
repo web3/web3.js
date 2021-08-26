@@ -38,7 +38,10 @@ A package that utilizes `web3-core-logger` requires the following:
     -   Should look similar to:
 
     ```typescript
-    import { Web3Error, Web3PackageErrorConfig } from 'web3-core-logger/src/types';
+    import {
+        Web3Error,
+        Web3PackageErrorConfig,
+    } from 'web3-core-logger/src/types';
     import packageVersion from './_version';
 
     export enum Web3ProvidersHttpErrorNames {
@@ -51,27 +54,28 @@ A package that utilizes `web3-core-logger` requires the following:
         errors: Record<Web3ProvidersHttpErrorNames, Web3Error>;
     }
 
-    export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
-        packageName: 'web3-providers-http',
-        packageVersion,
-        errors: {
-            invalidClientUrl: {
-                code: 1,
-                name: 'invalidClientUrl',
-                msg: 'Provided web3Client is an invalid HTTP(S) URL',
+    export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig =
+        {
+            packageName: 'web3-providers-http',
+            packageVersion,
+            errors: {
+                invalidClientUrl: {
+                    code: 1,
+                    name: 'invalidClientUrl',
+                    msg: 'Provided web3Client is an invalid HTTP(S) URL',
+                },
+                noHttpClient: {
+                    code: 2,
+                    name: 'noHttpClient',
+                    msg: 'No HTTP client has be initialized',
+                },
+                connectionRefused: {
+                    code: 3,
+                    name: 'connectionRefused',
+                    msg: 'Unable to make connection with HTTP client',
+                },
             },
-            noHttpClient: {
-                code: 2,
-                name: 'noHttpClient',
-                msg: 'No HTTP client has be initialized',
-            },
-            connectionRefused: {
-                code: 3,
-                name: 'connectionRefused',
-                msg: 'Unable to make connection with HTTP client',
-            },
-        },
-    };
+        };
     ```
 
 ### Creating Errors
