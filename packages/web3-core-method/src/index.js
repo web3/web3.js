@@ -850,7 +850,10 @@ function _handleTxPricing(method, tx) {
                 getGasPrice()
             ]).then(responses => {
                 const [block, gasPrice] = responses;
-                if (block && block.baseFeePerGas) {
+                if (
+                    (tx.type === '0x2' || tx.type === undefined) &&
+                    (block && block.baseFeePerGas)
+                ) {
                     // The network supports EIP-1559
 
                     // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
