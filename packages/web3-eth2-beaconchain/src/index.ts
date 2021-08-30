@@ -1,6 +1,5 @@
 import initWeb3Provider from 'web3-core-provider';
 import {
-    StateId,
     Status,
     AttestationData,
     AttesterSlashing,
@@ -9,14 +8,17 @@ import {
     SyncCommittee,
     SignedVoluntaryExit,
     BeaconBlock,
-    BlockId,
+    BlockIdentifier,
+    StateIdentifier,
+    ValidatorIndex,
 } from './types';
 import {
     RpcStringResult,
     Eth2RequestArguments,
     IWeb3Provider,
 } from 'web3-core-types/lib/types';
-import { ValidTypesEnum } from 'web3-utils/lib/types';
+import { PrefixedHexString, ValidTypesEnum } from 'web3-utils/lib/types';
+import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
 
 export default class Web3Beacon {
     private _defaultReturnType: ValidTypesEnum;
@@ -49,13 +51,13 @@ export default class Web3Beacon {
 
     /**
      * Calculates HashTreeRoot for state with given stateId. If stateId is root, same value will be returned.
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} HashTreeRoot
      */
 
     async getStateRoot(
-        stateId: StateId,
+        stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -72,13 +74,13 @@ export default class Web3Beacon {
 
     /**
      * Returns Fork object for state with given stateId.
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A fork object
      */
 
     async getStateFork(
-        stateId: StateId,
+        stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -93,13 +95,13 @@ export default class Web3Beacon {
 
     /**
      * Get finality checkpoints for state with given 'stateId'. In case finality is not yet achieved, checkpoint should return epoch 0 and ZERO_HASH as root
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Returns finality checkpoints for state with given 'stateId'. If finality is not yet achieved, checkpoint should return epoch 0 and ZERO_HASH as root.
      */
 
     async getFinalityCheckpoints(
-        stateId: StateId,
+        stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -114,16 +116,16 @@ export default class Web3Beacon {
 
     /**
      * Get a list of validators from state
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix.
-     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @param {string[]} id (Optional) Array of ids, Either a hex string encoded public key (with 0x prefix) or validator index
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix.
+     * @param {PrefixedHexString | ValidatorIndex)[]} id (Optional) Array of ids, Either hex string encoded public key (with 0x prefix) or validator index
      * @param {Status} status (Optional) Validator status specification https://hackmd.io/ofFJ5gOmQpu1jjHilHbdQQ
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Array of the validators specified with balance, status and index
      */
 
     async getValidators(
-        stateId: StateId,
-        id?: string[],
+        stateId: StateIdentifier,
+        validatorId?: (PrefixedHexString | ValidatorIndex)[],
         status?: Status[],
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
@@ -131,7 +133,7 @@ export default class Web3Beacon {
             return await this.provider.request({
                 ...requestArguments,
                 endpoint: `states/${stateId}/validators`,
-                params: { id, status },
+                params: { validatorId, status },
             });
         } catch (error) {
             throw Error(`Error getting validators: ${error.message}`);
@@ -140,15 +142,15 @@ export default class Web3Beacon {
 
     /**
      * Get validator from state by id
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
-     * @param {string} validatorId Either hex string encoded public key or validator index
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, hex string encoded stateRoot with 0x prefix
+     * @param {PrefixedHexString | ValidatorIndex)[]} validatorId Either hex string encoded public key or validator index
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} A validator specificied by state and id or public key along with status and balance
      */
 
     async getValidatorById(
-        stateId: StateId,
-        validatorId: string,
+        stateId: StateIdentifier,
+        validatorId: PrefixedHexString | ValidatorIndex,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -163,22 +165,22 @@ export default class Web3Beacon {
 
     /**
      * Get Validator states from state
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot or hex string encoded stateRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @param {string[]} id (Optional) Array of either hex string encoded public keys or validator index
+     * @param {PrefixedHexString | ValidatorIndex)[]} validatorId (Optional) Array of either hex string encoded public keys or validator index
      * @returns {Promise} Returns filterable array of validators with their balance, status and index.
      */
 
     async getValidatorBalances(
-        stateId: StateId,
-        id?: string[],
+        stateId: StateIdentifier,
+        validatorId?: (PrefixedHexString | ValidatorIndex)[],
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
             return await this.provider.request({
                 ...requestArguments,
                 endpoint: `states/${stateId}/validator_balances`,
-                params: { id },
+                params: { validatorId },
             });
         } catch (error) {
             throw Error(`Error getting validator balance: ${error.message}`);
@@ -187,16 +189,16 @@ export default class Web3Beacon {
 
     /**
      * Get the committees for the given state
-     * @param {StateId} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, or hex string encoded stateRoot with 0x prefix
-     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
+     * @param {StateIdentifier} stateId State identifier, can be "head", "genesis", "finalized", "justified", slot, or hex string encoded stateRoot with 0x prefix
      * @param {string} epoch (Optional) A number
      * @param {string} index (Optional) committee index
      * @param {string} slot (Optional) A slot
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Comittees
      */
 
     async getCommittees(
-        stateId: string,
+        stateId: StateIdentifier,
         epoch?: string,
         index?: string,
         slot?: string,
@@ -215,14 +217,14 @@ export default class Web3Beacon {
 
     /**
      * Get the sync committees for the given state.
-     * @param {StateId} stateId State identifier Can be "head", "genesis", "finalized", "justified", slot, or hex string encoded stateRoot with 0x prefix
+     * @param {StateIdentifier} stateId State identifier Can be "head", "genesis", "finalized", "justified", slot, or hex string encoded stateRoot with 0x prefix
+     * @param {string} epoch a time
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @param {string} epoch a number
      * @returns {Promise} Sync committees
      */
 
     async getSyncCommittees(
-        stateId: StateId,
+        stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>,
         epoch?: string
     ): Promise<RpcStringResult> {
@@ -239,7 +241,7 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block headers matching given query. By default it will fetch current head slot blocks
-     * @param {string} slot a number
+     * @param {string} slot
      * @param {string} parentRoot parent root
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Block header
@@ -263,13 +265,13 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block header for given block id.
-     * @param {BlockId} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
+     * @param {BlockIdentifier} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Block header
      */
 
     async getBlockHeadersById(
-        blockId: BlockId,
+        blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -311,13 +313,13 @@ export default class Web3Beacon {
 
     /**
      * Returns the complete SignedBeaconBlock for a given block ID. Depending on the Accept header it can be returned either as JSON or SSZ-serialized bytes.
-     * @param {BlockId} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
+     * @param {BlockIdentifier} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} SignedBeaconBlock
      */
 
     async getBlock(
-        blockId: BlockId,
+        blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -332,13 +334,13 @@ export default class Web3Beacon {
 
     /**
      * Retrieves block root of beaconBlock
-     * @param {BlockId} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
+     * @param {BlockIdentifier} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} Block Root
      */
 
     async getBlockRoot(
-        blockId: BlockId,
+        blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -353,13 +355,13 @@ export default class Web3Beacon {
 
     /**
      * Retrieves attestation included in requested block.
-     * @param {BlockId} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
+     * @param {BlockIdentifier} blockId Block identifier, can be "head", "genesis", "finalized", slot or hex string encoded blockRoot with 0x prefix
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} SignedBeaconBlock
      */
 
     async getBlockAttestations(
-        blockId: BlockId,
+        blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<RpcStringResult> {
         try {
@@ -374,9 +376,9 @@ export default class Web3Beacon {
 
     /**
      *Get Attestations from operations pool
-     @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @param {string} slot (Optional) a number
      * @param {string} (Optional) comitteeIndex
+     * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} SignedBeaconBlock
      */
 

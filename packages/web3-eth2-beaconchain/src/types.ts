@@ -1,5 +1,9 @@
 import { altair, phase0 } from '@chainsafe/lodestar-types';
-import { ValidTypesEnum } from 'web3-utils/lib/types';
+import {
+    ValidTypesEnum,
+    ValidTypes,
+    PrefixedHexString,
+} from 'web3-utils/lib/types';
 
 export interface Web3EthOptions {
     web3Client: string;
@@ -30,10 +34,20 @@ export enum Status {
     Withdrawal = 'withdrawal',
 }
 
-export type BlockId = 'head' | 'genesis' | 'finalized' | string;
+// ValidTypes => number | PrefixedHexString | NumberString | BigInt;
+export type BlockIdentifier =
+    | 'head'
+    | 'genesis'
+    | 'finalized'
+    | Slot
+    | PrefixedHexString;
+export type StateIdentifier = BlockIdentifier | 'justified';
+export type ValidatorIndex = string;
+
 export type AttestationData = phase0.AttestationData;
 export type AttesterSlashing = phase0.AttesterSlashing;
 export type ProposerSlashing = phase0.ProposerSlashing;
 export type SyncCommittee = altair.SyncCommittee;
 export type SignedVoluntaryExit = altair.SignedVoluntaryExit;
 export type BeaconBlock = phase0.BeaconBlock;
+export type Slot = phase0.Slot;
