@@ -1,7 +1,7 @@
 {
     "name": "web3-core-logger",
     "version": "1.0.0-alpha.0",
-    "description": "Logging package for Web3 4.x.x",
+    "description": "Generic and configurable logger used within Web3",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",

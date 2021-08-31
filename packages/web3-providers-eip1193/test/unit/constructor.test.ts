@@ -31,15 +31,7 @@ describe('constructs a Web3ProvidersEip1193 instance with expected properties', 
             // @ts-ignore - Ignore invalid type
             new Web3ProvidersEip1193({});
         }).toThrowError(
-            [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-providers-eip1193',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidClient',
-                'msg: Provided web3Client is an invalid EIP-1193 client',
-                'params: {"web3Client":{}}',
-            ].join('\n')
+            `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-providers-eip1193","packageVersion":"${Version}","name":"invalidClient","msg":"Provided web3Client is an invalid EIP-1193 client","params":{"web3Client":{}}}`
         );
     });
 });

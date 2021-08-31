@@ -15,12 +15,10 @@ export const Web3UtilsErrorsConfig: Web3UtilsErrorsConfig = {
     packageVersion,
     errors: {
         invalidInput: {
-            code: 1,
             name: 'invalidInput',
             msg: 'Cannot convert provided input to prefiex hex string',
         },
         invalidDesiredType: {
-            code: 2,
             name: 'invalidDesiredType',
             msg: 'Desired type is not supported',
         },

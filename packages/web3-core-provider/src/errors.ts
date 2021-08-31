@@ -15,12 +15,10 @@ export const Web3CoreProviderErrorsConfig: Web3CoreProviderErrorsConfig = {
     packageVersion,
     errors: {
         protocolNotImplemented: {
-            code: 1,
             name: 'protocolNotImplemented',
             msg: 'Detected protocol of provided web3Client is not implemented',
         },
         protocolNotSupported: {
-            code: 2,
             name: 'protocolNotSupported',
             msg: 'Detected protocol of provided web3Client is not supported',
         },

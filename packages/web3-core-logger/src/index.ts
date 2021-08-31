@@ -57,52 +57,18 @@ export default class Web3CoreLogger {
      */
     private _makeErrorString(web3Error: Web3Error): string {
         try {
-            const errorPieces = [
-                `loggerVersion: ${packageVersion}`,
-                `packageName: ${this._packageErrorConfig.packageName}`,
-                `packageVersion: ${this._packageErrorConfig.packageVersion}`,
-            ];
-
-            for (const property in web3Error) {
-                const value = web3Error[property as keyof typeof web3Error];
-
-                let formattedValue;
-                if (typeof value === 'object' && value !== null) {
-                    try {
-                        formattedValue = `params: ${JSON.stringify(value)}`;
-                    } catch (error) {
-                        if (
-                            error.message ===
-                            'Do not know how to serialize a BigInt'
-                        ) {
-                            // JSON.stringify doesn't work with BigInts
-                            // so we check each property in value for type === 'bigint'
-                            // then cast to string, so we can call JSON.stringify successfully
-                            for (const key of Object.keys(value)) {
-                                if (typeof value[key] === 'bigint') {
-                                    value[key] = `${value[key].toString()}n`;
-                                }
-                            }
-
-                            formattedValue = `params: ${JSON.stringify(value)}`;
-                        } else {
-                            throw error;
-                        }
-                    }
-                } else {
-                    formattedValue = `${property}: ${value}`;
-                }
-
-                errorPieces.push(formattedValue);
+            const errorObject = {
+                loggerVersion: packageVersion,
+                packageName: this._packageErrorConfig.packageName,
+                packageVersion: this._packageErrorConfig.packageVersion,
+                ...web3Error
             }
 
-            const errorString = errorPieces.join('\n');
-            if (errorString === undefined)
-                this.makeError(CoreErrorNames.failedToCreateErrorString, {
-                    params: { errorPieces },
-                });
-
-            return errorString;
+            return JSON.stringify(errorObject, (key, value) => {
+                // JSON.stringify doesn't work with BigInts,
+                // so we manually convert BigInts to their string representation
+                return typeof value === "bigint" ? value.toString() + "n" : value
+            })
         } catch (error) {
             throw error;
         }

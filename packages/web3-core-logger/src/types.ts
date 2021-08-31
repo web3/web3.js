@@ -4,7 +4,6 @@ export interface Web3ErrorDetails {
 }
 
 export interface Web3Error extends Web3ErrorDetails {
-    readonly code: number;
     readonly name: string;
     readonly msg: string;
 }

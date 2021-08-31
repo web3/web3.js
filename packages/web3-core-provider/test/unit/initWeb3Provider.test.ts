@@ -66,29 +66,13 @@ describe('Instantiates correct provider for varying provided clients', () => {
 
     it('should throw not implemented error for IPC client', () => {
         expect(() => initWeb3Provider('ipc://geth.ipc')).toThrowError(
-            [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-core-provider',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: protocolNotImplemented',
-                'msg: Detected protocol of provided web3Client is not implemented',
-                'params: {"web3Client":"ipc://geth.ipc"}',
-            ].join('\n')
+            `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-core-provider","packageVersion":"${Version}","name":"protocolNotImplemented","msg":"Detected protocol of provided web3Client is not implemented","params":{"web3Client":"ipc://geth.ipc"}}`
         );
     });
 
     it('should throw protocol not support error', () => {
         expect(() => initWeb3Provider('foobar')).toThrowError(
-            [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-core-provider',
-                `packageVersion: ${Version}`,
-                'code: 2',
-                'name: protocolNotSupported',
-                'msg: Detected protocol of provided web3Client is not supported',
-                'params: {"web3Client":"foobar"}',
-            ].join('\n')
+            `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-core-provider","packageVersion":"${Version}","name":"protocolNotSupported","msg":"Detected protocol of provided web3Client is not supported","params":{"web3Client":"foobar"}}`
         );
     });
 });
