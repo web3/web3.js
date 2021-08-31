@@ -434,6 +434,12 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+## [1.5.3]
+
+### Fixed
+
+- Unable to send legacy transaction if network supported EIP-1559 (#4277w)
+
 ### Changed
 
 - ethers from 5.1.4 to 5.4.4 (#4231)
