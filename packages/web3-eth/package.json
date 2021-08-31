@@ -35,6 +35,6 @@
     "dependencies": {
         "web3-core-provider": "1.0.0-alpha.0",
         "web3-utils": "4.0.0-alpha.0",
-        "web3-core-eth-method": "1.0.0-alpha.0"
+        "web3-eth-rpcmethods": "1.0.0-alpha.0"
     }
 }

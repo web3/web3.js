@@ -2,12 +2,12 @@
   <img src="../../assets/logo/web3js.jpg" width="200" alt="web3.js" />
 </p>
 
-# web3.js - Web3 Core Ethereum Method
+# web3.js - Web3 Ethereum RPC Wrapper Methods
 
 ## Installation
 
 ```bash
-yarn add web3-core-eth-method
+yarn add web3-eth-rpcmethods
 ```
 
 ## Package.json Scripts

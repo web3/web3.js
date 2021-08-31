@@ -59,7 +59,7 @@ import {
     getWork,
     submitWork,
     submitHashRate,
-} from 'web3-core-eth-method';
+} from 'web3-eth-rpcmethods';
 
 import { Web3EthOptions, EthCallTransaction } from './types';
 

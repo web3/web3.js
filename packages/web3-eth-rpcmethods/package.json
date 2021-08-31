@@ -1,7 +1,7 @@
 {
-    "name": "web3-core-eth-method",
+    "name": "web3-eth-rpcmethods",
     "version": "1.0.0-alpha.0",
-    "description": "Wraps Ethereum JSON-RPC calls",
+    "description": "Functional methods that wrap Ethereum JSON-RPC calls",
     "main": "lib/index.js",
     "repository": "https://github.com/ChainSafe/web3.js",
     "author": "ChainSafe Systems",
