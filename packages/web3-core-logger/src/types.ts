@@ -15,5 +15,5 @@ export interface Web3PackageErrorConfig {
 }
 
 export interface Web3LoggerError extends Error {
-    isWeb3LoggerError: true
+    isWeb3LoggerError: true;
 }

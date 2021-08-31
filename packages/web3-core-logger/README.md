@@ -156,6 +156,6 @@ try {
         // Do something with object properties...
     }
 
-    throw error
+    throw error;
 }
 ```
