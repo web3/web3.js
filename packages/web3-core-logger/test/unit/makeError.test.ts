@@ -34,6 +34,7 @@ describe('Web3CoreLogger', () => {
                 `{"loggerVersion":"${Version}","packageName":"testPackage","packageVersion":"1.0.0","code":1,"name":"testError1","msg":"this is a test","reason":"this is a test reason","params":{"param1":"one","param2":{"param3":[1,2,4]}}}`
             )
         );
+        expect(error.isWeb3LoggerError).toBeTruthy();
     });
 
     it('should error with unsupportedError', () => {

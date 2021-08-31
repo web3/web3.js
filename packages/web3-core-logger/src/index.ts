@@ -1,5 +1,5 @@
 import { CoreErrors, CoreErrorNames } from './errors';
-import { Web3PackageErrorConfig, Web3Error, Web3ErrorDetails } from './types';
+import { Web3PackageErrorConfig, Web3Error, Web3ErrorDetails, Web3LoggerError } from './types';
 import packageVersion from './_version';
 
 export default class Web3CoreLogger {
@@ -31,19 +31,26 @@ export default class Web3CoreLogger {
      * @param errorDetails Additional details to include in error message
      * @returns Error instance
      */
-    makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
+    makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Web3LoggerError {
         try {
             if (!this._errorsCollective.hasOwnProperty(web3ErrorName))
                 throw this.makeError(CoreErrorNames.unsupportedError, {
                     params: { web3ErrorName, errorDetails },
                 });
 
-            return Error(
+            const error = Error(
                 this._makeErrorString({
                     ...this._errorsCollective[web3ErrorName],
                     ...errorDetails,
                 })
-            );
+            ) as Web3LoggerError;
+
+            // We're adding this to give users the ability to check if the error received
+            // in a try/catch is of this package before attempting to JSON.parse error.message.
+            // Without this, users would have to wrap JSON.parse(error.message) in a try/catch
+            // to handle an invalid JSON error when attempting to parse a standard JavaScript error
+            error.isWeb3LoggerError = true
+            return error
         } catch (error) {
             throw error;
         }

@@ -13,3 +13,7 @@ export interface Web3PackageErrorConfig {
     packageVersion: string;
     errors: Record<any, Web3Error>;
 }
+
+export interface Web3LoggerError extends Error {
+    isWeb3LoggerError: true
+}
