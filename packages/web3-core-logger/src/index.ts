@@ -61,14 +61,16 @@ export default class Web3CoreLogger {
                 loggerVersion: packageVersion,
                 packageName: this._packageErrorConfig.packageName,
                 packageVersion: this._packageErrorConfig.packageVersion,
-                ...web3Error
-            }
+                ...web3Error,
+            };
 
             return JSON.stringify(errorObject, (key, value) => {
                 // JSON.stringify doesn't work with BigInts,
                 // so we manually convert BigInts to their string representation
-                return typeof value === "bigint" ? value.toString() + "n" : value
-            })
+                return typeof value === 'bigint'
+                    ? value.toString() + 'n'
+                    : value;
+            });
         } catch (error) {
             throw error;
         }
