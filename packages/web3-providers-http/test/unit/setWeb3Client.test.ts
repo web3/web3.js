@@ -1,6 +1,8 @@
+import Web3LoggerVersion from 'web3-core-logger/src/_version';
 import { Web3ProviderEvents } from 'web3-core-types/src/types';
 
 import Web3ProvidersHttp from '../../src/index';
+import Version from '../../src/_version';
 
 describe('Web3ProvidersHttp.setWeb3Client', () => {
     const expectedChainId = '0x1';
@@ -38,15 +40,7 @@ describe('Web3ProvidersHttp.setWeb3Client', () => {
             // @ts-ignore - Ignore invalid type
             web3ProvidersHttp.setWeb3Client({});
         }).toThrowError(
-            [
-                'loggerVersion: 1.0.0-alpha.0',
-                'packageName: web3-providers-http',
-                'packageVersion: 4.0.0-alpha.0',
-                'code: 1',
-                'name: invalidClientUrl',
-                'msg: Provided web3Client is an invalid HTTP(S) URL',
-                'params: {"web3Client":{}}',
-            ].join('\n')
+            `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-providers-http","packageVersion":"${Version}","name":"invalidClientUrl","msg":"Provided web3Client is an invalid HTTP(S) URL","params":{"web3Client":{}}}`
         );
     });
 

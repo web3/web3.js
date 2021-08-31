@@ -60,17 +60,14 @@ A package that utilizes `web3-core-logger` requires the following:
             packageVersion,
             errors: {
                 invalidClientUrl: {
-                    code: 1,
                     name: 'invalidClientUrl',
                     msg: 'Provided web3Client is an invalid HTTP(S) URL',
                 },
                 noHttpClient: {
-                    code: 2,
                     name: 'noHttpClient',
                     msg: 'No HTTP client has be initialized',
                 },
                 connectionRefused: {
-                    code: 3,
                     name: 'connectionRefused',
                     msg: 'Unable to make connection with HTTP client',
                 },
@@ -135,14 +132,30 @@ export default class Web3ProvidersHttp {
 }
 ```
 
-The above would produce an error message as such:
+The above would produce a JSON stringified error object that looks like this when parsed:
 
 ```typescript
-loggerVersion: 1.0.0
-packageName: web3-providers-http
-packageVersion: 4.0.0-alpha.0
-code: 1
-name: invalidClientUrl
-msg: Provided web3Client is an invalid HTTP(S) URL
-params: {"web3Client":{}}
+{
+    "loggerVersion": "1.0.0"
+    "packageName": "web3-providers-http"
+    "packageVersion": "4.0.0-alpha.0"
+    "name": "invalidClientUrl"
+    "msg": "Provided web3Client is an invalid HTTP(S) URL"
+    "params": {"web3Client":{}}
+}
+```
+
+**NOTE** To parse error message, remember to access the `message` property on the `Error` object like so:
+
+```typescript
+try {
+    new Web3ProvidersHttp('notAValidUrl');
+} catch (error) {
+    if (error.isWeb3LoggerError) {
+        const web3Error = JSON.parse(error.message);
+        // Do something with object properties...
+    }
+
+    throw error;
+}
 ```

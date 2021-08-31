@@ -34,15 +34,7 @@ describe('constructs a Web3ProvidersHttp instance with expected properties', () 
             // @ts-ignore - Ignore invalid type
             new Web3ProvidersHttp({});
         }).toThrowError(
-            [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-providers-http',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidClientUrl',
-                'msg: Provided web3Client is an invalid HTTP(S) URL',
-                'params: {"web3Client":{}}',
-            ].join('\n')
+            `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-providers-http","packageVersion":"${Version}","name":"invalidClientUrl","msg":"Provided web3Client is an invalid HTTP(S) URL","params":{"web3Client":{}}}`
         );
     });
 

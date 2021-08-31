@@ -53,31 +53,13 @@ export const testConfig: TestConfig = {
         {
             input: -1,
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":-1}',
-                'reason: Cannot convert number less than 0',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":-1},"reason":"Cannot convert number less than 0"}`,
             inputType: ValidTypesEnum.Number,
         },
         {
             input: 4.2,
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":4.2}',
-                'reason: Cannot convert decimals',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":4.2},"reason":"Cannot convert decimals"}`,
             inputType: ValidTypesEnum.Number,
         },
         {
@@ -123,16 +105,7 @@ export const testConfig: TestConfig = {
         {
             input: '0xxyz',
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":"0xxyz"}',
-                'reason: Cannot convert arbitrary string',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":"0xxyz"},"reason":"Cannot convert arbitrary string"}`,
             inputType: ValidTypesEnum.PrefixedHexString,
         },
         {
@@ -168,31 +141,13 @@ export const testConfig: TestConfig = {
         {
             input: '-1',
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":"-1"}',
-                'reason: Cannot convert number less than 0',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":"-1"},"reason":"Cannot convert number less than 0"}`,
             inputType: ValidTypesEnum.NumberString,
         },
         {
             input: '4.2',
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":"4.2"}',
-                'reason: Cannot convert decimals',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":"4.2"},"reason":"Cannot convert decimals"}`,
             inputType: ValidTypesEnum.NumberString,
         },
         {
@@ -228,16 +183,7 @@ export const testConfig: TestConfig = {
         {
             input: BigInt(-1),
             shouldError: true,
-            errorMessage: [
-                `loggerVersion: ${Web3LoggerVersion}`,
-                'packageName: web3-utils',
-                `packageVersion: ${Version}`,
-                'code: 1',
-                'name: invalidInput',
-                'msg: Cannot convert provided input to prefiex hex string',
-                'params: {"input":"-1n"}',
-                'reason: Cannot convert number less than 0',
-            ].join('\n'),
+            errorMessage: `{"loggerVersion":"${Web3LoggerVersion}","packageName":"web3-utils","packageVersion":"${Version}","name":"invalidInput","msg":"Cannot convert provided input to prefiex hex string","params":{"input":"-1n"},"reason":"Cannot convert number less than 0"}`,
             inputType: ValidTypesEnum.BigInt,
         },
         {

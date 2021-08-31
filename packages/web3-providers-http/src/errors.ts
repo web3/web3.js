@@ -16,17 +16,14 @@ export const Web3ProvidersHttpErrorsConfig: Web3ProvidersHttpErrorsConfig = {
     packageVersion,
     errors: {
         invalidClientUrl: {
-            code: 1,
             name: 'invalidClientUrl',
             msg: 'Provided web3Client is an invalid HTTP(S) URL',
         },
         noHttpClient: {
-            code: 2,
             name: 'noHttpClient',
             msg: 'No HTTP client has be initialized',
         },
         connectionRefused: {
-            code: 3,
             name: 'connectionRefused',
             msg: 'Unable to make connection with HTTP client',
         },

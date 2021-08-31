@@ -1,5 +1,10 @@
 import { CoreErrors, CoreErrorNames } from './errors';
-import { Web3PackageErrorConfig, Web3Error, Web3ErrorDetails } from './types';
+import {
+    Web3PackageErrorConfig,
+    Web3Error,
+    Web3ErrorDetails,
+    Web3LoggerError,
+} from './types';
 import packageVersion from './_version';
 
 export default class Web3CoreLogger {
@@ -31,19 +36,29 @@ export default class Web3CoreLogger {
      * @param errorDetails Additional details to include in error message
      * @returns Error instance
      */
-    makeError(web3ErrorName: string, errorDetails?: Web3ErrorDetails): Error {
+    makeError(
+        web3ErrorName: string,
+        errorDetails?: Web3ErrorDetails
+    ): Web3LoggerError {
         try {
             if (!this._errorsCollective.hasOwnProperty(web3ErrorName))
                 throw this.makeError(CoreErrorNames.unsupportedError, {
                     params: { web3ErrorName, errorDetails },
                 });
 
-            return Error(
+            const error = Error(
                 this._makeErrorString({
                     ...this._errorsCollective[web3ErrorName],
                     ...errorDetails,
                 })
-            );
+            ) as Web3LoggerError;
+
+            // We're adding this to give users the ability to check if the error received
+            // in a try/catch is of this package before attempting to JSON.parse error.message.
+            // Without this, users would have to wrap JSON.parse(error.message) in a try/catch
+            // to handle an invalid JSON error when attempting to parse a standard JavaScript error
+            error.isWeb3LoggerError = true;
+            return error;
         } catch (error) {
             throw error;
         }
@@ -57,52 +72,20 @@ export default class Web3CoreLogger {
      */
     private _makeErrorString(web3Error: Web3Error): string {
         try {
-            const errorPieces = [
-                `loggerVersion: ${packageVersion}`,
-                `packageName: ${this._packageErrorConfig.packageName}`,
-                `packageVersion: ${this._packageErrorConfig.packageVersion}`,
-            ];
+            const errorObject = {
+                loggerVersion: packageVersion,
+                packageName: this._packageErrorConfig.packageName,
+                packageVersion: this._packageErrorConfig.packageVersion,
+                ...web3Error,
+            };
 
-            for (const property in web3Error) {
-                const value = web3Error[property as keyof typeof web3Error];
-
-                let formattedValue;
-                if (typeof value === 'object' && value !== null) {
-                    try {
-                        formattedValue = `params: ${JSON.stringify(value)}`;
-                    } catch (error) {
-                        if (
-                            error.message ===
-                            'Do not know how to serialize a BigInt'
-                        ) {
-                            // JSON.stringify doesn't work with BigInts
-                            // so we check each property in value for type === 'bigint'
-                            // then cast to string, so we can call JSON.stringify successfully
-                            for (const key of Object.keys(value)) {
-                                if (typeof value[key] === 'bigint') {
-                                    value[key] = `${value[key].toString()}n`;
-                                }
-                            }
-
-                            formattedValue = `params: ${JSON.stringify(value)}`;
-                        } else {
-                            throw error;
-                        }
-                    }
-                } else {
-                    formattedValue = `${property}: ${value}`;
-                }
-
-                errorPieces.push(formattedValue);
-            }
-
-            const errorString = errorPieces.join('\n');
-            if (errorString === undefined)
-                this.makeError(CoreErrorNames.failedToCreateErrorString, {
-                    params: { errorPieces },
-                });
-
-            return errorString;
+            return JSON.stringify(errorObject, (key, value) => {
+                // JSON.stringify doesn't work with BigInts,
+                // so we manually convert BigInts to their string representation
+                return typeof value === 'bigint'
+                    ? value.toString() + 'n'
+                    : value;
+            });
         } catch (error) {
             throw error;
         }
