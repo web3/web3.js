@@ -163,7 +163,7 @@ export default class Web3ProvidersHttp
             // to the client, and should emit accordingly (EIP-1193)
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
             if (this._connected === false) this._connectToClient();
-            return response.data.data ? response.data.data : response.data;
+            return response.data;
         } catch (error) {
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;
@@ -220,7 +220,7 @@ export default class Web3ProvidersHttp
      */
     async request(
         args: Eth1RequestArguments | Eth2RequestArguments
-    ): Promise<RpcResponse | Eth2RpcResponse> {
+    ): Promise<RpcResponse | AxiosResponse> {
         try {
             if (this._httpClient === undefined)
                 throw Error('No HTTP client initiliazed');
@@ -236,7 +236,7 @@ export default class Web3ProvidersHttp
             // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connect-1
             if (this._connected === false) this._connectToClient();
 
-            return response.data.data ? response.data.data : response.data;
+            return response;
         } catch (error) {
             if (error.code === 'ECONNREFUSED' && this._connected) {
                 this._connected = false;

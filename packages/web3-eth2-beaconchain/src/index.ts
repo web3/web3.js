@@ -16,6 +16,7 @@ import {
     RpcStringResult,
     Eth2RequestArguments,
     IWeb3Provider,
+    Eth2Result,
 } from 'web3-core-types/lib/types';
 import { PrefixedHexString, ValidTypesEnum } from 'web3-utils/lib/types';
 import { toHex, formatOutput, formatOutputObject } from 'web3-utils';
@@ -38,7 +39,7 @@ export default class Web3Beacon {
      */
     async getGenesis(
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -59,7 +60,7 @@ export default class Web3Beacon {
     async getStateRoot(
         stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -82,7 +83,7 @@ export default class Web3Beacon {
     async getStateFork(
         stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -103,7 +104,7 @@ export default class Web3Beacon {
     async getFinalityCheckpoints(
         stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -128,7 +129,7 @@ export default class Web3Beacon {
         validatorId?: (PrefixedHexString | ValidatorIndex)[],
         status?: Status[],
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -152,7 +153,7 @@ export default class Web3Beacon {
         stateId: StateIdentifier,
         validatorId: PrefixedHexString | ValidatorIndex,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -175,7 +176,7 @@ export default class Web3Beacon {
         stateId: StateIdentifier,
         validatorId?: (PrefixedHexString | ValidatorIndex)[],
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -203,7 +204,7 @@ export default class Web3Beacon {
         index?: string,
         slot?: string,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -227,7 +228,7 @@ export default class Web3Beacon {
         stateId: StateIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>,
         epoch?: string
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -251,7 +252,7 @@ export default class Web3Beacon {
         slot: string,
         parent_root: string,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -273,7 +274,7 @@ export default class Web3Beacon {
     async getBlockHeadersById(
         blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,

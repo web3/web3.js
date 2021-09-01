@@ -181,6 +181,11 @@ export interface RpcResponse {
 }
 
 export type Eth2RpcResponse = { [key: string]: any } | { [key: string]: any }[];
+export type Eth2Result = {
+    code?: number;
+    data?: object | object[];
+    message?: string;
+};
 
 export interface IWeb3Provider extends Eip1193Provider {
     web3Client: Web3Client;
