@@ -390,7 +390,7 @@ function _handleTxPricing(_this, tx) {
                             maxFeePerGas = tx.gasPrice;
                             delete tx.gasPrice;
                         } else {
-                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
                             maxFeePerGas = tx.maxFeePerGas ||
                                 utils.toHex(
                                     utils.toBN(block.baseFeePerGas)

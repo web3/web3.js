@@ -1460,7 +1460,7 @@ Parameters
     - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
     - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction. 
     - ``maxFeePerGas`` - ``Number|String|BN``: (optional, defaulted to ``(2 * block.baseFeePerGas) + maxPriorityFeePerGas``) The maximum fee per gas that the transaction is willing to pay in total
-    - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``1 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
+    - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``2.5 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
     - ``accessList`` - ``List of hexstrings`` (optional) a list of addresses and storage keys that the transaction plans to access
     - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
     - ``nonce`` - ``Number``: (optional) Integer of the nonce. This allows to overwrite your own pending transactions that use the same nonce.

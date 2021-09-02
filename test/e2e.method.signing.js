@@ -253,6 +253,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
             gas: web3.utils.toHex(21000),
             maxFeePerGas: '0x59682F00', // 1.5 Gwei
+            maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
             accessList: []
         };
 
