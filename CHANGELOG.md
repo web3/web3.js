@@ -438,7 +438,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
-- Unable to send legacy transaction if network supported EIP-1559 (#4277w)
+- Unable to send legacy transaction if network supported EIP-1559 (#4277)
 
 ### Changed
 
