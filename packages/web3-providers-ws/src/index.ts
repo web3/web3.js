@@ -317,7 +317,7 @@ export default class Web3ProviderWS
                 if (id && this.responseQueue.has(id)) {
                     let requestItem = this.responseQueue.get(id);
 
-                    this.emit(Web3ProviderEvents.Message, result, requestItem);
+                    this.emit(Web3ProviderEvents.Message, result );
 
                     this.responseQueue.delete(id);
                 }
