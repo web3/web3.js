@@ -9,7 +9,6 @@ describe('Web3ProviderWS Tests', () => {
     });
 
     test('should instantiate with valid client URL', async (done) => {
-
         let client = 'ws://127.0.0.1:8545';
         provider = new Web3ProviderWS(client);
         expect(provider.web3Client).toBe(client);
@@ -17,14 +16,15 @@ describe('Web3ProviderWS Tests', () => {
     });
 
     test('should create instance of Web3ProviderWS and call connect', async (done) => {
-
-        const connectFunc = jest.spyOn(Web3ProviderWS.prototype as any, 'connect');
-        connectFunc.mockImplementation(() => {  
+        const connectFunc = jest.spyOn(
+            Web3ProviderWS.prototype as any,
+            'connect'
+        );
+        connectFunc.mockImplementation(() => {
             done();
         });
 
         provider = new Web3ProviderWS('ws://127.0.0.1:8545');
         expect(connectFunc).toHaveBeenCalled();
     });
-
 });

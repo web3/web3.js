@@ -316,7 +316,7 @@ export default class Web3ProviderWS
                 }
 
                 if (id && this.responseQueue.has(id)) {
-                    this.emit(Web3ProviderEvents.Message, result );
+                    this.emit(Web3ProviderEvents.Message, result);
 
                     this.responseQueue.delete(id);
                 }
