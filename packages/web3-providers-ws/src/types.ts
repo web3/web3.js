@@ -33,9 +33,3 @@ export enum WSStatus {
     Reconnect = 'Reconnect ',
 }
 
-export interface JsonRpcResponse {
-    jsonrpc: string;
-    id: number;
-    result?: any;
-    error?: string;
-}
