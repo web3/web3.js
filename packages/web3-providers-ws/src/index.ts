@@ -6,6 +6,7 @@ import {
     Eth1RequestArguments,
     Web3Client,
     Web3ProviderEvents,
+    RpcResponse,
 } from 'web3-core-types/lib/types';
 
 export default class Web3ProviderWS
@@ -133,8 +134,8 @@ export default class Web3ProviderWS
      *
      * @returns {Array}
      */
-    private parseResponse(inData: string): any {
-        let returnValues: any = [];
+    private parseResponse(inData: string): RpcResponse[] {
+        let returnValues: RpcResponse[] = [];
 
         // DE-CHUNKER
         let dechunkedData = inData
@@ -144,14 +145,14 @@ export default class Web3ProviderWS
             .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
             .split('|--|');
 
-        dechunkedData.forEach((data: any) => {
+        dechunkedData.forEach((data: string) => {
             // prepend the last chunk
             if (this.lastChunk) data = this.lastChunk + data;
 
-            let result: any = null;
+            let result: RpcResponse;
 
             try {
-                result = JSON.parse(data);
+                result = JSON.parse(data) as RpcResponse;
             } catch (error) {
                 this.lastChunk = data;
 
@@ -315,8 +316,6 @@ export default class Web3ProviderWS
                 }
 
                 if (id && this.responseQueue.has(id)) {
-                    let requestItem = this.responseQueue.get(id);
-
                     this.emit(Web3ProviderEvents.Message, result );
 
                     this.responseQueue.delete(id);

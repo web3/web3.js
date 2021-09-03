@@ -177,7 +177,8 @@ export interface Eth2RequestArguments extends RequestArguments {
 export interface RpcResponse {
     id: number;
     jsonrpc: string;
-    result: any;
+    result?: any;
+    error?: any;
 }
 
 export type Eth2RpcResponse = { [key: string]: any } | { [key: string]: any }[];
