@@ -1,14 +1,12 @@
 import Web3ProvidersHttp from 'web3-providers-http';
-import { ValidTypesEnum } from 'web3-core-types/src/types';
 
-import Web3Eth from '../../src';
+import Web3Beacon from '../../src';
 import { testsNoParams } from './testConfig';
 
 for (const testNoParams of testsNoParams) {
     describe(testNoParams.name, () => {
         let web3ProvidersHttpRequestSpy: jest.SpyInstance;
-        let web3Eth: Web3Eth;
-
+        let web3Beacon: Web3Beacon;
         beforeAll(() => {
             const chainIdResult = {
                 id: 42,
@@ -27,21 +25,23 @@ for (const testNoParams of testsNoParams) {
             Web3ProvidersHttp.prototype.request.mockReturnValueOnce(
                 chainIdResult
             );
-            web3Eth = new Web3Eth({ web3Client: 'http://127.0.0.1:8545' });
+            web3Beacon = new Web3Beacon({
+                web3Client: 'http://127.0.0.1:8545',
+            });
         });
 
         it('should make request with expected requestArguments', async () => {
             // @ts-ignore mockReturnValueOnce added by jest
+
             Web3ProvidersHttp.prototype.request.mockReturnValueOnce(
                 testNoParams.expectedResult
             );
 
             // @ts-ignore
-            const result = await web3Eth[testNoParams.name]();
+            const result = await web3Beacon[testNoParams.name]();
             expect(result).toStrictEqual(testNoParams.expectedResult);
             expect(web3ProvidersHttpRequestSpy).toHaveBeenCalledWith({
-                method: testNoParams.method,
-                params: [],
+                endpoint: testNoParams.endpoint,
             });
         });
     });

@@ -13,7 +13,6 @@ import {
     ValidatorIndex,
 } from './types';
 import {
-    RpcStringResult,
     Eth2RequestArguments,
     IWeb3Provider,
     Eth2Result,
@@ -297,7 +296,7 @@ export default class Web3Beacon {
     async postBlock(
         signedBeaconBlock: BeaconBlock,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -322,7 +321,7 @@ export default class Web3Beacon {
     async getBlock(
         blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -343,7 +342,7 @@ export default class Web3Beacon {
     async getBlockRoot(
         blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -364,7 +363,7 @@ export default class Web3Beacon {
     async getBlockAttestations(
         blockId: BlockIdentifier,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -387,7 +386,7 @@ export default class Web3Beacon {
         slot?: String,
         comitteeIndex?: String,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -411,7 +410,7 @@ export default class Web3Beacon {
     async postPoolAttestations(
         attestation: AttestationData,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -434,7 +433,7 @@ export default class Web3Beacon {
 
     async getAttesterSlashings(
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -455,7 +454,7 @@ export default class Web3Beacon {
     async postAttesterSlashings(
         attesterSlashings: AttesterSlashing,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -478,7 +477,7 @@ export default class Web3Beacon {
 
     async getProposerSlashings(
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -499,7 +498,7 @@ export default class Web3Beacon {
     async postProposerSlashings(
         proposerSlashings: ProposerSlashing,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -524,7 +523,7 @@ export default class Web3Beacon {
     async postSyncCommittees(
         syncCommittee: SyncCommittee,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -547,7 +546,7 @@ export default class Web3Beacon {
 
     async getVoluntaryExits(
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
@@ -568,7 +567,7 @@ export default class Web3Beacon {
     async PostVoluntaryExits(
         signedVoluntaryExit: SignedVoluntaryExit,
         requestArguments?: Partial<Eth2RequestArguments>
-    ): Promise<RpcStringResult> {
+    ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
