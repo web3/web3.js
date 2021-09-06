@@ -154,8 +154,8 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
-    if (tx.common && tx.chainId) { //tx.common.chainId is not optional in tx.common so only checking tx.common
-        error = new Error('Please provide the @ethereumjs/common.chainId object or the chainId property but not both together.');
+    if (!isNot(tx.common) && !isNot(tx.common.customChain.chainId) && !isNot(tx.chainId) && tx.chainId !== tx.common.customChain.chainId) {
+        error = new Error('Chain Id doesnt match in tx.chainId tx.common.customChain.chainId');
 
         callback(error);
         return Promise.reject(error);
@@ -271,18 +271,18 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        (isNot(tx.common.chainId) ? ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId) : undefined ),
+        ((isNot(tx.common) || isNot(tx.common.customChain.chainId)) ? ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId) : undefined ), //tx.common.customChain.chainId is not optional inside tx.common if tx.common is provided
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
         _handleTxPricing(_this, tx)
     ]).then(function(args) {
-        if ( (isNot(args[0]) && isNot(tx.common.chainId)) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+        if ( (isNot(args[0]) && isNot(tx.common) && isNot(tx.common.customChain.chainId)) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-    
+
     return signed({
             ...tx,
-            ... (isNot(tx.common.chainId) ? {chainId: args[0]}:{}), // if common.chainId is provided no need to add tx.chainId
+            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: args[0]}:{}), // if common.chainId is provided no need to add tx.chainId
             nonce: args[1],
             networkId: args[2],
             ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
