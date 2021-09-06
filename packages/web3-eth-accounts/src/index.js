@@ -282,7 +282,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     return signed({
             ...tx,
-            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: args[0]}:{}), // if common.chainId is provided no need to add tx.chainId
+            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: args[0]}:{}), // if common.customChain.chainId is provided no need to add tx.chainId
             nonce: args[1],
             networkId: args[2],
             ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
