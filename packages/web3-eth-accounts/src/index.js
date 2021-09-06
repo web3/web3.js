@@ -154,6 +154,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
+    if (tx.common && tx.chainId) { //tx.common.chainId is not optional in tx.common so only checking tx.common
+        error = new Error('Please provide the @ethereumjs/common.chainId object or the chainId property but not both together.');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
     function signed(tx) {
         const error = _validateTransactionForSigning(tx);
 
@@ -264,18 +271,18 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
+        (isNot(tx.common.chainId) ? ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId) : undefined ),
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
         _handleTxPricing(_this, tx)
     ]).then(function(args) {
-        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+        if ( (isNot(args[0]) && isNot(tx.common.chainId)) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
     
     return signed({
             ...tx,
-            chainId: args[0],
+            ... (isNot(tx.common.chainId) ? {chainId: args[0]}:{}), // if common.chainId is provided no need to add tx.chainId
             nonce: args[1],
             networkId: args[2],
             ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
