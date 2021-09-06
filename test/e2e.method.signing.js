@@ -280,7 +280,13 @@ describe('transaction and message signing [ @E2E ]', function() {
             gasLimit: web3.utils.toHex(21000),
             gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
             chain: "ropsten",
-            common: {},
+            common: {
+                customChain: {
+                name: 'custom-network',
+                networkId: 1,
+                chainId: 1,
+                }
+            },
             hardfork: "istanbul"
         };
 
