@@ -878,16 +878,10 @@ describe("eth", function () {
                 });
                 
 
-                it("signTransaction will call for chainId", function(done) {
+                it("signTransaction should not call for chainId if common.customChain.chainId provided", function(done) {
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
-                    provider.injectResult(1);
-                    provider.injectValidation(function (payload) {
-                        assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'eth_chainId');
-                        assert.deepEqual(payload.params, []);
-                    });
                     provider.injectResult(
                         test.transaction.common.hardfork === 'london' ?
                         postEip1559Block:
