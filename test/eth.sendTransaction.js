@@ -52,19 +52,25 @@ var tests = [{
             }
         }
     },
-    call: 'eth_gasPrice',
-    formattedArgs: [],
     result: '0x1234567',
     formattedResult: '0x1234567',
 
-    call2: 'eth_'+ method,
-    formattedArgs2: [{
+    call: 'eth_getBlockByNumber',
+    formattedArgs: ['latest', false],
+
+    call2: 'eth_gasPrice',
+    formattedArgs2: [],
+    result2: '0x1234567',
+    formattedResult2: '0x1234567',
+
+    call3: 'eth_'+ method,
+    formattedArgs3: [{
         from: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         value: "0x11f71f76bb1",
         gasPrice: "0x1234567"
     }],
-    result2: '0x1234567'
+    result3: '0x1234567'
 },{
     args: [{
         from: '0XDBDBDB2CBD23B783741E8D7FCF51E459B497E4A6',
@@ -249,6 +255,15 @@ describe(method, function () {
                 });
             }
 
+            if (test.call3) {
+                provider.injectResult(clone(test.result3));
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, test.call3);
+                    assert.deepEqual(payload.params, test.formattedArgs3 || []);
+                });
+            }
+
             provider.injectResult(null);
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
@@ -331,7 +346,15 @@ describe(method, function () {
                     assert.deepEqual(payload.params, test.formattedArgs2 || []);
                 });
             }
-
+            
+            if (test.call3) {
+                provider.injectResult(clone(test.result3));
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, test.call3);
+                    assert.deepEqual(payload.params, test.formattedArgs3 || []);
+                });
+            }
 
             provider.injectResult(null);
             provider.injectValidation(function (payload) {

@@ -8,7 +8,7 @@ web3.bzz
 
 
 The ``web3-bzz`` package allows you to interact with swarm, the decentralized file store.
-For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
+For more see the `Swarm Docs <https://docs.ethswarm.org/docs/>`_.
 
 
 .. code-block:: javascript

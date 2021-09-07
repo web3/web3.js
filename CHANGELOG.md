@@ -383,6 +383,61 @@ Released with 1.0.0-beta.37 code base.
 
 - Accidental commit (yarn-error.log) (#4062)
 
+## [1.4.0]
+
+### Added
+
+- Berlin Transaction Support (#4083)
+- When signing a transaction, common object now defaults to berlin instead of petersburg
+
+### Changed
+
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
+
+## [1.4.1]
+
+### Removes
+
+- Removing the underscore package 
+
+## [1.5.0]
+
+### Added
+
+- London transaction support (#4155)
+- RPC support `eth_feehistory` call (#4191)
+- Add `toNumber` method to `web3.utils` (#4191)
+
+### Changed
+ - Grammar fix (#4088) and updated Swarm (#4151)and Whisper doc links (#4170)
+ - Removed deprecation notice for HttpProvider (#4008)
+ - Nonce added to send options in documentation and types (#4052)
+ - Updated Solidity example to modern syntax (#4147)
+ - Changing web3 connection example from lets to const (#3967)
+ - Updated the documentation for the transaction object to include EIP-2718 and EIP-1559 options (#4188)
+
+## [1.5.1]
+
+### Added
+
+- `maxPriorityFeePerGas` and `maxFeePerGas` now included in `_txInputFormatter` (#4217)
+- If `maxPriorityFeePerGas` of `maxFeePerGas` present `_txInputFormatter` deletes `tx.gasPrice` (fixes #4211) (#4217)
+- Add block tag support (e.g. `latest`, `pending`, `earliest`) to `getFeeHistory` (#4224)
+- Support for EIP-1559 to `web3.eth.sendTransaction` (#4220)
+
+## [1.5.2]
+
+### Fixed
+
+- Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
+- `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
+
 ## [Unreleased]
 
-## [1.3.7]
+### Changed
+
+- ethers from 5.1.4 to 5.4.4 (#4231)
+- karma from 5.2.3 to 6.3.4 (#4231)
+- lerna from 3.22.1 to 4.0.0 (#4231)
+- Dropped build tests in CI for Node v8 and v10, and added support for Node v14
+- Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
