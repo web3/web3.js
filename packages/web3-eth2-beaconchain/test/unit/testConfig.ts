@@ -9,188 +9,190 @@ export const testsNoParams = [
             endpoint: 'genesis',
         },
     },
-    // {
-    //     name: 'getStateRoot',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getStateFork',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getFinalityCheckpoints',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getValidators',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getValidatorById',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getValidatorBalances',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getCommittees',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getSyncCommittees',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getBlockHeaders',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getBlockHeadersById',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
+    {
+        name: 'getVoluntaryExits',
+        endpoint: 'pool/voluntary_exits',
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getProposerSlashings',
+        endpoint: 'pool/proposer_slashings',
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getAttesterSlashings',
+        endpoint: 'pool/attester_slashings',
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+];
+
+export const testsHasParams = [
+    //need to test default params and required params, get eth2 expected results filled
+    {
+        name: 'getStateRoot',
+        endpoint: 'states/head/root',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getStateFork',
+        endpoint: 'states/head/fork',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getValidatorById',
+        endpoint: `states/head/validators/1`,
+        params: ['head', 1],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getFinalityCheckpoints',
+        endpoint: `states/head/finality_checkpoints`,
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    }, // need to test multiple parameters and optional parameters
+    {
+        name: 'getBlockHeadersById',
+        endpoint: 'headers/head',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getBlock',
+        endpoint: 'blocks/head',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getBlockRoot',
+        endpoint: 'blocks/head/root',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getBlockAttestations',
+        endpoint: 'blocks/head/attestations',
+        params: ['head'],
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getValidators',
+        endpoint: 'states/head/validators',
+        params: ['head', 1, 'active'],
+        expectedParams: {
+            status: 'active',
+            validatorId: 1,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getValidators',
+        endpoint: 'states/head/validators',
+        params: ['head'],
+        expectedParams: {
+            status: undefined,
+            validatorId: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getValidatorBalances',
+        endpoint: 'states/head/validator_balances',
+        params: ['head'],
+        expectedParams: {
+            id: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getCommittees',
+        endpoint: 'states/head/committees',
+        params: ['head'],
+        expectedParams: {
+            epoch: undefined,
+            index: undefined,
+            slot: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getSyncCommittees',
+        endpoint: 'states/head/sync_committees',
+        params: ['head'],
+        expectedParams: {
+            epoch: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
+    {
+        name: 'getBlockHeaders',
+        endpoint: 'headers',
+        params: [],
+        expectedParams: {
+            slot: undefined,
+            parentRoot: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
     // {
     //     name: 'postBlock',
-    //     method: 'genesis',
+    //     endpoint: 'blocks',
+    //     params: ['beacon'],
+    //     expectedParams: {
+    //         params: {signedBeaconBlock: 'beacon' },
+    //         providerOptions: {
+    //             httpMethod: 'post',
+    //         },
+    //     },
     //     expectedResult: {
     //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
     //     },
     // },
-    // {
-    //     name: 'getBlock',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getBlockRoot',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getBlockAttestations',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getPoolAttestations',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'postPoolAttestations',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getAttesterSlashings',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'postAttesterSlashings',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getProposerSlashings',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'postProposerSlashings',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'postSyncCommittees',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'getVoluntaryExits',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
-    // {
-    //     name: 'PostVoluntaryExits',
-    //     method: 'genesis',
-    //     expectedResult: {
-    //         ...baseExpectedResult,
-    //         result: 'Mist/v0.9.3/darwin/go1.4.1',
-    //     },
-    // },
+    {
+        name: 'getPoolAttestations',
+        endpoint: 'pool/attestations',
+        params: [],
+        expectedParams: {
+            slot: undefined,
+            committeeIndex: undefined,
+        },
+        expectedResult: {
+            ...baseExpectedResult,
+        },
+    },
 ];

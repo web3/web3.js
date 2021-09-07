@@ -194,7 +194,7 @@ export default class Web3Beacon {
      * @param {string} index (Optional) committee index
      * @param {string} slot (Optional) A slot
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
-     * @returns {Promise} Comittees
+     * @returns {Promise} Committees
      */
 
     async getCommittees(
@@ -207,7 +207,7 @@ export default class Web3Beacon {
         try {
             return await this.provider.request({
                 ...requestArguments,
-                endpoint: `states/${stateId}/committee`,
+                endpoint: `states/${stateId}/committees`,
                 params: { epoch, index, slot },
             });
         } catch (error) {
@@ -249,14 +249,14 @@ export default class Web3Beacon {
 
     async getBlockHeaders(
         slot: string,
-        parent_root: string,
+        parentRoot: string,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
                 endpoint: 'headers',
-                params: { slot, parent_root },
+                params: { slot, parentRoot },
             });
         } catch (error) {
             throw Error(`Error getting client version: ${error.message}`);
