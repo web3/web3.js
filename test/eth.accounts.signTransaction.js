@@ -614,6 +614,7 @@ var tests = [
             chainId: 1,
             nonce: 0,
             gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
             gasLimit: '0x6A40',
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -636,6 +637,7 @@ var tests = [
             chainId: 1,
             nonce: 0,
             gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
             gasLimit: '0x6A40',
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -757,6 +759,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -789,6 +792,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -828,6 +832,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -868,6 +873,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
                 
@@ -909,6 +915,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -955,6 +962,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -1016,6 +1024,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -1044,6 +1053,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     })
                 });
             }
