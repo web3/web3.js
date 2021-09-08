@@ -271,7 +271,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        ((isNot(tx.common) || isNot(tx.common.customChain.chainId)) ? ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId) : undefined ), //tx.common.customChain.chainId is not optional inside tx.common if tx.common is provided
+        ((isNot(tx.common) || isNot(tx.common.customChain.chainId)) ? //tx.common.customChain.chainId is not optional inside tx.common if tx.common is provided
+            ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId) 
+            : undefined ), 
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
         _handleTxPricing(_this, tx)
