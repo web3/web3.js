@@ -441,3 +441,4 @@ Released with 1.0.0-beta.37 code base.
 - lerna from 3.22.1 to 4.0.0 (#4231)
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
+- Emit subscription id with connect event when creating a subscription (#4300)
