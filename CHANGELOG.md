@@ -165,7 +165,6 @@ Released with 1.0.0-beta.37 code base.
 - Add missing subscription.on('connected') TS type definition (#3319)
 - Add missing bignumber.js dependency for TS types (#3386)
 - Upgrade swarm-js to 0.1.40 to remove npm vulnerability warning (#3399)
-- Fixed misleading error thrown on XMLHTTP request error
 - Upgrade devDeps to resolve security warnings (#3464)
   - dtslint 0.4.2 => 3.4.1
   - definitelytyped-header-parser 1.0.1 => 3.9.0
@@ -442,3 +441,4 @@ Released with 1.0.0-beta.37 code base.
 - lerna from 3.22.1 to 4.0.0 (#4231)
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
+- Fixed misleading error thrown on XMLHTTP request error (#4298)
