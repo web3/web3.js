@@ -1,7 +1,7 @@
 import initWeb3Provider from 'web3-core-provider';
 import {
     Status,
-    AttestationData,
+    Attestation,
     AttesterSlashing,
     Web3EthOptions,
     ProposerSlashing,
@@ -402,19 +402,19 @@ export default class Web3Beacon {
 
     /**
      * Submit Attestation objects to node
-     * @param {AttestationData} attestation
+     * @param {Attestation} attestation
      * @param {object} requestArguments (Optional) rpcOptions, providerOptions, and desired returnType rpcOptions, providerOptions, and desired returnType
      * @returns {Promise} returns a response code
      */
 
     async postPoolAttestations(
-        attestation: AttestationData,
+        attestation: Attestation,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<Eth2Result> {
         try {
             return await this.provider.request({
                 ...requestArguments,
-                endpoint: '`pool/attestations`',
+                endpoint: 'pool/attestations',
                 params: attestation,
                 providerOptions: {
                     httpMethod: 'post',
@@ -564,7 +564,7 @@ export default class Web3Beacon {
      * @returns {Promise} returns a response code
      */
 
-    async PostVoluntaryExits(
+    async postVoluntaryExits(
         signedVoluntaryExit: SignedVoluntaryExit,
         requestArguments?: Partial<Eth2RequestArguments>
     ): Promise<Eth2Result> {

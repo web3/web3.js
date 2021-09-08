@@ -48,6 +48,7 @@ for (const testHasParams of testsHasParams) {
             expect(web3ProvidersHttpRequestSpy).toHaveBeenCalledWith({
                 endpoint: testHasParams.endpoint,
                 params: testHasParams.expectedParams,
+                providerOptions: testHasParams.providerOptions,
             });
         });
     });

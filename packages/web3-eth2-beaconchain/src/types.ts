@@ -44,7 +44,7 @@ export type BlockIdentifier =
 export type StateIdentifier = BlockIdentifier | 'justified';
 export type ValidatorIndex = string;
 
-export type AttestationData = phase0.AttestationData;
+export type Attestation = phase0.Attestation;
 export type AttesterSlashing = phase0.AttesterSlashing;
 export type ProposerSlashing = phase0.ProposerSlashing;
 export type SyncCommittee = altair.SyncCommittee;
