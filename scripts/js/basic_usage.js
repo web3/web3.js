@@ -57,7 +57,15 @@ async function main(){
   log('>>>>>>');
 
   // WebSockets
-  web3 = new Web3(process.env.INFURA_WSS);
+  web3 = new Web3(
+    process.env.INFURA_WSS,
+    {
+      clientConfig: {
+        maxReceivedFrameSize: 100000000,
+        maxReceivedMessageSize: 100000000,
+      }
+    }
+  );
   block = await getBlockWithRetry(web3);
   web3.currentProvider.disconnect();
   log(util.inspect(block));
