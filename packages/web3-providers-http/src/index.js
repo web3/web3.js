@@ -97,7 +97,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     var request = this._prepareRequest();
 
     request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
+        if (request.readyState === 4 && request.timeout !== 1 && (request.status >= 200 && request.status < 300)) {
             var result = request.responseText;
             var error = null;
 
@@ -112,6 +112,16 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
     };
 
+	//since XHR2._onHttpRequestError swallows the initial request error, we need to get it from the underlying request
+	request.addEventListener('loadstart', function() {
+		var clientRequest = request._request;
+		if (clientRequest) {
+			clientRequest.on('error', function (error) {
+				callback(error || errors.RequestFailed());
+			});
+		}		
+	});
+
     request.ontimeout = function() {
         _this.connected = false;
         callback(errors.ConnectionTimeout(this.timeout));
@@ -121,7 +131,7 @@ HttpProvider.prototype.send = function (payload, callback) {
         request.send(JSON.stringify(payload));
     } catch(error) {
         this.connected = false;
-        callback(errors.InvalidConnection(this.host));
+        callback(errors.InvalidConnection(this.host, { code: 'ECONNREFUSED', reason: 'ECONNREFUSED' }));
     }
 };
 
