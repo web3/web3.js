@@ -77,12 +77,13 @@ describe('web3', function () {
                                 count++;
                         });
 
+                        const params = property.params === 2 ? ['0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', 'latest'] : [];
                         if(test.property) {
                             assert.isFunction(web3[test.property][property.name]);
-                            web3[test.property][property.name]();
+                            web3[test.property][property.name].apply(web3, params);
                         } else {
                             assert.isFunction(web3[property.name]);
-                            web3[property.name]();
+                            web3[property.name].apply(web3, params);
                         }
                     });
                 }

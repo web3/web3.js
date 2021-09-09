@@ -24,7 +24,9 @@ var errorTests = [
     '0x11f4d0a3c12e86B4b5F39b213f7E19D048276DAe',
     {},
     [],
-    ''
+    '',
+    undefined,
+    null,
 ];
 
 describe('formatters', function () {
