@@ -154,6 +154,20 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
+    if (!isNot(tx.common) && isNot(tx.common.customChain)) {
+        error = new Error('If tx.common is provided it must have tx.common.customChain');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
+    if (!isNot(tx.common) && isNot(tx.common.customChain.chainId)) {
+        error = new Error('If tx.common is provided it must have tx.common.customChain and tx.common.customChain.chainId');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
     if (!isNot(tx.common) && !isNot(tx.common.customChain.chainId) && !isNot(tx.chainId) && tx.chainId !== tx.common.customChain.chainId) {
         error = new Error('Chain Id doesnt match in tx.chainId tx.common.customChain.chainId');
 
