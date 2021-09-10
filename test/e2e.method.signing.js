@@ -582,7 +582,7 @@ describe('transaction and message signing [ @E2E ]', function() {
                 networkId: networkId,
                 chainId: chainId,
             },
-            harfork: 'petersburg',
+            hardfork: 'petersburg',
         };
 
         const txObject = {
