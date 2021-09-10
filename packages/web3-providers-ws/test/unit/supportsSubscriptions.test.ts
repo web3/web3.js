@@ -6,5 +6,4 @@ describe('web3ProvidersWS.supportsSubscriptions', () => {
         const web3ProvidersWS = new Web3ProviderWS('ws://127.0.0.1:8546');
         expect(web3ProvidersWS.supportsSubscriptions()).toEqual(true);
     });
-
 });
