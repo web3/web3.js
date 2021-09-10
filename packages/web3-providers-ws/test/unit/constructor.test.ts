@@ -17,7 +17,7 @@ describe('Web3ProviderWS Tests', () => {
 
     test('should create instance of Web3ProviderWS and call connect', async (done) => {
         const connectFunc = jest.spyOn(
-            Web3ProviderWS.prototype as any,
+            Web3ProviderWS.prototype,
             'connect'
         );
         connectFunc.mockImplementation(() => {
