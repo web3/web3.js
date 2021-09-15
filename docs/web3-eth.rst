@@ -375,6 +375,40 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-contract-blockHeaderTimeout:
+
+blockHeaderTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.blockHeaderTimeout
+    contract.blockHeaderTimeout // on contract instance
+
+The ``blockHeaderTimeout`` is used over socket-based connections. This option defines the amount seconds it should wait for "newBlockHeaders" event before falling back to polling to fetch transaction receipt.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of blockHeaderTimeout (default: 5 seconds)
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.blockHeaderTimeout;
+    > 5
+
+    // set the transaction confirmations blocks
+    web3.eth.blockHeaderTimeout = 10;
+
+
+------------------------------------------------------------------------------
+
 .. _web3-module-transactionconfirmationblocks:
 
 transactionConfirmationBlocks
