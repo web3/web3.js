@@ -249,9 +249,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var result = {
                 messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
-                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
-                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
-                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
+                v: '0x' + signedTx.v.toString('hex'),
+                r: '0x' + signedTx.r.toString('hex'),
+                s: '0x' + signedTx.s.toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };

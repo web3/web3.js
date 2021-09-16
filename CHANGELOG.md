@@ -434,6 +434,12 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+## [1.5.3]
+
+### Fixed
+
+- Unable to send legacy transaction if network supported EIP-1559 (#4277)
+
 ### Changed
 
 - ethers from 5.1.4 to 5.4.4 (#4231)
@@ -441,4 +447,10 @@ Released with 1.0.0-beta.37 code base.
 - lerna from 3.22.1 to 4.0.0 (#4231)
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
+- Fixed bug in signTransaction (#4295) 
+
+## [Unreleased]
+
+### Changed
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
+
