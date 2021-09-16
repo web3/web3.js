@@ -228,9 +228,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var result = {
                 messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
-                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
-                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
-                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
+                v: '0x' + signedTx.v.toString('hex'),
+                r: '0x' + signedTx.r.toString('hex'),
+                s: '0x' + signedTx.s.toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -331,8 +331,6 @@ function _handleTxType(tx) {
         txType = utils.toHex(tx.type)
     } else if (tx.type === undefined && hasEip1559) {
         txType = '0x2'
-    } else {
-        txType = '0x0'
     }
 
     if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
@@ -364,7 +362,10 @@ function _handleTxType(tx) {
 function _handleTxPricing(_this, tx) {
     return new Promise((resolve, reject) => {
         try {
-            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+            if (
+                (tx.type === undefined || tx.type < '0x2')
+                && tx.gasPrice !== undefined
+            ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
             } else {
@@ -389,7 +390,7 @@ function _handleTxPricing(_this, tx) {
                             maxFeePerGas = tx.gasPrice;
                             delete tx.gasPrice;
                         } else {
-                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
                             maxFeePerGas = tx.maxFeePerGas ||
                                 utils.toHex(
                                     utils.toBN(block.baseFeePerGas)
