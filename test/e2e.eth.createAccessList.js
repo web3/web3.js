@@ -36,14 +36,14 @@ describe('method.call [ @E2E ]', function () {
             var expected = {
                 accessList: [
                   {
-                    address: '0x61ecff5d2eb87dfc4e8517004349ad90d5ba82da',
+                    address: instance.options.address.toLowerCase(),
                     storageKeys: ["0x0000000000000000000000000000000000000000000000000000000000000000"]
                   }
                 ],
                 gasUsed: '0x644e'
             };
 
-            assert.equal(
+            assert.deepEqual(
                 await instance.methods.getValue().createAccessList({from: accounts[0]}),
                 expected
             );
@@ -53,7 +53,7 @@ describe('method.call [ @E2E ]', function () {
             var expected = {
                 accessList: [
                   {
-                    address: '0x62c5ea3d7b34f67fced4923b531fc21d674e6fc3',
+                    address: instance.options.address.toLowerCase(),
                     storageKeys: ["0x0000000000000000000000000000000000000000000000000000000000000000"]
                   }
                 ],
@@ -61,7 +61,7 @@ describe('method.call [ @E2E ]', function () {
             }
               
 
-            assert.equal(
+            assert.deepEqual(
                 await instance.methods.setValue(1).createAccessList({from: accounts[0]}),
                 expected
             );
