@@ -977,6 +977,7 @@ Returns
   - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
   - ``transactions`` - ``Array``: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
   - ``uncles`` - ``Array``: Array of uncle hashes.
+  - ``baseFeePerGas`` - ``String``: Minimum to be charged to send a transaction on the network (is a number string to avoid number overflow)
 
 -------
 Example
