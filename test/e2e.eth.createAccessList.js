@@ -33,6 +33,9 @@ describe('method.call [ @E2E ]', function () {
         })
 
         it('returns expected access list for getValue', async function () {
+            // Currently only Geth supports eth_createAccessList
+            if (process.env.GANACHE || global.window ) return
+
             var expected = {
                 accessList: [
                   {
@@ -50,6 +53,9 @@ describe('method.call [ @E2E ]', function () {
         });
 
         it('returns expected access list for setValue', async function () {
+            // Currently only Geth supports eth_createAccessList
+            if (process.env.GANACHE || global.window ) return
+
             var expected = {
                 accessList: [
                   {
