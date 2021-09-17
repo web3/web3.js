@@ -962,6 +962,7 @@ Returns
   - ``number`` - ``Number``: The block number. ``null`` if a pending block.
   - ``hash`` 32 Bytes - ``String``: Hash of the block. ``null`` if a pending block.
   - ``parentHash`` 32 Bytes - ``String``: Hash of the parent block.
+  - ``baseFeePerGas`` - ``String``: Minimum to be charged to send a transaction on the network (is a number string to avoid number overflow)
   - ``nonce`` 8 Bytes - ``String``: Hash of the generated proof-of-work. ``null`` if a pending block.
   - ``sha3Uncles`` 32 Bytes - ``String``: SHA3 of the uncles data in the block.
   - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` if a pending block.
@@ -977,7 +978,6 @@ Returns
   - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
   - ``transactions`` - ``Array``: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
   - ``uncles`` - ``Array``: Array of uncle hashes.
-  - ``baseFeePerGas`` - ``String``: Minimum to be charged to send a transaction on the network (is a number string to avoid number overflow)
 
 -------
 Example
@@ -993,6 +993,7 @@ Example
         "number": 3,
         "hash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
         "parentHash": "0x2302e1c0b972d00932deb5dab9eb2982f570597d9d42504c05d9c2147eaf9c88",
+        "baseFeePerGas": "58713056622",
         "nonce": "0xfb6e1a62d119228b",
         "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
         "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
