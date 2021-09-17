@@ -334,7 +334,7 @@ The ``blockHeaderTimeout`` is used over socket-based connections. This option de
 Returns
 -------
 
-``number``: The current value of blockHeaderTimeout (default: 5 seconds)
+``number``: The current value of blockHeaderTimeout (default: 10 seconds)
 
 ------------------------------------------------------------------------------
 
