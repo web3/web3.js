@@ -664,7 +664,7 @@ methods
 
     myContract.methods.myMethod([param1[, param2[, ...]]])
 
-Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`, :ref:`estimated  <contract-createAccessList>` , or :ref:`ABI encoded <contract-encodeABI>`.
+Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`, :ref:`createAccessList  <contract-createAccessList>` , or :ref:`ABI encoded <contract-encodeABI>`.
 
 The methods of this smart contract are available through:
 
