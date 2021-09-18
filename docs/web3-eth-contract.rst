@@ -691,7 +691,7 @@ Returns
 - ``Function`` - :ref:`send <contract-send>`: Will send a transaction to the smart contract and execute its method (Can alter the smart contract state).
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
-- ``Function`` - :ref:`createAccessList <contract-createAccessList>`: Returns an EIP-2930 access list for specified contract method Note: You must specify a ``from`` address and possible ``gas``
+- ``Function`` - :ref:`createAccessList <contract-createAccessList>`: Returns an EIP-2930 access list for specified contract method Note: You must specify a ``from`` address and ``gas`` if it's not specified in ``options`` when instantiating parent contract object (e.g. ``new web3.eth.Contract(jsonInterface[, address][, options])``).
 
 -------
 Example
