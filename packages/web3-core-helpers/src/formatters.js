@@ -332,7 +332,7 @@ var outputBlockFormatter = function (block) {
         block.miner = utils.toChecksumAddress(block.miner);
 
     if (block.baseFeePerGas)
-        block.baseFeePerGas = outputBigNumberFormatter(block.baseFeePerGas)
+        block.baseFeePerGas = utils.hexToNumber(block.baseFeePerGas)
 
     return block;
 };

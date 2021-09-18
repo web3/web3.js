@@ -103,7 +103,7 @@ describe('formatters', function () {
                 transactionsRoot: "0x738f53f745d58169da93ebbd52cc49e0c979d6ca68a6513007b546b19ab78ba4",
                 uncles: []
             }), {
-                baseFeePerGas: "7",
+                baseFeePerGas: 7,
                 difficulty: "1826012730",
                 extraData: "0x796f75747562652e636f6d2f77617463683f763d6451773477395767586351",
                 gasLimit: 30000001,
