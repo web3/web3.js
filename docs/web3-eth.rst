@@ -2134,7 +2134,7 @@ Parameters
 ----------
 
 1. A transaction object, see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>` with the difference that this method is specifically for contract method executions.
-2. ``block`` - ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the access list generation as the second argument, or with an error object as the first argument.
 
 
