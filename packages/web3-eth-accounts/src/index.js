@@ -39,6 +39,10 @@ var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
 };
 
+var isExist = function(value) {
+    return (typeof value !== 'undefined') && value !== null;
+};
+
 var Accounts = function Accounts() {
     var _this = this;
 
@@ -154,21 +158,21 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
-    if (!isNot(tx.common) && isNot(tx.common.customChain)) {
+    if (isExist(tx.common) && isNot(tx.common.customChain)) {
         error = new Error('If tx.common is provided it must have tx.common.customChain');
 
         callback(error);
         return Promise.reject(error);
     }
 
-    if (!isNot(tx.common) && isNot(tx.common.customChain.chainId)) {
+    if (isExist(tx.common) && isNot(tx.common.customChain.chainId)) {
         error = new Error('If tx.common is provided it must have tx.common.customChain and tx.common.customChain.chainId');
 
         callback(error);
         return Promise.reject(error);
     }
 
-    if (!isNot(tx.common) && !isNot(tx.common.customChain.chainId) && !isNot(tx.chainId) && tx.chainId !== tx.common.customChain.chainId) {
+    if (isExist(tx.common) && isExist(tx.common.customChain.chainId) && isExist(tx.chainId) && tx.chainId !== tx.common.customChain.chainId) {
         error = new Error('Chain Id doesnt match in tx.chainId tx.common.customChain.chainId');
 
         callback(error);
@@ -292,16 +296,18 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
         _handleTxPricing(_this, tx)
     ]).then(function(args) {
-        if ( (isNot(args[0]) && isNot(tx.common) && isNot(tx.common.customChain.chainId)) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+        const [txchainId, txnonce, txnetworkId, txgasInfo] = args; 
+
+        if ( (isNot(txchainId) && isNot(tx.common) && isNot(tx.common.customChain.chainId)) || isNot(txnonce) || isNot(txnetworkId) || isNot(txgasInfo)) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
 
     return signed({
             ...tx,
-            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: args[0]}:{}), // if common.customChain.chainId is provided no need to add tx.chainId
-            nonce: args[1],
-            networkId: args[2],
-            ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: txchainId}:{}), // if common.customChain.chainId is provided no need to add tx.chainId
+            nonce: txnonce,
+            networkId: txnetworkId,
+            ...txgasInfo // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
         });
     });
 };
