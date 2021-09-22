@@ -448,4 +448,4 @@ Released with 1.0.0-beta.37 code base.
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Fixed bug in signTransaction (#4295) 
-- updated readme to include webpack 5 angular support instructions (#4174)
+- Updated readme to include webpack 5 angular support instructions (#4174)
