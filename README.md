@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
+  <img src="assets/logo/web3js.jpg" width="300" alt="web3.js" />
 </p>
 
 # Web3.js
