@@ -448,7 +448,6 @@ Released with 1.0.0-beta.37 code base.
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Fixed bug in signTransaction (#4295) 
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
-- Fixed bug in signTransaction (#4295)
 
 ## [Unreleased]
 
