@@ -107,7 +107,8 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 ### New solution
 
-If you are using Angular version >11 and run into an issue building, the old solution below will not work. This is because polyfills are not included in the newest version of Angular.
+If you are using Angular version >11 and run into an issue building, the old solution below will not work. This is because polyfills are 
+not included in the newest version of Angular.
 
 To work around this:
 
@@ -144,7 +145,7 @@ Add the following lines to `polyfills.ts` file:
     } as any;
 ```
 
-## Old solution
+### Old solution
 
 If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
 
