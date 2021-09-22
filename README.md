@@ -119,29 +119,30 @@ npm install --save-dev crypto-browserify stream-browserify assert stream-http ht
 
 ```typescript
 {
-  "compilerOptions": {
-    "paths" : {
-      "crypto": ["./node_modules/crypto-browserify"],
-      "stream": ["./node_modules/stream-browserify"],
-      "assert": ["./node_modules/assert"],
-      "http": ["./node_modules/stream-http"],
-      "https": ["./node_modules/https-browserify"],
-      "os": ["./node_modules/os-browserify"],
+    "compilerOptions": {
+        "paths" : {
+        "crypto": ["./node_modules/crypto-browserify"],
+        "stream": ["./node_modules/stream-browserify"],
+        "assert": ["./node_modules/assert"],
+        "http": ["./node_modules/stream-http"],
+        "https": ["./node_modules/https-browserify"],
+        "os": ["./node_modules/os-browserify"],
     }
-  }
+}
 ```
 
 - Add the following lines to `polyfills.ts` file:
 
 ```typescript
- (window as any).global = window;
- import { Buffer } from 'buffer';
- global.Buffer = Buffer;
- global.process = {
+import { Buffer } from 'buffer';
+
+(window as any).global = window;
+global.Buffer = Buffer;
+global.process = {
     env: { DEBUG: undefined },
     version: '',
     nextTick: require('next-tick')
-    } as any;
+} as any;
 ```
 
 
