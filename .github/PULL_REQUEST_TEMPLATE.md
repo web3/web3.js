@@ -23,7 +23,7 @@ Fixes #(issue)
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no new warnings.
 - [ ] Any dependent changes have been merged and published in downstream modules.
-- [ ] I ran `npm run dtslint` with success and extended the tests and types if necessary.
+- [ ] I ran `npm run lint` with success and extended the tests and types if necessary.
 - [ ] I ran `npm run test:unit` with success.
 - [ ] I ran `npm run test:cov` and my test cases cover all the lines and branches of the added code.
 - [ ] I ran `npm run build` and tested `dist/web3.min.js` in a browser.
