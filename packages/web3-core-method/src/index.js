@@ -56,6 +56,7 @@ var Method = function Method(options) {
     this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
     this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
     this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
+    this.blockHeaderTimeout = options.blockHeaderTimeout || 10; // 10 seconds
     this.defaultCommon = options.defaultCommon;
     this.defaultChain = options.defaultChain;
     this.defaultHardfork = options.defaultHardfork;
@@ -547,22 +548,35 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // start watching for confirmation depending on the support features of the provider
     var startWatching = function (existingReceipt) {
+        let blockHeaderArrived = false; 
+
         const startInterval = () => {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
         };
 
-        if (!this.requestManager.provider.on) {
-            startInterval();
-        } else {
-            _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
-                if (err || !blockHeader) {
-                    // fall back to polling
-                    startInterval();
-                } else {
-                    checkConfirmation(existingReceipt, false, err, blockHeader, sub);
-                }
-            });
+        // If provider do not support event subscription use polling
+        if(!this.requestManager.provider.on) {
+            return startInterval();            
         }
+
+        // Subscribe to new block headers to look for tx receipt
+        _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
+            blockHeaderArrived = true; 
+
+            if (err || !blockHeader) {
+                // fall back to polling
+                return  startInterval();
+            }
+
+            checkConfirmation(existingReceipt, false, err, blockHeader, sub);
+        });
+
+        // Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
+        setTimeout(() => {
+            if(!blockHeaderArrived) {
+                startInterval();
+            }
+        }, this.blockHeaderTimeout * 1000);
     }.bind(this);
 
 
