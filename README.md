@@ -109,16 +109,15 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 If you are using Angular version >11 and run into an issue building, the old solution below will not work. This is because polyfills are not included in the newest version of Angular.
 
-To work around this:
+- Install the required dependencies within your angular project:
 
-
-install the required dependancies within your angular project:
-
-`npm install crypto-browserify stream-browserify assert stream-http https-browserify os-browserify`
-
-Within `tsconfig.json` add the following `paths` in `compilerOptions` so webpack can get the correct dependancies
-
+```bash
+npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify
 ```
+
+- Within `tsconfig.json` add the following `paths` in `compilerOptions` so Webpack can get the correct dependencies
+
+```javascript
 {
   "compilerOptions": {
     "paths" : {
@@ -132,8 +131,9 @@ Within `tsconfig.json` add the following `paths` in `compilerOptions` so webpack
   }
 ```
 
-Add the following lines to `polyfills.ts` file:
-```
+- Add the following lines to `polyfills.ts` file:
+
+```typescript
  (window as any).global = window;
  import { Buffer } from 'buffer';
  global.Buffer = Buffer;
@@ -143,6 +143,7 @@ Add the following lines to `polyfills.ts` file:
     nextTick: require('next-tick')
     } as any;
 ```
+
 
 ### Old solution
 
