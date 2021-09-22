@@ -17,13 +17,13 @@ yarn add web3-packagetemplate
 
 ## Getting Started
 
-- :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
-![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
+-   :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
+    ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
 
 ## Prerequisites
 
-- :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
-- :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
+-   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
+-   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
 
 ## Package.json Scripts
 
