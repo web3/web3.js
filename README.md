@@ -109,39 +109,40 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 If you are using Angular version >11 and run into an issue building, the old solution below will not work. This is because polyfills are not included in the newest version of Angular.
 
-To work around this:
+- Install the required dependencies within your angular project:
 
-
-install the required dependancies within your angular project:
-
-`npm install crypto-browserify stream-browserify assert stream-http https-browserify os-browserify`
-
-Within `tsconfig.json` add the following `paths` in `compilerOptions` so webpack can get the correct dependancies
-
+```bash
+npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify
 ```
+
+- Within `tsconfig.json` add the following `paths` in `compilerOptions` so Webpack can get the correct dependencies
+
+```typescript
 {
-  "compilerOptions": {
-    "paths" : {
-      "crypto": ["./node_modules/crypto-browserify"],
-      "stream": ["./node_modules/stream-browserify"],
-      "assert": ["./node_modules/assert"],
-      "http": ["./node_modules/stream-http"],
-      "https": ["./node_modules/https-browserify"],
-      "os": ["./node_modules/os-browserify"],
+    "compilerOptions": {
+        "paths" : {
+        "crypto": ["./node_modules/crypto-browserify"],
+        "stream": ["./node_modules/stream-browserify"],
+        "assert": ["./node_modules/assert"],
+        "http": ["./node_modules/stream-http"],
+        "https": ["./node_modules/https-browserify"],
+        "os": ["./node_modules/os-browserify"],
     }
-  }
+}
 ```
 
-Add the following lines to `polyfills.ts` file:
-```
- (window as any).global = window;
- import { Buffer } from 'buffer';
- global.Buffer = Buffer;
- global.process = {
+- Add the following lines to `polyfills.ts` file:
+
+```typescript
+import { Buffer } from 'buffer';
+
+(window as any).global = window;
+global.Buffer = Buffer;
+global.process = {
     env: { DEBUG: undefined },
     version: '',
     nextTick: require('next-tick')
-    } as any;
+} as any;
 ```
 
 ### Old solution
@@ -150,7 +151,7 @@ If you are using Ionic/Angular at a version >5 you may run into a build error in
 
 a work around for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
 
-Another variation of this problem was an issue opned on angular-cli: https://github.com/angular/angular-cli/issues/1548
+Another variation of this problem was an [issue opned on angular-cli](https://github.com/angular/angular-cli/issues/1548)
 
 ## Documentation
 
