@@ -432,8 +432,6 @@ Released with 1.0.0-beta.37 code base.
 - Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
 - `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
 
-## [Unreleased]
-
 ## [1.5.3]
 
 ### Fixed
@@ -450,3 +448,8 @@ Released with 1.0.0-beta.37 code base.
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Fixed bug in signTransaction (#4295) 
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
+- Fixed bug in signTransaction (#4295)
+
+## [Unreleased]
+
+## [1.5.4]
