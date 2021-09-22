@@ -1,3 +1,3 @@
 {
-	"extends": "./index.js"
+	"extends": "./ts.js"
 }
