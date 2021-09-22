@@ -1,11 +1,18 @@
 {
   "name": "web3.js",
   "private": true,
-  "description": "Ethereum API wrappers and utilities",
-  "license": "LGPL-3.0",
-  "author": "ChainSafe Systems",
   "version": "4.0.0",
-  "main": "index.js",
+  "description": "Ethereum API wrappers and utilities",
+  "author": "ChainSafe Systems",
+  "license": "LGPL-3.0",
+  "keywords": [
+      "ethereum",
+      "eth",
+      "web3",
+      "web3js",
+      "web3.js",
+      "blockchain"
+  ],
   "homepage": "https://github.com/ChainSafe/web3.js#readme",
   "repository": {
     "type": "git",
@@ -13,6 +20,10 @@
   },
   "bugs": {
     "url": "https://github.com/ChainSafe/web3.js/issues"
+  },
+  "engines": {
+      "node": ">=12",
+      "npm": ">=6.12.0"
   },
   "workspaces": {
     "packages": [
@@ -32,7 +43,7 @@
   },
   "devDependencies": {
     "eslint": "^7.24.0",
-    "husky": "^6.0.0",
+    "husky": "^7.0.2",
     "jest": "^26.6.3",
     "lerna": "^4.0.0",
     "lint-staged": "^11.0.0",

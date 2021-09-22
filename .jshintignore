@@ -1,3 +1,0 @@
-node_modules
-packages/**/node_modules/
-karma.conf.js
