@@ -117,7 +117,7 @@ npm install --save-dev crypto-browserify stream-browserify assert stream-http ht
 
 - Within `tsconfig.json` add the following `paths` in `compilerOptions` so Webpack can get the correct dependencies
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "paths" : {
