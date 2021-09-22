@@ -1,0 +1,6 @@
+*.idea
+dist
+.gitignore
+.editorconfig
+.npmignore
+.DS_Store

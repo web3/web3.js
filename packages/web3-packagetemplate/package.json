@@ -15,9 +15,9 @@
         "compile": "tsc --build",
         "lint": "yarn prettier --write . && eslint \"./src/**/*.ts\" --max-warnings=0",
         "lint:check": "yarn prettier --check . && eslint \"./src/**/*.ts\" --max-warnings=0",
-        "test": "jest",
-        "test:integration": "jest ./test/integration",
-        "test:unit": "jest ./test/unit"
+        "test": "jest --coverage",
+        "test:integration": "jest ./test/integration --coverage",
+        "test:unit": "jest ./test/unit --coverage"
     },
     "devDependencies": {
         "@types/jest": "^26.0.22",

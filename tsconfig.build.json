@@ -1,15 +1,20 @@
 {
     "compilerOptions": {
-      "composite": true,
-      "target": "es2020",
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "strict": true,
-      "declaration": true,
-      "declarationMap": true,
-      "allowSyntheticDefaultImports": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "target": "es2020",
+        "module": "commonjs",
+        "declaration": true,
+        "moduleResolution": "node",
+        "newLine": "lf",
+        "noFallthroughCasesInSwitch": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"pretty": true,
+		"removeComments": true,
+        "sourceMap": true,
+        "composite": true,
+        "declarationMap": true,
+        "strict": true,
     }
-  }
+}
