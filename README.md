@@ -145,7 +145,6 @@ global.process = {
 } as any;
 ```
 
-
 ### Old solution
 
 If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
