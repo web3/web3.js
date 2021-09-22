@@ -260,6 +260,19 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'blockHeaderTimeout', {
+        get: function () {
+            if (_this.options.blockHeaderTimeout === 0) {
+                return _this.options.blockHeaderTimeout;
+            }
+
+            return _this.options.blockHeaderTimeout || this.constructor.blockHeaderTimeout;
+        },
+        set: function (val) {
+            _this.options.blockHeaderTimeout = val;
+        },
+        enumerable: true
+    });    
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
