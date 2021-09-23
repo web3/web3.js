@@ -1,4 +1,4 @@
-require('jest-extended');
+import('jest-extended');
 
 // @todo extend jest to have "toHaveBeenCalledOnceWith" matcher.
 
