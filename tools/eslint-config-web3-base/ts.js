@@ -12,14 +12,14 @@ module.exports = {
 		'plugin:import/typescript',
 	],
 	rules: {
-		'class-methods-use-this': 'off',
-		'no-unused-expressions': 'off',
+		'class-methods-use-this': ['error'],
+		'no-unused-expressions': ['error'],
 		'no-continue': 'off',
-		'no-underscore-dangle': 'off',
+		'no-underscore-dangle': ['error'],
 		'import/prefer-default-export': 'off',
 		'lines-between-class-members': 'off',
-		'no-use-before-define': 'off',
-		'no-shadow': 'off',
+		'no-use-before-define': ['error'],
+		'no-shadow': ['error'],
 		'@typescript-eslint/no-shadow': ['error'],
 		'no-console': ['error', { allow: ['error', 'info', 'warn'] }],
 		'@typescript-eslint/no-floating-promises': ['error'],
@@ -49,7 +49,7 @@ module.exports = {
 		'@typescript-eslint/no-useless-constructor': ['error'],
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/ban-types': 'warn',
-		'@typescript-eslint/no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': 'warn',
 		'import/extensions': [
 			'error',
 			'ignorePackages',
@@ -60,7 +60,7 @@ module.exports = {
 				tsx: 'never',
 			},
 		],
-		'no-await-in-loop': 'off',
+		'no-await-in-loop': ['error'],
 		'no-restricted-syntax': [
 			'error',
 			{
