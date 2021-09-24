@@ -446,12 +446,13 @@ Released with 1.0.0-beta.37 code base.
 - lerna from 3.22.1 to 4.0.0 (#4231)
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
-- Fixed bug in signTransaction (#4295) 
-- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 - Fixed bug in signTransaction (#4295)
+- Format `block.baseFeePerGas` to number (#4330)
+- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 
 ## [Unreleased]
 
 ## [1.5.4]
+
 ### Changed
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
