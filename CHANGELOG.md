@@ -449,9 +449,11 @@ Released with 1.0.0-beta.37 code base.
 - Added missing PromiEvent handler types (#4194) 
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 - Fixed bug in signTransaction (#4295)
+- Format `block.baseFeePerGas` to number (#4330)
 
 ## [Unreleased]
 
 ## [1.5.4]
+
 ### Changed
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
