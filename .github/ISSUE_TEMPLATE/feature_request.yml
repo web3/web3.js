@@ -36,4 +36,4 @@ body:
     attributes:
       label: Are you willing to implement this feature?
       options:
-        - label: Yes
+        - label: "Yes"
