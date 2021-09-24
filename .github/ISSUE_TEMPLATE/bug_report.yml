@@ -53,8 +53,6 @@ body:
         - Browser: 
         - Node.js Version: 
         - NPM Version: 
-    validations:
-      required: true
   - type: textarea
     attributes:
       label: Anything Else?
