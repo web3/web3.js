@@ -1,0 +1,47 @@
+{
+	"name": "eslint-config-web3-base",
+	"private": true,
+	"version": "0.1.0",
+	"description": "Base eslint config for Web3 project.",
+	"author": "ChainSafe Systems",
+	"license": "LGPL-3.0",
+	"keywords": [
+		"eslint",
+		"ethereum",
+		"eth",
+		"web3",
+		"web3js",
+		"web3.js",
+		"blockchain"
+	],
+	"homepage": "https://github.com/ChainSafe/web3.js#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ChainSafe/web3.js.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ChainSafe/web3.js/issues"
+	},
+	"engines": {
+		"node": ">=12",
+		"npm": ">=6.12.0"
+	},
+	"main": "ts.js",
+	"scripts": {
+		"lint": "eslint --ext .js,.ts .",
+		"lint:fix": "eslint --fix --ext .js,.ts .",
+		"format": "prettier --write '**/*'"
+	},
+	"dependencies": {
+		"@typescript-eslint/eslint-plugin": "4.31.2",
+		"@typescript-eslint/parser": "4.31.2",
+		"eslint": "7.32.0",
+		"eslint-config-airbnb-base": "14.2.1",
+		"eslint-plugin-import": "2.24.2",
+		"eslint-config-prettier": "8.3.0",
+		"eslint-plugin-jest": "24.4.2"
+	},
+	"devDependencies": {
+		"typescript": "^4.4.3"
+	}
+}

@@ -1,0 +1,41 @@
+{
+	"name": "web3-packagetemplate",
+	"version": "1.0.0-alpha.0",
+	"description": "Package template for Web3 4.x.x",
+	"main": "dist/index.js",
+	"repository": "https://github.com/ChainSafe/web3.js",
+	"author": "ChainSafe Systems",
+	"license": "LGPL-3.0",
+	"files": [
+		"dist/**/*"
+	],
+	"scripts": {
+		"clean": "rimraf dist || mkdir dist || true",
+		"prebuild": "rimraf dist || mkdir dist || true",
+		"build": "tsc --build",
+		"build:check": "node -e \"require('./dist')\"",
+		"lint": "eslint --ext .js,.ts .",
+		"lint:fix": "eslint --fix --ext .js,.ts .",
+		"format": "prettier --write '**/*'",
+		"test": "jest --config=./test/unit/jest.config.js",
+		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
+		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
+		"test:watch": "npm test -- --watch",
+		"test:unit": "jest --config=./test/unit/jest.config.js",
+		"test:integration": "jest --config=./test/integration/jest.config.js"
+	},
+	"devDependencies": {
+		"@types/jest": "^27.0.2",
+		"@typescript-eslint/eslint-plugin": "^4.31.2",
+		"@typescript-eslint/parser": "^4.31.2",
+		"eslint": "^7.32.0",
+		"eslint-config-prettier": "^8.3.0",
+		"eslint-config-web3-base": "0.1.0",
+		"eslint-plugin-import": "^2.24.2",
+		"jest": "^27.2.1",
+		"jest-extended": "^0.11.5",
+		"prettier": "^2.4.1",
+		"ts-jest": "^27.0.5",
+		"typescript": "^4.4.3"
+	}
+}
