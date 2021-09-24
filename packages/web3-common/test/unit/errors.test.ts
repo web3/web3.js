@@ -20,8 +20,11 @@ describe('errors', () => {
 
 	describe('InvalidNumberOfParamsError', () => {
 		it('should have valid json structure', () => {
+			const got = 10; 
+			const expected = 20;
+
 			expect(
-				new errors.InvalidNumberOfParamsError(10, 20, 'method').toJSON(),
+				new errors.InvalidNumberOfParamsError(got, expected, 'method').toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -50,7 +53,9 @@ describe('errors', () => {
 
 	describe('ConnectionTimeoutError', () => {
 		it('should have valid json structure', () => {
-			expect(new errors.ConnectionTimeoutError(5000).toJSON()).toMatchSnapshot();
+			const timeoutValue = 5000;
+
+			expect(new errors.ConnectionTimeoutError(timeoutValue).toJSON()).toMatchSnapshot();
 		});
 	});
 
