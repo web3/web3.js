@@ -35,7 +35,4 @@ body:
   - type: checkboxes
     attributes:
       label: Are you willing to implement this feature?
-      options:
-        - label: Yes
-        - label: No
-          required: true
+      options: [Yes, No]
