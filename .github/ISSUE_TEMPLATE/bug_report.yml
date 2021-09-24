@@ -16,26 +16,23 @@ body:
       description: A concise description of what you're experiencing (include error message if you have one)
     validations:
       required: true
-    render: markdown
   - type: textarea
     attributes:
       label: Expected Behavior
       description: A concise description of what you expected to happen
     validations:
       required: true
-    render: markdown
   - type: textarea
     attributes:
       label: Steps to Reproduce
-      description: Steps to reproduce what you've encountered
+      description: "Steps to reproduce what you've encountered"
+      placeholder: |
+        Using this code:
+          ```typescript
+          // Your code using Web3.js
+          ```
     validations:
       required: true
-    placeholder: |
-      Using this code:
-        ```typescript
-        // Your code using Web3.js
-        ```
-    render: markdown
   - type: input
     attributes:
       label: Web3.js Version
@@ -52,16 +49,14 @@ body:
           - **Browser**: Brave Version 1.29.81 Chromium: 93.0.4577.82 (Official Build) (64-bit)
           - **Node.js Version**: v14.16.0
           - **NPM Version**: 7.19.1
+      value: |
+        - Operating System: 
+        - Browser: 
+        - Node.js Version: 
+        - NPM Version: 
     validations:
       required: true
-    value: |
-      - Operating System: 
-      - Browser: 
-      - Node.js Version: 
-      - NPM Version: 
-    render: markdown
   - type: textarea
     attributes:
       label: Anything Else?
       description: Links? References? Anything that would give us more context about what you've encountered
-    render: markdown
