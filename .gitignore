@@ -19,6 +19,8 @@ node_modules
 
 # Optional npm cache directory
 .npm
+.coverage
+.tool-versions
 
 # IDE directories
 .idea
@@ -27,6 +29,7 @@ tmp
 # Distribution directory
 .vscode
 lib/
+dist/
 tsconfig.tsbuildinfo
 
 # Unsupported lock files

@@ -23,10 +23,11 @@ Fixes #(issue)
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no new warnings.
 - [ ] Any dependent changes have been merged and published in downstream modules.
-- [ ] I ran `npm run dtslint` with success and extended the tests and types if necessary.
+- [ ] I ran `npm run lint` with success and extended the tests and types if necessary.
 - [ ] I ran `npm run test:unit` with success.
-- [ ] I ran `npm run test:cov` and my test cases cover all the lines and branches of the added code.
+- [ ] I ran `npm run test:coverage` and my test cases cover all the lines and branches of the added code.
 - [ ] I ran `npm run build` and tested `dist/web3.min.js` in a browser.
 - [ ] I have tested my code on the live network.
 - [ ] I have checked the Deploy Preview and it looks correct.
 - [ ] I have updated the `CHANGELOG.md` file in the root folder.
+- [ ] I have linked Issue(s) with this PR in "Linked Issues" menu.
