@@ -22,6 +22,7 @@ yarn add web3-packagetemplate
 
 ## Getting Started
 
+
 - :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
     ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
 
@@ -52,3 +53,4 @@ yarn add web3-packagetemplate
 [deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-package-tempalte
 [deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-package-tempalte
 [deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-package-tempalte
+
