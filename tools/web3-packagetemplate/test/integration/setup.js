@@ -1,3 +1,7 @@
-import('../config/setup');
+// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('../config/setup');
 
-jest.setTimeout(15000);
+const jestTimeout = 15000; 
+
+jest.setTimeout(jestTimeout);
