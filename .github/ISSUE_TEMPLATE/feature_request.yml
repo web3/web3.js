@@ -28,10 +28,10 @@ body:
   - type: textarea
     attributes:
       label: Feature Examples/References
-      description: Do you have any examples or referneces regarding this feature?
+      description: Do you have any examples or references regarding this feature?
       placeholder: |
         - [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)
-        - [Ethers' implementation](https://github.com/ethers-io/ethers.js/blob/c5bca7767e3f3d43e3d0bd3c9e9420321ee9907a/packages/abstract-signer/src.ts/index.ts#L199)
+        - [Ethers' implementation](https://github.com/ethers-io/ethers.js/blob/master/packages/abstract-signer/src.ts/index.ts)
   - type: checkboxes
     attributes:
       label: Are you willing to implement this feature?
