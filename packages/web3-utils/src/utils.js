@@ -494,7 +494,7 @@ var sha3 = function (value) {
         value = Buffer.from(value, 'utf-8');
     }
 
-    returnValue = ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(value));
+    var returnValue = ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(value));
 
     if(returnValue === SHA3_NULL_S) {
         return null;
