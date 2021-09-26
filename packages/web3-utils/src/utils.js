@@ -23,10 +23,8 @@
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var Hash = require("eth-lib/lib/hash");
+var ethereumjsUtil = require('ethereumjs-util');
 var ethereumBloomFilters = require('ethereum-bloom-filters');
-
-
 
 /**
  * Returns true if object is BN, otherwise false
@@ -490,10 +488,13 @@ var sha3 = function (value) {
     }
 
     if (isHexStrict(value) && /^0x/i.test((value).toString())) {
-        value = hexToBytes(value);
+        value = ethereumjsUtil.toBuffer(value);
+    } else if (typeof value === 'string') {
+        // Assume value is an arbitrary string
+        value = Buffer.from(value, 'utf-8');
     }
 
-    var returnValue = Hash.keccak256(value); // jshint ignore:line
+    var returnValue = ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(value));
 
     if(returnValue === SHA3_NULL_S) {
         return null;
@@ -502,7 +503,7 @@ var sha3 = function (value) {
     }
 };
 // expose the under the hood keccak256
-sha3._Hash = Hash;
+sha3._Hash = ethereumjsUtil.keccak256;
 
 /**
  * @method sha3Raw

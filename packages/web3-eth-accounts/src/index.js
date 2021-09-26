@@ -25,7 +25,6 @@
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
-var Hash = require('eth-lib/lib/hash');
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
@@ -34,6 +33,7 @@ var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 var HardForks = require('@ethereumjs/common').Hardfork;
+var ethereumjsUtil = require('ethereumjs-util');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -168,7 +168,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
             if (transaction.type === '0x1' && transaction.accessList === undefined) transaction.accessList = []
-            
+
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
@@ -272,7 +272,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-    
+
     return signed({
             ...tx,
             chainId: args[0],
@@ -337,7 +337,7 @@ function _handleTxType(tx) {
         throw Error("eip-1559 transactions don't support gasPrice");
     if ((txType === '0x1' || txType === '0x0') && hasEip1559)
         throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
-    
+
     if (
         hasEip1559 ||
         (
@@ -355,7 +355,7 @@ function _handleTxType(tx) {
     ) {
         txType = '0x1';
     }
-    
+
     return txType
 }
 
@@ -379,10 +379,10 @@ function _handleTxPricing(_this, tx) {
                         block && block.baseFeePerGas
                     ) {
                         // The network supports EIP-1559
-    
+
                         // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
                         let maxPriorityFeePerGas, maxFeePerGas;
-    
+
                         if (tx.gasPrice) {
                             // Using legacy gasPrice property on an eip-1559 network,
                             // so use gasPrice as both fee properties
@@ -429,7 +429,7 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return Hash.keccak256s(ethMessage);
+    return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {

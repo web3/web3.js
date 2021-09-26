@@ -449,4 +449,14 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.5.4]
+## [1.6.0]
+
+### Changed
+
+- Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
+
+## [1.6.1]
+
+### Changed
+
+- Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
