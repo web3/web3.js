@@ -447,13 +447,13 @@ Released with 1.0.0-beta.37 code base.
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Fixed bug in signTransaction (#4295)
 
-## [Unreleased]
-
 ## [1.6.0]
 
 ### Changed
 
 - Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
+
+## [Unreleased]
 
 ## [1.6.1]
 
