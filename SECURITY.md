@@ -10,4 +10,4 @@ Future rewrites and feature tracks `v2.x`, `v3.x`, and  `v4.x`:
 
 ## Reporting a Vulnerability
 - :rotating_light: Please, send vulnerability reports to `security@chainsafe.io`.
-- :warning: **Please do not file a public ticket** mentioning the vulnerability, as doing so could increase the likelihood of the vulnerability being used before a fix has been created, released and installed on the network.
+- :warning: **Please do not file a public ticket** mentioning the vulnerability, as doing so could increase the likelihood of the vulnerability being exploited before a fix has been created, released and installed on the network.
