@@ -89,7 +89,7 @@ describe('errors', () => {
 
 	describe('InvalidProviderError', () => {
 		it('should have valid json structure', () => {
-			expect(new errors.InvalidProviderError().toJSON()).toMatchSnapshot();
+			expect(new errors.InvalidProviderError('my url').toJSON()).toMatchSnapshot();
 		});
 	});
 

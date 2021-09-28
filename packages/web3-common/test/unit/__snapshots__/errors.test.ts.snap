@@ -135,7 +135,7 @@ Object {
 exports[`errors InvalidProviderError should have valid json structure 1`] = `
 Object {
   "code": 601,
-  "message": "Provider not set or invalid",
+  "message": "Provider with url \\"my url\\" is not set or invalid",
   "name": "InvalidProviderError",
 }
 `;

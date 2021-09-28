@@ -142,8 +142,8 @@ export class PendingRequestsOnReconnectingError extends ConnectionError {
 export class InvalidProviderError extends Web3Error {
 	public code = ERR_INVALID_PROVIDER;
 
-	public constructor() {
-		super('Provider not set or invalid');
+	public constructor(public clientUrl: string) {
+		super(`Provider with url "${clientUrl}" is not set or invalid`);
 	}
 }
 
