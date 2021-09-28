@@ -35,7 +35,7 @@ yarn add web3-common
 | Script           | Description                                         |
 | ---------------- | --------------------------------------------------- |
 | clean            | Uses `rimraf` to remove `dist/`                     |
-| build            | Uses `tsc` to build package and depedenent packages |
+| build            | Uses `tsc` to build package and dependent packages |
 | lint             | Uses `eslint` to lint package                       |
 | lint:fix         | Uses `eslint` to check and fix any warnings         |
 | format           | Uses `prettier` to format the code                  |
