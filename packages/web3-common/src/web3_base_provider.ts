@@ -1,19 +1,19 @@
 import {
-	JSONRPCPayload,
-	JSONRPCRequest,
-	JSONRPCResponseWithError,
-	JSONRPCResponseWithResult,
-	JSONRPCResult,
+	JsonRpcPayload,
+	JsonRpcRequest,
+	JsonRpcResponseWithError,
+	JsonRpcResponseWithResult,
+	JsonRpcResult,
 } from './types';
 
-export interface ProviderMessage<T = JSONRPCResult> {
+export interface ProviderMessage<T = JsonRpcResult> {
 	type: string;
 	data: T;
 }
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
-export type Web3BaseProviderCallback<T = JSONRPCResult> = (
+export type Web3BaseProviderCallback<T = JsonRpcResult> = (
 	error: Error | null,
 	result?: ProviderMessage<T>,
 ) => void;
@@ -29,11 +29,11 @@ export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
 export abstract class Web3BaseProvider {
 	// TODO: For legacy support, should be deprecated and removed in favor of `request`
-	public send<T = JSONRPCResult, T2 = unknown[]>(
-		payload: JSONRPCPayload<T2>,
+	public send<T = JsonRpcResult, T2 = unknown[]>(
+		payload: JsonRpcPayload<T2>,
 		callback: (
-			error?: JSONRPCResponseWithError<T>,
-			result?: JSONRPCResponseWithResult<T>,
+			error?: JsonRpcResponseWithError<T>,
+			result?: JsonRpcResponseWithResult<T>,
 		) => void,
 	): void {
 		this.request<T, T2>({ method: payload.method, params: payload.params })
@@ -47,10 +47,10 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JSONRPCResult, T2 = unknown[]>(request: JSONRPCRequest<T2>): Promise<T>;
+	abstract request<T = JsonRpcResult, T2 = unknown[]>(request: JsonRpcRequest<T2>): Promise<T>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
-	abstract on<T = JSONRPCResult>(
+	abstract on<T = JsonRpcResult>(
 		type: 'message' | 'disconnect' | string,
 		callback: Web3BaseProviderCallback<T>,
 	): void;
@@ -70,7 +70,7 @@ export abstract class Web3BaseProvider {
 	): void;
 	abstract removeListener(type: string, callback: Web3BaseProviderCallback): void;
 
-	abstract once?<T = JSONRPCResult>(type: string, callback: Web3BaseProviderCallback<T>): void;
+	abstract once?<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void;
 	abstract removeAllListeners?(type: string): void;
 	abstract connect(): void;
 	abstract disconnect(code: number, reason: string): void;
