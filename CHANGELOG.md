@@ -447,12 +447,19 @@ Released with 1.0.0-beta.37 code base.
 - Dropped build tests in CI for Node v8 and v10, and added support for Node v14 (#4231)
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Emit subscription id with connect event when creating a subscription (#4300)
-- Fixed bug in signTransaction (#4295) 
+- Fixed bug in signTransaction (#4295)
+- Format `block.baseFeePerGas` to number (#4330)
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 
 ## [Unreleased]
 
-## [1.5.4]
+## [1.6.0]
+
+### Changed
+
+- Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
+
+## [1.6.1]
 
 ### Changed
 
