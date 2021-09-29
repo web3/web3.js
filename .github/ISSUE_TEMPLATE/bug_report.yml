@@ -1,0 +1,59 @@
+name: Bug Report
+description: File a bug report
+labels: ["Bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you've encountered
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing (include error message if you have one)
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: "Steps to reproduce what you've encountered"
+      placeholder: |
+        Using this code:
+          ```typescript
+          // Your code using Web3.js
+          ```
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Web3.js Version
+      placeholder: "1.5.3"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        Versions of software you're using
+        examples:
+          - **Operating System**: Ubuntu 20.04
+          - **Browser**: Brave Version 1.29.81 Chromium: 93.0.4577.82 (Official Build) (64-bit)
+          - **Node.js Version**: v14.16.0
+          - **NPM Version**: 7.19.1
+      value: |
+        - Operating System: 
+        - Browser: 
+        - Node.js Version: 
+        - NPM Version: 
+  - type: textarea
+    attributes:
+      label: Anything Else?
+      description: Links? References? Anything that would give us more context about what you've encountered
