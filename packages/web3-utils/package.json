@@ -10,8 +10,8 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist || mkdir dist || true",
-		"prebuild": "rimraf dist || mkdir dist || true",
+		"clean": "rimraf dist",
+		"prebuild": "rimraf dist",
 		"build": "tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",
