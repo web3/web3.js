@@ -12,12 +12,12 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-utils` This contains useful utility functions for Dapp developers.
+`web3-utils` This contains a collection of utility functions used in web3.js.
 
 ###### Get it from the NPM Registry
 
 ```bash
-npm install web3-utils
+yarn add web3-utils
 ```
 
 ## Usage
