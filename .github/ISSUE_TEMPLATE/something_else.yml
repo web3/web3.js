@@ -2,8 +2,8 @@ name: Something Else
 description: Have something that's not a Bug Report, Feature Request, or related to Documentation?
 labels: ["Something Else"]
 body:
-- type: markdown
-  value: "If it's an Announcement, General Discussion, an Idea, a Question, or you just want to show everyone something you've built, please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue"
+  - type: markdown
+    value: "If it's an Announcement, General Discussion, an Idea, a Question, or you just want to show everyone something you've built, please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue"
   - type: checkboxes
     attributes:
       options:
