@@ -5,7 +5,15 @@ body:
   - type: markdown
     attributes:
       value: |
-        If it's an Announcement, General Discussion, an Idea, a Question, or you just want to show everyone something you've built, please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue
+        If it's a:
+        
+        - Announcement
+        - General Discussion
+        - Idea
+        - Question
+        - You'd like show everyone something you've built
+        
+        please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue
   - type: checkboxes
     attributes:
       options:
