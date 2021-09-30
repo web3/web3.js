@@ -17,7 +17,7 @@ yarn add web3
 
 ## Getting Started
 
-- :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
+- :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new/choose) or join us on [Discord](https://discord.gg/yjyvFRP)
 ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
 
 ## Prerequisites
