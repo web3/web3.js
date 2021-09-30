@@ -2,7 +2,7 @@
 	"extends": "../tsconfig",
 	"compilerOptions": {
 		"declaration": false,
-		"declarationMap": false,
+		"declarationMap": false
 	},
 	"include": ["./**/*", "../node_modules/jest-extended/types/**/*.ts"]
 }
