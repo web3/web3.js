@@ -1,7 +1,7 @@
 // Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-require('../config/setup');
+require('jest-extended');
 
-const jestTimeout = 15000;
+// @todo extend jest to have "toHaveBeenCalledOnceWith" matcher.
 
-jest.setTimeout(jestTimeout);
+process.env.NODE_ENV = 'test';
