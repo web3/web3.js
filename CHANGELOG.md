@@ -463,3 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
+
+### Fixed
+
+- Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
