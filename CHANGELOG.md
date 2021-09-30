@@ -452,15 +452,15 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.6.0]
 
-### Added
-
-- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
-
 ### Changed
 
 - Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
 
 ## [1.6.1]
+
+### Added
+
+- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
 
 ### Changed
 
