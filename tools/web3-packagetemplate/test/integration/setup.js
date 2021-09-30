@@ -2,6 +2,6 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('../config/setup');
 
-const jestTimeout = 15000; 
+const jestTimeout = 15000;
 
 jest.setTimeout(jestTimeout);
