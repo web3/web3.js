@@ -41,14 +41,8 @@ export class HttpProvider extends Web3BaseProvider {
 		) => void,
 		providerOptions?: T3,
 	): void {
-		this.request<T, T2, T3>(payload, providerOptions)
-			.then(d =>
-				callback(undefined, {
-					id: payload.id,
-					jsonrpc: payload.jsonrpc,
-					result: d,
-				}),
-			)
+		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
+			.then(d => callback(undefined, d))
 			.catch(e => callback(e, undefined));
 	}
 
