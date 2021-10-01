@@ -39,7 +39,14 @@ export abstract class Web3BaseProvider {
 	): void {
 		this.request<T, T2>(payload, providerOptions)
 			.then(d =>
-				callback(undefined, { result: d, id: payload.id ?? 0, jsonrpc: payload.jsonrpc ?? '2.0' }),
+				callback(
+                    undefined,
+                    {
+                        id: payload.id,
+                        jsonrpc: payload.jsonrpc,
+                        result: d,
+                    }
+                ),
 			)
 			.catch(e => callback(e, undefined));
 	}
