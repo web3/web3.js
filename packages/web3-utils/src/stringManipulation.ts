@@ -57,5 +57,6 @@ export const toTwosComplement = (value: number | string | bigint ):string => {
 
     //negative case: get compliment
 
-    return padLeft(toHex(val+BigInt(2**256+1)),32);
+    return padLeft(toHex(val+BigInt(2**256+1)),64);
 }
+
