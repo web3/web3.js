@@ -465,3 +465,4 @@ Released with 1.0.0-beta.37 code base.
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
 - Added missing PromiEvent handler types (#4194) 
 - Updated README to include Webpack 5 angular support instructions (#4174)
+- Added @types/bn.js dependency to additional packages (notably web3-utils) so the type export aligns with the js.
