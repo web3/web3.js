@@ -1,4 +1,4 @@
-import { stringify } from "querystring"
+import { toHex } from "converters"
 
 
 /**
@@ -10,20 +10,21 @@ import { stringify } from "querystring"
  */
 
 export const padLeft = (value: string | number, characterAmount: number, sign: string = "0"): string => {
-    const prefixed = hasPrefix(value) || typeof value === 'number' ? "0x" : "";
+    // const prefixed = typeof value === 'number' || hasPrefix(value)  ? "0x" : "";
+    const hexString = toHex(value);
 
-    //if number convert to string
+    //if number convert to hexstring
     if (typeof value === 'number') value = value.toString(16);
-    value = value.replace(/^0x/i,'')
+    value = value.replace(/^0x/i,'');
 
-    const padding = (characterAmount - value.length + 1 >= 0) ? characterAmount - value.length + 1 : 0;
+    const padding = (characterAmount + 2 - hexString.length + 1 >= 0) ? characterAmount + 2 - hexString.length + 1 : 0; //account for 0x, add 2
 
-    return prefixed.concat(sign.repeat(padding), value)
+    return "0x".concat(sign.repeat(padding), value.replace(/^0x/i,''));
 }
 
 //add this function to validation later
-const hasPrefix = (value: string | number): boolean => {
-    return /0x/i.test(value);
+const hasPrefix = (value: string): boolean => {
+    return /^0x/i.test(value);
 } 
 
 /**
@@ -35,15 +36,15 @@ const hasPrefix = (value: string | number): boolean => {
  * @returns 
  */
 export const padRight = (value: string | number, characterAmount: number, sign: string = "0"): string => {
-    const prefixed = hasPrefix(value) || typeof value === 'number' ? "0x" : "";
-
+    // const prefixed = typeof value === 'number' || hasPrefix(value)  ? "0x" 
+    const hexString = toHex(value); 
     //if number convert to string
-    if (typeof value === 'number') value = value.toString(16);
-    value = value.replace(/^0x/i,'')
+    // if (typeof value === 'number') value = value.toString(16);
+    // value = value.replace(/^0x/i,'')
 
-    const padding = (characterAmount - value.length + 1 >= 0) ? characterAmount - value.length + 1 : 0;
+    const padding = (characterAmount + 2 - hexString.length + 1 >= 0) ? characterAmount + 2 - hexString.length + 1 : 0; //account for 0x, add 2
 
-    return prefixed?.concat(value, sign.repeat(padding))
+    return hexString?.concat(value, sign.repeat(padding))
 }
 
 export const rightPad = padRight;
@@ -51,5 +52,10 @@ export const rightPad = padRight;
 export const leftPad = padLeft;
 
 export const toTwosComplement = (value: number | string | bigint ):string => {
-    return '0x' ;
+    const val = BigInt(value); //check if its greater than 0
+    if (val >= 0) return toHex(value);
+
+    //negative case: get compliment
+
+    return padLeft(toHex(val+BigInt(2**256+1)),32);
 }
