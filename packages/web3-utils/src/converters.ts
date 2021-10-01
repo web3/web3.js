@@ -1,43 +1,47 @@
+import { BigDecimal } from './big_decimal';
 import { sha3 } from './hash';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
 import { isAddress, isHexStrict } from './validation';
 
+const base = BigInt(10);
+const expo10 = (expo: number) => base ** BigInt(expo);
+
 // Ref: https://ethdocs.org/en/latest/ether.html
 /** @internal */
 const ethUnitMap = {
-	noether: '0',
-	wei: '1',
-	kwei: '1000',
-	Kwei: '1000',
-	babbage: '1000',
-	femtoether: '1000',
-	mwei: '1000000',
-	Mwei: '1000000',
-	lovelace: '1000000',
-	picoether: '1000000',
-	gwei: '1000000000',
-	Gwei: '1000000000',
-	shannon: '1000000000',
-	nanoether: '1000000000',
-	nano: '1000000000',
-	szabo: '1000000000000',
-	microether: '1000000000000',
-	micro: '1000000000000',
-	finney: '1000000000000000',
-	milliether: '1000000000000000',
-	milli: '1000000000000000',
-	ether: '1000000000000000000',
-	kether: '1000000000000000000000',
-	grand: '1000000000000000000000',
-	mether: '1000000000000000000000000',
-	gether: '1000000000000000000000000000',
-	tether: '1000000000000000000000000000000',
+	noether: BigInt('0'),
+	wei: BigInt(1),
+	kwei: expo10(3),
+	Kwei: expo10(3),
+	babbage: expo10(3),
+	femtoether: expo10(3),
+	mwei: expo10(6),
+	Mwei: expo10(6),
+	lovelace: expo10(6),
+	picoether: expo10(6),
+	gwei: expo10(9),
+	Gwei: expo10(9),
+	shannon: expo10(9),
+	nanoether: expo10(9),
+	nano: expo10(9),
+	szabo: expo10(12),
+	microether: expo10(12),
+	micro: expo10(12),
+	finney: expo10(15),
+	milliether: expo10(15),
+	milli: expo10(15),
+	ether: expo10(18),
+	kether: expo10(21),
+	grand: expo10(21),
+	mether: expo10(24),
+	gether: expo10(27),
+	tether: expo10(30),
 };
 
-export type EtherUnits = keyof typeof ethUnitMap;
+const errorMessage = (value: unknown, error: string) =>
+	`Invalid value given "${String(value)}". Error: ${error}.`;
 
-/** @internal */
-export const MAX_UINT64 = BigInt('18446744073709551615'); // BigInt((2 ** 64) - 1) - 1
+export type EtherUnits = keyof typeof ethUnitMap;
 
 /** @internal */
 const bytesToBuffer = (data: Bytes): Buffer | never => {
@@ -45,19 +49,35 @@ const bytesToBuffer = (data: Bytes): Buffer | never => {
 		return data;
 	}
 
+	if (data instanceof Uint8Array) {
+		return Buffer.from(data);
+	}
+
 	if (Array.isArray(data)) {
+		if (data.some(d => d < 0)) {
+			throw new Error(errorMessage(data, 'contains negative values'));
+		}
+
+		if (data.some(d => d > 255)) {
+			throw new Error(errorMessage(data, 'contains numbers greater than 255'));
+		}
+
+		if (data.some(d => !Number.isInteger(d))) {
+			throw new Error(errorMessage(data, 'contains invalid integer values'));
+		}
+
 		return Buffer.from(data);
 	}
 
 	if (typeof data === 'string' && !isHexStrict(data)) {
-		throw new Error(`The parameter "${data}" must be a valid HEX string.`);
+		throw new Error(errorMessage(data, 'not valid hex string'));
 	}
 
 	if (typeof data === 'string' && (data.startsWith('0x') || data.startsWith('0X'))) {
 		return Buffer.from(data.substr(2), 'hex');
 	}
 
-	throw new Error(`Invalid byte data format for "${data.toString()}"`);
+	throw new Error(errorMessage(data, 'can not parse as byte data'));
 };
 
 /** @internal */
@@ -66,29 +86,29 @@ const bufferToHexString = (data: Buffer) => `0x${data.toString('hex')}`;
 /**
  * Convert a byte array to a hex string
  */
-export const bytesToHex = (bytes: Bytes): string => bufferToHexString(bytesToBuffer(bytes));
+export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToBuffer(bytes));
 
 /**
  * Convert a hex string to a byte array
  */
-export const hexToBytes = (bytes: string): Buffer => bytesToBuffer(bytes);
+export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
 
 /**
  * Converts value to it's number representation
  */
 export const hexToNumber = (value: HexString): bigint | number => {
 	if (!isHexStrict(value)) {
-		throw new Error(`Given input "${value}" is not a number.`);
+		throw new Error(errorMessage(value, 'not valid hex string'));
 	}
 
 	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
-	const num = Number(hexValue);
+	const num = BigInt(hexValue);
 
-	if (num > Number.MAX_SAFE_INTEGER || num < Number.MIN_SAFE_INTEGER) {
+	if (num > BigInt(Number.MAX_SAFE_INTEGER) || num < BigInt(Number.MIN_SAFE_INTEGER)) {
 		return negative ? BigInt(-1) * BigInt(num) : BigInt(num);
 	}
 
-	return negative ? -1 * num : num;
+	return negative ? -1 * Number(num) : Number(num);
 };
 
 /**
@@ -100,29 +120,34 @@ export const toDecimal = hexToNumber;
  * Converts value to it's hex representation
  */
 export const numberToHex = (value: Numbers): HexString => {
-	if (!Number.isFinite(value)) {
-		throw new Error(`Given input "${value}" is not a number.`);
+	try {
+		if (typeof value === 'number' && !Number.isFinite(value)) {
+			throw new Error(errorMessage(value, 'contains invalid integer values'));
+		}
+
+		if ((typeof value === 'number' || typeof value === 'bigint') && BigInt(value) < BigInt(0)) {
+			return `-0x${value.toString(16).substr(1)}`;
+		}
+
+		if (
+			(typeof value === 'number' || typeof value === 'bigint') &&
+			BigInt(value) >= BigInt(0)
+		) {
+			return `0x${value.toString(16)}`;
+		}
+
+		if (typeof value === 'string' && isHexStrict(value)) {
+			return numberToHex(hexToNumber(value));
+		}
+
+		if (typeof value === 'string' && !isHexStrict(value)) {
+			return numberToHex(BigInt(value));
+		}
+	} catch {
+		throw new Error(errorMessage(value, 'not a valid integer'));
 	}
 
-	if (typeof value === 'string' && !isHexStrict(value)) {
-		throw new Error(`Given input "${value}" is not a number.`);
-	}
-
-	if (typeof value === 'number' || (typeof value === 'bigint' && value < 0)) {
-		return `-0x${value.toString(16)}`;
-	}
-
-	if (typeof value === 'number' || (typeof value === 'bigint' && value >= 0)) {
-		return `0x${value.toString(16)}`;
-	}
-
-	if (typeof value === 'string') {
-		const num = hexToNumber(value);
-
-		return num >= 0 ? `0x${num.toString(16)}` : `-0x${num.toString(16).substr(1)}`;
-	}
-
-	throw new Error('Can not parse number to hex');
+	throw new Error(errorMessage(value, 'not a valid integer'));
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
@@ -137,17 +162,28 @@ export const hexToNumberString = (data: HexString): string => hexToNumber(data).
 /**
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  */
-export const utf8ToHex = (str: string): HexString =>
-	`0x${Buffer.from(str, 'utf8').toString('hex')}`;
+export const utf8ToHex = (str: string): HexString => {
+	if (typeof str !== 'string') {
+		throw new Error(errorMessage(str, 'not a valid string'));
+	}
+
+	// To be compatible with 1.x trim null character
+	// eslint-disable-next-line no-control-regex
+	let strWithoutNullCharacter = str.replace(/^(?:\u0000)/, '');
+	// eslint-disable-next-line no-control-regex
+	strWithoutNullCharacter = strWithoutNullCharacter.replace(/(?:\u0000)$/, '');
+
+	return `0x${Buffer.from(strWithoutNullCharacter, 'utf8').toString('hex')}`;
+};
 
 /**
  * @alias `utf8ToHex`
- */  
+ */
 
 export const fromUtf8 = utf8ToHex;
 /**
  * @alias `utf8ToHex`
- */  
+ */
 export const stringToHex = utf8ToHex;
 
 /**
@@ -168,8 +204,13 @@ export const hexToString = hexToUtf8;
 /**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  */
-export const asciiToHex = (str: string): HexString =>
-	`0x${Buffer.from(str, 'ascii').toString('hex')}`;
+export const asciiToHex = (str: string): HexString => {
+	if (typeof str !== 'string') {
+		throw new Error(errorMessage(str, 'not a valid string'));
+	}
+
+	return `0x${Buffer.from(str, 'ascii').toString('hex')}`;
+};
 
 /**
  * @alias `asciiToHex`
@@ -186,7 +227,7 @@ export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toStrin
  */
 export const toAscii = hexToUtf8;
 
-/** 
+/**
  * Auto converts any given value into it's hex representation.
  */
 export const toHex = (
@@ -225,7 +266,7 @@ export const toHex = (
 		}
 	}
 
-	throw new Error(`Given input "${value.toString()}" can not be converted to hex.`);
+	throw new Error(errorMessage(value, 'can not be converted to hex'));
 };
 
 /**
@@ -237,72 +278,43 @@ export const toNumber = (value: Numbers): number | bigint => {
 		return value;
 	}
 
-	return hexToNumber(toHex(value));
+	return hexToNumber(numberToHex(value));
 };
 
 /**
  * Takes a number of wei and converts it to any other ether unit.
  */
 export const fromWei = (number: Numbers, unit: EtherUnits): string => {
-	if (!['number', 'bigint', 'string'].includes(typeof number)) {
-		throw new Error('Please pass numbers as strings/number/bigint to avoid precision errors.');
+	const denomination = ethUnitMap[unit];
+
+	if (!denomination) {
+		throw new Error(errorMessage(unit, 'invalid unit'));
 	}
 
-	if (
-		typeof number === 'string' ||
-		(typeof number === 'number' && (number.toString().split('.')[1] || '').length > 0)
-	) {
-		throw new Error('Wei value should not have decimal points');
-	}
-
-	const denomination = BigInt(ethUnitMap[unit]);
 	const weiAmount = BigInt(toNumber(number));
 
-	if (weiAmount > MAX_UINT64) {
-		throw new Error('wei amount out of range');
-	}
-
-	const int = (weiAmount / denomination).toString();
-	const fraction = BigInt(weiAmount % denomination) / denomination;
-
-	const floatingPointsSplit = fraction
-		.toLocaleString('en-US', {
-			maximumFractionDigits: ethUnitMap[unit]
-				.length as BigIntToLocaleStringOptions['maximumFractionDigits'],
-		})
-		.split('.')[1];
-
-	return fraction !== BigInt(0) ? `${int}.${floatingPointsSplit}` : int;
+	return new BigDecimal(weiAmount).divide(new BigDecimal(denomination)).toString();
 };
 
 /**
  * Takes a number of a unit and converts it to wei.
  */
 export const toWei = (number: Numbers, unit: EtherUnits): string => {
-	if (!['number', 'bigint', 'string'].includes(typeof number)) {
-		throw new Error('Please pass numbers as strings/number/bigint to avoid precision errors.');
+	const denomination = ethUnitMap[unit];
+
+	if (!denomination) {
+		throw new Error(errorMessage(unit, 'invalid unit'));
 	}
 
-	if (
-		typeof number === 'string' ||
-		(typeof number === 'number' &&
-			(number.toString().split('.')[1] || '').length > ethUnitMap[unit].length)
-	) {
-		throw new Error(`Amount has too many decimal points for "${unit} unit."`);
+	let amount: BigDecimal;
+
+	if (typeof number === 'string') {
+		amount = new BigDecimal(number);
+	} else {
+		amount = new BigDecimal(BigInt(toNumber(number)));
 	}
 
-	const amount = number.toString();
-	const denomination = BigInt(ethUnitMap[unit]);
-	const splitAmount = amount.split('.');
-	const intAmount = BigInt(splitAmount[0]);
-	const fraction = BigInt((splitAmount[1] ?? '0').padEnd(ethUnitMap[unit].length, '0'));
-	const fullAmount = intAmount * denomination + fraction;
-
-	if (fullAmount > MAX_UINT64) {
-		throw new Error('Amount out of range');
-	}
-
-	return fullAmount.toString();
+	return amount.mul(new BigDecimal(denomination)).toString();
 };
 
 export const toChecksumAddress = (address: Address): string => {
