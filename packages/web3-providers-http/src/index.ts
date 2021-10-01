@@ -9,9 +9,20 @@ export class HttpProvider extends Web3BaseProvider {
     public constructor(clientUrl: string, httpProviderOptions?: HttpProviderOptions) {
         super();
         // TODO replace error
-        if (!HttpProvider._validateClientUrl(clientUrl)) throw Error('Invalid client url');
+        if (!HttpProvider.validateClientUrl(clientUrl)) throw Error('Invalid client url');
         this.clientUrl = clientUrl;
         this.httpProviderOptions = httpProviderOptions;
+    }
+
+    private static validateClientUrl(clientUrl: string): boolean {
+        try {
+            return typeof clientUrl === 'string'
+                ? /^http(s)?:\/\//i.test(clientUrl)
+                : false;
+        } catch (e) {
+            // TODO replace
+            throw Error(`Failed to validate client url: ${(e as Error).message}`);
+        }
     }
 
     public send<T = JsonRpcResult, T2 = unknown[], T3 = RequestInit>(
@@ -24,15 +35,24 @@ export class HttpProvider extends Web3BaseProvider {
     ): void {
         this.request<T, T2, T3>(payload, providerOptions)
             .then(d =>
-                callback(undefined, { result: d, id: payload.id ?? 0, jsonrpc: payload.jsonrpc ?? '2.0' })
+                callback(
+                    undefined,
+                    {
+                        id: payload.id,
+                        jsonrpc: payload.jsonrpc,
+                        result: d,
+                    }
+                )
             )
             .catch(e => callback(e, undefined));
     }
 
+    /* eslint-disable class-methods-use-this */
     public getStatus(): Web3BaseProviderStatus {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public supportsSubscriptions() {
         return false
     }
@@ -65,46 +85,43 @@ export class HttpProvider extends Web3BaseProvider {
         return await response.json() as T
     }
 
+    /* eslint-disable class-methods-use-this */
     public on() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public removeListener() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public once() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public removeAllListeners() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public connect() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public disconnect() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public reset() {
         throw new MethodNotImplementedError();
     }
 
+    /* eslint-disable class-methods-use-this */
     public reconnect() {
         throw new MethodNotImplementedError();
-    }
-
-    private static _validateClientUrl(clientUrl: string): boolean {
-        try {
-            return typeof clientUrl === 'string'
-                ? /^http(s)?:\/\//i.test(clientUrl)
-                : false;
-        } catch (e) {
-            // TODO replace
-            throw Error(`Failed to validate client url: ${(e as Error).message}`);
-        }
     }
 }
