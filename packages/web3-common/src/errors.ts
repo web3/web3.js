@@ -3,6 +3,7 @@
 import {
 	ERR_RESPONSE,
 	ERR_PARAM,
+    ERR_METHOD_NOT_IMPLEMENTED,
 	ERR_CONN,
 	ERR_CONN_INVALID,
 	ERR_CONN_TIMEOUT,
@@ -329,5 +330,13 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 
 	public constructor() {
 		super('No "from" address specified in neither the given options, nor the default options.');
+	}
+}
+
+export class MethodNotImplementedError extends Web3Error {
+	public code = ERR_METHOD_NOT_IMPLEMENTED;
+
+	public constructor() {
+		super("The method you're trying to call is not implemented.");
 	}
 }
