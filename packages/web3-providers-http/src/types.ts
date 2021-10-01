@@ -1,3 +1,3 @@
 export interface HttpProviderOptions {
-    providerOptions: RequestInit;
+	providerOptions: RequestInit;
 }
