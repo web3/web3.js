@@ -31,7 +31,7 @@ jobs:
                   key: ${{ runner.os }}-node14-${{ hashFiles('**/yarn-lock.json') }}
 
             - run: yarn
-              if: steps.cache-deps.outputs.cache-hit != 'true'
+            #   if: steps.cache-deps.outputs.cache-hit != 'true'
 
             - run: yarn lint
     unit:
