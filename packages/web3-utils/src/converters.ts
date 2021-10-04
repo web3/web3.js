@@ -104,8 +104,8 @@ export const hexToNumber = (value: HexString): bigint | number => {
 	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
 	const num = BigInt(hexValue);
 
-	if (num > BigInt(Number.MAX_SAFE_INTEGER) || num < BigInt(Number.MIN_SAFE_INTEGER)) {
-		return negative ? BigInt(-1) * BigInt(num) : BigInt(num);
+	if (num > Number.MAX_SAFE_INTEGER || num < Number.MIN_SAFE_INTEGER) {
+		return negative ? -num : num;
 	}
 
 	return negative ? -1 * Number(num) : Number(num);
