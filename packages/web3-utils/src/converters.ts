@@ -257,7 +257,7 @@ export const toHex = (
 			return returnType ? 'int256' : numberToHex(value);
 		}
 
-		if (value.startsWith('0x') || value.startsWith('0X')) {
+		if (isHexStrict(value)) {
 			return returnType ? 'bytes' : value;
 		}
 
