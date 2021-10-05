@@ -67,6 +67,8 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 	[-255, '-0xff'],
 	['0xFF0', '0xff0'],
 	['-0xa0', '-0xa0'],
+	[0xff, '0xff'],
+	[-0xff, '-0xff'],
 ];
 
 export const numberToHexInvalidData: [any, string][] = [
@@ -186,7 +188,7 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 ];
 
 export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
-  [[0, 'wei'], '0'],
+	[[0, 'wei'], '0'],
 	[[123, 'wei'], '123'],
 	[['123', 'wei'], '123'],
 	[[BigInt(123), 'wei'], '123'],
@@ -201,6 +203,7 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
 	[['1', 'mether'], '0.000000000000000000000001'],
 	[['1', 'gether'], '0.000000000000000000000000001'],
 	[['1', 'tether'], '0.000000000000000000000000000001'],
+	[['900000000000000000000000000001', 'tether'], '0.900000000000000000000000000001'],
 	[['1000', 'kwei'], '1'],
 	[['1000000', 'mwei'], '1'],
 	[['1000000000', 'gwei'], '1'],
@@ -214,6 +217,10 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
 	[['1000000000000000000000000000000', 'tether'], '1'],
 	[['12345678', 'gwei'], '0.012345678'],
 	[['76912345678', 'gwei'], '76.912345678'],
+	[['134439381738', 'gwei'], '134.439381738'],
+	[['178373938391829348', 'ether'], '0.178373938391829348'],
+	[['879123456788877661', 'gwei'], '879123456.788877661'],
+	[['879123456788877661', 'tether'], '0.000000000000879123456788877661'],
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [
@@ -226,9 +233,9 @@ export const fromWeiInvalidData: [[any, any], string][] = [
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [
-	[[null, 'kwei'], 'Invalid value given "null". Error: not a valid integer.'],
-	[[undefined, 'kwei'], 'Invalid value given "undefined". Error: not a valid integer.'],
-	[[{}, 'kwei'], 'Invalid value given "[object Object]". Error: not a valid integer.'],
-	[['data', 'kwei'], 'Invalid value given "data". Error: not a valid integer.'],
+	[[null, 'kwei'], 'Invalid value given "null". Error: not a valid number.'],
+	[[undefined, 'kwei'], 'Invalid value given "undefined". Error: not a valid number.'],
+	[[{}, 'kwei'], 'Invalid value given "[object Object]". Error: not a valid number.'],
+	[['data', 'kwei'], 'Invalid value given "data". Error: not a valid number.'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
