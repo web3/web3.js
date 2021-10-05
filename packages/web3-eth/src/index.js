@@ -584,6 +584,12 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: formatter.outputTransactionFormatter
         }),
+        new Method({
+            name: 'createAccessList',
+            call: 'eth_createAccessList',
+            params: 2,
+            inputFormatter: [formatter.inputTransactionFormatter, formatter.inputDefaultBlockNumberFormatter],
+        }),
 
         // subscriptions
         new Subscriptions({

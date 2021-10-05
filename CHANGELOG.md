@@ -458,6 +458,10 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.6.1]
 
+### Added
+
+- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
@@ -467,3 +471,4 @@ Released with 1.0.0-beta.37 code base.
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 - Format `block.baseFeePerGas` to number (#4330)
 - Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
+- Updated README to include Webpack 5 angular support instructions (#4174)
