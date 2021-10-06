@@ -1,12 +1,12 @@
 import {
-	errorHigherValueIntegers,
-	errorInvalidBytesData,
-	errorInvalidHexString,
-	errorInvalidIntegersValues,
-	errorNegativeIntegers,
-	errorInvalidInteger,
-	errorInvalidString,
-	errorInvalidNumber,
+	HighValueIntegerInByteArrayError,
+	InvalidBytesError,
+	InvalidHexStringError,
+	InvalidIntegerError,
+	InvalidIntegerInByteArrayError,
+	InvalidNumberError,
+	NegativeIntegersInByteArrayError,
+	InvalidStringError,
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
@@ -19,22 +19,22 @@ export const isHexStrict = (hex: string) =>
 
 export const validateHexStringInput = (data: HexString) => {
 	if (!isHexStrict(data)) {
-		throw new Error(errorInvalidHexString(data));
+		throw new InvalidHexStringError(data);
 	}
 };
 
 export const validateBytesInput = (data: Bytes) => {
 	if (Array.isArray(data)) {
 		if (data.some(d => d < 0)) {
-			throw new Error(errorNegativeIntegers(data));
+			throw new NegativeIntegersInByteArrayError(data);
 		}
 
 		if (data.some(d => d > 255)) {
-			throw new Error(errorHigherValueIntegers(data));
+			throw new HighValueIntegerInByteArrayError(data);
 		}
 
 		if (data.some(d => !Number.isInteger(d))) {
-			throw new Error(errorInvalidIntegersValues(data));
+			throw new InvalidIntegerInByteArrayError(data);
 		}
 	}
 
@@ -45,7 +45,7 @@ export const validateBytesInput = (data: Bytes) => {
 
 	// Hex string can prefixed with `-0x` but not valid for bytes
 	if (typeof data === 'string' && data.startsWith('-')) {
-		throw new Error(errorInvalidBytesData(data));
+		throw new InvalidBytesError(data);
 	}
 };
 
@@ -54,16 +54,16 @@ export const validateNumbersInput = (
 	{ onlyIntegers }: { onlyIntegers: boolean },
 ) => {
 	if (!['number', 'string', 'bigint'].includes(typeof data)) {
-		throw new Error(onlyIntegers ? errorInvalidInteger(data) : errorInvalidNumber(data));
+		throw onlyIntegers ? new InvalidIntegerError(data) : new InvalidNumberError(data);
 	}
 
 	if (typeof data === 'number' && !Number.isFinite(data)) {
-		throw new Error(errorInvalidInteger(data));
+		throw new InvalidIntegerError(data);
 	}
 
 	// If these are full integer values given as 'number'
 	if (typeof data === 'number' && Math.floor(data) !== data) {
-		throw new Error(errorInvalidInteger(data));
+		throw new InvalidIntegerError(data);
 	}
 
 	// If its not a hex string, then it must contain a decimal point.
@@ -73,7 +73,7 @@ export const validateNumbersInput = (
 		!isHexStrict(data) &&
 		!/^(-)?[0-9]*$/i.test(data)
 	) {
-		throw new Error(errorInvalidInteger(data));
+		throw new InvalidIntegerError(data);
 	}
 
 	if (
@@ -82,12 +82,12 @@ export const validateNumbersInput = (
 		!isHexStrict(data) &&
 		!/^[0-9]\d*(\.\d+)?$/i.test(data)
 	) {
-		throw new Error(errorInvalidNumber(data));
+		throw new InvalidNumberError(data);
 	}
 };
 
 export const validateStringInput = (data: string) => {
 	if (typeof data !== 'string') {
-		throw new Error(errorInvalidString(data));
+		throw new InvalidStringError(data);
 	}
 };

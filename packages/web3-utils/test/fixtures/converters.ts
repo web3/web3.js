@@ -19,9 +19,9 @@ export const bytesToHexInvalidData: [any, string][] = [
 		[786, 12, 34, -2, 3],
 		'Invalid value given "786,12,34,-2,3". Error: contains negative values.',
 	],
-	['0x0c1g', 'Invalid value given "0x0c1g". Error: not valid hex string.'],
-	['0c1g', 'Invalid value given "0c1g". Error: not valid hex string.'],
-	['data', 'Invalid value given "data". Error: not valid hex string.'],
+	['0x0c1g', 'Invalid value given "0x0c1g". Error: not a valid hex string.'],
+	['0c1g', 'Invalid value given "0c1g". Error: not a valid hex string.'],
+	['data', 'Invalid value given "data". Error: not a valid hex string.'],
 	[12, 'Invalid value given "12". Error: can not parse as byte data.'],
 	[['string'], 'Invalid value given "string". Error: contains invalid integer values.'],
 	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
@@ -46,9 +46,9 @@ export const hexToBytesInvalidData: [any, string][] = [
 		[786, 12, 34, -2, 3],
 		'Invalid value given "786,12,34,-2,3". Error: contains negative values.',
 	],
-	['0x0c1g', 'Invalid value given "0x0c1g". Error: not valid hex string.'],
-	['0c1g', 'Invalid value given "0c1g". Error: not valid hex string.'],
-	['data', 'Invalid value given "data". Error: not valid hex string.'],
+	['0x0c1g', 'Invalid value given "0x0c1g". Error: not a valid hex string.'],
+	['0c1g', 'Invalid value given "0c1g". Error: not a valid hex string.'],
+	['data', 'Invalid value given "data". Error: not a valid hex string.'],
 	[12, 'Invalid value given "12". Error: can not parse as byte data.'],
 	[['string'], 'Invalid value given "string". Error: contains invalid integer values.'],
 	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
@@ -99,11 +99,11 @@ export const hexToNumberValidData: [HexString, Numbers][] = [
 ];
 
 export const hexToNumberInvalidData: [HexString, string][] = [
-	['1a', 'Invalid value given "1a". Error: not valid hex string.'],
-	['0xffdg', 'Invalid value given "0xffdg". Error: not valid hex string.'],
-	['xfff', 'Invalid value given "xfff". Error: not valid hex string.'],
-	['-123', 'Invalid value given "-123". Error: not valid hex string.'],
-	['-9x123', 'Invalid value given "-9x123". Error: not valid hex string.'],
+	['1a', 'Invalid value given "1a". Error: not a valid hex string.'],
+	['0xffdg', 'Invalid value given "0xffdg". Error: not a valid hex string.'],
+	['xfff', 'Invalid value given "xfff". Error: not a valid hex string.'],
+	['-123', 'Invalid value given "-123". Error: not a valid hex string.'],
+	['-9x123', 'Invalid value given "-9x123". Error: not a valid hex string.'],
 ];
 
 export const utf8ToHexValidData: [string, HexString][] = [
@@ -140,9 +140,9 @@ export const hexToUtf8ValidData: [HexString, string][] = [
 export const hexToUtf8InvalidData: [any, string][] = [
 	[
 		'0x4920686176652031303g0c2a3',
-		'Invalid value given "0x4920686176652031303g0c2a3". Error: not valid hex string.',
+		'Invalid value given "0x4920686176652031303g0c2a3". Error: not a valid hex string.',
 	],
-	['afde', 'Invalid value given "afde". Error: not valid hex string.'],
+	['afde', 'Invalid value given "afde". Error: not a valid hex string.'],
 	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
 	[undefined, 'Invalid value given "undefined". Error: can not parse as byte data.'],
 	[{}, 'Invalid value given "[object Object]". Error: can not parse as byte data.'],

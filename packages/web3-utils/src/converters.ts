@@ -1,9 +1,9 @@
 import {
-	errorCannotParseHex,
-	errorInvalidAddress,
-	errorInvalidBytesData,
-	errorInvalidInteger,
-	errorInvalidUnit,
+	HexProcessingError,
+	InvalidAddressError,
+	InvalidBytesError,
+	InvalidIntegerError,
+	InvalidUnitError,
 } from './errors';
 import { sha3 } from './hash';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
@@ -69,7 +69,7 @@ const bytesToBuffer = (data: Bytes): Buffer | never => {
 		return Buffer.from(data.substr(2), 'hex');
 	}
 
-	throw new Error(errorInvalidBytesData(data));
+	throw new InvalidBytesError(data);
 };
 
 /** @internal */
@@ -128,7 +128,7 @@ export const numberToHex = (value: Numbers): HexString => {
 		return numberToHex(BigInt(value));
 	}
 
-	throw new Error(errorInvalidInteger(value));
+	throw new InvalidIntegerError(value);
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
@@ -243,7 +243,7 @@ export const toHex = (
 		}
 	}
 
-	throw new Error(errorCannotParseHex(value));
+	throw new HexProcessingError(value);
 };
 
 /**
@@ -271,7 +271,7 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	const denomination = ethUnitMap[unit];
 
 	if (!denomination) {
-		throw new Error(errorInvalidUnit(unit));
+		throw new InvalidUnitError(unit);
 	}
 
 	// value in wei would always be integer
@@ -320,7 +320,7 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	const denomination = ethUnitMap[unit];
 
 	if (!denomination) {
-		throw new Error(errorInvalidUnit(unit));
+		throw new InvalidUnitError(unit);
 	}
 
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
@@ -358,7 +358,7 @@ export const toChecksumAddress = (address: Address): string => {
 	if (typeof address === 'undefined') return '';
 
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-		throw new Error(errorInvalidAddress(address));
+		throw new InvalidAddressError(address);
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
