@@ -13,6 +13,8 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
     [['-abcd', 8, '0'],'000-abcd'],
     [[BigInt('9007199254740992'),32,'0'],'0x00000000000000000020000000000000'],
     [[BigInt('-9007199254740992'),32,'0'],'-0x00000000000000000020000000000000'],
+    [[9007199254740992n,32,'0'],'0x00000000000000000020000000000000'],
+    [[-9007199254740992n,32,'0'],'-0x00000000000000000020000000000000'],
     [[-13, 10, '0'],'-0x000000000d'],
     [['9.5', 8, '0'],'000009.5']
 ]
@@ -31,8 +33,10 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
     [['-0x01', 64, 'f'], '-0x01ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
     [['zxy', 11, '0'],'zxy00000000'],
     [['-abcd', 32, '1'],'-abcd111111111111111111111111111'],
+    [[10000n,8,'0'],'0x27100000'],
     [[BigInt(10000),8,'0'],'0x27100000'],
     [[BigInt(-14),8,'0'],'-0xe0000000'],
+    [[-14n,8,'0'],'-0xe0000000'],
     [['15.5', 8, '0'],'15.50000']
 ]
 
@@ -46,10 +50,13 @@ export const padRightInvalidData: [[any, number, string], HexString][] = [
 export const toTwosComplementData: [Numbers, HexString][] = [
     [256, '0x0000000000000000000000000000000000000000000000000000000000000100'],
     [-256,'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'],
+    [0, '0x0000000000000000000000000000000000000000000000000000000000000000'],
     ['0x1','0x0000000000000000000000000000000000000000000000000000000000000001'],
     ['-0x1', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
     [BigInt('9007199254740992'), '0x0000000000000000000000000000000000000000000000000020000000000000'],
     [BigInt('-9007199254740992'),'0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
+    [9007199254740992n, '0x0000000000000000000000000000000000000000000000000020000000000000'],
+    [-9007199254740992n, '0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
     ['13', '0x000000000000000000000000000000000000000000000000000000000000000d'],
     ['-13', '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3']
 ]

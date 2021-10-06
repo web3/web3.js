@@ -1,22 +1,23 @@
 import { numberToHex, toHex, toNumber } from "./converters"
 import { Numbers } from './types';
-import { isHexStrict } from './validation';
+import { isHexStrict, validateNumbersInput } from './validation';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */
 
-export const padLeft = (value: Numbers | string, characterAmount: number, sign = "0"): string => {
+export const padLeft = (value: Numbers, characterAmount: number, sign = "0"): string => {
    if (typeof value === 'string' && !isHexStrict(value)) {
        return value.padStart(characterAmount, sign);
    }
    
+   validateNumbersInput(value, {onlyIntegers: true})
 
     const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
     
     const [prefix, hexValue] = hex.startsWith('-') ? ["-0x", hex.substr(3)] : ["0x", hex.substr(2)];
 
-    return prefix.concat(hexValue.padStart(characterAmount, sign));
+    return `${prefix}${hexValue.padStart(characterAmount, sign)}`
 }
 
 
@@ -27,6 +28,9 @@ export const padRight = (value: Numbers, characterAmount: number, sign = "0"): s
     if (typeof value === 'string' && !isHexStrict(value)) {
         return value.padEnd(characterAmount, sign);
     }
+
+    validateNumbersInput(value, {onlyIntegers: true});
+
     const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
     const prefixLength = hexString.startsWith('-') ? 3 : 2;
@@ -38,14 +42,18 @@ export const rightPad = padRight;
 export const leftPad = padLeft;
 
 /**
- * Converts a negative number into the two’s complement.
+ * Converts a negative number into the two’s complement and return a hexstring of 32 bytes.
  */
 export const toTwosComplement = (value: Numbers ): string => {
 
-    const val = toNumber(value); 
+    validateNumbersInput(value, {onlyIntegers: true});
 
+    const val = toNumber(value); 
     if (val >= 0) return padLeft(toHex(val),64);
 
     const v = BigInt(val);
-    return padLeft(numberToHex(v+BigInt(2**256+1)),64);
+    const inversion = 2n**256n;
+    const complement = v + inversion;
+
+    return padLeft(numberToHex(complement),64);
 }
