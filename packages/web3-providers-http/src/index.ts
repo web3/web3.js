@@ -1,5 +1,5 @@
 import {
-	InvalidResponseError,
+	ResponseError,
 	JsonRpcPayload,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
@@ -8,6 +8,7 @@ import {
 	MethodNotImplementedError,
 	JsonRpcResponse,
 	Web3BaseProviderStatus,
+    InvalidClientError
 } from 'web3-common';
 
 import { HttpProviderOptions } from './types';
@@ -18,19 +19,13 @@ export class HttpProvider extends Web3BaseProvider {
 
 	public constructor(clientUrl: string, httpProviderOptions?: HttpProviderOptions) {
 		super();
-		// TODO replace error
-		if (!HttpProvider.validateClientUrl(clientUrl)) throw Error('Invalid client url');
+		if (!HttpProvider.validateClientUrl(clientUrl)) throw new InvalidClientError(clientUrl);
 		this.clientUrl = clientUrl;
 		this.httpProviderOptions = httpProviderOptions;
 	}
 
 	private static validateClientUrl(clientUrl: string): boolean {
-		try {
-			return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
-		} catch (e) {
-			// TODO replace
-			throw Error(`Failed to validate client url: ${(e as Error).message}`);
-		}
+		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
 	}
 
 	public send<T = JsonRpcResult, T2 = unknown[], T3 = RequestInit>(
@@ -79,7 +74,7 @@ export class HttpProvider extends Web3BaseProvider {
 			}),
 		});
 
-		if (!response.ok) throw new InvalidResponseError((await response.json()) as T);
+		if (!response.ok) throw new ResponseError((await response.json()) as T);
 
 		return (await response.json()) as T;
 	}
