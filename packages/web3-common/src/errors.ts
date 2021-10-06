@@ -28,6 +28,7 @@ import {
 	ERR_CONTRACT_MISSING_DEPLOY_DATA,
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
+    ERR_INVALID_CLIENT
 } from './constants';
 
 type ConnectionEvent = { code: string; reason: string };
@@ -338,5 +339,13 @@ export class MethodNotImplementedError extends Web3Error {
 
 	public constructor() {
 		super("The method you're trying to call is not implemented.");
+	}
+}
+
+export class InvalidClientError extends Web3Error {
+	public code = ERR_INVALID_CLIENT;
+
+	public constructor(clientUrl: string) {
+		super(`Client URL "${clientUrl}" is invalid.`);
 	}
 }

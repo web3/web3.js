@@ -38,3 +38,4 @@ export const ERR_CONN_PENDING_REQUESTS = 506;
 // Provider error codes
 export const ERR_PROVIDER = 600;
 export const ERR_INVALID_PROVIDER = 601;
+export const ERR_INVALID_CLIENT = 602;
