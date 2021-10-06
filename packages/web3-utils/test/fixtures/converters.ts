@@ -190,7 +190,7 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 	['0x123c', ['0x123c', 'bytes']],
 ];
 
-export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
+const conversionBaseData: [[Numbers, EtherUnits], string][] = [
 	[[0, 'wei'], '0'],
 	[[123, 'wei'], '123'],
 	[['123', 'wei'], '123'],
@@ -225,6 +225,16 @@ export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
 	[['178373938391829348', 'ether'], '0.178373938391829348'],
 	[['879123456788877661', 'gwei'], '879123456.788877661'],
 	[['879123456788877661', 'tether'], '0.000000000000879123456788877661'],
+];
+
+export const fromWeiValidData: [[Numbers, EtherUnits], string][] = [
+	...conversionBaseData,
+	[['0xff', 'wei'], '255'],
+];
+
+export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
+	...conversionBaseData,
+	[['255', 'wei'], '0xFF'],
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [

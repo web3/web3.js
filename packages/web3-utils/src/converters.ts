@@ -274,17 +274,17 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 		throw new Error(errorInvalidUnit(unit));
 	}
 
+	// value in wei would always be integer
+	// 13456789, 1234
+	const value = String(toNumber(number));
+
 	// count number of zeros in denomination
 	// 1000000 -> 6
 	const numberOfZerosInDenomination = denomination.toString().length - 1;
 
 	if (numberOfZerosInDenomination <= 0) {
-		return number.toString();
+		return value.toString();
 	}
-
-	// value in wei would always be integer
-	// 13456789, 1234
-	const value = String(toNumber(number));
 
 	// pad the value with required zeros
 	// 13456789 -> 13456789, 1234 -> 001234
@@ -325,7 +325,9 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 
 	// if value is decimal e.g. 24.56 extract `integer` and `fraction` part
 	// to avoid `fraction` to be null use `concat` with empty string
-	const [integer, fraction] = String(typeof number === 'string' ? number : toNumber(number))
+	const [integer, fraction] = String(
+		typeof number === 'string' && !isHexStrict(number) ? number : toNumber(number),
+	)
 		.split('.')
 		.concat('');
 

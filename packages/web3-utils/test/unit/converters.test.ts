@@ -38,6 +38,7 @@ import {
 	numberToHexValidData,
 	toHexValidData,
 	toWeiInvalidData,
+	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
 } from '../fixtures/converters';
@@ -314,7 +315,7 @@ describe('converters', () => {
 
 	describe('toWei', () => {
 		describe('valid cases', () => {
-			it.each(fromWeiValidData)('%s', (input, output) => {
+			it.each(toWeiValidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(toWei(output, input[1])).toEqual(input[0].toString());
 			});
