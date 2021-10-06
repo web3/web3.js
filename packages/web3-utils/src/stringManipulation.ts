@@ -10,9 +10,13 @@ import { isHexStrict } from './validation';
  * @returns 
  */
 
-export const padLeft = (value: Numbers, characterAmount: number, sign: string = "0"): string => {
-   // needs string validation
-    const hex = numberToHex(value);
+export const padLeft = (value: Numbers | string, characterAmount: number, sign = "0"): string => {
+   if (typeof value === 'string' && !isHexStrict(value)) {
+       return value.padStart(characterAmount, sign);
+   }
+   
+
+    const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
     
     const [prefix, hexValue] = hex.startsWith('-') ? ["-0x", hex.substr(3)] : ["0x", hex.substr(2)];
 
@@ -28,9 +32,11 @@ export const padLeft = (value: Numbers, characterAmount: number, sign: string = 
  * @param sign 
  * @returns 
  */
-export const padRight = (value: Numbers, characterAmount: number, sign: string = "0"): string => {
-    // const prefixed = typeof value === 'number' || hasPrefix(value)  ? "0x" 
-    const hexString = numberToHex(value); 
+export const padRight = (value: Numbers, characterAmount: number, sign = "0"): string => {
+    if (typeof value === 'string' && !isHexStrict(value)) {
+        return value.padEnd(characterAmount, sign);
+    }
+    const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
     const prefixLength = hexString.startsWith('-') ? 3 : 2;
     return hexString.padEnd(characterAmount+ prefixLength, sign);
@@ -40,13 +46,12 @@ export const rightPad = padRight;
 
 export const leftPad = padLeft;
 
-export const toTwosComplement = (value: Numbers ):string => {
-    if (typeof value === 'string' && !isHexStrict(value)) throw new Error(`invalid value was given: {$value}`); 
+export const toTwosComplement = (value: Numbers ): string => {
 
     const val = toNumber(value); 
-    if (val >= 0) return padLeft(toHex(value),64);
 
-    //negative case: get compliment
+    if (val >= 0) return padLeft(toHex(val),64);
+
     const v = BigInt(val);
     return padLeft(numberToHex(v+BigInt(2**256+1)),64);
 }
