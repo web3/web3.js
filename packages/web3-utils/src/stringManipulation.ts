@@ -3,11 +3,7 @@ import { Numbers } from './types';
 import { isHexStrict } from './validation';
 
 /**
- * Adds a padding on the left of a string, Useful for adding paddings to HEX strings.
- * @param value 
- * @param characterAmount 
- * @param sign 
- * @returns 
+ * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */
 
 export const padLeft = (value: Numbers | string, characterAmount: number, sign = "0"): string => {
@@ -25,12 +21,7 @@ export const padLeft = (value: Numbers | string, characterAmount: number, sign =
 
 
 /**
- * 1.x function if number will convert to hex.
- * Adds a padding on the right of a string, Useful for adding paddings to HEX strings.
- * @param value 
- * @param characterAmount 
- * @param sign 
- * @returns 
+ * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string.
  */
 export const padRight = (value: Numbers, characterAmount: number, sign = "0"): string => {
     if (typeof value === 'string' && !isHexStrict(value)) {
@@ -46,6 +37,9 @@ export const rightPad = padRight;
 
 export const leftPad = padLeft;
 
+/**
+ * Converts a negative number into the two’s complement.
+ */
 export const toTwosComplement = (value: Numbers ): string => {
 
     const val = toNumber(value); 
