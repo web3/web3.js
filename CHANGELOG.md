@@ -461,6 +461,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+- `@types/bn.js` as dev-dependency to additional packages (notably web3-utils) (#4437)
 
 ### Changed
 
@@ -472,4 +473,3 @@ Released with 1.0.0-beta.37 code base.
 - Format `block.baseFeePerGas` to number (#4330)
 - Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
 - Updated README to include Webpack 5 angular support instructions (#4174)
-- - Added @types/bn.js dependency to additional packages (notably web3-utils) so the type export aligns with the js.
