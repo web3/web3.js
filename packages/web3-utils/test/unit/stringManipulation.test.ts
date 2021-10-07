@@ -1,6 +1,8 @@
 import {
+    leftPad,
     padLeft,
     padRight,
+    rightPad,
     toTwosComplement
 } from '../../src/stringManipulation';
 
@@ -40,7 +42,39 @@ describe('string manipulation tests', () => {
         describe('invalid cases', () => {
             it.each(padRightInvalidData)('%s', (input, output) => {
                 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-                expect(() => padLeft(input[0],input[1],input[2])).toThrow(output);
+                expect(() => padRight(input[0],input[1],input[2])).toThrow(output);
+        
+            });
+        })
+    })
+
+    describe('leftPad', () => {
+		describe('valid cases', () => {
+			it.each(padLeftData)('%s', (input, output) => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(leftPad(input[0],input[1],input[2])).toEqual(output);
+			});
+        })
+        describe('invalid cases', () => {
+            it.each(padLeftInvalidData)('%s', (input, output) => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                expect(() => leftPad(input[0],input[1],input[2])).toThrow(output);
+        
+            });
+        })
+    })
+
+    describe('rightPad', () => {
+		describe('valid cases', () => {
+			it.each(padRightData)('%s', (input, output) => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(rightPad(input[0],input[1],input[2])).toEqual(output);
+			});
+        })
+        describe('invalid cases', () => {
+            it.each(padRightInvalidData)('%s', (input, output) => {
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                expect(() => rightPad(input[0],input[1],input[2])).toThrow(output);
         
             });
         })

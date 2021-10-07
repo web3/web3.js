@@ -5,7 +5,6 @@ import { isHexStrict, validateNumbersInput } from './validation';
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */
-
 export const padLeft = (value: Numbers, characterAmount: number, sign = "0"): string => {
    if (typeof value === 'string' && !isHexStrict(value)) {
        return value.padStart(characterAmount, sign);
@@ -37,12 +36,18 @@ export const padRight = (value: Numbers, characterAmount: number, sign = "0"): s
     return hexString.padEnd(characterAmount+ prefixLength, sign);
 }
 
+/**
+ * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string. @alias `padRight`
+ */
 export const rightPad = padRight;
 
+/**
+ * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string. @alias `padLeft`
+ */
 export const leftPad = padLeft;
 
 /**
- * Converts a negative number into the two’s complement and return a hexstring of 32 bytes.
+ * Converts a negative number into the two’s complement and return a hexstring of 32 bytes. 
  */
 export const toTwosComplement = (value: Numbers ): string => {
 
