@@ -10,6 +10,7 @@ import {
 	Web3BaseProviderStatus,
     InvalidClientError
 } from 'web3-common';
+import fetch from 'cross-fetch';
 
 import { HttpProviderOptions } from './types';
 
