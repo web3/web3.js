@@ -1,5 +1,6 @@
 import { HttpProvider } from '../../src/index';
-import { validClients, invalidClients } from '../fixtures/clientUrls';
+import { httpProviderOptions } from  '../fixtures/http_provider_options';
+import { validClients, invalidClients } from '../fixtures/client_urls';
 
 describe('constructs a HttpProvider instance with expected methods', () => {
 	it('should construct with expected methods', () => {
@@ -22,26 +23,6 @@ describe('constructs a HttpProvider instance with expected methods', () => {
 
 describe('Allows for providerOptions to be passed upon instantiation', () => {
 	it('should construct successfully', () => {
-        const httpProviderOptions = {
-            providerOptions: ({
-                body: null,
-                cache: 'force-cache',
-                credentials: 'same-origin',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                integrity: 'foo',
-                keepalive: true,
-                method: 'GET',
-                mode: 'same-origin',
-                redirect: 'error',
-                referrer: 'foo',
-                referrerPolicy: 'same-origin',
-                signal: null,
-                window: null
-            } as RequestInit)
-        }
-
         new HttpProvider('http://localhost:8545', httpProviderOptions);
 	});
 });
