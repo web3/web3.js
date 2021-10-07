@@ -444,11 +444,9 @@ Released with 1.0.0-beta.37 code base.
 - ethers from 5.1.4 to 5.4.4 (#4231)
 - karma from 5.2.3 to 6.3.4 (#4231)
 - lerna from 3.22.1 to 4.0.0 (#4231)
-- Dropped build tests in CI for Node v8 and v10, and added support for Node v14
+- Dropped build tests in CI for Node v8 and v10, and added support for Node v14 (#4231)
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
-- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 - Fixed bug in signTransaction (#4295)
-- Format `block.baseFeePerGas` to number (#4330)
 
 ## [Unreleased]
 
@@ -460,9 +458,18 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.6.1]
 
+### Added
+
+- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
 - Added missing PromiEvent handler types (#4194) 
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
+- Emit subscription id with connect event when creating a subscription (#4300)
+- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
+- Format `block.baseFeePerGas` to number (#4330)
+- Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
+- Updated README to include Webpack 5 angular support instructions (#4174)
