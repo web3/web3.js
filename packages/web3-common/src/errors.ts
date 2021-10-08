@@ -3,7 +3,7 @@
 import {
 	ERR_RESPONSE,
 	ERR_PARAM,
-    ERR_METHOD_NOT_IMPLEMENTED,
+	ERR_METHOD_NOT_IMPLEMENTED,
 	ERR_CONN,
 	ERR_CONN_INVALID,
 	ERR_CONN_TIMEOUT,
@@ -28,7 +28,7 @@ import {
 	ERR_CONTRACT_MISSING_DEPLOY_DATA,
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
-    ERR_INVALID_CLIENT
+	ERR_INVALID_CLIENT,
 } from './constants';
 
 type ConnectionEvent = { code: string; reason: string };
@@ -37,7 +37,7 @@ type Receipt = Record<string, unknown>;
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
-	public readonly abstract code: number;
+	public abstract readonly code: number;
 
 	public constructor(msg: string) {
 		super(msg);

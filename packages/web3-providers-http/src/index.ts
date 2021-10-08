@@ -8,7 +8,7 @@ import {
 	MethodNotImplementedError,
 	JsonRpcResponse,
 	Web3BaseProviderStatus,
-    InvalidClientError
+	InvalidClientError,
 } from 'web3-common';
 import fetch from 'cross-fetch';
 

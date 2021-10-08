@@ -1,6 +1,6 @@
 import {
 	JsonRpcPayload,
-    JsonRpcResponse,
+	JsonRpcResponse,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
@@ -35,7 +35,7 @@ export abstract class Web3BaseProvider {
 			error?: JsonRpcResponseWithError<T>,
 			result?: JsonRpcResponseWithResult<T>,
 		) => void,
-        providerOptions?: T3,
+		providerOptions?: T3,
 	): void {
 		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
 			.then(d => callback(undefined, d))
@@ -46,7 +46,10 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(request: JsonRpcPayload<T2>, providerOptions?: T3): Promise<T>;
+	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
+		request: JsonRpcPayload<T2>,
+		providerOptions?: T3,
+	): Promise<T>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(

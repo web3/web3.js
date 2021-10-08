@@ -32,16 +32,16 @@ yarn add web3-common
 
 ## Package.json Scripts
 
-| Script           | Description                                         |
-| ---------------- | --------------------------------------------------- |
-| clean            | Uses `rimraf` to remove `dist/`                     |
+| Script           | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| clean            | Uses `rimraf` to remove `dist/`                    |
 | build            | Uses `tsc` to build package and dependent packages |
-| lint             | Uses `eslint` to lint package                       |
-| lint:fix         | Uses `eslint` to check and fix any warnings         |
-| format           | Uses `prettier` to format the code                  |
-| test             | Uses `jest` to run unit tests                       |
-| test:integration | Uses `jest` to run tests under `/test/integration`  |
-| test:unit        | Uses `jest` to run tests under `/test/unit`         |
+| lint             | Uses `eslint` to lint package                      |
+| lint:fix         | Uses `eslint` to check and fix any warnings        |
+| format           | Uses `prettier` to format the code                 |
+| test             | Uses `jest` to run unit tests                      |
+| test:integration | Uses `jest` to run tests under `/test/integration` |
+| test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
 [repo]: https://github.com/ethereum/web3.js
