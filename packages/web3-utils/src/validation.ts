@@ -14,6 +14,10 @@ import { Bytes, HexString, Numbers } from './types';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const isAddress = (_value: string): boolean => false;
 
+export const isHex = (hex: Numbers) =>  // need finite number validation
+
+	typeof hex === 'number' || typeof hex === 'bigint' || typeof hex === 'string' && typeof hex === 'number' && /^(-0x|0x)?[0-9a-f]*$/i.test(hex); 
+
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
 
