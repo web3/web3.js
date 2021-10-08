@@ -91,36 +91,6 @@ Example
 
 ------------------------------------------------------------------------------
 
-_
-=====================
-
-.. code-block:: javascript
-
-    web3.utils._()
-
-The `underscore <http://underscorejs.org>`_ library for many convenience JavaScript functions.
-
-See the `underscore API reference <http://underscorejs.org>`_ for details.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var _ = web3.utils._;
-
-    _.union([1,2],[3]);
-    > [1,2,3]
-
-    _.each({my: 'object'}, function(value, key){ ... })
-
-    ...
-
-
-
-------------------------------------------------------------------------------
-
 .. _utils-bn:
 
 BN
