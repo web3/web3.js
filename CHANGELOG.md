@@ -467,6 +467,7 @@ Released with 1.0.0-beta.37 code base.
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
 - Added missing PromiEvent handler types (#4194) 
 - Updated README to include Webpack 5 angular support instructions (#4174)
+- Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)
 - Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
 - Format `block.baseFeePerGas` to number (#4330)
