@@ -461,6 +461,7 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+- `@types/bn.js` as dev-dependency to additional packages (notably web3-utils) (#4437)
 
 ### Changed
 
