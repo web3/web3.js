@@ -2153,3 +2153,62 @@ Example
     }
 
 ------------------------------------------------------------------------------
+
+createAccessList
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.createAccessList(callObject [, callback])
+
+Will call to create an access list a method execution will access when executed in the EVM.
+Note: Currently `eth_createAccessList` seems to only be supported by Geth.
+Note: You must specify a ``from`` address and ``gas`` if it's not specified in ``options`` when instantiating parent contract object (e.g. ``new web3.eth.Contract(jsonInterface[, address][, options])``).
+
+----------
+Parameters
+----------
+
+1. A transaction object, see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>` with the difference that this method is specifically for contract method executions.
+2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the access list generation as the second argument, or with an error object as the first argument.
+
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Object``: The generated access list for transaction.
+
+.. code-block:: javascript
+
+    {
+        "accessList": [
+            {
+                "address": "0x00f5f5f3a25f142fafd0af24a754fafa340f32c7",
+                "storageKeys": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ]
+            }
+        ],
+        "gasUsed": "0x644e"
+    }
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.createAccessList({
+        from: '0x3bc5885c2941c5cda454bdb4a8c88aa7f248e312',
+        data: '0x20965255',
+        gasPrice: '0x3b9aca00',
+        gas: '0x3d0900',
+        to: '0x00f5f5f3a25f142fafd0af24a754fafa340f32c7'
+    })
+    .then(console.log);
+
+
+------------------------------------------------------------------------------
