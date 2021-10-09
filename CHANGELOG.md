@@ -448,8 +448,6 @@ Released with 1.0.0-beta.37 code base.
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
 - Fixed bug in signTransaction (#4295)
 
-## [Unreleased]
-
 ## [1.6.0]
 
 ### Changed
@@ -474,3 +472,7 @@ Released with 1.0.0-beta.37 code base.
 - Format `block.baseFeePerGas` to number (#4330)
 - Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
 - Updated README to include Webpack 5 angular support instructions (#4174)
+
+## [Unreleased]
+
+## [1.6.2]
