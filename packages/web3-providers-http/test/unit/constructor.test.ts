@@ -1,5 +1,5 @@
 import { HttpProvider } from '../../src/index';
-import { httpProviderOptions, validClients, invalidClients } from '../fixtures/helper_data';
+import { httpProviderOptions, validClients, invalidClients } from '../fixtures/test_data';
 
 describe('HttpProvider', () => {
 	it('should construct with expected methods', () => {

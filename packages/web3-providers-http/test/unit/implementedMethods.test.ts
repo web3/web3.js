@@ -14,7 +14,7 @@ import {
 /* eslint-disable-next-line import/first */
 import { HttpProvider } from '../../src/index';
 /* eslint-disable-next-line import/first */
-import { httpProviderOptions, mockGetBalanceResponse } from '../fixtures/helper_data';
+import { httpProviderOptions, mockGetBalanceResponse } from '../fixtures/test_data';
 
 describe('HttpProvider - implemented methods', () => {
 	const jsonRpcPayload = {
