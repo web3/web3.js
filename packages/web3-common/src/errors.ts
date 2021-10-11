@@ -27,6 +27,7 @@ import {
 	ERR_CONTRACT_MISSING_DEPLOY_DATA,
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
+	ERR_FORMATTERS,
 } from './constants';
 
 type ConnectionEvent = { code: string; reason: string };
@@ -330,4 +331,8 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 	public constructor() {
 		super('No "from" address specified in neither the given options, nor the default options.');
 	}
+}
+
+export class FormatterError extends Web3Error {
+	public code = ERR_FORMATTERS;
 }

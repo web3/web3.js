@@ -4,6 +4,7 @@ export const ERR_INVALID_RESPONSE = 101;
 
 // Generic errors
 export const ERR_PARAM = 200;
+export const ERR_FORMATTERS = 201;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;

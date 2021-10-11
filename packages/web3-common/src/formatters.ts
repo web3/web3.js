@@ -12,7 +12,7 @@ import {
 	toUtf8,
 	utf8ToHex,
 } from 'web3-utils';
-import { LogsInput, LogsOutput, PREDEFINED_BLOCK_NUMBERS } from '.';
+import { FormatterError, LogsInput, LogsOutput, PREDEFINED_BLOCK_NUMBERS } from '.';
 import {
 	Proof,
 	TransactionInput,
@@ -105,7 +105,7 @@ export const inputAddressFormatter = (address: string): string | never => {
 		return `0x${address.toLowerCase().replace('0x', '')}`;
 	}
 
-	throw new Error(
+	throw new FormatterError(
 		`Provided address ${address} is invalid, the capitalization checksum test failed, or it's an indirect IBAN address which can't be converted.`,
 	);
 };
@@ -122,7 +122,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	}
 
 	if (options.data && options.input) {
-		throw new Error(
+		throw new FormatterError(
 			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
 		);
 	}
@@ -137,7 +137,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	}
 
 	if (modifiedOptions.data && !isHexStrict(modifiedOptions.data)) {
-		throw new Error('The data field must be HEX encoded data.');
+		throw new FormatterError('The data field must be HEX encoded data.');
 	}
 
 	// allow both
@@ -184,7 +184,7 @@ export const inputTransactionFormatter = (options: TransactionInput, defaultAcco
 		opts.from = opts.from ?? defaultAccount;
 
 		if (!options.from && !(typeof options.from === 'number')) {
-			throw new Error('The send transactions "from" field must be defined!');
+			throw new FormatterError('The send transactions "from" field must be defined!');
 		}
 
 		opts.from = inputAddressFormatter(options.from);
@@ -301,7 +301,7 @@ export const outputLogFormatter = (log: LogsInput): LogsOutput => {
  */
 export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): ReceiptOutput => {
 	if (typeof receipt !== 'object') {
-		throw new Error(`Received receipt is invalid: ${String(receipt)}`);
+		throw new FormatterError(`Received receipt is invalid: ${String(receipt)}`);
 	}
 	const modifiedReceipt = { ...receipt } as unknown as Mutable<ReceiptOutput>;
 
