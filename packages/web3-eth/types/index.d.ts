@@ -403,7 +403,7 @@ export interface BlockHeader {
     logsBloom: string;
     transactionRoot: string;
     stateRoot: string;
-    receiptRoot: string;
+    receiptsRoot: string;
     miner: string;
     extraData: string;
     gasLimit: number;
