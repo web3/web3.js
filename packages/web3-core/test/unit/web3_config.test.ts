@@ -1,4 +1,3 @@
-import 'jest-extended';
 import { Web3Config } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
