@@ -4,6 +4,7 @@ import {
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
+	RequestItem,
 } from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
@@ -29,19 +30,13 @@ export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
 export abstract class Web3BaseProvider {
 	// TODO: For legacy support, should be deprecated and removed in favor of `request`
-	public send<T = JsonRpcResult, T2 = unknown[]>(
+	abstract send<T = JsonRpcResult, T2 = unknown[]>(
 		payload: JsonRpcPayload<T2>,
 		callback: (
-			error?: JsonRpcResponseWithError<T>,
+			error?: JsonRpcResponseWithError<T> | Error,
 			result?: JsonRpcResponseWithResult<T>,
 		) => void,
-	): void {
-		this.request<T, T2>({ method: payload.method, params: payload.params })
-			.then(d =>
-				callback(undefined, { result: d, id: payload.id ?? 0, jsonrpc: payload.jsonrpc }),
-			)
-			.catch(e => callback(e, undefined));
-	}
+	): void;
 
 	abstract getStatus(): Web3BaseProviderStatus;
 	abstract supportsSubscriptions(): boolean;
