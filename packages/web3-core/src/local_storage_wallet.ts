@@ -9,7 +9,9 @@ import {
 
 type BrowserError = { code: number; name: string };
 
-export class LocalStorageWallet<T extends Web3BaseWalletAccount> extends Web3BaseWallet<T> {
+export class LocalStorageWallet<
+	T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
+> extends Web3BaseWallet<T> {
 	private readonly _accounts: { [key: string]: T };
 	private readonly _defaultKeyName = 'web3js_wallet';
 
@@ -48,7 +50,7 @@ export class LocalStorageWallet<T extends Web3BaseWalletAccount> extends Web3Bas
 	}
 
 	public get length() {
-		return this._accounts.length;
+		return Object.keys(this._accounts).length;
 	}
 
 	public create(numberOfAccounts: number, entropy: string) {
@@ -64,7 +66,7 @@ export class LocalStorageWallet<T extends Web3BaseWalletAccount> extends Web3Bas
 			return this.add(this._accountProvider.privateKeyToAccount(account));
 		}
 
-		this._accounts[account.address] = account;
+		this._accounts[account.address.toLowerCase()] = account;
 
 		return true;
 	}
@@ -120,10 +122,7 @@ export class LocalStorageWallet<T extends Web3BaseWalletAccount> extends Web3Bas
 			throw new Error('Local storage not available.');
 		}
 
-		localStorage.setItem(
-			keyName ?? this._defaultKeyName,
-			JSON.stringify(this.encrypt(password)),
-		);
+		storage.setItem(keyName ?? this._defaultKeyName, JSON.stringify(this.encrypt(password)));
 
 		return true;
 	}
