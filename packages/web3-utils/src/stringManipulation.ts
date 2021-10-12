@@ -69,20 +69,3 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64 ): string => {
     return padLeft(numberToHex(complement),nibbleWidth);
 }
 
-export const fromTwosComplement = (value: Numbers, ): number | bigint => {
-
-    validateNumbersInput(value, {onlyIntegers: true});
-
-    const val = toNumber(value);
-
-    if (val >=0) return val;
-
-    const updatedVal = typeof val === 'bigint' ? val.toString() : val;
-    // const bits = Math.log(updatedVal) / Math.log(2);
-    
-
-    return 0;
-
-}
-
-
