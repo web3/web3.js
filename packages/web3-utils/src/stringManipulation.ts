@@ -1,6 +1,7 @@
 import { numberToHex, toHex, toNumber } from "./converters"
 import { Numbers } from './types';
 import { isHexStrict, validateNumbersInput } from './validation';
+import { NibbleWidthError } from './errors';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
@@ -47,18 +48,41 @@ export const rightPad = padRight;
 export const leftPad = padLeft;
 
 /**
- * Converts a negative number into the two’s complement and return a hexstring of 32 bytes. 
+ * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles. 
  */
-export const toTwosComplement = (value: Numbers ): string => {
+export const toTwosComplement = (value: Numbers, nibbleWidth = 64 ): string => {
+
+    validateNumbersInput(value, {onlyIntegers: true});
+    
+    const val = toNumber(value); 
+    
+    if (val >= 0) return padLeft(toHex(val),nibbleWidth);
+
+    const largestBit = 2n**BigInt(nibbleWidth*4); 
+    if (-val >= largestBit){
+		throw new NibbleWidthError(`value: "${value}", nibbleWidth: "${nibbleWidth}"`);
+	}
+    const updatedVal = BigInt(val);
+
+    const complement = updatedVal + largestBit;
+    
+    return padLeft(numberToHex(complement),nibbleWidth);
+}
+
+export const fromTwosComplement = (value: Numbers, ): number | bigint => {
 
     validateNumbersInput(value, {onlyIntegers: true});
 
-    const val = toNumber(value); 
-    if (val >= 0) return padLeft(toHex(val),64);
+    const val = toNumber(value);
 
-    const v = BigInt(val);
-    const inversion = 2n**256n;
-    const complement = v + inversion;
+    if (val >=0) return val;
 
-    return padLeft(numberToHex(complement),64);
+    const updatedVal = typeof val === 'bigint' ? val.toString() : val;
+    // const bits = Math.log(updatedVal) / Math.log(2);
+    
+
+    return 0;
+
 }
+
+

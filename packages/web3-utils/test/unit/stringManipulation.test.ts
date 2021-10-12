@@ -84,12 +84,13 @@ describe('string manipulation tests', () => {
 		describe('valid cases', () => {
 			it.each(toTwosComplementData)('%s', (input, output) => {
                 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(toTwosComplement(input)).toEqual(output);
+				expect(toTwosComplement(input[0],input[1])).toEqual(output);
 			});
         })
         describe('invalid cases', () => {
             it.each(toTwosComplementInvalidData)('%s', (input, output) => {
-                expect(() => toTwosComplement(input)).toThrow(output);
+                // eslint-disable-next-line @typescript-eslint/no-magic-numbers
+                expect(() => toTwosComplement(input[0],input[1])).toThrow(output);
         
             });
         })

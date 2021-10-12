@@ -47,24 +47,29 @@ export const padRightInvalidData: [[any, number, string], HexString][] = [
     [[{},3, 'f'], 'Invalid value given "[object Object]". Error: not a valid integer.'],
 ]
 
-export const toTwosComplementData: [Numbers, HexString][] = [
-    [256, '0x0000000000000000000000000000000000000000000000000000000000000100'],
-    [-256,'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'],
-    [0, '0x0000000000000000000000000000000000000000000000000000000000000000'],
-    ['0x1','0x0000000000000000000000000000000000000000000000000000000000000001'],
-    ['-0x1', '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-    [BigInt('9007199254740992'), '0x0000000000000000000000000000000000000000000000000020000000000000'],
-    [BigInt('-9007199254740992'),'0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
-    [9007199254740992n, '0x0000000000000000000000000000000000000000000000000020000000000000'],
-    [-9007199254740992n, '0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
-    ['13', '0x000000000000000000000000000000000000000000000000000000000000000d'],
-    ['-13', '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff3']
+export const toTwosComplementData: [[Numbers, number], HexString][] = [
+    [[256, 64], '0x0000000000000000000000000000000000000000000000000000000000000100'],
+    [[-256, 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'],
+    [[256, 56], '0x00000000000000000000000000000000000000000000000000000100'],
+    [[0, 64], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    [['0x1', 64],'0x0000000000000000000000000000000000000000000000000000000000000001'],
+    [['-0x1', 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
+    [[BigInt('9007199254740992'), 64], '0x0000000000000000000000000000000000000000000000000020000000000000'],
+    [[BigInt('-9007199254740992'), 64],'0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
+    [[9007199254740992n, 64], '0x0000000000000000000000000000000000000000000000000020000000000000'],
+    [[-9007199254740992n, 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000'],
+    [['13', 32], '0x0000000000000000000000000000000d'],
+    [['-13', 32], '0xfffffffffffffffffffffffffffffff3'],
+    [[-16, 2], '0xf0'],
 ]
 
-export const toTwosComplementInvalidData: [Numbers, HexString][] = [
-    ['ab', 'Invalid value given "ab". Error: not a valid integer.'],
-    ['-ab', 'Invalid value given "-ab". Error: not a valid integer.'],
-    ['ab0x', 'Invalid value given "ab0x". Error: not a valid integer.'],
-    [25.5, 'Invalid value given "25.5". Error: not a valid integer.'],
-    ["-120.0", 'Invalid value given "-120.0". Error: not a valid integer.']
+export const toTwosComplementInvalidData: [[Numbers, number], HexString][] = [
+    [['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],
+    [['-ab', 3], 'Invalid value given "-ab". Error: not a valid integer.'],
+    [['ab0x', 2], 'Invalid value given "ab0x". Error: not a valid integer.'],
+    [[25.5, 32], 'Invalid value given "25.5". Error: not a valid integer.'],
+    [["-120.0", 4], 'Invalid value given "-120.0". Error: not a valid integer.'],
+    [[-256, 2], 'Invalid value given "value: "-256", nibbleWidth: "2"". Error: value greater than the nibble width.'],
+    [['-0x1000', 3], 'Invalid value given "value: "-0x1000", nibbleWidth: "3"". Error: value greater than the nibble width.'],
+    [[-160000n, 1], 'Invalid value given "value: "-160000", nibbleWidth: "1"". Error: value greater than the nibble width.']
 ]
