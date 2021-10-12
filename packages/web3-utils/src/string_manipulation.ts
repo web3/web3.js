@@ -1,4 +1,4 @@
-import { numberToHex, toHex, toNumber } from "./converters"
+import { numberToHex, toHex, toNumber } from './converters';
 import { Numbers } from './types';
 import { isHexStrict, validateNumbersInput } from './validation';
 import { NibbleWidthError } from './errors';
@@ -6,36 +6,35 @@ import { NibbleWidthError } from './errors';
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */
-export const padLeft = (value: Numbers, characterAmount: number, sign = "0"): string => {
-   if (typeof value === 'string' && !isHexStrict(value)) {
-       return value.padStart(characterAmount, sign);
-   }
-   
-   validateNumbersInput(value, {onlyIntegers: true})
+export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): string => {
+	if (typeof value === 'string' && !isHexStrict(value)) {
+		return value.padStart(characterAmount, sign);
+	}
 
-    const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
-    
-    const [prefix, hexValue] = hex.startsWith('-') ? ["-0x", hex.substr(3)] : ["0x", hex.substr(2)];
+	validateNumbersInput(value, { onlyIntegers: true });
 
-    return `${prefix}${hexValue.padStart(characterAmount, sign)}`
-}
+	const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
+	const [prefix, hexValue] = hex.startsWith('-') ? ['-0x', hex.substr(3)] : ['0x', hex.substr(2)];
+
+	return `${prefix}${hexValue.padStart(characterAmount, sign)}`;
+};
 
 /**
  * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string.
  */
-export const padRight = (value: Numbers, characterAmount: number, sign = "0"): string => {
-    if (typeof value === 'string' && !isHexStrict(value)) {
-        return value.padEnd(characterAmount, sign);
-    }
+export const padRight = (value: Numbers, characterAmount: number, sign = '0'): string => {
+	if (typeof value === 'string' && !isHexStrict(value)) {
+		return value.padEnd(characterAmount, sign);
+	}
 
-    validateNumbersInput(value, {onlyIntegers: true});
+	validateNumbersInput(value, { onlyIntegers: true });
 
-    const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
+	const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
-    const prefixLength = hexString.startsWith('-') ? 3 : 2;
-    return hexString.padEnd(characterAmount+ prefixLength, sign);
-}
+	const prefixLength = hexString.startsWith('-') ? 3 : 2;
+	return hexString.padEnd(characterAmount + prefixLength, sign);
+};
 
 /**
  * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string. @alias `padRight`
@@ -48,24 +47,39 @@ export const rightPad = padRight;
 export const leftPad = padLeft;
 
 /**
- * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles. 
+ * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles.
  */
-export const toTwosComplement = (value: Numbers, nibbleWidth = 64 ): string => {
+export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
+	validateNumbersInput(value, { onlyIntegers: true });
 
-    validateNumbersInput(value, {onlyIntegers: true});
-    
-    const val = toNumber(value); 
-    
-    if (val >= 0) return padLeft(toHex(val),nibbleWidth);
+	const val = toNumber(value);
 
-    const largestBit = 2n**BigInt(nibbleWidth*4); 
-    if (-val >= largestBit){
+	if (val >= 0) return padLeft(toHex(val), nibbleWidth);
+
+	const largestBit = 2n ** BigInt(nibbleWidth * 4);
+	if (-val >= largestBit) {
 		throw new NibbleWidthError(`value: "${value}", nibbleWidth: "${nibbleWidth}"`);
 	}
-    const updatedVal = BigInt(val);
+	const updatedVal = BigInt(val);
 
-    const complement = updatedVal + largestBit;
-    
-    return padLeft(numberToHex(complement),nibbleWidth);
+	const complement = updatedVal + largestBit;
+
+	return padLeft(numberToHex(complement), nibbleWidth);
+};
+
+export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | bigint => {
+
+    validateNumbersInput(value, {onlyIntegers: true});
+
+    const val = toNumber(value);
+    // check most left bit if negative or postive
+
+    const bits = Math.log(Number(val)) / Math.log(2);
+
+
+
+    return 0;
+
 }
 
+console.log(fromTwosComplement(-8, 1));

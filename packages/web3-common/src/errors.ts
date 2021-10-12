@@ -35,7 +35,7 @@ type Receipt = Record<string, unknown>;
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
-	public readonly abstract code: number;
+	public abstract readonly code: number;
 
 	public constructor(msg: string) {
 		super(msg);
