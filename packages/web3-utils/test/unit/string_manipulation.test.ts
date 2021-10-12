@@ -4,7 +4,7 @@ import {
     padRight,
     rightPad,
     toTwosComplement
-} from '../../src/stringManipulation';
+} from '../../src/string_manipulation';
 
 import {
     padLeftData,
@@ -13,7 +13,7 @@ import {
     padRightInvalidData,
     toTwosComplementData,
     toTwosComplementInvalidData
-} from '../fixtures/stringManipulation';
+} from '../fixtures/string_manipulation';
 
 describe('string manipulation tests', () => {
     describe('padLeft', () => {
