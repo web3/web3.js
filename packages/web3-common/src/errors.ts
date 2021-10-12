@@ -110,7 +110,7 @@ export class ConnectionTimeoutError extends ConnectionError {
 
 export class ConnectionNotOpenError extends ConnectionError {
 	public constructor(event?: ConnectionEvent) {
-		super('Connection not open on send()', event);
+		super('Connection not open', event);
 		this.code = ERR_CONN_NOT_OPEN;
 	}
 }
