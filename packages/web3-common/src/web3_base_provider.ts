@@ -42,7 +42,7 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResult, T2 = unknown[]>(request: JsonRpcRequest<T2>): Promise<T>;
+	abstract request<T = JsonRpcResult, T2 = unknown[]>(request: JsonRpcRequest<T2> | RequestItem<T2, T>): Promise<T | void>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
