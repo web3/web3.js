@@ -1,14 +1,18 @@
 import {
 	ResponseError,
-	JsonRpcPayload,
-	JsonRpcResponseWithError,
-	JsonRpcResponseWithResult,
-	JsonRpcResult,
 	Web3BaseProvider,
 	MethodNotImplementedError,
 	JsonRpcResponse,
 	Web3BaseProviderStatus,
 	InvalidClientError,
+    SupportedProtocols,
+    JsonRpcRequest,
+    JsonRpcResponseData,
+    ExecutionJsonRpcResponse,
+    JsonRpcResponseError,
+    ConsensusJsonRpcRequest,
+    ExecutionJsonRpcRequest,
+    ConsensusJsonRpcResponse
 } from 'web3-common';
 import fetch from 'cross-fetch';
 
@@ -25,19 +29,15 @@ export class HttpProvider extends Web3BaseProvider {
 		this.httpProviderOptions = httpProviderOptions;
 	}
 
-	private static validateClientUrl(clientUrl: string): boolean {
-		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
-	}
-
-	public send<T = JsonRpcResult, T2 = unknown[], T3 = RequestInit>(
-		payload: JsonRpcPayload<T2>,
+	public send<T = unknown, T2 = JsonRpcResponseData>(
+		payload: JsonRpcRequest<T>,
 		callback: (
-			error?: JsonRpcResponseWithError<T>,
-			result?: JsonRpcResponseWithResult<T>,
+			error?: JsonRpcResponseError<T2>,
+			result?: JsonRpcResponse<T2>,
 		) => void,
-		providerOptions?: T3,
+		providerOptions?: RequestInit,
 	): void {
-		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
+		this.request<T, T2>(payload, providerOptions)
 			.then(d => callback(undefined, d))
 			.catch(e => callback(e, undefined));
 	}
@@ -52,32 +52,24 @@ export class HttpProvider extends Web3BaseProvider {
 		return false;
 	}
 
-	public async request<T = JsonRpcResponse, T2 = unknown[], T3 = RequestInit>(
-		request: JsonRpcPayload<T2>,
-		providerOptions?: T3,
-	): Promise<T> {
-		const providerOptionsCombined = {
+    public async request<T = unknown, T2 = JsonRpcResponseData>(
+		request: JsonRpcRequest<T>,
+		providerOptions?: RequestInit,
+	): Promise<JsonRpcResponse<T2>> {
+        const providerOptionsCombined = {
 			...this.httpProviderOptions?.providerOptions,
 			...providerOptions,
 		};
-		const response = await fetch(this.clientUrl, {
-			...providerOptionsCombined,
-			method: 'POST',
-			headers: {
-				...providerOptionsCombined.headers,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				id: request.id ?? Math.floor(Math.random() * 999999), // Generate random integer between 0 and 999,999
-				jsonrpc: request.jsonrpc ?? '2.0',
-				method: request.method,
-				params: request.params ?? [],
-			}),
-		});
 
-		if (!response.ok) throw new ResponseError((await response.json()) as T);
+        try {
+            if (request?.protocol === SupportedProtocols.CONSENSUS) {
+                return this.consensusRequest<T, T2>(request, providerOptionsCombined);
+            }
 
-		return (await response.json()) as T;
+            return this.executionRequest<T, T2>(request, providerOptionsCombined);
+        } catch (error) {
+            throw error;
+        }
 	}
 
 	/* eslint-disable class-methods-use-this */
@@ -119,4 +111,54 @@ export class HttpProvider extends Web3BaseProvider {
 	public reconnect() {
 		throw new MethodNotImplementedError();
 	}
+
+    private static validateClientUrl(clientUrl: string): boolean {
+		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
+	}
+
+    private async executionRequest<T = unknown[], T2 = JsonRpcResponseData>(
+        request: ExecutionJsonRpcRequest<T>,
+		providerOptions: RequestInit,
+    ): Promise<ExecutionJsonRpcResponse<T2>> {
+		const response = await fetch(this.clientUrl, {
+			...providerOptions,
+			method: 'POST',
+			headers: {
+				...providerOptions.headers,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				id: request.id ?? Math.floor(Math.random() * 999999), // Generate random integer between 0 and 999,999
+				jsonrpc: request.jsonrpc ?? '2.0',
+				method: request.method,
+				params: request.params ?? [],
+			}),
+		});
+
+		if (!response.ok) throw new ResponseError((await response.json()));
+
+		return (await response.json());
+    }
+
+    private async consensusRequest<T = unknown, T2 = JsonRpcResponseData>(
+        request: ConsensusJsonRpcRequest<T>,
+		providerOptions: RequestInit,
+    ): Promise<ConsensusJsonRpcResponse<T2>> {
+        const response = await fetch(
+            `${this.clientUrl}${request.endpoint}`,
+            {
+                ...providerOptions,
+                method: providerOptions.method || 'GET',
+                headers: {
+                    ...providerOptions.headers,
+                    'Content-Type': 'application/json',
+                },
+                body: request.requestBody ?? undefined
+		    }
+        );
+
+		if (!response.ok) throw new ResponseError(await response.json());
+
+		return await response.json();
+    }
 }
