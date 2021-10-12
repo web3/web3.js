@@ -5,10 +5,10 @@ jest.setMock('cross-fetch', fetchMock);
 
 /* eslint-disable-next-line import/first */
 import {
-	JsonRpcPayload,
-	JsonRpcResponseWithError,
-	JsonRpcResponseWithResult,
+	ExecutionJsonRpcRequest,
 	ResponseError,
+	JsonRpcResponseError,
+	JsonRpcResponse,
 } from 'web3-common';
 
 /* eslint-disable-next-line import/first */
@@ -22,7 +22,7 @@ describe('HttpProvider - implemented methods', () => {
 		id: 42,
 		method: 'eth_getBalance',
 		params: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', 'latest'],
-	} as JsonRpcPayload;
+	} as ExecutionJsonRpcRequest;
 
 	let httpProvider: HttpProvider;
 
@@ -35,35 +35,34 @@ describe('HttpProvider - implemented methods', () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
 
 			const requestSpy = jest.spyOn(httpProvider, 'request');
-			httpProvider.send(jsonRpcPayload, jest.fn(), httpProviderOptions);
+			httpProvider.send(jsonRpcPayload, jest.fn(), httpProviderOptions.providerOptions);
 
-			expect(requestSpy).toHaveBeenCalledWith(jsonRpcPayload, httpProviderOptions);
+			expect(requestSpy).toHaveBeenCalledWith(
+				jsonRpcPayload,
+				httpProviderOptions.providerOptions,
+			);
 		});
 
 		it('callback should receive expected values - Success', () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
 
-			const callback = jest.fn(
-				(error?: JsonRpcResponseWithError, result?: JsonRpcResponseWithResult) => {
-					expect(error).toBeUndefined();
-					expect(result).toStrictEqual(mockGetBalanceResponse);
-				},
-			);
+			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
+				expect(error).toBeUndefined();
+				expect(result).toStrictEqual(mockGetBalanceResponse);
+			});
 
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions);
+			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions.providerOptions);
 		});
 
 		it('callback should receive expected values - ResponseError', () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse), { status: 400 });
 
-			const callback = jest.fn(
-				(error?: JsonRpcResponseWithError, result?: JsonRpcResponseWithResult) => {
-					expect(error).toBeInstanceOf(ResponseError);
-					expect(result).toBeUndefined();
-				},
-			);
+			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
+				expect(error).toBeInstanceOf(ResponseError);
+				expect(result).toBeUndefined();
+			});
 
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions);
+			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions.providerOptions);
 		});
 	});
 
