@@ -31,7 +31,12 @@ import {
 	ERR_INVALID_CLIENT,
 } from './constants';
 
-type ConnectionEvent = { code: string; reason: string };
+ export type ConnectionEvent = { 
+	 code: number; 
+	 reason: string; 
+	 wasClean?: boolean; // if WS connection was closed properly 
+	};
+
  type Response<T = unknown> = { error?: { message?: string; data?: T } };
  type Receipt = Record<string, unknown>;
 
@@ -69,7 +74,7 @@ export class InvalidNumberOfParamsError extends Web3Error {
 
 export class ConnectionError extends Web3Error {
 	public code = ERR_CONN;
-	public errorCode?: string;
+	public errorCode?: number;
 	public errorReason?: string;
 
 	public constructor(message: string, event?: ConnectionEvent) {
