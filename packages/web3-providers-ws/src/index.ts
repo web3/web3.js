@@ -7,8 +7,8 @@ import { JsonRpcResult,
      JsonRpcResponseWithError, JsonRpcResponseWithResult
 } from 'web3-common';
 
-import { WebSocketOptions } from './types';
 import { MethodNotImplementedError, InvalidConnectionError,  ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError, InvalidClientError, ConnectionEvent } from 'web3-common/dist/errors';
+import { WebSocketOptions } from './types';
 
 export default class WebSocketProvider extends Web3BaseProvider {
 
@@ -19,7 +19,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private readonly requestQueue: Map<JsonRpcId, RequestItem<any, any>>;
     private readonly processedQueue: Map<JsonRpcId, RequestItem<any, any>>;
 
-    constructor(clientUrl: string, wsProviderOptions?: WebSocketOptions) {
+    public constructor(clientUrl: string, wsProviderOptions?: WebSocketOptions) {
         super();
         if (!WebSocketProvider.validateProviderUrl(clientUrl))
             throw new InvalidClientError(clientUrl);
@@ -48,16 +48,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         this.init();
         this.connect();
-    }
-
-    private init() {
-        this.lastDataChunk = "";
-        this.reconnecting = false;
-        this.reconnectAttempts = 0;
-
-        if (this.lastChunkTimeout) {
-            clearTimeout(this.lastChunkTimeout);
-        }
     }
 
     private static validateProviderUrl(providerUrl: string): boolean {
@@ -101,7 +91,89 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.addSocketListeners();
 
         } catch (e) {
-            throw new InvalidConnectionError(this.clientUrl); //TODO error code error detail via e 
+            throw new InvalidConnectionError(this.clientUrl); // TODO error code error detail via e 
+        }
+    }
+
+    public disconnect(code: number, reason: string): void {
+        this.removeSocketListeners();
+        this.webSocketConnection?.close(code || 1000, reason);
+    }
+
+    public reset(): void {
+        this.processedQueue.clear();
+        this.requestQueue.clear();
+
+        this.init(); // WIP
+        this.removeSocketListeners(); 
+        this.addSocketListeners();
+    }
+
+    public async request<T = JsonRpcResult, T2 = unknown[]>(request: RequestItem<T2, T>): Promise<void> {
+        
+        if (!this.webSocketConnection)
+            throw new Error('WebSocket connection is undefined');
+
+        if (request.payload.id === undefined)
+            throw new Error('Request Id not defined')
+
+        if (
+            this.webSocketConnection.readyState ===
+            this.webSocketConnection.CONNECTING ||
+            this.reconnecting
+        ) {
+            this.requestQueue.set(request.payload.id, request);
+            return;
+        }
+
+        if (
+            this.webSocketConnection.readyState !==
+            this.webSocketConnection.OPEN
+        ) {
+            this.requestQueue.delete(request.payload.id);
+
+            // TODO this.emit( WSStatus.Error,WSErrors.ConnectionNotOpenError, request );
+
+            if(request.callback !== undefined)
+                request.callback(new ConnectionNotOpenError());
+            return;
+        }
+
+        this.processedQueue.set(request.payload.id, request);
+        this.requestQueue.delete(request.payload.id);
+
+        try {
+            this.webSocketConnection.send(JSON.stringify(request));
+        } catch (error) {
+            if(request.callback !== undefined) 
+                request.callback(error as Error, undefined);
+            this.processedQueue.delete(request.payload.id);
+        }
+    }
+
+    public removeAllListeners(){
+        throw new MethodNotImplementedError();
+    }
+
+    public send<T = JsonRpcResult, T2 = unknown[]>(
+		payloadParam: JsonRpcPayload<T2>,
+		callbackParam: (
+			error?: JsonRpcResponseWithError<T> | Error,
+			result?: JsonRpcResponseWithResult<T>,
+		) => void,
+	): void {
+
+        this.request<T, T2>({payload: payloadParam, callback: callbackParam});
+
+    }
+
+    private init() {
+        this.lastDataChunk = "";
+        this.reconnecting = false;
+        this.reconnectAttempts = 0;
+
+        if (this.lastChunkTimeout) {
+            clearTimeout(this.lastChunkTimeout);
         }
     }
 
@@ -120,20 +192,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
             'close',
             this.onClose.bind(this)
         );
-    }
-
-    disconnect(code: number, reason: string): void {
-        this.removeSocketListeners();
-        this.webSocketConnection?.close(code || 1000, reason);
-    }
-
-    reset(): void {
-        this.processedQueue.clear();
-        this.requestQueue.clear();
-
-        this.init(); // WIP
-        this.removeSocketListeners(); 
-        this.addSocketListeners();
     }
 
     private reconnect(): void {
@@ -180,7 +238,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
                 }
 
                 if (id && this.processedQueue.has(id)) {
-                    let requestItem = this.processedQueue.get(id);
+                    const requestItem = this.processedQueue.get(id);
                     if (requestItem?.callback !== undefined) {
                         requestItem?.callback(undefined, result);
                     }
@@ -303,50 +361,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         return returnValues;
     }
-    
-    async request<T = JsonRpcResult, T2 = unknown[]>(request: RequestItem<T2, T>): Promise<void> {
-        
-        if (!this.webSocketConnection)
-            throw new Error('WebSocket connection is undefined');
 
-        if (request.payload.id === undefined)
-            throw new Error('Request Id not defined')
-
-        if (
-            this.webSocketConnection.readyState ===
-            this.webSocketConnection.CONNECTING ||
-            this.reconnecting
-        ) {
-            this.requestQueue.set(request.payload.id, request);
-            return;
-        }
-
-        if (
-            this.webSocketConnection.readyState !==
-            this.webSocketConnection.OPEN
-        ) {
-            this.requestQueue.delete(request.payload.id);
-
-            // TODO this.emit( WSStatus.Error,WSErrors.ConnectionNotOpenError, request );
-
-            if(request.callback !== undefined)
-                request.callback(new ConnectionNotOpenError());
-            return;
-        }
-
-        this.processedQueue.set(request.payload.id, request);
-        this.requestQueue.delete(request.payload.id);
-
-        try {
-            this.webSocketConnection.send(JSON.stringify(request));
-        } catch (error) {
-            if(request.callback !== undefined) 
-                request.callback(error as Error, undefined);
-            this.processedQueue.delete(request.payload.id);
-        }
-    }
-
-    removeSocketListeners(): void {
+    private removeSocketListeners(): void {
         // WIP any
         (this.webSocketConnection as any).removeEventListener(
             'message',
@@ -362,20 +378,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
         );
     }
 
-    removeAllListeners(){
-        throw new MethodNotImplementedError();
-    }
 
-    send<T = JsonRpcResult, T2 = unknown[]>(
-		payloadParam: JsonRpcPayload<T2>,
-		callbackParam: (
-			error?: JsonRpcResponseWithError<T> | Error,
-			result?: JsonRpcResponseWithResult<T>,
-		) => void,
-	): void {
-
-        this.request<T, T2>({payload: payloadParam, callback: callbackParam});
-
-    }
 
 }
