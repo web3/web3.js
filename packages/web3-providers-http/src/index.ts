@@ -131,8 +131,7 @@ export class HttpProvider extends Web3BaseProvider {
 			}),
 		});
 
-		if (!response.ok)
-			throw new ResponseError((await response.json()) as ExecutionJsonRpcResponse<T2>);
+		if (!response.ok) throw new ResponseError(await response.json());
 
 		return (await response.json()) as ExecutionJsonRpcResponse<T2>;
 	}
