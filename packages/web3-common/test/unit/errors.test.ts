@@ -33,7 +33,7 @@ describe('errors', () => {
 		it('should have valid json structure', () => {
 			expect(
 				new errors.ConnectionError('error message', {
-					code: '10',
+					code: 10,
 					reason: 'reason',
 				}).toJSON(),
 			).toMatchSnapshot();
@@ -44,7 +44,7 @@ describe('errors', () => {
 		it('should have valid json structure', () => {
 			expect(
 				new errors.InvalidConnectionError('my host', {
-					code: '10',
+					code: 10,
 					reason: 'reason',
 				}).toJSON(),
 			).toMatchSnapshot();
@@ -62,7 +62,7 @@ describe('errors', () => {
 	describe('ConnectionNotOpenError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new errors.ConnectionNotOpenError({ code: '10', reason: 'reason' }).toJSON(),
+				new errors.ConnectionNotOpenError({ code: 10, reason: 'reason' }).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -70,7 +70,7 @@ describe('errors', () => {
 	describe('ConnectionCloseError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new errors.ConnectionCloseError({ code: '10', reason: 'reason' }).toJSON(),
+				new errors.ConnectionCloseError({ code: 10, reason: 'reason' }).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
