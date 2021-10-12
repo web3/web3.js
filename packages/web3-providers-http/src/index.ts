@@ -152,8 +152,7 @@ export class HttpProvider extends Web3BaseProvider {
 			body: JSON.stringify(request.requestBody) ?? undefined,
 		});
 
-		if (!response.ok)
-			throw new ResponseError((await response.json()) as ConsensusJsonRpcResponse<T2>);
+		if (!response.ok) throw new ResponseError(await response.json());
 
 		return (await response.json()) as ConsensusJsonRpcResponse<T2>;
 	}
