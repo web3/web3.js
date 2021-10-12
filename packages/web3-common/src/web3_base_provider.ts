@@ -70,5 +70,4 @@ export abstract class Web3BaseProvider {
 	abstract connect(): void;
 	abstract disconnect(code: number, reason: string): void;
 	abstract reset(): void;
-	abstract reconnect(): void;
 }
