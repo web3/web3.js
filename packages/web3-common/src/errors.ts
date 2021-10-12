@@ -27,11 +27,13 @@ import {
 	ERR_CONTRACT_MISSING_DEPLOY_DATA,
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
+	ERR_METHOD_NOT_IMPLEMENTED,
+	ERR_INVALID_CLIENT,
 } from './constants';
 
 type ConnectionEvent = { code: string; reason: string };
-type Response<T = unknown> = { error?: { message?: string; data?: T } };
-type Receipt = Record<string, unknown>;
+ type Response<T = unknown> = { error?: { message?: string; data?: T } };
+ type Receipt = Record<string, unknown>;
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
@@ -329,5 +331,21 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 
 	public constructor() {
 		super('No "from" address specified in neither the given options, nor the default options.');
+	}
+}
+
+export class MethodNotImplementedError extends Web3Error {
+	public code = ERR_METHOD_NOT_IMPLEMENTED;
+
+	public constructor() {
+		super("The method you're trying to call is not implemented.");
+	}
+}
+
+export class InvalidClientError extends Web3Error {
+	public code = ERR_INVALID_CLIENT;
+
+	public constructor(clientUrl: string) {
+		super(`Client URL "${clientUrl}" is invalid.`);
 	}
 }
