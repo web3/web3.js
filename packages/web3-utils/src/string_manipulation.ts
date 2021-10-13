@@ -84,5 +84,5 @@ export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | b
 
 	const complement = 2n ** (BigInt(nibbleWidth) * 4n);
 
-	return BigInt(val) - complement;
+	return toNumber(BigInt(val) - complement);
 };

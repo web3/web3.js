@@ -256,7 +256,7 @@ export const toNumber = (value: Numbers): number | bigint => {
 	}
 
 	if (typeof value === 'bigint') {
-		return value >= Number.MIN_SAFE_INTEGER || value <= Number.MAX_SAFE_INTEGER
+		return value >= Number.MIN_SAFE_INTEGER && value <= Number.MAX_SAFE_INTEGER
 			? Number(value)
 			: value;
 	}
