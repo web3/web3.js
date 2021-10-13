@@ -42,7 +42,6 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 	[['15.5', 8, '0'], '15.50000'],
 ];
 
-
 export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[[256, 64], '0x0000000000000000000000000000000000000000000000000000000000000100'],
 	[[-256, 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'],
@@ -68,17 +67,19 @@ export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[[-16, 2], '0xf0'],
 ];
 
-export const fromTwosComplementData: [[Numbers, number], number | bigint ][] = [
+export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 	[['0x0000000000000000000000000000000000000000000000000000000000000100', 64], 256],
 	[['0x0000000000000000000000000000000d', 32], 13],
 	[['0x00000000000000000000000000000000000000000000000000000100', 56], 256],
-	[['0x0000000000000000000000000000000000000000000000000020000000000000', 64], BigInt('9007199254740992')],
+	[
+		['0x0000000000000000000000000000000000000000000000000020000000000000', 64],
+		BigInt('9007199254740992'),
+	],
 	[['0xfffffffffffffffffffffffffffffff3', 32], -13],
 	[['0xf0', 2], -16],
 	[['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64], -256],
-	// [['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64], BigInt('-9007199254740992')] // getting a do not know how to serialize bigint error from this  
-]
-
+	// [['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64], BigInt('-9007199254740992')] // getting a do not know how to serialize bigint error from this
+];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 	[['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],

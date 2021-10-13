@@ -107,6 +107,5 @@ describe('string manipulation tests', () => {
 				expect(() => fromTwosComplement(input[0], input[1])).toThrow(output);
 			});
 		});
-
 	});
 });
