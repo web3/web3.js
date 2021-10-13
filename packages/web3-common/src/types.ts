@@ -4,6 +4,7 @@ export type JsonRpcId = string | number | null;
 export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
 export type JsonRpcIdentifier = '2.0' | '1.0';
 
+// Make each attribute mutable by removing `readonly`
 export type Mutable<T> = {
 	-readonly [P in keyof T]: T[P];
 };

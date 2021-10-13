@@ -19,12 +19,7 @@ import {
 
 import * as formatters from '../../src/formatters';
 
-// TODO: The issue with export * causing issue with jest.spyOn
-// have to hack this way until find resolutions
-jest.mock('web3-utils', () => ({
-	__esModule: true,
-	...jest.requireActual('web3-utils'),
-}));
+jest.mock('web3-utils');
 
 describe('formatters', () => {
 	const toNumberResult = 12345;
