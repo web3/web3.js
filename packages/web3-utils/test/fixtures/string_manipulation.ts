@@ -78,7 +78,10 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 	[['0xfffffffffffffffffffffffffffffff3', 32], -13],
 	[['0xf0', 2], -16],
 	[['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64], -256],
-	// [['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64], BigInt('-9007199254740992')] // getting a do not know how to serialize bigint error from this
+	[
+		['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64],
+		BigInt('-9007199254740992'),
+	], // getting a do not know how to serialize bigint error from this
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
