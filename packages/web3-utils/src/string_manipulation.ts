@@ -67,19 +67,25 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 	return padLeft(numberToHex(complement), nibbleWidth);
 };
 
+/**
+ * Converts the twos complement into a decimal number or big int.
+ */
 export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | bigint => {
 
     validateNumbersInput(value, {onlyIntegers: true});
 
     const val = toNumber(value);
-    // check most left bit if negative or postive
+    
+    if (val < 0) return val;
+    const bits = Math.ceil(Math.log(Number(val)) / Math.log(2));
 
-    const bits = Math.log(Number(val)) / Math.log(2);
+    if (bits > nibbleWidth*4) throw new NibbleWidthError(`value: "${value}", nibbleWidth: "${nibbleWidth}"`);
+    if (nibbleWidth*4 !== bits) return val;
+
+    const complement = 2n**(BigInt(nibbleWidth)*4n);
 
 
-
-    return 0;
+    return toNumber(BigInt(val) - complement);
 
 }
 
-console.log(fromTwosComplement(-8, 1));

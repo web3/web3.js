@@ -18,7 +18,7 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 	[['9.5', 8, '0'], '000009.5'],
 ];
 
-export const padLeftInvalidData: [[any, number, string], HexString][] = [
+export const padInvalidData: [[any, number, string], HexString][] = [
 	[[9.5, 64, 'f'], 'Invalid value given "9.5". Error: not a valid integer.'],
 	[[null, 8, '0'], 'Invalid value given "null". Error: not a valid integer.'],
 	[[undefined, 8, '0'], 'Invalid value given "undefined". Error: not a valid integer.'],
@@ -42,12 +42,6 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 	[['15.5', 8, '0'], '15.50000'],
 ];
 
-export const padRightInvalidData: [[any, number, string], HexString][] = [
-	[[15.5, 64, 'f'], 'Invalid value given "15.5". Error: not a valid integer.'],
-	[[null, 8, '0'], 'Invalid value given "null". Error: not a valid integer.'],
-	[[undefined, 8, '0'], 'Invalid value given "undefined". Error: not a valid integer.'],
-	[[{}, 3, 'f'], 'Invalid value given "[object Object]". Error: not a valid integer.'],
-];
 
 export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[[256, 64], '0x0000000000000000000000000000000000000000000000000000000000000100'],
@@ -74,7 +68,19 @@ export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[[-16, 2], '0xf0'],
 ];
 
-export const toTwosComplementInvalidData: [[Numbers, number], HexString][] = [
+export const fromTwosComplementData: [[Numbers, number], number | bigint ][] = [
+	[['0x0000000000000000000000000000000000000000000000000000000000000100', 64], 256],
+	[['0x0000000000000000000000000000000d', 32], 13],
+	[['0x00000000000000000000000000000000000000000000000000000100', 56], 256],
+	[['0x0000000000000000000000000000000000000000000000000020000000000000', 64], BigInt('9007199254740992')],
+	[['0xfffffffffffffffffffffffffffffff3', 32], -13],
+	[['0xf0', 2], -16],
+	[['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64], -256],
+	// [['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64], BigInt('-9007199254740992')] // getting a do not know how to serialize bigint error from this  
+]
+
+
+export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 	[['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],
 	[['-ab', 3], 'Invalid value given "-ab". Error: not a valid integer.'],
 	[['ab0x', 2], 'Invalid value given "ab0x". Error: not a valid integer.'],
@@ -91,5 +97,21 @@ export const toTwosComplementInvalidData: [[Numbers, number], HexString][] = [
 	[
 		[-160000n, 1],
 		'Invalid value given "value: "-160000", nibbleWidth: "1"". Error: value greater than the nibble width.',
+	],
+];
+
+export const fromTwosComplementInvalidData: [[Numbers, number], string][] = [
+	[['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],
+	[['-ab', 3], 'Invalid value given "-ab". Error: not a valid integer.'],
+	[['ab0x', 2], 'Invalid value given "ab0x". Error: not a valid integer.'],
+	[[25.5, 32], 'Invalid value given "25.5". Error: not a valid integer.'],
+	[['-120.0', 4], 'Invalid value given "-120.0". Error: not a valid integer.'],
+	[
+		[1000, 2],
+		'Invalid value given "value: "1000", nibbleWidth: "2"". Error: value greater than the nibble width.',
+	],
+	[
+		['0xa05', 1],
+		'Invalid value given "value: "0xa05", nibbleWidth: "1"". Error: value greater than the nibble width.',
 	],
 ];

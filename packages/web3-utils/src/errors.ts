@@ -85,7 +85,7 @@ export class InvalidDenominatorError extends Web3Error {
 }
 
 export class NibbleWidthError extends Web3Error {
-	public constructor(value: unknown) {
+	public constructor(value: string) {
 		super(value, 'value greater than the nibble width');
 	}
 }

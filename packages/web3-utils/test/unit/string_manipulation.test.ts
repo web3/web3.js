@@ -1,4 +1,5 @@
 import {
+	fromTwosComplement,
 	leftPad,
 	padLeft,
 	padRight,
@@ -8,11 +9,12 @@ import {
 
 import {
 	padLeftData,
-	padLeftInvalidData,
+	padInvalidData,
 	padRightData,
-	padRightInvalidData,
 	toTwosComplementData,
 	toTwosComplementInvalidData,
+	fromTwosComplementData,
+	fromTwosComplementInvalidData,
 } from '../fixtures/string_manipulation';
 
 describe('string manipulation tests', () => {
@@ -24,7 +26,7 @@ describe('string manipulation tests', () => {
 			});
 		});
 		describe('invalid cases', () => {
-			it.each(padLeftInvalidData)('%s', (input, output) => {
+			it.each(padInvalidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => padLeft(input[0], input[1], input[2])).toThrow(output);
 			});
@@ -39,7 +41,7 @@ describe('string manipulation tests', () => {
 			});
 		});
 		describe('invalid cases', () => {
-			it.each(padRightInvalidData)('%s', (input, output) => {
+			it.each(padInvalidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => padRight(input[0], input[1], input[2])).toThrow(output);
 			});
@@ -54,7 +56,7 @@ describe('string manipulation tests', () => {
 			});
 		});
 		describe('invalid cases', () => {
-			it.each(padLeftInvalidData)('%s', (input, output) => {
+			it.each(padInvalidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => leftPad(input[0], input[1], input[2])).toThrow(output);
 			});
@@ -69,7 +71,7 @@ describe('string manipulation tests', () => {
 			});
 		});
 		describe('invalid cases', () => {
-			it.each(padRightInvalidData)('%s', (input, output) => {
+			it.each(padInvalidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => rightPad(input[0], input[1], input[2])).toThrow(output);
 			});
@@ -89,5 +91,22 @@ describe('string manipulation tests', () => {
 				expect(() => toTwosComplement(input[0], input[1])).toThrow(output);
 			});
 		});
+	});
+
+	describe('fromTwosComplement', () => {
+		describe('valid cases', () => {
+			it.each(fromTwosComplementData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(fromTwosComplement(input[0], input[1])).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(fromTwosComplementInvalidData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(() => fromTwosComplement(input[0], input[1])).toThrow(output);
+			});
+		});
+
 	});
 });
