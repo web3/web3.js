@@ -80,7 +80,7 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 	[['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64], -256],
 	[
 		['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64],
-		BigInt('-9007199254740992'),
+		-9007199254740992n,
 	], // getting a do not know how to serialize bigint error from this
 ];
 
