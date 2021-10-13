@@ -6,23 +6,34 @@ jest.setMock('cross-fetch', fetchMock);
 /* eslint-disable-next-line import/first */
 import {
 	ExecutionJsonRpcRequest,
+	ConsensusJsonRpcRequest,
 	ResponseError,
 	JsonRpcResponseError,
 	JsonRpcResponse,
+	SupportedProtocolsEnum,
 } from 'web3-common';
 
 /* eslint-disable-next-line import/first */
 import { HttpProvider } from '../../src/index';
 /* eslint-disable-next-line import/first */
-import { httpProviderOptions, mockGetBalanceResponse } from '../fixtures/test_data';
+import {
+	httpProviderOptions,
+	mockBeaconBlockHeaderResponse,
+	mockGetBalanceResponse,
+} from '../fixtures/test_data';
 
 describe('HttpProvider - implemented methods', () => {
-	const jsonRpcPayload = {
+	const executionJsonRpcPayload = {
 		jsonrpc: '2.0',
 		id: 42,
 		method: 'eth_getBalance',
 		params: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', 'latest'],
 	} as ExecutionJsonRpcRequest;
+
+	const consensusJsonRpcPayload = {
+		endpoint: '/eth/v1/beacon/headers/42',
+		protocol: SupportedProtocolsEnum.CONSENSUS,
+	} as ConsensusJsonRpcRequest;
 
 	let httpProvider: HttpProvider;
 
@@ -31,19 +42,95 @@ describe('HttpProvider - implemented methods', () => {
 	});
 
 	describe('httpProvider.send', () => {
-		it('Should call HttpProvider.request with correct parameters', () => {
+		it('Should call HttpProvider.request with correct providerOptions - Execution', () => {
+			const globalProviderOptions = {
+				providerOptions: {
+					...httpProviderOptions.providerOptions,
+					integrity: 'shouldBeOverwritten',
+					referer: 'shouldBeOverwritten',
+				},
+			};
+			const httpProviderWithProviderOptions = new HttpProvider(
+				'http://localhost:8545',
+				globalProviderOptions,
+			);
+
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
 
-			const requestSpy = jest.spyOn(httpProvider, 'request');
-			httpProvider.send(jsonRpcPayload, jest.fn(), httpProviderOptions.providerOptions);
+			const requestSpy = jest.spyOn(httpProviderWithProviderOptions, 'request');
+			httpProviderWithProviderOptions.send(
+				executionJsonRpcPayload,
+				jest.fn(),
+				httpProviderOptions.providerOptions,
+			);
 
 			expect(requestSpy).toHaveBeenCalledWith(
-				jsonRpcPayload,
+				executionJsonRpcPayload,
 				httpProviderOptions.providerOptions,
 			);
 		});
 
-		it('callback should receive expected values - Success', () => {
+		it('Should call HttpProvider.request with correct providerOptions - Consensus', () => {
+			const globalProviderOptions = {
+				providerOptions: {
+					...httpProviderOptions.providerOptions,
+					integrity: 'shouldBeOverwritten',
+					referer: 'shouldBeOverwritten',
+				},
+			};
+			const httpProviderWithProviderOptions = new HttpProvider(
+				'http://localhost:8545',
+				globalProviderOptions,
+			);
+
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse));
+
+			const requestSpy = jest.spyOn(httpProviderWithProviderOptions, 'request');
+			httpProviderWithProviderOptions.send(
+				consensusJsonRpcPayload,
+				jest.fn(),
+				httpProviderOptions.providerOptions,
+			);
+
+			expect(requestSpy).toHaveBeenCalledWith(
+				consensusJsonRpcPayload,
+				httpProviderOptions.providerOptions,
+			);
+		});
+
+		it('Should call HttpProvider.request with correct parameters - Execution', () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
+
+			const requestSpy = jest.spyOn(httpProvider, 'request');
+			httpProvider.send(
+				executionJsonRpcPayload,
+				jest.fn(),
+				httpProviderOptions.providerOptions,
+			);
+
+			expect(requestSpy).toHaveBeenCalledWith(
+				executionJsonRpcPayload,
+				httpProviderOptions.providerOptions,
+			);
+		});
+
+		it('Should call HttpProvider.request with correct parameters - Consensus', () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse));
+
+			const requestSpy = jest.spyOn(httpProvider, 'request');
+			httpProvider.send(
+				consensusJsonRpcPayload,
+				jest.fn(),
+				httpProviderOptions.providerOptions,
+			);
+
+			expect(requestSpy).toHaveBeenCalledWith(
+				consensusJsonRpcPayload,
+				httpProviderOptions.providerOptions,
+			);
+		});
+
+		it('callback should receive expected values - Execution Success', () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
 
 			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
@@ -51,10 +138,29 @@ describe('HttpProvider - implemented methods', () => {
 				expect(result).toStrictEqual(mockGetBalanceResponse);
 			});
 
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions.providerOptions);
+			httpProvider.send(
+				executionJsonRpcPayload,
+				callback,
+				httpProviderOptions.providerOptions,
+			);
 		});
 
-		it('callback should receive expected values - ResponseError', () => {
+		it('callback should receive expected values - Consensus Success', () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse));
+
+			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
+				expect(error).toBeUndefined();
+				expect(result).toStrictEqual(mockBeaconBlockHeaderResponse);
+			});
+
+			httpProvider.send(
+				consensusJsonRpcPayload,
+				callback,
+				httpProviderOptions.providerOptions,
+			);
+		});
+
+		it('callback should receive expected values - Execution ResponseError', () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse), { status: 400 });
 
 			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
@@ -62,7 +168,28 @@ describe('HttpProvider - implemented methods', () => {
 				expect(result).toBeUndefined();
 			});
 
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions.providerOptions);
+			httpProvider.send(
+				executionJsonRpcPayload,
+				callback,
+				httpProviderOptions.providerOptions,
+			);
+		});
+
+		it('callback should receive expected values - Consensus ResponseError', () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse), {
+				status: 400,
+			});
+
+			const callback = jest.fn((error?: JsonRpcResponseError, result?: JsonRpcResponse) => {
+				expect(error).toBeInstanceOf(ResponseError);
+				expect(result).toBeUndefined();
+			});
+
+			httpProvider.send(
+				consensusJsonRpcPayload,
+				callback,
+				httpProviderOptions.providerOptions,
+			);
 		});
 	});
 
@@ -73,18 +200,38 @@ describe('HttpProvider - implemented methods', () => {
 	});
 
 	describe('httpProvider.request', () => {
-		it('should return expected response', async () => {
+		it('should return expected response - Execution', async () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
 
-			expect(await httpProvider.request(jsonRpcPayload)).toStrictEqual(
+			expect(await httpProvider.request(executionJsonRpcPayload)).toStrictEqual(
 				mockGetBalanceResponse,
 			);
 		});
 
-		it('should return ResponseError', async () => {
+		it('should return expected response - Consensus', async () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse));
+
+			expect(await httpProvider.request(consensusJsonRpcPayload)).toStrictEqual(
+				mockBeaconBlockHeaderResponse,
+			);
+		});
+
+		it('should return ResponseError - Execution', async () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse), { status: 400 });
 
-			await expect(httpProvider.request(jsonRpcPayload)).rejects.toThrow(ResponseError);
+			await expect(httpProvider.request(executionJsonRpcPayload)).rejects.toThrow(
+				ResponseError,
+			);
+		});
+
+		it('should return ResponseError - Consensus', async () => {
+			fetchMock.mockResponseOnce(JSON.stringify(mockBeaconBlockHeaderResponse), {
+				status: 400,
+			});
+
+			await expect(httpProvider.request(consensusJsonRpcPayload)).rejects.toThrow(
+				ResponseError,
+			);
 		});
 	});
 });
