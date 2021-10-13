@@ -83,6 +83,8 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 		-9007199254740992n,
 	],
 	[[1000, 64], 1000],
+	[[-1000, 64], -1000],
+	[[BigInt(9), 1], -7],
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
