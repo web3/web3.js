@@ -134,9 +134,22 @@ describe('LocalStorageWallet', () => {
 			wallet.add(account);
 			expect(wallet).toHaveLength(1);
 
-			wallet.remove(0);
+			const result = wallet.remove(0);
+
+			expect(result).toBeTruthy();
 			expect(wallet).toHaveLength(0);
 			expect(wallet.get(0)).toBeUndefined();
+		});
+
+		it('should return false if index not found', () => {
+			const account = { address: 'my_address' } as never;
+			wallet.add(account);
+			expect(wallet).toHaveLength(1);
+
+			const result = wallet.remove(2);
+
+			expect(result).toBeFalsy();
+			expect(wallet).toHaveLength(1);
 		});
 
 		it('should remove account for given address', () => {
@@ -144,10 +157,22 @@ describe('LocalStorageWallet', () => {
 			wallet.add(account);
 			expect(wallet).toHaveLength(1);
 
-			wallet.remove('my_address');
+			const result = wallet.remove('my_address');
 
+			expect(result).toBeTruthy();
 			expect(wallet).toHaveLength(0);
 			expect(wallet.get(0)).toBeUndefined();
+		});
+
+		it('should return false if given address not found', () => {
+			const account = { address: 'my_address' } as never;
+			wallet.add(account);
+			expect(wallet).toHaveLength(1);
+
+			const result = wallet.remove('my_address2');
+
+			expect(result).toBeFalsy();
+			expect(wallet).toHaveLength(1);
 		});
 	});
 

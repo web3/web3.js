@@ -80,15 +80,17 @@ export class LocalStorageWallet<
 	}
 
 	public remove(addressOrIndex: string | number): boolean {
-		if (typeof addressOrIndex === 'string') {
-			delete this._accounts[addressOrIndex];
+		const result =
+			typeof addressOrIndex === 'string'
+				? { address: addressOrIndex }
+				: Object.values(this._accounts)[addressOrIndex];
+
+		if (result && this._accounts[result.address]) {
+			delete this._accounts[result.address];
 			return true;
 		}
 
-		const { address } = Object.values(this._accounts)[addressOrIndex];
-		delete this._accounts[address];
-
-		return true;
+		return false;
 	}
 
 	public clear() {
