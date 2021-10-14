@@ -6,7 +6,7 @@ describe('errors', () => {
 
 		for (const ErrorClass of Object.values(errors)) {
 			// To disable error for the abstract class
-			
+
 			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 			// @ts-expect-error
 			const err = new ErrorClass({} as never);
@@ -20,7 +20,7 @@ describe('errors', () => {
 
 	describe('InvalidNumberOfParamsError', () => {
 		it('should have valid json structure', () => {
-			const got = 10; 
+			const got = 10;
 			const expected = 20;
 
 			expect(
