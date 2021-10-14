@@ -83,3 +83,9 @@ export class InvalidDenominatorError extends Web3Error {
 		super(value, 'denominator must be number power of 10');
 	}
 }
+
+export class NibbleWidthError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'value greater than the nibble width');
+	}
+}
