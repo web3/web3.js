@@ -184,3 +184,9 @@ export interface SyncOutput {
 	readonly knownStates?: bigint | number;
 	readonly pulledStates?: bigint | number;
 }
+
+export enum PredefinedBlockNumbers {
+	LATEST = 'latest',
+	PENDING = 'pending',
+	EARLIEST = 'earliest',
+}

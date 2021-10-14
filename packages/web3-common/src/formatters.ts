@@ -12,7 +12,7 @@ import {
 	toUtf8,
 	utf8ToHex,
 } from 'web3-utils';
-import { FormatterError, LogsInput, LogsOutput, PREDEFINED_BLOCK_NUMBERS } from '.';
+import { FormatterError, LogsInput, LogsOutput, PredefinedBlockNumbers } from '.';
 import {
 	Proof,
 	TransactionInput,
@@ -51,7 +51,9 @@ export const outputBigIntegerFormatter = (number: Numbers) => toNumber(number);
  * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
  */
 export const isPredefinedBlockNumber = (blockNumber: string) =>
-	PREDEFINED_BLOCK_NUMBERS.includes(blockNumber);
+	PredefinedBlockNumbers.LATEST === blockNumber ||
+	PredefinedBlockNumbers.PENDING === blockNumber ||
+	PredefinedBlockNumbers.EARLIEST === blockNumber;
 
 /**
  * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'

@@ -1,6 +1,6 @@
 import * as utils from 'web3-utils';
 
-import { PREDEFINED_BLOCK_NUMBERS } from '../../src/constants';
+import { PredefinedBlockNumbers } from '../../src/types';
 import {
 	inputAddressFormatter,
 	inputBlockNumberFormatter,
@@ -96,12 +96,13 @@ describe('formatters', () => {
 			expect(inputBlockNumberFormatter(undefined)).toBeUndefined();
 		});
 
-		it.each(PREDEFINED_BLOCK_NUMBERS)(
-			'should return "%s" values for "%s" block numbers',
-			blockNumber => {
-				expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);
-			},
-		);
+		it.each([
+			PredefinedBlockNumbers.EARLIEST,
+			PredefinedBlockNumbers.LATEST,
+			PredefinedBlockNumbers.PENDING,
+		])('should return "%s" values for "%s" block numbers', blockNumber => {
+			expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);
+		});
 
 		it('should return valid genesis block number', () => {
 			expect(inputBlockNumberFormatter('genesis')).toEqual('0x0');
