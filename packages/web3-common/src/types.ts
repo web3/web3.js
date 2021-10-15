@@ -13,6 +13,8 @@ export interface JsonRpcResponseWithError<T = JsonRpcResult> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly error: JsonRpcError<T>;
 	readonly result?: never;
+	readonly method?: never;
+	readonly params?: never;
 }
 
 export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
@@ -20,11 +22,27 @@ export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly error?: never;
 	readonly result: T;
+	readonly method?: never;
+	readonly params?: never;
+}
+
+export interface Params<T = JsonRpcResult>{
+	readonly subscription: string; // for subscription id
+	readonly result: T;
+}
+export interface JsonRpcResponseWithSubscriptionResult<T = JsonRpcResult> {
+	readonly id?: JsonRpcId;
+	readonly jsonrpc: JsonRpcIdentifier;
+	readonly method: string;  	// for subscription
+	readonly params: Params<T>;	// for subscription results
+	readonly error?: never;
+	readonly result: never;
 }
 
 export type JsonRpcResponse<T = JsonRpcResult> =
 	| JsonRpcResponseWithError
-	| JsonRpcResponseWithResult<T>;
+	| JsonRpcResponseWithResult<T>
+	| JsonRpcResponseWithSubscriptionResult<T>;
 
 export interface JsonRpcRequest<T = unknown[]> {
 	readonly method: string;
