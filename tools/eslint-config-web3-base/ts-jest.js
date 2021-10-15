@@ -26,6 +26,6 @@ module.exports = {
 		'dot-notation': 'off',
 		'lines-between-class-members': 'off',
 		'arrow-body-style': 'off',
-		'no-underscore-dangle': ['error'],
+		'no-underscore-dangle': 'off',
 	},
 };
