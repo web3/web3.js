@@ -19,7 +19,7 @@ module.exports = {
 		'import/prefer-default-export': 'off',
 		'lines-between-class-members': 'off',
 		'no-use-before-define': ['error'],
-		'no-shadow': ['error'],
+		'no-shadow': 'off',
 		'@typescript-eslint/no-shadow': ['error'],
 		'no-console': ['error', { allow: ['error', 'info', 'warn'] }],
 		'@typescript-eslint/no-floating-promises': ['error'],

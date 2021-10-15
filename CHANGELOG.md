@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -133,7 +134,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-- ENS registry addresses updated (#3353, https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a)
+- ENS registry addresses updated (#3353, <https://medium.com/the-ethereum-name-service/ens-registry-migration-bug-fix-new-features-64379193a5a>)
 
 ## [1.2.7]
 
@@ -318,3 +319,13 @@ Released with 1.0.0-beta.37 code base.
 - Remove `notImplemented` flag from ETH2 Beacon Chain package methods schema
 - Fixed mutation of inputs to encoding and decoding functions (#3748)
 - Rename `web3-eth2-base` to `web3-eth2-core` and `web3-eth2-beacon` to `web3-eth2-beaconchain`
+
+## [4.x]
+
+### Breaking Changes
+
+#### web3-common
+
+1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
+2. Removed `this.defaultBlock` context from `inputDefaultBlockNumberFormatter` in `web3-core-helper` and converted to additional parameter
+2. Removed `this.defaultBlock` context from `inputTransactionFormatter` in `web3-core-helper` and converted to additional parameter
