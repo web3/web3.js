@@ -19,6 +19,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private readonly requestQueue: Map<JsonRpcId, RequestItem<any, any>>;
     private readonly processedQueue: Map<JsonRpcId, RequestItem<any, any>>;
 
+    private providerStatus: Web3BaseProviderStatus;
+
     public constructor(clientUrl: string, wsProviderOptions?: WebSocketOptions) {
         super();
         if (!WebSocketProvider.validateProviderUrl(clientUrl))
@@ -46,6 +48,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
         this.requestQueue = new Map<JsonRpcId, RequestItem>();
         this.processedQueue = new Map<JsonRpcId, RequestItem>();
 
+        this.providerStatus = 'disconnected';
+
         this.init();
         this.connect();
     }
@@ -55,7 +59,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     }
 
     public getStatus(): Web3BaseProviderStatus {
-        throw new MethodNotImplementedError(); // WIP
+        return this.providerStatus;
     }
 
     public supportsSubscriptions(): boolean {
@@ -79,6 +83,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
     public connect(): void {
         try {
+            this.providerStatus = 'connecting';
             this.webSocketConnection = new w3cwebsocket(
                 this.clientUrl,
                 this.wsProviderOptions?.protocol,
@@ -91,6 +96,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.addSocketListeners();
 
         } catch (e) {
+            this.providerStatus = 'disconnected';
             throw new InvalidConnectionError(this.clientUrl); // TODO error code error detail via e 
         }
     }
@@ -98,6 +104,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     public disconnect(code: number, reason: string): void {
         this.removeSocketListeners();
         this.webSocketConnection?.close(code || 1000, reason);
+        this.providerStatus = 'disconnected';
     }
 
     public reset(): void {
@@ -120,7 +127,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
         if (
             this.webSocketConnection.readyState ===
             this.webSocketConnection.CONNECTING ||
-            this.reconnecting
+            this.providerStatus === 'connecting'
         ) {
             this.requestQueue.set(request.payload.id, request);
             return;
@@ -133,6 +140,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.requestQueue.delete(request.payload.id);
 
             // TODO this.emit( WSStatus.Error,WSErrors.ConnectionNotOpenError, request );
+            this.providerStatus === 'disconnected';
 
             if(request.callback !== undefined)
                 request.callback(new ConnectionNotOpenError());
@@ -169,7 +177,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
     private init() {
         this.lastDataChunk = "";
-        this.reconnecting = false;
         this.reconnectAttempts = 0;
 
         if (this.lastChunkTimeout) {
@@ -195,7 +202,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     }
 
     private reconnect(): void {
-        this.reconnecting = true;
+        this.providerStatus = 'connecting';
 
         if (this.processedQueue.size > 0) {
             this.processedQueue.forEach((request: RequestItem, key: JsonRpcId) => {
@@ -249,12 +256,11 @@ export default class WebSocketProvider extends Web3BaseProvider {
         );
     }
 
-    private reconnecting = false;
     private reconnectAttempts = 0;
 
     private onConnect(): void {
+        this.providerStatus = 'connected';
         this.reconnectAttempts = 0;
-        this.reconnecting = false;
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
@@ -267,6 +273,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     }
 
     private onClose(event: ConnectionEvent): void {
+        this.providerStatus = 'disconnected';
         if (
             this.wsProviderOptions.reconnectOptions &&
             this.wsProviderOptions.reconnectOptions.auto &&
