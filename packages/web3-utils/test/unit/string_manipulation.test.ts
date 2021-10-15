@@ -21,13 +21,11 @@ describe('string manipulation tests', () => {
 	describe('padLeft', () => {
 		describe('valid cases', () => {
 			it.each(padLeftData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(padLeft(input[0], input[1], input[2])).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(padInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => padLeft(input[0], input[1], input[2])).toThrow(output);
 			});
 		});
@@ -36,13 +34,11 @@ describe('string manipulation tests', () => {
 	describe('padRight', () => {
 		describe('valid cases', () => {
 			it.each(padRightData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(padRight(input[0], input[1], input[2])).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(padInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => padRight(input[0], input[1], input[2])).toThrow(output);
 			});
 		});
@@ -51,13 +47,11 @@ describe('string manipulation tests', () => {
 	describe('leftPad', () => {
 		describe('valid cases', () => {
 			it.each(padLeftData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(leftPad(input[0], input[1], input[2])).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(padInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => leftPad(input[0], input[1], input[2])).toThrow(output);
 			});
 		});
@@ -66,13 +60,11 @@ describe('string manipulation tests', () => {
 	describe('rightPad', () => {
 		describe('valid cases', () => {
 			it.each(padRightData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(rightPad(input[0], input[1], input[2])).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(padInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => rightPad(input[0], input[1], input[2])).toThrow(output);
 			});
 		});
@@ -81,13 +73,11 @@ describe('string manipulation tests', () => {
 	describe('toTwosComplement', () => {
 		describe('valid cases', () => {
 			it.each(toTwosComplementData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(toTwosComplement(input[0], input[1])).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(toTwosComplementInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => toTwosComplement(input[0], input[1])).toThrow(output);
 			});
 		});
@@ -96,14 +86,12 @@ describe('string manipulation tests', () => {
 	describe('fromTwosComplement', () => {
 		describe('valid cases', () => {
 			it.each(fromTwosComplementData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(fromTwosComplement(input[0], input[1])).toEqual(output);
 			});
 		});
 
 		describe('invalid cases', () => {
 			it.each(fromTwosComplementInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => fromTwosComplement(input[0], input[1])).toThrow(output);
 			});
 		});
