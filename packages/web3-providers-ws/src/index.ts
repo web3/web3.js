@@ -1,13 +1,14 @@
-import { w3cwebsocket } from 'websocket';
+import { IMessageEvent, w3cwebsocket } from 'websocket';
 import { JsonRpcResult, 
     Web3BaseProvider, 
     Web3BaseProviderStatus, 
      JsonRpcId, 
      RequestItem, JsonRpcPayload,
-     JsonRpcResponseWithError, JsonRpcResponseWithResult
+     JsonRpcResponseWithError, JsonRpcResponseWithResult, JsonRpcResponse
 } from 'web3-common';
 
-import { MethodNotImplementedError, InvalidConnectionError,  ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError, InvalidClientError, ConnectionEvent } from 'web3-common/dist/errors';
+import { MethodNotImplementedError, InvalidConnectionError,  ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError, 
+    InvalidClientError, ConnectionEvent } from 'web3-common/dist/errors';
 import { WebSocketOptions } from './types';
 
 export default class WebSocketProvider extends Web3BaseProvider {
@@ -62,6 +63,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
         return this.providerStatus;
     }
 
+    /* eslint-disable class-methods-use-this */
     public supportsSubscriptions(): boolean {
         return true;
     }
@@ -140,7 +142,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.requestQueue.delete(request.payload.id);
 
             // TODO this.emit( WSStatus.Error,WSErrors.ConnectionNotOpenError, request );
-            this.providerStatus === 'disconnected';
+            this.providerStatus = 'disconnected';
 
             if(request.callback !== undefined)
                 request.callback(new ConnectionNotOpenError());
@@ -151,7 +153,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
         this.requestQueue.delete(request.payload.id);
 
         try {
-            this.webSocketConnection.send(JSON.stringify(request));
+            this.webSocketConnection.send(JSON.stringify(request.payload));
         } catch (error) {
             if(request.callback !== undefined) 
                 request.callback(error as Error, undefined);
@@ -227,28 +229,30 @@ export default class WebSocketProvider extends Web3BaseProvider {
         }
     }
 
-    private onMessage(e: any): void { // TODO add type instead of any
+    private onMessage(e: IMessageEvent): void {
         this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
-            (result: any) => { // TODO add type instead of any
+            (response: JsonRpcResponse) => { 
                 if (
-                    result.method &&
-                    result.method.indexOf('_subscription') !== -1
+                    response.method &&
+                    response.method.indexOf('_subscription') !== -1
                 ) {
                     // this.emit(Web3ProviderEvents.Message, result); WIP
                     return;
                 }
 
-                let {id} = result;
+                let id = response.id;
 
-                if (Array.isArray(result)) {
-                    id = result[0].id;
+                if (Array.isArray(response)) {
+                    id = response[0].id;
                 }
 
                 if (id && this.processedQueue.has(id)) {
                     const requestItem = this.processedQueue.get(id);
-                    if (requestItem?.callback !== undefined) {
-                        requestItem?.callback(undefined, result);
-                    }
+                     if (requestItem?.callback !== undefined) {
+                         requestItem?.callback(
+                            (response.error? response : undefined) as JsonRpcResponseWithError, 
+                            (response.result? response : undefined) as JsonRpcResponseWithResult);
+                     }
 
                     this.processedQueue.delete(id);
                 }
@@ -309,8 +313,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private lastDataChunk = "";
     private lastChunkTimeout!: NodeJS.Timeout;
 
-    private parseResponse(data: string): any { 
-        const returnValues: any = [];
+    private parseResponse(data: string): JsonRpcResponse[] { 
+        let returnValues : JsonRpcResponse[] = [];
 
         // de chunk
         const dechunkedData = data
@@ -324,7 +328,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             if (this.lastDataChunk !== "")
                 data = this.lastDataChunk + data;
 
-            let result: any = null;
+            let result: JsonRpcResponse;
 
             try {
                 result = JSON.parse(data);
