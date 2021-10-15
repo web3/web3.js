@@ -52,19 +52,20 @@ describe('Web3Config', () => {
 	});
 
 	it.each(Object.keys(defaultConfig))(
-		'should trigger "onConfigChange" if "%s" is changed',
+		'should trigger "configChange" event if "%s" is changed',
 		key => {
 			const obj = new MyConfigObject();
-			obj.onConfigChange = jest.fn();
+			const configChange = jest.fn();
+			obj.on('configChange', configChange);
 
 			obj[key as never] = 'newValue' as never;
 
-			expect(obj.onConfigChange).toHaveBeenCalledTimes(1);
-			expect(obj.onConfigChange).toHaveBeenCalledWith(
-				key,
-				defaultConfig[key as never],
-				'newValue',
-			);
+			expect(configChange).toHaveBeenCalledTimes(1);
+			expect(configChange).toHaveBeenCalledWith({
+				name: key,
+				oldValue: defaultConfig[key as never],
+				newValue: 'newValue',
+			});
 		},
 	);
 });
