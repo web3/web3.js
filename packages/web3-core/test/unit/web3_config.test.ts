@@ -1,4 +1,4 @@
-import { Web3Config } from '../../src/web3_config';
+import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
 
@@ -56,7 +56,7 @@ describe('Web3Config', () => {
 		key => {
 			const obj = new MyConfigObject();
 			const configChange = jest.fn();
-			obj.on('configChange', configChange);
+			obj.on(Web3ConfigEvent.CONFIG_CHANGE, configChange);
 
 			obj[key as never] = 'newValue' as never;
 

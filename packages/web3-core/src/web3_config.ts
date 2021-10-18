@@ -19,10 +19,12 @@ type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }
 	: never;
 
-export const EVENT_CONFIG_CHANGE = 'configChange';
+export enum Web3ConfigEvent {
+	CONFIG_CHANGE = 'CONFIG_CHANGE',
+}
 
 export abstract class Web3Config
-	extends Web3EventEmitter<{ [EVENT_CONFIG_CHANGE]: ConfigEvent<ConfigOptions> }>
+	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<ConfigOptions> }>
 	implements ConfigOptions
 {
 	private _config: ConfigOptions = {
@@ -48,7 +50,7 @@ export abstract class Web3Config
 	}
 
 	public set handleRevert(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'handleRevert',
 			oldValue: this._config.handleRevert,
 			newValue: val,
@@ -61,7 +63,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultAccount(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultAccount',
 			oldValue: this._config.defaultAccount,
 			newValue: val,
@@ -74,7 +76,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultBlock(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultBlock',
 			oldValue: this._config.defaultBlock,
 			newValue: val,
@@ -88,7 +90,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionBlockTimeout(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionBlockTimeout',
 			oldValue: this._config.transactionBlockTimeout,
 			newValue: val,
@@ -102,7 +104,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionConfirmationBlocks(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionConfirmationBlocks',
 			oldValue: this._config.transactionConfirmationBlocks,
 			newValue: val,
@@ -116,7 +118,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionPollingTimeout(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionPollingTimeout',
 			oldValue: this._config.transactionPollingTimeout,
 			newValue: val,
@@ -130,7 +132,7 @@ export abstract class Web3Config
 	}
 
 	public set blockHeaderTimeout(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'blockHeaderTimeout',
 			oldValue: this._config.blockHeaderTimeout,
 			newValue: val,
@@ -144,7 +146,7 @@ export abstract class Web3Config
 	}
 
 	public set maxListenersWarningThreshold(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'maxListenersWarningThreshold',
 			oldValue: this._config.maxListenersWarningThreshold,
 			newValue: val,
@@ -158,7 +160,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultChain(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultChain',
 			oldValue: this._config.defaultChain,
 			newValue: val,
@@ -172,7 +174,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultHardfork(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultHardfork',
 			oldValue: this._config.defaultHardfork,
 			newValue: val,
@@ -186,7 +188,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultCommon(val) {
-		this.emit(EVENT_CONFIG_CHANGE, {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultCommon',
 			oldValue: this._config.defaultCommon,
 			newValue: val,
