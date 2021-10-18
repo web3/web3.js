@@ -1,4 +1,3 @@
-import { IMessageEvent, w3cwebsocket } from 'websocket';
 import { JsonRpcResult, 
     Web3BaseProvider, 
     Web3BaseProviderStatus, 
@@ -6,7 +5,7 @@ import { JsonRpcResult,
      RequestItem, JsonRpcPayload,
      JsonRpcResponseWithError, JsonRpcResponseWithResult, JsonRpcResponse
 } from 'web3-common';
-
+import { IMessageEvent, w3cwebsocket as W3WS } from 'websocket';
 import { MethodNotImplementedError, InvalidConnectionError,  ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError, 
     InvalidClientError, ConnectionEvent } from 'web3-common/dist/errors';
 import { WebSocketOptions } from './types';
@@ -16,11 +15,18 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private readonly clientUrl: string;
     private readonly wsProviderOptions: WebSocketOptions;
    
-    private webSocketConnection?: w3cwebsocket;
+    private webSocketConnection?: W3WS;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     private readonly requestQueue: Map<JsonRpcId, RequestItem<any, any>>;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     private readonly processedQueue: Map<JsonRpcId, RequestItem<any, any>>;
 
     private providerStatus: Web3BaseProviderStatus;
+
+    private reconnectAttempts: number;
+
+    private lastDataChunk: string;
+    private lastChunkTimeout!: NodeJS.Timeout;
 
     public constructor(clientUrl: string, wsProviderOptions?: WebSocketOptions) {
         super();
@@ -48,6 +54,9 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         this.requestQueue = new Map<JsonRpcId, RequestItem>();
         this.processedQueue = new Map<JsonRpcId, RequestItem>();
+
+        this.reconnectAttempts = 0;
+        this.lastDataChunk = "";
 
         this.providerStatus = 'disconnected';
 
@@ -86,7 +95,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     public connect(): void {
         try {
             this.providerStatus = 'connecting';
-            this.webSocketConnection = new w3cwebsocket(
+            this.webSocketConnection = new W3WS(
                 this.clientUrl,
                 this.wsProviderOptions?.protocol,
                 undefined,
@@ -165,15 +174,15 @@ export default class WebSocketProvider extends Web3BaseProvider {
         throw new MethodNotImplementedError();
     }
 
-    public send<T = JsonRpcResult, T2 = unknown[]>(
+    public async send<T = JsonRpcResult, T2 = unknown[]>(
 		payloadParam: JsonRpcPayload<T2>,
 		callbackParam: (
 			error?: JsonRpcResponseWithError<T> | Error,
 			result?: JsonRpcResponseWithResult<T>,
 		) => void,
-	): void {
+	): Promise<void> {
 
-        this.request<T, T2>({payload: payloadParam, callback: callbackParam});
+        await this.request<T, T2>({payload: payloadParam, callback: callbackParam});
 
     }
 
@@ -186,17 +195,24 @@ export default class WebSocketProvider extends Web3BaseProvider {
         }
     }
 
+    /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
     private addSocketListeners(): void {
         // WIP any
+        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
+        /* eslint-disable  @typescript-eslint/no-unsafe-call */
         (this.webSocketConnection as any).addEventListener(
             'message',
             this.onMessage.bind(this)
         );
 
+        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
+        /* eslint-disable  @typescript-eslint/no-unsafe-call */
         (this.webSocketConnection as any).addEventListener(
             'open',
             this.onConnect.bind(this)
         );
+        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
+        /* eslint-disable  @typescript-eslint/no-unsafe-call */
         (this.webSocketConnection as any).addEventListener(
             'close',
             this.onClose.bind(this)
@@ -219,7 +235,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.reconnectAttempts < this.wsProviderOptions.reconnectOptions.maxAttempts
         ) {
             setTimeout(() => {
-                this.reconnectAttempts++;
+                this.reconnectAttempts += 1;
                 this.removeSocketListeners();
                 // this.emit(this.RECONNECT, _this.reconnectAttempts); WIP
                 this.connect();
@@ -260,7 +276,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
         );
     }
 
-    private reconnectAttempts = 0;
+    
 
     private onConnect(): void {
         this.providerStatus = 'connected';
@@ -268,8 +284,9 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                async (request: RequestItem, key: JsonRpcId) => {
-                    await this.request(request);
+                (request: RequestItem, key: JsonRpcId) => {
+                    /* eslint-disable  @typescript-eslint/no-floating-promises */
+                    this.request(request);
                     this.requestQueue.delete(key);
                 }
             );
@@ -279,8 +296,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private onClose(event: ConnectionEvent): void {
         this.providerStatus = 'disconnected';
         if (
-            this.wsProviderOptions.reconnectOptions &&
-            this.wsProviderOptions.reconnectOptions.auto &&
+            this.wsProviderOptions?.reconnectOptions?.auto &&
             (![1000, 1001].includes(event.code) || event.wasClean === false)
         ) {
             this.reconnect();
@@ -310,14 +326,11 @@ export default class WebSocketProvider extends Web3BaseProvider {
         this.removeSocketListeners();
     }
 
-    private lastDataChunk = "";
-    private lastChunkTimeout!: NodeJS.Timeout;
-
-    private parseResponse(data: string): JsonRpcResponse[] { 
-        let returnValues : JsonRpcResponse[] = [];
+    private parseResponse(dataReceived: string): JsonRpcResponse[] { 
+        let returnValues: JsonRpcResponse[] = [];
 
         // de chunk
-        const dechunkedData = data
+        const dechunkedData = dataReceived
             .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
             .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
             .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
@@ -325,15 +338,17 @@ export default class WebSocketProvider extends Web3BaseProvider {
             .split('|--|');
 
         dechunkedData.forEach((data: string) => {
+            let dataToParse: string = data;
+
             if (this.lastDataChunk !== "")
-                data = this.lastDataChunk + data;
+                dataToParse = this.lastDataChunk + dataToParse;
 
             let result: JsonRpcResponse;
 
             try {
-                result = JSON.parse(data);
+                result = JSON.parse(dataToParse);
             } catch (error) {
-                this.lastDataChunk = data;
+                this.lastDataChunk = dataToParse;
 
                 if (this.lastChunkTimeout)
                     clearTimeout(this.lastChunkTimeout);
@@ -373,16 +388,19 @@ export default class WebSocketProvider extends Web3BaseProvider {
         return returnValues;
     }
 
+    /* eslint-disable class-methods-use-this */
     private removeSocketListeners(): void {
-        // WIP any
+        /* eslint-disable @typescript-eslint/unbound-method */
         (this.webSocketConnection as any).removeEventListener(
             'message',
             this.onMessage
         );
+        /* eslint-disable @typescript-eslint/unbound-method */
         (this.webSocketConnection as any).removeEventListener(
             'open',
             this.onConnect
         );
+        /* eslint-disable @typescript-eslint/unbound-method */
         (this.webSocketConnection as any).removeEventListener(
             'close',
             this.onClose
