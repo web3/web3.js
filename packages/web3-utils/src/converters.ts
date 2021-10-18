@@ -5,6 +5,7 @@ import {
 	InvalidIntegerError,
 	InvalidUnitError,
 } from './errors';
+/* eslint-disable */
 import { sha3 } from './hash';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
 import {
@@ -362,7 +363,9 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-	const addressHash = sha3(lowerCaseAddress).replace(/^0x/i, '');
+	const hash = sha3(lowerCaseAddress);
+	if (hash === null) return '';
+	const addressHash = hash.replace(/^0x/i, '');
 	let checksumAddress = '0x';
 
 	for (let i = 0; i < address.length; i += 1) {
