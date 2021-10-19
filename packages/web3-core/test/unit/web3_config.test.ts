@@ -38,7 +38,6 @@ describe('Web3Config', () => {
 		const setterSpy = jest.spyOn(obj, key as never, 'set');
 
 		obj[key as never] = null as never;
-
 		expect(setterSpy).toHaveBeenCalledTimes(1);
 	});
 

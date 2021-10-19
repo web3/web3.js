@@ -81,7 +81,6 @@ export abstract class Web3Config
 			oldValue: this._config.defaultBlock,
 			newValue: val,
 		});
-
 		this._config.defaultBlock = val;
 	}
 
@@ -95,7 +94,6 @@ export abstract class Web3Config
 			oldValue: this._config.transactionBlockTimeout,
 			newValue: val,
 		});
-
 		this._config.transactionBlockTimeout = val;
 	}
 
@@ -151,7 +149,6 @@ export abstract class Web3Config
 			oldValue: this._config.maxListenersWarningThreshold,
 			newValue: val,
 		});
-
 		this._config.maxListenersWarningThreshold = val;
 	}
 
