@@ -1,3 +1,4 @@
+import { keccak256 } from 'ethereum-cryptography/keccak';
 import {
 	HexProcessingError,
 	InvalidAddressError,
@@ -5,8 +6,6 @@ import {
 	InvalidIntegerError,
 	InvalidUnitError,
 } from './errors';
-/* eslint-disable */
-import { sha3 } from './hash';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
 import {
 	isAddress,
@@ -363,8 +362,12 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-	const hash = sha3(lowerCaseAddress);
-	if (hash === null) return '';
+	const hash = keccak256(Buffer.from(lowerCaseAddress)).toString('hex');
+	if (
+		hash === null ||
+		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+	)
+		return ''; // // EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
 	const addressHash = hash.replace(/^0x/i, '');
 	let checksumAddress = '0x';
 
