@@ -23,7 +23,7 @@ export const sha3 = (data: string): string | null => {
 export const sha3Raw = (data: string): string => {
 	const hash = sha3(data);
 	if (hash === null) {
-		return SHA3_NULL;
+		return `0x${SHA3_NULL}`;
 	}
 
 	return hash;
