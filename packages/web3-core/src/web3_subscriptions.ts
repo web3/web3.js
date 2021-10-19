@@ -9,8 +9,8 @@ type CommonSubscriptionEvents = {
 };
 
 export abstract class Web3Subscription<
-	EventMap extends Web3EventMap,
-	ArgsType,
+	EventMap extends Web3EventMap = Record<string, unknown>,
+	ArgsType = null,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager;
 	private readonly _lastBlock?: BlockOutput;
@@ -57,10 +57,10 @@ export abstract class Web3Subscription<
 	public abstract buildSubscriptionParams(): unknown;
 }
 
-export type Web3SubscriptionConstructor<
-	T extends Web3Subscription<{}, unknown>,
-	A = unknown,
-> = new (args: A, options: { requestManager: Web3RequestManager }) => T;
+export type Web3SubscriptionConstructor<T extends Web3Subscription, A = unknown> = new (
+	args: A,
+	options: { requestManager: Web3RequestManager },
+) => T;
 
 // TODO: This class to be moved `web3-eth` package.
 export class LogsSubscription extends Web3Subscription<
@@ -85,8 +85,7 @@ export class LogsSubscription extends Web3Subscription<
 export class PendingTransactionsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: HexString;
-	},
-	null
+	}
 > {
 	// eslint-disable-next-line class-methods-use-this
 	public buildSubscriptionParams() {
@@ -98,8 +97,7 @@ export class PendingTransactionsSubscription extends Web3Subscription<
 export class NewBlockHeadersSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: BlockOutput;
-	},
-	null
+	}
 > {
 	// eslint-disable-next-line class-methods-use-this
 	public buildSubscriptionParams() {
@@ -112,8 +110,7 @@ export class SyncingSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: SyncOutput;
 		changed: boolean;
-	},
-	null
+	}
 > {
 	// eslint-disable-next-line class-methods-use-this
 	public buildSubscriptionParams() {

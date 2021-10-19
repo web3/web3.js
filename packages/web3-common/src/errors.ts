@@ -152,7 +152,7 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 	public code = ERR_RESPONSE;
 	public data?: ErrorType;
 
-	public constructor(result: JsonRpcResponse<any, ErrorType>, message?: string) {
+	public constructor(result: JsonRpcResponse<unknown, ErrorType>, message?: string) {
 		super(message ?? `Returned error: ${result?.error?.message ?? JSON.stringify(result)}`);
 		this.data = result.error?.data;
 	}
@@ -163,7 +163,7 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 }
 
 export class InvalidResponseError<ErrorType = unknown> extends ResponseError<ErrorType> {
-	public constructor(result: JsonRpcResponse<any, ErrorType>) {
+	public constructor(result: JsonRpcResponse<unknown, ErrorType>) {
 		super(
 			result,
 			result?.error?.message ?? `Invalid JSON RPC response: ${JSON.stringify(result)}`,

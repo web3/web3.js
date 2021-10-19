@@ -2,17 +2,14 @@ import { InvalidProviderError } from 'web3-common';
 import {
 	isWeb3Provider,
 	Web3RequestManager,
-	Web3RequestManagerEvent
+	Web3RequestManagerEvent,
 } from './web3_request_manager';
-import {
-	Web3Subscription,
-	Web3SubscriptionConstructor
-} from './web3_subscriptions';
+import { Web3Subscription, Web3SubscriptionConstructor } from './web3_subscriptions';
 
 export class Web3SubscriptionManager<
-	ST extends { [key: string]: Web3SubscriptionConstructor<any, any> },
+	ST extends { [key: string]: Web3SubscriptionConstructor<Web3Subscription> },
 > {
-	private _subscriptions: Map<string, Web3Subscription<any, any>> = new Map();
+	private readonly _subscriptions: Map<string, Web3Subscription> = new Map();
 
 	public constructor(
 		public readonly requestManager: Web3RequestManager,
@@ -40,7 +37,10 @@ export class Web3SubscriptionManager<
 		}
 
 		const Klass = this.registeredSubscriptions[name];
-		const subscription = new Klass(args ?? null, { requestManager: this.requestManager });
+
+		const subscription = new Klass(args ?? null, {
+			requestManager: this.requestManager,
+		}) as InstanceType<ST[T]>;
 
 		await subscription.subscribe();
 
@@ -53,7 +53,7 @@ export class Web3SubscriptionManager<
 		return subscription;
 	}
 
-	public async addSubscription(sub: Web3Subscription<{}, unknown>) {
+	public async addSubscription(sub: Web3Subscription) {
 		if (sub.id === undefined) {
 			throw new Error('Subscription is not subscribed yet.');
 		}
@@ -71,7 +71,7 @@ export class Web3SubscriptionManager<
 		this._subscriptions.set(sub.id, sub);
 	}
 
-	public async removeSubscription(sub: Web3Subscription<{}, unknown>) {
+	public async removeSubscription(sub: Web3Subscription) {
 		if (sub.id === undefined) {
 			throw new Error('Subscription is not subscribed yet.');
 		}
@@ -87,7 +87,7 @@ export class Web3SubscriptionManager<
 	public async unsubscribe() {
 		const result = [];
 
-		for (const [_, sub] of this._subscriptions.entries()) {
+		for (const [, sub] of this._subscriptions.entries()) {
 			result.push(this.removeSubscription(sub));
 		}
 
