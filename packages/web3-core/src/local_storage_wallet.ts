@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import {
 	Web3BaseWallet,
 	Web3BaseWalletAccount,

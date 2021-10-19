@@ -1,5 +1,3 @@
-/* eslint-disable no-underscore-dangle */
-
 import { HexString } from 'web3-utils';
 
 interface ConfigOptions {
