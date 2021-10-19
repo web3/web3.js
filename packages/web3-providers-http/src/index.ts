@@ -29,18 +29,6 @@ export class HttpProvider extends Web3BaseProvider {
 		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
 	}
 
-	public send<T = JsonRpcResult, T2 = unknown[], T3 = RequestInit>(
-		payload: JsonRpcPayload<T2>,
-		callback: (
-			error?: JsonRpcResponseWithError<T>,
-			result?: JsonRpcResponseWithResult<T>,
-		) => void,
-		providerOptions?: T3,
-	): void {
-		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
-			.then(d => callback(undefined, d))
-			.catch(e => callback(e, undefined));
-	}
 
 	/* eslint-disable class-methods-use-this */
 	public getStatus(): Web3BaseProviderStatus {
