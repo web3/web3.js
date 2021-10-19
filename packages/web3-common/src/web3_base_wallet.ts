@@ -19,7 +19,6 @@ export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> {
 	protected readonly _accountProvider: Web3AccountProvider<T>;
 
 	public constructor(accountProvider: Web3AccountProvider<T>) {
-		// eslint-disable-next-line no-underscore-dangle
 		this._accountProvider = accountProvider;
 	}
 
