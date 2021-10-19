@@ -44,16 +44,18 @@ type SupportedProviders =
 	| LegacySendProvider
 	| LegacySendAsyncProvider;
 
-const isWeb3Provider = (provider: SupportedProviders): provider is Web3BaseProvider =>
+export const isWeb3Provider = (provider: SupportedProviders): provider is Web3BaseProvider =>
 	Web3BaseProvider.isWeb3Provider(provider);
 
-const isLegacyRequestProvider = (provider: SupportedProviders): provider is LegacyRequestProvider =>
-	'request' in provider;
+export const isLegacyRequestProvider = (
+	provider: SupportedProviders,
+): provider is LegacyRequestProvider => 'request' in provider;
 
-const isLegacySendProvider = (provider: SupportedProviders): provider is LegacySendProvider =>
-	'send' in provider;
+export const isLegacySendProvider = (
+	provider: SupportedProviders,
+): provider is LegacySendProvider => 'send' in provider;
 
-const isLegacySendAsyncProvider = (
+export const isLegacySendAsyncProvider = (
 	provider: SupportedProviders,
 ): provider is LegacySendAsyncProvider => 'sendAsync' in provider;
 
@@ -124,6 +126,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			return provider.request<ResultType, RequestType>(request);
 		}
 
+		// TODO: This should be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
 			const payload = this._requestToPayload(request);
 
@@ -138,6 +141,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			});
 		}
 
+		// TODO: This should be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
 			const payload = this._requestToPayload(request);
 
@@ -152,6 +156,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			});
 		}
 
+		// TODO: This should be deprecated and removed.
 		if (isLegacySendAsyncProvider(provider)) {
 			const payload = this._requestToPayload(request);
 
