@@ -3,6 +3,7 @@
 import {
 	ERR_RESPONSE,
 	ERR_PARAM,
+	ERR_METHOD_NOT_IMPLEMENTED,
 	ERR_CONN,
 	ERR_CONN_INVALID,
 	ERR_CONN_TIMEOUT,
@@ -28,6 +29,7 @@ import {
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
 	ERR_FORMATTERS,
+	ERR_INVALID_CLIENT,
 } from './constants';
 
 type ConnectionEvent = { code: string; reason: string };
@@ -335,4 +337,20 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 
 export class FormatterError extends Web3Error {
 	public code = ERR_FORMATTERS;
+}
+
+export class MethodNotImplementedError extends Web3Error {
+	public code = ERR_METHOD_NOT_IMPLEMENTED;
+
+	public constructor() {
+		super("The method you're trying to call is not implemented.");
+	}
+}
+
+export class InvalidClientError extends Web3Error {
+	public code = ERR_INVALID_CLIENT;
+
+	public constructor(clientUrl: string) {
+		super(`Client URL "${clientUrl}" is invalid.`);
+	}
 }
