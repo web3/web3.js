@@ -89,3 +89,15 @@ export class NibbleWidthError extends Web3Error {
 		super(value, 'value greater than the nibble width');
 	}
 }
+
+export class InvalidType extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid type, type not supported');
+	}
+}
+
+export class InvalidArrayError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'array types is not supported.');
+	}
+}

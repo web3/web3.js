@@ -1,9 +1,9 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { Numbers, typedObject, typedObject2 } from './types';
-import { leftPad, rightPad } from './string_manipulation';
+import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { toHex, utf8ToHex, hexToBytes } from './converters';
 import { isAddress, isHexStrict } from './validation';
-import { InvalidStringError } from './errors';
+import { InvalidStringError, InvalidType, InvalidArrayError } from './errors';
 
 const SHA3_NULL = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -32,7 +32,10 @@ export const sha3Raw = (data: string): string => {
 export { keccak256 };
 
 const getType = (arg: typedObject | typedObject2 | Numbers): [string, Numbers] => {
-	if (typeof arg === 'object' && ('t' in arg || 'type' in arg)) {
+	if (
+		typeof arg === 'object' &&
+		(('t' in arg && 'v' in arg) || ('type' in arg && 'value' in arg))
+	) {
 		const type1 = 't' in arg ? arg.t : arg.type;
 		const val = 'v' in arg ? arg.v : arg.value;
 		return [type1, val];
@@ -45,6 +48,15 @@ const getType = (arg: typedObject | typedObject2 | Numbers): [string, Numbers] =
 	}
 
 	return [type1, val];
+};
+
+const getType2 = (arg: typedObject | typedObject2 | Numbers): [string, Numbers] => {
+	if (typeof arg === 'object' && ('t' in arg || 'type' in arg)) {
+		const type1 = 't' in arg ? arg.t : arg.type;
+		const val = 'v' in arg ? arg.v : arg.value;
+		return [type1, val];
+	} // no type provided so throw an error instead
+	throw new InvalidType(arg);
 };
 
 const parseTypeNArray = (type: string): number | null => {
@@ -102,10 +114,83 @@ const bitLength = (value: BigInt): number => {
 	const length = updatedVal.match(/1/g)?.length;
 	return length ?? 0;
 };
-const solidityPack = (type: string, value: string, arraySize?: number): string => {
+
+const solidityPack2 = (type: string, value: string, arraySize?: number): string => {
+	if (type === 'string') {
+		return utf8ToHex(value);
+	}
+	if (type === 'bool') {
+		return value ? '01' : '00';
+	}
+	if (type.startsWith('address')) {
+		const size = arraySize ? 64 : 40;
+
+		if (isAddress(value)) {
+			throw new Error(' is not a valid address, or the checksum is invalid.');
+		}
+
+		return leftPad(value, size);
+	}
 	const name = elementaryName(type);
 
-	if (name === 'bytes' && value === 'string') {
+	if (type.startsWith('uint')) {
+		const size = Number(name.slice(4));
+		if (size % 8 || size < 8 || size > 256) {
+			throw new Error('Invalid uint');
+		}
+		const num = parseNumber(value);
+		if (bitLength(num) > size) {
+			throw new Error('Supplied uint exceeds width: ');
+		}
+		if (num < BigInt(0)) {
+			throw new Error('Supplied uint ');
+		}
+
+		return size ? leftPad(num.toString(16), (size / 8) * 2) : num.toString(16);
+	}
+
+	if (type.startsWith('int')) {
+		const size = Number(name.slice(3));
+		if (size % 8 || size < 8 || size > 256) {
+			throw new Error('Invalid int');
+		}
+
+		const num = parseNumber(value);
+		if (bitLength(num) > size) {
+			throw new Error('Supplied int exceeds width: ');
+		}
+
+		if (num < BigInt(0)) {
+			return toTwosComplement(num.toString(), size / 4);
+		}
+		return size ? leftPad(num.toString(16), (size / 8) * 2) : num.toString(16);
+	}
+
+	if (name === 'bytes') {
+		if (value.replace(/^0x/i, '').length % 2 !== 0) {
+			throw new Error('Invalid bytes characters ');
+		}
+		return value;
+	}
+
+	if (type.startsWith('bytes')) {
+		// must be 32 byte slices when in an array
+		const size = arraySize ? 32 : parseTypeN(type);
+		if (!size) {
+			throw new Error('bytes[] not yet supported in solidity');
+		}
+
+		if (size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
+			throw new Error('Invalid bytes');
+		}
+
+		return rightPad(value, size * 2);
+	}
+	return '';
+};
+const solidityPack = (type: string, value: string, arraySize?: number): string => {
+	const name = elementaryName(type);
+	if (name === 'bytes') {
 		if (value.replace(/^0x/i, '').length % 2 !== 0) {
 			throw new Error('Invalid bytes characters ');
 		}
@@ -127,9 +212,23 @@ const solidityPack = (type: string, value: string, arraySize?: number): string =
 
 		return leftPad(value, size);
 	}
-
 	// Parse N from type<N>
 	const size = parseTypeN(type);
+
+	if (type.startsWith('uint')) {
+		if (size % 8 || size < 8 || size > 256) {
+			throw new Error('Invalid uint');
+		}
+		const num = parseNumber(value);
+		if (bitLength(num) > size) {
+			throw new Error('Supplied uint exceeds width: ');
+		}
+		if (num < BigInt(0)) {
+			throw new Error('Supplied uint ');
+		}
+
+		return size ? leftPad(num.toString(16), (size / 8) * 2) : num.toString(16);
+	}
 
 	if (type.startsWith('bytes')) {
 		if (!size) {
@@ -148,23 +247,45 @@ const solidityPack = (type: string, value: string, arraySize?: number): string =
 		return rightPad(value, size * 2);
 	}
 
-	if (type.startsWith('uint')) {
-		if (size % 8 || size < 8 || size > 256) {
-			throw new Error('Invalid uint');
-		}
-		const num = parseNumber(value);
-		if (bitLength(num) > size) {
-			throw new Error('Supplied uint exceeds width: ');
-		}
-		if (num < BigInt(0)) {
-			throw new Error('Supplied uint ');
-		}
-
-		return size ? leftPad(num.toString(16), (size / 8) * 2) : num.toString(16);
-	}
 	throw new Error('Unsupported or invalid type: ');
 };
+export const processSolidityEncodePackedArgs2 = (
+	arg: typedObject | typedObject2 | Numbers,
+): string => {
+	if (Array.isArray(arg)) {
+		throw new InvalidArrayError(arg);
+	}
 
+	const [type, val] = getType2(arg);
+
+	const updatedVal =
+		(type.startsWith('int') || type.startsWith('uint')) &&
+		typeof val === 'string' &&
+		!/^(-)?0x/i.test(val)
+			? BigInt(val)
+			: val;
+
+	// get the array size
+	if (Array.isArray(updatedVal)) {
+		// need arraySize and hexarg
+		const arraySize = parseTypeNArray(type);
+		if (arraySize === null) {
+			throw new Error('array has no length');
+		}
+		if (arraySize && updatedVal.length !== arraySize) {
+			throw new Error(' is not matching the given array ');
+		}
+
+		// else {
+		//     arraySize = value.length;
+		// }
+		const hexArg = updatedVal.map(v => solidityPack2(type, v, arraySize).replace('0x', ''));
+		return hexArg.join('');
+	}
+
+	const hexArg = solidityPack2(type, val.toString());
+	return hexArg.replace('0x', '');
+};
 export const processSolidityEncodePackedArgs = (
 	arg: typedObject | typedObject2 | Numbers,
 ): string => {
@@ -172,24 +293,6 @@ export const processSolidityEncodePackedArgs = (
 		throw new Error('Autodetection of array types is not supported.');
 	}
 
-	// var type, value = '';
-	// var hexArg, arraySize;
-
-	// // if type is given
-	// if (typeof arg === "object" && ('t' in arg || 'type' in arg)) {
-	//     const getType = 't' in arg ? arg.t : arg.type;
-	//     const value = 'v' in arg ? arg.v : arg.value;
-
-	// // otherwise try to guess the type
-	// } else {
-
-	//     const getType = toHex(arg, true);
-	//     const value = toHex(arg);
-
-	//     if (!getType.startsWith('int') && !getType.startsWith('uint')) {
-	//         const type = 'bytes';
-	//     }
-	// }
 	const [type, val] = getType(arg);
 
 	const updatedVal =
@@ -201,6 +304,7 @@ export const processSolidityEncodePackedArgs = (
 
 	// get the array size
 	if (Array.isArray(updatedVal)) {
+		// need arraySize and hexarg
 		const arraySize = parseTypeNArray(type);
 		if (arraySize === null) {
 			throw new Error('array has no length');
@@ -223,7 +327,13 @@ export const soliditySha3 = (...values: any[]): string | null => {
 	const args = Array.prototype.slice.call(values);
 
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
+	return sha3(`0x${hexArgs.join('')}`);
+};
 
+export const soliditySha3v2 = (...values: any[]): string | null => {
+	const args = Array.prototype.slice.call(values);
+
+	const hexArgs = args.map(processSolidityEncodePackedArgs2);
 	return sha3(`0x${hexArgs.join('')}`);
 };
 
