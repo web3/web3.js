@@ -14,7 +14,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "@types/bn.js": "^4.11.6",
+        "@types/bn.js": "^4.11.5",
         "web3-core": "1.6.1-rc.0",
         "web3-core-helpers": "1.6.1-rc.0",
         "web3-core-method": "1.6.1-rc.0",
