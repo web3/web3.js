@@ -29,7 +29,6 @@ describe('Web3Config', () => {
 
 		const result = obj[key as never];
 
-		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		expect(getterSpy).toHaveBeenCalledTimes(1);
 		expect(result).toEqual(defaultConfig[key as never]);
 	});
@@ -40,7 +39,6 @@ describe('Web3Config', () => {
 
 		obj[key as never] = null as never;
 
-		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		expect(setterSpy).toHaveBeenCalledTimes(1);
 	});
 
@@ -61,7 +59,6 @@ describe('Web3Config', () => {
 
 			obj[key as never] = 'newValue' as never;
 
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(obj.onConfigChange).toHaveBeenCalledTimes(1);
 			expect(obj.onConfigChange).toHaveBeenCalledWith(
 				key,

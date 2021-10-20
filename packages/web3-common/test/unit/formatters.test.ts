@@ -64,10 +64,8 @@ describe('formatters', () => {
 
 	describe('outputBigIntegerFormatter', () => {
 		it('should convert input to number', () => {
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			const result = outputBigIntegerFormatter(12n);
 
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(utils.toNumber).toHaveBeenCalledWith(12n);
 			expect(result).toEqual(toNumberResult);
 		});
@@ -129,14 +127,12 @@ describe('formatters', () => {
 
 	describe('inputDefaultBlockNumberFormatter', () => {
 		it('should return default block if block number not provided', () => {
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(inputDefaultBlockNumberFormatter(undefined, 255)).toEqual('0xff');
 		});
 
 		it('should return block number if block number provided', () => {
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(inputDefaultBlockNumberFormatter(10, 255)).toEqual(numberToHexResult);
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(utils.numberToHex).toHaveBeenCalledWith(10);
 		});
 	});
@@ -239,13 +235,12 @@ describe('formatters', () => {
 		it.each(['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce'])(
 			'should convert "%s" number value to hex',
 			attr => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				jest.spyOn(utils, 'toNumber').mockReturnValue(5678n);
 
 				expect(
 					txInputOptionsFormatter({ ...txInput, data: '0xff0011', [attr]: 5678n }),
 				).toEqual(expect.objectContaining({ [attr]: numberToHexResult }));
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 				expect(utils.numberToHex).toHaveBeenCalledWith(5678n);
 			},
 		);
@@ -260,7 +255,7 @@ describe('formatters', () => {
 			});
 
 			expect(utils.sha3).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(result.id).toEqual(`log_${sha3Result.substr(0, 8)}`);
 		});
 
@@ -368,11 +363,10 @@ describe('formatters', () => {
 				logs,
 			});
 
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(formatters.outputLogFormatter).toHaveBeenCalledTimes(logs.length);
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(formatters.outputLogFormatter).toHaveBeenCalledWith(logs[0], 0, logs);
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(formatters.outputLogFormatter).toHaveBeenCalledWith(logs[1], 1, logs);
 			expect(result.logs).toEqual(['outputLogFormatterResult', 'outputLogFormatterResult']);
 		});
@@ -490,16 +484,14 @@ describe('formatters', () => {
 				transactions.length,
 			);
 			expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith(
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				transactions[0],
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 				0,
 				transactions,
 			);
 			expect(formatters.outputTransactionFormatter).toHaveBeenCalledWith(
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				transactions[1],
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 				1,
 				transactions,
 			);
@@ -563,7 +555,6 @@ describe('formatters', () => {
 			jest.spyOn(utils, 'fromUtf8').mockReturnValue('fromUtf8Result');
 			const result = inputPostFormatter({ topics: ['0x123', 'non-hex-value'] } as any);
 
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(utils.fromUtf8).toHaveBeenCalledTimes(1);
 			expect(utils.fromUtf8).toHaveBeenCalledWith('non-hex-value');
 			expect(result).toEqual(
@@ -613,11 +604,10 @@ describe('formatters', () => {
 
 			const result = outputPostFormatter({ topics } as any);
 
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 			expect(utils.toUtf8).toHaveBeenCalledTimes(topics.length);
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(utils.toUtf8).toHaveBeenCalledWith(topics[0], 0, topics);
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+
 			expect(utils.toUtf8).toHaveBeenCalledWith(topics[1], 1, topics);
 			expect(result).toEqual(
 				expect.objectContaining({ topics: ['toUtf8Result', 'toUtf8Result'] }),

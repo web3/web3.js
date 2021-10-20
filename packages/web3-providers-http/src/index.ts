@@ -1,9 +1,6 @@
 import {
 	ResponseError,
 	JsonRpcPayload,
-	JsonRpcResponseWithError,
-	JsonRpcResponseWithResult,
-	JsonRpcResult,
 	Web3BaseProvider,
 	MethodNotImplementedError,
 	JsonRpcResponse,
@@ -28,7 +25,6 @@ export class HttpProvider extends Web3BaseProvider {
 	private static validateClientUrl(clientUrl: string): boolean {
 		return typeof clientUrl === 'string' ? /^http(s)?:\/\//i.test(clientUrl) : false;
 	}
-
 
 	/* eslint-disable class-methods-use-this */
 	public getStatus(): Web3BaseProviderStatus {
