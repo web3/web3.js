@@ -277,21 +277,18 @@ describe('converters', () => {
 	describe('toHex', () => {
 		describe('return value', () => {
 			it.each(toHexValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(toHex(input)).toEqual(output[0]);
 			});
 		});
 
 		describe('return type', () => {
 			it.each(toHexValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(toHex(input, true)).toEqual(output[1]);
 			});
 		});
 	});
 
 	describe('toNumber', () => {
-		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		it.each([...hexToNumberValidData, [123, 123], ['123', 123]])('%s', (input, output) => {
 			expect(toNumber(input)).toEqual(output);
 		});
@@ -300,14 +297,12 @@ describe('converters', () => {
 	describe('fromWei', () => {
 		describe('valid cases', () => {
 			it.each(fromWeiValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(fromWei(input[0], input[1])).toEqual(output);
 			});
 		});
 
 		describe('invalid cases', () => {
 			it.each(fromWeiInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => fromWei(input[0], input[1])).toThrow(output);
 			});
 		});
@@ -316,14 +311,12 @@ describe('converters', () => {
 	describe('toWei', () => {
 		describe('valid cases', () => {
 			it.each(toWeiValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(toWei(output, input[1])).toEqual(input[0].toString());
 			});
 		});
 
 		describe('invalid cases', () => {
 			it.each(toWeiInvalidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(() => toWei(input[0], input[1])).toThrow(output);
 			});
 		});
