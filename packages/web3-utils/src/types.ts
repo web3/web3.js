@@ -5,7 +5,7 @@ export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
 export type Numbers = number | bigint | string | HexString;
 export type typedObject = {
 	type: string;
-	value: string;
+	value: Numbers;
 };
 export type typedObject2 = {
 	t: string;

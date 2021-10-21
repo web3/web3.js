@@ -1,8 +1,8 @@
+import { typedObject, typedObject2 } from '../../src/types';
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
-export const sha3ValidData: [string, string | null][] = [
+export const sha3Data: [string, string | null][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],
-	['', null],
 	[
 		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
 		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
@@ -14,6 +14,8 @@ export const sha3ValidData: [string, string | null][] = [
 	['1234', '0x387a8233c96e1fc0ad5e284353276177af2186e7afa85296f106336e376669f7'],
 	['0x80', '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'],
 ];
+
+export const sha3ValidData: [string, string | null][] = [...sha3Data, ['', null]];
 
 export const sha3InvalidData: [any, string][] = [
 	[1, 'Invalid value given "1". Error: not a valid string.'],
@@ -33,17 +35,8 @@ export const sha3EthersValidData: [string, any][] = [
 ];
 
 export const sha3RawValidData: [string, string | null][] = [
-	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
-	],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image',
-		'0x74e687805c0cfbf0065120987739a5b0ba9b3686a1a778a463bddddcd18cc432',
-	],
-	['1234', '0x387a8233c96e1fc0ad5e284353276177af2186e7afa85296f106336e376669f7'],
-	['0x80', '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'],
+	...sha3Data,
+	['', '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'],
 ];
 
 export const sha3RawEthersValidData: [string, any][] = [
@@ -54,11 +47,11 @@ export const sha3RawEthersValidData: [string, any][] = [
 	],
 ];
 
-export const soliditySha3ValidData: [Record<string, unknown>[], string][] = [
+export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][] = [
 	[
 		[{ type: 'string', value: '31323334' }],
 		'0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b',
-	], // 1.x test cases
+	],
 	[
 		[
 			{ type: 'string', value: 'helloworld' },
@@ -121,12 +114,88 @@ export const soliditySha3ValidData: [Record<string, unknown>[], string][] = [
 		],
 		'0xa13b31627c1ed7aaded5aecec71baf02fe123797fffd45e662eac8e06fbe4955',
 	],
+	[
+		[{ t: 'int256', v: '32309054545061485574011236401' }],
+		'0x1594ff29e8161679724999598fb6b993f68549092dddc9f183b04c629aeb9d54',
+	],
 ];
 
-export const soliditySha3EthersValidData: [string, any][] = [
+export const soliditySha3ValidData: [typedObject[] | typedObject2[], string | null][] = [
+	...soliditySha3Data,
+	[[{ t: 'string', v: '' }], null],
+];
+
+export const soliditySha3RawValidData: [typedObject[] | typedObject2[], string | null][] = [
+	...soliditySha3Data,
 	[
-		'', // testing null hash
-		Buffer.from(''),
+		[{ t: 'string', v: '' }],
+		'0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
+	],
+];
+
+export const soliditySha3EthersValidData: [typedObject[] | typedObject2[], any[]][] = [
+	[
+		[
+			{ type: 'int16', value: -1 },
+			{ type: 'uint48', value: 12 },
+		],
+		[
+			['int16', 'uint48'],
+			[-1, 12],
+		],
+	],
+	[
+		[
+			{ type: 'uint16', value: 100 },
+			{ type: 'int48', value: 12 },
+		],
+		[
+			['uint16', 'int48'],
+			[100, 12],
+		],
+	],
+	[
+		[
+			{ type: 'string', value: 'Hello' },
+			{ type: 'uint8', value: 3 },
+		],
+		[
+			['string', 'uint8'],
+			['Hello', 3],
+		],
+	],
+	[
+		[
+			{ type: 'string', value: 'hello' },
+			{ type: 'string', value: 'world01' },
+		],
+		[
+			['string', 'string'],
+			['hello', 'world01'],
+		],
+	],
+	[
+		[
+			{ type: 'string', value: 'hell' },
+			{ type: 'string', value: 'oworld' },
+			{ type: 'uint16', value: '0x3031' },
+		],
+		[
+			['string', 'string', 'uint16'],
+			['hell', 'oworld', '0x3031'],
+		],
+	],
+	[
+		[{ type: 'uint96', value: '32309054545061485574011236401' }],
+		[['uint96'], ['32309054545061485574011236401']],
+	],
+	[
+		[{ type: 'address', value: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1' }],
+		[['address'], ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1']],
+	],
+	[
+		[{ type: 'bytes', value: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1' }],
+		[['bytes'], ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1']],
 	],
 ];
 

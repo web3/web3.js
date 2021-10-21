@@ -1,16 +1,17 @@
 import { ethers } from 'ethers';
-import { sha3, sha3Raw, soliditySha3v2 } from '../../src/hash';
+import { sha3, sha3Raw, soliditySha3, soliditySha3Raw } from '../../src/hash';
 import {
 	sha3InvalidData,
 	sha3ValidData,
 	sha3EthersValidData,
-	// soliditySha3EthersValidData,
+	soliditySha3RawValidData,
 	sha3RawValidData,
 	sha3RawEthersValidData,
 	soliditySha3ValidData,
 	soliditySha3InvalidData,
+	soliditySha3EthersValidData,
 } from '../fixtures/hash';
-
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('hash', () => {
 	describe('sha3', () => {
 		describe('valid cases', () => {
@@ -56,12 +57,42 @@ describe('hash', () => {
 		describe('valid cases', () => {
 			it.each(soliditySha3ValidData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(soliditySha3v2(...input)).toEqual(output);
+				expect(soliditySha3(...input)).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(soliditySha3InvalidData)('%s', (input, output) => {
-				expect(() => soliditySha3v2(input)).toThrow(output);
+				expect(() => soliditySha3(input)).toThrow(output);
+			});
+		});
+		describe('ethers cases', () => {
+			it.each(soliditySha3EthersValidData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(soliditySha3(...input)).toEqual(
+					ethers.utils.solidityKeccak256(output[0], output[1]),
+				);
+			});
+		});
+	});
+
+	describe('soliditySha3Raw', () => {
+		describe('valid cases', () => {
+			it.each(soliditySha3RawValidData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(soliditySha3Raw(...input)).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(soliditySha3InvalidData)('%s', (input, output) => {
+				expect(() => soliditySha3Raw(input)).toThrow(output);
+			});
+		});
+		describe('ethers cases', () => {
+			it.each(soliditySha3EthersValidData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(soliditySha3Raw(...input)).toEqual(
+					ethers.utils.solidityKeccak256(output[0], output[1]),
+				);
 			});
 		});
 	});
