@@ -37,7 +37,7 @@ describe('formatters', () => {
 		jest.spyOn(utils, 'hexToNumber').mockReturnValue(hexToNumberResult);
 		jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
 		jest.spyOn(utils, 'isAddress').mockReturnValue(true);
-		jest.spyOn(utils, 'sha3').mockReturnValue(sha3Result);
+		jest.spyOn(utils, 'sha3Raw').mockReturnValue(sha3Result);
 	});
 
 	describe('outputProofFormatter', () => {
@@ -254,7 +254,7 @@ describe('formatters', () => {
 				logIndex: 'logIndex',
 			});
 
-			expect(utils.sha3).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
+			expect(utils.sha3Raw).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
 
 			expect(result.id).toEqual(`log_${sha3Result.substr(0, 8)}`);
 		});
