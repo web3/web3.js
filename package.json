@@ -1,59 +1,59 @@
 {
-  "name": "web3.js",
-  "private": true,
-  "version": "4.0.0",
-  "description": "Ethereum API wrappers and utilities",
-  "author": "ChainSafe Systems",
-  "license": "LGPL-3.0",
-  "keywords": [
-    "ethereum",
-    "eth",
-    "web3",
-    "web3js",
-    "web3.js",
-    "blockchain"
-  ],
-  "homepage": "https://github.com/ChainSafe/web3.js#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ChainSafe/web3.js.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ChainSafe/web3.js/issues"
-  },
-  "engines": {
-    "node": ">=12",
-    "npm": ">=6.12.0"
-  },
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "tools/*"
-    ]
-  },
-  "scripts": {
-    "build": "yarn clean && lerna run build --stream",
-    "clean": "lerna run clean",
-    "ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion'",
-    "lint": "lerna run lint --stream --parallel",
-    "lint:fix": "lerna run lint:fix --stream --parallel",
-    "format": "lerna run format --stream --parallel",
-    "test": "lerna run test --stream --parallel",
-    "test:unit": "lerna run test:unit --stream --parallel",
-    "prepare": "husky install",
-    "postinstall": "yarn build"
-  },
-  "devDependencies": {
-    "@types/node": "*",
-    "eslint": "^7.32.0",
-    "husky": "^7.0.2",
-    "jest": "^27.2.1",
-    "lerna": "^4.0.0",
-    "lint-staged": "11.1.2",
-    "prettier": "^2.4.1",
-    "ts-jest": "^27.0.5",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.3"
-  },
-  "packageManager": "yarn@1.22.15"
+	"name": "web3.js",
+	"private": true,
+	"version": "4.0.0",
+	"description": "Ethereum API wrappers and utilities",
+	"author": "ChainSafe Systems",
+	"license": "LGPL-3.0",
+	"keywords": [
+		"ethereum",
+		"eth",
+		"web3",
+		"web3js",
+		"web3.js",
+		"blockchain"
+	],
+	"homepage": "https://github.com/ChainSafe/web3.js#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ChainSafe/web3.js.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ChainSafe/web3.js/issues"
+	},
+	"engines": {
+		"node": ">=12",
+		"npm": ">=6.12.0"
+	},
+	"workspaces": {
+		"packages": [
+			"packages/*",
+			"tools/*"
+		]
+	},
+	"scripts": {
+		"build": "yarn clean && lerna run build --stream",
+		"clean": "lerna run clean",
+		"ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion'",
+		"lint": "lerna run lint --stream --parallel",
+		"lint:fix": "lerna run lint:fix --stream --parallel",
+		"format": "lerna run format --stream --parallel",
+		"test": "lerna run test --stream --parallel",
+		"test:unit": "lerna run test:unit --stream --parallel",
+		"prepare": "husky install",
+		"postinstall": "yarn build"
+	},
+	"devDependencies": {
+		"@types/node": "*",
+		"eslint": "^7.32.0",
+		"husky": "^7.0.2",
+		"jest": "^27.2.1",
+		"lerna": "^4.0.0",
+		"lint-staged": "11.1.2",
+		"prettier": "^2.4.1",
+		"ts-jest": "^27.0.5",
+		"ts-node": "^10.2.1",
+		"typescript": "^4.4.3"
+	},
+	"packageManager": "yarn@1.22.15"
 }

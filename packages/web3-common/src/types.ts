@@ -39,7 +39,7 @@ export interface JsonRpcRequest<T = unknown[]> {
 }
 
 export interface JsonRpcPayload<T = unknown[]> extends JsonRpcRequest<T> {
-	readonly jsonrpc: JsonRpcIdentifier;
+	readonly jsonrpc?: JsonRpcIdentifier;
 	readonly id?: JsonRpcId;
 }
 

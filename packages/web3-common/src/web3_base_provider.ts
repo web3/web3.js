@@ -1,4 +1,4 @@
-import { JsonRpcRequest, JsonRpcResult } from './types';
+import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult } from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
 	type: string;
@@ -40,7 +40,10 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResult, T2 = unknown[]>(request: JsonRpcRequest<T2>): Promise<T>;
+	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
+		request: JsonRpcPayload<T2>,
+		providerOptions?: T3,
+	): Promise<T>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
