@@ -1,10 +1,9 @@
 import {
 	JsonRpcPayload,
-	JsonRpcRequest,
+	JsonRpcResponse,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
-	RequestItem,
 } from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
@@ -30,19 +29,27 @@ export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
 export abstract class Web3BaseProvider {
 	// TODO: For legacy support, should be deprecated and removed in favor of `request`
-	abstract send<T = JsonRpcResult, T2 = unknown[]>(
+	public send<T = JsonRpcResult, T2 = unknown[], T3 = unknown>(
 		payload: JsonRpcPayload<T2>,
 		callback: (
-			error?: JsonRpcResponseWithError<T> | Error,
+			error?: JsonRpcResponseWithError<T>,
 			result?: JsonRpcResponseWithResult<T>,
 		) => void,
-	): void;
+		providerOptions?: T3,
+	): void {
+		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
+			.then(d => callback(undefined, d))
+			.catch(e => callback(e, undefined));
+	}
 
 	abstract getStatus(): Web3BaseProviderStatus;
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResult, T2 = unknown[]>(request: JsonRpcRequest<T2> | RequestItem<T2, T>): Promise<T | void>;
+	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
+		request: JsonRpcPayload<T2>,
+		providerOptions?: T3,
+	): Promise<T>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
