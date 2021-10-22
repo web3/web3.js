@@ -53,8 +53,3 @@ export interface JsonRpcPayload<T = unknown[]> extends JsonRpcRequest<T> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly id?: JsonRpcId;
 }
-
-export interface RequestItem<T = unknown[], T2 = JsonRpcResult> {
-    payload: JsonRpcPayload<T>;
-    callback?: (error?: JsonRpcResponseWithError<T2> | Error, result?: JsonRpcResponseWithResult<T2>) => void;
-}
