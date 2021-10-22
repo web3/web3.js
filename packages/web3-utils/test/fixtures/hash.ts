@@ -204,3 +204,47 @@ export const soliditySha3InvalidData: [any, string][] = [
 	[BigInt(1010), 'Invalid value given "1010". Error: invalid type, type not supported.'],
 	[undefined, 'Invalid value given "undefined". Error: invalid type, type not supported.'],
 ];
+
+export const encodePackData: [typedObject[] | typedObject2[], any][] = [
+	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
+	[
+		[{ type: 'int', value: 31323334 }],
+		'0x0000000000000000000000000000000000000000000000000000000001ddf4c6',
+	],
+	[[{ type: 'string', value: '' }], '0x'],
+	[
+		[{ type: 'address', value: '0xfffffffffffffffffffff' }],
+		'0x0000000000000000000fffffffffffffffffffff',
+	],
+	[[{ type: 'bool', value: true }], '0x01'],
+	[[{ type: 'bool', value: false }], '0x00'],
+	[[{ value: 'Hello!%', type: 'string' }], '0x48656c6c6f2125'],
+	[
+		[{ t: 'uint256', v: BigInt('2345676856') }],
+		'0x000000000000000000000000000000000000000000000000000000008bd03038',
+	],
+	[
+		[{ type: 'uint256', value: '2342342342342342342345676856' }],
+		'0x000000000000000000000000000000000000000007918a48d0493ed3da6ed838',
+	],
+	[[{ type: 'uint8', value: '56' }], '0x38'],
+	[[{ v: '256', t: 'uint16' }], '0x0100'],
+	[[{ v: '3256', t: 'uint32' }], '0x00000cb8'],
+	[[{ v: '44454256', t: 'uint128' }], '0x00000000000000000000000002a65170'],
+	[[{ v: '44454256', t: 'int128' }], '0x00000000000000000000000002a65170'],
+	[[{ v: '0x22', t: 'bytes2' }], '0x2200'],
+	[[{ v: '0x44222266', t: 'bytes4' }], '0x44222266'],
+	[
+		[{ v: '0x44555ffffffffdd222222222222224444556553522', t: 'bytes32' }],
+		'0x44555ffffffffdd2222222222222244445565535220000000000000000000000',
+	],
+	[
+		[{ v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address' }],
+		'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	],
+	[
+		[{ v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes' }],
+		'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	],
+	[[{ v: [-12, 243], t: 'int[]' }], ''],
+];

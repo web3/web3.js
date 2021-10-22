@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { sha3, sha3Raw, soliditySha3, soliditySha3Raw } from '../../src/hash';
+import { sha3, sha3Raw, soliditySha3, soliditySha3Raw, encodePacked } from '../../src/hash';
 import {
 	sha3InvalidData,
 	sha3ValidData,
@@ -10,6 +10,7 @@ import {
 	soliditySha3ValidData,
 	soliditySha3InvalidData,
 	soliditySha3EthersValidData,
+	encodePackData,
 } from '../fixtures/hash';
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('hash', () => {
@@ -93,6 +94,15 @@ describe('hash', () => {
 				expect(soliditySha3Raw(...input)).toEqual(
 					ethers.utils.solidityKeccak256(output[0], output[1]),
 				);
+			});
+		});
+	});
+
+	describe('solidityPack', () => {
+		describe('valid cases', () => {
+			it.each(encodePackData)('%s', (input, output) => {
+				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+				expect(encodePacked(...input)).toEqual(output);
 			});
 		});
 	});

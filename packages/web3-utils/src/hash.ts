@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { Numbers, typedObject, typedObject2 } from './types';
+import { Numbers, typedObject, typedObject2, EncodingTypes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber } from './converters';
 import { isAddress, isHexStrict } from './validation';
@@ -34,7 +34,7 @@ export { keccak256 };
 /**
  * returns type and value
  */
-const getType = (arg: typedObject | typedObject2 | Numbers): [string, Numbers] => {
+const getType = (arg: typedObject | typedObject2 | Numbers): [string, EncodingTypes] => {
 	if (typeof arg === 'object' && ('t' in arg || 'type' in arg)) {
 		const type1 = 't' in arg ? arg.t : arg.type;
 		const val = 'v' in arg ? arg.v : arg.value;
@@ -106,12 +106,13 @@ const bitLength = (value: BigInt | number): number => {
  * Pads the value based on size and type
  * returns a string of the padded value
  */
-const solidityPack = (type: string, value: string, arraySize?: number): string => {
+const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): string => {
+	const value = val.toString();
 	if (type === 'string') {
 		return utf8ToHex(value);
 	}
 	if (type === 'bool') {
-		return value ? '01' : '00';
+		return value === 'true' ? '01' : '00';
 	}
 
 	if (type.startsWith('address')) {
@@ -120,11 +121,8 @@ const solidityPack = (type: string, value: string, arraySize?: number): string =
 		if (isAddress(value)) {
 			throw new Error(' is not a valid address, or the checksum is invalid.');
 		}
-
 		return leftPad(value, size);
 	}
-
-	// get
 	const name = elementaryName(type);
 
 	if (type.startsWith('uint')) {
@@ -218,21 +216,28 @@ export const processSolidityEncodePackedArgs = (
 };
 
 /**
- * Will tightly pack values given in the same way solidity would then hash.
- * returns a hash string, or null if input is empty
+ * Encode packed args to hex
  */
-export const soliditySha3 = (...values: typedObject[] | typedObject2[]): string | null => {
+export const encodePacked = (...values: typedObject[] | typedObject2[]): string => {
 	const args = Array.prototype.slice.call(values);
 
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
-	return sha3(`0x${hexArgs.join('')}`);
+
+	return `0x${hexArgs.join('').toLowerCase()}`;
 };
+
+/**
+ * Will tightly pack values given in the same way solidity would then hash.
+ * returns a hash string, or null if input is empty
+ */
+export const soliditySha3 = (...values: typedObject[] | typedObject2[]): string | null =>
+	sha3(encodePacked(...values));
 
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
  */
 export const soliditySha3Raw = (...values: typedObject[] | typedObject2[]): string =>
-	sha3Raw(
-		`0x${Array.prototype.slice.call(values).map(processSolidityEncodePackedArgs).join('')}`,
-	);
+	sha3Raw(encodePacked(...values));
+
+// console.log(encodePacked({v: [-12, 243], t: 'int256[]'}))
