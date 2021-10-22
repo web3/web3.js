@@ -1,31 +1,35 @@
-import { JsonRpcResult, 
-    Web3BaseProvider, 
-    Web3BaseProviderStatus, 
-     JsonRpcId, 
-     RequestItem, JsonRpcPayload,
-     JsonRpcResponseWithError, JsonRpcResponseWithResult, JsonRpcResponse
+import {
+    Web3BaseProvider,
+    Web3BaseProviderStatus,
+    JsonRpcId,
+    JsonRpcPayload,
+    JsonRpcResponse
 } from 'web3-common';
 import { IMessageEvent, w3cwebsocket as W3WS } from 'websocket';
-import { MethodNotImplementedError, InvalidConnectionError,  ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError, 
-    InvalidClientError, ConnectionEvent } from 'web3-common/dist/errors';
-import { WebSocketOptions } from './types';
+import {
+    MethodNotImplementedError, InvalidConnectionError, ConnectionTimeoutError, PendingRequestsOnReconnectingError, ConnectionNotOpenError,
+    InvalidClientError, ConnectionEvent
+} from 'web3-common/dist/errors';
+import { WebSocketOptions, WSRequestItem } from './types';
+import { DeferredPromise } from './deferredPromise';
+
 
 export default class WebSocketProvider extends Web3BaseProvider {
 
     private readonly clientUrl: string;
     private readonly wsProviderOptions: WebSocketOptions;
-   
+
     private webSocketConnection?: W3WS;
+
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    private readonly requestQueue: Map<JsonRpcId, RequestItem<any, any>>;
+    private readonly requestQueue: Map<JsonRpcId, WSRequestItem<any, any>>;
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    private readonly processedQueue: Map<JsonRpcId, RequestItem<any, any>>;
+    private readonly sentQueue: Map<JsonRpcId, WSRequestItem<any, any>>;
 
     private providerStatus: Web3BaseProviderStatus;
 
-    private reconnectAttempts: number;
-
-    private lastDataChunk: string;
+    private reconnectAttempts!: number;
+    private lastDataChunk!: string;
     private lastChunkTimeout!: NodeJS.Timeout;
 
     public constructor(clientUrl: string, wsProviderOptions?: WebSocketOptions) {
@@ -38,7 +42,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.wsProviderOptions = wsProviderOptions;
         else
             this.wsProviderOptions = {
-                customTimeout : 1000 * 15
+                customTimeout: 1000 * 15
             };
 
         if (!this.wsProviderOptions.customTimeout)
@@ -52,12 +56,9 @@ export default class WebSocketProvider extends Web3BaseProvider {
                 onTimeout: false,
             };
 
-        this.requestQueue = new Map<JsonRpcId, RequestItem>();
-        this.processedQueue = new Map<JsonRpcId, RequestItem>();
-
-        this.reconnectAttempts = 0;
-        this.lastDataChunk = "";
-
+        this.requestQueue = new Map<JsonRpcId, WSRequestItem>();
+        this.sentQueue = new Map<JsonRpcId, WSRequestItem>();
+       
         this.providerStatus = 'disconnected';
 
         this.init();
@@ -95,6 +96,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
     public connect(): void {
         try {
             this.providerStatus = 'connecting';
+
             this.webSocketConnection = new W3WS(
                 this.clientUrl,
                 this.wsProviderOptions?.protocol,
@@ -108,7 +110,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         } catch (e) {
             this.providerStatus = 'disconnected';
-            throw new InvalidConnectionError(this.clientUrl); // TODO error code error detail via e 
+            throw new InvalidConnectionError(this.clientUrl);
         }
     }
 
@@ -119,74 +121,95 @@ export default class WebSocketProvider extends Web3BaseProvider {
     }
 
     public reset(): void {
-        this.processedQueue.clear();
+        this.sentQueue.clear();
         this.requestQueue.clear();
 
-        this.init(); // WIP
-        this.removeSocketListeners(); 
+        this.init();
+        this.removeSocketListeners();
         this.addSocketListeners();
     }
 
-    public async request<T = JsonRpcResult, T2 = unknown[]>(request: RequestItem<T2, T>): Promise<void> {
-        
-        if (!this.webSocketConnection)
+    public async request<T = JsonRpcResponse, T2 = unknown[]>(request: JsonRpcPayload<T2>): Promise<T> {
+
+        if (this.webSocketConnection === undefined)
             throw new Error('WebSocket connection is undefined');
 
-        if (request.payload.id === undefined)
+        if (request.id === undefined)
             throw new Error('Request Id not defined')
 
-        if (
-            this.webSocketConnection.readyState ===
-            this.webSocketConnection.CONNECTING ||
-            this.providerStatus === 'connecting'
-        ) {
-            this.requestQueue.set(request.payload.id, request);
-            return;
-        }
+        const { id } = request;
 
-        if (
-            this.webSocketConnection.readyState !==
-            this.webSocketConnection.OPEN
-        ) {
-            this.requestQueue.delete(request.payload.id);
+        if (this.webSocketConnection.readyState === this.webSocketConnection.CLOSED ||
+            this.webSocketConnection.readyState === this.webSocketConnection.CLOSING) {
 
-            // TODO this.emit( WSStatus.Error,WSErrors.ConnectionNotOpenError, request );
             this.providerStatus = 'disconnected';
 
-            if(request.callback !== undefined)
-                request.callback(new ConnectionNotOpenError());
-            return;
+            this.requestQueue.delete(id);
+
+            throw new ConnectionNotOpenError();
         }
 
-        this.processedQueue.set(request.payload.id, request);
-        this.requestQueue.delete(request.payload.id);
+        const requestItem = this.requestQueue.get(id);
+        if (this.webSocketConnection.readyState === this.webSocketConnection.CONNECTING) {
+
+            this.providerStatus = 'connecting';
+
+            if (requestItem === undefined) {
+
+                const defPromise = new DeferredPromise<T>();
+
+                const reqItem: WSRequestItem<T2, T> = {
+                    payload: request,
+                    deferredPromise: defPromise
+                };
+
+                this.requestQueue.set(id, reqItem);
+                return defPromise.realPromise;
+            }
+            
+            return requestItem.deferredPromise.realPromise as Promise<T>;
+                
+        }
+
+        let promise;
+
+        if (requestItem !== undefined) {
+
+            this.sentQueue.set(id, requestItem);
+            this.requestQueue.delete(id);
+            promise = requestItem.deferredPromise.realPromise as Promise<T>;
+        }
+        else {
+
+            const defPromise = new DeferredPromise<T>();
+
+            const reqItem: WSRequestItem<T2, T> = {
+                payload: request,
+                deferredPromise: defPromise
+            };
+
+            this.sentQueue.set(id, reqItem);
+            promise = defPromise.realPromise;
+        }
 
         try {
-            this.webSocketConnection.send(JSON.stringify(request.payload));
+            this.webSocketConnection.send(JSON.stringify(request));
+
         } catch (error) {
-            if(request.callback !== undefined) 
-                request.callback(error as Error, undefined);
-            this.processedQueue.delete(request.payload.id);
+
+            this.sentQueue.delete(id);
+            throw error;
         }
+
+        return promise;
     }
 
-    public removeAllListeners(){
+    public removeAllListeners() {
         throw new MethodNotImplementedError();
     }
 
-    public async send<T = JsonRpcResult, T2 = unknown[]>(
-		payloadParam: JsonRpcPayload<T2>,
-		callbackParam: (
-			error?: JsonRpcResponseWithError<T> | Error,
-			result?: JsonRpcResponseWithResult<T>,
-		) => void,
-	): Promise<void> {
-
-        await this.request<T, T2>({payload: payloadParam, callback: callbackParam});
-
-    }
-
     private init() {
+
         this.lastDataChunk = "";
         this.reconnectAttempts = 0;
 
@@ -195,24 +218,18 @@ export default class WebSocketProvider extends Web3BaseProvider {
         }
     }
 
-    /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
     private addSocketListeners(): void {
-        // WIP any
-        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
-        /* eslint-disable  @typescript-eslint/no-unsafe-call */
+        // eslint-disable-next-line
         (this.webSocketConnection as any).addEventListener(
             'message',
             this.onMessage.bind(this)
         );
-
-        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
-        /* eslint-disable  @typescript-eslint/no-unsafe-call */
+        // eslint-disable-next-line
         (this.webSocketConnection as any).addEventListener(
             'open',
             this.onConnect.bind(this)
         );
-        /* eslint-disable  @typescript-eslint/no-unsafe-member-access */
-        /* eslint-disable  @typescript-eslint/no-unsafe-call */
+        // eslint-disable-next-line
         (this.webSocketConnection as any).addEventListener(
             'close',
             this.onClose.bind(this)
@@ -222,11 +239,12 @@ export default class WebSocketProvider extends Web3BaseProvider {
     private reconnect(): void {
         this.providerStatus = 'connecting';
 
-        if (this.processedQueue.size > 0) {
-            this.processedQueue.forEach((request: RequestItem, key: JsonRpcId) => {
-                if(request.callback !== undefined)
-                    request.callback(new PendingRequestsOnReconnectingError(), undefined);
-                this.processedQueue.delete(key);
+        if (this.sentQueue.size > 0) {
+
+            this.sentQueue.forEach((request: WSRequestItem, key: JsonRpcId) => {
+
+                request.deferredPromise.reject(new PendingRequestsOnReconnectingError());
+                this.sentQueue.delete(key);
             });
         }
 
@@ -235,61 +253,58 @@ export default class WebSocketProvider extends Web3BaseProvider {
             this.reconnectAttempts < this.wsProviderOptions.reconnectOptions.maxAttempts
         ) {
             setTimeout(() => {
+
                 this.reconnectAttempts += 1;
+
                 this.removeSocketListeners();
-                // this.emit(this.RECONNECT, _this.reconnectAttempts); WIP
                 this.connect();
+
             }, this.wsProviderOptions?.reconnectOptions?.delay);
 
-            
+
         }
     }
 
     private onMessage(e: IMessageEvent): void {
         this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
-            (response: JsonRpcResponse) => { 
-                if (
-                    response.method &&
-                    response.method.indexOf('_subscription') !== -1
-                ) {
-                    // this.emit(Web3ProviderEvents.Message, result); WIP
+            (response: JsonRpcResponse) => {
+
+                if (response.method?.includes('_subscription') ) {
+                    // this.emit(Web3ProviderEvents.Message, result); // WIP
                     return;
                 }
 
-                let id = response.id;
+                let { id } = response;
 
                 if (Array.isArray(response)) {
+                    // eslint-disable-next-line
                     id = response[0].id;
                 }
 
-                if (id && this.processedQueue.has(id)) {
-                    const requestItem = this.processedQueue.get(id);
-                     if (requestItem?.callback !== undefined) {
-                         requestItem?.callback(
-                            (response.error? response : undefined) as JsonRpcResponseWithError, 
-                            (response.result? response : undefined) as JsonRpcResponseWithResult);
-                     }
+                if (id && this.sentQueue.has(id)) {
+                    const requestItem = this.sentQueue.get(id);
+                    if (response.result !== undefined)
+                        requestItem?.deferredPromise.resolve(response);
+                    else if (response.error !== undefined)
+                        requestItem?.deferredPromise.reject(response);
 
-                    this.processedQueue.delete(id);
+                    this.sentQueue.delete(id);
                 }
             }
         );
     }
 
-    
 
-    private onConnect(): void {
+
+    private onConnect() {
         this.providerStatus = 'connected';
         this.reconnectAttempts = 0;
 
         if (this.requestQueue.size > 0) {
-            this.requestQueue.forEach(
-                (request: RequestItem, key: JsonRpcId) => {
-                    /* eslint-disable  @typescript-eslint/no-floating-promises */
-                    this.request(request);
-                    this.requestQueue.delete(key);
-                }
-            );
+            for (const value of this.requestQueue.values()) {
+                // eslint-disable-next-line
+                this.request(value.payload);
+            }
         }
     }
 
@@ -305,20 +320,18 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
         if (this.requestQueue.size > 0) {
             this.requestQueue.forEach(
-                (request: RequestItem, key: JsonRpcId) => {
-                    if(request?.callback !== undefined){
-                        request?.callback(new ConnectionNotOpenError(event), undefined);}
+                (request: WSRequestItem, key: JsonRpcId) => {
+                    request.deferredPromise.reject(new ConnectionNotOpenError(event));
                     this.requestQueue.delete(key);
                 }
             );
         }
 
-        if (this.processedQueue.size > 0) {
-            this.processedQueue.forEach(
-                (request: RequestItem, key: JsonRpcId) => {
-                    if(request?.callback !== undefined){
-                    request?.callback(new ConnectionNotOpenError(event), undefined);}
-                    this.processedQueue.delete(key);
+        if (this.sentQueue.size > 0) {
+            this.sentQueue.forEach(
+                (request: WSRequestItem, key: JsonRpcId) => {
+                    request.deferredPromise.reject(new ConnectionNotOpenError(event));
+                    this.sentQueue.delete(key);
                 }
             );
         }
@@ -326,8 +339,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
         this.removeSocketListeners();
     }
 
-    private parseResponse(dataReceived: string): JsonRpcResponse[] { 
-        let returnValues: JsonRpcResponse[] = [];
+    private parseResponse(dataReceived: string): JsonRpcResponse[] {
+        const returnValues: JsonRpcResponse[] = [];
 
         // de chunk
         const dechunkedData = dataReceived
@@ -346,7 +359,9 @@ export default class WebSocketProvider extends Web3BaseProvider {
             let result: JsonRpcResponse;
 
             try {
+                // eslint-disable-next-line
                 result = JSON.parse(dataToParse);
+
             } catch (error) {
                 this.lastDataChunk = dataToParse;
 
@@ -362,13 +377,10 @@ export default class WebSocketProvider extends Web3BaseProvider {
                         return;
                     }
 
-                    // this.emit( WSStatus.Error, WSErrors.ConnectionTimeout + this.wsProviderOptions.customTimeout ); //TODO
-
                     if (this.requestQueue.size > 0) {
                         this.requestQueue.forEach(
-                            (request: RequestItem, key: JsonRpcId) => {
-                                if(request?.callback !== undefined){
-                                    request?.callback( new ConnectionTimeoutError(this.wsProviderOptions.customTimeout), undefined);}
+                            (request: WSRequestItem, key: JsonRpcId) => {
+                                request.deferredPromise.reject(new ConnectionTimeoutError(this.wsProviderOptions.customTimeout));
                                 this.requestQueue.delete(key);
                             }
                         );
@@ -388,25 +400,15 @@ export default class WebSocketProvider extends Web3BaseProvider {
         return returnValues;
     }
 
-    /* eslint-disable class-methods-use-this */
     private removeSocketListeners(): void {
-        /* eslint-disable @typescript-eslint/unbound-method */
-        (this.webSocketConnection as any).removeEventListener(
-            'message',
-            this.onMessage
-        );
-        /* eslint-disable @typescript-eslint/unbound-method */
-        (this.webSocketConnection as any).removeEventListener(
-            'open',
-            this.onConnect
-        );
-        /* eslint-disable @typescript-eslint/unbound-method */
-        (this.webSocketConnection as any).removeEventListener(
-            'close',
-            this.onClose
-        );
+
+        // eslint-disable-next-line
+        (this.webSocketConnection as any).removeEventListener(  'message', this.onMessage );
+
+        // eslint-disable-next-line
+        (this.webSocketConnection as any).removeEventListener('open',this.onConnect );
+
+        // eslint-disable-next-line
+        (this.webSocketConnection as any).removeEventListener('close',this.onClose );
     }
-
-
-
 }
