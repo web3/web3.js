@@ -1,10 +1,4 @@
-import {
-	JsonRpcPayload,
-	JsonRpcResponse,
-	JsonRpcResponseWithError,
-	JsonRpcResponseWithResult,
-	JsonRpcResult,
-} from './types';
+import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult } from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
 	type: string;
@@ -25,21 +19,21 @@ export const JSONRPC_ERR_UNSUPPORTED_METHOD = 4200;
 export const JSONRPC_ERR_DISCONNECTED = 4900;
 export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 
+const symbol = Symbol.for('web3/base-provider');
+
 // Provider interface compatible with EIP-1193
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
 export abstract class Web3BaseProvider {
-	// TODO: For legacy support, should be deprecated and removed in favor of `request`
-	public send<T = JsonRpcResult, T2 = unknown[], T3 = unknown>(
-		payload: JsonRpcPayload<T2>,
-		callback: (
-			error?: JsonRpcResponseWithError<T>,
-			result?: JsonRpcResponseWithResult<T>,
-		) => void,
-		providerOptions?: T3,
-	): void {
-		this.request<JsonRpcResponseWithResult<T>, T2, T3>(payload, providerOptions)
-			.then(d => callback(undefined, d))
-			.catch(e => callback(e, undefined));
+	public static isWeb3Provider(provider: unknown) {
+		return (
+			provider instanceof Web3BaseProvider ||
+			Boolean(provider && (provider as { [symbol]: boolean })[symbol])
+		);
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	public get [symbol]() {
+		return true;
 	}
 
 	abstract getStatus(): Web3BaseProviderStatus;

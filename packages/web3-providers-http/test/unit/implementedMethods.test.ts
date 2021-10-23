@@ -30,43 +30,6 @@ describe('HttpProvider - implemented methods', () => {
 		httpProvider = new HttpProvider('http://localhost:8545');
 	});
 
-	describe('httpProvider.send', () => {
-		it('Should call HttpProvider.request with correct parameters', () => {
-			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
-
-			const requestSpy = jest.spyOn(httpProvider, 'request');
-			httpProvider.send(jsonRpcPayload, jest.fn(), httpProviderOptions);
-
-			expect(requestSpy).toHaveBeenCalledWith(jsonRpcPayload, httpProviderOptions);
-		});
-
-		it('callback should receive expected values - Success', () => {
-			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse));
-
-			const callback = jest.fn(
-				(error?: JsonRpcResponseWithError, result?: JsonRpcResponseWithResult) => {
-					expect(error).toBeUndefined();
-					expect(result).toStrictEqual(mockGetBalanceResponse);
-				},
-			);
-
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions);
-		});
-
-		it('callback should receive expected values - ResponseError', () => {
-			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse), { status: 400 });
-
-			const callback = jest.fn(
-				(error?: JsonRpcResponseWithError, result?: JsonRpcResponseWithResult) => {
-					expect(error).toBeInstanceOf(ResponseError);
-					expect(result).toBeUndefined();
-				},
-			);
-
-			httpProvider.send(jsonRpcPayload, callback, httpProviderOptions);
-		});
-	});
-
 	describe('httpProvider.supportsSubscriptions', () => {
 		it('should return false', () => {
 			expect(httpProvider.supportsSubscriptions()).toBe(false);
