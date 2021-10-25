@@ -1,63 +1,26 @@
-/* eslint-disable no-underscore-dangle */
 import { Socket } from 'net';
 import {
-	Web3BaseProvider,
-	Web3EventEmitter,
-	JsonRpcRequest,
-	JsonRpcPayload,
-	JsonRpcResponse,
 	InvalidProviderError,
 	InvalidResponseError,
-	JsonRpcResult,
+	JsonRpcPayload,
+	JsonRpcRequest,
+	JsonRpcResponse,
+	Web3BaseProvider,
+	Web3EventEmitter,
+	ProviderError,
 } from 'web3-common';
-
-type Web3BaseProviderConstructor = new (url: string, net?: Socket) => Web3BaseProvider;
+import { SupportedProviders, Web3BaseProviderConstructor } from './types';
+import {
+	isLegacyRequestProvider,
+	isLegacySendAsyncProvider,
+	isLegacySendProvider,
+	isWeb3Provider,
+} from './utils';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',
 	BEFORE_PROVIDER_CHANGE = 'BEFORE_PROVIDER_CHANGE',
 }
-
-type LegacyRequestProvider = {
-	request: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-		cb: (err: Error | null, response: JsonRpcResponse<R>) => void,
-	) => void;
-};
-
-type LegacySendProvider = {
-	send: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-		cb: (err: Error | null, response: JsonRpcResponse<R>) => void,
-	) => void;
-};
-
-type LegacySendAsyncProvider = {
-	sendAsync: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-	) => Promise<JsonRpcResponse<R>>;
-};
-
-type SupportedProviders =
-	| Web3BaseProvider
-	| LegacyRequestProvider
-	| LegacySendProvider
-	| LegacySendAsyncProvider;
-
-export const isWeb3Provider = (provider: SupportedProviders): provider is Web3BaseProvider =>
-	Web3BaseProvider.isWeb3Provider(provider);
-
-export const isLegacyRequestProvider = (
-	provider: SupportedProviders,
-): provider is LegacyRequestProvider => 'request' in provider;
-
-export const isLegacySendProvider = (
-	provider: SupportedProviders,
-): provider is LegacySendProvider => 'send' in provider;
-
-export const isLegacySendAsyncProvider = (
-	provider: SupportedProviders,
-): provider is LegacySendAsyncProvider => 'sendAsync' in provider;
 
 export class Web3RequestManager extends Web3EventEmitter<{
 	[key in Web3RequestManagerEvent]: SupportedProviders;
@@ -66,9 +29,13 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	private _provider!: SupportedProviders;
 	private readonly _providers: { [key: string]: Web3BaseProviderConstructor };
 
-	public constructor(provider: Web3BaseProvider | string, net: Socket) {
+	public constructor(provider?: Web3BaseProvider | string, net?: Socket) {
 		super();
-		this.setProvider(provider, net);
+
+		if (provider) {
+			this.setProvider(provider, net);
+		}
+
 		this._providers = Web3RequestManager.providers;
 	}
 
@@ -89,7 +56,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		return this._providers;
 	}
 
-	public setProvider(provider: Web3BaseProvider | string, net: Socket) {
+	public setProvider(provider: Web3BaseProvider | string, net?: Socket) {
 		let newProvider!: Web3BaseProvider;
 
 		// autodetect provider
@@ -106,7 +73,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			} else if (provider && typeof net === 'object' && typeof net.connect === 'function') {
 				newProvider = new this.providers.IpcProvider(provider, net);
 			} else if (provider) {
-				throw new Error(`Can't autodetect provider for "${provider}'"`);
+				throw new ProviderError(`Can't autodetect provider for "${provider}'"`);
 			}
 		}
 
@@ -119,7 +86,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		const { provider } = this;
 
 		if (!provider) {
-			throw new InvalidProviderError('');
+			throw new ProviderError('Provider not available');
 		}
 
 		if (isWeb3Provider(provider)) {
@@ -130,10 +97,10 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		if (isLegacyRequestProvider(provider)) {
 			const payload = this._requestToPayload(request);
 
-			return new Promise<ResultType>((resolve, reject): void => {
+			return new Promise<ResultType>((resolve): void => {
 				provider.request<ResultType, RequestType>(payload, (err, response) => {
 					if (err) {
-						return reject(err);
+						throw err;
 					}
 
 					return resolve(this._processJsonRpcResponse(payload, response));
@@ -145,10 +112,10 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		if (isLegacySendProvider(provider)) {
 			const payload = this._requestToPayload(request);
 
-			return new Promise<ResultType>((resolve, reject): void => {
+			return new Promise<ResultType>((resolve): void => {
 				provider.send<ResultType, RequestType>(payload, (err, response) => {
 					if (err) {
-						return reject(err);
+						throw err;
 					}
 
 					return resolve(this._processJsonRpcResponse(payload, response));

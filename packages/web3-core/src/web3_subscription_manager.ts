@@ -1,9 +1,6 @@
-import { InvalidProviderError } from 'web3-common';
-import {
-	isWeb3Provider,
-	Web3RequestManager,
-	Web3RequestManagerEvent,
-} from './web3_request_manager';
+import { ProviderError, SubscriptionError } from 'web3-common';
+import { isSupportSubscriptions } from './utils';
+import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
 import { Web3Subscription, Web3SubscriptionConstructor } from './web3_subscriptions';
 
 export class Web3SubscriptionManager<
@@ -15,12 +12,12 @@ export class Web3SubscriptionManager<
 		public readonly requestManager: Web3RequestManager,
 		public readonly registeredSubscriptions: ST,
 	) {
-		this.requestManager.on(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, () => {
-			// this.unsubscribe();
+		this.requestManager.on(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, async () => {
+			await this.unsubscribe();
 		});
 
 		this.requestManager.on(Web3RequestManagerEvent.PROVIDER_CHANGED, () => {
-			// this.clear();
+			this.clear();
 		});
 	}
 
@@ -29,43 +26,41 @@ export class Web3SubscriptionManager<
 		args?: ConstructorParameters<ST[T]>[0],
 	): Promise<InstanceType<ST[T]>> {
 		if (!this.requestManager.provider) {
-			throw new InvalidProviderError('No provider set');
+			throw new ProviderError('No provider set');
 		}
 
 		if (!this.supportsSubscriptions()) {
-			throw new Error('The current provider do not support subscriptions');
+			throw new SubscriptionError('The current provider do not support subscriptions');
 		}
 
 		const Klass = this.registeredSubscriptions[name];
+
+		if (!Klass) {
+			throw new SubscriptionError('Invalid subscription type');
+		}
 
 		const subscription = new Klass(args ?? null, {
 			requestManager: this.requestManager,
 		}) as InstanceType<ST[T]>;
 
-		await subscription.subscribe();
-
-		if (subscription.id === undefined) {
-			throw new Error('Subscription is not subscribed yet.');
-		}
-
-		this._subscriptions.set(subscription.id, subscription);
+		await this.addSubscription(subscription);
 
 		return subscription;
 	}
 
-	public async addSubscription(sub: Web3Subscription) {
-		if (sub.id === undefined) {
-			throw new Error('Subscription is not subscribed yet.');
-		}
+	public get subscriptions() {
+		return this._subscriptions;
+	}
 
-		if (this._subscriptions.has(sub.id)) {
-			throw new Error(`Subscription with id "${sub.id}" already exists`);
+	public async addSubscription(sub: Web3Subscription) {
+		if (sub.id && this._subscriptions.has(sub.id)) {
+			throw new SubscriptionError(`Subscription with id "${sub.id}" already exists`);
 		}
 
 		await sub.subscribe();
 
 		if (sub.id === undefined) {
-			throw new Error('Subscription is not subscribed yet.');
+			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}
 
 		this._subscriptions.set(sub.id, sub);
@@ -73,11 +68,11 @@ export class Web3SubscriptionManager<
 
 	public async removeSubscription(sub: Web3Subscription) {
 		if (sub.id === undefined) {
-			throw new Error('Subscription is not subscribed yet.');
+			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}
 
 		if (!this._subscriptions.has(sub.id)) {
-			throw new Error(`Subscription with id "${sub.id}" does not exists`);
+			throw new SubscriptionError(`Subscription with id "${sub.id}" does not exists`);
 		}
 
 		await sub.unsubscribe();
@@ -94,12 +89,11 @@ export class Web3SubscriptionManager<
 		return Promise.all(result);
 	}
 
-	public supportsSubscriptions(): boolean {
-		if (isWeb3Provider(this.requestManager.provider)) {
-			return this.requestManager.provider.supportsSubscriptions();
-		}
+	public clear() {
+		this._subscriptions.clear();
+	}
 
-		// TODO: Add checks for other types later
-		return false;
+	public supportsSubscriptions(): boolean {
+		return isSupportSubscriptions(this.requestManager.provider);
 	}
 }
