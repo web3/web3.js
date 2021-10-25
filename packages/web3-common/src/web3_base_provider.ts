@@ -31,6 +31,10 @@ export abstract class Web3BaseProvider {
 		);
 	}
 
+	// To match an object "instanceof" does not work if
+	// matcher class and object is using different package versions
+	// to overcome this bottleneck used this approach.
+	// The symbol value for one string will always remain same regardless of package versions
 	// eslint-disable-next-line class-methods-use-this
 	public get [symbol]() {
 		return true;

@@ -251,7 +251,7 @@ describe('Web3RequestManager', () => {
 			const manager = new Web3RequestManager();
 
 			await expect(manager.send({ method: 'my_method', params: {} })).rejects.toThrow(
-				'Provider with url "" is not set or invalid',
+				'Provider not available',
 			);
 		});
 

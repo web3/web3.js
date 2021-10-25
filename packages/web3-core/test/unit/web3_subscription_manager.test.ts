@@ -57,9 +57,7 @@ describe('Web3SubscriptionManager', () => {
 			delete requestManager.provider;
 			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(false);
 
-			await expect(subManager.subscribe('example')).rejects.toThrow(
-				'Provider with url "No provider set" is not set or invalid',
-			);
+			await expect(subManager.subscribe('example')).rejects.toThrow('Provider not available');
 		});
 
 		it('should throw error if subscription is not supported', async () => {

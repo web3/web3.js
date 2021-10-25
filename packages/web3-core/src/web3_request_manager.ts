@@ -70,9 +70,9 @@ export class Web3RequestManager extends Web3EventEmitter<{
 				newProvider = new this.providers.WebsocketProvider(provider);
 
 				// IPC
-			} else if (provider && typeof net === 'object' && typeof net.connect === 'function') {
+			} else if (typeof net === 'object' && typeof net.connect === 'function') {
 				newProvider = new this.providers.IpcProvider(provider, net);
-			} else if (provider) {
+			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}'"`);
 			}
 		}

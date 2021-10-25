@@ -26,7 +26,7 @@ export class Web3SubscriptionManager<
 		args?: ConstructorParameters<ST[T]>[0],
 	): Promise<InstanceType<ST[T]>> {
 		if (!this.requestManager.provider) {
-			throw new ProviderError('No provider set');
+			throw new ProviderError('Provider not available');
 		}
 
 		if (!this.supportsSubscriptions()) {
