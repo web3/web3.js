@@ -10,9 +10,26 @@ import {
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
+// TODO: implement later
+export const checkAddressChecksum = (_value: string): boolean => true;
+
 // TODO: Implement later
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const isAddress = (_value: string): boolean => false;
+export const isAddress = (_value: string): boolean => {
+	// check if it has the basic requirements of an address
+	if (!/^(0x)?[0-9a-f]{40}$/i.test(_value)) {
+		return false;
+		// If it's ALL lowercase or ALL upppercase
+	}
+	if (/^(0x|0X)?[0-9a-f]{40}$/.test(_value) || /^(0x|0X)?[0-9A-F]{40}$/.test(_value)) {
+		return true;
+		// Otherwise check each case
+	}
+	return checkAddressChecksum(_value);
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const isAddressv2 = (_value: string): boolean => true;
 
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);

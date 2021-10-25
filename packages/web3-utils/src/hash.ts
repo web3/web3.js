@@ -3,7 +3,16 @@ import { Numbers, typedObject, typedObject2, EncodingTypes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber } from './converters';
 import { isAddress, isHexStrict } from './validation';
-import { InvalidStringError, InvalidType } from './errors';
+import {
+	InvalidStringError,
+	InvalidType,
+	InvalidBooleanError,
+	InvalidAddressError,
+	InvalidSizeError,
+	InvalidLargeValueError,
+	InvalidUnsignedIntegerError,
+	InvalidBytesError,
+} from './errors';
 
 const SHA3_NULL = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -35,7 +44,11 @@ export { keccak256 };
  * returns type and value
  */
 const getType = (arg: typedObject | typedObject2 | Numbers): [string, EncodingTypes] => {
-	if (typeof arg === 'object' && ('t' in arg || 'type' in arg)) {
+	if (
+		typeof arg === 'object' &&
+		('t' in arg || 'type' in arg) &&
+		('v' in arg || 'value' in arg)
+	) {
 		const type1 = 't' in arg ? arg.t : arg.type;
 		const val = 'v' in arg ? arg.v : arg.value;
 		return [type1, val];
@@ -46,10 +59,10 @@ const getType = (arg: typedObject | typedObject2 | Numbers): [string, EncodingTy
 /**
  * get the array size
  */
-const parseTypeNArray = (type: string): number | null => {
-	const arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
-	return arraySize ? parseInt(arraySize[1], 10) : null;
-};
+// const parseTypeNArray = (type: string): number | null => {
+// 	const arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
+// 	return arraySize ? parseInt(arraySize[1], 10) : null;
+// };
 
 /**
  * returns the type with size if uint or int
@@ -67,19 +80,6 @@ const elementaryName = (name: string): string => {
 	if (name === 'uint') {
 		return 'uint256';
 	}
-	// need to work on fixed case/ add testcases for fixed
-	// if (name.startsWith('fixed[')) {
-	// 	return `fixed128x128${name.slice(5)}`;
-	// }
-	// if (name === 'fixed') {
-	// 	return 'fixed128x128';
-	// }
-	// if (name.startsWith('ufixed[')) {
-	// 	return `ufixed128x128${name.slice(6)}`;
-	// }
-	// if (name === 'ufixed') {
-	// 	return 'ufixed128x128';
-	// }
 	return name;
 };
 
@@ -109,49 +109,50 @@ const bitLength = (value: BigInt | number): number => {
 const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): string => {
 	const value = val.toString();
 	if (type === 'string') {
-		return utf8ToHex(value);
+		if (typeof val === 'string') return utf8ToHex(val);
+		throw new InvalidStringError(val);
 	}
-	if (type === 'bool') {
-		return value === 'true' ? '01' : '00';
+	if (type === 'bool' || type === 'boolean') {
+		if (typeof val === 'boolean') return val ? '01' : '00';
+		throw new InvalidBooleanError(val);
 	}
 
-	if (type.startsWith('address')) {
-		const size = arraySize ? 64 : 40;
-
-		if (isAddress(value)) {
-			throw new Error(' is not a valid address, or the checksum is invalid.');
+	if (type === 'address') {
+		if (!isAddress(value)) {
+			throw new InvalidAddressError(value);
 		}
-		return leftPad(value, size);
+		return value;
 	}
 	const name = elementaryName(type);
 
 	if (type.startsWith('uint')) {
-		const size = Number(name.slice(4));
+		const size = parseTypeN(type);
+
 		if (size % 8 || size < 8 || size > 256) {
-			throw new Error('Invalid uint');
+			throw new InvalidSizeError(value);
 		}
 		const num = toNumber(value);
 		if (bitLength(num) > size) {
-			throw new Error('Supplied uint exceeds width: ');
+			throw new InvalidLargeValueError(value);
 		}
 		if (num < BigInt(0)) {
-			throw new Error('Supplied uint ');
+			throw new InvalidUnsignedIntegerError(value);
 		}
 
 		return size ? leftPad(num.toString(16), (size / 8) * 2) : num.toString(16);
 	}
 
 	if (type.startsWith('int')) {
-		const size = Number(name.slice(3));
+		const size = parseTypeN(type);
+
 		if (size % 8 || size < 8 || size > 256) {
-			throw new Error('Invalid int');
+			throw new InvalidSizeError(type);
 		}
 
 		const num = toNumber(value);
 		if (bitLength(num) > size) {
-			throw new Error('Supplied int exceeds width: ');
+			throw new InvalidLargeValueError(value);
 		}
-
 		if (num < BigInt(0)) {
 			return toTwosComplement(num.toString(), (size / 8) * 2);
 		}
@@ -160,7 +161,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 
 	if (name === 'bytes') {
 		if (value.replace(/^0x/i, '').length % 2 !== 0) {
-			throw new Error('Invalid bytes characters ');
+			throw new InvalidBytesError(value);
 		}
 		return value;
 	}
@@ -168,12 +169,12 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	if (type.startsWith('bytes')) {
 		// must be 32 byte slices when in an array
 		const size = arraySize ? 32 : parseTypeN(type);
-		if (!size) {
-			throw new Error('bytes[] not yet supported in solidity');
-		}
+		// if (!size) {
+		// 	throw new Error('bytes[] not yet supported in solidity');
+		// }
 
-		if (size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
-			throw new Error('Invalid bytes');
+		if (!size || size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
+			throw new InvalidBytesError(value);
 		}
 
 		return rightPad(value, size * 2);
@@ -189,29 +190,14 @@ export const processSolidityEncodePackedArgs = (
 ): string => {
 	const [type, val] = getType(arg);
 
-	const updatedVal =
-		(type.startsWith('int') || type.startsWith('uint')) &&
-		typeof val === 'string' &&
-		!/^(-)?0x/i.test(val)
-			? BigInt(val)
-			: val;
-
 	// array case
-	if (Array.isArray(updatedVal)) {
-		// get the array size
-		const arraySize = parseTypeNArray(type);
-		if (arraySize === null) {
-			throw new Error('array has no length');
-		}
-		if (arraySize && updatedVal.length !== arraySize) {
-			throw new Error(' is not matching the given array ');
-		}
-
-		const hexArg = updatedVal.map(v => solidityPack(type, v, arraySize).replace('0x', ''));
+	if (Array.isArray(val)) {
+		// go through each element of the array and use map function to create new hexarg list
+		const hexArg = val.map((v: Numbers | boolean) => solidityPack(type, v).replace('0x', ''));
 		return hexArg.join('');
 	}
 
-	const hexArg = solidityPack(type, val.toString());
+	const hexArg = solidityPack(type, val);
 	return hexArg.replace('0x', '');
 };
 
@@ -239,5 +225,3 @@ export const soliditySha3 = (...values: typedObject[] | typedObject2[]): string 
  */
 export const soliditySha3Raw = (...values: typedObject[] | typedObject2[]): string =>
 	sha3Raw(encodePacked(...values));
-
-// console.log(encodePacked({v: [-12, 243], t: 'int256[]'}))

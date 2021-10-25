@@ -11,6 +11,7 @@ import {
 	soliditySha3InvalidData,
 	soliditySha3EthersValidData,
 	encodePackData,
+	encodePackedInvalidData,
 } from '../fixtures/hash';
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 describe('hash', () => {
@@ -98,11 +99,16 @@ describe('hash', () => {
 		});
 	});
 
-	describe('solidityPack', () => {
+	describe('encodePacked', () => {
 		describe('valid cases', () => {
 			it.each(encodePackData)('%s', (input, output) => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 				expect(encodePacked(...input)).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(encodePackedInvalidData)('%s', (input, output) => {
+				expect(() => encodePacked(input)).toThrow(output);
 			});
 		});
 	});

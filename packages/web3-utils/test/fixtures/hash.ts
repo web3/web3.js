@@ -213,8 +213,8 @@ export const encodePackData: [typedObject[] | typedObject2[], any][] = [
 	],
 	[[{ type: 'string', value: '' }], '0x'],
 	[
-		[{ type: 'address', value: '0xfffffffffffffffffffff' }],
-		'0x0000000000000000000fffffffffffffffffffff',
+		[{ type: 'address', value: '0xc1912fee45d61c87cc5ea59dae31190fffff232d' }],
+		'0xc1912fee45d61c87cc5ea59dae31190fffff232d',
 	],
 	[[{ type: 'bool', value: true }], '0x01'],
 	[[{ type: 'bool', value: false }], '0x00'],
@@ -246,5 +246,51 @@ export const encodePackData: [typedObject[] | typedObject2[], any][] = [
 		[{ v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes' }],
 		'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	],
-	[[{ v: [-12, 243], t: 'int[]' }], ''],
+	// [[{ v: [-12, 243], t: 'int256[]' }], ''],
+	[[{ t: 'int', v: '0' }], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+	[
+		[{ type: 'int256', value: '1234' }],
+		'0x00000000000000000000000000000000000000000000000000000000000004d2',
+	],
+	[
+		[{ type: 'string', value: '1234' }], // should be encoded differently than int256
+		'0x31323334',
+	],
+	[
+		[{ type: 'int256', value: 1234 }], // same as type int256 when value is a string
+		'0x00000000000000000000000000000000000000000000000000000000000004d2',
+	],
+	[
+		[{ type: 'int128[]', value: [12345, 324, 1, 2] }],
+		'0x00000000000000000000000000003039000000000000000000000000000001440000000000000000000000000000000100000000000000000000000000000002',
+	],
+];
+
+export const encodePackedInvalidData: [any, string][] = [
+	[{ type: 'string', value: 1234 }, 'Invalid value given "1234". Error: not a valid string.'],
+	[{ type: 'string', value: true }, 'Invalid value given "true". Error: not a valid string.'],
+	[{ type: 'string', value: 1234 }, 'Invalid value given "1234". Error: not a valid string.'],
+	[{ type: 'boolean', value: 1234 }, 'Invalid value given "1234". Error: not a valid boolean.'],
+	[
+		{ type: 'address', value: 1234 },
+		'Invalid value given "1234". Error: invalid ethereum address',
+	],
+	[
+		{ type: 'address', value: '0x2' },
+		'Invalid value given "0x2". Error: invalid ethereum address',
+	],
+	[{ type: 'uint612', value: 13 }, 'Invalid value given "13". Error: invalid size given.'],
+	[
+		{ type: 'uint8', value: 1000 },
+		'Invalid value given "1000". Error: value is larger than size.',
+	],
+	[
+		{ type: 'uint256', value: -1 },
+		'Invalid value given "-1". Error: not a valid unsigned integer.',
+	],
+	[{ type: 'int255', value: 100 }, 'Invalid value given "int255". Error: invalid size given.'],
+	[
+		{ type: 'bytes32', value: '0x1' },
+		'Invalid value given "0x1". Error: can not parse as byte data.',
+	],
 ];
