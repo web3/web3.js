@@ -3,6 +3,7 @@
 import {
 	ERR_RESPONSE,
 	ERR_PARAM,
+	ERR_METHOD_NOT_IMPLEMENTED,
 	ERR_CONN,
 	ERR_CONN_INVALID,
 	ERR_CONN_TIMEOUT,
@@ -27,22 +28,22 @@ import {
 	ERR_CONTRACT_MISSING_DEPLOY_DATA,
 	ERR_CONTRACT_MISSING_ADDRESS,
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
-	ERR_METHOD_NOT_IMPLEMENTED,
+	ERR_FORMATTERS,
 	ERR_INVALID_CLIENT,
 } from './constants';
 
- export type ConnectionEvent = { 
-	 code: number; 
-	 reason: string; 
-	 wasClean?: boolean; // if WS connection was closed properly 
-	};
+export type ConnectionEvent = {
+	code: number;
+	reason: string;
+	wasClean?: boolean; // if WS connection was closed properly
+};
 
- type Response<T = unknown> = { error?: { message?: string; data?: T } };
- type Receipt = Record<string, unknown>;
+type Response<T = unknown> = { error?: { message?: string; data?: T } };
+type Receipt = Record<string, unknown>;
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
-	public readonly abstract code: number;
+	public abstract readonly code: number;
 
 	public constructor(msg: string) {
 		super(msg);
@@ -337,6 +338,10 @@ export class ContractNoFromAddressDefinedError extends Web3Error {
 	public constructor() {
 		super('No "from" address specified in neither the given options, nor the default options.');
 	}
+}
+
+export class FormatterError extends Web3Error {
+	public code = ERR_FORMATTERS;
 }
 
 export class MethodNotImplementedError extends Web3Error {

@@ -11,7 +11,7 @@ module.exports = {
 		'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
 		'jest/consistent-test-it': ['error'],
 		'class-methods-use-this': ['error'],
-		'@typescript-eslint/no-magic-numbers': ['error'],
+		'@typescript-eslint/no-magic-numbers': 'off',
 		'@typescript-eslint/unbound-method': 'off',
 		'@typescript-eslint/no-require-imports': ['error'],
 		'@typescript-eslint/no-explicit-any': 'off',
@@ -26,6 +26,6 @@ module.exports = {
 		'dot-notation': 'off',
 		'lines-between-class-members': 'off',
 		'arrow-body-style': 'off',
-		'no-underscore-dangle': ['error'],
+		'no-underscore-dangle': 'off',
 	},
 };

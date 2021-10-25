@@ -4,7 +4,8 @@ export const ERR_INVALID_RESPONSE = 101;
 
 // Generic errors
 export const ERR_PARAM = 200;
-export const ERR_METHOD_NOT_IMPLEMENTED = 201;
+export const ERR_FORMATTERS = 201;
+export const ERR_METHOD_NOT_IMPLEMENTED = 202;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;
@@ -39,3 +40,5 @@ export const ERR_CONN_PENDING_REQUESTS = 506;
 export const ERR_PROVIDER = 600;
 export const ERR_INVALID_PROVIDER = 601;
 export const ERR_INVALID_CLIENT = 602;
+
+export const GENESIS_BLOCK_NUMBER = '0x0';
