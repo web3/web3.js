@@ -1,13 +1,15 @@
+import { EventEmitter } from 'events';
 import {
 	Web3BaseProvider,
 	Web3BaseProviderStatus,
 	JsonRpcId,
 	JsonRpcPayload,
 	JsonRpcResponse,
+	JsonRpcResult,
+	Web3BaseProviderCallback,
 } from 'web3-common';
 import { IMessageEvent, w3cwebsocket as W3WS } from 'websocket';
 import {
-	MethodNotImplementedError,
 	InvalidConnectionError,
 	ConnectionTimeoutError,
 	PendingRequestsOnReconnectingError,
@@ -19,6 +21,8 @@ import { WebSocketOptions, WSRequestItem } from './types';
 import { DeferredPromise } from './deferredPromise';
 
 export default class WebSocketProvider extends Web3BaseProvider {
+	public wsEventEmitter: EventEmitter = new EventEmitter();
+
 	private readonly clientUrl: string;
 	private readonly wsProviderOptions: WebSocketOptions;
 
@@ -79,19 +83,19 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		return true;
 	}
 
-	/* eslint-disable class-methods-use-this */
-	public on(): void {
-		throw new MethodNotImplementedError();
+	public on<T = JsonRpcResult>(
+		type: 'message' | string,
+		callback: Web3BaseProviderCallback<T>,
+	): void {
+		this.wsEventEmitter.on(type, callback);
 	}
 
-	/* eslint-disable class-methods-use-this */
-	public once() {
-		throw new MethodNotImplementedError();
+	public once<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void {
+		this.wsEventEmitter.once(type, callback);
 	}
 
-	/* eslint-disable class-methods-use-this */
-	public removeListener(): void {
-		throw new MethodNotImplementedError();
+	public removeListener(type: string, callback: Web3BaseProviderCallback): void {
+		this.wsEventEmitter.removeListener(type, callback);
 	}
 
 	public connect(): void {
@@ -136,6 +140,11 @@ export default class WebSocketProvider extends Web3BaseProvider {
 			throw new Error('WebSocket connection is undefined');
 
 		if (request.id === undefined) throw new Error('Request Id not defined');
+
+		if (this.requestQueue.has(request.id) || this.sentQueue.has(request.id))
+			throw new Error(
+				'Duplicate request Id. Another request is already in Queue with same request Id.',
+			);
 
 		const { id } = request;
 
@@ -197,8 +206,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		return promise;
 	}
 
-	public removeAllListeners() {
-		throw new MethodNotImplementedError();
+	public removeAllListeners(type: string): void {
+		this.wsEventEmitter.removeAllListeners(type);
 	}
 
 	private init() {
@@ -246,7 +255,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
 			(response: JsonRpcResponse) => {
 				if (response.method?.includes('_subscription')) {
-					// this.emit(Web3ProviderEvents.Message, result); // WIP
+					this.wsEventEmitter.emit('message', null, response);
 					return;
 				}
 
@@ -259,10 +268,13 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 				if (id && this.sentQueue.has(id)) {
 					const requestItem = this.sentQueue.get(id);
-					if (response.result !== undefined)
+					if (response.result !== undefined) {
+						this.wsEventEmitter.emit('message', null, response);
 						requestItem?.deferredPromise.resolve(response);
-					else if (response.error !== undefined)
+					} else if (response.error !== undefined) {
+						this.wsEventEmitter.emit('message', response, null);
 						requestItem?.deferredPromise.reject(response);
+					}
 
 					this.sentQueue.delete(id);
 				}
