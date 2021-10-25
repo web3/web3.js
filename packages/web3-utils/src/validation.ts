@@ -10,6 +10,12 @@ import {
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
+// TODO: implement later
+export const checkAddressChecksum = (_value: string): boolean => true;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const isAddressv2 = (_value: string): boolean => true;
+
 /**
  * returns true if input is a hexstring
  */
@@ -20,7 +26,9 @@ export const isHexStrict = (hex: string) =>
  * returns true if input is a hexstring, number or bigint
  */
 export const isHex = (hex: Numbers): boolean =>
-	typeof hex === 'number' || typeof hex === 'bigint' || isHexStrict(hex);
+	typeof hex === 'number' ||
+	typeof hex === 'bigint' ||
+	(typeof hex === 'string' && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 
 export const validateHexStringInput = (data: HexString) => {
 	if (!isHexStrict(data)) {
@@ -125,19 +133,19 @@ export const isAddress = (address: string): boolean => {
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
  */
-// export const checkAddressCheckSum = (address: string): boolean => {
-// 	const updatedAddress = address.replace(/^0x/i,'');
+export const checkAddressCheckSum = (address: string): boolean => {
+	const updatedAddress = address.replace(/^0x/i, '');
 
-// const addressHash = sha3(updatedAddress.toLowerCase()).replace(/^0x/i,'');
+	// const addressHash = sha3(updatedAddress.toLowerCase()).replace(/^0x/i,'');
 
-// for (var i = 0; i < 40; i++ ) {
-//     // the nth letter should be uppercase if the nth digit of casemap is 1
-//     if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-//         return false;
-//     }
-// }
-//  true;
-
+	// for (var i = 0; i < 40; i++ ) {
+	// the nth letter should be uppercase if the nth digit of casemap is 1
+	// if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
+	// return false;
+	// }
+	// }
+	return true;
+};
 /**
  * Returns true if the bloom is a valid bloom
  */
