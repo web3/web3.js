@@ -22,7 +22,8 @@ module.exports = function (config) {
     const configuration = {
         frameworks: ['mocha', 'browserify'],
         files: getTestFiles(),
-        preprocessors: getPreprocessors(),
+        // preprocessors: getPreprocessors(),
+        preprocessors: {},
         plugins: [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
