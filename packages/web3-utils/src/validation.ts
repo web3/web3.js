@@ -1,3 +1,4 @@
+import { keccak256 } from 'ethereum-cryptography/keccak';
 import {
 	HighValueIntegerInByteArrayError,
 	InvalidBytesError,
@@ -11,7 +12,6 @@ import {
 import { Bytes, HexString, Numbers } from './types';
 
 // TODO: implement later
-export const checkAddressChecksum = (_value: string): boolean => true;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const isAddressv2 = (_value: string): boolean => true;
@@ -133,17 +133,23 @@ export const isAddress = (address: string): boolean => {
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
  */
-export const checkAddressCheckSum = (address: string): boolean => {
-	const updatedAddress = address.replace(/^0x/i, '');
+export const checkAddressCheckSum = (data: string): boolean => {
+	if (!isAddressv2(data)) return false;
+	const address = data.replace(/^0x/i, '');
+	// const newData = isHexStrict(updatedData) ? hexToBytes(updatedData) : updatedData;
 
+	const addressHash = keccak256(Buffer.from(address.toLowerCase())).toString('hex');
 	// const addressHash = sha3(updatedAddress.toLowerCase()).replace(/^0x/i,'');
 
-	// for (var i = 0; i < 40; i++ ) {
-	// the nth letter should be uppercase if the nth digit of casemap is 1
-	// if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-	// return false;
-	// }
-	// }
+	for (let i = 0; i < 40; i += 1) {
+		// the nth letter should be uppercase if the nth digit of casemap is 1
+		if (
+			(parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) ||
+			(parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])
+		) {
+			return false;
+		}
+	}
 	return true;
 };
 /**

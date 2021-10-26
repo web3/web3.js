@@ -36,4 +36,7 @@ export const isHexStrictData: [any, boolean][] = [
 	[false, false],
 ];
 
-export const isHexInvalidData: [any, boolean][] = [];
+export const checkAddressCheckSumValidData: [any, boolean][] = [
+	['0xc1912fee45d61c87cc5ea59dae31190fffff232d', false],
+	['0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d', true],
+];

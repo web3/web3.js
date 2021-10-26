@@ -1,15 +1,14 @@
-import { isHex, isHexStrict } from '../../src/validation';
-import { isHexData, isHexStrictData } from '../fixtures/validation';
+import { isHex, isHexStrict, checkAddressCheckSum } from '../../src/validation';
+import { checkAddressCheckSumValidData, isHexData, isHexStrictData } from '../fixtures/validation';
 
 describe('validation', () => {
-
-    describe('isHex', () => {
+	describe('isHex', () => {
 		describe('valid cases', () => {
 			it.each(isHexData)('%s', (input, output) => {
 				expect(isHex(input)).toEqual(output);
 			});
 		});
-	})
+	});
 
 	describe('isHexStrict', () => {
 		describe('valid cases', () => {
@@ -18,10 +17,11 @@ describe('validation', () => {
 			});
 		});
 	});
-		// describe('invalid cases', () => {
-		// 	it.each(isHexInvalidData)('%s', (input, output) => {
-		// 		expect(() => isHex(input)).toThrow(output);
-		// 	});
-		// });
-
+	describe('checkAddressCheckSum', () => {
+		describe('valid cases', () => {
+			it.each(checkAddressCheckSumValidData)('%s', (input, output) => {
+				expect(checkAddressCheckSum(input)).toEqual(output);
+			});
+		});
+	});
 });
