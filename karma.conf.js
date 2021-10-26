@@ -36,6 +36,9 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: false,
         browsers: ['ChromeHeadless', 'FirefoxHeadless'],
+        browserify: {
+            ignoreMissing: true,
+        }
     };
 
     config.set(configuration);
