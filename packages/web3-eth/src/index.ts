@@ -22,16 +22,12 @@ export class Web3Eth {
 	private _options: Web3EthOptions;
 
 	constructor(provider: Web3BaseProvider | string, options: Web3EthOptions) {
-		// TODO
-		// @ts-expect-error - Expects additional argument, but I don't think it needs it
 		this._requestManager = new Web3RequestManager(provider);
 		this._options = options;
 	}
 
 	public async getProtocolVersion(options?: Web3EthMethodOptions): Promise<ReturnTypes> {
-		// TODO
-		// @ts-expect-error - request is type any
-		let response = await this._requestManager.provider.request<JsonRpcResponse<string>, []>({
+		let response = await this._requestManager.send<JsonRpcResponse<string>, []>({
 			method: 'eth_protocolVersion',
 		});
 
