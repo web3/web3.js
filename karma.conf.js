@@ -22,8 +22,7 @@ module.exports = function (config) {
     const configuration = {
         frameworks: ['mocha', 'browserify'],
         files: getTestFiles(),
-        // preprocessors: getPreprocessors(),
-        preprocessors: {},
+        preprocessors: getPreprocessors(),
         plugins: [
             'karma-chrome-launcher',
             'karma-firefox-launcher',
@@ -40,11 +39,14 @@ module.exports = function (config) {
         browserify: {
             ignoreMissing: true,
         },
-        browserifyPreprocessor: {
-            options: {
-                ignoreMissing: true,
+        customPreprocessors: {
+            browserify_preprocessor: {
+                base: 'browserify',
+                options: {
+                    ignoreMissing: true,
+                }
             }
-        }
+        },
     };
 
     config.set(configuration);
