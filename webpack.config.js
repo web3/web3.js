@@ -44,6 +44,9 @@ module.exports = {
             },
         ],
     },
+    externals: [
+        /.*\/genesisStates\/.*.json/
+    ],
     output: {
         filename: "[name].min.js",
         path: path.resolve(__dirname, "dist"),
