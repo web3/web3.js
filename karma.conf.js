@@ -40,7 +40,9 @@ module.exports = function (config) {
             ignoreMissing: true,
         },
         browserifyPreprocessor: {
-            ignore: ['**/genesisStates/*.json'],
+            options: {
+                ignoreMissing: true,
+            }
         }
     };
 
