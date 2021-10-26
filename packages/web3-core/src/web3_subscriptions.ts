@@ -1,5 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
-import { BlockOutput, SyncOutput, Web3EventEmitter, Web3EventMap } from 'web3-common';
+import {
+	BlockOutput,
+	SyncOutput,
+	Web3BaseProvider,
+	Web3EventEmitter,
+	Web3EventMap,
+} from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
 
@@ -8,13 +14,22 @@ type CommonSubscriptionEvents = {
 	connected: number;
 };
 
+interface SubscriptionMessageResponse {
+	data: {
+		method: string;
+		params: { result: unknown };
+		subscription: string;
+	};
+}
+
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap = Record<string, unknown>,
-	ArgsType = null,
+	ArgsType = any,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager;
 	private readonly _lastBlock?: BlockOutput;
 	private _id?: HexString;
+	private _messageListener?: (e: Error | null, data?: SubscriptionMessageResponse) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
@@ -35,9 +50,23 @@ export abstract class Web3Subscription<
 	public async subscribe() {
 		const result = await this._requestManager.send<string>({
 			method: 'eth_subscribe',
-			params: this.buildSubscriptionParams(),
+			params: this._buildSubscriptionParams(),
 		});
 		this._id = result;
+
+		const messageListener = (_: Error | null, data?: SubscriptionMessageResponse) => {
+			if (data?.data.method === 'eth_subscription' && data?.data.subscription === this._id) {
+				this._processSubscriptionResult(data?.data.params.result);
+			}
+		};
+
+		(this._requestManager.provider as Web3BaseProvider).on<{
+			method: string;
+			params: { result: unknown };
+			subscription: string;
+		}>('message', messageListener);
+
+		this._messageListener = messageListener;
 	}
 
 	public async resubscribe() {
@@ -52,13 +81,27 @@ export abstract class Web3Subscription<
 		});
 
 		this._id = undefined;
+
+		(this._requestManager.provider as Web3BaseProvider).removeListener(
+			'message',
+			this._messageListener as never,
+		);
 	}
 
-	public abstract buildSubscriptionParams(): unknown;
+	// eslint-disable-next-line class-methods-use-this
+	protected _processSubscriptionResult(_data: unknown) {
+		// Do nothing - This should be overridden in subclass.
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	protected _buildSubscriptionParams(): Record<string, unknown> {
+		// This should be overridden in the subclass
+		return {};
+	}
 }
 
-export type Web3SubscriptionConstructor<T extends Web3Subscription, A = unknown> = new (
-	args: A,
+export type Web3SubscriptionConstructor<T extends Web3Subscription> = new (
+	args: any,
 	options: { requestManager: Web3RequestManager },
 ) => T;
 
@@ -74,36 +117,21 @@ export class LogsSubscription extends Web3Subscription<
 		};
 	},
 	{ address?: HexString; topics?: HexString[] }
-> {
-	// eslint-disable-next-line class-methods-use-this
-	public buildSubscriptionParams() {
-		return {};
-	}
-}
+> {}
 
 // TODO: This class to be moved `web3-eth` package.
 export class PendingTransactionsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: HexString;
 	}
-> {
-	// eslint-disable-next-line class-methods-use-this
-	public buildSubscriptionParams() {
-		return {};
-	}
-}
+> {}
 
 // TODO: This class to be moved `web3-eth` package.
 export class NewBlockHeadersSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: BlockOutput;
 	}
-> {
-	// eslint-disable-next-line class-methods-use-this
-	public buildSubscriptionParams() {
-		return {};
-	}
-}
+> {}
 
 // TODO: This class to be moved `web3-eth` package.
 export class SyncingSubscription extends Web3Subscription<
@@ -111,9 +139,4 @@ export class SyncingSubscription extends Web3Subscription<
 		data: SyncOutput;
 		changed: boolean;
 	}
-> {
-	// eslint-disable-next-line class-methods-use-this
-	public buildSubscriptionParams() {
-		return {};
-	}
-}
+> {}

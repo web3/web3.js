@@ -30,6 +30,8 @@ import {
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
 	ERR_FORMATTERS,
 	ERR_INVALID_CLIENT,
+	ERR_PROVIDER,
+	ERR_SUBSCRIPTION,
 } from './constants';
 import { JsonRpcResponse } from './types';
 
@@ -142,12 +144,20 @@ export class PendingRequestsOnReconnectingError extends ConnectionError {
 	}
 }
 
+export class ProviderError extends Web3Error {
+	public code = ERR_PROVIDER;
+}
+
 export class InvalidProviderError extends Web3Error {
 	public code = ERR_INVALID_PROVIDER;
 
 	public constructor(public clientUrl: string) {
 		super(`Provider with url "${clientUrl}" is not set or invalid`);
 	}
+}
+
+export class SubscriptionError extends Web3Error {
+	public code = ERR_SUBSCRIPTION;
 }
 
 export class ResponseError<ErrorType = unknown> extends Web3Error {
