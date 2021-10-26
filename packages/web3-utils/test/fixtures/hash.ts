@@ -23,28 +23,9 @@ export const sha3InvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
 ];
 
-export const sha3EthersValidData: [string, any][] = [
-	['test123', Buffer.from('test123', 'utf-8')],
-	['0x265385c7f4132228a0d54eb1a9e7460b91c0cc68', '0x265385c7f4132228a0d54eb1a9e7460b91c0cc68'],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image',
-		Buffer.from('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image', 'utf-8'),
-	],
-	['1234', Buffer.from('1234', 'utf-8')],
-	['0x80', '0x80'],
-];
-
 export const sha3RawValidData: [string, string | null][] = [
 	...sha3Data,
 	['', '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'],
-];
-
-export const sha3RawEthersValidData: [string, any][] = [
-	...sha3EthersValidData,
-	[
-		'', // testing null hash
-		Buffer.from(''),
-	],
 ];
 
 export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][] = [

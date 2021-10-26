@@ -96,10 +96,7 @@ const parseTypeN = (value: string): number => {
  */
 const bitLength = (value: BigInt | number): number => {
 	const updatedVal = value.toString(2);
-	if (updatedVal === null) return 0;
-	if (updatedVal.match(/1/g) === null) return 0;
-	const length = updatedVal.match(/1/g)?.length;
-	return length ?? 0;
+	return updatedVal.length;
 };
 
 /**
@@ -124,9 +121,8 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 		return value;
 	}
 	const name = elementaryName(type);
-
 	if (type.startsWith('uint')) {
-		const size = parseTypeN(type);
+		const size = parseTypeN(name);
 
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(value);
@@ -143,8 +139,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 
 	if (type.startsWith('int')) {
-		const size = parseTypeN(type);
-
+		const size = parseTypeN(name);
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(type);
 		}
@@ -168,6 +163,9 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 
 	if (type.startsWith('bytes')) {
 		// must be 32 byte slices when in an array
+		if (value.replace(/^0x/i, '').length % 2 !== 0) {
+			throw new InvalidBytesError(value);
+		}
 		const size = arraySize ? 32 : parseTypeN(type);
 		// if (!size) {
 		// 	throw new Error('bytes[] not yet supported in solidity');

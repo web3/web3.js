@@ -1,15 +1,13 @@
-import { ethers } from 'ethers';
+import { keccak256 } from 'js-sha3';
 import { sha3, sha3Raw, soliditySha3, soliditySha3Raw, encodePacked } from '../../src/hash';
 import {
 	sha3InvalidData,
 	sha3ValidData,
-	sha3EthersValidData,
 	soliditySha3RawValidData,
 	sha3RawValidData,
-	sha3RawEthersValidData,
 	soliditySha3ValidData,
 	soliditySha3InvalidData,
-	soliditySha3EthersValidData,
+	// soliditySha3EthersValidData,
 	encodePackData,
 	encodePackedInvalidData,
 } from '../fixtures/hash';
@@ -29,9 +27,9 @@ describe('hash', () => {
 		});
 
 		describe('comparing with ether cases', () => {
-			it.each(sha3EthersValidData)('%s', (input, output) => {
+			it.each(sha3ValidData)('%s', input => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(sha3(input)).toEqual(ethers.utils.keccak256(output));
+				expect(sha3(input)).toEqual(keccak256(input));
 			});
 		});
 	});
@@ -43,9 +41,9 @@ describe('hash', () => {
 			});
 		});
 		describe('comparing with ether cases', () => {
-			it.each(sha3RawEthersValidData)('%s', (input, output) => {
+			it.each(sha3RawValidData)('%s', input => {
 				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(sha3Raw(input)).toEqual(ethers.utils.keccak256(output));
+				expect(sha3Raw(input)).toEqual(keccak256(input));
 			});
 		});
 		describe('invalid cases', () => {
@@ -67,14 +65,14 @@ describe('hash', () => {
 				expect(() => soliditySha3(input)).toThrow(output);
 			});
 		});
-		describe('ethers cases', () => {
-			it.each(soliditySha3EthersValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(soliditySha3(...input)).toEqual(
-					ethers.utils.solidityKeccak256(output[0], output[1]),
-				);
-			});
-		});
+		// describe('ethers cases', () => {
+		// 	it.each(soliditySha3EthersValidData)('%s', (input, output) => {
+		// 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		// 		expect(soliditySha3(...input)).toEqual(
+		// 			ethers.utils.solidityKeccak256(output[0], output[1]),
+		// 		);
+		// 	});
+		// });
 	});
 
 	describe('soliditySha3Raw', () => {
@@ -89,14 +87,14 @@ describe('hash', () => {
 				expect(() => soliditySha3Raw(input)).toThrow(output);
 			});
 		});
-		describe('ethers cases', () => {
-			it.each(soliditySha3EthersValidData)('%s', (input, output) => {
-				// eslint-disable-next-line @typescript-eslint/no-magic-numbers
-				expect(soliditySha3Raw(...input)).toEqual(
-					ethers.utils.solidityKeccak256(output[0], output[1]),
-				);
-			});
-		});
+		// describe('ethers cases', () => {
+		// 	it.each(soliditySha3EthersValidData)('%s', (input, output) => {
+		// 		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+		// 		expect(soliditySha3Raw(...input)).toEqual(
+		// 			ethers.utils.solidityKeccak256(output[0], output[1]),
+		// 		);
+		// 	});
+		// });
 	});
 
 	describe('encodePacked', () => {
