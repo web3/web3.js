@@ -37,7 +37,8 @@ module.exports = function (config) {
         autoWatch: false,
         browsers: ['ChromeHeadless', 'FirefoxHeadless'],
         browserify: {
-            ignore: ['**/genesisStates/*.json'],
+            ignore: ['**/genesisStates/**'],
+            ignoreMissing: true,
         }
     };
 
