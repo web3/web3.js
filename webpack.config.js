@@ -13,11 +13,19 @@ module.exports = {
             filename: "[file].map",
         }),
         new webpack.IgnorePlugin({
-            resourceRegExp: /.*\/genesisStates\/.*.json/,
+            checkResource(resource) {
+                // "@ethereumjs/common/genesisStates" consists ~800KB static files which are no more needed
+                // "idna-uts46-hx/idna-map.js" is ~200KB file which is not been used by the code we are using
+                return /(.*\/genesisStates\/.*\.json)|(.*\/idna-map.*)/.test(resource)
+            },
         }),
     ],
     resolve: {
-        modules: ["node_modules"],
+        alias: {
+            // To avoid blotting up the `bn.js` library all over the packages 
+            // use single library instance. 
+            "bn.js": path.resolve(__dirname, 'node_modules/bn.js')
+        }
     },
     module: {
         rules: [
