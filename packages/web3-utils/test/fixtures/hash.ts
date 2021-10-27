@@ -1,21 +1,41 @@
+import { hexToBytes } from '../../src/converters';
 import { typedObject, typedObject2 } from '../../src/types';
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 export const sha3Data: [string, string | null][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],
 	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
-	],
-	[
 		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image',
 		'0x74e687805c0cfbf0065120987739a5b0ba9b3686a1a778a463bddddcd18cc432',
 	],
 	['1234', '0x387a8233c96e1fc0ad5e284353276177af2186e7afa85296f106336e376669f7'],
-	['0x80', '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'],
+	['helloworld', '0xfa26db7ca85ead399216e7c6316bc50ed24393c3122b582735e7f3b0f91b93f0'],
 ];
 
-export const sha3ValidData: [string, string | null][] = [...sha3Data, ['', null]];
+export const sha3ValidData: [string, string | null][] = [
+	...sha3Data,
+	['', null],
+	[
+		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
+		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
+	],
+	['0x80', '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'],
+	[
+		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
+		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
+	],
+	['0x1234', '0x56570de287d73cd1cb6092bb8fdee6173974955fdef345ae579ee9f475ea7432'],
+];
+
+export const compareSha3JSValidData: [string, any | null][] = [
+	// cases that include buffer data
+	['0x80', Buffer.from(hexToBytes('0x80'))],
+	[
+		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
+		Buffer.from(hexToBytes('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')),
+	],
+	['0x1234', Buffer.from(hexToBytes('0x1234'))],
+];
 
 export const sha3InvalidData: [any, string][] = [
 	[1, 'Invalid value given "1". Error: not a valid string.'],
@@ -23,29 +43,12 @@ export const sha3InvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
 ];
 
-export const sha3EthersValidData: [string, any][] = [
-	['test123', Buffer.from('test123', 'utf-8')],
-	['0x265385c7f4132228a0d54eb1a9e7460b91c0cc68', '0x265385c7f4132228a0d54eb1a9e7460b91c0cc68'],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image',
-		Buffer.from('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image', 'utf-8'),
-	],
-	['1234', Buffer.from('1234', 'utf-8')],
-	['0x80', '0x80'],
-];
-
 export const sha3RawValidData: [string, string | null][] = [
 	...sha3Data,
 	['', '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'],
 ];
 
-export const sha3RawEthersValidData: [string, any][] = [
-	...sha3EthersValidData,
-	[
-		'', // testing null hash
-		Buffer.from(''),
-	],
-];
+export const compareSha3JSRawValidData: [string, string][] = [...compareSha3JSValidData];
 
 export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][] = [
 	[
@@ -95,6 +98,13 @@ export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][]
 		'0x81da7abb5c9c7515f57dab2fc946f01217ab52f3bd8958bc36bd55894451a93c',
 	],
 	[
+		[
+			{ type: 'int16', value: -1 },
+			{ type: 'uint48', value: '0x0c' },
+		],
+		'0x81da7abb5c9c7515f57dab2fc946f01217ab52f3bd8958bc36bd55894451a93c',
+	],
+	[
 		[{ type: 'string', value: 'Hello!%' }],
 		'0x661136a4267dba9ccdf6bfddb7c00e714de936674c4bdb065a531cf1cb15c7fc',
 	],
@@ -130,72 +140,6 @@ export const soliditySha3RawValidData: [typedObject[] | typedObject2[], string |
 	[
 		[{ t: 'string', v: '' }],
 		'0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
-	],
-];
-
-export const soliditySha3EthersValidData: [typedObject[] | typedObject2[], any[]][] = [
-	[
-		[
-			{ type: 'int16', value: -1 },
-			{ type: 'uint48', value: 12 },
-		],
-		[
-			['int16', 'uint48'],
-			[-1, 12],
-		],
-	],
-	[
-		[
-			{ type: 'uint16', value: 100 },
-			{ type: 'int48', value: 12 },
-		],
-		[
-			['uint16', 'int48'],
-			[100, 12],
-		],
-	],
-	[
-		[
-			{ type: 'string', value: 'Hello' },
-			{ type: 'uint8', value: 3 },
-		],
-		[
-			['string', 'uint8'],
-			['Hello', 3],
-		],
-	],
-	[
-		[
-			{ type: 'string', value: 'hello' },
-			{ type: 'string', value: 'world01' },
-		],
-		[
-			['string', 'string'],
-			['hello', 'world01'],
-		],
-	],
-	[
-		[
-			{ type: 'string', value: 'hell' },
-			{ type: 'string', value: 'oworld' },
-			{ type: 'uint16', value: '0x3031' },
-		],
-		[
-			['string', 'string', 'uint16'],
-			['hell', 'oworld', '0x3031'],
-		],
-	],
-	[
-		[{ type: 'uint96', value: '32309054545061485574011236401' }],
-		[['uint96'], ['32309054545061485574011236401']],
-	],
-	[
-		[{ type: 'address', value: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1' }],
-		[['address'], ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1']],
-	],
-	[
-		[{ type: 'bytes', value: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1' }],
-		[['bytes'], ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1']],
 	],
 ];
 
