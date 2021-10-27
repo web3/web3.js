@@ -15,8 +15,7 @@ module.exports = {
         new webpack.IgnorePlugin({
             checkResource(resource) {
                 // "@ethereumjs/common/genesisStates" consists ~800KB static files which are no more needed
-                // "idna-uts46-hx/idna-map.js" is ~200KB file which is not been used by the code we are using
-                return /(.*\/genesisStates\/.*\.json)|(.*\/idna-map.*)/.test(resource)
+                return /(.*\/genesisStates\/.*\.json)/.test(resource)
             },
         }),
     ],
