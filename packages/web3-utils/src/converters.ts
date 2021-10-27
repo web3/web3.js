@@ -362,7 +362,7 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-	const hash = keccak256(Buffer.from(lowerCaseAddress)).toString('hex');
+	const hash = (keccak256(Buffer.from(lowerCaseAddress)) as Buffer).toString('hex');
 	if (
 		hash === null ||
 		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'

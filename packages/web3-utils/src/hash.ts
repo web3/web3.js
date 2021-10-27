@@ -1,7 +1,7 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { Numbers, typedObject, typedObject2, EncodingTypes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
-import { utf8ToHex, hexToBytes, toNumber } from './converters';
+import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import { isAddress, isHexStrict } from './validation';
 import {
 	InvalidStringError,
@@ -14,16 +14,20 @@ import {
 	InvalidBytesError,
 } from './errors';
 
-const SHA3_NULL = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+const SHA3_NULL = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
+/**
+ *
+ * computes the Keccak-256 hash of the string input and returns a hexstring
+ */
 export const sha3 = (data: string): string | null => {
 	if (typeof data !== 'string') throw new InvalidStringError(data);
 	const newData = isHexStrict(data) ? hexToBytes(data) : data;
 
-	const hash = keccak256(Buffer.from(newData)).toString('hex');
+	const hash = bytesToHex(keccak256(Buffer.from(newData)));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-	return hash === SHA3_NULL ? null : `0x${hash}`;
+	return hash === SHA3_NULL ? null : hash;
 };
 
 /**
@@ -32,7 +36,7 @@ export const sha3 = (data: string): string | null => {
 export const sha3Raw = (data: string): string => {
 	const hash = sha3(data);
 	if (hash === null) {
-		return `0x${SHA3_NULL}`;
+		return SHA3_NULL;
 	}
 
 	return hash;
@@ -55,14 +59,6 @@ const getType = (arg: typedObject | typedObject2 | Numbers): [string, EncodingTy
 	}
 	throw new InvalidType(arg);
 };
-
-/**
- * get the array size
- */
-// const parseTypeNArray = (type: string): number | null => {
-// 	const arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
-// 	return arraySize ? parseInt(arraySize[1], 10) : null;
-// };
 
 /**
  * returns the type with size if uint or int
@@ -162,14 +158,11 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 
 	if (type.startsWith('bytes')) {
-		// must be 32 byte slices when in an array
 		if (value.replace(/^0x/i, '').length % 2 !== 0) {
 			throw new InvalidBytesError(value);
 		}
+		// if no byte size is speciified it will default to 32 bytes
 		const size = arraySize ? 32 : parseTypeN(type);
-		// if (!size) {
-		// 	throw new Error('bytes[] not yet supported in solidity');
-		// }
 
 		if (!size || size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
 			throw new InvalidBytesError(value);
@@ -200,7 +193,7 @@ export const processSolidityEncodePackedArgs = (
 };
 
 /**
- * Encode packed args to hex
+ * Encode packed arguments to a hexstring
  */
 export const encodePacked = (...values: typedObject[] | typedObject2[]): string => {
 	const args = Array.prototype.slice.call(values);
