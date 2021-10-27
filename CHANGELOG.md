@@ -472,6 +472,10 @@ Released with 1.0.0-beta.37 code base.
 - Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 
+### Fixed
+
+- Fix 1.6.1 build size issue with removing static asset files (#4506)
+
 ## [Unreleased]
 
 ## [1.6.2]
