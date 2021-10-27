@@ -78,7 +78,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		}
 
 		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this.provider);
-		this._provider = newProvider ?? null;
+		this._provider = newProvider ?? provider ?? null;
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this.provider);
 	}
 
