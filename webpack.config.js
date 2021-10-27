@@ -12,6 +12,9 @@ module.exports = {
         new webpack.SourceMapDevToolPlugin({
             filename: "[file].map",
         }),
+        new webpack.IgnorePlugin({
+            resourceRegExp: /.*\/genesisStates\/.*.json/,
+        }),
     ],
     resolve: {
         modules: ["node_modules"],
@@ -44,9 +47,6 @@ module.exports = {
             },
         ],
     },
-    externals: [
-        /.*\/genesisStates\/.*.json/
-    ],
     output: {
         filename: "[name].min.js",
         path: path.resolve(__dirname, "dist"),
