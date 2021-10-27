@@ -35,10 +35,7 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
-        browsers: ['ChromeHeadless', 'FirefoxHeadless'],
-        browserify: {
-            ignore: ['**/genesisStates/*.json'],
-        }
+        browsers: ['ChromeHeadless', 'FirefoxHeadless']
     };
 
     config.set(configuration);
