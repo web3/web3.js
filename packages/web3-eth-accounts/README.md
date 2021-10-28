@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# web3.js - Web3 Core
+# web3.js - Web3 Eth Accounts
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -12,12 +12,12 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-core` package contains core functions for [web3.js][repo] packages.
+`web3-eth-accounts` contains functionality for managing Ethereum accounts and signing.
 
 ###### Get it from the NPM Registry
 
 ```bash
-yarn add web3-core
+yarn add web3-eth-accounts
 ```
 
 ## Getting Started
