@@ -208,3 +208,9 @@ export enum PredefinedBlockNumbers {
 	PENDING = 'pending',
 	EARLIEST = 'earliest',
 }
+
+export type ConnectionEvent = {
+	code: number;
+	reason: string;
+	wasClean?: boolean; // if WS connection was closed properly
+};

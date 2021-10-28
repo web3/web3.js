@@ -7,6 +7,7 @@ import {
 	JsonRpcResponse,
 	JsonRpcResult,
 	Web3BaseProviderCallback,
+	ConnectionEvent,
 } from 'web3-common';
 import { IMessageEvent, w3cwebsocket as W3WS } from 'websocket';
 import {
@@ -15,7 +16,6 @@ import {
 	PendingRequestsOnReconnectingError,
 	ConnectionNotOpenError,
 	InvalidClientError,
-	ConnectionEvent,
 } from 'web3-common/dist/errors';
 import { WebSocketOptions, WSRequestItem } from './types';
 import { DeferredPromise } from './deferredPromise';

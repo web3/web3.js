@@ -31,12 +31,7 @@ import {
 	ERR_FORMATTERS,
 	ERR_INVALID_CLIENT,
 } from './constants';
-
-export type ConnectionEvent = {
-	code: number;
-	reason: string;
-	wasClean?: boolean; // if WS connection was closed properly
-};
+import { ConnectionEvent } from './types';
 
 type Response<T = unknown> = { error?: { message?: string; data?: T } };
 type Receipt = Record<string, unknown>;
