@@ -8,8 +8,8 @@ export interface ProviderMessage<T = JsonRpcResult> {
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
 export type Web3BaseProviderCallback<T = JsonRpcResult> = (
-	error: Error | JsonRpcResponseWithError | null,
-	result?: JsonRpcResponseWithResult<T> | null,
+	error: Error | null,
+	result?: ProviderMessage<T>,
 ) => void;
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
