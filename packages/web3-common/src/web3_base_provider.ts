@@ -1,3 +1,4 @@
+import { EthExecutionAPI } from './eth_execution_api';
 import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult } from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
@@ -44,10 +45,18 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
-		request: JsonRpcPayload<T2>,
-		providerOptions?: T3,
-	): Promise<T>;
+	abstract request<
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		API extends { [key: string]: (...params: any) => any } = EthExecutionAPI,
+		Method extends keyof API = keyof API,
+		ResponseType = ReturnType<API[Method]>,
+	>(
+		request: { method: Method } & (Parameters<API[Method]> extends []
+			? { params?: never }
+			: { params: Parameters<API[Method]> }) &
+			JsonRpcPayload<Parameters<API[Method]>>,
+		requestOptions?: unknown,
+	): Promise<JsonRpcResponse<ResponseType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
