@@ -255,7 +255,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 	private onMessage(e: IMessageEvent): void {
 		this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
 			(response: JsonRpcResponse | SubscriptionResultNotification) => {
-				if ('method' in response && response.method.includes('_subscription')) {
+				if ('method' in response && response.method.endsWith('_subscription')) {
 					this.wsEventEmitter.emit('message', null, response);
 					return;
 				}
