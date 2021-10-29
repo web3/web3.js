@@ -8,6 +8,7 @@ import {
 	JsonRpcResult,
 	Web3BaseProviderCallback,
 	ConnectionEvent,
+	SubscriptionResultNotification,
 } from 'web3-common';
 import { IMessageEvent, w3cwebsocket as W3WS } from 'websocket';
 import {
@@ -253,8 +254,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 	private onMessage(e: IMessageEvent): void {
 		this.parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
-			(response: JsonRpcResponse) => {
-				if (response.method?.includes('_subscription')) {
+			(response: JsonRpcResponse | SubscriptionResultNotification) => {
+				if ('method' in response && response.method.includes('_subscription')) {
 					this.wsEventEmitter.emit('message', null, response);
 					return;
 				}
@@ -268,10 +269,10 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 				if (id && this.sentQueue.has(id)) {
 					const requestItem = this.sentQueue.get(id);
-					if (response.result !== undefined) {
+					if ('result' in response && response.result !== undefined) {
 						this.wsEventEmitter.emit('message', null, response);
 						requestItem?.deferredPromise.resolve(response);
-					} else if (response.error !== undefined) {
+					} else if ('error' in response && response.error !== undefined) {
 						this.wsEventEmitter.emit('message', response, null);
 						requestItem?.deferredPromise.reject(response);
 					}

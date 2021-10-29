@@ -3,7 +3,6 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
-	JsonRpcResponseWithSubscriptionResult,
 	JsonRpcResult,
 } from './types';
 
@@ -16,7 +15,7 @@ export interface ProviderMessage<T = JsonRpcResult> {
 export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
 export type Web3BaseProviderCallback<T = JsonRpcResult> = (
 	error: Error | JsonRpcResponseWithError | null,
-	result?: JsonRpcResponseWithResult<T> | JsonRpcResponseWithSubscriptionResult<T> | null,
+	result?: JsonRpcResponseWithResult<T> | null,
 ) => void;
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
