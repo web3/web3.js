@@ -1,12 +1,30 @@
 // TODO Move to web3-common
 export type HexString = string;
 export type NumberString = string;
-export type DesiredReturnType = HexString | number | NumberString | bigint;
+export type ValidTypes = HexString | number | NumberString | bigint;
 
 interface EthSyncingIsSyncing<ReturnType = HexString> {
-    startingBlock: ReturnType,
-    currentBlock: ReturnType,
-    highestBlock: ReturnType
+	startingBlock: ReturnType;
+	currentBlock: ReturnType;
+	highestBlock: ReturnType;
 }
-type EthSyncingNotSyncing = Boolean;
-export type EthSyncingResponse<ReturnType = HexString> = EthSyncingIsSyncing<ReturnType> | EthSyncingNotSyncing;
+type EthSyncingNotSyncing = boolean;
+export type EthSyncingResponse<ReturnType = HexString> =
+	| EthSyncingIsSyncing<ReturnType>
+	| EthSyncingNotSyncing;
+
+// TODO Revisit
+export interface Transaction {
+	[key: string]: unknown;
+	to?: HexString; // If its a contract creation tx then no address wil be specified.
+	from?: HexString;
+	data?: string;
+	gas: ValidTypes;
+	gasLimit?: ValidTypes;
+	gasPrice?: ValidTypes;
+	maxPriorityFeePerGas?: ValidTypes;
+	maxFeePerGas?: ValidTypes;
+	nonce: ValidTypes;
+	value: ValidTypes;
+	type?: ValidTypes;
+}
