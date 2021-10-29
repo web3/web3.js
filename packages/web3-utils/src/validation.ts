@@ -11,11 +11,6 @@ import {
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
-// TODO: implement later
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const isAddressv2 = (_value: string): boolean => true;
-
 /**
  * returns true if input is a hexstring
  */
@@ -114,32 +109,17 @@ export const compareBlockNumbers = (blockA: string, blockB: string) => {
 	return 1;
 };
 
-// TODO: Implement later
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const isAddress = (address: string): boolean => {
-	// check if it has the basic requirements of an address
-	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-		return false;
-	}
-	// If it's ALL lowercase or ALL upppercase
-	if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-		return true;
-		// Otherwise check each case
-	}
-	return true;
-	// return checkAddressCheckSum(address);
-};
-
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
  */
 export const checkAddressCheckSum = (data: string): boolean => {
-	if (!isAddressv2(data)) return false;
-	const address = data.replace(/^0x/i, '');
-	// const newData = isHexStrict(updatedData) ? hexToBytes(updatedData) : updatedData;
+	if (!/^(0x)?[0-9a-f]{40}$/i.test(data)) return false;
+	const address = data.substr(2);
+	const updatedData = Buffer.from(address.toLowerCase(), 'utf-8');
 
-	const addressHash = keccak256(Buffer.from(address.toLowerCase())).toString('hex');
-	// const addressHash = sha3(updatedAddress.toLowerCase()).replace(/^0x/i,'');
+	const addressHash = Buffer.from(keccak256(updatedData) as Buffer)
+		.toString('hex')
+		.replace(/^0x/i, ''); // addresshash output is wrong
 
 	for (let i = 0; i < 40; i += 1) {
 		// the nth letter should be uppercase if the nth digit of casemap is 1
@@ -152,6 +132,22 @@ export const checkAddressCheckSum = (data: string): boolean => {
 	}
 	return true;
 };
+
+// TODO: Implement later
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const isAddress = (address: string): boolean => {
+	// check if it has the basic requirements of an address
+	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+		return false;
+	}
+	// If it's ALL lowercase or ALL upppercase
+	if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
+		return true;
+		// Otherwise check each case
+	}
+	return checkAddressCheckSum(address);
+};
+
 /**
  * Returns true if the bloom is a valid bloom
  */

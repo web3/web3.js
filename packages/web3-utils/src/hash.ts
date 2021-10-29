@@ -22,6 +22,7 @@ const SHA3_NULL = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d8
  */
 export const sha3 = (data: string): string | null => {
 	if (typeof data !== 'string') throw new InvalidStringError(data);
+
 	const newData = isHexStrict(data) ? hexToBytes(data) : data;
 
 	const hash = bytesToHex(keccak256(Buffer.from(newData)));
