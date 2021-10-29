@@ -5,7 +5,7 @@ describe('HttpProvider', () => {
 	it('should construct with expected methods', () => {
 		const httpProvider = new HttpProvider('http://localhost:8545');
 
-		expect(httpProvider.send).not.toBeUndefined();
+		expect(httpProvider.request).not.toBeUndefined();
 		expect(httpProvider.getStatus).not.toBeUndefined();
 		expect(httpProvider.supportsSubscriptions).not.toBeUndefined();
 		expect(httpProvider.request).not.toBeUndefined();

@@ -97,7 +97,9 @@ describe('errors', () => {
 		it('should have valid json structure with data', () => {
 			expect(
 				new errors.ResponseError({
-					error: { message: 'error message', data: { a: '10', b: '20' } },
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: { a: '10', b: '20' } },
 				}).toJSON(),
 			).toMatchSnapshot();
 		});
@@ -105,7 +107,9 @@ describe('errors', () => {
 		it('should have valid json structure without data', () => {
 			expect(
 				new errors.ResponseError({
-					error: { message: 'error message', data: undefined },
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: undefined },
 				}).toJSON(),
 			).toMatchSnapshot();
 		});
@@ -115,7 +119,9 @@ describe('errors', () => {
 		it('should have valid json structure', () => {
 			expect(
 				new errors.InvalidResponseError({
-					error: { message: 'error message', data: { a: '10', b: '20' } },
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: { a: '10', b: '20' } },
 				}).toJSON(),
 			).toMatchSnapshot();
 		});

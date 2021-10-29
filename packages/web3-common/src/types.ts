@@ -40,9 +40,9 @@ export interface SubscriptionResultNotification<T = JsonRpcResult> {
 	readonly params: Params<T>; // for subscription results
 }
 
-export type JsonRpcResponse<T = JsonRpcResult> =
-	| JsonRpcResponseWithError
-	| JsonRpcResponseWithResult<T>;
+export type JsonRpcResponse<R = JsonRpcResult, E = JsonRpcResult> =
+	| JsonRpcResponseWithError<E>
+	| JsonRpcResponseWithResult<R>;
 
 export interface JsonRpcRequest<T = unknown[]> {
 	readonly method: string;
