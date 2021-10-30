@@ -180,10 +180,12 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.json
 	eth_getBlockByHash: (blockHash: HexString32Bytes, hydrated: boolean) => Block;
 	eth_getBlockByNumber: (blockNumber: Uint, hydrated: boolean) => Block;
-	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint[];
-	eth_getBlockTransactionCountByNumber: (blockNumber: Uint) => Uint[];
-	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint[];
-	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint[];
+	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint;
+	eth_getBlockTransactionCountByNumber: (blockNumber: Uint) => Uint;
+	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint;
+	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint;
+    eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
+    eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
 	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo;
@@ -242,7 +244,7 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
 	eth_getBalance: (address: Address, block: BlockNumberOrTag) => Uint;
-	eth_getStorage: (
+	eth_getStorageAt: (
 		address: Address,
 		storageSlot: Uint256,
 		block: BlockNumberOrTag,
