@@ -1,4 +1,4 @@
-import { Web3BaseProvider } from 'web3-common';
+import { Web3APISpec, Web3BaseProvider } from 'web3-common';
 import {
 	LegacyRequestProvider,
 	LegacySendAsyncProvider,
@@ -6,23 +6,26 @@ import {
 	SupportedProviders,
 } from './types';
 
-export const isWeb3Provider = (provider: SupportedProviders): provider is Web3BaseProvider =>
-	Web3BaseProvider.isWeb3Provider(provider);
+export const isWeb3Provider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
+): provider is Web3BaseProvider<API> => Web3BaseProvider.isWeb3Provider(provider);
 
-export const isLegacyRequestProvider = (
-	provider: SupportedProviders,
+export const isLegacyRequestProvider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
 ): provider is LegacyRequestProvider => 'request' in provider;
 
-export const isLegacySendProvider = (
-	provider: SupportedProviders,
+export const isLegacySendProvider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
 ): provider is LegacySendProvider => 'send' in provider;
 
-export const isLegacySendAsyncProvider = (
-	provider: SupportedProviders,
+export const isLegacySendAsyncProvider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
 ): provider is LegacySendAsyncProvider => 'sendAsync' in provider;
 
-export const isSupportSubscriptions = (provider: SupportedProviders): boolean => {
-	if (isWeb3Provider(provider)) {
+export const isSupportSubscriptions = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
+): boolean => {
+	if (isWeb3Provider<API>(provider)) {
 		return provider.supportsSubscriptions();
 	}
 
