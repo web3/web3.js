@@ -1,5 +1,5 @@
 import { hexToBytes } from '../../src/converters';
-import { typedObject, typedObject2 } from '../../src/types';
+import { TypedObject, TypedObject2 } from '../../src/types';
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 export const sha3Data: [string, string | null][] = [
@@ -50,7 +50,7 @@ export const sha3RawValidData: [string, string | null][] = [
 
 export const compareSha3JSRawValidData: [string, string][] = [...compareSha3JSValidData];
 
-export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][] = [
+export const soliditySha3Data: [TypedObject[] | TypedObject2[], string | null][] = [
 	[
 		[{ type: 'string', value: '31323334' }],
 		'0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b',
@@ -130,12 +130,12 @@ export const soliditySha3Data: [typedObject[] | typedObject2[], string | null][]
 	],
 ];
 
-export const soliditySha3ValidData: [typedObject[] | typedObject2[], string | null][] = [
+export const soliditySha3ValidData: [TypedObject[] | TypedObject2[], string | null][] = [
 	...soliditySha3Data,
 	[[{ t: 'string', v: '' }], null],
 ];
 
-export const soliditySha3RawValidData: [typedObject[] | typedObject2[], string | null][] = [
+export const soliditySha3RawValidData: [TypedObject[] | TypedObject2[], string | null][] = [
 	...soliditySha3Data,
 	[
 		[{ t: 'string', v: '' }],
@@ -149,7 +149,7 @@ export const soliditySha3InvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: invalid type, type not supported.'],
 ];
 
-export const encodePackData: [typedObject[] | typedObject2[], any][] = [
+export const encodePackData: [TypedObject[] | TypedObject2[], any][] = [
 	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
 	[
 		[{ type: 'int', value: 31323334 }],
