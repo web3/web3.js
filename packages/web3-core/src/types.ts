@@ -1,5 +1,11 @@
 import { Socket } from 'net';
-import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult, Web3BaseProvider } from 'web3-common';
+import {
+	JsonRpcPayload,
+	JsonRpcResponse,
+	JsonRpcResult,
+	Web3BaseProvider,
+	Web3APISpec,
+} from 'web3-common';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -21,10 +27,13 @@ export type LegacySendAsyncProvider = {
 	) => Promise<JsonRpcResponse<R>>;
 };
 
-export type SupportedProviders =
-	| Web3BaseProvider
+export type SupportedProviders<API extends Web3APISpec> =
+	| Web3BaseProvider<API>
 	| LegacyRequestProvider
 	| LegacySendProvider
 	| LegacySendAsyncProvider;
 
-export type Web3BaseProviderConstructor = new (url: string, net?: Socket) => Web3BaseProvider;
+export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
+	url: string,
+	net?: Socket,
+) => Web3BaseProvider<API>;

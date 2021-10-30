@@ -250,9 +250,9 @@ describe('Web3RequestManager', () => {
 		it('should throw error if no provider is set', async () => {
 			const manager = new Web3RequestManager();
 
-			await expect(manager.send({ method: 'my_method', params: {} })).rejects.toThrow(
-				'Provider not available',
-			);
+			await expect(
+				manager.send({ method: 'eth_getBlockByHash', params: ['123', true] }),
+			).rejects.toThrow('Provider not available');
 		});
 
 		describe('web3-provider', () => {
@@ -268,7 +268,7 @@ describe('Web3RequestManager', () => {
 				const myProvider = {
 					request: jest
 						.fn()
-						.mockImplementation(async () => Promise.resolve(successResponse.result)),
+						.mockImplementation(async () => Promise.resolve(successResponse)),
 				} as any;
 
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
