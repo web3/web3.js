@@ -133,7 +133,7 @@ export class Web3Eth {
 	}
 
 	public async getBlockUncleCount<ReturnType = HexString>(
-		block: ValidTypes | PredefinedBlockNumbers,
+		block?: ValidTypes | PredefinedBlockNumbers,
 		options?: Web3EthMethodOptions,
 	): Promise<ReturnType> {
 		const _block = block ?? this._options.defaultBlock;
@@ -147,7 +147,7 @@ export class Web3Eth {
 
 	public async getCode(
 		address: HexString,
-		block: ValidTypes | PredefinedBlockNumbers,
+		block?: ValidTypes | PredefinedBlockNumbers,
 	): Promise<HexString> {
 		return RpcMethods.getCode(
 			this._requestManager,
@@ -178,10 +178,24 @@ export class Web3Eth {
 	// TODO Check for defaults such as gas
 	public async call(
 		transaction: Transaction,
-		block: ValidTypes | PredefinedBlockNumbers,
+		block?: ValidTypes | PredefinedBlockNumbers,
 		options?: Web3EthMethodOptions,
 	): Promise<HexString> {
 		return RpcMethods.call(
+			this._requestManager,
+			transaction,
+			block ?? this._options.defaultBlock,
+			options,
+		);
+	}
+
+    // TODO Check for defaults such as gas
+	public async estimateGas(
+		transaction: Transaction,
+		block?: ValidTypes | PredefinedBlockNumbers,
+		options?: Web3EthMethodOptions,
+	): Promise<HexString> {
+		return RpcMethods.estimateGas(
 			this._requestManager,
 			transaction,
 			block ?? this._options.defaultBlock,

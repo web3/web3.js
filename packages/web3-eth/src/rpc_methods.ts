@@ -432,3 +432,72 @@ export async function call(
 
 	return response.result;
 }
+
+export async function estimateGas(
+	requestManager: Web3RequestManager,
+	transaction: Transaction,
+	block: ValidTypes | PredefinedBlockNumbers,
+	options?: Web3EthMethodOptions,
+): Promise<HexString> {
+	// TODO Convert ValidTypes properties to HexString
+
+	const response = await requestManager.send<
+		JsonRpcResponse<HexString>,
+		[Transaction, ValidTypes | PredefinedBlockNumbers]
+	>({
+		method: 'eth_estimateGas',
+		params: [transaction, block],
+	});
+
+	if (response instanceof ResponseError) throw response;
+	if (response.result === undefined) throw new InvalidResponseError(response);
+
+	if (options?.returnType !== undefined) {
+		// TODO convert result
+	}
+
+	return response.result;
+}
+
+export async function getBlockByHash<ReturnType = HexString>(
+	requestManager: Web3RequestManager,
+	blockHash: HexString,
+    returnFullTransactions: boolean,
+	options?: Web3EthMethodOptions,
+): Promise<ReturnType> {
+	const response = await requestManager.send<JsonRpcResponse<ReturnType>, [HexString, boolean]>({
+		method: 'eth_getBlockByHash',
+		params: [blockHash, returnFullTransactions],
+	});
+
+	if (response instanceof ResponseError) throw response;
+	if (response.result === undefined) throw new InvalidResponseError(response);
+
+	if (options?.returnType !== undefined) {
+		// TODO convert result
+	}
+
+	return response.result;
+}
+
+export async function getBlockByNumber<ReturnType = HexString>(
+	requestManager: Web3RequestManager,
+	block: ValidTypes | PredefinedBlockNumbers,
+	options?: Web3EthMethodOptions,
+): Promise<ReturnType> {
+	// TODO convert block to hex string if not PredefinedBlockNumbers
+
+	const response = await requestManager.send<JsonRpcResponse<ReturnType>, [HexString]>({
+		method: 'eth_getBlockByNumber',
+		params: [block],
+	});
+
+	if (response instanceof ResponseError) throw response;
+	if (response.result === undefined) throw new InvalidResponseError(response);
+
+	if (options?.returnType !== undefined) {
+		// TODO convert result
+	}
+
+	return response.result;
+}
