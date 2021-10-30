@@ -253,4 +253,14 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
 	eth_sendTransaction: (transaction: TransactionWithSender) => HexString32Bytes;
 	eth_sendRawTransaction: (transaction: HexStringBytes) => HexString32Bytes;
+
+	// https://geth.ethereum.org/docs/rpc/pubsub
+	eth_subscribe: (
+		...params:
+			| ['newHeads']
+			| ['newPendingTransactions']
+			| ['syncing']
+			| ['logs', { address: HexString; topic: HexString[] }]
+	) => HexString;
+	eth_unsubscribe: (subscriptionId: HexString) => HexString;
 };
