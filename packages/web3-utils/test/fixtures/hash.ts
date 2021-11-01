@@ -1,6 +1,5 @@
 import { hexToBytes } from '../../src/converters';
 import { TypedObject, TypedObject2 } from '../../src/types';
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 export const sha3Data: [string, string | null][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],

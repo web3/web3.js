@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import {
 	HighValueIntegerInByteArrayError,
@@ -104,10 +105,65 @@ export const validateStringInput = (data: string) => {
  * Compares between block A and block B
  * Returns -1 if a < b, returns 1 if a > b and returns 0 if a == b
  */
-export const compareBlockNumbers = (blockA: string, blockB: string) => {
-	if (blockA === blockB) return 0;
+export const compareBlockNumbers = (blockA: string | number, blockB: string | number) => {
+	if (
+		blockA === blockB ||
+		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
+			(blockB === 'genesis' || blockB === 'earliest' || blockB === 0))
+	)
+		return 0;
+
 	return 1;
 };
+
+/**
+ * Compares between block A and block B
+ * Returns -1 if a < b, returns 1 if a > b and returns 0 if a == b
+ */
+//  export const compareBlockNumbersV2 = (a: string, b: string) => {
+// 	if (a === b) {
+//         return 0;
+//     }
+// 	if (("genesis" === a || "earliest" === a || 0 === a) && ("genesis" === b || "earliest" ===  b || 0 === b)) {
+//         return 0;
+//     }
+// 	 if ("genesis" == a || "earliest" == a) {
+//         // b !== a, thus a < b
+//         return -1;
+//     } else if ("genesis" == b || "earliest" == b) {
+//         // b !== a, thus a > b
+//         return 1;
+//     } else if (a == "latest") {
+//         if (b == "pending") {
+//             return -1;
+//         } else {
+//             // b !== ("pending" OR "latest"), thus a > b
+//             return 1;
+//         }
+//     } else if (b === "latest") {
+//         if (a == "pending") {
+//             return 1;
+//         } else {
+//             // b !== ("pending" OR "latest"), thus a > b
+//             return -1
+//         }
+//     } else if (a == "pending") {
+//         // b (== OR <) "latest", thus a > b
+//         return 1;
+//     } else if (b == "pending") {
+//         return -1;
+//     } else {
+//         let bnA = new BN(a);
+//         let bnB = new BN(b);
+//         if(bnA.lt(bnB)) {
+//             return -1;
+//         } else if(bnA.eq(bnB)) {
+//             return 0;
+//         } else {
+//             return 1;
+//         }
+//     }
+// };
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
@@ -119,7 +175,7 @@ export const checkAddressCheckSum = (data: string): boolean => {
 
 	const addressHash = Buffer.from(keccak256(updatedData) as Buffer)
 		.toString('hex')
-		.replace(/^0x/i, ''); // addresshash output is wrong
+		.replace(/^0x/i, '');
 
 	for (let i = 0; i < 40; i += 1) {
 		// the nth letter should be uppercase if the nth digit of casemap is 1
@@ -151,24 +207,43 @@ export const isAddress = (address: string): boolean => {
 /**
  * Returns true if the bloom is a valid bloom
  */
-// export const isBloom = (bloom: string): boolean => {
-// 	if (typeof bloom !== 'string') {
-// 		return false;
-// 	}
+export const isBloom = (bloom: string): boolean => {
+	if (typeof bloom !== 'string') {
+		return false;
+	}
 
-// 	if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
-// 		return false;
-// 	  }
+	if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
+		return false;
+	}
 
-// 	  if (
-// 		/^(0x)?[0-9a-f]{512}$/.test(bloom) ||
-// 		/^(0x)?[0-9A-F]{512}$/.test(bloom)
-// 	  ) {
-// 		return true;
-// 	  }
+	if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
+		return true;
+	}
 
-// 	  return false;
-// }
+	return false;
+};
+
+/**
+ * Code points to int
+ */
+const codePointToInt = (codePoint: number): number => {
+	if (codePoint >= 48 && codePoint <= 57) {
+		/* ['0'..'9'] -> [0..9] */
+		return codePoint - 48;
+	}
+
+	if (codePoint >= 65 && codePoint <= 70) {
+		/* ['A'..'F'] -> [10..15] */
+		return codePoint - 55;
+	}
+
+	if (codePoint >= 97 && codePoint <= 102) {
+		/* ['a'..'f'] -> [10..15] */
+		return codePoint - 87;
+	}
+
+	throw new Error('invalid bloom');
+};
 
 /**
  * Returns true if the value is part of the given bloom
@@ -176,30 +251,113 @@ export const isAddress = (address: string): boolean => {
  * @param bloom encoded bloom
  * @param value The value
  */
-//  export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
-// 	if (typeof value === 'object' && value.constructor === Uint8Array) {
-// 	  value = bytesToHex(value);
-// 	}
+export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
+	// const hex = (typeof value === 'object' && value.constructor === Uint8Array) {
+	//   value = bytesToHex(value);
+	// }
+	const buffer = typeof value === 'string' ? Buffer.from(value) : value;
 
-// 	const hash = keccak256(value).replace('0x', '');
+	const hash = (keccak256(buffer) as Buffer).toString('hex').replace(/^0x/i, '');
 
-// 	for (let i = 0; i < 12; i += 4) {
-// 	  // calculate bit position in bloom filter that must be active
-// 	  const bitpos =
-// 		((parseInt(hash.substr(i, 2), 16) << 8) +
-// 		  parseInt(hash.substr(i + 2, 2), 16)) &
-// 		2047;
+	for (let i = 0; i < 12; i += 4) {
+		// calculate bit position in bloom filter that must be active
 
-// 	  // test if bitpos in bloom is active
-// 	  const code = codePointToInt(
-// 		bloom.charCodeAt(bloom.length - 1 - Math.floor(bitpos / 4)),
-// 	  );
-// 	  const offset = 1 << bitpos % 4;
+		const bitpos =
+			((parseInt(hash.substr(i, 2), 16) << 8) + parseInt(hash.substr(i + 2, 2), 16)) & 2047;
 
-// 	  if ((code & offset) !== offset) {
-// 		return false;
-// 	  }
-// 	}
+		// test if bitpos in bloom is active
+		const code = codePointToInt(bloom.charCodeAt(bloom.length - 1 - Math.floor(bitpos / 4)));
 
-// 	return true;
-//   }
+		// @eslint/no-bitwise
+		const offset = 1 << bitpos % 4;
+
+		if ((code & offset) !== offset) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Adding padding to string on the left
+ */
+const padLeft = (value: string, chars: number) => {
+	const hasPrefix = /^0x/i.test(value) || typeof value === 'number';
+	const updatedValue = value.toString().replace(/^0x/i, '');
+
+	const padding = chars - updatedValue.length + 1 >= 0 ? chars - updatedValue.length + 1 : 0;
+
+	return (hasPrefix ? '0x' : '') + new Array(padding).join('0') + updatedValue;
+};
+
+export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean {
+	if (!isBloom(bloom)) {
+		throw new Error('Invalid bloom given');
+	}
+
+	if (!isAddress(ethereumAddress)) {
+		throw new Error(`Invalid ethereum address given: "${ethereumAddress}"`);
+	}
+
+	// you have to pad the ethereum address to 32 bytes
+	// else the bloom filter does not work
+	// this is only if your matching the USERS
+	// ethereum address. Contract address do not need this
+	// hence why we have 2 methods
+	// (0x is not in the 2nd parameter of padleft so 64 chars is fine)
+	const address = padLeft(ethereumAddress, 64);
+
+	return isInBloom(bloom, address);
+}
+
+/**
+ * Returns true if the contract address is part of the given bloom.
+ * note: false positives are possible.
+ */
+export function isContractAddressInBloom(bloom: string, contractAddress: string): boolean {
+	if (!isBloom(bloom)) {
+		throw new Error('Invalid bloom given');
+	}
+
+	if (!isAddress(contractAddress)) {
+		throw new Error(`Invalid contract address given: "${contractAddress}"`);
+	}
+
+	return isInBloom(bloom, contractAddress);
+}
+
+/**
+ * Checks if its a valid topic
+ */
+export function isTopic(topic: string): boolean {
+	if (typeof topic !== 'string') {
+		return false;
+	}
+
+	if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
+		return false;
+	}
+
+	if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Returns true if the topic is part of the given bloom.
+ * note: false positives are possible.
+ */
+export function isTopicInBloom(bloom: string, topic: string): boolean {
+	if (!isBloom(bloom)) {
+		throw new Error('Invalid bloom given');
+	}
+
+	if (!isTopic(topic)) {
+		throw new Error('Invalid topic');
+	}
+
+	return isInBloom(bloom, topic);
+}

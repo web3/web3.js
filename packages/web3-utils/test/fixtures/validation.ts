@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-
 // import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
 
 export const isHexData: [any, boolean][] = [
@@ -40,6 +38,8 @@ export const checkAddressCheckSumValidData: [any, boolean][] = [
 	['0xc1912fee45d61c87cc5ea59dae31190fffff232d', false],
 	['0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', false],
 	['0XD1220A0CF47C7B9BE7A2E6BA89F429762E7B9ADB', false],
+	['1234', false],
+	['0xa1b2', false],
 	['0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d', true],
 	['0x52908400098527886E0F7030069857D2E4169EE7', true],
 	['0x8617E340B3D01FA5F11F306F4090FD50E238070D', true],
@@ -62,3 +62,5 @@ export const isAddressValidData: [any, boolean][] = [
 	['0x12', false],
 	[123, false],
 ];
+
+export const isBloomValidData: [any, boolean][] = [];
