@@ -9,6 +9,7 @@ import {
 	InvalidNumberError,
 	NegativeIntegersInByteArrayError,
 	InvalidStringError,
+	BlockError,
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
@@ -105,7 +106,28 @@ export const validateStringInput = (data: string) => {
  * Compares between block A and block B
  * Returns -1 if a < b, returns 1 if a > b and returns 0 if a == b
  */
-export const compareBlockNumbers = (blockA: string | number, blockB: string | number) => {
+export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
+	// string validation
+	if (
+		typeof blockA === 'string' &&
+		!(
+			blockA === 'genesis' ||
+			blockA === 'earliest' ||
+			blockA === 'pending' ||
+			blockA === 'latest'
+		)
+	)
+		throw new BlockError(blockA);
+	if (
+		typeof blockB === 'string' &&
+		!(
+			blockB === 'genesis' ||
+			blockB === 'earliest' ||
+			blockB === 'pending' ||
+			blockB === 'latest'
+		)
+	)
+		throw new BlockError(blockB);
 	if (
 		blockA === blockB ||
 		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
@@ -113,57 +135,42 @@ export const compareBlockNumbers = (blockA: string | number, blockB: string | nu
 	)
 		return 0;
 
+	// b !== a, thus a < b
+	if (blockA === 'genesis' || blockA === 'earliest') return -1;
+
+	// b !== a, thus a > b
+	if (blockB === 'genesis' || blockB === 'earliest') return 1;
+
+	if (blockA === 'latest') {
+		if (blockB === 'pending') {
+			return -1;
+		} // b !== ("pending" OR "latest"), thus a > b
+		return 1;
+	}
+	if (blockB === 'latest') {
+		if (blockA === 'pending') {
+			return 1;
+		}
+		// b !== ("pending" OR "latest"), thus a > b
+		return -1;
+	}
+	if (blockA === 'pending') {
+		// b (== OR <) "latest", thus a > b
+		return 1;
+	}
+	if (blockB === 'pending') {
+		return -1;
+	}
+	const bigIntA = BigInt(blockA);
+	const bigIntB = BigInt(blockB);
+	if (bigIntA < bigIntB) {
+		return -1;
+	}
+	if (bigIntA === bigIntB) {
+		return 0;
+	}
 	return 1;
 };
-
-/**
- * Compares between block A and block B
- * Returns -1 if a < b, returns 1 if a > b and returns 0 if a == b
- */
-//  export const compareBlockNumbersV2 = (a: string, b: string) => {
-// 	if (a === b) {
-//         return 0;
-//     }
-// 	if (("genesis" === a || "earliest" === a || 0 === a) && ("genesis" === b || "earliest" ===  b || 0 === b)) {
-//         return 0;
-//     }
-// 	 if ("genesis" == a || "earliest" == a) {
-//         // b !== a, thus a < b
-//         return -1;
-//     } else if ("genesis" == b || "earliest" == b) {
-//         // b !== a, thus a > b
-//         return 1;
-//     } else if (a == "latest") {
-//         if (b == "pending") {
-//             return -1;
-//         } else {
-//             // b !== ("pending" OR "latest"), thus a > b
-//             return 1;
-//         }
-//     } else if (b === "latest") {
-//         if (a == "pending") {
-//             return 1;
-//         } else {
-//             // b !== ("pending" OR "latest"), thus a > b
-//             return -1
-//         }
-//     } else if (a == "pending") {
-//         // b (== OR <) "latest", thus a > b
-//         return 1;
-//     } else if (b == "pending") {
-//         return -1;
-//     } else {
-//         let bnA = new BN(a);
-//         let bnB = new BN(b);
-//         if(bnA.lt(bnB)) {
-//             return -1;
-//         } else if(bnA.eq(bnB)) {
-//             return 0;
-//         } else {
-//             return 1;
-//         }
-//     }
-// };
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.

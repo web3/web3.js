@@ -1,9 +1,17 @@
-import { isHex, isHexStrict, checkAddressCheckSum, isAddress } from '../../src/validation';
+import {
+	isHex,
+	isHexStrict,
+	checkAddressCheckSum,
+	isAddress,
+	compareBlockNumbers,
+} from '../../src/validation';
 import {
 	checkAddressCheckSumValidData,
 	isAddressValidData,
 	isHexData,
 	isHexStrictData,
+	compareBlockNumbersValidData,
+	compareBlockNumbersInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -14,7 +22,6 @@ describe('validation', () => {
 			});
 		});
 	});
-
 	describe('isHexStrict', () => {
 		describe('valid cases', () => {
 			it.each(isHexStrictData)('%s', (input, output) => {
@@ -33,6 +40,18 @@ describe('validation', () => {
 		describe('valid cases', () => {
 			it.each(isAddressValidData)('%s', (input, output) => {
 				expect(isAddress(input)).toEqual(output);
+			});
+		});
+	});
+	describe('compareBlockNumbers', () => {
+		describe('valid cases', () => {
+			it.each(compareBlockNumbersValidData)('%s', (input, output) => {
+				expect(compareBlockNumbers(input[0], input[1])).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(compareBlockNumbersInvalidData)('%s', (input, output) => {
+				expect(() => compareBlockNumbers(input[0], input[1])).toThrow(output);
 			});
 		});
 	});

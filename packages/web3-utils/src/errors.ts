@@ -125,3 +125,9 @@ export class InvalidLargeValueError extends Web3Error {
 		super(value, 'value is larger than size.');
 	}
 }
+
+export class BlockError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid string given');
+	}
+}

@@ -1,4 +1,4 @@
-// import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
+import { Numbers } from '../../src/types';
 
 export const isHexData: [any, boolean][] = [
 	['0x48', true],
@@ -64,3 +64,38 @@ export const isAddressValidData: [any, boolean][] = [
 ];
 
 export const isBloomValidData: [any, boolean][] = [];
+
+export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
+	[[1, 1], 0],
+	[[1, 2], -1],
+	[[2, 1], 1],
+	[[BigInt(1), BigInt(1)], 0],
+	[[BigInt(1), BigInt(2)], -1],
+	[[BigInt(2), 1n], 1],
+	[[1, BigInt(1)], 0],
+	[[1, BigInt(2)], -1],
+	[[2, BigInt(1)], 1],
+	[['genesis', 'earliest'], 0],
+	[['genesis', 0], 0],
+	[['earliest', 0], 0],
+	[['pending', 'pending'], 0],
+	[['latest', 'latest'], 0],
+	[['earliest', 2], -1],
+	[['earliest', 2n], -1],
+	[['earliest', 'pending'], -1],
+	[['genesis', 2], -1],
+	[['genesis', 'latest'], -1],
+	[['genesis', 'pending'], -1],
+	[[BigInt('9007199254740992'), BigInt('9007199254740991')], 1],
+	[[13532346, 13532300], 1],
+	[['pending', 'latest'], 1],
+	[['latest', 0], 1],
+	[['latest', 1n], 1],
+	[['pending', 0], 1],
+	[['pending', BigInt(1)], 1],
+];
+
+export const compareBlockNumbersInvalidData: [[Numbers, Numbers], string][] = [
+	[['pending', 'unknown'], 'Invalid value given "unknown". Error: invalid string given.'],
+	[['', 'pending'], 'Invalid value given "". Error: invalid string given'],
+];
