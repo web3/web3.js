@@ -22,7 +22,7 @@ import { WebSocketOptions, WSRequestItem } from './types';
 import { DeferredPromise } from './deferredPromise';
 
 export default class WebSocketProvider extends Web3BaseProvider {
-	public wsEventEmitter: EventEmitter = new EventEmitter();
+	private readonly wsEventEmitter: EventEmitter = new EventEmitter();
 
 	private readonly clientUrl: string;
 	private readonly wsProviderOptions: WebSocketOptions;
