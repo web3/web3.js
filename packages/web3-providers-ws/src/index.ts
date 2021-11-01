@@ -260,12 +260,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 					return;
 				}
 
-				let { id } = response;
-
-				if (Array.isArray(response)) {
-					// eslint-disable-next-line
-					id = response[0].id;
-				}
+				const { id } = response;
 
 				if (id && this.sentQueue.has(id)) {
 					const requestItem = this.sentQueue.get(id);
