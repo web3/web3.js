@@ -38,7 +38,7 @@ export const isResponseWithNotification = <Result>(
 	!Array.isArray(response) &&
 	!!response &&
 	response.jsonrpc === '2.0' &&
-	!response.params !== undefined;
+	response.params !== undefined;
 
 export const validateResponse = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,
