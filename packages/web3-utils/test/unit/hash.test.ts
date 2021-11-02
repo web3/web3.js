@@ -1,6 +1,7 @@
 import { keccak256 } from 'js-sha3';
 import { sha3, sha3Raw, soliditySha3, soliditySha3Raw, encodePacked } from '../../src/hash';
 import {
+	sha3Data,
 	sha3ValidData,
 	soliditySha3RawValidData,
 	sha3RawValidData,
@@ -19,6 +20,13 @@ describe('hash', () => {
 				expect(sha3(input)).toEqual(output);
 			});
 		});
+
+		describe('compare with js-sha3 normal cases', () => {
+			it.each(sha3Data)('%s', input => {
+				expect(sha3(input)).toEqual(`0x${keccak256(input)}`);
+			});
+		});
+
 		describe('compare with js-sha3 buffer cases', () => {
 			it.each(compareSha3JSValidData)('%s', (input, output) => {
 				expect(sha3(input)).toEqual(`0x${keccak256(output)}`);

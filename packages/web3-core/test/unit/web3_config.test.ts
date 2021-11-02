@@ -1,4 +1,4 @@
-import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
+import { Web3Config } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
 
@@ -38,6 +38,7 @@ describe('Web3Config', () => {
 		const setterSpy = jest.spyOn(obj, key as never, 'set');
 
 		obj[key as never] = null as never;
+
 		expect(setterSpy).toHaveBeenCalledTimes(1);
 	});
 
@@ -51,20 +52,19 @@ describe('Web3Config', () => {
 	});
 
 	it.each(Object.keys(defaultConfig))(
-		'should trigger "configChange" event if "%s" is changed',
+		'should trigger "onConfigChange" if "%s" is changed',
 		key => {
 			const obj = new MyConfigObject();
-			const configChange = jest.fn();
-			obj.on(Web3ConfigEvent.CONFIG_CHANGE, configChange);
+			obj.onConfigChange = jest.fn();
 
 			obj[key as never] = 'newValue' as never;
 
-			expect(configChange).toHaveBeenCalledTimes(1);
-			expect(configChange).toHaveBeenCalledWith({
-				name: key,
-				oldValue: defaultConfig[key as never],
-				newValue: 'newValue',
-			});
+			expect(obj.onConfigChange).toHaveBeenCalledTimes(1);
+			expect(obj.onConfigChange).toHaveBeenCalledWith(
+				key,
+				defaultConfig[key as never],
+				'newValue',
+			);
 		},
 	);
 });

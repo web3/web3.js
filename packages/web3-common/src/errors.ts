@@ -30,12 +30,10 @@ import {
 	ERR_CONTRACT_MISSING_FROM_ADDRESS,
 	ERR_FORMATTERS,
 	ERR_INVALID_CLIENT,
-	ERR_PROVIDER,
-	ERR_SUBSCRIPTION,
 } from './constants';
-import { JsonRpcResponse } from './types';
 
 type ConnectionEvent = { code: string; reason: string };
+type Response<T = unknown> = { error?: { message?: string; data?: T } };
 type Receipt = Record<string, unknown>;
 
 export abstract class Web3Error extends Error {
@@ -144,10 +142,6 @@ export class PendingRequestsOnReconnectingError extends ConnectionError {
 	}
 }
 
-export class ProviderError extends Web3Error {
-	public code = ERR_PROVIDER;
-}
-
 export class InvalidProviderError extends Web3Error {
 	public code = ERR_INVALID_PROVIDER;
 
@@ -156,15 +150,11 @@ export class InvalidProviderError extends Web3Error {
 	}
 }
 
-export class SubscriptionError extends Web3Error {
-	public code = ERR_SUBSCRIPTION;
-}
-
-export class ResponseError<ErrorType = unknown> extends Web3Error {
+export class ResponseError<T = unknown> extends Web3Error {
 	public code = ERR_RESPONSE;
-	public data?: ErrorType;
+	public data?: T;
 
-	public constructor(result: JsonRpcResponse<unknown, ErrorType>, message?: string) {
+	public constructor(result: Response<T>, message?: string) {
 		super(message ?? `Returned error: ${result?.error?.message ?? JSON.stringify(result)}`);
 		this.data = result.error?.data;
 	}
@@ -174,8 +164,8 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 	}
 }
 
-export class InvalidResponseError<ErrorType = unknown> extends ResponseError<ErrorType> {
-	public constructor(result: JsonRpcResponse<unknown, ErrorType>) {
+export class InvalidResponseError<T = unknown> extends ResponseError<T> {
+	public constructor(result: Response<T>) {
 		super(
 			result,
 			result?.error?.message ?? `Invalid JSON RPC response: ${JSON.stringify(result)}`,
