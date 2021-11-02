@@ -6,6 +6,7 @@ export const ERR_INVALID_RESPONSE = 101;
 export const ERR_PARAM = 200;
 export const ERR_FORMATTERS = 201;
 export const ERR_METHOD_NOT_IMPLEMENTED = 202;
+export const ERR_OPERATION_TIMEOUT = 203;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;
