@@ -126,8 +126,20 @@ export class InvalidLargeValueError extends Web3Error {
 	}
 }
 
-export class BlockError extends Web3Error {
+export class InvalidBlockError extends Web3Error {
 	public constructor(value: string) {
 		super(value, 'invalid string given');
+	}
+}
+
+export class InvalidBloomError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid bloom given');
+	}
+}
+
+export class InvalidTopicError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid topic given');
 	}
 }

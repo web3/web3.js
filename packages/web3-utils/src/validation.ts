@@ -9,7 +9,9 @@ import {
 	InvalidNumberError,
 	NegativeIntegersInByteArrayError,
 	InvalidStringError,
-	BlockError,
+	InvalidBloomError,
+	InvalidBlockError,
+	InvalidTopicError,
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
@@ -117,7 +119,7 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 			blockA === 'latest'
 		)
 	)
-		throw new BlockError(blockA);
+		throw new InvalidBlockError(blockA);
 	if (
 		typeof blockB === 'string' &&
 		!(
@@ -127,7 +129,7 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 			blockB === 'latest'
 		)
 	)
-		throw new BlockError(blockB);
+		throw new InvalidBlockError(blockB);
 	if (
 		blockA === blockB ||
 		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
@@ -249,7 +251,7 @@ const codePointToInt = (codePoint: number): number => {
 		return codePoint - 87;
 	}
 
-	throw new Error('invalid bloom');
+	throw new InvalidBloomError('invalid bloom');
 };
 
 /**
@@ -300,7 +302,7 @@ const padLeft = (value: string, chars: number) => {
 
 export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean {
 	if (!isBloom(bloom)) {
-		throw new Error('Invalid bloom given');
+		throw new InvalidBloomError(bloom);
 	}
 
 	if (!isAddress(ethereumAddress)) {
@@ -359,11 +361,11 @@ export function isTopic(topic: string): boolean {
  */
 export function isTopicInBloom(bloom: string, topic: string): boolean {
 	if (!isBloom(bloom)) {
-		throw new Error('Invalid bloom given');
+		throw new InvalidBlockError(bloom);
 	}
 
 	if (!isTopic(topic)) {
-		throw new Error('Invalid topic');
+		throw new InvalidTopicError(topic);
 	}
 
 	return isInBloom(bloom, topic);
