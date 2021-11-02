@@ -86,11 +86,11 @@ export type TransactionSigned =
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L269
 export type TransactionInfo = TransactionSigned & {
-	readonly blockHash: HexString32Bytes;
-	readonly blockNumber: Uint;
+	readonly blockHash: HexString32Bytes | null;
+	readonly blockNumber: Uint | null;
 	readonly from: Address;
 	readonly hash: HexString32Bytes;
-	readonly transactionIndex: Uint;
+	readonly transactionIndex: Uint | null;
 };
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L24
@@ -179,13 +179,13 @@ export type FilterResults = HexString32Bytes[] | Log[];
 export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.json
 	eth_getBlockByHash: (blockHash: HexString32Bytes, hydrated: boolean) => Block;
-	eth_getBlockByNumber: (blockNumber: Uint, hydrated: boolean) => Block;
-	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint;
-	eth_getBlockTransactionCountByNumber: (blockNumber: Uint) => Uint;
-	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint;
-	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint;
-    eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
-    eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
+	eth_getBlockByNumber: (blockNumber: BlockNumberOrTag, hydrated: boolean) => Block;
+	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint[];
+	eth_getBlockTransactionCountByNumber: (blockNumber: BlockNumberOrTag) => Uint[];
+	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint[];
+	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint[];
+	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
+	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
 	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo;
@@ -194,7 +194,7 @@ export type EthExecutionAPI = {
 		transactionIndex: Uint,
 	) => TransactionInfo;
 	eth_getTransactionByBlockNumberAndIndex: (
-		blockNumber: Uint,
+		blockNumber: BlockNumberOrTag,
 		transactionIndex: Uint,
 	) => TransactionInfo;
 	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo;
