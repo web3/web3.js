@@ -6,7 +6,7 @@ import {
 	isHexStrict,
 	Numbers,
 	numberToHex,
-	sha3,
+	sha3Raw,
 	toChecksumAddress,
 	toNumber,
 	toUtf8,
@@ -269,7 +269,7 @@ export const outputLogFormatter = (log: LogsInput): LogsOutput => {
 		typeof log.transactionHash === 'string' &&
 		typeof log.logIndex === 'string'
 	) {
-		const shaId = sha3(
+		const shaId = sha3Raw(
 			`${log.blockHash.replace('0x', '')}${log.transactionHash.replace(
 				'0x',
 				'',

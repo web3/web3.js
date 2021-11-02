@@ -17,3 +17,12 @@ export type Uint256 = HexString;
 // Hex encoded address
 export type Address = HexString;
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
+export type typedObject = {
+	type: string;
+	value: EncodingTypes;
+};
+export type typedObject2 = {
+	t: string;
+	v: EncodingTypes;
+};

@@ -89,3 +89,39 @@ export class NibbleWidthError extends Web3Error {
 		super(value, 'value greater than the nibble width');
 	}
 }
+
+export class InvalidType extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid type, type not supported');
+	}
+}
+
+export class InvalidArrayError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'array types is not supported.');
+	}
+}
+
+export class InvalidBooleanError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'not a valid boolean.');
+	}
+}
+
+export class InvalidUnsignedIntegerError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'not a valid unsigned integer.');
+	}
+}
+
+export class InvalidSizeError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid size given.');
+	}
+}
+
+export class InvalidLargeValueError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'value is larger than size.');
+	}
+}
