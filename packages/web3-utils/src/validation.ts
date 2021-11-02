@@ -232,6 +232,7 @@ export const isBloom = (bloom: string): boolean => {
 /**
  * Code points to int
  */
+
 const codePointToInt = (codePoint: number): number => {
 	if (codePoint >= 48 && codePoint <= 57) {
 		/* ['0'..'9'] -> [0..9] */

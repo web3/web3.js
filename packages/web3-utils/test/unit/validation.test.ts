@@ -4,6 +4,7 @@ import {
 	checkAddressCheckSum,
 	isAddress,
 	compareBlockNumbers,
+	validateHexStringInput,
 } from '../../src/validation';
 import {
 	checkAddressCheckSumValidData,
@@ -12,6 +13,7 @@ import {
 	isHexStrictData,
 	compareBlockNumbersValidData,
 	compareBlockNumbersInvalidData,
+	validateHexStringInputInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -26,6 +28,13 @@ describe('validation', () => {
 		describe('valid cases', () => {
 			it.each(isHexStrictData)('%s', (input, output) => {
 				expect(isHexStrict(input)).toEqual(output);
+			});
+		});
+	});
+	describe('validateHexString', () => {
+		describe('invalid cases', () => {
+			it.each(validateHexStringInputInvalidData)('%s', (input, output) => {
+				expect(() => validateHexStringInput(input)).toThrow(output);
 			});
 		});
 	});

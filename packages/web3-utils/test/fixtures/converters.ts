@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-
 import { EtherUnits } from '../../src/converters';
 import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
 

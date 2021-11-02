@@ -1,8 +1,16 @@
 import { Numbers } from '../../src/types';
 
-export const isHexData: [any, boolean][] = [
+export const hexStrict: [string, boolean][] = [
 	['0x48', true],
 	['0x123c', true],
+	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
+	['0xd115bffabbdd893a6f7cea402e7338643ced44a6', true],
+	['0x1', true],
+	['0xcd', true],
+];
+
+export const isHexData: [any, boolean][] = [
+	...hexStrict,
 	['45', true],
 	['', true],
 	['0', true],
@@ -18,8 +26,7 @@ export const isHexData: [any, boolean][] = [
 ];
 
 export const isHexStrictData: [any, boolean][] = [
-	['0x48', true],
-	['0x123c', true],
+	...hexStrict,
 	['45', false],
 	['', false],
 	['0', false],
@@ -32,6 +39,11 @@ export const isHexStrictData: [any, boolean][] = [
 	['\u0000', false],
 	[true, false],
 	[false, false],
+];
+
+export const validateHexStringInputInvalidData: [any, string][] = [
+	['0xT1', 'Invalid value given "0xT1". Error: not a valid hex string.'],
+	['1234', 'Invalid value given "1234". Error: not a valid hex string.'],
 ];
 
 export const checkAddressCheckSumValidData: [any, boolean][] = [
