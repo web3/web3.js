@@ -184,6 +184,8 @@ export type EthExecutionAPI = {
 	eth_getBlockTransactionCountByNumber: (blockNumber: BlockNumberOrTag) => Uint[];
 	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint[];
 	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint[];
+
+	// TODO Not included in execution API spec
 	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
 	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
