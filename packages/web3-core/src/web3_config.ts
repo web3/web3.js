@@ -1,4 +1,5 @@
 import { HexString } from 'web3-utils';
+import { Web3EventEmitter } from 'web3-common';
 
 interface ConfigOptions {
 	handleRevert: boolean;
@@ -14,13 +15,18 @@ interface ConfigOptions {
 	defaultCommon: Record<string, unknown> | null;
 }
 
-export abstract class Web3Config implements ConfigOptions {
-	public onConfigChange?: <T extends keyof ConfigOptions, T2 extends ConfigOptions[T]>(
-		data: T,
-		oldValue: T2,
-		newValue: T2,
-	) => void;
+type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
+	? { name: P; oldValue: T[P]; newValue: T[P] }
+	: never;
 
+export enum Web3ConfigEvent {
+	CONFIG_CHANGE = 'CONFIG_CHANGE',
+}
+
+export abstract class Web3Config
+	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<ConfigOptions> }>
+	implements ConfigOptions
+{
 	private _config: ConfigOptions = {
 		handleRevert: false,
 		defaultAccount: null,
@@ -44,7 +50,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set handleRevert(val) {
-		this.onConfigChange?.('handleRevert', this._config.handleRevert, val);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'handleRevert',
+			oldValue: this._config.handleRevert,
+			newValue: val,
+		});
 		this._config.handleRevert = val;
 	}
 
@@ -53,8 +63,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set defaultAccount(val) {
-		this.onConfigChange?.('defaultAccount', this._config.defaultAccount, val);
-
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultAccount',
+			oldValue: this._config.defaultAccount,
+			newValue: val,
+		});
 		this._config.defaultAccount = val;
 	}
 
@@ -63,8 +76,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set defaultBlock(val) {
-		this.onConfigChange?.('defaultBlock', this._config.defaultBlock, val);
-
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultBlock',
+			oldValue: this._config.defaultBlock,
+			newValue: val,
+		});
 		this._config.defaultBlock = val;
 	}
 
@@ -73,8 +89,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set transactionBlockTimeout(val) {
-		this.onConfigChange?.('transactionBlockTimeout', this._config.transactionBlockTimeout, val);
-
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionBlockTimeout',
+			oldValue: this._config.transactionBlockTimeout,
+			newValue: val,
+		});
 		this._config.transactionBlockTimeout = val;
 	}
 
@@ -83,11 +102,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set transactionConfirmationBlocks(val) {
-		this.onConfigChange?.(
-			'transactionConfirmationBlocks',
-			this._config.transactionConfirmationBlocks,
-			val,
-		);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionConfirmationBlocks',
+			oldValue: this._config.transactionConfirmationBlocks,
+			newValue: val,
+		});
 
 		this._config.transactionConfirmationBlocks = val;
 	}
@@ -97,11 +116,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set transactionPollingTimeout(val) {
-		this.onConfigChange?.(
-			'transactionPollingTimeout',
-			this._config.transactionPollingTimeout,
-			val,
-		);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionPollingTimeout',
+			oldValue: this._config.transactionPollingTimeout,
+			newValue: val,
+		});
 
 		this._config.transactionPollingTimeout = val;
 	}
@@ -111,7 +130,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set blockHeaderTimeout(val) {
-		this.onConfigChange?.('blockHeaderTimeout', this._config.blockHeaderTimeout, val);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'blockHeaderTimeout',
+			oldValue: this._config.blockHeaderTimeout,
+			newValue: val,
+		});
 
 		this._config.blockHeaderTimeout = val;
 	}
@@ -121,12 +144,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set maxListenersWarningThreshold(val) {
-		this.onConfigChange?.(
-			'maxListenersWarningThreshold',
-			this._config.maxListenersWarningThreshold,
-			val,
-		);
-
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'maxListenersWarningThreshold',
+			oldValue: this._config.maxListenersWarningThreshold,
+			newValue: val,
+		});
 		this._config.maxListenersWarningThreshold = val;
 	}
 
@@ -135,7 +157,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set defaultChain(val) {
-		this.onConfigChange?.('defaultChain', this._config.defaultChain, val);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultChain',
+			oldValue: this._config.defaultChain,
+			newValue: val,
+		});
 
 		this._config.defaultChain = val;
 	}
@@ -145,7 +171,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set defaultHardfork(val) {
-		this.onConfigChange?.('defaultHardfork', this._config.defaultHardfork, val);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultHardfork',
+			oldValue: this._config.defaultHardfork,
+			newValue: val,
+		});
 
 		this._config.defaultHardfork = val;
 	}
@@ -155,7 +185,11 @@ export abstract class Web3Config implements ConfigOptions {
 	}
 
 	public set defaultCommon(val) {
-		this.onConfigChange?.('defaultCommon', this._config.defaultCommon, val);
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultCommon',
+			oldValue: this._config.defaultCommon,
+			newValue: val,
+		});
 
 		this._config.defaultCommon = val;
 	}

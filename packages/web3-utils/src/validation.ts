@@ -15,9 +15,6 @@ import {
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
-/**
- * returns true if input is a hexstring
- */
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
 

@@ -29,9 +29,9 @@ export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
 	readonly result: T;
 }
 
-export type JsonRpcResponse<T = JsonRpcResult> =
-	| JsonRpcResponseWithError
-	| JsonRpcResponseWithResult<T>;
+export type JsonRpcResponse<R = JsonRpcResult, E = JsonRpcResult> =
+	| JsonRpcResponseWithError<E>
+	| JsonRpcResponseWithResult<R>;
 
 export interface JsonRpcRequest<T = unknown[]> {
 	readonly method: string;
