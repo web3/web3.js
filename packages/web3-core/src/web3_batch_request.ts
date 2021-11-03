@@ -4,12 +4,14 @@ import {
 	DeferredPromise,
 	jsonRpc,
 	JsonRpcRequest,
+	ResponseError,
+	OperationAbortError,
 } from 'web3-common';
 import { Web3RequestManager } from './web3_request_manager';
 
 export const DEFAULT_BATCH_REQUEST_TIMEOUT = 1000;
 
-export class BatchRequest {
+export class Web3BatchRequest {
 	private readonly _requestManager: Web3RequestManager;
 	private readonly _requests: Map<
 		number,
@@ -19,6 +21,10 @@ export class BatchRequest {
 	public constructor(requestManager: Web3RequestManager) {
 		this._requestManager = requestManager;
 		this._requests = new Map();
+	}
+
+	public get requests() {
+		return [...this._requests.values()].map(r => r.payload);
 	}
 
 	public add<ResponseType = unknown>(request: JsonRpcOptionalRequest<unknown>) {
@@ -36,8 +42,30 @@ export class BatchRequest {
 		);
 
 		if (response.length !== this._requests.size) {
-			throw new Error(
-				`Batch request mismatch the results. Requests: ${this._requests.size}, Responses: ${response.length}`,
+			this._abortAllRequests('Invalid batch response');
+
+			throw new ResponseError(
+				response,
+				`Batch request size mismatch the results size. Requests: ${this._requests.size}, Responses: ${response.length}`,
+			);
+		}
+
+		const requestIds = this.requests
+			.map(r => r.id)
+			.map(Number)
+			.sort((a, b) => a - b);
+
+		const responseIds = response
+			.map(r => r.id)
+			.map(Number)
+			.sort((a, b) => a - b);
+
+		if (JSON.stringify(requestIds) !== JSON.stringify(responseIds)) {
+			this._abortAllRequests('Invalid batch response');
+
+			throw new ResponseError(
+				response,
+				`Batch request mismatch the results. Requests: [${requestIds.join()}], Responses: [${responseIds.join()}]`,
 			);
 		}
 
@@ -50,5 +78,11 @@ export class BatchRequest {
 		}
 
 		return response;
+	}
+
+	private _abortAllRequests(msg: string) {
+		for (const { promise } of this._requests.values()) {
+			promise.reject(new OperationAbortError(msg));
+		}
 	}
 }
