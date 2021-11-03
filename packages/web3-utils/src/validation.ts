@@ -26,12 +26,18 @@ export const isHex = (hex: Numbers): boolean =>
 	typeof hex === 'bigint' ||
 	(typeof hex === 'string' && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 
+/**
+ * throws InvalidHexStringError if input is not a hexstring
+ */
 export const validateHexStringInput = (data: HexString) => {
 	if (!isHexStrict(data)) {
 		throw new InvalidHexStringError(data);
 	}
 };
 
+/**
+ * checks for valid byte array or hexstring otherwise throws error
+ */
 export const validateBytesInput = (data: Bytes) => {
 	if (Array.isArray(data)) {
 		if (data.some(d => d < 0)) {
@@ -58,6 +64,9 @@ export const validateBytesInput = (data: Bytes) => {
 	}
 };
 
+/**
+ * checks input for valid number otherwise throws error
+ */
 export const validateNumbersInput = (
 	data: Numbers,
 	{ onlyIntegers }: { onlyIntegers: boolean },

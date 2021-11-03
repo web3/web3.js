@@ -1,12 +1,19 @@
 import { Numbers } from '../../src/types';
 
-export const hexStrict: [string, boolean][] = [
+export const hexStrict: [any, boolean][] = [
 	['0x48', true],
 	['0x123c', true],
 	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
 	['0xd115bffabbdd893a6f7cea402e7338643ced44a6', true],
 	['0x1', true],
 	['0xcd', true],
+	['Heeäööä👅D34ɝɣ24Єͽ', false],
+	['-1000', false],
+	['0xH', false],
+	['I have 100£', false],
+	['\u0000', false],
+	[true, false],
+	[false, false],
 ];
 
 export const isHexData: [any, boolean][] = [
@@ -14,15 +21,11 @@ export const isHexData: [any, boolean][] = [
 	['45', true],
 	['', true],
 	['0', true],
+	[-255n, true],
+	[4n, true],
 	[1, true],
 	[BigInt(12), true],
 	[12n, true],
-	['-1000', false],
-	[-255n, true],
-	['I have 100£', false],
-	['\u0000', false],
-	[true, false],
-	[false, false],
 ];
 
 export const isHexStrictData: [any, boolean][] = [
@@ -44,6 +47,41 @@ export const isHexStrictData: [any, boolean][] = [
 export const validateHexStringInputInvalidData: [any, string][] = [
 	['0xT1', 'Invalid value given "0xT1". Error: not a valid hex string.'],
 	['1234', 'Invalid value given "1234". Error: not a valid hex string.'],
+	['hello', 'Invalid value given "hello". Error: not a valid hex string.'],
+];
+
+export const validateBytesInputInvalidData: [any, string][] = [
+	['0xT1', 'Invalid value given "0xT1". Error: not a valid hex string.'],
+	['1234', 'Invalid value given "1234". Error: not a valid hex string.'],
+	['hello', 'Invalid value given "hello". Error: not a valid hex string.'],
+	[[1, 2, -3, 4, 5], 'Invalid value given "1,2,-3,4,5". Error: contains negative values'],
+	[[2, 3, 266], 'Invalid value given "2,3,266". Error: contains numbers greater than 255'],
+	[['world'], 'Invalid value given "world". Error: contains invalid integer values'],
+	['-0x12', 'Invalid value given "-0x12". Error: can not parse as byte data'],
+];
+
+export const validateNumbersInputInvalidData: [any, string][] = [
+	[
+		[['hello'], { onlyIntegers: true }],
+		'Invalid value given "hello". Error: not a valid integer.',
+	],
+	[
+		[['world'], { onlyIntegers: false }],
+		'Invalid value given "world". Error: not a valid number.',
+	],
+	[
+		[4 / 0, { onlyIntegers: true }],
+		'Invalid value given "Infinity". Error: not a valid integer.',
+	],
+	[[4.4, { onlyIntegers: true }], 'Invalid value given "4.4". Error: not a valid integer.'],
+	[['word', { onlyIntegers: true }], 'Invalid value given "word". Error: not a valid integer.'],
+];
+
+export const validateStringInputInvalidData: [any, string][] = [
+	[123, 'Invalid value given "123". Error: not a valid string.'],
+	[{}, 'Invalid value given "[object Object]". Error: not a valid string.'],
+	[null, 'Invalid value given "null". Error: not a valid string.'],
+	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
 ];
 
 export const checkAddressCheckSumValidData: [any, boolean][] = [
@@ -74,8 +112,6 @@ export const isAddressValidData: [any, boolean][] = [
 	['0x12', false],
 	[123, false],
 ];
-
-export const isBloomValidData: [any, boolean][] = [];
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[1, 1], 0],
@@ -111,3 +147,5 @@ export const compareBlockNumbersInvalidData: [[Numbers, Numbers], string][] = [
 	[['pending', 'unknown'], 'Invalid value given "unknown". Error: invalid string given.'],
 	[['', 'pending'], 'Invalid value given "". Error: invalid string given'],
 ];
+
+export const isBloomValidData: [any, boolean][] = [];

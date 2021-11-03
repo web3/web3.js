@@ -5,6 +5,9 @@ import {
 	isAddress,
 	compareBlockNumbers,
 	validateHexStringInput,
+	validateBytesInput,
+	validateNumbersInput,
+	validateStringInput,
 } from '../../src/validation';
 import {
 	checkAddressCheckSumValidData,
@@ -14,6 +17,9 @@ import {
 	compareBlockNumbersValidData,
 	compareBlockNumbersInvalidData,
 	validateHexStringInputInvalidData,
+	validateBytesInputInvalidData,
+	validateNumbersInputInvalidData,
+	validateStringInputInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -35,6 +41,27 @@ describe('validation', () => {
 		describe('invalid cases', () => {
 			it.each(validateHexStringInputInvalidData)('%s', (input, output) => {
 				expect(() => validateHexStringInput(input)).toThrow(output);
+			});
+		});
+	});
+	describe('validateBytesInput', () => {
+		describe('invalid cases', () => {
+			it.each(validateBytesInputInvalidData)('%s', (input, output) => {
+				expect(() => validateBytesInput(input)).toThrow(output);
+			});
+		});
+	});
+	describe('validateNumbersInput', () => {
+		describe('invalid cases', () => {
+			it.each(validateNumbersInputInvalidData)('%s', (input, output) => {
+				expect(() => validateNumbersInput(input[0], input[1])).toThrow(output);
+			});
+		});
+	});
+	describe('validateStringInput', () => {
+		describe('invalid cases', () => {
+			it.each(validateStringInputInvalidData)('%s', (input, output) => {
+				expect(() => validateStringInput(input)).toThrow(output);
 			});
 		});
 	});
