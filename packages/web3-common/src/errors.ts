@@ -33,6 +33,7 @@ import {
 	ERR_PROVIDER,
 	ERR_SUBSCRIPTION,
 	ERR_OPERATION_TIMEOUT,
+	ERR_OPERATION_ABORT,
 } from './constants';
 import { JsonRpcResponse } from './types';
 import { isResponseWithError } from './json_rpc';
@@ -179,9 +180,11 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 				}`,
 		);
 
-		this.data = Array.isArray(response)
-			? response.map(r => r.error?.data as ErrorType)
-			: response?.error?.data;
+		if (!message) {
+			this.data = Array.isArray(response)
+				? response.map(r => r.error?.data as ErrorType)
+				: response?.error?.data;
+		}
 	}
 
 	public toJSON() {
@@ -382,4 +385,8 @@ export class InvalidClientError extends Web3Error {
 
 export class OperationTimeoutError extends Web3Error {
 	public code = ERR_OPERATION_TIMEOUT;
+}
+
+export class OperationAbortError extends Web3Error {
+	public code = ERR_OPERATION_ABORT;
 }
