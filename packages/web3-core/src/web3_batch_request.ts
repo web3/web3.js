@@ -6,6 +6,7 @@ import {
 	JsonRpcRequest,
 	ResponseError,
 	OperationAbortError,
+	OperationTimeoutError,
 } from 'web3-common';
 import { Web3RequestManager } from './web3_request_manager';
 
@@ -29,14 +30,41 @@ export class Web3BatchRequest {
 
 	public add<ResponseType = unknown>(request: JsonRpcOptionalRequest<unknown>) {
 		const payload = jsonRpc.toPayload(request) as JsonRpcRequest;
-		const promise = new DeferredPromise<ResponseType>(DEFAULT_BATCH_REQUEST_TIMEOUT);
+		const promise = new DeferredPromise<ResponseType>();
 
 		this._requests.set(payload.id as number, { payload, promise });
 
 		return promise;
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	public async execute(): Promise<JsonRpcBatchResponse<unknown, unknown>> {
+		if (this.requests.length === 0) {
+			return Promise.resolve([]);
+		}
+
+		const request = new DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>({
+			timeout: DEFAULT_BATCH_REQUEST_TIMEOUT,
+			eagerStart: true,
+			timeoutMessage: 'Batch request timeout',
+		});
+
+		this._processBatchRequest(request).catch(err => request.reject(err));
+
+		request.catch((err: Error) => {
+			if (err instanceof OperationTimeoutError) {
+				this._abortAllRequests('Batch request timeout');
+			}
+
+			request.reject(err);
+		});
+
+		return request;
+	}
+
+	private async _processBatchRequest(
+		promise: DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>,
+	) {
 		const response = await this._requestManager.sendBatch(
 			[...this._requests.values()].map(r => r.payload),
 		);
@@ -77,7 +105,7 @@ export class Web3BatchRequest {
 			}
 		}
 
-		return response;
+		promise.resolve(response);
 	}
 
 	private _abortAllRequests(msg: string) {

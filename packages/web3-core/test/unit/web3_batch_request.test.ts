@@ -5,6 +5,7 @@ import {
 	JsonRpcOptionalRequest,
 	OperationAbortError,
 	DeferredPromise,
+	OperationTimeoutError,
 } from 'web3-common';
 import { Web3BatchRequest } from '../../src/web3_batch_request';
 
@@ -159,6 +160,29 @@ describe('Web3BatchRequest', () => {
 			await expect(batchRequest.execute()).resolves.toEqual([response1, responseWithError]);
 			await expect(res1).resolves.toEqual(response1.result);
 			await expect(res2).rejects.toEqual(responseWithError.error);
+		});
+
+		it('should timeout if request not executed in a particular time', async () => {
+			let timerId!: NodeJS.Timeout;
+
+			jest.spyOn(requestManager, 'sendBatch').mockImplementation(async () => {
+				return new Promise(resolve => {
+					timerId = setTimeout(() => {
+						resolve(batchResponse);
+					}, 2000);
+				});
+			});
+
+			const res1 = batchRequest.add(request1);
+			const res2 = batchRequest.add(request2);
+
+			await expect(batchRequest.execute()).rejects.toThrow(
+				new OperationTimeoutError('Batch request timeout'),
+			);
+			await expect(res1).rejects.toThrow(new OperationAbortError('Batch request timeout'));
+			await expect(res2).rejects.toThrow(new OperationAbortError('Batch request timeout'));
+
+			clearTimeout(timerId);
 		});
 	});
 });

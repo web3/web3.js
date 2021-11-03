@@ -7,15 +7,32 @@ export class DeferredPromise<T> implements Promise<T> {
 	private _resolve!: (value: T | PromiseLike<T>) => void;
 	private _reject!: (reason?: unknown) => void;
 	private _state: 'pending' | 'fulfilled' | 'rejected' = 'pending';
-	private readonly _timeoutId: NodeJS.Timeout;
+	private _timeoutId?: NodeJS.Timeout;
+	private readonly _timeoutInterval?: number;
+	private readonly _timeoutMessage: string;
 
-	public constructor(timeout: number) {
+	public constructor(
+		{
+			timeout,
+			eagerStart,
+			timeoutMessage,
+		}: { timeout: number; eagerStart: boolean; timeoutMessage: string } = {
+			timeout: 0,
+			eagerStart: false,
+			timeoutMessage: 'DeferredPromise timed out',
+		},
+	) {
 		this._promise = new Promise<T>((resolve, reject) => {
 			this._resolve = resolve;
 			this._reject = reject;
 		});
 
-		this._timeoutId = setTimeout(this._checkTimeout.bind(this), timeout);
+		this._timeoutMessage = timeoutMessage;
+		this._timeoutInterval = timeout;
+
+		if (eagerStart) {
+			this.startTimer();
+		}
 	}
 
 	public get state(): 'pending' | 'fulfilled' | 'rejected' {
@@ -30,7 +47,7 @@ export class DeferredPromise<T> implements Promise<T> {
 	}
 
 	public async catch<TResult>(
-		onrejected?: (reason: unknown) => TResult | PromiseLike<TResult>,
+		onrejected?: (reason: any) => TResult | PromiseLike<TResult>,
 	): Promise<T | TResult> {
 		return this._promise.catch(onrejected);
 	}
@@ -42,18 +59,30 @@ export class DeferredPromise<T> implements Promise<T> {
 	public resolve(value: T | PromiseLike<T>): void {
 		this._resolve(value);
 		this._state = 'fulfilled';
-		clearTimeout(this._timeoutId);
+		this._clearTimeout();
 	}
 
 	public reject(reason?: unknown): void {
 		this._reject(reason);
 		this._state = 'rejected';
-		clearTimeout(this._timeoutId);
+		this._clearTimeout();
+	}
+
+	public startTimer() {
+		if (this._timeoutInterval && this._timeoutInterval > 0) {
+			this._timeoutId = setTimeout(this._checkTimeout.bind(this), this._timeoutInterval);
+		}
 	}
 
 	private _checkTimeout() {
-		if (this._state === 'pending') {
-			this.reject(new OperationTimeoutError('DeferredPromise timed out'));
+		if (this._state === 'pending' && this._timeoutId) {
+			this.reject(new OperationTimeoutError(this._timeoutMessage));
+		}
+	}
+
+	private _clearTimeout() {
+		if (this._timeoutId) {
+			clearTimeout(this._timeoutId);
 		}
 	}
 }
