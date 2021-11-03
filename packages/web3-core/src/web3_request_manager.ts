@@ -84,9 +84,9 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			}
 		}
 
-		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this.provider);
+		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this._provider);
 		this._provider = newProvider ?? provider ?? null;
-		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this.provider);
+		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 	}
 
 	public async send<ResultType>(request: JsonRpcOptionalRequest<unknown>): Promise<ResultType> {

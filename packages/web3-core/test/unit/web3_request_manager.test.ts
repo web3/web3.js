@@ -1,4 +1,4 @@
-import { InvalidResponseError, Web3BaseProvider } from 'web3-common';
+import { InvalidResponseError, Web3BaseProvider, jsonRpc } from 'web3-common';
 import {
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
@@ -230,11 +230,13 @@ describe('Web3RequestManager', () => {
 
 	describe('send()', () => {
 		let request: any;
+		let payload: any;
 		let errorResponse: JsonRpcResponseWithError;
 		let successResponse: JsonRpcResponseWithResult;
 
 		beforeEach(() => {
 			request = { method: 'my_method', params: {} };
+			payload = { method: 'my_method', params: {}, id: 1, jsonrpc: '2.0' };
 			errorResponse = {
 				id: 1,
 				jsonrpc: '2.0',
@@ -245,6 +247,8 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0',
 				result: 'my-resolved-value',
 			};
+
+			jest.spyOn(jsonRpc, 'toPayload').mockReturnValue(payload);
 		});
 
 		it('should throw error if no provider is set', async () => {
@@ -268,14 +272,14 @@ describe('Web3RequestManager', () => {
 				const myProvider = {
 					request: jest
 						.fn()
-						.mockImplementation(async () => Promise.resolve(successResponse.result)),
+						.mockImplementation(async () => Promise.resolve(successResponse)),
 				} as any;
 
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
 				await expect(manager.send(request)).resolves.toEqual(successResponse.result);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
-				expect(myProvider.request).toHaveBeenCalledWith(request);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
 
 			it('should pass request to provider and reject if provider rejects it', async () => {
@@ -290,7 +294,7 @@ describe('Web3RequestManager', () => {
 
 				await expect(manager.send(request)).rejects.toThrow('my-error');
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
-				expect(myProvider.request).toHaveBeenCalledWith(request);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
 		});
 
