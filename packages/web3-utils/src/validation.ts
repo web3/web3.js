@@ -12,6 +12,8 @@ import {
 	InvalidBloomError,
 	InvalidBlockError,
 	InvalidTopicError,
+	InvalidCharCodeError,
+	InvalidAddressError,
 } from './errors';
 import { Bytes, HexString, Numbers } from './types';
 
@@ -104,6 +106,9 @@ export const validateNumbersInput = (
 	}
 };
 
+/**
+ * checks input for valid string, otherwise throws error
+ */
 export const validateStringInput = (data: string) => {
 	if (typeof data !== 'string') {
 		throw new InvalidStringError(data);
@@ -204,8 +209,9 @@ export const checkAddressCheckSum = (data: string): boolean => {
 	return true;
 };
 
-// TODO: Implement later
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * Checks if a given string is a valid Ethereum address. It will also check the checksum, if the address has upper and lowercase letters.
+ */
 export const isAddress = (address: string): boolean => {
 	// check if it has the basic requirements of an address
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
@@ -220,7 +226,13 @@ export const isAddress = (address: string): boolean => {
 };
 
 /**
+ * Checks if a given value is a valid big int
+ */
+export const isBigInt = (value: Numbers): boolean => typeof value === 'bigint';
+
+/**
  * Returns true if the bloom is a valid bloom
+ * https://github.com/joshstevens19/ethereum-bloom-filters/blob/fbeb47b70b46243c3963fe1c2988d7461ef17236/src/index.ts#L7
  */
 export const isBloom = (bloom: string): boolean => {
 	if (typeof bloom !== 'string') {
@@ -257,34 +269,31 @@ const codePointToInt = (codePoint: number): number => {
 		/* ['a'..'f'] -> [10..15] */
 		return codePoint - 87;
 	}
-
-	throw new InvalidBloomError('invalid bloom');
+	throw new InvalidCharCodeError(codePoint);
 };
 
 /**
  * Returns true if the value is part of the given bloom
  * note: false positives are possible.
- * @param bloom encoded bloom
- * @param value The value
  */
 export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
-	// const hex = (typeof value === 'object' && value.constructor === Uint8Array) {
-	//   value = bytesToHex(value);
-	// }
-	const buffer = typeof value === 'string' ? Buffer.from(value) : value;
+	if (typeof value === 'string' && !isHexStrict(value)) throw new InvalidHexStringError(value);
+	if (!isBloom(bloom)) throw new InvalidBloomError(bloom);
 
-	const hash = (keccak256(buffer) as Buffer).toString('hex').replace(/^0x/i, '');
+	const buffer = typeof value === 'string' ? Buffer.from(value.substr(2), 'hex') : value;
+
+	const hash = Buffer.from(keccak256(buffer) as Buffer)
+		.toString('hex')
+		.replace(/^0x/i, '');
 
 	for (let i = 0; i < 12; i += 4) {
 		// calculate bit position in bloom filter that must be active
-
 		const bitpos =
 			((parseInt(hash.substr(i, 2), 16) << 8) + parseInt(hash.substr(i + 2, 2), 16)) & 2047;
 
 		// test if bitpos in bloom is active
 		const code = codePointToInt(bloom.charCodeAt(bloom.length - 1 - Math.floor(bitpos / 4)));
 
-		// @eslint/no-bitwise
 		const offset = 1 << bitpos % 4;
 
 		if ((code & offset) !== offset) {
@@ -307,13 +316,16 @@ const padLeft = (value: string, chars: number) => {
 	return (hasPrefix ? '0x' : '') + new Array(padding).join('0') + updatedValue;
 };
 
+/**
+ * Returns true if the ethereum users address is part of the given bloom note: false positives are possible.
+ */
 export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean {
 	if (!isBloom(bloom)) {
 		throw new InvalidBloomError(bloom);
 	}
 
 	if (!isAddress(ethereumAddress)) {
-		throw new Error(`Invalid ethereum address given: "${ethereumAddress}"`);
+		throw new InvalidAddressError(ethereumAddress);
 	}
 
 	// you have to pad the ethereum address to 32 bytes
@@ -322,6 +334,7 @@ export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: str
 	// ethereum address. Contract address do not need this
 	// hence why we have 2 methods
 	// (0x is not in the 2nd parameter of padleft so 64 chars is fine)
+
 	const address = padLeft(ethereumAddress, 64);
 
 	return isInBloom(bloom, address);

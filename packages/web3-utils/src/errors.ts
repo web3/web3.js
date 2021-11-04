@@ -143,3 +143,9 @@ export class InvalidTopicError extends Web3Error {
 		super(value, 'invalid topic given');
 	}
 }
+
+export class InvalidCharCodeError extends Web3Error {
+	public constructor(value: number) {
+		super(value, 'invalid char code given');
+	}
+}

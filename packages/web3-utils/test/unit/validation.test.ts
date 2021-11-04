@@ -8,6 +8,13 @@ import {
 	validateBytesInput,
 	validateNumbersInput,
 	validateStringInput,
+	isBloom,
+	isInBloom,
+	isUserEthereumAddressInBloom,
+	isTopic,
+	isTopicInBloom,
+	isContractAddressInBloom,
+	isBigInt,
 } from '../../src/validation';
 import {
 	checkAddressCheckSumValidData,
@@ -20,6 +27,14 @@ import {
 	validateBytesInputInvalidData,
 	validateNumbersInputInvalidData,
 	validateStringInputInvalidData,
+	isBloomValidData,
+	isInBloomValidData,
+	isInBloomInvalidData,
+	isUserEthereumAddressInBloomValidData,
+	isTopicValidData,
+	isTopicInBloomValidData,
+	isUserEthereumAddressInBloomInvalidData,
+	isBigIntValidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -88,6 +103,70 @@ describe('validation', () => {
 		describe('invalid cases', () => {
 			it.each(compareBlockNumbersInvalidData)('%s', (input, output) => {
 				expect(() => compareBlockNumbers(input[0], input[1])).toThrow(output);
+			});
+		});
+	});
+	describe('isUserEthereumAddressInBloomValidData', () => {
+		describe('valid cases', () => {
+			it.each(isUserEthereumAddressInBloomValidData)('%s', (input, output) => {
+				expect(isUserEthereumAddressInBloom(input[0], input[1])).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(isUserEthereumAddressInBloomInvalidData)('%s', (input, output) => {
+				expect(() => isUserEthereumAddressInBloom(input[0], input[1])).toThrow(output);
+			});
+		});
+	});
+	describe('isBloom', () => {
+		describe('valid cases', () => {
+			it.each(isBloomValidData)('%s', (input, output) => {
+				expect(isBloom(input)).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(isInBloomInvalidData)('%s', (input, output) => {
+				expect(() => isInBloom(input[0], input[1])).toThrow(output);
+			});
+		});
+	});
+	describe('isInBloom', () => {
+		describe('valid cases', () => {
+			it.each(isInBloomValidData)('%s', (input, output) => {
+				expect(isInBloom(input[0], input[1])).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(isInBloomInvalidData)('%s', (input, output) => {
+				expect(() => isInBloom(input[0], input[1])).toThrow(output);
+			});
+		});
+	});
+	describe('isTopic', () => {
+		describe('valid cases', () => {
+			it.each(isTopicValidData)('%s', (input, output) => {
+				expect(isTopic(input)).toEqual(output);
+			});
+		});
+	});
+	describe('isTopicInBloom', () => {
+		describe('valid cases', () => {
+			it.each(isTopicInBloomValidData)('%s', (input, output) => {
+				expect(isTopicInBloom(input[0], input[1])).toEqual(output);
+			});
+		});
+	});
+	describe('isContractAddressInBloom', () => {
+		describe('valid cases', () => {
+			it.each(isInBloomValidData)('%s', (input, output) => {
+				expect(isContractAddressInBloom(input[0], input[1])).toEqual(output);
+			});
+		});
+	});
+	describe('isBigInt', () => {
+		describe('valid cases', () => {
+			it.each(isBigIntValidData)('%s', (input, output) => {
+				expect(isBigInt(input)).toEqual(output);
 			});
 		});
 	});
