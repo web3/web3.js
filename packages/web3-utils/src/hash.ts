@@ -82,8 +82,8 @@ const elementaryName = (name: string): string => {
 /**
  * returns the size of the value of type 'byte'
  */
-const parseTypeN = (value: string): number => {
-	const typesize = /^\D+(\d+).*$/.exec(value);
+const parseTypeN = (value: string, typeLength: number): number => {
+	const typesize = /^(\d+).*$/.exec(value.slice(typeLength));
 	return typesize ? parseInt(typesize[1], 10) : 0;
 };
 
@@ -99,7 +99,7 @@ const bitLength = (value: BigInt | number): number => {
  * Pads the value based on size and type
  * returns a string of the padded value
  */
-const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): string => {
+const solidityPack = (type: string, val: EncodingTypes): string => {
 	const value = val.toString();
 	if (type === 'string') {
 		if (typeof val === 'string') return utf8ToHex(val);
@@ -118,7 +118,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 	const name = elementaryName(type);
 	if (type.startsWith('uint')) {
-		const size = parseTypeN(name);
+		const size = parseTypeN(name, 'uint'.length);
 
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(value);
@@ -135,7 +135,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 
 	if (type.startsWith('int')) {
-		const size = parseTypeN(name);
+		const size = parseTypeN(name, 'int'.length);
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(type);
 		}
@@ -161,8 +161,8 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 		if (value.replace(/^0x/i, '').length % 2 !== 0) {
 			throw new InvalidBytesError(value);
 		}
-		// if no byte size is speciified it will default to 32 bytes
-		const size = arraySize ? 32 : parseTypeN(type);
+
+		const size = parseTypeN(type, 'bytes'.length);
 
 		if (!size || size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
 			throw new InvalidBytesError(value);
