@@ -1,25 +1,18 @@
+import {
+	Address,
+	HexString,
+	HexString256Bytes,
+	HexString32Bytes,
+	HexStringBytes,
+	HexStringSingleByte,
+	Uint,
+	Uint256,
+} from 'web3-utils';
+
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
 
-type HexString = string;
-
-// Hex encoded 32 bytes
-type HexString32Bytes = HexString;
-// Hex encoded 1 byte
-type HexStringSingleByte = HexString;
-// Hex encoded 1 byte
-type HexStringBytes = HexString;
-// Hex encoded 256 byte
-type HexString256Bytes = HexString;
-// Hex encoded unsigned integer
-type Uint = HexString;
-// Hex encoded unsigned integer 32 bytes
-type Uint256 = HexString;
-// Hex encoded address
-type Address = HexString;
-
 export interface AccessListEntry {
-	readonly [k: string]: unknown;
 	readonly address?: Address;
 	readonly storageKeys?: HexString32Bytes[];
 }
@@ -28,6 +21,15 @@ export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
 export type BlockTag = 'earliest' | 'latest' | 'pending';
 export type BlockNumberOrTag = Uint | BlockTag;
+
+export interface TransactionCall {
+	readonly from?: Address;
+	readonly to: Address;
+	readonly gas?: Uint;
+	readonly gasPrice?: Uint;
+	readonly value?: Uint;
+	readonly data?: HexString;
+}
 
 export interface BaseTransaction {
 	readonly to?: Address;
@@ -98,27 +100,27 @@ export type TransactionWithSender = TransactionUnsigned & { from: Address };
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.json#L2
 export interface Block {
-	readonly [k: string]: unknown;
 	readonly parentHash: HexString32Bytes;
 	readonly sha3Uncles: HexString32Bytes;
 	readonly miner: HexString;
 	readonly stateRoot: HexString32Bytes;
 	readonly transactionsRoot: HexString32Bytes;
 	readonly receiptsRoot: HexString32Bytes;
-	readonly logsBloom: HexString256Bytes;
-	readonly difficulty?: HexStringBytes;
-	readonly number: Uint;
+	readonly logsBloom: HexString256Bytes | null;
+	readonly difficulty?: Uint;
+	readonly number: Uint | null;
 	readonly gasLimit: Uint;
 	readonly gasUsed: Uint;
 	readonly timestamp: Uint;
 	readonly extraData: HexStringBytes;
 	readonly mixHash: HexString32Bytes;
-	readonly nonce: HexStringBytes;
+	readonly nonce: HexStringBytes | null;
 	readonly totalDifficulty: Uint;
 	readonly baseFeePerGas?: Uint;
 	readonly size: Uint;
 	readonly transactions: TransactionHash[] | TransactionSigned[];
 	readonly uncles: Uncles;
+	readonly hash: HexString32Bytes | null;
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
@@ -175,15 +177,34 @@ export interface Filter {
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L2
 export type FilterResults = HexString32Bytes[] | Log[];
 
+export interface CompileResult {
+	readonly code: HexStringBytes;
+	readonly info: {
+		readonly source: string;
+		readonly language: string;
+		readonly languageVersion: string;
+		readonly compilerVersion: string;
+		readonly abiDefinition: Record<string, unknown>[];
+		readonly userDoc: {
+			readonly methods: Record<string, unknown>;
+		};
+		readonly developerDoc: {
+			readonly methods: Record<string, unknown>;
+		};
+	};
+}
+
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.json
 	eth_getBlockByHash: (blockHash: HexString32Bytes, hydrated: boolean) => Block;
 	eth_getBlockByNumber: (blockNumber: BlockNumberOrTag, hydrated: boolean) => Block;
-	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint[];
-	eth_getBlockTransactionCountByNumber: (blockNumber: BlockNumberOrTag) => Uint[];
-	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint[];
-	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint[];
+	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint;
+	eth_getBlockTransactionCountByNumber: (blockNumber: BlockNumberOrTag) => Uint;
+	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint;
+	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint;
+	eth_getUncleByBlockHashAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
+	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// TODO Not included in execution API spec
 	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
@@ -209,8 +230,8 @@ export type EthExecutionAPI = {
 	eth_blockNumber: () => Uint;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.json
-	eth_call: (transaction: TransactionWithSender) => HexStringBytes;
-	eth_estimateGas: (transaction: TransactionWithSender) => Uint;
+	eth_call: (transaction: TransactionCall, blockNumber: BlockNumberOrTag) => HexStringBytes;
+	eth_estimateGas: (transaction: TransactionWithSender, blockNumber: BlockNumberOrTag) => Uint;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.json
 	eth_gasPrice: () => Uint;
@@ -267,4 +288,10 @@ export type EthExecutionAPI = {
 			| ['logs', { address: HexString; topic: HexString[] }]
 	) => HexString;
 	eth_unsubscribe: (subscriptionId: HexString) => HexString;
+
+	// Non-supported by execution-apis specs
+	eth_getCompilers: () => string[];
+	eth_compileSolidity: (code: string) => CompileResult;
+	eth_compileLLL: (code: string) => HexStringBytes;
+	eth_compileSerpent: (code: string) => HexStringBytes;
 };
