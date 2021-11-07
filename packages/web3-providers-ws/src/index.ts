@@ -255,7 +255,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 		if (this._requestQueue.size > 0) {
 			for (const value of this._requestQueue.values()) {
-				// eslint-disable-next-line
+				/* eslint-disable @typescript-eslint/no-floating-promises  */
 				this.request(value.payload);
 			}
 		}
@@ -306,7 +306,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 			let result: JsonRpcResponse;
 
 			try {
-				// eslint-disable-next-line
+				/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 				result = JSON.parse(dataToParse);
 			} catch (error) {
 				this._lastDataChunk = dataToParse;
