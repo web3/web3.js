@@ -233,10 +233,9 @@ export default class WebSocketProvider extends Web3BaseProvider {
 					return;
 				}
 
-				const { id } = response;
+				if (response.id && this._sentQueue.has(response.id)) {
+					const requestItem = this._sentQueue.get(response.id);
 
-				if (id && this._sentQueue.has(id)) {
-					const requestItem = this._sentQueue.get(id);
 					if ('result' in response && response.result !== undefined) {
 						this._wsEventEmitter.emit('message', null, response);
 						requestItem?.deferredPromise.resolve(response);
@@ -245,7 +244,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 						requestItem?.deferredPromise.reject(response);
 					}
 
-					this._sentQueue.delete(id);
+					this._sentQueue.delete(response.id);
 				}
 			},
 		);
