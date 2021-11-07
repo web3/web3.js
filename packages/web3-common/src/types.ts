@@ -29,7 +29,7 @@ export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
 	readonly result: T;
 }
 
-export interface Params<T = JsonRpcResult> {
+export interface SubscriptionParams<T = JsonRpcResult> {
 	readonly subscription: string; // for subscription id
 	readonly result: T;
 }
@@ -37,7 +37,7 @@ export interface SubscriptionResultNotification<T = JsonRpcResult> {
 	readonly id?: JsonRpcId;
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
-	readonly params: Params<T>; // for subscription results
+	readonly params: SubscriptionParams<T>; // for subscription results
 }
 
 export type JsonRpcResponse<R = JsonRpcResult, E = JsonRpcResult> =
