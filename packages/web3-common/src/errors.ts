@@ -34,9 +34,7 @@ import {
 	ERR_SUBSCRIPTION,
 } from './constants';
 
-import { ConnectionEvent, JsonRpcResponse } from './types';
-
-type Receipt = Record<string, unknown>;
+import { ConnectionEvent, JsonRpcResponse, Receipt } from './types';
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;

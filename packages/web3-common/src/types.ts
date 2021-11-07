@@ -207,3 +207,5 @@ export type ConnectionEvent = {
 	reason: string;
 	wasClean?: boolean; // if WS connection was closed properly
 };
+
+export type Receipt = Record<string, unknown>;
