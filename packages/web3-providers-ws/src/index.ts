@@ -139,18 +139,16 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 		if (request.id === undefined) throw new Error('Request Id not defined');
 
-		const { id } = request;
-
 		if (
 			this._webSocketConnection.readyState === this._webSocketConnection.CLOSED ||
 			this._webSocketConnection.readyState === this._webSocketConnection.CLOSING
 		) {
-			this._requestQueue.delete(id);
+			this._requestQueue.delete(request.id);
 
 			throw new ConnectionNotOpenError();
 		}
 
-		const requestItem = this._requestQueue.get(id);
+		const requestItem = this._requestQueue.get(request.id);
 		if (this._webSocketConnection.readyState === this._webSocketConnection.CONNECTING) {
 			if (requestItem === undefined) {
 				const defPromise = new DeferredPromise<T>();
@@ -160,7 +158,7 @@ export default class WebSocketProvider extends Web3BaseProvider {
 					deferredPromise: defPromise,
 				};
 
-				this._requestQueue.set(id, reqItem);
+				this._requestQueue.set(request.id, reqItem);
 				return defPromise.realPromise;
 			}
 
@@ -170,8 +168,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		let promise;
 
 		if (requestItem !== undefined) {
-			this._sentQueue.set(id, requestItem);
-			this._requestQueue.delete(id);
+			this._sentQueue.set(request.id, requestItem);
+			this._requestQueue.delete(request.id);
 			promise = requestItem.deferredPromise.realPromise as Promise<T>;
 		} else {
 			const defPromise = new DeferredPromise<T>();
@@ -181,14 +179,14 @@ export default class WebSocketProvider extends Web3BaseProvider {
 				deferredPromise: defPromise,
 			};
 
-			this._sentQueue.set(id, reqItem);
+			this._sentQueue.set(request.id, reqItem);
 			promise = defPromise.realPromise;
 		}
 
 		try {
 			this._webSocketConnection.send(JSON.stringify(request));
 		} catch (error) {
-			this._sentQueue.delete(id);
+			this._sentQueue.delete(request.id);
 			throw error;
 		}
 
