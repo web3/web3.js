@@ -2,6 +2,7 @@ import {
 	Address,
 	HexString,
 	HexString256Bytes,
+	HexString8Bytes,
 	HexString32Bytes,
 	HexStringBytes,
 	HexStringSingleByte,
@@ -253,7 +254,7 @@ export type EthExecutionAPI = {
 	eth_hashrate: () => Uint;
 	eth_getWork: () => [HexString32Bytes, HexString32Bytes, HexString32Bytes];
 	eth_submitWork: (
-		powHash: HexString32Bytes,
+		nonce: HexString8Bytes,
 		seedHash: HexString32Bytes,
 		difficulty: HexString32Bytes,
 	) => boolean;
