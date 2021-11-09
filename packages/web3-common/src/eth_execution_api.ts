@@ -33,13 +33,12 @@ export interface TransactionCall {
 }
 
 export interface BaseTransaction {
-	readonly to?: Address;
+	readonly to?: Address | null;
 	readonly type: HexStringSingleByte;
 	readonly nonce: Uint;
 	readonly gas: Uint;
 	readonly value: Uint;
 	readonly input: HexStringBytes;
-	readonly chainId: Uint;
 }
 
 export interface Transaction1559Unsigned extends BaseTransaction {
@@ -210,16 +209,16 @@ export type EthExecutionAPI = {
 	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
-	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo;
+	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo | null;
 	eth_getTransactionByBlockHashAndIndex: (
 		blockHash: HexString32Bytes,
 		transactionIndex: Uint,
-	) => TransactionInfo;
+	) => TransactionInfo | null;
 	eth_getTransactionByBlockNumberAndIndex: (
 		blockNumber: BlockNumberOrTag,
 		transactionIndex: Uint,
-	) => TransactionInfo;
-	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo;
+	) => TransactionInfo | null;
+	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo | null;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.json
 	eth_protocolVersion: () => string;
