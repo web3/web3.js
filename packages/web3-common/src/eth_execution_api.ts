@@ -271,10 +271,10 @@ export type EthExecutionAPI = {
 	eth_getStorageAt: (
 		address: Address,
 		storageSlot: Uint256,
-		block: BlockNumberOrTag,
+		blockNumber: BlockNumberOrTag,
 	) => HexStringBytes;
-	eth_getTransactionCount: (address: Address, block: BlockNumberOrTag) => Uint;
-	eth_getCode: (address: Address, block: BlockNumberOrTag) => HexStringBytes;
+	eth_getTransactionCount: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
+	eth_getCode: (address: Address, blockNumber: BlockNumberOrTag) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
 	eth_sendTransaction: (transaction: TransactionWithSender) => HexString32Bytes;
