@@ -8,15 +8,13 @@ import {
 	JsonRpcResult,
 	Web3BaseProviderCallback,
 	SubscriptionResultNotification,
-} from 'web3-common';
-import { ClientRequestArgs } from 'http';
-import { ClientOptions, WebSocket, MessageEvent, CloseEvent } from 'isomorphic-ws';
-import {
 	InvalidConnectionError,
 	PendingRequestsOnReconnectingError,
 	ConnectionNotOpenError,
 	InvalidClientError,
-} from 'web3-common/dist/errors';
+} from 'web3-common';
+import { ClientRequestArgs } from 'http';
+import { ClientOptions, WebSocket, MessageEvent, CloseEvent } from 'isomorphic-ws';
 import { ReconnectOptions, WSRequestItem } from './types';
 import { DeferredPromise } from './deferred_promise';
 
