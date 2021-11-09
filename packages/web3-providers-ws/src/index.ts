@@ -35,7 +35,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
 
 	private _reconnectAttempts!: number;
 	private readonly _reconnectOptions: ReconnectOptions;
-	private _lastDataChunk!: string;
 
 	public constructor(
 		clientUrl: string,
@@ -112,6 +111,15 @@ export default class WebSocketProvider extends Web3BaseProvider {
 			this._webSocketConnection = new WebSocket(this._clientUrl, this._wsProviderOptions);
 
 			this._addSocketListeners();
+
+			if (this.getStatus() === 'connecting') {
+				// Rejecting promises if provider is not connected even after reattempts
+				setTimeout(() => {
+					if (this.getStatus() === 'disconnected') {
+						this._clearQueues(undefined);
+					}
+				}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
+			}
 		} catch (e) {
 			throw new InvalidConnectionError(this._clientUrl);
 		}
@@ -198,7 +206,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
 	}
 
 	private _init() {
-		this._lastDataChunk = '';
 		this._reconnectAttempts = 0;
 	}
 
@@ -226,28 +233,29 @@ export default class WebSocketProvider extends Web3BaseProvider {
 	}
 
 	private _onMessage(e: MessageEvent): void {
-		this._parseResponse(typeof e.data === 'string' ? e.data : '').forEach(
-			(response: JsonRpcResponse | SubscriptionResultNotification) => {
-				if ('method' in response && response.method.endsWith('_subscription')) {
+		if (typeof e.data === 'string') {
+			/* eslint-disable  @typescript-eslint/no-unsafe-assignment */
+			const response: JsonRpcResponse | SubscriptionResultNotification = JSON.parse(e.data);
+
+			if ('method' in response && response.method.endsWith('_subscription')) {
+				this._wsEventEmitter.emit('message', null, response);
+				return;
+			}
+
+			if (response.id && this._sentQueue.has(response.id)) {
+				const requestItem = this._sentQueue.get(response.id);
+
+				if ('result' in response && response.result !== undefined) {
 					this._wsEventEmitter.emit('message', null, response);
-					return;
+					requestItem?.deferredPromise.resolve(response);
+				} else if ('error' in response && response.error !== undefined) {
+					this._wsEventEmitter.emit('message', response, null);
+					requestItem?.deferredPromise.reject(response);
 				}
 
-				if (response.id && this._sentQueue.has(response.id)) {
-					const requestItem = this._sentQueue.get(response.id);
-
-					if ('result' in response && response.result !== undefined) {
-						this._wsEventEmitter.emit('message', null, response);
-						requestItem?.deferredPromise.resolve(response);
-					} else if ('error' in response && response.error !== undefined) {
-						this._wsEventEmitter.emit('message', response, null);
-						requestItem?.deferredPromise.reject(response);
-					}
-
-					this._sentQueue.delete(response.id);
-				}
-			},
-		);
+				this._sentQueue.delete(response.id);
+			}
+		}
 	}
 
 	private _onConnect() {
@@ -270,6 +278,11 @@ export default class WebSocketProvider extends Web3BaseProvider {
 			return;
 		}
 
+		this._clearQueues(event);
+		this._removeSocketListeners();
+	}
+
+	private _clearQueues(event?: CloseEvent) {
 		if (this._requestQueue.size > 0) {
 			this._requestQueue.forEach((request: WSRequestItem, key: JsonRpcId) => {
 				request.deferredPromise.reject(new ConnectionNotOpenError(event));
@@ -285,40 +298,6 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		}
 
 		this._removeSocketListeners();
-	}
-
-	private _parseResponse(dataReceived: string): JsonRpcResponse[] {
-		const returnValues: JsonRpcResponse[] = [];
-
-		// de chunk
-		const dechunkedData = dataReceived
-			.replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-			.replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-			.replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-			.replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-			.split('|--|');
-
-		dechunkedData.forEach((data: string) => {
-			let dataToParse: string = data;
-
-			if (this._lastDataChunk !== '') dataToParse = this._lastDataChunk + dataToParse;
-
-			let result: JsonRpcResponse;
-
-			try {
-				/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-				result = JSON.parse(dataToParse);
-			} catch (error) {
-				this._lastDataChunk = dataToParse;
-				return;
-			}
-
-			this._lastDataChunk = '';
-
-			if (result) returnValues.push(result);
-		});
-
-		return returnValues;
 	}
 
 	private _removeSocketListeners(): void {
