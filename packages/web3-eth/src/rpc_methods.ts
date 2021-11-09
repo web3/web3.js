@@ -11,7 +11,7 @@ import {
 	CompileResult,
 } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
-import { HexString32Bytes, HexStringBytes, Uint } from 'web3-utils';
+import { Address, Uint256, HexString32Bytes, HexStringBytes, Uint } from 'web3-utils';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager): Promise<string> {
 	return requestManager.send<'eth_protocolVersion'>({
@@ -27,7 +27,7 @@ export async function getSyncing(requestManager: Web3RequestManager): Promise<Sy
 	});
 }
 
-export async function getCoinbase(requestManager: Web3RequestManager): Promise<string> {
+export async function getCoinbase(requestManager: Web3RequestManager): Promise<Address> {
 	return requestManager.send<'eth_coinbase'>({
 		method: 'eth_coinbase',
 		params: [],
@@ -41,28 +41,28 @@ export async function getMining(requestManager: Web3RequestManager): Promise<boo
 	});
 }
 
-export async function getHashRate(requestManager: Web3RequestManager): Promise<string> {
+export async function getHashRate(requestManager: Web3RequestManager): Promise<Uint> {
 	return requestManager.send<'eth_hashrate'>({
 		method: 'eth_hashrate',
 		params: [],
 	});
 }
 
-export async function getGasPrice(requestManager: Web3RequestManager): Promise<string> {
+export async function getGasPrice(requestManager: Web3RequestManager): Promise<Uint> {
 	return requestManager.send<'eth_gasPrice'>({
 		method: 'eth_gasPrice',
 		params: [],
 	});
 }
 
-export async function getAccounts(requestManager: Web3RequestManager): Promise<string[]> {
+export async function getAccounts(requestManager: Web3RequestManager): Promise<Address[]> {
 	return requestManager.send<'eth_accounts'>({
 		method: 'eth_accounts',
 		params: [],
 	});
 }
 
-export async function getBlockNumber(requestManager: Web3RequestManager): Promise<string> {
+export async function getBlockNumber(requestManager: Web3RequestManager): Promise<Uint> {
 	return requestManager.send<'eth_blockNumber'>({
 		method: 'eth_blockNumber',
 		params: [],
@@ -71,36 +71,35 @@ export async function getBlockNumber(requestManager: Web3RequestManager): Promis
 
 export async function getBalance(
 	requestManager: Web3RequestManager,
-	address: string,
-	block: BlockNumberOrTag,
-): Promise<string> {
+	address: Address,
+	blockNumber: BlockNumberOrTag,
+): Promise<Uint> {
 	return requestManager.send<'eth_getBalance'>({
 		method: 'eth_getBalance',
-		params: [address, block],
+		params: [address, blockNumber],
 	});
 }
 
-// TODO https://github.com/ethereum/execution-apis/issues/95
 export async function getStorageAt(
 	requestManager: Web3RequestManager,
-	storageAddress: string,
-	storagePosition: string,
-	block: BlockNumberOrTag,
-): Promise<string> {
+	address: Address,
+	storageSlot: Uint256,
+	blockNumber: BlockNumberOrTag,
+): Promise<HexStringBytes> {
 	return requestManager.send<'eth_getStorageAt'>({
 		method: 'eth_getStorageAt',
-		params: [storageAddress, storagePosition, block],
+		params: [address, storageSlot, blockNumber],
 	});
 }
 
 export async function getTransactionCount(
 	requestManager: Web3RequestManager,
-	address: string,
-	block: BlockNumberOrTag,
-): Promise<string> {
+	address: Address,
+	blockNumber: BlockNumberOrTag,
+): Promise<Uint> {
 	return requestManager.send<'eth_getTransactionCount'>({
 		method: 'eth_getTransactionCount',
-		params: [address, block],
+		params: [address, blockNumber],
 	});
 }
 
@@ -136,40 +135,40 @@ export async function getUncleCountByBlockHash(
 
 export async function getUncleCountByBlockNumber(
 	requestManager: Web3RequestManager,
-	block: BlockNumberOrTag,
+	blockNumber: BlockNumberOrTag,
 ): Promise<Uint> {
 	return requestManager.send<'eth_getUncleCountByBlockNumber'>({
 		method: 'eth_getUncleCountByBlockNumber',
-		params: [block],
+		params: [blockNumber],
 	});
 }
 
 export async function getCode(
 	requestManager: Web3RequestManager,
-	address: string,
-	block: BlockNumberOrTag,
-): Promise<string> {
+	address: Address,
+	blockNumber: BlockNumberOrTag,
+): Promise<HexString32Bytes> {
 	return requestManager.send<'eth_getCode'>({
 		method: 'eth_getCode',
-		params: [address, block],
+		params: [address, blockNumber],
 	});
 }
 
 export async function sign(
 	requestManager: Web3RequestManager,
-	address: string,
-	data: string,
+	address: Address,
+	message: HexStringBytes,
 ): Promise<string> {
 	return requestManager.send<'eth_sign'>({
 		method: 'eth_sign',
-		params: [address, data],
+		params: [address, message],
 	});
 }
 
 export async function signTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender,
-): Promise<string> {
+): Promise<HexStringBytes> {
 	return requestManager.send<'eth_signTransaction'>({
 		method: 'eth_signTransaction',
 		params: [transaction],
@@ -179,7 +178,7 @@ export async function signTransaction(
 export async function sendTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender,
-): Promise<string> {
+): Promise<HexString32Bytes> {
 	return requestManager.send<'eth_sendTransaction'>({
 		method: 'eth_sendTransaction',
 		params: [transaction],
@@ -188,11 +187,11 @@ export async function sendTransaction(
 
 export async function sendRawTransaction(
 	requestManager: Web3RequestManager,
-	signedTransaction: string,
-): Promise<string> {
+	transaction: HexStringBytes,
+): Promise<HexString32Bytes> {
 	return requestManager.send<'eth_sendRawTransaction'>({
 		method: 'eth_sendRawTransaction',
-		params: [signedTransaction],
+		params: [transaction],
 	});
 }
 
@@ -220,7 +219,7 @@ export async function estimateGas(
 
 export async function getBlockByHash(
 	requestManager: Web3RequestManager,
-	blockHash: string,
+	blockHash: HexString32Bytes,
 	hydrated: boolean,
 ): Promise<Block> {
 	return requestManager.send<'eth_getBlockByHash'>({
@@ -231,18 +230,18 @@ export async function getBlockByHash(
 
 export async function getBlockByNumber(
 	requestManager: Web3RequestManager,
-	block: BlockNumberOrTag,
+	blockNumber: BlockNumberOrTag,
 	hydrated: boolean,
 ): Promise<Block> {
 	return requestManager.send<'eth_getBlockByNumber'>({
 		method: 'eth_getBlockByNumber',
-		params: [block, hydrated],
+		params: [blockNumber, hydrated],
 	});
 }
 
 export async function getTransactionByHash(
 	requestManager: Web3RequestManager,
-	transactionHash: string,
+	transactionHash: HexString32Bytes,
 ): Promise<TransactionInfo> {
 	return requestManager.send<'eth_getTransactionByHash'>({
 		method: 'eth_getTransactionByHash',
@@ -252,8 +251,8 @@ export async function getTransactionByHash(
 
 export async function getTransactionByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
-	blockHash: string,
-	transactionIndex: string,
+	blockHash: HexString32Bytes,
+	transactionIndex: Uint,
 ): Promise<TransactionInfo> {
 	return requestManager.send<'eth_getTransactionByBlockHashAndIndex'>({
 		method: 'eth_getTransactionByBlockHashAndIndex',
@@ -263,8 +262,8 @@ export async function getTransactionByBlockHashAndIndex(
 
 export async function getTransactionByBlockNumberAndIndex(
 	requestManager: Web3RequestManager,
-	blockNumber: string,
-	transactionIndex: string,
+	blockNumber: BlockNumberOrTag,
+	transactionIndex: Uint,
 ): Promise<TransactionInfo> {
 	return requestManager.send<'eth_getTransactionByBlockNumberAndIndex'>({
 		method: 'eth_getTransactionByBlockNumberAndIndex',
@@ -274,7 +273,7 @@ export async function getTransactionByBlockNumberAndIndex(
 
 export async function getTransactionReceipt(
 	requestManager: Web3RequestManager,
-	transactionHash: string,
+	transactionHash: HexString32Bytes,
 ): Promise<ReceiptInfo> {
 	return requestManager.send<'eth_getTransactionReceipt'>({
 		method: 'eth_getTransactionReceipt',
@@ -284,8 +283,8 @@ export async function getTransactionReceipt(
 
 export async function getUncleByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
-	blockHash: string,
-	uncleIndex: string,
+	blockHash: HexString32Bytes,
+	uncleIndex: Uint,
 ): Promise<Block> {
 	return requestManager.send<'eth_getUncleByBlockHashAndIndex'>({
 		method: 'eth_getUncleByBlockHashAndIndex',
@@ -296,7 +295,7 @@ export async function getUncleByBlockHashAndIndex(
 export async function getUncleByBlockNumberAndIndex(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
-	uncleIndex: string,
+	uncleIndex: Uint,
 ): Promise<Block> {
 	return requestManager.send<'eth_getUncleByBlockNumberAndIndex'>({
 		method: 'eth_getUncleByBlockNumberAndIndex',
@@ -341,17 +340,14 @@ export async function compileSerpent(
 	});
 }
 
-export async function newFilter(
-	requestManager: Web3RequestManager,
-	filter: Filter,
-): Promise<string> {
+export async function newFilter(requestManager: Web3RequestManager, filter: Filter): Promise<Uint> {
 	return requestManager.send<'eth_newFilter'>({
 		method: 'eth_newFilter',
 		params: [filter],
 	});
 }
 
-export async function newBlockFilter(requestManager: Web3RequestManager): Promise<string> {
+export async function newBlockFilter(requestManager: Web3RequestManager): Promise<Uint> {
 	return requestManager.send<'eth_newBlockFilter'>({
 		method: 'eth_newBlockFilter',
 		params: [],
@@ -360,7 +356,7 @@ export async function newBlockFilter(requestManager: Web3RequestManager): Promis
 
 export async function newPendingTransactionFilter(
 	requestManager: Web3RequestManager,
-): Promise<string> {
+): Promise<Uint> {
 	return requestManager.send<'eth_newPendingTransactionFilter'>({
 		method: 'eth_newPendingTransactionFilter',
 		params: [],
@@ -369,7 +365,7 @@ export async function newPendingTransactionFilter(
 
 export async function uninstallFilter(
 	requestManager: Web3RequestManager,
-	filterIdentifier: string,
+	filterIdentifier: Uint,
 ): Promise<boolean> {
 	return requestManager.send<'eth_uninstallFilter'>({
 		method: 'eth_uninstallFilter',
@@ -379,7 +375,7 @@ export async function uninstallFilter(
 
 export async function getFilterChanges(
 	requestManager: Web3RequestManager,
-	filterIdentifier: string,
+	filterIdentifier: Uint,
 ): Promise<FilterResults> {
 	return requestManager.send<'eth_getFilterChanges'>({
 		method: 'eth_getFilterChanges',
@@ -389,7 +385,7 @@ export async function getFilterChanges(
 
 export async function getFilterLogs(
 	requestManager: Web3RequestManager,
-	filterIdentifier: string,
+	filterIdentifier: Uint,
 ): Promise<FilterResults> {
 	return requestManager.send<'eth_getFilterLogs'>({
 		method: 'eth_getFilterLogs',
@@ -409,7 +405,7 @@ export async function getLogs(
 
 export async function getWork(
 	requestManager: Web3RequestManager,
-): Promise<[string, string, string]> {
+): Promise<[HexString32Bytes, HexString32Bytes, HexString32Bytes]> {
 	return requestManager.send<'eth_getWork'>({
 		method: 'eth_getWork',
 		params: [],
@@ -418,9 +414,9 @@ export async function getWork(
 
 export async function submitWork(
 	requestManager: Web3RequestManager,
-	powHash: string,
-	seedHash: string,
-	difficulty: string,
+	powHash: HexString32Bytes,
+	seedHash: HexString32Bytes,
+	difficulty: HexString32Bytes,
 ): Promise<boolean> {
 	return requestManager.send<'eth_submitWork'>({
 		method: 'eth_submitWork',
@@ -430,8 +426,8 @@ export async function submitWork(
 
 export async function submitHashrate(
 	requestManager: Web3RequestManager,
-	hashRate: string,
-	id: string,
+	hashRate: HexString32Bytes,
+	id: HexString32Bytes,
 ): Promise<boolean> {
 	return requestManager.send<'eth_submitHashrate'>({
 		method: 'eth_submitHashrate',

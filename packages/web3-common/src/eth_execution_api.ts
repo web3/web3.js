@@ -202,8 +202,8 @@ export type EthExecutionAPI = {
 	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint;
 	eth_getBlockTransactionCountByNumber: (blockNumber: BlockNumberOrTag) => Uint;
 	eth_getUncleCountByBlockHash: (blockHash: HexString32Bytes) => Uint;
-	eth_getUncleCountByBlockNumber: (blockNumber: Uint) => Uint;
-	eth_getUncleByBlockHashAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
+	eth_getUncleCountByBlockNumber: (blockNumber: BlockNumberOrTag) => Uint;
+	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
 	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
@@ -262,14 +262,14 @@ export type EthExecutionAPI = {
 	eth_signTransaction: (transaction: TransactionWithSender) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
-	eth_getBalance: (address: Address, block: BlockNumberOrTag) => Uint;
+	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
 	eth_getStorageAt: (
 		address: Address,
 		storageSlot: Uint256,
-		block: BlockNumberOrTag,
+		blockNumber: BlockNumberOrTag,
 	) => HexStringBytes;
-	eth_getTransactionCount: (address: Address, block: BlockNumberOrTag) => Uint;
-	eth_getCode: (address: Address, block: BlockNumberOrTag) => HexStringBytes;
+	eth_getTransactionCount: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
+	eth_getCode: (address: Address, blockNumber: BlockNumberOrTag) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
 	eth_sendTransaction: (transaction: TransactionWithSender) => HexString32Bytes;
