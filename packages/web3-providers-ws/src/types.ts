@@ -1,5 +1,5 @@
 import { JsonRpcPayload, JsonRpcResponse } from 'web3-common';
-import { DeferredPromise } from './deferredPromise';
+import { DeferredPromise } from './deferred_promise';
 
 export type ReconnectOptions = {
 	autoReconnect: boolean;

@@ -18,7 +18,7 @@ import {
 	InvalidClientError,
 } from 'web3-common/dist/errors';
 import { ReconnectOptions, WSRequestItem } from './types';
-import { DeferredPromise } from './deferredPromise';
+import { DeferredPromise } from './deferred_promise';
 
 export default class WebSocketProvider extends Web3BaseProvider {
 	private readonly _wsEventEmitter: EventEmitter = new EventEmitter();
