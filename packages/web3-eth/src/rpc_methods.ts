@@ -7,8 +7,11 @@ import {
 	ReceiptInfo,
 	Filter,
 	FilterResults,
+	TransactionCall,
+	CompileResult,
 } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
+import { HexString32Bytes, HexStringBytes, Uint } from 'web3-utils';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager): Promise<string> {
 	return requestManager.send<'eth_protocolVersion'>({
@@ -103,8 +106,8 @@ export async function getTransactionCount(
 
 export async function getBlockTransactionCountByHash(
 	requestManager: Web3RequestManager,
-	blockHash: string,
-): Promise<string[]> {
+	blockHash: HexString32Bytes,
+): Promise<Uint> {
 	return requestManager.send<'eth_getBlockTransactionCountByHash'>({
 		method: 'eth_getBlockTransactionCountByHash',
 		params: [blockHash],
@@ -114,7 +117,7 @@ export async function getBlockTransactionCountByHash(
 export async function getBlockTransactionCountByNumber(
 	requestManager: Web3RequestManager,
 	block: BlockNumberOrTag,
-): Promise<string[]> {
+): Promise<Uint> {
 	return requestManager.send<'eth_getBlockTransactionCountByNumber'>({
 		method: 'eth_getBlockTransactionCountByNumber',
 		params: [block],
@@ -123,8 +126,8 @@ export async function getBlockTransactionCountByNumber(
 
 export async function getUncleCountByBlockHash(
 	requestManager: Web3RequestManager,
-	blockHash: string,
-): Promise<string[]> {
+	blockHash: HexString32Bytes,
+): Promise<Uint> {
 	return requestManager.send<'eth_getUncleCountByBlockHash'>({
 		method: 'eth_getUncleCountByBlockHash',
 		params: [blockHash],
@@ -134,7 +137,7 @@ export async function getUncleCountByBlockHash(
 export async function getUncleCountByBlockNumber(
 	requestManager: Web3RequestManager,
 	block: BlockNumberOrTag,
-): Promise<string[]> {
+): Promise<Uint> {
 	return requestManager.send<'eth_getUncleCountByBlockNumber'>({
 		method: 'eth_getUncleCountByBlockNumber',
 		params: [block],
@@ -193,29 +196,25 @@ export async function sendRawTransaction(
 	});
 }
 
-// TODO https://github.com/ethereum/execution-apis/issues/98
 export async function call(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
-	// block: BlockNumberOrTag,
-): Promise<string> {
+	transaction: TransactionCall,
+	blockNumber: BlockNumberOrTag,
+): Promise<HexStringBytes> {
 	return requestManager.send<'eth_call'>({
 		method: 'eth_call',
-		// params: [transaction, block],
-		params: [transaction],
+		params: [transaction, blockNumber],
 	});
 }
 
-// TODO https://github.com/ethereum/execution-apis/issues/99
 export async function estimateGas(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender,
-	// block: BlockNumberOrTag,
-): Promise<string> {
+	blockNumber: BlockNumberOrTag,
+): Promise<Uint> {
 	return requestManager.send<'eth_estimateGas'>({
 		method: 'eth_estimateGas',
-		// params: [transaction, block],
-		params: [transaction],
+		params: [transaction, blockNumber],
 	});
 }
 
@@ -305,48 +304,42 @@ export async function getUncleByBlockNumberAndIndex(
 	});
 }
 
-// TODO https://github.com/ethereum/execution-apis/issues/100
-// export async function getCompilers(
-// 	requestManager: Web3RequestManager,
-// ): Promise<Block> {
-// 	return requestManager.send<'eth_getCompilers'>({
-// 		method: 'eth_getCompilers',
-// 		params: [],
-// 	});
-// }
+export async function getCompilers(requestManager: Web3RequestManager): Promise<string[]> {
+	return requestManager.send<'eth_getCompilers'>({
+		method: 'eth_getCompilers',
+		params: [],
+	});
+}
 
-// TODO https://github.com/ethereum/execution-apis/issues/101
-// export async function compileSolidity(
-// 	requestManager: Web3RequestManager,
-//     sourceCode: string
-// ): Promise<> {
-// 	return requestManager.send<'eth_compileSolidity'>({
-// 		method: 'eth_compileSolidity',
-// 		params: [sourceCode],
-// 	});
-// }
+export async function compileSolidity(
+	requestManager: Web3RequestManager,
+	code: string,
+): Promise<CompileResult> {
+	return requestManager.send<'eth_compileSolidity'>({
+		method: 'eth_compileSolidity',
+		params: [code],
+	});
+}
 
-// TODO https://github.com/ethereum/execution-apis/issues/101
-// export async function compileLLL(
-// 	requestManager: Web3RequestManager,
-//     sourceCode: string
-// ): Promise<> {
-// 	return requestManager.send<'eth_compileLLL'>({
-// 		method: 'eth_compileLLL',
-// 		params: [sourceCode],
-// 	});
-// }
+export async function compileLLL(
+	requestManager: Web3RequestManager,
+	code: string,
+): Promise<HexStringBytes> {
+	return requestManager.send<'eth_compileLLL'>({
+		method: 'eth_compileLLL',
+		params: [code],
+	});
+}
 
-// TODO https://github.com/ethereum/execution-apis/issues/101
-// export async function compileSerpent(
-// 	requestManager: Web3RequestManager,
-//     sourceCode: string
-// ): Promise<> {
-// 	return requestManager.send<'eth_compileSerpent'>({
-// 		method: 'eth_compileSerpent',
-// 		params: [sourceCode],
-// 	});
-// }
+export async function compileSerpent(
+	requestManager: Web3RequestManager,
+	code: string,
+): Promise<HexStringBytes> {
+	return requestManager.send<'eth_compileSerpent'>({
+		method: 'eth_compileSerpent',
+		params: [code],
+	});
+}
 
 export async function newFilter(
 	requestManager: Web3RequestManager,
