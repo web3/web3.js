@@ -230,7 +230,10 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.json
 	eth_call: (transaction: TransactionCall, blockNumber: BlockNumberOrTag) => HexStringBytes;
-	eth_estimateGas: (transaction: TransactionWithSender, blockNumber: BlockNumberOrTag) => Uint;
+	eth_estimateGas: (
+		transaction: Partial<TransactionWithSender>,
+		blockNumber: BlockNumberOrTag,
+	) => Uint;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.json
 	eth_gasPrice: () => Uint;
