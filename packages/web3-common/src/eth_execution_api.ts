@@ -143,15 +143,17 @@ export interface Log {
 export interface ReceiptInfo {
 	readonly transactionHash: HexString32Bytes;
 	readonly transactionIndex: HexString32Bytes;
-	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: Uint;
-	readonly from?: Address;
-	readonly to?: Address;
-	readonly cumulativeGasUsed?: Uint;
-	readonly gasUsed?: Uint;
-	readonly contractAddress?: Address;
-	readonly logs?: Log[];
-	readonly logsBloom?: HexString256Bytes;
+	readonly blockHash: HexString32Bytes;
+	readonly blockNumber: Uint;
+	readonly from: Address;
+	readonly to: Address;
+	readonly cumulativeGasUsed: Uint;
+	readonly gasUsed: Uint;
+	readonly contractAddress: Address | null;
+	readonly logs: Log[];
+	readonly logsBloom: HexString256Bytes;
+	readonly root: HexString32Bytes;
+	readonly status: '0x1' | '0x0';
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/client.json#L2
