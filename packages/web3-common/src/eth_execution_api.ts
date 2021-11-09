@@ -206,10 +206,6 @@ export type EthExecutionAPI = {
 	eth_getUncleByBlockHashAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
-	// TODO Not included in execution API spec
-	eth_getUncleByBlockHashAndIndex: (blockHash: HexString32Bytes, uncleIndex: Uint) => Block;
-	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
-
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
 	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo;
 	eth_getTransactionByBlockHashAndIndex: (
