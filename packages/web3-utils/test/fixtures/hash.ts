@@ -190,7 +190,6 @@ export const encodePackData: [typedObject[] | typedObject2[], any][] = [
 		[{ v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes' }],
 		'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	],
-	// [[{ v: [-12, 243], t: 'int256[]' }], ''],
 	[[{ t: 'int', v: '0' }], '0x0000000000000000000000000000000000000000000000000000000000000000'],
 	[
 		[{ type: 'int256', value: '1234' }],
@@ -208,6 +207,19 @@ export const encodePackData: [typedObject[] | typedObject2[], any][] = [
 		[{ type: 'int128[]', value: [12345, 324, 1, 2] }],
 		'0x00000000000000000000000000003039000000000000000000000000000001440000000000000000000000000000000100000000000000000000000000000002',
 	],
+	[
+		[
+			{
+				type: 'bytes32[]',
+				value: [
+					'0x1248',
+					'0x3c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4',
+				],
+			},
+		],
+		'0x12480000000000000000000000000000000000000000000000000000000000003c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4',
+	],
+	[[{ type: 'bytes4[]', value: ['0x11223344', '0x22334455'] }], '0x1122334422334455'],
 ];
 
 export const encodePackedInvalidData: [any, string][] = [
