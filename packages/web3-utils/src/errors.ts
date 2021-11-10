@@ -125,3 +125,27 @@ export class InvalidLargeValueError extends Web3Error {
 		super(value, 'value is larger than size.');
 	}
 }
+
+export class InvalidBlockError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid string given');
+	}
+}
+
+export class InvalidBloomError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid bloom given');
+	}
+}
+
+export class InvalidTopicError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid topic given');
+	}
+}
+
+export class InvalidCharCodeError extends Web3Error {
+	public constructor(value: number) {
+		super(value, 'invalid char code given');
+	}
+}

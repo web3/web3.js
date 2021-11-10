@@ -4,6 +4,8 @@ export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
 export type Numbers = number | bigint | string | HexString;
 // Hex encoded 32 bytes
 export type HexString32Bytes = HexString;
+// Hex encoded 8 bytes
+export type HexString8Bytes = HexString;
 // Hex encoded 1 byte
 export type HexStringSingleByte = HexString;
 // Hex encoded 1 byte
@@ -18,11 +20,11 @@ export type Uint256 = HexString;
 export type Address = HexString;
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
-export type typedObject = {
+export type TypedObject = {
 	type: string;
 	value: EncodingTypes;
 };
-export type typedObject2 = {
+export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
