@@ -479,3 +479,7 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.6.2]
+
+### Changed
+
+- Correct `web3.rst` example in documentation (#4511)
