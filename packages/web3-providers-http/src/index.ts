@@ -37,7 +37,7 @@ export class HttpProvider extends Web3BaseProvider {
 	}
 
 	public async request<T = JsonRpcResponse, T2 = unknown[], T3 = RequestInit>(
-		request: JsonRpcPayload<T2>,
+		payload: JsonRpcPayload<T2>,
 		providerOptions?: T3,
 	): Promise<T> {
 		const providerOptionsCombined = {
@@ -51,12 +51,7 @@ export class HttpProvider extends Web3BaseProvider {
 				...providerOptionsCombined.headers,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({
-				id: request.id ?? Math.floor(Math.random() * 999999), // Generate random integer between 0 and 999,999
-				jsonrpc: request.jsonrpc ?? '2.0',
-				method: request.method,
-				params: request.params ?? [],
-			}),
+			body: JSON.stringify(payload),
 		});
 
 		if (!response.ok) throw new ResponseError(await response.json());

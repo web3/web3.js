@@ -4,11 +4,15 @@ import {
 	InvalidProviderError,
 	InvalidResponseError,
 	JsonRpcPayload,
-	JsonRpcRequest,
-	JsonRpcResponse,
+	JsonRpcBatchRequest,
 	Web3BaseProvider,
 	Web3EventEmitter,
 	ProviderError,
+	JsonRpcOptionalRequest,
+	jsonRpc,
+	ResponseError,
+	JsonRpcBatchResponse,
+	JsonRpcResponse,
 } from 'web3-common';
 import { SupportedProviders, Web3BaseProviderConstructor } from './types';
 import {
@@ -26,7 +30,6 @@ export enum Web3RequestManagerEvent {
 export class Web3RequestManager extends Web3EventEmitter<{
 	[key in Web3RequestManagerEvent]: SupportedProviders;
 }> {
-	private _requestCounter = 0;
 	private _provider!: SupportedProviders;
 	private readonly _providers: { [key: string]: Web3BaseProviderConstructor };
 
@@ -50,6 +53,10 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	}
 
 	public get provider() {
+		if (!this._provider) {
+			throw new ProviderError('Provider not available');
+		}
+
 		return this._provider;
 	}
 
@@ -78,28 +85,48 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			}
 		}
 
-		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this.provider);
+		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this._provider);
 		this._provider = newProvider ?? provider ?? null;
-		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this.provider);
+		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 	}
 
-	public async send<ResultType, RequestType = unknown>(request: JsonRpcRequest<RequestType>) {
-		const { provider } = this;
+	public async send<ResultType>(request: JsonRpcOptionalRequest<unknown>): Promise<ResultType> {
+		const response = await this._sendRequest<ResultType>(request);
 
-		if (!provider) {
-			throw new ProviderError('Provider not available');
+		if (jsonRpc.isResponseWithResult(response)) {
+			return response.result;
 		}
 
+		throw new ResponseError(response);
+	}
+
+	public async sendBatch(request: JsonRpcBatchRequest): Promise<JsonRpcBatchResponse<unknown>> {
+		const response = await this._sendRequest<unknown>(request);
+
+		return response as JsonRpcBatchResponse<unknown>;
+	}
+
+	private async _sendRequest<ResultType>(
+		// We accept any type of request params here
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		request: JsonRpcOptionalRequest<any> | JsonRpcBatchRequest,
+	): Promise<JsonRpcResponse<ResultType>> {
+		const { provider } = this;
+
+		const payload = jsonRpc.isBatchRequest(request)
+			? jsonRpc.toBatchPayload(request)
+			: jsonRpc.toPayload(request);
+
 		if (isWeb3Provider(provider)) {
-			return provider.request<ResultType, RequestType>(request);
+			const response = await provider.request<ResultType>(payload);
+
+			return this._processJsonRpcResponse(payload, response);
 		}
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
-			const payload = this._requestToPayload(request);
-
-			return new Promise<ResultType>((resolve): void => {
-				provider.request<ResultType, RequestType>(payload, (err, response) => {
+			return new Promise((resolve): void => {
+				provider.request<ResultType>(payload, (err, response) => {
 					if (err) {
 						throw err;
 					}
@@ -111,10 +138,8 @@ export class Web3RequestManager extends Web3EventEmitter<{
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
-			const payload = this._requestToPayload(request);
-
-			return new Promise<ResultType>((resolve): void => {
-				provider.send<ResultType, RequestType>(payload, (err, response) => {
+			return new Promise((resolve): void => {
+				provider.send<ResultType>(payload, (err, response) => {
 					if (err) {
 						throw err;
 					}
@@ -126,44 +151,48 @@ export class Web3RequestManager extends Web3EventEmitter<{
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacySendAsyncProvider(provider)) {
-			const payload = this._requestToPayload(request);
-
 			return provider
-				.sendAsync<ResultType, RequestType>(payload)
-				.then(async response => this._processJsonRpcResponse(payload, response));
+				.sendAsync<ResultType>(payload)
+				.then(response => this._processJsonRpcResponse(payload, response));
 		}
 
 		throw new InvalidProviderError('Provider does not have a request or send method to use.');
 	}
 
-	// eslint-disable-next-line @typescript-eslint/require-await, class-methods-use-this
-	private async _processJsonRpcResponse<ResultType, ErrorType, RequestType>(
+	// eslint-disable-next-line class-methods-use-this
+	private _processJsonRpcResponse<ResultType, ErrorType, RequestType>(
 		payload: JsonRpcPayload<RequestType>,
 		response: JsonRpcResponse<ResultType, ErrorType>,
-	): Promise<ResultType> | never {
-		if (response?.id && payload.id !== response.id) {
+	): JsonRpcResponse<ResultType> | never {
+		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
+			throw new ResponseError(response, 'Got normal response for a batch request.');
+		}
+
+		if (!jsonRpc.isBatchRequest(payload) && Array.isArray(response)) {
+			throw new ResponseError(response, 'Got batch response for a normal request.');
+		}
+
+		if (jsonRpc.isBatchResponse(response)) {
+			return response as JsonRpcBatchResponse<ResultType>;
+		}
+
+		if (
+			(jsonRpc.isResponseWithError(response) || jsonRpc.isResponseWithResult(response)) &&
+			!jsonRpc.isBatchRequest(payload)
+		) {
+			if (response.id && payload.id !== response.id) {
+				throw new InvalidResponseError<ErrorType>(response);
+			}
+		}
+
+		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
 			throw new InvalidResponseError<ErrorType>(response);
 		}
 
-		if (response?.error) {
-			throw new InvalidResponseError<ErrorType>(response);
+		if (jsonRpc.isResponseWithResult<ResultType>(response)) {
+			return response;
 		}
 
-		return response.result;
-	}
-
-	private _requestToPayload<T>({ method, params }: JsonRpcRequest<T>): JsonRpcPayload<T> {
-		return {
-			jsonrpc: '2.0',
-			id: this._nextRequestId(),
-			method,
-			params,
-		};
-	}
-
-	private _nextRequestId(): number {
-		this._requestCounter += 1;
-
-		return this._requestCounter;
+		throw new ResponseError(response, 'Invalid response');
 	}
 }
