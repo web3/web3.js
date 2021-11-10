@@ -20,11 +20,11 @@ export type Uint256 = HexString;
 export type Address = HexString;
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
-export type typedObject = {
+export type TypedObject = {
 	type: string;
 	value: EncodingTypes;
 };
-export type typedObject2 = {
+export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
