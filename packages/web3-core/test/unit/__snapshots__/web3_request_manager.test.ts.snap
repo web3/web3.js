@@ -2,7 +2,7 @@
 
 exports[`Web3RequestManager providers should return providers on class 1`] = `
 Object {
-  "HttpProvider": Object {},
+  "HttpProvider": [Function],
   "IpcProvider": Object {},
   "WebsocketProvider": Object {},
 }
@@ -10,7 +10,7 @@ Object {
 
 exports[`Web3RequestManager providers should return providers on instance 1`] = `
 Object {
-  "HttpProvider": Object {},
+  "HttpProvider": [Function],
   "IpcProvider": Object {},
   "WebsocketProvider": Object {},
 }
