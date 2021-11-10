@@ -1,3 +1,4 @@
+import { HttpProvider } from 'web3-providers-http';
 import { Socket } from 'net';
 import {
 	InvalidProviderError,
@@ -32,7 +33,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	private _provider!: SupportedProviders;
 	private readonly _providers: { [key: string]: Web3BaseProviderConstructor };
 
-	public constructor(provider?: Web3BaseProvider | string, net?: Socket) {
+	public constructor(provider?: SupportedProviders | string, net?: Socket) {
 		super();
 
 		if (provider) {
@@ -45,7 +46,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	public static get providers() {
 		// TODO: Link the providers
 		return {
-			HttpProvider: {} as Web3BaseProviderConstructor,
+			HttpProvider,
 			WebsocketProvider: {} as Web3BaseProviderConstructor,
 			IpcProvider: {} as Web3BaseProviderConstructor,
 		};
@@ -63,7 +64,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		return this._providers;
 	}
 
-	public setProvider(provider: Web3BaseProvider | string, net?: Socket) {
+	public setProvider(provider: SupportedProviders | string, net?: Socket) {
 		let newProvider!: Web3BaseProvider;
 
 		// autodetect provider

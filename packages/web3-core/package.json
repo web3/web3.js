@@ -26,7 +26,8 @@
 	},
 	"dependencies": {
 		"web3-utils": "4.0.0-alpha.0",
-		"web3-common": "1.0.0-alpha.0"
+		"web3-common": "1.0.0-alpha.0",
+		"web3-providers-http": "4.0.0-alpha.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.2",

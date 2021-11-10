@@ -61,7 +61,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
 					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider),
+					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
 
 				const manager = new Web3RequestManager();
@@ -79,7 +79,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
 					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider),
+					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
 
 				const manager = new Web3RequestManager();
@@ -103,7 +103,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
 					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider),
+					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
 
 				const manager = new Web3RequestManager();
@@ -121,7 +121,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
 					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider),
+					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
 
 				const manager = new Web3RequestManager();
