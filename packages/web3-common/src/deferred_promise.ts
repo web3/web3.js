@@ -1,6 +1,7 @@
 import { OperationTimeoutError } from './errors';
 
 export class DeferredPromise<T> implements Promise<T> {
+	// public tag to treat object as promise by different libs
 	public [Symbol.toStringTag]: 'Promise';
 
 	private readonly _promise: Promise<T>;
