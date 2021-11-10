@@ -475,12 +475,9 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 - Fix 1.6.1 build size issue with removing static asset files (#4506)
+- Correct `web3.rst` example in documentation (#4511)
+- Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
 
 ## [Unreleased]
 
 ## [1.6.2]
-
-### Changed
-
-- Correct `web3.rst` example in documentation (#4511)
-- Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
