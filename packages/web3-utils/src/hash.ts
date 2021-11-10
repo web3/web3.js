@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { Numbers, typedObject, typedObject2, EncodingTypes } from './types';
+import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import { isAddress, isHexStrict } from './validation';
@@ -14,20 +14,19 @@ import {
 	InvalidBytesError,
 } from './errors';
 
-const SHA3_NULL = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 /**
  *
  * computes the Keccak-256 hash of the string input and returns a hexstring
  */
-export const sha3 = (data: string): string | null => {
-	if (typeof data !== 'string') throw new InvalidStringError(data);
-	const newData = isHexStrict(data) ? hexToBytes(data) : data;
+export const sha3 = (data: Bytes): string | null => {
+	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
 
-	const hash = bytesToHex(keccak256(Buffer.from(newData)));
+	const hash = bytesToHex(keccak256(Buffer.from(updatedData as Buffer)));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-	return hash === SHA3_NULL ? null : hash;
+	return hash === SHA3_EMPTY_BYTES ? null : hash;
 };
 
 /**
@@ -36,7 +35,7 @@ export const sha3 = (data: string): string | null => {
 export const sha3Raw = (data: string): string => {
 	const hash = sha3(data);
 	if (hash === null) {
-		return SHA3_NULL;
+		return SHA3_EMPTY_BYTES;
 	}
 
 	return hash;
@@ -47,7 +46,7 @@ export { keccak256 };
 /**
  * returns type and value
  */
-const getType = (arg: typedObject | typedObject2 | Numbers): [string, EncodingTypes] => {
+const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, EncodingTypes] => {
 	if (
 		typeof arg === 'object' &&
 		('t' in arg || 'type' in arg) &&
@@ -177,7 +176,7 @@ const solidityPack = (type: string, val: EncodingTypes): string => {
  * returns a string of the tightly packed value given based on the type
  */
 export const processSolidityEncodePackedArgs = (
-	arg: typedObject | typedObject2 | Numbers,
+	arg: TypedObject | TypedObjectAbbreviated | Numbers,
 ): string => {
 	const [type, val] = getType(arg);
 
@@ -195,7 +194,7 @@ export const processSolidityEncodePackedArgs = (
 /**
  * Encode packed arguments to a hexstring
  */
-export const encodePacked = (...values: typedObject[] | typedObject2[]): string => {
+export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]): string => {
 	const args = Array.prototype.slice.call(values);
 
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
@@ -207,12 +206,12 @@ export const encodePacked = (...values: typedObject[] | typedObject2[]): string 
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, or null if input is empty
  */
-export const soliditySha3 = (...values: typedObject[] | typedObject2[]): string | null =>
+export const soliditySha3 = (...values: TypedObject[] | TypedObjectAbbreviated[]): string | null =>
 	sha3(encodePacked(...values));
 
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
  */
-export const soliditySha3Raw = (...values: typedObject[] | typedObject2[]): string =>
+export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));

@@ -18,7 +18,7 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 	[['9.5', 8, '0'], '000009.5'],
 ];
 
-export const padInvalidData: [[any, number, string], HexString][] = [
+export const padInvalidData: [[any, number, string], string][] = [
 	[[9.5, 64, 'f'], 'Invalid value given "9.5". Error: not a valid integer.'],
 	[[null, 8, '0'], 'Invalid value given "null". Error: not a valid integer.'],
 	[[undefined, 8, '0'], 'Invalid value given "undefined". Error: not a valid integer.'],
