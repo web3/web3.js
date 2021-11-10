@@ -4,11 +4,11 @@ export type Address = string;
 export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
 export type Numbers = number | bigint | string | HexString;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
-export type typedObject = {
+export type TypedObject = {
 	type: string;
 	value: EncodingTypes;
 };
-export type typedObject2 = {
+export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
