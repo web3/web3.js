@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { Numbers, TypedObject, TypedObject2, EncodingTypes, Bytes } from './types';
+import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import { isAddress, isHexStrict } from './validation';
@@ -46,7 +46,7 @@ export { keccak256 };
 /**
  * returns type and value
  */
-const getType = (arg: TypedObject | TypedObject2 | Numbers): [string, EncodingTypes] => {
+const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, EncodingTypes] => {
 	if (
 		typeof arg === 'object' &&
 		('t' in arg || 'type' in arg) &&
@@ -81,8 +81,8 @@ const elementaryName = (name: string): string => {
 /**
  * returns the size of the value of type 'byte'
  */
-const parseTypeN = (value: string): number => {
-	const typesize = /^\D+(\d+).*$/.exec(value);
+const parseTypeN = (value: string, typeLength: number): number => {
+	const typesize = /^(\d+).*$/.exec(value.slice(typeLength));
 	return typesize ? parseInt(typesize[1], 10) : 0;
 };
 
@@ -98,7 +98,7 @@ const bitLength = (value: BigInt | number): number => {
  * Pads the value based on size and type
  * returns a string of the padded value
  */
-const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): string => {
+const solidityPack = (type: string, val: EncodingTypes): string => {
 	const value = val.toString();
 	if (type === 'string') {
 		if (typeof val === 'string') return utf8ToHex(val);
@@ -117,7 +117,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 	const name = elementaryName(type);
 	if (type.startsWith('uint')) {
-		const size = parseTypeN(name);
+		const size = parseTypeN(name, 'uint'.length);
 
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(value);
@@ -134,7 +134,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 	}
 
 	if (type.startsWith('int')) {
-		const size = parseTypeN(name);
+		const size = parseTypeN(name, 'int'.length);
 		if (size % 8 || size < 8 || size > 256) {
 			throw new InvalidSizeError(type);
 		}
@@ -160,8 +160,8 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
 		if (value.replace(/^0x/i, '').length % 2 !== 0) {
 			throw new InvalidBytesError(value);
 		}
-		// if no byte size is speciified it will default to 32 bytes
-		const size = arraySize ? 32 : parseTypeN(type);
+
+		const size = parseTypeN(type, 'bytes'.length);
 
 		if (!size || size < 1 || size > 64 || size < value.replace(/^0x/i, '').length / 2) {
 			throw new InvalidBytesError(value);
@@ -176,7 +176,7 @@ const solidityPack = (type: string, val: EncodingTypes, arraySize?: number): str
  * returns a string of the tightly packed value given based on the type
  */
 export const processSolidityEncodePackedArgs = (
-	arg: TypedObject | TypedObject2 | Numbers,
+	arg: TypedObject | TypedObjectAbbreviated | Numbers,
 ): string => {
 	const [type, val] = getType(arg);
 
@@ -194,7 +194,7 @@ export const processSolidityEncodePackedArgs = (
 /**
  * Encode packed arguments to a hexstring
  */
-export const encodePacked = (...values: TypedObject[] | TypedObject2[]): string => {
+export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]): string => {
 	const args = Array.prototype.slice.call(values);
 
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
@@ -206,12 +206,12 @@ export const encodePacked = (...values: TypedObject[] | TypedObject2[]): string 
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, or null if input is empty
  */
-export const soliditySha3 = (...values: TypedObject[] | TypedObject2[]): string | null =>
+export const soliditySha3 = (...values: TypedObject[] | TypedObjectAbbreviated[]): string | null =>
 	sha3(encodePacked(...values));
 
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
  */
-export const soliditySha3Raw = (...values: TypedObject[] | TypedObject2[]): string =>
+export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));

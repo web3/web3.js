@@ -5,6 +5,7 @@ export const hexStrict: [any, boolean][] = [
 	['0x123c', true],
 	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
 	['0xd115bffabbdd893a6f7cea402e7338643ced44a6', true],
+	['0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc', true],
 	['0x1', true],
 	['0xcd', true],
 	['Heeäööä👅D34ɝɣ24Єͽ', false],

@@ -8,7 +8,7 @@ export type TypedObject = {
 	type: string;
 	value: EncodingTypes;
 };
-export type TypedObject2 = {
+export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
@@ -25,5 +25,5 @@ export type jsonInterface = {
 	name: string,
 	type: string,
 	inputs: AbiInput[],
-	outputs: AbiInput[],
+	outputs?: AbiInput[],
 }

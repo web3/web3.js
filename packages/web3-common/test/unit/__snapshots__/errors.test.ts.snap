@@ -147,7 +147,7 @@ Object {
     "a": "10",
     "b": "20",
   },
-  "message": "error message",
+  "message": "Returned error: error message",
   "name": "InvalidResponseError",
 }
 `;

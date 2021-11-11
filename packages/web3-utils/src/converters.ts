@@ -435,3 +435,15 @@ export const jsonInterfaceMethodToString = (json: jsonInterface):string => {
 
     return types;
 };
+
+console.log(jsonInterfaceMethodToString({
+    name: 'myMethod',
+    type: 'function',
+    inputs: [{
+        type: 'uint256',
+        name: 'myNumber'
+    },{
+        type: 'string',
+        name: 'myString'
+    }]
+}))

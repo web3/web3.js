@@ -251,3 +251,17 @@ export const toWeiInvalidData: [[any, any], string][] = [
 	[['data', 'kwei'], 'Invalid value given "data". Error: not a valid number.'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
+
+export const jsonInterfaceValidData: [any, string][] = [
+	[{
+		name: 'myMethod',
+		type: 'function',
+		inputs: [{
+			type: 'uint256',
+			name: 'myNumber'
+		},{
+			type: 'string',
+			name: 'myString'
+		}]
+	}, 'myMethod(uint256,string)'],
+	]

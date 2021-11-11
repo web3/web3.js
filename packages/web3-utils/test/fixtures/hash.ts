@@ -1,5 +1,5 @@
 import { hexToBytes } from '../../src/converters';
-import { TypedObject, TypedObject2 } from '../../src/types';
+import { TypedObject, TypedObjectAbbreviated } from '../../src/types';
 
 export const sha3Data: [string, string | null][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],
@@ -49,7 +49,7 @@ export const sha3RawValidData: [string, string | null][] = [
 
 export const compareSha3JSRawValidData: [string, string][] = [...compareSha3JSValidData];
 
-export const soliditySha3Data: [TypedObject[] | TypedObject2[], string | null][] = [
+export const soliditySha3Data: [TypedObject[] | TypedObjectAbbreviated[], string | null][] = [
 	[
 		[{ type: 'string', value: '31323334' }],
 		'0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b',
@@ -129,18 +129,19 @@ export const soliditySha3Data: [TypedObject[] | TypedObject2[], string | null][]
 	],
 ];
 
-export const soliditySha3ValidData: [TypedObject[] | TypedObject2[], string | null][] = [
+export const soliditySha3ValidData: [TypedObject[] | TypedObjectAbbreviated[], string | null][] = [
 	...soliditySha3Data,
 	[[{ t: 'string', v: '' }], null],
 ];
 
-export const soliditySha3RawValidData: [TypedObject[] | TypedObject2[], string | null][] = [
-	...soliditySha3Data,
+export const soliditySha3RawValidData: [TypedObject[] | TypedObjectAbbreviated[], string | null][] =
 	[
-		[{ t: 'string', v: '' }],
-		'0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
-	],
-];
+		...soliditySha3Data,
+		[
+			[{ t: 'string', v: '' }],
+			'0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470',
+		],
+	];
 
 export const soliditySha3InvalidData: [any, string][] = [
 	[1, 'Invalid value given "1". Error: invalid type, type not supported.'],
@@ -148,7 +149,7 @@ export const soliditySha3InvalidData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: invalid type, type not supported.'],
 ];
 
-export const encodePackData: [TypedObject[] | TypedObject2[], any][] = [
+export const encodePackData: [TypedObject[] | TypedObjectAbbreviated[], any][] = [
 	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
 	[
 		[{ type: 'int', value: 31323334 }],
@@ -189,7 +190,6 @@ export const encodePackData: [TypedObject[] | TypedObject2[], any][] = [
 		[{ v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes' }],
 		'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	],
-	// [[{ v: [-12, 243], t: 'int256[]' }], ''],
 	[[{ t: 'int', v: '0' }], '0x0000000000000000000000000000000000000000000000000000000000000000'],
 	[
 		[{ type: 'int256', value: '1234' }],
@@ -207,6 +207,19 @@ export const encodePackData: [TypedObject[] | TypedObject2[], any][] = [
 		[{ type: 'int128[]', value: [12345, 324, 1, 2] }],
 		'0x00000000000000000000000000003039000000000000000000000000000001440000000000000000000000000000000100000000000000000000000000000002',
 	],
+	[
+		[
+			{
+				type: 'bytes32[]',
+				value: [
+					'0x1248',
+					'0x3c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4',
+				],
+			},
+		],
+		'0x12480000000000000000000000000000000000000000000000000000000000003c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4',
+	],
+	[[{ type: 'bytes4[]', value: ['0x11223344', '0x22334455'] }], '0x1122334422334455'],
 ];
 
 export const encodePackedInvalidData: [any, string][] = [
