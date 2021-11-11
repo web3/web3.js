@@ -71,7 +71,6 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 		return '0x0';
 	}
 
-	// eslint-disable-next-line no-nested-ternary
 	if (typeof blockNumber === 'string' && isHexStrict(blockNumber)) {
 		return blockNumber.toLowerCase();
 	}
