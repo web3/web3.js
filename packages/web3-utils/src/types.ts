@@ -12,3 +12,18 @@ export type TypedObject2 = {
 	t: string;
 	v: EncodingTypes;
 };
+
+export type AbiInput = {
+	name: string,
+	type: string,
+	components?: AbiInput[],
+	index?: boolean
+
+}
+
+export type jsonInterface = {
+	name: string,
+	type: string,
+	inputs: AbiInput[],
+	outputs: AbiInput[],
+}
