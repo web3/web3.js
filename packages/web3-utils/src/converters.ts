@@ -1,4 +1,5 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
+
 import {
 	HexProcessingError,
 	InvalidAddressError,
@@ -6,7 +7,15 @@ import {
 	InvalidIntegerError,
 	InvalidUnitError,
 } from './errors';
-import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
+import {
+	Address,
+	Bytes,
+	HexString,
+	Numbers,
+	ValueTypes,
+	ValidTypes,
+	ValidReturnTypes,
+} from './types';
 import {
 	isAddress,
 	isHexStrict,
@@ -216,12 +225,10 @@ export const toHex = (
 	}
 
 	if (typeof value === 'boolean') {
-		// eslint-disable-next-line no-nested-ternary
 		return returnType ? 'bool' : value ? '0x01' : '0x00';
 	}
 
 	if (typeof value === 'number') {
-		// eslint-disable-next-line no-nested-ternary
 		return returnType ? (value < 0 ? 'int256' : 'uint256') : numberToHex(value);
 	}
 
@@ -380,4 +387,23 @@ export const toChecksumAddress = (address: Address): string => {
 		}
 	}
 	return checksumAddress;
+};
+
+export const convertToValidType = (
+	value: string | number | bigint,
+	desiredType: ValidTypes,
+): ValidReturnTypes[ValidTypes] => {
+	switch (desiredType) {
+		case ValidTypes.HexString:
+			return toHex(value);
+		case ValidTypes.NumberString:
+			return hexToNumberString(toHex(value));
+		case ValidTypes.Number:
+			return toNumber(value);
+		case ValidTypes.BigInt:
+			return BigInt(toNumber(value));
+		default:
+			// TODO Replace with proper error
+			throw new Error('Invalid desiredType provided');
+	}
 };
