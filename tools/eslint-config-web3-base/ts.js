@@ -16,6 +16,7 @@ module.exports = {
 		'no-unused-expressions': ['error'],
 		'no-continue': 'off',
 		'no-underscore-dangle': 'off',
+		'no-nested-ternary': 'off',
 		'import/prefer-default-export': 'off',
 		'lines-between-class-members': 'off',
 		'no-use-before-define': ['error'],
