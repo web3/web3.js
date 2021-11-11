@@ -28,3 +28,16 @@ export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
+
+export enum ValidTypes {
+	HexString = 'HexString',
+	NumberString = 'NumberString',
+	Number = 'Number',
+	BigInt = 'BigInt',
+}
+export type ValidReturnTypes = {
+	[ValidTypes.HexString]: string;
+	[ValidTypes.NumberString]: string;
+	[ValidTypes.Number]: number;
+	[ValidTypes.BigInt]: bigint;
+};
