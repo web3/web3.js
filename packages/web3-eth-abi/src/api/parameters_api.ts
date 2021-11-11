@@ -30,7 +30,7 @@ export const encodeParameters = (
 
 		if (typeof type === 'string' && type.includes('tuple')) {
 			const coder = ethersAbiCoder._getCoder(ParamType.from(type));
-			modifyParams(coder, newParam);
+			modifyParams(coder, [newParam]);
 		}
 
 		modifiedParams.push(newParam);

@@ -1,11 +1,11 @@
 export interface JsonAbiParameter {
 	readonly name: string;
 	readonly type: string;
-	readonly baseType: string;
-	readonly indexed: boolean;
-	readonly components: Array<JsonAbiParameter>;
-	readonly arrayLength: number;
-	readonly arrayChildren: Array<JsonAbiParameter>;
+	readonly baseType?: string;
+	readonly indexed?: boolean;
+	readonly components?: Array<JsonAbiParameter>;
+	readonly arrayLength?: number;
+	readonly arrayChildren?: Array<JsonAbiParameter>;
 }
 
 export interface JsonAbiStruct {
@@ -19,10 +19,12 @@ export interface JsonAbiCoderStruct extends JsonAbiStruct {
 	components?: Array<JsonAbiStruct>;
 }
 
+type FragmentTypes = 'constructor' | 'event' | 'function';
+
 export interface JsonAbiBaseFragment {
 	[key: string]: unknown;
 	name?: string;
-	type: 'constructor' | 'event' | 'function';
+	type: FragmentTypes;
 	inputs?: Array<JsonAbiParameter>;
 }
 
@@ -35,8 +37,8 @@ export interface JsonAbiConstructorFragment extends JsonAbiBaseFragment {
 
 export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 	type: 'function';
-	constant: boolean;
-	stateMutability: 'nonpayable' | 'payable' | 'pure' | 'view';
+	constant?: boolean;
+	stateMutability?: 'nonpayable' | 'payable' | 'pure' | 'view';
 }
 
 export interface JsonAbiEventFragment extends JsonAbiBaseFragment {

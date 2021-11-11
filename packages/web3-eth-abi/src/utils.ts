@@ -119,7 +119,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 		const size = parseInt(match[2] ?? '256', 10);
 		if (size / 8 < (param as { length: number }).length) {
 			// pad to correct bit width
-			param = leftPad(param, size);
+			param = leftPad(param as string, size);
 		}
 	}
 
@@ -140,7 +140,7 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 			}
 			if ((param as string).length < maxSize) {
 				// pad to correct length
-				param = rightPad(param, size * 2);
+				param = rightPad(param as string, size * 2);
 			}
 		}
 
@@ -154,23 +154,30 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 };
 
 // eslint-disable-next-line consistent-return
-export const modifyParams = (coder: ReturnType<AbiCoder['_getCoder']>, param: unknown): unknown => {
+export const modifyParams = (
+	coder: ReturnType<AbiCoder['_getCoder']>,
+	param: unknown[],
+	// eslint-disable-next-line consistent-return
+): unknown => {
 	if (coder.name === 'array') {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return (param as Array<unknown>).map(p =>
+		return param.map(p =>
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))), p),
+			modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))), [
+				p,
+			]),
 		);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-	(coder as unknown).coders.forEach((c: ReturnType<AbiCoder['_getCoder']>, i: number) => {
+	(coder as any).coders.forEach((c: ReturnType<AbiCoder['_getCoder']>, i: number) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		if (c.name === 'tuple') {
-			modifyParams(c, (param as Array<unknown>)[i]);
+			modifyParams(c, [param[i]]);
 		} else {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, no-param-reassign
 			param[i] = formatParam(c.name, param[i]);
 		}
 	});
+	return [];
 };
