@@ -3,11 +3,12 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderStatus,
 	JsonRpcId,
-	JsonRpcPayload,
-	JsonRpcResponse,
+	JsonRpcRequest,
+	JsonRpcResponseWithResult,
+	JsonRpcResponseWithError,
 	JsonRpcResult,
 	Web3BaseProviderCallback,
-	SubscriptionResultNotification,
+	JsonRpcNotification,
 	InvalidConnectionError,
 	PendingRequestsOnReconnectingError,
 	ConnectionNotOpenError,
@@ -137,8 +138,8 @@ export default class WebSocketProvider extends Web3BaseProvider {
 		this._addSocketListeners();
 	}
 
-	public async request<T = JsonRpcResponse, T2 = unknown[]>(
-		request: JsonRpcPayload<T2>,
+	public async request<T = JsonRpcResponseWithResult | JsonRpcResponseWithError, T2 = unknown[]>(
+		request: JsonRpcRequest<T2>,
 	): Promise<T> {
 		if (this._webSocketConnection === undefined)
 			throw new Error('WebSocket connection is undefined');
@@ -233,7 +234,10 @@ export default class WebSocketProvider extends Web3BaseProvider {
 	private _onMessage(e: MessageEvent): void {
 		if (typeof e.data === 'string') {
 			/* eslint-disable  @typescript-eslint/no-unsafe-assignment */
-			const response: JsonRpcResponse | SubscriptionResultNotification = JSON.parse(e.data);
+			const response:
+				| JsonRpcResponseWithError
+				| JsonRpcResponseWithResult
+				| JsonRpcNotification = JSON.parse(e.data);
 
 			if ('method' in response && response.method.endsWith('_subscription')) {
 				this._wsEventEmitter.emit('message', null, response);
