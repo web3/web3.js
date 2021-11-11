@@ -1,10 +1,10 @@
 import { Socket } from 'net';
 import {
+	Web3APISpec,
 	JsonRpcPayload,
 	JsonRpcResponse,
 	JsonRpcResult,
 	Web3BaseProvider,
-	Web3APISpec,
 } from 'web3-common';
 
 export type LegacyRequestProvider = {
