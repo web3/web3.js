@@ -41,114 +41,136 @@ export class Web3Eth {
 		return RpcMethods.getMining(this._requestManager);
 	}
 
-	public async getHashRate(returnType?: ValidTypes): Promise<ValidReturnTypes[ValidTypes]> {
+	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getHashRate(this._requestManager);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
-	public async getGasPrice(returnType?: ValidTypes): Promise<ValidReturnTypes[ValidTypes]> {
+	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getGasPrice(this._requestManager);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getAccounts() {
 		return RpcMethods.getAccounts(this._requestManager);
 	}
 
-	public async getBlockNumber(returnType?: ValidTypes): Promise<ValidReturnTypes[ValidTypes]> {
+	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getBlockNumber(this._requestManager);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
 	// TODO Discuss the use of multiple optional parameters
-	public async getBalance(
+	public async getBalance<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ValidTypes,
-	): Promise<ValidReturnTypes[ValidTypes]> {
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getBalance(this._requestManager, address, blockNumber);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getStorageAt(
 		address: Address,
 		storageSlot: Uint256,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-	): Promise<ValidReturnTypes[ValidTypes]> {
+	) {
 		return RpcMethods.getStorageAt(this._requestManager, address, storageSlot, blockNumber);
 	}
 
 	// TODO Discuss the use of multiple optional parameters
-	public async getTransactionCount(
+	public async getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ValidTypes,
-	): Promise<ValidReturnTypes[ValidTypes]> {
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getTransactionCount(
 			this._requestManager,
 			address,
 			blockNumber,
 		);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
-	public async getBlockTransactionCount(
+    // TODO Discuss the use of multiple optional parameters
+	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ValidTypes,
-	): Promise<ValidReturnTypes[ValidTypes]> {
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response =
 			// Checking if block is a block hash or number
 			typeof block === 'string' && isHexStrict(block) && block.length === 66
 				? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
 				: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
-	public async getBlockUncleCount(
+    // TODO Discuss the use of multiple optional parameters
+	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ValidTypes,
-	): Promise<ValidReturnTypes[ValidTypes]> {
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
 		const response =
 			// Checking if block is a block hash or number
 			typeof block === 'string' && isHexStrict(block) && block.length === 66
 				? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
 				: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertToValidType(response, this._options.defaultReturnType)
-			: convertToValidType(response, returnType);
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
 	}
 
 	// public async getCode(
