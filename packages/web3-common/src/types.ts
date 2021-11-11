@@ -15,10 +15,10 @@ export interface JsonRpcError<T = JsonRpcResult> {
 	readonly data?: T;
 }
 
-export interface JsonRpcResponseWithError<T = JsonRpcResult> {
+export interface JsonRpcResponseWithError<Error = JsonRpcResult> {
 	readonly id: JsonRpcId;
 	readonly jsonrpc: JsonRpcIdentifier;
-	readonly error: JsonRpcError<T>;
+	readonly error: JsonRpcError<Error>;
 	readonly result?: never;
 }
 
@@ -33,26 +33,37 @@ export interface SubscriptionParams<T = JsonRpcResult> {
 	readonly subscription: string; // for subscription id
 	readonly result: T;
 }
-export interface SubscriptionResultNotification<T = JsonRpcResult> {
+export interface JsonRpcNotification<T = JsonRpcResult> {
 	readonly id?: JsonRpcId;
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
 	readonly params: SubscriptionParams<T>; // for subscription results
 }
 
-export type JsonRpcResponse<R = JsonRpcResult, E = JsonRpcResult> =
-	| JsonRpcResponseWithError<E>
-	| JsonRpcResponseWithResult<R>;
-
 export interface JsonRpcRequest<T = unknown[]> {
+	readonly id: JsonRpcId;
+	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string;
 	readonly params?: T;
 }
 
-export interface JsonRpcPayload<T = unknown[]> extends JsonRpcRequest<T> {
-	readonly jsonrpc?: JsonRpcIdentifier;
+export interface JsonRpcOptionalRequest<ParamType = unknown[]>
+	extends Omit<JsonRpcRequest<ParamType>, 'id' | 'jsonrpc'> {
 	readonly id?: JsonRpcId;
+	readonly jsonrpc?: JsonRpcIdentifier;
 }
+
+export type JsonRpcBatchRequest = JsonRpcRequest[];
+
+export type JsonRpcPayload<Param = unknown[]> = JsonRpcRequest<Param> | JsonRpcBatchRequest;
+
+export type JsonRpcBatchResponse<Result = JsonRpcResult, Error = JsonRpcResult> =
+	| (JsonRpcResponseWithError<Error> | JsonRpcResponseWithResult<Result>)[];
+
+export type JsonRpcResponse<Result = JsonRpcResult, Error = JsonRpcResult> =
+	| JsonRpcResponseWithError<Error>
+	| JsonRpcResponseWithResult<Result>
+	| JsonRpcBatchResponse<Result, Error>;
 
 export interface Proof {
 	readonly address: HexString;

@@ -1,4 +1,3 @@
-import { Socket } from 'net';
 import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult, Web3BaseProvider } from 'web3-common';
 
 export type LegacyRequestProvider = {
@@ -27,4 +26,4 @@ export type SupportedProviders =
 	| LegacySendProvider
 	| LegacySendAsyncProvider;
 
-export type Web3BaseProviderConstructor = new (url: string, net?: Socket) => Web3BaseProvider;
+export type Web3BaseProviderConstructor = new (url: string, ...args: any) => Web3BaseProvider;

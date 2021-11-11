@@ -45,9 +45,9 @@ export abstract class Web3BaseProvider {
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
-		request: JsonRpcPayload<T2>,
+		payload: JsonRpcPayload<T2>,
 		providerOptions?: T3,
-	): Promise<T>;
+	): Promise<JsonRpcResponse<T>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
