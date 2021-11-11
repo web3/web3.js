@@ -382,17 +382,6 @@ export const toChecksumAddress = (address: Address): string => {
 	return checksumAddress;
 };
 
-
-
-export const jsonInterfaceMethodToString = (json: jsonInterface):string => {
-    if (!!json && typeof json === 'object' && json.name && json.name.indexOf('(') !== -1) {
-        return json.name;
-    }
-
-    return `${json.name}(${flattenTypes(false, json.inputs).join(',')})`;
-};
-
-
 /**
  * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
  *
@@ -402,48 +391,42 @@ export const jsonInterfaceMethodToString = (json: jsonInterface):string => {
  * @return {Array} parameters as strings
  */
 
- export const flattenTypes = (includeTuple: boolean, puts: AbiInput[]):string[] => {
-    // console.log("entered _flattenTypes. inputs/outputs: " + puts)
-    let types: string[] = [];
+export const flattenTypes = (includeTuple: boolean, puts: AbiInput[]): string[] => {
+	// console.log("entered _flattenTypes. inputs/outputs: " + puts)
+	const types: string[] = [];
 
-    puts.forEach(param => {
-        if (typeof param.components === 'object') {
-            if (param.type.substring(0, 5) !== 'tuple') {
-                throw new Error('components found but type is not tuple; report on GitHub');
-            }
-            var arrayBracket = param.type.indexOf('[');
-            const suffix = (arrayBracket >= 0) ? param.type.substring(arrayBracket): '';
-            const result = flattenTypes(includeTuple, param.components);
-            // console.log("result should have things: " + result)
-            if(Array.isArray(result) && includeTuple) {
-                // console.log("include tuple word, and its an array. joining...: " + result.types)
-                types.push('tuple(' + result.join(',') + ')' + suffix);
-            }
-            else if(!includeTuple) {
-                // console.log("don't include tuple, but its an array. joining...: " + result)
-                types.push('(' + result.join(',') + ')' + suffix);
-            }
-            else {
-                // console.log("its a single type within a tuple: " + result.types)
-                types.push(`(${result})`);
-            }
-        } else {
-            // console.log("its a type and not directly in a tuple: " + param.type)
-            types.push(param.type);
-        }
-    });
+	puts.forEach(param => {
+		if (typeof param.components === 'object') {
+			if (!param.type.startsWith('tuple')) {
+				throw new Error('components found but type is not tuple; report on GitHub');
+			}
+			const arrayBracket = param.type.indexOf('[');
+			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
+			const result = flattenTypes(includeTuple, param.components);
+			// console.log("result should have things: " + result)
+			if (Array.isArray(result) && includeTuple) {
+				// console.log("include tuple word, and its an array. joining...: " + result.types)
+				types.push(`tuple(${result.join(',')})${suffix}`);
+			} else if (!includeTuple) {
+				// console.log("don't include tuple, but its an array. joining...: " + result)
+				types.push(`(${result.join(',')})${suffix}`);
+			} else {
+				// console.log("its a single type within a tuple: " + result.types)
+				types.push(`(${result.join(',')})`);
+			}
+		} else {
+			// console.log("its a type and not directly in a tuple: " + param.type)
+			types.push(param.type);
+		}
+	});
 
-    return types;
+	return types;
 };
 
-console.log(jsonInterfaceMethodToString({
-    name: 'myMethod',
-    type: 'function',
-    inputs: [{
-        type: 'uint256',
-        name: 'myNumber'
-    },{
-        type: 'string',
-        name: 'myString'
-    }]
-}))
+export const jsonInterfaceMethodToString = (json: jsonInterface): string => {
+	if (!!json && typeof json === 'object' && json.name && json.name.includes('(')) {
+		return json.name;
+	}
+
+	return `${json.name}(${flattenTypes(false, json.inputs).join(',')})`;
+};
