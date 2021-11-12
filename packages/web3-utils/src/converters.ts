@@ -5,8 +5,18 @@ import {
 	InvalidBytesError,
 	InvalidIntegerError,
 	InvalidUnitError,
+	InvalidTypeAbiInput,
 } from './errors';
-import { Address, Bytes, HexString, Numbers, ValueTypes, AbiInput, jsonInterface } from './types';
+import {
+	Address,
+	Bytes,
+	HexString,
+	Numbers,
+	ValueTypes,
+	JsonFunctionInterface,
+	JsonEventInterface,
+	Components,
+} from './types';
 import {
 	isAddress,
 	isHexStrict,
@@ -383,39 +393,29 @@ export const toChecksumAddress = (address: Address): string => {
 };
 
 /**
- * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
- *
- * @method _flattenTypes
- * @param {bool} includeTuple
- * @param {Object} puts
- * @return {Array} parameters as strings
+ *  used to flatten json abi inputs/outputs into an array of type-representing-strings
  */
 
-export const flattenTypes = (includeTuple: boolean, puts: AbiInput[]): string[] => {
-	// console.log("entered _flattenTypes. inputs/outputs: " + puts)
+export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[] => {
 	const types: string[] = [];
 
 	puts.forEach(param => {
 		if (typeof param.components === 'object') {
 			if (!param.type.startsWith('tuple')) {
-				throw new Error('components found but type is not tuple; report on GitHub');
+				throw new InvalidTypeAbiInput(param.type);
 			}
 			const arrayBracket = param.type.indexOf('[');
 			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
 			const result = flattenTypes(includeTuple, param.components);
-			// console.log("result should have things: " + result)
+
 			if (Array.isArray(result) && includeTuple) {
-				// console.log("include tuple word, and its an array. joining...: " + result.types)
 				types.push(`tuple(${result.join(',')})${suffix}`);
 			} else if (!includeTuple) {
-				// console.log("don't include tuple, but its an array. joining...: " + result)
 				types.push(`(${result.join(',')})${suffix}`);
 			} else {
-				// console.log("its a single type within a tuple: " + result.types)
-				types.push(`(${result.join(',')})`);
+				types.push(`(${result.join()})`);
 			}
 		} else {
-			// console.log("its a type and not directly in a tuple: " + param.type)
 			types.push(param.type);
 		}
 	});
@@ -423,8 +423,14 @@ export const flattenTypes = (includeTuple: boolean, puts: AbiInput[]): string[] 
 	return types;
 };
 
-export const jsonInterfaceMethodToString = (json: jsonInterface): string => {
-	if (!!json && typeof json === 'object' && json.name && json.name.includes('(')) {
+/**
+ * Should be used to create full function/event name from json abi
+ * returns a string
+ */
+export const jsonInterfaceMethodToString = (
+	json: JsonFunctionInterface | JsonEventInterface,
+): string => {
+	if (json.name.includes('(')) {
 		return json.name;
 	}
 

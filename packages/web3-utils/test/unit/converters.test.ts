@@ -20,7 +20,7 @@ import {
 	toUtf8,
 	toWei,
 	utf8ToHex,
-	jsonInterfaceMethodToString
+	jsonInterfaceMethodToString,
 } from '../../src/converters';
 import {
 	asciiToHexValidData,
@@ -42,7 +42,8 @@ import {
 	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
-	jsonInterfaceValidData
+	jsonInterfaceValidData,
+	jsonInterfaceInvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -326,8 +327,9 @@ describe('converters', () => {
 
 	describe('toChecksumAddress', () => {
 		describe('valid cases', () => {
-			// TODO: To be done after `sha3` is implemented
-			it.todo('should convert address valid checksum address');
+			it.each(jsonInterfaceValidData)('%s', (input, output) => {
+				expect(jsonInterfaceMethodToString(input)).toEqual(output);
+			});
 		});
 		describe('invalid cases', () => {
 			// TODO: To be done after `sha3` is implemented
@@ -340,5 +342,10 @@ describe('converters', () => {
 				expect(jsonInterfaceMethodToString(input)).toEqual(output);
 			});
 		});
-	})
+		describe('invalid cases', () => {
+			it.each(jsonInterfaceInvalidData)('%s', (input, output) => {
+				expect(() => jsonInterfaceMethodToString(input)).toThrow(output);
+			});
+		});
+	});
 });

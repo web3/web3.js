@@ -339,4 +339,80 @@ export const jsonInterfaceValidData: [any, string][] = [
 		},
 		'Event(uint256,bytes32)',
 	],
+	[
+		{
+			name: 'myEvent',
+			type: 'event',
+			inputs: [
+				{
+					type: 'uint256',
+					name: 'myNumber',
+				},
+				{
+					type: 'bytes32',
+					name: 'myBytes',
+				},
+			],
+		},
+		'myEvent(uint256,bytes32)',
+	],
+];
+
+export const jsonInterfaceInvalidData: [any, string][] = [
+	[
+		{
+			name: 'f',
+			type: 'function',
+			inputs: [
+				{
+					name: 's',
+					type: 'notTuple',
+					components: [
+						{
+							name: 'a',
+							type: 'uint256',
+						},
+						{
+							name: 'b',
+							type: 'uint256[]',
+						},
+						{
+							name: 'c',
+							type: 'tuple[]',
+							components: [
+								{
+									name: 'x',
+									type: 'uint256',
+								},
+								{
+									name: 'y',
+									type: 'uint256',
+								},
+							],
+						},
+					],
+				},
+				{
+					name: 't',
+					type: 'tuple',
+					components: [
+						{
+							name: 'x',
+							type: 'uint256',
+						},
+						{
+							name: 'y',
+							type: 'uint256',
+						},
+					],
+				},
+				{
+					name: 'a',
+					type: 'uint256',
+				},
+			],
+			outputs: [],
+		},
+		'Invalid value given "notTuple". Error: components found but type is not tuple.',
+	],
 ];
