@@ -114,7 +114,7 @@ export interface Block {
 	readonly timestamp: Uint;
 	readonly extraData: HexStringBytes;
 	readonly mixHash: HexString32Bytes;
-	readonly nonce: HexStringBytes | null;
+	readonly nonce: Uint | null;
 	readonly totalDifficulty: Uint;
 	readonly baseFeePerGas?: Uint;
 	readonly size: Uint;
