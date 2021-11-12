@@ -1,4 +1,10 @@
-import { BlockNumberOrTag, Web3BaseProvider } from 'web3-common';
+import {
+	BlockNumberOrTag,
+	TransactionCall,
+	TransactionWithSender,
+	Web3BaseProvider,
+	Filter,
+} from 'web3-common';
 import { Web3Config, Web3RequestManager } from 'web3-core';
 import {
 	ValidTypes,
@@ -8,6 +14,10 @@ import {
 	Uint256,
 	isHexStrict,
 	HexString32Bytes,
+	HexStringBytes,
+	HexString256Bytes,
+	Uint,
+	HexString8Bytes,
 } from 'web3-utils';
 
 import * as RpcMethods from './rpc_methods';
@@ -29,7 +39,7 @@ export class Web3Eth {
 		return RpcMethods.getProtocolVersion(this._requestManager);
 	}
 
-	public async getSyncingResponse() {
+	public async isSyncing() {
 		return RpcMethods.getSyncing(this._requestManager);
 	}
 
@@ -37,7 +47,7 @@ export class Web3Eth {
 		return RpcMethods.getCoinbase(this._requestManager);
 	}
 
-	public async getMining() {
+	public async isMining() {
 		return RpcMethods.getMining(this._requestManager);
 	}
 
@@ -112,6 +122,137 @@ export class Web3Eth {
 		return RpcMethods.getStorageAt(this._requestManager, address, storageSlot, blockNumber);
 	}
 
+	public async getCode(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	) {
+		return RpcMethods.getCode(this._requestManager, address, blockNumber);
+	}
+
+	// TODO Discuss the use of multiple optional parameters
+	// TODO Object returnType
+	public async getBlock(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		hydrated: boolean,
+		// returnType?: ReturnType,
+	) {
+		// Checking if block is a block hash or number
+		return typeof block === 'string' && isHexStrict(block) && block.length === 66
+			? RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
+			: RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
+
+		// return (
+		// 	returnType === undefined
+		// 		? this._options.defaultReturnType === undefined
+		// 			? response
+		// 			: convertToValidType(response, this._options.defaultReturnType)
+		// 		: convertToValidType(response, returnType)
+		// ) as ValidReturnTypes[ReturnType];
+	}
+
+	// TODO Discuss the use of multiple optional parameters
+	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
+		const response =
+			// Checking if block is a block hash or number
+			typeof block === 'string' && isHexStrict(block) && block.length === 66
+				? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
+				: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
+
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
+	}
+
+	// TODO Discuss the use of multiple optional parameters
+	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		returnType?: ReturnType,
+	): Promise<ValidReturnTypes[ReturnType]> {
+		const response =
+			// Checking if block is a block hash or number
+			typeof block === 'string' && isHexStrict(block) && block.length === 66
+				? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
+				: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
+
+		return (
+			returnType === undefined
+				? this._options.defaultReturnType === undefined
+					? response
+					: convertToValidType(response, this._options.defaultReturnType)
+				: convertToValidType(response, returnType)
+		) as ValidReturnTypes[ReturnType];
+	}
+
+	// TODO Object returnType
+	public async getUncle(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		uncleIndex: Uint,
+		// returnType?: ReturnType,
+	) {
+		// Checking if block is a block hash or number
+		return typeof block === 'string' && isHexStrict(block) && block.length === 66
+			? RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
+			: RpcMethods.getUncleByBlockNumberAndIndex(this._requestManager, block, uncleIndex);
+
+		// return (
+		// 	returnType === undefined
+		// 		? this._options.defaultReturnType === undefined
+		// 			? response
+		// 			: convertToValidType(response, this._options.defaultReturnType)
+		// 		: convertToValidType(response, returnType)
+		// ) as ValidReturnTypes[ReturnType];
+	}
+
+	// TODO Object returnType
+	public async getTransaction(transactionHash: HexString32Bytes) {
+		return RpcMethods.getTransactionByHash(this._requestManager, transactionHash);
+	}
+
+	// TODO Can't find in spec
+	// public async getPendingTransactions() {
+
+	// }
+
+	// TODO Object returnType
+	public async getTransactionFromBlock(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		transactionIndex: Uint,
+		// returnType?: ReturnType,
+	) {
+		// Checking if block is a block hash or number
+		return typeof block === 'string' && isHexStrict(block) && block.length === 66
+			? RpcMethods.getTransactionByBlockHashAndIndex(
+					this._requestManager,
+					block,
+					transactionIndex,
+			  )
+			: RpcMethods.getTransactionByBlockNumberAndIndex(
+					this._requestManager,
+					block,
+					transactionIndex,
+			  );
+
+		// return (
+		// 	returnType === undefined
+		// 		? this._options.defaultReturnType === undefined
+		// 			? response
+		// 			: convertToValidType(response, this._options.defaultReturnType)
+		// 		: convertToValidType(response, returnType)
+		// ) as ValidReturnTypes[ReturnType];
+	}
+
+	// TODO Object returnType
+	public async getTransactionReceipt(transactionHash: HexString32Bytes) {
+		return RpcMethods.getTransactionReceipt(this._requestManager, transactionHash);
+	}
+
 	// TODO Discuss the use of multiple optional parameters
 	public async getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		address: Address,
@@ -133,101 +274,83 @@ export class Web3Eth {
 		) as ValidReturnTypes[ReturnType];
 	}
 
-    // TODO Discuss the use of multiple optional parameters
-	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
-		const response =
-			// Checking if block is a block hash or number
-			typeof block === 'string' && isHexStrict(block) && block.length === 66
-				? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
-				: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
-
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
-		) as ValidReturnTypes[ReturnType];
+	public async sendTransaction(transaction: TransactionWithSender): Promise<HexString32Bytes> {
+		return RpcMethods.sendTransaction(this._requestManager, transaction);
 	}
 
-    // TODO Discuss the use of multiple optional parameters
-	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
-		const response =
-			// Checking if block is a block hash or number
-			typeof block === 'string' && isHexStrict(block) && block.length === 66
-				? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
-				: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
-
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
-		) as ValidReturnTypes[ReturnType];
+	public async sendSignedTransaction(transaction: HexStringBytes): Promise<HexString32Bytes> {
+		return RpcMethods.sendRawTransaction(this._requestManager, transaction);
 	}
 
-	// public async getCode(
-	// 	address: HexString,
-	// 	block?: ValidTypes | PredefinedBlockNumbers,
-	// ): Promise<HexString> {
-	// 	return RpcMethods.getCode(
-	// 		this._requestManager,
-	// 		address,
-	// 		block ?? this._options.defaultBlock,
-	// 	);
+	public async sign(address: Address, message: HexStringBytes): Promise<HexString256Bytes> {
+		return RpcMethods.sign(this._requestManager, address, message);
+	}
+
+	public async signTransaction(transaction: TransactionWithSender): Promise<HexStringBytes> {
+		return RpcMethods.signTransaction(this._requestManager, transaction);
+	}
+
+	public async call(
+		transaction: TransactionCall,
+		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	): Promise<HexStringBytes> {
+		return RpcMethods.call(this._requestManager, transaction, blockNumber);
+	}
+
+	public async estimateGas(
+		transaction: Partial<TransactionWithSender>,
+		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	): Promise<Uint> {
+		return RpcMethods.estimateGas(this._requestManager, transaction, blockNumber);
+	}
+
+	public async getPastLogs(filter: Filter) {
+		return RpcMethods.getLogs(this._requestManager, filter);
+	}
+
+	public async getWork() {
+		return RpcMethods.getWork(this._requestManager);
+	}
+
+	public async submitWork(
+		nonce: HexString8Bytes,
+		seedHash: HexString32Bytes,
+		difficulty: HexString32Bytes,
+	) {
+		return RpcMethods.submitWork(this._requestManager, nonce, seedHash, difficulty);
+	}
+
+	// TODO
+	// public async requestAccounts() {
+
 	// }
 
-	// // TODO Figure out type of data
-	// public async sign(address: HexString, data: HexString): Promise<HexString> {
-	// 	return RpcMethods.sign(this._requestManager, address, data);
+	// TODO
+	// public async getChainId() {
+
 	// }
 
-	// // TODO Check for defaults such as gas
-	// public async signTransaction(transaction: Transaction): Promise<HexString> {
-	// 	return RpcMethods.signTransaction(this._requestManager, transaction);
+	// TODO
+	// public async getNodeInfo() {
+
 	// }
 
-	// // TODO Check for defaults such as gas
-	// public async sendTransaction(transaction: Transaction): Promise<HexString> {
-	// 	return RpcMethods.sendTransaction(this._requestManager, transaction);
+	// TODO
+	// public async getProof() {
+
 	// }
 
-	// public async sendRawTransaction(signedTransaction: HexString): Promise<HexString> {
-	// 	return RpcMethods.sendRawTransaction(this._requestManager, signedTransaction);
-	// }
-
-	// // TODO Check for defaults such as gas
-	// public async call(
-	// 	transaction: Transaction,
-	// 	block?: ValidTypes | PredefinedBlockNumbers,
-	// 	options?: Web3EthMethodOptions,
-	// ): Promise<HexString> {
-	// 	return RpcMethods.call(
-	// 		this._requestManager,
-	// 		transaction,
-	// 		block ?? this._options.defaultBlock,
-	// 		options,
-	// 	);
-	// }
-
-	// // TODO Check for defaults such as gas
-	// public async estimateGas(
-	// 	transaction: Transaction,
-	// 	block?: ValidTypes | PredefinedBlockNumbers,
-	// 	options?: Web3EthMethodOptions,
-	// ): Promise<HexString> {
-	// 	return RpcMethods.estimateGas(
-	// 		this._requestManager,
-	// 		transaction,
-	// 		block ?? this._options.defaultBlock,
-	// 		options,
-	// 	);
-	// }
+	// TODO Object returnType
+	public async getFeeHistory(
+		blockCount: Uint,
+		newestBlock: BlockNumberOrTag,
+		rewardPercentiles: number[],
+	) {
+		return RpcMethods.getFeeHistory(
+			this._requestManager,
+			blockCount,
+			newestBlock,
+			rewardPercentiles,
+		);
+	}
 }
