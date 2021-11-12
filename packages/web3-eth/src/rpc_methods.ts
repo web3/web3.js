@@ -197,7 +197,7 @@ export async function call(
 
 export async function estimateGas(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
+	transaction: Partial<TransactionWithSender>,
 	blockNumber: BlockNumberOrTag,
 ) {
 	return requestManager.send<'eth_estimateGas'>({
@@ -396,5 +396,17 @@ export async function submitHashrate(
 	return requestManager.send<'eth_submitHashrate'>({
 		method: 'eth_submitHashrate',
 		params: [hashRate, id],
+	});
+}
+
+export async function getFeeHistory(
+	requestManager: Web3RequestManager,
+	blockCount: Uint,
+	newestBlock: BlockNumberOrTag,
+	rewardPercentiles: number[],
+) {
+	return requestManager.send<'eth_feeHistory'>({
+		method: 'eth_feeHistory',
+		params: [blockCount, newestBlock, rewardPercentiles],
 	});
 }
