@@ -1,3 +1,4 @@
+import { Block } from 'web3-common';
 import {
 	BlockNumberOrTag,
 	TransactionCall,
@@ -18,9 +19,12 @@ import {
 	HexString256Bytes,
 	Uint,
 	HexString8Bytes,
+	convertObjectPropertiesToValidType,
 } from 'web3-utils';
+import { convertibleBlockProperties } from './convertible_properties';
 
 import * as RpcMethods from './rpc_methods';
+import { VariablyTypedBlock } from './types';
 
 interface Web3EthOptions extends Web3Config {
 	defaultReturnType: ValidTypes;
@@ -130,24 +134,26 @@ export class Web3Eth {
 	}
 
 	// TODO Discuss the use of multiple optional parameters
-	// TODO Object returnType
-	public async getBlock(
+	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		hydrated: boolean,
-		// returnType?: ReturnType,
-	) {
-		// Checking if block is a block hash or number
-		return typeof block === 'string' && isHexStrict(block) && block.length === 66
-			? RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
-			: RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
+		returnType?: ReturnType,
+	): Promise<VariablyTypedBlock<ValidReturnTypes[ReturnType]>> {
+		const response =
+			// Checking if block is a block hash or number
+			typeof block === 'string' && isHexStrict(block) && block.length === 66
+				? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
+				: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
 
-		// return (
-		// 	returnType === undefined
-		// 		? this._options.defaultReturnType === undefined
-		// 			? response
-		// 			: convertToValidType(response, this._options.defaultReturnType)
-		// 		: convertToValidType(response, returnType)
-		// ) as ValidReturnTypes[ReturnType];
+		return returnType === undefined
+			? this._options.defaultReturnType === undefined
+				? response
+				: convertObjectPropertiesToValidType<VariablyTypedBlock>(
+						response,
+						convertibleBlockProperties,
+						this._options.defaultReturnType,
+				  )
+			: convertObjectPropertiesToValidType<VariablyTypedBlock>(response, convertibleBlockProperties, returnType);
 	}
 
 	// TODO Discuss the use of multiple optional parameters
@@ -191,24 +197,27 @@ export class Web3Eth {
 	}
 
 	// TODO Object returnType
-	public async getUncle(
-		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-		uncleIndex: Uint,
-		// returnType?: ReturnType,
-	) {
-		// Checking if block is a block hash or number
-		return typeof block === 'string' && isHexStrict(block) && block.length === 66
-			? RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
-			: RpcMethods.getUncleByBlockNumberAndIndex(this._requestManager, block, uncleIndex);
+	// public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+	// 	uncleIndex: Uint,
+	// 	returnType?: ReturnType,
+	// ) {
+	// 	// Checking if block is a block hash or number
+	// 	const response =
+	// 		typeof block === 'string' && isHexStrict(block) && block.length === 66
+	// 			? RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
+	// 			: RpcMethods.getUncleByBlockNumberAndIndex(this._requestManager, block, uncleIndex);
 
-		// return (
-		// 	returnType === undefined
-		// 		? this._options.defaultReturnType === undefined
-		// 			? response
-		// 			: convertToValidType(response, this._options.defaultReturnType)
-		// 		: convertToValidType(response, returnType)
-		// ) as ValidReturnTypes[ReturnType];
-	}
+	// 	return returnType === undefined
+	// 		? this._options.defaultReturnType === undefined
+	// 			? response
+	// 			: convertObjectPropertiesToValidType(
+	// 					response,
+	// 					convertibleBlockProperties,
+	// 					this._options.defaultReturnType,
+	// 			  )
+	// 		: convertObjectPropertiesToValidType(response, convertibleBlockProperties, returnType);
+	// }
 
 	// TODO Object returnType
 	public async getTransaction(transactionHash: HexString32Bytes) {

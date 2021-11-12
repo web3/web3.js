@@ -407,3 +407,21 @@ export const convertToValidType = (
 			throw new Error('Invalid desiredType provided');
 	}
 };
+
+// TODO Handle nested objects
+export function convertObjectPropertiesToValidType<ObjectType>(
+	object: ObjectType,
+	convertibleProperties: (keyof ObjectType)[],
+	desiredType: ValidTypes,
+) {
+	const convertedObject = { ...object };
+	for (const convertibleProperty of convertibleProperties) {
+        if (object[convertibleProperty] === undefined) continue;
+
+		convertedObject[convertibleProperty] = convertToValidType(
+			object[convertibleProperty] as unknown as string,
+			desiredType,
+		);
+	}
+	return convertedObject;
+};
