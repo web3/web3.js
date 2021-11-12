@@ -3,7 +3,7 @@
 exports[`errors ConnectionCloseError should have valid json structure 1`] = `
 Object {
   "code": 504,
-  "errorCode": "10",
+  "errorCode": 10,
   "errorReason": "reason",
   "message": "CONNECTION ERROR: The connection got closed with the close code 10 and the following reason string reason",
   "name": "ConnectionCloseError",
@@ -13,7 +13,7 @@ Object {
 exports[`errors ConnectionError should have valid json structure 1`] = `
 Object {
   "code": 500,
-  "errorCode": "10",
+  "errorCode": 10,
   "errorReason": "reason",
   "message": "error message",
   "name": "ConnectionError",
@@ -23,9 +23,9 @@ Object {
 exports[`errors ConnectionNotOpenError should have valid json structure 1`] = `
 Object {
   "code": 503,
-  "errorCode": "10",
+  "errorCode": 10,
   "errorReason": "reason",
-  "message": "Connection not open on send()",
+  "message": "Connection not open",
   "name": "ConnectionNotOpenError",
 }
 `;
@@ -113,7 +113,7 @@ Object {
 exports[`errors InvalidConnectionError should have valid json structure 1`] = `
 Object {
   "code": 501,
-  "errorCode": "10",
+  "errorCode": 10,
   "errorReason": "reason",
   "host": "my host",
   "message": "CONNECTION ERROR: Couldn't connect to node my host.",

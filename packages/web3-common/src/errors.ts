@@ -35,11 +35,9 @@ import {
 	ERR_OPERATION_TIMEOUT,
 	ERR_OPERATION_ABORT,
 } from './constants';
-import { JsonRpcResponse } from './types';
 import { isResponseWithError } from './json_rpc';
 
-type ConnectionEvent = { code: string; reason: string };
-type Receipt = Record<string, unknown>;
+import { ConnectionEvent, JsonRpcResponse, Receipt } from './types';
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
@@ -75,7 +73,7 @@ export class InvalidNumberOfParamsError extends Web3Error {
 
 export class ConnectionError extends Web3Error {
 	public code = ERR_CONN;
-	public errorCode?: string;
+	public errorCode?: number;
 	public errorReason?: string;
 
 	public constructor(message: string, event?: ConnectionEvent) {
@@ -116,7 +114,7 @@ export class ConnectionTimeoutError extends ConnectionError {
 
 export class ConnectionNotOpenError extends ConnectionError {
 	public constructor(event?: ConnectionEvent) {
-		super('Connection not open on send()', event);
+		super('Connection not open', event);
 		this.code = ERR_CONN_NOT_OPEN;
 	}
 }

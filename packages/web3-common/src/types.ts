@@ -29,10 +29,15 @@ export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
 	readonly result: T;
 }
 
-export interface JsonRpcNotification<Param = unknown[]> {
+export interface SubscriptionParams<T = JsonRpcResult> {
+	readonly subscription: string; // for subscription id
+	readonly result: T;
+}
+export interface JsonRpcNotification<T = JsonRpcResult> {
+	readonly id?: JsonRpcId;
 	readonly jsonrpc: JsonRpcIdentifier;
-	readonly method: string;
-	readonly params?: Param;
+	readonly method: string; // for subscription
+	readonly params: SubscriptionParams<T>; // for subscription results
 }
 
 export interface JsonRpcRequest<T = unknown[]> {
@@ -207,3 +212,11 @@ export enum PredefinedBlockNumbers {
 	PENDING = 'pending',
 	EARLIEST = 'earliest',
 }
+
+export type ConnectionEvent = {
+	code: number;
+	reason: string;
+	wasClean?: boolean; // if WS connection was closed properly
+};
+
+export type Receipt = Record<string, unknown>;
