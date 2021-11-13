@@ -480,3 +480,4 @@ Released with 1.0.0-beta.37 code base.
 
 - Correct `web3.rst` example in documentation (#4511)
 - Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
+- Node v16 support (#4541)
