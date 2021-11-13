@@ -35,9 +35,20 @@ export enum ValidTypes {
 	Number = 'Number',
 	BigInt = 'BigInt',
 }
+
 export type ValidReturnTypes = {
 	[ValidTypes.HexString]: string;
 	[ValidTypes.NumberString]: string;
 	[ValidTypes.Number]: number;
 	[ValidTypes.BigInt]: bigint;
+};
+
+export type FormatValidReturnType<
+	ObjectType,
+	Properties extends (keyof ObjectType)[],
+	ReturnType extends ValidTypes,
+> = {
+	[P in keyof ObjectType]: P extends Properties[number]
+		? ValidReturnTypes[ReturnType]
+		: ObjectType[P];
 };

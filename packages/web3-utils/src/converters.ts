@@ -15,6 +15,7 @@ import {
 	ValueTypes,
 	ValidTypes,
 	ValidReturnTypes,
+	FormatValidReturnType,
 } from './types';
 import {
 	isAddress,
@@ -409,19 +410,35 @@ export const convertToValidType = (
 };
 
 // TODO Handle nested objects
-export function convertObjectPropertiesToValidType<ObjectType>(
+export function convertObjectPropertiesToValidType<
+	// Object can have any properties. Unless specified as [key: string] index type didn't detect the record key correctly
+	// Also objects property types can be arrays, or other customs types as well so we have to specify any to cover all
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	ObjectType extends Record<any, any>,
+	Properties extends (keyof ObjectType)[],
+	ReturnType extends ValidTypes,
+>(
 	object: ObjectType,
-	convertibleProperties: (keyof ObjectType)[],
-	desiredType: ValidTypes,
-) {
-	const convertedObject = { ...object };
-	for (const convertibleProperty of convertibleProperties) {
-        if (object[convertibleProperty] === undefined) continue;
+	convertibleProperties: Properties,
+	desiredType: ReturnType,
+): FormatValidReturnType<ObjectType, Properties, ReturnType> {
+	const convertedObject = { ...object } as FormatValidReturnType<
+		ObjectType,
+		Properties,
+		ReturnType
+	>;
 
+	for (const convertibleProperty of convertibleProperties) {
+		if (convertedObject[convertibleProperty] === undefined) continue;
+
+		// TODO: Check why TS compiler is unable to detect the matching type of the deep properties
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
 		convertedObject[convertibleProperty] = convertToValidType(
-			object[convertibleProperty] as unknown as string,
+			object[convertibleProperty],
 			desiredType,
 		);
 	}
+
 	return convertedObject;
-};
+}

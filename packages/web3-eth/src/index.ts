@@ -1,4 +1,3 @@
-import { Block } from 'web3-common';
 import {
 	BlockNumberOrTag,
 	TransactionCall,
@@ -24,7 +23,6 @@ import {
 import { convertibleBlockProperties } from './convertible_properties';
 
 import * as RpcMethods from './rpc_methods';
-import { VariablyTypedBlock } from './types';
 
 interface Web3EthOptions extends Web3Config {
 	defaultReturnType: ValidTypes;
@@ -138,22 +136,18 @@ export class Web3Eth {
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		hydrated: boolean,
 		returnType?: ReturnType,
-	): Promise<VariablyTypedBlock<ValidReturnTypes[ReturnType]>> {
+	) {
 		const response =
 			// Checking if block is a block hash or number
 			typeof block === 'string' && isHexStrict(block) && block.length === 66
 				? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
 				: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
 
-		return returnType === undefined
-			? this._options.defaultReturnType === undefined
-				? response
-				: convertObjectPropertiesToValidType<VariablyTypedBlock>(
-						response,
-						convertibleBlockProperties,
-						this._options.defaultReturnType,
-				  )
-			: convertObjectPropertiesToValidType<VariablyTypedBlock>(response, convertibleBlockProperties, returnType);
+		return convertObjectPropertiesToValidType(
+			response,
+			convertibleBlockProperties,
+			returnType ?? this._options.defaultReturnType,
+		);
 	}
 
 	// TODO Discuss the use of multiple optional parameters
