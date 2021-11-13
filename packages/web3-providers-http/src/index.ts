@@ -1,18 +1,17 @@
-import {
-	ResponseError,
-	Web3BaseProvider,
-	MethodNotImplementedError,
-	JsonRpcResponse,
-	Web3BaseProviderStatus,
-	InvalidClientError,
-	EthExecutionAPI,
-	Web3APISpec,
-	Web3APIReturnType,
-	Web3APIPayload,
-	Web3APIMethod,
-} from 'web3-common';
 import fetch from 'cross-fetch';
-
+import {
+	EthExecutionAPI,
+	InvalidClientError,
+	JsonRpcResponse,
+	MethodNotImplementedError,
+	ResponseError,
+	Web3APIMethod,
+	Web3APIPayload,
+	Web3APIReturnType,
+	Web3APISpec,
+	Web3BaseProvider,
+	Web3BaseProviderStatus,
+} from 'web3-common';
 import { HttpProviderOptions } from './types';
 
 export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web3BaseProvider<API> {
@@ -44,7 +43,7 @@ export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(
-		request: Web3APIPayload<API, Method>,
+		payload: Web3APIPayload<API, Method>,
 		requestOptions?: RequestInit,
 	): Promise<JsonRpcResponse<ResponseType>> {
 		const providerOptionsCombined = {
@@ -58,12 +57,7 @@ export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web
 				...providerOptionsCombined.headers,
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({
-				id: request.id ?? Math.floor(Math.random() * 999999), // Generate random integer between 0 and 999,999
-				jsonrpc: request.jsonrpc ?? '2.0',
-				method: request.method,
-				params: request.params ?? [],
-			}),
+			body: JSON.stringify(payload),
 		});
 
 		if (!response.ok) throw new ResponseError(await response.json());

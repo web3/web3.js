@@ -32,11 +32,12 @@ import {
 	ERR_INVALID_CLIENT,
 	ERR_PROVIDER,
 	ERR_SUBSCRIPTION,
+	ERR_OPERATION_TIMEOUT,
+	ERR_OPERATION_ABORT,
 } from './constants';
-import { JsonRpcResponse } from './types';
+import { isResponseWithError } from './json_rpc';
 
-type ConnectionEvent = { code: string; reason: string };
-type Receipt = Record<string, unknown>;
+import { ConnectionEvent, JsonRpcResponse, Receipt } from './types';
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
@@ -72,7 +73,7 @@ export class InvalidNumberOfParamsError extends Web3Error {
 
 export class ConnectionError extends Web3Error {
 	public code = ERR_CONN;
-	public errorCode?: string;
+	public errorCode?: number;
 	public errorReason?: string;
 
 	public constructor(message: string, event?: ConnectionEvent) {
@@ -113,7 +114,7 @@ export class ConnectionTimeoutError extends ConnectionError {
 
 export class ConnectionNotOpenError extends ConnectionError {
 	public constructor(event?: ConnectionEvent) {
-		super('Connection not open on send()', event);
+		super('Connection not open', event);
 		this.code = ERR_CONN_NOT_OPEN;
 	}
 }
@@ -160,13 +161,28 @@ export class SubscriptionError extends Web3Error {
 	public code = ERR_SUBSCRIPTION;
 }
 
+const buildErrorMessage = (response: JsonRpcResponse<unknown, unknown>): string =>
+	isResponseWithError(response) ? response.error.message : '';
+
 export class ResponseError<ErrorType = unknown> extends Web3Error {
 	public code = ERR_RESPONSE;
-	public data?: ErrorType;
+	public data?: ErrorType | ErrorType[];
 
-	public constructor(result: JsonRpcResponse<unknown, ErrorType>, message?: string) {
-		super(message ?? `Returned error: ${result?.error?.message ?? JSON.stringify(result)}`);
-		this.data = result.error?.data;
+	public constructor(response: JsonRpcResponse<unknown, ErrorType>, message?: string) {
+		super(
+			message ??
+				`Returned error: ${
+					Array.isArray(response)
+						? response.map(r => buildErrorMessage(r)).join(',')
+						: buildErrorMessage(response)
+				}`,
+		);
+
+		if (!message) {
+			this.data = Array.isArray(response)
+				? response.map(r => r.error?.data as ErrorType)
+				: response?.error?.data;
+		}
 	}
 
 	public toJSON() {
@@ -176,10 +192,10 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 
 export class InvalidResponseError<ErrorType = unknown> extends ResponseError<ErrorType> {
 	public constructor(result: JsonRpcResponse<unknown, ErrorType>) {
-		super(
-			result,
-			result?.error?.message ?? `Invalid JSON RPC response: ${JSON.stringify(result)}`,
-		);
+		super(result);
+		if (!this.message || this.message === '') {
+			this.message = `Invalid JSON RPC response: ${JSON.stringify(result)}`;
+		}
 		this.code = ERR_INVALID_RESPONSE;
 	}
 }
@@ -363,4 +379,12 @@ export class InvalidClientError extends Web3Error {
 	public constructor(clientUrl: string) {
 		super(`Client URL "${clientUrl}" is invalid.`);
 	}
+}
+
+export class OperationTimeoutError extends Web3Error {
+	public code = ERR_OPERATION_TIMEOUT;
+}
+
+export class OperationAbortError extends Web3Error {
+	public code = ERR_OPERATION_ABORT;
 }

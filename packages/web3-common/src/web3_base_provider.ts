@@ -86,5 +86,4 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	abstract connect(): void;
 	abstract disconnect(code: number, reason: string): void;
 	abstract reset(): void;
-	abstract reconnect(): void;
 }

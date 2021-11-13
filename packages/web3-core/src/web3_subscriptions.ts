@@ -93,7 +93,7 @@ export abstract class Web3Subscription<
 		);
 	}
 
-	// eslint-disable-next-line class-methods-use-this
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
 	protected _processSubscriptionResult(_data: unknown) {
 		// Do nothing - This should be overridden in subclass.
 	}
@@ -106,6 +106,7 @@ export abstract class Web3Subscription<
 }
 
 export type Web3SubscriptionConstructor<T extends Web3Subscription> = new (
+	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
 	options: { requestManager: Web3RequestManager },
