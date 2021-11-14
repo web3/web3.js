@@ -1,4 +1,4 @@
-import { HexString } from 'web3-utils';
+import { HexString, ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
 
 interface ConfigOptions {
@@ -13,6 +13,7 @@ interface ConfigOptions {
 	defaultChain: string | null;
 	defaultHardfork: string | null;
 	defaultCommon: Record<string, unknown> | null;
+	defaultReturnType: ValidTypes;
 }
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
@@ -39,6 +40,7 @@ export abstract class Web3Config
 		defaultChain: null,
 		defaultHardfork: null,
 		defaultCommon: null,
+		defaultReturnType: ValidTypes.HexString,
 	};
 
 	public getConfig() {
@@ -192,5 +194,19 @@ export abstract class Web3Config
 		});
 
 		this._config.defaultCommon = val;
+	}
+
+	public get defaultReturnType() {
+		return this._config.defaultReturnType;
+	}
+
+	public set defaultReturnType(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultReturnType',
+			oldValue: this._config.defaultReturnType,
+			newValue: val,
+		});
+
+		this._config.defaultReturnType = val;
 	}
 }
