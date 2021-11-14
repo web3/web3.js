@@ -431,7 +431,7 @@ export function convertObjectPropertiesToValidType<
 	for (const convertibleProperty of convertibleProperties) {
 		if (convertedObject[convertibleProperty] === undefined) continue;
 
-		// TODO: Check why TS compiler is unable to detect the matching type of the deep properties
+		// TODO Check why TS compiler is unable to detect the matching type of the deep properties
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-expect-error
 		convertedObject[convertibleProperty] = convertToValidType(
