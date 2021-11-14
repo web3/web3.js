@@ -142,7 +142,7 @@ export interface Log {
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
 export interface ReceiptInfo {
 	readonly transactionHash: HexString32Bytes;
-	readonly transactionIndex: HexString32Bytes;
+	readonly transactionIndex: Uint;
 	readonly blockHash: HexString32Bytes;
 	readonly blockNumber: Uint;
 	readonly from: Address;
