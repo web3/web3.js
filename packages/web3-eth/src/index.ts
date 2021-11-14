@@ -282,19 +282,19 @@ export class Web3Eth {
 		) as ValidReturnTypes[ReturnType];
 	}
 
-	public async sendTransaction(transaction: TransactionWithSender): Promise<HexString32Bytes> {
+	public async sendTransaction(transaction: TransactionWithSender) {
 		return RpcMethods.sendTransaction(this._requestManager, transaction);
 	}
 
-	public async sendSignedTransaction(transaction: HexStringBytes): Promise<HexString32Bytes> {
+	public async sendSignedTransaction(transaction: HexStringBytes) {
 		return RpcMethods.sendRawTransaction(this._requestManager, transaction);
 	}
 
-	public async sign(address: Address, message: HexStringBytes): Promise<HexString256Bytes> {
+	public async sign(address: Address, message: HexStringBytes) {
 		return RpcMethods.sign(this._requestManager, address, message);
 	}
 
-	public async signTransaction(transaction: TransactionWithSender): Promise<HexStringBytes> {
+	public async signTransaction(transaction: TransactionWithSender) {
 		return RpcMethods.signTransaction(this._requestManager, transaction);
 	}
 
