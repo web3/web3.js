@@ -20,19 +20,24 @@ import {
 	HexString8Bytes,
 	convertObjectPropertiesToValidType,
 } from 'web3-utils';
-import { convertibleBlockProperties } from './convertible_properties';
+import {
+	convertibleBlockProperties,
+	convertibleFeeHistoryResultProperties,
+	convertibleReceiptInfoProperties,
+	convertibleTransactionInfoProperties,
+} from './convertible_properties';
 
 import * as RpcMethods from './rpc_methods';
 
-interface Web3EthOptions extends Web3Config {
-	defaultReturnType: ValidTypes;
+function isBlockHash(block: HexString32Bytes | BlockNumberOrTag): boolean {
+	return typeof block === 'string' && isHexStrict(block) && block.length === 66;
 }
 
 export class Web3Eth {
 	private readonly _requestManager: Web3RequestManager;
-	private readonly _options: Web3EthOptions;
+	private readonly _options: Web3Config;
 
-	public constructor(provider: Web3BaseProvider | string, options: Web3EthOptions) {
+	public constructor(provider: Web3BaseProvider | string, options: Web3Config) {
 		this._requestManager = new Web3RequestManager(provider);
 		this._options = options;
 	}
@@ -58,12 +63,9 @@ export class Web3Eth {
 	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getHashRate(this._requestManager);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -72,12 +74,9 @@ export class Web3Eth {
 	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getGasPrice(this._requestManager);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -90,12 +89,9 @@ export class Web3Eth {
 	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getBlockNumber(this._requestManager);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -107,12 +103,9 @@ export class Web3Eth {
 	): Promise<ValidReturnTypes[ReturnType]> {
 		const response = await RpcMethods.getBalance(this._requestManager, address, blockNumber);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -137,11 +130,9 @@ export class Web3Eth {
 		hydrated: boolean,
 		returnType?: ReturnType,
 	) {
-		const response =
-			// Checking if block is a block hash or number
-			typeof block === 'string' && isHexStrict(block) && block.length === 66
-				? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
-				: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
+		const response = isBlockHash(block)
+			? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
+			: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
 
 		return convertObjectPropertiesToValidType(
 			response,
@@ -155,18 +146,13 @@ export class Web3Eth {
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	): Promise<ValidReturnTypes[ReturnType]> {
-		const response =
-			// Checking if block is a block hash or number
-			typeof block === 'string' && isHexStrict(block) && block.length === 66
-				? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
-				: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
+		const response = isBlockHash(block)
+			? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
+			: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -175,47 +161,55 @@ export class Web3Eth {
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	): Promise<ValidReturnTypes[ReturnType]> {
-		const response =
-			// Checking if block is a block hash or number
-			typeof block === 'string' && isHexStrict(block) && block.length === 66
-				? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
-				: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
+		const response = isBlockHash(block)
+			? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
+			: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
-	// TODO Object returnType
-	// public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-	// 	uncleIndex: Uint,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	// Checking if block is a block hash or number
-	// 	const response =
-	// 		typeof block === 'string' && isHexStrict(block) && block.length === 66
-	// 			? RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
-	// 			: RpcMethods.getUncleByBlockNumberAndIndex(this._requestManager, block, uncleIndex);
+	public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+		uncleIndex: Uint,
+		returnType?: ReturnType,
+	) {
+		const response = isBlockHash(block)
+			? await RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
+			: await RpcMethods.getUncleByBlockNumberAndIndex(
+					this._requestManager,
+					block,
+					uncleIndex,
+			  );
 
-	// 	return returnType === undefined
-	// 		? this._options.defaultReturnType === undefined
-	// 			? response
-	// 			: convertObjectPropertiesToValidType(
-	// 					response,
-	// 					convertibleBlockProperties,
-	// 					this._options.defaultReturnType,
-	// 			  )
-	// 		: convertObjectPropertiesToValidType(response, convertibleBlockProperties, returnType);
-	// }
+		return convertObjectPropertiesToValidType(
+			response,
+			convertibleBlockProperties,
+			returnType ?? this._options.defaultReturnType,
+		);
+	}
 
-	// TODO Object returnType
-	public async getTransaction(transactionHash: HexString32Bytes) {
-		return RpcMethods.getTransactionByHash(this._requestManager, transactionHash);
+	public async getTransaction<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		transactionHash: HexString32Bytes,
+		returnType?: ReturnType,
+	) {
+		const response = await RpcMethods.getTransactionByHash(
+			this._requestManager,
+			transactionHash,
+		);
+
+		return response === null
+			? response
+			: convertObjectPropertiesToValidType(
+					response,
+					// TODO
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					convertibleTransactionInfoProperties,
+					returnType ?? this._options.defaultReturnType,
+			  );
 	}
 
 	// TODO Can't find in spec
@@ -223,37 +217,51 @@ export class Web3Eth {
 
 	// }
 
-	// TODO Object returnType
-	public async getTransactionFromBlock(
+	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		transactionIndex: Uint,
-		// returnType?: ReturnType,
+		returnType?: ReturnType,
 	) {
-		// Checking if block is a block hash or number
-		return typeof block === 'string' && isHexStrict(block) && block.length === 66
-			? RpcMethods.getTransactionByBlockHashAndIndex(
+		const response = isBlockHash(block)
+			? await RpcMethods.getTransactionByBlockHashAndIndex(
 					this._requestManager,
 					block,
 					transactionIndex,
 			  )
-			: RpcMethods.getTransactionByBlockNumberAndIndex(
+			: await RpcMethods.getTransactionByBlockNumberAndIndex(
 					this._requestManager,
 					block,
 					transactionIndex,
 			  );
 
-		// return (
-		// 	returnType === undefined
-		// 		? this._options.defaultReturnType === undefined
-		// 			? response
-		// 			: convertToValidType(response, this._options.defaultReturnType)
-		// 		: convertToValidType(response, returnType)
-		// ) as ValidReturnTypes[ReturnType];
+		return response === null
+			? response
+			: convertObjectPropertiesToValidType(
+					response,
+					// TODO
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					convertibleTransactionInfoProperties,
+					returnType ?? this._options.defaultReturnType,
+			  );
 	}
 
-	// TODO Object returnType
-	public async getTransactionReceipt(transactionHash: HexString32Bytes) {
-		return RpcMethods.getTransactionReceipt(this._requestManager, transactionHash);
+	public async getTransactionReceipt<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		transactionHash: HexString32Bytes,
+		returnType?: ReturnType,
+	) {
+		const response = await RpcMethods.getTransactionReceipt(
+			this._requestManager,
+			transactionHash,
+		);
+
+		return response === null
+			? response
+			: convertObjectPropertiesToValidType(
+					response,
+					convertibleReceiptInfoProperties,
+					returnType ?? this._options.defaultReturnType,
+			  );
 	}
 
 	// TODO Discuss the use of multiple optional parameters
@@ -268,12 +276,9 @@ export class Web3Eth {
 			blockNumber,
 		);
 
-		return (
-			returnType === undefined
-				? this._options.defaultReturnType === undefined
-					? response
-					: convertToValidType(response, this._options.defaultReturnType)
-				: convertToValidType(response, returnType)
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
@@ -296,15 +301,25 @@ export class Web3Eth {
 	public async call(
 		transaction: TransactionCall,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-	): Promise<HexStringBytes> {
+	) {
 		return RpcMethods.call(this._requestManager, transaction, blockNumber);
 	}
 
-	public async estimateGas(
+	public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		transaction: Partial<TransactionWithSender>,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-	): Promise<Uint> {
-		return RpcMethods.estimateGas(this._requestManager, transaction, blockNumber);
+		returnType?: ReturnType,
+	) {
+		const response = await RpcMethods.estimateGas(
+			this._requestManager,
+			transaction,
+			blockNumber,
+		);
+
+		return convertToValidType(
+			response,
+			returnType ?? this._options.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getPastLogs(filter: Filter) {
@@ -343,17 +358,23 @@ export class Web3Eth {
 
 	// }
 
-	// TODO Object returnType
-	public async getFeeHistory(
+	public async getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		blockCount: Uint,
 		newestBlock: BlockNumberOrTag,
 		rewardPercentiles: number[],
+		returnType?: ReturnType,
 	) {
-		return RpcMethods.getFeeHistory(
+		const response = await RpcMethods.getFeeHistory(
 			this._requestManager,
 			blockCount,
 			newestBlock,
 			rewardPercentiles,
+		);
+
+		return convertObjectPropertiesToValidType(
+			response,
+			convertibleFeeHistoryResultProperties,
+			returnType ?? this._options.defaultReturnType,
 		);
 	}
 }
