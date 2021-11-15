@@ -4,7 +4,7 @@ import { ExampleSubscription } from './fixtures/example_subscription';
 
 jest.mock('./fixtures/example_subscription');
 
-const subscriptions = { example: ExampleSubscription };
+const subscriptions = { example: ExampleSubscription as never };
 
 describe('Web3SubscriptionManager', () => {
 	let requestManager: any;
@@ -37,7 +37,7 @@ describe('Web3SubscriptionManager', () => {
 
 		it('should register the subscription types', () => {
 			const subManager = new Web3SubscriptionManager(requestManager, {
-				example: ExampleSubscription,
+				example: ExampleSubscription as never,
 			});
 
 			expect(subManager.registeredSubscriptions).toEqual(subscriptions);

@@ -1,19 +1,23 @@
-import { HttpProvider } from 'web3-providers-http';
 import { Socket } from 'net';
 import {
-	InvalidProviderError,
+	EthExecutionAPI,
 	InvalidResponseError,
-	JsonRpcPayload,
+	jsonRpc,
 	JsonRpcBatchRequest,
+	JsonRpcBatchResponse,
+	JsonRpcPayload,
+	JsonRpcResponse,
+	ProviderError,
+	ResponseError,
+	Web3APIMethod,
+	Web3APIPayload,
+	Web3APIRequest,
+	Web3APIReturnType,
+	Web3APISpec,
 	Web3BaseProvider,
 	Web3EventEmitter,
-	ProviderError,
-	JsonRpcOptionalRequest,
-	jsonRpc,
-	ResponseError,
-	JsonRpcBatchResponse,
-	JsonRpcResponse,
 } from 'web3-common';
+import { HttpProvider } from 'web3-providers-http';
 import { SupportedProviders, Web3BaseProviderConstructor } from './types';
 import {
 	isLegacyRequestProvider,
@@ -27,13 +31,15 @@ export enum Web3RequestManagerEvent {
 	BEFORE_PROVIDER_CHANGE = 'BEFORE_PROVIDER_CHANGE',
 }
 
-export class Web3RequestManager extends Web3EventEmitter<{
-	[key in Web3RequestManagerEvent]: SupportedProviders;
+export class Web3RequestManager<
+	API extends Web3APISpec = EthExecutionAPI,
+> extends Web3EventEmitter<{
+	[key in Web3RequestManagerEvent]: SupportedProviders<API>;
 }> {
-	private _provider!: SupportedProviders;
+	private _provider!: SupportedProviders<API>;
 	private readonly _providers: { [key: string]: Web3BaseProviderConstructor };
 
-	public constructor(provider?: SupportedProviders | string, net?: Socket) {
+	public constructor(provider?: SupportedProviders<API> | string | string, net?: Socket) {
 		super();
 
 		if (provider) {
@@ -46,7 +52,7 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	public static get providers() {
 		// TODO: Link the providers
 		return {
-			HttpProvider,
+			HttpProvider: HttpProvider as Web3BaseProviderConstructor,
 			WebsocketProvider: {} as Web3BaseProviderConstructor,
 			IpcProvider: {} as Web3BaseProviderConstructor,
 		};
@@ -64,22 +70,22 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		return this._providers;
 	}
 
-	public setProvider(provider: SupportedProviders | string, net?: Socket) {
-		let newProvider!: Web3BaseProvider;
+	public setProvider(provider: SupportedProviders<API> | string, net?: Socket) {
+		let newProvider!: Web3BaseProvider<API>;
 
 		// autodetect provider
 		if (provider && typeof provider === 'string' && this.providers) {
 			// HTTP
 			if (/^http(s)?:\/\//i.test(provider)) {
-				newProvider = new this.providers.HttpProvider(provider);
+				newProvider = new this.providers.HttpProvider<API>(provider);
 
 				// WS
 			} else if (/^ws(s)?:\/\//i.test(provider)) {
-				newProvider = new this.providers.WebsocketProvider(provider);
+				newProvider = new this.providers.WebsocketProvider<API>(provider);
 
 				// IPC
 			} else if (typeof net === 'object' && typeof net.connect === 'function') {
-				newProvider = new this.providers.IpcProvider(provider, net);
+				newProvider = new this.providers.IpcProvider<API>(provider, net);
 			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}'"`);
 			}
@@ -90,8 +96,11 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 	}
 
-	public async send<ResultType>(request: JsonRpcOptionalRequest<unknown>): Promise<ResultType> {
-		const response = await this._sendRequest<ResultType>(request);
+	public async send<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(request: Web3APIRequest<API, Method>): Promise<ResponseType> {
+		const response = await this._sendRequest<Method, ResponseType>(request);
 
 		if (jsonRpc.isResponseWithResult(response)) {
 			return response.result;
@@ -101,16 +110,17 @@ export class Web3RequestManager extends Web3EventEmitter<{
 	}
 
 	public async sendBatch(request: JsonRpcBatchRequest): Promise<JsonRpcBatchResponse<unknown>> {
-		const response = await this._sendRequest<unknown>(request);
+		const response = await this._sendRequest<never, never>(request);
 
 		return response as JsonRpcBatchResponse<unknown>;
 	}
 
-	private async _sendRequest<ResultType>(
-		// We accept any type of request params here
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		request: JsonRpcOptionalRequest<any> | JsonRpcBatchRequest,
-	): Promise<JsonRpcResponse<ResultType>> {
+	private async _sendRequest<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(
+		request: Web3APIRequest<API, Method> | JsonRpcBatchRequest,
+	): Promise<JsonRpcResponse<ResponseType>> {
 		const { provider } = this;
 
 		const payload = jsonRpc.isBatchRequest(request)
@@ -118,15 +128,17 @@ export class Web3RequestManager extends Web3EventEmitter<{
 			: jsonRpc.toPayload(request);
 
 		if (isWeb3Provider(provider)) {
-			const response = await provider.request<ResultType>(payload);
+			const response = await provider.request<Method, ResponseType>(
+				payload as Web3APIPayload<API, Method>,
+			);
 
 			return this._processJsonRpcResponse(payload, response);
 		}
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
-			return new Promise((resolve): void => {
-				provider.request<ResultType>(payload, (err, response) => {
+			return new Promise<JsonRpcResponse<ResponseType>>((resolve): void => {
+				provider.request<ResponseType>(payload, (err, response) => {
 					if (err) {
 						throw err;
 					}
@@ -138,8 +150,8 @@ export class Web3RequestManager extends Web3EventEmitter<{
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
-			return new Promise((resolve): void => {
-				provider.send<ResultType>(payload, (err, response) => {
+			return new Promise<JsonRpcResponse<ResponseType>>((resolve): void => {
+				provider.send<ResponseType>(payload, (err, response) => {
 					if (err) {
 						throw err;
 					}
@@ -152,11 +164,11 @@ export class Web3RequestManager extends Web3EventEmitter<{
 		// TODO: This should be deprecated and removed.
 		if (isLegacySendAsyncProvider(provider)) {
 			return provider
-				.sendAsync<ResultType>(payload)
+				.sendAsync<ResponseType>(payload)
 				.then(response => this._processJsonRpcResponse(payload, response));
 		}
 
-		throw new InvalidProviderError('Provider does not have a request or send method to use.');
+		throw new ProviderError('Provider does not have a request or send method to use.');
 	}
 
 	// eslint-disable-next-line class-methods-use-this

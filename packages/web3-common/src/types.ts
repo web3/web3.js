@@ -2,7 +2,7 @@ import { HexString } from 'web3-utils';
 
 export type JsonRpcId = string | number | null;
 export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
-export type JsonRpcIdentifier = '2.0' | '1.0';
+export type JsonRpcIdentifier = string & ('2.0' | '1.0');
 
 // Make each attribute mutable by removing `readonly`
 export type Mutable<T> = {
@@ -212,6 +212,29 @@ export enum PredefinedBlockNumbers {
 	PENDING = 'pending',
 	EARLIEST = 'earliest',
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Web3APISpec = Record<string, (...params: any) => any>;
+export type Web3APIMethod<T extends Web3APISpec> = string & keyof T;
+export type Web3APIParams<API extends Web3APISpec, Method extends Web3APIMethod<API>> = Parameters<
+	API[Method]
+>;
+
+export interface Web3APIRequest<API extends Web3APISpec, Method extends Web3APIMethod<API>> {
+	method: Method;
+	params: Web3APIParams<API, Method> extends [] ? [] : Web3APIParams<API, Method>;
+}
+
+export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIMethod<API>>
+	extends Web3APIRequest<API, Method> {
+	readonly jsonrpc?: JsonRpcIdentifier;
+	readonly id?: JsonRpcId;
+}
+
+export type Web3APIReturnType<
+	API extends Web3APISpec,
+	Method extends Web3APIMethod<API>,
+> = ReturnType<API[Method]>;
 
 export type ConnectionEvent = {
 	code: number;

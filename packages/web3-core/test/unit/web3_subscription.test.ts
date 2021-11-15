@@ -21,7 +21,7 @@ describe('Web3Subscription', () => {
 			expect(requestManager.send).toHaveBeenCalledTimes(1);
 			expect(requestManager.send).toHaveBeenCalledWith({
 				method: 'eth_subscribe',
-				params: { param1: 'value' },
+				params: ['newHeads'],
 			});
 		});
 

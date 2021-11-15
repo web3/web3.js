@@ -1,4 +1,12 @@
-import { JsonRpcPayload, JsonRpcResponse, JsonRpcResult } from './types';
+import { EthExecutionAPI } from './eth_execution_api';
+import {
+	Web3APIPayload,
+	Web3APIReturnType,
+	JsonRpcResponse,
+	JsonRpcResult,
+	Web3APIMethod,
+	Web3APISpec,
+} from './types';
 
 export interface ProviderMessage<T = JsonRpcResult> {
 	type: string;
@@ -23,7 +31,7 @@ const symbol = Symbol.for('web3/base-provider');
 
 // Provider interface compatible with EIP-1193
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md
-export abstract class Web3BaseProvider {
+export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI> {
 	public static isWeb3Provider(provider: unknown) {
 		return (
 			provider instanceof Web3BaseProvider ||
@@ -44,10 +52,13 @@ export abstract class Web3BaseProvider {
 	abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<T = JsonRpcResponse, T2 = unknown[], T3 = unknown>(
-		payload: JsonRpcPayload<T2>,
-		providerOptions?: T3,
-	): Promise<JsonRpcResponse<T>>;
+	abstract request<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(
+		request: Web3APIPayload<API, Method>,
+		requestOptions?: unknown,
+	): Promise<JsonRpcResponse<ResponseType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	abstract on<T = JsonRpcResult>(
