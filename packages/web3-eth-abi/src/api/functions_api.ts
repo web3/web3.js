@@ -1,4 +1,5 @@
-import { jsonInterfaceMethodToString, sha3Raw } from 'web3-utils';
+import { sha3Raw } from 'web3-utils';
+import { jsonInterfaceMethodToString } from '../utils';
 import { JsonAbiFunctionFragment } from '../types';
 import { encodeParameters } from './parameters_api';
 

@@ -1,5 +1,6 @@
-import { jsonInterfaceMethodToString, sha3Raw } from 'web3-utils';
+import { sha3Raw } from 'web3-utils';
 import { JsonAbiFragment } from '../types';
+import { jsonInterfaceMethodToString } from '../utils';
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.

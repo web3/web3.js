@@ -181,3 +181,48 @@ export const modifyParams = (
 	});
 	return [];
 };
+
+/**
+ *  used to flatten json abi inputs/outputs into an array of type-representing-strings
+ */
+
+export const flattenTypes = (includeTuple: boolean, puts: JsonAbiParameter[]): string[] => {
+	const types: string[] = [];
+
+	puts.forEach(param => {
+		if (typeof param.components === 'object') {
+			if (!param.type.startsWith('tuple')) {
+				throw new Error(
+					`Invalid value given "${param.type}". Error: components found but type is not tuple.`,
+				);
+			}
+			const arrayBracket = param.type.indexOf('[');
+			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
+			const result = flattenTypes(includeTuple, param.components);
+
+			if (Array.isArray(result) && includeTuple) {
+				types.push(`tuple(${result.join(',')})${suffix}`);
+			} else if (!includeTuple) {
+				types.push(`(${result.join(',')})${suffix}`);
+			} else {
+				types.push(`(${result.join()})`);
+			}
+		} else {
+			types.push(param.type);
+		}
+	});
+
+	return types;
+};
+
+/**
+ * Should be used to create full function/event name from json abi
+ * returns a string
+ */
+export const jsonInterfaceMethodToString = (json: JsonAbiFragment): string => {
+	if (json.name?.includes('(')) {
+		return json.name;
+	}
+
+	return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
+};
