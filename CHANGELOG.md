@@ -480,4 +480,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.6.2]
+## [1.7.0]
+
+### Changed
+
+ - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
+
