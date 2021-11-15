@@ -15,7 +15,6 @@ import {
 	isHexStrict,
 	HexString32Bytes,
 	HexStringBytes,
-	HexString256Bytes,
 	Uint,
 	HexString8Bytes,
 	convertObjectPropertiesToValidType,
@@ -60,7 +59,7 @@ export class Web3Eth {
 
 	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = await RpcMethods.getHashRate(this._requestManager);
 
 		return convertToValidType(
@@ -71,7 +70,7 @@ export class Web3Eth {
 
 	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = await RpcMethods.getGasPrice(this._requestManager);
 
 		return convertToValidType(
@@ -86,7 +85,7 @@ export class Web3Eth {
 
 	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = await RpcMethods.getBlockNumber(this._requestManager);
 
 		return convertToValidType(
@@ -100,7 +99,7 @@ export class Web3Eth {
 		address: Address,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = await RpcMethods.getBalance(this._requestManager, address, blockNumber);
 
 		return convertToValidType(
@@ -145,7 +144,7 @@ export class Web3Eth {
 	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = isBlockHash(block)
 			? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
 			: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
@@ -160,7 +159,7 @@ export class Web3Eth {
 	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = isBlockHash(block)
 			? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
 			: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
@@ -269,7 +268,7 @@ export class Web3Eth {
 		address: Address,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
-	): Promise<ValidReturnTypes[ReturnType]> {
+	) {
 		const response = await RpcMethods.getTransactionCount(
 			this._requestManager,
 			address,
