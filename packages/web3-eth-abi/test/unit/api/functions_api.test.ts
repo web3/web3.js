@@ -1,28 +1,49 @@
-import { encodeFunctionSignature } from '../../../src/api/functions_api';
+import { encodeFunctionCall, encodeFunctionSignature } from '../../../src/api/functions_api';
+import {
+	inValidFunctionsSignatures,
+	validFunctionsSignatures,
+	validFunctionsCall,
+	inValidFunctionsCalls,
+} from '../../fixtures/data';
 
 describe('functions_api', () => {
 	describe('encodeFunctionSignature', () => {
-		it.each([
-			['myMethod(uint256,string)', '0x24ee0097'],
-			[
-				{
-					name: 'myMethod',
-					type: 'function' as const,
-					inputs: [
-						{
-							type: 'uint256',
-							name: 'myNumber',
-						},
-						{
-							type: 'string',
-							name: 'myString',
-						},
-					],
+		describe('valid data', () => {
+			it.each(validFunctionsSignatures)(
+				'should pass for valid values: %s',
+				({ input, output }) => {
+					expect(encodeFunctionSignature(input)).toEqual(output);
 				},
-				'0x24ee0097',
-			],
-		])('should pass for valid values: %s', (input, output) => {
-			expect(encodeFunctionSignature(input)).toEqual(output);
+			);
+		});
+
+		describe('invalid data', () => {
+			it.each(inValidFunctionsSignatures)(
+				'should pass for valid values: %s',
+				({ input, output }) => {
+					expect(() => encodeFunctionSignature(input)).toThrow(output);
+				},
+			);
+		});
+	});
+
+	describe('encodeFunctionCall', () => {
+		describe('valid data', () => {
+			it.each(validFunctionsCall)(
+				'should pass for valid values: %s',
+				({ input: { abi, params }, output }) => {
+					expect(encodeFunctionCall(abi, params)).toEqual(output);
+				},
+			);
+		});
+
+		describe('invalid data', () => {
+			it.each(inValidFunctionsCalls)(
+				'should pass for valid values: %s',
+				({ input, output }) => {
+					expect(() => encodeFunctionCall(input)).toThrow(output);
+				},
+			);
 		});
 	});
 });

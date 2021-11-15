@@ -1,12 +1,35 @@
 import { AbiCoder, ParamType } from '@ethersproject/abi';
 import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
-import { JsonAbiCoderStruct, JsonAbiFragment, JsonAbiParameter, JsonAbiStruct } from './types';
+import {
+	JsonAbiCoderStruct,
+	JsonAbiFragment,
+	JsonAbiParameter,
+	JsonAbiStruct,
+	JsonAbiEventFragment,
+	JsonAbiFunctionFragment,
+} from './types';
 
 export const isAbiFragment = (item: unknown): item is JsonAbiFragment =>
+	item !== undefined &&
+	item !== null &&
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	['function', 'event', 'constructor'].includes((item as { type: string }).type);
+
+export const isAbiEventFragment = (item: unknown): item is JsonAbiEventFragment =>
+	item !== undefined &&
+	item !== null &&
+	typeof item === 'object' &&
+	(item as { type: string }).type !== undefined &&
+	(item as { type: string }).type === 'event';
+
+export const isAbiFunctionFragment = (item: unknown): item is JsonAbiFunctionFragment =>
+	item !== undefined &&
+	item !== null &&
+	typeof item === 'object' &&
+	(item as { type: string }).type !== undefined &&
+	(item as { type: string }).type === 'function';
 
 /**
  * Check if type is simplified struct format

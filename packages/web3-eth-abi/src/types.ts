@@ -43,7 +43,7 @@ export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 
 export interface JsonAbiEventFragment extends JsonAbiBaseFragment {
 	type: 'event';
-	anonymous: boolean;
+	anonymous?: boolean;
 	outputs?: Array<JsonAbiParameter>;
 }
 

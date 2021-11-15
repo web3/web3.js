@@ -1,5 +1,5 @@
 import { sha3Raw } from 'web3-utils';
-import { jsonInterfaceMethodToString } from '../utils';
+import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils';
 import { JsonAbiFunctionFragment } from '../types';
 import { encodeParameters } from './parameters_api';
 
@@ -7,6 +7,10 @@ import { encodeParameters } from './parameters_api';
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
  */
 export const encodeFunctionSignature = (functionName: string | JsonAbiFunctionFragment): string => {
+	if (typeof functionName !== 'string' && !isAbiFunctionFragment(functionName)) {
+		throw new Error('Invalid parameter value in encodeFunctionSignature');
+	}
+
 	let name: string;
 
 	if (typeof functionName === 'function' || (typeof functionName === 'object' && functionName)) {
@@ -23,8 +27,14 @@ export const encodeFunctionSignature = (functionName: string | JsonAbiFunctionFr
  */
 export const encodeFunctionCall = (
 	jsonInterface: JsonAbiFunctionFragment,
-	params: unknown,
-): string =>
-	`${encodeFunctionSignature(jsonInterface)}${encodeParameters(jsonInterface.inputs ?? [], [
-		params,
-	]).replace('0x', '')}`;
+	params?: unknown[],
+): string => {
+	if (!isAbiFunctionFragment(jsonInterface)) {
+		throw new Error('Invalid parameter value in encodeFunctionCall');
+	}
+
+	return `${encodeFunctionSignature(jsonInterface)}${encodeParameters(
+		jsonInterface.inputs ?? [],
+		params ?? [],
+	).replace('0x', '')}`;
+};
