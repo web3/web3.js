@@ -1,4 +1,4 @@
-import { JsonRpcRequest, JsonRpcResponse } from 'web3-common';
+import { Web3APIMethod, Web3APIPayload, Web3APISpec } from 'web3-common';
 import { DeferredPromise } from './deferred_promise';
 
 export type ReconnectOptions = {
@@ -7,7 +7,11 @@ export type ReconnectOptions = {
 	maxAttempts: number;
 };
 
-export interface WSRequestItem<T = unknown[], T2 = JsonRpcResponse> {
-	payload: JsonRpcRequest<T>;
-	deferredPromise: DeferredPromise<T2>;
+export interface WSRequestItem<
+	API extends Web3APISpec,
+	Method extends Web3APIMethod<API>,
+	ResponseType,
+> {
+	payload: Web3APIPayload<API, Method>;
+	deferredPromise: DeferredPromise<ResponseType>;
 }

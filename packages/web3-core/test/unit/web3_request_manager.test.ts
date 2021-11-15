@@ -3,7 +3,6 @@ import {
 	Web3BaseProvider,
 	jsonRpc,
 	JsonRpcPayload,
-	JsonRpcOptionalRequest,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
 } from 'web3-common';
@@ -237,7 +236,7 @@ describe('Web3RequestManager', () => {
 	});
 
 	describe('send()', () => {
-		let request: JsonRpcOptionalRequest;
+		let request: any;
 		let payload: JsonRpcPayload;
 		let errorResponse!: JsonRpcResponseWithError;
 		let successResponse!: JsonRpcResponseWithResult;

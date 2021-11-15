@@ -48,6 +48,7 @@ export class DeferredPromise<T> implements Promise<T> {
 	}
 
 	public async catch<TResult>(
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onrejected?: (reason: any) => TResult | PromiseLike<TResult>,
 	): Promise<T | TResult> {
 		return this._promise.catch(onrejected);

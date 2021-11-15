@@ -1,17 +1,20 @@
-import {
-	ResponseError,
-	JsonRpcPayload,
-	Web3BaseProvider,
-	MethodNotImplementedError,
-	JsonRpcResponse,
-	Web3BaseProviderStatus,
-	InvalidClientError,
-} from 'web3-common';
 import fetch from 'cross-fetch';
-
+import {
+	EthExecutionAPI,
+	InvalidClientError,
+	JsonRpcResponse,
+	MethodNotImplementedError,
+	ResponseError,
+	Web3APIMethod,
+	Web3APIPayload,
+	Web3APIReturnType,
+	Web3APISpec,
+	Web3BaseProvider,
+	Web3BaseProviderStatus,
+} from 'web3-common';
 import { HttpProviderOptions } from './types';
 
-export class HttpProvider extends Web3BaseProvider {
+export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web3BaseProvider<API> {
 	private readonly clientUrl: string;
 	private readonly httpProviderOptions: HttpProviderOptions | undefined;
 
@@ -36,13 +39,16 @@ export class HttpProvider extends Web3BaseProvider {
 		return false;
 	}
 
-	public async request<T = JsonRpcResponse, T2 = unknown[], T3 = RequestInit>(
-		payload: JsonRpcPayload<T2>,
-		providerOptions?: T3,
-	): Promise<T> {
+	public async request<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(
+		payload: Web3APIPayload<API, Method>,
+		requestOptions?: RequestInit,
+	): Promise<JsonRpcResponse<ResponseType>> {
 		const providerOptionsCombined = {
 			...this.httpProviderOptions?.providerOptions,
-			...providerOptions,
+			...requestOptions,
 		};
 		const response = await fetch(this.clientUrl, {
 			...providerOptionsCombined,
@@ -56,7 +62,7 @@ export class HttpProvider extends Web3BaseProvider {
 
 		if (!response.ok) throw new ResponseError(await response.json());
 
-		return (await response.json()) as T;
+		return (await response.json()) as JsonRpcResponse<ResponseType>;
 	}
 
 	/* eslint-disable class-methods-use-this */

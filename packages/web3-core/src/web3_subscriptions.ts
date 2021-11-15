@@ -5,6 +5,7 @@ import {
 	Web3BaseProvider,
 	Web3EventEmitter,
 	Web3EventMap,
+	EthExecutionAPI,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -24,7 +25,6 @@ interface SubscriptionMessageResponse {
 
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap = Record<string, unknown>,
-	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 > extends Web3EventEmitter<EventMap> {
@@ -50,7 +50,7 @@ export abstract class Web3Subscription<
 	}
 
 	public async subscribe() {
-		const result = await this._requestManager.send<string>({
+		const result = await this._requestManager.send({
 			method: 'eth_subscribe',
 			params: this._buildSubscriptionParams(),
 		});
@@ -77,13 +77,16 @@ export abstract class Web3Subscription<
 	}
 
 	public async unsubscribe() {
-		await this._requestManager.send<string>({
+		if (!this.id) {
+			return;
+		}
+
+		await this._requestManager.send({
 			method: 'eth_unsubscribe',
 			params: [this.id],
 		});
 
 		this._id = undefined;
-
 		(this._requestManager.provider as Web3BaseProvider).removeListener(
 			'message',
 			this._messageListener as never,
@@ -96,9 +99,9 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	protected _buildSubscriptionParams(): Record<string, unknown> {
+	protected _buildSubscriptionParams(): Parameters<EthExecutionAPI['eth_subscribe']> {
 		// This should be overridden in the subclass
-		return {};
+		throw new Error('Implement in the child class');
 	}
 }
 

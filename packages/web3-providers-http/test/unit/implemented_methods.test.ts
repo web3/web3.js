@@ -4,7 +4,7 @@ import fetchMock from 'jest-fetch-mock';
 jest.setMock('cross-fetch', fetchMock);
 
 /* eslint-disable-next-line import/first */
-import { JsonRpcPayload, ResponseError } from 'web3-common';
+import { ResponseError, Web3APIPayload, EthExecutionAPI } from 'web3-common';
 /* eslint-disable-next-line import/first */
 import { HttpProvider } from '../../src/index';
 /* eslint-disable-next-line import/first */
@@ -16,7 +16,7 @@ describe('HttpProvider - implemented methods', () => {
 		id: 42,
 		method: 'eth_getBalance',
 		params: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', 'latest'],
-	} as JsonRpcPayload;
+	} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	let httpProvider: HttpProvider;
 
