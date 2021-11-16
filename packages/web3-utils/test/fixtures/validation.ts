@@ -274,3 +274,15 @@ export const isBigIntValidData: [any, boolean][] = [
 	[BigInt(42), true],
 	[BigInt('1337'), true],
 ];
+
+export const isBlockTagValidData: [string, boolean][] = [
+	['latest', true],
+	['pending', true],
+	['earliest', true],
+];
+
+export const isBlockTagInvalidData: [any, boolean][] = [
+	['foo', false],
+	[42, false],
+	['0x42', false],
+];

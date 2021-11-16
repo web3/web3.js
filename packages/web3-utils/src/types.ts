@@ -18,6 +18,15 @@ export type Uint = HexString;
 export type Uint256 = HexString;
 // Hex encoded address
 export type Address = HexString;
+
+export enum BlockTags {
+	EARLIEST = 'earliest',
+	LATEST = 'latest',
+	PENDING = 'pending',
+}
+export type BlockTag = 'earliest' | 'latest' | 'pending';
+export type BlockNumberOrTag = Uint | BlockTag;
+
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
 export type TypedObject = {

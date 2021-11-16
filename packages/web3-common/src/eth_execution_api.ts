@@ -1,5 +1,6 @@
 import {
 	Address,
+	BlockNumberOrTag,
 	HexString,
 	HexString256Bytes,
 	HexString8Bytes,
@@ -20,8 +21,6 @@ export interface AccessListEntry {
 export type AccessList = AccessListEntry[];
 export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
-export type BlockTag = 'earliest' | 'latest' | 'pending';
-export type BlockNumberOrTag = Uint | BlockTag;
 
 export interface TransactionCall {
 	readonly from?: Address;

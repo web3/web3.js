@@ -1,5 +1,6 @@
 /* eslint-disable no-bitwise */
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { HexString32Bytes, InvalidBlockNumberOrTag, InvalidHexString32Bytes } from '.';
 import {
 	HighValueIntegerInByteArrayError,
 	InvalidBytesError,
@@ -15,7 +16,7 @@ import {
 	InvalidCharCodeError,
 	InvalidAddressError,
 } from './errors';
-import { Bytes, HexString, Numbers } from './types';
+import { BlockNumberOrTag, Bytes, HexString, Numbers, BlockTags } from './types';
 
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
@@ -225,6 +226,10 @@ export const isAddress = (address: string): boolean => {
 	return checkAddressCheckSum(address);
 };
 
+export function validateAddress(address: string): void {
+    if (!isAddress(address)) throw new InvalidAddressError(address);
+}
+
 /**
  * Checks if a given value is a valid big int
  */
@@ -389,4 +394,28 @@ export function isTopicInBloom(bloom: string, topic: string): boolean {
 	}
 
 	return isInBloom(bloom, topic);
+}
+
+/**
+ * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ */
+export const isBlockTag = (value: string) =>
+	BlockTags.LATEST === value ||
+	BlockTags.PENDING === value ||
+	BlockTags.EARLIEST === value;
+
+export function isBlockNumberOrTag(value: BlockNumberOrTag): boolean {
+	return isHexStrict(value) || isBlockTag(value);
+}
+
+export function validateBlockNumberOrTag(value: BlockNumberOrTag) {
+    if (!isBlockTag(value)) throw new InvalidBlockNumberOrTag(value);
+}
+
+export function isHexString32Bytes(value: HexString32Bytes): boolean {
+	return isHexStrict(value) && value.length === 66; // 32 bytes + 0x
+}
+
+export function validateHexString32Bytes(value: HexString32Bytes) {
+    if (!isHexString32Bytes(value)) throw new InvalidHexString32Bytes(value);
 }

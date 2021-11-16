@@ -15,6 +15,7 @@ import {
 	isTopicInBloom,
 	isContractAddressInBloom,
 	isBigInt,
+	isPredefinedBlockNumber,
 } from '../../src/validation';
 import {
 	checkAddressCheckSumValidData,
@@ -35,6 +36,8 @@ import {
 	isTopicInBloomValidData,
 	isUserEthereumAddressInBloomInvalidData,
 	isBigIntValidData,
+	isPredefinedBlockNumberValidData,
+	isPredefinedBlockNumberInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -167,6 +170,18 @@ describe('validation', () => {
 		describe('valid cases', () => {
 			it.each(isBigIntValidData)('%s', (input, output) => {
 				expect(isBigInt(input)).toEqual(output);
+			});
+		});
+	});
+	describe('isPredefinedBlockNumber', () => {
+		describe('valid cases', () => {
+			it.each(isPredefinedBlockNumberValidData)('%s', (input, output) => {
+				expect(isPredefinedBlockNumber(input)).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.each(isPredefinedBlockNumberInvalidData)('%s', (input, output) => {
+				expect(isPredefinedBlockNumber(input)).toEqual(output);
 			});
 		});
 	});

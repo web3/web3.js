@@ -1,6 +1,19 @@
-import { BlockNumberOrTag, TransactionWithSender, Filter, TransactionCall } from 'web3-common';
+import { TransactionWithSender, Filter, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
-import { Address, Uint256, HexString32Bytes, HexStringBytes, Uint } from 'web3-utils';
+import {
+	Address,
+	BlockNumberOrTag,
+	Uint256,
+	HexString32Bytes,
+	HexStringBytes,
+	Uint,
+	validateAddress,
+    validateBlockNumberOrTag,
+    validateHexString32Bytes,
+    validateHexStringInput,
+    InvalidBooleanError,
+    InvalidStringError
+} from 'web3-utils';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	return requestManager.send<'eth_protocolVersion'>({
@@ -63,6 +76,9 @@ export async function getBalance(
 	address: Address,
 	blockNumber: BlockNumberOrTag,
 ) {
+	validateAddress(address);
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getBalance'>({
 		method: 'eth_getBalance',
 		params: [address, blockNumber],
@@ -75,6 +91,10 @@ export async function getStorageAt(
 	storageSlot: Uint256,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateAddress(address);
+    validateHexString32Bytes(storageSlot);
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getStorageAt'>({
 		method: 'eth_getStorageAt',
 		params: [address, storageSlot, blockNumber],
@@ -86,6 +106,9 @@ export async function getTransactionCount(
 	address: Address,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateAddress(address);
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getTransactionCount'>({
 		method: 'eth_getTransactionCount',
 		params: [address, blockNumber],
@@ -96,6 +119,8 @@ export async function getBlockTransactionCountByHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
 ) {
+    validateHexString32Bytes(blockHash);
+
 	return requestManager.send<'eth_getBlockTransactionCountByHash'>({
 		method: 'eth_getBlockTransactionCountByHash',
 		params: [blockHash],
@@ -104,11 +129,13 @@ export async function getBlockTransactionCountByHash(
 
 export async function getBlockTransactionCountByNumber(
 	requestManager: Web3RequestManager,
-	block: BlockNumberOrTag,
+	blockNumber: BlockNumberOrTag,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getBlockTransactionCountByNumber'>({
 		method: 'eth_getBlockTransactionCountByNumber',
-		params: [block],
+		params: [blockNumber],
 	});
 }
 
@@ -116,6 +143,8 @@ export async function getUncleCountByBlockHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
 ) {
+    validateHexString32Bytes(blockHash);
+
 	return requestManager.send<'eth_getUncleCountByBlockHash'>({
 		method: 'eth_getUncleCountByBlockHash',
 		params: [blockHash],
@@ -126,6 +155,8 @@ export async function getUncleCountByBlockNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getUncleCountByBlockNumber'>({
 		method: 'eth_getUncleCountByBlockNumber',
 		params: [blockNumber],
@@ -137,6 +168,9 @@ export async function getCode(
 	address: Address,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateAddress(address);
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_getCode'>({
 		method: 'eth_getCode',
 		params: [address, blockNumber],
@@ -148,6 +182,9 @@ export async function sign(
 	address: Address,
 	message: HexStringBytes,
 ) {
+    validateAddress(address);
+    validateHexStringInput(message);
+
 	return requestManager.send<'eth_sign'>({
 		method: 'eth_sign',
 		params: [address, message],
@@ -178,6 +215,8 @@ export async function sendRawTransaction(
 	requestManager: Web3RequestManager,
 	transaction: HexStringBytes,
 ) {
+    validateHexStringInput(transaction);
+
 	return requestManager.send<'eth_sendRawTransaction'>({
 		method: 'eth_sendRawTransaction',
 		params: [transaction],
@@ -189,6 +228,8 @@ export async function call(
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_call'>({
 		method: 'eth_call',
 		params: [transaction, blockNumber],
@@ -200,6 +241,8 @@ export async function estimateGas(
 	transaction: Partial<TransactionWithSender>,
 	blockNumber: BlockNumberOrTag,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+
 	return requestManager.send<'eth_estimateGas'>({
 		method: 'eth_estimateGas',
 		params: [transaction, blockNumber],
@@ -211,6 +254,9 @@ export async function getBlockByHash(
 	blockHash: HexString32Bytes,
 	hydrated: boolean,
 ) {
+    validateHexString32Bytes(blockHash);
+    if (typeof hydrated !== 'boolean') throw new InvalidBooleanError(hydrated);
+
 	return requestManager.send<'eth_getBlockByHash'>({
 		method: 'eth_getBlockByHash',
 		params: [blockHash, hydrated],
@@ -222,6 +268,9 @@ export async function getBlockByNumber(
 	blockNumber: BlockNumberOrTag,
 	hydrated: boolean,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+    if (typeof hydrated !== 'boolean') throw new InvalidBooleanError(hydrated);
+
 	return requestManager.send<'eth_getBlockByNumber'>({
 		method: 'eth_getBlockByNumber',
 		params: [blockNumber, hydrated],
@@ -243,6 +292,8 @@ export async function getTransactionByBlockHashAndIndex(
 	blockHash: HexString32Bytes,
 	transactionIndex: Uint,
 ) {
+    validateHexString32Bytes(blockHash);
+
 	return requestManager.send<'eth_getTransactionByBlockHashAndIndex'>({
 		method: 'eth_getTransactionByBlockHashAndIndex',
 		params: [blockHash, transactionIndex],
@@ -254,6 +305,9 @@ export async function getTransactionByBlockNumberAndIndex(
 	blockNumber: BlockNumberOrTag,
 	transactionIndex: Uint,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+    validateHexStringInput(transactionIndex);
+
 	return requestManager.send<'eth_getTransactionByBlockNumberAndIndex'>({
 		method: 'eth_getTransactionByBlockNumberAndIndex',
 		params: [blockNumber, transactionIndex],
@@ -275,6 +329,9 @@ export async function getUncleByBlockHashAndIndex(
 	blockHash: HexString32Bytes,
 	uncleIndex: Uint,
 ) {
+    validateHexString32Bytes(blockHash);
+    validateHexStringInput(uncleIndex);
+
 	return requestManager.send<'eth_getUncleByBlockHashAndIndex'>({
 		method: 'eth_getUncleByBlockHashAndIndex',
 		params: [blockHash, uncleIndex],
@@ -286,6 +343,9 @@ export async function getUncleByBlockNumberAndIndex(
 	blockNumber: BlockNumberOrTag,
 	uncleIndex: Uint,
 ) {
+    validateBlockNumberOrTag(blockNumber);
+    validateHexStringInput(uncleIndex);
+
 	return requestManager.send<'eth_getUncleByBlockNumberAndIndex'>({
 		method: 'eth_getUncleByBlockNumberAndIndex',
 		params: [blockNumber, uncleIndex],
@@ -300,6 +360,8 @@ export async function getCompilers(requestManager: Web3RequestManager) {
 }
 
 export async function compileSolidity(requestManager: Web3RequestManager, code: string) {
+    if (typeof code !== 'string') throw new InvalidStringError(code);
+
 	return requestManager.send<'eth_compileSolidity'>({
 		method: 'eth_compileSolidity',
 		params: [code],
@@ -307,6 +369,8 @@ export async function compileSolidity(requestManager: Web3RequestManager, code: 
 }
 
 export async function compileLLL(requestManager: Web3RequestManager, code: string) {
+    if (typeof code !== 'string') throw new InvalidStringError(code);
+
 	return requestManager.send<'eth_compileLLL'>({
 		method: 'eth_compileLLL',
 		params: [code],
@@ -314,6 +378,8 @@ export async function compileLLL(requestManager: Web3RequestManager, code: strin
 }
 
 export async function compileSerpent(requestManager: Web3RequestManager, code: string) {
+    if (typeof code !== 'string') throw new InvalidStringError(code);
+
 	return requestManager.send<'eth_compileSerpent'>({
 		method: 'eth_compileSerpent',
 		params: [code],
@@ -342,6 +408,8 @@ export async function newPendingTransactionFilter(requestManager: Web3RequestMan
 }
 
 export async function uninstallFilter(requestManager: Web3RequestManager, filterIdentifier: Uint) {
+    validateHexStringInput(filterIdentifier);
+
 	return requestManager.send<'eth_uninstallFilter'>({
 		method: 'eth_uninstallFilter',
 		params: [filterIdentifier],
@@ -349,6 +417,8 @@ export async function uninstallFilter(requestManager: Web3RequestManager, filter
 }
 
 export async function getFilterChanges(requestManager: Web3RequestManager, filterIdentifier: Uint) {
+    validateHexStringInput(filterIdentifier);
+
 	return requestManager.send<'eth_getFilterChanges'>({
 		method: 'eth_getFilterChanges',
 		params: [filterIdentifier],
@@ -356,6 +426,8 @@ export async function getFilterChanges(requestManager: Web3RequestManager, filte
 }
 
 export async function getFilterLogs(requestManager: Web3RequestManager, filterIdentifier: Uint) {
+    validateHexStringInput(filterIdentifier);
+
 	return requestManager.send<'eth_getFilterLogs'>({
 		method: 'eth_getFilterLogs',
 		params: [filterIdentifier],
@@ -382,6 +454,10 @@ export async function submitWork(
 	seedHash: HexString32Bytes,
 	difficulty: HexString32Bytes,
 ) {
+    validateHexString32Bytes(powHash);
+    validateHexString32Bytes(seedHash);
+    validateHexString32Bytes(difficulty);
+
 	return requestManager.send<'eth_submitWork'>({
 		method: 'eth_submitWork',
 		params: [powHash, seedHash, difficulty],
@@ -393,6 +469,9 @@ export async function submitHashrate(
 	hashRate: HexString32Bytes,
 	id: HexString32Bytes,
 ) {
+    validateHexString32Bytes(hashRate);
+    validateHexString32Bytes(id);
+
 	return requestManager.send<'eth_submitHashrate'>({
 		method: 'eth_submitHashrate',
 		params: [hashRate, id],
@@ -405,6 +484,9 @@ export async function getFeeHistory(
 	newestBlock: BlockNumberOrTag,
 	rewardPercentiles: number[],
 ) {
+    validateHexStringInput(blockCount);
+    validateBlockNumberOrTag(newestBlock);
+
 	return requestManager.send<'eth_feeHistory'>({
 		method: 'eth_feeHistory',
 		params: [blockCount, newestBlock, rewardPercentiles],

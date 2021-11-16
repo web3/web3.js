@@ -155,3 +155,15 @@ export class InvalidTypeAbiInput extends Web3Error {
 		super(value, 'components found but type is not tuple');
 	}
 }
+
+export class InvalidBlockNumberOrTag extends Web3Error {
+    public constructor(value: any) {
+        super(value, 'invalid block number or tag given');
+    }
+}
+
+export class InvalidHexString32Bytes extends Web3Error {
+    public constructor(value: any) {
+        super(value, 'invalid block hash given');
+    }
+}

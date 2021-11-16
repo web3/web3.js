@@ -1,23 +1,18 @@
-import {
-	BlockNumberOrTag,
-	TransactionCall,
-	TransactionWithSender,
-	Web3BaseProvider,
-	Filter,
-} from 'web3-common';
+import { TransactionCall, TransactionWithSender, Web3BaseProvider, Filter } from 'web3-common';
 import { Web3Config, Web3RequestManager } from 'web3-core';
 import {
+	BlockNumberOrTag,
 	ValidTypes,
 	ValidReturnTypes,
 	convertToValidType,
 	Address,
 	Uint256,
-	isHexStrict,
 	HexString32Bytes,
 	HexStringBytes,
 	Uint,
 	HexString8Bytes,
 	convertObjectPropertiesToValidType,
+    isHexString32Bytes
 } from 'web3-utils';
 import {
 	convertibleBlockProperties,
@@ -27,10 +22,6 @@ import {
 } from './convertible_properties';
 
 import * as RpcMethods from './rpc_methods';
-
-function isBlockHash(block: HexString32Bytes | BlockNumberOrTag): boolean {
-	return typeof block === 'string' && isHexStrict(block) && block.length === 66;
-}
 
 export class Web3Eth {
 	private readonly _requestManager: Web3RequestManager;
@@ -129,7 +120,7 @@ export class Web3Eth {
 		hydrated: boolean,
 		returnType?: ReturnType,
 	) {
-		const response = isBlockHash(block)
+		const response = isHexString32Bytes(block)
 			? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
 			: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
 
@@ -145,7 +136,7 @@ export class Web3Eth {
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = isBlockHash(block)
+		const response = isHexString32Bytes(block)
 			? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
 			: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
 
@@ -160,7 +151,7 @@ export class Web3Eth {
 		block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = isBlockHash(block)
+		const response = isHexString32Bytes(block)
 			? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
 			: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
 
@@ -175,7 +166,7 @@ export class Web3Eth {
 		uncleIndex: Uint,
 		returnType?: ReturnType,
 	) {
-		const response = isBlockHash(block)
+		const response = isHexString32Bytes(block)
 			? await RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
 			: await RpcMethods.getUncleByBlockNumberAndIndex(
 					this._requestManager,
@@ -221,7 +212,7 @@ export class Web3Eth {
 		transactionIndex: Uint,
 		returnType?: ReturnType,
 	) {
-		const response = isBlockHash(block)
+		const response = isHexString32Bytes(block)
 			? await RpcMethods.getTransactionByBlockHashAndIndex(
 					this._requestManager,
 					block,
