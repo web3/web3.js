@@ -29,6 +29,40 @@ export type TypedObjectAbbreviated = {
 	v: EncodingTypes;
 };
 
+export type Components = {
+	name: string;
+	type: string;
+	indexed?: boolean;
+	components?: Components[];
+};
+
+export type AbiInput = {
+	name: string;
+	type: string;
+	components?: Components;
+	index?: boolean;
+	internalType?: string;
+};
+
+// https://docs.soliditylang.org/en/develop/abi-spec.html#json
+export type JsonFunctionInterface = {
+	type: 'function';
+	name: string;
+	inputs: Components[];
+	outputs?: AbiInput[];
+	stateMutability?: string;
+};
+
+export type JsonEventInterface = {
+	type: 'event';
+	name: string;
+	inputs: Components[];
+	indexed: boolean;
+	anonymous: boolean;
+};
+
+// TODO need to create Json Contract interface constructor, receive, and fallback
+
 export enum ValidTypes {
 	HexString = 'HexString',
 	NumberString = 'NumberString',

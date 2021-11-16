@@ -149,3 +149,9 @@ export class InvalidCharCodeError extends Web3Error {
 		super(value, 'invalid char code given');
 	}
 }
+
+export class InvalidTypeAbiInput extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'components found but type is not tuple');
+	}
+}
