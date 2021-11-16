@@ -1,4 +1,4 @@
-import { TransactionWithSender, Filter, TransactionCall } from 'web3-common';
+import { TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
@@ -7,13 +7,17 @@ import {
 	HexString32Bytes,
 	HexStringBytes,
 	Uint,
+	Filter,
 	validateAddress,
-    validateBlockNumberOrTag,
-    validateHexString32Bytes,
-    validateHexStringInput,
-    InvalidBooleanError,
-    InvalidStringError
+	validateBlockNumberOrTag,
+	validateBoolean,
+	validateHexString32Bytes,
+	validateHexStringInput,
+	validateFilterObject,
+	validateStringInput,
+	validateNumbersInput,
 } from 'web3-utils';
+import { validateTransactionCall, validateTransactionWithSender } from './validation';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	return requestManager.send<'eth_protocolVersion'>({
@@ -77,7 +81,7 @@ export async function getBalance(
 	blockNumber: BlockNumberOrTag,
 ) {
 	validateAddress(address);
-    validateBlockNumberOrTag(blockNumber);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getBalance'>({
 		method: 'eth_getBalance',
@@ -91,9 +95,9 @@ export async function getStorageAt(
 	storageSlot: Uint256,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateAddress(address);
-    validateHexString32Bytes(storageSlot);
-    validateBlockNumberOrTag(blockNumber);
+	validateAddress(address);
+	validateHexString32Bytes(storageSlot);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getStorageAt'>({
 		method: 'eth_getStorageAt',
@@ -106,8 +110,8 @@ export async function getTransactionCount(
 	address: Address,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateAddress(address);
-    validateBlockNumberOrTag(blockNumber);
+	validateAddress(address);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getTransactionCount'>({
 		method: 'eth_getTransactionCount',
@@ -119,7 +123,7 @@ export async function getBlockTransactionCountByHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
 ) {
-    validateHexString32Bytes(blockHash);
+	validateHexString32Bytes(blockHash);
 
 	return requestManager.send<'eth_getBlockTransactionCountByHash'>({
 		method: 'eth_getBlockTransactionCountByHash',
@@ -131,7 +135,7 @@ export async function getBlockTransactionCountByNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateBlockNumberOrTag(blockNumber);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getBlockTransactionCountByNumber'>({
 		method: 'eth_getBlockTransactionCountByNumber',
@@ -143,7 +147,7 @@ export async function getUncleCountByBlockHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
 ) {
-    validateHexString32Bytes(blockHash);
+	validateHexString32Bytes(blockHash);
 
 	return requestManager.send<'eth_getUncleCountByBlockHash'>({
 		method: 'eth_getUncleCountByBlockHash',
@@ -155,7 +159,7 @@ export async function getUncleCountByBlockNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateBlockNumberOrTag(blockNumber);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getUncleCountByBlockNumber'>({
 		method: 'eth_getUncleCountByBlockNumber',
@@ -168,8 +172,8 @@ export async function getCode(
 	address: Address,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateAddress(address);
-    validateBlockNumberOrTag(blockNumber);
+	validateAddress(address);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getCode'>({
 		method: 'eth_getCode',
@@ -182,8 +186,8 @@ export async function sign(
 	address: Address,
 	message: HexStringBytes,
 ) {
-    validateAddress(address);
-    validateHexStringInput(message);
+	validateAddress(address);
+	validateHexStringInput(message);
 
 	return requestManager.send<'eth_sign'>({
 		method: 'eth_sign',
@@ -195,6 +199,8 @@ export async function signTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender,
 ) {
+	validateTransactionWithSender(transaction);
+
 	return requestManager.send<'eth_signTransaction'>({
 		method: 'eth_signTransaction',
 		params: [transaction],
@@ -205,6 +211,8 @@ export async function sendTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender,
 ) {
+	validateTransactionWithSender(transaction);
+
 	return requestManager.send<'eth_sendTransaction'>({
 		method: 'eth_sendTransaction',
 		params: [transaction],
@@ -215,7 +223,7 @@ export async function sendRawTransaction(
 	requestManager: Web3RequestManager,
 	transaction: HexStringBytes,
 ) {
-    validateHexStringInput(transaction);
+	validateHexStringInput(transaction);
 
 	return requestManager.send<'eth_sendRawTransaction'>({
 		method: 'eth_sendRawTransaction',
@@ -228,7 +236,8 @@ export async function call(
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateBlockNumberOrTag(blockNumber);
+	validateTransactionCall(transaction);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_call'>({
 		method: 'eth_call',
@@ -236,12 +245,13 @@ export async function call(
 	});
 }
 
+// TODO Not sure how to best validate Partial<TransactionWithSender>
 export async function estimateGas(
 	requestManager: Web3RequestManager,
 	transaction: Partial<TransactionWithSender>,
 	blockNumber: BlockNumberOrTag,
 ) {
-    validateBlockNumberOrTag(blockNumber);
+	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_estimateGas'>({
 		method: 'eth_estimateGas',
@@ -254,8 +264,8 @@ export async function getBlockByHash(
 	blockHash: HexString32Bytes,
 	hydrated: boolean,
 ) {
-    validateHexString32Bytes(blockHash);
-    if (typeof hydrated !== 'boolean') throw new InvalidBooleanError(hydrated);
+	validateHexString32Bytes(blockHash);
+	validateBoolean(hydrated);
 
 	return requestManager.send<'eth_getBlockByHash'>({
 		method: 'eth_getBlockByHash',
@@ -268,8 +278,8 @@ export async function getBlockByNumber(
 	blockNumber: BlockNumberOrTag,
 	hydrated: boolean,
 ) {
-    validateBlockNumberOrTag(blockNumber);
-    if (typeof hydrated !== 'boolean') throw new InvalidBooleanError(hydrated);
+	validateBlockNumberOrTag(blockNumber);
+	validateBoolean(hydrated);
 
 	return requestManager.send<'eth_getBlockByNumber'>({
 		method: 'eth_getBlockByNumber',
@@ -281,6 +291,8 @@ export async function getTransactionByHash(
 	requestManager: Web3RequestManager,
 	transactionHash: HexString32Bytes,
 ) {
+	validateHexString32Bytes(transactionHash);
+
 	return requestManager.send<'eth_getTransactionByHash'>({
 		method: 'eth_getTransactionByHash',
 		params: [transactionHash],
@@ -292,7 +304,8 @@ export async function getTransactionByBlockHashAndIndex(
 	blockHash: HexString32Bytes,
 	transactionIndex: Uint,
 ) {
-    validateHexString32Bytes(blockHash);
+	validateHexString32Bytes(blockHash);
+	validateHexStringInput(transactionIndex);
 
 	return requestManager.send<'eth_getTransactionByBlockHashAndIndex'>({
 		method: 'eth_getTransactionByBlockHashAndIndex',
@@ -305,8 +318,8 @@ export async function getTransactionByBlockNumberAndIndex(
 	blockNumber: BlockNumberOrTag,
 	transactionIndex: Uint,
 ) {
-    validateBlockNumberOrTag(blockNumber);
-    validateHexStringInput(transactionIndex);
+	validateBlockNumberOrTag(blockNumber);
+	validateHexStringInput(transactionIndex);
 
 	return requestManager.send<'eth_getTransactionByBlockNumberAndIndex'>({
 		method: 'eth_getTransactionByBlockNumberAndIndex',
@@ -318,6 +331,8 @@ export async function getTransactionReceipt(
 	requestManager: Web3RequestManager,
 	transactionHash: HexString32Bytes,
 ) {
+	validateHexString32Bytes(transactionHash);
+
 	return requestManager.send<'eth_getTransactionReceipt'>({
 		method: 'eth_getTransactionReceipt',
 		params: [transactionHash],
@@ -329,8 +344,8 @@ export async function getUncleByBlockHashAndIndex(
 	blockHash: HexString32Bytes,
 	uncleIndex: Uint,
 ) {
-    validateHexString32Bytes(blockHash);
-    validateHexStringInput(uncleIndex);
+	validateHexString32Bytes(blockHash);
+	validateHexStringInput(uncleIndex);
 
 	return requestManager.send<'eth_getUncleByBlockHashAndIndex'>({
 		method: 'eth_getUncleByBlockHashAndIndex',
@@ -343,8 +358,8 @@ export async function getUncleByBlockNumberAndIndex(
 	blockNumber: BlockNumberOrTag,
 	uncleIndex: Uint,
 ) {
-    validateBlockNumberOrTag(blockNumber);
-    validateHexStringInput(uncleIndex);
+	validateBlockNumberOrTag(blockNumber);
+	validateHexStringInput(uncleIndex);
 
 	return requestManager.send<'eth_getUncleByBlockNumberAndIndex'>({
 		method: 'eth_getUncleByBlockNumberAndIndex',
@@ -360,7 +375,7 @@ export async function getCompilers(requestManager: Web3RequestManager) {
 }
 
 export async function compileSolidity(requestManager: Web3RequestManager, code: string) {
-    if (typeof code !== 'string') throw new InvalidStringError(code);
+	validateStringInput(code);
 
 	return requestManager.send<'eth_compileSolidity'>({
 		method: 'eth_compileSolidity',
@@ -369,7 +384,7 @@ export async function compileSolidity(requestManager: Web3RequestManager, code: 
 }
 
 export async function compileLLL(requestManager: Web3RequestManager, code: string) {
-    if (typeof code !== 'string') throw new InvalidStringError(code);
+	validateStringInput(code);
 
 	return requestManager.send<'eth_compileLLL'>({
 		method: 'eth_compileLLL',
@@ -378,7 +393,7 @@ export async function compileLLL(requestManager: Web3RequestManager, code: strin
 }
 
 export async function compileSerpent(requestManager: Web3RequestManager, code: string) {
-    if (typeof code !== 'string') throw new InvalidStringError(code);
+	validateStringInput(code);
 
 	return requestManager.send<'eth_compileSerpent'>({
 		method: 'eth_compileSerpent',
@@ -387,6 +402,8 @@ export async function compileSerpent(requestManager: Web3RequestManager, code: s
 }
 
 export async function newFilter(requestManager: Web3RequestManager, filter: Filter) {
+	validateFilterObject(filter);
+
 	return requestManager.send<'eth_newFilter'>({
 		method: 'eth_newFilter',
 		params: [filter],
@@ -408,7 +425,7 @@ export async function newPendingTransactionFilter(requestManager: Web3RequestMan
 }
 
 export async function uninstallFilter(requestManager: Web3RequestManager, filterIdentifier: Uint) {
-    validateHexStringInput(filterIdentifier);
+	validateHexStringInput(filterIdentifier);
 
 	return requestManager.send<'eth_uninstallFilter'>({
 		method: 'eth_uninstallFilter',
@@ -417,7 +434,7 @@ export async function uninstallFilter(requestManager: Web3RequestManager, filter
 }
 
 export async function getFilterChanges(requestManager: Web3RequestManager, filterIdentifier: Uint) {
-    validateHexStringInput(filterIdentifier);
+	validateHexStringInput(filterIdentifier);
 
 	return requestManager.send<'eth_getFilterChanges'>({
 		method: 'eth_getFilterChanges',
@@ -426,7 +443,7 @@ export async function getFilterChanges(requestManager: Web3RequestManager, filte
 }
 
 export async function getFilterLogs(requestManager: Web3RequestManager, filterIdentifier: Uint) {
-    validateHexStringInput(filterIdentifier);
+	validateHexStringInput(filterIdentifier);
 
 	return requestManager.send<'eth_getFilterLogs'>({
 		method: 'eth_getFilterLogs',
@@ -435,6 +452,8 @@ export async function getFilterLogs(requestManager: Web3RequestManager, filterId
 }
 
 export async function getLogs(requestManager: Web3RequestManager, filter: Filter) {
+	validateFilterObject(filter);
+
 	return requestManager.send<'eth_getLogs'>({
 		method: 'eth_getLogs',
 		params: [filter],
@@ -454,9 +473,9 @@ export async function submitWork(
 	seedHash: HexString32Bytes,
 	difficulty: HexString32Bytes,
 ) {
-    validateHexString32Bytes(powHash);
-    validateHexString32Bytes(seedHash);
-    validateHexString32Bytes(difficulty);
+	validateHexString32Bytes(powHash);
+	validateHexString32Bytes(seedHash);
+	validateHexString32Bytes(difficulty);
 
 	return requestManager.send<'eth_submitWork'>({
 		method: 'eth_submitWork',
@@ -469,8 +488,8 @@ export async function submitHashrate(
 	hashRate: HexString32Bytes,
 	id: HexString32Bytes,
 ) {
-    validateHexString32Bytes(hashRate);
-    validateHexString32Bytes(id);
+	validateHexString32Bytes(hashRate);
+	validateHexString32Bytes(id);
 
 	return requestManager.send<'eth_submitHashrate'>({
 		method: 'eth_submitHashrate',
@@ -484,8 +503,11 @@ export async function getFeeHistory(
 	newestBlock: BlockNumberOrTag,
 	rewardPercentiles: number[],
 ) {
-    validateHexStringInput(blockCount);
-    validateBlockNumberOrTag(newestBlock);
+	validateHexStringInput(blockCount);
+	validateBlockNumberOrTag(newestBlock);
+	for (const rewardPercentile of rewardPercentiles) {
+		validateNumbersInput(rewardPercentile, { onlyIntegers: false });
+	}
 
 	return requestManager.send<'eth_feeHistory'>({
 		method: 'eth_feeHistory',

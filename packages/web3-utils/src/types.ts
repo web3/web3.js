@@ -19,6 +19,9 @@ export type Uint256 = HexString;
 // Hex encoded address
 export type Address = HexString;
 
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
+export type Topic = HexString256Bytes;
+
 export enum BlockTags {
 	EARLIEST = 'earliest',
 	LATEST = 'latest',
@@ -95,3 +98,11 @@ export type FormatValidReturnType<
 		? ValidReturnTypes[ReturnType]
 		: ObjectType[P];
 };
+
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
+export interface Filter {
+	readonly fromBlock?: BlockNumberOrTag;
+	readonly toBlock?: BlockNumberOrTag;
+	readonly address?: Address | Address[];
+	readonly topics?: (Topic | Topic[] | null)[];
+}

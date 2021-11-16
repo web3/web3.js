@@ -1,4 +1,4 @@
-import { TransactionCall, TransactionWithSender, Web3BaseProvider, Filter } from 'web3-common';
+import { TransactionCall, TransactionWithSender, Web3BaseProvider } from 'web3-common';
 import { Web3Config, Web3RequestManager } from 'web3-core';
 import {
 	BlockNumberOrTag,
@@ -12,7 +12,8 @@ import {
 	Uint,
 	HexString8Bytes,
 	convertObjectPropertiesToValidType,
-    isHexString32Bytes
+	isHexString32Bytes,
+	Filter,
 } from 'web3-utils';
 import {
 	convertibleBlockProperties,

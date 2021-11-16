@@ -9,6 +9,8 @@ import {
 	HexStringSingleByte,
 	Uint,
 	Uint256,
+	Topic,
+	Filter,
 } from 'web3-utils';
 
 // The types are generated manually by referring to following doc
@@ -122,9 +124,6 @@ export interface Block {
 	readonly hash: HexString32Bytes | null;
 }
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
-export type Topic = HexString256Bytes;
-
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L2
 export interface Log {
 	readonly removed?: boolean;
@@ -165,14 +164,6 @@ export interface FeeHistoryResult {
 	readonly oldestBlock: Uint;
 	readonly baseFeePerGas: Uint;
 	readonly reward: number[][];
-}
-
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
-export interface Filter {
-	readonly fromBlock?: BlockNumberOrTag;
-	readonly toBlock?: BlockNumberOrTag;
-	readonly address?: Address | Address[];
-	readonly topics?: (Topic | Topic[] | null)[];
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L2

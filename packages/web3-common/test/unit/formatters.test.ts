@@ -1,12 +1,10 @@
 import * as utils from 'web3-utils';
 
-import { PredefinedBlockNumbers } from '../../src/types';
 import {
 	inputAddressFormatter,
 	inputBlockNumberFormatter,
 	inputDefaultBlockNumberFormatter,
 	inputPostFormatter,
-	isPredefinedBlockNumber,
 	outputBigIntegerFormatter,
 	outputBlockFormatter,
 	outputLogFormatter,

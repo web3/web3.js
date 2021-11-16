@@ -1,6 +1,5 @@
 /* eslint-disable no-bitwise */
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { HexString32Bytes, InvalidBlockNumberOrTag, InvalidHexString32Bytes } from '.';
 import {
 	HighValueIntegerInByteArrayError,
 	InvalidBytesError,
@@ -15,8 +14,20 @@ import {
 	InvalidTopicError,
 	InvalidCharCodeError,
 	InvalidAddressError,
+	InvalidBlockNumberOrTag,
+	InvalidHexString32Bytes,
+	InvalidFilter,
+	InvalidBooleanError,
 } from './errors';
-import { BlockNumberOrTag, Bytes, HexString, Numbers, BlockTags } from './types';
+import {
+	BlockNumberOrTag,
+	Bytes,
+	HexString,
+	HexString32Bytes,
+	Numbers,
+	BlockTags,
+	Filter,
+} from './types';
 
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
@@ -227,7 +238,7 @@ export const isAddress = (address: string): boolean => {
 };
 
 export function validateAddress(address: string): void {
-    if (!isAddress(address)) throw new InvalidAddressError(address);
+	if (!isAddress(address)) throw new InvalidAddressError(address);
 }
 
 /**
@@ -400,22 +411,77 @@ export function isTopicInBloom(bloom: string, topic: string): boolean {
  * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
  */
 export const isBlockTag = (value: string) =>
-	BlockTags.LATEST === value ||
-	BlockTags.PENDING === value ||
-	BlockTags.EARLIEST === value;
+	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
 
 export function isBlockNumberOrTag(value: BlockNumberOrTag): boolean {
 	return isHexStrict(value) || isBlockTag(value);
 }
 
 export function validateBlockNumberOrTag(value: BlockNumberOrTag) {
-    if (!isBlockTag(value)) throw new InvalidBlockNumberOrTag(value);
+	if (!isBlockTag(value)) throw new InvalidBlockNumberOrTag(value);
 }
 
 export function isHexString32Bytes(value: HexString32Bytes): boolean {
-	return isHexStrict(value) && value.length === 66; // 32 bytes + 0x
+	return isHexStrict(value) && value.length === 66; // 32 bytes + 0x = 66
 }
 
 export function validateHexString32Bytes(value: HexString32Bytes) {
-    if (!isHexString32Bytes(value)) throw new InvalidHexString32Bytes(value);
+	if (!isHexString32Bytes(value)) throw new InvalidHexString32Bytes(value);
+}
+
+/**
+ * First we check if all properties in the provided value are expected,
+ * then because all Filter properties are optional, we check if the expected properties
+ * are defined. If defined and they're not the expected type, we immediately return false,
+ * otherwise we return true after all checks pass.
+ */
+export function isFilterObject(value: Filter): boolean {
+	const expectedFilterProperties = ['fromBlock', 'toBlock', 'address', 'topics'];
+	if (!Object.keys(value).every(property => property in expectedFilterProperties)) return false;
+
+	if (
+		(value.fromBlock !== undefined && !isBlockNumberOrTag(value.fromBlock)) ||
+		(value.toBlock !== undefined && !isBlockNumberOrTag(value.toBlock))
+	)
+		return false;
+
+	if (value.address !== undefined) {
+		if (
+			Array.isArray(value.address) &&
+			!value.address.every(address => typeof address === 'string')
+		)
+			return false;
+
+		if (typeof value.address !== 'string') return false;
+	}
+
+	if (value.topics !== undefined) {
+		if (
+			!value.topics.every(topic => {
+				if (typeof topic === 'string') return true;
+				if (
+					Array.isArray(topic) &&
+					topic.every(nestedTopic => typeof nestedTopic === 'string')
+				)
+					return true;
+				if (topic === null) return true;
+				return false;
+			})
+		)
+			return false;
+	}
+
+	return true;
+}
+
+export function validateFilterObject(value: Filter) {
+	if (!isFilterObject(value)) throw new InvalidFilter(value);
+}
+
+export function isBoolean(value: boolean): boolean {
+	return typeof value === 'boolean';
+}
+
+export function validateBoolean(value: boolean) {
+	if (!isBoolean(value)) throw new InvalidBooleanError(value);
 }

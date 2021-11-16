@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { BlockNumberOrTag, Filter } from './types';
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
@@ -157,13 +158,21 @@ export class InvalidTypeAbiInput extends Web3Error {
 }
 
 export class InvalidBlockNumberOrTag extends Web3Error {
-    public constructor(value: any) {
-        super(value, 'invalid block number or tag given');
-    }
+	public constructor(value: BlockNumberOrTag) {
+		super(value, 'invalid block number or tag given');
+	}
 }
 
 export class InvalidHexString32Bytes extends Web3Error {
-    public constructor(value: any) {
-        super(value, 'invalid block hash given');
-    }
+	public constructor(value: string) {
+		super(value, 'invalid block hash given');
+	}
+}
+
+export class InvalidFilter extends Web3Error {
+	public constructor(value: Filter) {
+		// TODO Discuss this naive approach to logging object
+		// Does not account for non JSON properties
+		super(JSON.stringify(value), 'invalid filter given');
+	}
 }
