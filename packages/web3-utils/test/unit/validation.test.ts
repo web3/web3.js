@@ -1,3 +1,4 @@
+import { InvalidAddressError, InvalidBlockError, InvalidBloomError, InvalidHexStringError } from '../../src/errors';
 import {
 	isHex,
 	isHexStrict,
@@ -20,8 +21,6 @@ import {
 import {
 	checkAddressCheckSumValidData,
 	isAddressValidData,
-	isHexData,
-	isHexStrictData,
 	compareBlockNumbersValidData,
 	compareBlockNumbersInvalidData,
 	validateHexStringInputInvalidData,
@@ -38,22 +37,23 @@ import {
 	isBigIntValidData,
 	isBlockTagValidData,
 	isBlockTagInvalidData,
+	isAddressInvalidData,
+    isHexValidData,
+    isHexInvalidData,
+    isHexStrictValidData,
+    isHexStrictInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
 	describe('isHex', () => {
-		describe('valid cases', () => {
-			it.each(isHexData)('%s', (input, output) => {
-				expect(isHex(input)).toEqual(output);
-			});
-		});
+		it.each([...isHexValidData, ...isHexInvalidData])('%s', (input, output) => {
+            expect(isHex(input)).toEqual(output);
+        });
 	});
 	describe('isHexStrict', () => {
-		describe('valid cases', () => {
-			it.each(isHexStrictData)('%s', (input, output) => {
-				expect(isHexStrict(input)).toEqual(output);
-			});
-		});
+		it.each([...isHexStrictValidData, ...isHexStrictInvalidData])('%s', (input, output) => {
+            expect(isHexStrict(input)).toEqual(output);
+        });
 	});
 	describe('validateHexString', () => {
 		describe('invalid cases', () => {
@@ -84,105 +84,70 @@ describe('validation', () => {
 		});
 	});
 	describe('checkAddressCheckSum', () => {
-		describe('valid cases', () => {
-			it.each(checkAddressCheckSumValidData)('%s', (input, output) => {
-				expect(checkAddressCheckSum(input)).toEqual(output);
-			});
-		});
+		it.each(checkAddressCheckSumValidData)('%s', (input, output) => {
+            expect(checkAddressCheckSum(input)).toEqual(output);
+        });
 	});
 	describe('isAddress', () => {
-		describe('valid cases', () => {
-			it.each(isAddressValidData)('%s', (input, output) => {
-				expect(isAddress(input)).toEqual(output);
-			});
-		});
+		it.each([...isAddressValidData, ...isAddressInvalidData])('%s', (input, output) => {
+            expect(isAddress(input)).toEqual(output);
+        });
 	});
 	describe('compareBlockNumbers', () => {
-		describe('valid cases', () => {
-			it.each(compareBlockNumbersValidData)('%s', (input, output) => {
-				expect(compareBlockNumbers(input[0], input[1])).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(compareBlockNumbersInvalidData)('%s', (input, output) => {
-				expect(() => compareBlockNumbers(input[0], input[1])).toThrow(output);
-			});
-		});
+		it.each([...compareBlockNumbersValidData, ...compareBlockNumbersInvalidData])('%s', (input, output) => {
+            if (output instanceof InvalidBlockError) {
+                expect(() => compareBlockNumbers(input[0], input[1])).toThrow(output);
+            } else {
+                expect(compareBlockNumbers(input[0], input[1])).toEqual(output);
+            }
+        });
 	});
 	describe('isUserEthereumAddressInBloomValidData', () => {
-		describe('valid cases', () => {
-			it.each(isUserEthereumAddressInBloomValidData)('%s', (input, output) => {
-				expect(isUserEthereumAddressInBloom(input[0], input[1])).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(isUserEthereumAddressInBloomInvalidData)('%s', (input, output) => {
-				expect(() => isUserEthereumAddressInBloom(input[0], input[1])).toThrow(output);
-			});
-		});
+		it.each([...isUserEthereumAddressInBloomValidData, ...isUserEthereumAddressInBloomInvalidData])('%s', (input, output) => {
+            if (output instanceof InvalidBloomError || output instanceof InvalidAddressError) {
+                expect(() => isUserEthereumAddressInBloom(input[0], input[1])).toThrow(output);
+            } else {
+                expect(isUserEthereumAddressInBloom(input[0], input[1])).toEqual(output);
+            }
+        });
 	});
 	describe('isBloom', () => {
-		describe('valid cases', () => {
-			it.each(isBloomValidData)('%s', (input, output) => {
-				expect(isBloom(input)).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(isInBloomInvalidData)('%s', (input, output) => {
-				expect(() => isInBloom(input[0], input[1])).toThrow(output);
-			});
-		});
+		it.each(isBloomValidData)('%s', (input, output) => {
+            expect(isBloom(input)).toEqual(output);
+        });
 	});
 	describe('isInBloom', () => {
-		describe('valid cases', () => {
-			it.each(isInBloomValidData)('%s', (input, output) => {
-				expect(isInBloom(input[0], input[1])).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(isInBloomInvalidData)('%s', (input, output) => {
-				expect(() => isInBloom(input[0], input[1])).toThrow(output);
-			});
-		});
+		it.each([...isInBloomValidData, ...isInBloomInvalidData])('%s', (input, output) => {
+            if (output instanceof InvalidHexStringError || output instanceof InvalidBloomError) {
+                expect(() => isInBloom(input[0], input[1])).toThrow(output);
+            } else {
+                expect(isInBloom(input[0], input[1])).toEqual(output);
+            }
+        });
 	});
 	describe('isTopic', () => {
-		describe('valid cases', () => {
-			it.each(isTopicValidData)('%s', (input, output) => {
-				expect(isTopic(input)).toEqual(output);
-			});
-		});
+		it.each(isTopicValidData)('%s', (input, output) => {
+            expect(isTopic(input)).toEqual(output);
+        });
 	});
 	describe('isTopicInBloom', () => {
-		describe('valid cases', () => {
-			it.each(isTopicInBloomValidData)('%s', (input, output) => {
-				expect(isTopicInBloom(input[0], input[1])).toEqual(output);
-			});
-		});
+		it.each(isTopicInBloomValidData)('%s', (input, output) => {
+            expect(isTopicInBloom(input[0], input[1])).toEqual(output);
+        });
 	});
 	describe('isContractAddressInBloom', () => {
-		describe('valid cases', () => {
-			it.each(isInBloomValidData)('%s', (input, output) => {
-				expect(isContractAddressInBloom(input[0], input[1])).toEqual(output);
-			});
-		});
+		it.each(isInBloomValidData)('%s', (input, output) => {
+            expect(isContractAddressInBloom(input[0], input[1])).toEqual(output);
+        });
 	});
 	describe('isBigInt', () => {
-		describe('valid cases', () => {
-			it.each(isBigIntValidData)('%s', (input, output) => {
-				expect(isBigInt(input)).toEqual(output);
-			});
-		});
+		it.each(isBigIntValidData)('%s', (input, output) => {
+            expect(isBigInt(input)).toEqual(output);
+        });
 	});
 	describe('isBlockTag', () => {
-		describe('valid cases', () => {
-			it.each(isBlockTagValidData)('%s', (input, output) => {
-				expect(isBlockTag(input)).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(isBlockTagInvalidData)('%s', (input, output) => {
-				expect(isBlockTag(input)).toEqual(output);
-			});
-		});
+		it.each([...isBlockTagValidData, ...isBlockTagInvalidData])('%s', (input, output) => {
+            expect(isBlockTag(input)).toEqual(output);
+        });
 	});
 });

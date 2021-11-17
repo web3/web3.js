@@ -1,96 +1,97 @@
-import { Numbers } from '../../src/types';
+import { HighValueIntegerInByteArrayError, InvalidAddressError, InvalidBlockError, InvalidBloomError, InvalidBytesError, InvalidHexStringError, InvalidIntegerError, InvalidIntegerInByteArrayError, InvalidNumberError, InvalidStringError, NegativeIntegersInByteArrayError } from '../../src/errors';
+import { BlockNumberOrTag, Numbers, Uint } from '../../src/types';
 
-export const hexStrict: [any, boolean][] = [
-	['0x48', true],
+export const isHexStrictValidData: [Uint, true][] = [
+    ['0x48', true],
 	['0x123c', true],
 	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
 	['0xd115bffabbdd893a6f7cea402e7338643ced44a6', true],
 	['0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc', true],
 	['0x1', true],
 	['0xcd', true],
-	['Heeäööä👅D34ɝɣ24Єͽ', false],
+    ['-0xcd', true],
+    ['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
+];
+
+export const isHexInvalidData: [any, false][] = [
+    ['Heeäööä👅D34ɝɣ24Єͽ', false],
 	['-1000', false],
 	['0xH', false],
 	['I have 100£', false],
 	['\u0000', false],
 	[true, false],
 	[false, false],
+    ['0x407d73d8a49eeb85d32cf465507dd71d507100cG', false], // Invalid hex character "G"
+    [{}, false],
+	[() => {}, false],
+	[undefined, false],
 ];
 
-export const isHexData: [any, boolean][] = [
-	...hexStrict,
-	['45', true],
-	['', true],
-	['0', true],
-	[-255n, true],
-	[4n, true],
-	[1, true],
-	[BigInt(12), true],
-	[12n, true],
-];
-
-export const isHexStrictData: [any, boolean][] = [
-	...hexStrict,
-	['45', false],
+export const isHexStrictInvalidData: [any, false][] = [
+    ...isHexInvalidData,
+    ['45', false],
 	['', false],
 	['0', false],
 	[1, false],
 	[BigInt(12), false],
 	[12n, false],
-	['-1000', false],
 	[-255n, false],
-	['I have 100£', false],
-	['\u0000', false],
-	[true, false],
-	[false, false],
+    [-42, false],
+    [4.2, false],
 ];
 
-export const validateHexStringInputInvalidData: [any, string][] = [
-	['0xT1', 'Invalid value given "0xT1". Error: not a valid hex string.'],
-	['1234', 'Invalid value given "1234". Error: not a valid hex string.'],
-	['hello', 'Invalid value given "hello". Error: not a valid hex string.'],
+export const isHexValidData: [Numbers, true][] = [
+    ...isHexStrictValidData,
+    ['45', true],
+	['', true],
+	['0', true],
+	[1, true],
+	[BigInt(12), true],
+	[12n, true],
+	[-255n, true],
 ];
 
-export const validateBytesInputInvalidData: [any, string][] = [
-	['0xT1', 'Invalid value given "0xT1". Error: not a valid hex string.'],
-	['1234', 'Invalid value given "1234". Error: not a valid hex string.'],
-	['hello', 'Invalid value given "hello". Error: not a valid hex string.'],
-	[[1, 2, -3, 4, 5], 'Invalid value given "1,2,-3,4,5". Error: contains negative values'],
-	[[2, 3, 266], 'Invalid value given "2,3,266". Error: contains numbers greater than 255'],
-	[['world'], 'Invalid value given "world". Error: contains invalid integer values'],
-	['-0x12', 'Invalid value given "-0x12". Error: can not parse as byte data'],
+export const validateHexStringInputInvalidData: [any, InvalidHexStringError][] = [
+	['0xT1', new InvalidHexStringError('0xT1')],
+	['1234', new InvalidHexStringError('1234')],
+	['hello', new InvalidHexStringError('hello')],
 ];
 
-export const validateNumbersInputInvalidData: [any, string][] = [
+export const validateBytesInputInvalidData: [any, NegativeIntegersInByteArrayError | HighValueIntegerInByteArrayError | InvalidIntegerInByteArrayError | InvalidHexStringError | InvalidBytesError][] = [
+	['0xT1', new InvalidHexStringError('0xT1')],
+	['1234', new InvalidHexStringError('1234')],
+	['hello', new InvalidHexStringError('hello')],
+	[[1, 2, -3, 4, 5], new NegativeIntegersInByteArrayError([1,2,-3,4,5])],
+	[[2, 3, 266], new HighValueIntegerInByteArrayError([2, 3, 266])],
+	[['world'], new InvalidIntegerInByteArrayError(['world'])],
+	['-0x12', new InvalidBytesError('-0x12')],
+];
+
+export const validateNumbersInputInvalidData: [any, InvalidIntegerError | InvalidNumberError][] = [
 	[
 		[['hello'], { onlyIntegers: true }],
-		'Invalid value given "hello". Error: not a valid integer.',
+		new InvalidIntegerError('hello'),
 	],
 	[
 		[['world'], { onlyIntegers: false }],
-		'Invalid value given "world". Error: not a valid number.',
+		new InvalidNumberError('world'),
 	],
 	[
 		[4 / 0, { onlyIntegers: true }],
-		'Invalid value given "Infinity". Error: not a valid integer.',
+		new InvalidIntegerError(4 / 0),
 	],
-	[[4.4, { onlyIntegers: true }], 'Invalid value given "4.4". Error: not a valid integer.'],
-	[['word', { onlyIntegers: true }], 'Invalid value given "word". Error: not a valid integer.'],
+	[[4.4, { onlyIntegers: true }], new InvalidIntegerError(4.4)],
+	[['word', { onlyIntegers: true }], new InvalidIntegerError('word')],
 ];
 
-export const validateStringInputInvalidData: [any, string][] = [
-	[123, 'Invalid value given "123". Error: not a valid string.'],
-	[{}, 'Invalid value given "[object Object]". Error: not a valid string.'],
-	[null, 'Invalid value given "null". Error: not a valid string.'],
-	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
+export const validateStringInputInvalidData: [any, InvalidStringError][] = [
+	[123, new InvalidStringError(123)],
+	[{}, new InvalidStringError({},)],
+	[null, new InvalidStringError(null)],
+	[undefined, new InvalidStringError(undefined)],
 ];
 
-export const checkAddressCheckSumValidData: [any, boolean][] = [
-	['0xc1912fee45d61c87cc5ea59dae31190fffff232d', false],
-	['0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', false],
-	['0XD1220A0CF47C7B9BE7A2E6BA89F429762E7B9ADB', false],
-	['1234', false],
-	['0xa1b2', false],
+export const checkAddressCheckSumValidData: [any, true][] = [
 	['0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d', true],
 	['0x52908400098527886E0F7030069857D2E4169EE7', true],
 	['0x8617E340B3D01FA5F11F306F4090FD50E238070D', true],
@@ -101,17 +102,28 @@ export const checkAddressCheckSumValidData: [any, boolean][] = [
 	['0xD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb', true],
 ];
 
-export const isAddressValidData: [any, boolean][] = [
+export const checkAddressCheckSumInvalidData: [any, false][] = [
+	['0xc1912fee45d61c87cc5ea59dae31190fffff232d', false],
+	['0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', false],
+	['0XD1220A0CF47C7B9BE7A2E6BA89F429762E7B9ADB', false],
+	['1234', false],
+	['0xa1b2', false],
+];
+
+export const isAddressValidData: [any, true][] = [
 	['0xc6d9d2cd449a754c494264e1809c50e34d64562b', true],
 	['c6d9d2cd449a754c494264e1809c50e34d64562b', true],
 	['0xE247A45c287191d435A8a5D72A7C8dc030451E9F', true],
-	['0xE247a45c287191d435A8a5D72A7C8dc030451E9F', false],
 	['0xe247a45c287191d435a8a5d72a7c8dc030451e9f', true],
 	['0xE247A45C287191D435A8A5D72A7C8DC030451E9F', true],
 	['0XE247A45C287191D435A8A5D72A7C8DC030451E9F', true],
-	['0123', false],
-	['0x12', false],
-	[123, false],
+];
+
+export const isAddressInvalidData: [any, false][] = [
+    ...isHexStrictInvalidData,
+	['0x1', false],
+	['0xE247a45c287191d435A8a5D72A7C8dc030451E9F', false], // Invalid checksum
+	['-0x407d73d8a49eeb85d32cf465507dd71d507100c1', false],
 ];
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
@@ -144,12 +156,12 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['pending', BigInt(1)], 1],
 ];
 
-export const compareBlockNumbersInvalidData: [[Numbers, Numbers], string][] = [
-	[['pending', 'unknown'], 'Invalid value given "unknown". Error: invalid string given.'],
-	[['', 'pending'], 'Invalid value given "". Error: invalid string given'],
+export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockError][] = [
+	[['pending', 'unknown'], new InvalidBlockError('unknown')],
+	[['', 'pending'], new InvalidBlockError('')],
 ];
 
-export const isBloomValidData: [any, boolean][] = [
+export const isBloomValidData: [any, true][] = [
 	[
 		'0x00000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000008000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000010000000000000000000000000000000000010000000000402000000000000000000000020000010000000000000000000000000000000000000000000000000000000000000',
 		true,
@@ -158,13 +170,16 @@ export const isBloomValidData: [any, boolean][] = [
 		'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
 		true,
 	],
+];
+
+export const isBloomInvalidData: [any, false][] = [
 	['0x1100', false],
 	['0x1212', false],
 	['test', false],
 	[100, false],
 ];
 
-export const isInBloomValidData: [any, boolean][] = [
+export const isInBloomValidData: [any, true][] = [
 	[
 		[
 			'0x00000000200000000010000080000000000002000000000000000000000000000000000000020200000000000000000000800001000000000000000000200000000000000000000000000008000000800000000000000000000000000000000000000000020000000000000000000800000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000080000000000000000000000100000000000000000000000002000000000001000080000000000000000000000000000000000020200010000000000000000000000000000000000000100000000000000000000000',
@@ -186,6 +201,9 @@ export const isInBloomValidData: [any, boolean][] = [
 		],
 		true,
 	],
+];
+
+export const isInBloomInvalidData: [any, false | InvalidHexStringError | InvalidBloomError][] = [
 	[
 		[
 			'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
@@ -200,31 +218,28 @@ export const isInBloomValidData: [any, boolean][] = [
 		],
 		false,
 	],
-];
-
-export const isInBloomInvalidData: [any, string][] = [
-	[
+    [
 		['0x1100', '0x6254B927ecC25DDd233aAECD5296D746B1C006B4'],
-		'Invalid value given "0x1100". Error: invalid bloom given.',
+		new InvalidBloomError('0x1100'),
 	],
 	[
 		['0x1212', '0x6254B927ecC25DDd233aAECD5296D746B1C006B4'],
-		'Invalid value given "0x1212". Error: invalid bloom given.',
+		new InvalidBloomError('0x1212'),
 	],
 	[
 		['test', '0x6254B927ecC25DDd233aAECD5296D746B1C006B4'],
-		'Invalid value given "test". Error: invalid bloom given.',
+		new InvalidBloomError('test'),
 	],
 	[
 		[
 			'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
 			'0xhello',
 		],
-		'Invalid value given "0xhello". Error: not a valid hex string.',
+		new InvalidHexStringError('0xhello'),
 	],
 ];
 
-export const isUserEthereumAddressInBloomValidData: [any, boolean][] = [
+export const isUserEthereumAddressInBloomValidData: [any, true][] = [
 	[
 		[
 			'0x00000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000002000000000000000000000000000000100000000000000082000000000080000000000000000000000000000000000000000000000002000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
@@ -232,6 +247,9 @@ export const isUserEthereumAddressInBloomValidData: [any, boolean][] = [
 		],
 		true,
 	],
+];
+
+export const isUserEthereumAddressInBloomInvalidData: [any, false | InvalidBloomError | InvalidAddressError][] = [
 	[
 		[
 			'0x00000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000002000000000000000000000000000000100000000000000082000000000080000000000000000000000000000000000000000000000002000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
@@ -239,23 +257,20 @@ export const isUserEthereumAddressInBloomValidData: [any, boolean][] = [
 		],
 		false,
 	],
+    [
+        [
+            '0x00000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000002000000000000000000000000000000100000000000000082000000000080000000000000000000000000000000000000000000000002000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+            '0xH1',
+        ],
+        new InvalidAddressError('0xH1'),
+    ],
 ];
 
-export const isUserEthereumAddressInBloomInvalidData: [any, string][] = [
-	[
-		[
-			'0x00000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000002000000000000000000000000000000100000000000000082000000000080000000000000000000000000000000000000000000000002000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-			'0xH1',
-		],
-		'Invalid value given "0xH1". Error: invalid ethereum address.',
-	],
-];
-
-export const isTopicValidData: [any, boolean][] = [
+export const isTopicValidData: [any, true][] = [
 	['0x0ce781a18c10c8289803c7c4cfd532d797113c4b41c9701ffad7d0a632ac555b', true],
 ];
 
-export const isTopicInBloomValidData: [any, boolean][] = [
+export const isTopicInBloomValidData: [any, true][] = [
 	[
 		[
 			'0x00000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000002000000000000000000000000000001000000000000000000000000000000',
@@ -265,24 +280,47 @@ export const isTopicInBloomValidData: [any, boolean][] = [
 	],
 ];
 
-export const isBigIntValidData: [any, boolean][] = [
-	[3, false],
-	[4n, true],
-	['3', false],
-	['3n', false],
+export const isBigIntValidData: [any, true][] = [
 	[90071992547409911n, true],
 	[BigInt(42), true],
 	[BigInt('1337'), true],
 ];
 
-export const isBlockTagValidData: [string, boolean][] = [
+export const isBigIntInvalidData: [any, false][] = [
+	[3, false],
+	['3', false],
+	['3n', false],
+];
+
+// Uses same data defined in isHexStrictValidData minus negative hex strings
+export const isBlockNumberValidData: [Uint, true][] = [
+    ['0x48', true],
+	['0x123c', true],
+	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', true],
+	['0xd115bffabbdd893a6f7cea402e7338643ced44a6', true],
+	['0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc', true],
+	['0x1', true],
+	['0xcd', true],
+];
+
+export const isBlockNumberInvalidData: [any, false][] = [
+    ...isHexStrictInvalidData,
+    ['-0xcd', false],
+    ['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', false],
+];
+
+export const isBlockTagValidData: [string, true][] = [
 	['latest', true],
 	['pending', true],
 	['earliest', true],
 ];
 
-export const isBlockTagInvalidData: [any, boolean][] = [
-	['foo', false],
-	[42, false],
-	['0x42', false],
+export const isBlockTagInvalidData: [any, false][] = [
+	...isHexStrictInvalidData,
+	['EARLIEST', false],
+	['LATEST', false],
+	['PENDING', false],
+	['UNKNOWN', false],
 ];
+
+export const isBlockNumberOrTagValidData: [BlockNumberOrTag, true][] = [];
