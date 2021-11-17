@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { BlockNumberOrTag, Filter } from './types';
+import { Filter } from './types';
 
 export abstract class Web3Error extends Error {
 	public readonly name: string;
@@ -157,8 +157,10 @@ export class InvalidTypeAbiInput extends Web3Error {
 	}
 }
 
+// TODO Type of value for all errors should be any as
+// any value can be passed when an error occurs
 export class InvalidBlockNumberOrTag extends Web3Error {
-	public constructor(value: BlockNumberOrTag) {
+	public constructor(value: any) {
 		super(value, 'invalid block number or tag given');
 	}
 }
