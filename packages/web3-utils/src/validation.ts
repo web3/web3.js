@@ -27,6 +27,7 @@ import {
 	Numbers,
 	BlockTags,
 	Filter,
+	Uint,
 } from './types';
 
 export const isHexStrict = (hex: string) =>
@@ -407,27 +408,31 @@ export function isTopicInBloom(bloom: string, topic: string): boolean {
 	return isInBloom(bloom, topic);
 }
 
+export const isBlockNumber = (value: Uint): boolean =>
+	isHexStrict(value) && value.substr(0, 1) !== '-';
+
 /**
  * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
  */
 export const isBlockTag = (value: string) =>
 	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
 
-export function isBlockNumberOrTag(value: BlockNumberOrTag): boolean {
-	return isHexStrict(value) || isBlockTag(value);
-}
+/**
+ * Returns true if given value is valid hex string and not negative, or is a valid BlockTag
+ */
+export const isBlockNumberOrTag = (value: BlockNumberOrTag) =>
+	(isHexStrict(value) && value.substr(0, 1) !== '-') || isBlockTag(value);
 
-export function validateBlockNumberOrTag(value: BlockNumberOrTag) {
-	if (!isBlockTag(value)) throw new InvalidBlockNumberOrTag(value);
-}
+export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
+	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTag(value);
+};
 
-export function isHexString32Bytes(value: HexString32Bytes): boolean {
-	return isHexStrict(value) && value.length === 66; // 32 bytes + 0x = 66
-}
+export const isHexString32Bytes = (value: HexString32Bytes) =>
+	isHexStrict(value) && value.length === 66; // 32 bytes + 0x = 66
 
-export function validateHexString32Bytes(value: HexString32Bytes) {
+export const validateHexString32Bytes = (value: HexString32Bytes) => {
 	if (!isHexString32Bytes(value)) throw new InvalidHexString32Bytes(value);
-}
+};
 
 /**
  * First we check if all properties in the provided value are expected,
@@ -435,7 +440,7 @@ export function validateHexString32Bytes(value: HexString32Bytes) {
  * are defined. If defined and they're not the expected type, we immediately return false,
  * otherwise we return true after all checks pass.
  */
-export function isFilterObject(value: Filter): boolean {
+export const isFilterObject = (value: Filter) => {
 	const expectedFilterProperties = ['fromBlock', 'toBlock', 'address', 'topics'];
 	if (!Object.keys(value).every(property => property in expectedFilterProperties)) return false;
 
@@ -472,16 +477,14 @@ export function isFilterObject(value: Filter): boolean {
 	}
 
 	return true;
-}
+};
 
-export function validateFilterObject(value: Filter) {
+export const validateFilterObject = (value: Filter) => {
 	if (!isFilterObject(value)) throw new InvalidFilter(value);
-}
+};
 
-export function isBoolean(value: boolean): boolean {
-	return typeof value === 'boolean';
-}
+export const isBoolean = (value: boolean) => typeof value === 'boolean';
 
-export function validateBoolean(value: boolean) {
+export const validateBoolean = (value: boolean) => {
 	if (!isBoolean(value)) throw new InvalidBooleanError(value);
-}
+};
