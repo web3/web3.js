@@ -22,7 +22,7 @@ yarn add web3-providers-ws
 
 ## Getting Started
 
-- :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
+-   :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
     ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
 
 ## Prerequisites
@@ -32,16 +32,16 @@ yarn add web3-providers-ws
 
 ## Package.json Scripts
 
-| Script           | Description                                         |
-| ---------------- | --------------------------------------------------- |
-| clean            | Uses `rimraf` to remove `dist/`                     |
+| Script           | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| clean            | Uses `rimraf` to remove `dist/`                    |
 | build            | Uses `tsc` to build package and dependent packages |
-| lint             | Uses `eslint` to lint package                       |
-| lint:fix         | Uses `eslint` to check and fix any warnings         |
-| format           | Uses `prettier` to format the code                  |
-| test             | Uses `jest` to run unit tests                       |
-| test:integration | Uses `jest` to run tests under `/test/integration`  |
-| test:unit        | Uses `jest` to run tests under `/test/unit`         |
+| lint             | Uses `eslint` to lint package                      |
+| lint:fix         | Uses `eslint` to check and fix any warnings        |
+| format           | Uses `prettier` to format the code                 |
+| test             | Uses `jest` to run unit tests                      |
+| test:integration | Uses `jest` to run tests under `/test/integration` |
+| test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
 [repo]: https://github.com/ethereum/web3.js
