@@ -2,6 +2,7 @@ import { AbiCoder, ParamType } from '@ethersproject/abi';
 import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
+	AbiInput,
 	JsonAbiCoderStruct,
 	JsonAbiFragment,
 	JsonAbiParameter,
@@ -35,7 +36,7 @@ export const isAbiFunctionFragment = (item: unknown): item is JsonAbiFunctionFra
  * Check if type is simplified struct format
  */
 export const isSimplifiedStructFormat = (
-	type: Partial<JsonAbiParameter>,
+	type: string | Partial<JsonAbiParameter>,
 ): type is Omit<JsonAbiParameter, 'components' | 'name'> =>
 	typeof type === 'object' &&
 	typeof (type as { components: unknown }).components === 'undefined' &&
@@ -58,10 +59,10 @@ export const mapStructToCoderFormat = (struct: JsonAbiStruct): Array<JsonAbiCode
 	for (const key of Object.keys(struct)) {
 		const item = struct[key];
 
-		if (isAbiFragment(item)) {
+		if (typeof item === 'object') {
 			components.push({
 				...mapStructNameAndType(key),
-				components: mapStructToCoderFormat(item),
+				components: mapStructToCoderFormat(item as unknown as JsonAbiStruct),
 			});
 		} else {
 			components.push({
@@ -77,13 +78,14 @@ export const mapStructToCoderFormat = (struct: JsonAbiStruct): Array<JsonAbiCode
  * Map types if simplified format is used
  */
 export const mapTypes = (
-	types: Array<string | JsonAbiParameter>,
-): Array<string | JsonAbiParameter> => {
-	const mappedTypes: Array<string | JsonAbiParameter> = [];
+	types: AbiInput[],
+): Array<string | JsonAbiParameter | Record<string, unknown>> => {
+	const mappedTypes: Array<string | JsonAbiParameter | Record<string, unknown>> = [];
 
 	for (const type of types) {
 		let modifiedType = type;
 
+		// Clone object
 		if (typeof type === 'object') {
 			modifiedType = { ...type };
 		}
@@ -95,14 +97,11 @@ export const mapTypes = (
 			modifiedType = { ...type, type: 'bytes24' };
 		}
 
-		if (typeof modifiedType === 'object' && isSimplifiedStructFormat(modifiedType)) {
+		if (isSimplifiedStructFormat(modifiedType)) {
 			const structName = Object.keys(modifiedType)[0] as unknown as keyof typeof modifiedType;
-			const { name, type: structType } = mapStructNameAndType(structName);
 
 			mappedTypes.push({
-				...modifiedType,
-				name: name ?? '',
-				type: structType,
+				...mapStructNameAndType(structName),
 				components: mapStructToCoderFormat(
 					modifiedType[structName] as unknown as JsonAbiStruct,
 				) as unknown as JsonAbiParameter[],
@@ -116,7 +115,7 @@ export const mapTypes = (
 };
 
 /**
- * Handle some formatting of params for backwards compatability with Ethers V4
+ * Handle some formatting of params for backwards compatibility with Ethers V4
  */
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -192,7 +191,7 @@ export const modifyParams = (
 		);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any
 	(coder as any).coders.forEach((c: ReturnType<AbiCoder['_getCoder']>, i: number) => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		if (c.name === 'tuple') {

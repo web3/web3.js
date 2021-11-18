@@ -2,17 +2,19 @@ import { HexString } from 'web3-utils';
 import { JsonAbiParameter } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 
+const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
+
 /**
  * Decodes events non- and indexed parameters.
  */
-export const decodeLog = (
+export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	inputs: Array<JsonAbiParameter>,
-	_data: HexString,
-	_topics: string | string[],
+	data: HexString,
+	topics: string | string[],
 ) => {
-	const topics = Array.isArray(_topics) ? _topics : [_topics];
+	const clonedTopics = Array.isArray(topics) ? topics : [topics];
 
-	const data = _data ?? '';
+	const clonedData = data ?? '';
 
 	const notIndexedInputs: Array<string | JsonAbiParameter> = [];
 	const indexedParams: Array<string | JsonAbiParameter> = [];
@@ -21,11 +23,9 @@ export const decodeLog = (
 	// TODO check for anonymous logs?
 	for (const [i, input] of inputs.entries()) {
 		if (input.indexed) {
-			indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].includes(
-				input.type,
-			)
-				? (decodeParameter(input.type, topics[topicCount]) as unknown as JsonAbiParameter)
-				: topics[topicCount];
+			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
+				? (decodeParameter(input.type, clonedTopics[topicCount]) as JsonAbiParameter)
+				: clonedTopics[topicCount];
 
 			topicCount += 1;
 		} else {
@@ -33,10 +33,10 @@ export const decodeLog = (
 		}
 	}
 
-	const nonIndexedData = data;
-	const notIndexedParams = nonIndexedData
-		? decodeParametersWith(notIndexedInputs, nonIndexedData, true)
-		: [];
+	const nonIndexedData = clonedData;
+	const notIndexedParams: Record<string, unknown> = nonIndexedData
+		? decodeParametersWith<ReturnType>(notIndexedInputs, nonIndexedData, true)
+		: {};
 
 	const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
 	returnValue.__length__ = 0;
@@ -44,12 +44,8 @@ export const decodeLog = (
 	for (const [i, res] of inputs.entries()) {
 		returnValue[i] = res.type === 'string' ? '' : null;
 
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-		if (notIndexedParams[i]) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			returnValue[i] = notIndexedParams[i];
+		if (notIndexedParams[i.toString()]) {
+			returnValue[i] = notIndexedParams[i.toString()];
 		}
 		if (indexedParams[i]) {
 			returnValue[i] = indexedParams[i];
@@ -62,5 +58,5 @@ export const decodeLog = (
 		returnValue.__length__ += 1;
 	}
 
-	return returnValue;
+	return returnValue as ReturnType & { __length__: number };
 };

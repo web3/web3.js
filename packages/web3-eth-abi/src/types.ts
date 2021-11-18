@@ -52,3 +52,5 @@ export type JsonAbiFragment =
 	| JsonAbiConstructorFragment
 	| JsonAbiFunctionFragment
 	| JsonAbiEventFragment;
+
+export type AbiInput = string | JsonAbiParameter | { readonly [key: string]: unknown };

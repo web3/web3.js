@@ -18,5 +18,5 @@ export const encodeEventSignature = (functionName: string | JsonAbiEventFragment
 		name = functionName;
 	}
 
-	return sha3Raw(name).slice(0, 10);
+	return sha3Raw(name);
 };
