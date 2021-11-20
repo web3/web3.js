@@ -1,6 +1,4 @@
 /* eslint-disable max-classes-per-file */
-import { Filter } from './types';
-
 export abstract class Web3Error extends Error {
 	public readonly name: string;
 
@@ -172,7 +170,7 @@ export class InvalidHexString32Bytes extends Web3Error {
 }
 
 export class InvalidFilter extends Web3Error {
-	public constructor(value: Filter) {
+	public constructor(value: any) {
 		// TODO Discuss this naive approach to logging object
 		// Does not account for non JSON properties
 		super(JSON.stringify(value), 'invalid filter given');
