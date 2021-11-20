@@ -471,16 +471,14 @@ export const isFilterObject = (value: Filter) => {
 	if (value.topics !== undefined) {
 		if (
 			!value.topics.every(topic => {
-				if (typeof topic === 'string' && isHexString32Bytes(topic)) return true;
-				if (
-					Array.isArray(topic) &&
-					topic.every(
-						nestedTopic =>
-							typeof nestedTopic === 'string' && isHexString32Bytes(nestedTopic),
-					)
-				)
-					return true;
 				if (topic === null) return true;
+
+				if (Array.isArray(topic)) {
+					return topic.every(nestedTopic => isTopic(nestedTopic));
+				}
+
+				if (isTopic(topic)) return true;
+
 				return false;
 			})
 		)
