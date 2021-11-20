@@ -158,6 +158,7 @@ export class InvalidTypeAbiInput extends Web3Error {
 // TODO Type of value for all errors should be any as
 // any value can be passed when an error occurs
 export class InvalidBlockNumberOrTag extends Web3Error {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(value: any) {
 		super(value, 'invalid block number or tag given');
 	}
@@ -170,6 +171,7 @@ export class InvalidHexString32Bytes extends Web3Error {
 }
 
 export class InvalidFilter extends Web3Error {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(value: any) {
 		// TODO Discuss this naive approach to logging object
 		// Does not account for non JSON properties
