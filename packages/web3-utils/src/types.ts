@@ -20,7 +20,7 @@ export type Uint256 = HexString;
 export type Address = HexString;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
-export type Topic = HexString256Bytes;
+export type Topic = HexString32Bytes;
 
 export enum BlockTags {
 	EARLIEST = 'earliest',
