@@ -441,8 +441,20 @@ export const validateHexString32Bytes = (value: HexString32Bytes) => {
  * otherwise we return true after all checks pass.
  */
 export const isFilterObject = (value: Filter) => {
-	const expectedFilterProperties = ['fromBlock', 'toBlock', 'address', 'topics'];
-	if (!Object.keys(value).every(property => property in expectedFilterProperties)) return false;
+	const expectedFilterProperties: (keyof Filter)[] = [
+		'fromBlock',
+		'toBlock',
+		'address',
+		'topics',
+	];
+	if (value === null || typeof value !== 'object') return false;
+
+	if (
+		!Object.keys(value).every(property =>
+			expectedFilterProperties.includes(property as keyof Filter),
+		)
+	)
+		return false;
 
 	if (
 		(value.fromBlock !== undefined && !isBlockNumberOrTag(value.fromBlock)) ||
@@ -451,22 +463,21 @@ export const isFilterObject = (value: Filter) => {
 		return false;
 
 	if (value.address !== undefined) {
-		if (
-			Array.isArray(value.address) &&
-			!value.address.every(address => typeof address === 'string')
-		)
-			return false;
-
-		if (typeof value.address !== 'string') return false;
+		if (Array.isArray(value.address)) {
+			if (!value.address.every(address => isAddress(address))) return false;
+		} else if (!isAddress(value.address)) return false;
 	}
 
 	if (value.topics !== undefined) {
 		if (
 			!value.topics.every(topic => {
-				if (typeof topic === 'string') return true;
+				if (typeof topic === 'string' && isHexString32Bytes(topic)) return true;
 				if (
 					Array.isArray(topic) &&
-					topic.every(nestedTopic => typeof nestedTopic === 'string')
+					topic.every(
+						nestedTopic =>
+							typeof nestedTopic === 'string' && isHexString32Bytes(nestedTopic),
+					)
 				)
 					return true;
 				if (topic === null) return true;
