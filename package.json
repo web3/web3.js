@@ -55,5 +55,6 @@
 		"ts-node": "^10.2.1",
 		"typescript": "^4.4.3"
 	},
-	"packageManager": "yarn@1.22.15"
+	"packageManager": "yarn@1.22.15",
+	"dependencies": {}
 }
