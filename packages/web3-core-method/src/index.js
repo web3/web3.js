@@ -205,6 +205,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         timeoutCount = 0,
         confirmationCount = 0,
         intervalId = null,
+        blockHeaderTimeoutId = null,
         lastBlock = null,
         receiptJSON = '',
         gasProvided = ((!!payload.params[0] && typeof payload.params[0] === 'object') && payload.params[0].gas) ? payload.params[0].gas : null,
@@ -273,6 +274,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 sub = {
                     unsubscribe: function () {
                         clearInterval(intervalId);
+                        clearTimeout(blockHeaderTimeoutId);
                     }
                 };
             }
@@ -572,7 +574,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         });
 
         // Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
-        setTimeout(() => {
+        blockHeaderTimeoutId = setTimeout(() => {
             if(!blockHeaderArrived) {
                 startInterval();
             }

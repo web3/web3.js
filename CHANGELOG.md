@@ -472,12 +472,23 @@ Released with 1.0.0-beta.37 code base.
 - Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 
+### Fixed
+
+- Fix 1.6.1 build size issue with removing static asset files (#4506)
+- Correct `web3.rst` example in documentation (#4511)
+- Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
+
 ## [Unreleased]
 
-## [1.6.2]
+## [1.7.0]
+
+### Fixed
+ -  Fix readthedoc's build for web3js documentation (#4425)
 
 ### Changed
 
 - Correct `web3.rst` example in documentation (#4511)
 - Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
+- Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
 - Node v16 support (#4541)
+
