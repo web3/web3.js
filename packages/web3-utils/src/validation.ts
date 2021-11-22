@@ -15,6 +15,7 @@ import {
 	InvalidCharCodeError,
 	InvalidAddressError,
 	InvalidBlockNumberOrTag,
+	InvalidHexString8Bytes,
 	InvalidHexString32Bytes,
 	InvalidFilter,
 	InvalidBooleanError,
@@ -23,6 +24,7 @@ import {
 	BlockNumberOrTag,
 	Bytes,
 	HexString,
+	HexString8Bytes,
 	HexString32Bytes,
 	Numbers,
 	BlockTags,
@@ -425,6 +427,13 @@ export const isBlockNumberOrTag = (value: BlockNumberOrTag) =>
 
 export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
 	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTag(value);
+};
+
+export const isHexString8Bytes = (value: HexString8Bytes) =>
+	isHexStrict(value) && value.length === 18; // 8 bytes + 0x = 18
+
+export const validateHexString8Bytes = (value: HexString8Bytes) => {
+	if (!isHexString8Bytes(value)) throw new InvalidHexString8Bytes(value);
 };
 
 export const isHexString32Bytes = (value: HexString32Bytes) =>
