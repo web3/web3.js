@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-contract",
-	"version": "4.0.0-alpha.1",
+	"version": "4.0.0-alpha.0",
 	"description": "Web3 module to interact with Ethereum smart contracts.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-contract",
