@@ -11,11 +11,13 @@ import {
 	validateAddress,
 	validateBlockNumberOrTag,
 	validateBoolean,
+	validateHexString8Bytes,
 	validateHexString32Bytes,
 	validateHexStringInput,
 	validateFilterObject,
 	validateStringInput,
 	validateNumbersInput,
+	HexString8Bytes,
 } from 'web3-utils';
 import { validateTransactionCall, validateTransactionWithSender } from './validation';
 
@@ -96,7 +98,7 @@ export async function getStorageAt(
 	blockNumber: BlockNumberOrTag,
 ) {
 	validateAddress(address);
-	validateHexString32Bytes(storageSlot);
+	validateHexStringInput(storageSlot);
 	validateBlockNumberOrTag(blockNumber);
 
 	return requestManager.send<'eth_getStorageAt'>({
@@ -469,17 +471,17 @@ export async function getWork(requestManager: Web3RequestManager) {
 
 export async function submitWork(
 	requestManager: Web3RequestManager,
-	powHash: HexString32Bytes,
+	nonce: HexString8Bytes,
 	seedHash: HexString32Bytes,
 	difficulty: HexString32Bytes,
 ) {
-	validateHexString32Bytes(powHash);
+	validateHexString8Bytes(nonce);
 	validateHexString32Bytes(seedHash);
 	validateHexString32Bytes(difficulty);
 
 	return requestManager.send<'eth_submitWork'>({
 		method: 'eth_submitWork',
-		params: [powHash, seedHash, difficulty],
+		params: [nonce, seedHash, difficulty],
 	});
 }
 
