@@ -1,3 +1,4 @@
+import { AbiError } from 'web3-common';
 import { ParamType } from '@ethersproject/abi';
 import { HexString } from 'web3-utils';
 import ethersAbiCoder from '../ethers_abi_coder';
@@ -38,7 +39,7 @@ export const encodeParameters = (abi: AbiInput[], params: unknown[]): string => 
 			modifiedParams,
 		);
 	} catch (err) {
-		throw new Error(`Parameter encoding error: ${(err as Error).message}`);
+		throw new AbiError(`Parameter encoding error: ${(err as Error).message}`);
 	}
 };
 

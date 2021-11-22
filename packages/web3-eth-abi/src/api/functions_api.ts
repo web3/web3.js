@@ -1,3 +1,4 @@
+import { AbiError } from 'web3-common';
 import { sha3Raw } from 'web3-utils';
 import { isAbiFunctionFragment, jsonInterfaceMethodToString } from '../utils';
 import { JsonAbiFunctionFragment } from '../types';
@@ -30,7 +31,7 @@ export const encodeFunctionCall = (
 	params?: unknown[],
 ): string => {
 	if (!isAbiFunctionFragment(jsonInterface)) {
-		throw new Error('Invalid parameter value in encodeFunctionCall');
+		throw new AbiError('Invalid parameter value in encodeFunctionCall');
 	}
 
 	return `${encodeFunctionSignature(jsonInterface)}${encodeParameters(

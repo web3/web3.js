@@ -1,3 +1,4 @@
+import { AbiError } from 'web3-common';
 import { sha3Raw } from 'web3-utils';
 import { JsonAbiEventFragment } from '../types';
 import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils';
@@ -7,7 +8,7 @@ import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils';
  */
 export const encodeEventSignature = (functionName: string | JsonAbiEventFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiEventFragment(functionName)) {
-		throw new Error('Invalid parameter value in encodeEventSignature');
+		throw new AbiError('Invalid parameter value in encodeEventSignature');
 	}
 
 	let name: string;
