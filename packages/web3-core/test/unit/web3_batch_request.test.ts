@@ -101,8 +101,8 @@ describe('Web3BatchRequest', () => {
 
 			expect(requestManager.sendBatch).toHaveBeenCalledTimes(1);
 			expect(requestManager.sendBatch).toHaveBeenCalledWith(batchPayload);
-			await expect(res1).resolves.not.toBeUndefined();
-			await expect(res2).resolves.not.toBeUndefined();
+			await expect(res1).resolves.toBeDefined();
+			await expect(res2).resolves.toBeDefined();
 		});
 
 		it('should throw error if response size does not match', async () => {

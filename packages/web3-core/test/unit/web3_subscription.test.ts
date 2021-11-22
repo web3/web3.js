@@ -30,7 +30,7 @@ describe('Web3Subscription', () => {
 
 			expect(sub.id).toBeUndefined();
 			await sub.subscribe();
-			expect(sub.id).toEqual('sub-id');
+			expect(sub.id).toBe('sub-id');
 		});
 
 		it('should start listening to the "message" event', async () => {
@@ -60,7 +60,7 @@ describe('Web3Subscription', () => {
 		});
 
 		it('should remove the subscription id', async () => {
-			expect(sub.id).toEqual('sub-id');
+			expect(sub.id).toBe('sub-id');
 			await sub.unsubscribe();
 			expect(sub.id).toBeUndefined();
 		});

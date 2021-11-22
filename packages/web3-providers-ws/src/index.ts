@@ -275,7 +275,7 @@ export default class WebSocketProvider<
 
 		if (this._requestQueue.size > 0) {
 			for (const value of this._requestQueue.values()) {
-				/* eslint-disable @typescript-eslint/no-floating-promises  */
+				// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
 				this.request(value.payload);
 			}
 		}

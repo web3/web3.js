@@ -19,6 +19,7 @@ export class Web3Context<API extends Web3APISpec> extends Web3Config {
 		return this.requestManager.provider;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public set currentProvider(provider: SupportedProviders<any> | string) {
 		this.requestManager.setProvider(provider);
 	}

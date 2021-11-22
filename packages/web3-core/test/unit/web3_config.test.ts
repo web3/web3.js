@@ -47,7 +47,7 @@ describe('Web3Config', () => {
 		obj[key as never] = 'newValue' as never;
 		const result = obj[key as never];
 
-		expect(result).toEqual('newValue');
+		expect(result).toBe('newValue');
 	});
 
 	it.each(Object.keys(defaultConfig))(
