@@ -7,6 +7,7 @@ import {
 	InvalidBooleanError,
 	InvalidBytesError,
 	InvalidFilter,
+	InvalidHexString8Bytes,
 	InvalidHexString32Bytes,
 	InvalidHexStringError,
 	InvalidIntegerError,
@@ -15,7 +16,7 @@ import {
 	InvalidStringError,
 	NegativeIntegersInByteArrayError,
 } from '../../src/errors';
-import { Numbers, Uint, HexString32Bytes, Filter } from '../../src/types';
+import { Numbers, Uint, HexString32Bytes, Filter, HexString8Bytes } from '../../src/types';
 
 export const isHexStrictValidData: [Uint, true][] = [
 	['0x48', true],
@@ -361,6 +362,21 @@ export const validateBlockNumberOrTagInvalidData = () => {
 	];
 	previouslyDefinedData.forEach(data =>
 		invalidData.push([data[0], new InvalidBlockNumberOrTag(data[0])]),
+	);
+	return invalidData;
+};
+
+export const isHexString8BytesValidData: [HexString8Bytes, true][] = [
+	['0x0000000000000001', true],
+	['0x00000000000c0ffe', true],
+	['0x0000123098409924', true],
+];
+
+// Converts false from invalid data sets to expected thrown error
+export const validateHexString8BytesInvalidData = () => {
+	const invalidData: [any, InvalidHexString8Bytes][] = [];
+	isHexStrictInvalidData.forEach(data =>
+		invalidData.push([data[0], new InvalidHexString8Bytes(data[0])]),
 	);
 	return invalidData;
 };
