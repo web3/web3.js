@@ -39,6 +39,8 @@
 		"typescript": "^4.4.3"
 	},
 	"dependencies": {
-		"ethereum-cryptography": "^0.2.0"
+		"@types/randombytes": "^2.0.0",
+		"ethereum-cryptography": "^0.2.0",
+		"randombytes": "^2.1.0"
 	}
 }
