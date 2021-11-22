@@ -12,9 +12,19 @@ module.exports = {
         new webpack.SourceMapDevToolPlugin({
             filename: "[file].map",
         }),
+        new webpack.IgnorePlugin({
+            checkResource(resource) {
+                // "@ethereumjs/common/genesisStates" consists ~800KB static files which are no more needed
+                return /(.*\/genesisStates\/.*\.json)/.test(resource)
+            },
+        }),
     ],
     resolve: {
-        modules: ["node_modules"],
+        alias: {
+            // To avoid blotting up the `bn.js` library all over the packages 
+            // use single library instance. 
+            "bn.js": path.resolve(__dirname, 'node_modules/bn.js')
+        }
     },
     module: {
         rules: [
