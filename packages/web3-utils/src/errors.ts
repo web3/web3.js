@@ -164,9 +164,15 @@ export class InvalidBlockNumberOrTag extends Web3Error {
 	}
 }
 
+export class InvalidHexString8Bytes extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'invalid 8 byte hex string given');
+	}
+}
+
 export class InvalidHexString32Bytes extends Web3Error {
 	public constructor(value: string) {
-		super(value, 'invalid block hash given');
+		super(value, 'invalid 32 byte hex string given');
 	}
 }
 
