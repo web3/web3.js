@@ -24,6 +24,7 @@ export type AccessList = AccessListEntry[];
 export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
 
+// TODO Should probably support EIP-2930 and EIP-1559
 export interface TransactionCall {
 	readonly from?: Address;
 	readonly to: Address;

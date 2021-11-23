@@ -12,8 +12,9 @@ import { isAddress, isHexStrict, isHexString32Bytes } from 'web3-utils';
 import { InvalidTransactionCall, InvalidTransactionWithSender } from './errors';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
-	if (value.to !== undefined && value.to !== null && !isAddress(value.to)) return false;
-	if (!isHexStrict(value.type) && value.type.length !== 2) return false;
+	if (value.to !== undefined && value?.to !== null && !isAddress(value.to)) return false;
+	if (!isHexStrict(value.type) && value.type !== undefined && value.type.length !== 2)
+		return false;
 	if (!isHexStrict(value.nonce)) return false;
 	if (!isHexStrict(value.gas)) return false;
 	if (!isHexStrict(value.value)) return false;
@@ -60,7 +61,7 @@ export function isTransaction2930Unsigned(value: Transaction2930Unsigned): boole
 	return true;
 }
 
-export function isTransactionLegacy(value: TransactionLegacyUnsigned): boolean {
+export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsigned): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.gasPrice)) return false;
 
@@ -71,9 +72,9 @@ export function isTransactionWithSender(value: TransactionWithSender): boolean {
 	if (!isAddress(value.from)) return false;
 	if (!isBaseTransaction(value)) return false;
 	if (
-		!isTransaction1559Unsigned(value as Transaction1559Unsigned) ||
-		!isTransaction2930Unsigned(value as Transaction2930Unsigned) ||
-		!isTransactionLegacy(value as TransactionLegacyUnsigned)
+		!isTransaction1559Unsigned(value as Transaction1559Unsigned) &&
+		!isTransaction2930Unsigned(value as Transaction2930Unsigned) &&
+		!isTransactionLegacyUnsigned(value as TransactionLegacyUnsigned)
 	)
 		return false;
 
@@ -91,6 +92,9 @@ export function isTransactionCall(value: TransactionCall): boolean {
 	if (value.gasPrice !== undefined && !isHexStrict(value.gasPrice)) return false;
 	if (value.value !== undefined && !isHexStrict(value.value)) return false;
 	if (value.data !== undefined && !isHexStrict(value.data)) return false;
+	if ((value as BaseTransaction).type !== undefined) return false;
+	if (isTransaction1559Unsigned(value as Transaction1559Unsigned)) return false;
+	if (isTransaction2930Unsigned(value as Transaction2930Unsigned)) return false;
 
 	return true;
 }
