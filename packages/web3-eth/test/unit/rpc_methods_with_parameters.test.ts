@@ -1,9 +1,11 @@
 import { Web3RequestManager } from 'web3-core';
 
 import {
+	call,
 	compileLLL,
 	compileSerpent,
 	compileSolidity,
+	estimateGas,
 	getBalance,
 	getBlockByHash,
 	getBlockByNumber,
@@ -13,6 +15,7 @@ import {
 	getFeeHistory,
 	getFilterChanges,
 	getFilterLogs,
+	getLogs,
 	getStorageAt,
 	getTransactionByBlockHashAndIndex,
 	getTransactionByBlockNumberAndIndex,
@@ -23,16 +26,21 @@ import {
 	getUncleByBlockNumberAndIndex,
 	getUncleCountByBlockHash,
 	getUncleCountByBlockNumber,
+	newFilter,
 	sendRawTransaction,
+	sendTransaction,
 	sign,
+	signTransaction,
 	submitHashrate,
 	submitWork,
 	uninstallFilter,
 } from '../../src/rpc_methods';
 import {
+	callValidData,
 	compileLLLValidData,
 	compileSerpentValidData,
 	compileSolidityValidData,
+	estimateGasValidData,
 	getBalanceValidData,
 	getBlockByHashValidData,
 	getBlockByNumberValidData,
@@ -42,6 +50,7 @@ import {
 	getFeeHistoryValidData,
 	getFilterChangesValidData,
 	getFilterLogsValidData,
+	getLogsValidData,
 	getStorageAtValidData,
 	getTransactionByBlockHashAndIndexValidData,
 	getTransactionByBlockNumberAndIndexValidData,
@@ -52,7 +61,10 @@ import {
 	getUncleByBlockNumberAndIndexValidData,
 	getUncleCountByBlockHashValidData,
 	getUncleCountByBlockNumberValidData,
+	newFilterValidData,
 	sendRawTransactionValidData,
+	sendTransactionValidData,
+	signTransactionValidData,
 	signValidData,
 	submitHashrateValidData,
 	submitWorkValidData,
@@ -162,12 +174,52 @@ describe('rpc_methods_with_params', () => {
 		});
 	});
 
+	describe('signTransaction', () => {
+		it.each(signTransactionValidData())('%s', async transaction => {
+			await signTransaction(requestManager, transaction);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_signTransaction',
+				params: [transaction],
+			});
+		});
+	});
+
+	describe('sendTransaction', () => {
+		it.each(sendTransactionValidData())('%s', async transaction => {
+			await sendTransaction(requestManager, transaction);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_sendTransaction',
+				params: [transaction],
+			});
+		});
+	});
+
 	describe('sendRawTransaction', () => {
 		it.each(sendRawTransactionValidData)('%s', async transaction => {
 			await sendRawTransaction(requestManager, transaction);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_sendRawTransaction',
 				params: [transaction],
+			});
+		});
+	});
+
+	describe('call', () => {
+		it.each(callValidData())('%s', async (transaction, blockNumber) => {
+			await call(requestManager, transaction, blockNumber);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_call',
+				params: [transaction, blockNumber],
+			});
+		});
+	});
+
+	describe('estimateGas', () => {
+		it.each(estimateGasValidData())('%s', async (transaction, blockNumber) => {
+			await estimateGas(requestManager, transaction, blockNumber);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_estimateGas',
+				params: [transaction, blockNumber],
 			});
 		});
 	});
@@ -282,6 +334,16 @@ describe('rpc_methods_with_params', () => {
 		});
 	});
 
+	describe('newFilter', () => {
+		it.each(newFilterValidData())('%s', async filter => {
+			await newFilter(requestManager, filter);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_newFilter',
+				params: [filter],
+			});
+		});
+	});
+
 	describe('uninstallFilter', () => {
 		it.each(uninstallFilterValidData)('%s', async filterId => {
 			await uninstallFilter(requestManager, filterId);
@@ -308,6 +370,16 @@ describe('rpc_methods_with_params', () => {
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getFilterLogs',
 				params: [filterId],
+			});
+		});
+	});
+
+	describe('getLogs', () => {
+		it.each(getLogsValidData())('%s', async filter => {
+			await getLogs(requestManager, filter);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_getLogs',
+				params: [filter],
 			});
 		});
 	});
