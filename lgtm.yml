@@ -12,8 +12,8 @@ extraction:
       # Specify a list of files and folders to extract.
       include:
         - src
-    # Specify how TypeScript files should be extracted:
-    #   none = exclude all TypeScript files.
-    #   basic = extract syntactic information from TypeScript files.
-    #   full = extract syntactic and type information from TypeScript files.
-    typescript: full
+      # Specify how TypeScript files should be extracted:
+      #   none = exclude all TypeScript files.
+      #   basic = extract syntactic information from TypeScript files.
+      #   full = extract syntactic and type information from TypeScript files.
+      typescript: full
