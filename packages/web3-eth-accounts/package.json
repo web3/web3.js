@@ -40,6 +40,7 @@
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^0.2.0",
+		"keythereum": "^1.2.0",
 		"web3-utils": "4.0.0-alpha.0"
 	}
 }
