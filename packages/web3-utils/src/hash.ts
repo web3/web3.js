@@ -18,11 +18,11 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
 
 /**
  *
- * computes the Keccak-256 hash of the string input and returns a hexstring
+ * computes the Keccak-256 hash of the input and returns a hexstring
  */
 export const sha3 = (data: Bytes): string | null => {
 	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
-
+	// console.log(updatedData)
 	const hash = bytesToHex(keccak256(Buffer.from(updatedData as Buffer)));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
@@ -32,6 +32,8 @@ export const sha3 = (data: Bytes): string | null => {
 /**
  *Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
  */
+// console.log(sha3("0x0089d53f703f7e0843953d48133f74ce247184c2"))
+// console.log(sha3(Buffer.from("0089d53f703f7e0843953d48133f74ce247184c2")))
 export const sha3Raw = (data: string): string => {
 	const hash = sha3(data);
 	if (hash === null) {

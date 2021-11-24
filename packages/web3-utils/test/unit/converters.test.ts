@@ -21,6 +21,7 @@ import {
 	toWei,
 	utf8ToHex,
 	jsonInterfaceMethodToString,
+	toChecksumAddress,
 } from '../../src/converters';
 import {
 	asciiToHexValidData,
@@ -44,6 +45,7 @@ import {
 	utf8ToHexValidData,
 	jsonInterfaceValidData,
 	jsonInterfaceInvalidData,
+	toCheckSumValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -327,8 +329,8 @@ describe('converters', () => {
 
 	describe('toChecksumAddress', () => {
 		describe('valid cases', () => {
-			it.each(jsonInterfaceValidData)('%s', (input, output) => {
-				expect(jsonInterfaceMethodToString(input)).toEqual(output);
+			it.each(toCheckSumValidData)('%s', (input, output) => {
+				expect(toChecksumAddress(input)).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {

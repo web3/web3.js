@@ -358,6 +358,10 @@ export const jsonInterfaceValidData: [any, string][] = [
 	],
 ];
 
+export const toCheckSumValidData: [string, string][] = [
+	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],
+];
+
 export const jsonInterfaceInvalidData: [any, string][] = [
 	[
 		{
