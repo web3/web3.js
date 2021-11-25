@@ -39,6 +39,7 @@ export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 	type: 'function';
 	constant?: boolean;
 	stateMutability?: 'nonpayable' | 'payable' | 'pure' | 'view';
+	outputs?: Array<JsonAbiParameter>;
 }
 
 export interface JsonAbiEventFragment extends JsonAbiBaseFragment {

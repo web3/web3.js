@@ -1,5 +1,5 @@
 import { encodeEventSignature } from '../../../src/api/events_api';
-import { inValidEventsSignatures, validEventsSignatures } from '../../fixtures/data';
+import { invalidEventsSignatures, validEventsSignatures } from '../../fixtures/data';
 
 describe('events_api', () => {
 	describe('encodeEventSignature', () => {
@@ -12,7 +12,7 @@ describe('events_api', () => {
 			);
 		});
 		describe('invalid data', () => {
-			it.each(inValidEventsSignatures)(
+			it.each(invalidEventsSignatures)(
 				'should pass for valid values: %s',
 				({ input, output }) => {
 					expect(() => encodeEventSignature(input)).toThrow(output);

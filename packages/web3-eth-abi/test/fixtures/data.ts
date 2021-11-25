@@ -249,7 +249,7 @@ export const validEventsSignatures: { input: any; output: string }[] = [
 	},
 ];
 
-export const inValidEventsSignatures: { input: any; output: string }[] = [
+export const invalidEventsSignatures: { input: any; output: string }[] = [
 	{ input: 345, output: 'Invalid parameter value in encodeEventSignature' },
 	{ input: {}, output: 'Invalid parameter value in encodeEventSignature' },
 	{ input: ['mystring'], output: 'Invalid parameter value in encodeEventSignature' },
