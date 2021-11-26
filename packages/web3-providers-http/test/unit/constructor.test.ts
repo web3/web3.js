@@ -5,18 +5,18 @@ describe('HttpProvider', () => {
 	it('should construct with expected methods', () => {
 		const httpProvider = new HttpProvider('http://localhost:8545');
 
-		expect(httpProvider.request).not.toBeUndefined();
-		expect(httpProvider.getStatus).not.toBeUndefined();
-		expect(httpProvider.supportsSubscriptions).not.toBeUndefined();
-		expect(httpProvider.request).not.toBeUndefined();
-		expect(httpProvider.on).not.toBeUndefined();
-		expect(httpProvider.removeListener).not.toBeUndefined();
-		expect(httpProvider.once).not.toBeUndefined();
-		expect(httpProvider.removeAllListeners).not.toBeUndefined();
-		expect(httpProvider.connect).not.toBeUndefined();
-		expect(httpProvider.disconnect).not.toBeUndefined();
-		expect(httpProvider.reset).not.toBeUndefined();
-		expect(httpProvider.reconnect).not.toBeUndefined();
+		expect(httpProvider.request).toBeDefined();
+		expect(httpProvider.getStatus).toBeDefined();
+		expect(httpProvider.supportsSubscriptions).toBeDefined();
+		expect(httpProvider.request).toBeDefined();
+		expect(httpProvider.on).toBeDefined();
+		expect(httpProvider.removeListener).toBeDefined();
+		expect(httpProvider.once).toBeDefined();
+		expect(httpProvider.removeAllListeners).toBeDefined();
+		expect(httpProvider.connect).toBeDefined();
+		expect(httpProvider.disconnect).toBeDefined();
+		expect(httpProvider.reset).toBeDefined();
+		expect(httpProvider.reconnect).toBeDefined();
 	});
 
 	it('Allows for providerOptions to be passed upon instantiation', () => {
