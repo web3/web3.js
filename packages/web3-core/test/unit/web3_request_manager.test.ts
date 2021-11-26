@@ -5,11 +5,9 @@ import {
 	JsonRpcPayload,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
-} from 'web3-common';
-import {
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
-} from '../../../web3-common/src/types';
+} from 'web3-common';
 import { Web3RequestManager, Web3RequestManagerEvent } from '../../src/web3_request_manager';
 import * as utils from '../../src/utils';
 

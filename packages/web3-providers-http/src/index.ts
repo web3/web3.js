@@ -60,6 +60,7 @@ export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web
 			body: JSON.stringify(payload),
 		});
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		if (!response.ok) throw new ResponseError(await response.json());
 
 		return (await response.json()) as JsonRpcResponse<ResponseType>;
