@@ -4,12 +4,12 @@ import { Web3RequestManager } from '../../src/web3_request_manager';
 
 describe('Web3Context', () => {
 	it('should return providers on class level', () => {
-		expect(Web3Context.providers).not.toBeUndefined();
+		expect(Web3Context.providers).toBeDefined();
 	});
 
 	it('should return providers on instance level', () => {
 		const context = new Web3Context('test');
-		expect(context.providers).not.toBeUndefined();
+		expect(context.providers).toBeDefined();
 		expect(context.providers).toEqual(Web3Context.providers);
 	});
 

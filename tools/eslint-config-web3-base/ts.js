@@ -27,7 +27,10 @@ module.exports = {
 		'@typescript-eslint/consistent-type-assertions': ['error'],
 		'@typescript-eslint/explicit-member-accessibility': ['error'],
 		'@typescript-eslint/member-delimiter-style': ['error'],
-		'@typescript-eslint/member-ordering': ['error'],
+		'@typescript-eslint/member-ordering': [
+			'error',
+			{ default: ['public-static-field', 'public-instance-method'] },
+		],
 		'@typescript-eslint/no-extraneous-class': ['error'],
 		'@typescript-eslint/no-unnecessary-boolean-literal-compare': ['error'],
 		'@typescript-eslint/no-unnecessary-qualifier': ['error'],
