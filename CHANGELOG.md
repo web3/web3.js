@@ -429,3 +429,4 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.5.2]
 - `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232)
+
