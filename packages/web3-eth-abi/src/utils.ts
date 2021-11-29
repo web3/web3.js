@@ -120,10 +120,10 @@ export const mapTypes = (
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	let param = _param;
-	const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
-	const paramTypeBytesArray = new RegExp(/^bytes([0-9]*)\[\]$/);
-	const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
-	const paramTypeNumberArray = new RegExp(/^(u?int)([0-9]*)\[\]$/);
+	const paramTypeBytes = /^bytes([0-9]*)$/;
+	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
+	const paramTypeNumber = /^(u?int)([0-9]*)$/;
+	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
 
 	// Format BN to string
 	if (param instanceof BigInt) {
