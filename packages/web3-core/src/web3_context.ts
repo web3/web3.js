@@ -19,9 +19,7 @@ export class Web3Context<API extends Web3APISpec> extends Web3Config {
 		return this.requestManager.provider;
 	}
 
-	// TODO Getting: warning  Unexpected any. Specify a different type
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public set currentProvider(provider: SupportedProviders<any> | string) {
+	public set currentProvider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 }
