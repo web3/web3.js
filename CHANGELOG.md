@@ -482,6 +482,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.0]
 
+### Added
+- `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232) (#4585)
+
 ### Fixed
  -  Fix readthedoc's build for web3js documentation (#4425)
 
