@@ -134,8 +134,8 @@ export interface Transaction {
     to: string | null;
     value: string;
     gasPrice: string;
-    maxPriorityFeePerGas?: string;
-    maxFeePerGas?: string;
+    maxPriorityFeePerGas?: number | string | BN;
+    maxFeePerGas?: number | string | BN;
     gas: number;
     input: string;
 }
