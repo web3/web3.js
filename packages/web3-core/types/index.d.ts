@@ -87,8 +87,18 @@ export interface PromiEvent<T> extends Promise<T> {
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
     once(
-        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
-        handler: (error: Error | TransactionReceipt | string) => void
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
+        handler: (error: Error | TransactionReceipt | string | object) => void
+    ): PromiEvent<T>;
+
+    on(
+        type: 'sending',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    on(
+        type: 'sent',
+        handler: (payload: object) => void
     ): PromiEvent<T>;
 
     on(
@@ -109,8 +119,8 @@ export interface PromiEvent<T> extends Promise<T> {
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
     on(
-        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
-        handler: (error: Error | TransactionReceipt | string) => void
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
+        handler: (error: Error | TransactionReceipt | string | object) => void
     ): PromiEvent<T>;
 }
 

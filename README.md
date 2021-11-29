@@ -4,7 +4,7 @@
 
 # web3.js - Ethereum JavaScript API
 
-[![Gitter][gitter-image]][gitter-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url]
+[![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -104,11 +104,54 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 ## Trouble shooting and known issues.
 
 ### Web3 and Angular
+
+### New solution
+
+If you are using Angular version >11 and run into an issue building, the old solution below will not work. This is because polyfills are not included in the newest version of Angular.
+
+- Install the required dependencies within your angular project:
+
+```bash
+npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify
+```
+
+- Within `tsconfig.json` add the following `paths` in `compilerOptions` so Webpack can get the correct dependencies
+
+```typescript
+{
+    "compilerOptions": {
+        "paths" : {
+        "crypto": ["./node_modules/crypto-browserify"],
+        "stream": ["./node_modules/stream-browserify"],
+        "assert": ["./node_modules/assert"],
+        "http": ["./node_modules/stream-http"],
+        "https": ["./node_modules/https-browserify"],
+        "os": ["./node_modules/os-browserify"],
+    }
+}
+```
+
+- Add the following lines to `polyfills.ts` file:
+
+```typescript
+import { Buffer } from 'buffer';
+
+(window as any).global = window;
+global.Buffer = Buffer;
+global.process = {
+    env: { DEBUG: undefined },
+    version: '',
+    nextTick: require('next-tick')
+} as any;
+```
+
+### Old solution
+
 If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
 
 a work around for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
 
-Another variation of this problem was an issue opned on angular-cli: https://github.com/angular/angular-cli/issues/1548
+Another variation of this problem was an [issue opned on angular-cli](https://github.com/angular/angular-cli/issues/1548)
 
 ## Documentation
 
@@ -149,7 +192,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 
 ### Community
 
--   [Gitter][gitter-url]
+-   [Discord][discord-url]
 -   [StackExchange][stackexchange-url]
 
 ### Similar libraries in other languages
@@ -177,8 +220,8 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
-[gitter-image]: https://badges.gitter.im/Join%20Chat.svg
-[gitter-url]:  https://gitter.im/ethereum/web3.js
+[discord-image]: https://img.shields.io/discord/593655374469660673?label=Discord&logo=discord&style=flat
+[discord-url]:  https://discord.gg/pb3U4zE8ca
 [lerna-image]: https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg
 [lerna-url]: https://lerna.js.org/
 [netlify-image]: https://api.netlify.com/api/v1/badges/1fc64933-d170-4939-8bdb-508ecd205519/deploy-status

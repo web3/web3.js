@@ -100,6 +100,7 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var blockHeaderTimeout = 10; // 10 seconds
     var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
 
@@ -222,6 +223,23 @@ var Eth = function Eth() {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'blockHeaderTimeout', {
+        get: function () {
+            return blockHeaderTimeout;
+        },
+        set: function (val) {
+            blockHeaderTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.blockHeaderTimeout = blockHeaderTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.blockHeaderTimeout = blockHeaderTimeout;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -333,6 +351,7 @@ var Eth = function Eth() {
     this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+    this.Contract.blockHeaderTimeout = this.blockHeaderTimeout;
     this.Contract.handleRevert = this.handleRevert;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
@@ -389,7 +408,7 @@ var Eth = function Eth() {
             name: 'getFeeHistory',
             call: 'eth_feeHistory',
             params: 3,
-            inputFormatter: [utils.toNumber, formatter.inputBlockNumberFormatter, null]
+            inputFormatter: [utils.numberToHex, formatter.inputBlockNumberFormatter, null]
         }),
         new Method({
             name: 'getAccounts',
@@ -564,6 +583,12 @@ var Eth = function Eth() {
             call: 'eth_pendingTransactions',
             params: 0,
             outputFormatter: formatter.outputTransactionFormatter
+        }),
+        new Method({
+            name: 'createAccessList',
+            call: 'eth_createAccessList',
+            params: 2,
+            inputFormatter: [formatter.inputTransactionFormatter, formatter.inputDefaultBlockNumberFormatter],
         }),
 
         // subscriptions

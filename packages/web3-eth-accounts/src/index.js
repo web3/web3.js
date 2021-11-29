@@ -25,7 +25,6 @@
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
-var Hash = require('eth-lib/lib/hash');
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
@@ -34,9 +33,14 @@ var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 var HardForks = require('@ethereumjs/common').Hardfork;
+var ethereumjsUtil = require('ethereumjs-util');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
+};
+
+var isExist = function(value) {
+    return (typeof value !== 'undefined') && value !== null;
 };
 
 var Accounts = function Accounts() {
@@ -154,6 +158,27 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return Promise.reject(error);
     }
 
+    if (isExist(tx.common) && isNot(tx.common.customChain)) {
+        error = new Error('If tx.common is provided it must have tx.common.customChain');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
+    if (isExist(tx.common) && isNot(tx.common.customChain.chainId)) {
+        error = new Error('If tx.common is provided it must have tx.common.customChain and tx.common.customChain.chainId');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
+    if (isExist(tx.common) && isExist(tx.common.customChain.chainId) && isExist(tx.chainId) && tx.chainId !== tx.common.customChain.chainId) {
+        error = new Error('Chain Id doesnt match in tx.chainId tx.common.customChain.chainId');
+
+        callback(error);
+        return Promise.reject(error);
+    }
+
     function signed(tx) {
         const error = _validateTransactionForSigning(tx);
 
@@ -168,7 +193,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             transaction.value = transaction.value || '0x';
             transaction.gasLimit = transaction.gasLimit || transaction.gas;
             if (transaction.type === '0x1' && transaction.accessList === undefined) transaction.accessList = []
-            
+
             // Because tx has no @ethereumjs/tx signing options we use fetched vals.
             if (!hasTxSigningOptions) {
                 transactionOptions.common = Common.forCustomChain(
@@ -228,9 +253,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var result = {
                 messageHash: '0x' + Buffer.from(signedTx.getMessageToSign(true)).toString('hex'),
-                v: '0x' + Buffer.from(signedTx.v).toString('hex'),
-                r: '0x' + Buffer.from(signedTx.r).toString('hex'),
-                s: '0x' + Buffer.from(signedTx.s).toString('hex'),
+                v: '0x' + signedTx.v.toString('hex'),
+                r: '0x' + signedTx.r.toString('hex'),
+                s: '0x' + signedTx.s.toString('hex'),
                 rawTransaction: rawTransaction,
                 transactionHash: transactionHash
             };
@@ -264,21 +289,25 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId,
+        ((isNot(tx.common) || isNot(tx.common.customChain.chainId)) ? //tx.common.customChain.chainId is not optional inside tx.common if tx.common is provided
+            ( isNot(tx.chainId) ? _this._ethereumCall.getChainId() : tx.chainId)
+            : undefined ),
         isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce,
         isNot(hasTxSigningOptions) ? _this._ethereumCall.getNetworkId() : 1,
         _handleTxPricing(_this, tx)
     ]).then(function(args) {
-        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2]) || isNot(args[3])) {
+        const [txchainId, txnonce, txnetworkId, txgasInfo] = args;
+
+        if ( (isNot(txchainId) && isNot(tx.common) && isNot(tx.common.customChain.chainId)) || isNot(txnonce) || isNot(txnetworkId) || isNot(txgasInfo)) {
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
-    
+
     return signed({
             ...tx,
-            chainId: args[0],
-            nonce: args[1],
-            networkId: args[2],
-            ...args[3] // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
+            ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: txchainId}:{}), // if common.customChain.chainId is provided no need to add tx.chainId
+            nonce: txnonce,
+            networkId: txnetworkId,
+            ...txgasInfo // Will either be gasPrice or maxFeePerGas and maxPriorityFeePerGas
         });
     });
 };
@@ -331,15 +360,13 @@ function _handleTxType(tx) {
         txType = utils.toHex(tx.type)
     } else if (tx.type === undefined && hasEip1559) {
         txType = '0x2'
-    } else {
-        txType = '0x0'
     }
 
     if (tx.gasPrice !== undefined && (txType === '0x2' || hasEip1559))
         throw Error("eip-1559 transactions don't support gasPrice");
     if ((txType === '0x1' || txType === '0x0') && hasEip1559)
         throw Error("pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas");
-    
+
     if (
         hasEip1559 ||
         (
@@ -357,14 +384,17 @@ function _handleTxType(tx) {
     ) {
         txType = '0x1';
     }
-    
+
     return txType
 }
 
 function _handleTxPricing(_this, tx) {
     return new Promise((resolve, reject) => {
         try {
-            if (tx.type < '0x2' && tx.gasPrice !== undefined) {
+            if (
+                (tx.type === undefined || tx.type < '0x2')
+                && tx.gasPrice !== undefined
+            ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
             } else {
@@ -378,10 +408,10 @@ function _handleTxPricing(_this, tx) {
                         block && block.baseFeePerGas
                     ) {
                         // The network supports EIP-1559
-    
+
                         // Taken from https://github.com/ethers-io/ethers.js/blob/ba6854bdd5a912fe873d5da494cb5c62c190adde/packages/abstract-provider/src.ts/index.ts#L230
                         let maxPriorityFeePerGas, maxFeePerGas;
-    
+
                         if (tx.gasPrice) {
                             // Using legacy gasPrice property on an eip-1559 network,
                             // so use gasPrice as both fee properties
@@ -389,7 +419,7 @@ function _handleTxPricing(_this, tx) {
                             maxFeePerGas = tx.gasPrice;
                             delete tx.gasPrice;
                         } else {
-                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x3B9ACA00'; // 1 Gwei
+                            maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
                             maxFeePerGas = tx.maxFeePerGas ||
                                 utils.toHex(
                                     utils.toBN(block.baseFeePerGas)
@@ -428,7 +458,7 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     var preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     var preambleBuffer = Buffer.from(preamble);
     var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return Hash.keccak256s(ethMessage);
+    return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {

@@ -331,6 +331,9 @@ var outputBlockFormatter = function (block) {
     if (block.miner)
         block.miner = utils.toChecksumAddress(block.miner);
 
+    if (block.baseFeePerGas)
+        block.baseFeePerGas = utils.hexToNumber(block.baseFeePerGas)
+
     return block;
 };
 

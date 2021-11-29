@@ -2,6 +2,7 @@ var assert = require('assert');
 var Basic = require('./sources/Basic');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
+var {TransactionFactory} = require('@ethereumjs/tx');
 
 describe('transaction and message signing [ @E2E ]', function() {
     let web3;
@@ -253,6 +254,7 @@ describe('transaction and message signing [ @E2E ]', function() {
             value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
             gas: web3.utils.toHex(21000),
             maxFeePerGas: '0x59682F00', // 1.5 Gwei
+            maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
             accessList: []
         };
 
@@ -279,7 +281,13 @@ describe('transaction and message signing [ @E2E ]', function() {
             gasLimit: web3.utils.toHex(21000),
             gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
             chain: "ropsten",
-            common: {},
+            common: {
+                customChain: {
+                name: 'custom-network',
+                networkId: 1,
+                chainId: 1,
+                }
+            },
             hardfork: "istanbul"
         };
 
@@ -562,5 +570,43 @@ describe('transaction and message signing [ @E2E ]', function() {
             done(error)
         }
     });
-});
 
+    it('accounts.signTransaction returning valid v r s values', async function(){
+
+        const source = wallet[0].address;
+        const destination = wallet[1].address;
+
+        const txCount = await web3.eth.getTransactionCount(source);
+        const networkId = await web3.eth.net.getId();
+        const chainId = await web3.eth.getChainId();
+
+
+        const customCommon = {
+            baseChain: 'mainnet',
+            customChain: {
+                name: 'custom-network',
+                networkId: networkId,
+                chainId: chainId,
+            },
+            hardfork: 'petersburg',
+        };
+
+        const txObject = {
+            nonce:    web3.utils.toHex(txCount),
+            to:       destination,
+            value:    web3.utils.toHex(web3.utils.toWei('0.1', 'ether')),
+            gasLimit: web3.utils.toHex(21000),
+            gasPrice: web3.utils.toHex(web3.utils.toWei('10', 'gwei')),
+            common: customCommon
+        };
+
+        const signed = await web3.eth.accounts.signTransaction(txObject, wallet[0].privateKey);
+        
+        const data = Buffer.from(signed.rawTransaction.slice(2), "hex")
+        const tx = TransactionFactory.fromSerializedData(data);
+
+        assert(signed.v === ('0x' + tx.v.toString('hex')));
+        assert(signed.r === ('0x' + tx.r.toString('hex')));
+        assert(signed.s === ('0x' + tx.s.toString('hex')));
+    });
+});
