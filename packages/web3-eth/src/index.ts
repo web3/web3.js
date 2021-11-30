@@ -1,3 +1,6 @@
+// Disabling because returnTypes must be last param to match 1.x params
+/* eslint-disable default-param-last */
+
 import { TransactionCall, TransactionWithSender, Web3BaseProvider } from 'web3-common';
 import { Web3Config, Web3RequestManager } from 'web3-core';
 import {
@@ -22,7 +25,7 @@ import {
 	convertibleTransactionInfoProperties,
 } from './convertible_properties';
 
-import * as RpcMethods from './rpc_methods';
+import * as rpcMethods from './rpc_methods';
 
 export class Web3Eth {
 	private readonly _requestManager: Web3RequestManager;
@@ -34,25 +37,25 @@ export class Web3Eth {
 	}
 
 	public async getProtocolVersion() {
-		return RpcMethods.getProtocolVersion(this._requestManager);
+		return rpcMethods.getProtocolVersion(this._requestManager);
 	}
 
 	public async isSyncing() {
-		return RpcMethods.getSyncing(this._requestManager);
+		return rpcMethods.getSyncing(this._requestManager);
 	}
 
 	public async getCoinbase() {
-		return RpcMethods.getCoinbase(this._requestManager);
+		return rpcMethods.getCoinbase(this._requestManager);
 	}
 
 	public async isMining() {
-		return RpcMethods.getMining(this._requestManager);
+		return rpcMethods.getMining(this._requestManager);
 	}
 
 	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getHashRate(this._requestManager);
+		const response = await rpcMethods.getHashRate(this._requestManager);
 
 		return convertToValidType(
 			response,
@@ -63,7 +66,7 @@ export class Web3Eth {
 	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getGasPrice(this._requestManager);
+		const response = await rpcMethods.getGasPrice(this._requestManager);
 
 		return convertToValidType(
 			response,
@@ -72,13 +75,13 @@ export class Web3Eth {
 	}
 
 	public async getAccounts() {
-		return RpcMethods.getAccounts(this._requestManager);
+		return rpcMethods.getAccounts(this._requestManager);
 	}
 
 	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getBlockNumber(this._requestManager);
+		const response = await rpcMethods.getBlockNumber(this._requestManager);
 
 		return convertToValidType(
 			response,
@@ -92,7 +95,7 @@ export class Web3Eth {
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getBalance(this._requestManager, address, blockNumber);
+		const response = await rpcMethods.getBalance(this._requestManager, address, blockNumber);
 
 		return convertToValidType(
 			response,
@@ -105,14 +108,14 @@ export class Web3Eth {
 		storageSlot: Uint256,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 	) {
-		return RpcMethods.getStorageAt(this._requestManager, address, storageSlot, blockNumber);
+		return rpcMethods.getStorageAt(this._requestManager, address, storageSlot, blockNumber);
 	}
 
 	public async getCode(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 	) {
-		return RpcMethods.getCode(this._requestManager, address, blockNumber);
+		return rpcMethods.getCode(this._requestManager, address, blockNumber);
 	}
 
 	// TODO Discuss the use of multiple optional parameters
@@ -122,8 +125,8 @@ export class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await RpcMethods.getBlockByHash(this._requestManager, block, hydrated)
-			: await RpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
+			? await rpcMethods.getBlockByHash(this._requestManager, block, hydrated)
+			: await rpcMethods.getBlockByNumber(this._requestManager, block, hydrated);
 
 		return convertObjectPropertiesToValidType(
 			response,
@@ -138,8 +141,8 @@ export class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await RpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
-			: await RpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
+			? await rpcMethods.getBlockTransactionCountByHash(this._requestManager, block)
+			: await rpcMethods.getBlockTransactionCountByNumber(this._requestManager, block);
 
 		return convertToValidType(
 			response,
@@ -153,8 +156,8 @@ export class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await RpcMethods.getUncleCountByBlockHash(this._requestManager, block)
-			: await RpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
+			? await rpcMethods.getUncleCountByBlockHash(this._requestManager, block)
+			: await rpcMethods.getUncleCountByBlockNumber(this._requestManager, block);
 
 		return convertToValidType(
 			response,
@@ -168,8 +171,8 @@ export class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await RpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
-			: await RpcMethods.getUncleByBlockNumberAndIndex(
+			? await rpcMethods.getUncleByBlockHashAndIndex(this._requestManager, block, uncleIndex)
+			: await rpcMethods.getUncleByBlockNumberAndIndex(
 					this._requestManager,
 					block,
 					uncleIndex,
@@ -186,7 +189,7 @@ export class Web3Eth {
 		transactionHash: HexString32Bytes,
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getTransactionByHash(
+		const response = await rpcMethods.getTransactionByHash(
 			this._requestManager,
 			transactionHash,
 		);
@@ -214,12 +217,12 @@ export class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await RpcMethods.getTransactionByBlockHashAndIndex(
+			? await rpcMethods.getTransactionByBlockHashAndIndex(
 					this._requestManager,
 					block,
 					transactionIndex,
 			  )
-			: await RpcMethods.getTransactionByBlockNumberAndIndex(
+			: await rpcMethods.getTransactionByBlockNumberAndIndex(
 					this._requestManager,
 					block,
 					transactionIndex,
@@ -241,7 +244,7 @@ export class Web3Eth {
 		transactionHash: HexString32Bytes,
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getTransactionReceipt(
+		const response = await rpcMethods.getTransactionReceipt(
 			this._requestManager,
 			transactionHash,
 		);
@@ -261,7 +264,7 @@ export class Web3Eth {
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getTransactionCount(
+		const response = await rpcMethods.getTransactionCount(
 			this._requestManager,
 			address,
 			blockNumber,
@@ -274,26 +277,26 @@ export class Web3Eth {
 	}
 
 	public async sendTransaction(transaction: TransactionWithSender) {
-		return RpcMethods.sendTransaction(this._requestManager, transaction);
+		return rpcMethods.sendTransaction(this._requestManager, transaction);
 	}
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
-		return RpcMethods.sendRawTransaction(this._requestManager, transaction);
+		return rpcMethods.sendRawTransaction(this._requestManager, transaction);
 	}
 
 	public async sign(address: Address, message: HexStringBytes) {
-		return RpcMethods.sign(this._requestManager, address, message);
+		return rpcMethods.sign(this._requestManager, address, message);
 	}
 
 	public async signTransaction(transaction: TransactionWithSender) {
-		return RpcMethods.signTransaction(this._requestManager, transaction);
+		return rpcMethods.signTransaction(this._requestManager, transaction);
 	}
 
 	public async call(
 		transaction: TransactionCall,
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 	) {
-		return RpcMethods.call(this._requestManager, transaction, blockNumber);
+		return rpcMethods.call(this._requestManager, transaction, blockNumber);
 	}
 
 	public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -301,7 +304,7 @@ export class Web3Eth {
 		blockNumber: BlockNumberOrTag = this._options.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.estimateGas(
+		const response = await rpcMethods.estimateGas(
 			this._requestManager,
 			transaction,
 			blockNumber,
@@ -314,11 +317,11 @@ export class Web3Eth {
 	}
 
 	public async getPastLogs(filter: Filter) {
-		return RpcMethods.getLogs(this._requestManager, filter);
+		return rpcMethods.getLogs(this._requestManager, filter);
 	}
 
 	public async getWork() {
-		return RpcMethods.getWork(this._requestManager);
+		return rpcMethods.getWork(this._requestManager);
 	}
 
 	public async submitWork(
@@ -326,7 +329,7 @@ export class Web3Eth {
 		seedHash: HexString32Bytes,
 		difficulty: HexString32Bytes,
 	) {
-		return RpcMethods.submitWork(this._requestManager, nonce, seedHash, difficulty);
+		return rpcMethods.submitWork(this._requestManager, nonce, seedHash, difficulty);
 	}
 
 	// TODO
@@ -355,7 +358,7 @@ export class Web3Eth {
 		rewardPercentiles: number[],
 		returnType?: ReturnType,
 	) {
-		const response = await RpcMethods.getFeeHistory(
+		const response = await rpcMethods.getFeeHistory(
 			this._requestManager,
 			blockCount,
 			newestBlock,
