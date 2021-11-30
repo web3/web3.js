@@ -14,7 +14,7 @@ export const encodeFunctionSignature = (functionName: string | JsonAbiFunctionFr
 
 	let name: string;
 
-	if (typeof functionName === 'function' || (typeof functionName === 'object' && functionName)) {
+	if ( functionName && ( typeof functionName === 'function' || typeof functionName === 'object')) {
 		name = jsonInterfaceMethodToString(functionName);
 	} else {
 		name = functionName;

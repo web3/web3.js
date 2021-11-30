@@ -4,7 +4,7 @@ import { JsonAbiEventFragment } from '../types';
 import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils';
 
 /**
- * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+ * Encodes the event name to its ABI signature, which are the sha3 hash of the event name including input types..
  */
 export const encodeEventSignature = (functionName: string | JsonAbiEventFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiEventFragment(functionName)) {
@@ -13,7 +13,7 @@ export const encodeEventSignature = (functionName: string | JsonAbiEventFragment
 
 	let name: string;
 
-	if (typeof functionName === 'function' || (typeof functionName === 'object' && functionName)) {
+	if (functionName && (typeof functionName === 'function' || typeof functionName === 'object')) {
 		name = jsonInterfaceMethodToString(functionName);
 	} else {
 		name = functionName;
