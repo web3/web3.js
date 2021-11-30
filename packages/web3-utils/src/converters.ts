@@ -6,7 +6,7 @@ import {
 	InvalidBytesError,
 	InvalidIntegerError,
 	InvalidUnitError,
-	InvalidTypeAbiInput,
+	InvalidTypeAbiInputError,
 } from './errors';
 import {
 	Address,
@@ -405,7 +405,7 @@ export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[
 	puts.forEach(param => {
 		if (typeof param.components === 'object') {
 			if (!param.type.startsWith('tuple')) {
-				throw new InvalidTypeAbiInput(param.type);
+				throw new InvalidTypeAbiInputError(param.type);
 			}
 			const arrayBracket = param.type.indexOf('[');
 			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';

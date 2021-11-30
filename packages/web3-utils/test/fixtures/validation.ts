@@ -2,11 +2,11 @@ import {
 	HighValueIntegerInByteArrayError,
 	InvalidAddressError,
 	InvalidBlockError,
-	InvalidBlockNumberOrTag,
+	InvalidBlockNumberOrTagError,
 	InvalidBloomError,
 	InvalidBooleanError,
 	InvalidBytesError,
-	InvalidFilter,
+	InvalidFilterError,
 	InvalidHexStringError,
 	InvalidIntegerError,
 	InvalidIntegerInByteArrayError,
@@ -353,13 +353,13 @@ export const isBlockTagInvalidData: [any, false][] = [
 
 // Converts false from invalid data sets to expected thrown error
 export const validateBlockNumberOrTagInvalidData = () => {
-	const invalidData: [any, InvalidBlockNumberOrTag][] = [];
+	const invalidData: [any, InvalidBlockNumberOrTagError][] = [];
 	const previouslyDefinedData: [any, false][] = [
 		...isBlockNumberInvalidData,
 		...isBlockTagInvalidData,
 	];
 	previouslyDefinedData.forEach(data =>
-		invalidData.push([data[0], new InvalidBlockNumberOrTag(data[0])]),
+		invalidData.push([data[0], new InvalidBlockNumberOrTagError(data[0])]),
 	);
 	return invalidData;
 };
@@ -471,12 +471,12 @@ export const isFilterObjectValidData: [Filter, true][] = [
 
 // Converts false from invalid data sets to expected thrown error
 export const validateFilterObjectInvalidData = () => {
-	const invalidData: [any, InvalidFilter][] = [
+	const invalidData: [any, InvalidFilterError][] = [
 		[
 			{
 				fromBlock: 42,
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				fromBlock: 42,
 			}),
 		],
@@ -484,7 +484,7 @@ export const validateFilterObjectInvalidData = () => {
 			{
 				toBlock: -42,
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				toBlock: -42,
 			}),
 		],
@@ -492,7 +492,7 @@ export const validateFilterObjectInvalidData = () => {
 			{
 				address: '0x98',
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				address: '0x98',
 			}),
 		],
@@ -504,7 +504,7 @@ export const validateFilterObjectInvalidData = () => {
 					null,
 				],
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				address: [
 					'0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
 					'0xdfd5293d8e347dfe59e90efd55b2956a1343963d',
@@ -523,7 +523,7 @@ export const validateFilterObjectInvalidData = () => {
 					],
 				],
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				topics: [
 					'0x00000000000000000000000',
 					null,
@@ -552,7 +552,7 @@ export const validateFilterObjectInvalidData = () => {
 					],
 				],
 			},
-			new InvalidFilter({
+			new InvalidFilterError({
 				fromBlock: '0xc0ff3',
 				toBlock: '0xc0ff3',
 				address: [
@@ -571,6 +571,8 @@ export const validateFilterObjectInvalidData = () => {
 			}),
 		],
 	];
-	isHexStrictValidData.forEach(data => invalidData.push([data[0], new InvalidFilter(data[0])]));
+	isHexStrictValidData.forEach(data =>
+		invalidData.push([data[0], new InvalidFilterError(data[0])]),
+	);
 	return invalidData;
 };

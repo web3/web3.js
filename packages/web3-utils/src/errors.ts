@@ -94,7 +94,7 @@ export class NibbleWidthError extends Web3Error {
 	}
 }
 
-export class InvalidType extends Web3Error {
+export class InvalidTypeError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'invalid type, type not supported');
 	}
@@ -154,7 +154,7 @@ export class InvalidCharCodeError extends Web3Error {
 	}
 }
 
-export class InvalidTypeAbiInput extends Web3Error {
+export class InvalidTypeAbiInputError extends Web3Error {
 	public constructor(value: string) {
 		super(value, 'components found but type is not tuple');
 	}
@@ -162,14 +162,14 @@ export class InvalidTypeAbiInput extends Web3Error {
 
 // TODO Type of value for all errors should be any as
 // any value can be passed when an error occurs
-export class InvalidBlockNumberOrTag extends Web3Error {
+export class InvalidBlockNumberOrTagError extends Web3Error {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(value: any) {
 		super(value, 'invalid block number or tag given');
 	}
 }
 
-export class InvalidFilter extends Web3Error {
+export class InvalidFilterError extends Web3Error {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(value: any) {
 		// TODO Discuss this naive approach to logging object

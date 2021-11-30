@@ -14,8 +14,8 @@ import {
 	InvalidTopicError,
 	InvalidCharCodeError,
 	InvalidAddressError,
-	InvalidBlockNumberOrTag,
-	InvalidFilter,
+	InvalidBlockNumberOrTagError,
+	InvalidFilterError,
 	InvalidBooleanError,
 } from './errors';
 import {
@@ -424,7 +424,7 @@ export const isBlockNumberOrTag = (value: BlockNumberOrTag) =>
 	(isHexStrict(value) && value.substr(0, 1) !== '-') || isBlockTag(value);
 
 export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
-	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTag(value);
+	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTagError(value);
 };
 
 export const isHexString8Bytes = (value: HexString8Bytes) =>
@@ -496,7 +496,7 @@ export const isFilterObject = (value: Filter) => {
 };
 
 export const validateFilterObject = (value: Filter) => {
-	if (!isFilterObject(value)) throw new InvalidFilter(value);
+	if (!isFilterObject(value)) throw new InvalidFilterError(value);
 };
 
 export const isBoolean = (value: boolean) => typeof value === 'boolean';

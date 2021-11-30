@@ -5,7 +5,7 @@ import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import { isAddress, isHexStrict } from './validation';
 import {
 	InvalidStringError,
-	InvalidType,
+	InvalidTypeError,
 	InvalidBooleanError,
 	InvalidAddressError,
 	InvalidSizeError,
@@ -56,7 +56,7 @@ const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, 
 		const val = 'v' in arg ? arg.v : arg.value;
 		return [type1, val];
 	}
-	throw new InvalidType(arg);
+	throw new InvalidTypeError(arg);
 };
 
 /**

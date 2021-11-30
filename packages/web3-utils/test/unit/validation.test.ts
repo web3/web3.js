@@ -3,10 +3,10 @@
 import {
 	InvalidAddressError,
 	InvalidBlockError,
-	InvalidBlockNumberOrTag,
+	InvalidBlockNumberOrTagError,
 	InvalidBloomError,
 	InvalidBooleanError,
-	InvalidFilter,
+	InvalidFilterError,
 	InvalidHexStringError,
 } from '../../src/errors';
 import {
@@ -219,7 +219,7 @@ describe('validation', () => {
 			...isBlockNumberValidData,
 			...validateBlockNumberOrTagInvalidData(),
 		])('%s', (input, output) => {
-			if (output instanceof InvalidBlockNumberOrTag) {
+			if (output instanceof InvalidBlockNumberOrTagError) {
 				expect(() => validateBlockNumberOrTag(input)).toThrow(output);
 			} else {
 				expect(() => validateBlockNumberOrTag(input)).not.toThrow();
@@ -275,7 +275,7 @@ describe('validation', () => {
 		it.each([...isFilterObjectValidData, ...validateFilterObjectInvalidData()])(
 			'%s',
 			(input, output) => {
-				if (output instanceof InvalidFilter) {
+				if (output instanceof InvalidFilterError) {
 					expect(() => validateFilterObject(input)).toThrow(output);
 				} else {
 					expect(() => validateFilterObject(input)).not.toThrow();
