@@ -421,7 +421,7 @@ export const isBlockTag = (value: string) =>
  * Returns true if given value is valid hex string and not negative, or is a valid BlockTag
  */
 export const isBlockNumberOrTag = (value: BlockNumberOrTag) =>
-	(isHexStrict(value) && value.substr(0, 1) !== '-') || isBlockTag(value);
+	(isHexStrict(value) && value.startsWith('-')) || isBlockTag(value);
 
 export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
 	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTagError(value);
