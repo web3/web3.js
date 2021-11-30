@@ -7,8 +7,6 @@ import {
 	InvalidBooleanError,
 	InvalidBytesError,
 	InvalidFilter,
-	InvalidHexString8Bytes,
-	InvalidHexString32Bytes,
 	InvalidHexStringError,
 	InvalidIntegerError,
 	InvalidIntegerInByteArrayError,
@@ -374,9 +372,9 @@ export const isHexString8BytesValidData: [HexString8Bytes, true][] = [
 
 // Converts false from invalid data sets to expected thrown error
 export const validateHexString8BytesInvalidData = () => {
-	const invalidData: [any, InvalidHexString8Bytes][] = [];
+	const invalidData: [any, InvalidHexStringError][] = [];
 	isHexStrictInvalidData.forEach(data =>
-		invalidData.push([data[0], new InvalidHexString8Bytes(data[0])]),
+		invalidData.push([data[0], new InvalidHexStringError(data[0], 8)]),
 	);
 	return invalidData;
 };
@@ -389,9 +387,9 @@ export const isHexString32BytesValidData: [HexString32Bytes, true][] = [
 
 // Converts false from invalid data sets to expected thrown error
 export const validateHexString32BytesInvalidData = () => {
-	const invalidData: [any, InvalidHexString32Bytes][] = [];
+	const invalidData: [any, InvalidHexStringError][] = [];
 	isHexStrictInvalidData.forEach(data =>
-		invalidData.push([data[0], new InvalidHexString32Bytes(data[0])]),
+		invalidData.push([data[0], new InvalidHexStringError(data[0], 32)]),
 	);
 	return invalidData;
 };

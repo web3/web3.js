@@ -48,8 +48,13 @@ export class InvalidStringError extends Web3Error {
 }
 
 export class InvalidHexStringError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'not a valid hex string');
+	public constructor(value: unknown, expectedNumberOfBytes?: number) {
+		super(
+			value,
+			expectedNumberOfBytes !== undefined
+				? `not a valid ${expectedNumberOfBytes} byte hex string`
+				: `not a valid hex string`,
+		);
 	}
 }
 
@@ -161,18 +166,6 @@ export class InvalidBlockNumberOrTag extends Web3Error {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(value: any) {
 		super(value, 'invalid block number or tag given');
-	}
-}
-
-export class InvalidHexString8Bytes extends Web3Error {
-	public constructor(value: string) {
-		super(value, 'invalid 8 byte hex string given');
-	}
-}
-
-export class InvalidHexString32Bytes extends Web3Error {
-	public constructor(value: string) {
-		super(value, 'invalid 32 byte hex string given');
 	}
 }
 

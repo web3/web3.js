@@ -15,8 +15,6 @@ import {
 	InvalidCharCodeError,
 	InvalidAddressError,
 	InvalidBlockNumberOrTag,
-	InvalidHexString8Bytes,
-	InvalidHexString32Bytes,
 	InvalidFilter,
 	InvalidBooleanError,
 } from './errors';
@@ -433,14 +431,14 @@ export const isHexString8Bytes = (value: HexString8Bytes) =>
 	isHexStrict(value) && value.length === 18; // 8 bytes + 0x = 18
 
 export const validateHexString8Bytes = (value: HexString8Bytes) => {
-	if (!isHexString8Bytes(value)) throw new InvalidHexString8Bytes(value);
+	if (!isHexString8Bytes(value)) throw new InvalidHexStringError(value, 8);
 };
 
 export const isHexString32Bytes = (value: HexString32Bytes) =>
 	isHexStrict(value) && value.length === 66; // 32 bytes + 0x = 66
 
 export const validateHexString32Bytes = (value: HexString32Bytes) => {
-	if (!isHexString32Bytes(value)) throw new InvalidHexString32Bytes(value);
+	if (!isHexString32Bytes(value)) throw new InvalidHexStringError(value, 32);
 };
 
 /**

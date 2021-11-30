@@ -7,8 +7,6 @@ import {
 	InvalidBloomError,
 	InvalidBooleanError,
 	InvalidFilter,
-	InvalidHexString8Bytes,
-	InvalidHexString32Bytes,
 	InvalidHexStringError,
 } from '../../src/errors';
 import {
@@ -240,7 +238,7 @@ describe('validation', () => {
 		it.each([...isHexString8BytesValidData, ...validateHexString8BytesInvalidData()])(
 			'%s',
 			(input, output) => {
-				if (output instanceof InvalidHexString8Bytes) {
+				if (output instanceof InvalidHexStringError) {
 					expect(() => validateHexString8Bytes(input)).toThrow(output);
 				} else {
 					expect(() => validateHexString8Bytes(input)).not.toThrow();
@@ -260,7 +258,7 @@ describe('validation', () => {
 		it.each([...isHexString32BytesValidData, ...validateHexString32BytesInvalidData()])(
 			'%s',
 			(input, output) => {
-				if (output instanceof InvalidHexString32Bytes) {
+				if (output instanceof InvalidHexStringError) {
 					expect(() => validateHexString32Bytes(input)).toThrow(output);
 				} else {
 					expect(() => validateHexString32Bytes(input)).not.toThrow();
