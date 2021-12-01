@@ -2,13 +2,13 @@ import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { toChecksumAddress, bytesToHex, sha3Raw } from 'web3-utils';
 import { PrivateKeyError } from './errors';
 // Will be added later
-const encrypt = (): boolean => true;
+export const encrypt = (): boolean => true;
 
 // Will be added later
-const sign = (): boolean => true;
+export const sign = (): boolean => true;
 
 // Will be added later
-const signTransaction = (): boolean => true;
+export const signTransaction = (): boolean => true;
 
 /**
  * Get address from private key
