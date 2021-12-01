@@ -23,7 +23,7 @@ describe('Web3SubscriptionManager', () => {
 		it('should create register events for request manager', () => {
 			const subManager = new Web3SubscriptionManager(requestManager, {});
 
-			expect(subManager).not.toBeUndefined();
+			expect(subManager).toBeDefined();
 			expect(requestManager.on).toHaveBeenCalledTimes(2);
 			expect(requestManager.on).toHaveBeenCalledWith(
 				Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE,

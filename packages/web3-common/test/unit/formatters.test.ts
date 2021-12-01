@@ -103,7 +103,7 @@ describe('formatters', () => {
 		});
 
 		it('should return valid genesis block number', () => {
-			expect(inputBlockNumberFormatter('genesis')).toEqual('0x0');
+			expect(inputBlockNumberFormatter('genesis')).toBe('0x0');
 		});
 
 		it('should return lower case hex value for a valid hex string', () => {
@@ -112,7 +112,7 @@ describe('formatters', () => {
 
 			expect(utils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
 			expect(utils.numberToHex).not.toHaveBeenCalled();
-			expect(result).toEqual('0xaf0af');
+			expect(result).toBe('0xaf0af');
 		});
 
 		it('should try parsing number if given value is not valid hex string', () => {
@@ -127,7 +127,7 @@ describe('formatters', () => {
 
 	describe('inputDefaultBlockNumberFormatter', () => {
 		it('should return default block if block number not provided', () => {
-			expect(inputDefaultBlockNumberFormatter(undefined, 255)).toEqual('0xff');
+			expect(inputDefaultBlockNumberFormatter(undefined, 255)).toBe('0xff');
 		});
 
 		it('should return block number if block number provided', () => {
@@ -143,7 +143,7 @@ describe('formatters', () => {
 		it('should return lower case value if valid address', () => {
 			jest.spyOn(utils, 'isAddress').mockReturnValue(true);
 
-			expect(inputAddressFormatter('0xAcb')).toEqual('0xacb');
+			expect(inputAddressFormatter('0xAcb')).toBe('0xacb');
 		});
 
 		it('should throw error if not a valid address or iban', () => {
