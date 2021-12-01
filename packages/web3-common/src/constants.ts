@@ -8,6 +8,7 @@ export const ERR_FORMATTERS = 201;
 export const ERR_METHOD_NOT_IMPLEMENTED = 202;
 export const ERR_OPERATION_TIMEOUT = 203;
 export const ERR_OPERATION_ABORT = 204;
+export const ERR_ABI_ENCODING = 205;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;

@@ -5,18 +5,8 @@ import {
 	InvalidBytesError,
 	InvalidIntegerError,
 	InvalidUnitError,
-	InvalidTypeAbiInput,
 } from './errors';
-import {
-	Address,
-	Bytes,
-	HexString,
-	Numbers,
-	ValueTypes,
-	JsonFunctionInterface,
-	JsonEventInterface,
-	Components,
-} from './types';
+import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
 import {
 	isAddress,
 	isHexStrict,
@@ -390,49 +380,4 @@ export const toChecksumAddress = (address: Address): string => {
 		}
 	}
 	return checksumAddress;
-};
-
-/**
- *  used to flatten json abi inputs/outputs into an array of type-representing-strings
- */
-
-export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[] => {
-	const types: string[] = [];
-
-	puts.forEach(param => {
-		if (typeof param.components === 'object') {
-			if (!param.type.startsWith('tuple')) {
-				throw new InvalidTypeAbiInput(param.type);
-			}
-			const arrayBracket = param.type.indexOf('[');
-			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
-			const result = flattenTypes(includeTuple, param.components);
-
-			if (Array.isArray(result) && includeTuple) {
-				types.push(`tuple(${result.join(',')})${suffix}`);
-			} else if (!includeTuple) {
-				types.push(`(${result.join(',')})${suffix}`);
-			} else {
-				types.push(`(${result.join()})`);
-			}
-		} else {
-			types.push(param.type);
-		}
-	});
-
-	return types;
-};
-
-/**
- * Should be used to create full function/event name from json abi
- * returns a string
- */
-export const jsonInterfaceMethodToString = (
-	json: JsonFunctionInterface | JsonEventInterface,
-): string => {
-	if (json.name.includes('(')) {
-		return json.name;
-	}
-
-	return `${json.name}(${flattenTypes(false, json.inputs).join(',')})`;
 };
