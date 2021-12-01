@@ -9,7 +9,7 @@ import { encodeParameters } from './parameters_api';
  */
 export const encodeFunctionSignature = (functionName: string | JsonAbiFunctionFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiFunctionFragment(functionName)) {
-		throw new Error('Invalid parameter value in encodeFunctionSignature');
+		throw new AbiError('Invalid parameter value in encodeFunctionSignature');
 	}
 
 	let name: string;
@@ -28,7 +28,7 @@ export const encodeFunctionSignature = (functionName: string | JsonAbiFunctionFr
  */
 export const encodeFunctionCall = (
 	jsonInterface: JsonAbiFunctionFragment,
-	params?: unknown[],
+	params: unknown[],
 ): string => {
 	if (!isAbiFunctionFragment(jsonInterface)) {
 		throw new AbiError('Invalid parameter value in encodeFunctionCall');
