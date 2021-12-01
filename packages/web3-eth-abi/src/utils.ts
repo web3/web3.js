@@ -10,6 +10,7 @@ import {
 	JsonAbiStruct,
 	JsonAbiEventFragment,
 	JsonAbiFunctionFragment,
+	JsonAbiConstructorFragment,
 } from './types';
 
 export const isAbiFragment = (item: unknown): item is JsonAbiFragment =>
@@ -32,6 +33,13 @@ export const isAbiFunctionFragment = (item: unknown): item is JsonAbiFunctionFra
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	(item as { type: string }).type === 'function';
+
+export const isAbiConstructorFragment = (item: unknown): item is JsonAbiConstructorFragment =>
+	item !== undefined &&
+	item !== null &&
+	typeof item === 'object' &&
+	(item as { type: string }).type !== undefined &&
+	(item as { type: string }).type === 'constructor';
 
 /**
  * Check if type is simplified struct format
