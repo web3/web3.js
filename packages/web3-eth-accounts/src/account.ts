@@ -18,9 +18,9 @@ export const privateKeyToAccount = (
 ): {
 	address: string;
 	privateKey: string;
-	signTransaction: Function; // From 1.x
-	sign: Function;
-	encrypt: Function;
+	signTransaction: () => boolean; // From 1.x
+	sign: () => boolean;
+	encrypt: () => boolean;
 } => {
 	const stringPrivateKey =
 		typeof privateKey === 'object' ? Buffer.from(privateKey).toString('hex') : privateKey;

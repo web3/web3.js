@@ -1,9 +1,5 @@
 import { sign, signTransaction, encrypt } from '../../src/account';
 
-export const invalidPrivateKeyData: [any, string][] = [];
-
-export const validPrivateKeyData: [any, string][] = [];
-
 export const validPrivateKeytoAccountData: [string, any][] = [
 	[
 		'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
