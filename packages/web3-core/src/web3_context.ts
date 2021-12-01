@@ -19,7 +19,7 @@ export class Web3Context<API extends Web3APISpec> extends Web3Config {
 		return this.requestManager.provider;
 	}
 
-	public set currentProvider(provider: SupportedProviders<any> | string) {
+	public set currentProvider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 }

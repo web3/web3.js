@@ -1,6 +1,3 @@
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
-
 describe('constructs a PLACEHOLDER instance with expected properties', () => {
 	// let providerOptions: ProviderOptions
 

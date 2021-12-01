@@ -51,7 +51,7 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 		};
 
 		Object.defineProperty(this.options, 'address', {
-			set: value => this._parseAndSetAddress(value),
+			set: (value: Address) => this._parseAndSetAddress(value),
 			get: () => this._address,
 		});
 
@@ -68,16 +68,23 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 	private _parseAndSetJsonInterface(abis: JsonAbiFragment[]) {
 		this._functions = {};
 		this._events = {};
+		const result: JsonAbiFragment[] = [];
 
-		for (const abi of abis) {
-			// make constant and payable backwards compatible
-			abi.constant =
-				abi.stateMutability === 'view' || abi.stateMutability === 'pure' || abi.constant;
-			abi.payable = abi.stateMutability === 'payable' || abi.payable;
+		for (const a of abis) {
+			const abi = {
+				...a,
+			};
 
 			if (isAbiFunctionFragment(abi)) {
 				const name = jsonInterfaceMethodToString(abi);
 				const signature = encodeFunctionSignature(name);
+
+				// make constant and payable backwards compatible
+				abi.constant =
+					abi.stateMutability === 'view' ??
+					abi.stateMutability === 'pure' ??
+					abi.constant;
+				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
 
 				if (name in this._functions) {
 					this._functions[name] = {
@@ -102,6 +109,8 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 
 				this._events[signature] = event;
 			}
+
+			result.push(abi);
 		}
 
 		this._jsonInterface = abis;

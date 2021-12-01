@@ -1,4 +1,5 @@
 import { AbiCoder, ParamType } from '@ethersproject/abi';
+import { AbiError } from 'web3-common';
 import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
@@ -128,10 +129,10 @@ export const mapTypes = (
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	let param = _param;
-	const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
-	const paramTypeBytesArray = new RegExp(/^bytes([0-9]*)\[\]$/);
-	const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
-	const paramTypeNumberArray = new RegExp(/^(u?int)([0-9]*)\[\]$/);
+	const paramTypeBytes = /^bytes([0-9]*)$/;
+	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
+	const paramTypeNumber = /^(u?int)([0-9]*)$/;
+	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
 
 	// Format BN to string
 	if (param instanceof BigInt) {
@@ -222,7 +223,7 @@ export const flattenTypes = (includeTuple: boolean, puts: JsonAbiParameter[]): s
 	puts.forEach(param => {
 		if (typeof param.components === 'object') {
 			if (!param.type.startsWith('tuple')) {
-				throw new Error(
+				throw new AbiError(
 					`Invalid value given "${param.type}". Error: components found but type is not tuple.`,
 				);
 			}

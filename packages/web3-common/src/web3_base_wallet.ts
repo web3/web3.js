@@ -22,17 +22,20 @@ export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> {
 		this._accountProvider = accountProvider;
 	}
 
-	abstract create(numberOfAccounts: number, entropy: string): this;
-	abstract add(account: T | string): boolean;
-	abstract get(addressOrIndex: string | number): T;
-	abstract remove(addressOrIndex: string | number): boolean;
-	abstract clear(): this;
-	abstract encrypt(password: string, options?: Record<string, unknown>): Web3EncryptedWallet[];
-	abstract decrypt(
+	public abstract create(numberOfAccounts: number, entropy: string): this;
+	public abstract add(account: T | string): boolean;
+	public abstract get(addressOrIndex: string | number): T;
+	public abstract remove(addressOrIndex: string | number): boolean;
+	public abstract clear(): this;
+	public abstract encrypt(
+		password: string,
+		options?: Record<string, unknown>,
+	): Web3EncryptedWallet[];
+	public abstract decrypt(
 		encryptedWallet: Web3EncryptedWallet[],
 		password: string,
 		options?: Record<string, unknown>,
 	): this;
-	abstract save(password: string, keyName?: string): boolean | never;
-	abstract load(password: string, keyName?: string): this | never;
+	public abstract save(password: string, keyName?: string): boolean | never;
+	public abstract load(password: string, keyName?: string): this | never;
 }

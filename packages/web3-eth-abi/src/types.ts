@@ -1,3 +1,4 @@
+// TODO: Adding reference of source definition/doc for these types
 export interface JsonAbiParameter {
 	readonly name: string;
 	readonly type: string;
@@ -22,7 +23,6 @@ export interface JsonAbiCoderStruct extends JsonAbiStruct {
 type FragmentTypes = 'constructor' | 'event' | 'function';
 
 export interface JsonAbiBaseFragment {
-	[key: string]: unknown;
 	name?: string;
 	type: FragmentTypes;
 	inputs?: Array<JsonAbiParameter>;
@@ -30,25 +30,26 @@ export interface JsonAbiBaseFragment {
 
 export interface JsonAbiConstructorFragment extends JsonAbiBaseFragment {
 	type: 'constructor';
-	gas?: string;
-	payable: boolean;
 	stateMutability: 'nonpayable' | 'payable';
 }
 
 export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 	type: 'function';
-	constant?: boolean;
-	stateMutability?: 'nonpayable' | 'payable' | 'pure' | 'view';
+	stateMutability: 'nonpayable' | 'payable' | 'pure' | 'view';
+	outputs?: Array<JsonAbiParameter>;
+
+	// legacy properties
+	constant?: boolean;	// stateMutability == 'pure' or stateMutability == 'view'
+	payable?: boolean; // stateMutability == 'payable'
 }
 
 export interface JsonAbiEventFragment extends JsonAbiBaseFragment {
 	type: 'event';
 	anonymous?: boolean;
-	outputs?: Array<JsonAbiParameter>;
 }
 
+// https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type JsonAbiFragment =
-	| JsonAbiBaseFragment
 	| JsonAbiConstructorFragment
 	| JsonAbiFunctionFragment
 	| JsonAbiEventFragment;
