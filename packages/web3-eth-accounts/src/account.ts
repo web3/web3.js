@@ -13,7 +13,15 @@ const signTransaction = (): boolean => true;
 /**
  * Get address from private key
  */
-export const fromPrivate = (privateKey: string | Uint8Array): string => {
+export const privateKeyToAccount = (
+	privateKey: string | Uint8Array,
+): {
+	address: string;
+	privateKey: string;
+	signTransaction: Function; // From 1.x
+	sign: Function;
+	encrypt: Function;
+} => {
 	const stringPrivateKey =
 		typeof privateKey === 'object' ? Buffer.from(privateKey).toString('hex') : privateKey;
 	const updatedKey = stringPrivateKey.startsWith('0x')
@@ -30,7 +38,7 @@ export const fromPrivate = (privateKey: string | Uint8Array): string => {
 	const publicHash = sha3Raw(publicKeyString);
 	const publicHashHex = bytesToHex(publicHash);
 	const address = toChecksumAddress(publicHashHex.slice(-40));
-	return address;
+	return { address, privateKey: stringPrivateKey, signTransaction, sign, encrypt };
 };
 
 /**
@@ -39,7 +47,7 @@ export const fromPrivate = (privateKey: string | Uint8Array): string => {
 export const create = (): {
 	address: string;
 	privateKey: string;
-	signTransaction: Function; // From 1.x, removing this would be a breaking change
+	signTransaction: Function; // From 1.x
 	sign: Function;
 	encrypt: Function;
 } => {

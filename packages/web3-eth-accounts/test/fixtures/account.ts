@@ -2,7 +2,7 @@ export const invalidPrivateKeyData: [any, string][] = [];
 
 export const validPrivateKeyData: [any, string][] = [];
 
-export const validFromPrivateData: [any, string][] = [
+export const validPrivateKeytoAccountData: [any, string][] = [
 	[
 		'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
 		'0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',

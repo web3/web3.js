@@ -1,5 +1,5 @@
-import { create, fromPrivate } from '../../src/account';
-import { validFromPrivateData } from '../fixtures/account';
+import { create, privateKeyToAccount } from '../../src/account';
+import { validPrivateKeytoAccountData } from '../fixtures/account';
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -12,8 +12,8 @@ describe('accounts', () => {
 
 	describe('fromPrivate', () => {
 		describe('valid cases', () => {
-			it.each(validFromPrivateData)('%s', (input, output) => {
-				expect(fromPrivate(input)).toEqual(output);
+			it.each(validPrivateKeytoAccountData)('%s', (input, output) => {
+				expect(privateKeyToAccount(input)).toEqual(output);
 			});
 		});
 	});
