@@ -34,6 +34,7 @@ import {
 	ERR_SUBSCRIPTION,
 	ERR_OPERATION_TIMEOUT,
 	ERR_OPERATION_ABORT,
+	ERR_ABI_ENCODING,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -387,4 +388,8 @@ export class OperationTimeoutError extends Web3Error {
 
 export class OperationAbortError extends Web3Error {
 	public code = ERR_OPERATION_ABORT;
+}
+
+export class AbiError extends Web3Error {
+	public code = ERR_ABI_ENCODING;
 }
