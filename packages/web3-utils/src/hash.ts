@@ -34,7 +34,7 @@ export const sha3 = (data: Bytes): string | null => {
  */
 // console.log(sha3("0x0089d53f703f7e0843953d48133f74ce247184c2"))
 // console.log(sha3(Buffer.from("0089d53f703f7e0843953d48133f74ce247184c2")))
-export const sha3Raw = (data: string): string => {
+export const sha3Raw = (data: Bytes): string => {
 	const hash = sha3(data);
 	if (hash === null) {
 		return SHA3_EMPTY_BYTES;

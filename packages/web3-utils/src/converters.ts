@@ -370,9 +370,9 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-	// const bytes = hexToBytes(address)
 
 	const hash = bytesToHex(keccak256(Buffer.from(lowerCaseAddress)));
+
 	if (
 		hash === null ||
 		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'

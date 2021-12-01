@@ -1,4 +1,6 @@
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
+import { toChecksumAddress, bytesToHex, sha3Raw } from 'web3-utils';
+import { PrivateKeyError } from './errors';
 // Will be added later
 const encrypt = (): boolean => true;
 
@@ -18,12 +20,17 @@ export const fromPrivate = (privateKey: string | Uint8Array): string => {
 		? stringPrivateKey.slice(2)
 		: stringPrivateKey;
 
-	// 64 hex characters + hex-prefix
+	// Must be 64 hex characters
 	if (updatedKey.length !== 64) {
-		throw new Error('Private key must be 32 bytes long');
+		throw new PrivateKeyError(updatedKey);
 	}
-	const address = getPublicKey(updatedKey);
-	return `0x${address}`;
+	const publicKey = getPublicKey(updatedKey);
+
+	const publicKeyString = `0x${publicKey.slice(2)}`;
+	const publicHash = sha3Raw(publicKeyString);
+	const publicHashHex = bytesToHex(publicHash);
+	const address = toChecksumAddress(publicHashHex.slice(-40));
+	return address;
 };
 
 /**
