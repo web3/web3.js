@@ -1,3 +1,4 @@
+// TODO: Adding reference of source definition/doc for these types
 export interface JsonAbiParameter {
 	readonly name: string;
 	readonly type: string;
