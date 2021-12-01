@@ -24,6 +24,12 @@
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js"
 	},
+	"dependencies": {
+		"web3-common": "1.0.0-alpha.0",
+		"web3-eth-abi": "4.0.0-alpha.0",
+		"web3-core": "4.0.0-alpha.0",
+		"web3-utils": "4.0.0-alpha.0"
+	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",

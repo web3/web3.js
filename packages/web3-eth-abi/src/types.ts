@@ -30,15 +30,17 @@ export interface JsonAbiBaseFragment {
 
 export interface JsonAbiConstructorFragment extends JsonAbiBaseFragment {
 	type: 'constructor';
-	payable: boolean;
 	stateMutability: 'nonpayable' | 'payable';
 }
 
 export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 	type: 'function';
-	constant?: boolean;
-	stateMutability?: 'nonpayable' | 'payable' | 'pure' | 'view';
+	stateMutability: 'nonpayable' | 'payable' | 'pure' | 'view';
 	outputs?: Array<JsonAbiParameter>;
+
+	// legacy properties
+	constant?: boolean;	// stateMutability == 'pure' or stateMutability == 'view'
+	payable?: boolean; // stateMutability == 'payable'
 }
 
 export interface JsonAbiEventFragment extends JsonAbiBaseFragment {
@@ -48,7 +50,6 @@ export interface JsonAbiEventFragment extends JsonAbiBaseFragment {
 
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type JsonAbiFragment =
-	| JsonAbiBaseFragment
 	| JsonAbiConstructorFragment
 	| JsonAbiFunctionFragment
 	| JsonAbiEventFragment;

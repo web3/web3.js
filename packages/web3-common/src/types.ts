@@ -1,4 +1,4 @@
-import { HexString } from 'web3-utils';
+import { HexString, HexString32Bytes } from 'web3-utils';
 
 export type JsonRpcId = string | number | null;
 export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
@@ -112,16 +112,21 @@ export interface LogsInput {
 	readonly id?: string;
 	readonly blockNumber?: HexString;
 	readonly transactionIndex?: HexString;
-	readonly address?: HexString;
+	readonly address: HexString;
+	readonly topics: HexString[];
+	readonly data: HexString;
 }
 export interface LogsOutput {
 	readonly id?: string;
-	readonly blockHash?: HexString;
-	readonly transactionHash?: HexString;
-	readonly logIndex?: bigint | number;
-	readonly blockNumber?: bigint | number;
+	readonly removed: boolean;
+	readonly logIndex: bigint | number | null;
 	readonly transactionIndex?: bigint | number;
-	readonly address?: string;
+	readonly transactionHash: HexString32Bytes | null;
+	readonly blockHash: HexString32Bytes | null;
+	readonly blockNumber: bigint | number | null;
+	readonly address: string;
+	readonly topics: HexString[];
+	readonly data: HexString;
 }
 
 export interface BlockInput {
