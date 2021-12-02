@@ -1,20 +1,7 @@
-import { HexString, ValidTypes } from 'web3-utils';
+import { ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
 
-interface ConfigOptions {
-	handleRevert: boolean;
-	defaultAccount: HexString | null;
-	defaultBlock: HexString;
-	transactionBlockTimeout: number;
-	transactionConfirmationBlocks: number;
-	transactionPollingTimeout: number;
-	blockHeaderTimeout: number;
-	maxListenersWarningThreshold: number;
-	defaultChain: string | null;
-	defaultHardfork: string | null;
-	defaultCommon: Record<string, unknown> | null;
-	defaultReturnType: ValidTypes;
-}
+import { ConfigOptions } from './types';
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }
