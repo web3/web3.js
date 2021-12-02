@@ -1,6 +1,7 @@
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { toChecksumAddress, bytesToHex, sha3Raw, HexString } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from './errors';
+
 // Will be added later
 export const encrypt = (): boolean => true;
 
@@ -11,7 +12,7 @@ export const sign = (): boolean => true;
 export const signTransaction = (): boolean => true;
 
 /**
- * Get address from private key
+ * Get account from private key
  */
 export const privateKeyToAccount = (
 	privateKey: string | Buffer,
@@ -48,7 +49,7 @@ export const privateKeyToAccount = (
 };
 
 /**
- * Returns a random hex string by the given bytes size
+ * Returns an acoount
  */
 export const create = (): {
 	address: HexString;
