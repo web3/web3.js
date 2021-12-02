@@ -7,6 +7,9 @@ import {
 	InvalidIntegerError,
 	InvalidUnitError,
 	InvalidTypeAbiInputError,
+	InvalidDesiredTypeError,
+	InvalidConvertibleObjectError,
+	InvalidConvertiblePropertiesListError,
 } from './errors';
 import {
 	Address,
@@ -441,21 +444,20 @@ export const jsonInterfaceMethodToString = (
 };
 
 export const convertToValidType = (
-	value: string | number | bigint,
+	value: ValidReturnTypes[ValidTypes], // validate this
 	desiredType: ValidTypes,
 ): ValidReturnTypes[ValidTypes] => {
 	switch (desiredType) {
 		case ValidTypes.HexString:
-			return toHex(value);
+			return numberToHex(value);
 		case ValidTypes.NumberString:
-			return hexToNumberString(toHex(value));
+			return hexToNumberString(numberToHex(value));
 		case ValidTypes.Number:
 			return toNumber(value);
 		case ValidTypes.BigInt:
 			return BigInt(toNumber(value));
 		default:
-			// TODO Replace with proper error
-			throw new Error('Invalid desiredType provided');
+			throw new InvalidDesiredTypeError(desiredType);
 	}
 };
 
@@ -472,6 +474,16 @@ export function convertObjectPropertiesToValidType<
 	convertibleProperties: Properties,
 	desiredType: ReturnType,
 ): FormatValidReturnType<ObjectType, Properties, ReturnType> {
+	if (typeof object !== 'object' || object === null)
+		throw new InvalidConvertibleObjectError(object);
+	if (
+		!Array.isArray(convertibleProperties) ||
+		!convertibleProperties.every(convertibleProperty => typeof convertibleProperty === 'string')
+	)
+		throw new InvalidConvertiblePropertiesListError(convertibleProperties);
+	if (!Object.values(ValidTypes).includes(desiredType))
+		throw new InvalidDesiredTypeError(desiredType);
+
 	const convertedObject = { ...object } as FormatValidReturnType<
 		ObjectType,
 		Properties,
