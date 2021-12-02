@@ -1,6 +1,7 @@
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { toChecksumAddress, bytesToHex, sha3Raw, HexString } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from './errors';
+
 // Will be added later
 // Will be added later
 export const sign = (): boolean => true;
