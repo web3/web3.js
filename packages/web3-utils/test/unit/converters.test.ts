@@ -21,6 +21,8 @@ import {
 	toWei,
 	utf8ToHex,
 	jsonInterfaceMethodToString,
+	convertToValidType,
+	convertObjectPropertiesToValidType,
 } from '../../src/converters';
 import {
 	asciiToHexValidData,
@@ -44,6 +46,10 @@ import {
 	utf8ToHexValidData,
 	jsonInterfaceValidData,
 	jsonInterfaceInvalidData,
+	convertToValidTypeValidData,
+	convertToValidTypeInvalidData,
+	convertObjectPropertiesToValidTypeValidData,
+	convertObjectPropertiesToValidTypeInvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -346,6 +352,46 @@ describe('converters', () => {
 			it.each(jsonInterfaceInvalidData)('%s', (input, output) => {
 				expect(() => jsonInterfaceMethodToString(input)).toThrow(output);
 			});
+		});
+	});
+	describe('convertToValidType', () => {
+		describe('valid cases', () => {
+			it.each(convertToValidTypeValidData)(
+				'convert %s to %s and get %s',
+				(input, convertTo, output) => {
+					expect(convertToValidType(input, convertTo)).toEqual(output);
+				},
+			);
+		});
+		describe('invalid cases', () => {
+			it.each(convertToValidTypeInvalidData)(
+				'trying to convert %s to %s',
+				(input, convertTo, output) => {
+					expect(() => convertToValidType(input, convertTo)).toThrow(output);
+				},
+			);
+		});
+	});
+	describe('convertObjectPropertiesToValidType', () => {
+		describe('valid cases', () => {
+			it.each(convertObjectPropertiesToValidTypeValidData)(
+				'valid cases',
+				(input, convertibleProperties, convertTo, output) => {
+					expect(
+						convertObjectPropertiesToValidType(input, convertibleProperties, convertTo),
+					).toStrictEqual(output);
+				},
+			);
+		});
+		describe('invalid cases', () => {
+			it.each(convertObjectPropertiesToValidTypeInvalidData)(
+				'trying to convert %s with convertible properties: %s',
+				(input, convertibleProperties, convertTo, output) => {
+					expect(() =>
+						convertObjectPropertiesToValidType(input, convertibleProperties, convertTo),
+					).toThrow(output);
+				},
+			);
 		});
 	});
 });
