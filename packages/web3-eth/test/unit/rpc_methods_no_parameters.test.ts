@@ -15,7 +15,7 @@ import {
 	newPendingTransactionFilter,
 } from '../../src/rpc_methods';
 
-describe('rpc_methods_no_params', () => {
+describe('rpc_methods_no_parameters', () => {
 	const requestManagerSendSpy = jest.fn();
 
 	let requestManager: Web3RequestManager;
