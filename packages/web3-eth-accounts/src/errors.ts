@@ -14,8 +14,14 @@ export abstract class Web3Error extends Error {
 	}
 }
 
-export class PrivateKeyError extends Web3Error {
+export class PrivateKeyLengthError extends Web3Error {
 	public constructor(value: string) {
 		super(value, 'Private key must be 32 bytes long');
+	}
+}
+
+export class InvalidPrivateKeyError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'not a valid string or buffer');
 	}
 }

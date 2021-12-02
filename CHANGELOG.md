@@ -344,3 +344,4 @@ Released with 1.0.0-beta.37 code base.
 ### web3-eth-accounts
 
 1. `create` function does not take in the optional parameter `entropy`
+2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
