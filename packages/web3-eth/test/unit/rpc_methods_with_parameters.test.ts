@@ -73,7 +73,7 @@ import {
 
 // Invalid data is not being tested for each method, because that
 // would be retesting the validation methods which are tested in web3-utils
-describe('rpc_methods_with_params', () => {
+describe('rpc_methods_with_parameters', () => {
 	const requestManagerSendSpy = jest.fn();
 
 	let requestManager: Web3RequestManager;
