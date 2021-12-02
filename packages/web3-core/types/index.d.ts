@@ -134,6 +134,8 @@ export interface Transaction {
     to: string | null;
     value: string;
     gasPrice: string;
+    maxPriorityFeePerGas?: number | string | BN;
+    maxFeePerGas?: number | string | BN;
     gas: number;
     input: string;
 }
@@ -144,6 +146,8 @@ export interface TransactionConfig {
     value?: number | string | BN;
     gas?: number | string;
     gasPrice?: number | string | BN;
+    maxPriorityFeePerGas?: number | string | BN;
+    maxFeePerGas?: number | string | BN;
     data?: string;
     nonce?: number;
     chainId?: number;
