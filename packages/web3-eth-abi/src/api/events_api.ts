@@ -13,7 +13,7 @@ export const encodeEventSignature = (functionName: string | AbiEventFragment): s
 
 	let name: string;
 
-	if (typeof functionName === 'function' || (typeof functionName === 'object' && functionName)) {
+	if (functionName && (typeof functionName === 'function' || typeof functionName === 'object')) {
 		name = jsonInterfaceMethodToString(functionName);
 	} else {
 		name = functionName;

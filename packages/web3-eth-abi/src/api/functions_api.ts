@@ -9,12 +9,12 @@ import { encodeParameters } from './parameters_api';
  */
 export const encodeFunctionSignature = (functionName: string | AbiFunctionFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiFunctionFragment(functionName)) {
-		throw new Error('Invalid parameter value in encodeFunctionSignature');
+		throw new AbiError('Invalid parameter value in encodeFunctionSignature');
 	}
 
 	let name: string;
 
-	if (typeof functionName === 'function' || (typeof functionName === 'object' && functionName)) {
+	if (functionName && (typeof functionName === 'function' || typeof functionName === 'object')) {
 		name = jsonInterfaceMethodToString(functionName);
 	} else {
 		name = functionName;
@@ -28,14 +28,14 @@ export const encodeFunctionSignature = (functionName: string | AbiFunctionFragme
  */
 export const encodeFunctionCall = (
 	jsonInterface: AbiFunctionFragment,
-	params?: unknown[],
+	params: unknown[],
 ): string => {
 	if (!isAbiFunctionFragment(jsonInterface)) {
 		throw new AbiError('Invalid parameter value in encodeFunctionCall');
 	}
 
 	return `${encodeFunctionSignature(jsonInterface)}${encodeParameters(
-		jsonInterface.inputs ?? [],
+		[...(jsonInterface.inputs ?? [])],
 		params ?? [],
 	).replace('0x', '')}`;
 };

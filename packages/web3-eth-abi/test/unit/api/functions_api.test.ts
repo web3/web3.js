@@ -41,7 +41,7 @@ describe('functions_api', () => {
 			it.each(inValidFunctionsCalls)(
 				'should pass for valid values: %s',
 				({ input, output }) => {
-					expect(() => encodeFunctionCall(input)).toThrow(output);
+					expect(() => encodeFunctionCall(input, [])).toThrow(output);
 				},
 			);
 		});

@@ -48,11 +48,11 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		return true;
 	}
 
-	abstract getStatus(): Web3BaseProviderStatus;
-	abstract supportsSubscriptions(): boolean;
+	public abstract getStatus(): Web3BaseProviderStatus;
+	public abstract supportsSubscriptions(): boolean;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
-	abstract request<
+	public abstract request<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(
@@ -61,29 +61,32 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): Promise<JsonRpcResponse<ResponseType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
-	abstract on<T = JsonRpcResult>(
+	public abstract on<T = JsonRpcResult>(
 		type: 'message' | 'disconnect' | string,
 		callback: Web3BaseProviderCallback<T>,
 	): void;
-	abstract on(
+	public abstract on(
 		type: 'connect' | 'chainChanged',
 		callback: Web3BaseProviderCallback<{
 			readonly [key: string]: unknown;
 			readonly chainId: string;
 		}>,
 	): void;
-	abstract on(
+	public abstract on(
 		type: 'accountsChanged',
 		callback: Web3BaseProviderCallback<{
 			readonly [key: string]: unknown;
 			readonly accountsChanged: string[];
 		}>,
 	): void;
-	abstract removeListener(type: string, callback: Web3BaseProviderCallback): void;
+	public abstract removeListener(type: string, callback: Web3BaseProviderCallback): void;
 
-	abstract once?<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void;
-	abstract removeAllListeners?(type: string): void;
-	abstract connect(): void;
-	abstract disconnect(code: number, reason: string): void;
-	abstract reset(): void;
+	public abstract once?<T = JsonRpcResult>(
+		type: string,
+		callback: Web3BaseProviderCallback<T>,
+	): void;
+	public abstract removeAllListeners?(type: string): void;
+	public abstract connect(): void;
+	public abstract disconnect(code: number, reason: string): void;
+	public abstract reset(): void;
 }

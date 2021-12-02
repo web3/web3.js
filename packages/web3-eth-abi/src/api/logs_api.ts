@@ -5,7 +5,7 @@ import { decodeParameter, decodeParametersWith } from './parameters_api';
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
 
 /**
- * Decodes events non- and indexed parameters.
+ * Decodes ABI-encoded log data and indexed topic data
  */
 export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	inputs: Array<AbiParameter>,

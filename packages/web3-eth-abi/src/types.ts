@@ -1,14 +1,3 @@
-export interface AbiStruct {
-	[key: string]: unknown;
-	name?: string;
-	type: string;
-}
-
-export interface AbiCoderStruct extends AbiStruct {
-	[key: string]: unknown;
-	components?: Array<AbiStruct>;
-}
-
 export type AbiParameterBaseType =
 	| 'address'
 	| 'uint'
@@ -19,6 +8,7 @@ export type AbiParameterBaseType =
 	| 'array'
 	| 'tuple';
 
+// TODO: Adding reference of source definition/doc for these types
 export type AbiParameter = {
 	readonly name: string;
 	readonly type: string;
@@ -39,24 +29,25 @@ export type AbiBaseFragment = {
 
 export type AbiConstructorFragment = AbiBaseFragment & {
 	readonly type: 'constructor';
-	readonly gas?: string;
-	readonly payable: boolean;
 	readonly stateMutability: 'nonpayable' | 'payable';
 };
 
 export type AbiFunctionFragment = AbiBaseFragment & {
 	readonly type: 'function';
-	readonly constant?: boolean;
 	readonly stateMutability?: 'nonpayable' | 'payable' | 'pure' | 'view';
 	readonly outputs?: ReadonlyArray<AbiParameter>;
+
+	// legacy properties
+	readonly constant?: boolean; // stateMutability == 'pure' or stateMutability == 'view'
+	readonly payable?: boolean; // stateMutability == 'payable'
 };
 
 export type AbiEventFragment = AbiBaseFragment & {
 	readonly type: 'event';
 	readonly anonymous?: boolean;
-	readonly outputs?: ReadonlyArray<AbiParameter>;
 };
 
+// https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type AbiFragment = AbiConstructorFragment | AbiFunctionFragment | AbiEventFragment;
 export type Abi = ReadonlyArray<AbiFragment>;
 export type AbiInput = string | AbiParameter | { readonly [key: string]: unknown };
@@ -97,3 +88,13 @@ export type CompiledParameter<T = unknown> = {
 };
 
 export type AbiTypeToNativeType<T extends AbiParameterBaseType> = T extends 'bool' ? boolean : any;
+
+export interface AbiStruct {
+	[key: string]: unknown;
+	name?: string;
+	type: string;
+}
+
+export interface AbiCoderStruct extends AbiStruct {
+	components?: Array<AbiStruct>;
+}

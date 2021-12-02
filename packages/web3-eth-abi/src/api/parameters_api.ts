@@ -59,7 +59,7 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 ): ReturnType & { __length__: number } => {
 	try {
 		if (abis.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
-			throw new Error(
+			throw new AbiError(
 				"Returned values aren't valid, did it run Out of Gas? " +
 					'You might also see this error if you are not using the ' +
 					'correct ABI for the contract you are retrieving data from, ' +
@@ -94,7 +94,7 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 
 		return returnValue as ReturnType & { __length__: number };
 	} catch (err) {
-		throw new Error(`Parameter decoding error: ${(err as Error).message}`);
+		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
 	}
 };
 

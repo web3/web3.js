@@ -1,4 +1,5 @@
 import { AbiCoder, ParamType } from '@ethersproject/abi';
+import { AbiError } from 'web3-common';
 import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
@@ -9,6 +10,7 @@ import {
 	AbiStruct,
 	AbiEventFragment,
 	AbiFunctionFragment,
+	AbiConstructorFragment,
 	AbiParameterBaseType,
 } from './types';
 
@@ -32,6 +34,13 @@ export const isAbiFunctionFragment = (item: unknown): item is AbiFunctionFragmen
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	(item as { type: string }).type === 'function';
+
+export const isAbiConstructorFragment = (item: unknown): item is AbiConstructorFragment =>
+	item !== undefined &&
+	item !== null &&
+	typeof item === 'object' &&
+	(item as { type: string }).type !== undefined &&
+	(item as { type: string }).type === 'constructor';
 
 /**
  * Check if type is simplified struct format
@@ -121,10 +130,10 @@ export const mapTypes = (
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	let param = _param;
-	const paramTypeBytes = new RegExp(/^bytes([0-9]*)$/);
-	const paramTypeBytesArray = new RegExp(/^bytes([0-9]*)\[\]$/);
-	const paramTypeNumber = new RegExp(/^(u?int)([0-9]*)$/);
-	const paramTypeNumberArray = new RegExp(/^(u?int)([0-9]*)\[\]$/);
+	const paramTypeBytes = /^bytes([0-9]*)$/;
+	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
+	const paramTypeNumber = /^(u?int)([0-9]*)$/;
+	const paramTypeNumberArray = /^(u?int)([0-9]*)\[\]$/;
 
 	// Format BN to string
 	if (param instanceof BigInt) {
@@ -209,19 +218,19 @@ export const modifyParams = (
  *  used to flatten json abi inputs/outputs into an array of type-representing-strings
  */
 
-export const flattenTypes = (includeTuple: boolean, puts: AbiParameter[]): string[] => {
+export const flattenTypes = (includeTuple: boolean, puts: ReadonlyArray<AbiParameter>): string[] => {
 	const types: string[] = [];
 
 	puts.forEach(param => {
 		if (typeof param.components === 'object') {
 			if (!param.type.startsWith('tuple')) {
-				throw new Error(
+				throw new AbiError(
 					`Invalid value given "${param.type}". Error: components found but type is not tuple.`,
 				);
 			}
 			const arrayBracket = param.type.indexOf('[');
 			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
-			const result = flattenTypes(includeTuple, [...param.components]);
+			const result = flattenTypes(includeTuple, param.components);
 
 			if (Array.isArray(result) && includeTuple) {
 				types.push(`tuple(${result.join(',')})${suffix}`);
@@ -247,7 +256,7 @@ export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
 		return json.name;
 	}
 
-	return `${json.name ?? ''}(${flattenTypes(false, [...(json.inputs ?? [])]).join(',')})`;
+	return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
 };
 
 export const padZeros = (bytes: Buffer, size: number, direction: 'left' | 'right'): Buffer => {

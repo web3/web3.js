@@ -10,9 +10,14 @@ import {
 	AbiTypeToNativeType,
 	CompiledParameter,
 	Reader,
-	Writer
+	Writer,
 } from '../types';
-import { detectParameterBaseType, flattenTypes, isAbiEventFragment, isAbiFunctionFragment } from '../utils';
+import {
+	detectParameterBaseType,
+	flattenTypes,
+	isAbiEventFragment,
+	isAbiFunctionFragment,
+} from '../utils';
 import * as baseTypes from './base_types';
 
 abstract class EthAbiBaseCoder {
@@ -33,7 +38,7 @@ abstract class EthAbiBaseCoder {
 	}
 }
 
-const regexParamTypeArray = new RegExp(/^(.*)\[([0-9]*)\]$/);
+const regexParamTypeArray = /^(.*)\[([0-9]*)\]$/;
 
 const readerWriterMap: {
 	[K in AbiParameterBaseType]: {
@@ -79,7 +84,10 @@ export const compileParameters = (
 				internalType: internalType ?? '',
 				baseType: 'array',
 				arrayLength,
-				components: compileParameters([{...abi, type: detectParameterBaseType(type)}], path),
+				components: compileParameters(
+					[{ ...abi, type: detectParameterBaseType(type) }],
+					path,
+				),
 				read: readerWriterMap.array.reader,
 				write: readerWriterMap.array.writer,
 			});
