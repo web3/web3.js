@@ -177,3 +177,21 @@ export class InvalidFilterError extends Web3Error {
 		super(JSON.stringify(value), 'invalid filter given');
 	}
 }
+
+export class InvalidDesiredTypeError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid desired type for conversion given');
+	}
+}
+
+export class InvalidConvertibleObjectError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid object for conversion given');
+	}
+}
+
+export class InvalidConvertiblePropertiesListError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid list of convertible properties for conversion given');
+	}
+}
