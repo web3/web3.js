@@ -107,6 +107,16 @@ export const validateNumbersInput = (
 };
 
 /**
+ * checks input if typeof data is valid string input
+ */
+export const isValidString = (data: any) => typeof data === 'string';
+
+/**
+ * checks input if typeof data is valid buffer input
+ */
+export const isBuffer = (data: any) => Buffer.isBuffer(data);
+
+/**
  * checks input for valid string, otherwise throws error
  */
 export const validateStringInput = (data: string) => {

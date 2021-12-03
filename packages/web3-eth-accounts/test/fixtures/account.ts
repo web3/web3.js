@@ -24,8 +24,8 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 ];
 
 export const invalidPrivateKeytoAccountData: [any, string][] = [
-	['', 'Invalid value given "". Error: not a valid string or buffer.'],
-	[Buffer.from([]), 'Invalid value given "". Error: Private key must be 32 bytes long.'],
+	['', 'Invalid value given "". Error: Private key must be 32 bytes.'],
+	[Buffer.from([]), 'Invalid value given "". Error: Private key must be 32 bytes.'],
 	[undefined, 'Invalid value given "undefined". Error: not a valid string or buffer.'],
 	[null, 'Invalid value given "null". Error: not a valid string or buffer.'],
 ];
