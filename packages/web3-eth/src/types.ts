@@ -1,5 +1,5 @@
-import { AccessList } from 'web3-common';
-import { Address, HexString, Numbers } from 'web3-utils';
+import { AccessList, Block } from 'web3-common';
+import { Address, HexString, Numbers, ValidTypes, ValidReturnTypes } from 'web3-utils';
 
 export enum ChainNames {
 	MAINNET = 'mainnet',
@@ -46,4 +46,17 @@ export interface Transaction {
 		baseChain?: ChainNames;
 		hardfork?: HardForks;
 	};
+}
+
+export interface BlockFormatted<ReturnType extends ValidTypes = ValidTypes.HexString>
+	extends Block {
+	difficulty: ValidReturnTypes[ReturnType];
+	number: ValidReturnTypes[ReturnType];
+	gasLimit: ValidReturnTypes[ReturnType];
+	gasUsed: ValidReturnTypes[ReturnType];
+	timestamp: ValidReturnTypes[ReturnType];
+	nonce: ValidReturnTypes[ReturnType];
+	totalDifficulty: ValidReturnTypes[ReturnType];
+	baseFeePerGas: ValidReturnTypes[ReturnType];
+	size: ValidReturnTypes[ReturnType];
 }
