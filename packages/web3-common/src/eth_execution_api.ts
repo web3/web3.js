@@ -120,7 +120,7 @@ export interface Block {
 	readonly totalDifficulty: Uint;
 	readonly baseFeePerGas?: Uint;
 	readonly size: Uint;
-	readonly transactions: TransactionHash[] | TransactionSigned[];
+	readonly transactions: TransactionHash[] | TransactionInfo[];
 	readonly uncles: Uncles;
 	readonly hash: HexString32Bytes | null;
 }
