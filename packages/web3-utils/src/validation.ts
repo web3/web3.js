@@ -222,7 +222,7 @@ export const checkAddressCheckSum = (data: string): boolean => {
 /**
  * Checks if a given string is a valid Ethereum address. It will also check the checksum, if the address has upper and lowercase letters.
  */
-export const isAddress = (address: string): boolean => {
+export const isAddress = (address: string, checkChecksum = true): boolean => {
 	// check if it has the basic requirements of an address
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
 		return false;
@@ -232,7 +232,7 @@ export const isAddress = (address: string): boolean => {
 		return true;
 		// Otherwise check each case
 	}
-	return checkAddressCheckSum(address);
+	return checkChecksum ? checkAddressCheckSum(address) : true;
 };
 
 /**
