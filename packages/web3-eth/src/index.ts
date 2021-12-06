@@ -4,29 +4,30 @@
 // import { TransactionCall, TransactionWithSender, Web3BaseProvider } from 'web3-common';
 import { EthExecutionAPI, Web3BaseProvider } from 'web3-common';
 import { ConfigOptions, Web3Context } from 'web3-core';
-// import {
-// 	BlockNumberOrTag,
-// 	ValidTypes,
-// 	ValidReturnTypes,
-// 	convertToValidType,
-// 	Address,
-// 	Uint256,
-// 	HexString32Bytes,
-// 	HexStringBytes,
-// 	Uint,
-// 	HexString8Bytes,
-// 	convertObjectPropertiesToValidType,
-// 	isHexString32Bytes,
-// 	Filter,
-// } from 'web3-utils';
+import {
+	BlockNumberOrTag,
+	ValidTypes,
+	ValidReturnTypes,
+	convertToValidType,
+	Address,
+	// Uint256,
+	HexString32Bytes,
+	// HexStringBytes,
+	Uint,
+	// HexString8Bytes,
+	convertObjectPropertiesToValidType,
+	isHexString32Bytes,
+	// Filter,
+} from 'web3-utils';
 
-// import { Transaction } from './types';
-// import {
-// 	convertibleBlockProperties,
-// 	convertibleFeeHistoryResultProperties,
-// 	convertibleReceiptInfoProperties,
-// 	convertibleTransactionInfoProperties,
-// } from './convertible_properties';
+// import { Transaction, BlockFormatted } from './types';
+import { BlockFormatted } from './types';
+import {
+	convertibleBlockProperties,
+	// convertibleFeeHistoryResultProperties,
+	// convertibleReceiptInfoProperties,
+	convertibleTransactionInfoProperties,
+} from './convertible_properties';
 
 import * as rpcMethods from './rpc_methods';
 
@@ -53,159 +54,165 @@ export default class Web3Eth {
 		return rpcMethods.getMining(this.web3Context.requestManager);
 	}
 
-	// public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = await rpcMethods.getHashRate(this.web3Context.requestManager);
+	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getHashRate(this.web3Context.requestManager);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+			returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
-	// public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = await rpcMethods.getGasPrice(this.web3Context.requestManager);
+	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getGasPrice(this.web3Context.requestManager);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+			returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
 	public async getAccounts() {
 		return rpcMethods.getAccounts(this.web3Context.requestManager);
 	}
 
-	// public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = await rpcMethods.getBlockNumber(this.web3Context.requestManager);
+	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getBlockNumber(this.web3Context.requestManager);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+			returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
-	// // TODO Discuss the use of multiple optional parameters
-	// public async getBalance<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	address: Address,
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = await rpcMethods.getBalance(this.web3Context.requestManager, address, blockNumber);
+	// TODO Discuss the use of multiple optional parameters
+	public async getBalance<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getBalance(
+			this.web3Context.requestManager,
+			address,
+			blockNumber,
+		);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+			returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
 	// public async getStorageAt(
 	// 	address: Address,
 	// 	storageSlot: Uint256,
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	// ) {
 	// 	return rpcMethods.getStorageAt(this.web3Context.requestManager, address, storageSlot, blockNumber);
 	// }
 
 	// public async getCode(
 	// 	address: Address,
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	// ) {
 	// 	return rpcMethods.getCode(this.web3Context.requestManager, address, blockNumber);
 	// }
 
-	// // TODO Discuss the use of multiple optional parameters
-	// public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-	// 	hydrated: boolean,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = isHexString32Bytes(block)
-	// 		? await rpcMethods.getBlockByHash(this.web3Context.requestManager, block, hydrated)
-	// 		: await rpcMethods.getBlockByNumber(this.web3Context.requestManager, block, hydrated);
+	// TODO Discuss the use of multiple optional parameters
+	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		hydrated = false,
+		returnType?: ReturnType,
+	): Promise<BlockFormatted<ReturnType>> {
+		const response = isHexString32Bytes(block)
+			? await rpcMethods.getBlockByHash(this.web3Context.requestManager, block, hydrated)
+			: await rpcMethods.getBlockByNumber(this.web3Context.requestManager, block, hydrated);
 
-	// 	return convertObjectPropertiesToValidType(
-	// 		response,
-	// 		convertibleBlockProperties,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	);
-	// }
+        // @ts-expect-error Having a problem determining if BlockFormatted<ReturnType> is correct type
+		return convertObjectPropertiesToValidType(
+			response,
+			convertibleBlockProperties,
+			returnType ?? this.web3Context.defaultReturnType,
+		);
+	}
 
-	// // TODO Discuss the use of multiple optional parameters
-	// public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = isHexString32Bytes(block)
-	// 		? await rpcMethods.getBlockTransactionCountByHash(this.web3Context.requestManager, block)
-	// 		: await rpcMethods.getBlockTransactionCountByNumber(this.web3Context.requestManager, block);
+	// TODO Discuss the use of multiple optional parameters
+	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		returnType?: ReturnType,
+	) {
+		const response = isHexString32Bytes(block)
+			? await rpcMethods.getBlockTransactionCountByHash(this.web3Context.requestManager, block)
+			: await rpcMethods.getBlockTransactionCountByNumber(this.web3Context.requestManager, block);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+	returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
-	// // TODO Discuss the use of multiple optional parameters
-	// public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = isHexString32Bytes(block)
-	// 		? await rpcMethods.getUncleCountByBlockHash(this.web3Context.requestManager, block)
-	// 		: await rpcMethods.getUncleCountByBlockNumber(this.web3Context.requestManager, block);
+	// TODO Discuss the use of multiple optional parameters
+	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		returnType?: ReturnType,
+	) {
+		const response = isHexString32Bytes(block)
+			? await rpcMethods.getUncleCountByBlockHash(this.web3Context.requestManager, block)
+			: await rpcMethods.getUncleCountByBlockNumber(this.web3Context.requestManager, block);
 
-	// 	return convertToValidType(
-	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	) as ValidReturnTypes[ReturnType];
-	// }
+		return convertToValidType(
+			response,
+	returnType ?? this.web3Context.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
-	// public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
-	// 	uncleIndex: Uint,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = isHexString32Bytes(block)
-	// 		? await rpcMethods.getUncleByBlockHashAndIndex(this.web3Context.requestManager, block, uncleIndex)
-	// 		: await rpcMethods.getUncleByBlockNumberAndIndex(
-	// 				this.web3Context.requestManager,
-	// 				block,
-	// 				uncleIndex,
-	// 		  );
+	public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		uncleIndex: Uint,
+		returnType?: ReturnType,
+	): Promise<BlockFormatted<ReturnType>> {
+		const response = isHexString32Bytes(block)
+			? await rpcMethods.getUncleByBlockHashAndIndex(this.web3Context.requestManager, block, uncleIndex)
+			: await rpcMethods.getUncleByBlockNumberAndIndex(
+					this.web3Context.requestManager,
+					block,
+					uncleIndex,
+			  );
 
-	// 	return convertObjectPropertiesToValidType(
-	// 		response,
-	// 		convertibleBlockProperties,
-	// 		returnType ?? this._options.defaultReturnType,
-	// 	);
-	// }
+        // @ts-expect-error Having a problem determining if BlockFormatted<ReturnType> is correct type
+		return convertObjectPropertiesToValidType(
+			response,
+			convertibleBlockProperties,
+	returnType ?? this.web3Context.defaultReturnType,
+		);
+	}
 
-	// public async getTransaction<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	transactionHash: HexString32Bytes,
-	// 	returnType?: ReturnType,
-	// ) {
-	// 	const response = await rpcMethods.getTransactionByHash(
-	// 		this.web3Context.requestManager,
-	// 		transactionHash,
-	// 	);
+	public async getTransaction<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		transactionHash: HexString32Bytes,
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getTransactionByHash(
+			this.web3Context.requestManager,
+			transactionHash,
+		);
 
-	// 	return response === null
-	// 		? response
-	// 		: convertObjectPropertiesToValidType(
-	// 				response,
-	// 				// TODO
-	// 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// 				// @ts-expect-error
-	// 				convertibleTransactionInfoProperties,
-	// 				returnType ?? this._options.defaultReturnType,
-	// 		  );
-	// }
+		return response === null
+			? response
+			: convertObjectPropertiesToValidType(
+					response,
+					// TODO
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					convertibleTransactionInfoProperties,
+					returnType ?? this.web3Context.defaultReturnType,
+			  );
+	}
 
 	// // TODO Can't find in spec
 	// // public async getPendingTransactions() {
@@ -213,7 +220,7 @@ export default class Web3Eth {
 	// // }
 
 	// public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// 	block: HexString32Bytes | BlockNumberOrTag = this._options.defaultBlock,
+	// 	block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
 	// 	transactionIndex: Uint,
 	// 	returnType?: ReturnType,
 	// ) {
@@ -237,7 +244,7 @@ export default class Web3Eth {
 	// 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// 				// @ts-expect-error
 	// 				convertibleTransactionInfoProperties,
-	// 				returnType ?? this._options.defaultReturnType,
+	// 				returnType ?? this.web3Context.defaultReturnType,
 	// 		  );
 	// }
 
@@ -255,14 +262,14 @@ export default class Web3Eth {
 	// 		: convertObjectPropertiesToValidType(
 	// 				response,
 	// 				convertibleReceiptInfoProperties,
-	// 				returnType ?? this._options.defaultReturnType,
+	// 				returnType ?? this.web3Context.defaultReturnType,
 	// 		  );
 	// }
 
 	// // TODO Discuss the use of multiple optional parameters
 	// public async getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	// 	address: Address,
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	// 	returnType?: ReturnType,
 	// ) {
 	// 	const response = await rpcMethods.getTransactionCount(
@@ -273,7 +280,7 @@ export default class Web3Eth {
 
 	// 	return convertToValidType(
 	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
+	// returnType ?? this.web3Context.defaultReturnType,
 	// 	) as ValidReturnTypes[ReturnType];
 	// }
 
@@ -301,7 +308,7 @@ export default class Web3Eth {
 	// // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 	// public async call(
 	// 	transaction: Transaction & { to: Address },
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	// ) {
 	// 	return rpcMethods.call(this.web3Context.requestManager, transaction, blockNumber);
 	// }
@@ -309,7 +316,7 @@ export default class Web3Eth {
 	// // TODO Missing param
 	// public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	// 	transaction: Partial<TransactionWithSender>,
-	// 	blockNumber: BlockNumberOrTag = this._options.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	// 	returnType?: ReturnType,
 	// ) {
 	// 	const response = await rpcMethods.estimateGas(
@@ -320,7 +327,7 @@ export default class Web3Eth {
 
 	// 	return convertToValidType(
 	// 		response,
-	// 		returnType ?? this._options.defaultReturnType,
+	// returnType ?? this.web3Context.defaultReturnType,
 	// 	) as ValidReturnTypes[ReturnType];
 	// }
 
@@ -382,7 +389,7 @@ export default class Web3Eth {
 	// 	return convertObjectPropertiesToValidType(
 	// 		response,
 	// 		convertibleFeeHistoryResultProperties,
-	// 		returnType ?? this._options.defaultReturnType,
+	// returnType ?? this.web3Context.defaultReturnType,
 	// 	);
 	// }
 }
