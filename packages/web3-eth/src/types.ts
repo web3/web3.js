@@ -1,5 +1,14 @@
-import { AccessList, Block } from 'web3-common';
-import { Address, HexString, Numbers, ValidTypes, ValidReturnTypes } from 'web3-utils';
+import { AccessList, TransactionHash, TransactionInfo, Uncles } from 'web3-common';
+import {
+	Address,
+	HexString,
+	Numbers,
+	ValidTypes,
+	ValidReturnTypes,
+	HexString32Bytes,
+	HexString256Bytes,
+	HexStringBytes,
+} from 'web3-utils';
 
 export enum ChainNames {
 	MAINNET = 'mainnet',
@@ -48,15 +57,29 @@ export interface Transaction {
 	};
 }
 
-export interface BlockFormatted<ReturnType extends ValidTypes = ValidTypes.HexString>
-	extends Block {
-	difficulty: ValidReturnTypes[ReturnType];
-	number: ValidReturnTypes[ReturnType];
-	gasLimit: ValidReturnTypes[ReturnType];
-	gasUsed: ValidReturnTypes[ReturnType];
-	timestamp: ValidReturnTypes[ReturnType];
-	nonce: ValidReturnTypes[ReturnType];
-	totalDifficulty: ValidReturnTypes[ReturnType];
-	baseFeePerGas: ValidReturnTypes[ReturnType];
-	size: ValidReturnTypes[ReturnType];
+export interface BlockFormatted<
+	DesiredType extends ValidTypes = ValidTypes.HexString,
+	ReturnType = ValidReturnTypes[DesiredType],
+> {
+	readonly parentHash: HexString32Bytes;
+	readonly sha3Uncles: HexString32Bytes;
+	readonly miner: HexString;
+	readonly stateRoot: HexString32Bytes;
+	readonly transactionsRoot: HexString32Bytes;
+	readonly receiptsRoot: HexString32Bytes;
+	readonly logsBloom: HexString256Bytes | null;
+	readonly difficulty?: ReturnType;
+	readonly number: ReturnType;
+	readonly gasLimit: ReturnType;
+	readonly gasUsed: ReturnType;
+	readonly timestamp: ReturnType;
+	readonly extraData: HexStringBytes;
+	readonly mixHash: HexString32Bytes;
+	readonly nonce: ReturnType;
+	readonly totalDifficulty: ReturnType;
+	readonly baseFeePerGas?: ReturnType;
+	readonly size: ReturnType;
+	readonly transactions: TransactionHash[] | TransactionInfo[];
+	readonly uncles: Uncles;
+	readonly hash: HexString32Bytes | null;
 }
