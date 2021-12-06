@@ -101,17 +101,19 @@ export const checkAddressCheckSumValidData: [any, boolean][] = [
 	['0xD1220A0cf47c7B9Be7A2E6BA89F429762e7b9aDb', true],
 ];
 
-export const isAddressValidData: [any, boolean][] = [
-	['0xc6d9d2cd449a754c494264e1809c50e34d64562b', true],
-	['c6d9d2cd449a754c494264e1809c50e34d64562b', true],
-	['0xE247A45c287191d435A8a5D72A7C8dc030451E9F', true],
-	['0xE247a45c287191d435A8a5D72A7C8dc030451E9F', false],
-	['0xe247a45c287191d435a8a5d72a7c8dc030451e9f', true],
-	['0xE247A45C287191D435A8A5D72A7C8DC030451E9F', true],
-	['0XE247A45C287191D435A8A5D72A7C8DC030451E9F', true],
-	['0123', false],
-	['0x12', false],
-	[123, false],
+export const isAddressValidData: [[any, boolean], boolean][] = [
+	[['0xc6d9d2cd449a754c494264e1809c50e34d64562b', true], true],
+	[['c6d9d2cd449a754c494264e1809c50e34d64562b', true], true],
+	[['0xE247A45c287191d435A8a5D72A7C8dc030451E9F', true], true],
+	[['0xE247a45c287191d435A8a5D72A7C8dc030451E9F', true], false],
+	[['0xe247a45c287191d435a8a5d72a7c8dc030451e9f', true], true],
+	[['0xE247A45C287191D435A8A5D72A7C8DC030451E9F', true], true],
+	[['0XE247A45C287191D435A8A5D72A7C8DC030451E9F', true], true],
+	[['0xa54D3c09E34aC96807c1CC397404bF2B98DC4eFb', false], true],
+	[['0xa54D3c09E34aC96807c1CC397404bF2B98DC4eFb', true], false],
+	[['0123', true], false],
+	[['0x12', true], false],
+	[[123, true], false],
 ];
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [

@@ -90,7 +90,7 @@ describe('validation', () => {
 	describe('isAddress', () => {
 		describe('valid cases', () => {
 			it.each(isAddressValidData)('%s', (input, output) => {
-				expect(isAddress(input)).toEqual(output);
+				expect(isAddress(...input)).toEqual(output);
 			});
 		});
 	});
