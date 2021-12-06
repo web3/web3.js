@@ -1,112 +1,46 @@
-// import { Web3Eth } from '../../src/index';
+import Web3Eth from '../../src/index';
+import * as rpcMethods from '../../src/rpc_methods';
 
-// describe('rpc_methods_no_params', () => {
-//     let web3Eth: Web3Eth;
+jest.mock('../../src/rpc_methods');
 
-// 	beforeAll(() => {
-//         web3Eth = new Web3Eth('http://127.0.0.1:8545');
-// 	});
+describe('web3_eth_methods_no_parameters', () => {
+	let web3Eth: Web3Eth;
 
-// 	describe('should make call with expected parameters', () => {
-// 		it('getProtocolVersion', async () => {
-// 			await getProtocolVersion(requestManager);
+	beforeAll(() => {
+		web3Eth = new Web3Eth('http://127.0.0.1:8545');
+	});
 
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_protocolVersion',
-// 				params: [],
-// 			});
-// 		});
+	describe('should call RPC method with only request manager parameter', () => {
+		it('getProtocolVersion', async () => {
+			await web3Eth.getProtocolVersion();
+			expect(rpcMethods.getProtocolVersion).toHaveBeenCalledWith(
+				web3Eth.web3Context.requestManager,
+			);
+		});
 
-// 		it('getSyncing', async () => {
-// 			await getSyncing(requestManager);
+		it('isSyncing', async () => {
+			await web3Eth.isSyncing();
+			expect(rpcMethods.getSyncing).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+		});
 
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_syncing',
-// 				params: [],
-// 			});
-// 		});
+		it('getCoinbase', async () => {
+			await web3Eth.getCoinbase();
+			expect(rpcMethods.getCoinbase).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+		});
 
-// 		it('getCoinbase', async () => {
-// 			await getCoinbase(requestManager);
+		it('isMining', async () => {
+			await web3Eth.isMining();
+			expect(rpcMethods.getMining).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+		});
 
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_coinbase',
-// 				params: [],
-// 			});
-// 		});
+		it('getAccounts', async () => {
+			await web3Eth.getAccounts();
+			expect(rpcMethods.getAccounts).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+		});
 
-// 		it('getMining', async () => {
-// 			await getMining(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_mining',
-// 				params: [],
-// 			});
-// 		});
-
-// 		it('getHashRate', async () => {
-// 			await getHashRate(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_hashrate',
-// 				params: [],
-// 			});
-// 		});
-// 		it('getGasPrice', async () => {
-// 			await getGasPrice(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_gasPrice',
-// 				params: [],
-// 			});
-// 		});
-// 		it('getAccounts', async () => {
-// 			await getAccounts(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_accounts',
-// 				params: [],
-// 			});
-// 		});
-// 		it('getBlockNumber', async () => {
-// 			await getBlockNumber(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_blockNumber',
-// 				params: [],
-// 			});
-// 		});
-// 		it('getCompilers', async () => {
-// 			await getCompilers(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_getCompilers',
-// 				params: [],
-// 			});
-// 		});
-// 		it('newBlockFilter', async () => {
-// 			await newBlockFilter(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_newBlockFilter',
-// 				params: [],
-// 			});
-// 		});
-// 		it('newPendingTransactionFilter', async () => {
-// 			await newPendingTransactionFilter(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_newPendingTransactionFilter',
-// 				params: [],
-// 			});
-// 		});
-// 		it('getWork', async () => {
-// 			await getWork(requestManager);
-
-// 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-// 				method: 'eth_getWork',
-// 				params: [],
-// 			});
-// 		});
-// 	});
-// });
+		it('getWork', async () => {
+			await web3Eth.getWork();
+			expect(rpcMethods.getWork).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+		});
+	});
+});
