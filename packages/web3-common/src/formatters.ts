@@ -13,7 +13,7 @@ import {
 	utf8ToHex,
 	isBlockTag,
 } from 'web3-utils';
-import { FormatterError, LogsInput, LogsOutput } from '.';
+import { FormatterError } from './errors';
 import {
 	Proof,
 	TransactionInput,
@@ -27,6 +27,8 @@ import {
 	SyncInput,
 	SyncOutput,
 	Mutable,
+	LogsInput,
+	LogsOutput,
 } from './types';
 
 /**
@@ -252,7 +254,7 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
  * @param {Object} log object
  * @returns {Object} log
  */
-export const outputLogFormatter = (log: LogsInput): LogsOutput => {
+export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	const modifiedLog = { ...log } as unknown as Mutable<LogsOutput>;
 
 	// generate a custom log id

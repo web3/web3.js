@@ -20,9 +20,9 @@ import {
 	toUtf8,
 	toWei,
 	utf8ToHex,
-	jsonInterfaceMethodToString,
 	convertToValidType,
 	convertObjectPropertiesToValidType,
+	toChecksumAddress,
 } from '../../src/converters';
 import {
 	asciiToHexValidData,
@@ -44,12 +44,11 @@ import {
 	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
-	jsonInterfaceValidData,
-	jsonInterfaceInvalidData,
 	convertToValidTypeValidData,
 	convertToValidTypeInvalidData,
 	convertObjectPropertiesToValidTypeValidData,
 	convertObjectPropertiesToValidTypeInvalidData,
+	toCheckSumValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -330,28 +329,14 @@ describe('converters', () => {
 			});
 		});
 	});
-
 	describe('toChecksumAddress', () => {
 		describe('valid cases', () => {
-			it.each(jsonInterfaceValidData)('%s', (input, output) => {
-				expect(jsonInterfaceMethodToString(input)).toEqual(output);
+			it.each(toCheckSumValidData)('%s', (input, output) => {
+				expect(toChecksumAddress(input)).toEqual(output);
 			});
 		});
 		describe('invalid cases', () => {
-			// TODO: To be done after `sha3` is implemented
 			it.todo('should throw error for invalid cases');
-		});
-	});
-	describe('jsonInterface', () => {
-		describe('valid cases', () => {
-			it.each(jsonInterfaceValidData)('%s', (input, output) => {
-				expect(jsonInterfaceMethodToString(input)).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.each(jsonInterfaceInvalidData)('%s', (input, output) => {
-				expect(() => jsonInterfaceMethodToString(input)).toThrow(output);
-			});
 		});
 	});
 	describe('convertToValidType', () => {

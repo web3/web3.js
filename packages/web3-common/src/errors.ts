@@ -34,6 +34,9 @@ import {
 	ERR_SUBSCRIPTION,
 	ERR_OPERATION_TIMEOUT,
 	ERR_OPERATION_ABORT,
+	ERR_ABI_ENCODING,
+	ERR_INVALID_PRIVATE_KEY,
+	ERR_PRIVATE_KEY_LENGTH,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -387,4 +390,22 @@ export class OperationTimeoutError extends Web3Error {
 
 export class OperationAbortError extends Web3Error {
 	public code = ERR_OPERATION_ABORT;
+}
+
+export class AbiError extends Web3Error {
+	public code = ERR_ABI_ENCODING;
+}
+
+export class PrivateKeyLengthError extends Web3Error {
+	public code = ERR_PRIVATE_KEY_LENGTH;
+	public constructor(value: string | Buffer) {
+		super(`Invalid value given "${value.toString()}". Error: Private key must be 32 bytes.`);
+	}
+}
+
+export class InvalidPrivateKeyError extends Web3Error {
+	public code = ERR_INVALID_PRIVATE_KEY;
+	public constructor(value: string | Buffer) {
+		super(`Invalid value given "${String(value)}". Error: not a valid string or buffer.`);
+	}
 }
