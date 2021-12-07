@@ -10,14 +10,14 @@ import {
 	ValidReturnTypes,
 	convertToValidType,
 	Address,
-	// Uint256,
+	Uint256,
 	HexString32Bytes,
-	// HexStringBytes,
+	HexStringBytes,
 	Uint,
-	// HexString8Bytes,
+	HexString8Bytes,
 	convertObjectPropertiesToValidType,
 	isHexString32Bytes,
-	// Filter,
+	Filter,
 } from 'web3-utils';
 
 // import { Transaction, BlockFormatted } from './types';
@@ -109,20 +109,25 @@ export default class Web3Eth {
 		) as ValidReturnTypes[ReturnType];
 	}
 
-	// public async getStorageAt(
-	// 	address: Address,
-	// 	storageSlot: Uint256,
-	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
-	// ) {
-	// 	return rpcMethods.getStorageAt(this.web3Context.requestManager, address, storageSlot, blockNumber);
-	// }
+	public async getStorageAt(
+		address: Address,
+		storageSlot: Uint256,
+		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+	) {
+		return rpcMethods.getStorageAt(
+			this.web3Context.requestManager,
+			address,
+			storageSlot,
+			blockNumber,
+		);
+	}
 
-	// public async getCode(
-	// 	address: Address,
-	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
-	// ) {
-	// 	return rpcMethods.getCode(this.web3Context.requestManager, address, blockNumber);
-	// }
+	public async getCode(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+	) {
+		return rpcMethods.getCode(this.web3Context.requestManager, address, blockNumber);
+	}
 
 	// TODO Discuss the use of multiple optional parameters
 	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -294,28 +299,28 @@ export default class Web3Eth {
 		) as ValidReturnTypes[ReturnType];
 	}
 
-	// // TODO Missing param
+	// TODO Needs to convert input to hex string
 	// public async sendTransaction(transaction: Transaction) {
 	// 	return rpcMethods.sendTransaction(this.web3Context.requestManager, transaction);
 	// }
 
-	// public async sendSignedTransaction(transaction: HexStringBytes) {
-	// 	return rpcMethods.sendRawTransaction(this.web3Context.requestManager, transaction);
-	// }
+	public async sendSignedTransaction(transaction: HexStringBytes) {
+		return rpcMethods.sendRawTransaction(this.web3Context.requestManager, transaction);
+	}
 
-	// // TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
-	// // https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
-	// public async sign(message: HexStringBytes, address: Address) {
-	// 	return rpcMethods.sign(this.web3Context.requestManager, address, message);
-	// }
+	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
+	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
+	public async sign(message: HexStringBytes, address: Address) {
+		return rpcMethods.sign(this.web3Context.requestManager, address, message);
+	}
 
-	// // TODO Missing param
+	// TODO Needs to convert input to hex string
 	// public async signTransaction(transaction: Transaction) {
 	// 	return rpcMethods.signTransaction(this.web3Context.requestManager, transaction);
 	// }
 
-	// // TODO Decide what to do with transaction.to
-	// // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
+	// TODO Decide what to do with transaction.to
+	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 	// public async call(
 	// 	transaction: Transaction & { to: Address },
 	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
@@ -341,27 +346,27 @@ export default class Web3Eth {
 		) as ValidReturnTypes[ReturnType];
 	}
 
-	// public async getPastLogs(filter: Filter) {
-	//     // latest is default specified in 1.x
-	//     // https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
-	// 	return rpcMethods.getLogs(this.web3Context.requestManager, {
-	//         ...filter,
-	//         fromBlock: filter.fromBlock ?? 'latest',
-	//         toBlock: filter.toBlock ?? 'latest',
-	//     });
-	// }
+	public async getPastLogs(filter: Filter) {
+		return rpcMethods.getLogs(this.web3Context.requestManager, {
+			...filter,
+			// These defaults are carried over from 1.x
+			// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
+			fromBlock: filter.fromBlock ?? this.web3Context.defaultBlock,
+			toBlock: filter.toBlock ?? this.web3Context.defaultBlock,
+		});
+	}
 
 	public async getWork() {
 		return rpcMethods.getWork(this.web3Context.requestManager);
 	}
 
-	// public async submitWork(
-	// 	nonce: HexString8Bytes,
-	// 	seedHash: HexString32Bytes,
-	// 	difficulty: HexString32Bytes,
-	// ) {
-	// 	return rpcMethods.submitWork(this.web3Context.requestManager, nonce, seedHash, difficulty);
-	// }
+	public async submitWork(
+		nonce: HexString8Bytes,
+		seedHash: HexString32Bytes,
+		difficulty: HexString32Bytes,
+	) {
+		return rpcMethods.submitWork(this.web3Context.requestManager, nonce, seedHash, difficulty);
+	}
 
 	// // TODO
 	// // public async requestAccounts() {

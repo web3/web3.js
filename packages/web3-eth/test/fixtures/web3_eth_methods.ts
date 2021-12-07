@@ -1,6 +1,7 @@
 import {
 	Block,
 	FeeHistoryResult,
+	FilterResults,
 	ReceiptInfo,
 	TransactionInfo,
 	TransactionWithSender,
@@ -14,6 +15,10 @@ import {
 	BlockTags,
 	HexString,
 	Uint,
+	Uint256,
+	HexStringBytes,
+	Filter,
+	HexString8Bytes,
 } from 'web3-utils';
 import {
 	BlockFormatted,
@@ -1896,5 +1901,250 @@ export const getFeeHistoryValidData: [
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResultBigInt,
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ */
+export const getStorageAtValidData: [
+	[Address, Uint256, BlockNumberOrTag | undefined],
+	HexStringBytes,
+	[Address, Uint256, BlockNumberOrTag],
+][] = [
+	// All possible undefined values
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', undefined],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
+	],
+	// Defined address, storageSlot, and blockNumber
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.LATEST],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.EARLIEST],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.EARLIEST],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ */
+export const getCodeValidData: [
+	[Address, BlockNumberOrTag | undefined],
+	HexStringBytes,
+	[Address, BlockNumberOrTag],
+][] = [
+	// All possible undefined values
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+	],
+	// Defined address and blockNumber
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		'0xe8d4a51000',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+	],
+];
+
+/**
+ * Array consists of:
+ * - input
+ * - mock RPC result
+ */
+export const sendSignedTransactionValidData: [HexStringBytes, HexString32Bytes][] = [
+	[
+		'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+		'0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331',
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ */
+export const signValidData: [[HexStringBytes, Address], HexString32Bytes][] = [
+	[
+		['0xdeadbeaf', '0x407d73d8a49eeb85d32cf465507dd71d507100c1'],
+		'0xa3f20717a250c2b0b729b7e5becbff67fdaef7e0699da4de7ca5895b02a170a12d887fd3b17bfdce3481f10bea41f45ba9f709d39ce8325427b57afcfc994cee1b',
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ */
+export const getPastLogsValidData: [Filter, FilterResults, Filter][] = [
+	[
+		{},
+		[
+			{
+				logIndex: '0x1',
+				blockNumber: '0x1b4',
+				blockHash: '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				transactionHash: '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+				transactionIndex: '0x0',
+				address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+				topics: ['0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5'],
+			},
+		],
+		{
+			fromBlock: BlockTags.LATEST,
+			toBlock: BlockTags.LATEST,
+		},
+	],
+	[
+		{
+			address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			topics: [
+				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+				null,
+				[
+					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+				],
+			],
+		},
+		[
+			{
+				logIndex: '0x1',
+				blockNumber: '0x1b4',
+				blockHash: '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				transactionHash: '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+				transactionIndex: '0x0',
+				address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+				topics: ['0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5'],
+			},
+		],
+		{
+			fromBlock: BlockTags.LATEST,
+			toBlock: BlockTags.LATEST,
+			address: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			topics: [
+				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+				null,
+				[
+					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+				],
+			],
+		},
+	],
+	[
+		{
+			fromBlock: BlockTags.LATEST,
+			toBlock: BlockTags.LATEST,
+		},
+		[
+			{
+				logIndex: '0x1',
+				blockNumber: '0x1b4',
+				blockHash: '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				transactionHash: '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+				transactionIndex: '0x0',
+				address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+				topics: ['0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5'],
+			},
+		],
+		{
+			fromBlock: BlockTags.LATEST,
+			toBlock: BlockTags.LATEST,
+		},
+	],
+	[
+		{
+			fromBlock: BlockTags.PENDING,
+			toBlock: BlockTags.PENDING,
+		},
+		[
+			{
+				logIndex: '0x1',
+				blockNumber: '0x1b4',
+				blockHash: '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				transactionHash: '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+				transactionIndex: '0x0',
+				address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+				topics: ['0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5'],
+			},
+		],
+		{
+			fromBlock: BlockTags.PENDING,
+			toBlock: BlockTags.PENDING,
+		},
+	],
+	[
+		{
+			fromBlock: BlockTags.EARLIEST,
+			toBlock: BlockTags.EARLIEST,
+		},
+		[
+			{
+				logIndex: '0x1',
+				blockNumber: '0x1b4',
+				blockHash: '0x8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				transactionHash: '0xdf829c5a142f1fccd7d8216c5785ac562ff41e2dcfdf5785ac562ff41e2dcf',
+				transactionIndex: '0x0',
+				address: '0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d',
+				data: '0x0000000000000000000000000000000000000000000000000000000000000000',
+				topics: ['0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5'],
+			},
+		],
+		{
+			fromBlock: BlockTags.EARLIEST,
+			toBlock: BlockTags.EARLIEST,
+		},
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ */
+export const submitWorkValidData: [
+	[HexString8Bytes, HexString32Bytes, HexString32Bytes],
+	boolean,
+][] = [
+	[
+		[
+			'0x0000000000000001',
+			'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+			'0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
+		],
+		true,
 	],
 ];

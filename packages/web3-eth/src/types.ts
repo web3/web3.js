@@ -43,6 +43,7 @@ export interface Transaction {
 	maxFeePerGas?: Numbers;
 	maxPriorityFeePerGas?: Numbers;
 	accessList?: AccessList;
+	input: HexStringBytes;
 	data?: HexString;
 	nonce?: Numbers;
 	chain?: HexString;
