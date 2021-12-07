@@ -1,4 +1,11 @@
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
+import { keccak256 } from 'ethereum-cryptography/keccak';
+import {
+	TransactionFactory,
+	FeeMarketEIP1559TxData,
+	AccessListEIP2930TxData,
+	TxData,
+} from '@ethereumjs/tx';
 import {
 	toChecksumAddress,
 	bytesToHex,
@@ -8,6 +15,7 @@ import {
 	isValidString,
 } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
+import { signTransactionFunction, signTransactionResult } from './types';
 
 // TODO Will be added later
 export const encrypt = (): boolean => true;
@@ -15,8 +23,44 @@ export const encrypt = (): boolean => true;
 // TODO Will be added later
 export const sign = (): boolean => true;
 
-// TODO Will be added later
-export const signTransaction = (): boolean => true;
+/**
+ *  Signs an Ethereum transaction with a given private key.
+ */
+export const signTransaction = (
+	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+	privateKey: string,
+): signTransactionResult => {
+	//	TO DO : Send calls to web3.transaction package for :
+	//		Transaction Validation checks
+
+	const tx = TransactionFactory.fromTxData(transaction);
+	const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
+		throw new Error('Signer Error');
+
+	const validationErrors = signedTx.validate(true);
+
+	if (validationErrors.length > 0) {
+		let errorString = 'Signer Error: ';
+		for (const validationError of validationErrors) {
+			errorString += `${errorString} ${validationError}.`;
+		}
+		throw new Error(errorString);
+	}
+
+	const rlpEncoded = signedTx.serialize().toString('hex');
+	const rawTx = `0x${rlpEncoded}`;
+	const txHash = keccak256(Buffer.from(rawTx, 'hex'));
+
+	return {
+		messageHash: `0x${Buffer.from(signedTx.getMessageToSign(true)).toString('hex')}`,
+		v: `0x${signedTx.v.toString('hex')}`,
+		r: `0x${signedTx.r.toString('hex')}`,
+		s: `0x${signedTx.s.toString('hex')}`,
+		rawTransaction: rawTx,
+		transactionHash: `0x${Buffer.from(txHash).toString('hex')}`,
+	};
+};
 
 /**
  * Get account from private key
@@ -26,7 +70,7 @@ export const privateKeyToAccount = (
 ): {
 	address: string;
 	privateKey: string;
-	signTransaction: () => boolean; // From 1.x
+	signTransaction: signTransactionFunction; // From 1.x
 	sign: () => boolean;
 	encrypt: () => boolean;
 } => {
@@ -63,7 +107,7 @@ export const privateKeyToAccount = (
 export const create = (): {
 	address: HexString;
 	privateKey: string;
-	signTransaction: () => boolean; // From 1.x
+	signTransaction: signTransactionFunction; // From 1.x
 	sign: () => boolean;
 	encrypt: () => boolean;
 } => {
