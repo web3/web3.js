@@ -1,4 +1,10 @@
-import { Block, TransactionInfo } from 'web3-common';
+import {
+	Block,
+	FeeHistoryResult,
+	ReceiptInfo,
+	TransactionInfo,
+	TransactionWithSender,
+} from 'web3-common';
 import {
 	HexString32Bytes,
 	ValidTypes,
@@ -9,7 +15,12 @@ import {
 	HexString,
 	Uint,
 } from 'web3-utils';
-import { BlockFormatted } from '../../src/types';
+import {
+	BlockFormatted,
+	FeeHistoryResultFormatted,
+	ReceiptInfoFormatted,
+	TransactionInfoFormatted,
+} from '../../src/types';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
 export const getHashRateValidData: [
@@ -251,7 +262,7 @@ const block: Block = {
 	hash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
 	baseFeePerGas: '0x13afe8b904',
 };
-const transaction: TransactionInfo = {
+const transactionInfo: TransactionInfo = {
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
 	blockNumber: '0x5daf3b',
 	from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
@@ -267,8 +278,10 @@ const transaction: TransactionInfo = {
 	r: '0x1b5e176d927f8e9ab405058b2d2457392da3e20f328b16ddabcebc33eaac5fea',
 	s: '0x4ba69724e8f69de52f0125ad8b3c5c2cef33019bac3249e2c0a2192766d1721c',
 	type: '0x0',
+	maxFeePerGas: '0x1475505aab',
+	maxPriorityFeePerGas: '0x7f324180',
 };
-const hydratedTransactions: TransactionInfo[] = [transaction, transaction, transaction];
+const hydratedTransactions: TransactionInfo[] = [transactionInfo, transactionInfo, transactionInfo];
 const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
 	...block,
 	transactions: hydratedTransactions,
@@ -298,6 +311,7 @@ const blockFormattedNumber: BlockFormatted<ValidTypes.Number> = {
 const blockFormattedBigInt: BlockFormatted<ValidTypes.BigInt> = {
 	...block,
 	transactions: hydratedTransactions,
+	// TODO Change this to TransactionInfoFormatted
 	difficulty: BigInt('21109876668'),
 	number: BigInt('436'),
 	gasLimit: BigInt('5000'),
@@ -863,6 +877,13 @@ export const getUncleValidData: [
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
+		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		block,
+		'getUncleByBlockHashAndIndex',
+		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0'],
+		block as BlockFormatted,
+	],
+	[
 		[BlockTags.LATEST, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
@@ -1022,6 +1043,106 @@ export const getUncleValidData: [
 	],
 ];
 
+const transactionInfoNumberString: TransactionInfoFormatted<ValidTypes.NumberString> = {
+	...transactionInfo,
+	blockNumber: '6139707',
+	gas: '50000',
+	gasPrice: '20000000000',
+	type: '0',
+	nonce: '21',
+	transactionIndex: '65',
+	value: '4290000000000000',
+	v: '37',
+	maxFeePerGas: '87867546283',
+	maxPriorityFeePerGas: '2134000000',
+};
+const transactionInfoNumber: TransactionInfoFormatted<ValidTypes.Number> = {
+	...transactionInfo,
+	blockNumber: 6139707,
+	gas: 50000,
+	gasPrice: 20000000000,
+	type: 0,
+	nonce: 21,
+	transactionIndex: 65,
+	value: 4290000000000000,
+	v: 37,
+	maxFeePerGas: 87867546283,
+	maxPriorityFeePerGas: 2134000000,
+};
+const transactionInfoBigInt: TransactionInfoFormatted<ValidTypes.BigInt> = {
+	...transactionInfo,
+	blockNumber: BigInt('6139707'),
+	gas: BigInt('50000'),
+	gasPrice: BigInt('20000000000'),
+	type: BigInt('0'),
+	nonce: BigInt('21'),
+	transactionIndex: BigInt('65'),
+	value: BigInt('4290000000000000'),
+	v: BigInt('37'),
+	maxFeePerGas: BigInt('87867546283'),
+	maxPriorityFeePerGas: BigInt('2134000000'),
+};
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ * - expected output
+ */
+export const getTransactionValidData: [
+	[HexString32Bytes, ValidTypes | undefined],
+	TransactionInfo | null,
+	[HexString32Bytes],
+	(
+		| TransactionInfoFormatted
+		| TransactionInfoFormatted<ValidTypes.NumberString>
+		| TransactionInfoFormatted<ValidTypes.Number>
+		| TransactionInfoFormatted<ValidTypes.BigInt>
+	),
+][] = [
+	// Defined transactionHash, undefined returnType
+	[
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
+		transactionInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		transactionInfo,
+	],
+	// Defined transactionHash and returnType = ValidTypes.HexString
+	[
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			ValidTypes.HexString,
+		],
+		transactionInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		transactionInfo,
+	],
+	// Defined transactionHash and returnType = ValidTypes.NumberString
+	[
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			ValidTypes.NumberString,
+		],
+		transactionInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		transactionInfoNumberString,
+	],
+	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	[
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.Number],
+		transactionInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		transactionInfoNumber,
+	],
+	// Defined block and returnType = ValidTypes.BigInt
+	[
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.BigInt],
+		transactionInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		transactionInfoBigInt,
+	],
+];
+
 /**
  * Array consists of:
  * - array of inputs
@@ -1030,129 +1151,750 @@ export const getUncleValidData: [
  * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
  * - expected output
  */
-export const getTransactionValidData: [
+export const getTransactionFromBlockValidData: [
+	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, ValidTypes | undefined],
+	TransactionInfo,
+	'getTransactionByBlockHashAndIndex' | 'getTransactionByBlockNumberAndIndex',
+	[HexString32Bytes | BlockNumberOrTag, Uint],
+	(
+		| TransactionInfoFormatted
+		| TransactionInfoFormatted<ValidTypes.NumberString>
+		| TransactionInfoFormatted<ValidTypes.Number>
+		| TransactionInfoFormatted<ValidTypes.BigInt>
+	),
+][] = [
+	// All possible undefined values
+	[
+		[undefined, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfo,
+	],
+	// Defined block, uncleIndex = '0x0', and undefined returnType
+	[
+		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockHashAndIndex',
+		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.LATEST, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.PENDING, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfo,
+	],
+	// Defined block, uncleIndex = '0x0', and undefined returnType
+	[
+		[BlockTags.LATEST, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.PENDING, '0x0', undefined],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfo,
+	],
+	// Defined block, uncleIndex = true, and returnType = ValidTypes.HexString
+	[
+		[BlockTags.LATEST, '0x0', ValidTypes.HexString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', ValidTypes.HexString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfo,
+	],
+	[
+		[BlockTags.PENDING, '0x0', ValidTypes.HexString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfo,
+	],
+	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.NumberString
+	[
+		[BlockTags.LATEST, '0x0', ValidTypes.NumberString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfoNumberString,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', ValidTypes.NumberString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfoNumberString,
+	],
+	[
+		[BlockTags.PENDING, '0x0', ValidTypes.NumberString],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfoNumberString,
+	],
+	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.Number
+	[
+		[BlockTags.LATEST, '0x0', ValidTypes.Number],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfoNumber,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', ValidTypes.Number],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfoNumber,
+	],
+	[
+		[BlockTags.PENDING, '0x0', ValidTypes.Number],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfoNumber,
+	],
+	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.BigInt
+	[
+		[BlockTags.LATEST, '0x0', ValidTypes.BigInt],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.LATEST, '0x0'],
+		transactionInfoBigInt,
+	],
+	[
+		[BlockTags.EARLIEST, '0x0', ValidTypes.BigInt],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.EARLIEST, '0x0'],
+		transactionInfoBigInt,
+	],
+	[
+		[BlockTags.PENDING, '0x0', ValidTypes.BigInt],
+		transactionInfo,
+		'getTransactionByBlockNumberAndIndex',
+		[BlockTags.PENDING, '0x0'],
+		transactionInfoBigInt,
+	],
+];
+
+const receiptInfo: ReceiptInfo = {
+	transactionHash: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+	transactionIndex: '0x41',
+	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
+	blockNumber: '0x5daf3b',
+	from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
+	to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
+	cumulativeGasUsed: '0x33bc', // 13244
+	gasUsed: '0x4dc', // 1244
+	contractAddress: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+	logs: [],
+	logsBloom: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+	root: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+	status: '0x1',
+};
+const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
+	...receiptInfo,
+	transactionIndex: '65',
+	blockNumber: '6139707',
+	cumulativeGasUsed: '13244',
+	gasUsed: '1244',
+	status: '1',
+};
+const receiptInfoNumber: ReceiptInfoFormatted<ValidTypes.Number> = {
+	...receiptInfo,
+	transactionIndex: 65,
+	blockNumber: 6139707,
+	cumulativeGasUsed: 13244,
+	gasUsed: 1244,
+	status: 1,
+};
+const receiptInfoBigInt: ReceiptInfoFormatted<ValidTypes.BigInt> = {
+	...receiptInfo,
+	transactionIndex: BigInt('65'),
+	blockNumber: BigInt('6139707'),
+	cumulativeGasUsed: BigInt('13244'),
+	gasUsed: BigInt('1244'),
+	status: BigInt('1'),
+};
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ * - expected output
+ */
+export const getTransactionReceiptValidData: [
 	[HexString32Bytes, ValidTypes | undefined],
-	TransactionInfo | null,
-	'getUncleCountByBlockHash' | 'getUncleCountByBlockNumber',
-	[HexString32Bytes | BlockNumberOrTag],
-	// TODO Change this to TransactionInfoFormatted
-	ValidReturnTypes[ValidTypes],
+	ReceiptInfo | null,
+	[HexString32Bytes],
+	(
+		| ReceiptInfoFormatted
+		| ReceiptInfoFormatted<ValidTypes.NumberString>
+		| ReceiptInfoFormatted<ValidTypes.Number>
+		| ReceiptInfoFormatted<ValidTypes.BigInt>
+	),
 ][] = [
 	// Defined block, undefined returnType
 	[
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
-		transaction,
-		'getUncleCountByBlockHash',
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae'],
-		'0xb',
-	],
-	[
-		[BlockTags.LATEST, undefined],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.LATEST],
-		'0xb',
-	],
-	[
-		[BlockTags.EARLIEST, undefined],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.EARLIEST],
-		'0xb',
-	],
-	[
-		[BlockTags.PENDING, undefined],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.PENDING],
-		'0xb',
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
+		receiptInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		receiptInfo,
 	],
 	// Defined block and returnType = ValidTypes.HexString
 	[
-		[BlockTags.LATEST, ValidTypes.HexString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.LATEST],
-		'0xb',
-	],
-	[
-		[BlockTags.EARLIEST, ValidTypes.HexString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.EARLIEST],
-		'0xb',
-	],
-	[
-		[BlockTags.PENDING, ValidTypes.HexString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.PENDING],
-		'0xb',
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			ValidTypes.HexString,
+		],
+		receiptInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		receiptInfo,
 	],
 	// Defined block and returnType = ValidTypes.NumberString
 	[
-		[BlockTags.LATEST, ValidTypes.NumberString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.LATEST],
-		'11',
-	],
-	[
-		[BlockTags.EARLIEST, ValidTypes.NumberString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.EARLIEST],
-		'11',
-	],
-	[
-		[BlockTags.PENDING, ValidTypes.NumberString],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.PENDING],
-		'11',
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			ValidTypes.NumberString,
+		],
+		receiptInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		receiptInfoNumberString,
 	],
 	// Defined block, hydrated = true, and returnType = ValidTypes.Number
 	[
-		[BlockTags.LATEST, ValidTypes.Number],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.LATEST],
-		11,
-	],
-	[
-		[BlockTags.EARLIEST, ValidTypes.Number],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.EARLIEST],
-		11,
-	],
-	[
-		[BlockTags.PENDING, ValidTypes.Number],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.PENDING],
-		11,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.Number],
+		receiptInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		receiptInfoNumber,
 	],
 	// Defined block and returnType = ValidTypes.BigInt
 	[
-		[BlockTags.LATEST, ValidTypes.BigInt],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.LATEST],
-		BigInt('0xb'),
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.BigInt],
+		receiptInfo,
+		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
+		receiptInfoBigInt,
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ * - expected output
+ */
+export const getTransactionCountValidData: [
+	[Address, HexString32Bytes | BlockNumberOrTag | undefined, ValidTypes | undefined],
+	string,
+	[Address, HexString32Bytes | BlockNumberOrTag],
+	ValidReturnTypes[ValidTypes],
+][] = [
+	// All possible undefined values
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'0x42',
+	],
+	// Defined address and block number, undefined returnType
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			undefined,
+		],
+		'0x42',
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+		],
+		'0x42',
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.BigInt],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.EARLIEST],
-		BigInt('0xb'),
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'0x42',
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.BigInt],
-		transaction,
-		'getUncleCountByBlockNumber',
-		[BlockTags.PENDING],
-		BigInt('0xb'),
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		'0x42',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		'0x42',
+	],
+	// Defined block, uncleIndex = and undefined returnType
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'0x42',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		'0x42',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		'0x42',
+	],
+	// Defined block, uncleIndex = true, and returnType = ValidTypes.HexString
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.HexString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'0x42',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.HexString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		'0x42',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.HexString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		'0x42',
+	],
+	// Defined block, uncleIndex = and returnType = ValidTypes.NumberString
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.NumberString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		'66',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.NumberString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		'66',
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.NumberString],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		'66',
+	],
+	// Defined block, uncleIndex = and returnType = ValidTypes.Number
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.Number],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		66,
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.Number],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		66,
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.Number],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		66,
+	],
+	// Defined block, uncleIndex = and returnType = ValidTypes.BigInt
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.BigInt],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
+		BigInt('0x42'),
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.BigInt],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
+		BigInt('0x42'),
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.BigInt],
+		'0x42',
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+		BigInt('0x42'),
+	],
+];
+
+const transactionWithSender: TransactionWithSender = {
+	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	type: '0x0',
+	nonce: '0x1',
+	gas: '0xc350',
+	value: '0x1',
+	input: '0x0',
+	maxFeePerGas: '0x1475505aab',
+	maxPriorityFeePerGas: '0x7f324180',
+	accessList: [],
+	gasPrice: '0x4a817c800',
+	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+};
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ * - expected output
+ */
+export const estimateGasValidData: [
+	[
+		Partial<TransactionWithSender>,
+		HexString32Bytes | BlockNumberOrTag | undefined,
+		ValidTypes | undefined,
+	],
+	string,
+	[Partial<TransactionWithSender>, HexString32Bytes | BlockNumberOrTag],
+	ValidReturnTypes[ValidTypes],
+][] = [
+	// All possible undefined values
+	[
+		[transactionWithSender, undefined, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		'0x5208',
+	],
+	// Defined transaction and block number, undefined returnType
+	[
+		[
+			transactionWithSender,
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			undefined,
+		],
+		'0x5208',
+		[
+			transactionWithSender,
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+		],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.LATEST, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		'0x5208',
+	],
+	// Defined transaction and block number, undefined returnType
+	[
+		[transactionWithSender, BlockTags.LATEST, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, undefined],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		'0x5208',
+	],
+	// Defined transaction and block number, returnType = ValidTypes.HexString
+	[
+		[transactionWithSender, BlockTags.LATEST, ValidTypes.HexString],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.HexString],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, ValidTypes.HexString],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		'0x5208',
+	],
+	// Defined transaction and block number, returnType = ValidTypes.NumberString
+	[
+		[transactionWithSender, BlockTags.LATEST, ValidTypes.NumberString],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		'21000',
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.NumberString],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		'21000',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, ValidTypes.NumberString],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		'21000',
+	],
+	// Defined transaction and block number, returnType = ValidTypes.Number
+	[
+		[transactionWithSender, BlockTags.LATEST, ValidTypes.Number],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		21000,
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.Number],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		21000,
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, ValidTypes.Number],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		21000,
+	],
+	// Defined transaction and block number, returnType = ValidTypes.BigInt
+	[
+		[transactionWithSender, BlockTags.LATEST, ValidTypes.BigInt],
+		'0x5208',
+		[transactionWithSender, BlockTags.LATEST],
+		BigInt('0x5208'),
+	],
+	[
+		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.BigInt],
+		'0x5208',
+		[transactionWithSender, BlockTags.EARLIEST],
+		BigInt('0x5208'),
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, ValidTypes.BigInt],
+		'0x5208',
+		[transactionWithSender, BlockTags.PENDING],
+		BigInt('0x5208'),
+	],
+];
+
+const feeHistoryResult: FeeHistoryResult = {
+	oldestBlock: '0xa30950',
+	baseFeePerGas: '0x9',
+	reward: [],
+};
+const feeHistoryResultNumberString: FeeHistoryResultFormatted<ValidTypes.NumberString> = {
+	...feeHistoryResult,
+	oldestBlock: '10684752',
+	baseFeePerGas: '9',
+};
+const feeHistoryResultNumber: FeeHistoryResultFormatted<ValidTypes.Number> = {
+	...feeHistoryResult,
+	oldestBlock: 10684752,
+	baseFeePerGas: 9,
+};
+const feeHistoryResultBigInt: FeeHistoryResultFormatted<ValidTypes.BigInt> = {
+	...feeHistoryResult,
+	oldestBlock: BigInt('0xa30950'),
+	baseFeePerGas: BigInt('0x9'),
+};
+/**
+ * Array consists of:
+ * - array of inputs
+ * - mock RPC result
+ * - array of passed RPC parameters (excluding requestManager) - This is to account for any defaults set by the method
+ * - expected output
+ */
+export const getFeeHistoryValidData: [
+	[Uint, HexString32Bytes | BlockNumberOrTag | undefined, number[], ValidTypes | undefined],
+	FeeHistoryResult,
+	[Uint, HexString32Bytes | BlockNumberOrTag, number[]],
+	(
+		| FeeHistoryResultFormatted
+		| FeeHistoryResultFormatted<ValidTypes.NumberString>
+		| FeeHistoryResultFormatted<ValidTypes.Number>
+		| FeeHistoryResultFormatted<ValidTypes.BigInt>
+	),
+][] = [
+	// All possible undefined values
+	[
+		['0x4', undefined, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResult,
+	],
+	// Defined transaction and block number, undefined returnType
+	[
+		[
+			'0x4',
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			[],
+			undefined,
+		],
+		feeHistoryResult,
+		['0x4', '0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.LATEST, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResult,
+	],
+	// Defined transaction and block number, undefined returnType
+	[
+		['0x4', BlockTags.LATEST, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], undefined],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResult,
+	],
+	// Defined transaction and block number, returnType = ValidTypes.HexString
+	[
+		['0x4', BlockTags.LATEST, [], ValidTypes.HexString],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], ValidTypes.HexString],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResult,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], ValidTypes.HexString],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResult,
+	],
+	// Defined transaction and block number, returnType = ValidTypes.NumberString
+	[
+		['0x4', BlockTags.LATEST, [], ValidTypes.NumberString],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResultNumberString,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], ValidTypes.NumberString],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResultNumberString,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], ValidTypes.NumberString],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResultNumberString,
+	],
+	// Defined transaction and block number, returnType = ValidTypes.Number
+	[
+		['0x4', BlockTags.LATEST, [], ValidTypes.Number],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResultNumber,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], ValidTypes.Number],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResultNumber,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], ValidTypes.Number],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResultNumber,
+	],
+	// Defined transaction and block number, returnType = ValidTypes.BigInt
+	[
+		['0x4', BlockTags.LATEST, [], ValidTypes.BigInt],
+		feeHistoryResult,
+		['0x4', BlockTags.LATEST, []],
+		feeHistoryResultBigInt,
+	],
+	[
+		['0x4', BlockTags.EARLIEST, [], ValidTypes.BigInt],
+		feeHistoryResult,
+		['0x4', BlockTags.EARLIEST, []],
+		feeHistoryResultBigInt,
+	],
+	[
+		['0x4', BlockTags.PENDING, [], ValidTypes.BigInt],
+		feeHistoryResult,
+		['0x4', BlockTags.PENDING, []],
+		feeHistoryResultBigInt,
 	],
 ];
