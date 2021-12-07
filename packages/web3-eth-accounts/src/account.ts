@@ -6,6 +6,7 @@ import {
 	AccessListEIP2930TxData,
 	TxData,
 } from '@ethereumjs/tx';
+import { ecdsaSign } from 'secp256k1';
 import {
 	toChecksumAddress,
 	bytesToHex,
@@ -19,13 +20,52 @@ import {
 	hexToBytes,
 } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
-import { signTransactionFunction, signTransactionResult } from './types';
+import { signFunction, signResult, signTransactionFunction, signTransactionResult } from './types';
 
 // TODO Will be added later
 export const encrypt = (): boolean => true;
 
-// TODO Will be added later
-export const sign = (): boolean => true;
+/**
+ * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ */
+
+export const hashMessage = (message: string): string => {
+	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
+
+	const messageBytes = hexToBytes(messageHex);
+
+	const preamble = `\x19Ethereum Signed Message:\n${messageBytes.length}`;
+
+	const ethMessage = Buffer.concat([Buffer.from(preamble), Buffer.from(messageBytes)]);
+
+	return `0x${Buffer.from(keccak256(ethMessage)).toString('hex')}`;
+};
+
+/**
+ * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ */
+export const sign = (data: string, privateKey: string): signResult => {
+	// 64 hex characters + hex-prefix
+	if (privateKey.length !== 66) {
+		throw new Error('Private key must be 32 bytes long');
+	}
+
+	const hash = hashMessage(data);
+
+	const signObj = ecdsaSign(Buffer.from(hash, 'hex'), Buffer.from(privateKey.substr(2), 'hex'));
+
+	const r = Buffer.from(signObj.signature.slice(0, 32));
+	const s = Buffer.from(signObj.signature.slice(32, 64));
+	const v = signObj.recid + 27;
+
+	return {
+		message: data,
+		messageHash: hash,
+		v: `0x${v.toString(16)}`,
+		r: `0x${r.toString('hex')}`,
+		s: `0x${s.toString('hex')}`,
+	};
+};
 
 /**
  *  Signs an Ethereum transaction with a given private key.
@@ -86,7 +126,7 @@ export const privateKeyToAccount = (
 	address: string;
 	privateKey: string;
 	signTransaction: signTransactionFunction; // From 1.x
-	sign: () => boolean;
+	sign: signFunction;
 	encrypt: () => boolean;
 } => {
 	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
@@ -123,7 +163,7 @@ export const create = (): {
 	address: HexString;
 	privateKey: string;
 	signTransaction: signTransactionFunction; // From 1.x
-	sign: () => boolean;
+	sign: signFunction;
 	encrypt: () => boolean;
 } => {
 	const privateKey = utils.randomPrivateKey();
@@ -135,20 +175,4 @@ export const create = (): {
 		sign,
 		encrypt,
 	};
-};
-
-/**
- * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
- */
-
-export const hashMessage = (message: string): string => {
-	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
-
-	const messageBytes = hexToBytes(messageHex);
-
-	const preamble = `\x19Ethereum Signed Message:\n${messageBytes.length}`;
-
-	const ethMessage = Buffer.concat([Buffer.from(preamble), Buffer.from(messageBytes)]);
-
-	return `0x${Buffer.from(keccak256(ethMessage)).toString('hex')}`;
 };

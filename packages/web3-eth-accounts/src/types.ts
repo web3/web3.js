@@ -13,3 +13,13 @@ export type signTransactionFunction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
 	privateKey: string,
 ) => signTransactionResult;
+
+export type signResult = {
+	message: string;
+	messageHash: string;
+	r: string;
+	s: string;
+	v: string;
+};
+
+export type signFunction = (data: string, privateKey: string) => signResult;
