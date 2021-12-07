@@ -37,5 +37,10 @@
 		"prettier": "^2.4.1",
 		"ts-jest": "^27.0.7",
 		"typescript": "^4.5.2"
+	},
+	"dependencies": {
+		"ethereum-cryptography": "^0.2.0",
+		"web3-common": "^1.0.0-alpha.0",
+		"web3-utils": "^4.0.0-alpha.0"
 	}
 }

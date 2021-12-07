@@ -20,6 +20,7 @@ import {
 	toUtf8,
 	toWei,
 	utf8ToHex,
+	toChecksumAddress,
 } from '../../src/converters';
 import {
 	asciiToHexValidData,
@@ -41,6 +42,7 @@ import {
 	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
+	toCheckSumValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -319,6 +321,16 @@ describe('converters', () => {
 			it.each(toWeiInvalidData)('%s', (input, output) => {
 				expect(() => toWei(input[0], input[1])).toThrow(output);
 			});
+		});
+	});
+	describe('toChecksumAddress', () => {
+		describe('valid cases', () => {
+			it.each(toCheckSumValidData)('%s', (input, output) => {
+				expect(toChecksumAddress(input)).toEqual(output);
+			});
+		});
+		describe('invalid cases', () => {
+			it.todo('should throw error for invalid cases');
 		});
 	});
 });

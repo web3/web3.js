@@ -218,7 +218,10 @@ export const modifyParams = (
  *  used to flatten json abi inputs/outputs into an array of type-representing-strings
  */
 
-export const flattenTypes = (includeTuple: boolean, puts: ReadonlyArray<AbiParameter>): string[] => {
+export const flattenTypes = (
+	includeTuple: boolean,
+	puts: ReadonlyArray<AbiParameter>,
+): string[] => {
 	const types: string[] = [];
 
 	puts.forEach(param => {
@@ -252,11 +255,16 @@ export const flattenTypes = (includeTuple: boolean, puts: ReadonlyArray<AbiParam
  * returns a string
  */
 export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
-	if (json.name?.includes('(')) {
-		return json.name;
+	if (isAbiEventFragment(json) || isAbiFunctionFragment(json)) {
+		if (json.name?.includes('(')) {
+			return json.name;
+		}
+
+		return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
 	}
 
-	return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
+	// Constructor fragment
+	return `(${flattenTypes(false, json.inputs ?? []).join(',')})`;
 };
 
 export const padZeros = (bytes: Buffer, size: number, direction: 'left' | 'right'): Buffer => {

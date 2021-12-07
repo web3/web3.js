@@ -1,4 +1,4 @@
-import { Reader, ReaderOptions, Writer, WriterOptions } from '../..';
+import { Reader, ReaderOptions, Writer, WriterOptions } from '../../types';
 
 export const writeBoolean: Writer<boolean> = (value: boolean, options: WriterOptions) => {
 	const buf = Buffer.alloc(options.wordSize);

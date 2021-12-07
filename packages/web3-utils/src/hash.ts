@@ -18,7 +18,7 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
 
 /**
  *
- * computes the Keccak-256 hash of the string input and returns a hexstring
+ * computes the Keccak-256 hash of the input and returns a hexstring
  */
 export const sha3 = (data: Bytes): string | null => {
 	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
@@ -32,7 +32,7 @@ export const sha3 = (data: Bytes): string | null => {
 /**
  *Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
  */
-export const sha3Raw = (data: string): string => {
+export const sha3Raw = (data: Bytes): string => {
 	const hash = sha3(data);
 	if (hash === null) {
 		return SHA3_EMPTY_BYTES;

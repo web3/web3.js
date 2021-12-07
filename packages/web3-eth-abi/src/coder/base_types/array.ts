@@ -1,9 +1,4 @@
-import {
-	Reader,
-	ReaderOptions,
-	Writer,
-	WriterOptions
-} from '../..';
+import { Reader, ReaderOptions, Writer, WriterOptions } from '../..';
 import { writeUint } from './uint';
 
 export const writeArray: Writer<ReadonlyArray<unknown>> = (

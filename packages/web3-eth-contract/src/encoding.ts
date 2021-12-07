@@ -8,6 +8,7 @@ import {
 	AbiConstructorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
+	isAbiFunctionFragment,
 } from 'web3-eth-abi';
 import { HexString, Uint } from 'web3-utils';
 import { ContractOptions } from './types';
@@ -121,7 +122,7 @@ export const decodeEventABI = (
 
 	return {
 		...result,
-		returnValue: decodeLog([...(event.inputs ?? [])], data.data, argTopics),
+		returnValue: decodeLog([...event.inputs], data.data, argTopics),
 		event: event.name,
 		signature: event.anonymous || !data.topics[0] ? null : data.topics[0],
 		raw: {
@@ -136,7 +137,7 @@ export const encodeMethodABI = (
 	args: unknown[],
 	deployData?: HexString,
 ) => {
-	if (abi.signature && abi.name !== abi.signature) {
+	if (isAbiFunctionFragment(abi) && abi.signature && abi.name !== abi.signature) {
 		throw new Error('The ABI can not match with given signature');
 	}
 
@@ -184,7 +185,7 @@ export const decodeMethodReturn = (
 	}
 
 	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-	const result = decodeParameters([...(abi.inputs ?? [])], value);
+	const result = decodeParameters([...abi.inputs], value);
 
 	if (result.__length__ === 1) {
 		return result[0];

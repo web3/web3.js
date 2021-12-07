@@ -355,28 +355,30 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 };
 
 export const toChecksumAddress = (address: Address): string => {
-	if (typeof address === 'undefined') return '';
-
-	if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+	if (!isAddress(address, false)) {
 		throw new InvalidAddressError(address);
 	}
 
 	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-	const hash = (keccak256(Buffer.from(lowerCaseAddress)) as Buffer).toString('hex');
+
+	const hash = bytesToHex(keccak256(Buffer.from(lowerCaseAddress)));
+
 	if (
 		hash === null ||
 		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
 	)
 		return ''; // // EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
+
 	const addressHash = hash.replace(/^0x/i, '');
+
 	let checksumAddress = '0x';
 
-	for (let i = 0; i < address.length; i += 1) {
+	for (let i = 0; i < lowerCaseAddress.length; i += 1) {
 		// If ith character is 8 to f then make it uppercase
 		if (parseInt(addressHash[i], 16) > 7) {
-			checksumAddress += address[i].toUpperCase();
+			checksumAddress += lowerCaseAddress[i].toUpperCase();
 		} else {
-			checksumAddress += address[i];
+			checksumAddress += lowerCaseAddress[i];
 		}
 	}
 	return checksumAddress;

@@ -28,13 +28,18 @@ abstract class EthAbiBaseCoder {
 	}
 
 	public nameToString(): string {
-		if (this.abi.name?.includes('(')) {
-			return this.abi.name;
+		if (isAbiEventFragment(this.abi) || isAbiFunctionFragment(this.abi)) {
+			if (this.abi.name.includes('(')) {
+				return this.abi.name;
+			}
+
+			return `${this.abi.name ?? ''}(${flattenTypes(false, this.abi.inputs ?? []).join(
+				',',
+			)})`;
 		}
 
-		return `${this.abi.name ?? ''}(${flattenTypes(false, [...(this.abi.inputs ?? [])]).join(
-			',',
-		)})`;
+		// Constructor fragment
+		return `(${flattenTypes(false, this.abi.inputs ?? []).join(',')})`;
 	}
 }
 
