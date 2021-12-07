@@ -14,6 +14,9 @@ import {
 	isBuffer,
 	isValidString,
 	Address,
+	isHexStrict,
+	utf8ToHex,
+	hexToBytes,
 } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
 import { signTransactionFunction, signTransactionResult } from './types';
@@ -132,4 +135,20 @@ export const create = (): {
 		sign,
 		encrypt,
 	};
+};
+
+/**
+ * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ */
+
+export const hashMessage = (message: string): string => {
+	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
+
+	const messageBytes = hexToBytes(messageHex);
+
+	const preamble = `\x19Ethereum Signed Message:\n${messageBytes.length}`;
+
+	const ethMessage = Buffer.concat([Buffer.from(preamble), Buffer.from(messageBytes)]);
+
+	return `0x${Buffer.from(keccak256(ethMessage)).toString('hex')}`;
 };
