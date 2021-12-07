@@ -15,17 +15,17 @@ export const convertibleBlockProperties: (keyof Block)[] = [
 // https://stackoverflow.com/a/49402091
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export const convertibleTransactionInfoProperties: KeysOfUnion<TransactionInfo>[] = [
+	'blockNumber',
+	'gas',
+	'gasPrice',
 	'type',
 	'nonce',
-	'gas',
+	'transactionIndex',
 	'value',
+	'v',
 	'maxFeePerGas',
 	'maxPriorityFeePerGas',
 	'yParity',
-	'v',
-	'gasPrice',
-	'blockNumber',
-	'transactionIndex',
 ];
 
 export const convertibleReceiptInfoProperties: (keyof ReceiptInfo)[] = [
