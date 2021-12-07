@@ -13,6 +13,7 @@ import {
 	HexString,
 	isBuffer,
 	isValidString,
+	Address,
 } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
 import { signTransactionFunction, signTransactionResult } from './types';
@@ -60,6 +61,17 @@ export const signTransaction = (
 		rawTransaction: rawTx,
 		transactionHash: `0x${Buffer.from(txHash).toString('hex')}`,
 	};
+};
+
+/**
+ * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
+ */
+export const recoverTransaction = (rawTransaction: string): Address => {
+	if (rawTransaction === undefined) throw new Error('Invalid rawTransaction');
+
+	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
+
+	return toChecksumAddress(tx.getSenderAddress().toString());
 };
 
 /**
