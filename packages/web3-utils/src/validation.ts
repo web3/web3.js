@@ -437,18 +437,18 @@ export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
 	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTagError(value);
 };
 
-export const isHexString8Bytes = (value: HexString8Bytes) =>
-	isHexStrict(value) && value.length === 18; // 8 bytes + 0x = 18
+export const isHexString8Bytes = (value: HexString8Bytes, prefixed = true) =>
+	prefixed ? isHexStrict(value) && value.length === 18 : isHex(value) && value.length === 16;
 
-export const validateHexString8Bytes = (value: HexString8Bytes) => {
-	if (!isHexString8Bytes(value)) throw new InvalidHexStringError(value, 8);
+export const validateHexString8Bytes = (value: HexString8Bytes, prefixed = true) => {
+	if (!isHexString8Bytes(value, prefixed)) throw new InvalidHexStringError(value, 8);
 };
 
-export const isHexString32Bytes = (value: HexString32Bytes) =>
-	isHexStrict(value) && value.length === 66; // 32 bytes + 0x = 66
+export const isHexString32Bytes = (value: HexString32Bytes, prefixed = true) =>
+	prefixed ? isHexStrict(value) && value.length === 66 : isHex(value) && value.length === 64;
 
-export const validateHexString32Bytes = (value: HexString32Bytes) => {
-	if (!isHexString32Bytes(value)) throw new InvalidHexStringError(value, 32);
+export const validateHexString32Bytes = (value: HexString32Bytes, prefixed = true) => {
+	if (!isHexString32Bytes(value, prefixed)) throw new InvalidHexStringError(value, 32);
 };
 
 /**

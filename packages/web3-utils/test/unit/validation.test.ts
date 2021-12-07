@@ -230,7 +230,11 @@ describe('validation', () => {
 		it.each([...isHexString8BytesValidData, ...isHexStrictInvalidData])(
 			'%s',
 			(input, output) => {
-				expect(isHexString8Bytes(input)).toEqual(output);
+				if (Array.isArray(input)) {
+					expect(isHexString8Bytes(input[0], input[1])).toEqual(output);
+				} else {
+					expect(isHexString8Bytes(input)).toEqual(output);
+				}
 			},
 		);
 	});
@@ -240,6 +244,8 @@ describe('validation', () => {
 			(input, output) => {
 				if (output instanceof InvalidHexStringError) {
 					expect(() => validateHexString8Bytes(input)).toThrow(output);
+				} else if (Array.isArray(input)) {
+					expect(() => validateHexString8Bytes(input[0], input[1])).not.toThrow();
 				} else {
 					expect(() => validateHexString8Bytes(input)).not.toThrow();
 				}
@@ -250,7 +256,11 @@ describe('validation', () => {
 		it.each([...isHexString32BytesValidData, ...isHexStrictInvalidData])(
 			'%s',
 			(input, output) => {
-				expect(isHexString32Bytes(input)).toEqual(output);
+				if (Array.isArray(input)) {
+					expect(isHexString32Bytes(input[0], input[1])).toEqual(output);
+				} else {
+					expect(isHexString32Bytes(input)).toEqual(output);
+				}
 			},
 		);
 	});
@@ -260,6 +270,8 @@ describe('validation', () => {
 			(input, output) => {
 				if (output instanceof InvalidHexStringError) {
 					expect(() => validateHexString32Bytes(input)).toThrow(output);
+				} else if (Array.isArray(input)) {
+					expect(() => validateHexString32Bytes(input[0], input[1])).not.toThrow();
 				} else {
 					expect(() => validateHexString32Bytes(input)).not.toThrow();
 				}

@@ -364,10 +364,13 @@ export const validateBlockNumberOrTagInvalidData = () => {
 	return invalidData;
 };
 
-export const isHexString8BytesValidData: [HexString8Bytes, true][] = [
+export const isHexString8BytesValidData: [HexString8Bytes | [HexString8Bytes, false], true][] = [
 	['0x0000000000000001', true],
 	['0x00000000000c0ffe', true],
 	['0x0000123098409924', true],
+	[['0000000000000001', false], true],
+	[['00000000000c0ffe', false], true],
+	[['0000123098409924', false], true],
 ];
 
 // Converts false from invalid data sets to expected thrown error
@@ -379,10 +382,13 @@ export const validateHexString8BytesInvalidData = () => {
 	return invalidData;
 };
 
-export const isHexString32BytesValidData: [HexString32Bytes, true][] = [
+export const isHexString32BytesValidData: [HexString32Bytes | [HexString32Bytes, false], true][] = [
 	['0x22f30f0608f88c510de0016370f1525b330e5839026bdff93f9ceef24d2275e6', true],
 	['0x63a01bba0d4f0ad913a241aed52f5c55807be35f554536abd1e451d4e6515b29', true],
 	['0x687f28d48c22e9619b36776cf692501b3fc4e2143841efe3c7f45e49ea46b7f0', true],
+	[['22f30f0608f88c510de0016370f1525b330e5839026bdff93f9ceef24d2275e6', false], true],
+	[['63a01bba0d4f0ad913a241aed52f5c55807be35f554536abd1e451d4e6515b29', false], true],
+	[['687f28d48c22e9619b36776cf692501b3fc4e2143841efe3c7f45e49ea46b7f0', false], true],
 ];
 
 // Converts false from invalid data sets to expected thrown error
