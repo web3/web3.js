@@ -79,6 +79,18 @@ export const validateBytesInput = (data: Bytes) => {
 	}
 };
 
+export const isNumbers = (data: unknown) => ['number', 'string', 'bigint'].includes(typeof data);
+
+export const isFinite = (data: unknown) => typeof data === 'number' && Number.isFinite(data);
+
+export const isInteger = (data: unknown) => isFinite(data) && Math.floor(data as number) === data;
+
+export const isHexInteger = (data: unknown) =>
+	isHexStrict(data as string) && /^(-)?[0-9]*$/i.test(data as string);
+
+export const isDecimalString = (data: unknown) =>
+	typeof data === 'string' && isHexStrict(data) && /^\d*(\.\d+)?$/i.test(data);
+
 /**
  * checks input for valid number otherwise throws error
  */
@@ -86,37 +98,13 @@ export const validateNumbersInput = (
 	data: Numbers,
 	{ onlyIntegers }: { onlyIntegers: boolean },
 ) => {
-	if (!['number', 'string', 'bigint'].includes(typeof data)) {
+	if (!isNumbers(data))
 		throw onlyIntegers ? new InvalidIntegerError(data) : new InvalidNumberError(data);
-	}
-
-	if (typeof data === 'number' && !Number.isFinite(data)) {
-		throw new InvalidIntegerError(data);
-	}
-
-	// If these are full integer values given as 'number'
-	if (typeof data === 'number' && Math.floor(data) !== data) {
-		throw new InvalidIntegerError(data);
-	}
-
+	if (!isFinite(data)) throw new InvalidIntegerError(data);
+	if (onlyIntegers && !isInteger(data)) throw new InvalidIntegerError(data);
 	// If its not a hex string, then it must contain a decimal point.
-	if (
-		typeof data === 'string' &&
-		onlyIntegers &&
-		!isHexStrict(data) &&
-		!/^(-)?[0-9]*$/i.test(data)
-	) {
-		throw new InvalidIntegerError(data);
-	}
-
-	if (
-		typeof data === 'string' &&
-		!onlyIntegers &&
-		!isHexStrict(data) &&
-		!/^[0-9]\d*(\.\d+)?$/i.test(data)
-	) {
-		throw new InvalidNumberError(data);
-	}
+	if (onlyIntegers && !isHexInteger(data)) throw new InvalidIntegerError(data);
+	if (!onlyIntegers && isDecimalString(data)) throw new InvalidNumberError(data);
 };
 
 /**
