@@ -3,15 +3,13 @@ import { AbiError } from 'web3-common';
 import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
-	AbiInput,
 	AbiCoderStruct,
-	AbiFragment,
-	AbiParameter,
-	AbiStruct,
-	AbiEventFragment,
-	AbiFunctionFragment,
 	AbiConstructorFragment,
-	AbiParameterBaseType,
+	AbiEventFragment,
+	AbiFragment,
+	AbiFunctionFragment,
+	AbiInput,
+	AbiParameter, AbiStruct
 } from './types';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>
@@ -277,22 +275,3 @@ export const padZeros = (bytes: Buffer, size: number, direction: 'left' | 'right
 	return Buffer.concat([bytes, buf]);
 };
 
-export const detectParameterBaseType = (type: string): AbiParameterBaseType => {
-	if (['address', 'bool', 'bytes', 'string'].includes(type)) {
-		return type as AbiParameterBaseType;
-	}
-
-	if (type.startsWith('uint')) {
-		return 'uint';
-	}
-
-	if (type.startsWith('int')) {
-		return 'int';
-	}
-
-	if (type.startsWith('bytes')) {
-		return 'bytes';
-	}
-
-	throw new Error(`Can not detect parameter base type for "${type}"`);
-};

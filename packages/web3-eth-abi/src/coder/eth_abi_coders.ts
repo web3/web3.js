@@ -1,24 +1,20 @@
 /* eslint-disable max-classes-per-file */
 import { AbiError } from 'web3-common';
 import { sha3Raw } from 'web3-utils';
-import { AbiParameter } from '..';
 import {
 	AbiEventFragment,
 	AbiFragment,
 	AbiFunctionFragment,
+	AbiParameter,
 	AbiParameterBaseType,
-	AbiTypeToNativeType,
 	CompiledParameter,
 	Reader,
 	Writer,
+	AbiTypeToNativeType,
 } from '../types';
-import {
-	detectParameterBaseType,
-	flattenTypes,
-	isAbiEventFragment,
-	isAbiFunctionFragment,
-} from '../utils';
+import { flattenTypes, isAbiEventFragment, isAbiFunctionFragment } from '../utils';
 import * as baseTypes from './base_types';
+import { detectParameterBaseType, mergeEncodingResults } from './utils';
 
 abstract class EthAbiBaseCoder {
 	public readonly abi: AbiFragment;
@@ -42,8 +38,6 @@ abstract class EthAbiBaseCoder {
 		return `(${flattenTypes(false, this.abi.inputs ?? []).join(',')})`;
 	}
 }
-
-const regexParamTypeArray = /^(.*)\[([0-9]*)\]$/;
 
 const readerWriterMap: {
 	[K in AbiParameterBaseType]: {
@@ -74,38 +68,47 @@ export const compileParameters = (
 	const result: CompiledParameter[] = [];
 
 	for (const abi of parameters) {
-		const { name, type, internalType } = abi;
+		const { name, type } = abi;
 		let path = [basePath, name].join('.');
-		const match = regexParamTypeArray.exec(type);
+		const { baseType, size, arrayLength, isArray } = detectParameterBaseType(type);
 
-		if (match) {
-			const arrayLength = parseInt(match[2] || '-1', 10);
+		if (isArray) {
 			path = `${path}[#]`;
 
 			result.push({
 				name,
 				path,
 				type,
-				internalType: internalType ?? '',
-				baseType: 'array',
+				dynamic: true,
 				arrayLength,
-				components: compileParameters(
-					[{ ...abi, type: detectParameterBaseType(type) }],
-					path,
-				),
+				baseType: 'array',
+				size,
+				components: compileParameters([{ ...abi, type: `${baseType}${size ?? ''}` }], path),
 				read: readerWriterMap.array.reader,
 				write: readerWriterMap.array.writer,
 			});
-		} else {
-			const baseType = abi.components != null ? 'tuple' : detectParameterBaseType(type);
-
+		} else if (type === 'bytes') {
 			result.push({
 				name,
 				path,
 				type,
-				internalType: internalType ?? '',
-				baseType,
+				dynamic: true,
 				arrayLength: null,
+				baseType: abi.components ? 'tuple' : baseType,
+				size: abi.components ? null : size,
+				components: compileParameters(abi.components ?? [], path),
+				read: readerWriterMap[baseType].reader,
+				write: readerWriterMap[baseType].writer as Writer<unknown>,
+			});
+		} else {
+			result.push({
+				name,
+				path,
+				type,
+				dynamic: false,
+				arrayLength: null,
+				baseType: abi.components ? 'tuple' : baseType,
+				size: abi.components ? null : size,
 				components: compileParameters(abi.components ?? [], path),
 				read: readerWriterMap[baseType].reader,
 				write: readerWriterMap[baseType].writer as Writer<unknown>,
@@ -131,25 +134,12 @@ export class EthAbiParameterCoder {
 	}
 
 	public encode(data: ReadonlyArray<unknown>): Buffer {
-		const headers: Buffer[] = [];
-		const headersRefresh: boolean[] = [];
-		const tails: Buffer[] = [];
-
+		const results: ReturnType<Writer<unknown>>[] = [];
 		for (const [index, p] of this.compiledParameters.entries()) {
-			const { head, tail, refreshHead } = p.write(data[index], { param: p, wordSize: 32 });
-
-			headersRefresh.push(refreshHead);
-			headers.push(head);
-			tails.push(tail);
+			results.push(p.write(data[index], { param: p, wordSize: 32 }));
 		}
 
-		for (const [index, h] of headers.entries()) {
-			console.log(`${headersRefresh[index] ? 'R' : '-'} ${h.toString('hex')}`);
-		}
-
-		console.log(tails.map(h => h.toString('hex')).join('\n'));
-
-		return Buffer.concat([...headers, ...tails]);
+		return mergeEncodingResults(results);
 	}
 }
 

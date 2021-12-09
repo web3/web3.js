@@ -5,10 +5,11 @@ export const writeArray: Writer<ReadonlyArray<unknown>> = (
 	value: ReadonlyArray<unknown>,
 	options: WriterOptions,
 ) => {
-	const size = writeUint(value.length, options).head;
+	const size = writeUint(value.length.toString(), options).head;
 	const writer = options.param.components[0].write;
 	const result: Buffer[] = [];
 
+	result.push(size);
 	for (const v of value) {
 		const { head, tail } = writer(v as any, options);
 		result.push(head);
@@ -17,7 +18,7 @@ export const writeArray: Writer<ReadonlyArray<unknown>> = (
 
 	return {
 		head: Buffer.alloc(options.wordSize),
-		tail: Buffer.concat([size, ...result]),
+		tail: Buffer.concat(result),
 		refreshHead: true,
 	};
 };

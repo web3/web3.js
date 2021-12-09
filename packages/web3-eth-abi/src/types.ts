@@ -8,16 +8,6 @@ import {
 } from 'web3-utils';
 import { ConvertToNumber } from './number_map_type';
 
-export type AbiParameterBaseType =
-	| 'address'
-	| 'uint'
-	| 'int'
-	| 'bool'
-	| 'bytes'
-	| 'string'
-	| 'array'
-	| 'tuple';
-
 export interface AbiStruct {
 	[key: string]: unknown;
 	name?: string;
@@ -33,11 +23,13 @@ export interface AbiCoderStruct extends AbiStruct {
 export type AbiParameter = {
 	readonly name: string;
 	readonly type: string;
-	readonly internalType: string;
-	readonly indexed?: boolean;
 	readonly components?: ReadonlyArray<AbiParameter>;
-	readonly arrayLength?: number;
-	readonly arrayChildren?: ReadonlyArray<AbiParameter>;
+
+	// Not specified in spec but been created by Remix compiler
+	readonly internalType: string;
+
+	// In case of event
+	readonly indexed?: boolean;
 };
 
 type FragmentTypes = 'constructor' | 'event' | 'function';
@@ -155,7 +147,7 @@ export type MatchPrimitiveType<
 	| PrimitiveIntegerType<Type>
 	| PrimitiveBytesType<Type>
 	| PrimitiveTupleType<Type, Components>
-	| Type;
+	| never;
 
 // Only intended to use locally so why not exported
 // TODO: Inspect Record<string, AbiParameter> not working constraint
@@ -219,14 +211,26 @@ export type Writer<ValueType> = (
 	options: WriterOptions,
 ) => { head: Buffer; tail: Buffer; refreshHead: boolean };
 
+export type AbiParameterBaseType =
+	| 'address'
+	| 'uint'
+	| 'int'
+	| 'bool'
+	| 'bytes'
+	| 'string'
+	| 'array'
+	| 'tuple';
+
 export type CompiledParameter<T = unknown> = {
+	// Null in case of function output
 	name: string | null;
 	type: string;
-	internalType: string;
 	baseType: AbiParameterBaseType;
-	arrayLength: number | null;
 	path: string;
 	components: ReadonlyArray<CompiledParameter>;
+	size: number | null;
+	dynamic: boolean;
+	arrayLength: number | null;
 	read: Reader<T>;
 	write: Writer<T>;
 };
