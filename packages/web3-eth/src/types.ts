@@ -46,7 +46,7 @@ export interface Transaction {
 	input: HexStringBytes;
 	data?: HexString;
 	nonce?: Numbers;
-	chain?: HexString;
+	chain?: ChainNames | HexString;
 	hardfork?: HexString;
 	common?: {
 		customChain: {
