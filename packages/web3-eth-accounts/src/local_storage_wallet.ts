@@ -7,7 +7,7 @@ import {
 
 type BrowserError = { code: number; name: string };
 
-export class LocalStorageWallet<
+export class Wallet<
 	T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
 > extends Web3BaseWallet<T> {
 	private readonly _accounts: { [key: string]: T };
@@ -116,7 +116,7 @@ export class LocalStorageWallet<
 	}
 
 	public save(password: string, keyName?: string) {
-		const storage = LocalStorageWallet.getStorage();
+		const storage = Wallet.getStorage();
 
 		if (!storage) {
 			throw new Error('Local storage not available.');
@@ -128,7 +128,7 @@ export class LocalStorageWallet<
 	}
 
 	public load(password: string, keyName?: string) {
-		const storage = LocalStorageWallet.getStorage();
+		const storage = Wallet.getStorage();
 
 		if (!storage) {
 			throw new Error('Local storage not available.');
