@@ -54,7 +54,6 @@ describe('Wallet', () => {
 			expect(accounts).toHaveLength(numberOfAccounts);
 			expect(accounts).toMatchSnapshot();
 			expect(accountProvider.create).toHaveBeenCalledTimes(numberOfAccounts);
-			expect(accountProvider.create).toHaveBeenCalledWith('entropy');
 		});
 	});
 
