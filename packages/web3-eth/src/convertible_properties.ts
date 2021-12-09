@@ -1,4 +1,5 @@
 import { Block, FeeHistoryResult, ReceiptInfo, TransactionInfo } from 'web3-common';
+import { Transaction } from './types';
 
 export const convertibleBlockProperties: (keyof Block)[] = [
 	'difficulty',
@@ -27,6 +28,18 @@ export const convertibleTransactionInfoProperties: KeysOfUnion<TransactionInfo>[
 	'maxPriorityFeePerGas',
 	'yParity',
 ];
+
+export const convertibleTransactionProperties: KeysOfUnion<Transaction>[] = [
+	'value',
+	'gas',
+	'gasPrice',
+	'type',
+	'maxFeePerGas',
+	'maxPriorityFeePerGas',
+	'nonce',
+];
+
+export const convertibleTransactionCustomChainProperties = ['networkId', 'chainId'];
 
 export const convertibleReceiptInfoProperties: (keyof ReceiptInfo)[] = [
 	'transactionIndex',
