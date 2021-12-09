@@ -51,9 +51,9 @@ export class Wallet<
 		return Object.keys(this._accounts).length;
 	}
 
-	public create(numberOfAccounts: number, entropy: string) {
+	public create(numberOfAccounts: number) {
 		for (let i = 0; i < numberOfAccounts; i += 1) {
-			this.add(this._accountProvider.create(entropy));
+			this.add(this._accountProvider.create());
 		}
 
 		return this;

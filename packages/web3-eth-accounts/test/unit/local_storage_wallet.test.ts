@@ -44,7 +44,7 @@ describe('Wallet', () => {
 			const numberOfAccounts = 10;
 			const accounts = [];
 
-			wallet.create(numberOfAccounts, 'entropy');
+			wallet.create(numberOfAccounts);
 
 			for (let i = 0; i < numberOfAccounts; i += 1) {
 				accounts.push(wallet.get(i));
