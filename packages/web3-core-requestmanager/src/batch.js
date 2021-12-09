@@ -47,8 +47,10 @@ Batch.prototype.add = function (request) {
  */
 Batch.prototype.execute = function () {
     var requests = this.requests;
+    var sortResponses = this._sortResponses.bind(this);
+
     this.requestManager.sendBatch(requests, function (err, results) {
-        results = results || [];
+        results = sortResponses(results);
         requests.map(function (request, index) {
             return results[index] || {};
         }).forEach(function (result, index) {
@@ -70,6 +72,11 @@ Batch.prototype.execute = function () {
         });
     });
 };
+
+// Sort responses
+Batch.prototype._sortResponses = function (responses) {    
+    return (responses || []).sort((a, b) => a.id - b.id);
+}
 
 module.exports = Batch;
 
