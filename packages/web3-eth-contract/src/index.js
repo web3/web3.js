@@ -234,6 +234,19 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'transactionPollingInterval', {
+        get: function () {
+            if (_this.options.transactionPollingInterval === 0) {
+                return _this.options.transactionPollingInterval;
+            }
+
+            return _this.options.transactionPollingInterval || this.constructor.transactionPollingInterval;
+        },
+        set: function (val) {
+            _this.options.transactionPollingInterval = val;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'transactionConfirmationBlocks', {
         get: function () {
             if (_this.options.transactionConfirmationBlocks === 0) {
