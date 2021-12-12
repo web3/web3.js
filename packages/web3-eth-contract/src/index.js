@@ -1058,6 +1058,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 transactionBlockTimeout: _this._parent.transactionBlockTimeout,
                 transactionConfirmationBlocks: _this._parent.transactionConfirmationBlocks,
                 transactionPollingTimeout: _this._parent.transactionPollingTimeout,
+                transactionPollingInterval: _this._parent.transactionPollingInterval,
                 defaultCommon: _this._parent.defaultCommon,
                 defaultChain: _this._parent.defaultChain,
                 defaultHardfork: _this._parent.defaultHardfork,
