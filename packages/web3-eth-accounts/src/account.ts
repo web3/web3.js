@@ -170,12 +170,6 @@ export const create = (): {
 	encrypt: () => boolean;
 } => {
 	const privateKey = utils.randomPrivateKey();
-	const address = getPublicKey(privateKey);
-	return {
-		privateKey: `0x${Buffer.from(privateKey).toString('hex')}`,
-		address: `0x${Buffer.from(address).toString('hex')}`,
-		signTransaction,
-		sign,
-		encrypt,
-	};
+
+	return privateKeyToAccount(`0x${Buffer.from(privateKey).toString('hex')}`);
 };
