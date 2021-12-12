@@ -52,7 +52,10 @@ export const sign = (data: string, privateKey: string): signResult => {
 
 	const hash = hashMessage(data);
 
-	const signObj = ecdsaSign(Buffer.from(hash, 'hex'), Buffer.from(privateKey.substr(2), 'hex'));
+	const signObj = ecdsaSign(
+		Buffer.from(hash, 'hex'),
+		Buffer.from(privateKey.substring(2), 'hex'),
+	);
 
 	const r = Buffer.from(signObj.signature.slice(0, 32));
 	const s = Buffer.from(signObj.signature.slice(32, 64));
@@ -78,7 +81,7 @@ export const signTransaction = (
 	//		Transaction Validation checks
 
 	const tx = TransactionFactory.fromTxData(transaction);
-	const signedTx = tx.sign(Buffer.from(privateKey, 'hex'));
+	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
 		throw new Error('Signer Error');
 
