@@ -20,6 +20,7 @@ import {
 	HexString8Bytes,
 } from 'web3-utils';
 import { validateTransactionCall, validateTransactionWithSender } from './validation';
+import { Web3EthExecutionApi } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	return requestManager.send({
@@ -60,6 +61,24 @@ export async function getGasPrice(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_gasPrice',
 		params: [],
+	});
+}
+
+export async function getFeeHistory(
+	requestManager: Web3RequestManager,
+	blockCount: Uint,
+	newestBlock: BlockNumberOrTag,
+	rewardPercentiles: number[],
+) {
+	validateHexStringInput(blockCount);
+	validateBlockNumberOrTag(newestBlock);
+	for (const rewardPercentile of rewardPercentiles) {
+		validateNumbersInput(rewardPercentile, { onlyIntegers: false });
+	}
+
+	return requestManager.send({
+		method: 'eth_feeHistory',
+		params: [blockCount, newestBlock, rewardPercentiles],
 	});
 }
 
@@ -301,6 +320,13 @@ export async function getTransactionByHash(
 	});
 }
 
+export async function getPendingTransactions(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
+    return requestManager.send({
+        method: 'eth_pendingTransactions',
+        params: []
+    });
+}
+
 export async function getTransactionByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -499,20 +525,39 @@ export async function submitHashrate(
 	});
 }
 
-export async function getFeeHistory(
-	requestManager: Web3RequestManager,
-	blockCount: Uint,
-	newestBlock: BlockNumberOrTag,
-	rewardPercentiles: number[],
-) {
-	validateHexStringInput(blockCount);
-	validateBlockNumberOrTag(newestBlock);
-	for (const rewardPercentile of rewardPercentiles) {
-		validateNumbersInput(rewardPercentile, { onlyIntegers: false });
-	}
+export async function requestAccounts(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
+    return requestManager.send({
+        method: 'eth_requestAccounts',
+        params: []
+    })
+}
 
-	return requestManager.send({
-		method: 'eth_feeHistory',
-		params: [blockCount, newestBlock, rewardPercentiles],
-	});
+export async function getChainId(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
+    return requestManager.send({
+        method: 'eth_chainId',
+        params: []
+    })
+}
+
+export async function clientVersion(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
+    return requestManager.send({
+        method: 'web3_clientVersion',
+        params: []
+    })
+}
+
+export async function getProof(
+    requestManager: Web3RequestManager<Web3EthExecutionApi>,
+    address: Address,
+    storageKeys: HexString32Bytes[],
+    blockNumber: BlockNumberOrTag,
+) {
+    validateAddress(address);
+    storageKeys.forEach(storageKey => validateHexString32Bytes(storageKey));
+	validateBlockNumberOrTag(blockNumber);
+
+    return requestManager.send({
+        method: 'eth_getProof',
+        params: [address, storageKeys, blockNumber]
+    })
 }

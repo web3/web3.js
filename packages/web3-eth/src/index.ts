@@ -2,7 +2,6 @@
 /* eslint-disable default-param-last */
 
 import {
-	EthExecutionAPI,
 	// TransactionWithSender,
 	Block,
 	FeeHistoryResult,
@@ -47,8 +46,9 @@ import {
 } from './convertible_properties';
 
 import * as rpcMethods from './rpc_methods';
+import { Web3EthExecutionApi } from './web3_eth_execution_api';
 
-export default class Web3Eth extends Web3Context<EthExecutionAPI> {
+export default class Web3Eth extends Web3Context<Web3EthExecutionApi> {
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
@@ -253,10 +253,10 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 			  );
 	}
 
-	// // TODO Can't find in spec
-	// // public async getPendingTransactions() {
-
-	// // }
+    // TODO transaction property formatting
+	public async getPendingTransactions() {
+        await rpcMethods.getPendingTransactions(this.requestManager)
+	}
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
@@ -410,23 +410,36 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, difficulty);
 	}
 
-	// // TODO
-	// // public async requestAccounts() {
+    // TODO Format address to checksum
+	public async requestAccounts() {
+        return rpcMethods.requestAccounts(this.requestManager);
+	}
 
-	// // }
+    // TODO formatting
+	public async getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(returnType?: ReturnType) {
+        const response = await rpcMethods.getChainId(this.requestManager);
 
-	// // TODO
-	// // public async getChainId() {
+        return convertToValidType(
+			response,
+			returnType ?? this.defaultReturnType,
+		) as ValidReturnTypes[ReturnType];
+	}
 
-	// // }
+	public async getNodeInfo() {
+        return rpcMethods.clientVersion(this.requestManager);
+	}
 
-	// // TODO
-	// // public async getNodeInfo() {
-
-	// // }
-
-	// // TODO
-	// // public async getProof() {
-
-	// // }
+    // TODO formatting
+	public async getProof(
+        address: Address,
+		storageKeys: HexString32Bytes[],
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+    ) {
+        return rpcMethods.getProof(
+            this.requestManager,
+            address,
+            storageKeys,
+            blockNumber
+        );
+	}
 }
