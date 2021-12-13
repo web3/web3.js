@@ -3,14 +3,13 @@
 
 import {
 	EthExecutionAPI,
-	Web3BaseProvider,
 	// TransactionWithSender,
 	Block,
 	FeeHistoryResult,
 	TransactionInfo,
 	ReceiptInfo,
 } from 'web3-common';
-import { ConfigOptions, Web3Context } from 'web3-core';
+import { Web3Context } from 'web3-core';
 import {
 	BlockNumberOrTag,
 	ValidTypes,
@@ -49,59 +48,53 @@ import {
 
 import * as rpcMethods from './rpc_methods';
 
-export default class Web3Eth {
-	public readonly web3Context: Web3Context<EthExecutionAPI>;
-
-	public constructor(provider: Web3BaseProvider | string, options?: Partial<ConfigOptions>) {
-		this.web3Context = new Web3Context(provider, options);
-	}
-
+export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 	public async getProtocolVersion() {
-		return rpcMethods.getProtocolVersion(this.web3Context.requestManager);
+		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
 
 	public async isSyncing() {
-		return rpcMethods.getSyncing(this.web3Context.requestManager);
+		return rpcMethods.getSyncing(this.requestManager);
 	}
 
 	public async getCoinbase() {
-		return rpcMethods.getCoinbase(this.web3Context.requestManager);
+		return rpcMethods.getCoinbase(this.requestManager);
 	}
 
 	public async isMining() {
-		return rpcMethods.getMining(this.web3Context.requestManager);
+		return rpcMethods.getMining(this.requestManager);
 	}
 
 	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await rpcMethods.getHashRate(this.web3Context.requestManager);
+		const response = await rpcMethods.getHashRate(this.requestManager);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await rpcMethods.getGasPrice(this.web3Context.requestManager);
+		const response = await rpcMethods.getGasPrice(this.requestManager);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		blockCount: Uint,
-		newestBlock: BlockNumberOrTag = this.web3Context.defaultBlock,
+		newestBlock: BlockNumberOrTag = this.defaultBlock,
 		rewardPercentiles: number[],
 		returnType?: ReturnType,
 	) {
 		const response = await rpcMethods.getFeeHistory(
-			this.web3Context.requestManager,
+			this.requestManager,
 			blockCount,
 			newestBlock,
 			rewardPercentiles,
@@ -115,70 +108,58 @@ export default class Web3Eth {
 		>(
 			response,
 			convertibleFeeHistoryResultProperties,
-			returnType ?? (this.web3Context.defaultReturnType as ReturnType),
+			returnType ?? (this.defaultReturnType as ReturnType),
 		);
 	}
 
 	public async getAccounts() {
-		return rpcMethods.getAccounts(this.web3Context.requestManager);
+		return rpcMethods.getAccounts(this.requestManager);
 	}
 
 	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		returnType?: ReturnType,
 	) {
-		const response = await rpcMethods.getBlockNumber(this.web3Context.requestManager);
+		const response = await rpcMethods.getBlockNumber(this.requestManager);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getBalance<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		address: Address,
-		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnType?: ReturnType,
 	) {
-		const response = await rpcMethods.getBalance(
-			this.web3Context.requestManager,
-			address,
-			blockNumber,
-		);
+		const response = await rpcMethods.getBalance(this.requestManager, address, blockNumber);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getStorageAt(
 		address: Address,
 		storageSlot: Uint256,
-		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
 	) {
-		return rpcMethods.getStorageAt(
-			this.web3Context.requestManager,
-			address,
-			storageSlot,
-			blockNumber,
-		);
+		return rpcMethods.getStorageAt(this.requestManager, address, storageSlot, blockNumber);
 	}
 
-	public async getCode(
-		address: Address,
-		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
-	) {
-		return rpcMethods.getCode(this.web3Context.requestManager, address, blockNumber);
+	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
+		return rpcMethods.getCode(this.requestManager, address, blockNumber);
 	}
 
 	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		hydrated = false,
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await rpcMethods.getBlockByHash(this.web3Context.requestManager, block, hydrated)
-			: await rpcMethods.getBlockByNumber(this.web3Context.requestManager, block, hydrated);
+			? await rpcMethods.getBlockByHash(this.requestManager, block, hydrated)
+			: await rpcMethods.getBlockByNumber(this.requestManager, block, hydrated);
 
 		return convertObjectPropertiesToValidType<
 			BlockFormatted<ReturnType>,
@@ -188,57 +169,47 @@ export default class Web3Eth {
 		>(
 			response,
 			convertibleBlockProperties,
-			returnType ?? (this.web3Context.defaultReturnType as ReturnType),
+			returnType ?? (this.defaultReturnType as ReturnType),
 		);
 	}
 
 	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await rpcMethods.getBlockTransactionCountByHash(
-					this.web3Context.requestManager,
-					block,
-			  )
-			: await rpcMethods.getBlockTransactionCountByNumber(
-					this.web3Context.requestManager,
-					block,
-			  );
+			? await rpcMethods.getBlockTransactionCountByHash(this.requestManager, block)
+			: await rpcMethods.getBlockTransactionCountByNumber(this.requestManager, block);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await rpcMethods.getUncleCountByBlockHash(this.web3Context.requestManager, block)
-			: await rpcMethods.getUncleCountByBlockNumber(this.web3Context.requestManager, block);
+			? await rpcMethods.getUncleCountByBlockHash(this.requestManager, block)
+			: await rpcMethods.getUncleCountByBlockNumber(this.requestManager, block);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		uncleIndex: Uint,
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
-			? await rpcMethods.getUncleByBlockHashAndIndex(
-					this.web3Context.requestManager,
-					block,
-					uncleIndex,
-			  )
+			? await rpcMethods.getUncleByBlockHashAndIndex(this.requestManager, block, uncleIndex)
 			: await rpcMethods.getUncleByBlockNumberAndIndex(
-					this.web3Context.requestManager,
+					this.requestManager,
 					block,
 					uncleIndex,
 			  );
@@ -251,7 +222,7 @@ export default class Web3Eth {
 		>(
 			response,
 			convertibleBlockProperties,
-			returnType ?? (this.web3Context.defaultReturnType as ReturnType),
+			returnType ?? (this.defaultReturnType as ReturnType),
 		);
 	}
 
@@ -260,7 +231,7 @@ export default class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = await rpcMethods.getTransactionByHash(
-			this.web3Context.requestManager,
+			this.requestManager,
 			transactionHash,
 		);
 
@@ -273,8 +244,12 @@ export default class Web3Eth {
 					ReturnType
 			  >(
 					response,
+					// TODO
+					// @ts-expect-error TSC is complaining about different properties being
+					// available by various tx types
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					convertibleTransactionInfoProperties,
-					returnType ?? (this.web3Context.defaultReturnType as ReturnType),
+					returnType ?? (this.defaultReturnType as ReturnType),
 			  );
 	}
 
@@ -284,18 +259,18 @@ export default class Web3Eth {
 	// // }
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		transactionIndex: Uint,
 		returnType?: ReturnType,
 	) {
 		const response = isHexString32Bytes(block)
 			? await rpcMethods.getTransactionByBlockHashAndIndex(
-					this.web3Context.requestManager,
+					this.requestManager,
 					block,
 					transactionIndex,
 			  )
 			: await rpcMethods.getTransactionByBlockNumberAndIndex(
-					this.web3Context.requestManager,
+					this.requestManager,
 					block,
 					transactionIndex,
 			  );
@@ -309,8 +284,12 @@ export default class Web3Eth {
 					ReturnType
 			  >(
 					response,
+					// TODO
+					// @ts-expect-error TSC is complaining about different properties being
+					// available by various tx types
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					convertibleTransactionInfoProperties,
-					returnType ?? this.web3Context.defaultReturnType,
+					returnType ?? this.defaultReturnType,
 			  );
 	}
 
@@ -319,7 +298,7 @@ export default class Web3Eth {
 		returnType?: ReturnType,
 	) {
 		const response = await rpcMethods.getTransactionReceipt(
-			this.web3Context.requestManager,
+			this.requestManager,
 			transactionHash,
 		);
 
@@ -337,47 +316,47 @@ export default class Web3Eth {
 					// available by various tx types
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					convertibleReceiptInfoProperties,
-					returnType ?? (this.web3Context.defaultReturnType as ReturnType),
+					returnType ?? (this.defaultReturnType as ReturnType),
 			  );
 	}
 
 	public async getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		address: Address,
-		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnType?: ReturnType,
 	) {
 		const response = await rpcMethods.getTransactionCount(
-			this.web3Context.requestManager,
+			this.requestManager,
 			address,
 			blockNumber,
 		);
 
 		return convertToValidType(
 			response,
-			returnType ?? this.web3Context.defaultReturnType,
+			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	// public async sendTransaction(transaction: Transaction) {
 	// 	return rpcMethods.sendTransaction(
-	// 		this.web3Context.requestManager,
+	// 		this.requestManager,
 	// 		transaction,
 	// 	);
 	// }
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
-		return rpcMethods.sendRawTransaction(this.web3Context.requestManager, transaction);
+		return rpcMethods.sendRawTransaction(this.requestManager, transaction);
 	}
 
 	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
 	public async sign(message: HexStringBytes, address: Address) {
-		return rpcMethods.sign(this.web3Context.requestManager, address, message);
+		return rpcMethods.sign(this.requestManager, address, message);
 	}
 
 	// public async signTransaction(transaction: Transaction) {
 	// 	return rpcMethods.signTransaction(
-	// 		this.web3Context.requestManager,
+	// 		this.requestManager,
 	// 		transaction,
 	// 	);
 	// }
@@ -386,41 +365,41 @@ export default class Web3Eth {
 	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 	// public async call(
 	// 	transaction: Transaction & { to: Address },
-	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.defaultBlock,
 	// ) {
-	// 	return rpcMethods.call(this.web3Context.requestManager, transaction, blockNumber);
+	// 	return rpcMethods.call(this.requestManager, transaction, blockNumber);
 	// }
 
 	// TODO Missing param
 	// public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	// 	transaction: Transaction,
-	// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
+	// 	blockNumber: BlockNumberOrTag = this.defaultBlock,
 	// 	returnType?: ReturnType,
 	// ) {
 	// 	const response = await rpcMethods.estimateGas(
-	// 		this.web3Context.requestManager,
+	// 		this.requestManager,
 	// 		transaction,
 	// 		blockNumber,
 	// 	);
 
 	// 	return convertToValidType(
 	// 		response,
-	// 		returnType ?? this.web3Context.defaultReturnType,
+	// 		returnType ?? this.defaultReturnType,
 	// 	) as ValidReturnTypes[ReturnType];
 	// }
 
 	public async getPastLogs(filter: Filter) {
-		return rpcMethods.getLogs(this.web3Context.requestManager, {
+		return rpcMethods.getLogs(this.requestManager, {
 			...filter,
 			// These defaults are carried over from 1.x
 			// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
-			fromBlock: filter.fromBlock ?? this.web3Context.defaultBlock,
-			toBlock: filter.toBlock ?? this.web3Context.defaultBlock,
+			fromBlock: filter.fromBlock ?? this.defaultBlock,
+			toBlock: filter.toBlock ?? this.defaultBlock,
 		});
 	}
 
 	public async getWork() {
-		return rpcMethods.getWork(this.web3Context.requestManager);
+		return rpcMethods.getWork(this.requestManager);
 	}
 
 	public async submitWork(
@@ -428,7 +407,7 @@ export default class Web3Eth {
 		seedHash: HexString32Bytes,
 		difficulty: HexString32Bytes,
 	) {
-		return rpcMethods.submitWork(this.web3Context.requestManager, nonce, seedHash, difficulty);
+		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, difficulty);
 	}
 
 	// // TODO
