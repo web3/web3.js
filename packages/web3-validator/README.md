@@ -20,6 +20,38 @@ This is a sub-package of [web3.js][repo].
 yarn add web3-validator
 ```
 
+## Usage
+
+You can use the the validator by importing as and using to validate;
+
+```ts
+import { validator } from 'web3-validator';
+
+// To validate and throw
+validator.validate(['uint8', 'string'], [val1, val2]);
+
+// To validate and return error
+const errors = validator.validate(['uint8', 'string'], [val1, val2], { silent: true });
+```
+
+To see more examples of schema you can use to validate check [following file](./test/fixtures/abi_to_json_schema.ts).
+
+Following eth types are supported to validate.
+
+| Type  | Input As                        | Description                                                                                                                                               |
+| ----- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| uint  | `number`, `string`, `HexString` | Unsigned integer, all ethereum compatible variants are also supported e.g. `uint8`, `uint256`. You can also use array specifiers as `uint[]` or `uint[2]` |
+| int   | `number`, `string`, `HexString` | Signed integer, all ethereum compatible variants are also supported e.g. `int8`, `int256`. You can also use array specifiers as `int[]` or `int[2]`       |
+| bytes | `HexString`, `Buffer`           | Raw bytes. You can also use fixed length bytes as `bytes[2]`                                                                                              |
+
+| string | `string` | String values |
+| address | `string`, `HexString` | Ethereum network compatible address |
+| tuple | `array` | You can specify any tuple as nested arrays. e.g. `['uint', 'string']`. For a custom tuple or array tuple you can use syntax e.g. `['tuple[3]', ['uint', 'string']]` |
+
+For the ethereum compatible data values should be passed as arrays e.g. for schema `['uint', 'string']` value should be passed as `[2, 'my-string']`.
+
+The implementation of the validator is extension of [JSON-Schema-Draft07](https://json-schema.org/draft-07/json-schema-release-notes.html) with a custom keyword `eth`. So you can use JSON-Schema compatible schema to validate any object based data as well.
+
 ## Getting Started
 
 -   :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
