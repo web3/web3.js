@@ -19,7 +19,6 @@ import {
 	ValueTypes,
 	ValidTypes,
 	ValidReturnTypes,
-	FormatValidReturnType,
 	JsonFunctionInterface,
 	JsonEventInterface,
 	Components,
@@ -464,18 +463,15 @@ export const convertToValidType = (
 };
 
 // TODO Handle nested objects
+// Object can have any properties. Unless specified as [key: string] index type didn't detect the record key correctly
+// Also objects property types can be arrays, or other customs types as well so we have to specify any to cover all
 export function convertObjectPropertiesToValidType<
-	// Object can have any properties. Unless specified as [key: string] index type didn't detect the record key correctly
-	// Also objects property types can be arrays, or other customs types as well so we have to specify any to cover all
+	FormattedType,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ObjectType extends Record<any, any>,
 	Properties extends (keyof ObjectType)[],
 	ReturnType extends ValidTypes,
->(
-	object: ObjectType,
-	convertibleProperties: Properties,
-	desiredType: ReturnType,
-): FormatValidReturnType<ObjectType, Properties, ReturnType> {
+>(object: ObjectType, convertibleProperties: Properties, desiredType: ReturnType): FormattedType {
 	if (typeof object !== 'object' || object === null)
 		throw new InvalidConvertibleObjectError(object);
 	if (
@@ -486,11 +482,7 @@ export function convertObjectPropertiesToValidType<
 	if (!Object.values(ValidTypes).includes(desiredType))
 		throw new InvalidDesiredTypeError(desiredType);
 
-	const convertedObject = { ...object } as FormatValidReturnType<
-		ObjectType,
-		Properties,
-		ReturnType
-	>;
+	const convertedObject = { ...object };
 
 	for (const convertibleProperty of convertibleProperties) {
 		if (convertedObject[convertibleProperty] === undefined) continue;
