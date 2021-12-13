@@ -6,7 +6,7 @@ import {
 	AccessListEIP2930TxData,
 	TxData,
 } from '@ethereumjs/tx';
-import { ecdsaSign } from 'secp256k1';
+import { ecdsaSign, ecdsaRecover } from 'secp256k1';
 import {
 	toChecksumAddress,
 	bytesToHex,
@@ -20,7 +20,13 @@ import {
 	hexToBytes,
 } from 'web3-utils';
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
-import { signFunction, signResult, signTransactionFunction, signTransactionResult } from './types';
+import {
+	signatureObject,
+	signFunction,
+	signResult,
+	signTransactionFunction,
+	signTransactionResult,
+} from './types';
 
 // TODO Will be added later
 export const encrypt = (): boolean => true;
@@ -53,7 +59,7 @@ export const sign = (data: string, privateKey: string): signResult => {
 	const hash = hashMessage(data);
 
 	const signObj = ecdsaSign(
-		Buffer.from(hash, 'hex'),
+		Buffer.from(hash.substring(2), 'hex'),
 		Buffer.from(privateKey.substring(2), 'hex'),
 	);
 
@@ -67,6 +73,7 @@ export const sign = (data: string, privateKey: string): signResult => {
 		v: `0x${v.toString(16)}`,
 		r: `0x${r.toString('hex')}`,
 		s: `0x${s.toString('hex')}`,
+		signature: `0x${Buffer.from(signObj.signature).toString('hex')}${v.toString(16)}`,
 	};
 };
 
@@ -118,6 +125,41 @@ export const recoverTransaction = (rawTransaction: string): Address => {
 	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
 
 	return toChecksumAddress(tx.getSenderAddress().toString());
+};
+
+/**
+ * Recovers the Ethereum address which was used to sign the given data
+ */
+export const recover = (
+	data: string | signatureObject,
+	signature?: string,
+	hashed?: boolean,
+): Address => {
+	if (typeof data === 'object') {
+		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
+		return recover(data.messageHash, signatureStr, true);
+	}
+
+	if (signature === undefined) throw new Error('signature string undefined');
+
+	const hashedMessage = hashed ? data : hashMessage(data);
+
+	const v = signature.substring(130); // 0x + r + s + v
+
+	const ecPublicKey = ecdsaRecover(
+		Buffer.from(signature.substring(2, 130), 'hex'),
+		parseInt(v, 16) - 27,
+		Buffer.from(hashedMessage.substring(2), 'hex'),
+		false,
+	);
+
+	const publicKey = `0x${Buffer.from(ecPublicKey).toString('hex').slice(2)}`;
+
+	const publicHash = sha3Raw(publicKey);
+
+	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
+
+	return address;
 };
 
 /**
