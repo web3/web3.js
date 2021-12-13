@@ -1,10 +1,13 @@
 import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from '@ethereumjs/tx';
 
-export type signTransactionResult = {
+export type signatureObject = {
 	messageHash: string;
 	r: string;
 	s: string;
 	v: string;
+};
+
+export type signTransactionResult = signatureObject & {
 	rawTransaction: string;
 	transactionHash: string;
 };
@@ -14,12 +17,9 @@ export type signTransactionFunction = (
 	privateKey: string,
 ) => signTransactionResult;
 
-export type signResult = {
-	message: string;
-	messageHash: string;
-	r: string;
-	s: string;
-	v: string;
+export type signResult = signatureObject & {
+	message?: string;
+	signature: string;
 };
 
 export type signFunction = (data: string, privateKey: string) => signResult;
