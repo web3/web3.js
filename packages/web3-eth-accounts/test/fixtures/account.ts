@@ -29,3 +29,8 @@ export const invalidPrivateKeytoAccountData: [any, string][] = [
 	[undefined, 'Invalid value given "undefined". Error: not a valid string or buffer.'],
 	[null, 'Invalid value given "null". Error: not a valid string or buffer.'],
 ];
+
+
+export const validEncryptData: [any, string][] = [
+	
+]
