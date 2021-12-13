@@ -67,14 +67,20 @@ export const abiSchemaToJsonSchema = (
 		let abiName!: string;
 		let abiComponents: ShortValidationSchema | FullValidationSchema | undefined = [];
 
+		// If its a complete Abi Parameter
+		// e.g. {name: 'a', type: 'uint'}
 		if (isAbiParameterSchema(abi)) {
 			abiType = abi.type;
 			abiName = abi.name;
 			abiComponents = abi.components as FullValidationSchema;
+			// If its short form string value e.g. ['uint']
 		} else if (typeof abi === 'string') {
 			abiType = abi;
 			abiName = `${level ?? ''}/${index}`;
+
+			// If its provided in short form of tuple e.g. [['uint', 'string']]
 		} else if (Array.isArray(abi)) {
+			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
 			if (abi[1] && Array.isArray(abi[1])) {
 				abiType = abi[0] as string;
 				abiName = `${level ?? ''}/${index}`;
@@ -117,13 +123,5 @@ export const abiSchemaToJsonSchema = (
 
 	return schema;
 };
-
-// export const parseMinAbiSchema = (value: string): ShortValidationSchema => {
-// 	// Remove all spaces
-// 	let val = value.replace(/ /g, '');
-
-// 	// Split on the tuples
-// 	val = val.replace(/(\])(,)(\[)/g, '$1|$3').split('|');
-// };
 
 export const ethAbiToJsonSchema = (abis: ValidationSchemaInput) => abiSchemaToJsonSchema(abis);
