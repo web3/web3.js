@@ -3,7 +3,7 @@ import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2'
 import { scryptSync } from 'ethereum-cryptography/scrypt'
 import { encrypt as createCipheriv, decrypt as createDecipheriv} from 'ethereum-cryptography/aes'
-import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes } from 'web3-utils';
+import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes, validateBytesInput } from 'web3-utils';
 import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from './errors';
 
@@ -15,7 +15,7 @@ export const sign = (): boolean => true;
 // Will be added later
 export const signTransaction = (): boolean => true;
 
-
+// Generate a version 4 uuid
 // https://github.com/uuidjs/uuid/blob/main/src/v4.js#L5
 // https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/json-wallets/src.ts/utils.ts#L54
 const uuidV4 = () => {
@@ -44,7 +44,7 @@ const uuidV4 = () => {
 /**
  * Get account from private key
  */
-export const privateKeyToAccount = (
+ export const privateKeyToAccount = (
     privateKey: string | Buffer,
 ): {
     address: string;
@@ -78,6 +78,10 @@ export const privateKeyToAccount = (
     return { address, privateKey: stringPrivateKey, signTransaction, sign, encrypt };
 };
 
+/**
+ *  Decrypts a keystore v3 JSON, and creates the account.
+ * 
+ * */
 export const decrypt = async (v3Keystore: V3Keystore | string, password: string, nonStrict?: boolean): Promise<{
     address: string;
     privateKey: string;
@@ -126,35 +130,40 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
 };
 
 /**
- * encrypt privateKey given a password, returns a V3 Keystore
+ * encrypt a private key given a password, returns a V3 JSON Keystore
  * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
  */
 export const encrypt = async (privateKey: string, password: string | Buffer, options?: CipherOptions): Promise<V3Keystore> => {
     const account = privateKeyToAccount(privateKey);
 
-    const salt = options?.salt || randomBytes(32);
-    const iv = options?.iv || randomBytes(16);
-    const kdf = options?.kdf || 'scrypt';
+    // if given salt or iv is a string, convert it to a Uint8Array
+    const salt = options?.salt ? (typeof options.salt === 'string' ? Buffer.from(options.salt, 'hex'): options.salt): randomBytes(32);
+    validateBytesInput(salt);
+
+    const iv = options?.iv ? (typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex'): options.iv): randomBytes(16);
+    validateBytesInput(iv);
+
+    const kdf = options?.kdf ?? 'scrypt';
 
     let derivedKey;
-    let kdfparams: ScryptParams | PBKDF2SHA256Params ;
+    let kdfparams: ScryptParams | PBKDF2SHA256Params;
 
     // derive key from key derivation function
 	if (kdf === 'pbkdf2') {
         kdfparams = {
-            dklen: options?.dklen || 32,
-            salt: salt,
-            c: options?.c || 262144,
+            dklen: options?.dklen ?? 32,
+            salt: salt.toString('hex'),
+            c: options?.c ?? 262144,
             prf: 'hmac-sha256'
         }
         derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(salt), kdfparams.c, kdfparams.dklen, 'sha256')
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
         kdfparams = {
-		n: options?.n || 8192,
-		r: options?.r || 8,
-		p: options?.p || 1,
-        dklen: options?.dklen || 32,
+		n: options?.n ?? 8192,
+		r: options?.r ?? 8,
+		p: options?.p ?? 1,
+        dklen: options?.dklen ?? 32,
         salt: salt.toString('hex')
         }   
         derivedKey = scryptSync(Buffer.from(password), Buffer.from(salt), kdfparams.n, kdfparams.p, kdfparams.r,kdfparams.dklen);
@@ -164,7 +173,7 @@ export const encrypt = async (privateKey: string, password: string | Buffer, opt
 
     const cipherKey =  Buffer.from(privateKey.replace('0x', ''), 'hex')
 
-	const cipher = await createCipheriv(cipherKey, Buffer.from(derivedKey.slice(0,16)), Buffer.from(iv), 'aes-128-ctr');
+	const cipher = await createCipheriv(cipherKey, Buffer.from(derivedKey.slice(0,16)), iv, 'aes-128-ctr');
 
     const ciphertext = bytesToHex(cipher).slice(2);
 	if (!ciphertext) {
@@ -177,14 +186,14 @@ export const encrypt = async (privateKey: string, password: string | Buffer, opt
         id: uuidV4(),
         address: account.address.toLowerCase().replace('0x', ''),
         crypto: {
-            ciphertext, // remove prefix
+            ciphertext,
             cipherparams: {
                 iv: iv.toString('hex')
             },
             cipher: 'aes-128-ctr',
-            kdf: kdf,
+            kdf,
             kdfparams,
-            mac: mac
+            mac
         }
     }
 };
@@ -197,7 +206,7 @@ export const create = (): {
     privateKey: string;
     signTransaction: () => boolean; // From 1.x
     sign: () => boolean;
-    encrypt: (a:string, b: string) =>  Promise<V3Keystore>;
+    encrypt: (a: string, b: string) =>  Promise<V3Keystore>;
 } => {
     const privateKey = utils.randomPrivateKey();
     const address = getPublicKey(privateKey);
@@ -209,7 +218,3 @@ export const create = (): {
         encrypt,
     };
 };
-
-
-// encrypt("0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: "6ffb8102fa0fc9ff916f5fb67f2797a0", salt: "210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd"})
-encrypt("0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123");

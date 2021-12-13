@@ -6,7 +6,7 @@ export type Cipher = "aes-128-ctr" | "aes-128-cbc" | "aes-256-cbc"
 
 export type CipherOptions = {
     salt?: Buffer | string;
-    iv?: Buffer;
+    iv?: Buffer | string;
     kdf?: 'scrypt' | 'pbkdf2';
     dklen?: number;
     c?: number; // iterrations
@@ -35,11 +35,11 @@ export type V3Keystore = {
         ciphertext: string;
         cipherparams: {
             iv: string;
-        },
+        };
         kdf: "pbkdf2" | "scrypt";
         kdfparams: ScryptParams | PBKDF2SHA256Params;
         mac: HexString;
-    },
+    };
     id: string;
     version: 3;
     address: string;

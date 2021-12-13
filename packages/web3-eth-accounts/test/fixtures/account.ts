@@ -33,11 +33,28 @@ export const invalidPrivateKeytoAccountData: [any, string][] = [
 
 
 export const validEncryptData: [[any, string, CipherOptions], any][] = [
-	[["0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: Buffer.from("bfb43120ae00e9de110f8325143a2709", 'hex'), salt: "210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd"}],{
+	[["0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: Buffer.from("bfb43120ae00e9de110f8325143a2709", 'hex'), salt: Buffer.from("210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd", "hex")}],{
 		version: 3,
 		address: 'cda9a91875fc35c8ac1320e098e584495d66e47c',
 		crypto: {
-		  ciphertext: '91715ec63d2628c7cc9960a044871c36c0cb4e709f371b1694034808c330bb05',
+		  ciphertext: 'cb3e13e3281ff3861a3f0257fad4c9a51b0eb046f9c7821825c46b210f040b8f',
+		  cipherparams: { iv: 'bfb43120ae00e9de110f8325143a2709' },
+		  cipher: 'aes-128-ctr',
+		  kdf: 'scrypt',
+		  kdfparams: {
+			n: 8192,
+			r: 8,
+			p: 1,
+			dklen: 32,
+			salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd'
+		  },
+		}
+	  }],
+	  [["0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: "bfb43120ae00e9de110f8325143a2709", salt: "210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd"}],{
+		version: 3,
+		address: 'cda9a91875fc35c8ac1320e098e584495d66e47c',
+		crypto: {
+		  ciphertext: 'cb3e13e3281ff3861a3f0257fad4c9a51b0eb046f9c7821825c46b210f040b8f',
 		  cipherparams: { iv: 'bfb43120ae00e9de110f8325143a2709' },
 		  cipher: 'aes-128-ctr',
 		  kdf: 'scrypt',
@@ -50,4 +67,8 @@ export const validEncryptData: [[any, string, CipherOptions], any][] = [
 		  },
 		}
 	  }]	
+]
+
+export const invalidEncryptData: [[any, string, CipherOptions], string][] = [
+	// [["0x123456"]]
 ]

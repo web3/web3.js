@@ -38,6 +38,21 @@ export const validateHexStringInput = (data: HexString) => {
 };
 
 /**
+ * 
+ */
+ export function assertBytes(bytes: Uint8Array, ...len: number[]) {
+	if (
+	  bytes instanceof Uint8Array &&
+	  (!len.length || len.includes(bytes.length))
+	) {
+	  return;
+	}
+	throw new TypeError(
+	  `Expected ${len} bytes, not ${typeof bytes} with length=${bytes.length}`
+	);
+  }
+
+/**
  * checks for valid byte array or hexstring otherwise throws error
  */
 export const validateBytesInput = (data: Bytes) => {
