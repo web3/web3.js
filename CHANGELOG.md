@@ -347,3 +347,4 @@ Released with 1.0.0-beta.37 code base.
 1. `create` function does not take in the optional parameter `entropy`
 2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
 3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use web3.transaction package
+4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
