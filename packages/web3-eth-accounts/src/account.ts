@@ -3,9 +3,11 @@ import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2'
 import { scryptSync } from 'ethereum-cryptography/scrypt'
 import { encrypt as createCipheriv, decrypt as createDecipheriv} from 'ethereum-cryptography/aes'
-import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes, validateBytesInput } from 'web3-utils';
+import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes, validateBytesInput,
+	isBuffer,
+	isValidString, } from 'web3-utils';
 import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
-import { InvalidPrivateKeyError, PrivateKeyLengthError } from './errors';
+import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
 
 const validateKeyStore = (keyStore: V3Keystore | string): boolean => !!keyStore;
 
@@ -53,31 +55,32 @@ const uuidV4 = () => {
     sign: () => boolean;
     encrypt: (a: string,b: string) => Promise<V3Keystore>;
 } => {
-    if (!privateKey) {
-        throw new InvalidPrivateKeyError(privateKey);
-    }
+	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
+		throw new InvalidPrivateKeyError(privateKey);
+	}
 
-    const stringPrivateKey =
-        typeof privateKey === 'object' ? Buffer.from(privateKey).toString('hex') : privateKey;
+	const stringPrivateKey = Buffer.isBuffer(privateKey)
+		? Buffer.from(privateKey).toString('hex')
+		: privateKey;
 
-    const updatedKey = stringPrivateKey.startsWith('0x')
-        ? stringPrivateKey.slice(2)
-        : stringPrivateKey;
+	const stringPrivateKeyNoPrefix = stringPrivateKey.startsWith('0x')
+		? stringPrivateKey.slice(2)
+		: stringPrivateKey;
 
-    // Must be 64 hex characters
-    if (updatedKey.length !== 64) {
-        throw new PrivateKeyLengthError(updatedKey);
-    }
+	// TODO Replace with isHexString32Bytes function in web3-eth PR:
+	// Must be 64 hex characters
+	if (stringPrivateKeyNoPrefix.length !== 64) {
+		throw new PrivateKeyLengthError(stringPrivateKeyNoPrefix);
+	}
 
-    const publicKey = getPublicKey(updatedKey);
+	const publicKey = getPublicKey(stringPrivateKeyNoPrefix);
 
-    const publicKeyString = `0x${publicKey.slice(2)}`;
-    const publicHash = sha3Raw(publicKeyString);
-    const publicHashHex = bytesToHex(publicHash);
-    const address = toChecksumAddress(publicHashHex.slice(-40));
-    return { address, privateKey: stringPrivateKey, signTransaction, sign, encrypt };
-};
-
+	const publicKeyString = `0x${publicKey.slice(2)}`;
+	const publicHash = sha3Raw(publicKeyString);
+	const publicHashHex = bytesToHex(publicHash);
+	const address = toChecksumAddress(publicHashHex.slice(-40)); // To get the address, take the last 20 bytes of the public hash
+	return { address, privateKey: stringPrivateKey, signTransaction, sign, encrypt };
+}
 /**
  *  Decrypts a keystore v3 JSON, and creates the account.
  * 
@@ -208,13 +211,13 @@ export const create = (): {
     sign: () => boolean;
     encrypt: (a: string, b: string) =>  Promise<V3Keystore>;
 } => {
-    const privateKey = utils.randomPrivateKey();
-    const address = getPublicKey(privateKey);
-    return {
-        privateKey: `0x${Buffer.from(privateKey).toString('hex')}`,
-        address: `0x${Buffer.from(address).toString('hex')}`,
-        signTransaction,
-        sign,
-        encrypt,
-    };
+	const privateKey = utils.randomPrivateKey();
+	const address = getPublicKey(privateKey);
+	return {
+		privateKey: `0x${Buffer.from(privateKey).toString('hex')}`,
+		address: `0x${Buffer.from(address).toString('hex')}`,
+		signTransaction,
+		sign,
+		encrypt,
+	};
 };

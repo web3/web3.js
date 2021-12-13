@@ -355,7 +355,7 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 };
 
 export const toChecksumAddress = (address: Address): string => {
-	if (!/^(0x)?[0-9a-f]{40}$/i.test(address) && isHexStrict(address)) {
+	if (!isAddress(address, false)) {
 		throw new InvalidAddressError(address);
 	}
 

@@ -17,7 +17,7 @@ describe('accounts', () => {
 		});
 	});
 
-	describe('fromPrivate', () => {
+	describe('privateKeyToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validPrivateKeytoAccountData)('%s', (input, output) => {
 				expect(privateKeyToAccount(input)).toEqual(output);
