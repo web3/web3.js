@@ -10,3 +10,7 @@ export type ValidInputTypes = Buffer | bigint | string | number | boolean;
 export type FullValidationSchema = ReadonlyArray<AbiParameter>;
 export type ShortValidationSchema = ReadonlyArray<string | ShortValidationSchema>;
 export type ValidationSchemaInput = FullValidationSchema | ShortValidationSchema;
+
+export type Web3ValidationOptions = {
+	readonly silent: false;
+};
