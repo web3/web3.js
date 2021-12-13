@@ -4,9 +4,9 @@ import { HexString } from 'web3-utils'
 
 export type Cipher = "aes-128-ctr" | "aes-128-cbc" | "aes-256-cbc"
 
-export type Options = {
+export type CipherOptions = {
     salt?: Buffer | string;
-    iv?: string | Buffer;
+    iv?: Buffer;
     kdf?: 'scrypt' | 'pbkdf2';
     dklen?: number;
     c?: number; // iterrations

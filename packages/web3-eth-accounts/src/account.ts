@@ -4,10 +4,10 @@ import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2'
 import { scryptSync } from 'ethereum-cryptography/scrypt'
 import { encrypt as createCipheriv, decrypt as createDecipheriv} from 'ethereum-cryptography/aes'
 import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes } from 'web3-utils';
-import { V3Keystore, ScryptParams, PBKDF2SHA256Params, Options } from './types'
+import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from './errors';
 
-const validateKeyStore = (keyStore: V3Keystore | string): boolean => keyStore? true: false;
+const validateKeyStore = (keyStore: V3Keystore | string): boolean => !!keyStore;
 
 // Will be added later
 export const sign = (): boolean => true;
@@ -40,30 +40,6 @@ const uuidV4 = () => {
         hexString.substring(22, 34),
      ].join("-");
 }
-
-// const deriveKey = (kdf: string, password: string, salt: string, c: number, dklen: number): Buffer => {
-//     let derivedKey: Uint8Array;
-//     if (kdf === 'pbkdf2Sync') {
-//         // if (typeof window !== 'undefined'){
-//         //     const pbkdf2Params = {name: 'PBKDF2', hash: "SHA-256", salt, c}
-//         //     const cryptoKey =  await window.crypto.subtle.importKey('raw', Buffer.from(password), {name: 'PBKDF2'}, false, ["deriveBits", "deriveKey"])
-//         //     const hmacOptions = {name: "HMAC", hash: "SHA-256"}
-//         //     let key = await window.crypto.subtle.deriveKey(pbkdf2Params, cryptoKey, hmacOptions, false, ["decrypt"])
-//         // } else 
-//         // {
-//             derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(salt, 'hex'), c, dklen, 'sha256')
-//         // }
-//     } else if (kdf === 'scrypt') {
-//         const n = 8192;
-//         const r = 8;
-//         const p = 1;
-//         derivedKey = scryptSync(Buffer.from(password), Buffer.from(salt, 'hex'), n, r, p, dklen);
-//     } else {
-//         throw new Error('');
-//     }
-
-//     return Buffer.from(derivedKey);
-// }
 
 /**
  * Get account from private key
@@ -111,7 +87,7 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
 }>=> {
     if(!(typeof password === 'string')) throw new Error('');
     
-    const json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+    const json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore) as V3Keystore;
 
     validateKeyStore(json)
 
@@ -119,18 +95,24 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
 
     let derivedKey;
     if (json.crypto.kdf === 'scrypt') {
-        const kdfparams: ScryptParams = json.crypto.kdfparams;
+        const kdfparams = json.crypto.kdfparams as ScryptParams;
+
         // TODO support progress reporting callback
+        kdfparams.salt = typeof kdfparams.salt === 'string' ? Buffer.from(kdfparams.salt, 'hex') : kdfparams.salt
+
         derivedKey = scryptSync(Buffer.from(password), Buffer.from(kdfparams.salt), kdfparams.n, kdfparams.p, kdfparams.r, kdfparams.dklen);
     } else if (json.crypto.kdf === 'pbkdf2') {
-        const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams;
+        const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams as PBKDF2SHA256Params;
+
         if (kdfparams.prf !== 'hmac-sha256') {
             throw new Error('Unsupported parameters to PBKDF2');
         }
+
         derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
+
     const ciphertext = hexToBytes(`0X${json.crypto.ciphertext}`);
     const mac = sha3Raw(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
     
@@ -139,35 +121,33 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
     }
 
     const seed = await createDecipheriv(Buffer.from(json.crypto.ciphertext, 'hex'), derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
-    // var seed = '0x' + Buffer.from([...decipher.update(ciphertext), ...decipher.final()]).toString('hex');
-
+  
     return privateKeyToAccount(Buffer.from(seed));
-    
-    
 };
 
-export const encrypt = async (privateKey: string, password: string, options?: Options): Promise<V3Keystore> => {
+/**
+ * encrypt privateKey given a password, returns a V3 Keystore
+ * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+ */
+export const encrypt = async (privateKey: string, password: string | Buffer, options?: CipherOptions): Promise<V3Keystore> => {
     const account = privateKeyToAccount(privateKey);
 
     const salt = options?.salt || randomBytes(32);
-
-
     const iv = options?.iv || randomBytes(16);
-
     const kdf = options?.kdf || 'scrypt';
 
     let derivedKey;
     let kdfparams: ScryptParams | PBKDF2SHA256Params ;
-    const uintSalt = Uint8Array.from(Buffer.from(salt));
 
+    // derive key from key derivation function
 	if (kdf === 'pbkdf2') {
         kdfparams = {
             dklen: options?.dklen || 32,
-            salt,
+            salt: salt,
             c: options?.c || 262144,
             prf: 'hmac-sha256'
         }
-        derivedKey = pbkdf2Sync(Uint8Array.from(Buffer.from(password)), uintSalt, kdfparams.c, kdfparams.dklen, 'sha256')
+        derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(salt), kdfparams.c, kdfparams.dklen, 'sha256')
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
         kdfparams = {
@@ -175,9 +155,9 @@ export const encrypt = async (privateKey: string, password: string, options?: Op
 		r: options?.r || 8,
 		p: options?.p || 1,
         dklen: options?.dklen || 32,
-        salt
+        salt: salt.toString('hex')
         }   
-        derivedKey = scryptSync(Uint8Array.from(Buffer.from(password)), uintSalt, kdfparams.n, kdfparams.p, kdfparams.r,kdfparams.dklen);
+        derivedKey = scryptSync(Buffer.from(password), Buffer.from(salt), kdfparams.n, kdfparams.p, kdfparams.r,kdfparams.dklen);
 	} else {
 		throw new Error('Unsupported kdf');
 	}
@@ -191,6 +171,7 @@ export const encrypt = async (privateKey: string, password: string, options?: Op
 		throw new Error('unsupported cipher');
 	}
     const mac =  sha3Raw(Buffer.from([...derivedKey.slice(16,32), ...cipher])).replace('0x', '');
+
 	return {
         version: 3,
         id: uuidV4(),
@@ -202,16 +183,11 @@ export const encrypt = async (privateKey: string, password: string, options?: Op
             },
             cipher: 'aes-128-ctr',
             kdf: kdf,
-            kdfparams: kdfparams,
+            kdfparams,
             mac: mac
         }
     }
 };
-// const iv = Buffer.from("bfb43120ae00e9de110f8325143a2709", "hex");
-// const salt = Buffer.from("210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd", 'hex');
-// (encrypt("0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv, salt}).then(result => {
-//     decrypt(result, "123").then(console.log)
-// }));
 
 /**
  * Returns an acoount
@@ -234,4 +210,6 @@ export const create = (): {
     };
 };
 
-// window.crypto.subtle.deriveKey()
+
+// encrypt("0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: "6ffb8102fa0fc9ff916f5fb67f2797a0", salt: "210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd"})
+encrypt("0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123");
