@@ -19,7 +19,13 @@ import {
 	utf8ToHex,
 	hexToBytes,
 } from 'web3-utils';
-import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
+import {
+	InvalidPrivateKeyError,
+	PrivateKeyLengthError,
+	UndefinedRAWTransactionError,
+	SignerError,
+	InvalidSignatureError,
+} from 'web3-common';
 import {
 	signatureObject,
 	signFunction,
@@ -90,16 +96,16 @@ export const signTransaction = (
 	const tx = TransactionFactory.fromTxData(transaction);
 	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
-		throw new Error('Signer Error');
+		throw new SignerError('Signer Error ');
 
 	const validationErrors = signedTx.validate(true);
 
 	if (validationErrors.length > 0) {
-		let errorString = 'Signer Error: ';
+		let errorString = 'Signer Error ';
 		for (const validationError of validationErrors) {
 			errorString += `${errorString} ${validationError}.`;
 		}
-		throw new Error(errorString);
+		throw new SignerError(errorString);
 	}
 
 	const rlpEncoded = signedTx.serialize().toString('hex');
@@ -120,7 +126,7 @@ export const signTransaction = (
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
  */
 export const recoverTransaction = (rawTransaction: string): Address => {
-	if (rawTransaction === undefined) throw new Error('Invalid rawTransaction');
+	if (rawTransaction === undefined) throw new UndefinedRAWTransactionError();
 
 	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
 
@@ -140,7 +146,7 @@ export const recover = (
 		return recover(data.messageHash, signatureStr, true);
 	}
 
-	if (signature === undefined) throw new Error('signature string undefined');
+	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
 
 	const hashedMessage = hashed ? data : hashMessage(data);
 
