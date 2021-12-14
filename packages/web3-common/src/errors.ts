@@ -398,14 +398,14 @@ export class AbiError extends Web3Error {
 
 export class PrivateKeyLengthError extends Web3Error {
 	public code = ERR_PRIVATE_KEY_LENGTH;
-	public constructor(value: string | Buffer) {
-		super(`Invalid value given "${value.toString()}". Error: Private key must be 32 bytes.`);
+	public constructor() {
+		super(`Error: Private key must be 32 bytes.`);
 	}
 }
 
 export class InvalidPrivateKeyError extends Web3Error {
 	public code = ERR_INVALID_PRIVATE_KEY;
-	public constructor(value: string | Buffer) {
-		super(`Invalid value given "${String(value)}". Error: not a valid string or buffer.`);
+	public constructor() {
+		super(`Error: not a valid string or buffer.`);
 	}
 }
