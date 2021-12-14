@@ -17,13 +17,7 @@ export class Web3Context<API extends Web3APISpec> extends Web3Config {
 		super();
 		this.requestManager = new Web3RequestManager<API>(provider);
 
-		if (options !== undefined)
-			for (const key of Object.keys(options)) {
-				// TODO
-				// @ts-expect-error Not sure how to type this
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-				this[key] = options[key];
-			}
+		if (options !== undefined) Object.assign(this, options);
 	}
 
 	public get currentProvider(): SupportedProviders<API> | string {
