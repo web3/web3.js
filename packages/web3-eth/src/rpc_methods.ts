@@ -320,11 +320,13 @@ export async function getTransactionByHash(
 	});
 }
 
-export async function getPendingTransactions(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
-    return requestManager.send({
-        method: 'eth_pendingTransactions',
-        params: []
-    });
+export async function getPendingTransactions(
+	requestManager: Web3RequestManager<Web3EthExecutionApi>,
+) {
+	return requestManager.send({
+		method: 'eth_pendingTransactions',
+		params: [],
+	});
 }
 
 export async function getTransactionByBlockHashAndIndex(
@@ -526,38 +528,38 @@ export async function submitHashrate(
 }
 
 export async function requestAccounts(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
-    return requestManager.send({
-        method: 'eth_requestAccounts',
-        params: []
-    })
+	return requestManager.send({
+		method: 'eth_requestAccounts',
+		params: [],
+	});
 }
 
 export async function getChainId(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
-    return requestManager.send({
-        method: 'eth_chainId',
-        params: []
-    })
+	return requestManager.send({
+		method: 'eth_chainId',
+		params: [],
+	});
 }
 
 export async function clientVersion(requestManager: Web3RequestManager<Web3EthExecutionApi>) {
-    return requestManager.send({
-        method: 'web3_clientVersion',
-        params: []
-    })
+	return requestManager.send({
+		method: 'web3_clientVersion',
+		params: [],
+	});
 }
 
 export async function getProof(
-    requestManager: Web3RequestManager<Web3EthExecutionApi>,
-    address: Address,
-    storageKeys: HexString32Bytes[],
-    blockNumber: BlockNumberOrTag,
+	requestManager: Web3RequestManager<Web3EthExecutionApi>,
+	address: Address,
+	storageKeys: HexString32Bytes[],
+	blockNumber: BlockNumberOrTag,
 ) {
-    validateAddress(address);
-    storageKeys.forEach(storageKey => validateHexString32Bytes(storageKey));
+	validateAddress(address);
+	storageKeys.forEach(storageKey => validateHexString32Bytes(storageKey));
 	validateBlockNumberOrTag(blockNumber);
 
-    return requestManager.send({
-        method: 'eth_getProof',
-        params: [address, storageKeys, blockNumber]
-    })
+	return requestManager.send({
+		method: 'eth_getProof',
+		params: [address, storageKeys, blockNumber],
+	});
 }
