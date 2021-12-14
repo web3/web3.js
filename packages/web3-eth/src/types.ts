@@ -192,3 +192,20 @@ export interface FeeHistoryResultFormatted<
 	readonly baseFeePerGas: ReturnType;
 	readonly reward: number[][];
 }
+
+export interface GetProofResultFormatted<
+	DesiredType extends ValidTypes = ValidTypes.HexString,
+	ReturnType = ValidReturnTypes[DesiredType],
+> {
+	readonly address: Address;
+	readonly balance: ReturnType;
+	readonly codeHash: HexString;
+	readonly nonce: ReturnType;
+	readonly storageHash: HexString32Bytes;
+	readonly accountProof: HexString32Bytes[];
+	readonly storageProof: {
+		readonly key: HexString32Bytes;
+		readonly value: Uint;
+		readonly proof: HexString32Bytes[];
+	}[];
+}

@@ -23,6 +23,7 @@ import {
 	convertObjectPropertiesToValidType,
 	isHexString32Bytes,
 	Filter,
+	toChecksumAddress,
 	// isNumbers,
 	// numberToHex,
 } from 'web3-utils';
@@ -31,6 +32,7 @@ import {
 	// Transaction,
 	BlockFormatted,
 	FeeHistoryResultFormatted,
+	GetProofResultFormatted,
 	ReceiptInfoFormatted,
 	TransactionInfoFormatted,
 	// ChainNames,
@@ -39,6 +41,7 @@ import {
 import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
+	convertibleProofProperties,
 	// convertibleReceiptInfoProperties,
 	// convertibleTransactionCustomChainProperties,
 	convertibleTransactionInfoProperties,
@@ -46,7 +49,7 @@ import {
 } from './convertible_properties';
 
 import * as rpcMethods from './rpc_methods';
-import { Web3EthExecutionApi } from './web3_eth_execution_api';
+import { Proof, Web3EthExecutionApi } from './web3_eth_execution_api';
 
 export default class Web3Eth extends Web3Context<Web3EthExecutionApi> {
 	public async getProtocolVersion() {
@@ -253,9 +256,30 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionApi> {
 			  );
 	}
 
-    // TODO transaction property formatting
-	public async getPendingTransactions() {
-        await rpcMethods.getPendingTransactions(this.requestManager)
+	public async getPendingTransactions<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getPendingTransactions(this.requestManager);
+
+		const formattedResponse: TransactionInfoFormatted<ReturnType>[] = [];
+		for (const transaction of response) {
+			formattedResponse.push(
+				convertObjectPropertiesToValidType<
+					TransactionInfoFormatted<ReturnType>,
+					TransactionInfo,
+					(keyof TransactionInfo)[],
+					ReturnType
+				>(
+					transaction,
+					// TODO
+					// @ts-expect-error TSC is complaining about different properties being
+					// available by various tx types
+					convertibleTransactionInfoProperties,
+					returnType ?? (this.defaultReturnType as ReturnType),
+				),
+			);
+		}
+		return formattedResponse;
 	}
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -410,36 +434,49 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionApi> {
 		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, difficulty);
 	}
 
-    // TODO Format address to checksum
 	public async requestAccounts() {
-        return rpcMethods.requestAccounts(this.requestManager);
+		const response = await rpcMethods.requestAccounts(this.requestManager);
+		response.map(address => toChecksumAddress(address));
+		return response;
 	}
 
-    // TODO formatting
-	public async getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(returnType?: ReturnType) {
-        const response = await rpcMethods.getChainId(this.requestManager);
+	public async getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getChainId(this.requestManager);
 
-        return convertToValidType(
+		return convertToValidType(
 			response,
 			returnType ?? this.defaultReturnType,
 		) as ValidReturnTypes[ReturnType];
 	}
 
 	public async getNodeInfo() {
-        return rpcMethods.clientVersion(this.requestManager);
+		return rpcMethods.clientVersion(this.requestManager);
 	}
 
-    // TODO formatting
-	public async getProof(
-        address: Address,
+	public async getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		address: Address,
 		storageKeys: HexString32Bytes[],
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-    ) {
-        return rpcMethods.getProof(
-            this.requestManager,
-            address,
-            storageKeys,
-            blockNumber
-        );
+		returnType?: ReturnType,
+	) {
+		const response = await rpcMethods.getProof(
+			this.requestManager,
+			address,
+			storageKeys,
+			blockNumber,
+		);
+
+		return convertObjectPropertiesToValidType<
+			GetProofResultFormatted<ReturnType>,
+			Proof,
+			(keyof Proof)[],
+			ReturnType
+		>(
+			response,
+			convertibleProofProperties,
+			returnType ?? (this.defaultReturnType as ReturnType),
+		);
 	}
 }

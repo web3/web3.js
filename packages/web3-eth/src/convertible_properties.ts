@@ -1,5 +1,6 @@
 import { Block, FeeHistoryResult, ReceiptInfo, TransactionInfo } from 'web3-common';
 import { Transaction } from './types';
+import { Proof } from './web3_eth_execution_api';
 
 export const convertibleBlockProperties: (keyof Block)[] = [
 	'difficulty',
@@ -53,3 +54,5 @@ export const convertibleFeeHistoryResultProperties: (keyof FeeHistoryResult)[] =
 	'oldestBlock',
 	'baseFeePerGas',
 ];
+
+export const convertibleProofProperties: (keyof Proof)[] = ['nonce', 'balance'];
