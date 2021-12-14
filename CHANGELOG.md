@@ -432,12 +432,63 @@ Released with 1.0.0-beta.37 code base.
 - Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
 - `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
 
-## [Unreleased]
+## [1.5.3]
+
+### Fixed
+
+- Unable to send legacy transaction if network supported EIP-1559 (#4277)
+- Fixed bug in sending transaction with providers not support "newBlockHeaders" event (#3891)
 
 ### Changed
 
 - ethers from 5.1.4 to 5.4.4 (#4231)
 - karma from 5.2.3 to 6.3.4 (#4231)
 - lerna from 3.22.1 to 4.0.0 (#4231)
-- Dropped build tests in CI for Node v8 and v10, and added support for Node v14
+- Dropped build tests in CI for Node v8 and v10, and added support for Node v14 (#4231)
 - Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
+- Fixed bug in signTransaction (#4295)
+
+## [1.6.0]
+
+### Changed
+
+- Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
+
+## [1.6.1]
+
+### Added
+
+- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+
+### Changed
+
+- Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
+- Added missing PromiEvent handler types (#4194) 
+- Updated README to include Webpack 5 angular support instructions (#4174)
+- Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
+- Emit subscription id with connect event when creating a subscription (#4300)
+- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
+- Format `block.baseFeePerGas` to number (#4330)
+- Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
+- Updated README to include Webpack 5 angular support instructions (#4174)
+
+### Fixed
+
+- Fix 1.6.1 build size issue with removing static asset files (#4506)
+- Correct `web3.rst` example in documentation (#4511)
+- Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
+
+## [Unreleased]
+
+## [1.7.0]
+
+### Added
+- `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232) (#4585)
+
+### Fixed
+ -  Fix readthedoc's build for web3js documentation (#4425)
+ -  Fix response sorting for batch requests (#4250)
+
+### Changed
+
+ - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)

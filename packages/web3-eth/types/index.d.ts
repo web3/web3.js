@@ -403,12 +403,13 @@ export interface BlockHeader {
     logsBloom: string;
     transactionRoot: string;
     stateRoot: string;
-    receiptRoot: string;
+    receiptsRoot: string;
     miner: string;
     extraData: string;
     gasLimit: number;
     gasUsed: number;
     timestamp: number | string;
+    baseFeePerGas?: number;
 }
 
 // TODO: This interface does exist to provide backwards-compatibility and can get removed on a minor release

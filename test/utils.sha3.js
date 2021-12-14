@@ -4,6 +4,8 @@ var sha3 = require('../packages/web3-utils').sha3;
 var CryptoJS = require('crypto-js');
 var cjsSha3 = require('crypto-js/sha3');
 
+var ethers = require('ethers');
+var ethereumjsUtil = require('ethereumjs-util');
 
 describe('web3.sha3', function () {
     it('should return sha3 with hex prefix', function() {
@@ -47,5 +49,54 @@ describe('web3.sha3', function () {
         test('0x80', '0x6b03a5eef7706e3fb52a61c19ab1122fad7237726601ac665bd4def888f0e4a0');
         test('0x3c9229289a6125f7fdf1885a77bb12c37a8d3b4962d936f7e3084dece32a3ca1', '0x82ff40c0a986c6a5cfad4ddf4c3aa6996f1a7837f9c398e17e5de5cbd5a12b28');
 
+    });
+
+    it('should not return the same sha3 hash', function() {
+        assert.notEqual(
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image'),
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image')
+        );
+    });
+
+    it('should return the same keccak256 hash as ethers', function() {
+        assert.equal(
+            ethers.utils.keccak256(Buffer.from('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image', 'utf-8')),
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image')
+        )
+    });
+
+    it('should return the same keccak256 hash as ethereumjsUtil', function() {
+        assert.equal(
+            ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(Buffer.from('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image', 'utf-8'))),
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image')
+        )
+    });
+
+    it('should equal the expected hash', function() {
+        assert.equal(
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:9382:image'),
+            '0x3ec7b047254e2b906ed1d3af460b970ce1c9001b3882e42cdcc090e6ca049fa5'
+        );
+    });
+
+    it('should equal the expected hash', function() {
+        assert.equal(
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68:2382:image'),
+            '0x74e687805c0cfbf0065120987739a5b0ba9b3686a1a778a463bddddcd18cc432'
+        );
+    });
+
+    it('should return the same keccak256 hash as ethers', function() {
+        assert.equal(
+            ethers.utils.keccak256('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68'),
+            sha3('0x265385c7f4132228a0d54eb1a9e7460b91c0cc68')
+        )
+    });
+
+    it('should return the same keccak256 hash as ethers', function() {
+        assert.equal(
+            ethers.utils.keccak256(Buffer.from('1234', 'utf-8')),
+            sha3('1234')
+        )
     });
 });

@@ -113,6 +113,7 @@
         "crypto-js": "^3.3.0",
         "decache": "^4.6.0",
         "dependency-check": "^4.1.0",
+        "ethereumjs-util": "^7.1.0",
         "ethers": "^5.4.4",
         "ganache-cli": "^6.12.0",
         "jshint": "^2.12.0",
@@ -131,7 +132,6 @@
         "typescript": "^3.9.7",
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
-        "webpack-cli": "^3.3.12"
-    },
-    "dependencies": {}
+        "webpack-cli": "^4.9.1"
+    }
 }

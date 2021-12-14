@@ -260,6 +260,19 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'blockHeaderTimeout', {
+        get: function () {
+            if (_this.options.blockHeaderTimeout === 0) {
+                return _this.options.blockHeaderTimeout;
+            }
+
+            return _this.options.blockHeaderTimeout || this.constructor.blockHeaderTimeout;
+        },
+        set: function (val) {
+            _this.options.blockHeaderTimeout = val;
+        },
+        enumerable: true
+    });    
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -806,6 +819,7 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.send.request = this.parent._executeMethod.bind(txObject, 'send', true); // to make batch requests
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
+    txObject.createAccessList = this.parent._executeMethod.bind(txObject, 'createAccessList');
 
     if (args && this.method.inputs && args.length !== this.method.inputs.length) {
         if (this.nextMethod) {
@@ -903,6 +917,26 @@ Contract.prototype._executeMethod = function _executeMethod(){
     }
 
     switch (args.type) {
+        case 'createAccessList':
+
+            // return error, if no "from" is specified
+            if(!utils.isAddress(args.options.from)) {
+                return utils._fireError(errors.ContractNoFromAddressDefinedError(), defer.eventEmitter, defer.reject, args.callback);
+            }
+
+            var createAccessList = (new Method({
+                name: 'createAccessList',
+                call: 'eth_createAccessList',
+                params: 2,
+                inputFormatter: [formatters.inputTransactionFormatter, formatters.inputDefaultBlockNumberFormatter],
+                requestManager: _this._parent._requestManager,
+                accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
+                defaultAccount: _this._parent.defaultAccount,
+                defaultBlock: _this._parent.defaultBlock
+            })).createFunction();
+
+            return createAccessList(args.options, args.callback);
+
         case 'estimate':
 
             var estimateGas = (new Method({

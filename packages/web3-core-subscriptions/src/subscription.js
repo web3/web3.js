@@ -281,7 +281,6 @@ Subscription.prototype.subscribe = function() {
         if(!err && result) {
             _this.id = result;
             _this.method = payload.params[0];
-            _this.emit('connected', result);
 
             // call callback on notifications
             _this.options.requestManager.addSubscription(_this, function(error, result) {
@@ -310,6 +309,7 @@ Subscription.prototype.subscribe = function() {
                     _this.emit('error', error);
                 }
             });
+            _this.emit('connected', result);
         } else {
             setTimeout(function(){
                 _this.callback(err, false, _this);

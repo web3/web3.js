@@ -8,7 +8,7 @@ var methodCall = 'eth_feeHistory';
 var tests = [
     {
         args: [4, "0xA30953", []],
-        formattedArgs: [4, "0xa30953", []],
+        formattedArgs: ['0x4', "0xa30953", []],
         result: {
             "baseFeePerGas": [
             "0xa",
@@ -45,7 +45,7 @@ var tests = [
     },
     {
         args: ['0x4', 10684755, []],
-        formattedArgs: [4, "0xa30953", []],
+        formattedArgs: ['0x4', "0xa30953", []],
         result: {
             "baseFeePerGas": [
             "0xa",
@@ -82,7 +82,7 @@ var tests = [
     },
     {
         args: [new BigNumber(4), '10684755', []],
-        formattedArgs: [4, "0xa30953", []],
+        formattedArgs: ["0x4", "0xa30953", []],
         result: {
             "baseFeePerGas": [
             "0xa",
@@ -119,7 +119,7 @@ var tests = [
     },
     {
         args: [4, 'latest', []],
-        formattedArgs: [4, 'latest', []],
+        formattedArgs: ["0x4", 'latest', []],
         result: {
             "baseFeePerGas": [
             "0xa",
@@ -156,7 +156,7 @@ var tests = [
     },
     {
         args: [4, 'earliest', []],
-        formattedArgs: [4, 'earliest', []],
+        formattedArgs: ["0x4", 'earliest', []],
         result: {
             "baseFeePerGas": [
             "0xa",
@@ -193,7 +193,7 @@ var tests = [
     },
     {
         args: [4, 'pending', []],
-        formattedArgs: [4, 'pending', []],
+        formattedArgs: ['0x4', 'pending', []],
         result: {
             "baseFeePerGas": [
             "0xa",

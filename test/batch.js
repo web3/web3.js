@@ -6,6 +6,25 @@ var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 
 
 describe('lib/web3/batch', function () {
+    describe('_sortResponses', function () {
+        it('should sort the responses in order of requests', function() {
+            var provider = new FakeIpcProvider();
+            var web3 = new Web3(provider);
+
+            var batch = new web3.BatchRequest();
+            batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', () => {}));
+            batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000005', 'latest', () => {}));
+
+            const res1 = {id: 1, result: 'res1'}
+            const res2 = {id: 2, result: 'res2'}
+            const res3 = {id: 3, result: 'res3'}
+            const sortedResponses = batch._sortResponses([res3, res1, res2]);
+
+            assert.deepEqual(sortedResponses, [res1, res2, res3]);
+            batch.execute();
+        });
+    });
+
     describe('execute', function () {
         it('should execute batch request', function (done) {
 
