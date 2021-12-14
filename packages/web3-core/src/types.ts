@@ -39,7 +39,7 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	net?: Socket,
 ) => Web3BaseProvider<API>;
 
-export interface ConfigOptions {
+export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount: HexString | null;
 	defaultBlock: HexString;

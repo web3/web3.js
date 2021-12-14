@@ -1,5 +1,5 @@
 import { Web3APISpec } from 'web3-common';
-import { ConfigOptions, SupportedProviders } from './types';
+import { Web3ConfigOptions, SupportedProviders } from './types';
 import { Web3Config } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
 
@@ -12,7 +12,7 @@ export class Web3Context<API extends Web3APISpec> extends Web3Config {
 
 	public constructor(
 		provider: SupportedProviders<API> | string,
-		options?: Partial<ConfigOptions>,
+		options?: Partial<Web3ConfigOptions>,
 	) {
 		super();
 		this.requestManager = new Web3RequestManager<API>(provider);

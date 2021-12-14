@@ -1,7 +1,7 @@
 import { ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
 
-import { ConfigOptions } from './types';
+import { Web3ConfigOptions } from './types';
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }
@@ -12,10 +12,10 @@ export enum Web3ConfigEvent {
 }
 
 export abstract class Web3Config
-	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<ConfigOptions> }>
-	implements ConfigOptions
+	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<Web3ConfigOptions> }>
+	implements Web3ConfigOptions
 {
-	private _config: ConfigOptions = {
+	private _config: Web3ConfigOptions = {
 		handleRevert: false,
 		defaultAccount: null,
 		defaultBlock: 'latest',
