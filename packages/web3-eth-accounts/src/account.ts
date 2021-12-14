@@ -53,7 +53,7 @@ export const hashMessage = (message: string): string => {
 export const sign = (data: string, privateKey: string): signResult => {
 	// 64 hex characters + hex-prefix
 	if (privateKey.length !== 66) {
-		throw new Error('Private key must be 32 bytes long');
+		throw new PrivateKeyLengthError();
 	}
 
 	const hash = hashMessage(data);
@@ -175,7 +175,7 @@ export const privateKeyToAccount = (
 	encrypt: () => boolean;
 } => {
 	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
-		throw new InvalidPrivateKeyError(privateKey);
+		throw new InvalidPrivateKeyError();
 	}
 
 	const stringPrivateKey = Buffer.isBuffer(privateKey)
@@ -189,7 +189,7 @@ export const privateKeyToAccount = (
 	// TODO Replace with isHexString32Bytes function in web3-eth PR:
 	// Must be 64 hex characters
 	if (stringPrivateKeyNoPrefix.length !== 64) {
-		throw new PrivateKeyLengthError(stringPrivateKeyNoPrefix);
+		throw new PrivateKeyLengthError();
 	}
 
 	const publicKey = getPublicKey(stringPrivateKeyNoPrefix);
