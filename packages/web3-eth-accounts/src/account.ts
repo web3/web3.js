@@ -6,8 +6,8 @@ import { encrypt as createCipheriv, decrypt as createDecipheriv} from 'ethereum-
 import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes, validateBytesInput,
 	isBuffer,
 	isValidString, } from 'web3-utils';
-import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
 import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
+import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
 
 const validateKeyStore = (keyStore: V3Keystore | string): boolean => !!keyStore;
 
@@ -94,7 +94,7 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
 }>=> {
     if(!(typeof password === 'string')) throw new Error('');
     
-    const json = (!!v3Keystore && typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore) as V3Keystore;
+    const json = (typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore) as V3Keystore;
 
     validateKeyStore(json)
 
@@ -140,10 +140,20 @@ export const encrypt = async (privateKey: string, password: string | Buffer, opt
     const account = privateKeyToAccount(privateKey);
 
     // if given salt or iv is a string, convert it to a Uint8Array
-    const salt = options?.salt ? (typeof options.salt === 'string' ? Buffer.from(options.salt, 'hex'): options.salt): randomBytes(32);
+    let salt;
+    if (options?.salt){
+        salt = typeof options.salt === 'string' ? Buffer.from(options.salt, 'hex'): options.salt
+    } else {
+        salt = randomBytes(32);
+    }
     validateBytesInput(salt);
 
-    const iv = options?.iv ? (typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex'): options.iv): randomBytes(16);
+    let iv;
+    if (options?.iv){
+        iv = typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex'): options.iv
+    } else {
+        iv = randomBytes(16)
+    }
     validateBytesInput(iv);
 
     const kdf = options?.kdf ?? 'scrypt';

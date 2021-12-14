@@ -25,7 +25,7 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 ];
 
 export const invalidPrivateKeytoAccountData: [any, string][] = [
-	['', 'Invalid value given "". Error: not a valid string or buffer.'],
+	['', 'Invalid value given "". Error: Private key must be 32 bytes.'],
 	[Buffer.from([]), 'Invalid value given "". Error: Private key must be 32 bytes.'],
 	[undefined, 'Invalid value given "undefined". Error: not a valid string or buffer.'],
 	[null, 'Invalid value given "null". Error: not a valid string or buffer.'],
@@ -71,4 +71,8 @@ export const validEncryptData: [[any, string, CipherOptions], any][] = [
 
 export const invalidEncryptData: [[any, string, CipherOptions], string][] = [
 	// [["0x123456"]]
+]
+
+export const validDecryptData: [[any, string, CipherOptions]][] = [
+	[["0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6", "123", {iv: Buffer.from("bfb43120ae00e9de110f8325143a2709", 'hex'), salt: Buffer.from("210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd", "hex")}]]
 ]
