@@ -51,7 +51,6 @@ export type AbiFunctionFragment = AbiBaseFragment & {
 	readonly inputs: ReadonlyArray<AbiParameter>;
 	readonly outputs: ReadonlyArray<AbiParameter>;
 
-	// legacy properties
 	readonly constant?: boolean; // stateMutability == 'pure' or stateMutability == 'view'
 	readonly payable?: boolean; // stateMutability == 'payable'
 };

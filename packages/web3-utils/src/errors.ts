@@ -1,5 +1,4 @@
 /* eslint-disable max-classes-per-file */
-
 export abstract class Web3Error extends Error {
 	public readonly name: string;
 
@@ -49,8 +48,13 @@ export class InvalidStringError extends Web3Error {
 }
 
 export class InvalidHexStringError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'not a valid hex string');
+	public constructor(value: unknown, expectedNumberOfBytes?: number) {
+		super(
+			value,
+			expectedNumberOfBytes !== undefined
+				? `not a valid ${expectedNumberOfBytes} byte hex string`
+				: `not a valid hex string`,
+		);
 	}
 }
 
@@ -90,7 +94,7 @@ export class NibbleWidthError extends Web3Error {
 	}
 }
 
-export class InvalidType extends Web3Error {
+export class InvalidTypeError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'invalid type, type not supported');
 	}
@@ -147,5 +151,47 @@ export class InvalidTopicError extends Web3Error {
 export class InvalidCharCodeError extends Web3Error {
 	public constructor(value: number) {
 		super(value, 'invalid char code given');
+	}
+}
+
+export class InvalidTypeAbiInputError extends Web3Error {
+	public constructor(value: string) {
+		super(value, 'components found but type is not tuple');
+	}
+}
+
+// TODO Type of value for all errors should be any as
+// any value can be passed when an error occurs
+export class InvalidBlockNumberOrTagError extends Web3Error {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public constructor(value: any) {
+		super(value, 'invalid block number or tag given');
+	}
+}
+
+export class InvalidFilterError extends Web3Error {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public constructor(value: any) {
+		// TODO Discuss this naive approach to logging object
+		// Does not account for non JSON properties
+		super(JSON.stringify(value), 'invalid filter given');
+	}
+}
+
+export class InvalidDesiredTypeError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid desired type for conversion given');
+	}
+}
+
+export class InvalidConvertibleObjectError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid object for conversion given');
+	}
+}
+
+export class InvalidConvertiblePropertiesListError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'invalid list of convertible properties for conversion given');
 	}
 }

@@ -2,10 +2,10 @@
 
 import { when } from 'jest-when';
 import { Web3AccountProvider, Web3BaseWalletAccount } from 'web3-common';
-import { LocalStorageWallet } from '../../src/local_storage_wallet';
+import { Wallet } from '../../src/local_storage_wallet';
 
-describe('LocalStorageWallet', () => {
-	let wallet: LocalStorageWallet;
+describe('Wallet', () => {
+	let wallet: Wallet;
 	let accountProvider: Web3AccountProvider<Web3BaseWalletAccount>;
 	let localStorageSpy: {
 		getItem: jest.MockedFunction<(key: string) => string>;
@@ -17,7 +17,7 @@ describe('LocalStorageWallet', () => {
 	beforeEach(() => {
 		localStorageSpy = { getItem: jest.fn(), setItem: jest.fn() };
 
-		jest.spyOn(LocalStorageWallet, 'getStorage').mockReturnValue(localStorageSpy as never);
+		jest.spyOn(Wallet, 'getStorage').mockReturnValue(localStorageSpy as never);
 
 		accountProvider = {
 			privateKeyToAccount: jest.fn().mockImplementation(() => {
@@ -30,12 +30,12 @@ describe('LocalStorageWallet', () => {
 				return { address: `account_create_${totalAccountsCreate}` };
 			}),
 		};
-		wallet = new LocalStorageWallet(accountProvider);
+		wallet = new Wallet(accountProvider);
 	});
 
 	describe('constructor', () => {
 		it('should create instance of the wallet', () => {
-			expect(wallet).toBeInstanceOf(LocalStorageWallet);
+			expect(wallet).toBeInstanceOf(Wallet);
 		});
 	});
 
@@ -44,7 +44,7 @@ describe('LocalStorageWallet', () => {
 			const numberOfAccounts = 10;
 			const accounts = [];
 
-			wallet.create(numberOfAccounts, 'entropy');
+			wallet.create(numberOfAccounts);
 
 			for (let i = 0; i < numberOfAccounts; i += 1) {
 				accounts.push(wallet.get(i));
@@ -54,7 +54,6 @@ describe('LocalStorageWallet', () => {
 			expect(accounts).toHaveLength(numberOfAccounts);
 			expect(accounts).toMatchSnapshot();
 			expect(accountProvider.create).toHaveBeenCalledTimes(numberOfAccounts);
-			expect(accountProvider.create).toHaveBeenCalledWith('entropy');
 		});
 	});
 
@@ -249,7 +248,7 @@ describe('LocalStorageWallet', () => {
 
 	describe('save', () => {
 		it('should throw error if local storage not present', () => {
-			jest.spyOn(LocalStorageWallet, 'getStorage').mockReturnValue(undefined);
+			jest.spyOn(Wallet, 'getStorage').mockReturnValue(undefined);
 
 			expect(() => wallet.save('password')).toThrow('Local storage not available.');
 		});
@@ -287,7 +286,7 @@ describe('LocalStorageWallet', () => {
 
 	describe('load', () => {
 		it('should throw error if local storage not present', () => {
-			jest.spyOn(LocalStorageWallet, 'getStorage').mockReturnValue(undefined);
+			jest.spyOn(Wallet, 'getStorage').mockReturnValue(undefined);
 
 			expect(() => wallet.load('password')).toThrow('Local storage not available.');
 		});

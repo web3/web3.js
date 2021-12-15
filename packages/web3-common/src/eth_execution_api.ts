@@ -1,5 +1,6 @@
 import {
 	Address,
+	BlockNumberOrTag,
 	HexString,
 	HexString256Bytes,
 	HexString8Bytes,
@@ -8,6 +9,8 @@ import {
 	HexStringSingleByte,
 	Uint,
 	Uint256,
+	Topic,
+	Filter,
 } from 'web3-utils';
 
 // The types are generated manually by referring to following doc
@@ -20,9 +23,8 @@ export interface AccessListEntry {
 export type AccessList = AccessListEntry[];
 export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
-export type BlockTag = 'earliest' | 'latest' | 'pending';
-export type BlockNumberOrTag = Uint | BlockTag;
 
+// TODO Should probably support EIP-2930 and EIP-1559
 export interface TransactionCall {
 	readonly from?: Address;
 	readonly to: Address;
@@ -118,13 +120,10 @@ export interface Block {
 	readonly totalDifficulty: Uint;
 	readonly baseFeePerGas?: Uint;
 	readonly size: Uint;
-	readonly transactions: TransactionHash[] | TransactionSigned[];
+	readonly transactions: TransactionHash[] | TransactionInfo[];
 	readonly uncles: Uncles;
 	readonly hash: HexString32Bytes | null;
 }
-
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
-export type Topic = HexString256Bytes;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L2
 export interface Log {
@@ -142,7 +141,7 @@ export interface Log {
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
 export interface ReceiptInfo {
 	readonly transactionHash: HexString32Bytes;
-	readonly transactionIndex: HexString32Bytes;
+	readonly transactionIndex: Uint;
 	readonly blockHash: HexString32Bytes;
 	readonly blockNumber: Uint;
 	readonly from: Address;
@@ -166,14 +165,6 @@ export interface FeeHistoryResult {
 	readonly oldestBlock: Uint;
 	readonly baseFeePerGas: Uint;
 	readonly reward: number[][];
-}
-
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
-export interface Filter {
-	readonly fromBlock?: BlockNumberOrTag;
-	readonly toBlock?: BlockNumberOrTag;
-	readonly address?: Address | Address[];
-	readonly topics?: (Topic | Topic[] | null)[];
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L2
