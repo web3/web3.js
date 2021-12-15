@@ -4,7 +4,29 @@ import { SupportedProviders } from 'web3-core';
 import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
 import { Address, Bytes, Numbers, Uint, HexString } from 'web3-utils';
 
-type Callback<T> = (error: Error, result: T) => void;
+export type Callback<T> = (error: Error, result: T) => void;
+
+export interface EventLog {
+	event: string;
+	address: string;
+	returnValues: any;
+	logIndex: number;
+	transactionIndex: number;
+	transactionHash: string;
+	blockHash: string;
+	blockNumber: number;
+	raw?: { data: string; topics: any[] };
+}
+
+export interface ContractEventLog<T> extends EventLog {
+	returnValues: T;
+}
+
+export interface ContactEventOptions {
+	filter?: object;
+	fromBlock?: BlockNumberOrTag;
+	topics?: string[];
+}
 
 export interface ContractOptions {
 	readonly gas: Uint | null;
@@ -50,17 +72,17 @@ export interface PayableTx extends NonPayableTx {
 	value?: Numbers;
 }
 
-export interface NonPayableTransactionObject<T> {
-	arguments: T;
-	call(tx?: NonPayableTx, block?: BlockNumberOrTag): Promise<T>;
+export interface NonPayableTransactionObject<Inputs, Outputs> {
+	arguments: Array<Inputs[keyof Inputs]>;
+	call(tx?: NonPayableTx, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: NonPayableTx): PromiEvent<TransactionReceipt>;
 	estimateGas(tx?: NonPayableTx): Promise<number>;
 	encodeABI(): string;
 }
 
-export interface PayableTransactionObject<T> {
-	arguments: T;
-	call(tx?: PayableTx, block?: BlockNumberOrTag): Promise<T>;
+export interface PayableTransactionObject<Inputs, Outputs> {
+	arguments: Array<Inputs[keyof Inputs]>;
+	call(tx?: PayableTx, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: PayableTx): PromiEvent<TransactionReceipt>;
 	estimateGas(tx?: PayableTx): Promise<number>;
 	encodeABI(): string;
@@ -70,20 +92,23 @@ export type ContractMethodsInterface<
 	Abi extends ContractAbi,
 	Methods extends ContractMethods<Abi>,
 > = {
-	[Name in keyof Methods]: {
-		call: (
-			args: Methods[Name]['Inputs'],
-			// TODO: Debug why the `Abi` object is not accessible.
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-		) => Methods[Name]['Abi']['stateMutability'] extends 'payable' | 'pure'
-			? PayableTransactionObject<Methods[Name]['Outputs']>
-			: NonPayableTransactionObject<Methods[Name]['Outputs']>;
-	};
+	[Name in keyof Methods]: (
+		...args: Array<Methods[Name]['Inputs'][keyof Methods[Name]['Inputs']]>
+	) => // TODO: Debug why the `Abi` object is not accessible.
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
+	Methods[Name]['Abi']['stateMutability'] extends 'payable' | 'pure'
+		? PayableTransactionObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>
+		: NonPayableTransactionObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>;
 };
 
 export type ContractEventsInterface<Abi extends ContractAbi, Events extends ContractEvents<Abi>> = {
-	[Name in keyof Events]: (cb?: Callback<Events[Name]['Inputs']>) => EventEmitter;
+	[Name in keyof Events]:
+		| ((cb: Callback<ContractEventLog<Events[Name]['Inputs']>>) => EventEmitter)
+		| ((
+				options: ContactEventOptions,
+				cb: Callback<ContractEventLog<Events[Name]['Inputs']>>,
+		  ) => EventEmitter);
 };
 
 export type ContractEventEmitterInterface<

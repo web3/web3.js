@@ -135,12 +135,13 @@ export class Contract<Abi extends ContractAbi>
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractFunction(
 		name: string,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		_abi: AbiFunctionFragment,
 	): ContractBoundFunction {
 		return name;
 	}
 
-	// eslint-disable-next-line class-methods-use-this
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
 	private _createContractEvent(name: string, _abi: AbiEventFragment): ContractBoundEvent {
 		return name;
 	}
