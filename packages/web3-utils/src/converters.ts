@@ -1,12 +1,29 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
+
 import {
 	HexProcessingError,
 	InvalidAddressError,
 	InvalidBytesError,
 	InvalidIntegerError,
 	InvalidUnitError,
+	InvalidTypeAbiInputError,
+	InvalidDesiredTypeError,
+	InvalidConvertibleObjectError,
+	InvalidConvertiblePropertiesListError,
 } from './errors';
-import { Address, Bytes, HexString, Numbers, ValueTypes } from './types';
+import {
+	Address,
+	Bytes,
+	HexString,
+	Numbers,
+	ValueTypes,
+	ValidTypes,
+	ValidReturnTypes,
+	FormatValidReturnType,
+	JsonFunctionInterface,
+	JsonEventInterface,
+	Components,
+} from './types';
 import {
 	isAddress,
 	isHexStrict,
@@ -383,3 +400,109 @@ export const toChecksumAddress = (address: Address): string => {
 	}
 	return checksumAddress;
 };
+
+/**
+ *  used to flatten json abi inputs/outputs into an array of type-representing-strings
+ */
+export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[] => {
+	const types: string[] = [];
+
+	puts.forEach(param => {
+		if (typeof param.components === 'object') {
+			if (!param.type.startsWith('tuple')) {
+				throw new InvalidTypeAbiInputError(param.type);
+			}
+			const arrayBracket = param.type.indexOf('[');
+			const suffix = arrayBracket >= 0 ? param.type.substring(arrayBracket) : '';
+			const result = flattenTypes(includeTuple, param.components);
+
+			if (Array.isArray(result) && includeTuple) {
+				types.push(`tuple(${result.join(',')})${suffix}`);
+			} else if (!includeTuple) {
+				types.push(`(${result.join(',')})${suffix}`);
+			} else {
+				types.push(`(${result.join()})`);
+			}
+		} else {
+			types.push(param.type);
+		}
+	});
+
+	return types;
+};
+
+/**
+ * Should be used to create full function/event name from json abi
+ * returns a string
+ */
+export const jsonInterfaceMethodToString = (
+	json: JsonFunctionInterface | JsonEventInterface,
+): string => {
+	if (json.name.includes('(')) {
+		return json.name;
+	}
+
+	return `${json.name}(${flattenTypes(false, json.inputs).join(',')})`;
+};
+
+export const convertToValidType = (
+	value: ValidReturnTypes[ValidTypes], // validate this
+	desiredType: ValidTypes,
+): ValidReturnTypes[ValidTypes] => {
+	switch (desiredType) {
+		case ValidTypes.HexString:
+			return numberToHex(value);
+		case ValidTypes.NumberString:
+			return hexToNumberString(numberToHex(value));
+		case ValidTypes.Number:
+			return toNumber(value);
+		case ValidTypes.BigInt:
+			return BigInt(toNumber(value));
+		default:
+			throw new InvalidDesiredTypeError(desiredType);
+	}
+};
+
+// TODO Handle nested objects
+export function convertObjectPropertiesToValidType<
+	// Object can have any properties. Unless specified as [key: string] index type didn't detect the record key correctly
+	// Also objects property types can be arrays, or other customs types as well so we have to specify any to cover all
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	ObjectType extends Record<any, any>,
+	Properties extends (keyof ObjectType)[],
+	ReturnType extends ValidTypes,
+>(
+	object: ObjectType,
+	convertibleProperties: Properties,
+	desiredType: ReturnType,
+): FormatValidReturnType<ObjectType, Properties, ReturnType> {
+	if (typeof object !== 'object' || object === null)
+		throw new InvalidConvertibleObjectError(object);
+	if (
+		!Array.isArray(convertibleProperties) ||
+		!convertibleProperties.every(convertibleProperty => typeof convertibleProperty === 'string')
+	)
+		throw new InvalidConvertiblePropertiesListError(convertibleProperties);
+	if (!Object.values(ValidTypes).includes(desiredType))
+		throw new InvalidDesiredTypeError(desiredType);
+
+	const convertedObject = { ...object } as FormatValidReturnType<
+		ObjectType,
+		Properties,
+		ReturnType
+	>;
+
+	for (const convertibleProperty of convertibleProperties) {
+		if (convertedObject[convertibleProperty] === undefined) continue;
+
+		// TODO Check why TS compiler is unable to detect the matching type of the deep properties
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-expect-error
+		convertedObject[convertibleProperty] = convertToValidType(
+			object[convertibleProperty],
+			desiredType,
+		);
+	}
+
+	return convertedObject;
+}

@@ -1,3 +1,4 @@
+import { ValidTypes } from 'web3-utils';
 import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
@@ -9,6 +10,7 @@ const defaultConfig = {
 	defaultChain: null,
 	defaultCommon: null,
 	defaultHardfork: null,
+	defaultReturnType: ValidTypes.HexString,
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,

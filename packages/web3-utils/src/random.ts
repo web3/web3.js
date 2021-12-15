@@ -6,14 +6,13 @@ import { randomBytes as cryptoRandomBytes } from 'crypto';
  * @param {Number} size
  * @returns {Buffer}
  */
- export const randomBytes = (byteSize: number): Buffer => {
+export const randomBytes = (byteSize: number): Buffer => {
 	const randomValues =
 		typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues
 			? window.crypto.getRandomValues(new Uint8Array(byteSize))
 			: cryptoRandomBytes(byteSize);
 	return Buffer.from(randomValues);
 };
-
 
 /**
  * Returns a random hex string by the given bytes size
@@ -22,5 +21,3 @@ import { randomBytes as cryptoRandomBytes } from 'crypto';
  * @returns {string}
  */
 export const randomHex = (byteSize: number): string => `0x${randomBytes(byteSize).toString('hex')}`;
-
-
