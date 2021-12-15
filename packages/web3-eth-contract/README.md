@@ -30,6 +30,23 @@ yarn add web3-eth-contract
 -   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
 -   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
 
+## Usage
+
+You can initialize the typesafe Contract API instance with the following.
+
+```ts
+import { Contract } from 'web3-eth-contract';
+
+const abi = [...] as const;
+
+const contract = new Contract(abi);
+```
+
+-   We prefer that you use `web3.eth.Contract` API in normal usage.
+-   The use of `as const` is necessary to have fully type-safe interface for the contract.
+-   As the ABIs does not extensive in size, we suggest to copy those in your TS project and declare them `as const`.
+-   This approach is more flexible and seamless compared to other approaches of off-line compiling ABIs to TS interfaces.
+
 ## Package.json Scripts
 
 | Script           | Description                                        |
