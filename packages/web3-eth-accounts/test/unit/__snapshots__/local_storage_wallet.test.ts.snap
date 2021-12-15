@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LocalStorageWallet create should create given # of accounts using the account provider 1`] = `
+exports[`Wallet create should create given # of accounts using the account provider 1`] = `
 Array [
   Object {
     "address": "account_create_1",
