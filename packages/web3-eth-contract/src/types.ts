@@ -9,13 +9,13 @@ export type Callback<T> = (error: Error, result: T) => void;
 export interface EventLog {
 	event: string;
 	address: string;
-	returnValues: any;
+	returnValues: unknown;
 	logIndex: number;
 	transactionIndex: number;
 	transactionHash: string;
 	blockHash: string;
 	blockNumber: number;
-	raw?: { data: string; topics: any[] };
+	raw?: { data: string; topics: unknown[] };
 }
 
 export interface ContractEventLog<T> extends EventLog {
