@@ -12,7 +12,7 @@ import {
 } from '../validation';
 
 export const metaSchema = {
-	title: 'Wen3 Ethereum Compatible Types',
+	title: 'Web3 Ethereum Compatible Types',
 	type: 'string',
 };
 

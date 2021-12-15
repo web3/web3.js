@@ -12,7 +12,7 @@ export class Web3ValidatorError extends Error {
 		this.name = this.constructor.name;
 		this.errors = errors;
 
-		this.message = `Lisk validator found ${
+		this.message = `Web3 validator found ${
 			this.errors.length
 		} error[s]:\n${this._compileErrors().join('\n')}`;
 
