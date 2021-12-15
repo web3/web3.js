@@ -125,7 +125,7 @@ export const signTransaction = (
 /**
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
  */
-export const recoverTransaction = (rawTransaction: string): Address => {
+export const recoverTransaction = (rawTransaction: HexString): Address => {
 	if (rawTransaction === undefined) throw new UndefinedRAWTransactionError();
 
 	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
@@ -148,12 +148,13 @@ export const recover = (
 
 	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
 
+	const V_INDEX = 130;
 	const hashedMessage = hashed ? data : hashMessage(data);
 
-	const v = signature.substring(130); // 0x + r + s + v
+	const v = signature.substring(V_INDEX); // 0x + r + s + v
 
 	const ecPublicKey = ecdsaRecover(
-		Buffer.from(signature.substring(2, 130), 'hex'),
+		Buffer.from(signature.substring(2, V_INDEX), 'hex'),
 		parseInt(v, 16) - 27,
 		Buffer.from(hashedMessage.substring(2), 'hex'),
 		false,
