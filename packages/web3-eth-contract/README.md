@@ -47,6 +47,10 @@ const contract = new Contract(abi);
 -   As the ABIs does not extensive in size, we suggest to copy those in your TS project and declare them `as const`.
 -   This approach is more flexible and seamless compared to other approaches of off-line compiling ABIs to TS interfaces.
 
+## Compatibility
+
+We had tested the Typescript interface support for the ABIs compiled with solidity version `v0.4.x` and above. If you face any issue regarding the contract typing, please create an issue to report to us.
+
 ## Package.json Scripts
 
 | Script           | Description                                        |
