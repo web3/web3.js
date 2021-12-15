@@ -10,9 +10,6 @@ import {
 	Uint256,
 } from 'web3-utils';
 
-// TODO Not sure if this is okay to do
-import { isFilterObjectValidData } from 'web3-utils/test/fixtures/validation';
-
 import { isTransactionCallValidData, isTransactionWithSenderValidData } from './validation';
 
 export const getBalanceValidData: [Address, BlockNumberOrTag][] = [
@@ -161,6 +158,68 @@ export const compileSolidityValidData: [string][] = [
 export const compileLLLValidData: [string][] = [['(returnlll (suicide (caller)))']];
 
 export const compileSerpentValidData: [string][] = [['/* some serpent */']];
+
+export const isFilterObjectValidData: [Filter, true][] = [
+	[
+		{
+			fromBlock: '0xc0ff3',
+		},
+		true,
+	],
+	[
+		{
+			toBlock: '0xc0ff3',
+		},
+		true,
+	],
+	[
+		{
+			address: '0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
+		},
+		true,
+	],
+	[
+		{
+			address: [
+				'0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
+				'0xdfd5293d8e347dfe59e90efd55b2956a1343963d',
+			],
+		},
+		true,
+	],
+	[
+		{
+			topics: [
+				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+				null,
+				[
+					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+				],
+			],
+		},
+		true,
+	],
+	[
+		{
+			fromBlock: '0xc0ff3',
+			toBlock: '0xc0ff3',
+			address: [
+				'0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
+				'0xdfd5293d8e347dfe59e90efd55b2956a1343963d',
+			],
+			topics: [
+				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+				null,
+				[
+					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					'0x0000000000000000000000000aff3454fce5edbc8cca8697c15331677e6ebccc',
+				],
+			],
+		},
+		true,
+	],
+];
 
 export const newFilterValidData = (): [Filter][] =>
 	isFilterObjectValidData.map(transaction => [transaction[0]]);
