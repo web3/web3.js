@@ -124,7 +124,7 @@ export const encrypt = async (
 		kdfparams = {
 			dklen: options?.dklen ?? 32,
 			salt: salt.toString('hex'),
-			c: options?.c ?? 2097152,
+			c: options?.c ?? 262144,
 			prf: 'hmac-sha256',
 		};
 		derivedKey = pbkdf2Sync(
