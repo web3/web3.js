@@ -1,6 +1,6 @@
 import { isHexStrict } from 'web3-utils';
 import { create, privateKeyToAccount, encrypt, decrypt } from '../../src/account';
-import { validPrivateKeytoAccountData, invalidPrivateKeytoAccountData, validEncryptData, validDecryptData } from '../fixtures/account';
+import { validPrivateKeytoAccountData, invalidPrivateKeytoAccountData, validEncryptData, validDecryptData, invalidDecryptData, invalidEncryptData } from '../fixtures/account';
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -49,6 +49,12 @@ describe('accounts', () => {
 
 			});
 		});
+
+		describe('invalid cases', () => {
+			it.each(invalidEncryptData)('%s', (input, output) => {
+				expect(async () => await encrypt(input[0], input[1], input[2])).rejects.toThrow(output);
+			});
+		})
 	})
 	describe('decrypt', () => {
 		describe('valid cases', () => {
@@ -58,10 +64,17 @@ describe('accounts', () => {
 				});
 
 				// make sure decrypt does not throw invalid password error
-				const result = await decrypt(keystore, input[1])
+				const result = await decrypt(keystore, input[1]).catch(err => {
+					throw err;
+				});
 				expect(result).toEqual(privateKeyToAccount(input[0].slice(2)))
 
 			})
 		})
+		describe('invalid cases', () => {
+			it.each(invalidDecryptData)('%s', (input, output) => {
+				expect(() =>  decrypt(input[0], input[1])).rejects.toThrow(output);
+			});
+		});
 	})
 });

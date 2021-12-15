@@ -37,6 +37,7 @@ import {
 	ERR_ABI_ENCODING,
 	ERR_INVALID_PRIVATE_KEY,
 	ERR_PRIVATE_KEY_LENGTH,
+	ERR_UNSUPPORTED_KDF
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -407,5 +408,19 @@ export class InvalidPrivateKeyError extends Web3Error {
 	public code = ERR_INVALID_PRIVATE_KEY;
 	public constructor(value: string | Buffer) {
 		super(`Invalid value given "${String(value)}". Error: not a valid string or buffer.`);
+	}
+}
+
+export class InvalidKdfError extends Web3Error {
+	public code = ERR_UNSUPPORTED_KDF;
+	public constructor(){
+		super(`Error: invalid key derivation function`)
+	}
+}
+
+export class KeyDerivationError extends Web3Error {
+	public code = ERR_UNSUPPORTED_KDF;
+	public constructor() {
+		super(`Error: Key derivation failed - possibly wrong password`)
 	}
 }

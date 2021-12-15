@@ -6,7 +6,7 @@ import { encrypt as createCipheriv, decrypt as createDecipheriv} from 'ethereum-
 import { toChecksumAddress, bytesToHex, sha3Raw, HexString, randomBytes, hexToBytes, validateBytesInput,
 	isBuffer,
 	isValidString, } from 'web3-utils';
-import { InvalidPrivateKeyError, PrivateKeyLengthError } from 'web3-common';
+import { InvalidPrivateKeyError, PrivateKeyLengthError, InvalidKdfError, KeyDerivationError } from 'web3-common';
 import { V3Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types'
 
 const validateKeyStore = (keyStore: V3Keystore | string): boolean => !!keyStore;
@@ -87,12 +87,11 @@ const uuidV4 = () => {
  * */
 export const decrypt = async (v3Keystore: V3Keystore | string, password: string, nonStrict?: boolean): Promise<{
     address: string;
-    privateKey: string;
+    privateKey: HexString;
     signTransaction: () => boolean; // From 1.x
     sign: () => boolean;
     encrypt: (a: string,b: string) => Promise<V3Keystore>;
 }>=> {
-    if(!(typeof password === 'string')) throw new Error('');
     
     const json = (typeof v3Keystore === 'object') ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore) as V3Keystore;
 
@@ -111,20 +110,16 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
     } else if (json.crypto.kdf === 'pbkdf2') {
         const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams as PBKDF2SHA256Params;
 
-        if (kdfparams.prf !== 'hmac-sha256') {
-            throw new Error('Unsupported parameters to PBKDF2');
-        }
-
         derivedKey = pbkdf2Sync(Buffer.from(password), Buffer.from(kdfparams.salt), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
-        throw new Error('Unsupported key derivation scheme');
+        throw new InvalidKdfError();
     }
 
     const ciphertext = hexToBytes(`0X${json.crypto.ciphertext}`);
     const mac = sha3Raw(Buffer.from([...derivedKey.slice(16, 32), ...ciphertext])).replace('0x', '');
     
     if (mac !== json.crypto.mac) {
-        throw new Error('Key derivation failed - possibly wrong password');
+        throw new KeyDerivationError();
     }
 
     const seed = await createDecipheriv(Buffer.from(json.crypto.ciphertext, 'hex'), derivedKey.slice(0, 16), Buffer.from(json.crypto.cipherparams.iv, 'hex'));
@@ -136,7 +131,12 @@ export const decrypt = async (v3Keystore: V3Keystore | string, password: string,
  * encrypt a private key given a password, returns a V3 JSON Keystore
  * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
  */
-export const encrypt = async (privateKey: string, password: string | Buffer, options?: CipherOptions): Promise<V3Keystore> => {
+export const encrypt = async (privateKey: HexString, password: string | Buffer, options?: CipherOptions): Promise<V3Keystore> => {
+
+    if (!(isValidString(privateKey) || isBuffer(privateKey))) {
+		throw new InvalidPrivateKeyError(privateKey);
+	}
+
     const account = privateKeyToAccount(privateKey);
 
     // if given salt or iv is a string, convert it to a Uint8Array
@@ -181,7 +181,7 @@ export const encrypt = async (privateKey: string, password: string | Buffer, opt
         }   
         derivedKey = scryptSync(Buffer.from(password), Buffer.from(salt), kdfparams.n, kdfparams.p, kdfparams.r,kdfparams.dklen);
 	} else {
-		throw new Error('Unsupported kdf');
+		throw new InvalidKdfError();
 	}
 
     const cipherKey =  Buffer.from(privateKey.replace('0x', ''), 'hex')
@@ -189,9 +189,7 @@ export const encrypt = async (privateKey: string, password: string | Buffer, opt
 	const cipher = await createCipheriv(cipherKey, Buffer.from(derivedKey.slice(0,16)), iv, 'aes-128-ctr');
 
     const ciphertext = bytesToHex(cipher).slice(2);
-	if (!ciphertext) {
-		throw new Error('unsupported cipher');
-	}
+
     const mac =  sha3Raw(Buffer.from([...derivedKey.slice(16,32), ...cipher])).replace('0x', '');
 
 	return {
