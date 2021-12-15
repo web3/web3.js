@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { BlockNumberOrTag, EthExecutionAPI } from 'web3-common';
+import { BlockNumberOrTag, EthExecutionAPI, PromiEvent } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
 import { Address, Bytes, Numbers, Uint, HexString } from 'web3-utils';
@@ -50,12 +50,6 @@ export interface ContractInitOptions {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface TransactionReceipt {}
 
-// TODO: Add correct type
-// eslint-disable-next-line
-export interface PromiEvent<T> {
-	T: T;
-}
-
 export interface NonPayableTx {
 	nonce?: Numbers;
 	chainId?: Numbers;
@@ -75,7 +69,21 @@ export interface PayableTx extends NonPayableTx {
 export interface NonPayableTransactionObject<Inputs, Outputs> {
 	arguments: Array<Inputs[keyof Inputs]>;
 	call(tx?: NonPayableTx, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: NonPayableTx): PromiEvent<TransactionReceipt>;
+	send(tx?: NonPayableTx): PromiEvent<
+		TransactionReceipt,
+		{
+			sending: object;
+			sent: object;
+			transactionHash: string;
+			receipt: TransactionReceipt;
+			confirmation: {
+				confirmations: number;
+				receipt: TransactionReceipt;
+				latestBlockHash: HexString;
+			};
+			error: Error;
+		}
+	>;
 	estimateGas(tx?: NonPayableTx): Promise<number>;
 	encodeABI(): string;
 }
@@ -83,7 +91,21 @@ export interface NonPayableTransactionObject<Inputs, Outputs> {
 export interface PayableTransactionObject<Inputs, Outputs> {
 	arguments: Array<Inputs[keyof Inputs]>;
 	call(tx?: PayableTx, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: PayableTx): PromiEvent<TransactionReceipt>;
+	send(tx?: PayableTx): PromiEvent<
+		TransactionReceipt,
+		{
+			sending: object;
+			sent: object;
+			transactionHash: string;
+			receipt: TransactionReceipt;
+			confirmation: {
+				confirmations: number;
+				receipt: TransactionReceipt;
+				latestBlockHash: HexString;
+			};
+			error: Error;
+		}
+	>;
 	estimateGas(tx?: PayableTx): Promise<number>;
 	encodeABI(): string;
 }
