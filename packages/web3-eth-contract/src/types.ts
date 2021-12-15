@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
-import { BlockNumberOrTag, EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
+import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
-import { Address, Bytes, Numbers, Uint, HexString } from 'web3-utils';
+import { Address, Bytes, Numbers, Uint, HexString, BlockNumberOrTag } from 'web3-utils';
 
 export type Callback<T> = (error: Error, result: T) => void;
 
