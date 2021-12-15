@@ -113,7 +113,9 @@ export type PrimitiveBooleanType<Type extends string> = Type extends `bool[${inf
 	? boolean
 	: never;
 
-export type PrimitiveIntegerType<Type extends string> = Type extends `uint${string}[${infer Size}]`
+export type PrimitiveIntegerType<Type extends string> = Type extends
+	| `uint${string}[${infer Size}]`
+	| `int${string}[${infer Size}]`
 	? _TypedArray<Numbers, Size>
 	: Type extends 'uint' | 'int' | `int${string}` | `uint${string}`
 	? Numbers
