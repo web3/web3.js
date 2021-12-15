@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { BlockNumberOrTag, EthExecutionAPI, PromiEvent } from 'web3-common';
+import { BlockNumberOrTag, EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
 import { Address, Bytes, Numbers, Uint, HexString } from 'web3-utils';
@@ -46,9 +46,7 @@ export interface ContractInitOptions {
 	readonly provider: SupportedProviders<EthExecutionAPI> | string;
 }
 
-// TODO: Add correct type
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface TransactionReceipt {}
+export type TransactionReceipt = ReceiptInfo;
 
 export interface NonPayableTx {
 	nonce?: Numbers;
