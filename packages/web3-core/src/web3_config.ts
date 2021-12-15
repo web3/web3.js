@@ -1,19 +1,7 @@
-import { HexString } from 'web3-utils';
+import { ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
 
-interface ConfigOptions {
-	handleRevert: boolean;
-	defaultAccount: HexString | null;
-	defaultBlock: HexString;
-	transactionBlockTimeout: number;
-	transactionConfirmationBlocks: number;
-	transactionPollingTimeout: number;
-	blockHeaderTimeout: number;
-	maxListenersWarningThreshold: number;
-	defaultChain: string | null;
-	defaultHardfork: string | null;
-	defaultCommon: Record<string, unknown> | null;
-}
+import { Web3ConfigOptions } from './types';
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }
@@ -24,10 +12,10 @@ export enum Web3ConfigEvent {
 }
 
 export abstract class Web3Config
-	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<ConfigOptions> }>
-	implements ConfigOptions
+	extends Web3EventEmitter<{ [Web3ConfigEvent.CONFIG_CHANGE]: ConfigEvent<Web3ConfigOptions> }>
+	implements Web3ConfigOptions
 {
-	private _config: ConfigOptions = {
+	private _config: Web3ConfigOptions = {
 		handleRevert: false,
 		defaultAccount: null,
 		defaultBlock: 'latest',
@@ -39,6 +27,7 @@ export abstract class Web3Config
 		defaultChain: null,
 		defaultHardfork: null,
 		defaultCommon: null,
+		defaultReturnType: ValidTypes.HexString,
 	};
 
 	public getConfig() {
@@ -192,5 +181,19 @@ export abstract class Web3Config
 		});
 
 		this._config.defaultCommon = val;
+	}
+
+	public get defaultReturnType() {
+		return this._config.defaultReturnType;
+	}
+
+	public set defaultReturnType(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultReturnType',
+			oldValue: this._config.defaultReturnType,
+			newValue: val,
+		});
+
+		this._config.defaultReturnType = val;
 	}
 }
