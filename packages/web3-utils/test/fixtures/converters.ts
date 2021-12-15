@@ -1,5 +1,19 @@
 import { EtherUnits } from '../../src/converters';
-import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
+import {
+	InvalidConvertibleObjectError,
+	InvalidConvertiblePropertiesListError,
+	InvalidDesiredTypeError,
+	InvalidIntegerError,
+} from '../../src/errors';
+import {
+	Address,
+	Bytes,
+	HexString,
+	Numbers,
+	ValidTypes,
+	ValueTypes,
+	ValidReturnTypes,
+} from '../../src/types';
 
 export const bytesToHexValidData: [Bytes, HexString][] = [
 	[new Uint8Array([72]), '0x48'],
@@ -255,4 +269,272 @@ export const toCheckSumValidData: [string, string][] = [
 	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],
 	['0x5fbc2b6c19ee3dd5f9af96ff337ddc89e30ceaef', '0x5FBc2b6C19EE3DD5f9Af96ff337DDC89e30ceAef'],
 	['0xa54D3c09E34aC96807c1CC397404bF2B98DC4eFb', '0xa54d3c09E34aC96807c1CC397404bF2B98DC4eFb'],
+];
+
+export const convertToValidTypeValidData: [
+	ValidReturnTypes[ValidTypes],
+	ValidTypes,
+	ValidReturnTypes[ValidTypes],
+][] = [
+	['0x2a', ValidTypes.HexString, '0x2a'],
+	['42', ValidTypes.HexString, '0x2a'],
+	[42, ValidTypes.HexString, '0x2a'],
+	[BigInt('42'), ValidTypes.HexString, '0x2a'],
+	['0x2a', ValidTypes.NumberString, '42'],
+	['42', ValidTypes.NumberString, '42'],
+	[42, ValidTypes.NumberString, '42'],
+	[BigInt('42'), ValidTypes.NumberString, '42'],
+	['0x2a', ValidTypes.Number, 42],
+	['42', ValidTypes.Number, 42],
+	[42, ValidTypes.Number, 42],
+	[BigInt('42'), ValidTypes.Number, 42],
+	['0x2a', ValidTypes.BigInt, BigInt('42')],
+	['42', ValidTypes.BigInt, BigInt('42')],
+	[42, ValidTypes.BigInt, BigInt('42')],
+	[BigInt('42'), ValidTypes.BigInt, BigInt('42')],
+	['-0x2a', ValidTypes.HexString, '-0x2a'],
+	['-42', ValidTypes.HexString, '-0x2a'],
+	[-42, ValidTypes.HexString, '-0x2a'],
+	[BigInt('-42'), ValidTypes.HexString, '-0x2a'],
+	['-0x2a', ValidTypes.NumberString, '-42'],
+	['-42', ValidTypes.NumberString, '-42'],
+	[-42, ValidTypes.NumberString, '-42'],
+	[BigInt('-42'), ValidTypes.NumberString, '-42'],
+	['-0x2a', ValidTypes.Number, -42],
+	['-42', ValidTypes.Number, -42],
+	[-42, ValidTypes.Number, -42],
+	[BigInt('-42'), ValidTypes.Number, -42],
+	['-0x2a', ValidTypes.BigInt, BigInt('-42')],
+	['-42', ValidTypes.BigInt, BigInt('-42')],
+	[-42, ValidTypes.BigInt, BigInt('-42')],
+	[BigInt('-42'), ValidTypes.BigInt, BigInt('-42')],
+];
+
+export const convertToValidTypeInvalidData: [
+	any,
+	any,
+	InvalidDesiredTypeError | InvalidIntegerError,
+][] = [
+	['0x2a', 'hexString', new InvalidDesiredTypeError('hexString')],
+	['0x2a', 'qwerty', new InvalidDesiredTypeError('qwerty')],
+	['0x2a', 42, new InvalidDesiredTypeError(42)],
+	['0x2a', null, new InvalidDesiredTypeError(null)],
+	['0x2a', undefined, new InvalidDesiredTypeError(undefined)],
+	['0x2a', BigInt(0), new InvalidDesiredTypeError(BigInt(0))],
+	['foo', ValidTypes.HexString, new InvalidIntegerError('foo')],
+	['4.2', ValidTypes.HexString, new InvalidIntegerError('4.2')],
+	[null, ValidTypes.HexString, new InvalidIntegerError(null)],
+	[undefined, ValidTypes.HexString, new InvalidIntegerError(undefined)],
+	[true, ValidTypes.HexString, new InvalidIntegerError(true)],
+];
+
+export const convertObjectPropertiesToValidTypeValidData: [
+	Record<any, any>, // Starting object
+	string[], // List of keys to convert
+	ValidTypes, // Type to convert to
+	Record<any, any>, // Expected result
+][] = [
+	[
+		{
+			one: '42',
+			two: 42,
+			three: '0x2a',
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+		['one', 'two', 'three', 'four'],
+		ValidTypes.HexString,
+		{
+			one: '0x2a',
+			two: '0x2a',
+			three: '0x2a',
+			four: '0x2a',
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+	],
+	[
+		{
+			one: '42',
+			two: 42,
+			three: '0x2a',
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+		['one', 'two', 'three', 'four'],
+		ValidTypes.NumberString,
+		{
+			one: '42',
+			two: '42',
+			three: '42',
+			four: '42',
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+	],
+	[
+		{
+			one: '42',
+			two: 42,
+			three: '0x2a',
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+		['one', 'two', 'three', 'four'],
+		ValidTypes.Number,
+		{
+			one: 42,
+			two: 42,
+			three: 42,
+			four: 42,
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+	],
+	[
+		{
+			one: '42',
+			two: 42,
+			three: '0x2a',
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+		['one', 'two', 'three', 'four'],
+		ValidTypes.BigInt,
+		{
+			one: BigInt(42),
+			two: BigInt(42),
+			three: BigInt(42),
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+	],
+	[
+		{
+			one: '42',
+			two: 42,
+			three: '0x2a',
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+		['one', 'two', 'three', 'four', 'eight'], // Testing undefined key 'eight'
+		ValidTypes.BigInt,
+		{
+			one: BigInt(42),
+			two: BigInt(42),
+			three: BigInt(42),
+			four: BigInt(42),
+			five: false,
+			six: { one: '42', two: 42, three: '0x2a' },
+		},
+	],
+	[{}, ['one', 'two', 'three', 'four', 'eight'], ValidTypes.BigInt, {}],
+];
+
+export const convertObjectPropertiesToValidTypeInvalidData: [
+	any, // Starting object
+	any, // List of keys to convert
+	any, // Type to convert to
+	InvalidDesiredTypeError | InvalidIntegerError, // Expected error
+][] = [
+	[
+		{
+			one: 42,
+			two: false,
+			three: '0x2a',
+		},
+		['one', 'two', 'three'],
+		ValidTypes.HexString,
+		new InvalidIntegerError(false),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			three: () => {},
+		},
+		['one', 'two', 'three', 'four'],
+		ValidTypes.HexString,
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		new InvalidIntegerError(() => {}),
+	],
+	[
+		undefined,
+		['one', 'two', 'three', 'four'],
+		ValidTypes.HexString,
+		new InvalidConvertibleObjectError(undefined),
+	],
+	[
+		42,
+		['one', 'two', 'three', 'four'],
+		ValidTypes.HexString,
+		new InvalidConvertibleObjectError(42),
+	],
+	[
+		null,
+		['one', 'two', 'three', 'four'],
+		ValidTypes.HexString,
+		new InvalidConvertibleObjectError(null),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		undefined,
+		ValidTypes.HexString,
+		new InvalidConvertiblePropertiesListError(undefined),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		42,
+		ValidTypes.HexString,
+		new InvalidConvertiblePropertiesListError(42),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		['one', 'two', 'three', 42],
+		ValidTypes.HexString,
+		new InvalidConvertiblePropertiesListError(['one', 'two', 'three', 42]),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		['one', 'two', 'three', 'four'],
+		undefined,
+		new InvalidDesiredTypeError(undefined),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		['one', 'two', 'three', 'four'],
+		42,
+		new InvalidDesiredTypeError(42),
+	],
+	[
+		{
+			one: 42,
+			two: '42',
+		},
+		['one', 'two', 'three', 'four'],
+		'hexString',
+		new InvalidDesiredTypeError('hexString'),
+	],
 ];

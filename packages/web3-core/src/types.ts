@@ -6,6 +6,7 @@ import {
 	JsonRpcResult,
 	Web3BaseProvider,
 } from 'web3-common';
+import { HexString, ValidTypes } from 'web3-utils';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -37,3 +38,18 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
 	net?: Socket,
 ) => Web3BaseProvider<API>;
+
+export interface Web3ConfigOptions {
+	handleRevert: boolean;
+	defaultAccount: HexString | null;
+	defaultBlock: HexString;
+	transactionBlockTimeout: number;
+	transactionConfirmationBlocks: number;
+	transactionPollingTimeout: number;
+	blockHeaderTimeout: number;
+	maxListenersWarningThreshold: number;
+	defaultChain: string | null;
+	defaultHardfork: string | null;
+	defaultCommon: Record<string, unknown> | null;
+	defaultReturnType: ValidTypes;
+}

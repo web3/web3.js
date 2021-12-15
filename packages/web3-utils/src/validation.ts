@@ -14,8 +14,21 @@ import {
 	InvalidTopicError,
 	InvalidCharCodeError,
 	InvalidAddressError,
+	InvalidBlockNumberOrTagError,
+	InvalidFilterError,
+	InvalidBooleanError,
 } from './errors';
-import { Bytes, HexString, Numbers } from './types';
+import {
+	BlockNumberOrTag,
+	Bytes,
+	HexString,
+	HexString8Bytes,
+	HexString32Bytes,
+	Numbers,
+	BlockTags,
+	Filter,
+	Uint,
+} from './types';
 
 export const isHexStrict = (hex: string) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
@@ -235,6 +248,10 @@ export const isAddress = (address: string, checkChecksum = true): boolean => {
 	return checkChecksum ? checkAddressCheckSum(address) : true;
 };
 
+export function validateAddress(address: string): void {
+	if (!isAddress(address)) throw new InvalidAddressError(address);
+}
+
 /**
  * Checks if a given value is a valid big int
  */
@@ -400,3 +417,100 @@ export function isTopicInBloom(bloom: string, topic: string): boolean {
 
 	return isInBloom(bloom, topic);
 }
+
+export const isBlockNumber = (value: Uint): boolean =>
+	isHexStrict(value) && value.substr(0, 1) !== '-';
+
+/**
+ * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ */
+export const isBlockTag = (value: string) =>
+	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
+
+/**
+ * Returns true if given value is valid hex string and not negative, or is a valid BlockTag
+ */
+export const isBlockNumberOrTag = (value: BlockNumberOrTag) =>
+	(isHexStrict(value) && !value.startsWith('-')) || isBlockTag(value);
+
+export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
+	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTagError(value);
+};
+
+export const isHexString8Bytes = (value: HexString8Bytes, prefixed = true) =>
+	prefixed ? isHexStrict(value) && value.length === 18 : isHex(value) && value.length === 16;
+
+export const validateHexString8Bytes = (value: HexString8Bytes, prefixed = true) => {
+	if (!isHexString8Bytes(value, prefixed)) throw new InvalidHexStringError(value, 8);
+};
+
+export const isHexString32Bytes = (value: HexString32Bytes, prefixed = true) =>
+	prefixed ? isHexStrict(value) && value.length === 66 : isHex(value) && value.length === 64;
+
+export const validateHexString32Bytes = (value: HexString32Bytes, prefixed = true) => {
+	if (!isHexString32Bytes(value, prefixed)) throw new InvalidHexStringError(value, 32);
+};
+
+/**
+ * First we check if all properties in the provided value are expected,
+ * then because all Filter properties are optional, we check if the expected properties
+ * are defined. If defined and they're not the expected type, we immediately return false,
+ * otherwise we return true after all checks pass.
+ */
+export const isFilterObject = (value: Filter) => {
+	const expectedFilterProperties: (keyof Filter)[] = [
+		'fromBlock',
+		'toBlock',
+		'address',
+		'topics',
+	];
+	if (value === null || typeof value !== 'object') return false;
+
+	if (
+		!Object.keys(value).every(property =>
+			expectedFilterProperties.includes(property as keyof Filter),
+		)
+	)
+		return false;
+
+	if (
+		(value.fromBlock !== undefined && !isBlockNumberOrTag(value.fromBlock)) ||
+		(value.toBlock !== undefined && !isBlockNumberOrTag(value.toBlock))
+	)
+		return false;
+
+	if (value.address !== undefined) {
+		if (Array.isArray(value.address)) {
+			if (!value.address.every(address => isAddress(address))) return false;
+		} else if (!isAddress(value.address)) return false;
+	}
+
+	if (value.topics !== undefined) {
+		if (
+			!value.topics.every(topic => {
+				if (topic === null) return true;
+
+				if (Array.isArray(topic)) {
+					return topic.every(nestedTopic => isTopic(nestedTopic));
+				}
+
+				if (isTopic(topic)) return true;
+
+				return false;
+			})
+		)
+			return false;
+	}
+
+	return true;
+};
+
+export const validateFilterObject = (value: Filter) => {
+	if (!isFilterObject(value)) throw new InvalidFilterError(value);
+};
+
+export const isBoolean = (value: boolean) => typeof value === 'boolean';
+
+export const validateBoolean = (value: boolean) => {
+	if (!isBoolean(value)) throw new InvalidBooleanError(value);
+};

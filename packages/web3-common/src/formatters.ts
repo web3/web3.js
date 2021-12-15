@@ -11,6 +11,7 @@ import {
 	toNumber,
 	toUtf8,
 	utf8ToHex,
+	isBlockTag,
 } from 'web3-utils';
 import { FormatterError } from './errors';
 import {
@@ -28,7 +29,6 @@ import {
 	Mutable,
 	LogsInput,
 	LogsOutput,
-	PredefinedBlockNumbers,
 } from './types';
 
 /**
@@ -51,14 +51,6 @@ export const outputProofFormatter = (proof: Proof): Proof => ({
 export const outputBigIntegerFormatter = (number: Numbers) => toNumber(number);
 
 /**
- * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
- */
-export const isPredefinedBlockNumber = (blockNumber: string) =>
-	PredefinedBlockNumbers.LATEST === blockNumber ||
-	PredefinedBlockNumbers.PENDING === blockNumber ||
-	PredefinedBlockNumbers.EARLIEST === blockNumber;
-
-/**
  * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
  */
 export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
@@ -66,7 +58,7 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 		return undefined;
 	}
 
-	if (typeof blockNumber === 'string' && isPredefinedBlockNumber(blockNumber)) {
+	if (typeof blockNumber === 'string' && isBlockTag(blockNumber)) {
 		return blockNumber;
 	}
 
@@ -74,7 +66,6 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 		return '0x0';
 	}
 
-	// eslint-disable-next-line no-nested-ternary
 	if (typeof blockNumber === 'string' && isHexStrict(blockNumber)) {
 		return blockNumber.toLowerCase();
 	}

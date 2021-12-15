@@ -324,11 +324,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Breaking Changes
 
-#### web3-core
-
-1. The `Wallet` been renamed as `LocalStorageWallet` and moved from `web3-eth-accounts` to `web3-core`
-2. The `LocalStorageWallet` no more sport address/number indexing. Have to use `wallet.get` instead.
-
 #### web3-common
 
 1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
@@ -346,3 +341,5 @@ Released with 1.0.0-beta.37 code base.
 
 1. `create` function does not take in the optional parameter `entropy`
 2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
+3. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
+4. `Wallet.create` function doesn't accepts `entropy` param
