@@ -20,7 +20,12 @@ This is a sub-package of [web3.js][repo].
 yarn add web3-validator
 ```
 
-## Usage
+## Getting Started
+
+-   :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
+    ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
+
+### Usage
 
 You can use the the validator by importing as and using to validate;
 
@@ -50,12 +55,13 @@ Following eth types are supported to validate.
 
 For the ethereum compatible data values should be passed as arrays e.g. for schema `['uint', 'string']` value should be passed as `[2, 'my-string']`.
 
+You can also pass full ABI schema for the validation. e.g.
+
+```json
+[{ "name": "owner", "type": "address" }]
+```
+
 The implementation of the validator is extension of [JSON-Schema-Draft07](https://json-schema.org/draft-07/json-schema-release-notes.html) with a custom keyword `eth`. So you can use JSON-Schema compatible schema to validate any object based data as well.
-
-## Getting Started
-
--   :writing_hand: If you have questions [submit an issue](https://github.com/ChainSafe/web3.js/issues/new) or join us on [Discord](https://discord.gg/yjyvFRP)
-    ![Discord](https://img.shields.io/discord/593655374469660673.svg?label=Discord&logo=discord)
 
 ## Prerequisites
 
