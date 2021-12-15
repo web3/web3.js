@@ -54,3 +54,52 @@ export const signatureRecoverData: [string, any][] = [
 		},
 	],
 ];
+
+export const transactionsTestData: [any][] = [
+	[
+		// 'TxLegacy'
+		{
+			to: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
+			value: '0x186A0',
+			gasLimit: '0x520812',
+			gasPrice: '0x09184e72a000',
+			data: '',
+			chainId: 1,
+			nonce: 0,
+		},
+	],
+	[
+		// 'Tx1559'
+		{
+			to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+			maxPriorityFeePerGas: '0x3B9ACA00',
+			maxFeePerGas: '0xB2D05E00',
+			gasLimit: '0x6A4012',
+			value: '0x186A0',
+			data: '',
+			chainId: 1,
+			nonce: 0,
+		},
+	],
+	[
+		// 'Tx2930'
+		{
+			chainId: 1,
+			nonce: 0,
+			gasPrice: '0x09184e72a000',
+			gasLimit: '0x2710321',
+			to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+			value: '0x186A0',
+			data: '',
+			accessList: [
+				{
+					address: '0x0000000000000000000000000000000000000101',
+					storageKeys: [
+						'0x0000000000000000000000000000000000000000000000000000000000000000',
+						'0x00000000000000000000000000000000000000000000000000000000000060a7',
+					],
+				},
+			],
+		},
+	],
+];

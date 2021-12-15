@@ -1,4 +1,4 @@
-import { isHexStrict, toHex, toWei, Address, utf8ToHex } from 'web3-utils';
+import { isHexStrict, Address, utf8ToHex } from 'web3-utils';
 import {
 	create,
 	privateKeyToAccount,
@@ -12,6 +12,7 @@ import {
 	validPrivateKeytoAccountData,
 	invalidPrivateKeytoAccountData,
 	signatureRecoverData,
+	transactionsTestData,
 } from '../fixtures/account';
 
 describe('accounts', () => {
@@ -43,20 +44,10 @@ describe('accounts', () => {
 	});
 
 	describe('Signing and Recovery of Transaction', () => {
-		it('sign transaction', () => {
+		it.each(transactionsTestData)('sign transaction', txData => {
 			const account = create();
 
-			const tx = {
-				to: '0x2c7536e3605d9c16a7a3d7b1898e529396a65c23',
-				value: '0x16345785d8a0000',
-				gasLimit: '0x5208',
-				gasPrice: '0x2710',
-				chainId: 1,
-				nonce: '0x11',
-				data: '0x',
-			};
-
-			const signedResult = signTransaction(tx, account.privateKey);
+			const signedResult = signTransaction(txData, account.privateKey);
 			expect(signedResult).toBeDefined();
 			expect(signedResult.messageHash).toBeDefined();
 			expect(signedResult.rawTransaction).toBeDefined();
@@ -66,18 +57,10 @@ describe('accounts', () => {
 			expect(signedResult.v).toBeDefined();
 		});
 
-		it('recover transaction', () => {
+		it.each(transactionsTestData)('Recover transaction', txData => {
 			const account = create();
-
-			const rawTx = {
-				to: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
-				from: account.address,
-				value: toHex(toWei('0.1', 'ether')),
-				gasLimit: toHex(21000),
-				gasPrice: toHex('1000000'),
-			};
-
-			const signedResult = signTransaction(rawTx, account.privateKey);
+			const txObj = { ...txData, from: account.address };
+			const signedResult = signTransaction(txObj, account.privateKey);
 			expect(signedResult).toBeDefined();
 
 			const address: Address = recoverTransaction(signedResult.rawTransaction);
