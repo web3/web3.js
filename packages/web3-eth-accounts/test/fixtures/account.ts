@@ -24,10 +24,10 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 ];
 
 export const invalidPrivateKeytoAccountData: [any, string][] = [
-	['', 'Error: Private key must be 32 bytes.'],
-	[Buffer.from([]), 'Error: Private key must be 32 bytes.'],
-	[undefined, 'Error: not a valid string or buffer.'],
-	[null, 'Error: not a valid string or buffer.'],
+	['', 'Private key must be 32 bytes.'],
+	[Buffer.from([]), 'Private key must be 32 bytes.'],
+	[undefined, 'Not a valid string or buffer.'],
+	[null, 'Not a valid string or buffer.'],
 ];
 
 export const signatureRecoverData: [string, any][] = [

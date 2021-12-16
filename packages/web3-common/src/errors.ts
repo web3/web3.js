@@ -39,7 +39,7 @@ import {
 	ERR_PRIVATE_KEY_LENGTH,
 	ERR_SIGNATURE_FAILED,
 	ERR_INVALID_SIGNATURE,
-	ERR_TX_UNDEFINED,
+	ERR_RAW_TX_UNDEFINED,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -289,10 +289,10 @@ export class TransactionOutOfGasError extends TransactionError {
 	}
 }
 
-export class UndefinedRAWTransactionError extends TransactionError {
+export class UndefinedRawTransactionError extends TransactionError {
 	public constructor() {
-		super(`Transaction Undefined`);
-		this.code = ERR_TX_UNDEFINED;
+		super(`Raw transaction undefined`);
+		this.code = ERR_RAW_TX_UNDEFINED;
 	}
 }
 
@@ -409,27 +409,27 @@ export class AbiError extends Web3Error {
 export class PrivateKeyLengthError extends Web3Error {
 	public code = ERR_PRIVATE_KEY_LENGTH;
 	public constructor() {
-		super(`Error: Private key must be 32 bytes.`);
+		super(`Private key must be 32 bytes.`);
 	}
 }
 
 export class InvalidPrivateKeyError extends Web3Error {
 	public code = ERR_INVALID_PRIVATE_KEY;
 	public constructor() {
-		super(`Error: not a valid string or buffer.`);
+		super(`Not a valid string or buffer.`);
 	}
 }
 
 export class SignerError extends Web3Error {
 	public code = ERR_SIGNATURE_FAILED;
 	public constructor(errorDetails: string) {
-		super(`Error: Invalid signature. "${errorDetails}"`);
+		super(`Invalid signature. "${errorDetails}"`);
 	}
 }
 
 export class InvalidSignatureError extends Web3Error {
 	public code = ERR_INVALID_SIGNATURE;
 	public constructor(errorDetails: string) {
-		super(`Error: "${errorDetails}"`);
+		super(`"${errorDetails}"`);
 	}
 }

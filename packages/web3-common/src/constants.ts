@@ -29,7 +29,7 @@ export const ERR_TX_NO_CONTRACT_ADDRESS = 403;
 export const ERR_TX_CONTRACT_NOT_STORED = 404;
 export const ERR_TX_REVERT_WITHOUT_REASON = 405;
 export const ERR_TX_OUT_OF_GAS = 406;
-export const ERR_TX_UNDEFINED = 407;
+export const ERR_RAW_TX_UNDEFINED = 407;
 
 // Connection error codes
 export const ERR_CONN = 500;
