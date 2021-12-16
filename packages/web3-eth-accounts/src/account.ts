@@ -92,13 +92,13 @@ export const signTransaction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
 	privateKey: string,
 ): signTransactionResult => {
-	//	TO DO : Send calls to web3.transaction package for :
+	//	TODO : Send calls to web3.transaction package for :
 	//		Transaction Validation checks
 
 	const tx = TransactionFactory.fromTxData(transaction);
 	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
-		throw new SignerError('Signer Error ');
+		throw new SignerError('Signer Error');
 
 	const validationErrors = signedTx.validate(true);
 
@@ -150,7 +150,7 @@ export const recover = (
 
 	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
 
-	const V_INDEX = 130;
+	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = hashed ? data : hashMessage(data);
 
 	const v = signature.substring(V_INDEX); // 0x + r + s + v
