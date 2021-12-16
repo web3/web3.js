@@ -39,7 +39,7 @@ export interface JsonAbiFunctionFragment extends JsonAbiBaseFragment {
 	outputs?: Array<JsonAbiParameter>;
 
 	// legacy properties
-	constant?: boolean;	// stateMutability == 'pure' or stateMutability == 'view'
+	constant?: boolean; // stateMutability == 'pure' or stateMutability == 'view'
 	payable?: boolean; // stateMutability == 'payable'
 }
 
