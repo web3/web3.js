@@ -44,14 +44,14 @@ const contract = new Contract(abi);
 
 -   We prefer that you use `web3.eth.Contract` API in normal usage.
 -   The use of `as const` is necessary to have fully type-safe interface for the contract.
--   As the ABIs does not extensive in size, we suggest to copy those in your TS project and declare them `as const`.
--   This approach is more flexible and seamless compared to other approaches of off-line compiling ABIs to TS interfaces.
+-   As the ABIs are not extensive in size, we suggest declaring them `as const` in your TS project.
+-   This approach is more flexible and seamless compared to other approaches of off-line compiling ABIs to TS interfaces (such as [TypeChain](https://github.com/dethcrypto/TypeChain).
 
 ## Compatibility
 
-We had tested the Typescript interface support for the ABIs compiled with solidity version `v0.4.x` and above. If you face any issue regarding the contract typing, please create an issue to report to us.
+We have tested the Typescript interface support for the ABIs compiled with solidity version `v0.4.x` and above. If you face any issue regarding the contract typing, please create an issue to report to us.
 
-The Typescript support for fixed length array types are supported for limited numbers 30. See more details [here](https://github.com/ChainSafe/web3.js/blob/nh%2F4562-contract-typing/packages/web3-eth-abi/src/number_map_type.ts#L1). This limitation is only to provide more performant developer experience in IDEs. In future we may come up with a workaround to avoid this limitation. If you have any idea feel free to share.
+The Typescript support for fixed length array types are supported up 30 elements. See more details [here](https://github.com/ChainSafe/web3.js/blob/nh%2F4562-contract-typing/packages/web3-eth-abi/src/number_map_type.ts#L1). This limitation is only to provide more performant developer experience in IDEs. In future we may come up with a workaround to avoid this limitation. If you have any idea feel free to share.
 
 ## Package.json Scripts
 
