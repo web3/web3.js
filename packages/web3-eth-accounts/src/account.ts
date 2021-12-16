@@ -18,6 +18,7 @@ import {
 	isHexStrict,
 	utf8ToHex,
 	hexToBytes,
+	isHexString32Bytes,
 } from 'web3-utils';
 import {
 	InvalidPrivateKeyError,
@@ -57,8 +58,9 @@ export const hashMessage = (message: string): string => {
  * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
  */
 export const sign = (data: string, privateKey: string): signResult => {
-	// 64 hex characters + hex-prefix
-	if (privateKey.length !== 66) {
+	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
+
+	if (!isHexString32Bytes(privateKeyParam, false)) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -66,7 +68,7 @@ export const sign = (data: string, privateKey: string): signResult => {
 
 	const signObj = ecdsaSign(
 		Buffer.from(hash.substring(2), 'hex'),
-		Buffer.from(privateKey.substring(2), 'hex'),
+		Buffer.from(privateKeyParam, 'hex'),
 	);
 
 	const r = Buffer.from(signObj.signature.slice(0, 32));
