@@ -324,11 +324,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Breaking Changes
 
-#### web3-core
-
-1. The `Wallet` been renamed as `LocalStorageWallet` and moved from `web3-eth-accounts` to `web3-core`
-2. The `LocalStorageWallet` no more sport address/number indexing. Have to use `wallet.get` instead.
-
 #### web3-common
 
 1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
@@ -348,3 +343,5 @@ Released with 1.0.0-beta.37 code base.
 2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
 3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use web3.transaction package
 4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
+5. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
+6. `Wallet.create` function doesn't accepts `entropy` param

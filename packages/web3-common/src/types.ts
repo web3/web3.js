@@ -212,12 +212,6 @@ export interface SyncOutput {
 	readonly pulledStates?: bigint | number;
 }
 
-export enum PredefinedBlockNumbers {
-	LATEST = 'latest',
-	PENDING = 'pending',
-	EARLIEST = 'earliest',
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Web3APISpec = Record<string, (...params: any) => any>;
 export type Web3APIMethod<T extends Web3APISpec> = string & keyof T;

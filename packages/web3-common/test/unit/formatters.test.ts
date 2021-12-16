@@ -1,12 +1,10 @@
 import * as utils from 'web3-utils';
 
-import { PredefinedBlockNumbers } from '../../src/types';
 import {
 	inputAddressFormatter,
 	inputBlockNumberFormatter,
 	inputDefaultBlockNumberFormatter,
 	inputPostFormatter,
-	isPredefinedBlockNumber,
 	outputBigIntegerFormatter,
 	outputBlockFormatter,
 	outputLogFormatter,
@@ -71,36 +69,17 @@ describe('formatters', () => {
 		});
 	});
 
-	describe('isPredefinedBlockNumber', () => {
-		it('should return true for "latest"', () => {
-			expect(isPredefinedBlockNumber('latest')).toBeTruthy();
-		});
-
-		it('should return true for "pending"', () => {
-			expect(isPredefinedBlockNumber('pending')).toBeTruthy();
-		});
-
-		it('should return true for "earliest"', () => {
-			expect(isPredefinedBlockNumber('earliest')).toBeTruthy();
-		});
-
-		it('should return false for "unknown"', () => {
-			expect(isPredefinedBlockNumber('unknown')).toBeFalsy();
-		});
-	});
-
 	describe('inputBlockNumberFormatter', () => {
 		it('should return undefined if block number not given', () => {
 			expect(inputBlockNumberFormatter(undefined)).toBeUndefined();
 		});
 
-		it.each([
-			PredefinedBlockNumbers.EARLIEST,
-			PredefinedBlockNumbers.LATEST,
-			PredefinedBlockNumbers.PENDING,
-		])('should return "%s" values for "%s" block numbers', blockNumber => {
-			expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);
-		});
+		it.each([utils.BlockTags.EARLIEST, utils.BlockTags.LATEST, utils.BlockTags.PENDING])(
+			'should return "%s" values for "%s" block numbers',
+			blockNumber => {
+				expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);
+			},
+		);
 
 		it('should return valid genesis block number', () => {
 			expect(inputBlockNumberFormatter('genesis')).toBe('0x0');
