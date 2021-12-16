@@ -5,43 +5,35 @@ import { MatchPrimitiveType } from '../../src/types';
 describe('types', () => {
 	describe('primitive types', () => {
 		describe('bool', () => {
-			typecheck('should extend the boolean type', () => {
-				const b: MatchPrimitiveType<'bool', []> = true;
+			typecheck('should extend the boolean type', () =>
+				expectTypeOf<MatchPrimitiveType<'bool', []>>().toExtend<boolean>(),
+			);
 
-				return expectTypeOf(b).toExtend<boolean>();
-			});
+			typecheck('should extend the boolean type array', () =>
+				expectTypeOf<MatchPrimitiveType<'bool[]', []>>().toExtend<boolean[]>(),
+			);
 
-			typecheck('should extend the boolean type array', () => {
-				const b: MatchPrimitiveType<'bool[]', []> = [true];
-
-				return expectTypeOf(b).toExtend<boolean[]>();
-			});
-
-			typecheck('should extend the boolean type fixed array', () => {
-				const b: MatchPrimitiveType<'bool[3]', []> = [true, true, true];
-
-				return expectTypeOf(b).toExtend<[boolean, boolean, boolean]>();
-			});
+			typecheck('should extend the boolean type fixed array', () =>
+				expectTypeOf<MatchPrimitiveType<'bool[3]', []>>().toExtend<
+					[boolean, boolean, boolean]
+				>(),
+			);
 		});
 
 		describe('string', () => {
-			typecheck('should extend the string type', () => {
-				const b: MatchPrimitiveType<'string', []> = 'a';
+			typecheck('should extend the string type', () =>
+				expectTypeOf<MatchPrimitiveType<'string', []>>().toExtend<string>(),
+			);
 
-				return expectTypeOf(b).toExtend<string>();
-			});
+			typecheck('should extend the string type array', () =>
+				expectTypeOf<MatchPrimitiveType<'string[]', []>>().toExtend<string[]>(),
+			);
 
-			typecheck('should extend the string type array', () => {
-				const b: MatchPrimitiveType<'string[]', []> = ['a'];
-
-				return expectTypeOf(b).toExtend<string[]>();
-			});
-
-			typecheck('should extend the string type fixed array', () => {
-				const b: MatchPrimitiveType<'string[3]', []> = ['a', 'a', 'a'];
-
-				return expectTypeOf(b).toExtend<[string, string, string]>();
-			});
+			typecheck('should extend the string type fixed array', () =>
+				expectTypeOf<MatchPrimitiveType<'string[3]', []>>().toExtend<
+					[string, string, string]
+				>(),
+			);
 		});
 
 		describe('address', () => {
