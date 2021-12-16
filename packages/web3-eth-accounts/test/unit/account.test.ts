@@ -69,11 +69,17 @@ describe('accounts', () => {
 				});
 				expect(result).toEqual(privateKeyToAccount(input[0].slice(2)))
 
+				const keystoreString = JSON.stringify(keystore);
+
+				const stringResult = await decrypt(keystoreString, input[1], true).catch(err => {
+					throw err;
+				});
+				expect(stringResult).toEqual(privateKeyToAccount(input[0].slice(2)))
 			})
 		})
 		describe('invalid cases', () => {
 			it.each(invalidDecryptData)('%s', (input, output) => {
-				expect(() =>  decrypt(input[0], input[1])).rejects.toThrow(output);
+				expect(async () =>  decrypt(input[0], input[1])).rejects.toThrow(output);
 			});
 		});
 	})

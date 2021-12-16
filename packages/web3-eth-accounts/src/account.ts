@@ -18,15 +18,16 @@ import {
 	PrivateKeyLengthError,
 	InvalidKdfError,
 	KeyDerivationError,
+	KeyStoreVersionError
 } from 'web3-common';
 import { Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types';
 
 const validateKeyStore = (keyStore: Keystore | string): boolean => !!keyStore;
 
-// Will be added later
+// TODO will be added later
 export const sign = (): boolean => true;
 
-// Will be added later
+// TODO will be added later
 export const signTransaction = (): boolean => true;
 
 // Generate a version 4 uuid
@@ -97,6 +98,10 @@ export const encrypt = async (
 		throw new InvalidPrivateKeyError(privateKey);
 	}
 
+	const stringPrivateKey = Buffer.isBuffer(privateKey)
+		? Buffer.from(privateKey).toString('hex')
+		: privateKey;
+
 	// if given salt or iv is a string, convert it to a Uint8Array
 	let salt;
 	if (options?.salt) {
@@ -106,13 +111,17 @@ export const encrypt = async (
 	}
 	validateBytesInput(salt);
 
-	let iv;
+	const bufferPassword = typeof password === 'string' ? Buffer.from(password): password;
+
+	validateBytesInput(bufferPassword);
+
+	let initializationVector;
 	if (options?.iv) {
-		iv = typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
+		initializationVector = typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
 	} else {
-		iv = randomBytes(16);
+		initializationVector = randomBytes(16);
 	}
-	validateBytesInput(iv);
+	validateBytesInput(initializationVector);
 
 	const kdf = options?.kdf ?? 'scrypt';
 
@@ -128,14 +137,13 @@ export const encrypt = async (
 			prf: 'hmac-sha256',
 		};
 		derivedKey = pbkdf2Sync(
-			Buffer.from(password),
+			bufferPassword,
 			Buffer.from(salt),
 			kdfparams.c,
 			kdfparams.dklen,
 			'sha256',
 		);
 	} else if (kdf === 'scrypt') {
-		// FIXME: support progress reporting callback
 		kdfparams = {
 			n: options?.n ?? 8192,
 			r: options?.r ?? 8,
@@ -144,7 +152,7 @@ export const encrypt = async (
 			salt: salt.toString('hex'),
 		};
 		derivedKey = scryptSync(
-			Buffer.from(password),
+			bufferPassword,
 			Buffer.from(salt),
 			kdfparams.n,
 			kdfparams.p,
@@ -155,12 +163,12 @@ export const encrypt = async (
 		throw new InvalidKdfError();
 	}
 
-	const cipherKey = Buffer.from(privateKey.replace('0x', ''), 'hex');
+	const cipherKey = Buffer.from(stringPrivateKey.replace('0x', ''), 'hex');
 
 	const cipher = await createCipheriv(
 		cipherKey,
 		Buffer.from(derivedKey.slice(0, 16)),
-		iv,
+		initializationVector,
 		'aes-128-ctr',
 	);
 
@@ -171,11 +179,11 @@ export const encrypt = async (
 	return {
 		version: 3,
 		id: uuidV4(),
-		address: privateKeyToAddress(privateKey).toLowerCase().replace('0x', ''),
+		address: privateKeyToAddress(stringPrivateKey).toLowerCase().replace('0x', ''),
 		crypto: {
 			ciphertext,
 			cipherparams: {
-				iv: iv.toString('hex'),
+				iv: initializationVector.toString('hex'),
 			},
 			cipher: 'aes-128-ctr',
 			kdf,
@@ -195,7 +203,7 @@ export const privateKeyToAccount = (
 	privateKey: string;
 	signTransaction: () => boolean; // From 1.x
 	sign: () => boolean;
-	encrypt: (a: string, b: string) => Promise<Keystore>;
+	encrypt: (privateKey: string, password: string) => Promise<Keystore>;
 } => ({
 	address: privateKeyToAddress(privateKey),
 	privateKey: Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey,
@@ -231,14 +239,14 @@ export const create = (): {
  * */
 export const decrypt = async (
 	keystore: Keystore | string,
-	password: string,
+	password: string | Buffer,
 	nonStrict?: boolean,
 ): Promise<{
 	address: string;
 	privateKey: HexString;
 	signTransaction: () => boolean; // From 1.x
 	sign: () => boolean;
-	encrypt: (a: string, b: string) => Promise<Keystore>;
+	encrypt: (privateKey: string, password: string) => Promise<Keystore>;
 }> => {
 	const json =
 		typeof keystore === 'object'
@@ -247,21 +255,22 @@ export const decrypt = async (
 
 	validateKeyStore(json);
 
-	if (json.version !== 3) throw new Error('Not a valid V3 wallet');
+	if (json.version !== 3) throw new KeyStoreVersionError();
+
+	const bufferPassword = typeof password === 'string' ? Buffer.from(password): password;
+
+	validateBytesInput(bufferPassword);
 
 	let derivedKey;
 	if (json.crypto.kdf === 'scrypt') {
 		const kdfparams = json.crypto.kdfparams as ScryptParams;
-
-		// TODO support progress reporting callback
-		kdfparams.salt =
+		const bufferSalt =
 			typeof kdfparams.salt === 'string'
 				? Buffer.from(kdfparams.salt, 'hex')
 				: kdfparams.salt;
-
 		derivedKey = scryptSync(
-			Buffer.from(password),
-			Buffer.from(kdfparams.salt),
+			bufferPassword,
+			bufferSalt,
 			kdfparams.n,
 			kdfparams.p,
 			kdfparams.r,
@@ -270,9 +279,14 @@ export const decrypt = async (
 	} else if (json.crypto.kdf === 'pbkdf2') {
 		const kdfparams: PBKDF2SHA256Params = json.crypto.kdfparams as PBKDF2SHA256Params;
 
+		const bufferSalt =
+			typeof kdfparams.salt === 'string'
+				? Buffer.from(kdfparams.salt, 'hex')
+				: kdfparams.salt;
+
 		derivedKey = pbkdf2Sync(
-			Buffer.from(password),
-			Buffer.from(kdfparams.salt),
+			bufferPassword,
+			bufferSalt,
 			kdfparams.c,
 			kdfparams.dklen,
 			'sha256',

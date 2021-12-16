@@ -37,7 +37,9 @@ import {
 	ERR_ABI_ENCODING,
 	ERR_INVALID_PRIVATE_KEY,
 	ERR_PRIVATE_KEY_LENGTH,
-	ERR_UNSUPPORTED_KDF
+	ERR_UNSUPPORTED_KDF,
+	ERR_KEY_VERSION_UNSUPPORTED,
+	ERR_KEY_DERIVATION_FAIL
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -414,13 +416,20 @@ export class InvalidPrivateKeyError extends Web3Error {
 export class InvalidKdfError extends Web3Error {
 	public code = ERR_UNSUPPORTED_KDF;
 	public constructor(){
-		super(`Error: invalid key derivation function`)
+		super(`Invalid key derivation function`)
 	}
 }
 
 export class KeyDerivationError extends Web3Error {
-	public code = ERR_UNSUPPORTED_KDF;
+	public code = ERR_KEY_DERIVATION_FAIL;
 	public constructor() {
-		super(`Error: Key derivation failed - possibly wrong password`)
+		super(`Key derivation failed - possibly wrong password`)
+	}
+}
+
+export class KeyStoreVersionError extends Web3Error {
+	public code = ERR_KEY_VERSION_UNSUPPORTED;
+	public constructor() {
+		super('Unsupported version')
 	}
 }

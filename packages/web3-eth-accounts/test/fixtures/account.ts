@@ -1,6 +1,6 @@
 import { InvalidKdfError, KeyDerivationError, PrivateKeyLengthError } from 'web3-common';
 import { sign, signTransaction, encrypt } from '../../src/account';
-import { CipherOptions } from '../../src/types';
+import { CipherOptions, Keystore } from '../../src/types';
 
 export const validPrivateKeytoAccountData: [string, any][] = [
 	[
@@ -32,7 +32,7 @@ export const invalidPrivateKeytoAccountData: [any, string][] = [
 	[null, 'Invalid value given "null". Error: not a valid string or buffer.'],
 ];
 
-export const validEncryptData: [[any, string, CipherOptions], any][] = [
+export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -124,7 +124,7 @@ export const validEncryptData: [[any, string, CipherOptions], any][] = [
 	],
 ];
 
-export const invalidEncryptData: [[any, string, any], Error][] = [
+export const invalidEncryptData: [[any, string, any], PrivateKeyLengthError | InvalidKdfError][] = [
 	[
 		['0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a', '123', {}],
 		new PrivateKeyLengthError(
@@ -145,7 +145,7 @@ export const invalidEncryptData: [[any, string, any], Error][] = [
 	],
 ];
 
-export const validDecryptData: [[any, string, CipherOptions]][] = [
+export const validDecryptData: [[Keystore | any, string, CipherOptions]][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -156,7 +156,7 @@ export const validDecryptData: [[any, string, CipherOptions]][] = [
 					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
 					'hex',
 				),
-			},
+			}
 		],
 	],
 ];
