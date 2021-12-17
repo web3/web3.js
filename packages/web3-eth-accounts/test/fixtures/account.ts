@@ -1,3 +1,4 @@
+import { AccessListEIP2930TxData, FeeMarketEIP1559TxData, TxData } from '@ethereumjs/tx';
 import { sign, signTransaction, encrypt } from '../../src/account';
 
 export const validPrivateKeytoAccountData: [string, any][] = [
@@ -55,7 +56,7 @@ export const signatureRecoverData: [string, any][] = [
 	],
 ];
 
-export const transactionsTestData: [any][] = [
+export const transactionsTestData: [TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData][] = [
 	[
 		// 'TxLegacy'
 		{
