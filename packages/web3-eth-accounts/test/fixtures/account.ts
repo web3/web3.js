@@ -221,7 +221,7 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 	],
 ];
 
-export const invalidDecryptData: [[any, string], any][] = [
+export const invalidDecryptData: [[any, string], InvalidKdfError | KeyDerivationError][] = [
 	// TODO create Keystore test cases after validation PR is merged
 	[
 		[
