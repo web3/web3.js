@@ -25,9 +25,9 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js"
 	},
 	"dependencies": {
-		"web3-utils": "^4.0.0-alpha.0",
+		"@ethersproject/abi": "^5.0.7",
 		"web3-common": "^1.0.0-alpha.0",
-		"@ethersproject/abi": "^5.0.7"
+		"web3-utils": "^4.0.0-alpha.0"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
@@ -41,6 +41,7 @@
 		"jest": "^27.3.1",
 		"jest-extended": "^1.1.0",
 		"jest-when": "^3.4.1",
+		"@humeris/espresso-shot": "^4.0.0",
 		"prettier": "^2.4.1",
 		"ts-jest": "^27.0.7",
 		"typescript": "^4.5.2"

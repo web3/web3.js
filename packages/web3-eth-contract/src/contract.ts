@@ -1,25 +1,37 @@
-import { EthExecutionAPI, inputAddressFormatter } from 'web3-common';
+// eslint-disable-next-line max-classes-per-file
+import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
+	AbiEventFragment,
+	AbiFunctionFragment,
+	ContractAbi,
+	ContractEvents,
+	ContractMethods,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
-	JsonAbiEventFragment,
-	JsonAbiFragment,
-	JsonAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 import { Address, toChecksumAddress } from 'web3-utils';
-import { ContractInitOptions, ContractOptions } from './types';
+import {
+	ContractEventEmitterInterface,
+	ContractEventsInterface,
+	ContractInitOptions,
+	ContractMethodsInterface,
+	ContractOptions,
+} from './types';
 
 type ContractBoundFunction = string;
 type ContractBoundEvent = string;
 
-export class Contract extends Web3Context<EthExecutionAPI> {
+export class Contract<Abi extends ContractAbi>
+	extends Web3Context<EthExecutionAPI>
+	implements Web3EventEmitter<ContractEventEmitterInterface<Abi, ContractEvents<Abi>>>
+{
 	public readonly options: ContractOptions;
 
-	private _jsonInterface!: JsonAbiFragment[];
+	private _jsonInterface!: Abi;
 	private _address?: Address | null;
 	private _functions: Record<
 		string,
@@ -31,12 +43,16 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 	> = {};
 	private _events: Record<string, ContractBoundEvent> = {};
 
-	public constructor(
-		jsonInterface: JsonAbiFragment[],
-		address?: Address,
-		options?: ContractInitOptions,
-	) {
+	public readonly methods: ContractMethodsInterface<Abi, ContractMethods<Abi>>;
+	public readonly events: ContractEventsInterface<Abi, ContractEvents<Abi>>;
+
+	public constructor(jsonInterface: Abi, address?: Address, options?: ContractInitOptions) {
 		super(options?.provider ?? '');
+
+		// TODO: Implement these methods
+		this.methods = {} as ContractMethodsInterface<Abi, ContractMethods<Abi>>;
+		// TODO: Implement these events
+		this.events = {} as ContractEventsInterface<Abi, ContractEvents<Abi>>;
 
 		this._parseAndSetAddress(address);
 		this._parseAndSetJsonInterface(jsonInterface);
@@ -56,7 +72,7 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 		});
 
 		Object.defineProperty(this.options, 'jsonInterface', {
-			set: (value: JsonAbiFragment[]) => this._parseAndSetJsonInterface(value),
+			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value),
 			get: () => this._jsonInterface,
 		});
 	}
@@ -65,10 +81,10 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : null;
 	}
 
-	private _parseAndSetJsonInterface(abis: JsonAbiFragment[]) {
+	private _parseAndSetJsonInterface(abis: ContractAbi) {
 		this._functions = {};
 		this._events = {};
-		const result: JsonAbiFragment[] = [];
+		let result: ContractAbi = [];
 
 		for (const a of abis) {
 			const abi = {
@@ -110,22 +126,23 @@ export class Contract extends Web3Context<EthExecutionAPI> {
 				this._events[signature] = event;
 			}
 
-			result.push(abi);
+			result = [...result, abi];
 		}
 
-		this._jsonInterface = abis;
+		this._jsonInterface = [...result] as unknown as Abi;
 	}
 
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractFunction(
 		name: string,
-		_abi: JsonAbiFunctionFragment,
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		_abi: AbiFunctionFragment,
 	): ContractBoundFunction {
 		return name;
 	}
 
-	// eslint-disable-next-line class-methods-use-this
-	private _createContractEvent(name: string, _abi: JsonAbiEventFragment): ContractBoundEvent {
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	private _createContractEvent(name: string, _abi: AbiEventFragment): ContractBoundEvent {
 		return name;
 	}
 }

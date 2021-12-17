@@ -8,9 +8,11 @@ import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 /**
  * Should be used to encode list of params
  */
-export const encodeParameters = (abi: AbiInput[], params: unknown[]): string => {
+export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string => {
 	try {
-		const modifiedTypes = mapTypes(Array.isArray(abi) ? abi : [abi]);
+		const modifiedTypes = mapTypes(
+			Array.isArray(abi) ? (abi as AbiInput[]) : ([abi] as unknown as AbiInput[]),
+		);
 		const modifiedParams: Array<unknown> = [];
 
 		for (const [index, param] of params.entries()) {
