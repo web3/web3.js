@@ -33,6 +33,8 @@ import {
 	validateBlockNumberOrTag,
 	isHexString8Bytes,
 	validateHexString8Bytes,
+	isHexString16Bytes,
+	validateHexString16Bytes,
 	isHexString32Bytes,
 	validateHexString32Bytes,
 	isBoolean,
@@ -76,6 +78,8 @@ import {
 	validateFilterObjectInvalidData,
 	isHexString8BytesValidData,
 	validateHexString8BytesInvalidData,
+	isHexString16BytesValidData,
+	validateHexString16BytesInvalidData,
 } from '../fixtures/validation';
 
 describe('validation', () => {
@@ -238,6 +242,18 @@ describe('validation', () => {
 			},
 		);
 	});
+	describe('isHexString16Bytes', () => {
+		it.each([...isHexString16BytesValidData, ...isHexStrictInvalidData])(
+			'%s',
+			(input, output) => {
+				if (Array.isArray(input)) {
+					expect(isHexString16Bytes(input[0], input[1])).toEqual(output);
+				} else {
+					expect(isHexString16Bytes(input)).toEqual(output);
+				}
+			},
+		);
+	});
 	describe('validateHexString8Bytes', () => {
 		it.each([...isHexString8BytesValidData, ...validateHexString8BytesInvalidData()])(
 			'%s',
@@ -248,6 +264,20 @@ describe('validation', () => {
 					expect(() => validateHexString8Bytes(input[0], input[1])).not.toThrow();
 				} else {
 					expect(() => validateHexString8Bytes(input)).not.toThrow();
+				}
+			},
+		);
+	});
+	describe('validateHexString16Bytes', () => {
+		it.each([...isHexString16BytesValidData, ...validateHexString16BytesInvalidData()])(
+			'%s',
+			(input, output) => {
+				if (output instanceof InvalidHexStringError) {
+					expect(() => validateHexString16Bytes(input)).toThrow(output);
+				} else if (Array.isArray(input)) {
+					expect(() => validateHexString16Bytes(input[0], input[1])).not.toThrow();
+				} else {
+					expect(() => validateHexString16Bytes(input)).not.toThrow();
 				}
 			},
 		);

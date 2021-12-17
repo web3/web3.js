@@ -14,7 +14,14 @@ import {
 	InvalidStringError,
 	NegativeIntegersInByteArrayError,
 } from '../../src/errors';
-import { Numbers, Uint, HexString32Bytes, Filter, HexString8Bytes } from '../../src/types';
+import {
+	Numbers,
+	Uint,
+	HexString32Bytes,
+	Filter,
+	HexString8Bytes,
+	HexString16Bytes,
+} from '../../src/types';
 
 export const isHexStrictValidData: [Uint, true][] = [
 	['0x48', true],
@@ -378,6 +385,24 @@ export const validateHexString8BytesInvalidData = () => {
 	const invalidData: [any, InvalidHexStringError][] = [];
 	isHexStrictInvalidData.forEach(data =>
 		invalidData.push([data[0], new InvalidHexStringError(data[0], 8)]),
+	);
+	return invalidData;
+};
+
+export const isHexString16BytesValidData: [HexString8Bytes | [HexString16Bytes, false], true][] = [
+	['0x00000000000000000000000000000000', true],
+	['0x00000000000000000000000000000001', true],
+	['0x00000000000000000000123098409924', true],
+	[['00000000000000000000000000000001', false], true],
+	[['000000000000000000000000000c0ffe', false], true],
+	[['00001000000000000000023098409924', false], true],
+];
+
+// Converts false from invalid data sets to expected thrown error
+export const validateHexString16BytesInvalidData = () => {
+	const invalidData: [any, InvalidHexStringError][] = [];
+	isHexStrictInvalidData.forEach(data =>
+		invalidData.push([data[0], new InvalidHexStringError(data[0], 16)]),
 	);
 	return invalidData;
 };

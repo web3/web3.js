@@ -18,19 +18,9 @@ import {
 	InvalidFilterError,
 	InvalidBooleanError,
 } from './errors';
-import {
-	BlockNumberOrTag,
-	Bytes,
-	HexString,
-	HexString8Bytes,
-	HexString32Bytes,
-	Numbers,
-	BlockTags,
-	Filter,
-	Uint,
-} from './types';
+import { BlockNumberOrTag, Bytes, HexString, Numbers, BlockTags, Filter, Uint } from './types';
 
-export const isHexStrict = (hex: string) =>
+export const isHexStrict = (hex: unknown) =>
 	typeof hex === 'string' && /^(-)?0x[0-9a-f]*$/i.test(hex);
 
 /**
@@ -122,12 +112,12 @@ export const validateNumbersInput = (
 /**
  * checks input if typeof data is valid string input
  */
-export const isValidString = (data: any) => typeof data === 'string';
+export const isValidString = (data: unknown) => typeof data === 'string';
 
 /**
  * checks input if typeof data is valid buffer input
  */
-export const isBuffer = (data: any) => Buffer.isBuffer(data);
+export const isBuffer = (data: unknown) => Buffer.isBuffer(data);
 
 /**
  * checks input for valid string, otherwise throws error
@@ -437,17 +427,27 @@ export const validateBlockNumberOrTag = (value: BlockNumberOrTag) => {
 	if (!isBlockNumberOrTag(value)) throw new InvalidBlockNumberOrTagError(value);
 };
 
-export const isHexString8Bytes = (value: HexString8Bytes, prefixed = true) =>
-	prefixed ? isHexStrict(value) && value.length === 18 : isHex(value) && value.length === 16;
+export const isHexString8Bytes = (value: unknown, prefixed = true) =>
+	typeof value === 'string' &&
+	(prefixed ? isHexStrict(value) && value.length === 18 : isHex(value) && value.length === 16);
 
-export const validateHexString8Bytes = (value: HexString8Bytes, prefixed = true) => {
+export const validateHexString8Bytes = (value: unknown, prefixed = true) => {
 	if (!isHexString8Bytes(value, prefixed)) throw new InvalidHexStringError(value, 8);
 };
 
-export const isHexString32Bytes = (value: HexString32Bytes, prefixed = true) =>
-	prefixed ? isHexStrict(value) && value.length === 66 : isHex(value) && value.length === 64;
+export const isHexString16Bytes = (value: unknown, prefixed = true) =>
+	typeof value === 'string' &&
+	(prefixed ? isHexStrict(value) && value.length === 34 : isHex(value) && value.length === 32);
 
-export const validateHexString32Bytes = (value: HexString32Bytes, prefixed = true) => {
+export const validateHexString16Bytes = (value: unknown, prefixed = true) => {
+	if (!isHexString16Bytes(value, prefixed)) throw new InvalidHexStringError(value, 16);
+};
+
+export const isHexString32Bytes = (value: unknown, prefixed = true) =>
+	typeof value === 'string' &&
+	(prefixed ? isHexStrict(value) && value.length === 66 : isHex(value) && value.length === 64);
+
+export const validateHexString32Bytes = (value: unknown, prefixed = true) => {
 	if (!isHexString32Bytes(value, prefixed)) throw new InvalidHexStringError(value, 32);
 };
 
