@@ -29,7 +29,7 @@ export type PBKDF2SHA256Params = {
 	salt: Buffer | string;
 };
 
-export type Keystore = {
+export type KeyStore = {
 	crypto: {
 		cipher: Cipher;
 		ciphertext: string;

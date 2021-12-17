@@ -12,17 +12,33 @@ import {
 	validateBytesInput,
 	isBuffer,
 	isValidString,
+	isHexString32Bytes
 } from 'web3-utils';
 import {
 	InvalidPrivateKeyError,
 	PrivateKeyLengthError,
 	InvalidKdfError,
 	KeyDerivationError,
-	KeyStoreVersionError
+	KeyStoreVersionError,
+	InvalidPasswordError,
+	IVLengthError
 } from 'web3-common';
-import { Keystore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types';
+import { KeyStore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types';
 
-const validateKeyStore = (keyStore: Keystore | string): boolean => !!keyStore;
+const validateKeyStore = (keyStore: KeyStore): boolean => {
+	const keyStoreAttributes = ['id', 'address', 'crypto', 'mac'];
+	const cryptoAttributes = ['ciphertext', 'cipherparams', 'cipher', 'kdf', 'kdfparams'];
+	const pbkdf2Params = ['dklen', 'salt', 'c', 'prf'];
+	const scryptParams = ['n','p','r', 'dklen', 'salt'];
+
+	keyStoreAttributes.forEach(attribute => {
+		if (!keyStore.hasOwnProperty(attribute)){
+		return false;
+		}
+	});
+
+	return true;
+}
 
 // TODO will be added later
 export const sign = (): boolean => true;
@@ -58,9 +74,10 @@ const uuidV4 = () => {
 	].join('-');
 };
 
+
 const privateKeyToAddress = (privateKey: string | Buffer): string => {
 	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
-		throw new InvalidPrivateKeyError(privateKey);
+		throw new InvalidPrivateKeyError();
 	}
 
 	const stringPrivateKey = Buffer.isBuffer(privateKey)
@@ -71,10 +88,8 @@ const privateKeyToAddress = (privateKey: string | Buffer): string => {
 		? stringPrivateKey.slice(2)
 		: stringPrivateKey;
 
-	// TODO Replace with isHexString32Bytes function in web3-eth PR:
-	// Must be 64 hex characters
-	if (stringPrivateKeyNoPrefix.length !== 64) {
-		throw new PrivateKeyLengthError(stringPrivateKeyNoPrefix);
+	if (!isHexString32Bytes(stringPrivateKeyNoPrefix, false)) {
+		throw new PrivateKeyLengthError();
 	}
 
 	const publicKey = getPublicKey(stringPrivateKeyNoPrefix);
@@ -93,14 +108,18 @@ export const encrypt = async (
 	privateKey: HexString,
 	password: string | Buffer,
 	options?: CipherOptions,
-): Promise<Keystore> => {
+): Promise<KeyStore> => {
 	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
-		throw new InvalidPrivateKeyError(privateKey);
+		throw new InvalidPrivateKeyError();
 	}
 
 	const stringPrivateKey = Buffer.isBuffer(privateKey)
 		? Buffer.from(privateKey).toString('hex')
 		: privateKey;
+
+	if (!isHexString32Bytes(stringPrivateKey)){
+		throw new PrivateKeyLengthError();
+	}
 
 	// if given salt or iv is a string, convert it to a Uint8Array
 	let salt;
@@ -109,19 +128,23 @@ export const encrypt = async (
 	} else {
 		salt = randomBytes(32);
 	}
-	validateBytesInput(salt);
+
+	if (!(isValidString(password) || isBuffer(password))) {
+		throw new InvalidPasswordError();
+	}
 
 	const bufferPassword = typeof password === 'string' ? Buffer.from(password): password;
 
-	validateBytesInput(bufferPassword);
 
 	let initializationVector;
 	if (options?.iv) {
 		initializationVector = typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
+		if (initializationVector.toString('hex').length !== 32) {
+			throw new IVLengthError();
+		}
 	} else {
 		initializationVector = randomBytes(16);
 	}
-	validateBytesInput(initializationVector);
 
 	const kdf = options?.kdf ?? 'scrypt';
 
@@ -203,7 +226,7 @@ export const privateKeyToAccount = (
 	privateKey: string;
 	signTransaction: () => boolean; // From 1.x
 	sign: () => boolean;
-	encrypt: (privateKey: string, password: string) => Promise<Keystore>;
+	encrypt: (privateKey: string, password: string) => Promise<KeyStore>;
 } => ({
 	address: privateKeyToAddress(privateKey),
 	privateKey: Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey,
@@ -220,7 +243,7 @@ export const create = (): {
 	privateKey: string;
 	signTransaction: () => boolean; // From 1.x
 	sign: () => boolean;
-	encrypt: (a: string, b: string) => Promise<Keystore>;
+	encrypt: (a: string, b: string) => Promise<KeyStore>;
 } => {
 	const privateKey = utils.randomPrivateKey();
 	const address = getPublicKey(privateKey);
@@ -238,7 +261,7 @@ export const create = (): {
  *
  * */
 export const decrypt = async (
-	keystore: Keystore | string,
+	keystore: KeyStore | string,
 	password: string | Buffer,
 	nonStrict?: boolean,
 ): Promise<{
@@ -246,14 +269,16 @@ export const decrypt = async (
 	privateKey: HexString;
 	signTransaction: () => boolean; // From 1.x
 	sign: () => boolean;
-	encrypt: (privateKey: string, password: string) => Promise<Keystore>;
+	encrypt: (privateKey: HexString, password: string) => Promise<KeyStore>;
 }> => {
 	const json =
 		typeof keystore === 'object'
 			? keystore
-			: (JSON.parse(nonStrict ? keystore.toLowerCase() : keystore) as Keystore);
+			: (JSON.parse(nonStrict ? keystore.toLowerCase() : keystore) as KeyStore);
 
-	validateKeyStore(json);
+	if (!validateKeyStore(json)){
+		throw new Error('invalid keystore')
+	}
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
@@ -313,3 +338,23 @@ export const decrypt = async (
 
 	return privateKeyToAccount(Buffer.from(seed));
 };
+
+// encrypt("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709", "123", {iv: Buffer.from("")}).then(console.log)
+// const key = {
+// 	version: 3,
+// 	crypto: {
+// 		ciphertext: '76512156a34105fa6473ad040c666ae7b917d14c06543accc0d2dc28e6073b12',
+// 		cipherparams: { iv: 'bfb43120ae00e9de110f8325143a2709' },
+// 		cipher: 'aes-128-ctr',
+// 		kdf: 'pbkdf2',
+// 		kdfparams: {
+// 			dklen: 32,
+// 			salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
+// 			c: 262144,
+// 			prf: 'hmac-sha256',
+// 		},
+// 		mac: '46eb4884e82dc43b5aa415faba53cc653b7038e9d61cc32fd643cf8c396189b7',
+// 	},
+// } as KeyStore;
+// console.log(key)
+// decrypt(key, "123").then(console.log);

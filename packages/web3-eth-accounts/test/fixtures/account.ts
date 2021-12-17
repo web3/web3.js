@@ -1,6 +1,6 @@
-import { InvalidKdfError, KeyDerivationError, PrivateKeyLengthError } from 'web3-common';
+import { InvalidKdfError, InvalidPrivateKeyError, KeyDerivationError, PrivateKeyLengthError, InvalidPasswordError, IVLengthError } from 'web3-common';
 import { sign, signTransaction, encrypt } from '../../src/account';
-import { CipherOptions, Keystore } from '../../src/types';
+import { CipherOptions, KeyStore } from '../../src/types';
 
 export const validPrivateKeytoAccountData: [string, any][] = [
 	[
@@ -25,11 +25,11 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 	],
 ];
 
-export const invalidPrivateKeytoAccountData: [any, string][] = [
-	['', 'Invalid value given "". Error: Private key must be 32 bytes.'],
-	[Buffer.from([]), 'Invalid value given "". Error: Private key must be 32 bytes.'],
-	[undefined, 'Invalid value given "undefined". Error: not a valid string or buffer.'],
-	[null, 'Invalid value given "null". Error: not a valid string or buffer.'],
+export const invalidPrivateKeytoAccountData: [any, any][] = [
+	['', new PrivateKeyLengthError()],
+	[Buffer.from([]), new PrivateKeyLengthError()],
+	[undefined, new InvalidPrivateKeyError()],
+	[null, new InvalidPrivateKeyError()],
 ];
 
 export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = [
@@ -124,12 +124,10 @@ export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = 
 	],
 ];
 
-export const invalidEncryptData: [[any, string, any], PrivateKeyLengthError | InvalidKdfError][] = [
+export const invalidEncryptData: [[any, any, any], PrivateKeyLengthError | InvalidKdfError][] = [
 	[
 		['0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a', '123', {}],
-		new PrivateKeyLengthError(
-			'67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a',
-		),
+		new PrivateKeyLengthError(),
 	],
 	[
 		[
@@ -143,9 +141,31 @@ export const invalidEncryptData: [[any, string, any], PrivateKeyLengthError | In
 		],
 		new InvalidKdfError(),
 	],
+	[
+		[undefined, '123', {}], // no private key provided
+		new InvalidPrivateKeyError()
+	],
+	[ // no password provided
+		[
+			'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			undefined,
+			{}
+		],
+		new InvalidPasswordError()
+	],
+	[
+		['0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
+			'123',
+			{
+				n: 8192,
+				iv: Buffer.from('bfb43120ae00e9de110f8325143a27', 'hex'),
+				salt: undefined,
+			},], new IVLengthError()
+	]
+	
 ];
 
-export const validDecryptData: [[Keystore | any, string, CipherOptions]][] = [
+export const validDecryptData: [[KeyStore | any, string, CipherOptions]][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -188,6 +208,7 @@ export const invalidDecryptData: [[any, string], any][] = [
 		],
 		new InvalidKdfError(),
 	],
+	
 	[
 		[
 			{
