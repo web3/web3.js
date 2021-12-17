@@ -8,7 +8,7 @@ import {
 	PBKDF2IterationsError,
 } from 'web3-common';
 import { sign, signTransaction, encrypt } from '../../src/account';
-import { CipherOptions } from '../../src/types';
+import { CipherOptions, KeyStore } from '../../src/types';
 
 export const validPrivateKeytoAccountData: [string, any][] = [
 	[
@@ -33,14 +33,17 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 	],
 ];
 
-export const invalidPrivateKeytoAccountData: [any, any][] = [
+export const invalidPrivateKeytoAccountData: [
+	any,
+	PrivateKeyLengthError | InvalidPrivateKeyError,
+][] = [
 	['', new PrivateKeyLengthError()],
 	[Buffer.from([]), new PrivateKeyLengthError()],
 	[undefined, new InvalidPrivateKeyError()],
 	[null, new InvalidPrivateKeyError()],
 ];
 
-export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = [
+export const validEncryptData: [[any, string | Buffer, CipherOptions], KeyStore][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -69,7 +72,9 @@ export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = 
 					dklen: 32,
 					salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
 				},
+				mac: '46eb4884e82dc43b5aa415faba53cc653b7038e9d61cc32fd643cf8c396189b7',
 			},
+			id: '1d82a61f-2bba-4ebc-a283-56d49d877eb7',
 		},
 	],
 	[
@@ -97,7 +102,9 @@ export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = 
 					dklen: 32,
 					salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
 				},
+				mac: '46eb4884e82dc43b5aa415faba53cc653b7038e9d61cc32fd643cf8c396189b7',
 			},
+			id: '1d82a61f-2bba-4ebc-a283-56d49d877eb7',
 		},
 	],
 	[
@@ -132,7 +139,17 @@ export const validEncryptData: [[any, string | Buffer, CipherOptions], any][] = 
 	],
 ];
 
-export const invalidEncryptData: [[any, any, any], PrivateKeyLengthError | InvalidKdfError][] = [
+export const invalidEncryptData: [
+	[any, any, any],
+	(
+		| PrivateKeyLengthError
+		| InvalidKdfError
+		| InvalidPrivateKeyError
+		| InvalidPasswordError
+		| IVLengthError
+		| PBKDF2IterationsError
+	),
+][] = [
 	[
 		['0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a', '123', {}],
 		new PrivateKeyLengthError(),
