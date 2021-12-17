@@ -1,6 +1,14 @@
-import { InvalidKdfError, InvalidPrivateKeyError, KeyDerivationError, PrivateKeyLengthError, InvalidPasswordError, IVLengthError } from 'web3-common';
+import {
+	InvalidKdfError,
+	InvalidPrivateKeyError,
+	KeyDerivationError,
+	PrivateKeyLengthError,
+	InvalidPasswordError,
+	IVLengthError,
+	PBKDF2IterationsError,
+} from 'web3-common';
 import { sign, signTransaction, encrypt } from '../../src/account';
-import { CipherOptions, KeyStore } from '../../src/types';
+import { CipherOptions } from '../../src/types';
 
 export const validPrivateKeytoAccountData: [string, any][] = [
 	[
@@ -143,29 +151,43 @@ export const invalidEncryptData: [[any, any, any], PrivateKeyLengthError | Inval
 	],
 	[
 		[undefined, '123', {}], // no private key provided
-		new InvalidPrivateKeyError()
-	],
-	[ // no password provided
-		[
-			'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-			undefined,
-			{}
-		],
-		new InvalidPasswordError()
+		new InvalidPrivateKeyError(),
 	],
 	[
-		['0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
+		// no password provided
+		['0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709', undefined, {}],
+		new InvalidPasswordError(),
+	],
+	[
+		// iv length is not 16 bytes
+		[
+			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
 			'123',
 			{
 				n: 8192,
 				iv: Buffer.from('bfb43120ae00e9de110f8325143a27', 'hex'),
 				salt: undefined,
-			},], new IVLengthError()
-	]
-	
+			},
+		],
+		new IVLengthError(),
+	],
+	[
+		[
+			// iterations is less than 1000, should error
+			'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			'123',
+			{
+				iv: 'bfb43120ae00e9de110f8325143a2709',
+				salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
+				c: 100,
+				kdf: 'pbkdf2',
+			},
+		],
+		new PBKDF2IterationsError(),
+	],
 ];
 
-export const validDecryptData: [[KeyStore | any, string, CipherOptions]][] = [
+export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 	[
 		[
 			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
@@ -176,12 +198,14 @@ export const validDecryptData: [[KeyStore | any, string, CipherOptions]][] = [
 					'210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
 					'hex',
 				),
-			}
+			},
+			'0x67f476289210e3bef3c1c75e4de993ff0a00663df00def84e73aa7411eac18a6',
 		],
 	],
 ];
 
 export const invalidDecryptData: [[any, string], any][] = [
+	// TODO create Keystore test cases after validation PR is merged
 	[
 		[
 			{
@@ -208,7 +232,7 @@ export const invalidDecryptData: [[any, string], any][] = [
 		],
 		new InvalidKdfError(),
 	],
-	
+
 	[
 		[
 			{

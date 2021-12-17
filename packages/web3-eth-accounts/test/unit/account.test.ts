@@ -1,6 +1,13 @@
 import { isHexStrict } from 'web3-utils';
 import { create, privateKeyToAccount, encrypt, decrypt } from '../../src/account';
-import { validPrivateKeytoAccountData, invalidPrivateKeytoAccountData, validEncryptData, validDecryptData, invalidDecryptData, invalidEncryptData } from '../fixtures/account';
+import {
+	validPrivateKeytoAccountData,
+	invalidPrivateKeytoAccountData,
+	validEncryptData,
+	validDecryptData,
+	invalidDecryptData,
+	invalidEncryptData,
+} from '../fixtures/account';
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -31,9 +38,9 @@ describe('accounts', () => {
 	});
 
 	describe('encrypt', () => {
-		describe('valid cases',  () => {
+		describe('valid cases', () => {
 			it.each(validEncryptData)('%s', async (input, output) => {
-				const result = await encrypt(input[0],input[1],input[2]).catch(err => {
+				const result = await encrypt(input[0], input[1], input[2]).catch(err => {
 					throw err;
 				});
 				expect(result.version).toBe(output.version);
@@ -46,20 +53,20 @@ describe('accounts', () => {
 				expect(typeof result.version).toBe('number');
 				expect(typeof result.id).toBe('string');
 				expect(typeof result.crypto.mac).toBe('string');
-
 			});
 		});
 
 		describe('invalid cases', () => {
-			it.each(invalidEncryptData)('%s', (input, output) => {
-				expect(async () => await encrypt(input[0], input[1], input[2])).rejects.toThrow(output);
+			it.each(invalidEncryptData)('%s', async (input, output) => {
+				const result = encrypt(input[0], input[1], input[2]);
+				await expect(result).rejects.toThrow(output);
 			});
-		})
-	})
+		});
+	});
 	describe('decrypt', () => {
 		describe('valid cases', () => {
-			it.each(validDecryptData)('%s', async(input) => {
-				const keystore = await encrypt(input[0],input[1],input[2]).catch(err => {
+			it.each(validDecryptData)('%s', async input => {
+				const keystore = await encrypt(input[0], input[1], input[2]).catch(err => {
 					throw err;
 				});
 
@@ -67,20 +74,22 @@ describe('accounts', () => {
 				const result = await decrypt(keystore, input[1]).catch(err => {
 					throw err;
 				});
-				expect(result).toEqual(privateKeyToAccount(input[0].slice(2)))
+				expect(result).toEqual(privateKeyToAccount(input[3].slice(2)));
 
 				const keystoreString = JSON.stringify(keystore);
 
 				const stringResult = await decrypt(keystoreString, input[1], true).catch(err => {
 					throw err;
 				});
-				expect(stringResult).toEqual(privateKeyToAccount(input[0].slice(2)))
-			})
-		})
-		describe('invalid cases', () => {
-			it.each(invalidDecryptData)('%s', (input, output) => {
-				expect(async () =>  decrypt(input[0], input[1])).rejects.toThrow(output);
+				expect(stringResult).toEqual(privateKeyToAccount(input[3].slice(2)));
 			});
 		});
-	})
+		describe('invalid cases', () => {
+			it.each(invalidDecryptData)('%s', async (input, output) => {
+				const result = decrypt(input[0], input[1]);
+
+				await expect(result).rejects.toThrow(output);
+			});
+		});
+	});
 });

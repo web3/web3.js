@@ -12,7 +12,7 @@ import {
 	validateBytesInput,
 	isBuffer,
 	isValidString,
-	isHexString32Bytes
+	isHexString32Bytes,
 } from 'web3-utils';
 import {
 	InvalidPrivateKeyError,
@@ -21,24 +21,12 @@ import {
 	KeyDerivationError,
 	KeyStoreVersionError,
 	InvalidPasswordError,
-	IVLengthError
+	IVLengthError,
+	PBKDF2IterationsError,
 } from 'web3-common';
 import { KeyStore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types';
 
-const validateKeyStore = (keyStore: KeyStore): boolean => {
-	const keyStoreAttributes = ['id', 'address', 'crypto', 'mac'];
-	const cryptoAttributes = ['ciphertext', 'cipherparams', 'cipher', 'kdf', 'kdfparams'];
-	const pbkdf2Params = ['dklen', 'salt', 'c', 'prf'];
-	const scryptParams = ['n','p','r', 'dklen', 'salt'];
-
-	keyStoreAttributes.forEach(attribute => {
-		if (!keyStore.hasOwnProperty(attribute)){
-		return false;
-		}
-	});
-
-	return true;
-}
+const validateKeyStore = (keyStore: KeyStore): boolean => !!keyStore;
 
 // TODO will be added later
 export const sign = (): boolean => true;
@@ -73,7 +61,6 @@ const uuidV4 = () => {
 		hexString.substring(22, 34),
 	].join('-');
 };
-
 
 const privateKeyToAddress = (privateKey: string | Buffer): string => {
 	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
@@ -117,7 +104,7 @@ export const encrypt = async (
 		? Buffer.from(privateKey).toString('hex')
 		: privateKey;
 
-	if (!isHexString32Bytes(stringPrivateKey)){
+	if (!isHexString32Bytes(stringPrivateKey)) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -133,12 +120,12 @@ export const encrypt = async (
 		throw new InvalidPasswordError();
 	}
 
-	const bufferPassword = typeof password === 'string' ? Buffer.from(password): password;
-
+	const bufferPassword = typeof password === 'string' ? Buffer.from(password) : password;
 
 	let initializationVector;
 	if (options?.iv) {
-		initializationVector = typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
+		initializationVector =
+			typeof options.iv === 'string' ? Buffer.from(options.iv, 'hex') : options.iv;
 		if (initializationVector.toString('hex').length !== 32) {
 			throw new IVLengthError();
 		}
@@ -159,6 +146,11 @@ export const encrypt = async (
 			c: options?.c ?? 262144,
 			prf: 'hmac-sha256',
 		};
+
+		if (kdfparams.c < 1000) {
+			// error when c < 1000, pbkdf2 is less secure with less iterations
+			throw new PBKDF2IterationsError();
+		}
 		derivedKey = pbkdf2Sync(
 			bufferPassword,
 			Buffer.from(salt),
@@ -276,13 +268,14 @@ export const decrypt = async (
 			? keystore
 			: (JSON.parse(nonStrict ? keystore.toLowerCase() : keystore) as KeyStore);
 
-	if (!validateKeyStore(json)){
-		throw new Error('invalid keystore')
+	// TODO create Keystore validation, after validation PR is merged
+	if (!validateKeyStore(json)) {
+		throw new Error('invalid keystore');
 	}
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
-	const bufferPassword = typeof password === 'string' ? Buffer.from(password): password;
+	const bufferPassword = typeof password === 'string' ? Buffer.from(password) : password;
 
 	validateBytesInput(bufferPassword);
 
@@ -309,13 +302,7 @@ export const decrypt = async (
 				? Buffer.from(kdfparams.salt, 'hex')
 				: kdfparams.salt;
 
-		derivedKey = pbkdf2Sync(
-			bufferPassword,
-			bufferSalt,
-			kdfparams.c,
-			kdfparams.dklen,
-			'sha256',
-		);
+		derivedKey = pbkdf2Sync(bufferPassword, bufferSalt, kdfparams.c, kdfparams.dklen, 'sha256');
 	} else {
 		throw new InvalidKdfError();
 	}
@@ -338,23 +325,3 @@ export const decrypt = async (
 
 	return privateKeyToAccount(Buffer.from(seed));
 };
-
-// encrypt("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709", "123", {iv: Buffer.from("")}).then(console.log)
-// const key = {
-// 	version: 3,
-// 	crypto: {
-// 		ciphertext: '76512156a34105fa6473ad040c666ae7b917d14c06543accc0d2dc28e6073b12',
-// 		cipherparams: { iv: 'bfb43120ae00e9de110f8325143a2709' },
-// 		cipher: 'aes-128-ctr',
-// 		kdf: 'pbkdf2',
-// 		kdfparams: {
-// 			dklen: 32,
-// 			salt: '210d0ec956787d865358ac45716e6dd42e68d48e346d795746509523aeb477dd',
-// 			c: 262144,
-// 			prf: 'hmac-sha256',
-// 		},
-// 		mac: '46eb4884e82dc43b5aa415faba53cc653b7038e9d61cc32fd643cf8c396189b7',
-// 	},
-// } as KeyStore;
-// console.log(key)
-// decrypt(key, "123").then(console.log);

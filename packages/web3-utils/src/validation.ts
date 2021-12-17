@@ -51,21 +51,6 @@ export const validateHexStringInput = (data: HexString) => {
 };
 
 /**
- * 
- */
- export function assertBytes(bytes: Uint8Array, ...len: number[]) {
-	if (
-	  bytes instanceof Uint8Array &&
-	  (!len.length || len.includes(bytes.length))
-	) {
-	  return;
-	}
-	throw new TypeError(
-	  `Expected ${len} bytes, not ${typeof bytes} with length=${bytes.length}`
-	);
-  }
-
-/**
  * checks for valid byte array or hexstring otherwise throws error
  */
 export const validateBytesInput = (data: Bytes) => {
@@ -137,12 +122,12 @@ export const validateNumbersInput = (
 /**
  * checks input if typeof data is valid string input
  */
-export const isValidString = (data: any) => typeof data === 'string';
+export const isValidString = (data: Bytes) => typeof data === 'string';
 
 /**
  * checks input if typeof data is valid buffer input
  */
-export const isBuffer = (data: any) => Buffer.isBuffer(data);
+export const isBuffer = (data: Bytes) => Buffer.isBuffer(data);
 
 /**
  * checks input for valid string, otherwise throws error
@@ -457,6 +442,13 @@ export const isHexString8Bytes = (value: HexString8Bytes, prefixed = true) =>
 
 export const validateHexString8Bytes = (value: HexString8Bytes, prefixed = true) => {
 	if (!isHexString8Bytes(value, prefixed)) throw new InvalidHexStringError(value, 8);
+};
+
+export const isHexString16Bytes = (value: HexString32Bytes, prefixed = true) =>
+	prefixed ? isHexStrict(value) && value.length === 34 : isHex(value) && value.length === 32;
+
+export const validateHexString16Bytes = (value: HexString32Bytes, prefixed = true) => {
+	if (!isHexString16Bytes(value, prefixed)) throw new InvalidHexStringError(value, 16);
 };
 
 export const isHexString32Bytes = (value: HexString32Bytes, prefixed = true) =>
