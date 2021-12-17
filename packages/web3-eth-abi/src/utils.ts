@@ -4,37 +4,37 @@ import { leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
 	AbiInput,
-	JsonAbiCoderStruct,
-	JsonAbiFragment,
-	JsonAbiParameter,
-	JsonAbiStruct,
-	JsonAbiEventFragment,
-	JsonAbiFunctionFragment,
-	JsonAbiConstructorFragment,
+	AbiCoderStruct,
+	AbiFragment,
+	AbiParameter,
+	AbiStruct,
+	AbiEventFragment,
+	AbiFunctionFragment,
+	AbiConstructorFragment,
 } from './types';
 
-export const isAbiFragment = (item: unknown): item is JsonAbiFragment =>
+export const isAbiFragment = (item: unknown): item is AbiFragment =>
 	item !== undefined &&
 	item !== null &&
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	['function', 'event', 'constructor'].includes((item as { type: string }).type);
 
-export const isAbiEventFragment = (item: unknown): item is JsonAbiEventFragment =>
+export const isAbiEventFragment = (item: unknown): item is AbiEventFragment =>
 	item !== undefined &&
 	item !== null &&
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	(item as { type: string }).type === 'event';
 
-export const isAbiFunctionFragment = (item: unknown): item is JsonAbiFunctionFragment =>
+export const isAbiFunctionFragment = (item: unknown): item is AbiFunctionFragment =>
 	item !== undefined &&
 	item !== null &&
 	typeof item === 'object' &&
 	(item as { type: string }).type !== undefined &&
 	(item as { type: string }).type === 'function';
 
-export const isAbiConstructorFragment = (item: unknown): item is JsonAbiConstructorFragment =>
+export const isAbiConstructorFragment = (item: unknown): item is AbiConstructorFragment =>
 	item !== undefined &&
 	item !== null &&
 	typeof item === 'object' &&
@@ -45,8 +45,8 @@ export const isAbiConstructorFragment = (item: unknown): item is JsonAbiConstruc
  * Check if type is simplified struct format
  */
 export const isSimplifiedStructFormat = (
-	type: string | Partial<JsonAbiParameter>,
-): type is Omit<JsonAbiParameter, 'components' | 'name'> =>
+	type: string | Partial<AbiParameter>,
+): type is Omit<AbiParameter, 'components' | 'name'> =>
 	typeof type === 'object' &&
 	typeof (type as { components: unknown }).components === 'undefined' &&
 	typeof (type as { name: unknown }).name === 'undefined';
@@ -54,7 +54,7 @@ export const isSimplifiedStructFormat = (
 /**
  * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
  */
-export const mapStructNameAndType = (structName: string): JsonAbiStruct =>
+export const mapStructNameAndType = (structName: string): AbiStruct =>
 	structName.includes('[]')
 		? { type: 'tuple[]', name: structName.slice(0, -2) }
 		: { type: 'tuple', name: structName };
@@ -62,8 +62,8 @@ export const mapStructNameAndType = (structName: string): JsonAbiStruct =>
 /**
  * Maps the simplified format in to the expected format of the ABICoder
  */
-export const mapStructToCoderFormat = (struct: JsonAbiStruct): Array<JsonAbiCoderStruct> => {
-	const components: Array<JsonAbiCoderStruct> = [];
+export const mapStructToCoderFormat = (struct: AbiStruct): Array<AbiCoderStruct> => {
+	const components: Array<AbiCoderStruct> = [];
 
 	for (const key of Object.keys(struct)) {
 		const item = struct[key];
@@ -71,7 +71,7 @@ export const mapStructToCoderFormat = (struct: JsonAbiStruct): Array<JsonAbiCode
 		if (typeof item === 'object') {
 			components.push({
 				...mapStructNameAndType(key),
-				components: mapStructToCoderFormat(item as unknown as JsonAbiStruct),
+				components: mapStructToCoderFormat(item as unknown as AbiStruct),
 			});
 		} else {
 			components.push({
@@ -88,8 +88,8 @@ export const mapStructToCoderFormat = (struct: JsonAbiStruct): Array<JsonAbiCode
  */
 export const mapTypes = (
 	types: AbiInput[],
-): Array<string | JsonAbiParameter | Record<string, unknown>> => {
-	const mappedTypes: Array<string | JsonAbiParameter | Record<string, unknown>> = [];
+): Array<string | AbiParameter | Record<string, unknown>> => {
+	const mappedTypes: Array<string | AbiParameter | Record<string, unknown>> = [];
 
 	for (const type of types) {
 		let modifiedType = type;
@@ -112,8 +112,8 @@ export const mapTypes = (
 			mappedTypes.push({
 				...mapStructNameAndType(structName),
 				components: mapStructToCoderFormat(
-					modifiedType[structName] as unknown as JsonAbiStruct,
-				) as unknown as JsonAbiParameter[],
+					modifiedType[structName] as unknown as AbiStruct,
+				) as unknown as AbiParameter[],
 			});
 		} else {
 			mappedTypes.push(modifiedType);
@@ -217,7 +217,10 @@ export const modifyParams = (
  *  used to flatten json abi inputs/outputs into an array of type-representing-strings
  */
 
-export const flattenTypes = (includeTuple: boolean, puts: JsonAbiParameter[]): string[] => {
+export const flattenTypes = (
+	includeTuple: boolean,
+	puts: ReadonlyArray<AbiParameter>,
+): string[] => {
 	const types: string[] = [];
 
 	puts.forEach(param => {
@@ -250,10 +253,15 @@ export const flattenTypes = (includeTuple: boolean, puts: JsonAbiParameter[]): s
  * Should be used to create full function/event name from json abi
  * returns a string
  */
-export const jsonInterfaceMethodToString = (json: JsonAbiFragment): string => {
-	if (json.name?.includes('(')) {
-		return json.name;
+export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
+	if (isAbiEventFragment(json) || isAbiFunctionFragment(json)) {
+		if (json.name?.includes('(')) {
+			return json.name;
+		}
+
+		return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
 	}
 
-	return `${json.name ?? ''}(${flattenTypes(false, json.inputs ?? []).join(',')})`;
+	// Constructor fragment
+	return `(${flattenTypes(false, json.inputs ?? []).join(',')})`;
 };
