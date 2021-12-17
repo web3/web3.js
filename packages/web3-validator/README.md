@@ -51,6 +51,7 @@ Following eth types are supported to validate.
 
 | string | `string` | String values |
 | address | `string`, `HexString` | Ethereum network compatible address |
+| bloom | `string`, `HexString` | Check if a given string is a Eth bloom |
 | tuple | `array` | You can specify any tuple as nested arrays. e.g. `['uint', 'string']`. For a custom tuple or array tuple you can use syntax e.g. `['tuple[3]', ['uint', 'string']]` |
 
 For the ethereum compatible data values should be passed as arrays e.g. for schema `['uint', 'string']` value should be passed as `[2, 'my-string']`.

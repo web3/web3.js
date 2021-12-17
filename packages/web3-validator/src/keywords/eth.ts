@@ -9,6 +9,7 @@ import {
 	isUInt,
 	isAddress,
 	isValidEthType,
+	isBloom,
 } from '../validation';
 
 export const metaSchema = {
@@ -75,6 +76,10 @@ const compile = (
 
 		if (type === 'address') {
 			return isAddress(data);
+		}
+
+		if (type === 'bloom') {
+			return isBloom(data);
 		}
 
 		return false;

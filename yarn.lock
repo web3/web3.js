@@ -3240,7 +3240,7 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-ethereum-cryptography@^0.2.0:
+ethereum-cryptography@^0.2.0, ethereum-cryptography@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ethereum-cryptography/-/ethereum-cryptography-0.2.1.tgz#7a2cce5c47157eb6992229cf26ccd889d5ee4754"
   integrity sha512-hZkrGoL/LkL8OtrXJkCsNJkOs7ONplB1wvAq8pfagpHC5KVGJHWx2xFbRGuWP2zbMKBdxKBcbzMOG4v/ejSulw==

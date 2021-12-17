@@ -1,6 +1,6 @@
 import { VALID_ETH_BASE_TYPES } from './constants';
-import { AbiParameter } from './private_types';
 import { ValidationSchemaInput, FullValidationSchema, ShortValidationSchema } from './types';
+import { isAbiParameterSchema } from './validation/abi';
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
@@ -42,10 +42,6 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arrayLength };
 };
-
-export const isAbiParameterSchema = (
-	schema: string | ShortValidationSchema | AbiParameter,
-): schema is AbiParameter => typeof schema === 'object' && 'type' in schema && 'name' in schema;
 
 export const abiSchemaToJsonSchema = (
 	abis: ShortValidationSchema | FullValidationSchema,
@@ -125,3 +121,26 @@ export const abiSchemaToJsonSchema = (
 };
 
 export const ethAbiToJsonSchema = (abis: ValidationSchemaInput) => abiSchemaToJsonSchema(abis);
+
+/**
+ * Code points to int
+ */
+
+export const codePointToInt = (codePoint: number): number => {
+	if (codePoint >= 48 && codePoint <= 57) {
+		/* ['0'..'9'] -> [0..9] */
+		return codePoint - 48;
+	}
+
+	if (codePoint >= 65 && codePoint <= 70) {
+		/* ['A'..'F'] -> [10..15] */
+		return codePoint - 55;
+	}
+
+	if (codePoint >= 97 && codePoint <= 102) {
+		/* ['a'..'f'] -> [10..15] */
+		return codePoint - 87;
+	}
+
+	throw new Error(`Invalid code point: ${codePoint}`);
+};
