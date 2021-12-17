@@ -5,8 +5,8 @@ export type PromiseExecutor<T> = (
 	reject: (reason: unknown) => void,
 ) => void;
 
-export class PromiEvent<ResolveType, T extends Web3EventMap>
-	extends Web3EventEmitter<T>
+export class PromiEvent<ResolveType, EventMap extends Web3EventMap>
+	extends Web3EventEmitter<EventMap>
 	implements Promise<ResolveType>
 {
 	private readonly _promise: Promise<ResolveType>;
