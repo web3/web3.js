@@ -524,6 +524,18 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@humeris/boule@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@humeris/boule/-/boule-4.0.0.tgz#50eec1208f3d747585ecd6040b34641f0ba81931"
+  integrity sha512-kaD0eg61QZb8Qwymx/DW1bOoFwzuWiG9lW3ik3dD8//HDEvr15OSykXdJECLgQPfMrS4RuLGHU+lmJkrHk8XoA==
+
+"@humeris/espresso-shot@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@humeris/espresso-shot/-/espresso-shot-4.0.0.tgz#e720d2bd3d555a3118e788931a01a991308f8cfe"
+  integrity sha512-cVmyBfgrutiBmQcMIxfCVnTb2UBgl00dGIuwoOCjeeASOz9/rPtiXxbic9n+8RXXvTNt+mLfxssPMLf7yb7U5A==
+  dependencies:
+    "@humeris/boule" "^4.0.0"
+
 "@hutson/parse-repository-url@^3.0.0":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"

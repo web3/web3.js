@@ -1,5 +1,5 @@
 import { HexString } from 'web3-utils';
-import { JsonAbiParameter } from '../types';
+import { AbiParameter } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
@@ -8,7 +8,7 @@ const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufix
  * Decodes ABI-encoded log data and indexed topic data
  */
 export const decodeLog = <ReturnType extends Record<string, unknown>>(
-	inputs: Array<JsonAbiParameter>,
+	inputs: Array<AbiParameter>,
 	data: HexString,
 	topics: string | string[],
 ) => {
@@ -16,20 +16,20 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 
 	const clonedData = data ?? '';
 
-	const notIndexedInputs: Array<string | JsonAbiParameter> = [];
-	const indexedParams: Array<string | JsonAbiParameter> = [];
+	const notIndexedInputs: Array<string | AbiParameter> = [];
+	const indexedParams: Array<string | AbiParameter> = [];
 	let topicCount = 0;
 
 	// TODO check for anonymous logs?
 	for (const [i, input] of inputs.entries()) {
 		if (input.indexed) {
 			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
-				? (decodeParameter(input.type, clonedTopics[topicCount]) as JsonAbiParameter)
+				? (decodeParameter(input.type, clonedTopics[topicCount]) as AbiParameter)
 				: clonedTopics[topicCount];
 
 			topicCount += 1;
 		} else {
-			notIndexedInputs[i] = input as unknown as JsonAbiParameter;
+			notIndexedInputs[i] = input as unknown as AbiParameter;
 		}
 	}
 
