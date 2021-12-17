@@ -1,4 +1,12 @@
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
+import { keccak256 } from 'ethereum-cryptography/keccak';
+import {
+	TransactionFactory,
+	FeeMarketEIP1559TxData,
+	AccessListEIP2930TxData,
+	TxData,
+} from '@ethereumjs/tx';
+import { ecdsaSign, ecdsaRecover } from 'secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
 import { encrypt as createCipheriv, decrypt as createDecipheriv } from 'ethereum-cryptography/aes';
@@ -12,11 +20,17 @@ import {
 	validateBytesInput,
 	isBuffer,
 	isValidString,
+	Address,
+	isHexStrict,
+	utf8ToHex,
 	isHexString32Bytes,
 } from 'web3-utils';
 import {
 	InvalidPrivateKeyError,
 	PrivateKeyLengthError,
+	UndefinedRawTransactionError,
+	SignerError,
+	InvalidSignatureError,
 	InvalidKdfError,
 	KeyDerivationError,
 	KeyStoreVersionError,
@@ -24,15 +38,152 @@ import {
 	IVLengthError,
 	PBKDF2IterationsError,
 } from 'web3-common';
-import { KeyStore, ScryptParams, PBKDF2SHA256Params, CipherOptions } from './types';
+import {
+	signatureObject,
+	signFunction,
+	signResult,
+	signTransactionFunction,
+	signTransactionResult,
+	KeyStore,
+	ScryptParams,
+	PBKDF2SHA256Params,
+	CipherOptions,
+} from './types';
 
 const validateKeyStore = (keyStore: KeyStore): boolean => !!keyStore;
 
-// TODO will be added later
-export const sign = (): boolean => true;
+/**
+ * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ */
 
-// TODO will be added later
-export const signTransaction = (): boolean => true;
+export const hashMessage = (message: string): string => {
+	const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
+
+	const messageBytes = hexToBytes(messageHex);
+
+	const preamble = `\x19Ethereum Signed Message:\n${messageBytes.length}`;
+
+	const ethMessage = Buffer.concat([Buffer.from(preamble), Buffer.from(messageBytes)]);
+
+	return `0x${Buffer.from(keccak256(ethMessage)).toString('hex')}`;
+};
+
+/**
+ * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ */
+export const sign = (data: string, privateKey: HexString): signResult => {
+	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
+
+	if (!isHexString32Bytes(privateKeyParam, false)) {
+		throw new PrivateKeyLengthError();
+	}
+
+	const hash = hashMessage(data);
+
+	const signObj = ecdsaSign(
+		Buffer.from(hash.substring(2), 'hex'),
+		Buffer.from(privateKeyParam, 'hex'),
+	);
+
+	const r = Buffer.from(signObj.signature.slice(0, 32));
+	const s = Buffer.from(signObj.signature.slice(32, 64));
+	const v = signObj.recid + 27;
+
+	return {
+		message: data,
+		messageHash: hash,
+		v: `0x${v.toString(16)}`,
+		r: `0x${r.toString('hex')}`,
+		s: `0x${s.toString('hex')}`,
+		signature: `0x${Buffer.from(signObj.signature).toString('hex')}${v.toString(16)}`,
+	};
+};
+
+/**
+ *  Signs an Ethereum transaction with a given private key.
+ */
+export const signTransaction = (
+	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+	privateKey: HexString,
+): signTransactionResult => {
+	//	TODO : Send calls to web3.transaction package for :
+	//		Transaction Validation checks
+
+	const tx = TransactionFactory.fromTxData(transaction);
+	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
+	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
+		throw new SignerError('Signer Error');
+
+	const validationErrors = signedTx.validate(true);
+
+	if (validationErrors.length > 0) {
+		let errorString = 'Signer Error ';
+		for (const validationError of validationErrors) {
+			errorString += `${errorString} ${validationError}.`;
+		}
+		throw new SignerError(errorString);
+	}
+
+	const rlpEncoded = signedTx.serialize().toString('hex');
+	const rawTx = `0x${rlpEncoded}`;
+	const txHash = keccak256(Buffer.from(rawTx, 'hex'));
+
+	return {
+		messageHash: `0x${Buffer.from(signedTx.getMessageToSign(true)).toString('hex')}`,
+		v: `0x${signedTx.v.toString('hex')}`,
+		r: `0x${signedTx.r.toString('hex')}`,
+		s: `0x${signedTx.s.toString('hex')}`,
+		rawTransaction: rawTx,
+		transactionHash: `0x${Buffer.from(txHash).toString('hex')}`,
+	};
+};
+
+/**
+ * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
+ */
+export const recoverTransaction = (rawTransaction: HexString): Address => {
+	if (rawTransaction === undefined) throw new UndefinedRawTransactionError();
+
+	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
+
+	return toChecksumAddress(tx.getSenderAddress().toString());
+};
+
+/**
+ * Recovers the Ethereum address which was used to sign the given data
+ */
+export const recover = (
+	data: string | signatureObject,
+	signature?: string,
+	hashed?: boolean,
+): Address => {
+	if (typeof data === 'object') {
+		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
+		return recover(data.messageHash, signatureStr, true);
+	}
+
+	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
+
+	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
+	const hashedMessage = hashed ? data : hashMessage(data);
+
+	const v = signature.substring(V_INDEX); // 0x + r + s + v
+
+	const ecPublicKey = ecdsaRecover(
+		Buffer.from(signature.substring(2, V_INDEX), 'hex'),
+		parseInt(v, 16) - 27,
+		Buffer.from(hashedMessage.substring(2), 'hex'),
+		false,
+	);
+
+	const publicKey = `0x${Buffer.from(ecPublicKey).toString('hex').slice(2)}`;
+
+	const publicHash = sha3Raw(publicKey);
+
+	const address = toChecksumAddress(`0x${publicHash.slice(-40)}`);
+
+	return address;
+};
 
 // Generate a version 4 uuid
 // https://github.com/uuidjs/uuid/blob/main/src/v4.js#L5
@@ -216,8 +367,8 @@ export const privateKeyToAccount = (
 ): {
 	address: string;
 	privateKey: string;
-	signTransaction: () => boolean; // From 1.x
-	sign: () => boolean;
+	signTransaction: signTransactionFunction; // From 1.x
+	sign: signFunction;
 	encrypt: (privateKey: string, password: string) => Promise<KeyStore>;
 } => ({
 	address: privateKeyToAddress(privateKey),
@@ -232,20 +383,14 @@ export const privateKeyToAccount = (
  */
 export const create = (): {
 	address: HexString;
-	privateKey: string;
-	signTransaction: () => boolean; // From 1.x
-	sign: () => boolean;
+	privateKey: HexString;
+	signTransaction: signTransactionFunction; // From 1.x
+	sign: signFunction;
 	encrypt: (a: string, b: string) => Promise<KeyStore>;
 } => {
 	const privateKey = utils.randomPrivateKey();
-	const address = getPublicKey(privateKey);
-	return {
-		privateKey: `0x${Buffer.from(privateKey).toString('hex')}`,
-		address: `0x${Buffer.from(address).toString('hex')}`,
-		signTransaction,
-		sign,
-		encrypt,
-	};
+
+	return privateKeyToAccount(`0x${Buffer.from(privateKey).toString('hex')}`);
 };
 
 /**
@@ -259,8 +404,8 @@ export const decrypt = async (
 ): Promise<{
 	address: string;
 	privateKey: HexString;
-	signTransaction: () => boolean; // From 1.x
-	sign: () => boolean;
+	signTransaction: signTransactionFunction; // From 1.x
+	sign: signFunction;
 	encrypt: (privateKey: HexString, password: string) => Promise<KeyStore>;
 }> => {
 	const json =
