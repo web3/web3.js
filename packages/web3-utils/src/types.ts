@@ -4,6 +4,8 @@ export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
 export type Numbers = number | bigint | string | HexString;
 // Hex encoded 32 bytes
 export type HexString32Bytes = HexString;
+// Hex encoded 16 bytes
+export type HexString16Bytes = HexString;
 // Hex encoded 8 bytes
 export type HexString8Bytes = HexString;
 // Hex encoded 1 byte
