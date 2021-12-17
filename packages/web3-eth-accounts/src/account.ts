@@ -57,7 +57,7 @@ export const hashMessage = (message: string): string => {
 /**
  * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
  */
-export const sign = (data: string, privateKey: string): signResult => {
+export const sign = (data: string, privateKey: HexString): signResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
 
 	if (!isHexString32Bytes(privateKeyParam, false)) {
@@ -90,7 +90,7 @@ export const sign = (data: string, privateKey: string): signResult => {
  */
 export const signTransaction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
-	privateKey: string,
+	privateKey: HexString,
 ): signTransactionResult => {
 	//	TODO : Send calls to web3.transaction package for :
 	//		Transaction Validation checks
@@ -175,7 +175,7 @@ export const recover = (
  * Get account from private key
  */
 export const privateKeyToAccount = (
-	privateKey: string | Buffer,
+	privateKey: HexString | Buffer,
 ): {
 	address: string;
 	privateKey: string;
@@ -215,7 +215,7 @@ export const privateKeyToAccount = (
  */
 export const create = (): {
 	address: HexString;
-	privateKey: string;
+	privateKey: HexString;
 	signTransaction: signTransactionFunction; // From 1.x
 	sign: signFunction;
 	encrypt: () => boolean;
