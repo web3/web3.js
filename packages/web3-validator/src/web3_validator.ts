@@ -3,6 +3,7 @@ import { ethAbiToJsonSchema } from './utils';
 import { ValidationSchemaInput, Web3ValidationErrorObject, Web3ValidationOptions } from './types';
 import { ethKeyword } from './keywords/eth';
 import { Web3ValidatorError } from './errors';
+import * as formats from './formats';
 
 export class Web3Validator {
 	private readonly _validator: Ajv;
@@ -21,6 +22,11 @@ export class Web3Validator {
 		});
 
 		this._validator.addKeyword(ethKeyword);
+
+		for (const formatName of Object.keys(formats)) {
+			// eslint-disable-next-line import/namespace
+			this._validator.addFormat(formatName, formats[formatName as keyof typeof formats]);
+		}
 	}
 
 	public validateJSONSchema(
