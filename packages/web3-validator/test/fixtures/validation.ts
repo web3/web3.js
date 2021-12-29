@@ -1,5 +1,3 @@
-import { Filter, HexString32Bytes, HexString8Bytes, Numbers, Uint } from 'web3-utils';
-
 export const validUintData: any[] = [
 	'0x48',
 	'0x123c',
@@ -82,7 +80,7 @@ export const invalidIntDataWithAbiType: [any, string][] = [
 	['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 'uint8'],
 ];
 
-export const validHexStrictData: Uint[] = [
+export const validHexStrictData: any[] = [
 	'0x48',
 	'0x123c',
 	'0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
@@ -122,7 +120,7 @@ export const invalidHexStrictData: any[] = [
 	4.2,
 ];
 
-export const validHexData: Numbers[] = [
+export const validHexData: any[] = [
 	...validHexStrictData,
 	'45',
 	'',
@@ -168,7 +166,7 @@ export const invalidAddressData: any[] = [
 	'-0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 ];
 
-export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
+export const compareBlockNumbersValidData: [[any, any], number][] = [
 	[[1, 1], 0],
 	[[1, 2], -1],
 	[[2, 1], 1],
@@ -283,7 +281,7 @@ export const validBigIntData: any[] = [90071992547409911n, BigInt(42), BigInt('1
 export const invalidBigIntData: any[] = [3, '3', '3n'];
 
 // Uses same data defined in isHexStrictValidData minus negative hex strings
-export const validBlockNumberData: Uint[] = [
+export const validBlockNumberData: any[] = [
 	'0x48',
 	'0x123c',
 	'0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
@@ -309,7 +307,7 @@ export const invalidBlockTagData: any[] = [
 	'UNKNOWN',
 ];
 
-export const validHexString8Bytes: (HexString8Bytes | [HexString8Bytes, false])[] = [
+export const validHexString8Bytes: (string | [string, false])[] = [
 	'0x0000000000000001',
 	'0x00000000000c0ffe',
 	'0x0000123098409924',
@@ -318,7 +316,7 @@ export const validHexString8Bytes: (HexString8Bytes | [HexString8Bytes, false])[
 	['0000123098409924', false],
 ];
 
-export const validHexString32BytesData: (HexString32Bytes | [HexString32Bytes, false])[] = [
+export const validHexString32BytesData: (string | [string, false])[] = [
 	'0x22f30f0608f88c510de0016370f1525b330e5839026bdff93f9ceef24d2275e6',
 	'0x63a01bba0d4f0ad913a241aed52f5c55807be35f554536abd1e451d4e6515b29',
 	'0x687f28d48c22e9619b36776cf692501b3fc4e2143841efe3c7f45e49ea46b7f0',
@@ -333,7 +331,7 @@ export const invalidBooleanData = invalidHexStrictData.filter(
 	data => data !== 1 && data !== 0 && data !== '0' && data !== '1' && typeof data !== 'boolean',
 );
 
-export const validFilterObjectData: Filter[] = [
+export const validFilterObjectData: Record<string, unknown>[] = [
 	{
 		fromBlock: '0xc0ff3',
 	},
