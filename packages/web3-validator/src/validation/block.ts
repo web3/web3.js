@@ -1,4 +1,4 @@
-import { BlockTags } from '../constants';
+import { BlockTags } from '../types';
 import { isHexStrict } from './string';
 
 export const isBlockNumber = (value: string): boolean =>

@@ -7,9 +7,3 @@ export const VALID_ETH_BASE_TYPES = [
 	'address',
 	'tuple',
 ] as const;
-
-export enum BlockTags {
-	EARLIEST = 'earliest',
-	LATEST = 'latest',
-	PENDING = 'pending',
-}
