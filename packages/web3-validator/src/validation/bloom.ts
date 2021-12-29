@@ -1,5 +1,5 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { padLeft } from 'web3-utils';
+import { padLeft } from '../shared_utils';
 import { ValidInputTypes } from '../types';
 import { codePointToInt } from '../utils';
 import { isAddress } from './address';

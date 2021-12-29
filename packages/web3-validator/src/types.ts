@@ -14,3 +14,22 @@ export type ValidationSchemaInput = FullValidationSchema | ShortValidationSchema
 export type Web3ValidationOptions = {
 	readonly silent: boolean;
 };
+
+// Some duplicate types introduced to avoid circular dependency to avoid
+// breaking changes in "web3-utils" package.
+export enum BlockTags {
+	EARLIEST = 'earliest',
+	LATEST = 'latest',
+	PENDING = 'pending',
+}
+
+export type BlockTag = 'earliest' | 'latest' | 'pending';
+
+export type BlockNumberOrTag = string | BlockTag;
+
+export interface Filter {
+	readonly fromBlock?: BlockNumberOrTag;
+	readonly toBlock?: BlockNumberOrTag;
+	readonly address?: string | string[];
+	readonly topics?: (string | string[] | null)[];
+}

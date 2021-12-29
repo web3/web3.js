@@ -1,4 +1,4 @@
-import { Filter } from 'web3-utils';
+import { Filter } from '../types';
 import { isAddress } from './address';
 import { isBlockNumberOrTag } from './block';
 import { isTopic } from './topic';

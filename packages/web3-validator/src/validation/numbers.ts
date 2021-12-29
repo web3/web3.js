@@ -1,4 +1,4 @@
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber } from '../shared_utils';
 import { ValidInputTypes } from '../types';
 import { parseBaseType } from '../utils';
 import { isHexStrict } from './string';

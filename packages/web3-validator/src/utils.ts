@@ -1,5 +1,5 @@
 import { VALID_ETH_BASE_TYPES } from './constants';
-import { ValidationSchemaInput, FullValidationSchema, ShortValidationSchema } from './types';
+import { FullValidationSchema, ShortValidationSchema, ValidationSchemaInput } from './types';
 import { isAbiParameterSchema } from './validation/abi';
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
