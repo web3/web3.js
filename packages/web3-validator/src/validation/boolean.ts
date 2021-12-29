@@ -19,7 +19,7 @@ export const isBoolean = (value: ValidInputTypes) => {
 	}
 
 	if (typeof value === 'number') {
-		return value === 1;
+		return value === 1 || value === 0;
 	}
 
 	return false;

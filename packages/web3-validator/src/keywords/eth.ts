@@ -59,7 +59,7 @@ const compile = (
 		}
 
 		if (type === 'bytes') {
-			return isBytes(data, type);
+			return isBytes(data, { abiType: type });
 		}
 
 		if (type === 'string') {
@@ -67,11 +67,11 @@ const compile = (
 		}
 
 		if (type === 'uint') {
-			return isUInt(data, type);
+			return isUInt(data, { abiType: type });
 		}
 
 		if (type === 'int') {
-			return isInt(data, type);
+			return isInt(data, { abiType: type });
 		}
 
 		if (type === 'address') {

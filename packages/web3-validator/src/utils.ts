@@ -5,7 +5,7 @@ import { isAbiParameterSchema } from './validation/abi';
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
 ): {
-	baseType: T;
+	baseType?: T;
 	baseTypeSize: number | undefined;
 	isArray: boolean;
 	arrayLength: number | undefined;
@@ -34,10 +34,15 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 
 	if (strippedType.startsWith('int')) {
 		baseTypeSize = parseInt(strippedType.substring(3), 10);
+		strippedType = 'int';
 	} else if (strippedType.startsWith('uint')) {
 		baseTypeSize = parseInt(type.substring(4), 10);
+		strippedType = 'uint';
 	} else if (strippedType.startsWith('bytes')) {
 		baseTypeSize = parseInt(strippedType.substring(5), 10);
+		strippedType = 'bytes';
+	} else {
+		return { baseType: undefined, isArray: false, baseTypeSize: undefined, arrayLength: -1 };
 	}
 
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arrayLength };

@@ -7,8 +7,22 @@ import { isHexStrict } from './string';
  */
 export const isBuffer = (data: ValidInputTypes) => Buffer.isBuffer(data);
 
-export const isBytes = (value: ValidInputTypes, type: string) => {
-	if (typeof value !== 'string' && !Buffer.isBuffer(value)) {
+export const isBytes = (
+	value: ValidInputTypes | Uint8Array | number[],
+	options: { abiType: string; size?: never } | { size: number; abiType?: never } = {
+		abiType: 'bytes',
+	},
+) => {
+	if (typeof value !== 'string' && !Buffer.isBuffer(value) && !Array.isArray(value)) {
+		return false;
+	}
+
+	// isHexStrict also accepts - prefix which can not exists in bytes
+	if (typeof value === 'string' && isHexStrict(value) && value.startsWith('-')) {
+		return false;
+	}
+
+	if (typeof value === 'string' && !isHexStrict(value)) {
 		return false;
 	}
 
@@ -16,17 +30,32 @@ export const isBytes = (value: ValidInputTypes, type: string) => {
 
 	if (typeof value === 'string' && isHexStrict(value)) {
 		valueToCheck = Buffer.from(value.substring(2), 'hex');
-	} else if (typeof value === 'string' && !isHexStrict(value)) {
-		valueToCheck = Buffer.from(value, 'hex');
+	} else if (Array.isArray(value)) {
+		if (value.some(d => d < 0)) {
+			return false;
+		}
+
+		if (value.some(d => d > 255)) {
+			return false;
+		}
+
+		if (value.some(d => !Number.isInteger(d))) {
+			return false;
+		}
+		valueToCheck = Buffer.from(value);
 	} else {
 		valueToCheck = value as Buffer;
 	}
 
-	const { baseTypeSize: size } = parseBaseType(type);
+	if (options?.abiType) {
+		const { baseTypeSize } = parseBaseType(options.abiType);
 
-	if (!size) {
-		return true;
+		return baseTypeSize ? valueToCheck.length === baseTypeSize : true;
 	}
 
-	return valueToCheck.length === size;
+	if (options?.size) {
+		return valueToCheck.length === options?.size;
+	}
+
+	return true;
 };

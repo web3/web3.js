@@ -343,3 +343,7 @@ Released with 1.0.0-beta.37 code base.
 2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
 3. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
 4. `Wallet.create` function doesn't accepts `entropy` param
+
+### web3-validator
+
+1. `isBoolean` now accept `1`, and `0` as valid values to test.

@@ -8,18 +8,29 @@ import { isHexStrict } from './string';
  */
 export const isBigInt = (value: ValidInputTypes): boolean => typeof value === 'bigint';
 
-export const isUInt = (value: ValidInputTypes, type: string) => {
+export const isUInt = (
+	value: ValidInputTypes,
+	options: { abiType: string; bitSize?: never } | { bitSize: number; abiType?: never } = {
+		abiType: 'uint',
+	},
+) => {
 	if (!['number', 'string', 'bigint'].includes(typeof value)) {
 		return false;
 	}
 
-	const { baseTypeSize: size } = parseBaseType(type);
+	let size!: number;
 
-	if (!size) {
-		return true;
+	if (options?.abiType) {
+		const { baseTypeSize } = parseBaseType(options.abiType);
+
+		if (baseTypeSize) {
+			size = baseTypeSize;
+		}
+	} else if (options.bitSize) {
+		size = options.bitSize;
 	}
 
-	const maxSize = BigInt(2) ** BigInt(size) - BigInt(1);
+	const maxSize = BigInt(2) ** BigInt(size ?? 256) - BigInt(1);
 	const valueToCheck =
 		typeof value === 'string' && isHexStrict(value)
 			? BigInt(hexToNumber(value))
@@ -28,19 +39,30 @@ export const isUInt = (value: ValidInputTypes, type: string) => {
 	return valueToCheck >= 0 && valueToCheck <= maxSize;
 };
 
-export const isInt = (value: ValidInputTypes, type: string) => {
+export const isInt = (
+	value: ValidInputTypes,
+	options: { abiType: string; bitSize?: never } | { bitSize: number; abiType?: never } = {
+		abiType: 'int',
+	},
+) => {
 	if (!['number', 'string', 'bigint'].includes(typeof value)) {
 		return false;
 	}
 
-	const { baseTypeSize: size } = parseBaseType(type);
+	let size!: number;
 
-	if (!size) {
-		return true;
+	if (options?.abiType) {
+		const { baseTypeSize } = parseBaseType(options.abiType);
+
+		if (baseTypeSize) {
+			size = baseTypeSize;
+		}
+	} else if (options.bitSize) {
+		size = options.bitSize;
 	}
 
-	const maxSize = BigInt(2) ** BigInt(size - 1);
-	const minSize = BigInt(-1) * BigInt(2) ** BigInt(size - 1);
+	const maxSize = BigInt(2) ** BigInt((size ?? 256) - 1);
+	const minSize = BigInt(-1) * BigInt(2) ** BigInt((size ?? 256) - 1);
 	const valueToCheck =
 		typeof value === 'string' && isHexStrict(value)
 			? BigInt(hexToNumber(value))

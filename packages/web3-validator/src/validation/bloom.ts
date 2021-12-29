@@ -1,6 +1,8 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { padLeft } from 'web3-utils';
 import { ValidInputTypes } from '../types';
 import { codePointToInt } from '../utils';
+import { isAddress } from './address';
 import { isHexStrict } from './string';
 
 /**
@@ -61,4 +63,44 @@ export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
 	}
 
 	return true;
+}
+
+/**
+ * Returns true if the ethereum users address is part of the given bloom note: false positives are possible.
+ */
+export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean {
+	if (!isBloom(bloom)) {
+		return false;
+	}
+
+	if (!isAddress(ethereumAddress)) {
+		return false;
+	}
+
+	// you have to pad the ethereum address to 32 bytes
+	// else the bloom filter does not work
+	// this is only if your matching the USERS
+	// ethereum address. Contract address do not need this
+	// hence why we have 2 methods
+	// (0x is not in the 2nd parameter of padleft so 64 chars is fine)
+
+	const address = padLeft(ethereumAddress, 64);
+
+	return isInBloom(bloom, address);
+}
+
+/**
+ * Returns true if the contract address is part of the given bloom.
+ * note: false positives are possible.
+ */
+export function isContractAddressInBloom(bloom: string, contractAddress: string): boolean {
+	if (!isBloom(bloom)) {
+		return false;
+	}
+
+	if (!isAddress(contractAddress)) {
+		return false;
+	}
+
+	return isInBloom(bloom, contractAddress);
 }
