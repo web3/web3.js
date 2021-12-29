@@ -1,7 +1,9 @@
 import { Web3ValidationErrorObject } from './types';
 
 const errorFormatter = (error: Web3ValidationErrorObject): string =>
-	error.message ?? 'Unspecified error message.';
+	error.message
+		? `value at "${error.instancePath}" ${error.message}`
+		: `value at "${error.instancePath}" caused unspecified error`;
 
 export class Web3ValidatorError extends Error {
 	public readonly name: string;

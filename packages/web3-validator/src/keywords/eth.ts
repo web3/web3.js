@@ -1,6 +1,11 @@
 import { AnySchemaObject, FuncKeywordDefinition, SchemaCxt } from 'ajv';
 import { Web3ValidatorError } from '../errors';
-import { DataValidateFunction, DataValidationCxt, ValidInputTypes } from '../types';
+import {
+	DataValidateFunction,
+	DataValidationCxt,
+	ValidInputTypes,
+	Web3ValidationErrorObject,
+} from '../types';
 import {
 	isBoolean,
 	isString,
@@ -11,6 +16,15 @@ import {
 	isValidEthType,
 	isBloom,
 } from '../validation';
+
+const createErrorObject = (
+	message: string,
+	value: unknown,
+): Partial<Web3ValidationErrorObject> => ({
+	message,
+	keyword: 'eth',
+	params: { value },
+});
 
 export const metaSchema = {
 	title: 'Web3 Ethereum Compatible Types',
@@ -54,35 +68,40 @@ const compile = (
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		_dataCxt?: DataValidationCxt,
 	): boolean => {
-		if (type === 'boolean') {
-			return isBoolean(data);
+		let result = false;
+
+		switch (type) {
+			case 'boolean':
+				result = isBoolean(data);
+				break;
+			case 'bytes':
+				result = isBytes(data, { abiType: type });
+				break;
+			case 'string':
+				result = isString(data);
+				break;
+			case 'uint':
+				result = isUInt(data, { abiType: type });
+				break;
+			case 'int':
+				result = isInt(data, { abiType: type });
+				break;
+			case 'address':
+				result = isAddress(data);
+				break;
+			case 'bloom':
+				result = isBloom(data);
+				break;
+			default:
+				validate.errors = [createErrorObject(`can not identity "${type}"`, data)];
+				return false;
 		}
 
-		if (type === 'bytes') {
-			return isBytes(data, { abiType: type });
+		if (!result) {
+			validate.errors = [createErrorObject(`must pass "${type}" validation`, data)];
 		}
 
-		if (type === 'string') {
-			return isString(data);
-		}
-
-		if (type === 'uint') {
-			return isUInt(data, { abiType: type });
-		}
-
-		if (type === 'int') {
-			return isInt(data, { abiType: type });
-		}
-
-		if (type === 'address') {
-			return isAddress(data);
-		}
-
-		if (type === 'bloom') {
-			return isBloom(data);
-		}
-
-		return false;
+		return result;
 	};
 
 	return validate;
@@ -91,7 +110,7 @@ const compile = (
 export const ethKeyword: FuncKeywordDefinition = {
 	keyword: 'eth',
 	compile,
-	errors: 'full',
+	errors: true,
 	modifying: false,
 	metaSchema,
 };

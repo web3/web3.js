@@ -50,8 +50,8 @@ export class Web3Validator {
 	public validate(
 		schema: ValidationSchemaInput,
 		data: ReadonlyArray<unknown>,
-		options?: Web3ValidationOptions,
-	): Web3ValidationErrorObject[] {
+		options: Web3ValidationOptions = { silent: false },
+	): Web3ValidationErrorObject[] | undefined {
 		let errors: Web3ValidationErrorObject[] = [];
 
 		if (!this._validator.validate(ethAbiToJsonSchema(schema), data)) {
@@ -62,6 +62,10 @@ export class Web3Validator {
 			return errors;
 		}
 
-		throw new Web3ValidatorError(errors);
+		if (errors.length && !options?.silent) {
+			throw new Web3ValidatorError(errors);
+		}
+
+		return undefined;
 	}
 }

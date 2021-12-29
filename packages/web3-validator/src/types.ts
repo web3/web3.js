@@ -12,5 +12,5 @@ export type ShortValidationSchema = ReadonlyArray<string | ShortValidationSchema
 export type ValidationSchemaInput = FullValidationSchema | ShortValidationSchema;
 
 export type Web3ValidationOptions = {
-	readonly silent: false;
+	readonly silent: boolean;
 };
