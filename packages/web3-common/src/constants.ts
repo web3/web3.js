@@ -29,6 +29,7 @@ export const ERR_TX_NO_CONTRACT_ADDRESS = 403;
 export const ERR_TX_CONTRACT_NOT_STORED = 404;
 export const ERR_TX_REVERT_WITHOUT_REASON = 405;
 export const ERR_TX_OUT_OF_GAS = 406;
+export const ERR_RAW_TX_UNDEFINED = 407;
 
 // Connection error codes
 export const ERR_CONN = 500;
@@ -45,7 +46,19 @@ export const ERR_INVALID_PROVIDER = 601;
 export const ERR_INVALID_CLIENT = 602;
 export const ERR_SUBSCRIPTION = 603;
 
+// Account error codes
 export const ERR_PRIVATE_KEY_LENGTH = 701;
 export const ERR_INVALID_PRIVATE_KEY = 702;
+export const ERR_UNSUPPORTED_KDF = 703;
+export const ERR_KEY_DERIVATION_FAIL = 704;
+export const ERR_KEY_VERSION_UNSUPPORTED = 705;
+export const ERR_INVALID_PASSWORD = 706;
+export const ERR_IV_LENGTH = 707;
+export const ERR_INVALID_KEYSTORE = 708;
+export const ERR_PBKDF2_ITERATIONS = 709;
+
+// Signature error codes
+export const ERR_SIGNATURE_FAILED = 801;
+export const ERR_INVALID_SIGNATURE = 802;
 
 export const GENESIS_BLOCK_NUMBER = '0x0';

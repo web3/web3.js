@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"target": "es2020",
@@ -15,6 +15,6 @@
 		"removeComments": true,
 		"sourceMap": true,
 		"declarationMap": true,
-		"strict": true,
-  },
+		"strict": true
+	}
 }
