@@ -17,10 +17,10 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 ];
 
 export const padInvalidData: [[any, number, string], string][] = [
-	[[9.5, 64, 'f'], 'value at "/0" must pass "int" validation'],
+	[[9.5, 64, 'f'], 'value "9.5" at "/0" must pass "int" validation'],
 	[[null, 8, '0'], 'value at "/0" must pass "int" validation'],
 	[[undefined, 8, '0'], 'value at "/0" must pass "int" validation'],
-	[[{}, 3, 'f'], 'value at "/0" must pass "int" validation'],
+	[[{}, 3, 'f'], 'value "[object Object]" at "/0" must pass "int" validation'],
 ];
 
 export const padRightData: [[Numbers, number, string], HexString][] = [
@@ -72,13 +72,13 @@ export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 	// solidity only store 32 bytes numbersw
 	[
 		['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64],
-		'value at "/0" must pass "int" validation',
+		'value "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00" at "/0" must pass "int" validation',
 	],
-	[['ab', 32], 'value at "/0" must pass "int" validation'],
-	[['-ab', 3], 'value at "/0" must pass "int" validation'],
-	[['ab0x', 2], 'value at "/0" must pass "int" validation'],
-	[[25.5, 32], 'value at "/0" must pass "int" validation'],
-	[['-120.0', 4], 'value at "/0" must pass "int" validation'],
+	[['ab', 32], 'value "ab" at "/0" must pass "int" validation'],
+	[['-ab', 3], 'value "-ab" at "/0" must pass "int" validation'],
+	[['ab0x', 2], 'value "ab0x" at "/0" must pass "int" validation'],
+	[[25.5, 32], 'value "25.5" at "/0" must pass "int" validation'],
+	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[-256, 2],
 		'Invalid value given "value: "-256", nibbleWidth: "2"". Error: value greater than the nibble width.',
@@ -94,11 +94,11 @@ export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 ];
 
 export const fromTwosComplementInvalidData: [[Numbers, number], string][] = [
-	[['ab', 32], 'value at "/0" must pass "int" validation'],
-	[['-ab', 3], 'value at "/0" must pass "int" validation'],
-	[['ab0x', 2], 'value at "/0" must pass "int" validation'],
-	[[25.5, 32], 'value at "/0" must pass "int" validation'],
-	[['-120.0', 4], 'value at "/0" must pass "int" validation'],
+	[['ab', 32], 'value "ab" at "/0" must pass "int" validation'],
+	[['-ab', 3], 'value "-ab" at "/0" must pass "int" validation'],
+	[['ab0x', 2], 'value "ab0x" at "/0" must pass "int" validation'],
+	[[25.5, 32], 'value "25.5" at "/0" must pass "int" validation'],
+	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[1000, 2],
 		'Invalid value given "value: "1000", nibbleWidth: "2"". Error: value greater than the nibble width.',

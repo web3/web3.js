@@ -16,9 +16,9 @@ import {
 	Uint,
 	HexString8Bytes,
 	convertObjectPropertiesToValidType,
-	isHexString32Bytes,
 	Filter,
 } from 'web3-utils';
+import { isHexString32Bytes } from 'web3-validator';
 
 // import { Transaction, BlockFormatted } from './types';
 import { BlockFormatted } from './types';

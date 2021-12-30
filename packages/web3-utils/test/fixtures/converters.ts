@@ -23,18 +23,18 @@ export const bytesToHexValidData: [Bytes, HexString][] = [
 ];
 
 export const bytesToHexInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'value at "/0" must pass "bytes" validation'],
-	[[-72, 12], 'value at "/0" must pass "bytes" validation'],
-	[[567, 10098], 'value at "/0" must pass "bytes" validation'],
-	[[786, 12, 34, -2, 3], 'value at "/0" must pass "bytes" validation'],
-	['0x0c1g', 'value at "/0" must pass "bytes" validation'],
-	['0c1g', 'value at "/0" must pass "bytes" validation'],
-	['data', 'value at "/0" must pass "bytes" validation'],
-	[12, 'value at "/0" must pass "bytes" validation'],
-	[['string'], 'value at "/0" must pass "bytes" validation'],
+	[[9.5, 12.9], 'value "9.5,12.9" at "/0" must pass "bytes" validation'],
+	[[-72, 12], 'value "-72,12" at "/0" must pass "bytes" validation'],
+	[[567, 10098], 'value "567,10098" at "/0" must pass "bytes" validation'],
+	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
+	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
+	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
+	['data', 'value "data" at "/0" must pass "bytes" validation'],
+	[12, 'value "12" at "/0" must pass "bytes" validation'],
+	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
-	[{}, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 ];
 
 export const hexToBytesValidData: [HexString, Buffer][] = [
@@ -47,18 +47,18 @@ export const hexToBytesValidData: [HexString, Buffer][] = [
 ];
 
 export const hexToBytesInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'value at "/0" must pass "bytes" validation'],
-	[[-72, 12], 'value at "/0" must pass "bytes" validation'],
-	[[567, 10098], 'value at "/0" must pass "bytes" validation'],
-	[[786, 12, 34, -2, 3], 'value at "/0" must pass "bytes" validation'],
-	['0x0c1g', 'value at "/0" must pass "bytes" validation'],
-	['0c1g', 'value at "/0" must pass "bytes" validation'],
-	['data', 'value at "/0" must pass "bytes" validation'],
-	[12, 'value at "/0" must pass "bytes" validation'],
-	[['string'], 'value at "/0" must pass "bytes" validation'],
+	[[9.5, 12.9], 'value "9.5,12.9" at "/0" must pass "bytes" validation'],
+	[[-72, 12], 'value "-72,12" at "/0" must pass "bytes" validation'],
+	[[567, 10098], 'value "567,10098" at "/0" must pass "bytes" validation'],
+	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
+	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
+	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
+	['data', 'value "data" at "/0" must pass "bytes" validation'],
+	[12, 'value "12" at "/0" must pass "bytes" validation'],
+	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
-	[{}, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
 ];
 
 export const numberToHexValidData: [Numbers, HexString][] = [
@@ -78,12 +78,12 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 ];
 
 export const numberToHexInvalidData: [any, string][] = [
-	[12.2, 'value at "/0" must pass "int" validation'],
-	['0xag', 'value at "/0" must pass "int" validation'],
-	['122g', 'value at "/0" must pass "int" validation'],
+	[12.2, 'value "12.2" at "/0" must pass "int" validation'],
+	['0xag', 'value "0xag" at "/0" must pass "int" validation'],
+	['122g', 'value "122g" at "/0" must pass "int" validation'],
 	[null, 'value at "/0" must pass "int" validation'],
 	[undefined, 'value at "/0" must pass "int" validation'],
-	[{}, 'value at "/0" must pass "int" validation'],
+	[{}, 'value "[object Object]" at "/0" must pass "int" validation'],
 ];
 
 export const hexToNumberValidData: [HexString, Numbers][] = [
@@ -122,14 +122,14 @@ export const utf8ToHexValidData: [string, HexString][] = [
 ];
 
 export const utf8ToHexInvalidData: [any, string][] = [
-	[12, 'value at "/0" must pass "string" validation'],
-	[BigInt(12), 'value at "/0" must pass "string" validation'],
-	[12n, 'value at "/0" must pass "string" validation'],
+	[12, 'value "12" at "/0" must pass "string" validation'],
+	[BigInt(12), 'value "12" at "/0" must pass "string" validation'],
+	[12n, 'value "12" at "/0" must pass "string" validation'],
 	[null, 'value at "/0" must pass "string" validation'],
 	[undefined, 'value at "/0" must pass "string" validation'],
-	[{}, 'value at "/0" must pass "string" validation'],
-	[true, 'value at "/0" must pass "string" validation'],
-	[false, 'value at "/0" must pass "string" validation'],
+	[{}, 'value "[object Object]" at "/0" must pass "string" validation'],
+	[true, 'value "true" at "/0" must pass "string" validation'],
+	[false, 'value "false" at "/0" must pass "string" validation'],
 ];
 
 export const hexToUtf8ValidData: [HexString, string][] = [
@@ -143,12 +143,15 @@ export const hexToUtf8ValidData: [HexString, string][] = [
 ];
 
 export const hexToUtf8InvalidData: [any, string][] = [
-	['0x4920686176652031303g0c2a3', 'value at "/0" must pass "bytes" validation'],
-	['afde', 'value at "/0" must pass "bytes" validation'],
+	[
+		'0x4920686176652031303g0c2a3',
+		'value "0x4920686176652031303g0c2a3" at "/0" must pass "bytes" validation',
+	],
+	['afde', 'value "afde" at "/0" must pass "bytes" validation'],
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
-	[{}, 'value at "/0" must pass "bytes" validation'],
-	[true, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
+	[true, 'value "true" at "/0" must pass "bytes" validation'],
 ];
 
 export const asciiToHexValidData: [string, HexString][] = [
@@ -240,11 +243,11 @@ export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [
-	[['123.34', 'kwei'], 'value at "/0" must pass "int" validation'],
+	[['123.34', 'kwei'], 'value "123.34" at "/0" must pass "int" validation'],
 	[[null, 'kwei'], 'value at "/0" must pass "int" validation'],
 	[[undefined, 'kwei'], 'value at "/0" must pass "int" validation'],
-	[[{}, 'kwei'], 'value at "/0" must pass "int" validation'],
-	[['data', 'kwei'], 'value at "/0" must pass "int" validation'],
+	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "int" validation'],
+	[['data', 'kwei'], 'value "data" at "/0" must pass "int" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
 
@@ -307,11 +310,11 @@ export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError |
 	['0x2a', null, new InvalidDesiredTypeError(null)],
 	['0x2a', undefined, new InvalidDesiredTypeError(undefined)],
 	['0x2a', BigInt(0), new InvalidDesiredTypeError(BigInt(0))],
-	['foo', ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
-	['4.2', ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	['foo', ValidTypes.HexString, 'value "foo" at "/0" must pass "int" validation'],
+	['4.2', ValidTypes.HexString, 'value "4.2" at "/0" must pass "int" validation'],
 	[null, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
 	[undefined, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
-	[true, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	[true, ValidTypes.HexString, 'value "true" at "/0" must pass "int" validation'],
 ];
 
 export const convertObjectPropertiesToValidTypeValidData: [
@@ -437,7 +440,7 @@ export const convertObjectPropertiesToValidTypeInvalidData: [
 		},
 		['one', 'two', 'three'],
 		ValidTypes.HexString,
-		'value at "/0" must pass "int" validation',
+		'value "false" at "/0" must pass "int" validation',
 	],
 	[
 		{
@@ -448,7 +451,7 @@ export const convertObjectPropertiesToValidTypeInvalidData: [
 		},
 		['one', 'two', 'three', 'four'],
 		ValidTypes.HexString,
-		'value at "/0" must pass "int" validation',
+		'value "() => { }" at "/0" must pass "int" validation',
 	],
 	[
 		undefined,

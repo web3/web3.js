@@ -8,7 +8,7 @@ import {
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
 } from 'web3-common';
-import { isAddress, isHexStrict, isHexString32Bytes } from 'web3-utils';
+import { isAddress, isHexStrict, isHexString32Bytes } from 'web3-validator';
 import { InvalidTransactionCall, InvalidTransactionWithSender } from './errors';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
