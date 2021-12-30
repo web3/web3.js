@@ -29,7 +29,7 @@ export const isBloom = (bloom: ValidInputTypes): boolean => {
  * Returns true if the value is part of the given bloom
  * note: false positives are possible.
  */
-export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
+export const isInBloom = (bloom: string, value: string | Uint8Array): boolean => {
 	if (typeof value === 'string' && !isHexStrict(value)) {
 		return false;
 	}
@@ -63,12 +63,12 @@ export function isInBloom(bloom: string, value: string | Uint8Array): boolean {
 	}
 
 	return true;
-}
+};
 
 /**
  * Returns true if the ethereum users address is part of the given bloom note: false positives are possible.
  */
-export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean {
+export const isUserEthereumAddressInBloom = (bloom: string, ethereumAddress: string): boolean => {
 	if (!isBloom(bloom)) {
 		return false;
 	}
@@ -87,13 +87,13 @@ export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: str
 	const address = padLeft(ethereumAddress, 64);
 
 	return isInBloom(bloom, address);
-}
+};
 
 /**
  * Returns true if the contract address is part of the given bloom.
  * note: false positives are possible.
  */
-export function isContractAddressInBloom(bloom: string, contractAddress: string): boolean {
+export const isContractAddressInBloom = (bloom: string, contractAddress: string): boolean => {
 	if (!isBloom(bloom)) {
 		return false;
 	}
@@ -103,4 +103,4 @@ export function isContractAddressInBloom(bloom: string, contractAddress: string)
 	}
 
 	return isInBloom(bloom, contractAddress);
-}
+};

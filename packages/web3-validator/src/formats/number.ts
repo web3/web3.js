@@ -1,4 +1,6 @@
 import { FormatDefinition } from 'ajv';
-import { isUInt } from '../validation/numbers';
+import { isUInt, isNumber } from '../validation/numbers';
 
-export const uint: FormatDefinition<number> = { validate: (data: number) => isUInt(data) };
+export const uint: FormatDefinition<string> = { validate: (data: string) => isUInt(data) };
+export const int: FormatDefinition<string> = { validate: (data: string) => isUInt(data) };
+export const number: FormatDefinition<string> = { validate: (data: string) => isNumber(data) };

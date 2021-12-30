@@ -13,7 +13,12 @@ export const isBytes = (
 		abiType: 'bytes',
 	},
 ) => {
-	if (typeof value !== 'string' && !Buffer.isBuffer(value) && !Array.isArray(value)) {
+	if (
+		typeof value !== 'string' &&
+		!Buffer.isBuffer(value) &&
+		!Array.isArray(value) &&
+		!(value instanceof Uint8Array)
+	) {
 		return false;
 	}
 
@@ -43,8 +48,10 @@ export const isBytes = (
 			return false;
 		}
 		valueToCheck = Buffer.from(value);
+	} else if (value instanceof Uint8Array) {
+		valueToCheck = Buffer.from(value);
 	} else {
-		valueToCheck = value as Buffer;
+		valueToCheck = value as unknown as Buffer;
 	}
 
 	if (options?.abiType) {

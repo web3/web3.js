@@ -33,7 +33,7 @@ export class Web3Validator {
 		schema: object,
 		data: object,
 		options?: Web3ValidationOptions,
-	): Web3ValidationErrorObject[] {
+	): Web3ValidationErrorObject[] | undefined {
 		let errors: Web3ValidationErrorObject[] = [];
 
 		if (!this._validator.validate(schema, data)) {
@@ -44,7 +44,11 @@ export class Web3Validator {
 			return errors;
 		}
 
-		throw new Web3ValidatorError(errors);
+		if (errors.length && !options?.silent) {
+			throw new Web3ValidatorError(errors);
+		}
+
+		return undefined;
 	}
 
 	public validate(

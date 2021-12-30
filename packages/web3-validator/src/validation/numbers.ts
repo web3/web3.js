@@ -31,12 +31,18 @@ export const isUInt = (
 	}
 
 	const maxSize = BigInt(2) ** BigInt(size ?? 256) - BigInt(1);
-	const valueToCheck =
-		typeof value === 'string' && isHexStrict(value)
-			? BigInt(hexToNumber(value))
-			: BigInt(value as number);
 
-	return valueToCheck >= 0 && valueToCheck <= maxSize;
+	try {
+		const valueToCheck =
+			typeof value === 'string' && isHexStrict(value)
+				? BigInt(hexToNumber(value))
+				: BigInt(value as number);
+
+		return valueToCheck >= 0 && valueToCheck <= maxSize;
+	} catch (error) {
+		// Some invalid number value given which can not be converted via BigInt
+		return false;
+	}
 };
 
 export const isInt = (
@@ -63,10 +69,37 @@ export const isInt = (
 
 	const maxSize = BigInt(2) ** BigInt((size ?? 256) - 1);
 	const minSize = BigInt(-1) * BigInt(2) ** BigInt((size ?? 256) - 1);
-	const valueToCheck =
-		typeof value === 'string' && isHexStrict(value)
-			? BigInt(hexToNumber(value))
-			: BigInt(value as number);
 
-	return valueToCheck >= minSize && valueToCheck <= maxSize;
+	try {
+		const valueToCheck =
+			typeof value === 'string' && isHexStrict(value)
+				? BigInt(hexToNumber(value))
+				: BigInt(value as number);
+
+		return valueToCheck >= minSize && valueToCheck <= maxSize;
+	} catch (error) {
+		// Some invalid number value given which can not be converted via BigInt
+		return false;
+	}
+};
+
+export const isNumber = (value: ValidInputTypes) => {
+	if (isInt(value)) {
+		return true;
+	}
+
+	// It would be a decimal number
+	if (
+		typeof value === 'string' &&
+		/[0-9.]/.test(value) &&
+		value.indexOf('.') === value.lastIndexOf('.')
+	) {
+		return true;
+	}
+
+	if (typeof value === 'number') {
+		return true;
+	}
+
+	return false;
 };
