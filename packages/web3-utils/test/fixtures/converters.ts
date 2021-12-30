@@ -3,7 +3,6 @@ import {
 	InvalidConvertibleObjectError,
 	InvalidConvertiblePropertiesListError,
 	InvalidDesiredTypeError,
-	InvalidIntegerError,
 } from '../../src/errors';
 import {
 	Address,
@@ -24,21 +23,18 @@ export const bytesToHexValidData: [Bytes, HexString][] = [
 ];
 
 export const bytesToHexInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'Invalid value given "9.5,12.9". Error: contains invalid integer values.'],
-	[[-72, 12], 'Invalid value given "-72,12". Error: contains negative values.'],
-	[[567, 10098], 'Invalid value given "567,10098". Error: contains numbers greater than 255.'],
-	[
-		[786, 12, 34, -2, 3],
-		'Invalid value given "786,12,34,-2,3". Error: contains negative values.',
-	],
-	['0x0c1g', 'Invalid value given "0x0c1g". Error: not a valid hex string.'],
-	['0c1g', 'Invalid value given "0c1g". Error: not a valid hex string.'],
-	['data', 'Invalid value given "data". Error: not a valid hex string.'],
-	[12, 'Invalid value given "12". Error: can not parse as byte data.'],
-	[['string'], 'Invalid value given "string". Error: contains invalid integer values.'],
-	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
-	[undefined, 'Invalid value given "undefined". Error: can not parse as byte data.'],
-	[{}, 'Invalid value given "[object Object]". Error: can not parse as byte data.'],
+	[[9.5, 12.9], 'value at "/0" must pass "bytes" validation'],
+	[[-72, 12], 'value at "/0" must pass "bytes" validation'],
+	[[567, 10098], 'value at "/0" must pass "bytes" validation'],
+	[[786, 12, 34, -2, 3], 'value at "/0" must pass "bytes" validation'],
+	['0x0c1g', 'value at "/0" must pass "bytes" validation'],
+	['0c1g', 'value at "/0" must pass "bytes" validation'],
+	['data', 'value at "/0" must pass "bytes" validation'],
+	[12, 'value at "/0" must pass "bytes" validation'],
+	[['string'], 'value at "/0" must pass "bytes" validation'],
+	[null, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value at "/0" must pass "bytes" validation'],
 ];
 
 export const hexToBytesValidData: [HexString, Buffer][] = [
@@ -51,21 +47,18 @@ export const hexToBytesValidData: [HexString, Buffer][] = [
 ];
 
 export const hexToBytesInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'Invalid value given "9.5,12.9". Error: contains invalid integer values.'],
-	[[-72, 12], 'Invalid value given "-72,12". Error: contains negative values.'],
-	[[567, 10098], 'Invalid value given "567,10098". Error: contains numbers greater than 255.'],
-	[
-		[786, 12, 34, -2, 3],
-		'Invalid value given "786,12,34,-2,3". Error: contains negative values.',
-	],
-	['0x0c1g', 'Invalid value given "0x0c1g". Error: not a valid hex string.'],
-	['0c1g', 'Invalid value given "0c1g". Error: not a valid hex string.'],
-	['data', 'Invalid value given "data". Error: not a valid hex string.'],
-	[12, 'Invalid value given "12". Error: can not parse as byte data.'],
-	[['string'], 'Invalid value given "string". Error: contains invalid integer values.'],
-	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
-	[undefined, 'Invalid value given "undefined". Error: can not parse as byte data.'],
-	[{}, 'Invalid value given "[object Object]". Error: can not parse as byte data.'],
+	[[9.5, 12.9], 'value at "/0" must pass "bytes" validation'],
+	[[-72, 12], 'value at "/0" must pass "bytes" validation'],
+	[[567, 10098], 'value at "/0" must pass "bytes" validation'],
+	[[786, 12, 34, -2, 3], 'value at "/0" must pass "bytes" validation'],
+	['0x0c1g', 'value at "/0" must pass "bytes" validation'],
+	['0c1g', 'value at "/0" must pass "bytes" validation'],
+	['data', 'value at "/0" must pass "bytes" validation'],
+	[12, 'value at "/0" must pass "bytes" validation'],
+	[['string'], 'value at "/0" must pass "bytes" validation'],
+	[null, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value at "/0" must pass "bytes" validation'],
 ];
 
 export const numberToHexValidData: [Numbers, HexString][] = [
@@ -85,12 +78,12 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 ];
 
 export const numberToHexInvalidData: [any, string][] = [
-	[12.2, 'Invalid value given "12.2". Error: not a valid integer.'],
-	['0xag', 'Invalid value given "0xag". Error: not a valid integer.'],
-	['122g', 'Invalid value given "122g". Error: not a valid integer.'],
-	[null, 'Invalid value given "null". Error: not a valid integer.'],
-	[undefined, 'Invalid value given "undefined". Error: not a valid integer.'],
-	[{}, 'Invalid value given "[object Object]". Error: not a valid integer.'],
+	[12.2, 'value at "/0" must pass "int" validation'],
+	['0xag', 'value at "/0" must pass "int" validation'],
+	['122g', 'value at "/0" must pass "int" validation'],
+	[null, 'value at "/0" must pass "int" validation'],
+	[undefined, 'value at "/0" must pass "int" validation'],
+	[{}, 'value at "/0" must pass "int" validation'],
 ];
 
 export const hexToNumberValidData: [HexString, Numbers][] = [
@@ -111,11 +104,11 @@ export const hexToNumberValidData: [HexString, Numbers][] = [
 ];
 
 export const hexToNumberInvalidData: [HexString, string][] = [
-	['1a', 'Invalid value given "1a". Error: not a valid hex string.'],
-	['0xffdg', 'Invalid value given "0xffdg". Error: not a valid hex string.'],
-	['xfff', 'Invalid value given "xfff". Error: not a valid hex string.'],
-	['-123', 'Invalid value given "-123". Error: not a valid hex string.'],
-	['-9x123', 'Invalid value given "-9x123". Error: not a valid hex string.'],
+	['1a', 'value at "/0" must match format "hexStrict"'],
+	['0xffdg', 'value at "/0" must match format "hexStrict"'],
+	['xfff', 'value at "/0" must match format "hexStrict"'],
+	['-123', 'value at "/0" must match format "hexStrict"'],
+	['-9x123', 'value at "/0" must match format "hexStrict"'],
 ];
 
 export const utf8ToHexValidData: [string, HexString][] = [
@@ -129,14 +122,14 @@ export const utf8ToHexValidData: [string, HexString][] = [
 ];
 
 export const utf8ToHexInvalidData: [any, string][] = [
-	[12, 'Invalid value given "12". Error: not a valid string.'],
-	[BigInt(12), 'Invalid value given "12". Error: not a valid string.'],
-	[12n, 'Invalid value given "12". Error: not a valid string.'],
-	[null, 'Invalid value given "null". Error: not a valid string.'],
-	[undefined, 'Invalid value given "undefined". Error: not a valid string.'],
-	[{}, 'Invalid value given "[object Object]". Error: not a valid string.'],
-	[true, 'Invalid value given "true". Error: not a valid string.'],
-	[false, 'Invalid value given "false". Error: not a valid string.'],
+	[12, 'value at "/0" must pass "string" validation'],
+	[BigInt(12), 'value at "/0" must pass "string" validation'],
+	[12n, 'value at "/0" must pass "string" validation'],
+	[null, 'value at "/0" must pass "string" validation'],
+	[undefined, 'value at "/0" must pass "string" validation'],
+	[{}, 'value at "/0" must pass "string" validation'],
+	[true, 'value at "/0" must pass "string" validation'],
+	[false, 'value at "/0" must pass "string" validation'],
 ];
 
 export const hexToUtf8ValidData: [HexString, string][] = [
@@ -150,15 +143,12 @@ export const hexToUtf8ValidData: [HexString, string][] = [
 ];
 
 export const hexToUtf8InvalidData: [any, string][] = [
-	[
-		'0x4920686176652031303g0c2a3',
-		'Invalid value given "0x4920686176652031303g0c2a3". Error: not a valid hex string.',
-	],
-	['afde', 'Invalid value given "afde". Error: not a valid hex string.'],
-	[null, 'Invalid value given "null". Error: can not parse as byte data.'],
-	[undefined, 'Invalid value given "undefined". Error: can not parse as byte data.'],
-	[{}, 'Invalid value given "[object Object]". Error: can not parse as byte data.'],
-	[true, 'Invalid value given "true". Error: can not parse as byte data.'],
+	['0x4920686176652031303g0c2a3', 'value at "/0" must pass "bytes" validation'],
+	['afde', 'value at "/0" must pass "bytes" validation'],
+	[null, 'value at "/0" must pass "bytes" validation'],
+	[undefined, 'value at "/0" must pass "bytes" validation'],
+	[{}, 'value at "/0" must pass "bytes" validation'],
+	[true, 'value at "/0" must pass "bytes" validation'],
 ];
 
 export const asciiToHexValidData: [string, HexString][] = [
@@ -250,19 +240,19 @@ export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [
-	[['123.34', 'kwei'], 'Invalid value given "123.34". Error: not a valid integer.'],
-	[[null, 'kwei'], 'Invalid value given "null". Error: not a valid integer.'],
-	[[undefined, 'kwei'], 'Invalid value given "undefined". Error: not a valid integer.'],
-	[[{}, 'kwei'], 'Invalid value given "[object Object]". Error: not a valid integer.'],
-	[['data', 'kwei'], 'Invalid value given "data". Error: not a valid integer.'],
+	[['123.34', 'kwei'], 'value at "/0" must pass "int" validation'],
+	[[null, 'kwei'], 'value at "/0" must pass "int" validation'],
+	[[undefined, 'kwei'], 'value at "/0" must pass "int" validation'],
+	[[{}, 'kwei'], 'value at "/0" must pass "int" validation'],
+	[['data', 'kwei'], 'value at "/0" must pass "int" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [
-	[[null, 'kwei'], 'Invalid value given "null". Error: not a valid number.'],
-	[[undefined, 'kwei'], 'Invalid value given "undefined". Error: not a valid number.'],
-	[[{}, 'kwei'], 'Invalid value given "[object Object]". Error: not a valid number.'],
-	[['data', 'kwei'], 'Invalid value given "data". Error: not a valid number.'],
+	[[null, 'kwei'], 'value at "/0" must be string'],
+	[[undefined, 'kwei'], 'value at "/0" must be string'],
+	[[{}, 'kwei'], 'value at "/0" must be string'],
+	[['data', 'kwei'], 'value at "/0" must match format "number"'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
 export const toCheckSumValidData: [string, string][] = [
@@ -310,22 +300,18 @@ export const convertToValidTypeValidData: [
 	[BigInt('-42'), ValidTypes.BigInt, BigInt('-42')],
 ];
 
-export const convertToValidTypeInvalidData: [
-	any,
-	any,
-	InvalidDesiredTypeError | InvalidIntegerError,
-][] = [
+export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError | string][] = [
 	['0x2a', 'hexString', new InvalidDesiredTypeError('hexString')],
 	['0x2a', 'qwerty', new InvalidDesiredTypeError('qwerty')],
 	['0x2a', 42, new InvalidDesiredTypeError(42)],
 	['0x2a', null, new InvalidDesiredTypeError(null)],
 	['0x2a', undefined, new InvalidDesiredTypeError(undefined)],
 	['0x2a', BigInt(0), new InvalidDesiredTypeError(BigInt(0))],
-	['foo', ValidTypes.HexString, new InvalidIntegerError('foo')],
-	['4.2', ValidTypes.HexString, new InvalidIntegerError('4.2')],
-	[null, ValidTypes.HexString, new InvalidIntegerError(null)],
-	[undefined, ValidTypes.HexString, new InvalidIntegerError(undefined)],
-	[true, ValidTypes.HexString, new InvalidIntegerError(true)],
+	['foo', ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	['4.2', ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	[null, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	[undefined, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
+	[true, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
 ];
 
 export const convertObjectPropertiesToValidTypeValidData: [
@@ -441,7 +427,7 @@ export const convertObjectPropertiesToValidTypeInvalidData: [
 	any, // Starting object
 	any, // List of keys to convert
 	any, // Type to convert to
-	InvalidDesiredTypeError | InvalidIntegerError, // Expected error
+	InvalidDesiredTypeError | string, // Expected error
 ][] = [
 	[
 		{
@@ -451,7 +437,7 @@ export const convertObjectPropertiesToValidTypeInvalidData: [
 		},
 		['one', 'two', 'three'],
 		ValidTypes.HexString,
-		new InvalidIntegerError(false),
+		'value at "/0" must pass "int" validation',
 	],
 	[
 		{
@@ -462,8 +448,7 @@ export const convertObjectPropertiesToValidTypeInvalidData: [
 		},
 		['one', 'two', 'three', 'four'],
 		ValidTypes.HexString,
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		new InvalidIntegerError(() => {}),
+		'value at "/0" must pass "int" validation',
 	],
 	[
 		undefined,
