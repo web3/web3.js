@@ -32,7 +32,7 @@ describe('web3-validator', () => {
 
 			it('should raise error by default', () => {
 				expect(() => validator.validate(['uint'], [-1])).toThrow(
-					'Web3 validator found 1 error[s]:\nvalue at "/0" must pass "uint" validation',
+					'Web3 validator found 1 error[s]:\nvalue "-1" at "/0" must pass "uint" validation',
 				);
 			});
 
