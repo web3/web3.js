@@ -8,7 +8,7 @@ import {
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 } from 'web3-common';
-import { HttpProvider } from 'web3-providers-http';
+import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';
 import { Web3RequestManager, Web3RequestManagerEvent } from '../../src/web3_request_manager';

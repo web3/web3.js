@@ -1,4 +1,4 @@
-import { HttpProvider } from 'web3-providers-http';
+import HttpProvider from 'web3-providers-http';
 import { Web3Context } from '../../src/web3_context';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 

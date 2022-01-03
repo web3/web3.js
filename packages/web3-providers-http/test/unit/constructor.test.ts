@@ -1,4 +1,4 @@
-import { HttpProvider } from '../../src/index';
+import HttpProvider from '../../src/index';
 import { httpProviderOptions, validClients, invalidClients } from '../fixtures/test_data';
 
 describe('HttpProvider', () => {

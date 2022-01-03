@@ -17,7 +17,7 @@ import {
 	Web3BaseProvider,
 	Web3EventEmitter,
 } from 'web3-common';
-import { HttpProvider } from 'web3-providers-http';
+import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';
 import { SupportedProviders, Web3BaseProviderConstructor } from './types';
