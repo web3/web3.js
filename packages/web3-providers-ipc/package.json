@@ -1,7 +1,7 @@
 {
-	"name": "web3-providers-http",
+	"name": "web3-providers-ipc",
 	"version": "4.0.0-alpha.1",
-	"description": "Module to handle web3 RPC connections over IPC sockets.",
+	"description": "Package template for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
@@ -34,13 +34,11 @@
 		"eslint-plugin-import": "^2.25.3",
 		"jest": "^27.3.1",
 		"jest-extended": "^1.1.0",
-		"jest-fetch-mock": "^3.0.3",
 		"prettier": "^2.4.1",
 		"ts-jest": "^27.0.7",
 		"typescript": "^4.5.2"
 	},
 	"dependencies": {
-		"cross-fetch": "^3.1.4",
 		"web3-common": "1.0.0-alpha.0"
 	}
 }
