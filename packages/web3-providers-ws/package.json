@@ -1,7 +1,7 @@
 {
 	"name": "web3-providers-ws",
 	"version": "4.0.0-alpha.0",
-	"description": "Websocket Provider for Web3 4.x.x",
+	"description": "Websocket provider for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",

@@ -1,7 +1,7 @@
 {
 	"name": "web3-providers-ipc",
-	"version": "4.0.0-alpha.1",
-	"description": "Package template for Web3 4.x.x",
+	"version": "4.0.0-alpha.0",
+	"description": "IPC provider for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
