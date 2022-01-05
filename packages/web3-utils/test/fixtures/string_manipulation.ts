@@ -69,7 +69,7 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
-	// solidity only store 32 bytes numbersw
+	// solidity only store 32 bytes numbers
 	[
 		['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64],
 		'value "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00" at "/0" must pass "int" validation',

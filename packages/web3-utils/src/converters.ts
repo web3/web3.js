@@ -64,7 +64,7 @@ export type EtherUnits = keyof typeof ethUnitMap;
 
 /** @internal */
 const bytesToBuffer = (data: Bytes): Buffer | never => {
-	validator.validate(['bytes'], [data], { silent: false });
+	validator.validate(['bytes'], [data]);
 
 	if (Buffer.isBuffer(data)) {
 		return data;
@@ -101,7 +101,6 @@ export const hexToNumber = (value: HexString): bigint | number => {
 	validator.validateJSONSchema(
 		{ type: 'array', items: [{ type: 'string', format: 'hexStrict' }] },
 		[value],
-		{ silent: false },
 	);
 
 	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
@@ -123,7 +122,7 @@ export const toDecimal = hexToNumber;
  * Converts value to it's hex representation
  */
 export const numberToHex = (value: Numbers): HexString => {
-	validator.validate(['int'], [value], { silent: false });
+	validator.validate(['int'], [value]);
 
 	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
 		return `-0x${value.toString(16).substr(1)}`;
@@ -158,7 +157,7 @@ export const hexToNumberString = (data: HexString): string => hexToNumber(data).
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  */
 export const utf8ToHex = (str: string): HexString => {
-	validator.validate(['string'], [str], { silent: false });
+	validator.validate(['string'], [str]);
 
 	// To be compatible with 1.x trim null character
 	// eslint-disable-next-line no-control-regex
@@ -198,7 +197,7 @@ export const hexToString = hexToUtf8;
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  */
 export const asciiToHex = (str: string): HexString => {
-	validator.validate(['string'], [str], { silent: false });
+	validator.validate(['string'], [str]);
 
 	return `0x${Buffer.from(str, 'ascii').toString('hex')}`;
 };
@@ -335,7 +334,6 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 			items: { anyOf: [{ type: 'string', format: 'number' }, { type: 'number' }] },
 		},
 		[number],
-		{ silent: false },
 	);
 
 	const denomination = ethUnitMap[unit];

@@ -88,11 +88,7 @@ export async function getStorageAt(
 	storageSlot: Uint256,
 	blockNumber: BlockNumberOrTag,
 ) {
-	validator.validate(
-		['address', 'hex', 'blockNumberOrTag'],
-		[address, storageSlot, blockNumber],
-		{ silent: false },
-	);
+	validator.validate(['address', 'hex', 'blockNumberOrTag'], [address, storageSlot, blockNumber]);
 
 	return requestManager.send({
 		method: 'eth_getStorageAt',

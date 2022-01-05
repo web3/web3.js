@@ -11,7 +11,7 @@ export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): st
 		return value.padStart(characterAmount, sign);
 	}
 
-	validator.validate(['int'], [value], { silent: false });
+	validator.validate(['int'], [value]);
 
 	const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
@@ -28,7 +28,7 @@ export const padRight = (value: Numbers, characterAmount: number, sign = '0'): s
 		return value.padEnd(characterAmount, sign);
 	}
 
-	validator.validate(['int'], [value], { silent: false });
+	validator.validate(['int'], [value]);
 
 	const hexString = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
@@ -50,7 +50,7 @@ export const leftPad = padLeft;
  * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles.
  */
 export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
-	validator.validate(['int'], [value], { silent: false });
+	validator.validate(['int'], [value]);
 
 	const val = toNumber(value);
 
@@ -71,7 +71,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
  * Converts the twos complement into a decimal number or big int.
  */
 export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | bigint => {
-	validator.validate(['int'], [value], { silent: false });
+	validator.validate(['int'], [value]);
 
 	const val = toNumber(value);
 
