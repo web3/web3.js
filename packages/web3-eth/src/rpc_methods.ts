@@ -485,9 +485,7 @@ export async function getFeeHistory(
 	validator.validate(['hex', 'blockNumberOrTag'], [blockCount, newestBlock]);
 
 	for (const rewardPercentile of rewardPercentiles) {
-		validator.validate(['number'], [rewardPercentile], {
-			silent: false,
-		});
+		validator.validate(['number'], [rewardPercentile]);
 	}
 
 	return requestManager.send({
