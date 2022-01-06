@@ -11,8 +11,8 @@ import {
 	toNumber,
 	toUtf8,
 	utf8ToHex,
-	isBlockTag,
 } from 'web3-utils';
+import { isBlockTag } from 'web3-validator';
 import { FormatterError } from './errors';
 import {
 	Proof,

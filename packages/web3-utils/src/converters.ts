@@ -1,10 +1,10 @@
+import { validator, isAddress, isHexStrict } from 'web3-validator';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 
 import {
 	HexProcessingError,
 	InvalidAddressError,
 	InvalidBytesError,
-	InvalidIntegerError,
 	InvalidUnitError,
 	InvalidTypeAbiInputError,
 	InvalidDesiredTypeError,
@@ -24,14 +24,6 @@ import {
 	JsonEventInterface,
 	Components,
 } from './types';
-import {
-	isAddress,
-	isHexStrict,
-	validateBytesInput,
-	validateHexStringInput,
-	validateNumbersInput,
-	validateStringInput,
-} from './validation';
 
 const base = BigInt(10);
 const expo10 = (expo: number) => base ** BigInt(expo);
@@ -72,7 +64,7 @@ export type EtherUnits = keyof typeof ethUnitMap;
 
 /** @internal */
 const bytesToBuffer = (data: Bytes): Buffer | never => {
-	validateBytesInput(data);
+	validator.validate(['bytes'], [data]);
 
 	if (Buffer.isBuffer(data)) {
 		return data;
@@ -106,7 +98,7 @@ export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
  * Converts value to it's number representation
  */
 export const hexToNumber = (value: HexString): bigint | number => {
-	validateHexStringInput(value);
+	validator.validate(['hex'], [value]);
 
 	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
 	const num = BigInt(hexValue);
@@ -127,7 +119,7 @@ export const toDecimal = hexToNumber;
  * Converts value to it's hex representation
  */
 export const numberToHex = (value: Numbers): HexString => {
-	validateNumbersInput(value, { onlyIntegers: true });
+	validator.validate(['int'], [value]);
 
 	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
 		return `-0x${value.toString(16).substr(1)}`;
@@ -145,7 +137,8 @@ export const numberToHex = (value: Numbers): HexString => {
 		return numberToHex(BigInt(value));
 	}
 
-	throw new InvalidIntegerError(value);
+	// Code should not reach here
+	throw new Error('Invalid input value');
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
@@ -161,7 +154,7 @@ export const hexToNumberString = (data: HexString): string => hexToNumber(data).
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  */
 export const utf8ToHex = (str: string): HexString => {
-	validateStringInput(str);
+	validator.validate(['string'], [str]);
 
 	// To be compatible with 1.x trim null character
 	// eslint-disable-next-line no-control-regex
@@ -201,7 +194,7 @@ export const hexToString = hexToUtf8;
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  */
 export const asciiToHex = (str: string): HexString => {
-	validateStringInput(str);
+	validator.validate(['string'], [str]);
 
 	return `0x${Buffer.from(str, 'ascii').toString('hex')}`;
 };
@@ -332,7 +325,7 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
  * Takes a number of a unit and converts it to wei.
  */
 export const toWei = (number: Numbers, unit: EtherUnits): string => {
-	validateNumbersInput(number, { onlyIntegers: false });
+	validator.validate(['number'], [number]);
 
 	const denomination = ethUnitMap[unit];
 

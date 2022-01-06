@@ -1,4 +1,5 @@
-import { isValidEthType } from '../../../src/validation/eth';
+import { isValidEthBaseType } from '../../../src/validation/eth';
+
 import { invalidEthTypeData, validEthTypeData } from '../../fixtures/validation';
 
 describe('validation', () => {
@@ -6,13 +7,13 @@ describe('validation', () => {
 		describe('isValidEthType', () => {
 			describe('valid cases', () => {
 				it.each(validEthTypeData)('%s', input => {
-					expect(isValidEthType(input)).toBeTruthy();
+					expect(isValidEthBaseType(input)).toBeTruthy();
 				});
 			});
 
 			describe('invalid cases', () => {
 				it.each(invalidEthTypeData)('%s', input => {
-					expect(isValidEthType(input)).toBeFalsy();
+					expect(isValidEthBaseType(input)).toBeFalsy();
 				});
 			});
 		});
