@@ -1,11 +1,6 @@
 import { AnySchemaObject, FuncKeywordDefinition, SchemaCxt } from 'ajv';
 import { Web3ValidatorError } from '../errors';
-import {
-	DataValidateFunction,
-	DataValidationCxt,
-	ValidInputTypes,
-	Web3ValidationErrorObject,
-} from '../types';
+import { DataValidateFunction, ValidInputTypes, Web3ValidationErrorObject } from '../types';
 import {
 	isBoolean,
 	isString,
@@ -64,9 +59,7 @@ const compile = (
 
 	const validate: DataValidateFunction = (
 		data: ValidInputTypes,
-		// TODO: Could be useful in future
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		_dataCxt?: DataValidationCxt,
+		// Second parameter `dataCxt?: DataValidationCxt` might be useful for extensive validation
 	): boolean => {
 		let result = false;
 
