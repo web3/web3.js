@@ -1,6 +1,6 @@
 import { parseBaseType } from '../utils';
 
-export const isValidEthType = (type: string): boolean => {
+export const isValidEthBaseType = (type: string): boolean => {
 	const { baseType, baseTypeSize } = parseBaseType(type);
 
 	if (!baseType) {
