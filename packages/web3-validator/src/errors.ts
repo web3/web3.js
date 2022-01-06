@@ -1,9 +1,27 @@
 import { Web3ValidationErrorObject } from './types';
 
-const errorFormatter = (error: Web3ValidationErrorObject): string =>
-	error.message
-		? `value at "${error.instancePath}" ${error.message}`
-		: `value at "${error.instancePath}" caused unspecified error`;
+const errorFormatter = (error: Web3ValidationErrorObject): string => {
+	if (error.message && error.instancePath && error.params && error.params.value != null) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+		return `value "${(error.params as { value: unknown }).value}" at "${error.instancePath}" ${
+			error.message
+		}`;
+	}
+
+	if (error.message && error.instancePath) {
+		return `value at "${error.instancePath}" ${error.message}`;
+	}
+
+	if (error.instancePath) {
+		return `value at "${error.instancePath}" caused unspecified error`;
+	}
+
+	if (error.message) {
+		return error.message;
+	}
+
+	return 'unspecified error';
+};
 
 export class Web3ValidatorError extends Error {
 	public readonly name: string;

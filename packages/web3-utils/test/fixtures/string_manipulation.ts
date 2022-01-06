@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-
 import { HexString, Numbers } from '../../src/types';
 
 export const padLeftData: [[Numbers, number, string], HexString][] = [
@@ -19,10 +17,10 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 ];
 
 export const padInvalidData: [[any, number, string], string][] = [
-	[[9.5, 64, 'f'], 'Invalid value given "9.5". Error: not a valid integer.'],
-	[[null, 8, '0'], 'Invalid value given "null". Error: not a valid integer.'],
-	[[undefined, 8, '0'], 'Invalid value given "undefined". Error: not a valid integer.'],
-	[[{}, 3, 'f'], 'Invalid value given "[object Object]". Error: not a valid integer.'],
+	[[9.5, 64, 'f'], 'value "9.5" at "/0" must pass "int" validation'],
+	[[null, 8, '0'], 'value at "/0" must pass "int" validation'],
+	[[undefined, 8, '0'], 'value at "/0" must pass "int" validation'],
+	[[{}, 3, 'f'], 'value "[object Object]" at "/0" must pass "int" validation'],
 ];
 
 export const padRightData: [[Numbers, number, string], HexString][] = [
@@ -43,56 +41,44 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 ];
 
 export const toTwosComplementData: [[Numbers, number], HexString][] = [
-	[[256, 64], '0x0000000000000000000000000000000000000000000000000000000000000100'],
-	[[-256, 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00'],
-	[[256, 56], '0x00000000000000000000000000000000000000000000000000000100'],
-	[[0, 64], '0x0000000000000000000000000000000000000000000000000000000000000000'],
-	[['0x1', 64], '0x0000000000000000000000000000000000000000000000000000000000000001'],
-	[['-0x1', 64], '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
-	[
-		[BigInt('9007199254740992'), 64],
-		'0x0000000000000000000000000000000000000000000000000020000000000000',
-	],
-	[
-		[BigInt('-9007199254740992'), 64],
-		'0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000',
-	],
-	[[9007199254740992n, 64], '0x0000000000000000000000000000000000000000000000000020000000000000'],
-	[
-		[-9007199254740992n, 64],
-		'0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000',
-	],
+	[[13, 32], '0x0000000000000000000000000000000d'],
+	[[256, 30], '0x000000000000000000000000000100'],
+	[[0, 32], '0x00000000000000000000000000000000'],
+	[['0x1', 32], '0x00000000000000000000000000000001'],
+	[['-0x1', 32], '0xffffffffffffffffffffffffffffffff'],
+	[[BigInt('9007199254740992'), 32], '0x00000000000000000020000000000000'],
+	[[BigInt('-9007199254740992'), 32], '0xffffffffffffffffffe0000000000000'],
+	[[9007199254740992n, 32], '0x00000000000000000020000000000000'],
+	[[-9007199254740992n, 32], '0xffffffffffffffffffe0000000000000'],
 	[['13', 32], '0x0000000000000000000000000000000d'],
 	[['-13', 32], '0xfffffffffffffffffffffffffffffff3'],
 	[[-16, 2], '0xf0'],
 ];
 
 export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
-	[['0x0000000000000000000000000000000000000000000000000000000000000100', 64], 256],
 	[['0x0000000000000000000000000000000d', 32], 13],
-	[['0x00000000000000000000000000000000000000000000000000000100', 56], 256],
-	[
-		['0x0000000000000000000000000000000000000000000000000020000000000000', 64],
-		BigInt('9007199254740992'),
-	],
+	[['0x000000000000000000000000000100', 30], 256],
+	[['0x00000000000000000020000000000000', 32], BigInt('9007199254740992')],
 	[['0xfffffffffffffffffffffffffffffff3', 32], -13],
 	[['0xf0', 2], -16],
-	[['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64], -256],
-	[
-		['0xffffffffffffffffffffffffffffffffffffffffffffffffffe0000000000000', 64],
-		-9007199254740992n,
-	],
+	[['0xffffffffffffffffffffffffffffff00', 32], -256],
+	[['0xffffffffffffffffffe0000000000000', 32], -9007199254740992n],
 	[[1000, 64], 1000],
 	[[-1000, 64], -1000],
 	[[BigInt(9), 1], -7],
 ];
 
 export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
-	[['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],
-	[['-ab', 3], 'Invalid value given "-ab". Error: not a valid integer.'],
-	[['ab0x', 2], 'Invalid value given "ab0x". Error: not a valid integer.'],
-	[[25.5, 32], 'Invalid value given "25.5". Error: not a valid integer.'],
-	[['-120.0', 4], 'Invalid value given "-120.0". Error: not a valid integer.'],
+	// solidity only store 32 bytes numbers
+	[
+		['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00', 64],
+		'value "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00" at "/0" must pass "int" validation',
+	],
+	[['ab', 32], 'value "ab" at "/0" must pass "int" validation'],
+	[['-ab', 3], 'value "-ab" at "/0" must pass "int" validation'],
+	[['ab0x', 2], 'value "ab0x" at "/0" must pass "int" validation'],
+	[[25.5, 32], 'value "25.5" at "/0" must pass "int" validation'],
+	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[-256, 2],
 		'Invalid value given "value: "-256", nibbleWidth: "2"". Error: value greater than the nibble width.',
@@ -108,11 +94,11 @@ export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 ];
 
 export const fromTwosComplementInvalidData: [[Numbers, number], string][] = [
-	[['ab', 32], 'Invalid value given "ab". Error: not a valid integer.'],
-	[['-ab', 3], 'Invalid value given "-ab". Error: not a valid integer.'],
-	[['ab0x', 2], 'Invalid value given "ab0x". Error: not a valid integer.'],
-	[[25.5, 32], 'Invalid value given "25.5". Error: not a valid integer.'],
-	[['-120.0', 4], 'Invalid value given "-120.0". Error: not a valid integer.'],
+	[['ab', 32], 'value "ab" at "/0" must pass "int" validation'],
+	[['-ab', 3], 'value "-ab" at "/0" must pass "int" validation'],
+	[['ab0x', 2], 'value "ab0x" at "/0" must pass "int" validation'],
+	[[25.5, 32], 'value "25.5" at "/0" must pass "int" validation'],
+	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[1000, 2],
 		'Invalid value given "value: "1000", nibbleWidth: "2"". Error: value greater than the nibble width.',

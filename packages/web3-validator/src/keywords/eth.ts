@@ -1,15 +1,20 @@
 import { AnySchemaObject, FuncKeywordDefinition, SchemaCxt } from 'ajv';
 import { Web3ValidatorError } from '../errors';
-import { DataValidateFunction, ValidInputTypes, Web3ValidationErrorObject } from '../types';
+import { DataValidateFunction, Filter, ValidInputTypes, Web3ValidationErrorObject } from '../types';
+import { parseBaseType } from '../utils';
 import {
-	isBoolean,
-	isString,
-	isBytes,
-	isInt,
-	isUInt,
 	isAddress,
-	isValidEthType,
+	isBlockNumber,
+	isBlockNumberOrTag,
 	isBloom,
+	isBoolean,
+	isBytes,
+	isFilterObject,
+	isHexStrict,
+	isInt,
+	isNumber,
+	isString,
+	isUInt,
 } from '../validation';
 
 const createErrorObject = (
@@ -25,6 +30,8 @@ export const metaSchema = {
 	title: 'Web3 Ethereum Compatible Types',
 	type: 'string',
 };
+
+const extraTypes = ['hex', 'number', 'blockNumber', 'blockNumberOrTag', 'filter', 'bloom'];
 
 const compile = (
 	type: string,
@@ -45,7 +52,9 @@ const compile = (
 		]);
 	}
 
-	if (!isValidEthType(type)) {
+	const { baseType } = parseBaseType(type);
+
+	if (!baseType && !extraTypes.includes(type)) {
 		throw new Web3ValidatorError([
 			{
 				keyword: 'eth',
@@ -57,37 +66,58 @@ const compile = (
 		]);
 	}
 
-	const validate: DataValidateFunction = (
-		data: ValidInputTypes,
-		// Second parameter `dataCxt?: DataValidationCxt` might be useful for extensive validation
-	): boolean => {
+	const validate: DataValidateFunction = (data: ValidInputTypes): boolean => {
 		let result = false;
 
-		switch (type) {
-			case 'boolean':
-				result = isBoolean(data);
-				break;
-			case 'bytes':
-				result = isBytes(data, { abiType: type });
-				break;
-			case 'string':
-				result = isString(data);
-				break;
-			case 'uint':
-				result = isUInt(data, { abiType: type });
-				break;
-			case 'int':
-				result = isInt(data, { abiType: type });
-				break;
-			case 'address':
-				result = isAddress(data);
-				break;
-			case 'bloom':
-				result = isBloom(data);
-				break;
-			default:
-				validate.errors = [createErrorObject(`can not identity "${type}"`, data)];
-				return false;
+		if (baseType) {
+			// eslint-disable-next-line default-case
+			switch (baseType) {
+				case 'bool':
+					result = isBoolean(data);
+					break;
+				case 'bytes':
+					result = isBytes(data, { abiType: type });
+					break;
+				case 'string':
+					result = isString(data);
+					break;
+				case 'uint':
+					result = isUInt(data, { abiType: type });
+					break;
+				case 'int':
+					result = isInt(data, { abiType: type });
+					break;
+				case 'address':
+					result = isAddress(data);
+					break;
+				case 'tuple': {
+					throw new Error('"tuple" type is not implemented directly.');
+				}
+			}
+		} else {
+			switch (type) {
+				case 'hex':
+					result = isHexStrict(data);
+					break;
+				case 'number':
+					result = isNumber(data);
+					break;
+				case 'blockNumber':
+					result = isBlockNumber(data as string);
+					break;
+				case 'blockNumberOrTag':
+					result = isBlockNumberOrTag(data as string);
+					break;
+				case 'filter':
+					result = isFilterObject(data as unknown as Filter);
+					break;
+				case 'bloom':
+					result = isBloom(data);
+					break;
+				default:
+					validate.errors = [createErrorObject(`can not identity "${type}"`, data)];
+					return false;
+			}
 		}
 
 		if (!result) {
