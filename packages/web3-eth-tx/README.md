@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-eth-tx` contains a [@ethereumjs/tx](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/tx) wrapper class and transaction realted utils.
+`web3-eth-tx` contains a [@ethereumjs/tx](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/tx) wrapper class and transaction related utils.
 
 ###### Get it from the NPM Registry
 
