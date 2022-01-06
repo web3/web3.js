@@ -98,10 +98,7 @@ export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
  * Converts value to it's number representation
  */
 export const hexToNumber = (value: HexString): bigint | number => {
-	validator.validateJSONSchema(
-		{ type: 'array', items: [{ type: 'string', format: 'hexStrict' }] },
-		[value],
-	);
+	validator.validate(['hex'], [value]);
 
 	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
 	const num = BigInt(hexValue);
@@ -328,13 +325,7 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
  * Takes a number of a unit and converts it to wei.
  */
 export const toWei = (number: Numbers, unit: EtherUnits): string => {
-	validator.validateJSONSchema(
-		{
-			type: 'array',
-			items: { anyOf: [{ type: 'string', format: 'number' }, { type: 'number' }] },
-		},
-		[number],
-	);
+	validator.validate(['number'], [number]);
 
 	const denomination = ethUnitMap[unit];
 

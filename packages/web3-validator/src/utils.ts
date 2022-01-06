@@ -85,7 +85,7 @@ export const abiSchemaToJsonSchema = (
 			if (abi[1] && Array.isArray(abi[1])) {
 				abiType = abi[0] as string;
 				abiName = `${level ?? ''}/${index}`;
-				abiComponents = abi[1] as ReadonlyArray<string>;
+				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
 			} else {
 				abiType = 'tuple';
 				abiName = `${level ?? ''}/${index}`;

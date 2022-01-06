@@ -104,11 +104,11 @@ export const hexToNumberValidData: [HexString, Numbers][] = [
 ];
 
 export const hexToNumberInvalidData: [HexString, string][] = [
-	['1a', 'value at "/0" must match format "hexStrict"'],
-	['0xffdg', 'value at "/0" must match format "hexStrict"'],
-	['xfff', 'value at "/0" must match format "hexStrict"'],
-	['-123', 'value at "/0" must match format "hexStrict"'],
-	['-9x123', 'value at "/0" must match format "hexStrict"'],
+	['1a', 'value "1a" at "/0" must pass "hex" validation'],
+	['0xffdg', 'value "0xffdg" at "/0" must pass "hex" validation'],
+	['xfff', 'value "xfff" at "/0" must pass "hex" validation'],
+	['-123', 'value "-123" at "/0" must pass "hex" validation'],
+	['-9x123', 'value "-9x123" at "/0" must pass "hex" validation'],
 ];
 
 export const utf8ToHexValidData: [string, HexString][] = [
@@ -252,10 +252,10 @@ export const fromWeiInvalidData: [[any, any], string][] = [
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [
-	[[null, 'kwei'], 'value at "/0" must be string'],
-	[[undefined, 'kwei'], 'value at "/0" must be string'],
-	[[{}, 'kwei'], 'value at "/0" must be string'],
-	[['data', 'kwei'], 'value at "/0" must match format "number"'],
+	[[null, 'kwei'], 'value at "/0" must pass "number" validation'],
+	[[undefined, 'kwei'], 'value at "/0" must pass "number" validation'],
+	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "number" validation'],
+	[['data', 'kwei'], 'value "data" at "/0" must pass "number" validation'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
 export const toCheckSumValidData: [string, string][] = [
