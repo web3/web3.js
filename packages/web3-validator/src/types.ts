@@ -19,6 +19,7 @@ export type EthBaseTypesWithMeta =
 	| `int${string}[${number}]`
 	| `uint${string}`
 	| `uint${string}[${number}]`
+	| `tuple[]`
 	| `tuple[${number}]`;
 
 export type EthExtendedTypes =
@@ -31,6 +32,7 @@ export type EthExtendedTypes =
 
 export type FullValidationSchema = ReadonlyArray<AbiParameter>;
 export type ShortValidationSchema = ReadonlyArray<
+	| string
 	| EthBaseTypes
 	| EthExtendedTypes
 	| EthBaseTypesWithMeta
