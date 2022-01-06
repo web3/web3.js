@@ -1,4 +1,5 @@
 import { isValidEthBaseType } from '../../../src/validation/eth';
+
 import { invalidEthTypeData, validEthTypeData } from '../../fixtures/validation';
 
 describe('validation', () => {

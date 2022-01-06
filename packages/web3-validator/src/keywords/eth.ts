@@ -1,27 +1,21 @@
 import { AnySchemaObject, FuncKeywordDefinition, SchemaCxt } from 'ajv';
 import { Web3ValidatorError } from '../errors';
+import { DataValidateFunction, Filter, ValidInputTypes, Web3ValidationErrorObject } from '../types';
+import { parseBaseType } from '../utils';
 import {
-	DataValidateFunction,
-	DataValidationCxt,
-	ValidInputTypes,
-	Web3ValidationErrorObject,
-	Filter,
-} from '../types';
-import {
-	isBoolean,
-	isString,
-	isBytes,
-	isInt,
-	isUInt,
 	isAddress,
-	isBloom,
 	isBlockNumber,
 	isBlockNumberOrTag,
-	isHexStrict,
+	isBloom,
+	isBoolean,
+	isBytes,
 	isFilterObject,
+	isHexStrict,
+	isInt,
 	isNumber,
+	isString,
+	isUInt,
 } from '../validation';
-import { parseBaseType } from '../utils';
 
 const createErrorObject = (
 	message: string,
@@ -72,12 +66,7 @@ const compile = (
 		]);
 	}
 
-	const validate: DataValidateFunction = (
-		data: ValidInputTypes,
-		// TODO: Could be useful in future
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		_dataCxt?: DataValidationCxt,
-	): boolean => {
+	const validate: DataValidateFunction = (data: ValidInputTypes): boolean => {
 		let result = false;
 
 		if (baseType) {
