@@ -336,17 +336,24 @@ Released with 1.0.0-beta.37 code base.
 2. The functions `soliditySha3` `soliditySha3Raw` `encodePacked` does not support BN and now supports `BigInt`
 3. The functions `flattenTypes` and `jsonInterfaceMethodToString` moved to the `web3-eth-abi` package
 4. The function `isAddress` now includes an optional parameter `checkChecksum` type boolean
+5. `isBoolean` now accept `1`, and `0` as valid values to test. Ref: `web3-validator`
 
 ### web3-eth-accounts
 
 1. `create` function does not take in the optional parameter `entropy`
 2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
-3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use `web3-eth-transaction` package
-4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
-5. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
-6. `Wallet.create` function doesn't accepts `entropy` param
+3. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
+4. `Wallet.create` function doesn't accepts `entropy` param
+
+### web3-validator
+
+1. `isBoolean` now accept `1`, and `0` as valid values to test.
 
 #### web3-eth-contract
 
 1. Event logs does not support types for indexed properties but named properties supported.
 2. Types for overloaded ABI functions are not yet supported.
+3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use `web3-eth-transaction` package
+4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
+5. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
+6. `Wallet.create` function doesn't accepts `entropy` param
