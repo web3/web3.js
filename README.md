@@ -103,6 +103,101 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 ## Trouble shooting and known issues.
 
+### Web3 and Create-react-app
+
+If you are using create-react-app version >=5 you may run into issues building. This is because polyfills are not included in the latest version of create-react-app.
+
+### Solution
+
+1. Install react-app-rewired
+
+If you are using yarn:
+```
+yarn add --dev react-app-rewired
+```
+
+If you are using npm:
+```
+npm install --save-dev react-app-rewired
+```
+
+2. Create `config-overrides.js` in the root of your project folder with the content:
+
+```
+module.exports = function override(config) {
+    const fallback = config.resolve.fallback || {};
+    Object.assign(fallback, {
+        "crypto": require.resolve("crypto-browserify"),
+        "stream": require.resolve("stream-browserify"),
+        "assert": require.resolve("assert"),
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "os": require.resolve("os-browserify"),
+        "url": require.resolve("url")
+    })
+    config.resolve.fallback = fallback;
+
+    return config;
+}
+```
+
+3. Install the missing modules
+
+If you are using yarn:
+```
+yarn add --dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
+```
+If you are using npm:
+```
+npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
+```
+
+4. Create the file `polyfill.js` in the src folder and in the file add:
+
+```
+import { Buffer } from 'buffer';
+
+window.global = window;
+global.Buffer = Buffer;
+global.process = {
+    env: { DEBUG: undefined },
+    version: '',
+    nextTick: require('next-tick')
+};
+```
+
+5. In `index.js` , import `polyfill.js` before `web3`:
+```
+import './polyfill.js';
+import Web3 from 'web3';
+```
+
+6. Within `package.json` change the scripts field:
+replace 
+```
+"scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  }
+```
+with
+```
+"scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test"
+  }
+```
+The missing polyfills should be included now and your app should be functional with web3.
+
+If you want to hide the warnings created by the console:
+
+In `config-overrides.js` add:
+
+`config.ignoreWarnings = [/Failed to parse source map/];`
+
+
 ### Web3 and Angular
 
 ### New solution
