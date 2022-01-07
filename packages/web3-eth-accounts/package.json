@@ -20,7 +20,7 @@
         "eth-lib": "0.2.8",
         "ethereumjs-util": "^7.0.10",
         "scrypt-js": "^3.0.1",
-        "uuid": "3.3.2",
+        "uuid": "8.3.2",
         "web3-core": "1.6.1",
         "web3-core-helpers": "1.6.1",
         "web3-core-method": "1.6.1",
