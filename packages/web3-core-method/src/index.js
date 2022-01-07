@@ -56,6 +56,7 @@ var Method = function Method(options) {
     this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
     this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
     this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
+    this.transactionPollingInterval = options.transactionPollingInterval || 1000;
     this.blockHeaderTimeout = options.blockHeaderTimeout || 10; // 10 seconds
     this.defaultCommon = options.defaultCommon;
     this.defaultChain = options.defaultChain;
@@ -553,7 +554,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         let blockHeaderArrived = false; 
 
         const startInterval = () => {
-            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), method.transactionPollingInterval);
         };
 
         // If provider do not support event subscription use polling

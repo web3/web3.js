@@ -484,7 +484,8 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 - `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232) (#4585)
-
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+- 
 ### Fixed
  -  Fix readthedoc's build for web3js documentation (#4425)
  -  Fix response sorting for batch requests (#4250)

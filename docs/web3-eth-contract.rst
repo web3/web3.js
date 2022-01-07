@@ -380,6 +380,27 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _eth-contract-module-transactionpollinginterval:
+
+transactionPollingInterval
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionPollingInterval
+    contract.transactionPollingInterval // on contract instance
+
+The ``transactionPollingInterval`` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingInterval (default: 1000)
+
+------------------------------------------------------------------------------
+
 .. _eth-contract-module-handlerevert:
 
 handleRevert
