@@ -109,21 +109,22 @@ If you are using create-react-app version >=5 you may run into issues building. 
 
 ### Solution
 
-1. Install react-app-rewired
+
+- Install react-app-rewired
 
 If you are using yarn:
-```
+```bash
 yarn add --dev react-app-rewired
 ```
 
 If you are using npm:
-```
+```bash
 npm install --save-dev react-app-rewired
 ```
 
-2. Create `config-overrides.js` in the root of your project folder with the content:
+- Create `config-overrides.js` in the root of your project folder with the content:
 
-```
+```javascript
 module.exports = function override(config) {
     const fallback = config.resolve.fallback || {};
     Object.assign(fallback, {
@@ -141,20 +142,21 @@ module.exports = function override(config) {
 }
 ```
 
-3. Install the missing modules
+
+- Install the missing modules
 
 If you are using yarn:
-```
+```bash
 yarn add --dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
 ```
 If you are using npm:
-```
+```bash
 npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
 ```
 
-4. Create the file `polyfill.js` in the src folder and in the file add:
+- Create the file `polyfill.js` in the src folder and in the file add:
 
-```
+```javascript
 import { Buffer } from 'buffer';
 
 window.global = window;
@@ -166,37 +168,40 @@ global.process = {
 };
 ```
 
-5. In `index.js` , import `polyfill.js` before `web3`:
-```
+- In `index.js` , import `polyfill.js` before `web3`:
+```javascript
 import './polyfill.js';
 import Web3 from 'web3';
 ```
 
-6. Within `package.json` change the scripts field:
-replace 
-```
+- Within `package.json` change the scripts field, instead of `react-scripts` replace it with `react-app-rewired`
+
+before: 
+```typescript
 "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
-  }
+    "test": "react-scripts test",
+  ...
 ```
-with
-```
+
+after:
+```typescript
 "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test"
-  }
+    "test": "react-app-rewired test",
+  ...
 ```
+
 The missing polyfills should be included now and your app should be functional with web3.
+- If you want to hide the warnings created by the console:
 
-If you want to hide the warnings created by the console:
+In `config-overrides.js` within the `override` function, add:
 
-In `config-overrides.js` add:
-
-`config.ignoreWarnings = [/Failed to parse source map/];`
-
+```javascript
+config.ignoreWarnings = [/Failed to parse source map/];`
+```
 
 ### Web3 and Angular
 
