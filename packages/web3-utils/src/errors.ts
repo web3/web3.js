@@ -13,48 +13,9 @@ export abstract class Web3Error extends Error {
 	}
 }
 
-export class NegativeIntegersInByteArrayError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'contains negative values');
-	}
-}
-export class HighValueIntegerInByteArrayError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'contains numbers greater than 255');
-	}
-}
-export class InvalidIntegerInByteArrayError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'contains invalid integer values');
-	}
-}
-
-export class InvalidIntegerError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'not a valid integer');
-	}
-}
-
-export class InvalidNumberError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'not a valid number');
-	}
-}
-
 export class InvalidStringError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'not a valid string');
-	}
-}
-
-export class InvalidHexStringError extends Web3Error {
-	public constructor(value: unknown, expectedNumberOfBytes?: number) {
-		super(
-			value,
-			expectedNumberOfBytes !== undefined
-				? `not a valid ${expectedNumberOfBytes} byte hex string`
-				: `not a valid hex string`,
-		);
 	}
 }
 
@@ -82,12 +43,6 @@ export class HexProcessingError extends Web3Error {
 	}
 }
 
-export class InvalidDenominatorError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'denominator must be number power of 10');
-	}
-}
-
 export class NibbleWidthError extends Web3Error {
 	public constructor(value: string) {
 		super(value, 'value greater than the nibble width');
@@ -97,12 +52,6 @@ export class NibbleWidthError extends Web3Error {
 export class InvalidTypeError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'invalid type, type not supported');
-	}
-}
-
-export class InvalidArrayError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'array types is not supported.');
 	}
 }
 
@@ -136,45 +85,9 @@ export class InvalidBlockError extends Web3Error {
 	}
 }
 
-export class InvalidBloomError extends Web3Error {
-	public constructor(value: string) {
-		super(value, 'invalid bloom given');
-	}
-}
-
-export class InvalidTopicError extends Web3Error {
-	public constructor(value: string) {
-		super(value, 'invalid topic given');
-	}
-}
-
-export class InvalidCharCodeError extends Web3Error {
-	public constructor(value: number) {
-		super(value, 'invalid char code given');
-	}
-}
-
 export class InvalidTypeAbiInputError extends Web3Error {
 	public constructor(value: string) {
 		super(value, 'components found but type is not tuple');
-	}
-}
-
-// TODO Type of value for all errors should be any as
-// any value can be passed when an error occurs
-export class InvalidBlockNumberOrTagError extends Web3Error {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public constructor(value: any) {
-		super(value, 'invalid block number or tag given');
-	}
-}
-
-export class InvalidFilterError extends Web3Error {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public constructor(value: any) {
-		// TODO Discuss this naive approach to logging object
-		// Does not account for non JSON properties
-		super(JSON.stringify(value), 'invalid filter given');
 	}
 }
 

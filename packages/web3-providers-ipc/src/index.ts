@@ -109,9 +109,10 @@ export default class IpcProvider<
 		}
 
 		try {
-			this._socket.write(JSON.stringify(request));
 			const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
 			this._requestQueue.set(request.id, defPromise);
+			this._socket.write(JSON.stringify(request));
+
 			return defPromise;
 		} catch (error) {
 			this._requestQueue.delete(request.id);

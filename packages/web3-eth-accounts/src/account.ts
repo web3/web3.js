@@ -17,14 +17,11 @@ import {
 	HexString,
 	randomBytes,
 	hexToBytes,
-	validateBytesInput,
-	isBuffer,
-	isValidString,
 	Address,
 	isHexStrict,
 	utf8ToHex,
-	isHexString32Bytes,
 } from 'web3-utils';
+import { validator, isBuffer, isHexString32Bytes, isString } from 'web3-validator';
 import {
 	InvalidPrivateKeyError,
 	PrivateKeyLengthError,
@@ -214,7 +211,7 @@ const uuidV4 = () => {
 };
 
 const privateKeyToAddress = (privateKey: string | Buffer): string => {
-	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
+	if (!(isString(privateKey) || isBuffer(privateKey))) {
 		throw new InvalidPrivateKeyError();
 	}
 
@@ -247,7 +244,7 @@ export const encrypt = async (
 	password: string | Buffer,
 	options?: CipherOptions,
 ): Promise<KeyStore> => {
-	if (!(isValidString(privateKey) || isBuffer(privateKey))) {
+	if (!(isString(privateKey) || isBuffer(privateKey))) {
 		throw new InvalidPrivateKeyError();
 	}
 
@@ -267,7 +264,7 @@ export const encrypt = async (
 		salt = randomBytes(32);
 	}
 
-	if (!(isValidString(password) || isBuffer(password))) {
+	if (!(isString(password) || isBuffer(password))) {
 		throw new InvalidPasswordError();
 	}
 
@@ -422,7 +419,7 @@ export const decrypt = async (
 
 	const bufferPassword = typeof password === 'string' ? Buffer.from(password) : password;
 
-	validateBytesInput(bufferPassword);
+	validator.validate(['bytes'], [bufferPassword]);
 
 	let derivedKey;
 	if (json.crypto.kdf === 'scrypt') {

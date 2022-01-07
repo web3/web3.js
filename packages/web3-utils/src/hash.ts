@@ -1,8 +1,8 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
+import { isAddress, isHexStrict } from 'web3-validator';
 import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
-import { isAddress, isHexStrict } from './validation';
 import {
 	InvalidStringError,
 	InvalidTypeError,
