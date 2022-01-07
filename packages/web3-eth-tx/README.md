@@ -46,8 +46,8 @@ yarn add web3-eth-tx
 [docs]: http://web3js.readthedocs.io/en/4.0/
 [repo]: https://github.com/ethereum/web3.js
 [npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.org/packages/web3-package-tempalte
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-package-tempalte
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-package-tempalte
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-package-tempalte
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-package-tempalte
+[npm-url]: https://npmjs.org/packages/web3-eth-tx
+[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-eth-tx
+[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-eth-tx
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-eth-tx
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-eth-tx
