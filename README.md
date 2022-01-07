@@ -105,26 +105,28 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 ### Web3 and Create-react-app
 
-If you are using create-react-app version >=5 you may run into issues building. This is because polyfills are not included in the latest version of create-react-app.
+If you are using create-react-app version >=5 you may run into issues building. This is because NodeJS polyfills are not included in the latest version of create-react-app.
 
 ### Solution
 
 
-- Install react-app-rewired
+- Install react-app-rewired and the missing modules
 
 If you are using yarn:
 ```bash
-yarn add --dev react-app-rewired
+yarn add --dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer
 ```
 
 If you are using npm:
 ```bash
-npm install --save-dev react-app-rewired
+npm install --save-dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer process
 ```
 
 - Create `config-overrides.js` in the root of your project folder with the content:
 
 ```javascript
+const webpack = require('webpack');
+
 module.exports = function override(config) {
     const fallback = config.resolve.fallback || {};
     Object.assign(fallback, {
@@ -137,44 +139,17 @@ module.exports = function override(config) {
         "url": require.resolve("url")
     })
     config.resolve.fallback = fallback;
-
+    config.plugins = (config.plugins || []).concat([
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', 'Buffer']
+        })
+    ])
     return config;
 }
 ```
 
-
-- Install the missing modules
-
-If you are using yarn:
-```bash
-yarn add --dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
-```
-If you are using npm:
-```bash
-npm install --save-dev crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url
-```
-
-- Create the file `polyfill.js` in the src folder and in the file add:
-
-```javascript
-import { Buffer } from 'buffer';
-
-window.global = window;
-global.Buffer = Buffer;
-global.process = {
-    env: { DEBUG: undefined },
-    version: '',
-    nextTick: require('next-tick')
-};
-```
-
-- In `index.js` , import `polyfill.js` before `web3`:
-```javascript
-import './polyfill.js';
-import Web3 from 'web3';
-```
-
-- Within `package.json` change the scripts field, instead of `react-scripts` replace it with `react-app-rewired`
+- Within `package.json` change the scripts field for start, build and test. Instead of `react-scripts` replace it with `react-app-rewired`
 
 before: 
 ```typescript
@@ -182,7 +157,8 @@ before:
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-  ...
+    "eject": "react-scripts eject"
+},
 ```
 
 after:
@@ -191,16 +167,17 @@ after:
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-  ...
+    "eject": "react-scripts eject"
+},
 ```
 
-The missing polyfills should be included now and your app should be functional with web3.
+The missing Nodejs polyfills should be included now and your app should be functional with web3.
 - If you want to hide the warnings created by the console:
 
 In `config-overrides.js` within the `override` function, add:
 
 ```javascript
-config.ignoreWarnings = [/Failed to parse source map/];`
+config.ignoreWarnings = [/Failed to parse source map/];
 ```
 
 ### Web3 and Angular
