@@ -44,11 +44,11 @@ export class Web3RequestManager<
 	public constructor(provider?: SupportedProviders<API> | string | string, net?: Socket) {
 		super();
 
+		this._providers = Web3RequestManager.providers;
+
 		if (provider) {
 			this.setProvider(provider, net);
 		}
-
-		this._providers = Web3RequestManager.providers;
 	}
 
 	public static get providers() {
