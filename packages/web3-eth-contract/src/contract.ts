@@ -1,33 +1,39 @@
-// eslint-disable-next-line max-classes-per-file
+import EventEmitter = require('events');
 import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
 	ContractAbi,
-	ContractEvents,
-	ContractMethods,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { Address, toChecksumAddress } from 'web3-utils';
+import { Address, BlockNumberOrTag, BlockTags, hexToNumber, toChecksumAddress } from 'web3-utils';
+import { decodeMethodReturn, encodeMethodABI } from './encoding';
 import {
 	ContractEventEmitterInterface,
 	ContractEventsInterface,
 	ContractInitOptions,
 	ContractMethodsInterface,
 	ContractOptions,
+	NonPayableCallOptions,
+	NonPayableMethodObject,
+	PayableCallOptions,
+	PayableMethodObject,
 } from './types';
+import { getEstimateGasParams, getSendTxParams, getTxCallParams } from './utils';
 
-type ContractBoundFunction = string;
-type ContractBoundEvent = string;
+type ContractBoundMethod = () =>
+	| NonPayableMethodObject<unknown, unknown>
+	| PayableMethodObject<unknown, unknown>;
+type ContractBoundEvent = EventEmitter;
 
 export class Contract<Abi extends ContractAbi>
 	extends Web3Context<EthExecutionAPI>
-	implements Web3EventEmitter<ContractEventEmitterInterface<Abi, ContractEvents<Abi>>>
+	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
 	public readonly options: ContractOptions;
 
@@ -37,22 +43,16 @@ export class Contract<Abi extends ContractAbi>
 		string,
 		{
 			signature: string;
-			function: ContractBoundFunction;
-			cascadeFunction?: ContractBoundFunction;
+			method: ContractBoundMethod;
+			cascadeFunction?: ContractBoundMethod;
 		}
 	> = {};
-	private _events: Record<string, ContractBoundEvent> = {};
 
-	public readonly methods: ContractMethodsInterface<Abi, ContractMethods<Abi>>;
-	public readonly events: ContractEventsInterface<Abi, ContractEvents<Abi>>;
+	private _methods!: ContractMethodsInterface<Abi>;
+	private _events!: ContractEventsInterface<Abi>;
 
 	public constructor(jsonInterface: Abi, address?: Address, options?: ContractInitOptions) {
 		super(options?.provider ?? '');
-
-		// TODO: Implement these methods
-		this.methods = {} as ContractMethodsInterface<Abi, ContractMethods<Abi>>;
-		// TODO: Implement these events
-		this.events = {} as ContractEventsInterface<Abi, ContractEvents<Abi>>;
 
 		this._parseAndSetAddress(address);
 		this._parseAndSetJsonInterface(jsonInterface);
@@ -77,13 +77,24 @@ export class Contract<Abi extends ContractAbi>
 		});
 	}
 
+	public get events() {
+		return this._events;
+	}
+
+	public get methods() {
+		return this._methods;
+	}
+
 	private _parseAndSetAddress(value?: Address) {
 		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : null;
 	}
 
 	private _parseAndSetJsonInterface(abis: ContractAbi) {
 		this._functions = {};
-		this._events = {};
+
+		this._methods = {} as ContractMethodsInterface<Abi>;
+		this._events = {} as ContractEventsInterface<Abi>;
+
 		let result: ContractAbi = [];
 
 		for (const a of abis) {
@@ -92,8 +103,8 @@ export class Contract<Abi extends ContractAbi>
 			};
 
 			if (isAbiFunctionFragment(abi)) {
-				const name = jsonInterfaceMethodToString(abi);
-				const signature = encodeFunctionSignature(name);
+				const methodName = jsonInterfaceMethodToString(abi);
+				const methodSignature = encodeFunctionSignature(methodName);
 
 				// make constant and payable backwards compatible
 				abi.constant =
@@ -102,28 +113,54 @@ export class Contract<Abi extends ContractAbi>
 					abi.constant;
 				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
 
-				if (name in this._functions) {
-					this._functions[name] = {
-						signature,
-						function: this._createContractFunction(name, abi),
-						cascadeFunction: this._functions[name].function,
+				if (methodName in this._functions) {
+					this._functions[methodName] = {
+						signature: methodSignature,
+						method: this._createContractMethod(abi),
+						cascadeFunction: this._functions[methodName].method,
 					};
 				} else {
-					this._functions[name] = {
-						signature,
-						function: this._createContractFunction(name, abi),
+					this._functions[methodName] = {
+						signature: methodSignature,
+						method: this._createContractMethod(abi),
 					};
 				}
-			} else if (isAbiEventFragment(abi)) {
-				const name = jsonInterfaceMethodToString(abi);
-				const signature = encodeEventSignature(name);
-				const event = this._createContractEvent(name, abi);
 
-				if (!(name in this._events) || abi.name === 'bound') {
-					this._events[name] = event;
+				// TODO: Debug the error of mixing up mapped type and index type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				this._methods[abi.name] = this._functions[methodName].method;
+
+				// TODO: Debug the error of mixing up mapped type and index type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				this._methods[methodName] = this._functions[methodName].method;
+
+				// TODO: Debug the error of mixing up mapped type and index type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				this._methods[methodSignature] = this._functions[methodName].method;
+			} else if (isAbiEventFragment(abi)) {
+				const eventName = jsonInterfaceMethodToString(abi);
+				const eventSignature = encodeEventSignature(eventName);
+				const event = this._createContractEvent(eventName, abi);
+
+				if (!(eventName in this._events) || abi.name === 'bound') {
+					// TODO: Debug the error of mixing up mapped type and index type
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-expect-error
+					this._events[eventName] = event;
 				}
 
-				this._events[signature] = event;
+				// TODO: Debug the error of mixing up mapped type and index type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				this._events[abi.name] = event;
+
+				// TODO: Debug the error of mixing up mapped type and index type
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-expect-error
+				this._events[eventSignature] = event;
 			}
 
 			result = [...result, abi];
@@ -132,17 +169,126 @@ export class Contract<Abi extends ContractAbi>
 		this._jsonInterface = [...result] as unknown as Abi;
 	}
 
-	// eslint-disable-next-line class-methods-use-this
-	private _createContractFunction(
-		name: string,
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		_abi: AbiFunctionFragment,
-	): ContractBoundFunction {
-		return name;
+	private _createContractMethod(abi: AbiFunctionFragment): ContractBoundMethod {
+		return (...params) => {
+			// TODO: Add `params` validation with new validator
+			// validator.validate(abi, params);
+
+			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
+				return {
+					arguments: params,
+					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
+						this._contractMethodCall(abi, params, options, block),
+					// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
+					send: async (options?: PayableCallOptions) =>
+						this._contractMethodSend(abi, params, options),
+					estimateGas: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
+						this._contractMethodEstimateGas(abi, params, options, block),
+					encodeABI: () => encodeMethodABI(abi, params),
+				} as unknown as PayableMethodObject<unknown, unknown>;
+			}
+
+			return {
+				arguments: params,
+				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
+					this._contractMethodCall(abi, params, options, block),
+				send: async (options?: NonPayableCallOptions) =>
+					this._contractMethodSend(abi, params, options),
+				estimateGas: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
+					this._contractMethodEstimateGas(abi, params, options, block),
+				encodeABI: () => encodeMethodABI(abi, params),
+			} as unknown as NonPayableMethodObject<unknown, unknown>;
+		};
 	}
 
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	private _createContractEvent(name: string, _abi: AbiEventFragment): ContractBoundEvent {
-		return name;
+	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		options?: Options,
+		block?: BlockNumberOrTag,
+	) {
+		return decodeMethodReturn(
+			abi,
+			await this.requestManager.send({
+				method: 'eth_call',
+				params: [
+					getTxCallParams({
+						abi,
+						params,
+						options,
+						contractOptions: this.options,
+					}),
+					block ?? BlockTags.LATEST,
+				],
+			}),
+		);
+	}
+
+	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		options?: Options,
+	) {
+		return decodeMethodReturn(
+			abi,
+			await this.requestManager.send({
+				method: 'eth_sendTransaction',
+				params: [
+					getSendTxParams({
+						abi,
+						params,
+						options,
+						contractOptions: this.options,
+					}),
+				],
+			}),
+		);
+	}
+
+	private async _contractMethodEstimateGas<
+		Options extends PayableCallOptions | NonPayableCallOptions,
+	>(abi: AbiFunctionFragment, params: unknown[], options?: Options, block?: BlockNumberOrTag) {
+		return hexToNumber(
+			await this.requestManager.send({
+				method: 'eth_estimateGas',
+				params: [
+					getEstimateGasParams({
+						abi,
+						params,
+						options,
+						contractOptions: this.options,
+					}),
+					block ?? BlockTags.LATEST,
+				],
+			}),
+		);
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	private _createContractEvent(_abi: AbiEventFragment): ContractBoundEvent {
+		// return (...params) => {
+		// 	// TODO: Add `params` validation with new validator
+		// 	// validator.validate(abi, params);
+
+		// 	if (params.length > 2 || params.length < 1) {
+		// 		throw new Error('Contract event arguments not matched.');
+		// 	}
+
+		// 	if (typeof params[0] === 'object' && params[1]) {
+		// 		throw new Error('Must specify contract event callback');
+		// 	}
+
+		// 	if (typeof params[0] === 'object' && typeof params[1] !== 'function') {
+		// 		throw new Error('Must specify contract event callback');
+		// 	}
+
+		// 	const options: ContactEventOptions = params.length === 2 ? params[0] : {};
+		// 	const cb: Callback<ContractEventLog<unknown>> =
+		// 		params.length === 2 ? params[1] : params[0];
+
+		// 	return cb;
+		// } as ContractBoundEvent;
+
+		return {} as ContractBoundEvent;
 	}
 }

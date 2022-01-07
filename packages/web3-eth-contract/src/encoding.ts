@@ -1,14 +1,14 @@
 import { inputBlockNumberFormatter, LogsInput, outputLogFormatter } from 'web3-common';
 import {
-	decodeLog,
-	decodeParameters,
-	encodeParameter,
-	encodeParameters,
-	isAbiConstructorFragment,
 	AbiConstructorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
-	isAbiFunctionFragment,
+	decodeLog,
+	decodeParameters,
+	encodeFunctionSignature,
+	encodeParameter,
+	encodeParameters,
+	isAbiConstructorFragment,
 } from 'web3-eth-abi';
 import { HexString, Uint } from 'web3-utils';
 import { ContractOptions } from './types';
@@ -133,15 +133,12 @@ export const decodeEventABI = (
 };
 
 export const encodeMethodABI = (
-	abi: (AbiFunctionFragment | AbiConstructorFragment) & { signature?: string },
+	abi: AbiFunctionFragment | AbiConstructorFragment,
 	args: unknown[],
 	deployData?: HexString,
 ) => {
-	if (isAbiFunctionFragment(abi) && abi.signature && abi.name !== abi.signature) {
-		throw new Error('The ABI can not match with given signature');
-	}
-
 	const inputLength = Array.isArray(abi.inputs) ? abi.inputs.length : 0;
+
 	if (inputLength !== args.length) {
 		throw new Error(
 			`The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`,
@@ -166,26 +163,16 @@ export const encodeMethodABI = (
 		return `${deployData}${params}`;
 	}
 
-	// return method
-	const returnValue = abi.signature ? `${abi.signature}${params}` : params;
-
-	if (!returnValue) {
-		throw new Error(`Couldn't find a matching contract method named "${abi.name ?? ''}".`);
-	}
-
-	return returnValue;
+	return `${encodeFunctionSignature(abi)}${params}`;
 };
 
-export const decodeMethodReturn = (
-	abi: (AbiFunctionFragment | AbiConstructorFragment) & { signature?: string },
-	returnValues?: HexString,
-) => {
+export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
 	if (!returnValues) {
 		return null;
 	}
 
 	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-	const result = decodeParameters([...abi.inputs], value);
+	const result = decodeParameters([...abi.outputs], value);
 
 	if (result.__length__ === 1) {
 		return result[0];
