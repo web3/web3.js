@@ -14,7 +14,9 @@ import {
 } from 'web3-common';
 import { HttpProviderOptions } from './types';
 
-export class HttpProvider<API extends Web3APISpec = EthExecutionAPI> extends Web3BaseProvider<API> {
+export default class HttpProvider<
+	API extends Web3APISpec = EthExecutionAPI,
+> extends Web3BaseProvider<API> {
 	private readonly clientUrl: string;
 	private readonly httpProviderOptions: HttpProviderOptions | undefined;
 
