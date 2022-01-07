@@ -493,7 +493,7 @@ The ``transactionPollingInterval`` is used over HTTP connections. This option de
 Returns
 -------
 
-``number``: The current value of transactionPollingInterval (default: 1000)
+``number``: The current value of transactionPollingInterval (default: 1000ms)
 
 ------------------------------------------------------------------------------
 
