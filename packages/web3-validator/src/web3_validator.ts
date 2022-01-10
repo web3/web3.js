@@ -56,18 +56,34 @@ export class Web3Validator {
 		data: ReadonlyArray<unknown>,
 		options: Web3ValidationOptions = { silent: false },
 	): Web3ValidationErrorObject[] | undefined {
-		let errors: Web3ValidationErrorObject[] = [];
+		const jsonSchema = ethAbiToJsonSchema(schema);
 
-		if (!this._validator.validate(ethAbiToJsonSchema(schema), data)) {
-			errors = this._validator.errors as Web3ValidationErrorObject[];
+		if (jsonSchema.items?.length === 0 && data.length === 0) {
+			return undefined;
 		}
 
-		if (options?.silent) {
-			return errors;
+		if (jsonSchema.items?.length === 0 && data.length !== 0) {
+			throw new Web3ValidatorError([
+				{
+					instancePath: '/0',
+					schemaPath: '/',
+					keyword: 'required',
+					message: 'empty schema against data can not be validated',
+					params: data,
+				},
+			]);
 		}
 
-		if (errors.length && !options?.silent) {
-			throw new Web3ValidatorError(errors);
+		if (!this._validator.validate(jsonSchema, data)) {
+			const errors = this._validator.errors as Web3ValidationErrorObject[];
+
+			if (options?.silent) {
+				return errors;
+			}
+
+			if (errors.length && !options?.silent) {
+				throw new Web3ValidatorError(errors);
+			}
 		}
 
 		return undefined;
