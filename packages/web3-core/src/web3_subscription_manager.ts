@@ -1,11 +1,11 @@
 import { ProviderError, SubscriptionError, Web3APISpec } from 'web3-common';
 import { isSupportSubscriptions } from './utils';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
-import { Web3Subscription, Web3SubscriptionConstructor } from './web3_subscriptions';
+import { Web3SubscriptionConstructor } from './web3_subscriptions';
 
 export class Web3SubscriptionManager<
 	API extends Web3APISpec,
-	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<Web3Subscription, API> },
+	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> },
 > {
 	private readonly _subscriptions: Map<
 		string,
@@ -33,10 +33,6 @@ export class Web3SubscriptionManager<
 			throw new ProviderError('Provider not available');
 		}
 
-		if (!this.supportsSubscriptions()) {
-			throw new SubscriptionError('The current provider do not support subscriptions');
-		}
-
 		const Klass = this.registeredSubscriptions[name];
 
 		if (!Klass) {
@@ -57,6 +53,10 @@ export class Web3SubscriptionManager<
 	}
 
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
+		if (!this.supportsSubscriptions()) {
+			throw new SubscriptionError('The current provider do not support subscriptions');
+		}
+
 		if (sub.id && this._subscriptions.has(sub.id)) {
 			throw new SubscriptionError(`Subscription with id "${sub.id}" already exists`);
 		}

@@ -2,13 +2,13 @@ import { Web3APISpec } from 'web3-common';
 import { Web3ConfigOptions, SupportedProviders } from './types';
 import { Web3Config } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
-import { Web3Subscription, Web3SubscriptionConstructor } from './web3_subscriptions';
+import { Web3SubscriptionConstructor } from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
 
 export class Web3Context<
 	API extends Web3APISpec,
 	RegisteredSubs extends {
-		[key: string]: Web3SubscriptionConstructor<Web3Subscription, API>;
+		[key: string]: Web3SubscriptionConstructor<API>;
 	} = {},
 > extends Web3Config {
 	public static readonly providers = Web3RequestManager.providers;

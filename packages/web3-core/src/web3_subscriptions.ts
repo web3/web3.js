@@ -7,6 +7,11 @@ import {
 	Web3EventMap,
 	Web3APISpec,
 	Web3APIParams,
+	EthExecutionAPI,
+	Log,
+	JsonRpcNotification,
+	JsonRpcSubscriptionResult,
+	jsonRpc,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -15,25 +20,16 @@ type CommonSubscriptionEvents = {
 	error: Error;
 	connected: number;
 };
-
-interface SubscriptionMessageResponse {
-	data: {
-		method: string;
-		params: { result: unknown };
-		subscription: string;
-	};
-}
-
 export abstract class Web3Subscription<
-	EventMap extends Web3EventMap = Record<string, unknown>,
+	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
-	API extends Web3APISpec = {},
+	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
 	private _id?: HexString;
-	private _messageListener?: (e: Error | null, data?: SubscriptionMessageResponse) => void;
+	private _messageListener?: (e: Error | null, data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
@@ -58,17 +54,16 @@ export abstract class Web3Subscription<
 		});
 		this._id = result;
 
-		const messageListener = (_: Error | null, data?: SubscriptionMessageResponse) => {
-			if (data?.data.method === 'eth_subscription' && data?.data.subscription === this._id) {
-				this._processSubscriptionResult(data?.data.params.result);
+		const messageListener = (
+			_: Error | null,
+			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
+		) => {
+			if (data && jsonRpc.isResponseWithNotification(data)) {
+				this._processSubscriptionResult(data?.params.result);
 			}
 		};
 
-		(this._requestManager.provider as Web3BaseProvider).on<{
-			method: string;
-			params: { result: unknown };
-			subscription: string;
-		}>('message', messageListener);
+		(this._requestManager.provider as Web3BaseProvider).on<Log>('message', messageListener);
 
 		this._messageListener = messageListener;
 	}
@@ -101,18 +96,21 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	protected _buildSubscriptionParams(): Parameters<API['eth_subscribe']> {
+	protected _buildSubscriptionParams(): Web3APIParams<API, 'eth_subscribe'> {
 		// This should be overridden in the subclass
 		throw new Error('Implement in the child class');
 	}
 }
 
-export type Web3SubscriptionConstructor<T extends Web3Subscription, API extends Web3APISpec> = new (
+export type Web3SubscriptionConstructor<
+	API extends Web3APISpec,
+	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
+> = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
 	options: { requestManager: Web3RequestManager<API> },
-) => T;
+) => SubscriptionType;
 
 // TODO: This class to be moved `web3-eth` package.
 export class LogsSubscription extends Web3Subscription<
