@@ -47,7 +47,7 @@ export class Contract {
 
     deploy(options: DeployOptions): ContractSendMethod;
 
-    methods: any;
+    methods: Record<string, (...args: unknown[]) => ContractSendMethod>;
 
     once(
         event: string,
