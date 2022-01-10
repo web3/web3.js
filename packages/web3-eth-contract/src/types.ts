@@ -1,6 +1,5 @@
-import { EventEmitter } from 'events';
 import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
-import { SupportedProviders } from 'web3-core';
+import { LogsSubscription, SupportedProviders } from 'web3-core';
 import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
 import {
 	Address,
@@ -43,7 +42,7 @@ export interface ContractOptions {
 	readonly from?: Address;
 	readonly data?: Bytes;
 	jsonInterface: ContractAbi;
-	address?: Address | null;
+	address?: Address;
 }
 
 export interface ContractInitOptions {
@@ -139,16 +138,9 @@ export type ContractEventsInterface<
 	Abi extends ContractAbi,
 	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
 > = {
-	[key: string]:
-		| ((cb: Callback<ContractEventLog<unknown>>) => EventEmitter)
-		| ((options: ContactEventOptions, cb: Callback<ContractEventLog<unknown>>) => EventEmitter);
+	[key: string]: (options?: ContactEventOptions) => Promise<LogsSubscription>;
 } & {
-	[Name in keyof Events]:
-		| ((cb: Callback<ContractEventLog<Events[Name]['Inputs']>>) => EventEmitter)
-		| ((
-				options: ContactEventOptions,
-				cb: Callback<ContractEventLog<Events[Name]['Inputs']>>,
-		  ) => EventEmitter);
+	[Name in keyof Events]: (options?: ContactEventOptions) => Promise<LogsSubscription>;
 };
 
 export type ContractEventEmitterInterface<

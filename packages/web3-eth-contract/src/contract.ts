@@ -1,4 +1,3 @@
-import EventEmitter = require('events');
 import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -12,7 +11,9 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 import { Address, BlockNumberOrTag, BlockTags, hexToNumber, toChecksumAddress } from 'web3-utils';
-import { decodeMethodReturn, encodeMethodABI } from './encoding';
+import { validator } from 'web3-validator';
+import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
+import { LogsSubscription } from './log_subscription';
 import {
 	ContractEventEmitterInterface,
 	ContractEventsInterface,
@@ -26,13 +27,15 @@ import {
 } from './types';
 import { getEstimateGasParams, getSendTxParams, getTxCallParams } from './utils';
 
+type EventParameters = Parameters<typeof encodeEventABI>[2];
+
 type ContractBoundMethod = () =>
 	| NonPayableMethodObject<unknown, unknown>
 	| PayableMethodObject<unknown, unknown>;
-type ContractBoundEvent = EventEmitter;
+type ContractBoundEvent = (options?: EventParameters) => Promise<LogsSubscription>;
 
 export class Contract<Abi extends ContractAbi>
-	extends Web3Context<EthExecutionAPI>
+	extends Web3Context<EthExecutionAPI, { logs: typeof LogsSubscription }>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
 	public readonly options: ContractOptions;
@@ -52,13 +55,13 @@ export class Contract<Abi extends ContractAbi>
 	private _events!: ContractEventsInterface<Abi>;
 
 	public constructor(jsonInterface: Abi, address?: Address, options?: ContractInitOptions) {
-		super(options?.provider ?? '');
+		super(options?.provider ?? '', {}, { logs: LogsSubscription });
 
 		this._parseAndSetAddress(address);
 		this._parseAndSetJsonInterface(jsonInterface);
 
 		this.options = {
-			address: null,
+			address: undefined,
 			jsonInterface: [],
 			gas: options?.gas ?? options?.gasLimit ?? null,
 			gasPrice: options?.gasPrice ?? null,
@@ -143,7 +146,7 @@ export class Contract<Abi extends ContractAbi>
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
-				const event = this._createContractEvent(eventName, abi);
+				const event = this._createContractEvent(abi);
 
 				if (!(eventName in this._events) || abi.name === 'bound') {
 					// TODO: Debug the error of mixing up mapped type and index type
@@ -171,8 +174,7 @@ export class Contract<Abi extends ContractAbi>
 
 	private _createContractMethod(abi: AbiFunctionFragment): ContractBoundMethod {
 		return (...params) => {
-			// TODO: Add `params` validation with new validator
-			// validator.validate(abi, params);
+			validator.validate(abi.inputs, params);
 
 			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
 				return {
@@ -265,30 +267,37 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	private _createContractEvent(_abi: AbiEventFragment): ContractBoundEvent {
-		// return (...params) => {
-		// 	// TODO: Add `params` validation with new validator
-		// 	// validator.validate(abi, params);
+	private _createContractEvent(abi: AbiEventFragment): ContractBoundEvent {
+		return async (...params: unknown[]) => {
+			// TODO: Add `params` validation with new validator
+			// validator.validate(abi, params);
 
-		// 	if (params.length > 2 || params.length < 1) {
-		// 		throw new Error('Contract event arguments not matched.');
-		// 	}
+			// if (params.length > 2 || params.length < 1) {
+			// 	throw new Error('Contract event arguments not matched.');
+			// }
 
-		// 	if (typeof params[0] === 'object' && params[1]) {
-		// 		throw new Error('Must specify contract event callback');
-		// 	}
+			// if (typeof params[0] === 'object' && params[1]) {
+			// 	throw new Error('Must specify contract event callback');
+			// }
 
-		// 	if (typeof params[0] === 'object' && typeof params[1] !== 'function') {
-		// 		throw new Error('Must specify contract event callback');
-		// 	}
+			// if (typeof params[0] === 'object' && typeof params[1] !== 'function') {
+			// 	throw new Error('Must specify contract event callback');
+			// }
 
-		// 	const options: ContactEventOptions = params.length === 2 ? params[0] : {};
-		// 	const cb: Callback<ContractEventLog<unknown>> =
-		// 		params.length === 2 ? params[1] : params[0];
+			const encodedParams = encodeEventABI(
+				this.options,
+				{ ...abi, signature: encodeEventSignature(jsonInterfaceMethodToString(abi)) },
+				params[0] as EventParameters,
+			);
 
-		// 	return cb;
-		// } as ContractBoundEvent;
+			const sub = new LogsSubscription(
+				{ address: this.options.address, topics: encodedParams.topics, abi },
+				{ requestManager: this.requestManager },
+			);
 
-		return {} as ContractBoundEvent;
+			await this.subscriptionManager?.addSubscription(sub);
+
+			return sub;
+		};
 	}
 }
