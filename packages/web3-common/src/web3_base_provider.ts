@@ -6,18 +6,15 @@ import {
 	JsonRpcResult,
 	Web3APIMethod,
 	Web3APISpec,
+	JsonRpcNotification,
+	JsonRpcSubscriptionResult,
 } from './types';
-
-export interface ProviderMessage<T = JsonRpcResult> {
-	type: string;
-	data: T;
-}
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
 export type Web3BaseProviderCallback<T = JsonRpcResult> = (
 	error: Error | null,
-	result?: ProviderMessage<T>,
+	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors

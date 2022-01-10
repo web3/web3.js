@@ -38,6 +38,15 @@ export interface JsonRpcNotification<T = JsonRpcResult> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
 	readonly params: SubscriptionParams<T>; // for subscription results
+	readonly result: never;
+}
+
+export interface JsonRpcSubscriptionResult {
+	readonly id: number;
+	readonly jsonrpc: string;
+	readonly result: string;
+	readonly method: never;
+	readonly params: never;
 }
 
 export interface JsonRpcRequest<T = unknown[]> {
