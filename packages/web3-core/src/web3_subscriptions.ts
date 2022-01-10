@@ -5,7 +5,8 @@ import {
 	Web3BaseProvider,
 	Web3EventEmitter,
 	Web3EventMap,
-	EthExecutionAPI,
+	Web3APISpec,
+	Web3APIParams,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -27,15 +28,16 @@ export abstract class Web3Subscription<
 	EventMap extends Web3EventMap = Record<string, unknown>,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
+	API extends Web3APISpec = {},
 > extends Web3EventEmitter<EventMap> {
-	private readonly _requestManager: Web3RequestManager;
+	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
 	private _id?: HexString;
 	private _messageListener?: (e: Error | null, data?: SubscriptionMessageResponse) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
-		options: { requestManager: Web3RequestManager },
+		options: { requestManager: Web3RequestManager<API> },
 	) {
 		super();
 		this._requestManager = options.requestManager;
@@ -83,7 +85,7 @@ export abstract class Web3Subscription<
 
 		await this._requestManager.send({
 			method: 'eth_unsubscribe',
-			params: [this.id],
+			params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
 		});
 
 		this._id = undefined;
@@ -99,17 +101,17 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	protected _buildSubscriptionParams(): Parameters<EthExecutionAPI['eth_subscribe']> {
+	protected _buildSubscriptionParams(): Parameters<API['eth_subscribe']> {
 		// This should be overridden in the subclass
 		throw new Error('Implement in the child class');
 	}
 }
 
-export type Web3SubscriptionConstructor<T extends Web3Subscription> = new (
+export type Web3SubscriptionConstructor<T extends Web3Subscription, API extends Web3APISpec> = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
-	options: { requestManager: Web3RequestManager },
+	options: { requestManager: Web3RequestManager<API> },
 ) => T;
 
 // TODO: This class to be moved `web3-eth` package.

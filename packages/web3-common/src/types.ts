@@ -221,7 +221,7 @@ export type Web3APIParams<API extends Web3APISpec, Method extends Web3APIMethod<
 
 export interface Web3APIRequest<API extends Web3APISpec, Method extends Web3APIMethod<API>> {
 	method: Method;
-	params: Web3APIParams<API, Method> extends [] ? [] : Web3APIParams<API, Method>;
+	params: Web3APIParams<API, Method>;
 }
 
 export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIMethod<API>>
