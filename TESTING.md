@@ -52,7 +52,7 @@ in their mocha test description and runs them against:
 These tests are grouped in files prefixed by "e2e", ex: `test/e2e.method.call.js`.
 
 Additionally, there are conventional unit tests postfixed `.ganache.js` which spin up a ganache
-server programatically within mocha. This pattern is useful if you want to
+server programmatically within mocha. This pattern is useful if you want to
 control client configuration for a specific case, test against multiple independent providers, etc.
 
 **"Real world" tests**
