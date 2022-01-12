@@ -1,6 +1,6 @@
 'use strict';
 
-var REGISTRY = [
+const REGISTRY = [
 	{
 		anonymous: false,
 		inputs: [
