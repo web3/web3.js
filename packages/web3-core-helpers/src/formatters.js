@@ -288,6 +288,10 @@ var outputTransactionReceiptFormatter = function (receipt) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
+    if (receipt.effectiveGasPrice) {
+        receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
+    }
+
     if (receipt.contractAddress) {
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
