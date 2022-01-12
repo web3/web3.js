@@ -439,9 +439,11 @@ export const jsonInterfaceMethodToString = (
 };
 
 export const convertToValidType = (
-	value: ValidReturnTypes[ValidTypes], // validate this
+	value: ValidReturnTypes[ValidTypes] | undefined, // validate this
 	desiredType: ValidTypes,
-): ValidReturnTypes[ValidTypes] => {
+): ValidReturnTypes[ValidTypes] | undefined => {
+	if (value === undefined) return value;
+
 	switch (desiredType) {
 		case ValidTypes.HexString:
 			return numberToHex(value);
