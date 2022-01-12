@@ -1,7 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 
-import { EthExecutionAPI, Web3BaseProvider, TransactionWithSender } from 'web3-common';
+import { EthExecutionAPI, TransactionWithSender } from 'web3-common';
 import { SupportedProviders, Web3ConfigOptions, Web3Context } from 'web3-core';
 import {
 	BlockNumberOrTag,
