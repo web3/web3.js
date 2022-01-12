@@ -1402,8 +1402,9 @@ Returns
   - ``to`` - ``String``: Address of the receiver. ``null`` when it's a contract creation transaction.
   - ``contractAddress`` - ``String``: The contract address created, if the transaction was a contract creation, otherwise ``null``.
   - ``cumulativeGasUsed`` - ``Number``: The total amount of gas used when this transaction was executed in the block.
-  - ``gasUsed``- ``Number``:  The amount of gas used by this specific transaction alone.
+  - ``gasUsed`` - ``Number``:  The amount of gas used by this specific transaction alone.
   - ``logs`` - ``Array``: Array of log objects, which this transaction generated.
+  - ``effectiveGasPrice`` - ``Number``:  it is equal to the actual gas price paid for inclusion. This calculation differs depending if the transaction is an EIP-1559 transaction or not.
 
 -------
 Example
