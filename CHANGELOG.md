@@ -488,6 +488,7 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
  -  Fix readthedoc's build for web3js documentation (#4425)
  -  Fix response sorting for batch requests (#4250)
+ -  Fix typos in REVIEW.md and TESTING.md (#4691)
 
 ### Changed
 
