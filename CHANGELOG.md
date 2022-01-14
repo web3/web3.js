@@ -495,6 +495,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.1]
 
+### Added
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
 -  Added effectiveGasPrice to TransactionReceipt (#4692)
