@@ -10,6 +10,7 @@ var txResult = {
     "contractAddress":"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
     "cumulativeGasUsed":"0x7f110",
     "gasUsed": "0x7f110",
+    "effectiveGasPrice": "0x09184e72a000",
     "logs": [{
         transactionIndex: '0x3e8',
         logIndex: '0x3e8',
@@ -36,6 +37,7 @@ var formattedTxResult = {
     "contractAddress":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
     "cumulativeGasUsed": 520464,
     "gasUsed": 520464,
+    "effectiveGasPrice": 10000000000000,
     "logs": [{
         id: "log_2b801386",
         transactionIndex: 1000,

@@ -356,6 +356,21 @@ var runTests = function(contractFactory) {
 
             assert.equal(contract.options.transactionPollingTimeout, 0);
         });
+        it('should define the transactionPollingInterval object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingInterval: 0}, provider);
+
+            assert.equal(contract.transactionPollingInterval, 0);
+            assert.equal(contract.options.transactionPollingInterval, 0);
+        });
+        it('should update the transactionPollingInterval property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingInterval: 1}, provider);
+
+            contract.transactionPollingInterval = 0;
+
+            assert.equal(contract.options.transactionPollingInterval, 0);
+        });
         it('should define the transactionConfirmationBlocks object property if passed over the options', function() {
             var provider = new FakeIpcProvider();
             var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 0}, provider);
