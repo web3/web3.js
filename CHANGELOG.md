@@ -484,8 +484,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 - `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232) (#4585)
-- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
-- 
+
 ### Fixed
  -  Fix readthedoc's build for web3js documentation (#4425)
  -  Fix response sorting for batch requests (#4250)
@@ -495,6 +494,9 @@ Released with 1.0.0-beta.37 code base.
  - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
 
 ## [1.7.1]
+
+### Added
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
 
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
