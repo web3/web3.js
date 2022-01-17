@@ -500,3 +500,4 @@ Released with 1.0.0-beta.37 code base.
 -  Added effectiveGasPrice to TransactionReceipt (#4692)
 -  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
 -  Updated README to include Webpack 5 create-react-app support instructions (#4173)
+-  Update the documentation for `methods.myMethod.estimateGas` (#4702)
