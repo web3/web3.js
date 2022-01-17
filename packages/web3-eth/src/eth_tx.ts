@@ -79,8 +79,8 @@ export interface Transaction<NumberType = Numbers> {
 	common?: Common<NumberType>;
 	gasLimit?: NumberType;
 	v?: NumberType;
-	r?: NumberType;
-	s?: NumberType;
+	r?: HexString;
+	s?: HexString;
 }
 
 export function formatTransaction<
@@ -104,8 +104,6 @@ export function formatTransaction<
 		chainId: convertToValidType(transaction.chainId, desiredType),
 		gasLimit: convertToValidType(transaction.gasLimit, desiredType),
 		v: convertToValidType(transaction.v, desiredType),
-		r: convertToValidType(transaction.r, desiredType),
-		s: convertToValidType(transaction.s, desiredType),
 		common: {
 			...transaction.common,
 			customChain: {
@@ -132,10 +130,12 @@ export const detectTransactionType = (
 
 	if (transaction.maxFeePerGas !== undefined || transaction.maxPriorityFeePerGas !== undefined)
 		return '0x2';
-	if (transaction.hardfork === 'berlin') return '0x2';
-	if (transaction.common?.hardfork === 'berlin') return '0x2';
+	if (transaction.hardfork === 'london') return '0x2';
+	if (transaction.common?.hardfork === 'london') return '0x2';
 
 	if (transaction.accessList !== undefined) return '0x1';
+	if (transaction.hardfork === 'berlin') return '0x1';
+	if (transaction.common?.hardfork === 'berlin') return '0x1';
 
 	return undefined;
 };
