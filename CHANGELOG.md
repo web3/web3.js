@@ -502,4 +502,4 @@ Released with 1.0.0-beta.37 code base.
 -  Updated README to include Webpack 5 create-react-app support instructions (#4173)
 
 ### Changed
--  Muted E2E gnosis dex tests in CI (#4436)
+-  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
