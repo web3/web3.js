@@ -138,10 +138,6 @@ const validateGas = (transaction: Transaction<HexString>) => {
 
 	if (transaction.gas !== undefined || transaction.gasPrice !== undefined) {
 		if (
-			// TODO - Discuss requirement of gasPrice, wasn't enforced in 1.x, but
-			// at this point gasPrice should've been populated by populateTransaction
-			// if not provided by the user
-
 			// This check is verifying gas and gasPrice aren't less than 0.
 			// transaction's number properties have been converted to HexStrings.
 			// JavaScript doesn't handle negative hex strings e.g. -0x1, but our
@@ -157,9 +153,6 @@ const validateGas = (transaction: Transaction<HexString>) => {
 				gasPrice: transaction.gasPrice,
 			});
 	} else if (
-		// TODO - Discuss requirement of maxFeePerGas and maxPriorityFeePerGas
-		// wasn't enforced in 1.x, but at this point the properties should've been
-		// populated by populateTransaction if not provided by the user
 		transaction.maxFeePerGas === undefined ||
 		transaction.maxPriorityFeePerGas === undefined ||
 		transaction.maxFeePerGas.startsWith('-') ||
