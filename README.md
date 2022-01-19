@@ -101,7 +101,7 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
     ....
 ```
 
-## Trouble shooting and known issues.
+## Troubleshooting and known issues.
 
 ### Web3 and Create-react-app
 
