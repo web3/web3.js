@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 
-import { Web3Error } from 'web3-utils';
+import { Numbers, Web3Error } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public constructor(value: unknown) {
@@ -15,15 +15,17 @@ export class InvalidTransactionCall extends Web3Error {
 }
 
 export class MissingCustomChainError extends Web3Error {
-	public constructor(value: undefined) {
-		super(value, 'If tx.common is provided it must have tx.common.customChain');
+	public constructor() {
+		// TODO - Discuss what to pass as value
+		super('N/A', 'If tx.common is provided it must have tx.common.customChain');
 	}
 }
 
 export class MissingCustomChainIdError extends Web3Error {
-	public constructor(value: undefined) {
+	public constructor() {
 		super(
-			value,
+			// TODO - Discuss what to pass as value
+			'N/A',
 			'If tx.common is provided it must have tx.common.customChain and tx.common.customChain.chainId',
 		);
 	}
@@ -61,20 +63,43 @@ export class MissingChainOrHardforkError extends Web3Error {
 }
 
 export class MissingGasError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, '"gas" is missing');
+	public constructor(value: {
+		gas: Numbers | undefined;
+		gasLimit: Numbers | undefined;
+		maxPriorityFeePerGas: Numbers | undefined;
+		maxFeePerGas: Numbers | undefined;
+	}) {
+		super(
+			`gas: ${value.gas ?? 'undefined'}, gasLimit: ${
+				value.gasLimit ?? 'undefined'
+			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+				value.maxFeePerGas ?? 'undefined'
+			}`,
+			'"gas" is missing',
+		);
 	}
 }
 
 export class InvalidGasOrGasPrice extends Web3Error {
-	public constructor(value: { gas: unknown; gasPrice: unknown }) {
-		super(JSON.stringify(value), 'Gas or gasPrice is lower than 0');
+	public constructor(value: { gas: Numbers | undefined; gasPrice: Numbers | undefined }) {
+		super(
+			`gas: ${value.gas ?? 'undefined'}, gasPrice: ${value.gasPrice ?? 'undefined'}`,
+			'Gas or gasPrice is lower than 0',
+		);
 	}
 }
 
 export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends Web3Error {
-	public constructor(value: { maxPriorityFeePerGas: unknown; maxFeePerGas: unknown }) {
-		super(JSON.stringify(value), 'maxPriorityFeePerGas or maxFeePerGas is lower than 0');
+	public constructor(value: {
+		maxPriorityFeePerGas: Numbers | undefined;
+		maxFeePerGas: Numbers | undefined;
+	}) {
+		super(
+			`maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+				value.maxFeePerGas ?? 'undefined'
+			}`,
+			'maxPriorityFeePerGas or maxFeePerGas is lower than 0',
+		);
 	}
 }
 
@@ -85,9 +110,14 @@ export class Eip1559GasPriceError extends Web3Error {
 }
 
 export class UnsupportedFeeMarketError extends Web3Error {
-	public constructor(value: { maxPriorityFeePerGas: unknown; maxFeePerGas: unknown }) {
+	public constructor(value: {
+		maxPriorityFeePerGas: Numbers | undefined;
+		maxFeePerGas: Numbers | undefined;
+	}) {
 		super(
-			JSON.stringify(value),
+			`maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
+				value.maxFeePerGas ?? 'undefined'
+			}`,
 			"pre-eip-1559 transaction don't support maxFeePerGas/maxPriorityFeePerGas",
 		);
 	}
@@ -95,13 +125,16 @@ export class UnsupportedFeeMarketError extends Web3Error {
 
 export class InvalidTransactionObjectError extends Web3Error {
 	public constructor(value: unknown) {
-		super(value, 'invalid transaction obejct');
+		super(value, 'invalid transaction object');
 	}
 }
 
 export class InvalidNonceOrChainIdError extends Web3Error {
-	public constructor(value: { nonce: unknown; chainId: unknown }) {
-		super(JSON.stringify(value), 'Nonce or chainId is lower than 0');
+	public constructor(value: { nonce: Numbers | undefined; chainId: Numbers | undefined }) {
+		super(
+			`nonce: ${value.nonce ?? 'undefined'}, chainId: ${value.chainId ?? 'undefined'}`,
+			'Nonce or chainId is lower than 0',
+		);
 	}
 }
 
