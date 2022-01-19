@@ -478,8 +478,6 @@ Released with 1.0.0-beta.37 code base.
 - Correct `web3.rst` example in documentation (#4511)
 - Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
 
-## [Unreleased]
-
 ## [1.7.0]
 
 ### Added
@@ -494,6 +492,8 @@ Released with 1.0.0-beta.37 code base.
 
  - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
 
+## [Unreleased]
+
 ## [1.7.1]
 
 ### Added
@@ -501,6 +501,10 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
+-  Fix typos in web3-utils.rst (#4662)
 -  Added effectiveGasPrice to TransactionReceipt (#4692)
 -  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
 -  Updated README to include Webpack 5 create-react-app support instructions (#4173)
+
+### Changed
+-  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
