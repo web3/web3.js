@@ -64,7 +64,7 @@ describe('Web3SubscriptionManager', () => {
 			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(false);
 
 			await expect(subManager.subscribe('example')).rejects.toThrow(
-				'The current provider do not support subscriptions',
+				'The current provider does not support subscriptions',
 			);
 		});
 
