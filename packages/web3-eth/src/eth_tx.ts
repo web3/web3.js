@@ -262,9 +262,6 @@ export async function populateTransaction<
 			populatedTransaction.gasLimit = populatedTransaction.gas;
 	}
 
-	// TODO - Discuss how this should work with default hardfork, because detectTransactionType
-	// will use 0x2 for london and 0x1 for berlin, but should this be overwritten by web3Context.defaultTxType?
-	// If populatedTransaction.type is already defined, no change will be made
 	populatedTransaction.type = detectTransactionType(populatedTransaction);
 	// TODO - After web3Context.defaultTxType is implemented
 	if (populatedTransaction.type === undefined) populatedTransaction.type = '0x0'; // web3Context.defaultTxType;
