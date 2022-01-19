@@ -1,6 +1,8 @@
 const isIterable = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' && item !== null && !Array.isArray(item) && !Buffer.isBuffer(item);
 
+// The following code is a derivative work of the code from the "LiskHQ/lisk-sdk" project,
+// which is licensed under Apache version 2.
 export const mergeDeep = (
 	destination: Record<string, unknown>,
 	...sources: Record<string, unknown>[]
