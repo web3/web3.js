@@ -1,4 +1,5 @@
-import { detectTransactionType, Transaction } from '../../src/eth_tx';
+import { detectTransactionType } from '../../src/eth_tx';
+import { Transaction } from '../../src/types';
 import {
 	transactionType0x0,
 	transactionType0x1,

@@ -1,17 +1,16 @@
-import { AccessList, EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
-	Address,
 	BlockTags,
 	convertToValidType,
 	HexString,
-	HexStringBytes,
 	Numbers,
 	toHex,
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
 import { privateKeyToAddress } from 'web3-eth-accounts';
+
 import Web3Eth from '.';
 import {
 	ChainIdMismatchError,
@@ -30,58 +29,7 @@ import {
 	UnsupportedFeeMarketError,
 	UnsupportedTransactionTypeError,
 } from './errors';
-
-export type chain = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
-export type hardfork =
-	| 'arrowGlacier'
-	| 'berlin'
-	| 'byzantium'
-	| 'chainstart'
-	| 'constantinople'
-	| 'dao'
-	| 'homestead'
-	| 'istanbul'
-	| 'london'
-	| 'merge'
-	| 'muirGlacier'
-	| 'petersburg'
-	| 'shanghai'
-	| 'spuriousDragon'
-	| 'tangerineWhistle';
-
-export interface CustomChain<NumberType = Numbers> {
-	name?: string;
-	networkId: NumberType;
-	chainId: NumberType;
-}
-
-export interface Common<NumberType = Numbers> {
-	customChain: CustomChain<NumberType>;
-	baseChain?: chain;
-	hardfork?: hardfork;
-}
-
-export interface Transaction<NumberType = Numbers> {
-	from?: Address;
-	to?: Address;
-	value?: NumberType;
-	gas?: NumberType;
-	gasPrice?: NumberType;
-	type?: NumberType;
-	maxFeePerGas?: NumberType;
-	maxPriorityFeePerGas?: NumberType;
-	accessList?: AccessList;
-	data?: HexStringBytes;
-	nonce?: NumberType;
-	chain?: chain;
-	hardfork?: hardfork;
-	chainId?: NumberType;
-	common?: Common<NumberType>;
-	gasLimit?: NumberType;
-	v?: NumberType;
-	r?: HexString;
-	s?: HexString;
-}
+import { PopulatedUnsignedTransaction, Transaction } from './types';
 
 export function formatTransaction<
 	DesiredType extends ValidTypes = ValidTypes,
@@ -262,36 +210,6 @@ export const validateTransactionForSigning = (
 			chainId: transaction.chainId,
 		});
 };
-
-export interface PopulatedUnsignedBaseTransaction<NumberType = Numbers> {
-	from: Address;
-	to?: Address;
-	value: Numbers;
-	gas?: Numbers;
-	gasPrice: Numbers;
-	type: Numbers;
-	data: HexStringBytes;
-	nonce: Numbers;
-	chain: chain;
-	hardfork: hardfork;
-	chainId: Numbers;
-	common: Common<NumberType>;
-	gasLimit: Numbers;
-}
-export interface PopulatedUnsignedEip2930Transaction<NumberType = Numbers>
-	extends PopulatedUnsignedBaseTransaction<NumberType> {
-	accessList: AccessList;
-}
-export interface PopulatedUnsignedEip1559Transaction<NumberType = Numbers>
-	extends PopulatedUnsignedEip2930Transaction<NumberType> {
-	gasPrice: never;
-	maxFeePerGas: NumberType;
-	maxPriorityFeePerGas: NumberType;
-}
-export type PopulatedUnsignedTransaction<NumberType = Numbers> =
-	| PopulatedUnsignedBaseTransaction<NumberType>
-	| PopulatedUnsignedEip2930Transaction<NumberType>
-	| PopulatedUnsignedEip1559Transaction<NumberType>;
 
 export async function populateTransaction<
 	DesiredType extends ValidTypes,
