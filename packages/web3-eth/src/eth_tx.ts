@@ -243,7 +243,6 @@ export async function populateTransaction<
 	// TODO - Add default to Web3Context
 	if (populatedTransaction.chain === undefined) populatedTransaction.chain = 'mainnet';
 	// TODO - Add default to Web3Context
-	// TODO - Update default to berlin? (It's london in 1.x)
 	if (populatedTransaction.hardfork === undefined) populatedTransaction.hardfork = 'london';
 
 	if (populatedTransaction.chainId === undefined) {
