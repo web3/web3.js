@@ -35,7 +35,6 @@ export class LogsSubscription extends Web3Subscription<
 		];
 	}
 
-	// eslint-disable-next-line class-methods-use-this
 	protected _processSubscriptionResult(data: LogsInput): void {
 		const decoded = decodeEventABI(
 			{ ...this.abi, signature: encodeEventSignature(jsonInterfaceMethodToString(this.abi)) },
