@@ -54,7 +54,7 @@ export class Web3SubscriptionManager<
 
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (!this.supportsSubscriptions()) {
-			throw new SubscriptionError('The current provider do not support subscriptions');
+			throw new SubscriptionError('The current provider does not support subscriptions');
 		}
 
 		if (sub.id && this._subscriptions.has(sub.id)) {

@@ -2,6 +2,7 @@ import { TransactionCall, TransactionWithSender } from 'web3-common';
 import { AbiFunctionFragment } from 'web3-eth-abi';
 import { mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
+import { Web3ContractError } from './errors';
 import { NonPayableCallOptions, PayableCallOptions, ContractOptions } from './types';
 
 export const getSendTxParams = ({
@@ -16,11 +17,11 @@ export const getSendTxParams = ({
 	contractOptions: ContractOptions;
 }): TransactionWithSender & { data: string } => {
 	if (!options?.to && !contractOptions.address) {
-		throw new Error('Contract address not specified');
+		throw new Web3ContractError('Contract address not specified');
 	}
 
 	if (!options?.from && !contractOptions.from) {
-		throw new Error('Contract "from" address not specified');
+		throw new Web3ContractError('Contract "from" address not specified');
 	}
 
 	let txParams = mergeDeep(
@@ -44,7 +45,7 @@ export const getSendTxParams = ({
 	return txParams;
 };
 
-export const getTxCallParams = ({
+export const getEthTxCallParams = ({
 	abi,
 	params,
 	options,
@@ -56,7 +57,7 @@ export const getTxCallParams = ({
 	contractOptions: ContractOptions;
 }): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
-		throw new Error('Contract address not specified');
+		throw new Web3ContractError('Contract address not specified');
 	}
 
 	let txParams = mergeDeep(
@@ -92,7 +93,7 @@ export const getEstimateGasParams = ({
 	contractOptions: ContractOptions;
 }): Partial<TransactionWithSender> => {
 	if (!options?.to && !contractOptions.address) {
-		throw new Error('Contract address not specified');
+		throw new Web3ContractError('Contract address not specified');
 	}
 
 	let txParams = mergeDeep(

@@ -25,7 +25,7 @@ import {
 	PayableCallOptions,
 	PayableMethodObject,
 } from './types';
-import { getEstimateGasParams, getSendTxParams, getTxCallParams } from './utils';
+import { getEstimateGasParams, getSendTxParams, getEthTxCallParams } from './utils';
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
@@ -214,7 +214,7 @@ export class Contract<Abi extends ContractAbi>
 			await this.requestManager.send({
 				method: 'eth_call',
 				params: [
-					getTxCallParams({
+					getEthTxCallParams({
 						abi,
 						params,
 						options,
@@ -269,21 +269,6 @@ export class Contract<Abi extends ContractAbi>
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractEvent(abi: AbiEventFragment): ContractBoundEvent {
 		return async (...params: unknown[]) => {
-			// TODO: Add `params` validation with new validator
-			// validator.validate(abi, params);
-
-			// if (params.length > 2 || params.length < 1) {
-			// 	throw new Error('Contract event arguments not matched.');
-			// }
-
-			// if (typeof params[0] === 'object' && params[1]) {
-			// 	throw new Error('Must specify contract event callback');
-			// }
-
-			// if (typeof params[0] === 'object' && typeof params[1] !== 'function') {
-			// 	throw new Error('Must specify contract event callback');
-			// }
-
 			const encodedParams = encodeEventABI(
 				this.options,
 				{ ...abi, signature: encodeEventSignature(jsonInterfaceMethodToString(abi)) },

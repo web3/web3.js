@@ -11,6 +11,7 @@ import {
 	isAbiConstructorFragment,
 } from 'web3-eth-abi';
 import { HexString, Uint } from 'web3-utils';
+import { Web3ContractError } from './errors';
 import { ContractOptions } from './types';
 
 export const encodeEventABI = (
@@ -140,7 +141,7 @@ export const encodeMethodABI = (
 	const inputLength = Array.isArray(abi.inputs) ? abi.inputs.length : 0;
 
 	if (inputLength !== args.length) {
-		throw new Error(
+		throw new Web3ContractError(
 			`The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`,
 		);
 	}
@@ -152,7 +153,7 @@ export const encodeMethodABI = (
 
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)
-			throw new Error(
+			throw new Web3ContractError(
 				'The contract has no contract data option set. This is necessary to append the constructor parameters.',
 			);
 
