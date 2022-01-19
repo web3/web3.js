@@ -1,6 +1,6 @@
 import { MethodNotImplementedError } from 'web3-common';
 
-import { HttpProvider } from '../../src/index';
+import HttpProvider from '../../src/index';
 
 describe('HttpProvider - not implemented methods', () => {
 	let httpProvider: HttpProvider;

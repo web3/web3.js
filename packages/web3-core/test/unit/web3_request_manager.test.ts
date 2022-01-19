@@ -8,6 +8,9 @@ import {
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 } from 'web3-common';
+import HttpProvider from 'web3-providers-http';
+import WSProvider from 'web3-providers-ws';
+import IpcProvider from 'web3-providers-ipc';
 import { Web3RequestManager, Web3RequestManagerEvent } from '../../src/web3_request_manager';
 import * as utils from '../../src/utils';
 
@@ -35,11 +38,17 @@ describe('Web3RequestManager', () => {
 		it('should return providers on instance', () => {
 			const manager = new Web3RequestManager();
 
-			expect(manager.providers).toMatchSnapshot();
+			expect(Object.keys(manager.providers)).toEqual([
+				'HttpProvider',
+				'WebsocketProvider',
+				'IpcProvider',
+			]);
 		});
 
-		it('should return providers on class', () => {
-			expect(Web3RequestManager.providers).toMatchSnapshot();
+		it('should return providers of particular instances', () => {
+			expect(Web3RequestManager.providers.HttpProvider).toBe(HttpProvider);
+			expect(Web3RequestManager.providers.WebsocketProvider).toBe(WSProvider);
+			expect(Web3RequestManager.providers.IpcProvider).toBe(IpcProvider);
 		});
 	});
 
