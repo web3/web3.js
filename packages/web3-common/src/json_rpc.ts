@@ -39,7 +39,8 @@ export const isResponseWithNotification = <Result>(
 	!Array.isArray(response) &&
 	!!response &&
 	response.jsonrpc === '2.0' &&
-	response.params !== undefined;
+	response.params !== undefined &&
+	response.method !== undefined;
 
 export const isSubscriptionResult = <Result>(
 	response: JsonRpcNotification<Result> | JsonRpcSubscriptionResult,

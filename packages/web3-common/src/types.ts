@@ -251,3 +251,10 @@ export type ConnectionEvent = {
 };
 
 export type Receipt = Record<string, unknown>;
+
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
+export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
+export type Web3BaseProviderCallback<T = JsonRpcResult> = (
+	error: Error | null,
+	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
+) => void;
