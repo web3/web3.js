@@ -368,6 +368,6 @@ const REGISTRY = [
 		stateMutability: 'view',
 		type: 'function',
 	},
-];
+] as const;
 
 module.exports = REGISTRY;
