@@ -43,7 +43,7 @@
 		"@ethereumjs/tx": "^3.4.0",
 		"web3-common": "1.0.0-alpha.0",
 		"web3-core": "4.0.0-alpha.0",
-		"web3-eth-accounts": "4.0.0-alpha.0"
+		"web3-eth-accounts": "4.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1",
 		"web3-validator": "^0.1.0-alpha.0"
 	}
