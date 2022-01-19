@@ -84,7 +84,7 @@ export interface Transaction<NumberType = Numbers> {
 }
 
 export function formatTransaction<
-	DesiredType extends ValidTypes,
+	DesiredType extends ValidTypes = ValidTypes,
 	ReturnType = ValidReturnTypes[DesiredType],
 >(
 	transaction: Transaction,
@@ -94,7 +94,8 @@ export function formatTransaction<
 	if (overrideMethod !== undefined) return overrideMethod(transaction);
 	const formattedTransaction = {
 		...transaction,
-		value: convertToValidType(transaction.value, desiredType),
+		value:
+			transaction.value === '0x' ? '0x' : convertToValidType(transaction.value, desiredType),
 		gas: convertToValidType(transaction.gas, desiredType),
 		gasPrice: convertToValidType(transaction.gasPrice, desiredType),
 		type: convertToValidType(transaction.type, desiredType),
@@ -289,8 +290,9 @@ export interface PopulatedUnsignedEip1559Transaction<NumberType = Numbers>
 }
 export type PopulatedUnsignedTransaction<NumberType = Numbers> =
 	| PopulatedUnsignedBaseTransaction<NumberType>
-	| PopulatedUnsignedEip2930Transaction
+	| PopulatedUnsignedEip2930Transaction<NumberType>
 	| PopulatedUnsignedEip1559Transaction<NumberType>;
+
 export async function populateTransaction<
 	DesiredType extends ValidTypes,
 	ReturnType = ValidReturnTypes[DesiredType],
@@ -350,6 +352,8 @@ export async function populateTransaction<
 			populatedTransaction.gasLimit = populatedTransaction.gas;
 	}
 
+	// TODO - Discuss how this should work with default hardfork, because detectTransactionType
+	// will use 0x2 for london and 0x1 for berlin, but should this be overwritten by web3Context.defaultTxType?
 	// If populatedTransaction.type is already defined, no change will be made
 	populatedTransaction.type = detectTransactionType(populatedTransaction);
 	// TODO - After web3Context.defaultTxType is implemented
@@ -364,7 +368,7 @@ export async function populateTransaction<
 	if (hexTxType === '0x0' || hexTxType === '0x1') {
 		// transaction.type not supported before Berlin hardfork
 		// TODO - Maybe add check for populatedTransaction.hardfork >= Berlin before deleting
-		if (hexTxType === '0x0') populatedTransaction.type = undefined;
+		// if (hexTxType === '0x0') populatedTransaction.type = undefined;
 
 		if (populatedTransaction.gasPrice === undefined)
 			populatedTransaction.gasPrice = await web3Eth.getGasPrice();
@@ -386,7 +390,7 @@ export async function populateTransaction<
 		} else {
 			if (populatedTransaction.maxPriorityFeePerGas === undefined)
 				// TODO - Add maxPriorityFeePerGas default to Web3Context
-				populatedTransaction.maxPriorityFeePerGas = toHex('2500000000'); // 2.5 Gwei
+				populatedTransaction.maxPriorityFeePerGas = toHex(2500000000); // 2.5 Gwei
 			if (populatedTransaction.maxFeePerGas === undefined)
 				populatedTransaction.maxFeePerGas =
 					BigInt(block.baseFeePerGas) * BigInt(2) +
@@ -394,6 +398,7 @@ export async function populateTransaction<
 		}
 	}
 
+	// TODO - TSC returns that as only PopulatedUnsignedBaseTransaction
 	return formatTransaction(
 		populatedTransaction,
 		desiredType,
