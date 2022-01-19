@@ -33,18 +33,21 @@ export enum Web3RequestManagerEvent {
 	BEFORE_PROVIDER_CHANGE = 'BEFORE_PROVIDER_CHANGE',
 }
 
+const availableProviders = {
+	HttpProvider: HttpProvider as Web3BaseProviderConstructor,
+	WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
+	IpcProvider: IpcProvider as Web3BaseProviderConstructor,
+};
+
 export class Web3RequestManager<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<{
 	[key in Web3RequestManagerEvent]: SupportedProviders<API>;
 }> {
 	private _provider!: SupportedProviders<API>;
-	private readonly _providers: { [key: string]: Web3BaseProviderConstructor };
 
 	public constructor(provider?: SupportedProviders<API> | string | string, net?: Socket) {
 		super();
-
-		this._providers = Web3RequestManager.providers;
 
 		if (provider) {
 			this.setProvider(provider, net);
@@ -52,11 +55,7 @@ export class Web3RequestManager<
 	}
 
 	public static get providers() {
-		return {
-			HttpProvider: HttpProvider as Web3BaseProviderConstructor,
-			WebsocketProvider: WSProvider as Web3BaseProviderConstructor,
-			IpcProvider: IpcProvider as Web3BaseProviderConstructor,
-		};
+		return availableProviders;
 	}
 
 	public get provider() {
@@ -67,8 +66,9 @@ export class Web3RequestManager<
 		return this._provider;
 	}
 
+	// eslint-disable-next-line class-methods-use-this
 	public get providers() {
-		return this._providers;
+		return availableProviders;
 	}
 
 	public setProvider(provider: SupportedProviders<API> | string, net?: Socket) {
