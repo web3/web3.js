@@ -1,4 +1,4 @@
-const TESTREGISTRAR = [
+const TEST_REGISTRAR = [
 	{
 		inputs: [
 			{
@@ -80,4 +80,4 @@ const TESTREGISTRAR = [
 	},
 ] as const;
 
-module.exports = TESTREGISTRAR;
+module.exports = TEST_REGISTRAR;

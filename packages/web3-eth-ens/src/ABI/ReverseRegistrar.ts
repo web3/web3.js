@@ -1,4 +1,4 @@
-const REVERSEREGISTRAR = [
+const REVERSE_REGISTRAR = [
 	{
 		inputs: [
 			{
@@ -137,4 +137,4 @@ const REVERSEREGISTRAR = [
 	},
 ] as const;
 
-module.exports = REVERSEREGISTRAR;
+module.exports = REVERSE_REGISTRAR;
