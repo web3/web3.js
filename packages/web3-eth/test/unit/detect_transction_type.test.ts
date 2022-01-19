@@ -8,10 +8,10 @@ import {
 
 describe('should override detectTransactionType method', () => {
 	it('should return 42', () => {
-		const overrideFunction = (transaction: Transaction) => {
-			if (transaction.type !== undefined) return transaction.type;
-			return 42;
-		};
+		// @ts-expect-error - Purposefully not using transaction here,
+		// but must be present to satisfy method signature
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const overrideFunction = (transaction: Transaction) => 42;
 		expect(detectTransactionType(transactionTypeUndefined[0], overrideFunction)).toBe(42);
 	});
 });
