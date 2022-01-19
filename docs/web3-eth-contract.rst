@@ -981,8 +981,8 @@ methods.myMethod.estimateGas
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
 
-Will call to estimate the gas a method execution will take when executed in the EVM.
-The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
+Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain. The returned amount can be used as a gas estimate for executing the transaction publicly. The actual gas used can be different when sending the transaction later, as the state of the smart contract can be different at that time.
+
 Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 
 ----------
