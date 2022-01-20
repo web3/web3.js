@@ -1,3 +1,4 @@
+// https://github.com/ensdomains/ens/blob/master/contracts/ENS.sol
 const REGISTRY = [
 	{
 		anonymous: false,
