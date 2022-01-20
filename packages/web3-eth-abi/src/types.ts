@@ -1,4 +1,4 @@
-import { Address, Bytes, Numbers, FixedSizeArray } from 'web3-utils';
+import { Address, Bytes, FixedSizeArray, Numbers } from 'web3-utils';
 import { ConvertToNumber } from './number_map_type';
 
 export interface AbiStruct {
@@ -163,7 +163,8 @@ export type ContractMethodOutputParameters<Params extends Array<unknown>> = Para
 	? []
 	: Params extends [infer H, ...infer R]
 	? H extends AbiParameter
-		? [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
+		? // TODO: Find a way to set name for tuple item
+		  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
 		: ContractMethodOutputParameters<R>
 	: Params;
 
@@ -171,7 +172,8 @@ export type ContractMethodInputParameters<Params extends Array<unknown>> = Param
 	? []
 	: Params extends [infer H, ...infer R]
 	? H extends AbiParameter
-		? [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
+		? // TODO: Find a way to set name for tuple item
+		  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
 		: ContractMethodInputParameters<R>
 	: Params;
 
