@@ -4,6 +4,8 @@ import {
 	AbiEventFragment,
 	AbiFunctionFragment,
 	ContractAbi,
+	ContractEvents,
+	ContractMethods,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	isAbiEventFragment,
@@ -15,17 +17,54 @@ import { validator } from 'web3-validator';
 import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { LogsSubscription } from './log_subscription';
 import {
-	ContractEventEmitterInterface,
-	ContractEventsInterface,
+	ContractEventOptions,
 	ContractInitOptions,
-	ContractMethodsInterface,
 	ContractOptions,
 	NonPayableCallOptions,
 	NonPayableMethodObject,
 	PayableCallOptions,
 	PayableMethodObject,
 } from './types';
-import { getEstimateGasParams, getSendTxParams, getEthTxCallParams } from './utils';
+import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './utils';
+
+// To avoid circular dependency between types and encoding, declared these types here.
+export type ContractMethodsInterface<
+	Abi extends ContractAbi,
+	Methods extends ContractMethods<Abi> = ContractMethods<Abi>,
+> = {
+	[key: string]: (
+		...args: Array<unknown>
+	) =>
+		| PayableMethodObject<Array<unknown>, Array<unknown>>
+		| NonPayableMethodObject<Array<unknown>, Array<unknown>>;
+} & {
+	[Name in keyof Methods]: (
+		...args: Methods[Name]['Inputs']
+	) => // TODO: Debug why `Abi` object is not accessible
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
+	Methods[Name]['Abi']['stateMutability'] extends 'payable' | 'pure'
+		? PayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>
+		: NonPayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>;
+};
+
+// To avoid circular dependency between types and encoding, declared these types here.
+export type ContractEventsInterface<
+	Abi extends ContractAbi,
+	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
+> = {
+	[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+} & {
+	[Name in keyof Events]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+};
+
+// To avoid circular dependency between types and encoding, declared these types here.
+export type ContractEventEmitterInterface<
+	Abi extends ContractAbi,
+	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
+> = {
+	[Name in keyof Events]: Events[Name]['Inputs'];
+};
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 

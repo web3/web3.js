@@ -1,18 +1,7 @@
 import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
-import { LogsSubscription, SupportedProviders } from 'web3-core';
-import { ContractAbi, ContractEvents, ContractMethods } from 'web3-eth-abi';
-import {
-	Address,
-	Bytes,
-	Numbers,
-	Uint,
-	HexString,
-	BlockNumberOrTag,
-	ObjectValueToTuple,
-	Filter,
-} from 'web3-utils';
-
-export type Callback<T> = (error: Error, result: T) => void;
+import { SupportedProviders } from 'web3-core';
+import { ContractAbi } from 'web3-eth-abi';
+import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -26,11 +15,7 @@ export interface EventLog {
 	raw?: { data: string; topics: unknown[] };
 }
 
-export interface ContractEventLog<T> extends EventLog {
-	returnValues: T;
-}
-
-export interface ContactEventOptions {
+export interface ContractEventOptions {
 	filter?: Filter;
 	fromBlock?: BlockNumberOrTag;
 	topics?: string[];
@@ -73,7 +58,7 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 }
 
 export interface NonPayableMethodObject<Inputs, Outputs> {
-	arguments: Array<Inputs[keyof Inputs]>;
+	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: NonPayableCallOptions): PromiEvent<
 		TransactionReceipt,
@@ -95,7 +80,7 @@ export interface NonPayableMethodObject<Inputs, Outputs> {
 }
 
 export interface PayableMethodObject<Inputs, Outputs> {
-	arguments: Array<Inputs[keyof Inputs]>;
+	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: PayableCallOptions): PromiEvent<
 		TransactionReceipt,
@@ -115,37 +100,3 @@ export interface PayableMethodObject<Inputs, Outputs> {
 	estimateGas(tx?: PayableCallOptions): Promise<number>;
 	encodeABI(): HexString;
 }
-
-export type ContractMethodsInterface<
-	Abi extends ContractAbi,
-	Methods extends ContractMethods<Abi> = ContractMethods<Abi>,
-> = {
-	[key: string]: (
-		...args: ReadonlyArray<unknown>
-	) => PayableMethodObject<unknown, unknown> | NonPayableMethodObject<unknown, unknown>;
-} & {
-	[Name in keyof Methods]: (
-		...args: ObjectValueToTuple<Methods[Name]['Inputs']>
-	) => // TODO: Debug why `Abi` object is not accessible
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	Methods[Name]['Abi']['stateMutability'] extends 'payable' | 'pure'
-		? PayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>
-		: NonPayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>;
-};
-
-export type ContractEventsInterface<
-	Abi extends ContractAbi,
-	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
-> = {
-	[key: string]: (options?: ContactEventOptions) => Promise<LogsSubscription>;
-} & {
-	[Name in keyof Events]: (options?: ContactEventOptions) => Promise<LogsSubscription>;
-};
-
-export type ContractEventEmitterInterface<
-	Abi extends ContractAbi,
-	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
-> = {
-	[Name in keyof Events]: Events[Name]['Inputs'];
-};

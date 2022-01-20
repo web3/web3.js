@@ -1,11 +1,4 @@
-import {
-	Address,
-	Bytes,
-	Numbers,
-	ObjectValueToTuple,
-	ArrayToIndexObject,
-	FixedSizeArray,
-} from 'web3-utils';
+import { Address, Bytes, Numbers, FixedSizeArray } from 'web3-utils';
 import { ConvertToNumber } from './number_map_type';
 
 export interface AbiStruct {
@@ -166,41 +159,40 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
-// Only intended to use locally so why not exported
-// TODO: Inspect Record<string, AbiParameter> not working constraint
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type _ExtractParameterType<T extends Record<string, any>> = {
-	[K in keyof T]: MatchPrimitiveType<T[K]['type'], T[K]['components']>;
-};
+export type ContractMethodOutputParameters<Params extends Array<unknown>> = Params extends []
+	? []
+	: Params extends [infer H, ...infer R]
+	? H extends AbiParameter
+		? [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
+		: ContractMethodOutputParameters<R>
+	: Params;
 
-export type ContractMethodOutputParameters<Params extends ReadonlyArray<AbiParameter>> =
-	ObjectValueToTuple<_ExtractParameterType<ArrayToIndexObject<Params>>>;
-
-export type ContractMethodInputParameters<Params extends ReadonlyArray<AbiParameter>> = {
-	[Param in Params[number] as Param['name']]: MatchPrimitiveType<
-		Param['type'],
-		Param['components']
-	>;
-};
+export type ContractMethodInputParameters<Params extends Array<unknown>> = Params extends []
+	? []
+	: Params extends [infer H, ...infer R]
+	? H extends AbiParameter
+		? [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
+		: ContractMethodInputParameters<R>
+	: Params;
 
 export type ContractConstructor<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiConstructorFragment> as 'constructor']: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
 	};
 }['constructor'];
 
 export type ContractMethods<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiFunctionFragment> as Abi['name']]: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
-		readonly Outputs: ContractMethodOutputParameters<Abi['outputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
+		readonly Outputs: ContractMethodOutputParameters<[...Abi['outputs']]>;
 	};
 };
 
 export type ContractEvents<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiEventFragment> as Abi['name']]: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
 	};
 };
