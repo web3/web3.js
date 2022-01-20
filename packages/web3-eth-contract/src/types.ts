@@ -24,6 +24,7 @@ export interface ContractEventOptions {
 export interface ContractOptions {
 	readonly gas: Uint | null;
 	readonly gasPrice: Uint | null;
+	readonly gasLimit?: Uint;
 	readonly from?: Address;
 	readonly data?: Bytes;
 	jsonInterface: ContractAbi;

@@ -104,6 +104,7 @@ export class Contract<Abi extends ContractAbi>
 			jsonInterface: [],
 			gas: options?.gas ?? options?.gasLimit ?? null,
 			gasPrice: options?.gasPrice ?? null,
+			gasLimit: options?.gasLimit,
 			from: options?.from,
 			data: options?.data,
 		};
@@ -125,6 +126,17 @@ export class Contract<Abi extends ContractAbi>
 
 	public get methods() {
 		return this._methods;
+	}
+
+	public clone() {
+		return new Contract<Abi>(this._jsonInterface, this._address ?? undefined, {
+			gas: this.options.gas,
+			gasPrice: this.options.gasPrice,
+			gasLimit: this.options.gasLimit,
+			from: this.options.from,
+			data: this.options.data,
+			provider: this.currentProvider,
+		});
 	}
 
 	private _parseAndSetAddress(value?: Address) {
