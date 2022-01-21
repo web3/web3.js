@@ -265,9 +265,9 @@ export const toCheckSumValidData: [string, string][] = [
 ];
 
 export const convertToValidTypeValidData: [
-	ValidReturnTypes[ValidTypes],
+	ValidReturnTypes[ValidTypes] | undefined,
 	ValidTypes,
-	ValidReturnTypes[ValidTypes],
+	ValidReturnTypes[ValidTypes] | undefined,
 ][] = [
 	['0x2a', ValidTypes.HexString, '0x2a'],
 	['42', ValidTypes.HexString, '0x2a'],
@@ -301,6 +301,7 @@ export const convertToValidTypeValidData: [
 	['-42', ValidTypes.BigInt, BigInt('-42')],
 	[-42, ValidTypes.BigInt, BigInt('-42')],
 	[BigInt('-42'), ValidTypes.BigInt, BigInt('-42')],
+	[undefined, ValidTypes.HexString, undefined],
 ];
 
 export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError | string][] = [
@@ -313,7 +314,6 @@ export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError |
 	['foo', ValidTypes.HexString, 'value "foo" at "/0" must pass "int" validation'],
 	['4.2', ValidTypes.HexString, 'value "4.2" at "/0" must pass "int" validation'],
 	[null, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
-	[undefined, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
 	[true, ValidTypes.HexString, 'value "true" at "/0" must pass "int" validation'],
 ];
 
