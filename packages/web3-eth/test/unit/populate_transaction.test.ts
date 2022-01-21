@@ -1,7 +1,7 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { BlockTags, ValidTypes } from 'web3-utils';
-import { HttpProvider } from 'web3-providers-http';
+import HttpProvider from 'web3-providers-http';
 
 import * as rpcMethods from '../../src/rpc_methods';
 import { populateTransaction } from '../../src/eth_tx';

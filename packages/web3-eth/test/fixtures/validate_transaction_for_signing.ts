@@ -12,7 +12,7 @@ import {
 	MissingGasError,
 	UnsupportedFeeMarketError,
 } from '../../src/errors';
-import { Transaction } from '../../src/eth_tx';
+import { Transaction } from '../../src/types';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const invalidTransactionObject: any[] = ['42', false, '0x0', BigInt(42), () => {}];

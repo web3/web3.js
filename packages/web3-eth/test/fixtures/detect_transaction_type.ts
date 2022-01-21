@@ -1,5 +1,5 @@
 import { ValidReturnTypes, ValidTypes } from 'web3-utils';
-import { Transaction } from '../../src/eth_tx';
+import { Transaction } from '../../src/types';
 
 export const transactionType0x0: Transaction<ValidReturnTypes[ValidTypes.HexString]>[] = [
 	{
