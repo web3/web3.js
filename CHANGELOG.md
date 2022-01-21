@@ -497,6 +497,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 - `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+- Add example import for package level types (#4611)
 
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
