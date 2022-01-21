@@ -7,7 +7,7 @@ Only published PRs will be considered for review. Draft PRs will be considered i
 ## Rules
 
 *   [ ] PR follows the provided [template](.github/PULL_REQUEST_TEMPLATE.md).
-*   [ ] PR doesn't contain unneccessary changes.
+*   [ ] PR doesn't contain unnecessary changes.
 *   [ ] The changed code preserves the conventions and stylistic consistency of the project.
 *   [ ] PR uses labels accordingly. (new labels may be suggested)
 *   [ ] PR includes unit and e2e tests if related to any logic changes.
@@ -20,7 +20,7 @@ Only published PRs will be considered for review. Draft PRs will be considered i
     *   [ ] Any new files contain the web3.js file header.
     *   [ ] The documentation was updated (if applicable).
     *   [ ] The CHANGELOG was updated accordingly.
-    *   [ ] The CI with QA passes succesfully.
+    *   [ ] The CI with QA passes successfully.
         *   [ ] The CI logs were manually checked to ensure false positives were not reported.
     *   [ ] All comments have been addressed.
     *   [ ] Doesn't add undue maintenance burden.
