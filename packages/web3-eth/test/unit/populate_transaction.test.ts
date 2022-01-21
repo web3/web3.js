@@ -103,6 +103,19 @@ describe('populateTransaction', () => {
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
 
+	it('should call override method', async () => {
+		const overrideFunction = jest.fn();
+		const input = { ...transaction };
+		await populateTransaction(
+			input,
+			web3Context,
+			ValidTypes.HexString,
+			'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			overrideFunction,
+		);
+		expect(overrideFunction).toHaveBeenCalledWith(input);
+	});
+
 	describe('should populate from', () => {
 		it('should use privateKey to populate', async () => {
 			const input = { ...transaction };

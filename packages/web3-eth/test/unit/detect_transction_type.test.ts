@@ -1,5 +1,4 @@
 import { detectTransactionType } from '../../src/eth_tx';
-import { Transaction } from '../../src/types';
 import {
 	transactionType0x0,
 	transactionType0x1,
@@ -9,12 +8,10 @@ import {
 
 describe('detectTransactionType', () => {
 	describe('should override detectTransactionType method', () => {
-		it('should return 42', () => {
-			// @ts-expect-error - Purposefully not using transaction here,
-			// but must be present to satisfy method signature
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const overrideFunction = (transaction: Transaction) => 42;
-			expect(detectTransactionType(transactionTypeUndefined[0], overrideFunction)).toBe(42);
+		it('should call override method', () => {
+			const overrideFunction = jest.fn();
+			detectTransactionType(transactionTypeUndefined[0], overrideFunction);
+			expect(overrideFunction).toHaveBeenCalledWith(transactionTypeUndefined[0]);
 		});
 	});
 

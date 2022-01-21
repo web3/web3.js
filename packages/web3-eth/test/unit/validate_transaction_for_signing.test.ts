@@ -2,7 +2,6 @@
 
 import { InvalidTransactionObjectError } from '../../src/errors';
 import { validateTransactionForSigning } from '../../src/eth_tx';
-import { Transaction } from '../../src/types';
 import {
 	invalidNonceOrChainIdData,
 	invalidTransactionObject,
@@ -13,14 +12,10 @@ import {
 
 describe('validateTransactionForSigning', () => {
 	describe('should override validateTransactionForSigning method', () => {
-		it('should return 42', () => {
-			// @ts-expect-error - Purposefully not using transaction here,
-			// but must be present to satisfy method signature
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const overrideFunction = (transaction: Transaction) => 42;
-			expect(
-				validateTransactionForSigning(invalidTransactionObject[0], overrideFunction),
-			).toBe(42);
+		it('should call override method', () => {
+			const overrideFunction = jest.fn();
+			validateTransactionForSigning(invalidTransactionObject[0], overrideFunction);
+			expect(overrideFunction).toHaveBeenCalledWith(invalidTransactionObject[0]);
 		});
 	});
 

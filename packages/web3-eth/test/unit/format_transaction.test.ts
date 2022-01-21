@@ -8,6 +8,12 @@ import {
 } from '../fixtures/format_transaction';
 
 describe('formatTransaction', () => {
+	it('should call override method', () => {
+		const overrideFunction = jest.fn();
+		formatTransaction(hexStringTransaction, ValidTypes.Number, overrideFunction);
+		expect(overrideFunction).toHaveBeenCalledWith(hexStringTransaction);
+	});
+
 	describe('should convert hex string properties to expected type', () => {
 		it('numbers', () => {
 			const result = formatTransaction(hexStringTransaction, ValidTypes.Number);
