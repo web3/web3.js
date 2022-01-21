@@ -1,4 +1,5 @@
 import { toChecksumAddress, isAddress, leftPad, hexToNumber } from 'web3-utils';
+import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
 
 /**
@@ -46,10 +47,17 @@ const _mod9710 = (iban: string): number => {
 	return parseInt(remainder, 10) % 97;
 };
 
+const _isValid = (iban: string): boolean =>
+	/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
+	_mod9710(_iso13616Prepare(iban)) === 1;
+
 export class Iban {
 	private readonly _iban: string;
 
 	public constructor(iban: string) {
+		if (_isValid(iban)) {
+			// error
+		}
 		this._iban = iban;
 	}
 
@@ -70,8 +78,7 @@ export class Iban {
 			const paddedBigInt = leftPad(bigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
-
-		return ''; // error
+		throw new IbanLengthError();
 	};
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address
@@ -79,9 +86,8 @@ export class Iban {
 	public static toAddress = (iban: string): string => {
 		const ibanObject = new Iban(iban);
 		if (!ibanObject.isDirect()) {
-			throw new Error("IBAN is indirect and can't be converted");
+			throw new IbanLengthError();
 		}
-
 		return ibanObject.toAddress();
 	};
 
@@ -131,10 +137,7 @@ export class Iban {
 	 * Should be called to check if iban is correct
 	 */
 	public isValid() {
-		return (
-			/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-			_mod9710(_iso13616Prepare(this._iban)) === 1
-		);
+		_isValid(this._iban);
 	}
 
 	/**
