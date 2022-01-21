@@ -1,4 +1,4 @@
-import { toChecksumAddress, isAddress, leftPad } from 'web3-utils';
+import { toChecksumAddress, isAddress, leftPad, hexToNumber } from 'web3-utils';
 import { IbanOptions } from './types';
 
 /**
@@ -10,7 +10,7 @@ const _iso13616Prepare = (iban: string): string => {
 	const Z = 'Z'.charCodeAt(0);
 
 	const upperIban = iban.toUpperCase();
-	const modifiedIban = upperIban.substr(4) + upperIban.substr(0, 4);
+	const modifiedIban = `${upperIban.substr(4)}${upperIban.substr(0, 4)}`;
 
 	return modifiedIban
 		.split('')
@@ -28,7 +28,7 @@ const _iso13616Prepare = (iban: string): string => {
 /**
  * return the bigint of the given string with the specified base
  */
-const _parseInt = (str: string, base: number): BigInt =>
+const _parseInt = (str: string, base: number): bigint =>
 	[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
 
 /**
@@ -67,12 +67,12 @@ export class Iban {
 		if (this.isDirect()) {
 			const base36 = this._iban.substr(4);
 			const bigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
-			return toChecksumAddress(bigInt.toString(16));
+			const paddedBigInt = leftPad(bigInt, 40);
+			return toChecksumAddress(paddedBigInt);
 		}
 
 		return ''; // error
 	};
-
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address
 	 */
@@ -107,9 +107,7 @@ export class Iban {
 			throw new Error(`Provided address is not a valid address: ${address}`);
 		}
 
-		const addressStripped = address.replace('0x', '').replace('0X', '');
-
-		const num = BigInt(addressStripped);
+		const num = BigInt(hexToNumber(address));
 		const base36 = num.toString(36);
 		const padded = leftPad(base36, 15);
 		return Iban.fromBban(padded.toUpperCase());
@@ -145,5 +143,9 @@ export class Iban {
 	public static isValid(iban: string) {
 		const i = new Iban(iban);
 		return i.isValid();
+	}
+
+	public toString(): string {
+		return this._iban;
 	}
 }
