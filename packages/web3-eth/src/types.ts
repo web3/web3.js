@@ -40,7 +40,7 @@ export interface Common<NumberType = Numbers> {
 	hardfork?: hardfork;
 }
 
-export interface Transaction<NumberType = Numbers> {
+export interface Transaction<NumberType extends Numbers = Numbers> {
 	from?: Address;
 	to?: Address;
 	value?: NumberType;
@@ -62,7 +62,7 @@ export interface Transaction<NumberType = Numbers> {
 	s?: HexString;
 }
 
-export interface PopulatedUnsignedBaseTransaction<NumberType = Numbers> {
+export interface PopulatedUnsignedBaseTransaction<NumberType extends Numbers = Numbers> {
 	from: Address;
 	to?: Address;
 	value: Numbers;
@@ -77,17 +77,17 @@ export interface PopulatedUnsignedBaseTransaction<NumberType = Numbers> {
 	common: Common<NumberType>;
 	gasLimit: Numbers;
 }
-export interface PopulatedUnsignedEip2930Transaction<NumberType = Numbers>
+export interface PopulatedUnsignedEip2930Transaction<NumberType extends Numbers = Numbers>
 	extends PopulatedUnsignedBaseTransaction<NumberType> {
 	accessList: AccessList;
 }
-export interface PopulatedUnsignedEip1559Transaction<NumberType = Numbers>
+export interface PopulatedUnsignedEip1559Transaction<NumberType extends Numbers = Numbers>
 	extends PopulatedUnsignedEip2930Transaction<NumberType> {
 	gasPrice: never;
 	maxFeePerGas: NumberType;
 	maxPriorityFeePerGas: NumberType;
 }
-export type PopulatedUnsignedTransaction<NumberType = Numbers> =
+export type PopulatedUnsignedTransaction<NumberType extends Numbers = Numbers> =
 	| PopulatedUnsignedBaseTransaction<NumberType>
 	| PopulatedUnsignedEip2930Transaction<NumberType>
 	| PopulatedUnsignedEip1559Transaction<NumberType>;
