@@ -16,16 +16,17 @@ export class InvalidTransactionCall extends Web3Error {
 
 export class MissingCustomChainError extends Web3Error {
 	public constructor() {
-		// TODO - Discuss what to pass as value
-		super('N/A', 'If tx.common is provided it must have tx.common.customChain');
+		super(
+			'MissingCustomChainError',
+			'If tx.common is provided it must have tx.common.customChain',
+		);
 	}
 }
 
 export class MissingCustomChainIdError extends Web3Error {
 	public constructor() {
 		super(
-			// TODO - Discuss what to pass as value
-			'N/A',
+			'MissingCustomChainIdError',
 			'If tx.common is provided it must have tx.common.customChain and tx.common.customChain.chainId',
 		);
 	}
@@ -42,9 +43,8 @@ export class ChainIdMismatchError extends Web3Error {
 
 export class CommonOrChainAndHardforkError extends Web3Error {
 	public constructor() {
-		// TODO - Discuss what to pass as value, would it make sense to pass common, chain, and hardfork for error message here?
 		super(
-			'N/A',
+			'CommonOrChainAndHardforkError',
 			'Please provide the @ethereumjs/common object or the chain and hardfork property but not all together.',
 		);
 	}
@@ -52,9 +52,8 @@ export class CommonOrChainAndHardforkError extends Web3Error {
 
 export class MissingChainOrHardforkError extends Web3Error {
 	public constructor(value: { chain: string | undefined; hardfork: string | undefined }) {
-		// TODO - Discuss what to pass as value
 		super(
-			'N/A',
+			'MissingChainOrHardforkError',
 			`When specifying chain and hardfork, both values must be defined. Received "chain": ${
 				value.chain ?? 'undefined'
 			}, "hardfork": ${value.hardfork ?? 'undefined'}`,
@@ -140,15 +139,13 @@ export class InvalidNonceOrChainIdError extends Web3Error {
 
 export class UnableToPopulateNonceError extends Web3Error {
 	public constructor() {
-		// TODO - Discuss what to pass as value
-		super('N/A', 'unable to populate nonce, no from address available');
+		super('UnableToPopulateNonceError', 'unable to populate nonce, no from address available');
 	}
 }
 
 export class Eip1559NotSupportedError extends Web3Error {
 	public constructor() {
-		// TODO - Discuss what to pass as value
-		super('N/A', "Network doesn't support eip-1559");
+		super('Eip1559NotSupportedError', "Network doesn't support eip-1559");
 	}
 }
 
