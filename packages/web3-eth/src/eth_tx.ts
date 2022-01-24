@@ -1,6 +1,14 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { BlockTags, convertToValidType, HexString, Numbers, toHex, ValidTypes } from 'web3-utils';
+import {
+	BlockTags,
+	convertToValidType,
+	HexString,
+	Numbers,
+	toHex,
+	ValidReturnTypes,
+	ValidTypes,
+} from 'web3-utils';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 
 import Web3Eth from '.';
@@ -21,12 +29,12 @@ import {
 	UnsupportedFeeMarketError,
 	UnsupportedTransactionTypeError,
 } from './errors';
-import { Transaction } from './types';
+import { PopulatedUnsignedTransaction, Transaction } from './types';
 
-export function formatTransaction<DesiredType extends ValidTypes>(
-	transaction: Transaction,
-	desiredType: DesiredType,
-): Transaction<DesiredType> {
+export function formatTransaction<
+	DesiredType extends ValidTypes,
+	NumberType extends ValidReturnTypes[DesiredType] = ValidReturnTypes[DesiredType],
+>(transaction: Transaction, desiredType: DesiredType): Transaction<NumberType> {
 	const formattedTransaction = { ...transaction };
 	if (formattedTransaction.value !== undefined)
 		formattedTransaction.value =
@@ -81,7 +89,7 @@ export function formatTransaction<DesiredType extends ValidTypes>(
 		}
 	}
 
-	return formattedTransaction as Transaction<DesiredType>;
+	return formattedTransaction as Transaction<NumberType>;
 }
 
 export const detectTransactionType = (
@@ -219,12 +227,15 @@ export const validateTransactionForSigning = (
 		});
 };
 
-export async function populateTransaction<DesiredType extends ValidTypes>(
+export async function populateTransaction<
+	DesiredType extends ValidTypes,
+	NumberType extends ValidReturnTypes[DesiredType] = ValidReturnTypes[DesiredType],
+>(
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
 	desiredType: DesiredType,
 	privateKey?: HexString,
-) {
+): Promise<PopulatedUnsignedTransaction<NumberType>> {
 	const populatedTransaction = { ...transaction };
 	const web3Eth = new Web3Eth(web3Context.currentProvider);
 
@@ -314,7 +325,11 @@ export async function populateTransaction<DesiredType extends ValidTypes>(
 		}
 	}
 
-	return formatTransaction(populatedTransaction, desiredType);
+	// TODO - Types of property 'gasPrice' are incompatible
+	return formatTransaction(
+		populatedTransaction,
+		desiredType,
+	) as unknown as PopulatedUnsignedTransaction<NumberType>;
 }
 
 // TODO - Replace use of Web3Context with Web3Eth
