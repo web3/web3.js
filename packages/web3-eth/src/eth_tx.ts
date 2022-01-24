@@ -122,6 +122,7 @@ const validateChainInfo = (transaction: Transaction) => {
 		});
 };
 
+// TODO Split into validateEipXXX methods
 const validateGas = (transaction: Transaction<HexString>) => {
 	if (
 		transaction.gas === undefined &&
@@ -266,7 +267,7 @@ export async function populateTransaction<
 	// TODO - After web3Context.defaultTxType is implemented
 	if (populatedTransaction.type === undefined) populatedTransaction.type = '0x0'; // web3Context.defaultTxType;
 
-	const block = await web3Eth.getBlock();
+	// TODO Probably need to account for negative hex strings
 	const hexTxType = toHex(populatedTransaction.type);
 
 	if (hexTxType < '0x0' || hexTxType > '0x2')
@@ -286,6 +287,8 @@ export async function populateTransaction<
 	}
 
 	if (hexTxType === '0x2') {
+		const block = await web3Eth.getBlock();
+
 		// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
 		if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
 
