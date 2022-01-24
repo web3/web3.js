@@ -1,4 +1,4 @@
-import { Iban } from '../../src/iban';
+import { Iban } from '../../src/index';
 import {
 	validIbanToAddressData,
 	validFromBbanData,
