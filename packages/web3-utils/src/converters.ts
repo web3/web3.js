@@ -439,10 +439,11 @@ export const jsonInterfaceMethodToString = (
 };
 
 export const convertToValidType = (
-	value: ValidReturnTypes[ValidTypes] | undefined, // validate this
+	value: ValidReturnTypes[ValidTypes], // validate this
 	desiredType: ValidTypes,
-): ValidReturnTypes[ValidTypes] | undefined => {
-	if (value === undefined) return value;
+) => {
+	// TODO - Replace error
+	if (value === undefined) throw new Error('value is undefined');
 
 	switch (desiredType) {
 		case ValidTypes.HexString:
