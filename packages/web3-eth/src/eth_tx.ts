@@ -35,7 +35,17 @@ export function formatTransaction<
 	DesiredType extends ValidTypes,
 	NumberType extends ValidReturnTypes[DesiredType] = ValidReturnTypes[DesiredType],
 >(transaction: Transaction, desiredType: DesiredType): Transaction<NumberType> {
-	const formattedTransaction = { ...transaction };
+	// TODO - The spread operator performs a shallow copy of transaction.
+	// I tried using Object.assign({}, transaction) which is supposed to perform a deep copy,
+	// but format_transactions.test.ts were still failing due to original object properties
+	// being wrongfully updated by this method.
+	const formattedTransaction = {
+		...transaction,
+		common: {
+			...transaction.common,
+			customChain: { ...transaction.common?.customChain },
+		},
+	};
 	if (formattedTransaction.value !== undefined)
 		formattedTransaction.value =
 			formattedTransaction.value === '0x'
