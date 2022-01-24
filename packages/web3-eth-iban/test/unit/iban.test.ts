@@ -82,6 +82,15 @@ describe('iban', () => {
 	describe('isValid', () => {
 		describe('valid cases', () => {
 			it.each(isValidData)('%s', (input, output) => {
+				const iban = new Iban(input);
+				expect(iban.isValid()).toBe(output);
+			});
+		});
+	});
+
+	describe('isValid static', () => {
+		describe('valid cases', () => {
+			it.each(isValidData)('%s', (input, output) => {
 				expect(Iban.isValid(input)).toBe(output);
 			});
 		});
