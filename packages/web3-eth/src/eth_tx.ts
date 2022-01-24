@@ -269,7 +269,7 @@ export async function populateTransaction<
 	const block = await web3Eth.getBlock();
 	const hexTxType = toHex(populatedTransaction.type);
 
-	if (hexTxType < '0x0' || hexTxType > '0x2')
+	if (hexTxType < '0x0' || hexTxType > '0x7f') //https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 		throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
 	if (hexTxType === '0x0' || hexTxType === '0x1') {
