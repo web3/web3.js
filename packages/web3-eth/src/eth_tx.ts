@@ -40,7 +40,7 @@ export function formatTransaction<
 	overrideMethod?: (transaction: Transaction) => Transaction<ReturnType>,
 ): Transaction<ReturnType> {
 	if (overrideMethod !== undefined) return overrideMethod(transaction);
-	const formattedTransaction = {
+	const formattedTransaction: Transaction<ReturnType> = {
 		...transaction,
 		value:
 			transaction.value === '0x' ? '0x' : convertToValidType(transaction.value, desiredType),
@@ -65,9 +65,8 @@ export function formatTransaction<
 			},
 		},
 	};
-	// TODO - TSC is complaining that ReturnType could be instantiated with an
-	// arbitrary type which could be unrelated to 'string | number | bigint | undefined'
-	return formattedTransaction as unknown as Transaction<ReturnType>;
+
+	return formattedTransaction;
 }
 
 export const detectTransactionType = (
@@ -270,7 +269,8 @@ export async function populateTransaction<
 	// TODO Probably need to account for negative hex strings
 	const hexTxType = toHex(populatedTransaction.type);
 
-	if (hexTxType < '0x0' || hexTxType > '0x7f') //https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
+	if (hexTxType < '0x0' || hexTxType > '0x7f')
+		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 		throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
 	if (hexTxType === '0x0' || hexTxType === '0x1') {
