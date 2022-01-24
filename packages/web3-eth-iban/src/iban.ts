@@ -73,6 +73,7 @@ export class Iban {
 	 */
 	public toAddress = (): string => {
 		if (this.isDirect()) {
+			// check if Iban can be converted to an address
 			const base36 = this._iban.substr(4);
 			const bigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
 			const paddedBigInt = leftPad(bigInt, 40);
@@ -137,7 +138,7 @@ export class Iban {
 	 * Should be called to check if iban is correct
 	 */
 	public isValid() {
-		_isValid(this._iban);
+		return _isValid(this._iban);
 	}
 
 	/**
@@ -150,5 +151,12 @@ export class Iban {
 
 	public toString(): string {
 		return this._iban;
+	}
+
+	/**
+	 * check if iban number if indirect
+	 */
+	public isIndirect(): boolean {
+		return this._iban.length === 20;
 	}
 }
