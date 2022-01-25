@@ -10,6 +10,7 @@ import {
 	InvalidDesiredTypeError,
 	InvalidConvertibleObjectError,
 	InvalidConvertiblePropertiesListError,
+	InvalidConvertibleValueError,
 } from './errors';
 import {
 	Address,
@@ -442,8 +443,7 @@ export const convertToValidType = (
 	value: ValidReturnTypes[ValidTypes], // validate this
 	desiredType: ValidTypes,
 ) => {
-	// TODO - Replace error
-	if (value === undefined) throw new Error('value is undefined');
+	if (value === undefined) throw new InvalidConvertibleValueError();
 
 	switch (desiredType) {
 		case ValidTypes.HexString:
