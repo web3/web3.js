@@ -46,44 +46,35 @@ export function formatTransaction<
 			customChain: { ...transaction.common?.customChain },
 		},
 	};
-	if (formattedTransaction.value !== undefined)
-		formattedTransaction.value =
-			formattedTransaction.value === '0x'
-				? '0x'
-				: convertToValidType(formattedTransaction.value, desiredType);
-	if (formattedTransaction.gas !== undefined)
-		formattedTransaction.gas = convertToValidType(formattedTransaction.gas, desiredType);
-	if (formattedTransaction.gasPrice !== undefined)
-		formattedTransaction.gasPrice = convertToValidType(
-			formattedTransaction.gasPrice,
-			desiredType,
-		);
-	if (formattedTransaction.type !== undefined)
-		formattedTransaction.type = convertToValidType(formattedTransaction.type, desiredType);
-	if (formattedTransaction.maxFeePerGas !== undefined)
-		formattedTransaction.maxFeePerGas = convertToValidType(
-			formattedTransaction.maxFeePerGas,
-			desiredType,
-		);
-	if (formattedTransaction.maxPriorityFeePerGas !== undefined)
-		formattedTransaction.maxPriorityFeePerGas = convertToValidType(
-			formattedTransaction.maxPriorityFeePerGas,
-			desiredType,
-		);
-	if (formattedTransaction.nonce !== undefined)
-		formattedTransaction.nonce = convertToValidType(formattedTransaction.nonce, desiredType);
-	if (formattedTransaction.chainId !== undefined)
-		formattedTransaction.chainId = convertToValidType(
-			formattedTransaction.chainId,
-			desiredType,
-		);
-	if (formattedTransaction.gasLimit !== undefined)
-		formattedTransaction.gasLimit = convertToValidType(
-			formattedTransaction.gasLimit,
-			desiredType,
-		);
-	if (formattedTransaction.v !== undefined)
-		formattedTransaction.v = convertToValidType(formattedTransaction.v, desiredType);
+
+	const formattableProperties: (keyof Transaction)[] = [
+		'value',
+		'gas',
+		'gasPrice',
+		'type',
+		'maxFeePerGas',
+		'maxPriorityFeePerGas',
+		'nonce',
+		'chainId',
+		'gasLimit',
+		'v',
+	];
+	for (const transactionProperty of formattableProperties) {
+		const formattedProperty = formattedTransaction[transactionProperty];
+		if (
+			formattedProperty !== undefined &&
+			formattedProperty !== null &&
+			typeof formattedProperty !== 'object' &&
+			!Array.isArray(formattedProperty)
+		) {
+			if (transactionProperty === 'value' && formattedProperty === '0x') continue;
+			(formattedTransaction[transactionProperty] as Numbers) = convertToValidType(
+				formattedProperty,
+				desiredType,
+			);
+		}
+	}
+
 	if (formattedTransaction.common !== undefined) {
 		if (formattedTransaction.common.customChain !== undefined) {
 			if (formattedTransaction.common.customChain.networkId !== undefined)
