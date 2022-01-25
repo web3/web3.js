@@ -37,7 +37,7 @@ export function formatTransaction<
 >(transaction: Transaction, desiredType: DesiredType): Transaction<NumberType> {
 	// TODO - The spread operator performs a shallow copy of transaction.
 	// I tried using Object.assign({}, transaction) which is supposed to perform a deep copy,
-	// but format_transactions.test.ts were still failing due to original object properties
+	// but format_transactions.test.ts were still failing due to original nested object properties
 	// being wrongfully updated by this method.
 	const formattedTransaction = {
 		...transaction,
