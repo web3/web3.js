@@ -147,9 +147,9 @@ const validateChainInfo = (transaction: Transaction) => {
 
 // TODO Split into validateEipXXX methods
 const validateGas = (transaction: Transaction<HexString>) => {
-	const legacyGasPresent = transaction.gas === undefined && transaction.gasLimit === undefined;
+	const legacyGasPresent = transaction.gas !== undefined && transaction.gasLimit !== undefined;
 	const feeMarketGasPresent =
-		transaction.maxPriorityFeePerGas === undefined && transaction.maxFeePerGas === undefined;
+		transaction.maxPriorityFeePerGas !== undefined && transaction.maxFeePerGas !== undefined;
 
 	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
