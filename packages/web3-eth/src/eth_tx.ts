@@ -147,12 +147,11 @@ const validateChainInfo = (transaction: Transaction) => {
 
 // TODO Split into validateEipXXX methods
 const validateGas = (transaction: Transaction<HexString>) => {
-	if (
-		transaction.gas === undefined &&
-		transaction.gasLimit === undefined &&
-		transaction.maxPriorityFeePerGas === undefined &&
-		transaction.maxFeePerGas === undefined
-	)
+	const legacyGasPresent = transaction.gas === undefined && transaction.gasLimit === undefined;
+	const feeMarketGasPresent =
+		transaction.maxPriorityFeePerGas === undefined && transaction.maxFeePerGas === undefined;
+
+	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
 			gas: transaction.gas,
 			gasLimit: transaction.gasLimit,
@@ -160,7 +159,7 @@ const validateGas = (transaction: Transaction<HexString>) => {
 			maxFeePerGas: transaction.maxFeePerGas,
 		});
 
-	if (transaction.gas !== undefined || transaction.gasPrice !== undefined) {
+	if (legacyGasPresent) {
 		if (
 			// This check is verifying gas and gasPrice aren't less than 0.
 			// transaction's number properties have been converted to HexStrings.
