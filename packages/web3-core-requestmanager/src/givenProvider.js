@@ -24,14 +24,31 @@
 
 var givenProvider = null;
 
+const getGlobal = () => {
+    if (typeof globalThis !== 'undefined') { return globalThis }
+    if (typeof self !== 'undefined') { return self; }
+    if (typeof global !== 'undefined') { return global; }
+    if (typeof window !== 'undefined') { return window; }
+    
+    // This eval() will cause a Trusted Types / Content Security Policy failure
+    // in browsers that support it, on websites that have *also* have these
+    // controls enabled.
+    //
+    // The chance of this occurring is next to nil, as `window` would have to be
+    // deleted and `globalThis` would have to be unsupported, as well as the
+    // browser having support for the modern security controls detecting this
+    // unsafe usage:
+    //
+    // https://caniuse.com/contentsecuritypolicy,mdn-javascript_builtins_globalthis
+    //
+    // In these browsers, there is no eval() safe way of getting a reference to the
+    // global object when these conditions occur.
+    return Function('return this')();
+}
+
 // ADD GIVEN PROVIDER
 /* jshint ignore:start */
-var global;
-try {
-  global = Function('return this')();
-} catch (e) {
-  global = window;
-}
+var global = getGlobal();
 
 // EIP-1193: window.ethereum
 if (typeof global.ethereum !== 'undefined') {
