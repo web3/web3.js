@@ -65,6 +65,7 @@ export class ChainIdMismatchError extends Web3Error {
 	public constructor(value: { txChainId: unknown; customChainId: unknown }) {
 		super(
 			JSON.stringify(value),
+			// https://github.com/ChainSafe/web3.js/blob/8783f4d64e424456bdc53b34ef1142d0a7cee4d7/packages/web3-eth-accounts/src/index.js#L176
 			'Chain Id doesnt match in tx.chainId tx.common.customChain.chainId',
 		);
 	}
