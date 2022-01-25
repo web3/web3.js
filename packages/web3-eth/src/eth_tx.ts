@@ -281,47 +281,45 @@ export async function populateTransaction<
 
 	populatedTransaction.type = detectTransactionType(populatedTransaction);
 	// TODO - After web3Context.defaultTxType is implemented
-	if (populatedTransaction.type === undefined) populatedTransaction.type = '0x0'; // web3Context.defaultTxType;
+	// if (populatedTransaction.type === undefined) populatedTransaction.type = '0x0'; // web3Context.defaultTxType;
 
-	// TODO Probably need to account for negative hex strings
-	const hexTxType = toHex(populatedTransaction.type);
+	if (populatedTransaction.type !== undefined) {
+		// TODO Probably need to account for negative hex strings
+		const hexTxType = toHex(populatedTransaction.type);
 
-	if (hexTxType < '0x0' || hexTxType > '0x7f')
-		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
-		throw new UnsupportedTransactionTypeError(populatedTransaction.type);
+		if (hexTxType < '0x0' || hexTxType > '0x7f')
+			// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
+			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
-	if (hexTxType === '0x0' || hexTxType === '0x1') {
-		// transaction.type not supported before Berlin hardfork
-		// TODO - Maybe add check for populatedTransaction.hardfork >= Berlin before deleting
-		// if (hexTxType === '0x0') populatedTransaction.type = undefined;
+		if (hexTxType === '0x0' || hexTxType === '0x1') {
+			if (populatedTransaction.gasPrice === undefined)
+				populatedTransaction.gasPrice = await web3Eth.getGasPrice();
+		}
 
-		if (populatedTransaction.gasPrice === undefined)
-			populatedTransaction.gasPrice = await web3Eth.getGasPrice();
-	}
+		if (hexTxType === '0x1' || hexTxType === '0x2') {
+			if (populatedTransaction.accessList === undefined) populatedTransaction.accessList = [];
+		}
 
-	if (hexTxType === '0x1' || hexTxType === '0x2') {
-		if (populatedTransaction.accessList === undefined) populatedTransaction.accessList = [];
-	}
+		if (hexTxType === '0x2') {
+			const block = await web3Eth.getBlock();
 
-	if (hexTxType === '0x2') {
-		const block = await web3Eth.getBlock();
+			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
+			if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
 
-		// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
-		if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
-
-		if (populatedTransaction.gasPrice !== undefined) {
-			// Logic from 1.x
-			populatedTransaction.maxPriorityFeePerGas = populatedTransaction.gasPrice;
-			populatedTransaction.maxFeePerGas = populatedTransaction.gasPrice;
-			populatedTransaction.gasPrice = undefined;
-		} else {
-			if (populatedTransaction.maxPriorityFeePerGas === undefined)
-				// TODO - Add maxPriorityFeePerGas default to Web3Context
-				populatedTransaction.maxPriorityFeePerGas = toHex(2500000000); // 2.5 Gwei
-			if (populatedTransaction.maxFeePerGas === undefined)
-				populatedTransaction.maxFeePerGas =
-					BigInt(block.baseFeePerGas) * BigInt(2) +
-					BigInt(populatedTransaction.maxPriorityFeePerGas);
+			if (populatedTransaction.gasPrice !== undefined) {
+				// Logic from 1.x
+				populatedTransaction.maxPriorityFeePerGas = populatedTransaction.gasPrice;
+				populatedTransaction.maxFeePerGas = populatedTransaction.gasPrice;
+				populatedTransaction.gasPrice = undefined;
+			} else {
+				if (populatedTransaction.maxPriorityFeePerGas === undefined)
+					// TODO - Add maxPriorityFeePerGas default to Web3Context
+					populatedTransaction.maxPriorityFeePerGas = toHex(2500000000); // 2.5 Gwei
+				if (populatedTransaction.maxFeePerGas === undefined)
+					populatedTransaction.maxFeePerGas =
+						BigInt(block.baseFeePerGas) * BigInt(2) +
+						BigInt(populatedTransaction.maxPriorityFeePerGas);
+			}
 		}
 	}
 

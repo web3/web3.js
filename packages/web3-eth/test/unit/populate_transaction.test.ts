@@ -240,23 +240,6 @@ describe('populateTransaction', () => {
 	});
 
 	describe('should populate type', () => {
-		it('should populate with 0x0', async () => {
-			const input = { ...transaction };
-			delete input.type;
-
-			// Used by detectTransactionType
-			delete input.maxFeePerGas;
-			delete input.maxPriorityFeePerGas;
-			delete input.common?.hardfork;
-			delete input.accessList;
-			// detectTransactionType will automatically set type to 0x2 for london
-			// and 0x1 for berlin, so manually setting to something it doesn't handle yet
-			input.hardfork = 'merge';
-
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect(result.type).toBe('0x0');
-		});
-
 		it('should throw UnsupportedTransactionTypeError', async () => {
 			const input = { ...transaction };
 			input.type = '0x8'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
