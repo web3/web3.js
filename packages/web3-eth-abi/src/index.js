@@ -362,7 +362,9 @@ ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
 
     outputs.forEach(function (output, i) {
         var decodedValue = res[returnValue.__length__];
-        decodedValue = (decodedValue === '0x') ? null : decodedValue;
+        
+        // only convert `0x` to null if it's not string value
+        decodedValue = (decodedValue === '0x' && output.type !== 'string') ? null : decodedValue;
 
         returnValue[i] = decodedValue;
 
