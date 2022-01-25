@@ -1,20 +1,45 @@
 /* eslint-disable max-classes-per-file */
 
+import { ERR_TX_MISSING_GAS } from 'web3-common';
+import { ERR_TX_INVALID_FEE_MARKET_GAS } from 'web3-common';
+import { ERR_TX_INVALID_LEGACY_FEE_MARKET } from 'web3-common';
+import { ERR_TX_INVALID_NONCE_OR_CHAIN_ID } from 'web3-common';
+import { ERR_TX_UNSUPPORTED_EIP_1559 } from 'web3-common';
+import { ERR_TX_UNSUPPORTED_TYPE } from 'web3-common';
+import { ERR_TX_UNABLE_TO_POPULATE_NONCE } from 'web3-common';
+import { ERR_TX_INVALID_OBJECT } from 'web3-common';
+import { ERR_TX_INVALID_FEE_MARKET_GAS_PRICE } from 'web3-common';
+import { ERR_TX_INVALID_LEGACY_GAS } from 'web3-common';
+import {
+	ERR_TX_CHAIN_ID_MISMATCH,
+	ERR_TX_INVALID_CALL,
+	ERR_TX_INVALID_CHAIN_INFO,
+	ERR_TX_INVALID_SENDER,
+	ERR_TX_MISSING_CHAIN_INFO,
+	ERR_TX_MISSING_CUSTOM_CHAIN,
+	ERR_TX_MISSING_CUSTOM_CHAIN_ID,
+} from 'web3-common';
 import { Numbers, Web3Error } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
+	public code = ERR_TX_INVALID_SENDER;
+
 	public constructor(value: unknown) {
 		super(JSON.stringify(value), 'invalid transaction with sender');
 	}
 }
 
 export class InvalidTransactionCall extends Web3Error {
+	public code = ERR_TX_INVALID_CALL;
+
 	public constructor(value: unknown) {
 		super(JSON.stringify(value), 'invalid transaction call');
 	}
 }
 
 export class MissingCustomChainError extends Web3Error {
+	public code = ERR_TX_MISSING_CUSTOM_CHAIN;
+
 	public constructor() {
 		super(
 			'MissingCustomChainError',
@@ -24,6 +49,8 @@ export class MissingCustomChainError extends Web3Error {
 }
 
 export class MissingCustomChainIdError extends Web3Error {
+	public code = ERR_TX_MISSING_CUSTOM_CHAIN_ID;
+
 	public constructor() {
 		super(
 			'MissingCustomChainIdError',
@@ -33,6 +60,8 @@ export class MissingCustomChainIdError extends Web3Error {
 }
 
 export class ChainIdMismatchError extends Web3Error {
+	public code = ERR_TX_CHAIN_ID_MISMATCH;
+
 	public constructor(value: { txChainId: unknown; customChainId: unknown }) {
 		super(
 			JSON.stringify(value),
@@ -42,6 +71,8 @@ export class ChainIdMismatchError extends Web3Error {
 }
 
 export class CommonOrChainAndHardforkError extends Web3Error {
+	public code = ERR_TX_INVALID_CHAIN_INFO;
+
 	public constructor() {
 		super(
 			'CommonOrChainAndHardforkError',
@@ -51,6 +82,8 @@ export class CommonOrChainAndHardforkError extends Web3Error {
 }
 
 export class MissingChainOrHardforkError extends Web3Error {
+	public code = ERR_TX_MISSING_CHAIN_INFO;
+
 	public constructor(value: { chain: string | undefined; hardfork: string | undefined }) {
 		super(
 			'MissingChainOrHardforkError',
@@ -62,6 +95,8 @@ export class MissingChainOrHardforkError extends Web3Error {
 }
 
 export class MissingGasError extends Web3Error {
+	public code = ERR_TX_MISSING_GAS;
+
 	public constructor(value: {
 		gas: Numbers | undefined;
 		gasLimit: Numbers | undefined;
@@ -80,6 +115,8 @@ export class MissingGasError extends Web3Error {
 }
 
 export class InvalidGasOrGasPrice extends Web3Error {
+	public code = ERR_TX_INVALID_LEGACY_GAS;
+
 	public constructor(value: { gas: Numbers | undefined; gasPrice: Numbers | undefined }) {
 		super(
 			`gas: ${value.gas ?? 'undefined'}, gasPrice: ${value.gasPrice ?? 'undefined'}`,
@@ -89,6 +126,8 @@ export class InvalidGasOrGasPrice extends Web3Error {
 }
 
 export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends Web3Error {
+	public code = ERR_TX_INVALID_FEE_MARKET_GAS;
+
 	public constructor(value: {
 		maxPriorityFeePerGas: Numbers | undefined;
 		maxFeePerGas: Numbers | undefined;
@@ -103,12 +142,16 @@ export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends Web3Error {
 }
 
 export class Eip1559GasPriceError extends Web3Error {
+	public code = ERR_TX_INVALID_FEE_MARKET_GAS_PRICE;
+
 	public constructor(value: unknown) {
 		super(value, "eip-1559 transactions don't support gasPrice");
 	}
 }
 
 export class UnsupportedFeeMarketError extends Web3Error {
+	public code = ERR_TX_INVALID_LEGACY_FEE_MARKET;
+
 	public constructor(value: {
 		maxPriorityFeePerGas: Numbers | undefined;
 		maxFeePerGas: Numbers | undefined;
@@ -123,12 +166,16 @@ export class UnsupportedFeeMarketError extends Web3Error {
 }
 
 export class InvalidTransactionObjectError extends Web3Error {
+	public code = ERR_TX_INVALID_OBJECT;
+
 	public constructor(value: unknown) {
 		super(value, 'invalid transaction object');
 	}
 }
 
 export class InvalidNonceOrChainIdError extends Web3Error {
+	public code = ERR_TX_INVALID_NONCE_OR_CHAIN_ID;
+
 	public constructor(value: { nonce: Numbers | undefined; chainId: Numbers | undefined }) {
 		super(
 			`nonce: ${value.nonce ?? 'undefined'}, chainId: ${value.chainId ?? 'undefined'}`,
@@ -138,18 +185,24 @@ export class InvalidNonceOrChainIdError extends Web3Error {
 }
 
 export class UnableToPopulateNonceError extends Web3Error {
+	public code = ERR_TX_UNABLE_TO_POPULATE_NONCE;
+
 	public constructor() {
 		super('UnableToPopulateNonceError', 'unable to populate nonce, no from address available');
 	}
 }
 
 export class Eip1559NotSupportedError extends Web3Error {
+	public code = ERR_TX_UNSUPPORTED_EIP_1559;
+
 	public constructor() {
 		super('Eip1559NotSupportedError', "Network doesn't support eip-1559");
 	}
 }
 
 export class UnsupportedTransactionTypeError extends Web3Error {
+	public code = ERR_TX_UNSUPPORTED_TYPE;
+
 	public constructor(value: unknown) {
 		super(value, 'unsupported transaction type');
 	}
