@@ -3,6 +3,7 @@ import {
 	InvalidConvertibleObjectError,
 	InvalidConvertiblePropertiesListError,
 	InvalidDesiredTypeError,
+	InvalidConvertibleValueError,
 } from '../../src/errors';
 import {
 	Address,
@@ -265,9 +266,9 @@ export const toCheckSumValidData: [string, string][] = [
 ];
 
 export const convertToValidTypeValidData: [
-	ValidReturnTypes[ValidTypes] | undefined,
+	ValidReturnTypes[ValidTypes],
 	ValidTypes,
-	ValidReturnTypes[ValidTypes] | undefined,
+	ValidReturnTypes[ValidTypes],
 ][] = [
 	['0x2a', ValidTypes.HexString, '0x2a'],
 	['42', ValidTypes.HexString, '0x2a'],
@@ -301,10 +302,13 @@ export const convertToValidTypeValidData: [
 	['-42', ValidTypes.BigInt, BigInt('-42')],
 	[-42, ValidTypes.BigInt, BigInt('-42')],
 	[BigInt('-42'), ValidTypes.BigInt, BigInt('-42')],
-	[undefined, ValidTypes.HexString, undefined],
 ];
 
-export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError | string][] = [
+export const convertToValidTypeInvalidData: [
+	any,
+	any,
+	InvalidDesiredTypeError | InvalidConvertibleValueError | string,
+][] = [
 	['0x2a', 'hexString', new InvalidDesiredTypeError('hexString')],
 	['0x2a', 'qwerty', new InvalidDesiredTypeError('qwerty')],
 	['0x2a', 42, new InvalidDesiredTypeError(42)],
@@ -315,6 +319,7 @@ export const convertToValidTypeInvalidData: [any, any, InvalidDesiredTypeError |
 	['4.2', ValidTypes.HexString, 'value "4.2" at "/0" must pass "int" validation'],
 	[null, ValidTypes.HexString, 'value at "/0" must pass "int" validation'],
 	[true, ValidTypes.HexString, 'value "true" at "/0" must pass "int" validation'],
+	[undefined, ValidTypes.HexString, new InvalidConvertibleValueError()],
 ];
 
 export const convertObjectPropertiesToValidTypeValidData: [
