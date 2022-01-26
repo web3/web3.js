@@ -1,4 +1,4 @@
-import { toChecksumAddress, isAddress, leftPad, hexToNumber } from 'web3-utils';
+import { toChecksumAddress, isAddress, padLeft, hexToNumber, HexString, InvalidAddressError } from 'web3-utils';
 import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
 
@@ -11,7 +11,7 @@ const _iso13616Prepare = (iban: string): string => {
 	const Z = 'Z'.charCodeAt(0);
 
 	const upperIban = iban.toUpperCase();
-	const modifiedIban = `${upperIban.substr(4)}${upperIban.substr(0, 4)}`;
+	const modifiedIban = `${upperIban.slice(4)}${upperIban.slice(0, 4)}`;
 
 	return modifiedIban
 		.split('')
@@ -55,28 +55,26 @@ export class Iban {
 	private readonly _iban: string;
 
 	public constructor(iban: string) {
-		if (_isValid(iban)) {
-			// error
-		}
+		// TODO add IBAN validation and error 
 		this._iban = iban;
 	}
 
 	/**
 	 * check if iban number is direct
 	 */
-	private isDirect() {
+	public isDirect() {
 		return this._iban.length === 34 || this._iban.length === 35;
 	}
 
 	/**
 	 * Get the clients direct address from iban
 	 */
-	public toAddress = (): string => {
+	public toAddress = (): HexString => {
 		if (this.isDirect()) {
 			// check if Iban can be converted to an address
-			const base36 = this._iban.substr(4);
-			const bigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
-			const paddedBigInt = leftPad(bigInt, 40);
+			const base36 = this._iban.slice(4);
+			const parsedBigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
+			const paddedBigInt = padLeft(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
 		throw new IbanLengthError();
@@ -84,11 +82,8 @@ export class Iban {
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address
 	 */
-	public static toAddress = (iban: string): string => {
+	public static toAddress = (iban: string): HexString => {
 		const ibanObject = new Iban(iban);
-		if (!ibanObject.isDirect()) {
-			throw new IbanLengthError();
-		}
 		return ibanObject.toAddress();
 	};
 
@@ -109,9 +104,9 @@ export class Iban {
 	/**
 	 * This method should be used to create iban object from an ethereum address
 	 */
-	public static fromAddress(address: string): Iban {
+	public static fromAddress(address: HexString): Iban {
 		if (!isAddress(address)) {
-			throw new Error(`Provided address is not a valid address: ${address}`);
+			throw new InvalidAddressError(address);
 		}
 
 		const num = BigInt(hexToNumber(address));
@@ -123,7 +118,7 @@ export class Iban {
 	/**
 	 * This method should be used to create iban address from an ethereum address
 	 */
-	public static toIban(address: string): string {
+	public static toIban(address: HexString): string {
 		return Iban.fromAddress(address).toString();
 	}
 
