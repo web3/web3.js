@@ -22,6 +22,7 @@ import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
 	convertibleReceiptInfoProperties,
+	convertibleTransactionInfoProperties,
 } from './convertible_properties';
 
 import * as rpcMethods from './rpc_methods';
@@ -29,10 +30,13 @@ import { BlockFormatted } from './types';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
+
 export const isSyncing = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getSyncing(web3Context.requestManager);
+
 export const getCoinbase = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getCoinbase(web3Context.requestManager);
+
 export const isMining = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getMining(web3Context.requestManager);
 
@@ -206,19 +210,20 @@ export async function getTransaction<ReturnType extends ValidTypes = ValidTypes.
 
 export async function getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: HexString32Bytes | BlockNumberOrTag | undefined,
 	transactionIndex: Uint,
 	returnType?: ReturnType,
 ) {
-	const response = isHexString32Bytes(block)
+	const blockOrDefault = block ?? web3Context.defaultBlock;
+	const response = isHexString32Bytes(blockOrDefault)
 		? await rpcMethods.getTransactionByBlockHashAndIndex(
 				web3Context.requestManager,
-				block,
+				blockOrDefault,
 				transactionIndex,
 		  )
 		: await rpcMethods.getTransactionByBlockNumberAndIndex(
 				web3Context.requestManager,
-				block,
+				blockOrDefault,
 				transactionIndex,
 		  );
 
@@ -256,13 +261,13 @@ export async function getTransactionReceipt<ReturnType extends ValidTypes = Vali
 export async function getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address: Address,
-	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+	blockNumber: BlockNumberOrTag | undefined,
 	returnType?: ReturnType,
 ) {
 	const response = await rpcMethods.getTransactionCount(
 		web3Context.requestManager,
 		address,
-		blockNumber,
+		blockNumber ?? web3Context.defaultBlock,
 	);
 
 	return convertToValidType(
