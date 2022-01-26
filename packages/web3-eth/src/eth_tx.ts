@@ -11,7 +11,6 @@ import {
 } from 'web3-utils';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 
-import Web3Eth from '.';
 import {
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
@@ -30,6 +29,7 @@ import {
 	UnsupportedTransactionTypeError,
 } from './errors';
 import { PopulatedUnsignedTransaction, Transaction } from './types';
+import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 
 export function formatTransaction<
 	DesiredType extends ValidTypes,
@@ -245,7 +245,6 @@ export async function populateTransaction<
 	privateKey?: HexString,
 ): Promise<PopulatedUnsignedTransaction<NumberType>> {
 	const populatedTransaction = { ...transaction };
-	const web3Eth = new Web3Eth(web3Context.currentProvider);
 
 	if (populatedTransaction.from === undefined) {
 		if (privateKey !== undefined) {
@@ -257,7 +256,8 @@ export async function populateTransaction<
 
 	if (populatedTransaction.nonce === undefined) {
 		if (populatedTransaction.from === undefined) throw new UnableToPopulateNonceError();
-		populatedTransaction.nonce = await web3Eth.getTransactionCount(
+		populatedTransaction.nonce = await getTransactionCount(
+			web3Context,
 			populatedTransaction.from,
 			BlockTags.PENDING,
 		);
@@ -301,7 +301,7 @@ export async function populateTransaction<
 
 		if (hexTxType === '0x0' || hexTxType === '0x1') {
 			if (populatedTransaction.gasPrice === undefined)
-				populatedTransaction.gasPrice = await web3Eth.getGasPrice();
+				populatedTransaction.gasPrice = await getGasPrice(web3Context);
 		}
 
 		if (hexTxType === '0x1' || hexTxType === '0x2') {
@@ -309,7 +309,7 @@ export async function populateTransaction<
 		}
 
 		if (hexTxType === '0x2') {
-			const block = await web3Eth.getBlock();
+			const block = await getBlock(web3Context);
 
 			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
 			if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
