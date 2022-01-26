@@ -1,15 +1,4 @@
 /* eslint-disable max-classes-per-file */
-
-import { ERR_TX_MISSING_GAS } from 'web3-common';
-import { ERR_TX_INVALID_FEE_MARKET_GAS } from 'web3-common';
-import { ERR_TX_INVALID_LEGACY_FEE_MARKET } from 'web3-common';
-import { ERR_TX_INVALID_NONCE_OR_CHAIN_ID } from 'web3-common';
-import { ERR_TX_UNSUPPORTED_EIP_1559 } from 'web3-common';
-import { ERR_TX_UNSUPPORTED_TYPE } from 'web3-common';
-import { ERR_TX_UNABLE_TO_POPULATE_NONCE } from 'web3-common';
-import { ERR_TX_INVALID_OBJECT } from 'web3-common';
-import { ERR_TX_INVALID_FEE_MARKET_GAS_PRICE } from 'web3-common';
-import { ERR_TX_INVALID_LEGACY_GAS } from 'web3-common';
 import {
 	ERR_TX_CHAIN_ID_MISMATCH,
 	ERR_TX_INVALID_CALL,
@@ -18,6 +7,16 @@ import {
 	ERR_TX_MISSING_CHAIN_INFO,
 	ERR_TX_MISSING_CUSTOM_CHAIN,
 	ERR_TX_MISSING_CUSTOM_CHAIN_ID,
+	ERR_TX_MISSING_GAS,
+	ERR_TX_INVALID_FEE_MARKET_GAS,
+	ERR_TX_INVALID_LEGACY_FEE_MARKET,
+	ERR_TX_INVALID_NONCE_OR_CHAIN_ID,
+	ERR_TX_UNSUPPORTED_EIP_1559,
+	ERR_TX_UNSUPPORTED_TYPE,
+	ERR_TX_UNABLE_TO_POPULATE_NONCE,
+	ERR_TX_INVALID_OBJECT,
+	ERR_TX_INVALID_FEE_MARKET_GAS_PRICE,
+	ERR_TX_INVALID_LEGACY_GAS,
 } from 'web3-common';
 import { Numbers, Web3Error } from 'web3-utils';
 
