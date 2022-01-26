@@ -1,4 +1,4 @@
-import { toChecksumAddress, isAddress, padLeft, hexToNumber, HexString, InvalidAddressError } from 'web3-utils';
+import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString, InvalidAddressError } from 'web3-utils';
 import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
 
@@ -74,7 +74,7 @@ export class Iban {
 			// check if Iban can be converted to an address
 			const base36 = this._iban.slice(4);
 			const parsedBigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
-			const paddedBigInt = padLeft(parsedBigInt, 40);
+			const paddedBigInt = leftPad(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
 		throw new IbanLengthError();
