@@ -100,7 +100,7 @@ export const detectTransactionType = (
 	// TODO - Refactor overrideMethod
 	if (overrideMethod !== undefined) return overrideMethod(transaction);
 	if (transaction.type !== undefined)
-		return convertToValidType(transaction.type, ValidTypes.HexString);
+		return convertToValidType(transaction.type, ValidTypes.HexString) as HexString;
 
 	if (
 		transaction.maxFeePerGas !== undefined ||
@@ -337,5 +337,3 @@ export async function populateTransaction<
 		desiredType,
 	) as unknown as PopulatedUnsignedTransaction<NumberType>;
 }
-
-// TODO - Replace use of Web3Context with Web3Eth
