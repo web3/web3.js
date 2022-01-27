@@ -1,13 +1,19 @@
-import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString, InvalidAddressError } from 'web3-utils';
+import {
+	toChecksumAddress,
+	isAddress,
+	leftPad,
+	hexToNumber,
+	HexString,
+	InvalidAddressError,
+} from 'web3-utils';
 import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
-
 
 export class Iban {
 	private readonly _iban: string;
 
 	public constructor(iban: string) {
-		// TODO add IBAN validation and error 
+		// TODO add IBAN validation and error
 		this._iban = iban;
 	}
 
@@ -60,11 +66,10 @@ export class Iban {
 		/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
 		Iban._mod9710(Iban._iso13616Prepare(iban)) === 1;
 
-
 	/**
-	* check if iban number is direct
-	*/
-	public isDirect() {
+	 * check if iban number is direct
+	 */
+	public isDirect(): boolean {
 		return this._iban.length === 34 || this._iban.length === 35;
 	}
 
@@ -132,9 +137,30 @@ export class Iban {
 	}
 
 	/**
+	 * Should be called to get client identifier within institution
+	 */
+	public client(): string {
+		return this.isIndirect() ? this._iban.slice(11) : '';
+	}
+
+	/**
+	 * Returns the ibans checksum
+	 */
+	public checksum(): string {
+		return this._iban.slice(2, 4);
+	}
+
+	/**
+	 * Returns institution identifier from iban
+	 */
+	public institution(): string {
+		return this.isIndirect() ? this._iban.slice(7, 11) : '';
+	}
+
+	/**
 	 * Should be called to check if iban is correct
 	 */
-	public isValid() {
+	public isValid(): boolean {
 		return Iban._isValid(this._iban);
 	}
 

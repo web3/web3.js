@@ -7,6 +7,9 @@ import {
 	isValidData,
 	validIsDirectData,
 	validIsIndirectData,
+	validClientData,
+	validChecksumData,
+	validInstitutionData,
 } from '../fixtures/iban';
 
 describe('iban', () => {
@@ -109,6 +112,33 @@ describe('iban', () => {
 			it.each(validIsIndirectData)('%s', (input, output) => {
 				const iban = new Iban(input);
 				expect(iban.isIndirect()).toBe(output);
+			});
+		});
+	});
+
+	describe('client', () => {
+		describe('valid cases', () => {
+			it.each(validClientData)('%s', (input, output) => {
+				const iban = new Iban(input);
+				expect(iban.client()).toBe(output);
+			});
+		});
+	});
+
+	describe('institution', () => {
+		describe('valid cases', () => {
+			it.each(validInstitutionData)('%s', (input, output) => {
+				const iban = new Iban(input);
+				expect(iban.institution()).toBe(output);
+			});
+		});
+	});
+
+	describe('checksum', () => {
+		describe('valid cases', () => {
+			it.each(validChecksumData)('%s', (input, output) => {
+				const iban = new Iban(input);
+				expect(iban.checksum()).toBe(output);
 			});
 		});
 	});

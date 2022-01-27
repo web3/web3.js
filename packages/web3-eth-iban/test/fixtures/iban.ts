@@ -55,3 +55,9 @@ export const validIsIndirectData: [string, boolean][] = [
 	['XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', false],
 	['XE81ETHXREGGAVOFYO', false],
 ];
+
+export const validClientData: [string, string][] = [['XE81ETHXREGGAVOFYORK', 'GAVOFYORK']];
+
+export const validChecksumData: [string, string][] = [['XE81ETHXREGGAVOFYORK', '81']];
+
+export const validInstitutionData: [string, string][] = [['XE81ETHXREGGAVOFYORK', 'XREG']];
