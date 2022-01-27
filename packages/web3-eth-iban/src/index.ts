@@ -2,54 +2,6 @@ import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString, InvalidA
 import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
 
-/**
- * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
- * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
- */
-const _iso13616Prepare = (iban: string): string => {
-	const A = 'A'.charCodeAt(0);
-	const Z = 'Z'.charCodeAt(0);
-
-	const upperIban = iban.toUpperCase();
-	const modifiedIban = `${upperIban.slice(4)}${upperIban.slice(0, 4)}`;
-
-	return modifiedIban
-		.split('')
-		.map(n => {
-			const code = n.charCodeAt(0);
-			if (code >= A && code <= Z) {
-				// A = 10, B = 11, ... Z = 35
-				return code - A + 10;
-			}
-			return n;
-		})
-		.join('');
-};
-
-/**
- * return the bigint of the given string with the specified base
- */
-const _parseInt = (str: string, base: number): bigint =>
-	[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
-
-/**
- * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
- */
-const _mod9710 = (iban: string): number => {
-	let remainder = iban;
-	let block;
-
-	while (remainder.length > 2) {
-		block = remainder.slice(0, 9);
-		remainder = `${(parseInt(block, 10) % 97).toString()}${remainder.slice(block.length)}`;
-	}
-
-	return parseInt(remainder, 10) % 97;
-};
-
-const _isValid = (iban: string): boolean =>
-	/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
-	_mod9710(_iso13616Prepare(iban)) === 1;
 
 export class Iban {
 	private readonly _iban: string;
@@ -60,8 +12,58 @@ export class Iban {
 	}
 
 	/**
-	 * check if iban number is direct
+	 * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
+	 * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
 	 */
+	private static _iso13616Prepare = (iban: string): string => {
+		const A = 'A'.charCodeAt(0);
+		const Z = 'Z'.charCodeAt(0);
+
+		const upperIban = iban.toUpperCase();
+		const modifiedIban = `${upperIban.slice(4)}${upperIban.slice(0, 4)}`;
+
+		return modifiedIban
+			.split('')
+			.map(n => {
+				const code = n.charCodeAt(0);
+				if (code >= A && code <= Z) {
+					// A = 10, B = 11, ... Z = 35
+					return code - A + 10;
+				}
+				return n;
+			})
+			.join('');
+	};
+
+	/**
+	 * return the bigint of the given string with the specified base
+	 */
+	private static _parseInt = (str: string, base: number): bigint =>
+		[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
+
+	/**
+	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
+	 */
+	private static _mod9710 = (iban: string): number => {
+		let remainder = iban;
+		let block;
+
+		while (remainder.length > 2) {
+			block = remainder.slice(0, 9);
+			remainder = `${(parseInt(block, 10) % 97).toString()}${remainder.slice(block.length)}`;
+		}
+
+		return parseInt(remainder, 10) % 97;
+	};
+
+	private static _isValid = (iban: string): boolean =>
+		/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
+		Iban._mod9710(Iban._iso13616Prepare(iban)) === 1;
+
+
+	/**
+	* check if iban number is direct
+	*/
 	public isDirect() {
 		return this._iban.length === 34 || this._iban.length === 35;
 	}
@@ -73,7 +75,7 @@ export class Iban {
 		if (this.isDirect()) {
 			// check if Iban can be converted to an address
 			const base36 = this._iban.slice(4);
-			const parsedBigInt = _parseInt(base36, 36); // convert the base36 string to a bigint
+			const parsedBigInt = Iban._parseInt(base36, 36); // convert the base36 string to a bigint
 			const paddedBigInt = leftPad(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
@@ -95,7 +97,7 @@ export class Iban {
 	public static fromBban(bban: string): Iban {
 		const countryCode = 'XE';
 
-		const remainder = _mod9710(_iso13616Prepare(`${countryCode}00${bban}`));
+		const remainder = this._mod9710(this._iso13616Prepare(`${countryCode}00${bban}`));
 		const checkDigit = `0${(98 - remainder).toString()}`.slice(-2);
 
 		return new Iban(`${countryCode}${checkDigit}${bban}`);
@@ -133,7 +135,7 @@ export class Iban {
 	 * Should be called to check if iban is correct
 	 */
 	public isValid() {
-		return _isValid(this._iban);
+		return Iban._isValid(this._iban);
 	}
 
 	/**
