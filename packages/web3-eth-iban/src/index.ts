@@ -15,7 +15,7 @@ export class Iban {
 	 * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
 	 * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
 	 */
-	private static _iso13616Prepare = (iban: string): string => {
+	private static readonly _iso13616Prepare = (iban: string): string => {
 		const A = 'A'.charCodeAt(0);
 		const Z = 'Z'.charCodeAt(0);
 
@@ -38,13 +38,13 @@ export class Iban {
 	/**
 	 * return the bigint of the given string with the specified base
 	 */
-	private static _parseInt = (str: string, base: number): bigint =>
+	private static readonly _parseInt = (str: string, base: number): bigint =>
 		[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
 
 	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
 	 */
-	private static _mod9710 = (iban: string): number => {
+	private static readonly _mod9710 = (iban: string): number => {
 		let remainder = iban;
 		let block;
 
@@ -56,7 +56,7 @@ export class Iban {
 		return parseInt(remainder, 10) % 97;
 	};
 
-	private static _isValid = (iban: string): boolean =>
+	private static readonly _isValid = (iban: string): boolean =>
 		/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
 		Iban._mod9710(Iban._iso13616Prepare(iban)) === 1;
 
