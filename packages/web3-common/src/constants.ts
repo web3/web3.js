@@ -61,4 +61,7 @@ export const ERR_PBKDF2_ITERATIONS = 709;
 export const ERR_SIGNATURE_FAILED = 801;
 export const ERR_INVALID_SIGNATURE = 802;
 
+// Iban error codes
+export const ERR_IBAN_LENGTH = 901;
+
 export const GENESIS_BLOCK_NUMBER = '0x0';
