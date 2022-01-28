@@ -17,9 +17,9 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import * as http from 'http';
-import * as https from 'https';
+ import * as net from 'net';
+ import * as http from 'http';
+ import * as https from 'https';
 
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
@@ -222,9 +222,13 @@ export interface JsonRpcPayload {
 
 export interface JsonRpcResponse {
     jsonrpc: string;
-    id: number;
+    id: string | number;
     result?: any;
-    error?: string;
+    error?: {
+      readonly code?: number;
+      readonly data?: unknown;
+      readonly message: string;
+    };
 }
 
 export interface RevertInstructionError extends Error {
