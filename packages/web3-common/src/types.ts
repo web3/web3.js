@@ -38,6 +38,15 @@ export interface JsonRpcNotification<T = JsonRpcResult> {
 	readonly jsonrpc: JsonRpcIdentifier;
 	readonly method: string; // for subscription
 	readonly params: SubscriptionParams<T>; // for subscription results
+	readonly result: never;
+}
+
+export interface JsonRpcSubscriptionResult {
+	readonly id: number;
+	readonly jsonrpc: string;
+	readonly result: string;
+	readonly method: never;
+	readonly params: never;
 }
 
 export interface JsonRpcRequest<T = unknown[]> {
@@ -221,7 +230,7 @@ export type Web3APIParams<API extends Web3APISpec, Method extends Web3APIMethod<
 
 export interface Web3APIRequest<API extends Web3APISpec, Method extends Web3APIMethod<API>> {
 	method: Method;
-	params: Web3APIParams<API, Method> extends [] ? [] : Web3APIParams<API, Method>;
+	params: Web3APIParams<API, Method>;
 }
 
 export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIMethod<API>>
@@ -242,3 +251,10 @@ export type ConnectionEvent = {
 };
 
 export type Receipt = Record<string, unknown>;
+
+// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
+export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
+export type Web3BaseProviderCallback<T = JsonRpcResult> = (
+	error: Error | null,
+	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
+) => void;
