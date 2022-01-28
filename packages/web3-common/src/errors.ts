@@ -482,10 +482,3 @@ export class PBKDF2IterationsError extends Web3Error {
 		super('c > 1000, pbkdf2 is less secure with less iterations');
 	}
 }
-
-export class IbanLengthError extends Web3Error {
-	public code = ERR_IBAN_LENGTH;
-	public constructor() {
-		super('Iban is indirect and cannot be converted. Must be length of 34 or 35');
-	}
-}

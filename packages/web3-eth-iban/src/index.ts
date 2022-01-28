@@ -1,13 +1,18 @@
-import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString, InvalidAddressError } from 'web3-utils';
-import { IbanLengthError } from 'web3-common';
+import {
+	toChecksumAddress,
+	isAddress,
+	leftPad,
+	hexToNumber,
+	HexString,
+	InvalidAddressError,
+} from 'web3-utils';
 import { IbanOptions } from './types';
-
 
 export class Iban {
 	private readonly _iban: string;
 
 	public constructor(iban: string) {
-		// TODO add IBAN validation and error 
+		// TODO add IBAN validation and error
 		this._iban = iban;
 	}
 
@@ -60,10 +65,9 @@ export class Iban {
 		/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
 		Iban._mod9710(Iban._iso13616Prepare(iban)) === 1;
 
-
 	/**
-	* check if iban number is direct
-	*/
+	 * check if iban number is direct
+	 */
 	public isDirect() {
 		return this._iban.length === 34 || this._iban.length === 35;
 	}
@@ -79,7 +83,7 @@ export class Iban {
 			const paddedBigInt = leftPad(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
-		throw new IbanLengthError();
+		throw new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35');
 	};
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address

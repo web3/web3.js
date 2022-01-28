@@ -1,4 +1,3 @@
-import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from '../../src/types';
 
 export const validIbanToAddressData: [string, string][] = [
@@ -8,9 +7,15 @@ export const validIbanToAddressData: [string, string][] = [
 	['XE76LL5FJYLSMDVW5J02HWU6R5ZVPHURYM9', '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'],
 ];
 
-export const invalidIbanToAddressData: [string, IbanLengthError][] = [
-	['XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK', new IbanLengthError()],
-	['XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK365', new IbanLengthError()],
+export const invalidIbanToAddressData: [string, Error][] = [
+	[
+		'XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK',
+		new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35'),
+	],
+	[
+		'XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK365',
+		new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35'),
+	],
 ];
 
 export const invalidAddressData: [string][] = [
