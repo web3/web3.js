@@ -6,26 +6,9 @@ import {
 	JsonRpcResult,
 	Web3APIMethod,
 	Web3APISpec,
+	Web3BaseProviderStatus,
+	Web3BaseProviderCallback,
 } from './types';
-
-export interface ProviderMessage<T = JsonRpcResult> {
-	type: string;
-	data: T;
-}
-
-// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
-export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
-export type Web3BaseProviderCallback<T = JsonRpcResult> = (
-	error: Error | null,
-	result?: ProviderMessage<T>,
-) => void;
-
-// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
-export const JSONRPC_ERR_REJECTED_REQUEST = 4001;
-export const JSONRPC_ERR_UNAUTHORIZED = 4001;
-export const JSONRPC_ERR_UNSUPPORTED_METHOD = 4200;
-export const JSONRPC_ERR_DISCONNECTED = 4900;
-export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 
 const symbol = Symbol.for('web3/base-provider');
 

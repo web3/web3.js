@@ -45,30 +45,6 @@ export type TypedObjectAbbreviated = {
 
 export type IndexKeysForArray<A extends readonly unknown[]> = Exclude<keyof A, keyof []>;
 
-export type IntersectionOfUnion<U> = (U extends unknown ? (k: U) => void : never) extends (
-	k: infer I,
-) => void
-	? I
-	: never;
-
-export type LastOf<T> = IntersectionOfUnion<
-	T extends unknown ? () => T : never
-> extends () => infer R
-	? R
-	: never;
-
-export type Push<T extends unknown[], V> = [...T, V];
-
-export type UnionToTuple<T, L = LastOf<T>, N = [T] extends [never] ? true : false> = true extends N
-	? []
-	: Push<UnionToTuple<Exclude<T, L>>, L>;
-
-export type ObjectValueToTuple<
-	T,
-	KS extends unknown[] = UnionToTuple<keyof T>,
-	R extends unknown[] = [],
-> = KS extends [infer K, ...infer KT] ? ObjectValueToTuple<T, KT, [...R, T[K & keyof T]]> : R;
-
 export type ArrayToIndexObject<T extends ReadonlyArray<unknown>> = {
 	[K in IndexKeysForArray<T>]: T[K];
 };

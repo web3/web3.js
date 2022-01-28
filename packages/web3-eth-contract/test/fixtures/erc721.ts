@@ -1,94 +1,47 @@
-import { EventEmitter } from 'events';
 import { Address, Numbers } from 'web3-utils';
-import {
-	ContractEventLog,
-	NonPayableTransactionObject,
-	PayableTransactionObject,
-	Callback,
-	ContactEventOptions,
-} from '../../src/types';
+import { LogsSubscription } from '../../src/log_subscription';
+import { ContractEventOptions, NonPayableMethodObject, PayableMethodObject } from '../../src/types';
 
 export interface Erc721Interface {
 	methods: {
-		getApproved: (
-			_tokenId: Numbers,
-		) => NonPayableTransactionObject<{ _tokenId: Numbers }, [Address]>;
+		[key: string]: (
+			...args: ReadonlyArray<any>
+		) =>
+			| PayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>
+			| NonPayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>;
+		getApproved: (_tokenId: Numbers) => NonPayableMethodObject<[_tokenId: Numbers], [Address]>;
 		approve: (
 			_approved: Address,
 			_tokenId: Numbers,
-		) => NonPayableTransactionObject<{ _approved: Address; _tokenId: Numbers }, []>;
+		) => PayableMethodObject<[_approved: Address, _tokenId: Numbers], []>;
 		transferFrom: (
 			_from: Address,
 			_to: Address,
 			_tokenId: Numbers,
-		) => PayableTransactionObject<{ _from: Address; _to: Address; _tokenId: Numbers }, []>;
+		) => PayableMethodObject<[_from: Address, _to: Address, _tokenId: Numbers], []>;
 		safeTransferFrom: (
 			_from: Address,
 			_to: Address,
 			_tokenId: Numbers,
-		) => NonPayableTransactionObject<{ _from: Address; _to: Address; _tokenId: Numbers }, []>;
-		ownerOf: (
-			_tokenId: Numbers,
-		) => NonPayableTransactionObject<{ _tokenId: Numbers }, [Address]>;
-		balanceOf: (_owner: Address) => NonPayableTransactionObject<{ _owner: Address }, [Numbers]>;
+		) => PayableMethodObject<[_from: Address, _to: Address, _tokenId: Numbers], []>;
+		ownerOf: (_tokenId: Numbers) => NonPayableMethodObject<[_tokenId: Numbers], [Address]>;
+		balanceOf: (_owner: Address) => NonPayableMethodObject<[_owner: Address], [Numbers]>;
 		setApprovalForAll: (
 			_operator: Address,
 			_approved: boolean,
-		) => NonPayableTransactionObject<{ _operator: Address; _approved: boolean }, []>;
+		) => NonPayableMethodObject<[_operator: Address, _approved: boolean], []>;
 
 		isApprovedForAll: (
 			_owner: Address,
 			_operator: Address,
-		) => NonPayableTransactionObject<{ _owner: Address; _operator: Address }, [boolean]>;
+		) => NonPayableMethodObject<[_owner: Address, _operator: Address], [boolean]>;
 	};
 
 	events: {
-		Transfer:
-			| ((
-					cb: Callback<
-						ContractEventLog<{ _from: Address; _to: Address; _tokenId: Numbers }>
-					>,
-			  ) => EventEmitter)
-			| ((
-					options: ContactEventOptions,
-					cb: Callback<
-						ContractEventLog<{ _from: Address; _to: Address; _tokenId: Numbers }>
-					>,
-			  ) => EventEmitter);
-
-		Approval:
-			| ((
-					cb: Callback<
-						ContractEventLog<{ _owner: Address; _approved: Address; _tokenId: Numbers }>
-					>,
-			  ) => EventEmitter)
-			| ((
-					options: ContactEventOptions,
-					cb: Callback<
-						ContractEventLog<{ _owner: Address; _approved: Address; _tokenId: Numbers }>
-					>,
-			  ) => EventEmitter);
-
-		ApprovalForAll:
-			| ((
-					cb: Callback<
-						ContractEventLog<{
-							_owner: Address;
-							_operator: Address;
-							_approved: boolean;
-						}>
-					>,
-			  ) => EventEmitter)
-			| ((
-					options: ContactEventOptions,
-					cb: Callback<
-						ContractEventLog<{
-							_owner: Address;
-							_operator: Address;
-							_approved: boolean;
-						}>
-					>,
-			  ) => EventEmitter);
+		[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		Transfer: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		Approval: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		ApprovalForAll: (options?: ContractEventOptions) => Promise<LogsSubscription>;
 	};
 }
 

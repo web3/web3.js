@@ -1,11 +1,4 @@
-import {
-	Address,
-	Bytes,
-	Numbers,
-	ObjectValueToTuple,
-	ArrayToIndexObject,
-	FixedSizeArray,
-} from 'web3-utils';
+import { Address, Bytes, FixedSizeArray, Numbers } from 'web3-utils';
 import { ConvertToNumber } from './number_map_type';
 
 export interface AbiStruct {
@@ -33,21 +26,24 @@ export type AbiParameter = {
 type FragmentTypes = 'constructor' | 'event' | 'function' | 'fallback';
 
 export type AbiBaseFragment = {
-	readonly type: FragmentTypes;
+        // type will default to string if passed ABI is declared without "as const"
+	readonly type: string | FragmentTypes;
 };
+
+// To assign an ABI which is not declared `as const` need to specify a generic string
 
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type AbiConstructorFragment = AbiBaseFragment & {
-	readonly type: 'constructor';
-	readonly stateMutability: 'nonpayable' | 'payable';
+	readonly type: string | 'constructor';
+	readonly stateMutability: string | 'nonpayable' | 'payable';
 	readonly inputs: ReadonlyArray<AbiParameter>;
 };
 
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type AbiFunctionFragment = AbiBaseFragment & {
 	readonly name: string;
-	readonly type: 'function';
-	readonly stateMutability: 'nonpayable' | 'payable' | 'pure' | 'view';
+	readonly type: string | 'function';
+	readonly stateMutability: string | 'nonpayable' | 'payable' | 'pure' | 'view';
 	readonly inputs: ReadonlyArray<AbiParameter>;
 	readonly outputs: ReadonlyArray<AbiParameter>;
 
@@ -57,8 +53,8 @@ export type AbiFunctionFragment = AbiBaseFragment & {
 
 export type AbiFallbackFragment = AbiBaseFragment & {
 	readonly name?: never;
-	readonly type: 'fallback';
-	readonly stateMutability: 'nonpayable' | 'payable' | 'pure' | 'view';
+	readonly type: string | 'fallback';
+	readonly stateMutability: string | 'nonpayable' | 'payable' | 'pure' | 'view';
 	readonly inputs?: never;
 	readonly outputs?: never;
 
@@ -70,7 +66,7 @@ export type AbiFallbackFragment = AbiBaseFragment & {
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type AbiEventFragment = AbiBaseFragment & {
 	readonly name: string;
-	readonly type: 'event';
+	readonly type: string | 'event';
 	readonly inputs: ReadonlyArray<AbiParameter>;
 	readonly anonymous?: boolean;
 };
@@ -164,44 +160,42 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
-// Only intended to use locally so why not exported
-// TODO: Inspect Record<string, AbiParameter> not working constraint
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type _ExtractParameterType<T extends Record<string, any>> = {
-	[K in keyof T]: MatchPrimitiveType<T[K]['type'], T[K]['components']>;
-};
+export type ContractMethodOutputParameters<Params extends Array<unknown>> = Params extends []
+	? []
+	: Params extends [infer H, ...infer R]
+	? H extends AbiParameter
+		? // TODO: Find a way to set name for tuple item
+		  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
+		: ContractMethodOutputParameters<R>
+	: Params;
 
-export type ContractMethodOutputParameters<Params extends ReadonlyArray<AbiParameter>> =
-	ObjectValueToTuple<_ExtractParameterType<ArrayToIndexObject<Params>>>;
-
-export type ContractMethodInputParameters<Params extends ReadonlyArray<AbiParameter>> =
-	Params extends readonly []
-		? never
-		: {
-				[Param in Params[number] as Param['name']]: MatchPrimitiveType<
-					Param['type'],
-					Param['components']
-				>;
-		  };
+export type ContractMethodInputParameters<Params extends Array<unknown>> = Params extends []
+	? []
+	: Params extends [infer H, ...infer R]
+	? H extends AbiParameter
+		? // TODO: Find a way to set name for tuple item
+		  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
+		: ContractMethodInputParameters<R>
+	: Params;
 
 export type ContractConstructor<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiConstructorFragment> as 'constructor']: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
 	};
 }['constructor'];
 
 export type ContractMethods<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiFunctionFragment> as Abi['name']]: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
-		readonly Outputs: ContractMethodOutputParameters<Abi['outputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
+		readonly Outputs: ContractMethodOutputParameters<[...Abi['outputs']]>;
 	};
 };
 
 export type ContractEvents<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiEventFragment> as Abi['name']]: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
+		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
 	};
 };
