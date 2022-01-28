@@ -80,6 +80,7 @@ Released with 1.0.0-beta.37 code base.
 - Fix hexToNumber and hexToNumberString prefix validation (#3086)
 - The receipt will now returned on a EVM error (this got removed on beta.18) (#3129)
 - Fixes transaction confirmations with the HttpProvider (#3140)
+- Fix error in web worker for web3-providers-ws (#4745)
 
 ## [1.2.3]
 
