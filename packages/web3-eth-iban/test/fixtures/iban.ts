@@ -29,11 +29,19 @@ export const validCreateIndirectData: [IbanOptions, string][] = [
 		},
 		'XE81ETHXREGGAVOFYORK',
 	],
+	[
+		{
+			institution: 'XREG',
+			identifier: 'HELLOWORL',
+		},
+		'XE48ETHXREGHELLOWORL',
+	],
 ];
 
 export const isValidData: [any, boolean][] = [
 	['XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK36', true],
 	['XE81ETHXREGGAVOFYORK', true],
+	['XE48ETHXREGHELLOWORL', true],
 	[1, false], // anything that is not a string should return false
 	[[], false],
 	[true, false],
@@ -54,4 +62,20 @@ export const validIsIndirectData: [string, boolean][] = [
 	['XE81ETHXREGGAVOFYORK', true],
 	['XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', false],
 	['XE81ETHXREGGAVOFYO', false],
+	['XE48ETHXREGHELLOWORL', true],
+];
+
+export const validClientData: [string, string][] = [
+	['XE81ETHXREGGAVOFYORK', 'GAVOFYORK'],
+	['XE48ETHXREGHELLOWORL', 'HELLOWORL'],
+];
+
+export const validChecksumData: [string, string][] = [
+	['XE81ETHXREGGAVOFYORK', '81'],
+	['XE48ETHXREGHELLOWORL', '48'],
+];
+
+export const validInstitutionData: [string, string][] = [
+	['XE81ETHXREGGAVOFYORK', 'XREG'],
+	['XE48ETHXREGHELLOWORL', 'XREG'],
 ];
