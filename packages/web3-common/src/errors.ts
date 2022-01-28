@@ -46,7 +46,6 @@ import {
 	ERR_INVALID_PASSWORD,
 	ERR_IV_LENGTH,
 	ERR_PBKDF2_ITERATIONS,
-	ERR_IBAN_LENGTH,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
