@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ganache = require('ganache-cli');
+var ganache = require('ganache');
 var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 

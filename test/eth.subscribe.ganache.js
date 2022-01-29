@@ -1,5 +1,5 @@
 const assert = require('assert');
-const ganache = require('ganache-cli');
+const ganache = require('ganache');
 const pify = require('pify');
 const { getWeb3, waitSeconds } = require('./helpers/test.utils');
 
