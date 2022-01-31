@@ -75,20 +75,16 @@ export function formatTransaction<
 		}
 	}
 
-	if (formattedTransaction.common !== undefined) {
-		if (formattedTransaction.common.customChain !== undefined) {
-			if (formattedTransaction.common.customChain.networkId !== undefined)
-				formattedTransaction.common.customChain.networkId = convertToValidType(
-					formattedTransaction.common.customChain.networkId,
-					desiredType,
-				);
-			if (formattedTransaction.common.customChain.chainId !== undefined)
-				formattedTransaction.common.customChain.chainId = convertToValidType(
-					formattedTransaction.common.customChain.chainId,
-					desiredType,
-				);
-		}
-	}
+	if (formattedTransaction.common?.customChain?.networkId !== undefined)
+		formattedTransaction.common.customChain.networkId = convertToValidType(
+			formattedTransaction.common.customChain.networkId,
+			desiredType,
+		);
+	if (formattedTransaction.common?.customChain?.chainId !== undefined)
+		formattedTransaction.common.customChain.chainId = convertToValidType(
+			formattedTransaction.common.customChain.chainId,
+			desiredType,
+		);
 
 	return formattedTransaction as Transaction<NumberType>;
 }
