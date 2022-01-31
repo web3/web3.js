@@ -13,6 +13,7 @@ import {
 	utf8ToHex,
 } from 'web3-utils';
 import { isBlockTag } from 'web3-validator';
+import { Iban } from 'web3-eth-iban';
 import { FormatterError } from './errors';
 import {
 	Proof,
@@ -88,14 +89,11 @@ export const inputDefaultBlockNumberFormatter = (
 };
 
 export const inputAddressFormatter = (address: string): string | never => {
-	// TODO: Implement IBAN address scheme logic below.
+	const iban = new Iban(address);
 
-	// const iban = new Iban(address);
-	// if (iban.isValid() && iban.isDirect()) {
-	// 	return iban.toAddress().toLowerCase();
-	// } else if (utils.isAddress(address)) {
-	// 	return '0x' + address.toLowerCase().replace('0x', '');
-	// }
+	if (iban.isValid() && iban.isDirect()) {
+		return iban.toAddress().toLowerCase();
+	}
 
 	if (isAddress(address)) {
 		return `0x${address.toLowerCase().replace('0x', '')}`;

@@ -6,7 +6,6 @@ import {
 	HexString,
 	InvalidAddressError,
 } from 'web3-utils';
-import { IbanLengthError } from 'web3-common';
 import { IbanOptions } from './types';
 
 export class Iban {
@@ -84,7 +83,7 @@ export class Iban {
 			const paddedBigInt = leftPad(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
-		throw new IbanLengthError();
+		throw new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35');
 	};
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address

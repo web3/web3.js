@@ -26,7 +26,7 @@ export type AbiParameter = {
 type FragmentTypes = 'constructor' | 'event' | 'function' | 'fallback';
 
 export type AbiBaseFragment = {
-        // type will default to string if passed ABI is declared without "as const"
+	// type will default to string if passed ABI is declared without "as const"
 	readonly type: string | FragmentTypes;
 };
 
