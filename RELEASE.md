@@ -56,7 +56,8 @@ To provide safety over longer periods, it is important to have versions tagged a
 | Release |    Status     | Initial Release |   LTS Start   | End-of-Life |
 | :-----: | :-----------: | :-------------: | :-----------: | :---------: |
 |   1.x   |      LTS      |  24. Jul. 2017  | 23. Jul. 2019 |     TBD     |
-|   2.x   | Alpha Preview |  13. Jul. 2019  |      TBD      |     TBD     |
+|   2.x   | Alpha Preview |  13. Jul. 2019  | 13. Jul. 2019 | 13. Jul. 2020 |
+|   4.x.  |  Development  |    Apr. 2022    |      TBD.     |     TBD.    |
 
 ## Deprecation Rules
 
