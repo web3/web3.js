@@ -45,7 +45,7 @@ import {
 	sendSignedTransactionValidData,
 	signValidData,
 	submitWorkValidData,
-} from '../fixtures/web3_eth_methods';
+} from '../fixtures/rpc_methods_wrappers';
 
 jest.mock('../../src/rpc_methods');
 
