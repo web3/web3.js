@@ -41,6 +41,7 @@ export interface BaseTransaction {
 	readonly gas: Uint;
 	readonly value: Uint;
 	readonly input: HexStringBytes;
+	readonly chainId: Uint;
 }
 
 export interface Transaction1559Unsigned extends BaseTransaction {
