@@ -235,7 +235,7 @@ export const getBalanceValidData: [
 	],
 ];
 
-export const block: Block = {
+const block: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',
 	sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
 	miner: '0xbb7b8287f3f0a933474a79eae42cbca977791171',
@@ -267,7 +267,7 @@ export const block: Block = {
 	hash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
 	baseFeePerGas: '0x13afe8b904',
 };
-export const transactionInfo: TransactionInfo = {
+const transactionInfo: TransactionInfo = {
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
 	blockNumber: '0x5daf3b',
 	from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
@@ -286,12 +286,8 @@ export const transactionInfo: TransactionInfo = {
 	maxFeePerGas: '0x1475505aab',
 	maxPriorityFeePerGas: '0x7f324180',
 };
-export const hydratedTransactions: TransactionInfo[] = [
-	transactionInfo,
-	transactionInfo,
-	transactionInfo,
-];
-export const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
+const hydratedTransactions: TransactionInfo[] = [transactionInfo, transactionInfo, transactionInfo];
+const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
 	...block,
 	transactions: hydratedTransactions,
 	difficulty: '21109876668',
@@ -304,7 +300,7 @@ export const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString>
 	baseFeePerGas: '84555643140',
 	size: '544',
 };
-export const blockFormattedNumber: BlockFormatted<ValidTypes.Number> = {
+const blockFormattedNumber: BlockFormatted<ValidTypes.Number> = {
 	...block,
 	transactions: hydratedTransactions,
 	difficulty: 21109876668,
@@ -317,7 +313,7 @@ export const blockFormattedNumber: BlockFormatted<ValidTypes.Number> = {
 	baseFeePerGas: 84555643140,
 	size: 544,
 };
-export const blockFormattedBigInt: BlockFormatted<ValidTypes.BigInt> = {
+const blockFormattedBigInt: BlockFormatted<ValidTypes.BigInt> = {
 	...block,
 	transactions: hydratedTransactions,
 	// TODO Change this to TransactionInfoFormatted
