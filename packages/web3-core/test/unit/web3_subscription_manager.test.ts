@@ -45,7 +45,7 @@ describe('Web3SubscriptionManager', () => {
 	});
 
 	describe('subscribe', () => {
-		let subManager: Web3SubscriptionManager<any>;
+		let subManager: Web3SubscriptionManager<any, any>;
 
 		beforeEach(() => {
 			subManager = new Web3SubscriptionManager(requestManager, subscriptions);
@@ -64,7 +64,7 @@ describe('Web3SubscriptionManager', () => {
 			jest.spyOn(subManager, 'supportsSubscriptions').mockReturnValue(false);
 
 			await expect(subManager.subscribe('example')).rejects.toThrow(
-				'The current provider do not support subscriptions',
+				'The current provider does not support subscriptions',
 			);
 		});
 
@@ -95,7 +95,7 @@ describe('Web3SubscriptionManager', () => {
 	});
 
 	describe('addSubscription', () => {
-		let subManager: Web3SubscriptionManager<any>;
+		let subManager: Web3SubscriptionManager<any, any>;
 		let sub: ExampleSubscription;
 
 		beforeEach(() => {
@@ -131,7 +131,7 @@ describe('Web3SubscriptionManager', () => {
 	});
 
 	describe('removeSubscription', () => {
-		let subManager: Web3SubscriptionManager<any>;
+		let subManager: Web3SubscriptionManager<any, any>;
 		let sub: ExampleSubscription;
 
 		beforeEach(async () => {

@@ -1,16 +1,20 @@
-import { ProviderError, SubscriptionError } from 'web3-common';
+import { ProviderError, SubscriptionError, Web3APISpec } from 'web3-common';
 import { isSupportSubscriptions } from './utils';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
-import { Web3Subscription, Web3SubscriptionConstructor } from './web3_subscriptions';
+import { Web3SubscriptionConstructor } from './web3_subscriptions';
 
 export class Web3SubscriptionManager<
-	ST extends { [key: string]: Web3SubscriptionConstructor<Web3Subscription> },
+	API extends Web3APISpec,
+	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> },
 > {
-	private readonly _subscriptions: Map<string, Web3Subscription> = new Map();
+	private readonly _subscriptions: Map<
+		string,
+		InstanceType<RegisteredSubs[keyof RegisteredSubs]>
+	> = new Map();
 
 	public constructor(
-		public readonly requestManager: Web3RequestManager,
-		public readonly registeredSubscriptions: ST,
+		public readonly requestManager: Web3RequestManager<API>,
+		public readonly registeredSubscriptions: RegisteredSubs,
 	) {
 		this.requestManager.on(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, async () => {
 			await this.unsubscribe();
@@ -21,16 +25,12 @@ export class Web3SubscriptionManager<
 		});
 	}
 
-	public async subscribe<T extends keyof ST>(
+	public async subscribe<T extends keyof RegisteredSubs>(
 		name: T,
-		args?: ConstructorParameters<ST[T]>[0],
-	): Promise<InstanceType<ST[T]>> {
+		args?: ConstructorParameters<RegisteredSubs[T]>[0],
+	): Promise<InstanceType<RegisteredSubs[T]>> {
 		if (!this.requestManager.provider) {
 			throw new ProviderError('Provider not available');
-		}
-
-		if (!this.supportsSubscriptions()) {
-			throw new SubscriptionError('The current provider do not support subscriptions');
 		}
 
 		const Klass = this.registeredSubscriptions[name];
@@ -41,7 +41,7 @@ export class Web3SubscriptionManager<
 
 		const subscription = new Klass(args ?? null, {
 			requestManager: this.requestManager,
-		}) as InstanceType<ST[T]>;
+		}) as InstanceType<RegisteredSubs[T]>;
 
 		await this.addSubscription(subscription);
 
@@ -52,7 +52,11 @@ export class Web3SubscriptionManager<
 		return this._subscriptions;
 	}
 
-	public async addSubscription(sub: Web3Subscription) {
+	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
+		if (!this.supportsSubscriptions()) {
+			throw new SubscriptionError('The current provider does not support subscriptions');
+		}
+
 		if (sub.id && this._subscriptions.has(sub.id)) {
 			throw new SubscriptionError(`Subscription with id "${sub.id}" already exists`);
 		}
@@ -66,7 +70,7 @@ export class Web3SubscriptionManager<
 		this._subscriptions.set(sub.id, sub);
 	}
 
-	public async removeSubscription(sub: Web3Subscription) {
+	public async removeSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (sub.id === undefined) {
 			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}

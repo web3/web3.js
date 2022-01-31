@@ -8,6 +8,7 @@ import {
 	JsonRpcNotification,
 	JsonRpcRequest,
 	JsonRpcBatchResponse,
+	JsonRpcSubscriptionResult,
 } from './types';
 
 let messageId = 0;
@@ -33,12 +34,22 @@ export const isResponseWithError = <Error = unknown, Result = unknown>(
 	(typeof response.id === 'number' || typeof response.id === 'string');
 
 export const isResponseWithNotification = <Result>(
-	response: JsonRpcNotification<Result>,
+	response: JsonRpcNotification<Result> | JsonRpcSubscriptionResult,
 ): response is JsonRpcNotification<Result> =>
 	!Array.isArray(response) &&
 	!!response &&
 	response.jsonrpc === '2.0' &&
-	response.params !== undefined;
+	response.params !== undefined &&
+	response.method !== undefined;
+
+export const isSubscriptionResult = <Result>(
+	response: JsonRpcNotification<Result> | JsonRpcSubscriptionResult,
+): response is JsonRpcSubscriptionResult =>
+	!Array.isArray(response) &&
+	!!response &&
+	response.jsonrpc === '2.0' &&
+	response.id !== undefined &&
+	response.result !== undefined;
 
 export const validateResponse = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,

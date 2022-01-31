@@ -8,25 +8,25 @@ describe('Web3Context', () => {
 	});
 
 	it('should return providers on instance level', () => {
-		const context = new Web3Context('test');
+		const context = new Web3Context('http://test.com');
 		expect(context.providers).toBeDefined();
 		expect(context.providers).toEqual(Web3Context.providers);
 	});
 
 	it('should create instance of request manager', () => {
-		const context = new Web3Context('test');
+		const context = new Web3Context('http://test.com');
 
 		expect(context.requestManager).toBeInstanceOf(Web3RequestManager);
 	});
 
 	it('should return current provider from request manager', () => {
-		const context = new Web3Context('test');
+		const context = new Web3Context('http://test.com');
 
 		expect(context.currentProvider).toBe(context.requestManager.provider);
 	});
 
 	it('should set return current provider for the request manager', () => {
-		const context = new Web3Context('test');
+		const context = new Web3Context('http://test.com');
 
 		context.currentProvider = 'http://test/abc';
 

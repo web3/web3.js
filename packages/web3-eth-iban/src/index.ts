@@ -68,7 +68,7 @@ export class Iban {
 	/**
 	 * check if iban number is direct
 	 */
-	public isDirect() {
+	public isDirect(): boolean {
 		return this._iban.length === 34 || this._iban.length === 35;
 	}
 
@@ -136,9 +136,30 @@ export class Iban {
 	}
 
 	/**
+	 * Should be called to get client identifier within institution
+	 */
+	public client(): string {
+		return this.isIndirect() ? this._iban.slice(11) : '';
+	}
+
+	/**
+	 * Returns the ibans checksum
+	 */
+	public checksum(): string {
+		return this._iban.slice(2, 4);
+	}
+
+	/**
+	 * Returns institution identifier from iban
+	 */
+	public institution(): string {
+		return this.isIndirect() ? this._iban.slice(7, 11) : '';
+	}
+
+	/**
 	 * Should be called to check if iban is correct
 	 */
-	public isValid() {
+	public isValid(): boolean {
 		return Iban._isValid(this._iban);
 	}
 
