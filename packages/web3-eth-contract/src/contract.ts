@@ -5,6 +5,7 @@ import {
 	AbiFunctionFragment,
 	ContractAbi,
 	ContractEvents,
+	ContractMethod,
 	ContractMethods,
 	encodeEventSignature,
 	encodeFunctionSignature,
@@ -27,35 +28,29 @@ import {
 } from './types';
 import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './utils';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ContractBoundMethod<Method extends ContractMethod<any>> = (
+	...args: Method['Inputs']
+) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
+	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
+	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
+
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractMethodsInterface<
 	Abi extends ContractAbi,
 	Methods extends ContractMethods<Abi> = ContractMethods<Abi>,
 > = {
-	[key: string]: (
-		...args: Array<unknown>
-	) =>
-		| PayableMethodObject<Array<unknown>, Array<unknown>>
-		| NonPayableMethodObject<Array<unknown>, Array<unknown>>;
-} & {
-	[Name in keyof Methods]: (
-		...args: Methods[Name]['Inputs']
-	) => // TODO: Debug why `Abi` object is not accessible
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-expect-error
-	Methods[Name]['Abi']['stateMutability'] extends 'payable' | 'pure'
-		? PayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>
-		: NonPayableMethodObject<Methods[Name]['Inputs'], Methods[Name]['Outputs']>;
+	[Name in keyof Methods | string]: ContractBoundMethod<Methods[Name]>;
 };
+
+type ContractBoundEvent = (options?: ContractEventOptions) => Promise<LogsSubscription>;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
 	Abi extends ContractAbi,
 	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
 > = {
-	[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-} & {
-	[Name in keyof Events]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+	[Name in keyof Events | string]: ContractBoundEvent;
 };
 
 // To avoid circular dependency between types and encoding, declared these types here.
@@ -67,11 +62,6 @@ export type ContractEventEmitterInterface<
 };
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
-
-type ContractBoundMethod = () =>
-	| NonPayableMethodObject<unknown, unknown>
-	| PayableMethodObject<unknown, unknown>;
-type ContractBoundEvent = (options?: EventParameters) => Promise<LogsSubscription>;
 
 export class Contract<Abi extends ContractAbi>
 	extends Web3Context<EthExecutionAPI, { logs: typeof LogsSubscription }>
@@ -85,8 +75,10 @@ export class Contract<Abi extends ContractAbi>
 		string,
 		{
 			signature: string;
-			method: ContractBoundMethod;
-			cascadeFunction?: ContractBoundMethod;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			method: ContractBoundMethod<any>;
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			cascadeFunction?: ContractBoundMethod<any>;
 		}
 	> = {};
 
@@ -180,41 +172,22 @@ export class Contract<Abi extends ContractAbi>
 					};
 				}
 
-				// TODO: Debug the error of mixing up mapped type and index type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				this._methods[abi.name] = this._functions[methodName].method;
-
-				// TODO: Debug the error of mixing up mapped type and index type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				this._methods[methodName] = this._functions[methodName].method;
-
-				// TODO: Debug the error of mixing up mapped type and index type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				this._methods[methodSignature] = this._functions[methodName].method;
+				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] =
+					this._functions[methodName].method;
+				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
+					this._functions[methodName].method;
+				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] =
+					this._functions[methodName].method;
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
 				const event = this._createContractEvent(abi);
 
 				if (!(eventName in this._events) || abi.name === 'bound') {
-					// TODO: Debug the error of mixing up mapped type and index type
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					this._events[eventName] = event;
+					this._events[eventName as keyof ContractEventsInterface<Abi>] = event;
 				}
-
-				// TODO: Debug the error of mixing up mapped type and index type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				this._events[abi.name] = event;
-
-				// TODO: Debug the error of mixing up mapped type and index type
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				this._events[eventSignature] = event;
+				this._events[abi.name as keyof ContractEventsInterface<Abi>] = event;
+				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event;
 			}
 
 			result = [...result, abi];
@@ -223,8 +196,10 @@ export class Contract<Abi extends ContractAbi>
 		this._jsonInterface = [...result] as unknown as Abi;
 	}
 
-	private _createContractMethod(abi: AbiFunctionFragment): ContractBoundMethod {
-		return (...params) => {
+	private _createContractMethod<T extends AbiFunctionFragment>(
+		abi: T,
+	): ContractBoundMethod<ContractMethod<T>> {
+		return (...params: unknown[]) => {
 			validator.validate(abi.inputs, params);
 
 			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
@@ -238,7 +213,10 @@ export class Contract<Abi extends ContractAbi>
 					estimateGas: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodEstimateGas(abi, params, options, block),
 					encodeABI: () => encodeMethodABI(abi, params),
-				} as unknown as PayableMethodObject<unknown, unknown>;
+				} as unknown as PayableMethodObject<
+					ContractMethod<T>['Inputs'],
+					ContractMethod<T>['Outputs']
+				>;
 			}
 
 			return {
@@ -250,7 +228,10 @@ export class Contract<Abi extends ContractAbi>
 				estimateGas: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodEstimateGas(abi, params, options, block),
 				encodeABI: () => encodeMethodABI(abi, params),
-			} as unknown as NonPayableMethodObject<unknown, unknown>;
+			} as unknown as NonPayableMethodObject<
+				ContractMethod<T>['Inputs'],
+				ContractMethod<T>['Outputs']
+			>;
 		};
 	}
 
