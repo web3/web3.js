@@ -47,6 +47,7 @@ export interface Transaction {
 	data?: HexString;
 	nonce?: Numbers;
 	chain?: HexString;
+	chainId?: HexString;
 	hardfork?: HexString;
 	common?: {
 		customChain: {
