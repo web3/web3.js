@@ -277,7 +277,7 @@ export type EthExecutionAPI = {
 			| ['newHeads']
 			| ['newPendingTransactions']
 			| ['syncing']
-			| ['logs', { address: HexString; topic: HexString[] }]
+			| ['logs', { address?: HexString; topics?: HexString[] }]
 	) => HexString;
 	eth_unsubscribe: (subscriptionId: HexString) => HexString;
 

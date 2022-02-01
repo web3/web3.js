@@ -62,31 +62,26 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('http provider', () => {
-			it('should detect and set http provider', () => {
-				const providerString = 'http://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
+			beforeEach(() => {
+				jest.spyOn(Web3RequestManager.prototype, 'providers', 'get').mockReturnValue({
+					...Web3RequestManager.prototype.providers,
 					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
+			});
+
+			it('should detect and set http provider', () => {
+				const providerString = 'http://mydomain.com';
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
 
-				expect(Web3RequestManager.providers.HttpProvider).toHaveBeenCalledTimes(1);
-				expect(Web3RequestManager.providers.HttpProvider).toHaveBeenCalledWith(
-					providerString,
-				);
+				expect(manager.providers.HttpProvider).toHaveBeenCalledTimes(1);
+				expect(manager.providers.HttpProvider).toHaveBeenCalledWith(providerString);
 				expect(manager.provider).toEqual(myProvider);
 			});
 
 			it('should emit events before changing the provider', () => {
 				const providerString = 'http://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
-				});
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
@@ -104,31 +99,26 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('https provider', () => {
-			it('should detect and set http provider', () => {
-				const providerString = 'https://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
+			beforeEach(() => {
+				jest.spyOn(Web3RequestManager.prototype, 'providers', 'get').mockReturnValue({
+					...Web3RequestManager.prototype.providers,
 					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
 				});
+			});
+
+			it('should detect and set http provider', () => {
+				const providerString = 'https://mydomain.com';
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
 
-				expect(Web3RequestManager.providers.HttpProvider).toHaveBeenCalledTimes(1);
-				expect(Web3RequestManager.providers.HttpProvider).toHaveBeenCalledWith(
-					providerString,
-				);
+				expect(manager.providers.HttpProvider).toHaveBeenCalledTimes(1);
+				expect(manager.providers.HttpProvider).toHaveBeenCalledWith(providerString);
 				expect(manager.provider).toEqual(myProvider);
 			});
 
 			it('should emit events before changing the provider', () => {
 				const providerString = 'https://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
-					HttpProvider: jest.fn().mockImplementation(() => myProvider) as any,
-				});
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
@@ -146,31 +136,26 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('ws provider', () => {
-			it('should detect and set ws provider', () => {
-				const providerString = 'ws://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
+			beforeEach(() => {
+				jest.spyOn(Web3RequestManager.prototype, 'providers', 'get').mockReturnValue({
+					...Web3RequestManager.prototype.providers,
 					WebsocketProvider: jest.fn().mockImplementation(() => myProvider),
 				});
+			});
+
+			it('should detect and set ws provider', () => {
+				const providerString = 'ws://mydomain.com';
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
 
-				expect(Web3RequestManager.providers.WebsocketProvider).toHaveBeenCalledTimes(1);
-				expect(Web3RequestManager.providers.WebsocketProvider).toHaveBeenCalledWith(
-					providerString,
-				);
+				expect(manager.providers.WebsocketProvider).toHaveBeenCalledTimes(1);
+				expect(manager.providers.WebsocketProvider).toHaveBeenCalledWith(providerString);
 				expect(manager.provider).toEqual(myProvider);
 			});
 
 			it('should emit events before changing the provider', () => {
 				const providerString = 'ws://mydomain.com';
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
-					WebsocketProvider: jest.fn().mockImplementation(() => myProvider),
-				});
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString);
@@ -188,34 +173,28 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('ipc provider', () => {
+			beforeEach(() => {
+				jest.spyOn(Web3RequestManager.prototype, 'providers', 'get').mockReturnValue({
+					...Web3RequestManager.prototype.providers,
+					IpcProvider: jest.fn().mockImplementation(() => myProvider),
+				});
+			});
+
 			it('should detect and set ipc provider', () => {
 				const providerString = 'ipc://mydomain.com';
 				const socket = { connect: () => jest.fn() } as any;
 
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
-					IpcProvider: jest.fn().mockImplementation(() => myProvider),
-				});
-
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString, socket);
 
-				expect(Web3RequestManager.providers.IpcProvider).toHaveBeenCalledTimes(1);
-				expect(Web3RequestManager.providers.IpcProvider).toHaveBeenCalledWith(
-					providerString,
-					socket,
-				);
+				expect(manager.providers.IpcProvider).toHaveBeenCalledTimes(1);
+				expect(manager.providers.IpcProvider).toHaveBeenCalledWith(providerString, socket);
 				expect(manager.provider).toEqual(myProvider);
 			});
 
 			it('should emit events before changing the provider', () => {
 				const providerString = 'ipc://mydomain.com';
 				const socket = { connect: () => jest.fn() } as any;
-
-				jest.spyOn(Web3RequestManager, 'providers', 'get').mockReturnValue({
-					...Web3RequestManager.providers,
-					IpcProvider: jest.fn().mockImplementation(() => myProvider),
-				});
 
 				const manager = new Web3RequestManager();
 				manager.setProvider(providerString, socket);

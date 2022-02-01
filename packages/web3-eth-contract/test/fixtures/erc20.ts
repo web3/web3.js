@@ -1,93 +1,44 @@
-import { EventEmitter } from 'events';
 import { Address, Numbers } from 'web3-utils';
-import {
-	ContractEventLog,
-	NonPayableTransactionObject,
-	PayableTransactionObject,
-	Callback,
-	ContactEventOptions,
-} from '../../src/types';
+import { LogsSubscription } from '../../src/log_subscription';
+import { ContractEventOptions, PayableMethodObject, NonPayableMethodObject } from '../../src/types';
 
 export interface Erc20Interface {
 	methods: {
-		name: (args: never) => PayableTransactionObject<never, [string]>;
+		[key: string]: (
+			...args: ReadonlyArray<any>
+		) =>
+			| PayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>
+			| NonPayableMethodObject<ReadonlyArray<unknown>, ReadonlyArray<unknown>>;
+
+		name: () => NonPayableMethodObject<[], [string]>;
 
 		approve: (
 			_spender: string,
 			_value: Numbers,
-		) => NonPayableTransactionObject<
-			{
-				_spender: string;
-				_value: Numbers;
-			},
-			[boolean]
-		>;
-		totalSupply: (args: never) => NonPayableTransactionObject<never, [Numbers]>;
-
+		) => NonPayableMethodObject<[_spender: string, _value: Numbers], [boolean]>;
+		totalSupply: () => NonPayableMethodObject<[], [Numbers]>;
 		transferFrom: (
 			_from: Address,
 			_to: Address,
 			_value: Numbers,
-		) => NonPayableTransactionObject<
-			{
-				_from: Address;
-				_to: Address;
-				_value: Numbers;
-			},
-			[boolean]
-		>;
-
-		decimals: (args: never) => NonPayableTransactionObject<never, [Numbers]>;
-
-		balanceOf: (_owner: Address) => NonPayableTransactionObject<{ _owner: Address }, [Numbers]>;
-
-		symbol: (args: never) => NonPayableTransactionObject<never, [string]>;
-
+		) => NonPayableMethodObject<[_from: Address, _to: Address, _value: Numbers], [boolean]>;
+		decimals: () => NonPayableMethodObject<[], [Numbers]>;
+		balanceOf: (_owner: Address) => NonPayableMethodObject<[_owner: Address], [Numbers]>;
+		symbol: () => NonPayableMethodObject<[], [string]>;
 		transfer: (
 			_to: Address,
 			_value: Numbers,
-		) => NonPayableTransactionObject<
-			{
-				_to: Address;
-				_value: Numbers;
-			},
-			[boolean]
-		>;
-
+		) => NonPayableMethodObject<[_to: Address, _value: Numbers], [boolean]>;
 		allowance: (
 			_owner: Address,
 			_spender: Address,
-		) => NonPayableTransactionObject<
-			{
-				_owner: Address;
-				_spender: Address;
-			},
-			[Numbers]
-		>;
+		) => NonPayableMethodObject<[_owner: Address, _spender: Address], [Numbers]>;
 	};
 
 	events: {
-		Approval:
-			| ((
-					cb: Callback<
-						ContractEventLog<{ owner: Address; spender: Address; value: Numbers }>
-					>,
-			  ) => EventEmitter)
-			| ((
-					options: ContactEventOptions,
-					cb: Callback<
-						ContractEventLog<{ owner: Address; spender: Address; value: Numbers }>
-					>,
-			  ) => EventEmitter);
-
-		Transfer:
-			| ((
-					cb: Callback<ContractEventLog<{ from: Address; to: Address; value: Numbers }>>,
-			  ) => EventEmitter)
-			| ((
-					options: ContactEventOptions,
-					cb: Callback<ContractEventLog<{ from: Address; to: Address; value: Numbers }>>,
-			  ) => EventEmitter);
+		[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		Approval: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		Transfer: (options?: ContractEventOptions) => Promise<LogsSubscription>;
 	};
 }
 
