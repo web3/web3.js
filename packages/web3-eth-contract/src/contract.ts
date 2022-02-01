@@ -49,8 +49,9 @@ export type ContractMethodsInterface<
 	Abi extends ContractAbi,
 	Methods extends ContractMethods<Abi> = ContractMethods<Abi>,
 > = {
-	[Name in keyof Methods | string]: ContractBoundMethod<Methods[Name]>;
-};
+	[Name in keyof Methods]: ContractBoundMethod<Methods[Name]>;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+} & { [key: string]: ContractBoundMethod<any> };
 
 type ContractBoundEvent = (options?: ContractEventOptions) => Promise<LogsSubscription>;
 
@@ -59,7 +60,9 @@ export type ContractEventsInterface<
 	Abi extends ContractAbi,
 	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
 > = {
-	[Name in keyof Events | string]: ContractBoundEvent;
+	[Name in keyof Events]: ContractBoundEvent;
+} & {
+	[key: string]: ContractBoundEvent;
 };
 
 // To avoid circular dependency between types and encoding, declared these types here.
@@ -248,22 +251,32 @@ export class Contract<Abi extends ContractAbi>
 					};
 				}
 
-				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] =
-					this._functions[methodName].method;
-				this._methods[methodName as keyof ContractMethodsInterface<Abi>] =
-					this._functions[methodName].method;
-				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] =
-					this._functions[methodName].method;
+				// We don't know a particular type of the Abi method so can't type check
+				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = this._functions[
+					methodName
+				].method as never;
+
+				// We don't know a particular type of the Abi method so can't type check
+				this._methods[methodName as keyof ContractMethodsInterface<Abi>] = this._functions[
+					methodName
+				].method as never;
+
+				// We don't know a particular type of the Abi method so can't type check
+				this._methods[methodSignature as keyof ContractMethodsInterface<Abi>] = this
+					._functions[methodName].method as never;
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
 				const event = this._createContractEvent(abi);
 
 				if (!(eventName in this._events) || abi.name === 'bound') {
-					this._events[eventName as keyof ContractEventsInterface<Abi>] = event;
+					// It's a private type and we don't want to expose it and no nee to check
+					this._events[eventName as keyof ContractEventsInterface<Abi>] = event as never;
 				}
-				this._events[abi.name as keyof ContractEventsInterface<Abi>] = event;
-				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event;
+				// It's a private type and we don't want to expose it and no nee to check
+				this._events[abi.name as keyof ContractEventsInterface<Abi>] = event as never;
+				// It's a private type and we don't want to expose it and no nee to check
+				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
 
 			result = [...result, abi];

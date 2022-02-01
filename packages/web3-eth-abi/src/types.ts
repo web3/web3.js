@@ -192,7 +192,10 @@ export type ContractMethod<Abi extends AbiFunctionFragment> = {
 };
 
 export type ContractMethods<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<Abis, AbiFunctionFragment> as Abi['name']]: ContractMethod<Abi>;
+	[Abi in FilterAbis<
+		Abis,
+		AbiFunctionFragment & { type: 'function' }
+	> as Abi['name']]: ContractMethod<Abi>;
 };
 
 export type ContractEvent<Abi extends AbiEventFragment> = {
@@ -201,5 +204,8 @@ export type ContractEvent<Abi extends AbiEventFragment> = {
 };
 
 export type ContractEvents<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<Abis, AbiEventFragment> as Abi['name']]: ContractEvent<Abi>;
+	[Abi in FilterAbis<
+		Abis,
+		AbiEventFragment & { type: 'event' }
+	> as Abi['name']]: ContractEvent<Abi>;
 };
