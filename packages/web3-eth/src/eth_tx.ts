@@ -191,7 +191,6 @@ const _validateEip1559 = (transaction: Transaction<HexString>) => {
 		});
 };
 
-// TODO Split into validateEipXXX methods
 const _validateGas = (transaction: Transaction<HexString>) => {
 	const legacyGasPresent = transaction.gas !== undefined && transaction.gasLimit !== undefined;
 	const feeMarketGasPresent =
