@@ -24,8 +24,9 @@ export abstract class Web3Config
 		transactionPollingTimeout: 750,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
-		defaultChain: null,
-		defaultHardfork: null,
+		defaultChain: 'mainnet',
+		defaultHardfork: 'london',
+		// TODO - Check if there is a default Common
 		defaultCommon: null,
 		defaultReturnType: ValidTypes.HexString,
 		defaultTransactionType: null,
