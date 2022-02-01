@@ -95,6 +95,7 @@ export const detectTransactionType = (
 ): HexString | undefined => {
 	// TODO - Refactor overrideMethod
 	if (overrideMethod !== undefined) return overrideMethod(transaction);
+
 	if (transaction.type !== undefined)
 		return convertToValidType(transaction.type, ValidTypes.HexString) as HexString;
 
@@ -262,16 +263,10 @@ export async function populateTransaction<
 	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 	if (populatedTransaction.data === undefined) populatedTransaction.data = '0x';
 	if (populatedTransaction.chain === undefined) {
-		populatedTransaction.chain =
-			web3Context.defaultChain !== null || web3Context.defaultChain !== undefined
-				? (web3Context.defaultChain as chain)
-				: 'mainnet';
+		populatedTransaction.chain = web3Context.defaultChain as chain;
 	}
 	if (populatedTransaction.hardfork === undefined)
-		populatedTransaction.hardfork =
-			web3Context.defaultHardfork !== null || web3Context.defaultHardfork !== undefined
-				? (web3Context.defaultHardfork as hardfork)
-				: 'london';
+		populatedTransaction.hardfork = web3Context.defaultHardfork as hardfork;
 
 	if (populatedTransaction.chainId === undefined) {
 		if (populatedTransaction.common?.customChain.chainId === undefined) {
@@ -322,9 +317,9 @@ export async function populateTransaction<
 		}
 
 		if (hexTxType === '0x2') {
+			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
 			const block = await getBlock(web3Context);
 
-			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
 			if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
 
 			if (populatedTransaction.gasPrice !== undefined) {

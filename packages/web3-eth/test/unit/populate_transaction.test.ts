@@ -27,6 +27,7 @@ describe('populateTransaction', () => {
 	const expectedBaseFeePerGas = '0x13afe8b904';
 	const expectedMaxPriorityFeePerGas = '0x9502f900';
 	const expectedMaxFeePerGas = '0x27f4d46b08';
+	const defaultTransactionType = '0x0';
 	const transaction: Transaction = {
 		from: expectedFrom,
 		to: '0x3535353535353535353535353535353535353535',
@@ -189,22 +190,42 @@ describe('populateTransaction', () => {
 	});
 
 	describe('should populate chain', () => {
-		it('should populate with 0x', async () => {
+		it('should populate with mainnet', async () => {
 			const input = { ...transaction };
 			delete input.chain;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.chain).toBe('mainnet');
 		});
+
+		it('should use web3Context.defaultChain to populate', async () => {
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+
+			const input = { ...transaction };
+			delete input.chain;
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect(result.chain).toBe(web3Context.defaultChain);
+		});
 	});
 
 	describe('should populate hardfork', () => {
-		it('should populate with 0x', async () => {
+		it('should populate with london', async () => {
 			const input = { ...transaction };
 			delete input.hardfork;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.hardfork).toBe('london');
+		});
+
+		it('should use web3Context.defaultHardfork to populate', async () => {
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+
+			const input = { ...transaction };
+			delete input.hardfork;
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
 	});
 
@@ -247,6 +268,27 @@ describe('populateTransaction', () => {
 			await expect(
 				populateTransaction(input, web3Context, ValidTypes.HexString),
 			).rejects.toThrow(new UnsupportedTransactionTypeError(input.type));
+		});
+
+		it('should use web3Context.defaultTransactionType to populate', async () => {
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
+				defaultTransactionType,
+			});
+
+			const input = { ...transaction };
+			delete input.gas;
+			delete input.gasLimit;
+			delete input.gasPrice;
+			delete input.maxFeePerGas;
+			delete input.maxPriorityFeePerGas;
+			delete input.accessList;
+			delete input.type;
+
+			input.hardfork = 'istanbul';
+			if (input.common !== undefined) input.common.hardfork = 'istanbul';
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect(result.type).toBe(web3Context.defaultTransactionType);
 		});
 	});
 
@@ -363,6 +405,64 @@ describe('populateTransaction', () => {
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
 				expectedMaxPriorityFeePerGas,
+			); // 2.5 Gwei, hardcoded in populateTransaction;
+			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
+				expectedMaxFeePerGas,
+			);
+		});
+
+		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxPriorityFeePerGas and maxFeePerGas)', async () => {
+			const input = { ...transaction };
+			delete input.maxPriorityFeePerGas;
+			delete input.maxFeePerGas;
+			delete input.gasPrice;
+			input.type = '0x2';
+
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
+				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			});
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
+				web3Context.defaultMaxPriorityFeePerGas,
+			); // 2.5 Gwei, hardcoded in populateTransaction;
+			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
+				expectedMaxFeePerGas,
+			);
+		});
+
+		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxFeePerGas)', async () => {
+			const input = { ...transaction };
+			delete input.maxFeePerGas;
+			delete input.gasPrice;
+			input.type = '0x2';
+
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
+				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			});
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
+				web3Context.defaultMaxPriorityFeePerGas,
+			); // 2.5 Gwei, hardcoded in populateTransaction;
+			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
+				expectedMaxFeePerGas,
+			);
+		});
+
+		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxPriorityFeePerGas)', async () => {
+			const input = { ...transaction };
+			delete input.maxPriorityFeePerGas;
+			delete input.gasPrice;
+			input.type = '0x2';
+
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
+				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			});
+
+			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
+				web3Context.defaultMaxPriorityFeePerGas,
 			); // 2.5 Gwei, hardcoded in populateTransaction;
 			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
 				expectedMaxFeePerGas,
