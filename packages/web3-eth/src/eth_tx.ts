@@ -28,7 +28,7 @@ import {
 	UnsupportedFeeMarketError,
 	UnsupportedTransactionTypeError,
 } from './errors';
-import { PopulatedUnsignedTransaction, Transaction } from './types';
+import { chain, hardfork, PopulatedUnsignedTransaction, Transaction } from './types';
 import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 
 export function formatTransaction<
@@ -261,10 +261,17 @@ export async function populateTransaction<
 
 	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 	if (populatedTransaction.data === undefined) populatedTransaction.data = '0x';
-	// TODO - Add default to Web3Context
-	if (populatedTransaction.chain === undefined) populatedTransaction.chain = 'mainnet';
-	// TODO - Add default to Web3Context
-	if (populatedTransaction.hardfork === undefined) populatedTransaction.hardfork = 'london';
+	if (populatedTransaction.chain === undefined) {
+		populatedTransaction.chain =
+			web3Context.defaultChain !== null || web3Context.defaultChain !== undefined
+				? (web3Context.defaultChain as chain)
+				: 'mainnet';
+	}
+	if (populatedTransaction.hardfork === undefined)
+		populatedTransaction.hardfork =
+			web3Context.defaultHardfork !== null || web3Context.defaultHardfork !== undefined
+				? (web3Context.defaultHardfork as hardfork)
+				: 'london';
 
 	if (populatedTransaction.chainId === undefined) {
 		if (populatedTransaction.common?.customChain.chainId === undefined) {
@@ -284,15 +291,25 @@ export async function populateTransaction<
 	}
 
 	populatedTransaction.type = detectTransactionType(populatedTransaction);
-	// TODO - After web3Context.defaultTxType is implemented
-	// if (populatedTransaction.type === undefined) populatedTransaction.type = '0x0'; // web3Context.defaultTxType;
+	if (
+		populatedTransaction.type === undefined &&
+		(web3Context.defaultTransactionType !== null ||
+			web3Context.defaultTransactionType !== undefined)
+	)
+		populatedTransaction.type = convertToValidType(
+			// TODO - TSC is complaining it could be null, even though we check above
+			web3Context.defaultTransactionType as Numbers,
+			ValidTypes.HexString,
+		);
 
 	if (populatedTransaction.type !== undefined) {
-		// TODO Probably need to account for negative hex strings
 		const hexTxType = toHex(populatedTransaction.type);
 
+		if (hexTxType.startsWith('-'))
+			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
+
+		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 		if (hexTxType < '0x0' || hexTxType > '0x7f')
-			// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
 		if (hexTxType === '0x0' || hexTxType === '0x1') {
@@ -317,8 +334,10 @@ export async function populateTransaction<
 				populatedTransaction.gasPrice = undefined;
 			} else {
 				if (populatedTransaction.maxPriorityFeePerGas === undefined)
-					// TODO - Add maxPriorityFeePerGas default to Web3Context
-					populatedTransaction.maxPriorityFeePerGas = toHex(2500000000); // 2.5 Gwei
+					populatedTransaction.maxPriorityFeePerGas = convertToValidType(
+						web3Context.defaultMaxPriorityFeePerGas,
+						ValidTypes.HexString,
+					);
 				if (populatedTransaction.maxFeePerGas === undefined)
 					populatedTransaction.maxFeePerGas =
 						BigInt(block.baseFeePerGas) * BigInt(2) +

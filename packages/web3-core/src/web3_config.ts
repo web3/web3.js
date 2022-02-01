@@ -1,4 +1,4 @@
-import { ValidTypes } from 'web3-utils';
+import { toHex, ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
 
 import { Web3ConfigOptions } from './types';
@@ -28,6 +28,8 @@ export abstract class Web3Config
 		defaultHardfork: null,
 		defaultCommon: null,
 		defaultReturnType: ValidTypes.HexString,
+		defaultTransactionType: null,
+		defaultMaxPriorityFeePerGas: toHex(2500000000),
 	};
 
 	public getConfig() {
@@ -195,5 +197,33 @@ export abstract class Web3Config
 		});
 
 		this._config.defaultReturnType = val;
+	}
+
+	public get defaultTransactionType() {
+		return this._config.defaultTransactionType;
+	}
+
+	public set defaultTransactionType(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultTransactionType',
+			oldValue: this._config.defaultTransactionType,
+			newValue: val,
+		});
+
+		this._config.defaultTransactionType = val;
+	}
+
+	public get defaultMaxPriorityFeePerGas() {
+		return this._config.defaultMaxPriorityFeePerGas;
+	}
+
+	public set defaultMaxPriorityFeePerGas(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultMaxPriorityFeePerGas',
+			oldValue: this._config.defaultMaxPriorityFeePerGas,
+			newValue: val,
+		});
+
+		this._config.defaultMaxPriorityFeePerGas = val;
 	}
 }
