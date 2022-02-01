@@ -117,7 +117,7 @@ export const detectTransactionType = (
 	return undefined;
 };
 
-const validateCustomChainInfo = (transaction: Transaction) => {
+const _validateCustomChainInfo = (transaction: Transaction) => {
 	if (transaction.common !== undefined) {
 		if (transaction.common.customChain === undefined) throw new MissingCustomChainError();
 		if (transaction.common.customChain.chainId === undefined)
@@ -133,7 +133,7 @@ const validateCustomChainInfo = (transaction: Transaction) => {
 	}
 };
 
-const validateChainInfo = (transaction: Transaction) => {
+const _validateChainInfo = (transaction: Transaction) => {
 	if (
 		transaction.common !== undefined &&
 		transaction.chain !== undefined &&
@@ -150,8 +150,49 @@ const validateChainInfo = (transaction: Transaction) => {
 		});
 };
 
+const _validateLegacyGas = (transaction: Transaction<HexString>) => {
+	if (
+		// This check is verifying gas and gasPrice aren't less than 0.
+		// transaction's number properties have been converted to HexStrings.
+		// JavaScript doesn't handle negative hex strings e.g. -0x1, but our
+		// numberToHex method does. -0x1 < 0 would result in false, so we must check if
+		// hex string is negative via the inclusion of -
+		transaction.gas === undefined ||
+		transaction.gasPrice === undefined ||
+		transaction.gas.startsWith('-') ||
+		transaction.gasPrice.startsWith('-')
+	)
+		throw new InvalidGasOrGasPrice({
+			gas: transaction.gas,
+			gasPrice: transaction.gasPrice,
+		});
+};
+
+const _validateFeeMarketGas = (transaction: Transaction<HexString>) => {
+	if (
+		transaction.maxFeePerGas === undefined ||
+		transaction.maxPriorityFeePerGas === undefined ||
+		transaction.maxFeePerGas.startsWith('-') ||
+		transaction.maxPriorityFeePerGas.startsWith('-')
+	)
+		throw new InvalidMaxPriorityFeePerGasOrMaxFeePerGas({
+			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+			maxFeePerGas: transaction.maxFeePerGas,
+		});
+};
+
+const _validateEip1559 = (transaction: Transaction<HexString>) => {
+	if (transaction.gasPrice !== undefined && transaction.type === '0x2')
+		throw new Eip1559GasPriceError(transaction.gasPrice);
+	if (transaction.type === '0x0' || transaction.type === '0x1')
+		throw new UnsupportedFeeMarketError({
+			maxFeePerGas: transaction.maxFeePerGas,
+			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+		});
+};
+
 // TODO Split into validateEipXXX methods
-const validateGas = (transaction: Transaction<HexString>) => {
+const _validateGas = (transaction: Transaction<HexString>) => {
 	const legacyGasPresent = transaction.gas !== undefined && transaction.gasLimit !== undefined;
 	const feeMarketGasPresent =
 		transaction.maxPriorityFeePerGas !== undefined && transaction.maxFeePerGas !== undefined;
@@ -164,42 +205,11 @@ const validateGas = (transaction: Transaction<HexString>) => {
 			maxFeePerGas: transaction.maxFeePerGas,
 		});
 
-	if (legacyGasPresent) {
-		if (
-			// This check is verifying gas and gasPrice aren't less than 0.
-			// transaction's number properties have been converted to HexStrings.
-			// JavaScript doesn't handle negative hex strings e.g. -0x1, but our
-			// numberToHex method does. -0x1 < 0 would result in false, so we must check if
-			// hex string is negative via the inclusion of -
-			transaction.gas === undefined ||
-			transaction.gasPrice === undefined ||
-			transaction.gas.startsWith('-') ||
-			transaction.gasPrice.startsWith('-')
-		)
-			throw new InvalidGasOrGasPrice({
-				gas: transaction.gas,
-				gasPrice: transaction.gasPrice,
-			});
-	} else if (
-		transaction.maxFeePerGas === undefined ||
-		transaction.maxPriorityFeePerGas === undefined ||
-		transaction.maxFeePerGas.startsWith('-') ||
-		transaction.maxPriorityFeePerGas.startsWith('-')
-	)
-		throw new InvalidMaxPriorityFeePerGasOrMaxFeePerGas({
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-			maxFeePerGas: transaction.maxFeePerGas,
-		});
+	(legacyGasPresent ? _validateLegacyGas : _validateFeeMarketGas)(transaction);
 
 	const hasEip1559 =
 		transaction.maxFeePerGas !== undefined || transaction.maxPriorityFeePerGas !== undefined;
-	if (transaction.gasPrice !== undefined && (transaction.type === '0x2' || hasEip1559))
-		throw new Eip1559GasPriceError(transaction.gasPrice);
-	if ((transaction.type === '0x0' || transaction.type === '0x1') && hasEip1559)
-		throw new UnsupportedFeeMarketError({
-			maxFeePerGas: transaction.maxFeePerGas,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-		});
+	if (hasEip1559) _validateEip1559(transaction);
 };
 
 export const validateTransactionForSigning = (
@@ -216,9 +226,9 @@ export const validateTransactionForSigning = (
 
 	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
 
-	validateCustomChainInfo(transaction);
-	validateChainInfo(transaction);
-	validateGas(formattedTransaction);
+	_validateCustomChainInfo(transaction);
+	_validateChainInfo(transaction);
+	_validateGas(formattedTransaction);
 
 	if (
 		formattedTransaction.nonce === undefined ||
