@@ -168,6 +168,11 @@ export const encodeMethodABI = (
 };
 
 export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
+	// If it was constructor then we need to return contract address
+	if (abi.type === 'constructor') {
+		return returnValues;
+	}
+
 	if (!returnValues) {
 		return null;
 	}

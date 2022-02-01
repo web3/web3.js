@@ -4,6 +4,7 @@ import {
 	AbiEventFragment,
 	AbiFunctionFragment,
 	ContractAbi,
+	ContractConstructor,
 	ContractEvents,
 	ContractMethod,
 	ContractMethods,
@@ -13,9 +14,17 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { Address, BlockNumberOrTag, BlockTags, hexToNumber, toChecksumAddress } from 'web3-utils';
+import {
+	Address,
+	BlockNumberOrTag,
+	BlockTags,
+	hexToNumber,
+	toChecksumAddress,
+	HexString,
+} from 'web3-utils';
 import { validator } from 'web3-validator';
 import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
+import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
 import {
 	ContractEventOptions,
@@ -129,6 +138,73 @@ export class Contract<Abi extends ContractAbi>
 			data: this.options.data,
 			provider: this.currentProvider,
 		});
+	}
+
+	public deploy(deployOptions?: {
+		data?: HexString;
+		arguments?: ContractConstructor<Abi>['Inputs'];
+	}) {
+		const abi = this._jsonInterface.find(j => j.type === 'constructor');
+
+		if (!abi) {
+			throw new Web3ContractError('No constructor interface found.');
+		}
+
+		if (!deployOptions?.data) {
+			throw new Web3ContractError('No data provided.');
+		}
+		const data = deployOptions?.data ?? this.options.data;
+		const args = deployOptions?.arguments ?? [];
+		validator.validate(['string'], args);
+
+		const contractOptions = { ...this.options, data };
+
+		return {
+			arguments: args,
+			// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
+			send: async (options?: PayableCallOptions) => {
+				const modifiedOptions = { ...options };
+				delete modifiedOptions.to;
+
+				const txHash = await this._contractMethodSend(
+					abi as AbiFunctionFragment,
+					args,
+					modifiedOptions,
+					contractOptions,
+				);
+
+				return txHash;
+
+				// TODO: Use eth-tx functions to
+				//
+				// 1. Get the transaction receipt from the above txHash
+				// 2. Extract the contract address from the receipt
+				// 3. Get the code from eth_getCode for the contract address
+				// 4. Return the contract instance with the new address and the code
+				//
+				// return new Contract<Abi>(this._jsonInterface, contractAddress as HexString, {
+				// 	gas: this.options.gas,
+				// 	gasPrice: this.options.gasPrice,
+				// 	gasLimit: this.options.gasLimit,
+				// 	from: this.options.from,
+				// 	data: this.options.data,
+				// 	provider: this.currentProvider,
+				// });
+			},
+			estimateGas: async (options?: PayableCallOptions, block?: BlockNumberOrTag) => {
+				const modifiedOptions = { ...options };
+				delete modifiedOptions.to;
+
+				return this._contractMethodEstimateGas(
+					abi as AbiFunctionFragment,
+					args,
+					modifiedOptions,
+					block,
+					contractOptions,
+				);
+			},
+			encodeABI: () => encodeMethodABI(abi as AbiFunctionFragment, args, data),
+		};
 	}
 
 	private _parseAndSetAddress(value?: Address) {
@@ -262,6 +338,7 @@ export class Contract<Abi extends ContractAbi>
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		options?: Options,
+		contractOptions?: ContractOptions,
 	) {
 		return decodeMethodReturn(
 			abi,
@@ -272,7 +349,7 @@ export class Contract<Abi extends ContractAbi>
 						abi,
 						params,
 						options,
-						contractOptions: this.options,
+						contractOptions: contractOptions ?? this.options,
 					}),
 				],
 			}),
@@ -281,7 +358,13 @@ export class Contract<Abi extends ContractAbi>
 
 	private async _contractMethodEstimateGas<
 		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(abi: AbiFunctionFragment, params: unknown[], options?: Options, block?: BlockNumberOrTag) {
+	>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		options?: Options,
+		block?: BlockNumberOrTag,
+		contractOptions?: ContractOptions,
+	) {
 		return hexToNumber(
 			await this.requestManager.send({
 				method: 'eth_estimateGas',
@@ -290,7 +373,7 @@ export class Contract<Abi extends ContractAbi>
 						abi,
 						params,
 						options,
-						contractOptions: this.options,
+						contractOptions: contractOptions ?? this.options,
 					}),
 					block ?? BlockTags.LATEST,
 				],
