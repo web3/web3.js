@@ -24,6 +24,7 @@ import {
 	MissingCustomChainError,
 	MissingCustomChainIdError,
 	MissingGasError,
+	TransactionGasMismatchError,
 	UnableToPopulateNonceError,
 	UnsupportedFeeMarketError,
 	UnsupportedTransactionTypeError,
@@ -131,6 +132,8 @@ const _validateCustomChainInfo = (transaction: Transaction) => {
 				customChainId: transaction.common.customChain.chainId,
 			});
 	}
+
+	// TODO - Should throw error?
 };
 
 const _validateChainInfo = (transaction: Transaction) => {
@@ -166,9 +169,25 @@ const _validateLegacyGas = (transaction: Transaction<HexString>) => {
 			gas: transaction.gas,
 			gasPrice: transaction.gasPrice,
 		});
+	if (transaction.maxFeePerGas !== undefined || transaction.maxPriorityFeePerGas !== undefined)
+		throw new UnsupportedFeeMarketError({
+			maxFeePerGas: transaction.maxFeePerGas,
+			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+		});
 };
 
 const _validateFeeMarketGas = (transaction: Transaction<HexString>) => {
+	// These errors come from 1.x, so they must be checked before
+	// InvalidMaxPriorityFeePerGasOrMaxFeePerGas to throw the same error
+	// for the same code executing in 1.x
+	if (transaction.gasPrice !== undefined && transaction.type === '0x2')
+		throw new Eip1559GasPriceError(transaction.gasPrice);
+	if (transaction.type === '0x0' || transaction.type === '0x1')
+		throw new UnsupportedFeeMarketError({
+			maxFeePerGas: transaction.maxFeePerGas,
+			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+		});
+
 	if (
 		transaction.maxFeePerGas === undefined ||
 		transaction.maxPriorityFeePerGas === undefined ||
@@ -181,34 +200,40 @@ const _validateFeeMarketGas = (transaction: Transaction<HexString>) => {
 		});
 };
 
-const _validateEip1559 = (transaction: Transaction<HexString>) => {
-	if (transaction.gasPrice !== undefined && transaction.type === '0x2')
-		throw new Eip1559GasPriceError(transaction.gasPrice);
-	if (transaction.type === '0x0' || transaction.type === '0x1')
-		throw new UnsupportedFeeMarketError({
-			maxFeePerGas: transaction.maxFeePerGas,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-		});
-};
-
+/**
+ * This method checks if all required gas properties are present for either
+ * legacy gas (type 0x0 and 0x1) OR fee market transactions (0x2)
+ */
 const _validateGas = (transaction: Transaction<HexString>) => {
-	const legacyGasPresent = transaction.gas !== undefined && transaction.gasLimit !== undefined;
+	const gasPresent = transaction.gas !== undefined || transaction.gasLimit !== undefined;
+	const legacyGasPresent = gasPresent && transaction.gasPrice !== undefined;
 	const feeMarketGasPresent =
-		transaction.maxPriorityFeePerGas !== undefined && transaction.maxFeePerGas !== undefined;
+		gasPresent &&
+		transaction.maxPriorityFeePerGas !== undefined &&
+		transaction.maxFeePerGas !== undefined;
 
 	if (!legacyGasPresent && !feeMarketGasPresent)
 		throw new MissingGasError({
 			gas: transaction.gas,
 			gasLimit: transaction.gasLimit,
+			gasPrice: transaction.gasPrice,
+			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
+			maxFeePerGas: transaction.maxFeePerGas,
+		});
+
+	if (legacyGasPresent && feeMarketGasPresent)
+		throw new TransactionGasMismatchError({
+			gas: transaction.gas,
+			gasLimit: transaction.gasLimit,
+			gasPrice: transaction.gasPrice,
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
 			maxFeePerGas: transaction.maxFeePerGas,
 		});
 
 	(legacyGasPresent ? _validateLegacyGas : _validateFeeMarketGas)(transaction);
-
-	const hasEip1559 =
-		transaction.maxFeePerGas !== undefined || transaction.maxPriorityFeePerGas !== undefined;
-	if (hasEip1559) _validateEip1559(transaction);
+	(transaction.type !== undefined && transaction.type < '0x1'
+		? _validateLegacyGas
+		: _validateFeeMarketGas)(transaction);
 };
 
 export const validateTransactionForSigning = (
@@ -223,10 +248,10 @@ export const validateTransactionForSigning = (
 	if (typeof transaction !== 'object' || transaction === null)
 		throw new InvalidTransactionObjectError(transaction);
 
-	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
-
 	_validateCustomChainInfo(transaction);
 	_validateChainInfo(transaction);
+
+	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
 	_validateGas(formattedTransaction);
 
 	if (
