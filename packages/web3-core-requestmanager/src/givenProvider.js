@@ -26,11 +26,13 @@ var givenProvider = null;
 
 // ADD GIVEN PROVIDER
 /* jshint ignore:start */
-var global;
-try {
-  global = Function('return this')();
-} catch (e) {
-  global = window;
+var global = typeof globalThis === 'object' ? globalThis : undefined;
+if(!global) {
+    try {
+        global = Function('return this')();
+    } catch (e) {
+        global = self;
+    }
 }
 
 // EIP-1193: window.ethereum
