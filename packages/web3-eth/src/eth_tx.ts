@@ -12,25 +12,15 @@ import {
 import { privateKeyToAddress } from 'web3-eth-accounts';
 
 import {
-	ChainIdMismatchError,
-	CommonOrChainAndHardforkError,
-	Eip1559GasPriceError,
 	Eip1559NotSupportedError,
-	InvalidGasOrGasPrice,
-	InvalidMaxPriorityFeePerGasOrMaxFeePerGas,
 	InvalidNonceOrChainIdError,
 	InvalidTransactionObjectError,
-	MissingChainOrHardforkError,
-	MissingCustomChainError,
-	MissingCustomChainIdError,
-	MissingGasError,
-	TransactionGasMismatchError,
 	UnableToPopulateNonceError,
-	UnsupportedFeeMarketError,
 	UnsupportedTransactionTypeError,
 } from './errors';
 import { chain, hardfork, PopulatedUnsignedTransaction, Transaction } from './types';
 import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
+import { validateChainInfo, validateCustomChainInfo, validateGas } from './validation';
 
 export function formatTransaction<
 	DesiredType extends ValidTypes,
@@ -118,124 +108,6 @@ export const detectTransactionType = (
 	return undefined;
 };
 
-const _validateCustomChainInfo = (transaction: Transaction) => {
-	if (transaction.common !== undefined) {
-		if (transaction.common.customChain === undefined) throw new MissingCustomChainError();
-		if (transaction.common.customChain.chainId === undefined)
-			throw new MissingCustomChainIdError();
-		if (
-			transaction.chainId !== undefined &&
-			transaction.chainId !== transaction.common.customChain.chainId
-		)
-			throw new ChainIdMismatchError({
-				txChainId: transaction.chainId,
-				customChainId: transaction.common.customChain.chainId,
-			});
-	}
-
-	// TODO - Should throw error?
-};
-
-const _validateChainInfo = (transaction: Transaction) => {
-	if (
-		transaction.common !== undefined &&
-		transaction.chain !== undefined &&
-		transaction.hardfork !== undefined
-	)
-		throw new CommonOrChainAndHardforkError();
-	if (
-		(transaction.chain !== undefined && transaction.hardfork === undefined) ||
-		(transaction.hardfork !== undefined && transaction.chain === undefined)
-	)
-		throw new MissingChainOrHardforkError({
-			chain: transaction.chain,
-			hardfork: transaction.hardfork,
-		});
-};
-
-const _validateLegacyGas = (transaction: Transaction<HexString>) => {
-	if (
-		// This check is verifying gas and gasPrice aren't less than 0.
-		// transaction's number properties have been converted to HexStrings.
-		// JavaScript doesn't handle negative hex strings e.g. -0x1, but our
-		// numberToHex method does. -0x1 < 0 would result in false, so we must check if
-		// hex string is negative via the inclusion of -
-		transaction.gas === undefined ||
-		transaction.gasPrice === undefined ||
-		transaction.gas.startsWith('-') ||
-		transaction.gasPrice.startsWith('-')
-	)
-		throw new InvalidGasOrGasPrice({
-			gas: transaction.gas,
-			gasPrice: transaction.gasPrice,
-		});
-	if (transaction.maxFeePerGas !== undefined || transaction.maxPriorityFeePerGas !== undefined)
-		throw new UnsupportedFeeMarketError({
-			maxFeePerGas: transaction.maxFeePerGas,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-		});
-};
-
-const _validateFeeMarketGas = (transaction: Transaction<HexString>) => {
-	// These errors come from 1.x, so they must be checked before
-	// InvalidMaxPriorityFeePerGasOrMaxFeePerGas to throw the same error
-	// for the same code executing in 1.x
-	if (transaction.gasPrice !== undefined && transaction.type === '0x2')
-		throw new Eip1559GasPriceError(transaction.gasPrice);
-	if (transaction.type === '0x0' || transaction.type === '0x1')
-		throw new UnsupportedFeeMarketError({
-			maxFeePerGas: transaction.maxFeePerGas,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-		});
-
-	if (
-		transaction.maxFeePerGas === undefined ||
-		transaction.maxPriorityFeePerGas === undefined ||
-		transaction.maxFeePerGas.startsWith('-') ||
-		transaction.maxPriorityFeePerGas.startsWith('-')
-	)
-		throw new InvalidMaxPriorityFeePerGasOrMaxFeePerGas({
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-			maxFeePerGas: transaction.maxFeePerGas,
-		});
-};
-
-/**
- * This method checks if all required gas properties are present for either
- * legacy gas (type 0x0 and 0x1) OR fee market transactions (0x2)
- */
-const _validateGas = (transaction: Transaction<HexString>) => {
-	const gasPresent = transaction.gas !== undefined || transaction.gasLimit !== undefined;
-	const legacyGasPresent = gasPresent && transaction.gasPrice !== undefined;
-	const feeMarketGasPresent =
-		gasPresent &&
-		transaction.maxPriorityFeePerGas !== undefined &&
-		transaction.maxFeePerGas !== undefined;
-
-	if (!legacyGasPresent && !feeMarketGasPresent)
-		throw new MissingGasError({
-			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
-			gasPrice: transaction.gasPrice,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-			maxFeePerGas: transaction.maxFeePerGas,
-		});
-
-	if (legacyGasPresent && feeMarketGasPresent)
-		throw new TransactionGasMismatchError({
-			gas: transaction.gas,
-			gasLimit: transaction.gasLimit,
-			gasPrice: transaction.gasPrice,
-			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
-			maxFeePerGas: transaction.maxFeePerGas,
-		});
-
-	(legacyGasPresent ? _validateLegacyGas : _validateFeeMarketGas)(transaction);
-	(transaction.type !== undefined && transaction.type < '0x1'
-		? _validateLegacyGas
-		: _validateFeeMarketGas)(transaction);
-};
-
 export const validateTransactionForSigning = (
 	transaction: Transaction,
 	overrideMethod?: (transaction: Transaction) => void,
@@ -248,11 +120,11 @@ export const validateTransactionForSigning = (
 	if (typeof transaction !== 'object' || transaction === null)
 		throw new InvalidTransactionObjectError(transaction);
 
-	_validateCustomChainInfo(transaction);
-	_validateChainInfo(transaction);
+	validateCustomChainInfo(transaction);
+	validateChainInfo(transaction);
 
 	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
-	_validateGas(formattedTransaction);
+	validateGas(formattedTransaction);
 
 	if (
 		formattedTransaction.nonce === undefined ||
