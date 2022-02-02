@@ -501,6 +501,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
+-  Use globalThis to locate global object if possible (#4613)
 -  Fix typos in web3-utils.rst (#4662)
 -  Added effectiveGasPrice to TransactionReceipt (#4692)
 -  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
