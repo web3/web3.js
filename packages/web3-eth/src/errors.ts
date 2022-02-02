@@ -100,16 +100,38 @@ export class MissingGasError extends Web3Error {
 	public constructor(value: {
 		gas: Numbers | undefined;
 		gasLimit: Numbers | undefined;
+		gasPrice: Numbers | undefined;
 		maxPriorityFeePerGas: Numbers | undefined;
 		maxFeePerGas: Numbers | undefined;
 	}) {
 		super(
 			`gas: ${value.gas ?? 'undefined'}, gasLimit: ${
 				value.gasLimit ?? 'undefined'
-			}, maxPriorityFeePerGas: ${value.maxPriorityFeePerGas ?? 'undefined'}, maxFeePerGas: ${
-				value.maxFeePerGas ?? 'undefined'
-			}`,
+			}, gasPrice: ${value.gasPrice ?? 'undefined'}, maxPriorityFeePerGas: ${
+				value.maxPriorityFeePerGas ?? 'undefined'
+			}, maxFeePerGas: ${value.maxFeePerGas ?? 'undefined'}`,
 			'"gas" is missing',
+		);
+	}
+}
+
+export class TransactionGasMismatchError extends Web3Error {
+	public code = ERR_TX_MISSING_GAS;
+
+	public constructor(value: {
+		gas: Numbers | undefined;
+		gasLimit: Numbers | undefined;
+		gasPrice: Numbers | undefined;
+		maxPriorityFeePerGas: Numbers | undefined;
+		maxFeePerGas: Numbers | undefined;
+	}) {
+		super(
+			`gas: ${value.gas ?? 'undefined'}, gasLimit: ${
+				value.gasLimit ?? 'undefined'
+			}, gasPrice: ${value.gasPrice ?? 'undefined'}, maxPriorityFeePerGas: ${
+				value.maxPriorityFeePerGas ?? 'undefined'
+			}, maxFeePerGas: ${value.maxFeePerGas ?? 'undefined'}`,
+			'transaction must specify legacy or fee market gas properties, not both',
 		);
 	}
 }
