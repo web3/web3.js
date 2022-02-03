@@ -14,17 +14,6 @@ import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 describe('prepareTransactionForSigning', () => {
 	const web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 
-	beforeEach(() => {
-		// getTransactionCountSpy = jest
-		// 	.spyOn(rpcMethods, 'getTransactionCount')
-		// 	// @ts-expect-error - Mocked implementation doesn't have correct method signature
-		// 	// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-		// 	.mockImplementation(() => expectedNonce);
-		// // @ts-expect-error - Mocked implementation doesn't have correct method signature
-		// // (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-		// jest.spyOn(rpcMethods, 'getGasPrice').mockImplementation(() => expectedGasPrice);
-	});
-
 	describe('should return an @ethereumjs/tx instance with expected properties', () => {
 		it.each(validTransactions)(
 			'mockBlock: %s\nexpectedTransaction: %s\nexpectedPrivateKey: %s\nexpectedAddress: %s\nexpectedRlpEncodedTransaction: %s\nexpectedTransactionHash: %s\nexpectedMessageToSign: %s\nexpectedV: %s\nexpectedR: %s\nexpectedS: %s',
