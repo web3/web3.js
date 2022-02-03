@@ -1,6 +1,5 @@
-import { hexToNumber } from '../shared_utils';
 import { ValidInputTypes } from '../types';
-import { parseBaseType } from '../utils';
+import { parseBaseType, hexToNumber } from '../utils';
 import { isHexStrict } from './string';
 
 /**
