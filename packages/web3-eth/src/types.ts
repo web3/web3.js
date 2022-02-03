@@ -52,6 +52,7 @@ export interface Transaction<NumberType extends Numbers = Numbers> {
 	maxPriorityFeePerGas?: NumberType;
 	accessList?: AccessList;
 	data?: HexStringBytes;
+	input?: HexStringBytes;
 	nonce?: NumberType;
 	chain?: chain;
 	hardfork?: hardfork;
