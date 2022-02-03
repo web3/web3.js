@@ -16,7 +16,7 @@ const defaultConfig = {
 	transactionBlockTimeout: 50,
 	transactionConfirmationBlocks: 24,
 	transactionPollingTimeout: 750,
-	defaultTransactionType: null,
+	defaultTransactionType: '0x0',
 	defaultMaxPriorityFeePerGas: toHex(2500000000),
 };
 
