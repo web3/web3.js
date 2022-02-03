@@ -233,7 +233,7 @@ export const validateGas = (transaction: Transaction<HexString>) => {
 		});
 
 	(legacyGasPresent ? validateLegacyGas : validateFeeMarketGas)(transaction);
-	(transaction.type !== undefined && transaction.type < '0x1'
-		? validateLegacyGas
-		: validateFeeMarketGas)(transaction);
+	(transaction.type !== undefined && transaction.type > '0x1'
+		? validateFeeMarketGas
+		: validateLegacyGas)(transaction);
 };

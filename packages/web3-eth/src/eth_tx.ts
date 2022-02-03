@@ -6,10 +6,13 @@ import {
 	HexString,
 	Numbers,
 	toHex,
+	toNumber,
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
 import { privateKeyToAddress } from 'web3-eth-accounts';
+import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
+import Common from '@ethereumjs/common';
 
 import {
 	Eip1559NotSupportedError,
@@ -18,7 +21,14 @@ import {
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from './errors';
-import { chain, hardfork, PopulatedUnsignedTransaction, Transaction } from './types';
+import {
+	chain,
+	hardfork,
+	PopulatedUnsignedEip1559Transaction,
+	PopulatedUnsignedEip2930Transaction,
+	PopulatedUnsignedTransaction,
+	Transaction,
+} from './types';
 import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 import { validateChainInfo, validateCustomChainInfo, validateGas } from './validation';
 
@@ -30,13 +40,12 @@ export function formatTransaction<
 	// I tried using Object.assign({}, transaction) which is supposed to perform a deep copy,
 	// but format_transactions.test.ts were still failing due to original nested object properties
 	// being wrongfully updated by this method.
-	const formattedTransaction = {
-		...transaction,
-		common: {
-			...transaction.common,
-			customChain: { ...transaction.common?.customChain },
-		},
-	};
+	const formattedTransaction = { ...transaction };
+	if (transaction.common !== undefined) {
+		formattedTransaction.common = { ...transaction.common };
+		if (transaction.common.customChain !== undefined)
+			formattedTransaction.common.customChain = { ...transaction.common.customChain };
+	}
 
 	const formattableProperties: (keyof Transaction)[] = [
 		'value',
@@ -76,6 +85,15 @@ export function formatTransaction<
 			formattedTransaction.common.customChain.chainId,
 			desiredType,
 		);
+
+	if (formattedTransaction.data !== undefined && formattedTransaction.input !== undefined)
+		throw new Error(
+			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
+		);
+	else if (formattedTransaction.input !== undefined) {
+		formattedTransaction.data = formattedTransaction.input;
+		delete formattedTransaction.input;
+	}
 
 	return formattedTransaction as Transaction<NumberType>;
 }
@@ -145,7 +163,7 @@ export async function populateTransaction<
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
 	desiredType: DesiredType,
-	privateKey?: HexString,
+	privateKey?: HexString | Buffer,
 ): Promise<PopulatedUnsignedTransaction<NumberType>> {
 	const populatedTransaction = { ...transaction };
 
@@ -166,30 +184,42 @@ export async function populateTransaction<
 		);
 	}
 
-	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
-	if (populatedTransaction.data === undefined) populatedTransaction.data = '0x';
-	if (populatedTransaction.chain === undefined) {
-		populatedTransaction.chain = web3Context.defaultChain as chain;
-	}
-	if (populatedTransaction.hardfork === undefined)
-		populatedTransaction.hardfork = web3Context.defaultHardfork as hardfork;
+	// TODO - Not sure if needed
+	// if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 
-	if (populatedTransaction.chainId === undefined) {
-		if (populatedTransaction.common?.customChain.chainId === undefined) {
+	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined)
+		throw new Error(
+			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
+		);
+	else if (populatedTransaction.input !== undefined) {
+		populatedTransaction.data = populatedTransaction.input;
+		delete populatedTransaction.input;
+	}
+
+	if (
+		populatedTransaction.data !== undefined &&
+		populatedTransaction.data !== null &&
+		populatedTransaction.data !== '' &&
+		!populatedTransaction.data.startsWith('0x')
+	)
+		populatedTransaction.data = `0x${populatedTransaction.data}`;
+
+	if (populatedTransaction.common === undefined) {
+		if (populatedTransaction.chain === undefined)
+			populatedTransaction.chain = web3Context.defaultChain as chain;
+		if (populatedTransaction.hardfork === undefined)
+			populatedTransaction.hardfork = web3Context.defaultHardfork as hardfork;
+	} else if (populatedTransaction.chainId === undefined)
+		if (populatedTransaction.common.customChain.chainId === undefined) {
 			// TODO - web3Eth.getChainId not implemented
 			// populatedTransaction.chainId = await web3Eth.getChainId();
 		}
-	}
 
-	if (populatedTransaction.gas === undefined) {
-		if (populatedTransaction.gasLimit !== undefined)
-			populatedTransaction.gas = populatedTransaction.gasLimit;
-	}
+	if (populatedTransaction.gas === undefined && populatedTransaction.gasLimit !== undefined)
+		populatedTransaction.gas = populatedTransaction.gasLimit;
 
-	if (populatedTransaction.gasLimit === undefined) {
-		if (populatedTransaction.gas !== undefined)
-			populatedTransaction.gasLimit = populatedTransaction.gas;
-	}
+	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
+		populatedTransaction.gasLimit = populatedTransaction.gas;
 
 	populatedTransaction.type = detectTransactionType(populatedTransaction);
 	if (
@@ -197,11 +227,7 @@ export async function populateTransaction<
 		(web3Context.defaultTransactionType !== null ||
 			web3Context.defaultTransactionType !== undefined)
 	)
-		populatedTransaction.type = convertToValidType(
-			// TODO - TSC is complaining it could be null, even though we check above
-			web3Context.defaultTransactionType as Numbers,
-			ValidTypes.HexString,
-		);
+		populatedTransaction.type = web3Context.defaultTransactionType as HexString;
 
 	if (populatedTransaction.type !== undefined) {
 		const hexTxType = toHex(populatedTransaction.type);
@@ -253,3 +279,67 @@ export async function populateTransaction<
 		desiredType,
 	) as unknown as PopulatedUnsignedTransaction<NumberType>;
 }
+
+const getEthereumjsTxDataFromTransaction = (
+	transaction: PopulatedUnsignedTransaction<ValidReturnTypes[ValidTypes.HexString]>,
+) => ({
+	nonce: transaction.nonce as HexString,
+	gasPrice: transaction.gasPrice as HexString,
+	gasLimit: transaction.gasLimit as HexString,
+	to: transaction.to as HexString,
+	value: transaction.value as HexString,
+	data: transaction.data,
+	type: transaction.type as HexString,
+	chainId: transaction.chainId as HexString,
+	accessList: (transaction as PopulatedUnsignedEip2930Transaction).accessList,
+	maxPriorityFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction)
+		.maxPriorityFeePerGas as HexString,
+	maxFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction).maxFeePerGas as HexString,
+});
+
+const getEthereumjsTransactionOptions = (
+	transaction: PopulatedUnsignedTransaction<ValidReturnTypes[ValidTypes.HexString]>,
+) => {
+	const hasTransactionSigningOptions =
+		(transaction.chain !== undefined && transaction.hardfork !== undefined) ||
+		transaction.common !== undefined;
+
+	let common;
+	if (!hasTransactionSigningOptions) {
+		common = Common.custom({
+			name: 'custom-network',
+			chainId: toNumber(transaction.chainId) as number,
+			// networkId: transaction.networkId,
+			defaultHardfork: transaction.hardfork ?? 'london',
+		});
+	} else if (transaction.common)
+		common = Common.custom({
+			name: transaction.common.customChain.name ?? 'custom-network',
+			chainId: toNumber(transaction.common.customChain.chainId) as number,
+			// networkId: transaction.common.customChain.networkId,
+			defaultHardfork: transaction.common.hardfork ?? 'london',
+		});
+
+	return { common } as TxOptions;
+};
+
+// TODO - Needs override function
+export const prepareTransactionForSigning = async (
+	transaction: Transaction,
+	web3Context: Web3Context<EthExecutionAPI>,
+	privateKey?: HexString | Buffer,
+) => {
+	const populatedTransaction = await populateTransaction(
+		transaction,
+		web3Context,
+		ValidTypes.HexString,
+		privateKey,
+	);
+
+	validateTransactionForSigning(populatedTransaction);
+
+	return TransactionFactory.fromTxData(
+		getEthereumjsTxDataFromTransaction(populatedTransaction),
+		getEthereumjsTransactionOptions(populatedTransaction),
+	);
+};
