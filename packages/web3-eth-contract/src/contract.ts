@@ -270,12 +270,12 @@ export class Contract<Abi extends ContractAbi>
 				const event = this._createContractEvent(abi);
 
 				if (!(eventName in this._events) || abi.name === 'bound') {
-					// It's a private type and we don't want to expose it and no nee to check
+					// It's a private type and we don't want to expose it and no need to check
 					this._events[eventName as keyof ContractEventsInterface<Abi>] = event as never;
 				}
-				// It's a private type and we don't want to expose it and no nee to check
+				// It's a private type and we don't want to expose it and no need to check
 				this._events[abi.name as keyof ContractEventsInterface<Abi>] = event as never;
-				// It's a private type and we don't want to expose it and no nee to check
+				// It's a private type and we don't want to expose it and no need to check
 				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
 
