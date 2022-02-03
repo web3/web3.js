@@ -142,8 +142,9 @@ export const validateChainInfo = (transaction: Transaction) => {
 		transaction.common !== undefined &&
 		transaction.chain !== undefined &&
 		transaction.hardfork !== undefined
-	)
+	) {
 		throw new CommonOrChainAndHardforkError();
+	}
 	if (
 		(transaction.chain !== undefined && transaction.hardfork === undefined) ||
 		(transaction.hardfork !== undefined && transaction.chain === undefined)
