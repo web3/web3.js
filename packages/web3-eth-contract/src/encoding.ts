@@ -10,7 +10,7 @@ import {
 	encodeParameters,
 	isAbiConstructorFragment,
 } from 'web3-eth-abi';
-import { HexString, Uint } from 'web3-utils';
+import { Filter, HexString, Uint } from 'web3-utils';
 import { Web3ContractError } from './errors';
 import { ContractOptions } from './types';
 
@@ -20,12 +20,12 @@ export const encodeEventABI = (
 	options?: {
 		fromBlock?: Uint;
 		toBlock?: Uint;
-		filter: Record<string, string>;
+		filter?: Filter;
 		topics?: HexString | HexString[];
 	},
 ) => {
 	const opts: {
-		filter: Record<string, string>;
+		filter: Filter;
 		fromBlock?: string;
 		toBlock?: string;
 		topics?: HexString[];
@@ -59,7 +59,7 @@ export const encodeEventABI = (
 					continue;
 				}
 
-				const value = opts.filter[input.name];
+				const value = opts.filter[input.name as keyof Filter];
 
 				if (!value) {
 					continue;
@@ -168,6 +168,11 @@ export const encodeMethodABI = (
 };
 
 export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexString) => {
+	// If it was constructor then we need to return contract address
+	if (abi.type === 'constructor') {
+		return returnValues;
+	}
+
 	if (!returnValues) {
 		return null;
 	}
