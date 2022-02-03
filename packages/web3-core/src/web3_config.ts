@@ -29,7 +29,7 @@ export abstract class Web3Config
 		// TODO - Check if there is a default Common
 		defaultCommon: null,
 		defaultReturnType: ValidTypes.HexString,
-		defaultTransactionType: null,
+		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 	};
 
