@@ -58,7 +58,7 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 	value?: string;
 }
 
-export interface NonPayableMethodObject<Inputs, Outputs> {
+export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: NonPayableCallOptions): PromiEvent<
@@ -80,7 +80,7 @@ export interface NonPayableMethodObject<Inputs, Outputs> {
 	encodeABI(): string;
 }
 
-export interface PayableMethodObject<Inputs, Outputs> {
+export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: PayableCallOptions): PromiEvent<
