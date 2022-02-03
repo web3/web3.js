@@ -185,17 +185,27 @@ export type ContractConstructor<Abis extends ContractAbi> = {
 	};
 }['constructor'];
 
+export type ContractMethod<Abi extends AbiFunctionFragment> = {
+	readonly Abi: Abi;
+	readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
+	readonly Outputs: ContractMethodOutputParameters<[...Abi['outputs']]>;
+};
+
 export type ContractMethods<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<Abis, AbiFunctionFragment> as Abi['name']]: {
-		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
-		readonly Outputs: ContractMethodOutputParameters<[...Abi['outputs']]>;
-	};
+	[Abi in FilterAbis<
+		Abis,
+		AbiFunctionFragment & { type: 'function' }
+	> as Abi['name']]: ContractMethod<Abi>;
+};
+
+export type ContractEvent<Abi extends AbiEventFragment> = {
+	readonly Abi: Abi;
+	readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
 };
 
 export type ContractEvents<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<Abis, AbiEventFragment> as Abi['name']]: {
-		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<[...Abi['inputs']]>;
-	};
+	[Abi in FilterAbis<
+		Abis,
+		AbiEventFragment & { type: 'event' }
+	> as Abi['name']]: ContractEvent<Abi>;
 };
