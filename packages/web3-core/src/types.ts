@@ -52,6 +52,6 @@ export interface Web3ConfigOptions {
 	defaultHardfork: string | null;
 	defaultCommon: Record<string, unknown> | null;
 	defaultReturnType: ValidTypes;
-	defaultTransactionType: Numbers | null;
+	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
 }
