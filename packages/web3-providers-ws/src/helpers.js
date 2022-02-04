@@ -19,7 +19,7 @@ if (isNode || isRN) {
         helpers = require('url').parse;
     }
 } else {
-    _btoa = btoa.bind(window);
+    _btoa = btoa.bind(typeof globalThis === 'object' ? globalThis : self);
     helpers = function(url) {
         return new URL(url);
     };
