@@ -30,7 +30,6 @@ export const isBaseTransactionValidData: [BaseTransaction, true][] = [
 			gas: '0x5208',
 			value: '0x1',
 			input: '0x1',
-			chainId: '0x1',
 		},
 		true,
 	],
