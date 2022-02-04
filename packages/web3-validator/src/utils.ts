@@ -56,10 +56,13 @@ export const abiSchemaToJsonSchema = (
 		type: string;
 		items?: unknown[];
 		maxItems?: number;
+		minItems?: number;
 		additionalItems?: boolean;
 	} = {
 		type: 'array',
 		items: [],
+		maxItems: abis.length,
+		minItems: abis.length,
 	};
 
 	for (const [index, abi] of abis.entries()) {
