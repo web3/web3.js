@@ -143,7 +143,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 		delete modifiedOptions.gasPrice;
 	}
 
-	['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce']
+	['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce', 'chainId']
 		.filter(key => modifiedOptions[key] !== undefined)
 		.forEach(key => {
 			modifiedOptions[key] = numberToHex(modifiedOptions[key] as Numbers);
