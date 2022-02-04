@@ -285,6 +285,7 @@ const transactionInfo: TransactionInfo = {
 	type: '0x0',
 	maxFeePerGas: '0x1475505aab',
 	maxPriorityFeePerGas: '0x7f324180',
+	chainId: '0x1',
 };
 const hydratedTransactions: TransactionInfo[] = [transactionInfo, transactionInfo, transactionInfo];
 const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
@@ -1060,6 +1061,7 @@ const transactionInfoNumberString: TransactionInfoFormatted<ValidTypes.NumberStr
 	v: '37',
 	maxFeePerGas: '87867546283',
 	maxPriorityFeePerGas: '2134000000',
+	chainId: '1',
 };
 const transactionInfoNumber: TransactionInfoFormatted<ValidTypes.Number> = {
 	...transactionInfo,
@@ -1073,6 +1075,7 @@ const transactionInfoNumber: TransactionInfoFormatted<ValidTypes.Number> = {
 	v: 37,
 	maxFeePerGas: 87867546283,
 	maxPriorityFeePerGas: 2134000000,
+	chainId: 1,
 };
 const transactionInfoBigInt: TransactionInfoFormatted<ValidTypes.BigInt> = {
 	...transactionInfo,
@@ -1086,6 +1089,7 @@ const transactionInfoBigInt: TransactionInfoFormatted<ValidTypes.BigInt> = {
 	v: BigInt('37'),
 	maxFeePerGas: BigInt('87867546283'),
 	maxPriorityFeePerGas: BigInt('2134000000'),
+	chainId: BigInt('1'),
 };
 /**
  * Array consists of:
@@ -1578,6 +1582,7 @@ const transactionWithSender: TransactionWithSender = {
 	accessList: [],
 	gasPrice: '0x4a817c800',
 	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	chainId: '0x1',
 };
 /**
  * Array consists of:
