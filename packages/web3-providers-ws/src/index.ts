@@ -22,6 +22,7 @@ import {
 	Web3BaseProviderStatus,
 	DeferredPromise,
 } from 'web3-common';
+import { Web3WSProviderError } from './errors';
 import { ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
@@ -150,9 +151,9 @@ export default class WebSocketProvider<
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponse<ResponseType>> {
 		if (this._webSocketConnection === undefined)
-			throw new Error('WebSocket connection is undefined');
+			throw new Web3WSProviderError('WebSocket connection is undefined');
 
-		if (request.id === undefined) throw new Error('Request Id not defined');
+		if (request.id === undefined) throw new Web3WSProviderError('Request Id not defined');
 
 		if (
 			this._webSocketConnection.readyState === this._webSocketConnection.CLOSED ||
