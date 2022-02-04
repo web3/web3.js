@@ -47,6 +47,7 @@ export interface Transaction {
 	data?: HexString;
 	nonce?: Numbers;
 	chain?: HexString;
+	chainId?: HexString;
 	hardfork?: HexString;
 	common?: {
 		customChain: {
@@ -69,6 +70,7 @@ interface BaseTransactionFormatted<
 	readonly gas: ReturnType;
 	readonly value: ReturnType;
 	readonly input: HexStringBytes;
+	readonly chainId?: ReturnType;
 }
 
 interface Transaction1559UnsignedFormatted<
