@@ -107,7 +107,7 @@ export const abiSchemaToJsonSchema = (
 
 		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
 
-		let childSchema: JsonSchema = { ...schema };
+		let childSchema: JsonSchema;
 		let lastSchema = schema;
 		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
 			childSchema = {
