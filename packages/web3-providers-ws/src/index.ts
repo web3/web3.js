@@ -20,8 +20,8 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderCallback,
 	Web3BaseProviderStatus,
+	DeferredPromise,
 } from 'web3-common';
-import { DeferredPromise } from './deferred_promise';
 import { ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
@@ -174,11 +174,10 @@ export default class WebSocketProvider<
 				};
 
 				this._requestQueue.set(request.id, reqItem);
-				return defPromise.realPromise;
+				return defPromise;
 			}
 
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-			return requestItem.deferredPromise.realPromise;
+			return requestItem.deferredPromise;
 		}
 
 		let promise;
@@ -186,7 +185,7 @@ export default class WebSocketProvider<
 		if (requestItem !== undefined) {
 			this._sentQueue.set(request.id, requestItem);
 			this._requestQueue.delete(request.id);
-			promise = requestItem.deferredPromise.realPromise;
+			promise = requestItem.deferredPromise;
 		} else {
 			const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
 
@@ -196,7 +195,7 @@ export default class WebSocketProvider<
 			};
 
 			this._sentQueue.set(request.id, reqItem);
-			promise = defPromise.realPromise;
+			promise = defPromise;
 		}
 
 		try {
