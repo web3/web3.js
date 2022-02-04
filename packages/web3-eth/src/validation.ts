@@ -19,6 +19,7 @@ export function isBaseTransaction(value: BaseTransaction): boolean {
 	if (!isHexStrict(value.gas)) return false;
 	if (!isHexStrict(value.value)) return false;
 	if (!isHexStrict(value.input)) return false;
+	if (value.chainId && !isHexStrict(value.chainId)) return false;
 
 	return true;
 }

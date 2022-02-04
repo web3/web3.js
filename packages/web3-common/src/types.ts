@@ -96,6 +96,7 @@ export interface TransactionInput {
 	readonly blockNumber?: HexString;
 	readonly transactionIndex?: HexString;
 	readonly type?: HexString;
+	readonly chainId?: HexString;
 }
 
 export type TransactionOutput = {
