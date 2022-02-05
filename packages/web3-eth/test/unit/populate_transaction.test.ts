@@ -193,6 +193,7 @@ describe('populateTransaction', () => {
 		it('should populate with mainnet', async () => {
 			const input = { ...transaction };
 			delete input.chain;
+			delete input.common;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.chain).toBe('mainnet');
@@ -203,6 +204,7 @@ describe('populateTransaction', () => {
 
 			const input = { ...transaction };
 			delete input.chain;
+			delete input.common;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.chain).toBe(web3Context.defaultChain);
@@ -213,6 +215,7 @@ describe('populateTransaction', () => {
 		it('should populate with london', async () => {
 			const input = { ...transaction };
 			delete input.hardfork;
+			delete input.common;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.hardfork).toBe('london');
@@ -223,6 +226,7 @@ describe('populateTransaction', () => {
 
 			const input = { ...transaction };
 			delete input.hardfork;
+			delete input.common;
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
