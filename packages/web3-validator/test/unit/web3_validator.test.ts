@@ -30,6 +30,24 @@ describe('web3-validator', () => {
 				expect(validator.validate(['uint'], [1])).toBeUndefined();
 			});
 
+			it('should raise error with empty value', () => {
+				expect(() => validator.validate(['string'], [])).toThrow(
+					'must NOT have fewer than 1 items',
+				);
+			});
+
+			it('should raise error with less value', () => {
+				expect(() => validator.validate(['string', 'string'], ['value'])).toThrow(
+					'must NOT have fewer than 2 items',
+				);
+			});
+
+			it('should raise error with more value', () => {
+				expect(() => validator.validate(['string'], ['value', 'value2'])).toThrow(
+					'must NOT have more than 1 items',
+				);
+			});
+
 			it('should raise error by default', () => {
 				expect(() => validator.validate(['uint'], [-1])).toThrow(
 					'Web3 validator found 1 error[s]:\nvalue "-1" at "/0" must pass "uint" validation',

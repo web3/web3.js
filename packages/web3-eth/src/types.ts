@@ -104,6 +104,7 @@ interface BaseTransactionFormatted<
 	readonly gas: ReturnType;
 	readonly value: ReturnType;
 	readonly input: HexStringBytes;
+	readonly chainId?: ReturnType;
 }
 
 interface Transaction1559UnsignedFormatted<
