@@ -28,6 +28,7 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
+var { isOffChainLookup, ccipReadCall } = require('web3-ccip-read');
 
 var EthersTransactionUtils = require('@ethersproject/transactions');
 
@@ -634,6 +635,14 @@ Method.prototype.buildCall = function () {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
+
+            //hook into CCIP-read
+            if (isOffChainLookup(err, result)) {
+                const ccipReadResult = ccipReadCall(err, result, payload, send);
+                defer.resolve(ccipReadResult);
+                return;
+            }
+
             if (method.handleRevert && isCall && method.abiCoder) {
                 var reasonData;
 

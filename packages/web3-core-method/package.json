@@ -18,7 +18,8 @@
         "web3-core-helpers": "1.6.1",
         "web3-core-promievent": "1.6.1",
         "web3-core-subscriptions": "1.6.1",
-        "web3-utils": "1.6.1"
+        "web3-utils": "1.6.1",
+        "web3-ccip-read": "1.0.0"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",

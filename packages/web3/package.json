@@ -56,7 +56,8 @@
         "web3-eth-personal": "1.6.1",
         "web3-net": "1.6.1",
         "web3-shh": "1.6.1",
-        "web3-utils": "1.6.1"
+        "web3-utils": "1.6.1",
+        "web3-ccip-read": "1.0.0"
     },
     "devDependencies": {
         "@types/node": "^12.12.6",
