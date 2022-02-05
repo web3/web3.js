@@ -213,6 +213,7 @@ export interface TransactionReceipt {
     contractAddress?: string;
     cumulativeGasUsed: number;
     gasUsed: number;
+    effectiveGasPrice: number;
     logs: Log[];
     logsBloom: string;
     events?: {
