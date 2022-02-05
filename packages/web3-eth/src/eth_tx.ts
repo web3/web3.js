@@ -184,8 +184,7 @@ export async function populateTransaction<
 		);
 	}
 
-	// TODO - Not sure if needed
-	// if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
+	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 
 	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined)
 		throw new Error(
@@ -197,11 +196,12 @@ export async function populateTransaction<
 	}
 
 	if (
-		populatedTransaction.data !== undefined &&
-		populatedTransaction.data !== null &&
-		populatedTransaction.data !== '' &&
-		!populatedTransaction.data.startsWith('0x')
+		populatedTransaction.data === undefined ||
+		populatedTransaction.data === null ||
+		populatedTransaction.data === ''
 	)
+		populatedTransaction.data = '0x';
+	if (!populatedTransaction.data.startsWith('0x'))
 		populatedTransaction.data = `0x${populatedTransaction.data}`;
 
 	if (populatedTransaction.common === undefined) {
