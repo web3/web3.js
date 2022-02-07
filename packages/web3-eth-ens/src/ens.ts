@@ -1,10 +1,13 @@
 import { isHexStrict, sha3Raw } from "web3-utils"
+import Web3Eth from 'web3-eth';
 
 export class ENS {
-    private eth: string;
+    private eth;
     private registryAddress: string;
-    constructor(eth:string){
+    private _lastSyncCheck: number;
+    constructor(eth: Web3Eth){
         this.eth = eth;
+        this._lastSyncCheck = -1;
     }
 
     // TODO in registry issue
@@ -58,4 +61,36 @@ export class ENS {
 
     // TODO in registry
     public getAddress (): boolean { return true };
+
+    // TODO in resolver
+    public setAddress (): boolean { return true };
+
+    // TODO in resolver
+    public getPubkey (): boolean { return true };
+
+    // TODO in resolver
+    public setPubkey (): boolean { return true };
+
+    // TODO in resolver
+    public getContent (): boolean { return true };
+
+    // TODO in resolver
+    public setContent (): boolean { return true };
+
+    // TODO in resolver
+    public getContentHash (): boolean { return true };
+
+    // TODO in resolver
+    public setContentHash (): boolean { return true };
+
+    // TODO in resolver
+    public getMultiHash (): boolean { return true };
+
+    // TODO in resolver
+    public setMultiHash (): boolean { return true };
+
+    // TODO after eth.net.getNetworkType is complete
+    public checkNetwork (): string { 
+        return "true";
+     };
 }
