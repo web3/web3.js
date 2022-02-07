@@ -1,5 +1,4 @@
-import { Web3APIMethod, Web3APIPayload, Web3APISpec } from 'web3-common';
-import { DeferredPromise } from './deferred_promise';
+import { Web3APIMethod, Web3APIPayload, Web3APISpec, DeferredPromise } from 'web3-common';
 
 export type ReconnectOptions = {
 	autoReconnect: boolean;
