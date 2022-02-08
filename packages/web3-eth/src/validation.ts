@@ -135,7 +135,6 @@ export const validateCustomChainInfo = (transaction: Transaction) => {
 			});
 	}
 
-	// TODO - Should throw error?
 };
 
 export const validateChainInfo = (transaction: Transaction) => {
