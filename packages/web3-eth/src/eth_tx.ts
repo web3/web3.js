@@ -285,7 +285,7 @@ export async function populateTransaction<
 }
 
 const getEthereumjsTxDataFromTransaction = (
-	transaction: PopulatedUnsignedTransaction<ValidReturnTypes[ValidTypes.HexString]>,
+	transaction: PopulatedUnsignedTransaction<HexString>,
 ) => ({
 	nonce: transaction.nonce as HexString,
 	gasPrice: transaction.gasPrice as HexString,
@@ -301,9 +301,7 @@ const getEthereumjsTxDataFromTransaction = (
 	maxFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction).maxFeePerGas as HexString,
 });
 
-const getEthereumjsTransactionOptions = (
-	transaction: PopulatedUnsignedTransaction<ValidReturnTypes[ValidTypes.HexString]>,
-) => {
+const getEthereumjsTransactionOptions = (transaction: PopulatedUnsignedTransaction<HexString>) => {
 	const hasTransactionSigningOptions =
 		(transaction.chain !== undefined && transaction.hardfork !== undefined) ||
 		transaction.common !== undefined;
