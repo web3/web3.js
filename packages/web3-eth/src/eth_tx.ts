@@ -18,6 +18,7 @@ import {
 	Eip1559NotSupportedError,
 	InvalidNonceOrChainIdError,
 	InvalidTransactionObjectError,
+	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from './errors';
@@ -87,9 +88,10 @@ export function formatTransaction<
 		);
 
 	if (formattedTransaction.data !== undefined && formattedTransaction.input !== undefined)
-		throw new Error(
-			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
-		);
+		throw new TransactionDataAndInputError({
+			data: formattedTransaction.data,
+			input: formattedTransaction.input,
+		});
 	else if (formattedTransaction.input !== undefined) {
 		formattedTransaction.data = formattedTransaction.input;
 		delete formattedTransaction.input;
@@ -187,9 +189,10 @@ export async function populateTransaction<
 	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 
 	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined)
-		throw new Error(
-			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
-		);
+		throw new TransactionDataAndInputError({
+			data: populatedTransaction.data,
+			input: populatedTransaction.input,
+		});
 	else if (populatedTransaction.input !== undefined) {
 		populatedTransaction.data = populatedTransaction.input;
 		delete populatedTransaction.input;

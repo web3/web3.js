@@ -17,8 +17,9 @@ import {
 	ERR_TX_INVALID_OBJECT,
 	ERR_TX_INVALID_FEE_MARKET_GAS_PRICE,
 	ERR_TX_INVALID_LEGACY_GAS,
+	ERR_TX_DATA_AND_INPUT,
 } from 'web3-common';
-import { Numbers, Web3Error } from 'web3-utils';
+import { HexString, Numbers, Web3Error } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
@@ -227,5 +228,16 @@ export class UnsupportedTransactionTypeError extends Web3Error {
 
 	public constructor(value: unknown) {
 		super(value, 'unsupported transaction type');
+	}
+}
+
+export class TransactionDataAndInputError extends Web3Error {
+	public code = ERR_TX_DATA_AND_INPUT;
+
+	public constructor(value: { data: HexString | undefined; input: HexString | undefined }) {
+		super(
+			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
+			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
+		);
 	}
 }

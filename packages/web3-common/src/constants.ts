@@ -48,6 +48,7 @@ export const ERR_TX_INVALID_NONCE_OR_CHAIN_ID = 421;
 export const ERR_TX_UNABLE_TO_POPULATE_NONCE = 422;
 export const ERR_TX_UNSUPPORTED_EIP_1559 = 423;
 export const ERR_TX_UNSUPPORTED_TYPE = 424;
+export const ERR_TX_DATA_AND_INPUT = 425;
 
 // Connection error codes
 export const ERR_CONN = 500;
