@@ -212,17 +212,20 @@ export async function populateTransaction<
 			populatedTransaction.chain = web3Context.defaultChain as chain;
 		if (populatedTransaction.hardfork === undefined)
 			populatedTransaction.hardfork = web3Context.defaultHardfork as hardfork;
-	} else if (populatedTransaction.chainId === undefined)
-		if (populatedTransaction.common.customChain.chainId === undefined) {
+	}
+
+	if (
+		populatedTransaction.chainId === undefined &&
+		populatedTransaction.common?.customChain.chainId === undefined
+	)
+		if (populatedTransaction.networkId === undefined) {
 			// TODO - web3Eth.getChainId not implemented
 			// populatedTransaction.chainId = await web3Eth.getChainId();
-		}
 
-	if (populatedTransaction.networkId === undefined) {
-		populatedTransaction.networkId = web3Context.defaultNetworkId ?? undefined;
-		//  TODO - getNetworkId (net_version) not implemented
-		// 	populatedTransaction.networkId = await getNetworkId();
-	}
+			populatedTransaction.networkId = web3Context.defaultNetworkId ?? undefined;
+			//  TODO - getNetworkId (net_version) not implemented
+			// 	populatedTransaction.networkId = await getNetworkId();
+		}
 
 	if (populatedTransaction.gas === undefined && populatedTransaction.gasLimit !== undefined)
 		populatedTransaction.gas = populatedTransaction.gasLimit;
