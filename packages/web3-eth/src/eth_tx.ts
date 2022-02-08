@@ -5,7 +5,6 @@ import {
 	convertToValidType,
 	HexString,
 	Numbers,
-	toHex,
 	toNumber,
 	ValidReturnTypes,
 	ValidTypes,
