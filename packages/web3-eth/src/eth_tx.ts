@@ -236,25 +236,23 @@ export async function populateTransaction<
 		populatedTransaction.type = web3Context.defaultTransactionType as HexString;
 
 	if (populatedTransaction.type !== undefined) {
-		const hexTxType = toHex(populatedTransaction.type);
-
-		if (hexTxType.startsWith('-'))
+		if (populatedTransaction.type.startsWith('-'))
 			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
 		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
-		if (hexTxType < '0x0' || hexTxType > '0x7f')
+		if (populatedTransaction.type < '0x0' || populatedTransaction.type > '0x7f')
 			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
-		if (hexTxType === '0x0' || hexTxType === '0x1') {
+		if (populatedTransaction.type === '0x0' || populatedTransaction.type === '0x1') {
 			if (populatedTransaction.gasPrice === undefined)
 				populatedTransaction.gasPrice = await getGasPrice(web3Context);
 		}
 
-		if (hexTxType === '0x1' || hexTxType === '0x2') {
+		if (populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2') {
 			if (populatedTransaction.accessList === undefined) populatedTransaction.accessList = [];
 		}
 
-		if (hexTxType === '0x2') {
+		if (populatedTransaction.type === '0x2') {
 			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
 			const block = await getBlock(web3Context);
 
