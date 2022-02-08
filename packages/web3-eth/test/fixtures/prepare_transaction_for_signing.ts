@@ -817,6 +817,7 @@ export const validTransactions: [
 		'0xe3a2e10c7d3af3407ec2d38c64788d6673926e9b28d6d2e7df3c94cdf0548233',
 		'0xad3e5faafaf3a9350ab16c1be0198ce9ff3c6bef0b91e05488d757f07de9557',
 	],
+	// TODO - RLP encoded value doesn't match
 	// https://github.com/ChainSafe/web3.js/blob/1.x/test/eth.accounts.signTransaction.js#L656
 	// [
 	// 	postEip1559Block,
