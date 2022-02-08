@@ -1,5 +1,5 @@
 // https://github.com/ensdomains/ens/blob/master/contracts/ENS.sol
-const REGISTRY = [
+export const REGISTRY = [
 	{
 		anonymous: false,
 		inputs: [
@@ -370,5 +370,3 @@ const REGISTRY = [
 		type: 'function',
 	},
 ] as const;
-
-module.exports = REGISTRY;
