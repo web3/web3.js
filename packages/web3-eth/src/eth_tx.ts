@@ -300,29 +300,42 @@ const getEthereumjsTxDataFromTransaction = (
 	maxFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction).maxFeePerGas as HexString,
 });
 
-const getEthereumjsTransactionOptions = (transaction: PopulatedUnsignedTransaction<HexString>) => {
+const getEthereumjsTransactionOptions = (
+	transaction: PopulatedUnsignedTransaction<HexString>,
+	web3Context: Web3Context<EthExecutionAPI>,
+) => {
 	const hasTransactionSigningOptions =
 		(transaction.chain !== undefined && transaction.hardfork !== undefined) ||
 		transaction.common !== undefined;
 
 	let common;
 	if (!hasTransactionSigningOptions) {
-		common = Common.custom({
-			name: 'custom-network',
-			chainId: toNumber(transaction.chainId) as number,
-			networkId:
-				transaction.networkId !== undefined
-					? (toNumber(transaction.networkId) as number)
-					: undefined,
-			defaultHardfork: transaction.hardfork ?? 'london',
-		});
+		common = Common.custom(
+			{
+				name: 'custom-network',
+				chainId: toNumber(transaction.chainId) as number,
+				networkId:
+					transaction.networkId !== undefined
+						? (toNumber(transaction.networkId) as number)
+						: undefined,
+				defaultHardfork: transaction.hardfork ?? web3Context.defaultHardfork,
+			},
+			{
+				baseChain: web3Context.defaultChain,
+			},
+		);
 	} else if (transaction.common)
-		common = Common.custom({
-			name: transaction.common.customChain.name ?? 'custom-network',
-			chainId: toNumber(transaction.common.customChain.chainId) as number,
-			networkId: toNumber(transaction.common.customChain.networkId) as number,
-			defaultHardfork: transaction.common.hardfork ?? 'london',
-		});
+		common = Common.custom(
+			{
+				name: transaction.common.customChain.name ?? 'custom-network',
+				chainId: toNumber(transaction.common.customChain.chainId) as number,
+				networkId: toNumber(transaction.common.customChain.networkId) as number,
+				defaultHardfork: transaction.common.hardfork ?? web3Context.defaultHardfork,
+			},
+			{
+				baseChain: transaction.common.baseChain ?? web3Context.defaultChain,
+			},
+		);
 
 	return { common } as TxOptions;
 };
@@ -344,6 +357,6 @@ export const prepareTransactionForSigning = async (
 
 	return TransactionFactory.fromTxData(
 		getEthereumjsTxDataFromTransaction(populatedTransaction),
-		getEthereumjsTransactionOptions(populatedTransaction),
+		getEthereumjsTransactionOptions(populatedTransaction, web3Context),
 	);
 };
