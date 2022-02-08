@@ -244,16 +244,6 @@ describe('populateTransaction', () => {
 		});
 	});
 
-	describe('should populate gas', () => {
-		it('should populate with gasLimit', async () => {
-			const input = { ...transaction };
-			delete input.gas;
-
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect(result.gas).toBe(expectedGas);
-		});
-	});
-
 	describe('should populate gasLimit', () => {
 		it('should populate with gas', async () => {
 			const input = { ...transaction };
