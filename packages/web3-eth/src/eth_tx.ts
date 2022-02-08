@@ -224,9 +224,6 @@ export async function populateTransaction<
 	// 	populatedTransaction.networkId = await getNetworkId();
 	// }
 
-	if (populatedTransaction.gas === undefined && populatedTransaction.gasLimit !== undefined)
-		populatedTransaction.gas = populatedTransaction.gasLimit;
-
 	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 
