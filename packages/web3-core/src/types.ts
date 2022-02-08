@@ -49,8 +49,8 @@ export interface Web3ConfigOptions {
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
 	defaultNetworkId: Numbers | null;
-	defaultChain: string | null;
-	defaultHardfork: string | null;
+	defaultChain: string;
+	defaultHardfork: string;
 	defaultCommon: Record<string, unknown> | null;
 	defaultReturnType: ValidTypes;
 	defaultTransactionType: Numbers;
