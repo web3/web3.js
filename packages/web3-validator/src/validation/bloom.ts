@@ -1,7 +1,6 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { padLeft } from '../shared_utils';
 import { ValidInputTypes } from '../types';
-import { codePointToInt } from '../utils';
+import { codePointToInt, padLeft } from '../utils';
 import { isAddress } from './address';
 import { isHexStrict } from './string';
 

@@ -321,4 +321,180 @@ export const abiToJsonSchemaCases: {
 			minItems: 2,
 		},
 	},
+
+	{
+		title: 'nested array example 1',
+		input: {
+			full: [
+				{
+					name: 'a',
+					type: 'uint[2][3]',
+				},
+			],
+			short: ['uint[2][3]'],
+		},
+		output: {
+			type: 'array',
+			items: {
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: expect.any(String),
+						items: {
+							eth: 'uint',
+						},
+						minItems: 2,
+						maxItems: 2,
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
+			maxItems: 1,
+			minItems: 1,
+		},
+	},
+
+	{
+		title: 'nested array example 2',
+		input: {
+			full: [
+				{
+					name: 'a',
+					type: 'uint[][3]',
+				},
+			],
+			short: ['uint[][3]'],
+		},
+		output: {
+			type: 'array',
+			items: {
+				type: 'array',
+				items: [
+					{
+						type: 'array',
+						$id: expect.any(String),
+						items: {
+							eth: 'uint',
+						},
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
+			maxItems: 1,
+			minItems: 1,
+		},
+	},
+
+	{
+		title: 'nested tuple example 1',
+		input: {
+			full: [
+				{
+					name: 'a',
+					type: 'tuple[][3]',
+					components: [
+						{
+							name: 'level',
+							type: 'uint',
+						},
+						{
+							name: 'message',
+							type: 'string',
+						},
+					],
+				},
+			],
+			short: [['tuple[][3]', ['uint', 'string']]],
+		},
+		output: {
+			type: 'array',
+			items: {
+				type: 'array',
+				items: [
+					{
+						$id: expect.any(String),
+						type: 'array',
+						items: {
+							type: 'array',
+							items: [
+								{
+									$id: expect.any(String),
+									eth: 'uint',
+								},
+								{
+									$id: expect.any(String),
+									eth: 'string',
+								},
+							],
+							maxItems: 2,
+							minItems: 2,
+						},
+					},
+				],
+				maxItems: 3,
+				minItems: 3,
+			},
+			maxItems: 1,
+			minItems: 1,
+		},
+	},
+
+	{
+		title: 'nested tuple example 2',
+		input: {
+			full: [
+				{
+					name: 'a',
+					type: 'tuple[3][5]',
+					components: [
+						{
+							name: 'level',
+							type: 'uint',
+						},
+						{
+							name: 'message',
+							type: 'string',
+						},
+					],
+				},
+			],
+			short: [['tuple[3][5]', ['uint', 'string']]],
+		},
+		output: {
+			type: 'array',
+			items: {
+				type: 'array',
+				items: [
+					{
+						$id: expect.any(String),
+						type: 'array',
+						items: {
+							type: 'array',
+							items: [
+								{
+									$id: expect.any(String),
+									eth: 'uint',
+								},
+								{
+									$id: expect.any(String),
+									eth: 'string',
+								},
+							],
+							maxItems: 2,
+							minItems: 2,
+						},
+						maxItems: 3,
+						minItems: 3,
+					},
+				],
+				maxItems: 5,
+				minItems: 5,
+			},
+			maxItems: 1,
+			minItems: 1,
+		},
+	},
 ];
