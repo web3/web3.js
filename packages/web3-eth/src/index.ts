@@ -90,8 +90,6 @@ export default class Web3Eth {
 		return rpcMethodsWrappers.getCode(this.web3Context, address, blockNumber);
 	}
 
-	// TODO - Should this.web3Context.defaultBlock still be used? Or should rpcMethodsWrappers handle defaults?
-	// Or vice verse
 	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this.web3Context.defaultBlock,
 		hydrated = false,
