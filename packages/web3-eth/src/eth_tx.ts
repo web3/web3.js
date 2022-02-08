@@ -215,6 +215,12 @@ export async function populateTransaction<
 			// populatedTransaction.chainId = await web3Eth.getChainId();
 		}
 
+	if (populatedTransaction.networkId === undefined) {
+		populatedTransaction.networkId = web3Context.defaultNetworkId ?? undefined;
+		//  TODO - getNetworkId (net_version) not implemented
+		// 	populatedTransaction.networkId = await getNetworkId();
+	}
+
 	if (populatedTransaction.gas === undefined && populatedTransaction.gasLimit !== undefined)
 		populatedTransaction.gas = populatedTransaction.gasLimit;
 
@@ -309,14 +315,17 @@ const getEthereumjsTransactionOptions = (
 		common = Common.custom({
 			name: 'custom-network',
 			chainId: toNumber(transaction.chainId) as number,
-			// networkId: transaction.networkId,
+			networkId:
+				transaction.networkId !== undefined
+					? (toNumber(transaction.networkId) as number)
+					: undefined,
 			defaultHardfork: transaction.hardfork ?? 'london',
 		});
 	} else if (transaction.common)
 		common = Common.custom({
 			name: transaction.common.customChain.name ?? 'custom-network',
 			chainId: toNumber(transaction.common.customChain.chainId) as number,
-			// networkId: transaction.common.customChain.networkId,
+			networkId: toNumber(transaction.common.customChain.networkId) as number,
 			defaultHardfork: transaction.common.hardfork ?? 'london',
 		});
 

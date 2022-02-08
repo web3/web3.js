@@ -57,6 +57,7 @@ export interface Transaction<NumberType extends Numbers = Numbers> {
 	chain?: chain;
 	hardfork?: hardfork;
 	chainId?: NumberType;
+	networkId?: NumberType;
 	common?: Common<NumberType>;
 	gasLimit?: NumberType;
 	v?: NumberType;
@@ -73,6 +74,7 @@ export interface PopulatedUnsignedBaseTransaction<NumberType extends Numbers = N
 	type: Numbers;
 	data: HexStringBytes;
 	nonce: Numbers;
+	networkId: Numbers;
 	chain: chain;
 	hardfork: hardfork;
 	chainId: Numbers;

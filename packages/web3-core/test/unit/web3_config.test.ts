@@ -8,6 +8,7 @@ const defaultConfig = {
 	defaultAccount: null,
 	defaultBlock: 'latest',
 	defaultChain: 'mainnet',
+	defaultNetworkId: null,
 	defaultCommon: null,
 	defaultHardfork: 'london',
 	defaultReturnType: ValidTypes.HexString,

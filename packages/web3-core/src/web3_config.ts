@@ -24,6 +24,7 @@ export abstract class Web3Config
 		transactionPollingTimeout: 750,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
+		defaultNetworkId: null,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
 		// TODO - Check if there is a default Common
@@ -142,6 +143,20 @@ export abstract class Web3Config
 			newValue: val,
 		});
 		this._config.maxListenersWarningThreshold = val;
+	}
+
+	public get defaultNetworkId() {
+		return this._config.defaultNetworkId;
+	}
+
+	public set defaultNetworkId(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'defaultNetworkId',
+			oldValue: this._config.defaultNetworkId,
+			newValue: val,
+		});
+
+		this._config.defaultNetworkId = val;
 	}
 
 	public get defaultChain() {
