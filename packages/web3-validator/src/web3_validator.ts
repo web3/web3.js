@@ -58,11 +58,19 @@ export class Web3Validator {
 	): Web3ValidationErrorObject[] | undefined {
 		const jsonSchema = ethAbiToJsonSchema(schema);
 
-		if (jsonSchema.items?.length === 0 && data.length === 0) {
+		if (
+			Array.isArray(jsonSchema.items) &&
+			jsonSchema.items?.length === 0 &&
+			data.length === 0
+		) {
 			return undefined;
 		}
 
-		if (jsonSchema.items?.length === 0 && data.length !== 0) {
+		if (
+			Array.isArray(jsonSchema.items) &&
+			jsonSchema.items?.length === 0 &&
+			data.length !== 0
+		) {
 			throw new Web3ValidatorError([
 				{
 					instancePath: '/0',

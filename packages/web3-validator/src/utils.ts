@@ -1,35 +1,40 @@
 import { VALID_ETH_BASE_TYPES } from './constants';
-import { FullValidationSchema, ShortValidationSchema, ValidationSchemaInput } from './types';
+import {
+	FullValidationSchema,
+	ShortValidationSchema,
+	ValidationSchemaInput,
+	ValidInputTypes,
+} from './types';
 import { isAbiParameterSchema } from './validation/abi';
+import { isHexStrict } from './validation/string';
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
 ): {
 	baseType?: T;
 	baseTypeSize: number | undefined;
+	arraySizes: number[];
 	isArray: boolean;
-	arrayLength: number | undefined;
 } => {
-	let strippedType = type;
+	// Remove all empty spaces to avoid any parsing issue.
+	let strippedType = type.replace(/ /, '');
 	let baseTypeSize: number | undefined;
 	let isArray = false;
-	let arrayLength: number | undefined;
+	let arraySizes: number[] = [];
 
-	if (type.endsWith(']')) {
-		// TODO: Validate for nested arrays
-		strippedType = type.slice(0, type.indexOf('['));
+	if (type.includes('[')) {
+		// Extract the array type
+		strippedType = strippedType.slice(0, strippedType.indexOf('['));
+		// Extract array indexes
+		arraySizes = [...type.matchAll(/(?:\[(\d*)\])/g)]
+			.map(match => parseInt(match[1], 10))
+			.map(size => (Number.isNaN(size) ? -1 : size));
 
-		isArray = true;
-		arrayLength = parseInt(
-			type.substring(type.lastIndexOf('[') + 1, type.lastIndexOf(']')),
-			10,
-		);
-		arrayLength = Number.isNaN(arrayLength) ? undefined : arrayLength;
+		isArray = arraySizes.length > 0;
 	}
 
-	// TODO: Investigate why "strippedType" cause error
-	if (VALID_ETH_BASE_TYPES.includes(strippedType as never)) {
-		return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arrayLength };
+	if (VALID_ETH_BASE_TYPES.includes(strippedType)) {
+		return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
 	}
 
 	if (strippedType.startsWith('int')) {
@@ -42,23 +47,27 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 		baseTypeSize = parseInt(strippedType.substring(5), 10);
 		strippedType = 'bytes';
 	} else {
-		return { baseType: undefined, isArray: false, baseTypeSize: undefined, arrayLength: -1 };
+		return { baseType: undefined, isArray: false, baseTypeSize: undefined, arraySizes };
 	}
 
-	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arrayLength };
+	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
+};
+
+type JsonSchema = {
+	$id?: string;
+	type?: string;
+	eth?: string;
+	items?: JsonSchema | JsonSchema[];
+	maxItems?: number;
+	minItems?: number;
+	additionalItems?: boolean;
 };
 
 export const abiSchemaToJsonSchema = (
 	abis: ShortValidationSchema | FullValidationSchema,
 	level?: number,
 ) => {
-	const schema: {
-		type: string;
-		items?: unknown[];
-		maxItems?: number;
-		minItems?: number;
-		additionalItems?: boolean;
-	} = {
+	const schema: JsonSchema = {
 		type: 'array',
 		items: [],
 		maxItems: abis.length,
@@ -96,32 +105,65 @@ export const abiSchemaToJsonSchema = (
 			}
 		}
 
-		const { baseType, isArray, arrayLength } = parseBaseType(abiType);
+		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
+
+		let childSchema: JsonSchema;
+		let lastSchema = schema;
+		for (let i = arraySizes.length - 1; i > 0; i -= 1) {
+			childSchema = {
+				type: 'array',
+				items: [],
+				maxItems: arraySizes[i],
+				minItems: arraySizes[i],
+			};
+
+			if (arraySizes[i] < 0) {
+				delete childSchema.maxItems;
+				delete childSchema.minItems;
+			}
+
+			lastSchema.items = childSchema;
+			lastSchema = childSchema;
+		}
 
 		if (baseType === 'tuple' && !isArray) {
-			schema.items?.push(abiSchemaToJsonSchema(abiComponents, index));
+			(lastSchema.items as JsonSchema[]).push(abiSchemaToJsonSchema(abiComponents, index));
 		} else if (baseType === 'tuple' && isArray) {
-			schema.items?.push({
+			const arraySize = arraySizes[0];
+			const item: JsonSchema = {
 				$id: abiName,
 				type: 'array',
 				items: abiSchemaToJsonSchema(abiComponents, index),
-				maxItems: arrayLength,
-				minItems: arrayLength,
-			});
+				maxItems: arraySize,
+				minItems: arraySize,
+			};
+
+			if (arraySize < 0) {
+				delete item.maxItems;
+				delete item.minItems;
+			}
+
+			(lastSchema.items as JsonSchema[]).push(item);
 		} else if (isArray) {
-			const item = {
+			const arraySize = arraySizes[0];
+			const item: JsonSchema = {
 				type: 'array',
 				$id: abiName,
 				items: {
 					eth: baseType,
 				},
-				minItems: arrayLength,
-				maxItems: arrayLength,
+				minItems: arraySize,
+				maxItems: arraySize,
 			};
 
-			schema.items?.push(item);
+			if (arraySize < 0) {
+				delete item.maxItems;
+				delete item.minItems;
+			}
+
+			(lastSchema.items as JsonSchema[]).push(item);
 		} else {
-			schema.items?.push({ $id: abiName, eth: abiType });
+			(lastSchema.items as JsonSchema[]).push({ $id: abiName, eth: abiType });
 		}
 	}
 
@@ -151,4 +193,60 @@ export const codePointToInt = (codePoint: number): number => {
 	}
 
 	throw new Error(`Invalid code point: ${codePoint}`);
+};
+
+/**
+ * Converts value to it's number representation
+ */
+export const hexToNumber = (value: string): bigint | number => {
+	if (!isHexStrict(value)) {
+		throw new Error('Invalid hex string');
+	}
+
+	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
+	const num = BigInt(hexValue);
+
+	if (num > Number.MAX_SAFE_INTEGER) {
+		return negative ? -num : num;
+	}
+
+	return negative ? -1 * Number(num) : Number(num);
+};
+
+/**
+ * Converts value to it's hex representation
+ */
+export const numberToHex = (value: ValidInputTypes): string => {
+	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
+		return `-0x${value.toString(16).substr(1)}`;
+	}
+
+	if ((typeof value === 'number' || typeof value === 'bigint') && value >= 0) {
+		return `0x${value.toString(16)}`;
+	}
+
+	if (typeof value === 'string' && isHexStrict(value)) {
+		return numberToHex(hexToNumber(value));
+	}
+
+	if (typeof value === 'string' && !isHexStrict(value)) {
+		return numberToHex(BigInt(value));
+	}
+
+	throw new Error('Invalid number value');
+};
+
+/**
+ * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
+ */
+export const padLeft = (value: ValidInputTypes, characterAmount: number, sign = '0'): string => {
+	if (typeof value === 'string' && !isHexStrict(value)) {
+		return value.padStart(characterAmount, sign);
+	}
+
+	const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
+
+	const [prefix, hexValue] = hex.startsWith('-') ? ['-0x', hex.substr(3)] : ['0x', hex.substr(2)];
+
+	return `${prefix}${hexValue.padStart(characterAmount, sign)}`;
 };

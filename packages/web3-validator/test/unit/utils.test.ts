@@ -4,7 +4,7 @@ import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 describe('ethAbiToJsonSchema', () => {
 	describe('full schema', () => {
 		it.each(abiToJsonSchemaCases)('$title', ({ input, output }) => {
-			expect(ethAbiToJsonSchema(input.full)).toEqual(expect.objectContaining(output));
+			expect(ethAbiToJsonSchema(input.full)).toEqual(output);
 		});
 	});
 
