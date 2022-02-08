@@ -204,7 +204,7 @@ export async function populateTransaction<
 		populatedTransaction.data === ''
 	)
 		populatedTransaction.data = '0x';
-	if (!populatedTransaction.data.startsWith('0x'))
+	else if (!populatedTransaction.data.startsWith('0x'))
 		populatedTransaction.data = `0x${populatedTransaction.data}`;
 
 	if (populatedTransaction.common === undefined) {
