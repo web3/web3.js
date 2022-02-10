@@ -1,66 +1,83 @@
-import { isHexStrict, sha3Raw } from "web3-utils"
-import Web3Eth from 'web3-eth';
+import { Address } from 'web3-utils';
+import { NonPayableCallOptions, TransactionReceipt } from 'web3-eth-contract';
+import { Registry } from './registry';
 
 export class ENS {
-    private eth;
-    private registryAddress: string;
-    private _lastSyncCheck: number;
-    constructor(eth: Web3Eth){
-        this.eth = eth;
-        this._lastSyncCheck = -1;
+    public registryAddress: string;
+    private registry: Registry;
+
+    constructor(){
+        this.registry = new Registry();
+        this.registryAddress = "";
     }
 
-    // TODO in registry issue
-    public getResolver(name: string): Promise < boolean> { 
-        return new Promise<boolean>(() => { return name === name}) 
+    /**
+    * Returns the Resolver by the given address
+    */
+    public getResolver(name: string): Promise <boolean> { 
+        return new Promise<boolean>(() => { return this.registry.getResolver(name)}) 
     }
 
-    // TODO in registry issue
-    public setResolver(): boolean {
-        return true;
+    /**
+    * set the resolver of the given name
+    */
+    public setResolver(name: string, address: Address, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> {
+        return this.registry.setResolver(name, address, txConfig);
     }
 
 
-    public supportsInterface(name: string, interfaceId: string): boolean{
-        this.getResolver(name).then((resolver) =>  {
-            if (!isHexStrict(interfaceId)) {
-                interfaceId = sha3Raw(interfaceId).slice(0,10);
-            }
+    // TODO finish in resolver
+    public supportsInterface(): Promise <boolean>{
+        return new Promise<boolean>(() => true)
+    }
+
+    /**
+    * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+    */
+    public setSubnodeRecord (name: string, label: string, owner: Address, resolver: Address, ttl: string, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> { return this.registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);};
+
+    /**
+    * Sets or clears an approval by the given operator.
+    */
+    public setApprovalForAll (operator: Address, approved: boolean, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> { return this.registry.setApprovalForAll(operator, approved, txConfig) };
+
+    /**
+    * Returns true if the operator is approved
+    */
+    public isApprovedForAll (owner: Address, operator: Address): Promise<unknown> { return this.registry.isApprovedForAll(owner, operator); };
     
-            return resolver.methods.supportsInterface(interfaceId).call(callback);
-        })
-        return true;
-    }
+    /**
+    * Returns true if the record exists
+    */
+    public recordExists (name: string): Promise<unknown> { return this.registry.recordExists(name); };
 
-    // TODO in registry
-    public setSubnodeRecord (): boolean { return true };
+    /**
+    * Returns the address of the owner of an ENS name.
+    */
+    public setSubnodeOwner (name: string, label: string, address: Address, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> { return this.registry.setSubnodeOwner(name, label, address, txConfig); };
 
-    // TODO in registry
-    public setApprovalForAll (): boolean { return true };
+    /**
+    * Returns the address of the owner of an ENS name.
+    */
+    public getTTL (name: string): Promise<unknown> { return this.registry.getTTL(name) };
 
-    // TODO in registry
-    public isApprovedForAll (): boolean { return true };
-    
-    // TODO in registry
-    public recordExists (): boolean { return true };
+    /**
+    * Returns the address of the owner of an ENS name.
+    */
+    public setTTL (name: string, ttl: string, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> { return this.registry.setTTL(name, ttl, txConfig) };
 
-    // TODO in registry
-    public setSubnodeOwner (): boolean { return true };
+    /**
+    * Returns the owner by the given name and current configured or detected Registry
+    */
+    public getOwner (name: string): Promise<unknown> { return this.registry.getOwner(name) };
 
-    // TODO in registry
-    public getTTL (): boolean { return true };
+    /**
+    * Returns the address of the owner of an ENS name.
+    */
+    public setOwner (name: string, address: Address, txConfig: NonPayableCallOptions): Promise<TransactionReceipt> { return this.registry.setOwner(name, address, txConfig) };
 
-    // TODO in registry
-    public setTTL (): boolean { return true };
-
-    // TODO in registry
-    public getOwner (): boolean { return true };
-
-    // TODO in registry
-    public setOwner (): boolean { return true };
-
-    // TODO in registry
-    public getAddress (): boolean { return true };
+    // TODO in resolver
+    public getAddress () { return true };
 
     // TODO in resolver
     public setAddress (): boolean { return true };
@@ -90,7 +107,7 @@ export class ENS {
     public setMultiHash (): boolean { return true };
 
     // TODO after eth.net.getNetworkType is complete
-    public checkNetwork (): string { 
-        return "true";
+    public checkNetwork (): boolean { 
+        return true;
      };
 }
