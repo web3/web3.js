@@ -1,4 +1,4 @@
-import { isHexStrict, validator } from 'web3-validator';
+import { isHexStrict, validator, utils as validatorUtils } from 'web3-validator';
 import { numberToHex, toHex, toNumber } from './converters';
 import { Numbers } from './types';
 import { NibbleWidthError } from './errors';
@@ -7,17 +7,16 @@ import { NibbleWidthError } from './errors';
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */
 export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): string => {
+	// To avoid duplicate code and circular dependency we will
+	// use `padLeft` implementation from `web3-validator`
+
 	if (typeof value === 'string' && !isHexStrict(value)) {
 		return value.padStart(characterAmount, sign);
 	}
 
 	validator.validate(['int'], [value]);
 
-	const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
-
-	const [prefix, hexValue] = hex.startsWith('-') ? ['-0x', hex.substr(3)] : ['0x', hex.substr(2)];
-
-	return `${prefix}${hexValue.padStart(characterAmount, sign)}`;
+	return validatorUtils.padLeft(value, characterAmount, sign);
 };
 
 /**

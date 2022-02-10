@@ -26,6 +26,7 @@ export const convertibleTransactionInfoProperties: KeysOfUnion<TransactionInfo>[
 	'maxFeePerGas',
 	'maxPriorityFeePerGas',
 	'yParity',
+	'chainId',
 ];
 
 export const convertibleReceiptInfoProperties: (keyof ReceiptInfo)[] = [

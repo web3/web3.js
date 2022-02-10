@@ -1,4 +1,4 @@
-import { validator, isAddress, isHexStrict } from 'web3-validator';
+import { validator, isAddress, isHexStrict, utils as validatorUtils } from 'web3-validator';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 
 import {
@@ -100,14 +100,9 @@ export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
 export const hexToNumber = (value: HexString): bigint | number => {
 	validator.validate(['hex'], [value]);
 
-	const [negative, hexValue] = value.startsWith('-') ? [true, value.substr(1)] : [false, value];
-	const num = BigInt(hexValue);
-
-	if (num > Number.MAX_SAFE_INTEGER) {
-		return negative ? -num : num;
-	}
-
-	return negative ? -1 * Number(num) : Number(num);
+	// To avoid duplicate code and circular dependency we will
+	// use `hexToNumber` implementation from `web3-validator`
+	return validatorUtils.hexToNumber(value);
 };
 
 /**
@@ -121,24 +116,9 @@ export const toDecimal = hexToNumber;
 export const numberToHex = (value: Numbers): HexString => {
 	validator.validate(['int'], [value]);
 
-	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
-		return `-0x${value.toString(16).substr(1)}`;
-	}
-
-	if ((typeof value === 'number' || typeof value === 'bigint') && value >= 0) {
-		return `0x${value.toString(16)}`;
-	}
-
-	if (typeof value === 'string' && isHexStrict(value)) {
-		return numberToHex(hexToNumber(value));
-	}
-
-	if (typeof value === 'string' && !isHexStrict(value)) {
-		return numberToHex(BigInt(value));
-	}
-
-	// Code should not reach here
-	throw new Error('Invalid input value');
+	// To avoid duplicate code and circular dependency we will
+	// use `numberToHex` implementation from `web3-validator`
+	return validatorUtils.numberToHex(value);
 };
 /**
  * Converts value to it's hex representation @alias `numberToHex`
