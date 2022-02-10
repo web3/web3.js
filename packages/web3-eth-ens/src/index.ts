@@ -1,3 +1,1 @@
-import { ENS } from './ens';
-
-module.exports= ENS;
+export * from './ens';
