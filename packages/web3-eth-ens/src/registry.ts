@@ -8,7 +8,7 @@ export class Registry {
 	private readonly contract: Contract<typeof registryABI>;
 
 	public constructor() {
-		// TODO when eth.net is finished we can check network
+		// TODO for contract, when eth.net is finished we can check network
 		this.contract = new Contract(registryABI);
 	}
 	public async getOwner(name: string): Promise<[string] | RevertInstructionError> {

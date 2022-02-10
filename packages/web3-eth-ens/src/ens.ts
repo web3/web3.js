@@ -4,13 +4,20 @@ import { NonPayableCallOptions, TransactionReceipt } from 'web3-eth-contract';
 import { Registry } from './registry';
 
 export class ENS {
-	// eslint-disable-next-line @typescript-eslint/prefer-readonly
-	public registryAddress: string;
+	private _registryAddress: string;
 	private readonly registry: Registry;
 
 	public constructor() {
 		this.registry = new Registry();
-		this.registryAddress = '';
+		this._registryAddress = ''; // TODO change this when eth.net is finished
+	}
+
+	public get registryAddress(): string {
+		return this._registryAddress;
+	}
+
+	public set registryAddress(registryAddress: string) {
+		this._registryAddress = registryAddress;
 	}
 
 	/**
