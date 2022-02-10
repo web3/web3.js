@@ -17,6 +17,7 @@ import {
 
 // import { Transaction, BlockFormatted } from './types';
 import { BlockFormatted } from './types';
+import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 
 export default class Web3Eth {
@@ -30,19 +31,19 @@ export default class Web3Eth {
 	}
 
 	public async getProtocolVersion() {
-		return rpcMethodsWrappers.getProtocolVersion(this.web3Context);
+		return rpcMethods.getProtocolVersion(this.web3Context.requestManager);
 	}
 
 	public async isSyncing() {
-		return rpcMethodsWrappers.isSyncing(this.web3Context);
+		return rpcMethods.getSyncing(this.web3Context.requestManager);
 	}
 
 	public async getCoinbase() {
-		return rpcMethodsWrappers.getCoinbase(this.web3Context);
+		return rpcMethods.getCoinbase(this.web3Context.requestManager);
 	}
 
 	public async isMining() {
-		return rpcMethodsWrappers.isMining(this.web3Context);
+		return rpcMethods.getMining(this.web3Context.requestManager);
 	}
 
 	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -80,14 +81,19 @@ export default class Web3Eth {
 		storageSlot: Uint256,
 		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this.web3Context, address, storageSlot, blockNumber);
+		return rpcMethods.getStorageAt(
+			this.web3Context.requestManager,
+			address,
+			storageSlot,
+			blockNumber,
+		);
 	}
 
 	public async getCode(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
 	) {
-		return rpcMethodsWrappers.getCode(this.web3Context, address, blockNumber);
+		return rpcMethods.getCode(this.web3Context.requestManager, address, blockNumber);
 	}
 
 	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -175,13 +181,13 @@ export default class Web3Eth {
 	// }
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
-		return rpcMethodsWrappers.sendSignedTransaction(this.web3Context, transaction);
+		return rpcMethods.sendRawTransaction(this.web3Context.requestManager, transaction);
 	}
 
 	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
 	public async sign(message: HexStringBytes, address: Address) {
-		return rpcMethodsWrappers.sign(this.web3Context, message, address);
+		return rpcMethods.sign(this.web3Context.requestManager, message, address);
 	}
 
 	// TODO Needs to convert input to hex string
@@ -213,7 +219,7 @@ export default class Web3Eth {
 	}
 
 	public async getPastLogs(filter: Filter) {
-		return rpcMethodsWrappers.getPastLogs(this.web3Context, {
+		return rpcMethods.getLogs(this.web3Context.requestManager, {
 			...filter,
 			// These defaults are carried over from 1.x
 			// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
@@ -223,7 +229,7 @@ export default class Web3Eth {
 	}
 
 	public async getWork() {
-		return rpcMethodsWrappers.getWork(this.web3Context);
+		return rpcMethods.getWork(this.web3Context.requestManager);
 	}
 
 	public async submitWork(
@@ -231,7 +237,7 @@ export default class Web3Eth {
 		seedHash: HexString32Bytes,
 		difficulty: HexString32Bytes,
 	) {
-		return rpcMethodsWrappers.submitWork(this.web3Context, nonce, seedHash, difficulty);
+		return rpcMethods.submitWork(this.web3Context.requestManager, nonce, seedHash, difficulty);
 	}
 
 	// // TODO
