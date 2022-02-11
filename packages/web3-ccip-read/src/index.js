@@ -33,16 +33,30 @@ const CCIP_READ_INTERFACE = new Interface([
     'function callback(bytes memory result, bytes memory extraData)',
 ]);
 
-
-var _callGateway = async function (urls, to, callData) {
+var _gatewayQuery = function (url, to, calldata) {
     var httpObject = new http.Http();
 
+    const lowerTo = to.toLowerCase();
+    const lowerCalldata = calldata.toLowerCase();
+
+    const senderUrl = url.replace('{sender}', lowerTo);
+
+    if(!url) throw new Error('No gateway url was provided');
+
+    if(url.includes('{data}')) {
+        return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}.json`);
+    }
+
+    return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
+};
+
+var _callGateway = async function (urls, to, callData) {
+
     for (const url of urls) {
-        const queryUrl = `${url}${to.toLowerCase()}/${callData.toLowerCase()}.json`;
         let response;
 
         try {
-            response = await httpObject.get(queryUrl);
+            response = await _gatewayQuery(url, to, callData);
             if (response.status >= 200 && response.status <= 299) {
                 return response;
             }
@@ -52,19 +66,18 @@ var _callGateway = async function (urls, to, callData) {
             }
         }
 
-        console.warn(`Gateway ${url} failed`);
+        console.warn(`Gateway "${url}" failed`);
     }
 
     throw new Error('All gateways failed');
 };
 
-var _hasDurinFunctionSelector = function (encodedString) {
+var _hasCcipReadFunctionSelector = function (encodedString) {
     return encodedString && encodedString.substring(0, 10) === `0x${ENCODED_CCIP_READ_FUNCTION_SELECTOR}`;
 };
 
-//Reverts are handled differently depending on the environment
+//Errors are handled differently depending on the environment
 var _normalizeResponse = function (errorObject, result) {
-
     const defaultResponse = {
         data: ''
     };
@@ -73,13 +86,13 @@ var _normalizeResponse = function (errorObject, result) {
         return defaultResponse;
     }
 
-    if (typeof errorObject === "string" && _hasDurinFunctionSelector(errorObject)) {
+    if (typeof errorObject === "string" && _hasCcipReadFunctionSelector(errorObject)) {
         return {
             data: errorObject
         };
     }
 
-    if (typeof result === "string" && _hasDurinFunctionSelector(result)) {
+    if (typeof result === "string" && _hasCcipReadFunctionSelector(result)) {
         return {
             data: result
         };
@@ -87,7 +100,7 @@ var _normalizeResponse = function (errorObject, result) {
 
     if (
         typeof errorObject === 'object' &&
-        _hasDurinFunctionSelector(errorObject && errorObject.data)
+        _hasCcipReadFunctionSelector(errorObject && errorObject.data)
     ) {
         return {
             data: errorObject.data

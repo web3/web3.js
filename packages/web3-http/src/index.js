@@ -26,25 +26,18 @@ var https = require('https');
 var http = require('http');
 
 
-var Http = function(queryUrl, options) {
+var Http = function(options) {
     options = options || {};
     this.withCredentials = options.withCredentials || false;
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
-    this.agent = options.agent;
     this.connected = false;
 
     // keepAlive is true unless explicitly set to false
     const keepAlive = options.keepAlive !== false;
 
-    if (!this.agent) {
-        if (queryUrl.substring(0, 5) === "https") {
-            this.httpsAgent = new https.Agent({ keepAlive });
-        }
-        else {
-            this.httpAgent = new http.Agent({ keepAlive });
-        }
-    }
+    this.httpsAgent = new https.Agent({ keepAlive });
+    this.httpAgent = new http.Agent({ keepAlive });
 };
 
 Http.prototype._prepareRequest = function(){
