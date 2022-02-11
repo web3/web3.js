@@ -11,13 +11,13 @@ export class Registry {
 		// TODO for contract, when eth.net is finished we can check network
 		this.contract = new Contract(registryABI);
 	}
-	public async getOwner(name: string): Promise<[string] | RevertInstructionError> {
+	public async getOwner(name: string) {
 		const promise = new Promise<[string]>((resolve, reject) => {
 			this.contract.methods
 				.owner(namehash(name))
 				.call()
-				.then(receipt => {
-					resolve(receipt);
+				.then(owner => {
+					resolve(owner);
 				})
 				.catch(() => {
 					reject(RevertInstructionError);
@@ -50,8 +50,8 @@ export class Registry {
 			this.contract.methods
 				.getTTL(namehash(name))
 				.call()
-				.then(receipt => {
-					resolve(receipt);
+				.then(ttl => {
+					resolve(ttl);
 				})
 				.catch(() => {
 					reject(RevertInstructionError);
@@ -144,8 +144,8 @@ export class Registry {
 			this.contract.methods
 				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
 				.call()
-				.then(receipt => {
-					resolve(receipt);
+				.then(res => {
+					resolve(res);
 				})
 				.catch(() => {
 					reject(RevertInstructionError);
@@ -159,8 +159,8 @@ export class Registry {
 			this.contract.methods
 				.recordExists(namehash(name))
 				.call()
-				.then(bool => {
-					resolve(bool);
+				.then(res => {
+					resolve(res);
 				})
 				.catch(() => {
 					reject(RevertInstructionError);
@@ -174,8 +174,8 @@ export class Registry {
 			this.contract.methods
 				.getResolver(namehash(name))
 				.call()
-				.then(receipt => {
-					resolve(receipt);
+				.then(resolver => {
+					resolve(resolver);
 				})
 				.catch(() => {
 					reject(RevertInstructionError);
