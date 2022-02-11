@@ -26,14 +26,28 @@ var https = require('https');
 var http = require('http');
 
 
-var Http = function() {
-    const keepAlive = true;
-    this.httpsAgent = new https.Agent({ keepAlive });
-    this.httpAgent = new http.Agent({ keepAlive });
-    this.timeout = 10; //TODO: add proper timeout
+var Http = function(queryUrl, options) {
+    options = options || {};
+    this.withCredentials = options.withCredentials || false;
+    this.timeout = options.timeout || 0;
+    this.headers = options.headers;
+    this.agent = options.agent;
+    this.connected = false;
+
+    // keepAlive is true unless explicitly set to false
+    const keepAlive = options.keepAlive !== false;
+
+    if (!this.agent) {
+        if (queryUrl.substring(0, 5) === "https") {
+            this.httpsAgent = new https.Agent({ keepAlive });
+        }
+        else {
+            this.httpAgent = new http.Agent({ keepAlive });
+        }
+    }
 };
 
-Http.prototype._prepareRequest = function(queryUrl){
+Http.prototype._prepareRequest = function(){
     var request;
 
     // the current runtime is a browser
@@ -42,20 +56,78 @@ Http.prototype._prepareRequest = function(queryUrl){
     } else {
         request = new XHR2();
         var agents = {httpsAgent: this.httpsAgent, httpAgent: this.httpAgent};
+        if (this.agent) {
+            agents.httpsAgent = this.agent.https;
+            agents.httpAgent = this.agent.http;
+        }
         request.nodejsSet(agents);
     }
-
-    request.open('GET', queryUrl, true);
-    request.setRequestHeader('Content-Type','application/json');
-    request.timeout = this.timeout;
 
     return request;
 };
 
-Http.prototype.get = function(queryUrl, payload= {}) {
+Http.prototype.get = function(queryUrl) {
     return new Promise((resolve, reject) => {
         var _this = this;
         var request = this._prepareRequest(queryUrl);
+        request.open('GET', queryUrl, true);
+        request.setRequestHeader('Content-Type','application/json');
+
+        request.timeout = this.timeout;
+        request.withCredentials = this.withCredentials;
+        if (this.headers) {
+            this.headers.forEach(function (header) {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
+
+        request.onreadystatechange = function() {
+            if (request.readyState === 4 && request.timeout !== 1) {
+                var response = request.responseText;
+
+                try {
+                    response = JSON.parse(response);
+                } catch(e) {
+                    reject(request);
+                }
+
+                _this.connected = true;
+                resolve({
+                    status: request.status,
+                    response
+                });
+            }
+        };
+
+        request.ontimeout = function() {
+            _this.connected = false;
+            reject(errors.ConnectionTimeout(this.timeout));
+        };
+
+        try {
+            request.send();
+        } catch(error) {
+            this.connected = false;
+            reject(request);
+        }
+    });
+};
+
+Http.prototype.post = function(queryUrl, payload= {}) {
+    return new Promise((resolve, reject) => {
+        var _this = this;
+        var request = this._prepareRequest(queryUrl);
+        request.open('POST', queryUrl, true);
+        request.setRequestHeader('Content-Type','application/json');
+        request.timeout = this.timeout;
+
+        request.timeout = this.timeout;
+        request.withCredentials = this.withCredentials;
+        if (this.headers) {
+            this.headers.forEach(function (header) {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
 
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
