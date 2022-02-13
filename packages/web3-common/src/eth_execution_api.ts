@@ -288,5 +288,7 @@ export type EthExecutionAPI = {
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
 	eth_pendingTransactions: () => TransactionInfo[];
+
+	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
 	eth_requestAccounts: () => Address[];
 };
