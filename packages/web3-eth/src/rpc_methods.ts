@@ -507,3 +507,10 @@ export async function requestAccounts(requestManager: Web3RequestManager) {
 		params: [],
 	});
 }
+
+export async function getChainId(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_chainId',
+		params: [],
+	});
+}

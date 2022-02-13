@@ -3,6 +3,7 @@ import { Web3RequestManager } from 'web3-core';
 import {
 	getAccounts,
 	getBlockNumber,
+	getChainId,
 	getCoinbase,
 	getCompilers,
 	getGasPrice,
@@ -142,6 +143,14 @@ describe('rpc_methods_no_parameters', () => {
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_requestAccounts',
+				params: [],
+			});
+		});
+		it('getChainId', async () => {
+			await getChainId(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_chainId',
 				params: [],
 			});
 		});
