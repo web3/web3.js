@@ -45,5 +45,10 @@ describe('web3_eth_methods_no_parameters', () => {
 			await web3Eth.getPendingTransactions();
 			expect(rpcMethods.getPendingTransactions).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
+
+		it('requestAccounts', async () => {
+			await web3Eth.requestAccounts();
+			expect(rpcMethods.requestAccounts).toHaveBeenCalledWith(web3Eth.requestManager);
+		});
 	});
 });

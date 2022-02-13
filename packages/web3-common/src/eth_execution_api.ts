@@ -211,7 +211,6 @@ export type EthExecutionAPI = {
 		transactionIndex: Uint,
 	) => TransactionInfo | null;
 	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo | null;
-	eth_pendingTransactions: () => TransactionInfo[];
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.json
 	eth_protocolVersion: () => string;
@@ -288,4 +287,6 @@ export type EthExecutionAPI = {
 	eth_compileSolidity: (code: string) => CompileResult;
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
+	eth_pendingTransactions: () => TransactionInfo[];
+	eth_requestAccounts: () => Address[];
 };

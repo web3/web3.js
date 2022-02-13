@@ -14,6 +14,7 @@ import {
 	getWork,
 	newBlockFilter,
 	newPendingTransactionFilter,
+	requestAccounts,
 } from '../../src/rpc_methods';
 
 describe('rpc_methods_no_parameters', () => {
@@ -133,6 +134,14 @@ describe('rpc_methods_no_parameters', () => {
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_pendingTransactions',
+				params: [],
+			});
+		});
+		it('requestAccounts', async () => {
+			await requestAccounts(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_requestAccounts',
 				params: [],
 			});
 		});

@@ -323,13 +323,6 @@ export async function getTransactionReceipt(
 	});
 }
 
-export async function getPendingTransactions(requestManager: Web3RequestManager) {
-	return requestManager.send({
-		method: 'eth_pendingTransactions',
-		params: [],
-	});
-}
-
 export async function getUncleByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -498,5 +491,19 @@ export async function getFeeHistory(
 	return requestManager.send({
 		method: 'eth_feeHistory',
 		params: [blockCount, newestBlock, rewardPercentiles],
+	});
+}
+
+export async function getPendingTransactions(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_pendingTransactions',
+		params: [],
+	});
+}
+
+export async function requestAccounts(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_requestAccounts',
+		params: [],
 	});
 }
