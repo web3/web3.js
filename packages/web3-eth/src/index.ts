@@ -115,10 +115,10 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnType);
 	}
 
-	// TODO Can't find in spec
-	// public async getPendingTransactions() {
-
-	// }
+	// TODO Format transactions
+	public async getPendingTransactions() {
+		return rpcMethods.getPendingTransactions(this.requestManager);
+	}
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,

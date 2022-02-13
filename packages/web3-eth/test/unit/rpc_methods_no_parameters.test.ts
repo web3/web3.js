@@ -8,6 +8,7 @@ import {
 	getGasPrice,
 	getHashRate,
 	getMining,
+	getPendingTransactions,
 	getProtocolVersion,
 	getSyncing,
 	getWork,
@@ -124,6 +125,14 @@ describe('rpc_methods_no_parameters', () => {
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getWork',
+				params: [],
+			});
+		});
+		it('getPendingTransactions', async () => {
+			await getPendingTransactions(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_pendingTransactions',
 				params: [],
 			});
 		});

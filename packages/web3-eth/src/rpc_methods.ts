@@ -323,6 +323,13 @@ export async function getTransactionReceipt(
 	});
 }
 
+export async function getPendingTransactions(requestManager: Web3RequestManager) {
+	return requestManager.send({
+		method: 'eth_pendingTransactions',
+		params: [],
+	});
+}
+
 export async function getUncleByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
