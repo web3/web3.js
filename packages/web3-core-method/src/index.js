@@ -63,6 +63,7 @@ var Method = function Method(options) {
     this.defaultChain = options.defaultChain;
     this.defaultHardfork = options.defaultHardfork;
     this.handleRevert = options.handleRevert;
+    this.ccipReadGatewayCallback = options.ccipReadGatewayCallback;
 };
 
 Method.prototype.setRequestManager = function (requestManager, accounts) {
@@ -639,7 +640,10 @@ Method.prototype.buildCall = function () {
 
             //hook into CCIP-read
             if (isOffChainLookup(err, result)) {
-                const ccipReadResult = ccipReadCall(err, result, payload, send);
+                const options = {
+                    ccipReadGatewayCallback: method.ccipReadGatewayCallback,
+                };
+                const ccipReadResult = ccipReadCall(err, result, payload, send, options);
                 defer.resolve(ccipReadResult);
                 return;
             }

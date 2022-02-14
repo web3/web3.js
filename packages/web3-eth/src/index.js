@@ -104,6 +104,7 @@ var Eth = function Eth() {
     var blockHeaderTimeout = 10; // 10 seconds
     var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
+    var ccipReadGatewayCallback = null;
 
     Object.defineProperty(this, 'handleRevert', {
         get: function () {
@@ -118,6 +119,23 @@ var Eth = function Eth() {
             // update handleRevert
             methods.forEach(function(method) {
                 method.handleRevert = handleRevert;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'ccipReadGatewayCallback', {
+        get: function () {
+            return ccipReadGatewayCallback;
+        },
+        set: function (val) {
+            ccipReadGatewayCallback = val;
+
+            // also set on the Contract object
+            _this.Contract.ccipReadGatewayCallback = ccipReadGatewayCallback;
+
+            // update ccipReadGatewayCallback
+            methods.forEach(function(method) {
+                method.ccipReadGatewayCallback = ccipReadGatewayCallback;
             });
         },
         enumerable: true
@@ -372,6 +390,7 @@ var Eth = function Eth() {
     this.Contract.transactionPollingInterval = this.transactionPollingInterval;
     this.Contract.blockHeaderTimeout = this.blockHeaderTimeout;
     this.Contract.handleRevert = this.handleRevert;
+    this.Contract.ccipReadGatewayCallback = this.ccipReadGatewayCallback;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
     this.Contract.currentProvider = this._requestManager.provider;
@@ -701,6 +720,7 @@ var Eth = function Eth() {
         method.transactionPollingTimeout = _this.transactionPollingTimeout;
         method.transactionPollingInterval = _this.transactionPollingInterval;
         method.handleRevert = _this.handleRevert;
+        method.ccipReadGatewayCallback = _this.ccipReadGatewayCallback;
     });
 
 };

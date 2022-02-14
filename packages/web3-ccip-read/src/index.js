@@ -26,14 +26,14 @@ var {defaultAbiCoder, Interface} = require('@ethersproject/abi');
 var {hexConcat} = require('@ethersproject/bytes');
 
 const ENCODED_CCIP_READ_FUNCTION_SELECTOR = '556f1830';
-const MAX_REDIRECT_COUNT = 3;
+const MAX_REDIRECT_COUNT = 4;
 const OFFCHAIN_LOOKUP_PARAMETER_TYPES = ['address', 'string[]', 'bytes', 'bytes4', 'bytes'];
 
 const CCIP_READ_INTERFACE = new Interface([
     'function callback(bytes memory result, bytes memory extraData)',
 ]);
 
-var _gatewayQuery = function (url, to, calldata) {
+var gatewayQuery = function (url, to, calldata) {
     var httpObject = new http.Http();
 
     const lowerTo = to.toLowerCase();
@@ -50,13 +50,13 @@ var _gatewayQuery = function (url, to, calldata) {
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
 };
 
-var _callGateway = async function (urls, to, callData) {
+var callGateway = async function (urls, to, callData) {
 
     for (const url of urls) {
         let response;
 
         try {
-            response = await _gatewayQuery(url, to, callData);
+            response = await gatewayQuery(url, to, callData);
             if (response.status >= 200 && response.status <= 299) {
                 return response;
             }
@@ -72,12 +72,12 @@ var _callGateway = async function (urls, to, callData) {
     throw new Error('All gateways failed');
 };
 
-var _hasCcipReadFunctionSelector = function (encodedString) {
+var hasCcipReadFunctionSelector = function (encodedString) {
     return encodedString && encodedString.substring(0, 10) === `0x${ENCODED_CCIP_READ_FUNCTION_SELECTOR}`;
 };
 
 //Errors are handled differently depending on the environment
-var _normalizeResponse = function (errorObject, result) {
+var normalizeResponse = function (errorObject, result) {
     const defaultResponse = {
         data: ''
     };
@@ -86,13 +86,13 @@ var _normalizeResponse = function (errorObject, result) {
         return defaultResponse;
     }
 
-    if (typeof errorObject === "string" && _hasCcipReadFunctionSelector(errorObject)) {
+    if (typeof errorObject === "string" && hasCcipReadFunctionSelector(errorObject)) {
         return {
             data: errorObject
         };
     }
 
-    if (typeof result === "string" && _hasCcipReadFunctionSelector(result)) {
+    if (typeof result === "string" && hasCcipReadFunctionSelector(result)) {
         return {
             data: result
         };
@@ -100,7 +100,7 @@ var _normalizeResponse = function (errorObject, result) {
 
     if (
         typeof errorObject === 'object' &&
-        _hasCcipReadFunctionSelector(errorObject && errorObject.data)
+        hasCcipReadFunctionSelector(errorObject && errorObject.data)
     ) {
         return {
             data: errorObject.data
@@ -121,7 +121,7 @@ var _normalizeResponse = function (errorObject, result) {
  * @return {Boolean} true if reversion was a CCIP-Read error
  */
 var isOffChainLookup = function (err, result) {
-    const normalizedResponse = _normalizeResponse(err, result);
+    const normalizedResponse = normalizeResponse(err, result);
     return !!normalizedResponse.data;
 };
 
@@ -135,7 +135,7 @@ var isOffChainLookup = function (err, result) {
  *
  * @return {String} encoded list of params
  */
-var ccipReadCall = async function (errorObject, result, payload, send) {
+var ccipReadCall = async function (errorObject, result, payload, send, options) {
     if (send.ccipReadCalls) {
         send.ccipReadCalls++;
     } else {
@@ -145,7 +145,7 @@ var ccipReadCall = async function (errorObject, result, payload, send) {
         throw new Error('Too many CCIP-Read redirects');
     }
 
-    const normalizedResponse = _normalizeResponse(errorObject, result);
+    const normalizedResponse = normalizeResponse(errorObject, result);
     if (!normalizedResponse.data) {
         throw new Error('ccipReadCall called for a non-CCIP-Read compliant error');
     }
@@ -161,11 +161,22 @@ var ccipReadCall = async function (errorObject, result, payload, send) {
         throw new Error('CCIP-read error: sender does match contract address');
     }
 
-    const gatewayResult = await _callGateway(urls, sender, callData);
+    let gatewayResult;
+    if(options.ccipReadGatewayCallback) {
+        try{
+            gatewayResult = await options.ccipReadGatewayCallback(urls, sender, callData);
+        } catch(e) {
+            console.error('ccipReadGatewayCallback error.');
+            throw e;
+        }
+    } else {
+        const result = await callGateway(urls, sender, callData);
+        gatewayResult = result.response.data;
+    }
 
     const nextCall = hexConcat([
         callbackFunction,
-        defaultAbiCoder.encode(CCIP_READ_INTERFACE.getFunction('callback').inputs, [gatewayResult.response.data, extraData]),
+        defaultAbiCoder.encode(CCIP_READ_INTERFACE.getFunction('callback').inputs, [gatewayResult, extraData]),
     ]);
 
     return send({
