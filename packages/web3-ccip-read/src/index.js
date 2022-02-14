@@ -161,16 +161,24 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         throw new Error('CCIP-read error: sender does match contract address');
     }
 
+
+    let finalUrls;
+    if(options.ccipReadGatewayUrls.length) {
+        finalUrls = options.ccipReadGatewayUrls;
+    } else {
+        finalUrls = urls;
+    }
+
     let gatewayResult;
     if(options.ccipReadGatewayCallback) {
         try{
-            gatewayResult = await options.ccipReadGatewayCallback(urls, sender, callData);
+            gatewayResult = await options.ccipReadGatewayCallback(finalUrls, sender, callData);
         } catch(e) {
             console.error('ccipReadGatewayCallback error.');
             throw e;
         }
     } else {
-        const result = await callGateway(urls, sender, callData);
+        const result = await callGateway(finalUrls, sender, callData);
         gatewayResult = result.response.data;
     }
 
