@@ -8,15 +8,17 @@ const REVERSE_REGISTRAR = [
 				type: 'address',
 			},
 			{
-				internalType: 'contract NameResolver',
+				internalType: 'contract Resolver',
 				name: 'resolverAddr',
 				type: 'address',
 			},
 		],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'constructor',
 	},
 	{
+		constant: true,
 		inputs: [],
 		name: 'ADDR_REVERSE_NODE',
 		outputs: [
@@ -26,10 +28,12 @@ const REVERSE_REGISTRAR = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'address',
@@ -45,10 +49,12 @@ const REVERSE_REGISTRAR = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'address',
@@ -69,23 +75,27 @@ const REVERSE_REGISTRAR = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [],
 		name: 'defaultResolver',
 		outputs: [
 			{
-				internalType: 'contract NameResolver',
+				internalType: 'contract Resolver',
 				name: '',
 				type: 'address',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [],
 		name: 'ens',
 		outputs: [
@@ -95,10 +105,12 @@ const REVERSE_REGISTRAR = [
 				type: 'address',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'address',
@@ -114,10 +126,12 @@ const REVERSE_REGISTRAR = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'pure',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'string',
@@ -133,9 +147,10 @@ const REVERSE_REGISTRAR = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 ] as const;
 
-module.exports = REVERSE_REGISTRAR;
+export default REVERSE_REGISTRAR;
