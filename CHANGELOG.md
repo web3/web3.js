@@ -515,5 +515,10 @@ Released with 1.0.0-beta.37 code base.
 -  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
 - Replaced ganache-cli (recently deprecated) with ganache package (#4746).
 
+
+### Removed
+- Removed deprecated Morden testnet code (#4339)
+
+
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
