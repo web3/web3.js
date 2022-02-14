@@ -1,7 +1,7 @@
 import { inputAddressFormatter, ReceiptInfo, RevertInstructionError } from 'web3-common';
 import { Contract, NonPayableCallOptions, TransactionReceipt } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
-import { REGISTRY as registryABI } from './ABI/Registry';
+import { REGISTRY as registryABI, RESOLVER as resolverABI } from './ABI/Registry';
 import { namehash } from './utils';
 
 export class Registry {
@@ -170,19 +170,21 @@ export class Registry {
 	}
 
 	public async getResolver(name: string) {
-		const promise = new Promise((resolve, reject) => {
-			this.contract.methods
-				.getResolver(namehash(name))
-				.call()
-				.then(resolver => {
-					resolve(resolver);
-				})
-				.catch(() => {
-					reject(RevertInstructionError);
-				});
-		});
-		return promise;
-	}
+        const resolverContract = new Promise((resolve, reject) => {
+            this.contract.methods
+                .getResolver(namehash(name))
+                .call()
+                .then(address => {
+                    const resolverContract = (typeof(address) === 'string') ? new Contract(resolverABI, address) : new Contract(resolverABI);
+                    // TODO set currentProvider when ens.eth.currentProvider is made
+                    resolve(resolverContract);
+                })
+                .catch(() => {
+                    reject(RevertInstructionError);
+                });
+        });
+        return resolverContract;
+    }
 
 	public async setResolver(
 		name: string,
