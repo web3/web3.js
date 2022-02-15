@@ -5,6 +5,7 @@ import * as rpcMethods from '../../src/rpc_methods';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	estimateGasValidData,
+	// estimateGasValidData,
 	getBalanceValidData,
 	getBlockNumberValidData,
 	getBlockTransactionCountValidData,
@@ -12,6 +13,8 @@ import {
 	getBlockValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
+	// getCodeValidData,
+	// getFeeHistoryValidData,
 	getGasPriceValidData,
 	getHashRateValidData,
 	getPastLogsValidData,
