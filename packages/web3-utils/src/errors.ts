@@ -108,3 +108,9 @@ export class InvalidConvertiblePropertiesListError extends Web3Error {
 		super(value, 'invalid list of convertible properties for conversion given');
 	}
 }
+
+export class InvalidConvertibleValueError extends Web3Error {
+	public constructor() {
+		super(undefined, 'cannot convert undefined');
+	}
+}

@@ -10,6 +10,7 @@ import {
 	InvalidDesiredTypeError,
 	InvalidConvertibleObjectError,
 	InvalidConvertiblePropertiesListError,
+	InvalidConvertibleValueError,
 } from './errors';
 import {
 	Address,
@@ -421,7 +422,9 @@ export const jsonInterfaceMethodToString = (
 export const convertToValidType = (
 	value: ValidReturnTypes[ValidTypes], // validate this
 	desiredType: ValidTypes,
-): ValidReturnTypes[ValidTypes] => {
+) => {
+	if (value === undefined) throw new InvalidConvertibleValueError();
+
 	switch (desiredType) {
 		case ValidTypes.HexString:
 			return numberToHex(value);
