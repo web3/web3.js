@@ -31,6 +31,25 @@ export const ERR_TX_REVERT_WITHOUT_REASON = 405;
 export const ERR_TX_OUT_OF_GAS = 406;
 export const ERR_RAW_TX_UNDEFINED = 407;
 
+export const ERR_TX_INVALID_SENDER = 408;
+export const ERR_TX_INVALID_CALL = 409;
+export const ERR_TX_MISSING_CUSTOM_CHAIN = 410;
+export const ERR_TX_MISSING_CUSTOM_CHAIN_ID = 411;
+export const ERR_TX_CHAIN_ID_MISMATCH = 412;
+export const ERR_TX_INVALID_CHAIN_INFO = 413;
+export const ERR_TX_MISSING_CHAIN_INFO = 414;
+export const ERR_TX_MISSING_GAS = 415;
+export const ERR_TX_INVALID_LEGACY_GAS = 416;
+export const ERR_TX_INVALID_FEE_MARKET_GAS = 417;
+export const ERR_TX_INVALID_FEE_MARKET_GAS_PRICE = 418;
+export const ERR_TX_INVALID_LEGACY_FEE_MARKET = 419;
+export const ERR_TX_INVALID_OBJECT = 420;
+export const ERR_TX_INVALID_NONCE_OR_CHAIN_ID = 421;
+export const ERR_TX_UNABLE_TO_POPULATE_NONCE = 422;
+export const ERR_TX_UNSUPPORTED_EIP_1559 = 423;
+export const ERR_TX_UNSUPPORTED_TYPE = 424;
+export const ERR_TX_DATA_AND_INPUT = 425;
+
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;

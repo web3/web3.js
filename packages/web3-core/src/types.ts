@@ -6,7 +6,7 @@ import {
 	JsonRpcResult,
 	Web3BaseProvider,
 } from 'web3-common';
-import { HexString, ValidTypes } from 'web3-utils';
+import { HexString, Numbers, ValidTypes } from 'web3-utils';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -48,8 +48,11 @@ export interface Web3ConfigOptions {
 	transactionPollingTimeout: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
-	defaultChain: string | null;
-	defaultHardfork: string | null;
+	defaultNetworkId: Numbers | null;
+	defaultChain: string;
+	defaultHardfork: string;
 	defaultCommon: Record<string, unknown> | null;
 	defaultReturnType: ValidTypes;
+	defaultTransactionType: Numbers;
+	defaultMaxPriorityFeePerGas: Numbers;
 }

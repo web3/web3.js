@@ -2,8 +2,10 @@
 
 import Web3Eth from '../../src/index';
 import * as rpcMethods from '../../src/rpc_methods';
+import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	estimateGasValidData,
+	// estimateGasValidData,
 	getBalanceValidData,
 	getBlockNumberValidData,
 	getBlockTransactionCountValidData,
@@ -11,6 +13,8 @@ import {
 	getBlockValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
+	// getCodeValidData,
+	// getFeeHistoryValidData,
 	getGasPriceValidData,
 	getHashRateValidData,
 	getPastLogsValidData,
@@ -23,9 +27,20 @@ import {
 	sendSignedTransactionValidData,
 	signValidData,
 	submitWorkValidData,
-} from '../fixtures/web3_eth_methods';
+	// getPastLogsValidData,
+	// getStorageAtValidData,
+	// getTransactionCountValidData,
+	// getTransactionFromBlockValidData,
+	// getTransactionReceiptValidData,
+	// getTransactionValidData,
+	// getUncleValidData,
+	// sendSignedTransactionValidData,
+	// signValidData,
+	// submitWorkValidData,
+} from '../fixtures/web3_eth_methods_with_parameters';
 
 jest.mock('../../src/rpc_methods');
+jest.mock('../../src/rpc_method_wrappers');
 
 describe('web3_eth_methods_with_parameters', () => {
 	let web3Eth: Web3Eth;
@@ -37,48 +52,33 @@ describe('web3_eth_methods_with_parameters', () => {
 	describe('should call RPC method with expected parameters', () => {
 		describe('only has returnType parameter', () => {
 			describe('getHashRate', () => {
-				it.each(getHashRateValidData)(
-					'returnType: %s mockRpcResponse: %s output: %s',
-					async (returnType, mockRpcResponse, output) => {
-						(rpcMethods.getHashRate as jest.Mock).mockResolvedValueOnce(
-							mockRpcResponse,
-						);
-						expect(await web3Eth.getHashRate(returnType)).toBe(output);
-						expect(rpcMethods.getHashRate).toHaveBeenCalledWith(
-							web3Eth.web3Context.requestManager,
-						);
-					},
-				);
+				it.each(getHashRateValidData)('returnType: %s', async returnType => {
+					await web3Eth.getHashRate(returnType);
+					expect(rpcMethodWrappers.getHashRate).toHaveBeenCalledWith(
+						web3Eth.web3Context,
+						returnType,
+					);
+				});
 			});
 
 			describe('getGasPrice', () => {
-				it.each(getGasPriceValidData)(
-					'returnType: %s mockRpcResponse: %s output: %s',
-					async (returnType, mockRpcResponse, output) => {
-						(rpcMethods.getGasPrice as jest.Mock).mockResolvedValueOnce(
-							mockRpcResponse,
-						);
-						expect(await web3Eth.getGasPrice(returnType)).toBe(output);
-						expect(rpcMethods.getGasPrice).toHaveBeenCalledWith(
-							web3Eth.web3Context.requestManager,
-						);
-					},
-				);
+				it.each(getGasPriceValidData)('returnType: %s', async returnType => {
+					await web3Eth.getGasPrice(returnType);
+					expect(rpcMethodWrappers.getGasPrice).toHaveBeenCalledWith(
+						web3Eth.web3Context,
+						returnType,
+					);
+				});
 			});
 
 			describe('getBlockNumber', () => {
-				it.each(getBlockNumberValidData)(
-					'returnType: %s mockRpcResponse: %s output: %s',
-					async (returnType, mockRpcResponse, output) => {
-						(rpcMethods.getBlockNumber as jest.Mock).mockResolvedValueOnce(
-							mockRpcResponse,
-						);
-						expect(await web3Eth.getBlockNumber(returnType)).toBe(output);
-						expect(rpcMethods.getBlockNumber).toHaveBeenCalledWith(
-							web3Eth.web3Context.requestManager,
-						);
-					},
-				);
+				it.each(getBlockNumberValidData)('returnType: %s', async returnType => {
+					await web3Eth.getBlockNumber(returnType);
+					expect(rpcMethodWrappers.getBlockNumber).toHaveBeenCalledWith(
+						web3Eth.web3Context,
+						returnType,
+					);
+				});
 			});
 		});
 
@@ -86,14 +86,11 @@ describe('web3_eth_methods_with_parameters', () => {
 			describe('has returnType parameter', () => {
 				describe('getBalance', () => {
 					it.each(getBalanceValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.getBalance as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getBalance(...input)).toBe(output);
-							expect(rpcMethods.getBalance).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getBalance(...input);
+							expect(rpcMethodWrappers.getBalance).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -102,20 +99,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getBlock', () => {
 					it.each(getBlockValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (
-							input,
-							mockRpcResponse,
-							expectedRpcMethodToBeCalled,
-							rpcMethodParameters,
-							output,
-						) => {
-							(
-								rpcMethods[expectedRpcMethodToBeCalled] as jest.Mock
-							).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.getBlock(...input)).toStrictEqual(output);
-							expect(rpcMethods[expectedRpcMethodToBeCalled]).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getBlock(...input);
+							expect(rpcMethodWrappers.getBlock).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -124,22 +112,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getBlockTransactionCount', () => {
 					it.each(getBlockTransactionCountValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (
-							input,
-							mockRpcResponse,
-							expectedRpcMethodToBeCalled,
-							rpcMethodParameters,
-							output,
-						) => {
-							(
-								rpcMethods[expectedRpcMethodToBeCalled] as jest.Mock
-							).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.getBlockTransactionCount(...input)).toStrictEqual(
-								output,
-							);
-							expect(rpcMethods[expectedRpcMethodToBeCalled]).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getBlockTransactionCount(...input);
+							expect(rpcMethodWrappers.getBlockTransactionCount).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -148,22 +125,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getBlockUncleCount', () => {
 					it.each(getBlockUncleCountValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (
-							input,
-							mockRpcResponse,
-							expectedRpcMethodToBeCalled,
-							rpcMethodParameters,
-							output,
-						) => {
-							(
-								rpcMethods[expectedRpcMethodToBeCalled] as jest.Mock
-							).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.getBlockUncleCount(...input)).toStrictEqual(
-								output,
-							);
-							expect(rpcMethods[expectedRpcMethodToBeCalled]).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getBlockUncleCount(...input);
+							expect(rpcMethodWrappers.getBlockUncleCount).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -172,20 +138,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getUncle', () => {
 					it.each(getUncleValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (
-							input,
-							mockRpcResponse,
-							expectedRpcMethodToBeCalled,
-							rpcMethodParameters,
-							output,
-						) => {
-							(
-								rpcMethods[expectedRpcMethodToBeCalled] as jest.Mock
-							).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.getUncle(...input)).toStrictEqual(output);
-							expect(rpcMethods[expectedRpcMethodToBeCalled]).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getUncle(...input);
+							expect(rpcMethodWrappers.getUncle).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -194,14 +151,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getTransaction', () => {
 					it.each(getTransactionValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.getTransactionByHash as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getTransaction(...input)).toStrictEqual(output);
-							expect(rpcMethods.getTransactionByHash).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getTransaction(...input);
+							expect(rpcMethodWrappers.getTransaction).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -210,22 +164,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getTransactionFromBlock', () => {
 					it.each(getTransactionFromBlockValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (
-							input,
-							mockRpcResponse,
-							expectedRpcMethodToBeCalled,
-							rpcMethodParameters,
-							output,
-						) => {
-							(
-								rpcMethods[expectedRpcMethodToBeCalled] as jest.Mock
-							).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.getTransactionFromBlock(...input)).toStrictEqual(
-								output,
-							);
-							expect(rpcMethods[expectedRpcMethodToBeCalled]).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getTransactionFromBlock(...input);
+							expect(rpcMethodWrappers.getTransactionFromBlock).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -234,16 +177,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getTransactionReceipt', () => {
 					it.each(getTransactionReceiptValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getTransactionReceipt(...input)).toStrictEqual(
-								output,
-							);
-							expect(rpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getTransactionReceipt(...input);
+							expect(rpcMethodWrappers.getTransactionReceipt).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -252,16 +190,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getTransactionCount', () => {
 					it.each(getTransactionCountValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.getTransactionCount as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getTransactionCount(...input)).toStrictEqual(
-								output,
-							);
-							expect(rpcMethods.getTransactionCount).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\rpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getTransactionCount(...input);
+							expect(rpcMethodWrappers.getTransactionCount).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -270,14 +203,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('estimateGas', () => {
 					it.each(estimateGasValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.estimateGas as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.estimateGas(...input)).toStrictEqual(output);
-							expect(rpcMethods.estimateGas).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.estimateGas(...input);
+							expect(rpcMethodWrappers.estimateGas).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -286,14 +216,11 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getFeeHistory', () => {
 					it.each(getFeeHistoryValidData)(
-						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters, output) => {
-							(rpcMethods.getFeeHistory as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getFeeHistory(...input)).toStrictEqual(output);
-							expect(rpcMethods.getFeeHistory).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getFeeHistory(...input);
+							expect(rpcMethodWrappers.getFeeHistory).toHaveBeenCalledWith(
+								web3Eth.web3Context,
 								...rpcMethodParameters,
 							);
 						},
@@ -304,12 +231,9 @@ describe('web3_eth_methods_with_parameters', () => {
 			describe("doesn't have returnType parameter", () => {
 				describe('getStorageAt', () => {
 					it.each(getStorageAtValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters) => {
-							(rpcMethods.getStorageAt as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getStorageAt(...input)).toBe(mockRpcResponse);
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getStorageAt(...input);
 							expect(rpcMethods.getStorageAt).toHaveBeenCalledWith(
 								web3Eth.web3Context.requestManager,
 								...rpcMethodParameters,
@@ -320,12 +244,9 @@ describe('web3_eth_methods_with_parameters', () => {
 
 				describe('getCode', () => {
 					it.each(getCodeValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse, rpcMethodParameters) => {
-							(rpcMethods.getCode as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getCode(...input)).toBe(mockRpcResponse);
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getCode(...input);
 							expect(rpcMethods.getCode).toHaveBeenCalledWith(
 								web3Eth.web3Context.requestManager,
 								...rpcMethodParameters,
@@ -335,49 +256,30 @@ describe('web3_eth_methods_with_parameters', () => {
 				});
 
 				describe('sendSignedTransaction', () => {
-					it.each(sendSignedTransactionValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse) => {
-							(rpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.sendSignedTransaction(input)).toBe(
-								mockRpcResponse,
-							);
-							expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
-								input,
-							);
-						},
-					);
+					it.each(sendSignedTransactionValidData)('input: %s', async input => {
+						await web3Eth.sendSignedTransaction(input);
+						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+							web3Eth.web3Context.requestManager,
+							input,
+						);
+					});
 				});
 
 				describe('sign', () => {
-					it.each(signValidData)(
-						'input: %s\nmockRpcResponse: %s',
-						async (input, mockRpcResponse) => {
-							(rpcMethods.sign as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
-							expect(await web3Eth.sign(...input)).toBe(mockRpcResponse);
-							expect(rpcMethods.sign).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
-								// web3-eth methods takes sign(message, address)
-								// RPC method takes sign(address, message)
-								// so we manually swap them here
-								input[1],
-								input[0],
-							);
-						},
-					);
+					it.each(signValidData)('input: %s', async input => {
+						await web3Eth.sign(...input);
+						expect(rpcMethods.sign).toHaveBeenCalledWith(
+							web3Eth.web3Context.requestManager,
+							...input,
+						);
+					});
 				});
 
 				describe('getPastLogs', () => {
 					it.each(getPastLogsValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s',
-						async (input, mockRpcResponse, rpcMethodParameters) => {
-							(rpcMethods.getLogs as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.getPastLogs(input)).toBe(mockRpcResponse);
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getPastLogs(input);
 							expect(rpcMethods.getLogs).toHaveBeenCalledWith(
 								web3Eth.web3Context.requestManager,
 								rpcMethodParameters,
@@ -387,19 +289,13 @@ describe('web3_eth_methods_with_parameters', () => {
 				});
 
 				describe('submitWork', () => {
-					it.each(submitWorkValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s',
-						async (input, mockRpcResponse) => {
-							(rpcMethods.submitWork as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await web3Eth.submitWork(...input)).toBe(mockRpcResponse);
-							expect(rpcMethods.submitWork).toHaveBeenCalledWith(
-								web3Eth.web3Context.requestManager,
-								...input,
-							);
-						},
-					);
+					it.each(submitWorkValidData)('input: %s', async input => {
+						await web3Eth.submitWork(...input);
+						expect(rpcMethods.submitWork).toHaveBeenCalledWith(
+							web3Eth.web3Context.requestManager,
+							...input,
+						);
+					});
 				});
 			});
 		});
