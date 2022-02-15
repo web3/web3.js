@@ -81,4 +81,4 @@ const TEST_REGISTRAR = [
 	},
 ] as const;
 
-module.exports = TEST_REGISTRAR;
+export default TEST_REGISTRAR;
