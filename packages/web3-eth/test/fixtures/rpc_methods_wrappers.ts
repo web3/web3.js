@@ -1570,7 +1570,7 @@ export const getTransactionCountValidData: [
 	],
 ];
 
-const transactionWithSender: TransactionWithSender = {
+export const transactionWithSender: TransactionWithSender = {
 	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	type: '0x0',
 	nonce: '0x1',

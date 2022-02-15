@@ -210,7 +210,7 @@ const uuidV4 = () => {
 	].join('-');
 };
 
-const privateKeyToAddress = (privateKey: string | Buffer): string => {
+export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 	if (!(isString(privateKey) || isBuffer(privateKey))) {
 		throw new InvalidPrivateKeyError();
 	}

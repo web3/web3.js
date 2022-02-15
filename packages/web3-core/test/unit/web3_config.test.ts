@@ -1,4 +1,4 @@
-import { ValidTypes } from 'web3-utils';
+import { toHex, ValidTypes } from 'web3-utils';
 import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
@@ -7,15 +7,18 @@ const defaultConfig = {
 	blockHeaderTimeout: 10,
 	defaultAccount: null,
 	defaultBlock: 'latest',
-	defaultChain: null,
+	defaultChain: 'mainnet',
+	defaultNetworkId: null,
 	defaultCommon: null,
-	defaultHardfork: null,
+	defaultHardfork: 'london',
 	defaultReturnType: ValidTypes.HexString,
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,
 	transactionConfirmationBlocks: 24,
 	transactionPollingTimeout: 750,
+	defaultTransactionType: '0x0',
+	defaultMaxPriorityFeePerGas: toHex(2500000000),
 };
 
 describe('Web3Config', () => {
