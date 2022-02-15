@@ -1,1 +1,8 @@
-../../templates/tsconfig.json.tmpl
+{
+	"extends": "../../tsconfig",
+	"compilerOptions": {
+		"outDir": "dist",
+		"esModuleInterop": true
+	},
+	"include": ["src/**/*"]
+}
