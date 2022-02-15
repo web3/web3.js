@@ -15,6 +15,7 @@ import {
 	getGasPriceValidData,
 	getHashRateValidData,
 	getPastLogsValidData,
+	getProofValidData,
 	getStorageAtValidData,
 	getTransactionCountValidData,
 	getTransactionFromBlockValidData,
@@ -201,6 +202,19 @@ describe('web3_eth_methods_with_parameters', () => {
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getFeeHistory(...input);
 							expect(rpcMethodWrappers.getFeeHistory).toHaveBeenCalledWith(
+								web3Eth,
+								...rpcMethodParameters,
+							);
+						},
+					);
+				});
+
+				describe('getProof', () => {
+					it.each(getProofValidData)(
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getProof(...input);
+							expect(rpcMethodWrappers.getProof).toHaveBeenCalledWith(
 								web3Eth,
 								...rpcMethodParameters,
 							);

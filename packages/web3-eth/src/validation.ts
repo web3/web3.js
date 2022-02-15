@@ -134,7 +134,6 @@ export const validateCustomChainInfo = (transaction: Transaction) => {
 				customChainId: transaction.common.customChain.chainId,
 			});
 	}
-
 };
 
 export const validateChainInfo = (transaction: Transaction) => {

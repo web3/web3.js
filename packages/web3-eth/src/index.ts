@@ -218,15 +218,20 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		return rpcMethods.getChainId(this.requestManager);
 	}
 
-	// // TODO
-	// // public async getNodeInfo() {
+	// TODO
+	// public async getNodeInfo() {
 
-	// // }
+	// }
 
-	// // TODO
-	// // public async getProof() {
-
-	// // }
+	// TODO - Format input
+	public async getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		address: Address,
+		storageKey: HexString32Bytes,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnType?: ReturnType,
+	) {
+		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnType);
+	}
 
 	public async getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		blockCount: Uint,

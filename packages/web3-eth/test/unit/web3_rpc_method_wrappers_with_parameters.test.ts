@@ -12,6 +12,7 @@ import {
 	getFeeHistory,
 	getGasPrice,
 	getHashRate,
+	getProof,
 	getTransaction,
 	getTransactionCount,
 	getTransactionFromBlock,
@@ -28,6 +29,7 @@ import {
 	getFeeHistoryValidData,
 	getGasPriceValidData,
 	getHashRateValidData,
+	getProofValidData,
 	getTransactionCountValidData,
 	getTransactionFromBlockValidData,
 	getTransactionReceiptValidData,
@@ -299,6 +301,22 @@ describe('web3_eth_methods_with_parameters', () => {
 							);
 							expect(await getFeeHistory(web3Eth, ...input)).toStrictEqual(output);
 							expect(rpcMethods.getFeeHistory).toHaveBeenCalledWith(
+								web3Eth.requestManager,
+								...rpcMethodParameters,
+							);
+						},
+					);
+				});
+
+				describe('getProof', () => {
+					it.each(getProofValidData)(
+						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
+						async (input, mockRpcResponse, rpcMethodParameters, output) => {
+							(rpcMethods.getProof as jest.Mock).mockResolvedValueOnce(
+								mockRpcResponse,
+							);
+							expect(await getProof(web3Eth, ...input)).toStrictEqual(output);
+							expect(rpcMethods.getProof).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								...rpcMethodParameters,
 							);

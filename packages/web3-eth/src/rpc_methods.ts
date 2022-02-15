@@ -514,3 +514,15 @@ export async function getChainId(requestManager: Web3RequestManager) {
 		params: [],
 	});
 }
+
+export async function getProof(
+	requestManager: Web3RequestManager,
+	address: Address,
+	storageKey: HexString32Bytes,
+	blockNumber: BlockNumberOrTag,
+) {
+	return requestManager.send({
+		method: 'eth_getProof',
+		params: [address, storageKey, blockNumber],
+	});
+}

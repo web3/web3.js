@@ -172,10 +172,6 @@ export async function getTransaction<ReturnType extends ValidTypes = ValidTypes.
 		  );
 }
 
-// TODO Can't find in spec
-// export async function getPendingTransactions() {
-// }
-
 export async function getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	block: HexString32Bytes | BlockNumberOrTag | undefined,
@@ -282,26 +278,6 @@ export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.Hex
 	) as ValidReturnTypes[ReturnType];
 }
 
-// TODO
-// public async requestAccounts() {
-
-// }
-
-// TODO
-// public async getChainId() {
-
-// }
-
-// TODO
-// public async getNodeInfo() {
-
-// }
-
-// TODO
-// public async getProof() {
-
-// }
-
 export async function getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	blockCount: Uint,
@@ -321,4 +297,28 @@ export async function getFeeHistory<ReturnType extends ValidTypes = ValidTypes.H
 		convertibleFeeHistoryResultProperties,
 		returnType ?? web3Context.defaultReturnType,
 	);
+}
+
+export async function getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	address: Address,
+	storageKey: HexString32Bytes,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+	returnType?: ReturnType,
+) {
+	const response = await rpcMethods.getProof(
+		web3Context.requestManager,
+		address,
+		storageKey,
+		blockNumber,
+	);
+	return {
+		...response,
+		balance: convertToValidType(response.balance, returnType ?? web3Context.defaultReturnType),
+		nonce: convertToValidType(response.nonce, returnType ?? web3Context.defaultReturnType),
+		storageProof: response.storageProof.map(proof => ({
+			...proof,
+			value: convertToValidType(proof.value, returnType ?? web3Context.defaultReturnType),
+		})),
+	};
 }
