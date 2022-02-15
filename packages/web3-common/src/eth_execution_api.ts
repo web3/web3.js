@@ -188,21 +188,6 @@ export interface CompileResult {
 	};
 }
 
-export interface StorageProof {
-	readonly key: HexString32Bytes;
-	readonly value: Uint;
-	readonly proof: HexString32Bytes[];
-}
-
-export interface AccountObject {
-	readonly balance: Uint;
-	readonly codeHash: HexString32Bytes;
-	readonly nonce: Uint;
-	readonly storageHash: HexString32Bytes;
-	readonly accountProof: HexString32Bytes[];
-	readonly storageProof: StorageProof[];
-}
-
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.json
@@ -302,18 +287,4 @@ export type EthExecutionAPI = {
 	eth_compileSolidity: (code: string) => CompileResult;
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
-	eth_pendingTransactions: () => TransactionInfo[];
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-	eth_requestAccounts: () => Address[];
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-695.md
-	eth_chainId: () => Uint;
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1186.md
-	eth_getProof: (
-		address: Address,
-		storageKey: HexString32Bytes,
-		blockNumber: BlockNumberOrTag,
-	) => AccountObject;
 };

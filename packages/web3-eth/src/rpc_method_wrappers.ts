@@ -23,6 +23,7 @@ import {
 
 import * as rpcMethods from './rpc_methods';
 import { BlockFormatted } from './types';
+import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -300,7 +301,7 @@ export async function getFeeHistory<ReturnType extends ValidTypes = ValidTypes.H
 }
 
 export async function getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	web3Context: Web3Context<EthExecutionAPI>,
+	web3Context: Web3Context<Web3EthExecutionAPI>,
 	address: Address,
 	storageKey: HexString32Bytes,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,

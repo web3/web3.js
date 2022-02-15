@@ -1,7 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 
-import { EthExecutionAPI, TransactionWithSender } from 'web3-common';
+import { TransactionWithSender } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
 	BlockNumberOrTag,
@@ -18,8 +18,9 @@ import {
 import { BlockFormatted } from './types';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
-export default class Web3Eth extends Web3Context<EthExecutionAPI> {
+export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
