@@ -66,12 +66,12 @@ export const invalidIntDataWithSize: [any, number][] = [
 ];
 
 export const validIntDataWithAbiType: [any, string][] = [
-	['-0x48', 'uint8'],
-	['-0x123c', 'uint16'],
-	['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 'uint256'],
-	['-1', 'uint16'],
-	[-1, 'uint8'],
-	[BigInt(-12), 'uint64'],
+	['0x48', 'int8'],
+	['0x123c', 'int16'],
+	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 'int256'],
+	['-1', 'int16'],
+	[-1, 'int8'],
+	[BigInt(-12), 'int64'],
 ];
 
 export const invalidIntDataWithAbiType: [any, string][] = [
