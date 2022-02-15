@@ -4,6 +4,7 @@ import Web3Eth from '../../src/index';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	estimateGasValidData,
+	// estimateGasValidData,
 	getBalanceValidData,
 	getBlockNumberValidData,
 	getBlockTransactionCountValidData,
@@ -11,6 +12,8 @@ import {
 	getBlockValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
+	// getCodeValidData,
+	// getFeeHistoryValidData,
 	getGasPriceValidData,
 	getHashRateValidData,
 	getPastLogsValidData,
