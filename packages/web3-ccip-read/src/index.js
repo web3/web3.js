@@ -50,6 +50,10 @@ var gatewayQuery = function (url, to, calldata) {
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
 };
 
+var parseGatewayError = function (errorResponse) {
+    return `Gateway query error: ${errorResponse.status} ${errorResponse.statusText} \n ${errorResponse.responseText}`;
+};
+
 var callGateway = async function (urls, to, callData) {
 
     for (const url of urls) {
@@ -61,12 +65,15 @@ var callGateway = async function (urls, to, callData) {
                 return response;
             }
         } catch (errorResponse) {
-            if (errorResponse.status >= 400 && errorResponse.status <= 499) {
-                throw new Error('There was a problem fetching data from the gateway');
-            }
-        }
+            const parsedError = parseGatewayError(errorResponse);
 
-        console.warn(`Gateway "${url}" failed`);
+            if (errorResponse.status >= 400 && errorResponse.status <= 499) {
+                throw new Error(parsedError);
+            }
+
+            //5xx errors
+            console.warn(parsedError);
+        }
     }
 
     throw new Error('All gateways failed');
@@ -142,12 +149,12 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         send.ccipReadCalls = 1;
     }
     if (send.ccipReadCalls > MAX_REDIRECT_COUNT) {
-        throw new Error('Too many CCIP-Read redirects');
+        throw new Error('Too many CCIP-read redirects');
     }
 
     const normalizedResponse = normalizeResponse(errorObject, result);
     if (!normalizedResponse.data) {
-        throw new Error('ccipReadCall called for a non-CCIP-Read compliant error');
+        throw new Error('ccipReadCall called for a non-CCIP-read compliant error');
     }
 
     const [sender, urls, callData, callbackFunction, extraData] = Object.values(
@@ -167,6 +174,10 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         finalUrls = options.ccipReadGatewayUrls;
     } else {
         finalUrls = urls;
+    }
+
+    if(!finalUrls.length) {
+        throw new Error('No gateway urls provided');
     }
 
     let gatewayResult;

@@ -68,6 +68,7 @@ Http.prototype.get = function(queryUrl) {
 
         request.timeout = this.timeout;
         request.withCredentials = this.withCredentials;
+
         if (this.headers) {
             this.headers.forEach(function (header) {
                 request.setRequestHeader(header.name, header.value);
@@ -112,10 +113,10 @@ Http.prototype.post = function(queryUrl, payload= {}) {
         var request = this._prepareRequest(queryUrl);
         request.open('POST', queryUrl, true);
         request.setRequestHeader('Content-Type','application/json');
-        request.timeout = this.timeout;
 
         request.timeout = this.timeout;
         request.withCredentials = this.withCredentials;
+
         if (this.headers) {
             this.headers.forEach(function (header) {
                 request.setRequestHeader(header.name, header.value);
