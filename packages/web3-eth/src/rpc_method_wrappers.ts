@@ -8,8 +8,12 @@ import {
 	BlockNumberOrTag,
 	convertObjectPropertiesToValidType,
 	convertToValidType,
+	Filter,
 	HexString32Bytes,
+	HexString8Bytes,
+	HexStringBytes,
 	Uint,
+	Uint256,
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
@@ -23,6 +27,18 @@ import {
 
 import * as rpcMethods from './rpc_methods';
 import { BlockFormatted } from './types';
+
+export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
+	rpcMethods.getProtocolVersion(web3Context.requestManager);
+
+export const isSyncing = async (web3Context: Web3Context<EthExecutionAPI>) =>
+	rpcMethods.getSyncing(web3Context.requestManager);
+
+export const getCoinbase = async (web3Context: Web3Context<EthExecutionAPI>) =>
+	rpcMethods.getCoinbase(web3Context.requestManager);
+
+export const isMining = async (web3Context: Web3Context<EthExecutionAPI>) =>
+	rpcMethods.getMining(web3Context.requestManager);
 
 export async function getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -76,6 +92,19 @@ export async function getBalance<ReturnType extends ValidTypes = ValidTypes.HexS
 		returnType ?? web3Context.defaultReturnType,
 	) as ValidReturnTypes[ReturnType];
 }
+
+export const getStorageAt = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	address: Address,
+	storageSlot: Uint256,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+) => rpcMethods.getStorageAt(web3Context.requestManager, address, storageSlot, blockNumber);
+
+export const getCode = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	address: Address,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+) => rpcMethods.getCode(web3Context.requestManager, address, blockNumber);
 
 export async function getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -252,6 +281,19 @@ export async function getTransactionCount<ReturnType extends ValidTypes = ValidT
 // 	return rpcMethods.sendTransaction(this.web3Context.requestManager, transaction);
 // }
 
+export const sendSignedTransaction = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: HexStringBytes,
+) => rpcMethods.sendRawTransaction(web3Context.requestManager, transaction);
+
+// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
+// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
+export const sign = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	message: HexStringBytes,
+	address: Address,
+) => rpcMethods.sign(web3Context.requestManager, address, message);
+
 // TODO Needs to convert input to hex string
 // public async signTransaction(transaction: Transaction) {
 // 	return rpcMethods.signTransaction(this.web3Context.requestManager, transaction);
@@ -284,6 +326,25 @@ export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.Hex
 		returnType ?? web3Context.defaultReturnType,
 	) as ValidReturnTypes[ReturnType];
 }
+
+export const getPastLogs = async (web3Context: Web3Context<EthExecutionAPI>, filter: Filter) =>
+	rpcMethods.getLogs(web3Context.requestManager, {
+		...filter,
+		// These defaults are carried over from 1.x
+		// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
+		fromBlock: filter.fromBlock ?? web3Context.defaultBlock,
+		toBlock: filter.toBlock ?? web3Context.defaultBlock,
+	});
+
+export const getWork = async (web3Context: Web3Context<EthExecutionAPI>) =>
+	rpcMethods.getWork(web3Context.requestManager);
+
+export const submitWork = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	nonce: HexString8Bytes,
+	seedHash: HexString32Bytes,
+	difficulty: HexString32Bytes,
+) => rpcMethods.submitWork(web3Context.requestManager, nonce, seedHash, difficulty);
 
 // TODO
 // public async requestAccounts() {

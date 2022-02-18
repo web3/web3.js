@@ -1,7 +1,7 @@
 import Web3Eth from '../../src/index';
-import * as rpcMethods from '../../src/rpc_methods';
+import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('../../src/rpc_method_wrappers');
 
 describe('web3_eth_methods_no_parameters', () => {
 	let web3Eth: Web3Eth;
@@ -13,34 +13,32 @@ describe('web3_eth_methods_no_parameters', () => {
 	describe('should call RPC method with only request manager parameter', () => {
 		it('getProtocolVersion', async () => {
 			await web3Eth.getProtocolVersion();
-			expect(rpcMethods.getProtocolVersion).toHaveBeenCalledWith(
-				web3Eth.web3Context.requestManager,
-			);
+			expect(rpcMethodWrappers.getProtocolVersion).toHaveBeenCalledWith(web3Eth);
 		});
 
 		it('isSyncing', async () => {
 			await web3Eth.isSyncing();
-			expect(rpcMethods.getSyncing).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+			expect(rpcMethodWrappers.isSyncing).toHaveBeenCalledWith(web3Eth);
 		});
 
 		it('getCoinbase', async () => {
 			await web3Eth.getCoinbase();
-			expect(rpcMethods.getCoinbase).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+			expect(rpcMethodWrappers.getCoinbase).toHaveBeenCalledWith(web3Eth);
 		});
 
 		it('isMining', async () => {
 			await web3Eth.isMining();
-			expect(rpcMethods.getMining).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+			expect(rpcMethodWrappers.isMining).toHaveBeenCalledWith(web3Eth);
 		});
 
 		it('getAccounts', async () => {
 			await web3Eth.getAccounts();
-			expect(rpcMethods.getAccounts).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+			expect(rpcMethodWrappers.getAccounts).toHaveBeenCalledWith(web3Eth);
 		});
 
 		it('getWork', async () => {
 			await web3Eth.getWork();
-			expect(rpcMethods.getWork).toHaveBeenCalledWith(web3Eth.web3Context.requestManager);
+			expect(rpcMethodWrappers.getWork).toHaveBeenCalledWith(web3Eth);
 		});
 	});
 });
