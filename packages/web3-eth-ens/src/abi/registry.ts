@@ -1,5 +1,12 @@
-// https://github.com/ensdomains/ens/blob/master/contracts/ENS.sol
-export const REGISTRY = [
+// https://etherscan.io/address/0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
+
+const REGISTRY = [
+	{
+		inputs: [{ internalType: 'contract ENS', name: '_old', type: 'address' }],
+		payable: false,
+		stateMutability: 'nonpayable',
+		type: 'constructor',
+	},
 	{
 		anonymous: false,
 		inputs: [
@@ -108,6 +115,7 @@ export const REGISTRY = [
 		type: 'event',
 	},
 	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'address',
@@ -128,10 +136,21 @@ export const REGISTRY = [
 				type: 'bool',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: true,
+		inputs: [],
+		name: 'old',
+		outputs: [{ internalType: 'contract ENS', name: '', type: 'address' }],
+		payable: false,
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -147,10 +166,12 @@ export const REGISTRY = [
 				type: 'address',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -166,10 +187,12 @@ export const REGISTRY = [
 				type: 'bool',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -185,10 +208,12 @@ export const REGISTRY = [
 				type: 'address',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'address',
@@ -203,10 +228,12 @@ export const REGISTRY = [
 		],
 		name: 'setApprovalForAll',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -221,10 +248,12 @@ export const REGISTRY = [
 		],
 		name: 'setOwner',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -249,10 +278,12 @@ export const REGISTRY = [
 		],
 		name: 'setRecord',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -267,10 +298,12 @@ export const REGISTRY = [
 		],
 		name: 'setResolver',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -296,10 +329,12 @@ export const REGISTRY = [
 				type: 'bytes32',
 			},
 		],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -329,10 +364,12 @@ export const REGISTRY = [
 		],
 		name: 'setSubnodeRecord',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: false,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -347,10 +384,12 @@ export const REGISTRY = [
 		],
 		name: 'setTTL',
 		outputs: [],
+		payable: false,
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
+		constant: true,
 		inputs: [
 			{
 				internalType: 'bytes32',
@@ -366,7 +405,10 @@ export const REGISTRY = [
 				type: 'uint64',
 			},
 		],
+		payable: false,
 		stateMutability: 'view',
 		type: 'function',
 	},
 ] as const;
+
+export default REGISTRY;

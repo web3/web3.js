@@ -11,54 +11,90 @@ import {
 	Uint,
 } from 'web3-utils';
 
-export enum ChainNames {
-	MAINNET = 'mainnet',
-	GOERLI = 'goerli',
-	KOVAN = 'kovan',
-	RINKEBY = 'rinkeby',
-	ROPSTEN = 'ropsten',
+export type chain = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
+export type hardfork =
+	| 'arrowGlacier'
+	| 'berlin'
+	| 'byzantium'
+	| 'chainstart'
+	| 'constantinople'
+	| 'dao'
+	| 'homestead'
+	| 'istanbul'
+	| 'london'
+	| 'merge'
+	| 'muirGlacier'
+	| 'petersburg'
+	| 'shanghai'
+	| 'spuriousDragon'
+	| 'tangerineWhistle';
+
+export interface CustomChain<NumberType = Numbers> {
+	name?: string;
+	networkId: NumberType;
+	chainId: NumberType;
 }
 
-export enum HardForks {
-	CHAIN_START = 'chainstart',
-	HOMESTEAD = 'homestead',
-	DAO = 'dao',
-	TANGERINE_WHISTLE = 'tangerineWhistle',
-	SPURIOUS_DRAGON = 'spuriousDragon',
-	BYZANTIUM = 'byzantium',
-	CONSTANTINOPLE = 'constantinople',
-	PETERSBURG = 'petersburg',
-	ISTANBUL = 'istanbul',
-	BERLIN = 'berlin',
-	LONDON = 'london',
+export interface Common<NumberType = Numbers> {
+	customChain: CustomChain<NumberType>;
+	baseChain?: chain;
+	hardfork?: hardfork;
 }
 
-export interface Transaction {
+export interface Transaction<NumberType extends Numbers = Numbers> {
 	from?: Address;
 	to?: Address;
-	value?: Numbers;
-	gas?: Numbers;
-	gasPrice?: Numbers;
-	type?: Numbers;
-	maxFeePerGas?: Numbers;
-	maxPriorityFeePerGas?: Numbers;
+	value?: NumberType;
+	gas?: NumberType;
+	gasPrice?: NumberType;
+	type?: NumberType;
+	maxFeePerGas?: NumberType;
+	maxPriorityFeePerGas?: NumberType;
 	accessList?: AccessList;
-	input: HexStringBytes;
-	data?: HexString;
-	nonce?: Numbers;
-	chain?: HexString;
-	chainId?: HexString;
-	hardfork?: HexString;
-	common?: {
-		customChain: {
-			name?: string;
-			networkId: Numbers;
-			chainId: Numbers;
-		};
-		baseChain?: ChainNames;
-		hardfork?: HardForks;
-	};
+	data?: HexStringBytes;
+	input?: HexStringBytes;
+	nonce?: NumberType;
+	chain?: chain;
+	hardfork?: hardfork;
+	chainId?: NumberType;
+	networkId?: NumberType;
+	common?: Common<NumberType>;
+	gasLimit?: NumberType;
+	v?: NumberType;
+	r?: HexString;
+	s?: HexString;
 }
+
+export interface PopulatedUnsignedBaseTransaction<NumberType extends Numbers = Numbers> {
+	from: Address;
+	to?: Address;
+	value: Numbers;
+	gas?: Numbers;
+	gasPrice: Numbers;
+	type: Numbers;
+	data: HexStringBytes;
+	nonce: Numbers;
+	networkId: Numbers;
+	chain: chain;
+	hardfork: hardfork;
+	chainId: Numbers;
+	common: Common<NumberType>;
+	gasLimit: Numbers;
+}
+export interface PopulatedUnsignedEip2930Transaction<NumberType extends Numbers = Numbers>
+	extends PopulatedUnsignedBaseTransaction<NumberType> {
+	accessList: AccessList;
+}
+export interface PopulatedUnsignedEip1559Transaction<NumberType extends Numbers = Numbers>
+	extends PopulatedUnsignedEip2930Transaction<NumberType> {
+	gasPrice: never;
+	maxFeePerGas: NumberType;
+	maxPriorityFeePerGas: NumberType;
+}
+export type PopulatedUnsignedTransaction<NumberType extends Numbers = Numbers> =
+	| PopulatedUnsignedBaseTransaction<NumberType>
+	| PopulatedUnsignedEip2930Transaction<NumberType>
+	| PopulatedUnsignedEip1559Transaction<NumberType>;
 
 interface BaseTransactionFormatted<
 	DesiredType extends ValidTypes = ValidTypes.HexString,

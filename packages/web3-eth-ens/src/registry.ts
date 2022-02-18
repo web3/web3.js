@@ -1,19 +1,19 @@
 import { inputAddressFormatter, ReceiptInfo } from 'web3-common';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
-import { REGISTRY as registryABI } from './ABI/Registry';
-import { RESOLVER as resolverABI } from './ABI/Resolver';
+import REGISTRY from './ABI/registry';
+import { RESOLVER } from './ABI/resolver';
 import { registryAddress } from './config';
 import { namehash } from './utils';
 
 export class Registry {
-	private readonly contract: Contract<typeof registryABI>;
+	private readonly contract: Contract<typeof REGISTRY>;
 
 	public constructor(customRegistryAddress?: Address) {
 		// TODO for contract, when eth.net is finished we can check network
 		this.contract = customRegistryAddress
-			? new Contract(registryABI, customRegistryAddress)
-			: new Contract(registryABI, registryAddress);
+			? new Contract(REGISTRY, customRegistryAddress)
+			: new Contract(REGISTRY, registryAddress);
 	}
 	public async getOwner(name: string) {
 		try {
@@ -150,10 +150,13 @@ export class Registry {
 			const promise = await this.contract.methods
 				.resolver(namehash(name))
 				.call()
-				.then(address => {
-					const contract = new Contract(resolverABI, address[0]);
+				.then(address => { // address type is unknown, not sure why
+					if (typeof(address) === 'string'){ 
+					const contract = new Contract(RESOLVER, address);
 					// TODO: set contract provider needs to be added when ens current provider
 					return contract;
+					}
+					throw new Error();
 				});
 
 			return promise;
