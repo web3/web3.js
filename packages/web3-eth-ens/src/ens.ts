@@ -2,22 +2,15 @@ import { Address } from 'web3-utils';
 import { RevertInstructionError } from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt } from 'web3-eth-contract';
 import { Registry } from './registry';
+import { registryAddress } from './config';
 
 export class ENS {
-	private _registryAddress: string;
+	public _registryAddress: string;
 	private readonly registry: Registry;
 
-	public constructor() {
-		this.registry = new Registry();
-		this._registryAddress = ''; // TODO change this when eth.net is finished
-	}
-
-	public get registryAddress(): string {
-		return this._registryAddress;
-	}
-
-	public set registryAddress(registryAddress: string) {
-		this._registryAddress = registryAddress;
+	public constructor(registryAddr?: string) {
+		this.registry = new Registry(registryAddr);
+		this._registryAddress = registryAddr ?? registryAddress; // TODO change this when eth.net is finished
 	}
 
 	/**
