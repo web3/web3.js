@@ -10,7 +10,7 @@
 [![Dependency Status][deps-image]][deps-url]
 [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is a sub-package of [web3.js][repo].
+This is the main package of [web3.js](https://github.com/ChainSafe/web3.js).
 
 `web3` contains the ideal setup for a Web3.js package.
 
