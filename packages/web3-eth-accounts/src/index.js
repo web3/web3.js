@@ -22,6 +22,7 @@
 
 'use strict';
 
+const { PrivateKey } = require("@hashgraph/sdk");
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
@@ -34,6 +35,10 @@ var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 var HardForks = require('@ethereumjs/common').Hardfork;
 var ethereumjsUtil = require('ethereumjs-util');
+
+const createClient = require('./createClient');
+const createNewAccountId = require('./createNewAccountId');
+const sign = require('./sign');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -90,9 +95,9 @@ var Accounts = function Accounts() {
             call: 'eth_getBlockByNumber',
             params: 2,
             inputFormatter: [function(blockNumber) {
-                return blockNumber ? utils.toHex(blockNumber) : 'latest'
+                return blockNumber ? utils.toHex(blockNumber) : 'latest';
             }, function() {
-                return false
+                return false;
             }]
         }),
     ];
@@ -107,28 +112,47 @@ var Accounts = function Accounts() {
     this.wallet = new Wallet(this);
 };
 
-Accounts.prototype._addAccountFunctions = function(account) {
-    var _this = this;
+// TODO Get myAccountId and myPrivateKey from Wallet
+const accountId = '0.0.29674178';
+const privateKey = '302e020100300506032b657004220420857877963ad72e14a4bf323583eda74eefbb17cf8d8ddb8e9dd52028228286e6';
+const client = createClient(accountId, privateKey);
+
+Accounts.prototype._addAccountFunctions = async function (newAccountPrivateKey) {
+    const _this = this;
+    const newAccountPublicKey = newAccountPrivateKey.publicKey;
+
+    let address =  await createNewAccountId(newAccountPrivateKey, client);
+
+    const account = {
+        address,
+        privateKey: newAccountPrivateKey,
+        publicKey: newAccountPublicKey,
+    };
 
     // add sign functions
-    account.signTransaction = function signTransaction(tx, callback) {
-        return _this.signTransaction(tx, account.privateKey, callback);
+    account.signTransaction = function signTransaction() {
+        // TODO
+        return function() {};
     };
-    account.sign = function sign(data) {
-        return _this.sign(data, account.privateKey);
-    };
-
-    account.encrypt = function encrypt(password, options) {
-        return _this.encrypt(account.privateKey, password, options);
+    account.sign = function(data) {
+        return _this.sign(data, client);
     };
 
+    account.encrypt = function encrypt() {
+        // TODO
+        return function() {};
+    };
 
     return account;
 };
 
-Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
+Accounts.prototype.create = async function create() {
+    const newAccountPrivateKey = PrivateKey.generateED25519();
+
+    return this._addAccountFunctions(newAccountPrivateKey);
 };
+
+// console.log('Accounts', new Accounts().create().then((resp) => console.log('resp', resp)));
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
     if (!privateKey.startsWith('0x')) {
@@ -140,7 +164,8 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
         throw new Error("Private key must be 32 bytes long");
     }
 
-    return this._addAccountFunctions(Account.fromPrivate(privateKey));
+    return null;
+    // return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
@@ -302,7 +327,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             throw new Error('One of the values "chainId", "networkId", "gasPrice", or "nonce" couldn\'t be fetched: ' + JSON.stringify(args));
         }
 
-    return signed({
+        return signed({
             ...tx,
             ... ((isNot(tx.common) || isNot(tx.common.customChain.chainId) ) ? {chainId: txchainId}:{}), // if common.customChain.chainId is provided no need to add tx.chainId
             nonce: txnonce,
@@ -370,16 +395,16 @@ function _handleTxType(tx) {
     if (
         hasEip1559 ||
         (
-            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
-            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
+        (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.London) ||
+        (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.London)
         )
     ) {
         txType = '0x2';
     } else if (
         tx.accessList ||
         (
-            (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
-            (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
+        (tx.common && tx.common.hardfork && tx.common.hardfork.toLowerCase() === HardForks.Berlin) ||
+        (tx.hardfork && tx.hardfork.toLowerCase() === HardForks.Berlin)
         )
     ) {
         txType = '0x1';
@@ -421,11 +446,11 @@ function _handleTxPricing(_this, tx) {
                         } else {
                             maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
                             maxFeePerGas = tx.maxFeePerGas ||
-                                utils.toHex(
-                                    utils.toBN(block.baseFeePerGas)
-                                        .mul(utils.toBN(2))
-                                        .add(utils.toBN(maxPriorityFeePerGas))
-                                );
+                                           utils.toHex(
+                                               utils.toBN(block.baseFeePerGas)
+                                                   .mul(utils.toBN(2))
+                                                   .add(utils.toBN(maxPriorityFeePerGas))
+                                           );
                         }
                         resolve({ maxFeePerGas, maxPriorityFeePerGas });
                     } else {
@@ -461,28 +486,11 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
 };
 
-Accounts.prototype.sign = function sign(data, privateKey) {
-    if (!privateKey.startsWith('0x')) {
-        privateKey = '0x' + privateKey;
-    }
-
-    // 64 hex characters + hex-prefix
-    if (privateKey.length !== 66) {
-        throw new Error("Private key must be 32 bytes long");
-    }
-
-    var hash = this.hashMessage(data);
-    var signature = Account.sign(hash, privateKey);
-    var vrs = Account.decodeSignature(signature);
-    return {
-        message: data,
-        messageHash: hash,
-        v: vrs[0],
-        r: vrs[1],
-        s: vrs[2],
-        signature: signature
-    };
+Accounts.prototype.sign = function(data, client) {
+    return sign(data, client);
 };
+
+console.log('Accounts', new Accounts().create().then(resp => resp.sign('test')));
 
 Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
@@ -609,7 +617,6 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
         }
     };
 };
-
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
@@ -775,18 +782,19 @@ function storageAvailable(type) {
         return true;
     } catch (e) {
         return e && (
-                // everything except Firefox
-            e.code === 22 ||
-            // Firefox
-            e.code === 1014 ||
-            // test name field too, because code might not be present
-            // everything except Firefox
-            e.name === 'QuotaExceededError' ||
-            // Firefox
-            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
-            // acknowledge QuotaExceededError only if there's something already stored
-            (storage && storage.length !== 0);
+                     // everything except Firefox
+                     e.code === 22 ||
+                     // Firefox
+                     e.code === 1014 ||
+                     // test name field too, because code might not be present
+                     // everything except Firefox
+                     e.name === 'QuotaExceededError' ||
+                     // Firefox
+                     e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+               // acknowledge QuotaExceededError only if there's something already stored
+               (storage && storage.length !== 0);
     }
 }
 
 module.exports = Accounts;
+
