@@ -56,13 +56,13 @@ export type Mixed =
     | number
     | BN
     | {
-          type: string;
-          value: string;
-      }
+        type: string;
+        value: string;
+    }
     | {
-          t: string;
-          v: string | BN | number;
-      }
+        t: string;
+        v: string | BN | number;
+    }
     | boolean;
 
 export type Hex = string | number;
@@ -85,6 +85,7 @@ export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
 export function fromWei(value: string | BN, unit?: Unit): string;
+export function fromTinybar(value: string, unit?: Unit): string;
 export function hexToBytes(hex: Hex): number[];
 export function hexToNumber(hex: Hex): number;
 export function hexToNumberString(hex: Hex): string;
@@ -106,6 +107,8 @@ export function toHex(value: number | string | BN): string;
 export function toUtf8(string: string): string;
 export function toWei(val: BN, unit?: Unit): BN;
 export function toWei(val: string, unit?: Unit): string;
+export function toTinybar(val: BN, unit?: Unit): BN;
+export function toTinybar(val: string, unit?: Unit): string;
 export function isBloom(bloom: string): boolean;
 export function isInBloom(bloom: string, value: string | Uint8Array): boolean;
 export function isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean;
@@ -120,7 +123,7 @@ export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
-export function getSignatureParameters(signature: string): {r: string; s: string; v: number};
+export function getSignatureParameters(signature: string): { r: string; s: string; v: number };
 export function stripHexPrefix(str: string): string;
 export function toNumber(value: number | string | BN): number;
 
@@ -143,6 +146,7 @@ export interface Utils {
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
     fromWei(value: string | BN, unit?: Unit): string;
+    fromTinybar(value: string, unit?: Unit): string;
     hexToBytes(hex: Hex): number[];
     hexToNumber(hex: Hex): number;
     hexToNumberString(hex: Hex): string;
@@ -163,6 +167,8 @@ export interface Utils {
     toUtf8(string: string): string;
     toWei(val: BN, unit?: Unit): BN;
     toWei(val: string, unit?: Unit): string;
+    toTinybar(val: BN, unit?: Unit): BN;
+    toTinybar(val: string, unit?: Unit): string;
     isBloom(bloom: string): boolean;
     isInBloom(bloom: string, value: string | Uint8Array): boolean;
     isUserEthereumAddressInBloom(bloom: string, ethereumAddress: string): boolean;
@@ -177,7 +183,7 @@ export interface Utils {
     unitMap(): Units;
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
-    getSignatureParameters(signature: string): {r: string; s: string; v: number};
+    getSignatureParameters(signature: string): { r: string; s: string; v: number };
     stripHexPrefix(str: string): string;
     toNumber(value: number | string | BN): number;
 }
@@ -231,13 +237,13 @@ export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
-	components?: AbiInput[];
+    components?: AbiInput[];
     internalType?: string;
 }
 
 export interface AbiOutput {
     name: string;
     type: string;
-	components?: AbiOutput[];
+    components?: AbiOutput[];
     internalType?: string;
 }
