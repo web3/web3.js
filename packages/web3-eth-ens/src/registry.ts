@@ -1,6 +1,6 @@
 import { inputAddressFormatter, ReceiptInfo } from 'web3-common';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
-import { Address, isHexStrict, sha3Raw, toNumber, Numbers } from 'web3-utils';
+import { Address, isHexStrict, sha3Raw } from 'web3-utils';
 import { REGISTRY as registryABI } from './ABI/Registry';
 import { RESOLVER as resolverABI } from './ABI/Resolver';
 import { registryAddress } from './config';
@@ -53,13 +53,11 @@ export class Registry {
 
 	public async setTTL(
 		name: string,
-		ttl: Numbers,
+		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
 	): Promise<ReceiptInfo> {
 		try {
-			const promise = await this.contract.methods
-				.setTTL(namehash(name), toNumber(ttl))
-				.send(txConfig);
+			const promise = await this.contract.methods.setTTL(namehash(name), ttl).send(txConfig);
 
 			return promise;
 		} catch (error) {
@@ -89,7 +87,7 @@ export class Registry {
 		label: string,
 		owner: Address,
 		resolver: Address,
-		ttl: Numbers,
+		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
 	): Promise<ReceiptInfo> {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;

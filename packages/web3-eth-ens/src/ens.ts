@@ -39,7 +39,7 @@ export class ENS {
 		label: string,
 		owner: Address,
 		resolver: Address,
-		ttl: string,
+		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this.registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
