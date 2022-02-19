@@ -18,6 +18,8 @@ import {
 	getTransactionFromBlock,
 	getTransactionReceipt,
 	getUncle,
+	sendSignedTransaction,
+	sign,
 } from '../../src/rpc_method_wrappers';
 import {
 	estimateGasValidData,
@@ -35,6 +37,8 @@ import {
 	getTransactionReceiptValidData,
 	getTransactionValidData,
 	getUncleValidData,
+	sendSignedTransactionValidData,
+	signValidData,
 } from '../fixtures/rpc_methods_wrappers';
 
 jest.mock('../../src/rpc_methods');
@@ -319,6 +323,42 @@ describe('web3_eth_methods_with_parameters', () => {
 							expect(rpcMethods.getProof).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								...rpcMethodParameters,
+							);
+						},
+					);
+				});
+
+				describe('sendSignedTransaction', () => {
+					it.each(sendSignedTransactionValidData)(
+						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
+						async (input, mockRpcResponse) => {
+							(rpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
+								mockRpcResponse,
+							);
+							expect(await sendSignedTransaction(web3Eth, input)).toBe(
+								mockRpcResponse,
+							);
+							expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+								web3Eth.requestManager,
+								input,
+							);
+						},
+					);
+				});
+
+				describe('sign', () => {
+					it.each(signValidData)(
+						'input: %s\nmockRpcResponse: %s',
+						async (input, mockRpcResponse) => {
+							(rpcMethods.sign as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+							expect(await sign(web3Eth, ...input)).toBe(mockRpcResponse);
+							expect(rpcMethods.sign).toHaveBeenCalledWith(
+								web3Eth.requestManager,
+								// web3-eth methods takes sign(message, address)
+								// RPC method takes sign(address, message)
+								// so we manually swap them here
+								input[1],
+								input[0],
 							);
 						},
 					);

@@ -57,7 +57,11 @@ export const isInt = (
 	let size!: number;
 
 	if (options?.abiType) {
-		const { baseTypeSize } = parseBaseType(options.abiType);
+		const { baseTypeSize, baseType } = parseBaseType(options.abiType);
+
+		if (baseType !== 'int') {
+			return false;
+		}
 
 		if (baseTypeSize) {
 			size = baseTypeSize;
