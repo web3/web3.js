@@ -43,7 +43,7 @@ export interface Common<NumberType = Numbers> {
 
 export interface Transaction<NumberType extends Numbers = Numbers> {
 	from?: Address;
-	to?: Address;
+	to?: Address | null;
 	value?: NumberType;
 	gas?: NumberType;
 	gasPrice?: NumberType;

@@ -42,6 +42,8 @@ describe('web3_eth_methods_no_parameters', () => {
 		});
 
 		it('getPendingTransactions', async () => {
+			(rpcMethods.getPendingTransactions as jest.Mock).mockResolvedValueOnce([]);
+
 			await web3Eth.getPendingTransactions();
 			expect(rpcMethods.getPendingTransactions).toHaveBeenCalledWith(web3Eth.requestManager);
 		});

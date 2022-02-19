@@ -92,6 +92,23 @@ describe('web3_eth_methods_with_parameters', () => {
 					},
 				);
 			});
+
+			// TODO - formatTransaction uses transaction.data, but current
+			// transaction typing only specifies transaction.input
+			// describe('getPendingTransactions', () => {
+			// 	it.each(getPendingTransactionValidData)(
+			// 		'returnType: %s mockRpcResponse: %s output: %s',
+			// 		async (returnType, mockRpcResponse, output) => {
+			// 			(rpcMethods.getPendingTransactions as jest.Mock).mockResolvedValueOnce(
+			// 				mockRpcResponse,
+			// 			);
+			// 			expect(await getPendingTransactions(web3Eth, returnType)).toBe(output);
+			// 			expect(rpcMethods.getPendingTransactions).toHaveBeenCalledWith(
+			// 				web3Eth.requestManager,
+			// 			);
+			// 		},
+			// 	);
+			// });
 		});
 
 		describe('has multiple parameters', () => {

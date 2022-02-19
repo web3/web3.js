@@ -1573,6 +1573,43 @@ export const getTransactionCountValidData: [
 	],
 ];
 
+// export const getPendingTransactionValidData: [
+// 	ValidTypes | undefined,
+// 	TransactionInfo[],
+// 	(
+// 		| TransactionInfoFormatted
+// 		| TransactionInfoFormatted<ValidTypes.NumberString>
+// 		| TransactionInfoFormatted<ValidTypes.Number>
+// 		| TransactionInfoFormatted<ValidTypes.BigInt>
+// 	)[],
+// ][] = [
+// 	[
+// 		undefined,
+// 		[transactionInfo, transactionInfo, transactionInfo],
+// 		[transactionInfo, transactionInfo, transactionInfo],
+// 	],
+// [
+// 	ValidTypes.HexString,
+// 	[transactionInfo, transactionInfo, transactionInfo],
+// 	[transactionInfo, transactionInfo, transactionInfo],
+// ],
+// [
+// 	ValidTypes.Number,
+// 	[transactionInfo, transactionInfo, transactionInfo],
+// 	[transactionInfoNumber, transactionInfoNumber, transactionInfoNumber],
+// ],
+// [
+// 	ValidTypes.NumberString,
+// 	[transactionInfo, transactionInfo, transactionInfo],
+// 	[transactionInfoNumberString, transactionInfoNumberString, transactionInfoNumberString],
+// ],
+// [
+// 	ValidTypes.BigInt,
+// 	[transactionInfo, transactionInfo, transactionInfo],
+// 	[transactionInfoBigInt, transactionInfoBigInt, transactionInfoBigInt],
+// ],
+// ];
+
 export const transactionWithSender: TransactionWithSender = {
 	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	type: '0x0',

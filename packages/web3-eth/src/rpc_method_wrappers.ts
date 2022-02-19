@@ -22,6 +22,7 @@ import {
 	convertibleReceiptInfoProperties,
 	convertibleTransactionInfoProperties,
 } from './convertible_properties';
+import { formatTransaction } from './format_transaction';
 
 import * as rpcMethods from './rpc_methods';
 import { BlockFormatted } from './types';
@@ -266,6 +267,16 @@ export async function getTransactionCount<ReturnType extends ValidTypes = ValidT
 		response,
 		returnType ?? web3Context.defaultReturnType,
 	) as ValidReturnTypes[ReturnType];
+}
+
+export async function getPendingTransactions<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnType?: ReturnType,
+) {
+	const response = await rpcMethods.getPendingTransactions(web3Context.requestManager);
+	return response.map(transaction =>
+		formatTransaction(transaction, returnType ?? web3Context.defaultReturnType),
+	);
 }
 
 // TODO Needs to convert input to hex string

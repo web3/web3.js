@@ -116,9 +116,10 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnType);
 	}
 
-	// TODO Format transactions
-	public async getPendingTransactions() {
-		return rpcMethods.getPendingTransactions(this.requestManager);
+	public async getPendingTransactions<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		return rpcMethodsWrappers.getPendingTransactions(this, returnType);
 	}
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
