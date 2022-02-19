@@ -1,4 +1,4 @@
-import { AccountObject, TransactionCall, TransactionWithSender } from 'web3-common';
+import { TransactionCall, TransactionWithSender } from 'web3-common';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -9,6 +9,8 @@ import {
 	Uint,
 	Uint256,
 } from 'web3-utils';
+
+import { AccountObject } from '../../src/web3_eth_execution_api';
 
 import { isTransactionCallValidData, isTransactionWithSenderValidData } from './validation';
 

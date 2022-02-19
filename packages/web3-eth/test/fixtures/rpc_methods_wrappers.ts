@@ -1,5 +1,4 @@
 import {
-	AccountObject,
 	Block,
 	FeeHistoryResult,
 	FilterResults,
@@ -21,6 +20,7 @@ import {
 	Filter,
 	HexString8Bytes,
 } from 'web3-utils';
+
 import {
 	AccountObjectFormatted,
 	BlockFormatted,
@@ -28,6 +28,7 @@ import {
 	ReceiptInfoFormatted,
 	TransactionInfoFormatted,
 } from '../../src/types';
+import { AccountObject } from '../../src/web3_eth_execution_api';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
 export const getHashRateValidData: [
