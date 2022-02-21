@@ -135,24 +135,15 @@ Accounts.prototype._addAccountFunctions = async function (newAccountPrivateKey) 
     return account;
 };
 
-Accounts.prototype.create = async function create() {
-    const newAccountPrivateKey = PrivateKey.generateED25519();
+Accounts.prototype.create = async function create(privateKey) {
+    const newAccountPrivateKey = privateKey || PrivateKey.generateED25519();
 
     return this._addAccountFunctions(newAccountPrivateKey);
 };
 
-Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
-    if (!privateKey.startsWith('0x')) {
-        privateKey = '0x' + privateKey;
-    }
-
-    // 64 hex characters + hex-prefix
-    if (!ignoreLength && privateKey.length !== 66) {
-        throw new Error("Private key must be 32 bytes long");
-    }
-
-    return null;
-    // return this._addAccountFunctions(Account.fromPrivate(privateKey));
+Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, isED25519Key = false) {
+    const key = isED25519Key ? PrivateKey.fromStringED25519(privateKey) : PrivateKey.fromStringECDSA(privateKey);
+    return this.create(key);
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
