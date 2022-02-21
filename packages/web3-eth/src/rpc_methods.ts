@@ -529,3 +529,10 @@ export async function getProof(
 		params: [address, storageKey, blockNumber],
 	});
 }
+
+export async function getNodeInfo(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
+	return requestManager.send({
+		method: 'web3_clientVersion',
+		params: [],
+	});
+}

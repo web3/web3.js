@@ -221,10 +221,9 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getChainId(this, returnType);
 	}
 
-	// TODO
-	// public async getNodeInfo() {
-
-	// }
+	public async getNodeInfo() {
+		return rpcMethods.getNodeInfo(this.requestManager);
+	}
 
 	// TODO - Format input
 	public async getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(

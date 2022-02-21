@@ -52,5 +52,10 @@ describe('web3_eth_methods_no_parameters', () => {
 			await web3Eth.requestAccounts();
 			expect(rpcMethods.requestAccounts).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
+
+		it('getNodeInfo', async () => {
+			await web3Eth.getNodeInfo();
+			expect(rpcMethods.getNodeInfo).toHaveBeenCalledWith(web3Eth.requestManager);
+		});
 	});
 });

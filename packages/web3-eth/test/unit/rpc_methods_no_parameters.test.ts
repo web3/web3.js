@@ -9,6 +9,7 @@ import {
 	getGasPrice,
 	getHashRate,
 	getMining,
+	getNodeInfo,
 	getPendingTransactions,
 	getProtocolVersion,
 	getSyncing,
@@ -151,6 +152,14 @@ describe('rpc_methods_no_parameters', () => {
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_chainId',
+				params: [],
+			});
+		});
+		it('getNodeInfo', async () => {
+			await getNodeInfo(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'web3_clientVersion',
 				params: [],
 			});
 		});
