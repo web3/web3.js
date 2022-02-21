@@ -38,7 +38,6 @@ var ethereumjsUtil = require('ethereumjs-util');
 
 const createClient = require('./createClient');
 const createNewAccountId = require('./createNewAccountId');
-const sign = require('./sign');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -134,8 +133,8 @@ Accounts.prototype._addAccountFunctions = async function (newAccountPrivateKey) 
         // TODO
         return function() {};
     };
-    account.sign = function(data) {
-        return _this.sign(data, client);
+    account.sign = function sign(data) {
+        return _this.sign(data, account.privateKey);
     };
 
     account.encrypt = function encrypt() {
@@ -476,6 +475,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx, txOpt
 };
 /* jshint ignore:end */
 
+// TODO not sure if it is needed
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var messageHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
     var messageBytes = utils.hexToBytes(messageHex);
@@ -486,8 +486,15 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
 };
 
-Accounts.prototype.sign = function(data, client) {
-    return sign(data, client);
+Accounts.prototype.sign = function sign(data, privateKey) {
+    const dataToUint8Array = new TextEncoder().encode(data);
+
+    const signature = privateKey.sign(dataToUint8Array);
+
+    return {
+        message: data,
+        signature: signature
+    };
 };
 
 console.log('Accounts', new Accounts().create().then(resp => resp.sign('test')));
