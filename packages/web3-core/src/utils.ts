@@ -22,6 +22,14 @@ export const isLegacySendAsyncProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
 ): provider is LegacySendAsyncProvider => 'sendAsync' in provider;
 
+export const isSupportedProvider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
+): boolean =>
+	Web3BaseProvider.isWeb3Provider(provider) ||
+	isLegacyRequestProvider(provider) ||
+	isLegacySendAsyncProvider(provider) ||
+	isLegacySendProvider(provider);
+
 export const isSupportSubscriptions = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
 ): boolean => {

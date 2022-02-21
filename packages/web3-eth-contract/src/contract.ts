@@ -1,5 +1,5 @@
 import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
-import { Web3Context } from 'web3-core';
+import { Web3Context, Web3ContextObject } from 'web3-core';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -97,8 +97,17 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
-	public constructor(jsonInterface: Abi, address?: Address, options?: ContractInitOptions) {
-		super(options?.provider ?? '', {}, { logs: LogsSubscription });
+	public constructor(
+		jsonInterface: Abi,
+		address?: Address,
+		options?: ContractInitOptions,
+		context?: Partial<Web3ContextObject<EthExecutionAPI, { logs: typeof LogsSubscription }>>,
+	) {
+		super({
+			...context,
+			provider: options?.provider ?? context?.provider ?? Contract.givenProvider,
+			registeredSubscriptions: { logs: LogsSubscription },
+		});
 
 		this._parseAndSetAddress(address);
 		this._parseAndSetJsonInterface(jsonInterface);
