@@ -351,6 +351,18 @@ export async function getFeeHistory<ReturnType extends ValidTypes = ValidTypes.H
 	);
 }
 
+export async function getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnType?: ReturnType,
+) {
+	const response = await rpcMethods.getChainId(web3Context.requestManager);
+
+	return convertToValidType(
+		response,
+		returnType ?? web3Context.defaultReturnType,
+	) as ValidReturnTypes[ReturnType];
+}
+
 export async function getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
 	web3Context: Web3Context<Web3EthExecutionAPI>,
 	address: Address,

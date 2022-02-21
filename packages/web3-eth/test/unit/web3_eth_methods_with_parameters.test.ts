@@ -11,6 +11,7 @@ import {
 	getBlockTransactionCountValidData,
 	getBlockUncleCountValidData,
 	getBlockValidData,
+	getChainIdValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
 	// getCodeValidData,
@@ -63,6 +64,13 @@ describe('web3_eth_methods_with_parameters', () => {
 						web3Eth,
 						returnType,
 					);
+				});
+			});
+
+			describe('getChainId', () => {
+				it.each(getChainIdValidData)('returnType: %s', async returnType => {
+					await web3Eth.getChainId(returnType);
+					expect(rpcMethodWrappers.getChainId).toHaveBeenCalledWith(web3Eth, returnType);
 				});
 			});
 		});

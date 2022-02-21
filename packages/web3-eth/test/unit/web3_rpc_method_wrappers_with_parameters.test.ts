@@ -9,6 +9,7 @@ import {
 	getBlockNumber,
 	getBlockTransactionCount,
 	getBlockUncleCount,
+	getChainId,
 	getFeeHistory,
 	getGasPrice,
 	getHashRate,
@@ -28,6 +29,7 @@ import {
 	getBlockTransactionCountValidData,
 	getBlockUncleCountValidData,
 	getBlockValidData,
+	getChainIdValidData,
 	getFeeHistoryValidData,
 	getGasPriceValidData,
 	getHashRateValidData,
@@ -109,6 +111,17 @@ describe('web3_eth_methods_with_parameters', () => {
 			// 		},
 			// 	);
 			// });
+
+			describe('getChainId', () => {
+				it.each(getChainIdValidData)(
+					'returnType: %s mockRpcResponse: %s output: %s',
+					async (returnType, mockRpcResponse, output) => {
+						(rpcMethods.getChainId as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+						expect(await getChainId(web3Eth, returnType)).toBe(output);
+						expect(rpcMethods.getChainId).toHaveBeenCalledWith(web3Eth.requestManager);
+					},
+				);
+			});
 		});
 
 		describe('has multiple parameters', () => {

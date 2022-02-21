@@ -40,6 +40,15 @@ export const getBlockNumberValidData: [ValidTypes | undefined][] = [
 	[ValidTypes.BigInt],
 ];
 
+// Array consists of: returnType parameter
+export const getChainIdValidData: [ValidTypes | undefined][] = [
+	[undefined],
+	[ValidTypes.HexString],
+	[ValidTypes.NumberString],
+	[ValidTypes.Number],
+	[ValidTypes.BigInt],
+];
+
 /**
  * Array consists of:
  * - array of inputs

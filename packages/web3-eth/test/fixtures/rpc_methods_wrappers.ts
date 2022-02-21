@@ -19,6 +19,7 @@ import {
 	HexStringBytes,
 	Filter,
 	HexString8Bytes,
+	Numbers,
 } from 'web3-utils';
 
 import {
@@ -2629,4 +2630,12 @@ export const getProofValidData: [
 		],
 		accountObjectBigInt,
 	],
+];
+
+export const getChainIdValidData: [ValidTypes | undefined, Uint, Numbers][] = [
+	[undefined, '0x3d', '0x3d'],
+	[ValidTypes.HexString, '0x3d', '0x3d'],
+	[ValidTypes.Number, '0x3d', 61],
+	[ValidTypes.NumberString, '0x3d', '61'],
+	[ValidTypes.BigInt, '0x3d', BigInt('0x3d')],
 ];
