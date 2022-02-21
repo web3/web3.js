@@ -143,7 +143,8 @@ Accounts.prototype.create = async function create(privateKey) {
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, isED25519Key = false) {
     const key = isED25519Key ? PrivateKey.fromStringED25519(privateKey) : PrivateKey.fromStringECDSA(privateKey);
-    return this.create(key);
+
+    return this._addAccountFunctions(key);
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
