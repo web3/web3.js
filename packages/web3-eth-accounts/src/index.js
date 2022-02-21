@@ -106,11 +106,9 @@ const privateKey = '302e020100300506032b657004220420857877963ad72e14a4bf323583ed
 const client = createClient(accountId, privateKey);
 // =====> HELPERS END <=====
 
-Accounts.prototype._addAccountFunctions = async function (newAccountPrivateKey) {
+Accounts.prototype._addAccountFunctions = function (newAccountPrivateKey, address) {
     const _this = this;
     const newAccountPublicKey = newAccountPrivateKey.publicKey;
-
-    let address =  await createNewAccountId(newAccountPrivateKey, client);
 
     const account = {
         address,
@@ -135,17 +133,15 @@ Accounts.prototype._addAccountFunctions = async function (newAccountPrivateKey) 
     return account;
 };
 
-Accounts.prototype.create = async function create(privateKey) {
-    const newAccountPrivateKey = privateKey || PrivateKey.generateED25519();
+Accounts.prototype.create = async function create() {
+    const newAccountPrivateKey = PrivateKey.generateED25519();
+    const address =  await createNewAccountId(newAccountPrivateKey, client);
 
-    return this._addAccountFunctions(newAccountPrivateKey);
+    return this._addAccountFunctions(newAccountPrivateKey, address);
 };
 
-Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, isED25519Key = false) {
-    const key = isED25519Key ? PrivateKey.fromStringED25519(privateKey) : PrivateKey.fromStringECDSA(privateKey);
-
-    return this._addAccountFunctions(key);
-};
+// TODO Not available
+Accounts.prototype.privateKeyToAccount = async function privateKeyToAccount() {};
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
     privateKey.signTransaction(tx);
