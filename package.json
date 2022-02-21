@@ -23,7 +23,7 @@
         "lint": "jshint *.js packages",
         "test": "mocha -R spec --require ts-node/register --grep E2E --invert",
         "test:unit": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --grep E2E --invert --exit",
-        "test:mytest": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --grep isAddress --exit",
+        "test:single": "./scripts/singletest.sh",
         "test:cov": "npm run cov:clean; npm run test:unit; npm run test:e2e:clients; npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
         "depcheck": "lerna exec dependency-check -- --missing --verbose .",
