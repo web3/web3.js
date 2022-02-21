@@ -141,8 +141,6 @@ Accounts.prototype.create = async function create() {
     return this._addAccountFunctions(newAccountPrivateKey);
 };
 
-// console.log('Accounts', new Accounts().create().then((resp) => console.log('resp', resp)));
-
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey, ignoreLength) {
     if (!privateKey.startsWith('0x')) {
         privateKey = '0x' + privateKey;
@@ -158,7 +156,7 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
-    return tx.sign(privateKey);
+    privateKey.signTransaction(tx);
 };
 
 /* jshint ignore:start */
