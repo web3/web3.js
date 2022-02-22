@@ -641,7 +641,7 @@ Method.prototype.buildCall = function () {
         var sendTxCallback = function (err, result) {
 
             //hook into CCIP-read
-            if (isOffChainLookup(err, result)) {
+            if (isOffChainLookup(err, result) && isCall) {
                 const options = {
                     ccipReadGatewayCallback: method.ccipReadGatewayCallback,
                     ccipReadGatewayUrls: method.ccipReadGatewayUrls,
