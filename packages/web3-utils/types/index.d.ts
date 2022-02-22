@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import { Client } from '@hashgraph/sdk';
+import NodeClient from '@hashgraph/sdk/lib/client/NodeClient';
 import BN = require('bn.js');
 
 export type Unit =
@@ -81,6 +83,7 @@ export function toAscii(string: string): string;
 export function bytesToHex(bytes: number[]): string;
 export function numberToHex(value: number | string | BN): string;
 export function checkAddressChecksum(address: string, chainId?: number): boolean;
+export function checkAddressChecksumHedera(checksum: string, address: string, client: NodeClient): boolean;
 export function fromAscii(string: string): string;
 export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
@@ -102,6 +105,7 @@ export function randomHex(bytesSize: number): string;
 export function utf8ToHex(string: string): string;
 export function stringToHex(string: string): string;
 export function toChecksumAddress(address: string, chainId?: number): string;
+export function toChecksumAddressHedera(address: string, client: NodeClient): string;
 export function toDecimal(hex: Hex): number;
 export function toHex(value: number | string | BN): string;
 export function toUtf8(string: string): string;
@@ -142,6 +146,7 @@ export interface Utils {
     bytesToHex(bytes: number[]): string;
     numberToHex(value: number | string | BN): string;
     checkAddressChecksum(address: string, chainId?: number): boolean;
+    checkAddressChecksumHedera(checksum: string, address: string, client: NodeClient): boolean;
     fromAscii(string: string): string;
     fromDecimal(value: string | number): string;
     fromUtf8(string: string): string;
@@ -162,6 +167,7 @@ export interface Utils {
     utf8ToHex(string: string): string;
     stringToHex(string: string): string;
     toChecksumAddress(address: string, chainId?: number): string;
+    toChecksumAddressHedera(address: string, client: NodeClient): string;
     toDecimal(hex: Hex): number;
     toHex(value: number | string | BN): string;
     toUtf8(string: string): string;

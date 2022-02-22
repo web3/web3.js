@@ -21,13 +21,12 @@
  * @date 2017
  */
 
+import { Hbar, HbarUnit} from '@hashgraph/sdk';
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
 var randombytes = require('randombytes');
 var BN = require('bn.js');
-var hashgraph = require('@hashgraph/sdk');
-
 
 
 /**
@@ -211,8 +210,8 @@ var asciiToHex = function (str) {
  */
 var getUnitValue = function (unit) {
     unit = unit ? unit : 'Hbar';
-    if (!hashgraph.HbarUnit[unit]) {
-        throw new Error('This unit "' + unit + '" doesn\'t exist, please use the one of the following units' + JSON.stringify(Object.keys(hashgraph.HBarUnit), null, 2));
+    if (!HbarUnit[unit]) {
+        throw new Error('This unit "' + unit + '" doesn\'t exist, please use the one of the following units' + JSON.stringify(Object.keys(HBarUnit), null, 2));
     }
     return unit;
 };
@@ -280,10 +279,10 @@ var fromTinybar = function (number, unit) {
 
     if (utils.isBN(number)) {
         const stringNumber = number.toString();
-        return hashgraph.Hbar.from(stringNumber, hashgraph.HbarUnit.Tinybar).to(hashgraph.HbarUnit[unit]).toString(10);
+        return Hbar.from(stringNumber, HbarUnit.Tinybar).to(HbarUnit[unit]).toString(10);
     }
 
-    return hashgraph.Hbar.from(number, hashgraph.HbarUnit.Tinybar).to(hashgraph.HbarUnit[unit]).toString(10);
+    return Hbar.from(number, HbarUnit.Tinybar).to(HbarUnit[unit]).toString(10);
 };
 
 /**
@@ -334,11 +333,11 @@ var toTinybar = function (number, unit) {
 
     if (utils.isBN(number)) {
         const stringNumber = number.toString();
-        const stringValue = hashgraph.Hbar.from(stringNumber, hashgraph.HbarUnit[unit]).toTinybars().toString(10);
+        const stringValue = Hbar.from(stringNumber, HbarUnit[unit]).toTinybars().toString(10);
         return utils.toBN(stringValue);
     }
 
-    return hashgraph.Hbar.from(number, hashgraph.HbarUnit[unit]).toTinybars().toString(10);
+    return Hbar.from(number, HbarUnit[unit]).toTinybars().toString(10);
 }
 
 
@@ -372,6 +371,23 @@ var toChecksumAddress = function (address) {
     }
     return checksumAddress;
 };
+
+
+
+/**
+ * Converts to a checksum address
+ *
+ * @method toChecksumAddress
+ * @param {String} address 
+ * @param {NodeClient}  client 
+ * @return {String}
+ */
+var toChecksumAddressHedera = function (address, client) {
+    return utils.getChecksumAddress(address, client);
+};
+
+
+
 
 /**
  * Returns -1 if a<b, 1 if a>b; 0 if a == b.
@@ -450,7 +466,9 @@ module.exports = {
     isAddress: utils.isAddress,
     isHederaAddress: utils.isHederaAddress,
     checkAddressChecksum: utils.checkAddressChecksum,
+    checkAddressChecksumHedera: utils.checkAddressChecksumHedera,
     toChecksumAddress: toChecksumAddress,
+    toChecksumAddressHedera: toChecksumAddressHedera,
     toHex: utils.toHex,
     toBN: utils.toBN,
 
