@@ -1,8 +1,9 @@
 import { Address } from 'web3-utils';
 import { RevertInstructionError } from 'web3-common';
-import { NonPayableCallOptions, TransactionReceipt } from 'web3-eth-contract';
+import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
+import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
-import { registryAddress } from './config';
+import { registryContractAddress } from './config';
 
 export class ENS {
 	public _registryAddress: string;
@@ -10,13 +11,13 @@ export class ENS {
 
 	public constructor(registryAddr?: string) {
 		this.registry = new Registry(registryAddr);
-		this._registryAddress = registryAddr ?? registryAddress; // TODO change this when eth.net is finished
+		this._registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
 	}
 
 	/**
 	 * Returns the Resolver by the given address
 	 */
-	public async getResolver(name: string): Promise<unknown> {
+	public async getResolver(name: string): Promise<Contract<typeof RESOLVER>> {
 		return this.registry.getResolver(name);
 	}
 
@@ -94,7 +95,7 @@ export class ENS {
 	 */
 	public async setTTL(
 		name: string,
-		ttl: string,
+		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this.registry.setTTL(name, ttl, txConfig);

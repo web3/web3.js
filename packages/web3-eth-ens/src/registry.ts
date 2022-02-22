@@ -1,9 +1,9 @@
 import { inputAddressFormatter, ReceiptInfo } from 'web3-common';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
-import REGISTRY from './ABI/registry';
-import { RESOLVER } from './ABI/resolver';
-import { registryAddress } from './config';
+import REGISTRY from './abi/registry';
+import { RESOLVER } from './abi/resolver';
+import { registryContractAddress } from './config';
 import { namehash } from './utils';
 
 export class Registry {
@@ -11,9 +11,7 @@ export class Registry {
 
 	public constructor(customRegistryAddress?: Address) {
 		// TODO for contract, when eth.net is finished we can check network
-		this.contract = customRegistryAddress
-			? new Contract(REGISTRY, customRegistryAddress)
-			: new Contract(REGISTRY, registryAddress);
+		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryContractAddress);
 	}
 	public async getOwner(name: string) {
 		try {
@@ -25,13 +23,13 @@ export class Registry {
 		}
 	}
 
-	public async setOwner(
+	public setOwner(
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
 	) {
 		try {
-			const receipt = await this.contract.methods
+			const receipt = this.contract.methods
 				.setOwner(namehash(name), inputAddressFormatter(address))
 				.send(txConfig);
 
@@ -55,11 +53,11 @@ export class Registry {
 		name: string,
 		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
-	): Promise<ReceiptInfo> {
+	) {
 		try {
-			const promise = await this.contract.methods.setTTL(namehash(name), ttl).send(txConfig);
+			const promievent = this.contract.methods.setTTL(namehash(name), ttl).send(txConfig);
 
-			return promise;
+			return promievent;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
@@ -70,10 +68,10 @@ export class Registry {
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
-	): Promise<ReceiptInfo> {
+	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
-			const receipt = await this.contract.methods
+			const receipt = this.contract.methods
 				.setSubnodeOwner(namehash(name), hexStrictLabel, inputAddressFormatter(address))
 				.send(txConfig);
 			return receipt;
@@ -89,10 +87,10 @@ export class Registry {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
-	): Promise<ReceiptInfo> {
+	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
-			const receipt = await this.contract.methods
+			const receipt = this.contract.methods
 				.setSubnodeRecord(
 					namehash(name),
 					hexStrictLabel,
@@ -111,9 +109,9 @@ export class Registry {
 		operator: string,
 		approved: boolean,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
-	): Promise<ReceiptInfo> {
+	) {
 		try {
-			const receipt = await this.contract.methods
+			const receipt = this.contract.methods
 				.setApprovalForAll(operator, approved)
 				.send(txConfig);
 
@@ -150,11 +148,12 @@ export class Registry {
 			const promise = await this.contract.methods
 				.resolver(namehash(name))
 				.call()
-				.then(address => { // address type is unknown, not sure why
-					if (typeof(address) === 'string'){ 
-					const contract = new Contract(RESOLVER, address);
-					// TODO: set contract provider needs to be added when ens current provider
-					return contract;
+				.then(address => {
+					// address type is unknown, not sure why
+					if (typeof address === 'string') {
+						const contract = new Contract(RESOLVER, address);
+						// TODO: set contract provider needs to be added when ens current provider
+						return contract;
 					}
 					throw new Error();
 				});
