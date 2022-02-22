@@ -287,4 +287,9 @@ export type EthExecutionAPI = {
 	eth_compileSolidity: (code: string) => CompileResult;
 	eth_compileLLL: (code: string) => HexStringBytes;
 	eth_compileSerpent: (code: string) => HexStringBytes;
+
+	// net api
+	net_version: () => string; // https://eth.wiki/json-rpc/API#net_version
+	net_listening: () => boolean; // https://eth.wiki/json-rpc/API#net_listening
+	net_peerCount: () => HexString; // https://eth.wiki/json-rpc/API#net_peercount
 };
