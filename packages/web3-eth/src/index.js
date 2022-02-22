@@ -106,6 +106,7 @@ var Eth = function Eth() {
     var defaultChain, defaultHardfork, defaultCommon;
     var ccipReadGatewayCallback = null;
     var ccipReadGatewayUrls = [];
+    var ccipReadGatewayAllowList = [];
 
     Object.defineProperty(this, 'handleRevert', {
         get: function () {
@@ -154,6 +155,23 @@ var Eth = function Eth() {
             // update ccipReadGatewayUrls
             methods.forEach(function(method) {
                 method.ccipReadGatewayUrls = ccipReadGatewayUrls;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'ccipReadGatewayAllowList', {
+        get: function () {
+            return ccipReadGatewayAllowList;
+        },
+        set: function (val) {
+            ccipReadGatewayAllowList = val;
+
+            // also set on the Contract object
+            _this.Contract.ccipReadGatewayAllowList = ccipReadGatewayAllowList;
+
+            // update ccipReadGatewayAllowList
+            methods.forEach(function(method) {
+                method.ccipReadGatewayAllowList = ccipReadGatewayAllowList;
             });
         },
         enumerable: true
@@ -410,6 +428,7 @@ var Eth = function Eth() {
     this.Contract.handleRevert = this.handleRevert;
     this.Contract.ccipReadGatewayCallback = this.ccipReadGatewayCallback;
     this.Contract.ccipReadGatewayUrls = this.ccipReadGatewayUrls;
+    this.Contract.ccipReadGatewayAllowList = this.ccipReadGatewayAllowList;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
     this.Contract.currentProvider = this._requestManager.provider;
@@ -741,6 +760,7 @@ var Eth = function Eth() {
         method.handleRevert = _this.handleRevert;
         method.ccipReadGatewayCallback = _this.ccipReadGatewayCallback;
         method.ccipReadGatewayUrls = _this.ccipReadGatewayUrls;
+        method.ccipReadGatewayAllowList = _this.ccipReadGatewayAllowList;
     });
 
 };

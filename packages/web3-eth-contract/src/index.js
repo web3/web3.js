@@ -223,6 +223,22 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'ccipReadGatewayAllowList', {
+        get: function () {
+            if (
+                _this.options.ccipReadGatewayAllowList &&
+                _this.options.ccipReadGatewayAllowList.length
+            ) {
+                return _this.options.ccipReadGatewayAllowList;
+            }
+
+            return this.constructor.ccipReadGatewayAllowList;
+        },
+        set: function (val) {
+            _this.options.ccipReadGatewayAllowList = val;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultCommon', {
         get: function () {
             return _this.options.common || this.constructor.defaultCommon;
@@ -1015,6 +1031,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 handleRevert: _this._parent.handleRevert,
                 ccipReadGatewayCallback: _this._parent.ccipReadGatewayCallback,
                 ccipReadGatewayUrls: _this._parent.ccipReadGatewayUrls,
+                ccipReadGatewayAllowList: _this._parent.ccipReadGatewayAllowList,
                 abiCoder: abi
             })).createFunction();
 

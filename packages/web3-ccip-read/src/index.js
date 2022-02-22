@@ -50,29 +50,38 @@ var gatewayQuery = function (url, to, calldata) {
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
 };
 
-var parseGatewayError = function (errorResponse) {
+var formatGatewayError = function (errorResponse) {
     return `Gateway query error: ${errorResponse.status} ${errorResponse.statusText} \n ${errorResponse.responseText}`;
 };
 
-var callGateway = async function (urls, to, callData) {
+var isUrlAllowed = function (url, allowList) {
+    if(!allowList || !(allowList && allowList.length)) return true;
+    return allowList.includes(new URL(url).hostname);
+};
+
+var callGateway = async function (urls, to, callData, allowList) {
 
     for (const url of urls) {
-        let response;
+        if(!isUrlAllowed(url, allowList)) {
+            console.warn(`Gateway at ${url} not called due to allow list rules`);
+            continue;
+        }
 
+        let response;
         try {
             response = await gatewayQuery(url, to, callData);
             if (response.status >= 200 && response.status <= 299) {
                 return response;
             }
         } catch (errorResponse) {
-            const parsedError = parseGatewayError(errorResponse);
+            const formattedError = formatGatewayError(errorResponse);
 
             if (errorResponse.status >= 400 && errorResponse.status <= 499) {
-                throw new Error(parsedError);
+                throw new Error(formattedError);
             }
 
             //5xx errors
-            console.warn(parsedError);
+            console.warn(formattedError);
         }
     }
 
@@ -116,6 +125,8 @@ var normalizeResponse = function (errorObject, result) {
 
     return defaultResponse;
 };
+
+
 
 /**
  * Determine if revert is a CCIP-Read error
@@ -183,13 +194,13 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
     let gatewayResult;
     if(options.ccipReadGatewayCallback) {
         try{
-            gatewayResult = await options.ccipReadGatewayCallback(finalUrls, sender, callData);
+            gatewayResult = await options.ccipReadGatewayCallback(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
         } catch(e) {
             console.error('ccipReadGatewayCallback error.');
             throw e;
         }
     } else {
-        const result = await callGateway(finalUrls, sender, callData);
+        const result = await callGateway(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
         gatewayResult = result.response.data;
     }
 

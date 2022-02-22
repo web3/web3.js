@@ -65,6 +65,7 @@ var Method = function Method(options) {
     this.handleRevert = options.handleRevert;
     this.ccipReadGatewayCallback = options.ccipReadGatewayCallback;
     this.ccipReadGatewayUrls = options.ccipReadGatewayUrls;
+    this.ccipReadGatewayAllowList = options.ccipReadGatewayAllowList;
 };
 
 Method.prototype.setRequestManager = function (requestManager, accounts) {
@@ -643,7 +644,8 @@ Method.prototype.buildCall = function () {
             if (isOffChainLookup(err, result)) {
                 const options = {
                     ccipReadGatewayCallback: method.ccipReadGatewayCallback,
-                    ccipReadGatewayUrls: method.ccipReadGatewayUrls
+                    ccipReadGatewayUrls: method.ccipReadGatewayUrls,
+                    ccipReadGatewayAllowList: method.ccipReadGatewayAllowList,
                 };
                 const ccipReadResult = ccipReadCall(err, result, payload, send, options);
                 defer.resolve(ccipReadResult);
