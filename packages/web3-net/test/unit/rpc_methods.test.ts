@@ -27,7 +27,7 @@ describe('rpc_methods', () => {
 			await getPeerCount(requestManager);
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'net_listening',
+				method: 'net_peerCount',
 				params: [],
 			});
 		});
@@ -36,7 +36,7 @@ describe('rpc_methods', () => {
 			await isListening(requestManager);
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'net_peerCount',
+				method: 'net_listening',
 				params: [],
 			});
 		});
