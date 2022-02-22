@@ -101,8 +101,8 @@ var Accounts = function Accounts() {
 
 // TODO Get myAccountId and myPrivateKey from Wallet
 // =====> HELPERS <=====
-const accountId = '0.0.29674178';
-const privateKey = '302e020100300506032b657004220420857877963ad72e14a4bf323583eda74eefbb17cf8d8ddb8e9dd52028228286e6';
+const accountId = '';
+const privateKey = '';
 const client = createClient(accountId, privateKey);
 // =====> HELPERS END <=====
 
@@ -125,9 +125,8 @@ Accounts.prototype._addAccountFunctions = function (newAccountPrivateKey, addres
         return _this.sign(data, account.privateKey);
     };
 
-    account.encrypt = function encrypt() {
-        // TODO
-        return function() {};
+    account.encrypt = function encrypt(password, options) {
+        return _this.encrypt(account.privateKey, password, options);
     };
 
     return account;
@@ -141,7 +140,9 @@ Accounts.prototype.create = async function create() {
 };
 
 // TODO Not available
-Accounts.prototype.privateKeyToAccount = async function privateKeyToAccount() {};
+Accounts.prototype.privateKeyToAccount = async function privateKeyToAccount() {
+    throw new Error("Not available");
+};
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
     privateKey.signTransaction(tx);
@@ -248,7 +249,7 @@ Accounts.prototype.decrypt = function(v3Keystore, password, nonStrict) {
 
 Accounts.prototype.encrypt = function(privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
-    var account = this.privateKeyToAccount(privateKey, true);
+    // var account = this.privateKeyToAccount(privateKey, true);
 
     options = options || {};
     var salt = options.salt || cryp.randomBytes(32);
@@ -282,7 +283,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
 
 
     var ciphertext = Buffer.from([
-        ...cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
+        ...cipher.update(Buffer.from(privateKey, 'hex')),
         ...cipher.final()]
     );
 
@@ -291,7 +292,8 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
     return {
         version: 3,
         id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
-        address: account.address.toLowerCase().replace('0x', ''),
+        // TODO add accountId value
+        // address: account.address.toLowerCase().replace('0x', ''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
             cipherparams: {
