@@ -1,4 +1,3 @@
-// https://github.com/ensdomains/ens/blob/master/contracts/ENS.sol
 // https://etherscan.io/address/0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
 
 const REGISTRY = [
