@@ -13,11 +13,9 @@ export class Registry {
 		// TODO for contract, when eth.net is finished we can check network
 		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryContractAddress);
 	}
-	public async getOwner(name: string) {
+	public getOwner(name: string) {
 		try {
-			const result = await this.contract.methods.owner(namehash(name)).call();
-
-			return result;
+			return this.contract.methods.owner(namehash(name)).call();
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
@@ -39,17 +37,15 @@ export class Registry {
 		}
 	}
 
-	public async getTTL(name: string) {
+	public getTTL(name: string) {
 		try {
-			const ttl = await this.contract.methods.ttl(namehash(name)).call();
-
-			return ttl;
+			return this.contract.methods.ttl(namehash(name)).call();
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
-	public async setTTL(
+	public setTTL(
 		name: string,
 		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
@@ -63,7 +59,7 @@ export class Registry {
 		}
 	}
 
-	public async setSubnodeOwner(
+	public setSubnodeOwner(
 		name: string,
 		label: string,
 		address: Address,
@@ -80,7 +76,7 @@ export class Registry {
 		}
 	}
 
-	public async setSubnodeRecord(
+	public setSubnodeRecord(
 		name: string,
 		label: string,
 		owner: Address,
@@ -105,7 +101,7 @@ export class Registry {
 		}
 	}
 
-	public async setApprovalForAll(
+	public setApprovalForAll(
 		operator: string,
 		approved: boolean,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
@@ -121,11 +117,19 @@ export class Registry {
 		}
 	}
 
-	public async isApprovedForAll(owner: Address, operator: Address) {
+	public isApprovedForAll(owner: Address, operator: Address) {
 		try {
-			const promise = await this.contract.methods
+			return this.contract.methods
 				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
 				.call();
+		} catch (error) {
+			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+		}
+	}
+
+	public recordExists(name: string) {
+		try {
+			const promise = this.contract.methods.recordExists(namehash(name)).call();
 
 			return promise;
 		} catch (error) {
@@ -133,19 +137,9 @@ export class Registry {
 		}
 	}
 
-	public async recordExists(name: string) {
+	public getResolver(name: string) {
 		try {
-			const promise = await this.contract.methods.recordExists(namehash(name)).call();
-
-			return promise;
-		} catch (error) {
-			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
-		}
-	}
-
-	public async getResolver(name: string) {
-		try {
-			const promise = await this.contract.methods
+			return this.contract.methods
 				.resolver(namehash(name))
 				.call()
 				.then(address => {
@@ -157,24 +151,20 @@ export class Registry {
 					}
 					throw new Error();
 				});
-
-			return promise;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
-	public async setResolver(
+	public setResolver(
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
 	): Promise<ReceiptInfo> {
 		try {
-			const promise = await this.contract.methods
+			return this.contract.methods
 				.setResolver(namehash(name), inputAddressFormatter(address))
 				.send(txConfig);
-
-			return promise;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
