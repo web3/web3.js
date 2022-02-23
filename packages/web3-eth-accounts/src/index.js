@@ -32,7 +32,6 @@ var uuid = require('uuid');
 var utils = require('web3-utils');
 var ethereumjsUtil = require('ethereumjs-util');
 
-const createClient = require('./createClient');
 const createNewAccountId = require('./createNewAccountId');
 
 var Accounts = function Accounts() {
@@ -100,12 +99,6 @@ var Accounts = function Accounts() {
 };
 
 // TODO Get myAccountId and myPrivateKey from Wallet
-// =====> HELPERS <=====
-const accountId = '';
-const privateKey = '';
-const client = createClient(accountId, privateKey);
-// =====> HELPERS END <=====
-
 Accounts.prototype._addAccountFunctions = function (newAccountPrivateKey, address) {
     const _this = this;
     const newAccountPublicKey = newAccountPrivateKey.publicKey;
@@ -132,15 +125,13 @@ Accounts.prototype._addAccountFunctions = function (newAccountPrivateKey, addres
     return account;
 };
 
-Accounts.prototype.create = async function create() {
+Accounts.prototype.create = function create(cb) {
     const newAccountPrivateKey = PrivateKey.generateED25519();
-    const address =  await createNewAccountId(newAccountPrivateKey, client);
-
-    return this._addAccountFunctions(newAccountPrivateKey, address);
+    createNewAccountId.call(this, newAccountPrivateKey, cb);
 };
 
 // TODO Not available
-Accounts.prototype.privateKeyToAccount = async function privateKeyToAccount() {
+Accounts.prototype.privateKeyToAccount = function privateKeyToAccount() {
     throw new Error("Not available");
 };
 
