@@ -1,4 +1,4 @@
-import { inputAddressFormatter, ReceiptInfo } from 'web3-common';
+import { inputAddressFormatter } from 'web3-common';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
 import REGISTRY from './abi/registry';
@@ -124,7 +124,7 @@ export class Registry {
 			const result = this.contract.methods
 				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
 				.call();
-			
+
 			return result;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
@@ -164,7 +164,7 @@ export class Registry {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
-	): Promise<ReceiptInfo> {
+	) {
 		try {
 			return this.contract.methods
 				.setResolver(namehash(name), inputAddressFormatter(address))
