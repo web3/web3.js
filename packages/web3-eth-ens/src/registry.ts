@@ -13,9 +13,11 @@ export class Registry {
 		// TODO for contract, when eth.net is finished we can check network
 		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryContractAddress);
 	}
-	public getOwner(name: string) {
+	public async getOwner(name: string) {
 		try {
-			return this.contract.methods.owner(namehash(name)).call();
+			const result = this.contract.methods.owner(namehash(name)).call();
+
+			return result;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
@@ -37,7 +39,7 @@ export class Registry {
 		}
 	}
 
-	public getTTL(name: string) {
+	public async getTTL(name: string) {
 		try {
 			return this.contract.methods.ttl(namehash(name)).call();
 		} catch (error) {
@@ -117,17 +119,19 @@ export class Registry {
 		}
 	}
 
-	public isApprovedForAll(owner: Address, operator: Address) {
+	public async isApprovedForAll(owner: Address, operator: Address) {
 		try {
-			return this.contract.methods
+			const result = this.contract.methods
 				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
 				.call();
+			
+			return result;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
 	}
 
-	public recordExists(name: string) {
+	public async recordExists(name: string) {
 		try {
 			const promise = this.contract.methods.recordExists(namehash(name)).call();
 
@@ -137,7 +141,7 @@ export class Registry {
 		}
 	}
 
-	public getResolver(name: string) {
+	public async getResolver(name: string) {
 		try {
 			return this.contract.methods
 				.resolver(namehash(name))
