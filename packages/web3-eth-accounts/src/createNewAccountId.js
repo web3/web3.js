@@ -3,7 +3,6 @@ const { AccountCreateTransaction } = require("@hashgraph/sdk");
 const createNewAccountId = function(newAccountPrivateKey, cb) {
     var _this = this;
 
-    console.log({ _this, newAccountPrivateKey });
     const newAccountPublicKey = newAccountPrivateKey.publicKey;
 
     // Create the transaction
