@@ -122,6 +122,19 @@ export class ENS {
 		return this.registry.setOwner(name, address, txConfig);
 	}
 
+	/**
+	 * Returns the address of the owner of an ENS name.
+	 */
+	public async setRecord(
+		name: string,
+		owner: Address,
+		resolver: Address,
+		ttl: number,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this.registry.setRecord(name, owner, resolver, ttl, txConfig);
+	}
+
 	/*
 	 * Sets the address of an ENS name in his resolver.
 	 */
