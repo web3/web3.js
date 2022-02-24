@@ -1,7 +1,7 @@
 import Web3Eth from '../../src/index';
-import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
+import * as rpcMethods from '../../src/rpc_methods';
 
-jest.mock('../../src/rpc_method_wrappers');
+jest.mock('../../src/rpc_methods');
 
 describe('web3_eth_methods_no_parameters', () => {
 	let web3Eth: Web3Eth;
@@ -13,32 +13,49 @@ describe('web3_eth_methods_no_parameters', () => {
 	describe('should call RPC method with only request manager parameter', () => {
 		it('getProtocolVersion', async () => {
 			await web3Eth.getProtocolVersion();
-			expect(rpcMethodWrappers.getProtocolVersion).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getProtocolVersion).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 
 		it('isSyncing', async () => {
 			await web3Eth.isSyncing();
-			expect(rpcMethodWrappers.isSyncing).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getSyncing).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 
 		it('getCoinbase', async () => {
 			await web3Eth.getCoinbase();
-			expect(rpcMethodWrappers.getCoinbase).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getCoinbase).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 
 		it('isMining', async () => {
 			await web3Eth.isMining();
-			expect(rpcMethodWrappers.isMining).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getMining).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 
 		it('getAccounts', async () => {
 			await web3Eth.getAccounts();
-			expect(rpcMethodWrappers.getAccounts).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getAccounts).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 
 		it('getWork', async () => {
 			await web3Eth.getWork();
-			expect(rpcMethodWrappers.getWork).toHaveBeenCalledWith(web3Eth);
+			expect(rpcMethods.getWork).toHaveBeenCalledWith(web3Eth.requestManager);
+		});
+
+		it('getPendingTransactions', async () => {
+			(rpcMethods.getPendingTransactions as jest.Mock).mockResolvedValueOnce([]);
+
+			await web3Eth.getPendingTransactions();
+			expect(rpcMethods.getPendingTransactions).toHaveBeenCalledWith(web3Eth.requestManager);
+		});
+
+		it('requestAccounts', async () => {
+			await web3Eth.requestAccounts();
+			expect(rpcMethods.requestAccounts).toHaveBeenCalledWith(web3Eth.requestManager);
+		});
+
+		it('getNodeInfo', async () => {
+			await web3Eth.getNodeInfo();
+			expect(rpcMethods.getNodeInfo).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 	});
 });

@@ -1,5 +1,5 @@
 import { ValidTypes } from 'web3-utils';
-import { formatTransaction } from '../../src/eth_tx';
+import { formatTransaction } from '../../src/format_transaction';
 import {
 	bigIntTransaction,
 	hexStringTransaction,

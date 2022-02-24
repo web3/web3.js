@@ -16,6 +16,7 @@ import {
 	getFilterChanges,
 	getFilterLogs,
 	getLogs,
+	getProof,
 	getStorageAt,
 	getTransactionByBlockHashAndIndex,
 	getTransactionByBlockNumberAndIndex,
@@ -51,6 +52,7 @@ import {
 	getFilterChangesValidData,
 	getFilterLogsValidData,
 	getLogsValidData,
+	getProofValidData,
 	getStorageAtValidData,
 	getTransactionByBlockHashAndIndexValidData,
 	getTransactionByBlockNumberAndIndexValidData,
@@ -415,5 +417,15 @@ describe('rpc_methods_with_parameters', () => {
 				});
 			},
 		);
+	});
+
+	describe('getProof', () => {
+		it.each(getProofValidData)('%s', async (address, storageKey, blockNumberOrTag) => {
+			await getProof(requestManager, address, storageKey, blockNumberOrTag);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_getProof',
+				params: [address, storageKey, blockNumberOrTag],
+			});
+		});
 	});
 });
