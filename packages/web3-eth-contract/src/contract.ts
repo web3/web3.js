@@ -105,7 +105,8 @@ export class Contract<Abi extends ContractAbi>
 	) {
 		super({
 			...context,
-			provider: options?.provider ?? context?.provider ?? Contract.givenProvider,
+			// Pass an empty string to avoid type issue. Error will be thrown from underlying validation
+			provider: options?.provider ?? context?.provider ?? Contract.givenProvider ?? '',
 			registeredSubscriptions: { logs: LogsSubscription },
 		});
 
