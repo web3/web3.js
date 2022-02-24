@@ -1,16 +1,27 @@
 const { AccountCreateTransaction } = require("@hashgraph/sdk");
 
-const createNewAccountId = async function(newAccountPrivateKey, client) {
+const createNewAccountId = function(newAccountPrivateKey, cb) {
+    var _this = this;
+
     const newAccountPublicKey = newAccountPrivateKey.publicKey;
 
     // Create the transaction
-    const newAccountTransactionResponse = await new AccountCreateTransaction()
-        .setKey(newAccountPublicKey)
-        .execute(client);
+    const tx = new AccountCreateTransaction()
+        .setKey(newAccountPublicKey);
 
-    // Get the new account ID
-    const getReceipt = await newAccountTransactionResponse.getReceipt(client);
-    return getReceipt.accountId;
+    _this.currentProvider.send(tx, (error, response) => {
+        if (error) {
+            throw error;
+        }
+
+        _this.currentProvider.getReceipt(response, (error, response) => {
+            if (error) {
+                throw error;
+            }
+
+            cb(response)
+        });
+    });
 };
 
 module.exports = createNewAccountId;

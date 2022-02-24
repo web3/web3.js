@@ -20,6 +20,8 @@
 import * as net from 'net';
 import * as http from 'http';
 import * as https from 'https';
+import { Client, Transaction } from '@hashgraph/sdk';
+import {proto} from '@hashgraph/proto/lib/proto';
 
 export class formatters {
     static outputBigNumberFormatter(number: number): number;
@@ -155,16 +157,16 @@ export class IpcProviderBase {
 }
 
 export class HttpProviderBase {
-    constructor(host: string, options?: HttpProviderOptions);
+    constructor(client: Client);
 
-    host: string;
+    client: Client;
     connected: boolean;
 
     supportsSubscriptions(): boolean;
 
     send(
-        payload: JsonRpcPayload,
-        callback: (error: Error | null, result?: JsonRpcResponse) => void
+        tx: Transaction,
+        callback: (error: Error | null, result?: proto.ITransactionResponse) => void
     ): void;
 
     disconnect(): boolean;

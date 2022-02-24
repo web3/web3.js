@@ -20,11 +20,10 @@
 "use strict";
 
 
-const { callbackify } = require('util');
 var errors = require('web3-core-helpers').errors;
-var Jsonrpc = require('./jsonrpc.js');
 var BatchManager = require('./batch.js');
 var givenProvider = require('./givenProvider.js');
+var { Transaction, Client } = require('@hashgraph/sdk');
 
 /**
  * It's responsible for passing messages to providers
@@ -32,16 +31,15 @@ var givenProvider = require('./givenProvider.js');
  * Default poll timeout is 1 second
  * Singleton
  *
- * @param {string|Object}provider
- * @param {Net.Socket} net
+ * @param {Client} client
  *
  * @constructor
  */
-var RequestManager = function RequestManager(provider, net) {
+var RequestManager = function RequestManager(client) {
     this.provider = null;
     this.providers = RequestManager.providers;
 
-    this.setProvider(provider, net);
+    this.setProvider(client);
     this.subscriptions = new Map();
 };
 
@@ -49,9 +47,7 @@ var RequestManager = function RequestManager(provider, net) {
 RequestManager.givenProvider = givenProvider;
 
 RequestManager.providers = {
-    WebsocketProvider: require('web3-providers-ws'),
-    HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    HttpProvider: require('hweb3-providers-http'),
 };
 
 
@@ -60,34 +56,18 @@ RequestManager.providers = {
  *
  * @method setProvider
  *
- * @param {Object} provider
- * @param {net.Socket} net
+ * @param {Client} client
  *
  * @returns void
  */
-RequestManager.prototype.setProvider = function (provider, net) {
+RequestManager.prototype.setProvider = function (client) {
     var _this = this;
 
-    // autodetect provider
-    if (provider && typeof provider === 'string' && this.providers) {
-
-        // HTTP
-        if (/^http(s)?:\/\//i.test(provider)) {
-            provider = new this.providers.HttpProvider(provider);
-
-            // WS
-        } else if (/^ws(s)?:\/\//i.test(provider)) {
-            provider = new this.providers.WebsocketProvider(provider);
-
-            // IPC
-        } else if (provider && typeof net === 'object' && typeof net.connect === 'function') {
-            provider = new this.providers.IpcProvider(provider, net);
-
-        } else if (provider) {
-            throw new Error('Can\'t autodetect provider for "' + provider + '"');
-        }
+    if (!client && typeof client !== 'object') {
+        throw new Error('Can\'t set provider for "' + client + '"');
     }
 
+    let provider = new this.providers.HttpProvider(client);
 
     // reset the old one before changing, if still connected
     if (this.provider && this.provider.connected)
@@ -105,7 +85,7 @@ RequestManager.prototype.setProvider = function (provider, net) {
                         _this.subscriptions.get(data.subscription).callback(null, data.result);
                     }
                 }
-            })
+            });
         } else { // legacy provider subscription event
             this.provider.on('data', function data(result, deprecatedResult) {
                 result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
@@ -160,58 +140,46 @@ RequestManager.prototype.setProvider = function (provider, net) {
  * Prefers to use the `request` method available on the provider as specified in [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193).
  * If `request` is not available, falls back to `sendAsync` and `send` respectively.
  * @method send
- * @param {Object} data
+ * @param {Transaction} tx
  * @param {Function} callback
  */
-RequestManager.prototype.send = function (data, callback) {
+RequestManager.prototype.send = function (tx, callback) {
     callback = callback || function () { };
 
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
 
-    const { method, params } = data
-
-    const jsonrpcPayload = Jsonrpc.toPayload(method, params);
-    const jsonrpcResultCallback = this._jsonrpcResultCallback(callback, jsonrpcPayload)
-
-    if (this.provider.request) {
-        const callbackRequest = callbackify(this.provider.request.bind(this.provider))
-        const requestArgs = { method, params }
-        callbackRequest(requestArgs, callback);
-    } else if (this.provider.sendAsync) {
-        this.provider.sendAsync(jsonrpcPayload, jsonrpcResultCallback);
-    } else if (this.provider.send) {
-        this.provider.send(jsonrpcPayload, jsonrpcResultCallback);
-    } else {
-        throw new Error('Provider does not have a request or send method to use.');
-    }
+    this.provider.send(tx, callback);
 };
 
 /**
  * Asynchronously send batch request.
  * Only works if provider supports batch methods through `sendAsync` or `send`.
  * @method sendBatch
- * @param {Array} data - array of payload objects
+ * @param {Array.<Transaction>} txs - array of payload objects
  * @param {Function} callback
  */
-RequestManager.prototype.sendBatch = function (data, callback) {
-    if (!this.provider) {
-        return callback(errors.InvalidProvider());
-    }
+RequestManager.prototype.sendBatch = function (txs, callback) {
+    //
+    // if (!this.provider) {
+    //     return callback(errors.InvalidProvider());
+    // }
+    //
+    // var payload = Jsonrpc.toBatchPayload(data);
+    // this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
+    //     if (err) {
+    //         return callback(err);
+    //     }
+    //
+    //     if (!Array.isArray(results)) {
+    //         return callback(errors.InvalidResponse(results));
+    //     }
+    //
+    //     callback(null, results);
+    // });
 
-    var payload = Jsonrpc.toBatchPayload(data);
-    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        if (!Array.isArray(results)) {
-            return callback(errors.InvalidResponse(results));
-        }
-
-        callback(null, results);
-    });
+    return callback('Not supported');
 };
 
 
@@ -319,39 +287,6 @@ RequestManager.prototype._isCleanCloseEvent = function (event) {
  */
 RequestManager.prototype._isIpcCloseError = function (event) {
     return typeof event === 'boolean' && event;
-};
-
-/**
- * The jsonrpc result callback for RequestManager.send
- *
- * @method _jsonrpcResultCallback
- *
- * @param {Function} callback the callback to use
- * @param {Object} payload the jsonrpc payload
- *
- * @returns {Function} return callback of form (err, result)
- *
- */
-RequestManager.prototype._jsonrpcResultCallback = function (callback, payload) {
-    return function (err, result) {
-        if (result && result.id && payload.id !== result.id) {
-            return callback(new Error(`Wrong response id ${result.id} (expected: ${payload.id}) in ${JSON.stringify(payload)}`));
-        }
-
-        if (err) {
-            return callback(err);
-        }
-
-        if (result && result.error) {
-            return callback(errors.ErrorResponse(result));
-        }
-
-        if (!Jsonrpc.isValidResponse(result)) {
-            return callback(errors.InvalidResponse(result));
-        }
-
-        callback(null, result.result);
-    }
 };
 
 module.exports = {
