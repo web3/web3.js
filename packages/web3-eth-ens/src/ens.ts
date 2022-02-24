@@ -125,22 +125,22 @@ export class ENS {
 	/*
 	 * Sets the address of an ENS name in his resolver.
 	 */
-	public async setAddress(ENSName: string, address: Address, txConfig: NonPayableCallOptions) {
-		return this.resolver.setAddress(ENSName, address, txConfig);
+	public async setAddress(name: string, address: Address, txConfig: NonPayableCallOptions) {
+		return this.resolver.setAddress(name, address, txConfig);
 	}
 
 	/*
 	 * Sets the SECP256k1 public key associated with an ENS node.
 	 */
-	public async setPubkey(ENSName: string, x: string, y: string, txConfig: NonPayableCallOptions) {
-		return this.resolver.setPubkey(ENSName, x, y, txConfig);
+	public async setPubkey(name: string, x: string, y: string, txConfig: NonPayableCallOptions) {
+		return this.resolver.setPubkey(name, x, y, txConfig);
 	}
 
 	/*
 	 * Sets the content hash associated with an ENS node.
 	 */
-	public async setContenthash(ENSName: string, hash: string, txConfig: NonPayableCallOptions) {
-		return this.resolver.setContenthash(ENSName, hash, txConfig);
+	public async setContenthash(name: string, hash: string, txConfig: NonPayableCallOptions) {
+		return this.resolver.setContenthash(name, hash, txConfig);
 	}
 
 	// TODO in resolver
