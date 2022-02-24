@@ -103,6 +103,7 @@ export class Resolver {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.addr);
+
 		return resolverContract.methods.addr(namehash(ENSName)).call();
 	}
 
@@ -110,6 +111,7 @@ export class Resolver {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.pubkey);
+
 		return resolverContract.methods.pubkey(namehash(ENSName)).call();
 	}
 
@@ -117,6 +119,7 @@ export class Resolver {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.contenthash);
+
 		return resolverContract.methods.contenthash(namehash(ENSName)).call();
 	}
 }
