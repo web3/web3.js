@@ -1,15 +1,20 @@
+import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { Address } from 'web3-utils';
-import { RevertInstructionError } from 'web3-common';
+import { RevertInstructionError, EthExecutionAPI } from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
 import { registryContractAddress } from './config';
 
-export class ENS {
+export class ENS extends Web3Context<EthExecutionAPI> {
 	public _registryAddress: string;
 	private readonly registry: Registry;
 
-	public constructor(registryAddr?: string) {
+	public constructor(
+		registryAddr?: string,
+		provider?: SupportedProviders<EthExecutionAPI> | Web3ContextObject,
+	) {
+		super(provider ?? '');
 		this.registry = new Registry(registryAddr);
 		this._registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
 	}
