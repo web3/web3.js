@@ -196,12 +196,14 @@ export async function signTransaction(
 	});
 }
 
+// TODO - Validation should be:
+// isTransactionWithSender(transaction)
+// ? validateTransactionWithSender(transaction)
+// : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function sendTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
+	transaction: TransactionWithSender | Partial<TransactionWithSender>,
 ) {
-	validateTransactionWithSender(transaction);
-
 	return requestManager.send({
 		method: 'eth_sendTransaction',
 		params: [transaction],
