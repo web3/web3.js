@@ -1,20 +1,19 @@
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
+import { Registry } from '../../src/registry';
 
-describe('constructs a PLACEHOLDER instance with expected properties', () => {
-	// let providerOptions: ProviderOptions
+describe('registry', () => {
+	it('should construct with expected methods', () => {
+		const registry = new Registry();
 
-	beforeEach(() => {
-		// providerOptions = {
-		//     providerUrl: 'http://127.0.0.1:8545'
-		// }
-	});
-
-	it('should construct with expected properties', () => {
-		// const web3ProviderBase = new Web3ProviderBase(providerOptions)
-		// expect(web3ProviderBase).toMatchObject({
-		//     _providerUrl: providerOptions.providerUrl
-		// })
-		expect(true).toBeTruthy();
+		expect(registry.getOwner).toBeDefined();
+		expect(registry.getResolver).toBeDefined();
+		expect(registry.getTTL).toBeDefined();
+		expect(registry.isApprovedForAll).toBeDefined();
+		expect(registry.recordExists).toBeDefined();
+		expect(registry.setApprovalForAll).toBeDefined();
+		expect(registry.setOwner).toBeDefined();
+		expect(registry.setResolver).toBeDefined();
+		expect(registry.setSubnodeOwner).toBeDefined();
+		expect(registry.setSubnodeRecord).toBeDefined();
+		expect(registry.setTTL).toBeDefined();
 	});
 });
