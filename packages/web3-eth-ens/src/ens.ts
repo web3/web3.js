@@ -4,14 +4,17 @@ import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-co
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
 import { registryContractAddress } from './config';
+import { Resolver } from './resolver';
 
 export class ENS {
 	public _registryAddress: string;
 	private readonly registry: Registry;
+	private readonly resolver: Resolver;
 
 	public constructor(registryAddr?: string) {
 		this.registry = new Registry(registryAddr);
 		this._registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
+		this.resolver = new Resolver(this.registry);
 	}
 
 	/**
@@ -119,35 +122,41 @@ export class ENS {
 		return this.registry.setOwner(name, address, txConfig);
 	}
 
-	// TODO in resolver
-	// public getAddress () { return true };
+	/*
+	 * Sets the address of an ENS name in his resolver.
+	 */
+	public async setAddress(ENSName: string, address: Address, txConfig: NonPayableCallOptions) {
+		return this.resolver.setAddress(ENSName, address, txConfig);
+	}
+
+	/*
+	 * Sets the SECP256k1 public key associated with an ENS node.
+	 */
+	public async setPubkey(ENSName: string, x: string, y: string, txConfig: NonPayableCallOptions) {
+		return this.resolver.setPubkey(ENSName, x, y, txConfig);
+	}
+
+	/*
+	 * Sets the content hash associated with an ENS node.
+	 */
+	public async setContenthash(ENSName: string, hash: string, txConfig: NonPayableCallOptions) {
+		return this.resolver.setContenthash(ENSName, hash, txConfig);
+	}
 
 	// TODO in resolver
-	// public setAddress () { return true };
+	// public getAddress () { return true };
 
 	// TODO in resolver
 	// public getPubkey () { return true };
 
 	// TODO in resolver
-	// public setPubkey (): boolean { return true };
-
-	// TODO in resolver
 	// public getContent (): boolean { return true };
-
-	// TODO in resolver
-	// public setContent (): boolean { return true };
 
 	// TODO in resolver
 	// public getContentHash (): boolean { return true };
 
 	// TODO in resolver
-	// public setContentHash (): boolean { return true };
-
-	// TODO in resolver
 	// public getMultiHash (): boolean { return true };
-
-	// TODO in resolver
-	// public setMultiHash (): boolean { return true };
 
 	// TODO after eth.net.getNetworkType is complete
 	// public checkNetwork (): boolean {
