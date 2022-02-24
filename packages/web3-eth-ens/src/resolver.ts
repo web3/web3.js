@@ -1,4 +1,4 @@
-import { Address } from 'web3-utils';
+import { Address, sha3, isHexStrict } from 'web3-utils';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { inputAddressFormatter } from 'web3-common';
 import { interfaceIds, methodsInInterface } from './config';
@@ -77,5 +77,46 @@ export class Resolver {
 		} catch (error) {
 			throw new Error(); //    to do web3 error
 		}
+	}
+
+	public async supportsInterface(ENSName: string, interfaceId: string) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+
+		let interfaceIdParam = interfaceId;
+
+		if (!isHexStrict(interfaceIdParam)) {
+			interfaceIdParam = sha3(interfaceId) ?? '';
+
+			if (interfaceId === '') throw new Error('Invalid interface Id');
+
+			interfaceIdParam = interfaceIdParam.slice(0, 10);
+		}
+
+		try {
+			return resolverContract.methods.supportsInterface(interfaceIdParam).call();
+		} catch (error) {
+			throw new Error(); //    to do web3 error
+		}
+	}
+
+	public async getAddress(ENSName: string) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.addr);
+		return resolverContract.methods.addr(namehash(ENSName)).call();
+	}
+
+	public async getPubkey(ENSName: string) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.pubkey);
+		return resolverContract.methods.pubkey(namehash(ENSName)).call();
+	}
+
+	public async getContenthash(ENSName: string) {
+		const resolverContract = await this.getResolverContractAdapter(ENSName);
+
+		await this.checkInterfaceSupport(resolverContract, methodsInInterface.contenthash);
+		return resolverContract.methods.contenthash(namehash(ENSName)).call();
 	}
 }
