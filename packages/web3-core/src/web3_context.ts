@@ -58,9 +58,8 @@ export class Web3Context<
 	public static readonly providers = Web3RequestManager.providers;
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
-
-	public requestManager: Web3RequestManager<API>;
-	public subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
+	private _requestManager: Web3RequestManager<API>;
+	private _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 
 	public constructor(
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
@@ -71,7 +70,7 @@ export class Web3Context<
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
 		) {
-			this.requestManager = new Web3RequestManager<API>(
+			this._requestManager = new Web3RequestManager<API>(
 				providerOrContext as SupportedProviders<API>,
 			);
 
@@ -83,16 +82,24 @@ export class Web3Context<
 
 		this.setConfig(config ?? {});
 
-		this.requestManager = requestManager ?? new Web3RequestManager<API>(provider);
+		this._requestManager = requestManager ?? new Web3RequestManager<API>(provider);
 
 		if (subscriptionManager) {
-			this.subscriptionManager = subscriptionManager;
+			this._subscriptionManager = subscriptionManager;
 		} else if (registeredSubscriptions) {
-			this.subscriptionManager = new Web3SubscriptionManager(
+			this._subscriptionManager = new Web3SubscriptionManager(
 				this.requestManager,
 				registeredSubscriptions,
 			);
 		}
+	}
+
+	public get requestManager() {
+		return this._requestManager;
+	}
+
+	public get subscriptionManager() {
+		return this._subscriptionManager;
 	}
 
 	public static fromContextObject<T extends Web3Context<any>, T3 extends unknown[]>(
@@ -114,6 +121,11 @@ export class Web3Context<
 		};
 	}
 
+	/**
+	 * Use to create new object of any type extended by `Web3Context`
+	 * and link it to current context. This can be used to initiate a global context object
+	 * and then use it to create new objects of any type extended by `Web3Context`.
+	 */
 	public use<T extends Web3Context<any>, T2 extends unknown[]>(
 		ContextRef: Web3ContextConstructor<T, T2>,
 		...args: [...T2]
@@ -123,26 +135,23 @@ export class Web3Context<
 		);
 
 		this.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
-			// TODO: Test why it's not assigning the event name
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			newContextChild[event.name] = event.newValue;
+			newContextChild.setConfig({ [event.name]: event.newValue });
 		});
 
 		return newContextChild;
 	}
 
-	public linkTo<T extends Web3Context<API, RegisteredSubs>>(parentContext: T) {
+	/**
+	 * Link current context to another context.
+	 */
+	public link<T extends Web3Context<API, RegisteredSubs>>(parentContext: T) {
 		this.setConfig(parentContext.getConfig());
-		this.requestManager = parentContext.requestManager;
+		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
-		this.subscriptionManager = parentContext.subscriptionManager;
+		this._subscriptionManager = parentContext.subscriptionManager;
 
 		parentContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
-			// TODO: Test why it's not assigning the event name
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			this[event.name] = event.newValue;
+			this.setConfig({ [event.name]: event.newValue });
 		});
 	}
 
