@@ -1,10 +1,8 @@
 import Web3Eth from '../../src/index';
 import * as rpcMethods from '../../src/rpc_methods';
 import {
-	getAccounts,
 	getCoinbase,
 	getProtocolVersion,
-	getWork,
 	isMining,
 	isSyncing,
 } from '../../src/rpc_method_wrappers';
@@ -37,16 +35,6 @@ describe('web3_eth_methods_no_parameters', () => {
 		it('isMining', async () => {
 			await isMining(web3Eth);
 			expect(rpcMethods.getMining).toHaveBeenCalledWith(web3Eth.requestManager);
-		});
-
-		it('getAccounts', async () => {
-			await getAccounts(web3Eth);
-			expect(rpcMethods.getAccounts).toHaveBeenCalledWith(web3Eth.requestManager);
-		});
-
-		it('getWork', async () => {
-			await getWork(web3Eth);
-			expect(rpcMethods.getWork).toHaveBeenCalledWith(web3Eth.requestManager);
 		});
 	});
 });

@@ -40,6 +40,15 @@ export const getBlockNumberValidData: [ValidTypes | undefined][] = [
 	[ValidTypes.BigInt],
 ];
 
+// Array consists of: returnType parameter
+export const getChainIdValidData: [ValidTypes | undefined][] = [
+	[undefined],
+	[ValidTypes.HexString],
+	[ValidTypes.NumberString],
+	[ValidTypes.Number],
+	[ValidTypes.BigInt],
+];
+
 /**
  * Array consists of:
  * - array of inputs
@@ -1216,6 +1225,317 @@ export const submitWorkValidData: [[HexString8Bytes, HexString32Bytes, HexString
 			'0x0000000000000001',
 			'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
 			'0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
+		],
+	],
+];
+
+/**
+ * Array consists of:
+ * - array of inputs
+ * - array of passed RPC parameters (excluding Web3Context) - This is to account for any defaults set by the method
+ */
+export const getProofValidData: [
+	[Address, HexString32Bytes, BlockNumberOrTag | undefined, ValidTypes | undefined],
+	[Address, HexString32Bytes, BlockNumberOrTag, ValidTypes | undefined],
+][] = [
+	// All possible undefined values
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			undefined,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			undefined,
+		],
+	],
+	// Defined block number, undefined returnType
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			undefined,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			undefined,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			undefined,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			undefined,
+		],
+	],
+	// Defined block number, returnType = ValidTypes.HexString
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.HexString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.HexString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.HexString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.HexString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.HexString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.HexString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.HexString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.HexString,
+		],
+	],
+	// Defined block number, returnType = ValidTypes.NumberString
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.NumberString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.NumberString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.NumberString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.NumberString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.NumberString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.NumberString,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.NumberString,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.NumberString,
+		],
+	],
+	// Defined block number, returnType = ValidTypes.Number
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.Number,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.Number,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.Number,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.Number,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.Number,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.Number,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.Number,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.Number,
+		],
+	],
+	// Defined block number, returnType = ValidTypes.BigInt
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.BigInt,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			'0x1',
+			ValidTypes.BigInt,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.BigInt,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.EARLIEST,
+			ValidTypes.BigInt,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.BigInt,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.LATEST,
+			ValidTypes.BigInt,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.BigInt,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			BlockTags.PENDING,
+			ValidTypes.BigInt,
 		],
 	],
 ];

@@ -43,7 +43,7 @@ export interface Common<NumberType = Numbers> {
 
 export interface Transaction<NumberType extends Numbers = Numbers> {
 	from?: Address;
-	to?: Address;
+	to?: Address | null;
 	value?: NumberType;
 	gas?: NumberType;
 	gasPrice?: NumberType;
@@ -229,4 +229,19 @@ export interface FeeHistoryResultFormatted<
 	readonly oldestBlock: ReturnType;
 	readonly baseFeePerGas: ReturnType;
 	readonly reward: number[][];
+}
+
+export interface StorageProofFormatted<NumberType extends Numbers = Numbers> {
+	readonly key: HexString32Bytes;
+	readonly value: NumberType;
+	readonly proof: HexString32Bytes[];
+}
+
+export interface AccountObjectFormatted<NumberType extends Numbers = Numbers> {
+	readonly balance: NumberType;
+	readonly codeHash: HexString32Bytes;
+	readonly nonce: NumberType;
+	readonly storageHash: HexString32Bytes;
+	readonly accountProof: HexString32Bytes[];
+	readonly storageProof: StorageProofFormatted<NumberType>[];
 }

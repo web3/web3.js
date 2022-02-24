@@ -40,6 +40,7 @@ export interface BaseTransaction {
 	readonly nonce: Uint;
 	readonly gas: Uint;
 	readonly value: Uint;
+	// TODO - Investigate if this should actually be data instead of input
 	readonly input: HexStringBytes;
 	chainId?: Uint;
 }

@@ -12,6 +12,7 @@ import {
 } from 'web3-utils';
 import { validator } from 'web3-validator';
 import { validateTransactionCall, validateTransactionWithSender } from './validation';
+import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	return requestManager.send({
@@ -491,5 +492,47 @@ export async function getFeeHistory(
 	return requestManager.send({
 		method: 'eth_feeHistory',
 		params: [blockCount, newestBlock, rewardPercentiles],
+	});
+}
+
+export async function getPendingTransactions(
+	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
+) {
+	return requestManager.send({
+		method: 'eth_pendingTransactions',
+		params: [],
+	});
+}
+
+export async function requestAccounts(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
+	return requestManager.send({
+		method: 'eth_requestAccounts',
+		params: [],
+	});
+}
+
+export async function getChainId(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
+	return requestManager.send({
+		method: 'eth_chainId',
+		params: [],
+	});
+}
+
+export async function getProof(
+	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
+	address: Address,
+	storageKey: HexString32Bytes,
+	blockNumber: BlockNumberOrTag,
+) {
+	return requestManager.send({
+		method: 'eth_getProof',
+		params: [address, storageKey, blockNumber],
+	});
+}
+
+export async function getNodeInfo(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
+	return requestManager.send({
+		method: 'web3_clientVersion',
+		params: [],
 	});
 }
