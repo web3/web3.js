@@ -1,6 +1,7 @@
 /* eslint-disable import/namespace */
 
 import Web3Eth from '../../src/index';
+import * as rpcMethods from '../../src/rpc_methods';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	estimateGasValidData,
@@ -10,6 +11,7 @@ import {
 	getBlockTransactionCountValidData,
 	getBlockUncleCountValidData,
 	getBlockValidData,
+	getChainIdValidData,
 	getCodeValidData,
 	getFeeHistoryValidData,
 	// getCodeValidData,
@@ -17,6 +19,7 @@ import {
 	getGasPriceValidData,
 	getHashRateValidData,
 	getPastLogsValidData,
+	getProofValidData,
 	getStorageAtValidData,
 	getTransactionCountValidData,
 	getTransactionFromBlockValidData,
@@ -28,6 +31,7 @@ import {
 	submitWorkValidData,
 } from '../fixtures/web3_eth_methods_with_parameters';
 
+jest.mock('../../src/rpc_methods');
 jest.mock('../../src/rpc_method_wrappers');
 
 describe('web3_eth_methods_with_parameters', () => {
@@ -60,6 +64,13 @@ describe('web3_eth_methods_with_parameters', () => {
 						web3Eth,
 						returnType,
 					);
+				});
+			});
+
+			describe('getChainId', () => {
+				it.each(getChainIdValidData)('returnType: %s', async returnType => {
+					await web3Eth.getChainId(returnType);
+					expect(rpcMethodWrappers.getChainId).toHaveBeenCalledWith(web3Eth, returnType);
 				});
 			});
 		});
@@ -208,6 +219,19 @@ describe('web3_eth_methods_with_parameters', () => {
 						},
 					);
 				});
+
+				describe('getProof', () => {
+					it.each(getProofValidData)(
+						'input: %s\nrpcMethodParameters: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.getProof(...input);
+							expect(rpcMethodWrappers.getProof).toHaveBeenCalledWith(
+								web3Eth,
+								...rpcMethodParameters,
+							);
+						},
+					);
+				});
 			});
 
 			describe("doesn't have returnType parameter", () => {
@@ -216,8 +240,8 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getStorageAt(...input);
-							expect(rpcMethodWrappers.getStorageAt).toHaveBeenCalledWith(
-								web3Eth,
+							expect(rpcMethods.getStorageAt).toHaveBeenCalledWith(
+								web3Eth.requestManager,
 								...rpcMethodParameters,
 							);
 						},
@@ -229,8 +253,8 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getCode(...input);
-							expect(rpcMethodWrappers.getCode).toHaveBeenCalledWith(
-								web3Eth,
+							expect(rpcMethods.getCode).toHaveBeenCalledWith(
+								web3Eth.requestManager,
 								...rpcMethodParameters,
 							);
 						},
@@ -240,8 +264,8 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe('sendSignedTransaction', () => {
 					it.each(sendSignedTransactionValidData)('input: %s', async input => {
 						await web3Eth.sendSignedTransaction(input);
-						expect(rpcMethodWrappers.sendSignedTransaction).toHaveBeenCalledWith(
-							web3Eth,
+						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+							web3Eth.requestManager,
 							input,
 						);
 					});
@@ -250,7 +274,10 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe('sign', () => {
 					it.each(signValidData)('input: %s', async input => {
 						await web3Eth.sign(...input);
-						expect(rpcMethodWrappers.sign).toHaveBeenCalledWith(web3Eth, ...input);
+						expect(rpcMethods.sign).toHaveBeenCalledWith(
+							web3Eth.requestManager,
+							...input,
+						);
 					});
 				});
 
@@ -259,8 +286,8 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getPastLogs(input);
-							expect(rpcMethodWrappers.getPastLogs).toHaveBeenCalledWith(
-								web3Eth,
+							expect(rpcMethods.getLogs).toHaveBeenCalledWith(
+								web3Eth.requestManager,
 								rpcMethodParameters,
 							);
 						},
@@ -270,8 +297,8 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe('submitWork', () => {
 					it.each(submitWorkValidData)('input: %s', async input => {
 						await web3Eth.submitWork(...input);
-						expect(rpcMethodWrappers.submitWork).toHaveBeenCalledWith(
-							web3Eth,
+						expect(rpcMethods.submitWork).toHaveBeenCalledWith(
+							web3Eth.requestManager,
 							...input,
 						);
 					});

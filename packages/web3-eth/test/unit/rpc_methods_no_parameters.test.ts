@@ -3,16 +3,20 @@ import { Web3RequestManager } from 'web3-core';
 import {
 	getAccounts,
 	getBlockNumber,
+	getChainId,
 	getCoinbase,
 	getCompilers,
 	getGasPrice,
 	getHashRate,
 	getMining,
+	getNodeInfo,
+	getPendingTransactions,
 	getProtocolVersion,
 	getSyncing,
 	getWork,
 	newBlockFilter,
 	newPendingTransactionFilter,
+	requestAccounts,
 } from '../../src/rpc_methods';
 
 describe('rpc_methods_no_parameters', () => {
@@ -124,6 +128,38 @@ describe('rpc_methods_no_parameters', () => {
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getWork',
+				params: [],
+			});
+		});
+		it('getPendingTransactions', async () => {
+			await getPendingTransactions(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_pendingTransactions',
+				params: [],
+			});
+		});
+		it('requestAccounts', async () => {
+			await requestAccounts(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_requestAccounts',
+				params: [],
+			});
+		});
+		it('getChainId', async () => {
+			await getChainId(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_chainId',
+				params: [],
+			});
+		});
+		it('getNodeInfo', async () => {
+			await getNodeInfo(requestManager);
+
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'web3_clientVersion',
 				params: [],
 			});
 		});

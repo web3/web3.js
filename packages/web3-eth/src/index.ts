@@ -1,7 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 
-import { EthExecutionAPI, TransactionWithSender } from 'web3-common';
+import { TransactionWithSender } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
 	BlockNumberOrTag,
@@ -16,23 +16,25 @@ import {
 } from 'web3-utils';
 
 import { BlockFormatted } from './types';
+import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
-export default class Web3Eth extends Web3Context<EthExecutionAPI> {
+export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public async getProtocolVersion() {
-		return rpcMethodsWrappers.getProtocolVersion(this);
+		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
 
 	public async isSyncing() {
-		return rpcMethodsWrappers.isSyncing(this);
+		return rpcMethods.getSyncing(this.requestManager);
 	}
 
 	public async getCoinbase() {
-		return rpcMethodsWrappers.getCoinbase(this);
+		return rpcMethods.getCoinbase(this.requestManager);
 	}
 
 	public async isMining() {
-		return rpcMethodsWrappers.isMining(this);
+		return rpcMethods.getMining(this.requestManager);
 	}
 
 	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -48,7 +50,7 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 	}
 
 	public async getAccounts() {
-		return rpcMethodsWrappers.getAccounts(this);
+		return rpcMethods.getAccounts(this.requestManager);
 	}
 
 	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -70,11 +72,11 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		storageSlot: Uint256,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber);
+		return rpcMethods.getStorageAt(this.requestManager, address, storageSlot, blockNumber);
 	}
 
 	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
-		return rpcMethodsWrappers.getCode(this, address, blockNumber);
+		return rpcMethods.getCode(this.requestManager, address, blockNumber);
 	}
 
 	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
@@ -114,10 +116,11 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnType);
 	}
 
-	// TODO Can't find in spec
-	// public async getPendingTransactions() {
-
-	// }
+	public async getPendingTransactions<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		return rpcMethodsWrappers.getPendingTransactions(this, returnType);
+	}
 
 	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
@@ -153,13 +156,13 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 	// }
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
-		return rpcMethodsWrappers.sendSignedTransaction(this, transaction);
+		return rpcMethods.sendRawTransaction(this.requestManager, transaction);
 	}
 
 	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
 	public async sign(message: HexStringBytes, address: Address) {
-		return rpcMethodsWrappers.sign(this, message, address);
+		return rpcMethods.sign(this.requestManager, message, address);
 	}
 
 	// TODO Needs to convert input to hex string
@@ -186,7 +189,7 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 	}
 
 	public async getPastLogs(filter: Filter) {
-		return rpcMethodsWrappers.getPastLogs(this, {
+		return rpcMethods.getLogs(this.requestManager, {
 			...filter,
 			// These defaults are carried over from 1.x
 			// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
@@ -196,7 +199,7 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 	}
 
 	public async getWork() {
-		return rpcMethodsWrappers.getWork(this);
+		return rpcMethods.getWork(this.requestManager);
 	}
 
 	public async submitWork(
@@ -204,28 +207,33 @@ export default class Web3Eth extends Web3Context<EthExecutionAPI> {
 		seedHash: HexString32Bytes,
 		difficulty: HexString32Bytes,
 	) {
-		return rpcMethodsWrappers.submitWork(this, nonce, seedHash, difficulty);
+		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, difficulty);
 	}
 
-	// // TODO
-	// // public async requestAccounts() {
+	// TODO - Format addresses
+	public async requestAccounts() {
+		return rpcMethods.requestAccounts(this.requestManager);
+	}
 
-	// // }
+	public async getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		returnType?: ReturnType,
+	) {
+		return rpcMethodsWrappers.getChainId(this, returnType);
+	}
 
-	// // TODO
-	// // public async getChainId() {
+	public async getNodeInfo() {
+		return rpcMethods.getNodeInfo(this.requestManager);
+	}
 
-	// // }
-
-	// // TODO
-	// // public async getNodeInfo() {
-
-	// // }
-
-	// // TODO
-	// // public async getProof() {
-
-	// // }
+	// TODO - Format input
+	public async getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		address: Address,
+		storageKey: HexString32Bytes,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnType?: ReturnType,
+	) {
+		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnType);
+	}
 
 	public async getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		blockCount: Uint,
