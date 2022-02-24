@@ -7,21 +7,21 @@ import { registryContractAddress } from './config';
 import { Resolver } from './resolver';
 
 export class ENS {
-	public _registryAddress: string;
-	private readonly registry: Registry;
-	private readonly resolver: Resolver;
+	public registryAddress: string;
+	private readonly _registry: Registry;
+	private readonly _resolver: Resolver;
 
 	public constructor(registryAddr?: string) {
-		this.registry = new Registry(registryAddr);
-		this._registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
-		this.resolver = new Resolver(this.registry);
+		this._registry = new Registry(registryAddr);
+		this.registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
+		this._resolver = new Resolver(this._registry);
 	}
 
 	/**
 	 * Returns the Resolver by the given address
 	 */
 	public async getResolver(name: string): Promise<Contract<typeof RESOLVER>> {
-		return this.registry.getResolver(name);
+		return this._registry.getResolver(name);
 	}
 
 	/**
@@ -32,7 +32,7 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setResolver(name, address, txConfig);
+		return this._registry.setResolver(name, address, txConfig);
 	}
 
 	/**
@@ -46,7 +46,7 @@ export class ENS {
 		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
+		return this._registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
 	}
 
 	/**
@@ -57,21 +57,21 @@ export class ENS {
 		approved: boolean,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setApprovalForAll(operator, approved, txConfig);
+		return this._registry.setApprovalForAll(operator, approved, txConfig);
 	}
 
 	/**
 	 * Returns true if the operator is approved
 	 */
 	public async isApprovedForAll(owner: Address, operator: Address): Promise<unknown> {
-		return this.registry.isApprovedForAll(owner, operator);
+		return this._registry.isApprovedForAll(owner, operator);
 	}
 
 	/**
 	 * Returns true if the record exists
 	 */
 	public async recordExists(name: string): Promise<unknown> {
-		return this.registry.recordExists(name);
+		return this._registry.recordExists(name);
 	}
 
 	/**
@@ -83,14 +83,14 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setSubnodeOwner(name, label, address, txConfig);
+		return this._registry.setSubnodeOwner(name, label, address, txConfig);
 	}
 
 	/**
 	 * Returns the address of the owner of an ENS name.
 	 */
 	public async getTTL(name: string): Promise<unknown> {
-		return this.registry.getTTL(name);
+		return this._registry.getTTL(name);
 	}
 
 	/**
@@ -101,14 +101,14 @@ export class ENS {
 		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setTTL(name, ttl, txConfig);
+		return this._registry.setTTL(name, ttl, txConfig);
 	}
 
 	/**
 	 * Returns the owner by the given name and current configured or detected Registry
 	 */
 	public async getOwner(name: string): Promise<unknown> {
-		return this.registry.getOwner(name);
+		return this._registry.getOwner(name);
 	}
 
 	/**
@@ -119,7 +119,7 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setOwner(name, address, txConfig);
+		return this._registry.setOwner(name, address, txConfig);
 	}
 
 	/**
@@ -132,7 +132,7 @@ export class ENS {
 		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setRecord(name, owner, resolver, ttl, txConfig);
+		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
 	}
 
 	/*
@@ -143,7 +143,7 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.resolver.setAddress(name, address, txConfig);
+		return this._resolver.setAddress(name, address, txConfig);
 	}
 
 	/*
@@ -155,7 +155,7 @@ export class ENS {
 		y: string,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.resolver.setPubkey(name, x, y, txConfig);
+		return this._resolver.setPubkey(name, x, y, txConfig);
 	}
 
 	/*
@@ -166,28 +166,28 @@ export class ENS {
 		hash: string,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.resolver.setContenthash(name, hash, txConfig);
+		return this._resolver.setContenthash(name, hash, txConfig);
 	}
 
 	/*
 	 * Resolves an ENS name to an Ethereum address.
 	 */
 	public async getAddress(ENSName: string) {
-		return this.resolver.getAddress(ENSName);
+		return this._resolver.getAddress(ENSName);
 	}
 
 	/*
 	 * Returns the X and Y coordinates of the curve point for the public key.
 	 */
 	public async getPubkey(ENSName: string) {
-		return this.resolver.getPubkey(ENSName);
+		return this._resolver.getPubkey(ENSName);
 	}
 
 	/*
 	 * Returns the content hash object associated with an ENS node.
 	 */
 	public async getContenthash(ENSName: string) {
-		return this.resolver.getContenthash(ENSName);
+		return this._resolver.getContenthash(ENSName);
 	}
 
 	// TODO after eth.net.getNetworkType is complete
