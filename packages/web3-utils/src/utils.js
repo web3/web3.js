@@ -76,46 +76,29 @@ var toTwosComplement = function (number) {
 };
 
 /**
- * Checks if the given string is an address
+ * Checks if the given string is an Hedera address
  *
  * @method isAddress
- * @param {String} address the given HEX address
+ * @param {String} address
  * @return {Boolean}
  */
 var isAddress = function (address) {
     // check if it has the basic requirements of an address
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
-        return false;
-        // If it's ALL lowercase or ALL upppercase
-    } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-        return true;
-        // Otherwise check each case
-    } else {
-        return checkAddressChecksum(address);
-    }
+    return /^0\.0\.\d+$/.test(address);
 };
 
 
-
 /**
- * Checks if the given string is a checksummed address
+ * Checks if the given string is a checksummed Hedera address
  *
- * @method checkAddressChecksum
- * @param {String} address the given HEX address
+ * @method checkAddressChecksumHedera
+ * @param {String} checksum
+ * @param {String} address
+ * @param {NodeClient} client
  * @return {Boolean}
  */
-var checkAddressChecksum = function (address) {
-    // Check each case
-    address = address.replace(/^0x/i,'');
-    var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
-
-    for (var i = 0; i < 40; i++ ) {
-        // the nth letter should be uppercase if the nth digit of casemap is 1
-        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
-            return false;
-        }
-    }
-    return true;
+var checkAddressChecksum = function (checksum, address, client) {
+    return checksum === getChecksumAddress(address, client);
 };
 
 /**
@@ -534,6 +517,73 @@ var toNumber = function(value) {
     return typeof value === 'number' ? value : hexToNumber(toHex(value));
 }
 
+/**
+ * Hedera checksum algorithm 
+ * @param {string} ledgerId 
+ * @param {string} addr 
+ * @returns string
+ */
+var _checksum = function (addr, ledgerId) {
+    let answer = "";
+    let d = []; // Digits with 10 for ".", so if addr == "0.0.123" then d == [0, 10, 0, 10, 1, 2, 3]
+    let s0 = 0; // Sum of even positions (mod 11)
+    let s1 = 0; // Sum of odd positions (mod 11)
+    let s = 0; // Weighted sum of all positions (mod p3)
+    let sh = 0; // Hash of the ledger ID
+    let c = 0; // The checksum, as a single number
+    const p3 = 26 * 26 * 26; // 3 digits in base 26
+    const p5 = 26 * 26 * 26 * 26 * 26; // 5 digits in base 26
+    const ascii_a = "a".charCodeAt(0); // 97
+    const m = 1000003; // Min prime greater than a million. Used for the final permutation.
+    const w = 31; // Sum s of digit values weights them by powers of w. Should be coprime to p5.
+
+    let id = ledgerId + "000000000000";
+    let h = [];
+    for (var i = 0; i < id.length; i += 2) {
+        h.push(parseInt(id.substring(i, i + 2), 16));
+    }
+    for (let i = 0; i < addr.length; i++) {
+        d.push(addr[i] === "." ? 10 : parseInt(addr[i], 10));
+    }
+    for (let i = 0; i < d.length; i++) {
+        s = (w * s + d[i]) % p3;
+        if (i % 2 === 0) {
+            s0 = (s0 + d[i]) % 11;
+        } else {
+            s1 = (s1 + d[i]) % 11;
+        }
+    }
+    for (let i = 0; i < h.length; i++) {
+        sh = (w * sh + h[i]) % p5;
+    }
+    c = ((((addr.length % 5) * 11 + s0) * 11 + s1) * p3 + s + sh) % p5;
+    c = (c * m) % p5;
+
+    for (let i = 0; i < 5; i++) {
+        answer = String.fromCharCode(ascii_a + (c % 26)) + answer;
+        c /= 26;
+    }
+
+    return answer;
+}
+
+/**
+ * return a hedera checksum address
+ * @param {string} address 
+ * @param {NodeClient} client 
+ * @returns 
+ */
+var getChecksumAddress = function (address, client) {
+    if (!isAddress(address)) {
+        throw new Error('Address is incorrect');
+    }
+    if (!client._network.ledgerId._ledgerId) {
+        throw new Error('Incorrect client');
+    }
+
+    return _checksum(address, client._network.ledgerId._ledgerId);
+}
+
 module.exports = {
     BN: BN,
     isBN: isBN,
@@ -563,5 +613,6 @@ module.exports = {
     toTwosComplement: toTwosComplement,
     sha3: sha3,
     sha3Raw: sha3Raw,
-    toNumber: toNumber
+    toNumber: toNumber,
+    getChecksumAddress: getChecksumAddress
 };

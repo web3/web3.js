@@ -14,6 +14,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
+        "@hashgraph/sdk": "^2.9.1",
         "bn.js": "^4.11.9",
         "ethereum-bloom-filters": "^1.0.6",
         "ethereumjs-util": "^7.1.0",
