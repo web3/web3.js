@@ -125,46 +125,60 @@ export class ENS {
 	/*
 	 * Sets the address of an ENS name in his resolver.
 	 */
-	public async setAddress(name: string, address: Address, txConfig: NonPayableCallOptions) {
+	public async setAddress(
+		name: string,
+		address: Address,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this.resolver.setAddress(name, address, txConfig);
 	}
 
 	/*
 	 * Sets the SECP256k1 public key associated with an ENS node.
 	 */
-	public async setPubkey(name: string, x: string, y: string, txConfig: NonPayableCallOptions) {
+	public async setPubkey(
+		name: string,
+		x: string,
+		y: string,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this.resolver.setPubkey(name, x, y, txConfig);
 	}
 
 	/*
 	 * Sets the content hash associated with an ENS node.
 	 */
-	public async setContenthash(name: string, hash: string, txConfig: NonPayableCallOptions) {
+	public async setContenthash(
+		name: string,
+		hash: string,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
 		return this.resolver.setContenthash(name, hash, txConfig);
 	}
 
-	// TODO in resolver
-	// public getAddress () { return true };
+	/*
+	 * Resolves an ENS name to an Ethereum address.
+	 */
+	public async getAddress(ENSName: string) {
+		return this.resolver.getAddress(ENSName);
+	}
 
-	// TODO in resolver
-	// public getPubkey () { return true };
+	/*
+	 * Returns the X and Y coordinates of the curve point for the public key.
+	 */
+	public async getPubkey(ENSName: string) {
+		return this.resolver.getPubkey(ENSName);
+	}
 
-	// TODO in resolver
-	// public getContent (): boolean { return true };
-
-	// TODO in resolver
-	// public getContentHash (): boolean { return true };
-
-	// TODO in resolver
-	// public getMultiHash (): boolean { return true };
+	/*
+	 * Returns the content hash object associated with an ENS node.
+	 */
+	public async getContenthash(ENSName: string) {
+		return this.resolver.getContenthash(ENSName);
+	}
 
 	// TODO after eth.net.getNetworkType is complete
 	// public checkNetwork (): boolean {
 	// return true;
 	//  };
-
-	// TODO finish in resolver
-	// public supportsInterface(){
-	//     return true;
-	// }
 }
