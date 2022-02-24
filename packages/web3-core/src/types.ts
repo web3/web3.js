@@ -46,6 +46,8 @@ export interface Web3ConfigOptions {
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingTimeout: number;
+	transactionReceiptPollingInterval: number;
+	transactionConfirmationPollingInterval: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
 	defaultNetworkId: Numbers | null;
