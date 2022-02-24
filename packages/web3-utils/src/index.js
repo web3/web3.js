@@ -20,7 +20,7 @@
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
-
+import { Hbar, HbarUnit } from '@hashgraph/sdk';
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
@@ -203,116 +203,79 @@ var asciiToHex = function(str) {
 
 
 /**
- * Returns value of unit in Wei
+ * Returns Hedera unit name
  *
  * @method getUnitValue
- * @param {String} unit the unit to convert to, default ether
- * @returns {BN} value of the unit (in Wei)
- * @throws error if the unit is not correct:w
+ * @param {String} unit the unit to convert to, default Hbar
+ * @throws error if the unit is not correct
  */
 var getUnitValue = function (unit) {
-    unit = unit ? unit.toLowerCase() : 'ether';
-    if (!ethjsUnit.unitMap[unit]) {
-        throw new Error('This unit "'+ unit +'" doesn\'t exist, please use the one of the following units' + JSON.stringify(ethjsUnit.unitMap, null, 2));
+    unit = unit ? unit : 'Hbar';
+    if (!HbarUnit[unit]) {
+        throw new Error('This unit "' + unit + '" doesn\'t exist, please use the one of the following units' + JSON.stringify(Object.keys(HBarUnit), null, 2));
     }
     return unit;
 };
 
+
 /**
- * Takes a number of wei and converts it to any other ether unit.
- *
- * Possible units are:
- *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     babbage
- * - mwei       picoether      lovelace
- * - gwei       nanoether      shannon      nano
- * - --         microether     szabo        micro
- * - --         milliether     finney       milli
- * - ether      --             --
- * - kether                    --           grand
- * - mether
- * - gether
- * - tether
- *
- * @method fromWei
- * @param {Number|String} number can be a number, number string or a HEX of a decimal
- * @param {String} unit the unit to convert to, default ether
- * @return {String|Object} When given a BN object it returns one as well, otherwise a number
+ * @method fromTinybar 
+ * @param {string|BN} number 
+ * @param {string} unit 
+ * @returns {string|BN} converted tinybars to given unit
  */
-var fromWei = function(number, unit) {
+var fromTinybar = function (number, unit) {
     unit = getUnitValue(unit);
 
-    if(!utils.isBN(number) && !(typeof number === 'string')) {
+    if (!utils.isBN(number) && !(typeof number === 'string')) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
+    if (utils.isBN(number)) {
+        const stringNumber = number.toString();
+        return Hbar.from(stringNumber, HbarUnit.Tinybar).to(HbarUnit[unit]).toString(10);
+    }
+
+    return Hbar.from(number, HbarUnit.Tinybar).to(HbarUnit[unit]).toString(10);
 };
 
 /**
- * Takes a number of a unit and converts it to wei.
- *
- * Possible units are:
- *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     babbage
- * - mwei       picoether      lovelace
- * - gwei       nanoether      shannon      nano
- * - --         microether     szabo        micro
- * - --         microether     szabo        micro
- * - --         milliether     finney       milli
- * - ether      --             --
- * - kether                    --           grand
- * - mether
- * - gether
- * - tether
- *
- * @method toWei
- * @param {Number|String|BN} number can be a number, number string or a HEX of a decimal
- * @param {String} unit the unit to convert from, default ether
- * @return {String|Object} When given a BN object it returns one as well, otherwise a number
+ * Takes a number of a unit and converts it to tinybar.
+ * @method toTinybar
+ * @param {String|BN} amount
+ * @param {String} unit 
+ * @return {String|Object} When given a BN object it returns one as well
  */
-var toWei = function(number, unit) {
+var toTinybar = function (number, unit) {
     unit = getUnitValue(unit);
-
-    if(!utils.isBN(number) && !(typeof number === 'string')) {
+    if (!utils.isBN(number) && !(typeof number === 'string')) {
         throw new Error('Please pass numbers as strings or BN objects to avoid precision errors.');
     }
 
-    return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
-};
+    if (utils.isBN(number)) {
+        const stringNumber = number.toString();
+        const stringValue = Hbar.from(stringNumber, HbarUnit[unit]).toTinybars().toString(10);
+        return utils.toBN(stringValue);
+    }
+
+    return Hbar.from(number, HbarUnit[unit]).toTinybars().toString(10);
+}
 
 
 
 
 /**
- * Converts to a checksum address
+ *  Converts to a hedera checksum address
  *
  * @method toChecksumAddress
- * @param {String} address the given HEX address
+ * @param {String} address 
+ * @param {NodeClient}  client 
  * @return {String}
  */
-var toChecksumAddress = function (address) {
-    if (typeof address === 'undefined') return '';
-
-    if(!/^(0x)?[0-9a-f]{40}$/i.test(address))
-        throw new Error('Given address "'+ address +'" is not a valid Ethereum address.');
-
-
-
-    address = address.toLowerCase().replace(/^0x/i,'');
-    var addressHash = utils.sha3(address).replace(/^0x/i,'');
-    var checksumAddress = '0x';
-
-    for (var i = 0; i < address.length; i++ ) {
-        // If ith character is 8 to f then make it uppercase
-        if (parseInt(addressHash[i], 16) > 7) {
-            checksumAddress += address[i].toUpperCase();
-        } else {
-            checksumAddress += address[i];
-        }
-    }
-    return checksumAddress;
+var toChecksumAddress = function (address, client) {
+    return utils.getChecksumAddress(address, client);
 };
+
 
 /**
  * Returns -1 if a<b, 1 if a>b; 0 if a == b.
@@ -420,8 +383,8 @@ module.exports = {
     fromAscii: asciiToHex,
 
     unitMap: ethjsUnit.unitMap,
-    toWei: toWei,
-    fromWei: fromWei,
+    toTinybar: toTinybar,
+    fromTinybar: fromTinybar,
 
     padLeft: utils.leftPad,
     leftPad: utils.leftPad,
