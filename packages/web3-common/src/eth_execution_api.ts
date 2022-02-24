@@ -270,7 +270,9 @@ export type EthExecutionAPI = {
 	eth_getCode: (address: Address, blockNumber: BlockNumberOrTag) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
-	eth_sendTransaction: (transaction: TransactionWithSender) => HexString32Bytes;
+	eth_sendTransaction: (
+		transaction: TransactionWithSender | Partial<TransactionWithSender>,
+	) => HexString32Bytes;
 	eth_sendRawTransaction: (transaction: HexStringBytes) => HexString32Bytes;
 
 	// https://geth.ethereum.org/docs/rpc/pubsub
