@@ -15,7 +15,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		) => Contract<Abi>;
 	};
 
-	public constructor(provider: SupportedProviders<EthExecutionAPI> | string) {
+	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
 		super({ provider });
 
 		// Have to use local alias to initiate contract context

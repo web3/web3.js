@@ -14,7 +14,7 @@ export type Web3ContextObject<
 	} = any,
 > = {
 	config: Web3ConfigOptions;
-	provider: SupportedProviders<API> | string;
+	provider: SupportedProviders<API>;
 	requestManager: Web3RequestManager<API>;
 	subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs> | undefined;
 	registeredSubscriptions?: RegisteredSubs;
@@ -52,7 +52,6 @@ export class Web3Context<
 	public constructor(
 		providerOrContext:
 			| SupportedProviders<API>
-			| string
 			| Partial<Web3ContextObject<API, RegisteredSubs>>,
 	) {
 		super();
@@ -62,7 +61,7 @@ export class Web3Context<
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
 		) {
 			this.requestManager = new Web3RequestManager<API>(
-				providerOrContext as SupportedProviders<API> | string,
+				providerOrContext as SupportedProviders<API>,
 			);
 
 			return;
@@ -136,19 +135,19 @@ export class Web3Context<
 		});
 	}
 
-	public get provider(): SupportedProviders<API> | string {
+	public get provider(): SupportedProviders<API> {
 		return this.requestManager.provider;
 	}
 
-	public set provider(provider: SupportedProviders<API> | string) {
+	public set provider(provider: SupportedProviders<API>) {
 		this.requestManager.setProvider(provider);
 	}
 
-	public get currentProvider(): SupportedProviders<API> | string {
+	public get currentProvider(): SupportedProviders<API> {
 		return this.requestManager.provider;
 	}
 
-	public set currentProvider(provider: SupportedProviders<API> | string) {
+	public set currentProvider(provider: SupportedProviders<API>) {
 		this.requestManager.setProvider(provider);
 	}
 }

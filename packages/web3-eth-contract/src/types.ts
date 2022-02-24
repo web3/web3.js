@@ -37,7 +37,7 @@ export interface ContractInitOptions {
 	readonly from?: Address;
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;
-	readonly provider: SupportedProviders<EthExecutionAPI> | string;
+	readonly provider: SupportedProviders<EthExecutionAPI>;
 }
 
 export type TransactionReceipt = ReceiptInfo;
