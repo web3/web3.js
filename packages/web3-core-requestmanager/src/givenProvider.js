@@ -16,8 +16,8 @@
  */
 /**
  * @file givenProvider.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @author Patryk Matyjasiak <patryk.matyjasiak@arianelabs.com>
+ * @date 2022
  */
 
 "use strict";
@@ -36,56 +36,18 @@ if(!global) {
 }
 
 // EIP-1193: window.ethereum
-if (typeof global.ethereum !== 'undefined') {
-    givenProvider = global.ethereum;
+if (typeof global.hedera !== 'undefined') {
+    givenProvider = global.hedera;
 
 // Legacy web3.currentProvider
-} else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
+} else if(typeof global.hweb3 !== 'undefined' && global.hweb3.currentProvider) {
 
-    if(global.web3.currentProvider.sendAsync) {
-        global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
-        delete global.web3.currentProvider.sendAsync;
+    if(global.hweb3.currentProvider.sendAsync) {
+        global.hweb3.currentProvider.send = global.hweb3.currentProvider.sendAsync;
+        delete global.hweb3.currentProvider.sendAsync;
     }
 
-    // if connection is 'ipcProviderWrapper', add subscription support
-    if(!global.web3.currentProvider.on &&
-        global.web3.currentProvider.connection &&
-        global.web3.currentProvider.connection.constructor.name === 'ipcProviderWrapper') {
-
-        global.web3.currentProvider.on = function (type, callback) {
-
-            if(typeof callback !== 'function')
-                throw new Error('The second parameter callback must be a function.');
-
-            switch(type){
-                case 'data':
-                    this.connection.on('data', function(data) {
-                        var result = '';
-
-                        data = data.toString();
-
-                        try {
-                            result = JSON.parse(data);
-                        } catch(e) {
-                            return callback(new Error('Couldn\'t parse response data'+ data));
-                        }
-
-                        // notification
-                        if(!result.id && result.method.indexOf('_subscription') !== -1) {
-                            callback(null, result);
-                        }
-
-                    });
-                    break;
-
-                default:
-                    this.connection.on(type, callback);
-                    break;
-            }
-        };
-    }
-
-    givenProvider = global.web3.currentProvider;
+    givenProvider = global.hweb3.currentProvider;
 }
 /* jshint ignore:end */
 

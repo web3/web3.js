@@ -12,6 +12,8 @@
         "compile": "tsc -b tsconfig.json"
     },
     "dependencies": {
+        "@hashgraph/sdk": "^2.9.1",
+        "hweb3-providers-http": "^1.0.0",
         "util": "^0.12.0",
         "web3-core-helpers": "1.7.0",
         "web3-providers-http": "1.7.0",
