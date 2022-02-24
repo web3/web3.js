@@ -21,6 +21,19 @@ export type Web3ContextObject<
 	providers: typeof Web3RequestManager.providers;
 };
 
+export type Web3ContextInitOptions<
+	API extends Web3APISpec = any,
+	RegisteredSubs extends {
+		[key: string]: Web3SubscriptionConstructor<API>;
+	} = any,
+> = {
+	config?: Partial<Web3ConfigOptions>;
+	provider: SupportedProviders<API>;
+	requestManager?: Web3RequestManager<API>;
+	subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs> | undefined;
+	registeredSubscriptions?: RegisteredSubs;
+};
+
 export type Web3ContextConstructor<
 	// eslint-disable-next-line no-use-before-define
 	T extends Web3Context<any>,
@@ -50,9 +63,7 @@ export class Web3Context<
 	public subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 
 	public constructor(
-		providerOrContext:
-			| SupportedProviders<API>
-			| Partial<Web3ContextObject<API, RegisteredSubs>>,
+		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
 		super();
 
