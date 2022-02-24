@@ -1,13 +1,13 @@
 import { Web3Context } from 'web3-core';
-import { EthExecutionAPI } from 'web3-common';
 
 import * as rpcMethods from './rpc_methods';
+import { NetRPCApi } from './types';
 
-export const getId = async (web3Context: Web3Context<EthExecutionAPI>) =>
+export const getId = async (web3Context: Web3Context<NetRPCApi>) =>
 	rpcMethods.getId(web3Context.requestManager);
 
-export const isListening = async (web3Context: Web3Context<EthExecutionAPI>) =>
+export const isListening = async (web3Context: Web3Context<NetRPCApi>) =>
 	rpcMethods.isListening(web3Context.requestManager);
 
-export const getPeerCount = async (web3Context: Web3Context<EthExecutionAPI>) =>
+export const getPeerCount = async (web3Context: Web3Context<NetRPCApi>) =>
 	rpcMethods.getPeerCount(web3Context.requestManager);

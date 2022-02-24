@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# web3.js - Package Template
+# web3.js -Net
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-packagetemplate` contains the ideal setup for a Web3.js package.
+`web3-net` package allows to interact with an Ethereum node’s network properties.
 
 ###### Get it from the NPM Registry
 

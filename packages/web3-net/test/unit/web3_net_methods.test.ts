@@ -1,4 +1,4 @@
-import Web3Net from '../../src/index';
+import { Web3Net } from '../../src';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 
 jest.mock('../../src/rpc_method_wrappers');

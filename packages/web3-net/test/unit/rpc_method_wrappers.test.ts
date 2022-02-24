@@ -1,4 +1,4 @@
-import Web3Net from '../../src/index';
+import { Web3Net } from '../../src';
 import * as rpcMethods from '../../src/rpc_methods';
 import { getId, isListening, getPeerCount } from '../../src/rpc_method_wrappers';
 

@@ -1,9 +1,9 @@
 import { Web3Context } from 'web3-core';
-import { EthExecutionAPI } from 'web3-common';
 
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { NetRPCApi } from './types';
 
-export default class Web3Net extends Web3Context<EthExecutionAPI> {
+export class Web3Net extends Web3Context<NetRPCApi> {
 	public async getId() {
 		return rpcMethodsWrappers.getId(this);
 	}
@@ -16,3 +16,5 @@ export default class Web3Net extends Web3Context<EthExecutionAPI> {
 		return rpcMethodsWrappers.getPeerCount(this);
 	}
 }
+
+export default Web3Net;
