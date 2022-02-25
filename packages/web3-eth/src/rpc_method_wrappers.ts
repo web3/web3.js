@@ -25,7 +25,7 @@ import {
 import { formatTransaction } from './format_transaction';
 
 import * as rpcMethods from './rpc_methods';
-import { BlockFormatted, Transaction } from './types';
+import { BlockFormatted, Transaction, TransactionEvents } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
@@ -278,16 +278,80 @@ export async function getPendingTransactions<ReturnType extends ValidTypes = Val
 		formatTransaction(transaction, returnType ?? web3Context.defaultReturnType),
 	);
 }
-type TransactionEvents = {
-	sending: Transaction;
-	sent: Transaction;
-	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfo;
-	confirmation: {
-		confirmationNumber: Number;
-		receipt: ReceiptInfo;
-		latestBlockHash: HexString32Bytes;
-	};
+
+const waitForTransactionReceipt = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	transactionHash: HexString32Bytes,
+): Promise<ReceiptInfo> =>
+	new Promise(resolve => {
+		let transactionPollingDuration = 0;
+		// TODO - Promise returned in function argument where a void return was expected
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
+		const intervalId = setInterval(async () => {
+			transactionPollingDuration += web3Context.transactionReceiptPollingInterval;
+			// TODO - Should probably throw an error
+			if (transactionPollingDuration >= web3Context.transactionPollingTimeout)
+				clearInterval(intervalId);
+
+			const response = await rpcMethods.getTransactionReceipt(
+				web3Context.requestManager,
+				transactionHash,
+			);
+
+			if (response !== null) {
+				clearInterval(intervalId);
+				resolve(response);
+			}
+		}, web3Context.transactionReceiptPollingInterval);
+	});
+
+const watchTransactionForConfirmations = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	transactionPromiEvent: PromiEvent<ReceiptInfo, TransactionEvents>,
+	transactionReceipt: ReceiptInfo,
+) => {
+	if (
+		transactionReceipt === undefined ||
+		transactionReceipt === null ||
+		transactionReceipt.blockHash === undefined ||
+		transactionReceipt.blockHash === null
+	)
+		// TODO - Replace error
+		throw new Error('Receipt missing or blockHash null');
+
+	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
+		// TODO - Replace error
+		throw new Error('Receipt missing block number');
+
+	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
+	// so a subscription for newBlockHeaders can be made instead of polling
+
+	// Having a transactionReceipt means that the transaction has already been included
+	// in at least one block, so we start with 1
+	let confirmationNumber = 1;
+	// TODO - Promise returned in function argument where a void return was expected
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	const intervalId = setInterval(async () => {
+		if (confirmationNumber >= web3Context.transactionConfirmationBlocks)
+			clearInterval(intervalId);
+
+		const nextBlock = await getBlock(
+			web3Context,
+			// TODO - Refactor after input formatting is added to getBlock
+			(BigInt(transactionReceipt.blockNumber) + BigInt(confirmationNumber)).toString(16),
+			false,
+			ValidTypes.Number,
+		);
+
+		if (nextBlock?.hash !== null) {
+			confirmationNumber += 1;
+			transactionPromiEvent.emit('confirmation', {
+				confirmationNumber,
+				receipt: transactionReceipt,
+				latestBlockHash: nextBlock.hash,
+			});
+		}
+	}, web3Context.transactionConfirmationPollingInterval);
 };
 
 export async function sendTransaction(
@@ -295,6 +359,8 @@ export async function sendTransaction(
 	transaction: Transaction,
 ) {
 	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
+	// TODO - Promise returned in function argument where a void return was expected
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new PromiEvent<ReceiptInfo, TransactionEvents>(async resolve => {
 		// TODO - Populate potentially missing gas fields
 		// if (
@@ -331,81 +397,12 @@ export async function sendTransaction(
 		// TODO - Format receipt
 		resolve(transactionReceipt);
 
-		watchTransactionForConfirmations(web3Context, promiEvent, transactionReceipt);
+		// TODO - Should this be awaited?
+		await watchTransactionForConfirmations(web3Context, promiEvent, transactionReceipt);
 	});
 
 	return promiEvent;
 }
-
-const waitForTransactionReceipt = (
-	web3Context: Web3Context<EthExecutionAPI>,
-	transactionHash: HexString32Bytes,
-): Promise<ReceiptInfo> => {
-	return new Promise(resolve => {
-		let transactionPollingDuration = 0;
-		const intervalId = setInterval(async () => {
-			transactionPollingDuration += web3Context.transactionReceiptPollingInterval;
-			// TODO - Should probably throw an error
-			if (transactionPollingDuration >= web3Context.transactionPollingTimeout)
-				clearInterval(intervalId);
-
-			const response = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
-
-			if (response !== null) {
-				clearInterval(intervalId);
-				resolve(response);
-			}
-		}, web3Context.transactionReceiptPollingInterval);
-	});
-};
-
-const watchTransactionForConfirmations = async (
-	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfo, TransactionEvents>,
-	transactionReceipt: ReceiptInfo,
-) => {
-	if (
-		transactionReceipt === undefined ||
-		transactionReceipt === null ||
-		transactionReceipt.blockHash === undefined ||
-		transactionReceipt.blockHash === null
-	)
-		// TODO - Replace error
-		throw new Error('Receipt missing or blockHash null');
-
-	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
-		// TODO - Replace error
-		throw new Error('Receipt missing block number');
-
-	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
-	// so a subscription for newBlockHeaders can be made instead of polling
-
-	// Having a transactionReceipt means that the transaction has already been included
-	// in at least one block, so we start with 1
-	let confirmationNumber = 1;
-	const intervalId = setInterval(async () => {
-		if (confirmationNumber >= web3Context.transactionConfirmationBlocks)
-			clearInterval(intervalId);
-
-		const nextBlock = await getBlock(
-			web3Context,
-			transactionReceipt.blockNumber + confirmationNumber,
-			false,
-			ValidTypes.Number,
-		);
-		if (nextBlock !== null && nextBlock.hash !== null) {
-			confirmationNumber += 1;
-			transactionPromiEvent.emit('confirmation', {
-				confirmationNumber,
-				receipt: transactionReceipt,
-				latestBlockHash: nextBlock.hash,
-			});
-		}
-	}, web3Context.transactionConfirmationPollingInterval);
-};
 
 export const sendSignedTransaction = async (
 	web3Context: Web3Context<EthExecutionAPI>,
