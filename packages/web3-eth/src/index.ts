@@ -15,7 +15,7 @@ import {
 	Filter,
 } from 'web3-utils';
 
-import { BlockFormatted } from './types';
+import { BlockFormatted, Transaction, TransactionCall } from './types';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
@@ -150,10 +150,9 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnType);
 	}
 
-	// TODO Needs to convert input to hex string
-	// public async sendTransaction(transaction: Transaction) {
-	// 	return rpcMethodsWrappers.sendTransaction(this, transaction);
-	// }
+	public async sendTransaction(transaction: Transaction) {
+		return rpcMethodsWrappers.sendTransaction(this, transaction);
+	}
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
 		return rpcMethods.sendRawTransaction(this.requestManager, transaction);
@@ -165,19 +164,18 @@ export default class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethods.sign(this.requestManager, message, address);
 	}
 
-	// TODO Needs to convert input to hex string
-	// public async signTransaction(transaction: Transaction) {
-	// 	return rpcMethodsWrappers.signTransaction(this, transaction);
-	// }
+	public async signTransaction(transaction: Transaction) {
+		return rpcMethodsWrappers.signTransaction(this, transaction);
+	}
 
 	// TODO Decide what to do with transaction.to
 	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
-	// public async call(
-	// 	transaction: Transaction & { to: Address },
-	// 	blockNumber: BlockNumberOrTag = this.defaultBlock,
-	// ) {
-	// 	return rpcMethodsWrappers.call(this, transaction, blockNumber);
-	// }
+	public async call(
+		transaction: TransactionCall,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+	) {
+		return rpcMethodsWrappers.call(this, transaction, blockNumber);
+	}
 
 	// TODO Missing param
 	public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
