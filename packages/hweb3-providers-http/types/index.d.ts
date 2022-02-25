@@ -22,6 +22,7 @@
 
 import { HttpProviderBase } from 'web3-core-helpers';
 import { Client, Transaction } from '@hashgraph/sdk';
+import { ITransactionResponse, ITransactionReceipt } from "@hashgraph/proto";
 
 export class HttpProvider extends HttpProviderBase {
     client: Client;
@@ -33,9 +34,26 @@ export class HttpProvider extends HttpProviderBase {
         tx: Transaction,
         callback?: (
             error: Error | null,
-            result: import("@hashgraph/proto/lib/proto").proto.ITransactionResponse | undefined
+            result: ITransactionResponse | undefined
         ) => void
     ): void;
+
+    getReceipt(
+        txReceipt: ITransactionResponse,
+        callback?: (
+            error: Error | null,
+            result: ITransactionReceipt | undefined
+        ) => void
+    ): void;
+
+    sign(
+        data: string
+    ): Uint8Array;
+
+    signTransaction(
+        tx: Transaction
+    ): Uint8Array;
+
     disconnect(): boolean;
     supportsSubscriptions(): boolean;
 }

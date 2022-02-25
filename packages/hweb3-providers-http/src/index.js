@@ -71,6 +71,27 @@ HttpProvider.prototype.getReceipt = function (txResponse, callback) {
         });
 };
 
+/**
+ * Sign a message with given client.
+ *
+ * @param {String} data
+ * @returns {Uint8Array} - The signature bytes without the message
+ */
+HttpProvider.prototype.sign = function (data) {
+    const dataInUint8Array = new TextEncoder().encode(data);
+    return this.client.operator.sign(dataInUint8Array);
+};
+
+/**
+ * Sign a transaction with given client.
+ *
+ * @param {Transaction} tx
+ * @returns {Uint8Array} - The signature bytes without the message
+ */
+HttpProvider.prototype.signTransaction = function (tx) {
+    return this.client.operator.signTransaction(tx);
+};
+
 HttpProvider.prototype.disconnect = function () {
     //NO OP
     return false;

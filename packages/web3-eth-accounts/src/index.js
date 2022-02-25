@@ -87,6 +87,7 @@ var Accounts = function Accounts() {
             }]
         }),
     ];
+
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
     _ethereumCall.forEach( (method) => {
@@ -111,11 +112,11 @@ Accounts.prototype._addAccountFunctions = function (newAccountPrivateKey, addres
 
     // add sign functions
     account.signTransaction = function signTransaction(tx) {
-        return _this.signTransaction(tx, newAccountPrivateKey);
+        return _this.signTransaction(tx);
     };
 
     account.sign = function sign(data) {
-        return _this.sign(data, account.privateKey);
+        return _this.sign(data);
     };
 
     account.encrypt = function encrypt(password, options) {
@@ -135,8 +136,8 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount() {
     throw new Error("Not available");
 };
 
-Accounts.prototype.signTransaction = function signTransaction(tx, privateKey) {
-    privateKey.signTransaction(tx);
+Accounts.prototype.signTransaction = function signTransaction(tx) {
+    return this.currentProvider.signTransaction(tx);
 };
 
 /* jshint ignore:start */
@@ -160,10 +161,8 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     return ethereumjsUtil.bufferToHex(ethereumjsUtil.keccak256(ethMessage));
 };
 
-Accounts.prototype.sign = function sign(data, privateKey) {
-    const dataToUint8Array = new TextEncoder().encode(data);
-
-    const signature = privateKey.sign(dataToUint8Array);
+Accounts.prototype.sign = function sign(data) {
+    const signature = this.currentProvider.sign(data);
 
     return {
         message: data,

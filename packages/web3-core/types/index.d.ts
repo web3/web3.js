@@ -31,6 +31,12 @@ import {
 import { Method } from 'web3-core-method';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
+import { Client, Transaction } from '@hashgraph/sdk';
+import { ITransactionResponse } from "@hashgraph/proto";
+
+export {
+    Transaction
+}
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -40,6 +46,8 @@ export interface SignedTransaction {
     rawTransaction?: string;
     transactionHash?: string;
 }
+
+export interface TransactionConfig {}
 
 export interface Extension {
     property?: string,
@@ -122,38 +130,6 @@ export interface PromiEvent<T> extends Promise<T> {
         type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
         handler: (error: Error | TransactionReceipt | string | object) => void
     ): PromiEvent<T>;
-}
-
-export interface Transaction {
-    hash: string;
-    nonce: number;
-    blockHash: string | null;
-    blockNumber: number | null;
-    transactionIndex: number | null;
-    from: string;
-    to: string | null;
-    value: string;
-    gasPrice: string;
-    maxPriorityFeePerGas?: number | string | BN;
-    maxFeePerGas?: number | string | BN;
-    gas: number;
-    input: string;
-}
-
-export interface TransactionConfig {
-    from?: string | number;
-    to?: string;
-    value?: number | string | BN;
-    gas?: number | string;
-    gasPrice?: number | string | BN;
-    maxPriorityFeePerGas?: number | string | BN;
-    maxFeePerGas?: number | string | BN;
-    data?: string;
-    nonce?: number;
-    chainId?: number;
-    common?: Common;
-    chain?: string;
-    hardfork?: string;
 }
 
 export type chain =
@@ -280,29 +256,26 @@ export class NetworkBase {
 
 export class AccountsBase {
     constructor();
-    constructor(provider: provider);
-    constructor(provider: provider, net: net.Socket);
+    constructor(client: Client);
 
     readonly givenProvider: any;
     readonly currentProvider: provider;
 
     setProvider(provider: provider): boolean;
 
-    create(entropy?: string): Account;
+    create(callback: () => void): void;
 
     privateKeyToAccount(privateKey: string, ignoreLength?: boolean): Account;
 
     signTransaction(
-        transactionConfig: TransactionConfig,
-        privateKey: string,
-        callback?: (error: Error, signedTransaction: SignedTransaction) => void
-    ): Promise<SignedTransaction>;
+        tx: Transaction,
+    ): Uint8Array;
 
     recoverTransaction(signature: string): string;
 
     hashMessage(message: string): string;
 
-    sign(data: string, privateKey: string): Sign;
+    sign(data: string): Uint8Array;
 
     recover(signatureObject: SignatureObject): string;
     recover(message: string, signature: string, preFixed?: boolean): string;
@@ -362,10 +335,9 @@ export interface Account {
     address: string;
     privateKey: string;
     signTransaction: (
-        transactionConfig: TransactionConfig,
-        callback?: (signTransaction: SignedTransaction) => void
-    ) => Promise<SignedTransaction>;
-    sign: (data: string) => Sign;
+        tx: Transaction
+    ) => Uint8Array;
+    sign: (data: string) => Uint8Array;
     encrypt: (password: string) => EncryptedKeystoreV3Json;
 }
 
@@ -412,7 +384,7 @@ export class BatchRequest {
 }
 
 export class HttpProvider extends HttpProviderBase {
-    constructor(host: string, options?: HttpProviderOptions);
+    constructor(client: Client);
 }
 
 export class IpcProvider extends IpcProviderBase {
@@ -443,7 +415,7 @@ export interface RequestArguments {
 
 export interface AbstractProvider {
     sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
-    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    send?(tx: Transaction, callback: (error: Error | null, result?: ITransactionResponse) => void): void;
     request?(args: RequestArguments): Promise<any>;
     connected?: boolean;
   }
