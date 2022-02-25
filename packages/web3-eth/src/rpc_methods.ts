@@ -11,7 +11,6 @@ import {
 	HexString8Bytes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
-import { validateTransactionCall } from './validation';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
@@ -224,12 +223,13 @@ export async function sendRawTransaction(
 	});
 }
 
+// TODO - validate transaction
 export async function call(
 	requestManager: Web3RequestManager,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag,
 ) {
-	validateTransactionCall(transaction);
+	// validateTransactionCall(transaction);
 	validator.validate(['blockNumberOrTag'], [blockNumber]);
 
 	return requestManager.send({
