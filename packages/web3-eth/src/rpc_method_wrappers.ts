@@ -25,7 +25,12 @@ import {
 import { formatTransaction } from './format_transaction';
 
 import * as rpcMethods from './rpc_methods';
-import { BlockFormatted, Transaction, TransactionEvents } from './types';
+import {
+	BlockFormatted,
+	Transaction,
+	SendTransactionEvents,
+	SendSignedTransactionEvents,
+} from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
@@ -305,11 +310,13 @@ const waitForTransactionReceipt = async (
 		}, web3Context.transactionReceiptPollingInterval);
 	});
 
-const watchTransactionForConfirmations = async (
+function watchTransactionForConfirmations<
+	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
+>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfo, TransactionEvents>,
+	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
-) => {
+) {
 	if (
 		transactionReceipt === undefined ||
 		transactionReceipt === null ||
@@ -352,7 +359,7 @@ const watchTransactionForConfirmations = async (
 			});
 		}
 	}, web3Context.transactionConfirmationPollingInterval);
-};
+}
 
 export async function sendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -361,7 +368,7 @@ export async function sendTransaction(
 	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ReceiptInfo, TransactionEvents>(async resolve => {
+	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(async resolve => {
 		// TODO - Populate potentially missing gas fields
 		// if (
 		// 	transaction.gasPrice === undefined &&
@@ -397,8 +404,11 @@ export async function sendTransaction(
 		// TODO - Format receipt
 		resolve(transactionReceipt);
 
-		// TODO - Should this be awaited?
-		await watchTransactionForConfirmations(web3Context, promiEvent, transactionReceipt);
+		watchTransactionForConfirmations<SendTransactionEvents>(
+			web3Context,
+			promiEvent,
+			transactionReceipt,
+		);
 	});
 
 	return promiEvent;
@@ -407,7 +417,42 @@ export async function sendTransaction(
 export const sendSignedTransaction = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
-) => rpcMethods.sendRawTransaction(web3Context.requestManager, transaction);
+) => {
+	// TODO - Promise returned in function argument where a void return was expected
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(async resolve => {
+		promiEvent.emit('sending', transaction);
+
+		const transactionHash = await rpcMethods.sendRawTransaction(
+			web3Context.requestManager,
+			transaction,
+		);
+
+		promiEvent.emit('sent', transaction);
+		promiEvent.emit('transactionHash', transactionHash);
+
+		let transactionReceipt = await rpcMethods.getTransactionReceipt(
+			web3Context.requestManager,
+			transactionHash,
+		);
+
+		// Transaction hasn't been included in a block yet
+		if (transactionReceipt === null)
+			transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
+
+		promiEvent.emit('receipt', transactionReceipt);
+		// TODO - Format receipt
+		resolve(transactionReceipt);
+
+		watchTransactionForConfirmations<SendSignedTransactionEvents>(
+			web3Context,
+			promiEvent,
+			transactionReceipt,
+		);
+	});
+
+	return promiEvent;
+};
 
 // TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 // https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign

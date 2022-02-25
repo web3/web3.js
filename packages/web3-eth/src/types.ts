@@ -253,9 +253,21 @@ export interface AccountObjectFormatted<NumberType extends Numbers = Numbers> {
 	readonly storageProof: StorageProofFormatted<NumberType>[];
 }
 
-export type TransactionEvents = {
+export type SendTransactionEvents = {
 	sending: Transaction;
 	sent: Transaction;
+	transactionHash: HexString32Bytes;
+	receipt: ReceiptInfo;
+	confirmation: {
+		confirmationNumber: number;
+		receipt: ReceiptInfo;
+		latestBlockHash: HexString32Bytes;
+	};
+};
+
+export type SendSignedTransactionEvents = {
+	sending: HexStringBytes;
+	sent: HexStringBytes;
 	transactionHash: HexString32Bytes;
 	receipt: ReceiptInfo;
 	confirmation: {
