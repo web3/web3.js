@@ -462,10 +462,14 @@ export const sign = async (
 	address: Address,
 ) => rpcMethods.sign(web3Context.requestManager, address, message);
 
-// TODO Needs to convert input to hex string
-// public async signTransaction(transaction: Transaction) {
-// 	return rpcMethods.signTransaction(this.web3Context.requestManager, transaction);
-// }
+export const signTransaction = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: Transaction,
+) =>
+	rpcMethods.signTransaction(
+		web3Context.requestManager,
+		formatTransaction(transaction, ValidTypes.HexString),
+	);
 
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076

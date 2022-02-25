@@ -257,7 +257,9 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.json
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
-	eth_signTransaction: (transaction: TransactionWithSender) => HexStringBytes;
+	eth_signTransaction: (
+		transaction: TransactionWithSender | Partial<TransactionWithSender>,
+	) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
 	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;

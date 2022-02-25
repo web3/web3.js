@@ -11,7 +11,7 @@ import {
 	HexString8Bytes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
-import { validateTransactionCall, validateTransactionWithSender } from './validation';
+import { validateTransactionCall } from './validation';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
@@ -184,12 +184,14 @@ export async function sign(
 	});
 }
 
+// TODO - Validation should be:
+// isTransactionWithSender(transaction)
+// ? validateTransactionWithSender(transaction)
+// : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function signTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
+	transaction: TransactionWithSender | Partial<TransactionWithSender>,
 ) {
-	validateTransactionWithSender(transaction);
-
 	return requestManager.send({
 		method: 'eth_signTransaction',
 		params: [transaction],
