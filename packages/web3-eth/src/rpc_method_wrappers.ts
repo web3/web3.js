@@ -8,6 +8,7 @@ import {
 	BlockNumberOrTag,
 	convertObjectPropertiesToValidType,
 	convertToValidType,
+	HexString,
 	HexString32Bytes,
 	HexStringBytes,
 	Uint,
@@ -30,6 +31,7 @@ import {
 	Transaction,
 	SendTransactionEvents,
 	SendSignedTransactionEvents,
+	TransactionCall,
 } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
@@ -473,12 +475,16 @@ export const signTransaction = async (
 
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
-// public async call(
-// 	transaction: Transaction & { to: Address },
-// 	blockNumber: BlockNumberOrTag = this.web3Context.defaultBlock,
-// ) {
-// 	return rpcMethods.call(this.web3Context.requestManager, transaction, blockNumber);
-// }
+export const call = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: TransactionCall,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+) =>
+	rpcMethods.call(
+		web3Context.requestManager,
+		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
+		convertToValidType(blockNumber, ValidTypes.HexString) as HexString,
+	);
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
