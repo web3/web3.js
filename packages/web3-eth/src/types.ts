@@ -72,6 +72,11 @@ export interface Transaction<NumberType extends Numbers = Numbers> {
 	s?: HexString;
 }
 
+export interface TransactionCall<NumberType extends Numbers = Numbers>
+	extends Transaction<NumberType> {
+	to: Address;
+}
+
 export interface PopulatedUnsignedBaseTransaction<NumberType extends Numbers = Numbers> {
 	from: Address;
 	to?: Address;
