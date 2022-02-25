@@ -1,4 +1,11 @@
-import { AccessList, Log, TransactionHash, TransactionInfo, Uncles } from 'web3-common';
+import {
+	AccessList,
+	Log,
+	ReceiptInfo,
+	TransactionHash,
+	TransactionInfo,
+	Uncles,
+} from 'web3-common';
 import {
 	Address,
 	HexString,
@@ -245,3 +252,15 @@ export interface AccountObjectFormatted<NumberType extends Numbers = Numbers> {
 	readonly accountProof: HexString32Bytes[];
 	readonly storageProof: StorageProofFormatted<NumberType>[];
 }
+
+export type TransactionEvents = {
+	sending: Transaction;
+	sent: Transaction;
+	transactionHash: HexString32Bytes;
+	receipt: ReceiptInfo;
+	confirmation: {
+		confirmationNumber: number;
+		receipt: ReceiptInfo;
+		latestBlockHash: HexString32Bytes;
+	};
+};
