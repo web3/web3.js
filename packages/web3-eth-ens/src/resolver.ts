@@ -1,6 +1,10 @@
 import { Address, sha3, isHexStrict } from 'web3-utils';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
-import { inputAddressFormatter } from 'web3-common';
+import {
+	inputAddressFormatter,
+	ResolverMethodMissingError,
+	ENSCheckInterfaceSupportError,
+} from 'web3-common';
 import { interfaceIds, methodsInInterface } from './config';
 import { Registry } from './registry';
 import { RESOLVER } from './abi/resolver';
@@ -27,56 +31,49 @@ export class Resolver {
 		resolverContract: Contract<typeof RESOLVER>,
 		methodName: string,
 	) {
-		if (interfaceIds[methodName] === undefined) throw new Error(); //  ResolverMethodMissingError(resolver address, methodName);
+		if (interfaceIds[methodName] === undefined)
+			throw new ResolverMethodMissingError(
+				resolverContract.options.address ?? '',
+				methodName,
+			);
 
 		let supported = false;
-		try {
-			supported = (await resolverContract.methods
-				.supportsInterface(interfaceIds[methodName])
-				.call()) as Awaited<Promise<boolean>>;
-		} catch (err) {
-			//  TODO throw new Error
-		}
 
-		if (!supported) throw new Error(); // new ResolverMethodMissingError(resolver address, methodName);
+		supported = (await resolverContract.methods
+			.supportsInterface(interfaceIds[methodName])
+			.call()) as Awaited<Promise<boolean>>;
+
+		if (!supported)
+			throw new ResolverMethodMissingError(
+				resolverContract.options.address ?? '',
+				methodName,
+			);
 	}
 
 	public async setAddress(ENSName: string, address: Address, txConfig: NonPayableCallOptions) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
 
-		try {
-			return resolverContract.methods
-				.setAddr(namehash(ENSName), inputAddressFormatter(address))
-				.send(txConfig);
-		} catch (error) {
-			throw new Error(); //    to do web3 error
-		}
+		return resolverContract.methods
+			.setAddr(namehash(ENSName), inputAddressFormatter(address))
+			.send(txConfig);
 	}
 
 	public async setPubkey(ENSName: string, x: string, y: string, txConfig: NonPayableCallOptions) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setPubkey);
 
-		try {
-			//  TODO: verify that X and Y coordinates of pub key are normalized?
-			return resolverContract.methods
-				.setPubkey(namehash(ENSName), namehash(x), namehash(y))
-				.send(txConfig);
-		} catch (error) {
-			throw new Error(); //    to do web3 error
-		}
+		//  TODO: verify that X and Y coordinates of pub key are normalized?
+		return resolverContract.methods
+			.setPubkey(namehash(ENSName), namehash(x), namehash(y))
+			.send(txConfig);
 	}
 
 	public async setContenthash(ENSName: string, hash: string, txConfig: NonPayableCallOptions) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setContenthash);
 
-		try {
-			return resolverContract.methods.setContenthash(namehash(ENSName), hash).send(txConfig);
-		} catch (error) {
-			throw new Error(); //    to do web3 error
-		}
+		return resolverContract.methods.setContenthash(namehash(ENSName), hash).send(txConfig);
 	}
 
 	public async supportsInterface(ENSName: string, interfaceId: string) {
@@ -92,11 +89,7 @@ export class Resolver {
 			interfaceIdParam = interfaceIdParam.slice(0, 10);
 		}
 
-		try {
-			return resolverContract.methods.supportsInterface(interfaceIdParam).call();
-		} catch (error) {
-			throw new Error(); //    to do web3 error
-		}
+		return resolverContract.methods.supportsInterface(interfaceIdParam).call();
 	}
 
 	public async getAddress(ENSName: string) {
