@@ -24,14 +24,17 @@ export type AccessList = AccessListEntry[];
 export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
 
-// TODO Should probably support EIP-2930 and EIP-1559
 export interface TransactionCall {
 	readonly from?: Address;
 	readonly to: Address;
 	readonly gas?: Uint;
 	readonly gasPrice?: Uint;
 	readonly value?: Uint;
-	readonly data?: HexString;
+	readonly data?: HexStringBytes;
+	readonly type?: HexStringSingleByte;
+	readonly maxFeePerGas?: Uint;
+	readonly maxPriorityFeePerGas?: Uint;
+	readonly accessList?: AccessList;
 }
 
 export interface BaseTransaction {
@@ -42,7 +45,7 @@ export interface BaseTransaction {
 	readonly value: Uint;
 	// TODO - Investigate if this should actually be data instead of input
 	readonly input: HexStringBytes;
-	chainId?: Uint;
+	readonly chainId?: Uint;
 }
 
 export interface Transaction1559Unsigned extends BaseTransaction {
