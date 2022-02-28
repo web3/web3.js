@@ -11,7 +11,7 @@ import { Transaction, formatTransaction } from 'web3-eth';
 import { validator } from 'web3-validator';
 import { EthPersonalAPI } from './personal_api';
 
-class EthPersonal extends Web3Context<EthPersonalAPI> {
+export class EthPersonal extends Web3Context<EthPersonalAPI> {
 	public async getAccounts() {
 		const result = await this.requestManager.send({
 			method: 'personal_listAccounts',
