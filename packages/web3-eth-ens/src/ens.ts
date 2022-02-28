@@ -190,6 +190,13 @@ export class ENS {
 		return this._resolver.getContenthash(ENSName);
 	}
 
+	/*
+	 * Returns true if the related Resolver does support the given signature or interfaceId.
+	 */
+	public async supportsInterface(ENSName: string, interfaceId: string) {
+		return this._resolver.supportsInterface(ENSName, interfaceId);
+	}
+
 	// TODO after eth.net.getNetworkType is complete
 	// public checkNetwork (): boolean {
 	// return true;
