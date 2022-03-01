@@ -1,112 +1,44 @@
 import { Web3Context } from 'web3-core';
-import {
-	Address,
-	HexString,
-	isHexStrict,
-	toChecksumAddress,
-	utf8ToHex,
-	ValidTypes,
-} from 'web3-utils';
-import { Transaction, formatTransaction } from 'web3-eth';
-import { validator } from 'web3-validator';
-import { EthPersonalAPI } from './personal_api';
+import { Transaction } from 'web3-eth';
+import { Address, HexString } from 'web3-utils';
+import { EthPersonalAPI } from './eth_personal_api';
+import * as rpcWrappers from './rpc_method_wrappers';
 
 export class EthPersonal extends Web3Context<EthPersonalAPI> {
 	public async getAccounts() {
-		const result = await this.requestManager.send({
-			method: 'personal_listAccounts',
-			params: [],
-		});
-
-		return result.map(toChecksumAddress);
+		return rpcWrappers.getAccounts(this.requestManager);
 	}
 
 	public async newAccount(password: string) {
-		validator.validate(['string'], [password]);
-
-		const result = await this.requestManager.send({
-			method: 'personal_newAccount',
-			params: [password],
-		});
-
-		return toChecksumAddress(result);
+		return rpcWrappers.newAccount(this.requestManager, password);
 	}
 
 	public async unlockAccount(address: Address, password: string, unlockDuration: number) {
-		validator.validate(['address', 'string', 'uint'], [address, password, unlockDuration]);
-
-		const result = await this.requestManager.send({
-			method: 'personal_unlockAccount',
-			params: [address, password, unlockDuration],
-		});
-
-		return result;
+		return rpcWrappers.unlockAccount(this.requestManager, address, password, unlockDuration);
 	}
 
 	public async lockAccount(address: Address) {
-		validator.validate(['address'], [address]);
-
-		const result = await this.requestManager.send({
-			method: 'personal_lockAccount',
-			params: [address],
-		});
-
-		return result;
+		return rpcWrappers.lockAccount(this.requestManager, address);
 	}
 
 	public async importRawKey(keyData: HexString, passphrase: string) {
-		validator.validate(['bytes', 'string'], [keyData, passphrase]);
-
-		const result = await this.requestManager.send({
-			method: 'personal_importRawKey',
-			params: [keyData, passphrase],
-		});
-
-		return result;
+		return rpcWrappers.importRawKey(this.requestManager, keyData, passphrase);
 	}
 
 	public async sendTransaction(tx: Transaction, passphrase: string) {
-		const result = await this.requestManager.send({
-			method: 'personal_sendTransaction',
-			params: [formatTransaction(tx, ValidTypes.HexString), passphrase],
-		});
-
-		return result;
+		return rpcWrappers.sendTransaction(this.requestManager, tx, passphrase);
 	}
 
 	public async signTransaction(tx: Transaction, passphrase: string) {
-		const result = await this.requestManager.send({
-			method: 'personal_signTransaction',
-			params: [formatTransaction(tx, ValidTypes.HexString), passphrase],
-		});
-
-		return result;
+		return rpcWrappers.signTransaction(this.requestManager, tx, passphrase);
 	}
 
 	public async sign(data: HexString, address: Address, passphrase: string) {
-		validator.validate(['bytes', 'address', 'string'], [data, address, passphrase]);
-
-		const dataToSign = isHexStrict(data) ? data : utf8ToHex(data);
-
-		const result = await this.requestManager.send({
-			method: 'personal_sign',
-			params: [dataToSign, address, passphrase],
-		});
-
-		return result;
+		return rpcWrappers.sign(this.requestManager, data, address, passphrase);
 	}
 
 	public async ecRecover(signedData: HexString, passphrase: string) {
-		validator.validate(['bytes', 'string'], [signedData, passphrase]);
-
-		const signedDataString = isHexStrict(signedData) ? signedData : utf8ToHex(signedData);
-
-		const result = await this.requestManager.send({
-			method: 'personal_ecRecover',
-			params: [signedDataString, passphrase],
-		});
-
-		return result;
+		return rpcWrappers.ecRecover(this.requestManager, signedData, passphrase);
 	}
 }
 
