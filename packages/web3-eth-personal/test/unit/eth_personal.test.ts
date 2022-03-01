@@ -265,11 +265,11 @@ describe('EthPersonal', () => {
 
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
 
-			await ethPersonal.ecRecover(data, 'password');
+			await ethPersonal.ecRecover(data, '0x000000');
 
 			expect(sendSpy).toHaveBeenCalledWith({
 				method: 'personal_ecRecover',
-				params: [data, 'password'],
+				params: [data, '0x000000'],
 			});
 		});
 

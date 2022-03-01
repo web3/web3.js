@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-eth-personal` contains the ideal setup for a Web3.js package.
+`web3-eth-personal` Web3 module to interact with the Ethereum blockchain accounts stored in the node.
 
 ###### Get it from the NPM Registry
 

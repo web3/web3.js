@@ -75,9 +75,9 @@ export const sign = async (
 export const ecRecover = async (
 	requestManager: EthPersonalAPIManager,
 	signedData: HexString,
-	passphrase: string,
+	signature: string,
 ) =>
 	requestManager.send({
 		method: 'personal_ecRecover',
-		params: [signedData, passphrase],
+		params: [signedData, signature],
 	});

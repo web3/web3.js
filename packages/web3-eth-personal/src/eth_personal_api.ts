@@ -10,5 +10,5 @@ export type EthPersonalAPI = {
 	personal_sendTransaction: (tx: Transaction, passphrase: string) => HexString;
 	personal_signTransaction: (tx: Transaction, passphrase: string) => HexString;
 	personal_sign: (data: HexString, address: Address, passphrase: string) => HexString;
-	personal_ecRecover: (signedData: HexString, passphrase: string) => HexString;
+	personal_ecRecover: (signedData: HexString, signature: HexString) => Address;
 };

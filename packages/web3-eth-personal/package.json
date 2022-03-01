@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-personal",
-	"version": "4.0.0-alpha.1",
+	"version": "4.0.0-alpha.0",
 	"description": "Web3 module to interact with the Ethereum blockchain accounts stored in the node.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",

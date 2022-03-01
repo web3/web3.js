@@ -98,11 +98,11 @@ export const sign = async (
 export const ecRecover = async (
 	requestManager: EthPersonalAPIManager,
 	signedData: HexString,
-	passphrase: string,
+	signature: string,
 ) => {
-	validator.validate(['bytes', 'string'], [signedData, passphrase]);
+	validator.validate(['bytes', 'string'], [signedData, signature]);
 
 	const signedDataString = isHexStrict(signedData) ? signedData : utf8ToHex(signedData);
 
-	return rpcEcRecover(requestManager, signedDataString, passphrase);
+	return rpcEcRecover(requestManager, signedDataString, signature);
 };

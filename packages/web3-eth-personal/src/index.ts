@@ -37,8 +37,8 @@ export class EthPersonal extends Web3Context<EthPersonalAPI> {
 		return rpcWrappers.sign(this.requestManager, data, address, passphrase);
 	}
 
-	public async ecRecover(signedData: HexString, passphrase: string) {
-		return rpcWrappers.ecRecover(this.requestManager, signedData, passphrase);
+	public async ecRecover(signedData: HexString, signature: string) {
+		return rpcWrappers.ecRecover(this.requestManager, signedData, signature);
 	}
 }
 
