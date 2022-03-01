@@ -1,7 +1,7 @@
 import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
+import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Uint, ValidTypes } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -43,14 +43,14 @@ export interface ContractInitOptions {
 export type TransactionReceipt = ReceiptInfo;
 
 export interface NonPayableCallOptions {
-	nonce?: Numbers;
-	chainId?: Numbers;
+	nonce?: string;
+	chainId?: string;
 	from?: Address;
 	to?: Address;
 	data?: HexString;
 	gas?: string;
-	maxPriorityFeePerGas?: Numbers;
-	maxFeePerGas?: Numbers;
+	maxPriorityFeePerGas?: string;
+	maxFeePerGas?: string;
 	gasPrice?: string;
 }
 
@@ -76,7 +76,10 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 			error: Error;
 		}
 	>;
-	estimateGas(tx?: NonPayableCallOptions): Promise<number>;
+	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		options?: NonPayableCallOptions,
+		returnType?: ReturnType,
+	): Promise<ReturnType>;
 	encodeABI(): string;
 }
 
@@ -98,6 +101,9 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 			error: Error;
 		}
 	>;
-	estimateGas(tx?: PayableCallOptions): Promise<number>;
+	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		options?: PayableCallOptions,
+		returnType?: ReturnType,
+	): Promise<ReturnType>;
 	encodeABI(): HexString;
 }

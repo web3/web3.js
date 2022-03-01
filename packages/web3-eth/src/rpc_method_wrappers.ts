@@ -488,7 +488,8 @@ export const call = async (
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	web3Context: Web3Context<EthExecutionAPI>,
+	// The context can have different subscriptions
+	web3Context: Web3Context<EthExecutionAPI, any>,
 	transaction: Partial<TransactionWithSender>,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnType?: ReturnType,
