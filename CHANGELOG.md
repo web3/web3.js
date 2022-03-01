@@ -521,10 +521,3 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
-
-## [Unreleased]
-
-## [1.8.0]
-
-### Security
-- Updating libraries with `npm audit fix` to address vulnerabilities (#4753)
