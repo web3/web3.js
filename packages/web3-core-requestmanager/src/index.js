@@ -23,7 +23,6 @@
 var errors = require('web3-core-helpers').errors;
 var BatchManager = require('./batch.js');
 var givenProvider = require('./givenProvider.js');
-var { Transaction, Client } = require('@hashgraph/sdk');
 
 /**
  * It's responsible for passing messages to providers

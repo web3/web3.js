@@ -18,6 +18,7 @@
         "web3-core-helpers": "1.7.0"
     },
     "devDependencies": {
+        "@types/node": "^12.12.6",
         "dtslint": "^3.4.1",
         "typescript": "^3.9.5"
     }

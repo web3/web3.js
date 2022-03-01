@@ -51,6 +51,9 @@
         "type": "git",
         "url": "https://github.com/ethereum/web3.js.git"
     },
+    "publishConfig": {
+        "@ArianeLabs:registry": "https://npm.pkg.github.com"
+    },
     "homepage": "https://github.com/ethereum/web3.js",
     "bugs": {
         "url": "https://github.com/ethereum/web3.js/issues"
