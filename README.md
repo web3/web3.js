@@ -115,7 +115,7 @@ If you are using create-react-app version >=5 you may run into issues building. 
 
 If you are using yarn:
 ```bash
-yarn add --dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer
+yarn add --dev react-app-rewired process crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer
 ```
 
 If you are using npm:
