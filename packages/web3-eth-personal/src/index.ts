@@ -96,7 +96,7 @@ export class EthPersonal extends Web3Context<EthPersonalAPI> {
 		return result;
 	}
 
-	public async ecRecover(signedData: HexString, passphrase: string) {
+	public async ecRecover(signedData: HexString, signature: HexString) {
 		validator.validate(['bytes', 'string'], [signedData, passphrase]);
 
 		const signedDataString = isHexStrict(signedData) ? signedData : utf8ToHex(signedData);
