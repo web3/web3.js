@@ -18,6 +18,7 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
+import { isBlockTag } from 'web3-validator';
 import { isHexString32Bytes } from 'web3-validator';
 import {
 	convertibleBlockProperties,
@@ -497,14 +498,18 @@ export const signTransaction = async (
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 export const call = async (
-	web3Context: Web3Context<EthExecutionAPI>,
+	// A context can have any subscriptions
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	web3Context: Web3Context<EthExecutionAPI, any>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 ) =>
 	rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
-		convertToValidType(blockNumber, ValidTypes.HexString) as HexString,
+		isBlockTag(blockNumber)
+			? blockNumber
+			: (convertToValidType(blockNumber, ValidTypes.HexString) as HexString),
 	);
 
 // TODO Missing param

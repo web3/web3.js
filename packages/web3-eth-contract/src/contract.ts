@@ -14,7 +14,7 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { estimateGas, sendTransaction } from 'web3-eth/src/rpc_method_wrappers';
+import { estimateGas, sendTransaction, call } from 'web3-eth/src/rpc_method_wrappers';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -343,21 +343,14 @@ export class Contract<Abi extends ContractAbi>
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
-		return decodeMethodReturn(
+		const tx = getEthTxCallParams({
 			abi,
-			await this.requestManager.send({
-				method: 'eth_call',
-				params: [
-					getEthTxCallParams({
-						abi,
-						params,
-						options,
-						contractOptions: this.options,
-					}),
-					block ?? BlockTags.LATEST,
-				],
-			}),
-		);
+			params,
+			options,
+			contractOptions: this.options,
+		});
+
+		return decodeMethodReturn(abi, await call(this, tx, block));
 	}
 
 	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
