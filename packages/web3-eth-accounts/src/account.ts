@@ -49,8 +49,7 @@ import {
 } from './types';
 
 const validateKeyStore = (keyStore: KeyStore) => {
-	validator.validateJSONSchema(keyStoreSchema, [keyStore]);
-	return true;
+	validator.validateJSONSchema(keyStoreSchema, keyStore);
 };
 
 /**
@@ -414,10 +413,7 @@ export const decrypt = async (
 			? keystore
 			: (JSON.parse(nonStrict ? keystore.toLowerCase() : keystore) as KeyStore);
 
-	// TODO create Keystore validation, after validation PR is merged
-	if (!validateKeyStore(json)) {
-		throw new Error('invalid keystore');
-	}
+	validateKeyStore(json);
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
