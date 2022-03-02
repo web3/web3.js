@@ -49,6 +49,9 @@ export const ERR_TX_UNABLE_TO_POPULATE_NONCE = 422;
 export const ERR_TX_UNSUPPORTED_EIP_1559 = 423;
 export const ERR_TX_UNSUPPORTED_TYPE = 424;
 export const ERR_TX_DATA_AND_INPUT = 425;
+export const ERR_TX_POLLING_TIMEOUT = 426;
+export const ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL = 427;
+export const ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER = 428;
 
 // Connection error codes
 export const ERR_CONN = 500;
