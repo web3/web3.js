@@ -16,7 +16,7 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
-import { isHexString32Bytes } from 'web3-validator';
+import { validator, isHexString32Bytes } from 'web3-validator';
 import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
@@ -484,17 +484,18 @@ export const signTransaction = async (
 		formatTransaction(transaction, ValidTypes.HexString),
 	);
 
-// TODO Should validate that transaction.to is defined
 export const call = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) =>
-	rpcMethods.call(
+) => {
+	validator.validate(['address'], [transaction.to]);
+	return rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
 		convertToValidType(blockNumber, ValidTypes.HexString) as HexString,
 	);
+};
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
