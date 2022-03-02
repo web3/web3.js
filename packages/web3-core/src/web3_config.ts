@@ -21,9 +21,10 @@ export abstract class Web3Config
 		defaultBlock: 'latest',
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
+		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750,
-		transactionReceiptPollingInterval: 1000,
-		transactionConfirmationPollingInterval: 13000,
+		transactionReceiptPollingInterval: null,
+		transactionConfirmationPollingInterval: null,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
 		defaultNetworkId: null,
@@ -104,6 +105,23 @@ export abstract class Web3Config
 		});
 
 		this._config.transactionConfirmationBlocks = val;
+	}
+
+	public get transactionPollingInterval() {
+		return this._config.transactionPollingInterval;
+	}
+
+	public set transactionPollingInterval(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionPollingInterval',
+			oldValue: this._config.transactionPollingInterval,
+			newValue: val,
+		});
+
+		this._config.transactionPollingTimeout = val;
+
+		this.transactionReceiptPollingInterval = val;
+		this.transactionConfirmationPollingInterval = val;
 	}
 
 	public get transactionPollingTimeout() {

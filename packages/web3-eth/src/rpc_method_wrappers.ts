@@ -300,7 +300,9 @@ const waitForTransactionReceipt = async (
 		// TODO - Promise returned in function argument where a void return was expected
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const intervalId = setInterval(async () => {
-			transactionPollingDuration += web3Context.transactionReceiptPollingInterval;
+			transactionPollingDuration +=
+				web3Context.transactionReceiptPollingInterval ??
+				web3Context.transactionPollingInterval;
 
 			if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
 				clearInterval(intervalId);
@@ -319,7 +321,7 @@ const waitForTransactionReceipt = async (
 				clearInterval(intervalId);
 				resolve(response);
 			}
-		}, web3Context.transactionReceiptPollingInterval);
+		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 	});
 
 function watchTransactionForConfirmations<
@@ -371,7 +373,7 @@ function watchTransactionForConfirmations<
 				latestBlockHash: nextBlock.hash,
 			});
 		}
-	}, web3Context.transactionConfirmationPollingInterval);
+	}, web3Context.transactionConfirmationPollingInterval ?? web3Context.transactionPollingInterval);
 }
 
 export async function sendTransaction(
