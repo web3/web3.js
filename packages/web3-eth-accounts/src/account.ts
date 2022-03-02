@@ -45,9 +45,13 @@ import {
 	ScryptParams,
 	PBKDF2SHA256Params,
 	CipherOptions,
+	keyStoreSchema,
 } from './types';
 
-const validateKeyStore = (keyStore: KeyStore): boolean => !!keyStore;
+const validateKeyStore = (keyStore: KeyStore) => {
+	validator.validateJSONSchema(keyStoreSchema, [keyStore]);
+	return true;
+};
 
 /**
  * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.

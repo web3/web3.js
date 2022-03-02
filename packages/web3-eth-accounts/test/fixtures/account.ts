@@ -8,6 +8,7 @@ import {
 	IVLengthError,
 	PBKDF2IterationsError,
 } from 'web3-common';
+// import { Web3ValidationErrorObject } from 'web3-validator';
 import { sign, signTransaction, encrypt } from '../../src/account';
 import { CipherOptions, KeyStore } from '../../src/types';
 
@@ -114,8 +115,6 @@ export const invalidPrivateKeytoAccountData: [
 ][] = [
 	['', new PrivateKeyLengthError()],
 	[Buffer.from([]), new PrivateKeyLengthError()],
-	[undefined, new InvalidPrivateKeyError()],
-	[null, new InvalidPrivateKeyError()],
 ];
 
 export const validEncryptData: [[any, string | Buffer, CipherOptions], KeyStore][] = [
