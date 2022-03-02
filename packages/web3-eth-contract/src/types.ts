@@ -1,6 +1,7 @@
-import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
+import { EthExecutionAPI, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
+import { sendTransaction } from 'web3-eth/src/rpc_method_wrappers';
 import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Uint, ValidTypes } from 'web3-utils';
 
 export interface EventLog {
@@ -61,21 +62,7 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: NonPayableCallOptions): PromiEvent<
-		TransactionReceipt,
-		{
-			sending: object;
-			sent: object;
-			transactionHash: string;
-			receipt: TransactionReceipt;
-			confirmation: {
-				confirmations: number;
-				receipt: TransactionReceipt;
-				latestBlockHash: HexString;
-			};
-			error: Error;
-		}
-	>;
+	send(tx?: NonPayableCallOptions): ReturnType<typeof sendTransaction>;
 	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		options?: NonPayableCallOptions,
 		returnType?: ReturnType,
@@ -86,21 +73,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: PayableCallOptions): PromiEvent<
-		TransactionReceipt,
-		{
-			sending: object;
-			sent: object;
-			transactionHash: string;
-			receipt: TransactionReceipt;
-			confirmation: {
-				confirmations: number;
-				receipt: TransactionReceipt;
-				latestBlockHash: HexString;
-			};
-			error: Error;
-		}
-	>;
+	send(tx?: PayableCallOptions): ReturnType<typeof sendTransaction>;
 	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
 		options?: PayableCallOptions,
 		returnType?: ReturnType,

@@ -14,7 +14,7 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { estimateGas } from 'web3-eth/src/rpc_method_wrappers';
+import { estimateGas, sendTransaction } from 'web3-eth/src/rpc_method_wrappers';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -170,14 +170,19 @@ export class Contract<Abi extends ContractAbi>
 				const modifiedOptions = { ...options };
 				delete modifiedOptions.to;
 
-				const txHash = await this._contractMethodSend(
+				const promiEvent = this._contractMethodSend(
 					abi as AbiFunctionFragment,
 					args,
 					modifiedOptions,
 					contractOptions,
 				);
 
-				return txHash;
+				// eslint-disable-next-line no-void
+				void promiEvent.then(res => {
+					this._address = res.contractAddress;
+				});
+
+				return promiEvent;
 
 				// TODO: Use eth-tx functions to
 				//
@@ -301,7 +306,7 @@ export class Contract<Abi extends ContractAbi>
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(abi, params, options, block),
 					// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
-					send: async (options?: PayableCallOptions) =>
+					send: (options?: PayableCallOptions) =>
 						this._contractMethodSend(abi, params, options),
 					estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
 						options?: PayableCallOptions,
@@ -318,7 +323,7 @@ export class Contract<Abi extends ContractAbi>
 				arguments: params,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(abi, params, options, block),
-				send: async (options?: NonPayableCallOptions) =>
+				send: (options?: NonPayableCallOptions) =>
 					this._contractMethodSend(abi, params, options),
 				estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
 					options?: NonPayableCallOptions,
@@ -355,26 +360,20 @@ export class Contract<Abi extends ContractAbi>
 		);
 	}
 
-	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
-		return decodeMethodReturn(
+		const tx = getSendTxParams({
 			abi,
-			await this.requestManager.send({
-				method: 'eth_sendTransaction',
-				params: [
-					getSendTxParams({
-						abi,
-						params,
-						options,
-						contractOptions: contractOptions ?? this.options,
-					}),
-				],
-			}),
-		);
+			params,
+			options,
+			contractOptions: contractOptions ?? this.options,
+		});
+
+		return sendTransaction(this, tx);
 	}
 
 	private async _contractMethodEstimateGas<
