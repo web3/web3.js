@@ -19,7 +19,6 @@ import {
 	getTransactionFromBlock,
 	getTransactionReceipt,
 	getUncle,
-	sendSignedTransaction,
 	sign,
 } from '../../src/rpc_method_wrappers';
 import {
@@ -39,7 +38,6 @@ import {
 	getTransactionReceiptValidData,
 	getTransactionValidData,
 	getUncleValidData,
-	sendSignedTransactionValidData,
 	signValidData,
 } from '../fixtures/rpc_methods_wrappers';
 
@@ -358,23 +356,25 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
-				describe('sendSignedTransaction', () => {
-					it.each(sendSignedTransactionValidData)(
-						'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
-						async (input, mockRpcResponse) => {
-							(rpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
-								mockRpcResponse,
-							);
-							expect(await sendSignedTransaction(web3Eth, input)).toBe(
-								mockRpcResponse,
-							);
-							expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
-								web3Eth.requestManager,
-								input,
-							);
-						},
-					);
-				});
+				// TODO - Re-implement after this is merged:
+				// https://github.com/ChainSafe/web3.js/pull/4806
+				// describe('sendSignedTransaction', () => {
+				// 	it.each(sendSignedTransactionValidData)(
+				// 		'input: %s\nmockRpcResponse: %s\nrpcMethodParameters: %s\noutput: %s',
+				// 		async (input, mockRpcResponse) => {
+				// 			(rpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
+				// 				mockRpcResponse,
+				// 			);
+				// 			expect(await sendSignedTransaction(web3Eth, input)).toBe(
+				// 				mockRpcResponse,
+				// 			);
+				// 			expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+				// 				web3Eth.requestManager,
+				// 				input,
+				// 			);
+				// 		},
+				// 	);
+				// });
 
 				describe('sign', () => {
 					it.each(signValidData)(
