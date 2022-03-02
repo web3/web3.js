@@ -118,7 +118,7 @@ export abstract class Web3Config
 			newValue: val,
 		});
 
-		this._config.transactionPollingTimeout = val;
+		this._config.transactionPollingInterval = val;
 
 		this.transactionReceiptPollingInterval = val;
 		this.transactionConfirmationPollingInterval = val;
