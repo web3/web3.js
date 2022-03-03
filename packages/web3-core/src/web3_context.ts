@@ -9,6 +9,7 @@ export class Web3Context<
 	API extends Web3APISpec,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
+		// eslint-disable-next-line @typescript-eslint/ban-types
 	} = {},
 > extends Web3Config {
 	public static readonly providers = Web3RequestManager.providers;

@@ -24,14 +24,17 @@ export type AccessList = AccessListEntry[];
 export type TransactionHash = HexString;
 export type Uncles = HexString32Bytes[];
 
-// TODO Should probably support EIP-2930 and EIP-1559
 export interface TransactionCall {
 	readonly from?: Address;
 	readonly to: Address;
 	readonly gas?: Uint;
 	readonly gasPrice?: Uint;
 	readonly value?: Uint;
-	readonly data?: HexString;
+	readonly data?: HexStringBytes;
+	readonly type?: HexStringSingleByte;
+	readonly maxFeePerGas?: Uint;
+	readonly maxPriorityFeePerGas?: Uint;
+	readonly accessList?: AccessList;
 }
 
 export interface BaseTransaction {
@@ -42,7 +45,7 @@ export interface BaseTransaction {
 	readonly value: Uint;
 	// TODO - Investigate if this should actually be data instead of input
 	readonly input: HexStringBytes;
-	chainId?: Uint;
+	readonly chainId?: Uint;
 }
 
 export interface Transaction1559Unsigned extends BaseTransaction {
@@ -257,7 +260,9 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.json
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
-	eth_signTransaction: (transaction: TransactionWithSender) => HexStringBytes;
+	eth_signTransaction: (
+		transaction: TransactionWithSender | Partial<TransactionWithSender>,
+	) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
 	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
@@ -270,7 +275,9 @@ export type EthExecutionAPI = {
 	eth_getCode: (address: Address, blockNumber: BlockNumberOrTag) => HexStringBytes;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
-	eth_sendTransaction: (transaction: TransactionWithSender) => HexString32Bytes;
+	eth_sendTransaction: (
+		transaction: TransactionWithSender | Partial<TransactionWithSender>,
+	) => HexString32Bytes;
 	eth_sendRawTransaction: (transaction: HexStringBytes) => HexString32Bytes;
 
 	// https://geth.ethereum.org/docs/rpc/pubsub
