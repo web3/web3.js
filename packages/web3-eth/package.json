@@ -1,6 +1,6 @@
 {
     "name": "web3-eth",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-eth",
     "license": "LGPL-3.0",
@@ -14,18 +14,18 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "web3-core": "1.7.0",
-        "web3-core-helpers": "1.7.0",
-        "web3-core-method": "1.7.0",
-        "web3-core-subscriptions": "1.7.0",
-        "web3-eth-abi": "1.7.0",
-        "web3-eth-accounts": "1.7.0",
-        "web3-eth-contract": "1.7.0",
-        "web3-eth-ens": "1.7.0",
-        "web3-eth-iban": "1.7.0",
-        "web3-eth-personal": "1.7.0",
-        "web3-net": "1.7.0",
-        "web3-utils": "1.7.0"
+        "web3-core": "1.7.1",
+        "web3-core-helpers": "1.7.1",
+        "web3-core-method": "1.7.1",
+        "web3-core-subscriptions": "1.7.1",
+        "web3-eth-abi": "1.7.1",
+        "web3-eth-accounts": "1.7.1",
+        "web3-eth-contract": "1.7.1",
+        "web3-eth-ens": "1.7.1",
+        "web3-eth-iban": "1.7.1",
+        "web3-eth-personal": "1.7.1",
+        "web3-net": "1.7.1",
+        "web3-utils": "1.7.1"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
