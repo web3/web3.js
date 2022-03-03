@@ -173,4 +173,25 @@ export class Registry {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
 	}
+
+	public setRecord(
+		name: string,
+		owner: Address,
+		resolver: Address,
+		ttl: number,
+		txConfig: NonPayableCallOptions,
+	) {
+		try {
+			return this.contract.methods
+				.setRecord(
+					namehash(name),
+					inputAddressFormatter(owner),
+					inputAddressFormatter(resolver),
+					ttl,
+				)
+				.send(txConfig);
+		} catch (error) {
+			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
+		}
+	}
 }
