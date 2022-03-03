@@ -21,7 +21,10 @@ export abstract class Web3Config
 		defaultBlock: 'latest',
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
+		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750,
+		transactionReceiptPollingInterval: null,
+		transactionConfirmationPollingInterval: null,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
 		defaultNetworkId: null,
@@ -104,6 +107,23 @@ export abstract class Web3Config
 		this._config.transactionConfirmationBlocks = val;
 	}
 
+	public get transactionPollingInterval() {
+		return this._config.transactionPollingInterval;
+	}
+
+	public set transactionPollingInterval(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionPollingInterval',
+			oldValue: this._config.transactionPollingInterval,
+			newValue: val,
+		});
+
+		this._config.transactionPollingInterval = val;
+
+		this.transactionReceiptPollingInterval = val;
+		this.transactionConfirmationPollingInterval = val;
+	}
+
 	public get transactionPollingTimeout() {
 		return this._config.transactionPollingTimeout;
 	}
@@ -116,6 +136,34 @@ export abstract class Web3Config
 		});
 
 		this._config.transactionPollingTimeout = val;
+	}
+
+	public get transactionReceiptPollingInterval() {
+		return this._config.transactionReceiptPollingInterval;
+	}
+
+	public set transactionReceiptPollingInterval(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionReceiptPollingInterval',
+			oldValue: this._config.transactionReceiptPollingInterval,
+			newValue: val,
+		});
+
+		this._config.transactionReceiptPollingInterval = val;
+	}
+
+	public get transactionConfirmationPollingInterval() {
+		return this._config.transactionConfirmationPollingInterval;
+	}
+
+	public set transactionConfirmationPollingInterval(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionConfirmationPollingInterval',
+			oldValue: this._config.transactionConfirmationPollingInterval,
+			newValue: val,
+		});
+
+		this._config.transactionConfirmationPollingInterval = val;
 	}
 
 	public get blockHeaderTimeout() {

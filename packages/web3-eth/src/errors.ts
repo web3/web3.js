@@ -18,8 +18,12 @@ import {
 	ERR_TX_INVALID_FEE_MARKET_GAS_PRICE,
 	ERR_TX_INVALID_LEGACY_GAS,
 	ERR_TX_DATA_AND_INPUT,
+	ERR_TX_POLLING_TIMEOUT,
+	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
+	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
+	ReceiptInfo,
 } from 'web3-common';
-import { HexString, Numbers, Web3Error } from 'web3-utils';
+import { HexString, HexString32Bytes, Numbers, Web3Error } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
@@ -239,5 +243,35 @@ export class TransactionDataAndInputError extends Web3Error {
 			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
 			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
 		);
+	}
+}
+
+export class TransactionPollingTimeoutError extends Web3Error {
+	public code = ERR_TX_POLLING_TIMEOUT;
+
+	public constructor(value: { numberOfSeconds: number; transactionHash: HexString32Bytes }) {
+		super(
+			`transactionHash: ${value.transactionHash}`,
+			`Transaction was not mined within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`,
+		);
+	}
+}
+
+export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
+	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
+
+	public constructor(value: { receipt: ReceiptInfo; blockHash: HexString32Bytes }) {
+		super(
+			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${value.blockHash}`,
+			`Receipt missing or blockHash null`,
+		);
+	}
+}
+
+export class TransactionReceiptMissingBlockNumberError extends Web3Error {
+	public code = ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER;
+
+	public constructor(value: { receipt: ReceiptInfo }) {
+		super(`receipt: ${JSON.stringify(value.receipt)}`, `Receipt missing block number`);
 	}
 }
