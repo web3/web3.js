@@ -109,7 +109,7 @@ export function isTransactionCall(value: TransactionCall): boolean {
 	if (value.gasPrice !== undefined && !isHexStrict(value.gasPrice)) return false;
 	if (value.value !== undefined && !isHexStrict(value.value)) return false;
 	if (value.data !== undefined && !isHexStrict(value.data)) return false;
-	if ((value as BaseTransaction).type !== undefined) return false;
+	if (value.type !== undefined) return false;
 	if (isTransaction1559Unsigned(value as Transaction1559Unsigned)) return false;
 	if (isTransaction2930Unsigned(value as Transaction2930Unsigned)) return false;
 

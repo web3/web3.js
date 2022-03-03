@@ -45,7 +45,10 @@ export interface Web3ConfigOptions {
 	defaultBlock: HexString;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
+	transactionPollingInterval: number;
 	transactionPollingTimeout: number;
+	transactionReceiptPollingInterval: number | null;
+	transactionConfirmationPollingInterval: number | null;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
 	defaultNetworkId: Numbers | null;

@@ -11,7 +11,6 @@ import {
 	HexString8Bytes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
-import { validateTransactionCall, validateTransactionWithSender } from './validation';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
@@ -184,24 +183,28 @@ export async function sign(
 	});
 }
 
+// TODO - Validation should be:
+// isTransactionWithSender(transaction)
+// ? validateTransactionWithSender(transaction)
+// : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function signTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
+	transaction: TransactionWithSender | Partial<TransactionWithSender>,
 ) {
-	validateTransactionWithSender(transaction);
-
 	return requestManager.send({
 		method: 'eth_signTransaction',
 		params: [transaction],
 	});
 }
 
+// TODO - Validation should be:
+// isTransactionWithSender(transaction)
+// ? validateTransactionWithSender(transaction)
+// : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function sendTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSender,
+	transaction: TransactionWithSender | Partial<TransactionWithSender>,
 ) {
-	validateTransactionWithSender(transaction);
-
 	return requestManager.send({
 		method: 'eth_sendTransaction',
 		params: [transaction],
@@ -220,12 +223,13 @@ export async function sendRawTransaction(
 	});
 }
 
+// TODO - validate transaction
 export async function call(
 	requestManager: Web3RequestManager,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag,
 ) {
-	validateTransactionCall(transaction);
+	// validateTransactionCall(transaction);
 	validator.validate(['blockNumberOrTag'], [blockNumber]);
 
 	return requestManager.send({
