@@ -18,14 +18,18 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
-import { isBlockTag } from 'web3-validator';
-import { isHexString32Bytes } from 'web3-validator';
+import { validator, isHexString32Bytes, isBlockTag } from 'web3-validator';
 import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
 	convertibleReceiptInfoProperties,
 	convertibleTransactionInfoProperties,
 } from './convertible_properties';
+import {
+	TransactionMissingReceiptOrBlockHashError,
+	TransactionPollingTimeoutError,
+	TransactionReceiptMissingBlockNumberError,
+} from './errors';
 import { formatTransaction } from './format_transaction';
 
 import * as rpcMethods from './rpc_methods';
@@ -302,10 +306,17 @@ const waitForTransactionReceipt = async (
 		// TODO - Promise returned in function argument where a void return was expected
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const intervalId = setInterval(async () => {
-			transactionPollingDuration += web3Context.transactionReceiptPollingInterval;
-			// TODO - Should probably throw an error
-			if (transactionPollingDuration >= web3Context.transactionPollingTimeout)
+			transactionPollingDuration +=
+				web3Context.transactionReceiptPollingInterval ??
+				web3Context.transactionPollingInterval;
+
+			if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
 				clearInterval(intervalId);
+				throw new TransactionPollingTimeoutError({
+					numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+					transactionHash,
+				});
+			}
 
 			const response = await rpcMethods.getTransactionReceipt(
 				web3Context.requestManager,
@@ -316,7 +327,7 @@ const waitForTransactionReceipt = async (
 				clearInterval(intervalId);
 				resolve(response);
 			}
-		}, web3Context.transactionReceiptPollingInterval);
+		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 	});
 
 function watchTransactionForConfirmations<
@@ -334,12 +345,13 @@ function watchTransactionForConfirmations<
 		transactionReceipt.blockHash === undefined ||
 		transactionReceipt.blockHash === null
 	)
-		// TODO - Replace error
-		throw new Error('Receipt missing or blockHash null');
+		throw new TransactionMissingReceiptOrBlockHashError({
+			receipt: transactionReceipt,
+			blockHash: transactionReceipt.blockHash,
+		});
 
 	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
-		// TODO - Replace error
-		throw new Error('Receipt missing block number');
+		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
 	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
 	// so a subscription for newBlockHeaders can be made instead of polling
@@ -355,7 +367,6 @@ function watchTransactionForConfirmations<
 
 		const nextBlock = await getBlock(
 			web3Context,
-			// TODO - Refactor after input formatting is added to getBlock
 			numberToHex(
 				BigInt(hexToNumber(transactionReceipt.blockNumber)) + BigInt(confirmationNumber),
 			),
@@ -504,6 +515,7 @@ export const call = async (
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 ) =>
+	validator.validate(['address'], [transaction.to]);
 	rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
