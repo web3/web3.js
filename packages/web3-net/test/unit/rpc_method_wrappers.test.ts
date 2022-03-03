@@ -1,6 +1,7 @@
 import { Web3Net } from '../../src';
+import { getIdValidData, getPeerCountValidData } from '../fixtures/rpc_method_wrappers';
 import * as rpcMethods from '../../src/rpc_methods';
-import { getId, isListening, getPeerCount } from '../../src/rpc_method_wrappers';
+import { getId, getPeerCount, isListening } from '../../src/rpc_method_wrappers';
 
 jest.mock('../../src/rpc_methods');
 
@@ -12,19 +13,33 @@ describe('rpc_method_wrappers', () => {
 	});
 
 	describe('should call RPC method', () => {
-		it('getId', async () => {
-			await getId(web3Net);
-			expect(rpcMethods.getId).toHaveBeenCalledWith(web3Net.requestManager);
+		describe('getId', () => {
+			it.each(getIdValidData)(
+				'returnType: %s mockRpcResponse: %s output: %s',
+				async (returnType, mockRpcResponse, output) => {
+					(rpcMethods.getId as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+
+					expect(await getId(web3Net, returnType)).toBe(output);
+					expect(rpcMethods.getId).toHaveBeenCalledWith(web3Net.requestManager);
+				},
+			);
+		});
+
+		describe('getPeerCount', () => {
+			it.each(getPeerCountValidData)(
+				'returnType: %s mockRpcResponse: %s output: %s',
+				async (returnType, mockRpcResponse, output) => {
+					(rpcMethods.getPeerCount as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+
+					expect(await getPeerCount(web3Net, returnType)).toBe(output);
+					expect(rpcMethods.getPeerCount).toHaveBeenCalledWith(web3Net.requestManager);
+				},
+			);
 		});
 
 		it('isListening', async () => {
 			await isListening(web3Net);
 			expect(rpcMethods.isListening).toHaveBeenCalledWith(web3Net.requestManager);
-		});
-
-		it('getPeerCount', async () => {
-			await getPeerCount(web3Net);
-			expect(rpcMethods.getPeerCount).toHaveBeenCalledWith(web3Net.requestManager);
 		});
 	});
 });
