@@ -4,21 +4,24 @@ import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-co
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
 import { registryContractAddress } from './config';
+import { Resolver } from './resolver';
 
 export class ENS {
-	public _registryAddress: string;
-	private readonly registry: Registry;
+	public registryAddress: string;
+	private readonly _registry: Registry;
+	private readonly _resolver: Resolver;
 
 	public constructor(registryAddr?: string) {
-		this.registry = new Registry(registryAddr);
-		this._registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
+		this._registry = new Registry(registryAddr);
+		this.registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
+		this._resolver = new Resolver(this._registry);
 	}
 
 	/**
 	 * Returns the Resolver by the given address
 	 */
 	public async getResolver(name: string): Promise<Contract<typeof RESOLVER>> {
-		return this.registry.getResolver(name);
+		return this._registry.getResolver(name);
 	}
 
 	/**
@@ -29,7 +32,7 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setResolver(name, address, txConfig);
+		return this._registry.setResolver(name, address, txConfig);
 	}
 
 	/**
@@ -43,7 +46,7 @@ export class ENS {
 		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
+		return this._registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
 	}
 
 	/**
@@ -54,21 +57,21 @@ export class ENS {
 		approved: boolean,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setApprovalForAll(operator, approved, txConfig);
+		return this._registry.setApprovalForAll(operator, approved, txConfig);
 	}
 
 	/**
 	 * Returns true if the operator is approved
 	 */
 	public async isApprovedForAll(owner: Address, operator: Address): Promise<unknown> {
-		return this.registry.isApprovedForAll(owner, operator);
+		return this._registry.isApprovedForAll(owner, operator);
 	}
 
 	/**
 	 * Returns true if the record exists
 	 */
 	public async recordExists(name: string): Promise<unknown> {
-		return this.registry.recordExists(name);
+		return this._registry.recordExists(name);
 	}
 
 	/**
@@ -80,14 +83,14 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setSubnodeOwner(name, label, address, txConfig);
+		return this._registry.setSubnodeOwner(name, label, address, txConfig);
 	}
 
 	/**
 	 * Returns the address of the owner of an ENS name.
 	 */
 	public async getTTL(name: string): Promise<unknown> {
-		return this.registry.getTTL(name);
+		return this._registry.getTTL(name);
 	}
 
 	/**
@@ -98,14 +101,14 @@ export class ENS {
 		ttl: number,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setTTL(name, ttl, txConfig);
+		return this._registry.setTTL(name, ttl, txConfig);
 	}
 
 	/**
 	 * Returns the owner by the given name and current configured or detected Registry
 	 */
 	public async getOwner(name: string): Promise<unknown> {
-		return this.registry.getOwner(name);
+		return this._registry.getOwner(name);
 	}
 
 	/**
@@ -116,46 +119,86 @@ export class ENS {
 		address: Address,
 		txConfig: NonPayableCallOptions,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this.registry.setOwner(name, address, txConfig);
+		return this._registry.setOwner(name, address, txConfig);
 	}
 
-	// TODO in resolver
-	// public getAddress () { return true };
+	/**
+	 * Returns the address of the owner of an ENS name.
+	 */
+	public async setRecord(
+		name: string,
+		owner: Address,
+		resolver: Address,
+		ttl: number,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
+	}
 
-	// TODO in resolver
-	// public setAddress () { return true };
+	/*
+	 * Sets the address of an ENS name in his resolver.
+	 */
+	public async setAddress(
+		name: string,
+		address: Address,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._resolver.setAddress(name, address, txConfig);
+	}
 
-	// TODO in resolver
-	// public getPubkey () { return true };
+	/*
+	 * Sets the SECP256k1 public key associated with an ENS node.
+	 */
+	public async setPubkey(
+		name: string,
+		x: string,
+		y: string,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._resolver.setPubkey(name, x, y, txConfig);
+	}
 
-	// TODO in resolver
-	// public setPubkey (): boolean { return true };
+	/*
+	 * Sets the content hash associated with an ENS node.
+	 */
+	public async setContenthash(
+		name: string,
+		hash: string,
+		txConfig: NonPayableCallOptions,
+	): Promise<TransactionReceipt | RevertInstructionError> {
+		return this._resolver.setContenthash(name, hash, txConfig);
+	}
 
-	// TODO in resolver
-	// public getContent (): boolean { return true };
+	/*
+	 * Resolves an ENS name to an Ethereum address.
+	 */
+	public async getAddress(ENSName: string) {
+		return this._resolver.getAddress(ENSName);
+	}
 
-	// TODO in resolver
-	// public setContent (): boolean { return true };
+	/*
+	 * Returns the X and Y coordinates of the curve point for the public key.
+	 */
+	public async getPubkey(ENSName: string) {
+		return this._resolver.getPubkey(ENSName);
+	}
 
-	// TODO in resolver
-	// public getContentHash (): boolean { return true };
+	/*
+	 * Returns the content hash object associated with an ENS node.
+	 */
+	public async getContenthash(ENSName: string) {
+		return this._resolver.getContenthash(ENSName);
+	}
 
-	// TODO in resolver
-	// public setContentHash (): boolean { return true };
-
-	// TODO in resolver
-	// public getMultiHash (): boolean { return true };
-
-	// TODO in resolver
-	// public setMultiHash (): boolean { return true };
+	/*
+	 * Returns true if the related Resolver does support the given signature or interfaceId.
+	 */
+	public async supportsInterface(ENSName: string, interfaceId: string) {
+		return this._resolver.supportsInterface(ENSName, interfaceId);
+	}
 
 	// TODO after eth.net.getNetworkType is complete
 	// public checkNetwork (): boolean {
 	// return true;
 	//  };
-
-	// TODO finish in resolver
-	// public supportsInterface(){
-	//     return true;
-	// }
 }
