@@ -37,8 +37,8 @@ describe('formatters', () => {
 		jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
 		jest.spyOn(utils, 'isAddress').mockReturnValue(true);
 		jest.spyOn(utils, 'sha3Raw').mockReturnValue(sha3Result);
-		jest.spyOn(Iban.prototype, 'isValid').mockImplementation(() => false);
-		jest.spyOn(Iban.prototype, 'isDirect').mockImplementation(() => false);
+		jest.spyOn(Iban, 'isValid').mockImplementation(() => false);
+		jest.spyOn(Iban, 'isDirect').mockImplementation(() => false);
 	});
 
 	describe('outputProofFormatter', () => {
@@ -124,8 +124,8 @@ describe('formatters', () => {
 			const address = '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8';
 			Iban.prototype.toAddress = jest.fn(() => address);
 
-			jest.spyOn(Iban.prototype, 'isValid').mockImplementation(() => true);
-			jest.spyOn(Iban.prototype, 'isDirect').mockImplementation(() => true);
+			jest.spyOn(Iban, 'isValid').mockImplementation(() => true);
+			jest.spyOn(Iban, 'isDirect').mockImplementation(() => true);
 
 			expect(inputAddressFormatter('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS')).toBe(address);
 			expect(Iban.prototype.toAddress).toHaveBeenCalled();
