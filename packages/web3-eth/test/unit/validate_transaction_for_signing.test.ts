@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-conditional-expect */
 
 import { InvalidTransactionObjectError } from '../../src/errors';
-import { validateTransactionForSigning } from '../../src/eth_tx';
+import { validateTransactionForSigning } from '../../src/validation';
 import {
 	invalidNonceOrChainIdData,
 	invalidTransactionObject,

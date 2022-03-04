@@ -1,4 +1,4 @@
-import { detectTransactionType } from '../../src/eth_tx';
+import { detectTransactionType } from '../../src/utils/detect_transaction_type';
 import {
 	transactionType0x0,
 	transactionType0x1,

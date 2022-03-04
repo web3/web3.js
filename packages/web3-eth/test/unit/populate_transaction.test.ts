@@ -4,7 +4,7 @@ import { BlockTags, ValidTypes } from 'web3-utils';
 import HttpProvider from 'web3-providers-http';
 
 import * as rpcMethods from '../../src/rpc_methods';
-import { populateTransaction } from '../../src/eth_tx';
+import { populateTransaction } from '../../src/utils/populate_transaction';
 import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,

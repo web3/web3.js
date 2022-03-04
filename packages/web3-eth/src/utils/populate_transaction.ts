@@ -1,94 +1,18 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import {
-	BlockTags,
-	convertToValidType,
-	HexString,
-	toNumber,
-	ValidReturnTypes,
-	ValidTypes,
-} from 'web3-utils';
+import { BlockTags, convertToValidType, HexString, ValidReturnTypes, ValidTypes } from 'web3-utils';
 import { privateKeyToAddress } from 'web3-eth-accounts';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
-import Common from '@ethereumjs/common';
 
 import {
 	Eip1559NotSupportedError,
-	InvalidNonceOrChainIdError,
-	InvalidTransactionObjectError,
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
-} from './errors';
-import {
-	chain,
-	hardfork,
-	PopulatedUnsignedEip1559Transaction,
-	PopulatedUnsignedEip2930Transaction,
-	PopulatedUnsignedTransaction,
-	Transaction,
-} from './types';
-import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
-import { validateChainInfo, validateCustomChainInfo, validateGas } from './validation';
+} from '../errors';
+import { chain, hardfork, PopulatedUnsignedTransaction, Transaction } from '../types';
+import { getBlock, getGasPrice, getTransactionCount } from '../rpc_method_wrappers';
 import { formatTransaction } from './format_transaction';
-
-export const detectTransactionType = (
-	transaction: Transaction,
-	overrideMethod?: (transaction: Transaction) => HexString | undefined,
-): HexString | undefined => {
-	// TODO - Refactor overrideMethod
-	if (overrideMethod !== undefined) return overrideMethod(transaction);
-
-	if (transaction.type !== undefined)
-		return convertToValidType(transaction.type, ValidTypes.HexString) as HexString;
-
-	if (
-		transaction.maxFeePerGas !== undefined ||
-		transaction.maxPriorityFeePerGas !== undefined ||
-		transaction.hardfork === 'london' ||
-		transaction.common?.hardfork === 'london'
-	)
-		return '0x2';
-
-	if (
-		transaction.accessList !== undefined ||
-		transaction.hardfork === 'berlin' ||
-		transaction.common?.hardfork === 'berlin'
-	)
-		return '0x1';
-
-	return undefined;
-};
-
-export const validateTransactionForSigning = (
-	transaction: Transaction,
-	overrideMethod?: (transaction: Transaction) => void,
-) => {
-	if (overrideMethod !== undefined) {
-		overrideMethod(transaction);
-		return;
-	}
-
-	if (typeof transaction !== 'object' || transaction === null)
-		throw new InvalidTransactionObjectError(transaction);
-
-	validateCustomChainInfo(transaction);
-	validateChainInfo(transaction);
-
-	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
-	validateGas(formattedTransaction);
-
-	if (
-		formattedTransaction.nonce === undefined ||
-		formattedTransaction.chainId === undefined ||
-		formattedTransaction.nonce.startsWith('-') ||
-		formattedTransaction.chainId.startsWith('-')
-	)
-		throw new InvalidNonceOrChainIdError({
-			nonce: transaction.nonce,
-			chainId: transaction.chainId,
-		});
-};
+import { detectTransactionType } from './detect_transaction_type';
 
 export async function populateTransaction<
 	DesiredType extends ValidTypes,
@@ -215,81 +139,3 @@ export async function populateTransaction<
 		desiredType,
 	) as unknown as PopulatedUnsignedTransaction<NumberType>;
 }
-
-const getEthereumjsTxDataFromTransaction = (
-	transaction: PopulatedUnsignedTransaction<HexString>,
-) => ({
-	nonce: transaction.nonce as HexString,
-	gasPrice: transaction.gasPrice as HexString,
-	gasLimit: transaction.gasLimit as HexString,
-	to: transaction.to as HexString,
-	value: transaction.value as HexString,
-	data: transaction.data,
-	type: transaction.type as HexString,
-	chainId: transaction.chainId as HexString,
-	accessList: (transaction as PopulatedUnsignedEip2930Transaction).accessList,
-	maxPriorityFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction)
-		.maxPriorityFeePerGas as HexString,
-	maxFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction).maxFeePerGas as HexString,
-});
-
-const getEthereumjsTransactionOptions = (
-	transaction: PopulatedUnsignedTransaction<HexString>,
-	web3Context: Web3Context<EthExecutionAPI>,
-) => {
-	const hasTransactionSigningOptions =
-		(transaction.chain !== undefined && transaction.hardfork !== undefined) ||
-		transaction.common !== undefined;
-
-	let common;
-	if (!hasTransactionSigningOptions) {
-		common = Common.custom(
-			{
-				name: 'custom-network',
-				chainId: toNumber(transaction.chainId) as number,
-				networkId:
-					transaction.networkId !== undefined
-						? (toNumber(transaction.networkId) as number)
-						: undefined,
-				defaultHardfork: transaction.hardfork ?? web3Context.defaultHardfork,
-			},
-			{
-				baseChain: web3Context.defaultChain,
-			},
-		);
-	} else if (transaction.common)
-		common = Common.custom(
-			{
-				name: transaction.common.customChain.name ?? 'custom-network',
-				chainId: toNumber(transaction.common.customChain.chainId) as number,
-				networkId: toNumber(transaction.common.customChain.networkId) as number,
-				defaultHardfork: transaction.common.hardfork ?? web3Context.defaultHardfork,
-			},
-			{
-				baseChain: transaction.common.baseChain ?? web3Context.defaultChain,
-			},
-		);
-
-	return { common } as TxOptions;
-};
-
-// TODO - Needs override function
-export const prepareTransactionForSigning = async (
-	transaction: Transaction,
-	web3Context: Web3Context<EthExecutionAPI>,
-	privateKey?: HexString | Buffer,
-) => {
-	const populatedTransaction = await populateTransaction(
-		transaction,
-		web3Context,
-		ValidTypes.HexString,
-		privateKey,
-	);
-
-	validateTransactionForSigning(populatedTransaction);
-
-	return TransactionFactory.fromTxData(
-		getEthereumjsTxDataFromTransaction(populatedTransaction),
-		getEthereumjsTransactionOptions(populatedTransaction, web3Context),
-	);
-};
