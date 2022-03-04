@@ -1,6 +1,7 @@
-import { TransactionCall, TransactionWithSender } from 'web3-common';
+import { TransactionWithSender } from 'web3-common';
 import { AbiFunctionFragment } from 'web3-eth-abi';
 import { mergeDeep } from 'web3-utils';
+import { TransactionCall } from 'web3-eth/src/types';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
 import { NonPayableCallOptions, PayableCallOptions, ContractOptions } from './types';
@@ -15,7 +16,7 @@ export const getSendTxParams = ({
 	params: unknown[];
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
-}): TransactionWithSender & { data: string } => {
+}): TransactionCall => {
 	if (!options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
@@ -33,7 +34,7 @@ export const getSendTxParams = ({
 			data: contractOptions.data,
 		},
 		options as unknown as Record<string, unknown>,
-	) as unknown as TransactionWithSender & { data: string };
+	) as unknown as TransactionCall;
 
 	if (!txParams.data) {
 		txParams = {
@@ -114,5 +115,5 @@ export const getEstimateGasParams = ({
 		};
 	}
 
-	return txParams;
+	return txParams as TransactionWithSender;
 };
