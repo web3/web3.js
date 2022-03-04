@@ -104,6 +104,7 @@ export abstract class Web3Subscription<
 
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally

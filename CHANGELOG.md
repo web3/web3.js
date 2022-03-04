@@ -361,3 +361,10 @@ Released with 1.0.0-beta.37 code base.
 #### web3-net
 
 1. package will not support web3.bzz.net and web3.shh.net
+
+#### web3-eth-ens
+
+1. `setMultihash` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver (https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol)
+2. `setContent` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver (https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol)
+3. `getContent` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver.
+4. `getMultihash` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver.
