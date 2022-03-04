@@ -35,4 +35,27 @@ describe('PromiEvent', () => {
 			});
 		});
 	});
+
+	it('should initialize and emit later', async () => {
+		return new Promise(done => {
+			const func = () => {
+				const p = new PromiEvent<string, { data: string }>(resolve => {
+					resolve('resolved value');
+				});
+
+				setImmediate(() => {
+					p.emit('data', 'emitted data');
+				});
+
+				return p;
+			};
+
+			const p = func();
+
+			p.on('data', data => {
+				expect(data).toBe('emitted data');
+				done(null);
+			});
+		});
+	});
 });
