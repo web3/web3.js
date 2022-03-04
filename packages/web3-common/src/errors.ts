@@ -46,6 +46,7 @@ import {
 	ERR_INVALID_PASSWORD,
 	ERR_IV_LENGTH,
 	ERR_PBKDF2_ITERATIONS,
+	ERR_ENS_CHECK_INTERFACE_SUPPORT,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -479,5 +480,12 @@ export class PBKDF2IterationsError extends Web3Error {
 	public code = ERR_PBKDF2_ITERATIONS;
 	public constructor() {
 		super('c > 1000, pbkdf2 is less secure with less iterations');
+	}
+}
+
+export class ENSCheckInterfaceSupportError extends Web3Error {
+	public code = ERR_ENS_CHECK_INTERFACE_SUPPORT;
+	public constructor(errorDetails: string) {
+		super(`ENS resolver check interface support error. "${errorDetails}"`);
 	}
 }

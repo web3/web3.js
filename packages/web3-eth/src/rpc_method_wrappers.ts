@@ -16,13 +16,18 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
-import { isHexString32Bytes } from 'web3-validator';
+import { validator, isHexString32Bytes } from 'web3-validator';
 import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
 	convertibleReceiptInfoProperties,
 	convertibleTransactionInfoProperties,
 } from './convertible_properties';
+import {
+	TransactionMissingReceiptOrBlockHashError,
+	TransactionPollingTimeoutError,
+	TransactionReceiptMissingBlockNumberError,
+} from './errors';
 import { formatTransaction } from './format_transaction';
 
 import * as rpcMethods from './rpc_methods';
@@ -295,10 +300,17 @@ const waitForTransactionReceipt = async (
 		// TODO - Promise returned in function argument where a void return was expected
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		const intervalId = setInterval(async () => {
-			transactionPollingDuration += web3Context.transactionReceiptPollingInterval;
-			// TODO - Should probably throw an error
-			if (transactionPollingDuration >= web3Context.transactionPollingTimeout)
+			transactionPollingDuration +=
+				web3Context.transactionReceiptPollingInterval ??
+				web3Context.transactionPollingInterval;
+
+			if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
 				clearInterval(intervalId);
+				throw new TransactionPollingTimeoutError({
+					numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+					transactionHash,
+				});
+			}
 
 			const response = await rpcMethods.getTransactionReceipt(
 				web3Context.requestManager,
@@ -309,7 +321,7 @@ const waitForTransactionReceipt = async (
 				clearInterval(intervalId);
 				resolve(response);
 			}
-		}, web3Context.transactionReceiptPollingInterval);
+		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 	});
 
 function watchTransactionForConfirmations<
@@ -325,12 +337,13 @@ function watchTransactionForConfirmations<
 		transactionReceipt.blockHash === undefined ||
 		transactionReceipt.blockHash === null
 	)
-		// TODO - Replace error
-		throw new Error('Receipt missing or blockHash null');
+		throw new TransactionMissingReceiptOrBlockHashError({
+			receipt: transactionReceipt,
+			blockHash: transactionReceipt.blockHash,
+		});
 
 	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
-		// TODO - Replace error
-		throw new Error('Receipt missing block number');
+		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
 	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
 	// so a subscription for newBlockHeaders can be made instead of polling
@@ -360,7 +373,7 @@ function watchTransactionForConfirmations<
 				latestBlockHash: nextBlock.hash,
 			});
 		}
-	}, web3Context.transactionConfirmationPollingInterval);
+	}, web3Context.transactionConfirmationPollingInterval ?? web3Context.transactionPollingInterval);
 }
 
 export async function sendTransaction(
@@ -473,18 +486,18 @@ export const signTransaction = async (
 		formatTransaction(transaction, ValidTypes.HexString),
 	);
 
-// TODO Decide what to do with transaction.to
-// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 export const call = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) =>
-	rpcMethods.call(
+) => {
+	validator.validate(['address'], [transaction.to]);
+	return rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
 		convertToValidType(blockNumber, ValidTypes.HexString) as HexString,
 	);
+};
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
