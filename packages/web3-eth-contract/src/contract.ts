@@ -165,7 +165,6 @@ export class Contract<Abi extends ContractAbi>
 
 		return {
 			arguments: args,
-			// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
 			send: async (options?: PayableCallOptions) => {
 				const modifiedOptions = { ...options };
 				delete modifiedOptions.to;
@@ -183,22 +182,6 @@ export class Contract<Abi extends ContractAbi>
 				});
 
 				return promiEvent;
-
-				// TODO: Use eth-tx functions to
-				//
-				// 1. Get the transaction receipt from the above txHash
-				// 2. Extract the contract address from the receipt
-				// 3. Get the code from eth_getCode for the contract address
-				// 4. Return the contract instance with the new address and the code
-				//
-				// return new Contract<Abi>(this._jsonInterface, contractAddress as HexString, {
-				// 	gas: this.options.gas,
-				// 	gasPrice: this.options.gasPrice,
-				// 	gasLimit: this.options.gasLimit,
-				// 	from: this.options.from,
-				// 	data: this.options.data,
-				// 	provider: this.currentProvider,
-				// });
 			},
 			estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
 				options?: PayableCallOptions,
@@ -305,7 +288,6 @@ export class Contract<Abi extends ContractAbi>
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(abi, params, options, block),
-					// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
 					send: (options?: PayableCallOptions) =>
 						this._contractMethodSend(abi, params, options),
 					estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(

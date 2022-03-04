@@ -44,14 +44,14 @@ export interface ContractInitOptions {
 export type TransactionReceipt = ReceiptInfo;
 
 export interface NonPayableCallOptions {
-	nonce?: string;
-	chainId?: string;
+	nonce?: HexString;
+	chainId?: HexString;
 	from?: Address;
 	to?: Address;
 	data?: HexString;
 	gas?: string;
-	maxPriorityFeePerGas?: string;
-	maxFeePerGas?: string;
+	maxPriorityFeePerGas?: HexString;
+	maxFeePerGas?: HexString;
 	gasPrice?: string;
 }
 

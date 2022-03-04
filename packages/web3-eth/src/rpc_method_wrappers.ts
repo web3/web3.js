@@ -382,7 +382,7 @@ function watchTransactionForConfirmations<
 				latestBlockHash: nextBlock.hash,
 			});
 		}
-	}, web3Context.transactionConfirmationPollingInterval);
+	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 }
 
 export function sendTransaction(
@@ -514,15 +514,17 @@ export const call = async (
 	web3Context: Web3Context<EthExecutionAPI, any>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) =>
+) => {
 	validator.validate(['address'], [transaction.to]);
-	rpcMethods.call(
+
+	return rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, ValidTypes.HexString) as TransactionCall<HexString>,
 		isBlockTag(blockNumber)
 			? blockNumber
 			: (convertToValidType(blockNumber, ValidTypes.HexString) as HexString),
 	);
+};
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
