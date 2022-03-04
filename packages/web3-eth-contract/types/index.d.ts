@@ -29,6 +29,8 @@ export class Contract {
         options?: ContractOptions
     );
 
+    static setProvider(provider: string): void;
+
     private _address: string;
     private _jsonInterface: AbiItem[];
     defaultAccount: string | null;
