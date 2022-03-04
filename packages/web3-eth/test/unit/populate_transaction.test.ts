@@ -132,8 +132,11 @@ describe('populateTransaction', () => {
 		});
 
 		it('should use web3Context.defaultAccount to populate', async () => {
-			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
-				defaultAccount: expectedFrom,
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultAccount: expectedFrom,
+				},
 			});
 
 			const input = { ...transaction };
@@ -265,8 +268,11 @@ describe('populateTransaction', () => {
 		});
 
 		it('should use web3Context.defaultTransactionType to populate', async () => {
-			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
-				defaultTransactionType,
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultTransactionType,
+				},
 			});
 
 			const input = { ...transaction };
@@ -412,8 +418,11 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
-				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+				},
 			});
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
@@ -431,8 +440,11 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
-				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+				},
 			});
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
@@ -450,8 +462,11 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'), {
-				defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultMaxPriorityFeePerGas: expectedMaxPriorityFeePerGas,
+				},
 			});
 
 			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);

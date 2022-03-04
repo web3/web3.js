@@ -2,7 +2,7 @@
 
 import { when } from 'jest-when';
 import { Web3AccountProvider, Web3BaseWalletAccount } from 'web3-common';
-import { Wallet } from '../../src/local_storage_wallet';
+import { Wallet } from '../../src/wallet';
 
 describe('Wallet', () => {
 	let wallet: Wallet;

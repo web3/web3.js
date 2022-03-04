@@ -357,6 +357,11 @@ Released with 1.0.0-beta.37 code base.
 4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
 5. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
 6. `Wallet.create` function doesn't accepts `entropy` param
+7. `contract.method.send()` will resolve to transaction receipt instead of `transactionHash`. User can use `receipt.transactionHash` instead.
+
+#### web3-net
+
+1. package will not support web3.bzz.net and web3.shh.net
 
 #### web3-eth-iban
 

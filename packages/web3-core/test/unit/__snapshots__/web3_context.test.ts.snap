@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Web3Context getContextObject should return correct context object 1`] = `
+Object {
+  "config": Object {
+    "blockHeaderTimeout": 10,
+    "defaultAccount": null,
+    "defaultBlock": "latest",
+    "defaultChain": "mainnet",
+    "defaultCommon": null,
+    "defaultHardfork": "london",
+    "defaultMaxPriorityFeePerGas": "0x9502f900",
+    "defaultNetworkId": null,
+    "defaultReturnType": "HexString",
+    "defaultTransactionType": "0x0",
+    "handleRevert": false,
+    "maxListenersWarningThreshold": 100,
+    "transactionBlockTimeout": 50,
+    "transactionConfirmationBlocks": 24,
+    "transactionConfirmationPollingInterval": null,
+    "transactionPollingInterval": 1000,
+    "transactionPollingTimeout": 750,
+    "transactionReceiptPollingInterval": null,
+  },
+  "provider": HttpProvider {
+    "clientUrl": "http://test/abc",
+    "httpProviderOptions": undefined,
+  },
+  "providers": Object {
+    "HttpProvider": [Function],
+    "IpcProvider": [Function],
+    "WebsocketProvider": [Function],
+  },
+  "registeredSubscriptions": undefined,
+  "requestManager": Web3RequestManager {
+    "_emitter": EventEmitter {
+      "_events": Object {},
+      "_eventsCount": 0,
+      "_maxListeners": undefined,
+      Symbol(kCapture): false,
+    },
+    "_provider": HttpProvider {
+      "clientUrl": "http://test/abc",
+      "httpProviderOptions": undefined,
+    },
+  },
+  "subscriptionManager": undefined,
+}
+`;

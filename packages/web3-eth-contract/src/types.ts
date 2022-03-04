@@ -1,7 +1,8 @@
-import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
+import { EthExecutionAPI, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
+import { sendTransaction } from 'web3-eth';
+import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Uint, ValidTypes } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -37,20 +38,20 @@ export interface ContractInitOptions {
 	readonly from?: Address;
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;
-	readonly provider: SupportedProviders<EthExecutionAPI> | string;
+	readonly provider: SupportedProviders<EthExecutionAPI>;
 }
 
 export type TransactionReceipt = ReceiptInfo;
 
 export interface NonPayableCallOptions {
-	nonce?: Numbers;
-	chainId?: Numbers;
+	nonce?: HexString;
+	chainId?: HexString;
 	from?: Address;
 	to?: Address;
 	data?: HexString;
 	gas?: string;
-	maxPriorityFeePerGas?: Numbers;
-	maxFeePerGas?: Numbers;
+	maxPriorityFeePerGas?: HexString;
+	maxFeePerGas?: HexString;
 	gasPrice?: string;
 }
 
@@ -61,43 +62,21 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: NonPayableCallOptions): PromiEvent<
-		TransactionReceipt,
-		{
-			sending: object;
-			sent: object;
-			transactionHash: string;
-			receipt: TransactionReceipt;
-			confirmation: {
-				confirmations: number;
-				receipt: TransactionReceipt;
-				latestBlockHash: HexString;
-			};
-			error: Error;
-		}
-	>;
-	estimateGas(tx?: NonPayableCallOptions): Promise<number>;
+	send(tx?: NonPayableCallOptions): ReturnType<typeof sendTransaction>;
+	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		options?: NonPayableCallOptions,
+		returnType?: ReturnType,
+	): Promise<ReturnType>;
 	encodeABI(): string;
 }
 
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: PayableCallOptions): PromiEvent<
-		TransactionReceipt,
-		{
-			sending: object;
-			sent: object;
-			transactionHash: string;
-			receipt: TransactionReceipt;
-			confirmation: {
-				confirmations: number;
-				receipt: TransactionReceipt;
-				latestBlockHash: HexString;
-			};
-			error: Error;
-		}
-	>;
-	estimateGas(tx?: PayableCallOptions): Promise<number>;
+	send(tx?: PayableCallOptions): ReturnType<typeof sendTransaction>;
+	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		options?: PayableCallOptions,
+		returnType?: ReturnType,
+	): Promise<ReturnType>;
 	encodeABI(): HexString;
 }

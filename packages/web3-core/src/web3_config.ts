@@ -37,8 +37,19 @@ export abstract class Web3Config
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 	};
 
+	public constructor(options?: Partial<Web3ConfigOptions>) {
+		super();
+
+		this.setConfig(options ?? {});
+	}
+
 	public getConfig() {
 		return this._config;
+	}
+
+	public setConfig(options: Partial<Web3ConfigOptions>) {
+		// TODO: Improve and add key check
+		Object.assign(this._config, options);
 	}
 
 	public get handleRevert() {
@@ -129,11 +140,7 @@ export abstract class Web3Config
 	}
 
 	public set transactionPollingTimeout(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionPollingTimeout',
-			oldValue: this._config.transactionPollingTimeout,
-			newValue: val,
-		});
+		this._triggerConfigChange('transactionPollingTimeout', val);
 
 		this._config.transactionPollingTimeout = val;
 	}
@@ -171,11 +178,7 @@ export abstract class Web3Config
 	}
 
 	public set blockHeaderTimeout(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'blockHeaderTimeout',
-			oldValue: this._config.blockHeaderTimeout,
-			newValue: val,
-		});
+		this._triggerConfigChange('blockHeaderTimeout', val);
 
 		this._config.blockHeaderTimeout = val;
 	}
@@ -185,11 +188,8 @@ export abstract class Web3Config
 	}
 
 	public set maxListenersWarningThreshold(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'maxListenersWarningThreshold',
-			oldValue: this._config.maxListenersWarningThreshold,
-			newValue: val,
-		});
+		this._triggerConfigChange('maxListenersWarningThreshold', val);
+
 		this._config.maxListenersWarningThreshold = val;
 	}
 
@@ -198,11 +198,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultNetworkId(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultNetworkId',
-			oldValue: this._config.defaultNetworkId,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultNetworkId', val);
 
 		this._config.defaultNetworkId = val;
 	}
@@ -212,11 +208,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultChain(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultChain',
-			oldValue: this._config.defaultChain,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultChain', val);
 
 		this._config.defaultChain = val;
 	}
@@ -226,11 +218,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultHardfork(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultHardfork',
-			oldValue: this._config.defaultHardfork,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultHardfork', val);
 
 		this._config.defaultHardfork = val;
 	}
@@ -240,11 +228,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultCommon(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultCommon',
-			oldValue: this._config.defaultCommon,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultCommon', val);
 
 		this._config.defaultCommon = val;
 	}
@@ -254,11 +238,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultReturnType(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultReturnType',
-			oldValue: this._config.defaultReturnType,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultReturnType', val);
 
 		this._config.defaultReturnType = val;
 	}
@@ -268,11 +248,7 @@ export abstract class Web3Config
 	}
 
 	public set defaultTransactionType(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultTransactionType',
-			oldValue: this._config.defaultTransactionType,
-			newValue: val,
-		});
+		this._triggerConfigChange('defaultTransactionType', val);
 
 		this._config.defaultTransactionType = val;
 	}
@@ -282,12 +258,18 @@ export abstract class Web3Config
 	}
 
 	public set defaultMaxPriorityFeePerGas(val) {
-		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'defaultMaxPriorityFeePerGas',
-			oldValue: this._config.defaultMaxPriorityFeePerGas,
-			newValue: val,
-		});
-
+		this._triggerConfigChange('defaultMaxPriorityFeePerGas', val);
 		this._config.defaultMaxPriorityFeePerGas = val;
+	}
+
+	private _triggerConfigChange<K extends keyof Web3ConfigOptions>(
+		config: K,
+		newValue: Web3ConfigOptions[K],
+	) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: config,
+			oldValue: this._config[config],
+			newValue,
+		} as ConfigEvent<Web3ConfigOptions>);
 	}
 }
