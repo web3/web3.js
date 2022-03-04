@@ -1,4 +1,4 @@
-import { convertToValidType, Numbers, ValidReturnTypes, ValidTypes } from 'web3-utils';
+import { convertToValidType, Numbers, ValidReturnTypes, ValidTypes, mergeDeep } from 'web3-utils';
 import { TransactionDataAndInputError } from './errors';
 import { Transaction } from './types';
 
@@ -6,11 +6,10 @@ export function formatTransaction<
 	DesiredType extends ValidTypes,
 	NumberType extends ValidReturnTypes[DesiredType] = ValidReturnTypes[DesiredType],
 >(transaction: Transaction, desiredType: DesiredType): Transaction<NumberType> {
-	// TODO - The spread operator performs a shallow copy of transaction.
-	// I tried using Object.assign({}, transaction) which is supposed to perform a deep copy,
-	// but format_transactions.test.ts were still failing due to original nested object properties
-	// being wrongfully updated by this method.
-	const formattedTransaction = { ...transaction };
+	const formattedTransaction = mergeDeep(
+		{},
+		transaction as Record<string, unknown>,
+	) as Transaction;
 	if (transaction.common !== undefined) {
 		formattedTransaction.common = { ...transaction.common };
 		if (transaction.common.customChain !== undefined)
