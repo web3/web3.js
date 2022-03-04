@@ -1,12 +1,15 @@
 import { Socket } from 'net';
 import {
-	Web3APISpec,
+	EthExecutionAPI,
 	JsonRpcPayload,
 	JsonRpcResponse,
 	JsonRpcResult,
+	Web3APISpec,
 	Web3BaseProvider,
 } from 'web3-common';
 import { HexString, Numbers, ValidTypes } from 'web3-utils';
+// eslint-disable-next-line import/no-cycle
+import { Web3Context } from './web3_context';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -40,6 +43,16 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	net?: Socket,
 ) => Web3BaseProvider<API>;
 
+// TODO: When we have `web3-types` package we can share TransactionType
+export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
+
+// TODO: When we have `web3-types` package we can share TransactionType
+export type TransactionBuilder = (options: {
+	transaction: Record<string, unknown>;
+	web3Context: Web3Context<EthExecutionAPI>;
+	privateKey?: HexString | Buffer;
+}) => Promise<Record<string, unknown>>;
+
 export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount: HexString | null;
@@ -59,4 +72,6 @@ export interface Web3ConfigOptions {
 	defaultReturnType: ValidTypes;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
+	transactionBuilder?: TransactionBuilder;
+	transactionTypeParser?: TransactionTypeParser;
 }

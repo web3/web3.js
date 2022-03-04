@@ -1,17 +1,9 @@
-import { EthExecutionAPI } from 'web3-common';
-import { Web3Context } from 'web3-core';
-import {
-	BlockTags,
-	convertToValidType,
-	HexString,
-	toNumber,
-	ValidReturnTypes,
-	ValidTypes,
-} from 'web3-utils';
-import { privateKeyToAddress } from 'web3-eth-accounts';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
 import Common from '@ethereumjs/common';
-
+import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
+import { EthExecutionAPI } from 'web3-common';
+import { TransactionBuilder, TransactionTypeParser, Web3Context } from 'web3-core';
+import { privateKeyToAddress } from 'web3-eth-accounts';
+import { BlockTags, convertToValidType, HexString, toNumber, ValidTypes } from 'web3-utils';
 import {
 	Eip1559NotSupportedError,
 	InvalidNonceOrChainIdError,
@@ -20,6 +12,8 @@ import {
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from './errors';
+import { formatTransaction } from './format_transaction';
+import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 import {
 	chain,
 	hardfork,
@@ -28,37 +22,32 @@ import {
 	PopulatedUnsignedTransaction,
 	Transaction,
 } from './types';
-import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 import { validateChainInfo, validateCustomChainInfo, validateGas } from './validation';
-import { formatTransaction } from './format_transaction';
 
-export const detectTransactionType = (
-	transaction: Transaction,
-	overrideMethod?: (transaction: Transaction) => HexString | undefined,
-): HexString | undefined => {
-	// TODO - Refactor overrideMethod
-	if (overrideMethod !== undefined) return overrideMethod(transaction);
+export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
+	const tx = transaction as unknown as Transaction;
 
-	if (transaction.type !== undefined)
-		return convertToValidType(transaction.type, ValidTypes.HexString) as HexString;
+	if (tx.type !== undefined)
+		return convertToValidType(tx.type, ValidTypes.HexString) as HexString;
 
 	if (
-		transaction.maxFeePerGas !== undefined ||
-		transaction.maxPriorityFeePerGas !== undefined ||
-		transaction.hardfork === 'london' ||
-		transaction.common?.hardfork === 'london'
+		tx.maxFeePerGas !== undefined ||
+		tx.maxPriorityFeePerGas !== undefined ||
+		tx.hardfork === 'london' ||
+		tx.common?.hardfork === 'london'
 	)
 		return '0x2';
 
-	if (
-		transaction.accessList !== undefined ||
-		transaction.hardfork === 'berlin' ||
-		transaction.common?.hardfork === 'berlin'
-	)
+	if (tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin')
 		return '0x1';
 
 	return undefined;
 };
+
+export const detectTransactionType = (
+	transaction: Transaction,
+	transactionTypeParser: TransactionTypeParser = defaultTransactionTypeParser,
+) => transactionTypeParser(transaction as unknown as Record<string, unknown>);
 
 export const validateTransactionForSigning = (
 	transaction: Transaction,
@@ -90,16 +79,12 @@ export const validateTransactionForSigning = (
 		});
 };
 
-export async function populateTransaction<
-	DesiredType extends ValidTypes,
-	NumberType extends ValidReturnTypes[DesiredType] = ValidReturnTypes[DesiredType],
->(
-	transaction: Transaction,
-	web3Context: Web3Context<EthExecutionAPI>,
-	desiredType: DesiredType,
-	privateKey?: HexString | Buffer,
-): Promise<PopulatedUnsignedTransaction<NumberType>> {
-	const populatedTransaction = { ...transaction };
+export const defaultTransactionBuilder: TransactionBuilder = async ({
+	transaction,
+	web3Context,
+	privateKey,
+}) => {
+	const populatedTransaction = { ...transaction } as unknown as Transaction;
 
 	if (populatedTransaction.from === undefined) {
 		if (privateKey !== undefined) {
@@ -159,7 +144,10 @@ export async function populateTransaction<
 	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 
-	populatedTransaction.type = detectTransactionType(populatedTransaction);
+	populatedTransaction.type = detectTransactionType(
+		populatedTransaction,
+		web3Context.transactionTypeParser ?? defaultTransactionTypeParser,
+	);
 	if (
 		populatedTransaction.type === undefined &&
 		(web3Context.defaultTransactionType !== null ||
@@ -209,12 +197,8 @@ export async function populateTransaction<
 		}
 	}
 
-	// TODO - Types of property 'gasPrice' are incompatible
-	return formatTransaction(
-		populatedTransaction,
-		desiredType,
-	) as unknown as PopulatedUnsignedTransaction<NumberType>;
-}
+	return populatedTransaction as Record<string, unknown>;
+};
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: PopulatedUnsignedTransaction<HexString>,
@@ -279,17 +263,23 @@ export const prepareTransactionForSigning = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Buffer,
 ) => {
-	const populatedTransaction = await populateTransaction(
-		transaction,
-		web3Context,
-		ValidTypes.HexString,
-		privateKey,
-	);
+	const transactionBuilder = web3Context.transactionBuilder ?? defaultTransactionBuilder;
 
-	validateTransactionForSigning(populatedTransaction);
+	const populatedTransaction = await transactionBuilder({
+		transaction: transaction as unknown as Record<string, unknown>,
+		web3Context,
+		privateKey,
+	});
+
+	const formattedTransaction = formatTransaction(
+		populatedTransaction,
+		ValidTypes.HexString,
+	) as PopulatedUnsignedTransaction<HexString>;
+
+	validateTransactionForSigning(formattedTransaction);
 
 	return TransactionFactory.fromTxData(
-		getEthereumjsTxDataFromTransaction(populatedTransaction),
-		getEthereumjsTransactionOptions(populatedTransaction, web3Context),
+		getEthereumjsTxDataFromTransaction(formattedTransaction),
+		getEthereumjsTransactionOptions(formattedTransaction, web3Context),
 	);
 };

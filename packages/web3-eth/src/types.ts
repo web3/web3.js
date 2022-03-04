@@ -9,13 +9,13 @@ import {
 import {
 	Address,
 	HexString,
-	Numbers,
-	ValidTypes,
-	ValidReturnTypes,
-	HexString32Bytes,
 	HexString256Bytes,
+	HexString32Bytes,
 	HexStringBytes,
+	Numbers,
 	Uint,
+	ValidReturnTypes,
+	ValidTypes,
 } from 'web3-utils';
 
 export type chain = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';

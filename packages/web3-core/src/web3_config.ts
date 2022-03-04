@@ -1,6 +1,6 @@
-import { toHex, ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
-
+import { toHex, ValidTypes } from 'web3-utils';
+// eslint-disable-next-line import/no-cycle
 import { Web3ConfigOptions } from './types';
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
@@ -35,6 +35,8 @@ export abstract class Web3Config
 		defaultReturnType: ValidTypes.HexString,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
+		transactionBuilder: undefined,
+		transactionTypeParser: undefined,
 	};
 
 	public constructor(options?: Partial<Web3ConfigOptions>) {
@@ -260,6 +262,24 @@ export abstract class Web3Config
 	public set defaultMaxPriorityFeePerGas(val) {
 		this._triggerConfigChange('defaultMaxPriorityFeePerGas', val);
 		this._config.defaultMaxPriorityFeePerGas = val;
+	}
+
+	public get transactionBuilder() {
+		return this._config.transactionBuilder;
+	}
+
+	public set transactionBuilder(val) {
+		this._triggerConfigChange('transactionBuilder', val);
+		this._config.transactionBuilder = val;
+	}
+
+	public get transactionTypeParser() {
+		return this._config.transactionTypeParser;
+	}
+
+	public set transactionTypeParser(val) {
+		this._triggerConfigChange('transactionTypeParser', val);
+		this._config.transactionTypeParser = val;
 	}
 
 	private _triggerConfigChange<K extends keyof Web3ConfigOptions>(
