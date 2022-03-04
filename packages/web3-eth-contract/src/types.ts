@@ -1,7 +1,7 @@
 import { EthExecutionAPI, ReceiptInfo } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
-import { sendTransaction } from 'web3-eth/src/rpc_method_wrappers';
+import { sendTransaction } from 'web3-eth';
 import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Uint, ValidTypes } from 'web3-utils';
 
 export interface EventLog {
@@ -38,7 +38,7 @@ export interface ContractInitOptions {
 	readonly from?: Address;
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;
-	readonly provider: SupportedProviders<EthExecutionAPI> | string;
+	readonly provider: SupportedProviders<EthExecutionAPI>;
 }
 
 export type TransactionReceipt = ReceiptInfo;

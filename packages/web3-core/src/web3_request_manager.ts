@@ -46,7 +46,7 @@ export class Web3RequestManager<
 }> {
 	private _provider!: SupportedProviders<API>;
 
-	public constructor(provider?: SupportedProviders<API> | string | string, net?: Socket) {
+	public constructor(provider?: SupportedProviders<API>, net?: Socket) {
 		super();
 
 		if (provider) {
@@ -71,7 +71,7 @@ export class Web3RequestManager<
 		return availableProviders;
 	}
 
-	public setProvider(provider: SupportedProviders<API> | string, net?: Socket) {
+	public setProvider(provider: SupportedProviders<API>, net?: Socket) {
 		let newProvider!: Web3BaseProvider<API>;
 
 		// autodetect provider

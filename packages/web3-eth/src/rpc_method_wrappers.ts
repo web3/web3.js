@@ -118,9 +118,7 @@ export const getCode = async (
 ) => rpcMethods.getCode(web3Context.requestManager, address, blockNumber);
 
 export async function getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// A context can have any subscriptions
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	hydrated = false,
 	returnType?: ReturnType,
@@ -296,9 +294,7 @@ export async function getPendingTransactions<ReturnType extends ValidTypes = Val
 }
 
 const waitForTransactionReceipt = async (
-	// A context can have any subscriptions
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: HexString32Bytes,
 ): Promise<ReceiptInfo> =>
 	new Promise(resolve => {
@@ -333,9 +329,7 @@ const waitForTransactionReceipt = async (
 function watchTransactionForConfirmations<
 	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
 >(
-	// A context can have any subscriptions
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 ) {
@@ -386,8 +380,7 @@ function watchTransactionForConfirmations<
 }
 
 export function sendTransaction(
-	// caller can have different subscriptions
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
 ): PromiEvent<ReceiptInfo, SendTransactionEvents> {
 	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
@@ -509,9 +502,7 @@ export const signTransaction = async (
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 export const call = async (
-	// A context can have any subscriptions
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 ) => {
@@ -528,8 +519,7 @@ export const call = async (
 
 // TODO Missing param
 export async function estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
-	// The context can have different subscriptions
-	web3Context: Web3Context<EthExecutionAPI, any>,
+	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Partial<TransactionWithSender>,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnType?: ReturnType,
