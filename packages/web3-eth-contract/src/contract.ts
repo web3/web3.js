@@ -14,13 +14,14 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
+import { estimateGas, sendTransaction, call } from 'web3-eth/src/rpc_method_wrappers';
 import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
-	hexToNumber,
-	toChecksumAddress,
 	HexString,
+	toChecksumAddress,
+	ValidTypes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
 import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
@@ -164,47 +165,38 @@ export class Contract<Abi extends ContractAbi>
 
 		return {
 			arguments: args,
-			// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
 			send: async (options?: PayableCallOptions) => {
 				const modifiedOptions = { ...options };
 				delete modifiedOptions.to;
 
-				const txHash = await this._contractMethodSend(
+				const promiEvent = this._contractMethodSend(
 					abi as AbiFunctionFragment,
 					args,
 					modifiedOptions,
 					contractOptions,
 				);
 
-				return txHash;
+				// eslint-disable-next-line no-void
+				void promiEvent.then(res => {
+					this._address = res.contractAddress;
+				});
 
-				// TODO: Use eth-tx functions to
-				//
-				// 1. Get the transaction receipt from the above txHash
-				// 2. Extract the contract address from the receipt
-				// 3. Get the code from eth_getCode for the contract address
-				// 4. Return the contract instance with the new address and the code
-				//
-				// return new Contract<Abi>(this._jsonInterface, contractAddress as HexString, {
-				// 	gas: this.options.gas,
-				// 	gasPrice: this.options.gasPrice,
-				// 	gasLimit: this.options.gasLimit,
-				// 	from: this.options.from,
-				// 	data: this.options.data,
-				// 	provider: this.currentProvider,
-				// });
+				return promiEvent;
 			},
-			estimateGas: async (options?: PayableCallOptions, block?: BlockNumberOrTag) => {
+			estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+				options?: PayableCallOptions,
+				returnType?: ReturnType,
+			) => {
 				const modifiedOptions = { ...options };
 				delete modifiedOptions.to;
 
-				return this._contractMethodEstimateGas(
-					abi as AbiFunctionFragment,
-					args,
-					modifiedOptions,
-					block,
+				return this._contractMethodEstimateGas({
+					abi: abi as AbiFunctionFragment,
+					params: args,
+					returnType,
+					options: modifiedOptions,
 					contractOptions,
-				);
+				});
 			},
 			encodeABI: () => encodeMethodABI(abi as AbiFunctionFragment, args, data),
 		};
@@ -296,11 +288,12 @@ export class Contract<Abi extends ContractAbi>
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(abi, params, options, block),
-					// TODO: Use `web3-eth-tx` package to return `PromiEvent` instead.
-					send: async (options?: PayableCallOptions) =>
+					send: (options?: PayableCallOptions) =>
 						this._contractMethodSend(abi, params, options),
-					estimateGas: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodEstimateGas(abi, params, options, block),
+					estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+						options?: PayableCallOptions,
+						returnType?: ReturnType,
+					) => this._contractMethodEstimateGas({ abi, params, returnType, options }),
 					encodeABI: () => encodeMethodABI(abi, params),
 				} as unknown as PayableMethodObject<
 					ContractMethod<T>['Inputs'],
@@ -312,10 +305,12 @@ export class Contract<Abi extends ContractAbi>
 				arguments: params,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(abi, params, options, block),
-				send: async (options?: NonPayableCallOptions) =>
+				send: (options?: NonPayableCallOptions) =>
 					this._contractMethodSend(abi, params, options),
-				estimateGas: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
-					this._contractMethodEstimateGas(abi, params, options, block),
+				estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+					options?: NonPayableCallOptions,
+					returnType?: ReturnType,
+				) => this._contractMethodEstimateGas({ abi, params, returnType, options }),
 				encodeABI: () => encodeMethodABI(abi, params),
 			} as unknown as NonPayableMethodObject<
 				ContractMethod<T>['Inputs'],
@@ -330,68 +325,56 @@ export class Contract<Abi extends ContractAbi>
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
-		return decodeMethodReturn(
+		const tx = getEthTxCallParams({
 			abi,
-			await this.requestManager.send({
-				method: 'eth_call',
-				params: [
-					getEthTxCallParams({
-						abi,
-						params,
-						options,
-						contractOptions: this.options,
-					}),
-					block ?? BlockTags.LATEST,
-				],
-			}),
-		);
+			params,
+			options,
+			contractOptions: this.options,
+		});
+
+		return decodeMethodReturn(abi, await call(this, tx, block));
 	}
 
-	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
-		return decodeMethodReturn(
+		const tx = getSendTxParams({
 			abi,
-			await this.requestManager.send({
-				method: 'eth_sendTransaction',
-				params: [
-					getSendTxParams({
-						abi,
-						params,
-						options,
-						contractOptions: contractOptions ?? this.options,
-					}),
-				],
-			}),
-		);
+			params,
+			options,
+			contractOptions: contractOptions ?? this.options,
+		});
+
+		return sendTransaction(this, tx);
 	}
 
 	private async _contractMethodEstimateGas<
 		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(
-		abi: AbiFunctionFragment,
-		params: unknown[],
-		options?: Options,
-		block?: BlockNumberOrTag,
-		contractOptions?: ContractOptions,
-	) {
-		return hexToNumber(
-			await this.requestManager.send({
-				method: 'eth_estimateGas',
-				params: [
-					getEstimateGasParams({
-						abi,
-						params,
-						options,
-						contractOptions: contractOptions ?? this.options,
-					}),
-					block ?? BlockTags.LATEST,
-				],
-			}),
-		);
+		ReturnType extends ValidTypes = ValidTypes.HexString,
+	>({
+		abi,
+		params,
+		returnType,
+		options,
+		contractOptions,
+	}: {
+		abi: AbiFunctionFragment;
+		params: unknown[];
+		returnType?: ReturnType;
+		options?: Options;
+		contractOptions?: ContractOptions;
+	}) {
+		const tx = getEstimateGasParams({
+			abi,
+			params,
+			options,
+			contractOptions: contractOptions ?? this.options,
+		});
+
+		return estimateGas(this, tx, BlockTags.LATEST, returnType);
 	}
 
 	// eslint-disable-next-line class-methods-use-this
