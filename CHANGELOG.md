@@ -363,6 +363,11 @@ Released with 1.0.0-beta.37 code base.
 
 1. package will not support web3.bzz.net and web3.shh.net
 
+#### web3-eth-iban
+
+1. IBAN constructor now has validation check for indirect/direct iban.
+2. `isDirect`, `isValid`, `isIndirect` are now also included as static methods.
+
 #### web3-eth-ens
 
 1. `setMultihash` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver (https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol)

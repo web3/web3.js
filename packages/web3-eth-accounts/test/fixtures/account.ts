@@ -114,8 +114,6 @@ export const invalidPrivateKeytoAccountData: [
 ][] = [
 	['', new PrivateKeyLengthError()],
 	[Buffer.from([]), new PrivateKeyLengthError()],
-	[undefined, new InvalidPrivateKeyError()],
-	[null, new InvalidPrivateKeyError()],
 ];
 
 export const validEncryptData: [[any, string | Buffer, CipherOptions], KeyStore][] = [
@@ -279,6 +277,34 @@ export const invalidEncryptData: [
 	],
 ];
 
+export const invalidKeyStore: [[any, string]][] = [
+	[
+		// invalid keystore error, missing id field
+		[
+			{
+				// invalid kdf
+				version: 3,
+				address: 'cda9a91875fc35c8ac1320e098e584495d66e47c',
+				crypto: {
+					ciphertext: '222f49d9cb350b0b9a16472ecb389f8128bc9404233c34ba0484db12fb47534e',
+					cipherparams: { iv: '8c36f74571c7aef9dd4901c9c1cc720a' },
+					cipher: 'aes-128-ctr',
+					kdf: 'hkdf',
+					kdfparams: {
+						dklen: 32,
+						salt: 'ffd22eb8573fb1de0262cc133042e8fd9b193a46f20c09f25f39fae90a7a2896',
+						n: 8192,
+						r: 8,
+						p: 1,
+					},
+					mac: '46162bad0ac2145ddd399bfb47b474959a2845faf69e69bd1b325ec8db3298cb',
+				},
+			},
+			'123',
+		],
+	],
+];
+
 export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 	[
 		[
@@ -297,7 +323,6 @@ export const validDecryptData: [[string, string, CipherOptions, string]][] = [
 ];
 
 export const invalidDecryptData: [[any, string], InvalidKdfError | KeyDerivationError][] = [
-	// TODO create Keystore test cases after validation PR is merged
 	[
 		[
 			{
@@ -324,7 +349,6 @@ export const invalidDecryptData: [[any, string], InvalidKdfError | KeyDerivation
 		],
 		new InvalidKdfError(),
 	],
-
 	[
 		[
 			{
