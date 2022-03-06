@@ -1,3 +1,4 @@
+import { Web3ValidatorError } from 'web3-validator';
 import { isHexStrict, Address, utf8ToHex } from 'web3-utils';
 import {
 	create,
@@ -18,6 +19,7 @@ import {
 	validEncryptData,
 	validDecryptData,
 	invalidDecryptData,
+	invalidKeyStore,
 	invalidEncryptData,
 } from '../fixtures/account';
 
@@ -155,6 +157,14 @@ describe('accounts', () => {
 				const result = decrypt(input[0], input[1]);
 
 				await expect(result).rejects.toThrow(output);
+			});
+		});
+
+		describe('invalid keystore, fails validation', () => {
+			it.each(invalidKeyStore)('%s', async input => {
+				const result = decrypt(input[0], input[1]);
+
+				await expect(result).rejects.toThrow(Web3ValidatorError);
 			});
 		});
 	});

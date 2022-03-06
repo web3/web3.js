@@ -45,9 +45,8 @@ import {
 	ScryptParams,
 	PBKDF2SHA256Params,
 	CipherOptions,
+	keyStoreSchema,
 } from './types';
-
-const validateKeyStore = (keyStore: KeyStore): boolean => !!keyStore;
 
 /**
  * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
@@ -410,10 +409,7 @@ export const decrypt = async (
 			? keystore
 			: (JSON.parse(nonStrict ? keystore.toLowerCase() : keystore) as KeyStore);
 
-	// TODO create Keystore validation, after validation PR is merged
-	if (!validateKeyStore(json)) {
-		throw new Error('invalid keystore');
-	}
+	validator.validateJSONSchema(keyStoreSchema, json);
 
 	if (json.version !== 3) throw new KeyStoreVersionError();
 
