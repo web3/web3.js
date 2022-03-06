@@ -89,9 +89,9 @@ export const inputDefaultBlockNumberFormatter = (
 };
 
 export const inputAddressFormatter = (address: string): string | never => {
-	const iban = new Iban(address);
+	if (Iban.isValid(address) && Iban.isDirect(address)) {
+		const iban = new Iban(address);
 
-	if (iban.isValid() && iban.isDirect()) {
 		return iban.toAddress().toLowerCase();
 	}
 

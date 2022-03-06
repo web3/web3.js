@@ -110,8 +110,7 @@ describe('iban', () => {
 	describe('isIndirect', () => {
 		describe('valid cases', () => {
 			it.each(validIsIndirectData)('%s', (input, output) => {
-				const iban = new Iban(input);
-				expect(iban.isIndirect()).toBe(output);
+				expect(Iban.isIndirect(input)).toBe(output);
 			});
 		});
 	});
