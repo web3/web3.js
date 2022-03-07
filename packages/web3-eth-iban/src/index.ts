@@ -11,9 +11,23 @@ import { IbanOptions } from './types';
 export class Iban {
 	private readonly _iban: string;
 
+	public static isDirect(iban: string): boolean {
+		return iban.length === 34 || iban.length === 35;
+	}
+
+	public static isIndirect(iban: string): boolean {
+		return iban.length === 20;
+	}
+
+	/**
+	 * Construct a direct or indirect IBAN
+	 */
 	public constructor(iban: string) {
-		// TODO add IBAN validation and error
-		this._iban = iban;
+		if (Iban.isIndirect(iban) || Iban.isDirect(iban)) {
+			this._iban = iban;
+		} else {
+			throw new Error('Invalid IBAN was provided');
+		}
 	}
 
 	/**
@@ -69,7 +83,7 @@ export class Iban {
 	 * check if iban number is direct
 	 */
 	public isDirect(): boolean {
-		return this._iban.length === 34 || this._iban.length === 35;
+		return Iban.isDirect(this._iban);
 	}
 
 	/**
@@ -167,8 +181,7 @@ export class Iban {
 	 * This method should be used to check if given string is valid iban object
 	 */
 	public static isValid(iban: string) {
-		const i = new Iban(iban);
-		return i.isValid();
+		return Iban._isValid(iban);
 	}
 
 	public toString(): string {
@@ -179,6 +192,6 @@ export class Iban {
 	 * check if iban number if indirect
 	 */
 	public isIndirect(): boolean {
-		return this._iban.length === 20;
+		return Iban.isIndirect(this._iban);
 	}
 }

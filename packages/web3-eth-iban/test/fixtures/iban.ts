@@ -9,11 +9,7 @@ export const validIbanToAddressData: [string, string][] = [
 
 export const invalidIbanToAddressData: [string, Error][] = [
 	[
-		'XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK',
-		new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35'),
-	],
-	[
-		'XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK365',
+		'XE81ETHXREGGAVOFYORK',
 		new Error('Iban is indirect and cannot be converted. Must be length of 34 or 35'),
 	],
 ];
@@ -47,6 +43,10 @@ export const isValidData: [any, boolean][] = [
 	['XE65GB6LDNXYOFTX0NSV3FUWKOWIXAMJK36', true],
 	['XE81ETHXREGGAVOFYORK', true],
 	['XE48ETHXREGHELLOWORL', true],
+];
+
+export const isValidStaticData: [any, boolean][] = [
+	...isValidData,
 	[1, false], // anything that is not a string should return false
 	[[], false],
 	[true, false],
