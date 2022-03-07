@@ -81,7 +81,9 @@ export const validateTransactionForSigning = (
 		});
 };
 
-export const defaultTransactionBuilder: TransactionBuilder<Transaction> = async ({
+export const defaultTransactionBuilder: TransactionBuilder<EthExecutionAPI> = async <
+	ReturnType = Transaction,
+>({
 	transaction,
 	web3Context,
 	privateKey,
@@ -204,7 +206,7 @@ export const defaultTransactionBuilder: TransactionBuilder<Transaction> = async 
 	}
 
 	// TODO: When we have `web3-types` package we can share TransactionType
-	return populatedTransaction as Record<string, unknown>;
+	return populatedTransaction as ReturnType;
 };
 
 const getEthereumjsTxDataFromTransaction = (

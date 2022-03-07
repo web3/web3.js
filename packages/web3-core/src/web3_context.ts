@@ -180,10 +180,9 @@ export class Web3Context<
 // To avoid cycle dependency declare this type in this file
 // TODO: When we have `web3-types` package we can share TransactionType
 export type TransactionBuilder<
-	ReturnType = Record<string, unknown>,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	API extends Web3APISpec = any,
-> = (options: {
+> = <ReturnType = Record<string, unknown>>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
