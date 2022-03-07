@@ -54,15 +54,75 @@ var formatGatewayError = function (errorResponse) {
     return `Gateway query error: ${errorResponse.status} ${errorResponse.statusText} \n ${errorResponse.responseText}`;
 };
 
-var isUrlAllowed = function (url, allowList) {
+var isUrlAllowed = function (urlInstance, allowList) {
     if(!allowList || !(allowList && allowList.length)) return true;
-    return allowList.includes(new URL(url).hostname);
+    return allowList.includes(urlInstance.hostname);
 };
 
-var callGateway = async function (urls, to, callData, allowList) {
+var hasCcipReadFunctionSelector = function (encodedString) {
+    return encodedString && encodedString.substring(0, 10) === `0x${ENCODED_CCIP_READ_FUNCTION_SELECTOR}`;
+};
 
+//Errors are handled differently depending on the environment
+var normalizeResponse = function (error, result) {
+    console.log('error: ', error);
+    console.log('result: ', result);
+
+    const defaultResponse = {
+        data: ''
+    };
+
+    if (!error && !result) {
+        return defaultResponse;
+    }
+
+    if (typeof error === "string" && hasCcipReadFunctionSelector(error)) {
+        return {
+            data: error
+        };
+    }
+
+    if (typeof result === "string" && hasCcipReadFunctionSelector(result)) {
+        return {
+            data: result
+        };
+    }
+
+    if (
+        typeof error === 'object' &&
+        hasCcipReadFunctionSelector(error && error.data)
+    ) {
+        return {
+            data: error.data
+        };
+    }
+
+    return defaultResponse;
+};
+
+/**
+ * Loop through gateway urls in order to fetch off-chain data
+ *
+ * @method callGateways
+ *
+ * @param {Array} urls
+ * @param {} to
+ * @param {Error} err
+ * @param {Object} result
+ *
+ * @return {Boolean} true if reversion was a CCIP-Read error
+ */
+var callGateways = async function (urls, to, callData, allowList) {
     for (const url of urls) {
-        if(!isUrlAllowed(url, allowList)) {
+        let urlInstance;
+        try {
+            urlInstance = new URL(url);
+        } catch(e) {
+            console.warn('Skipping gateway url ${url} as it is malformed');
+            continue;
+        }
+
+        if(!isUrlAllowed(urlInstance, allowList)) {
             console.warn(`Gateway at ${url} not called due to allow list rules`);
             continue;
         }
@@ -70,10 +130,12 @@ var callGateway = async function (urls, to, callData, allowList) {
         let response;
         try {
             response = await gatewayQuery(url, to, callData);
+            console.log('response: ', response);
             if (response.status >= 200 && response.status <= 299) {
                 return response;
             }
         } catch (errorResponse) {
+            console.log('errorResponse: ', errorResponse);
             const formattedError = formatGatewayError(errorResponse);
 
             if (errorResponse.status >= 400 && errorResponse.status <= 499) {
@@ -85,48 +147,8 @@ var callGateway = async function (urls, to, callData, allowList) {
         }
     }
 
-    throw new Error('All gateways failed');
+    // throw new Error('All gateways failed');
 };
-
-var hasCcipReadFunctionSelector = function (encodedString) {
-    return encodedString && encodedString.substring(0, 10) === `0x${ENCODED_CCIP_READ_FUNCTION_SELECTOR}`;
-};
-
-//Errors are handled differently depending on the environment
-var normalizeResponse = function (errorObject, result) {
-    const defaultResponse = {
-        data: ''
-    };
-
-    if (!errorObject && !result) {
-        return defaultResponse;
-    }
-
-    if (typeof errorObject === "string" && hasCcipReadFunctionSelector(errorObject)) {
-        return {
-            data: errorObject
-        };
-    }
-
-    if (typeof result === "string" && hasCcipReadFunctionSelector(result)) {
-        return {
-            data: result
-        };
-    }
-
-    if (
-        typeof errorObject === 'object' &&
-        hasCcipReadFunctionSelector(errorObject && errorObject.data)
-    ) {
-        return {
-            data: errorObject.data
-        };
-    }
-
-    return defaultResponse;
-};
-
-
 
 /**
  * Determine if revert is a CCIP-Read error
@@ -200,7 +222,7 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
             throw e;
         }
     } else {
-        const result = await callGateway(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
+        const result = await callGateways(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
         gatewayResult = result.response.data;
     }
 
@@ -217,5 +239,6 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
 
 module.exports = {
     isOffChainLookup,
-    ccipReadCall
+    ccipReadCall,
+    callGateways,
 };
