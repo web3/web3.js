@@ -27,7 +27,7 @@ import {
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
 } from './errors';
-import { formatTransaction } from './format_transaction';
+import { formatTransaction } from './utils/format_transaction';
 import { Transaction } from './types';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
