@@ -47,11 +47,14 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
 
 // TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionBuilder = (options: {
+export type TransactionBuilder = <
+	ReturnType = Record<string, unknown>,
+	API extends EthExecutionAPI = EthExecutionAPI,
+>(options: {
 	transaction: Record<string, unknown>;
-	web3Context: Web3Context<EthExecutionAPI>;
+	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
-}) => Promise<Record<string, unknown>>;
+}) => Promise<ReturnType>;
 
 export interface Web3ConfigOptions {
 	handleRevert: boolean;

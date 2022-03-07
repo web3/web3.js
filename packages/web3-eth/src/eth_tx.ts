@@ -257,7 +257,6 @@ const getEthereumjsTransactionOptions = (
 	return { common } as TxOptions;
 };
 
-// TODO - Needs override function
 export const prepareTransactionForSigning = async (
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
