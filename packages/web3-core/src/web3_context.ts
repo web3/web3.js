@@ -1,13 +1,16 @@
 import { Web3APISpec } from 'web3-common';
-import { SupportedProviders, Web3ConfigOptions } from './types';
+import { HexString } from 'web3-utils';
+import { SupportedProviders } from './types';
 import { isSupportedProvider } from './utils';
-import { Web3Config, Web3ConfigEvent } from './web3_config';
+// eslint-disable-next-line import/no-cycle
+import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	API extends Web3APISpec = any,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
@@ -135,6 +138,7 @@ export class Web3Context<
 		);
 
 		this.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			newContextChild.setConfig({ [event.name]: event.newValue });
 		});
 
@@ -151,6 +155,7 @@ export class Web3Context<
 		this._subscriptionManager = parentContext.subscriptionManager;
 
 		parentContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			this.setConfig({ [event.name]: event.newValue });
 		});
 	}
@@ -171,3 +176,15 @@ export class Web3Context<
 		this.requestManager.setProvider(provider);
 	}
 }
+
+// To avoid cycle dependency declare this type in this file
+// TODO: When we have `web3-types` package we can share TransactionType
+export type TransactionBuilder<
+	ReturnType = Record<string, unknown>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	API extends Web3APISpec = any,
+> = (options: {
+	transaction: Record<string, unknown>;
+	web3Context: Web3Context<API>;
+	privateKey?: HexString | Buffer;
+}) => Promise<ReturnType>;
