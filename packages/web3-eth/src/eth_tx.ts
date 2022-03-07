@@ -47,7 +47,9 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 export const detectTransactionType = (
 	transaction: Transaction,
 	transactionTypeParser: TransactionTypeParser = defaultTransactionTypeParser,
-) => transactionTypeParser(transaction as unknown as Record<string, unknown>);
+) =>
+    // TODO: When we have `web3-types` package we can share TransactionType
+    transactionTypeParser(transaction as unknown as Record<string, unknown>);
 
 export const validateTransactionForSigning = (
 	transaction: Transaction,
@@ -197,6 +199,7 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 		}
 	}
 
+    // TODO: When we have `web3-types` package we can share TransactionType
 	return populatedTransaction as Record<string, unknown>;
 };
 
