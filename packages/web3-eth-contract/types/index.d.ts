@@ -18,8 +18,104 @@
  */
 
 import BN = require('bn.js');
-import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOptions, LogsOptions} from 'web3-core';
-import {AbiItem} from 'web3-utils';
+import { Common, PromiEvent, hardfork, chain, BlockNumber, PastLogsOptions, LogsOptions } from 'web3-core';
+import { AbiItem } from 'web3-utils';
+
+export namespace ContractMethod {
+    type CallOptions = {
+        /** (optional): The address the call “transaction” should be made from. */
+        from: string
+        /** (optional): The gas price in wei to use for this call “transaction”. */
+        gasPrice: string
+        /** (optional): The maximum gas provided for this call “transaction” (gas limit). */
+        gas: number
+    }
+
+    type SendOptions = CallOptions & {
+        /** (optional): The value transferred for the call “transaction” in wei. */
+        value: any
+    }
+
+    type CallSendCallback = (error: Error, txnHash: string) => void
+
+    type GasOptions = {
+        /** (optional): The address the call “transaction” should be made from. */
+        from: string
+        /** (optional): The maximum gas provided for this call “transaction” (gas limit). */
+        gas: number
+        /** (optional): The value transferred for the call “transaction” in wei. */
+        value: any
+    }
+
+    type GasCallback = (error: Error, gasAmount: number) => void
+}
+
+export type ContractMethod<T> = {
+    /**
+     * Call a “constant” method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
+     * 
+     * @param options Provide options used for calling.
+     * @param defaultBlock (optional): If you pass this parameter it will not use the default block set with contract.defaultBlock. Useful for requesting data from or replaying transactions in past blocks.
+     * @param callback (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
+     */
+    call(options: Partial<ContractMethod.CallOptions>, defaultBlock: number | string | "earliest" | "latest" | "pending", callback: ContractMethod.CallSendCallback): void
+
+    /**
+     * Call a “constant” method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
+     * 
+     * @param options Provide options used for calling.
+     * @param defaultBlock (optional): If you pass this parameter it will not use the default block set with contract.defaultBlock. Useful for requesting data from or replaying transactions in past blocks.
+     * @returns A [promise combined event emitter](https://web3js.readthedocs.io/en/v1.2.11/callbacks-promises-events.html#promievent). Resolves when the transaction receipt is available,
+     * @
+     */
+    call(options: Partial<ContractMethod.CallOptions>, defaultBlock: number | string | "earliest" | "latest" | "pending"): PromiEvent<T>
+
+    /**
+     * Call a “constant” method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
+     * 
+     * @param options Provide options used for calling.
+     * @returns A [promise combined event emitter](https://web3js.readthedocs.io/en/v1.2.11/callbacks-promises-events.html#promievent). Resolves when the transaction receipt is available,
+     */
+    call(options: Partial<ContractMethod.CallOptions>): PromiEvent<T>
+
+    /**
+     * Send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
+     * 
+     * @param options Provide options for sending transaction
+     * @param callback (optional): This callback will be fired first with the “transactionHash”, or with an error object as the first argument.
+     */
+    send(options: Partial<ContractMethod.SendOptions>, callback: ContractMethod.CallSendCallback): void
+
+    /**
+     * Send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
+     * 
+     * @param options Provide options for sending transaction
+     * @returns A [promise combined event emitter](https://web3js.readthedocs.io/en/v1.2.11/callbacks-promises-events.html#promievent). Resolves when the transaction receipt is available,
+     */
+    send(options: Partial<ContractMethod.SendOptions>): PromiEvent<T>
+
+    /**
+     * Encodes the ABI for this method. The resulting hex string is 32-bit function signature hash plus the passed parameters in Solidity tightly packed format. 
+     * @returns The encoded ABI byte code to send via a transaction or call.
+     */
+    encodeABI(): string
+
+    /**
+     * Will call to estimate the gas a method execution will take when executed in the EVM
+     * 
+     * @param options Provide the options for the call.
+     * @param callback (optional) This callback will be fired with the result of the gas estimation as the second argument, or with an error object as the first argument.
+     */
+    estimatedGas(options: Partial<ContractMethod.GasOptions>, callback: ContractMethod.GasCallback): void
+
+    /**
+     * Will call to estimate the gas a method execution will take when executed in the EVM
+     * 
+     * @param options (optional) Provide the options for the call.
+     * @returns The gas amount estimated.
+     */
+    estimatedGas(options?: Partial<ContractMethod.GasOptions>): Promise<number>
+}
 
 // TODO: Add generic type!
 export class Contract {
@@ -47,7 +143,9 @@ export class Contract {
 
     deploy(options: DeployOptions): ContractSendMethod;
 
-    methods: any;
+    methods: {
+        [key in string]: <T = any>(...args: string[]) => ContractMethod<T>
+    };
 
     once(
         event: string,
