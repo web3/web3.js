@@ -30,7 +30,7 @@ import {
 	TransactionPollingTimeoutError,
 	TransactionReceiptMissingBlockNumberError,
 } from './errors';
-import { formatTransaction } from './format_transaction';
+import { formatTransaction } from './utils/format_transaction';
 
 import * as rpcMethods from './rpc_methods';
 import {
