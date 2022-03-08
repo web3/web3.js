@@ -3,7 +3,9 @@ import HttpProvider from 'web3-providers-http';
 import { Web3Context } from '../../src/web3_context';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 class Context1 extends Web3Context<{}> {}
+// eslint-disable-next-line @typescript-eslint/ban-types
 class Context2 extends Web3Context<{}> {}
 
 describe('Web3Context', () => {

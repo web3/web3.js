@@ -1,7 +1,32 @@
 import { Web3EventEmitter } from 'web3-common';
-import { toHex, ValidTypes } from 'web3-utils';
+import { Numbers, HexString, toHex, ValidTypes } from 'web3-utils';
+import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
-import { Web3ConfigOptions } from './types';
+import { TransactionBuilder } from './web3_context';
+
+// To avoid cycle dependency declare this
+export interface Web3ConfigOptions {
+	handleRevert: boolean;
+	defaultAccount: HexString | null;
+	defaultBlock: HexString;
+	transactionBlockTimeout: number;
+	transactionConfirmationBlocks: number;
+	transactionPollingInterval: number;
+	transactionPollingTimeout: number;
+	transactionReceiptPollingInterval: number | null;
+	transactionConfirmationPollingInterval: number | null;
+	blockHeaderTimeout: number;
+	maxListenersWarningThreshold: number;
+	defaultNetworkId: Numbers | null;
+	defaultChain: string;
+	defaultHardfork: string;
+	defaultCommon: Record<string, unknown> | null;
+	defaultReturnType: ValidTypes;
+	defaultTransactionType: Numbers;
+	defaultMaxPriorityFeePerGas: Numbers;
+	transactionBuilder?: TransactionBuilder;
+	transactionTypeParser?: TransactionTypeParser;
+}
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }

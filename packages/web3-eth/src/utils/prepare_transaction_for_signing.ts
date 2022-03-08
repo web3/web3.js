@@ -75,7 +75,7 @@ export const prepareTransactionForSigning = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Buffer,
 ) => {
-	const populatedTransaction = await transactionBuilder(transaction, web3Context, privateKey);
+	const populatedTransaction = await transactionBuilder({ transaction, web3Context, privateKey });
 
 	const formattedTransaction = formatTransaction(
 		populatedTransaction,

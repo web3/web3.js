@@ -1,5 +1,5 @@
 import { ValidTypes } from 'web3-utils';
-import { formatTransaction } from '../../src/format_transaction';
+import { formatTransaction } from '../../src/utils/format_transaction';
 import {
 	bigIntTransaction,
 	hexStringTransaction,
@@ -9,9 +9,9 @@ import {
 
 describe('formatTransaction', () => {
 	it.skip('should call override method', () => {
-		// const overrideFunction = jest.fn();
-		// formatTransaction(hexStringTransaction, ValidTypes.Number, overrideFunction);
-		// expect(overrideFunction).toHaveBeenCalledWith(hexStringTransaction);
+		const overrideFunction = jest.fn();
+		formatTransaction(hexStringTransaction, ValidTypes.Number);
+		expect(overrideFunction).toHaveBeenCalledWith(hexStringTransaction);
 	});
 
 	describe('should convert hex string properties to expected type', () => {

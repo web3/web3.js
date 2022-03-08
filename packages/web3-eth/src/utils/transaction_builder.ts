@@ -1,5 +1,5 @@
 import { EthExecutionAPI } from 'web3-common';
-import { TransactionBuilder, Web3Context } from 'web3-core';
+import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { BlockTags, convertToValidType, HexString, ValidTypes } from 'web3-utils';
 import {
@@ -12,25 +12,25 @@ import { getBlock, getGasPrice, getTransactionCount } from '../rpc_method_wrappe
 import { chain, hardfork, Transaction } from '../types';
 import { detectTransactionType } from './detect_transaction_type';
 
-export const defaultTransactionBuilder: TransactionBuilder = async ({
-	transaction,
-	web3Context,
-	privateKey,
-}) => {
-	const populatedTransaction = { ...transaction } as unknown as Transaction;
+export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
+	transaction: Record<string, unknown>;
+	web3Context: Web3Context<EthExecutionAPI>;
+	privateKey?: HexString | Buffer;
+}): Promise<ReturnType> {
+	const populatedTransaction = { ...options.transaction } as unknown as Transaction;
 
 	if (populatedTransaction.from === undefined) {
-		if (privateKey !== undefined) {
-			populatedTransaction.from = privateKeyToAddress(privateKey);
-		} else if (web3Context.defaultAccount !== null)
-			populatedTransaction.from = web3Context.defaultAccount;
+		if (options.privateKey !== undefined) {
+			populatedTransaction.from = privateKeyToAddress(options.privateKey);
+		} else if (options.web3Context.defaultAccount !== null)
+			populatedTransaction.from = options.web3Context.defaultAccount;
 		// TODO Try to fill from using web3.eth.accounts.wallet
 	}
 
 	if (populatedTransaction.nonce === undefined) {
 		if (populatedTransaction.from === undefined) throw new UnableToPopulateNonceError();
 		populatedTransaction.nonce = await getTransactionCount(
-			web3Context,
+			options.web3Context,
 			populatedTransaction.from,
 			BlockTags.PENDING,
 		);
@@ -59,9 +59,9 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 
 	if (populatedTransaction.common === undefined) {
 		if (populatedTransaction.chain === undefined)
-			populatedTransaction.chain = web3Context.defaultChain as chain;
+			populatedTransaction.chain = options.web3Context.defaultChain as chain;
 		if (populatedTransaction.hardfork === undefined)
-			populatedTransaction.hardfork = web3Context.defaultHardfork as hardfork;
+			populatedTransaction.hardfork = options.web3Context.defaultHardfork as hardfork;
 	}
 
 	// if (populatedTransaction.chainId === undefined && populatedTransaction.common?.customChain.chainId === undefined)
@@ -77,13 +77,13 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 
-	populatedTransaction.type = detectTransactionType(populatedTransaction, web3Context);
+	populatedTransaction.type = detectTransactionType(populatedTransaction, options.web3Context);
 	if (
 		populatedTransaction.type === undefined &&
-		(web3Context.defaultTransactionType !== null ||
-			web3Context.defaultTransactionType !== undefined)
+		(options.web3Context.defaultTransactionType !== null ||
+			options.web3Context.defaultTransactionType !== undefined)
 	)
-		populatedTransaction.type = web3Context.defaultTransactionType as HexString;
+		populatedTransaction.type = options.web3Context.defaultTransactionType as HexString;
 
 	if (populatedTransaction.type !== undefined) {
 		if (populatedTransaction.type.startsWith('-'))
@@ -95,7 +95,7 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 
 		if (populatedTransaction.type === '0x0' || populatedTransaction.type === '0x1') {
 			if (populatedTransaction.gasPrice === undefined)
-				populatedTransaction.gasPrice = await getGasPrice(web3Context);
+				populatedTransaction.gasPrice = await getGasPrice(options.web3Context);
 		}
 
 		if (populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2') {
@@ -104,7 +104,7 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 
 		if (populatedTransaction.type === '0x2') {
 			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
-			const block = await getBlock(web3Context);
+			const block = await getBlock(options.web3Context);
 
 			if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
 
@@ -116,7 +116,7 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 			} else {
 				if (populatedTransaction.maxPriorityFeePerGas === undefined)
 					populatedTransaction.maxPriorityFeePerGas = convertToValidType(
-						web3Context.defaultMaxPriorityFeePerGas,
+						options.web3Context.defaultMaxPriorityFeePerGas,
 						ValidTypes.HexString,
 					);
 				if (populatedTransaction.maxFeePerGas === undefined)
@@ -127,16 +127,15 @@ export const defaultTransactionBuilder: TransactionBuilder = async ({
 		}
 	}
 
-	return populatedTransaction as Record<string, unknown>;
-};
+	return populatedTransaction as ReturnType;
+}
 
-export const transactionBuilder = async (
-	transaction: Transaction,
-	web3Context: Web3Context<EthExecutionAPI>,
-	privateKey?: HexString | Buffer,
-) =>
-	(web3Context.transactionBuilder ?? defaultTransactionBuilder)({
-		transaction: transaction as unknown as Record<string, unknown>,
-		web3Context,
-		privateKey,
+export const transactionBuilder = async (options: {
+	transaction: Transaction;
+	web3Context: Web3Context<EthExecutionAPI>;
+	privateKey?: HexString | Buffer;
+}) =>
+	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
+		...options,
+		transaction: options.transaction as unknown as Record<string, unknown>,
 	});

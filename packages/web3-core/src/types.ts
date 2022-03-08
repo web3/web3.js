@@ -1,15 +1,12 @@
 import { Socket } from 'net';
 import {
-	EthExecutionAPI,
 	JsonRpcPayload,
 	JsonRpcResponse,
 	JsonRpcResult,
 	Web3APISpec,
 	Web3BaseProvider,
 } from 'web3-common';
-import { HexString, Numbers, ValidTypes } from 'web3-utils';
-// eslint-disable-next-line import/no-cycle
-import { Web3Context } from './web3_context';
+import { HexString } from 'web3-utils';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -45,33 +42,3 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 
 // TODO: When we have `web3-types` package we can share TransactionType
 export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
-
-// TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionBuilder = (options: {
-	transaction: Record<string, unknown>;
-	web3Context: Web3Context<EthExecutionAPI>;
-	privateKey?: HexString | Buffer;
-}) => Promise<Record<string, unknown>>;
-
-export interface Web3ConfigOptions {
-	handleRevert: boolean;
-	defaultAccount: HexString | null;
-	defaultBlock: HexString;
-	transactionBlockTimeout: number;
-	transactionConfirmationBlocks: number;
-	transactionPollingInterval: number;
-	transactionPollingTimeout: number;
-	transactionReceiptPollingInterval: number | null;
-	transactionConfirmationPollingInterval: number | null;
-	blockHeaderTimeout: number;
-	maxListenersWarningThreshold: number;
-	defaultNetworkId: Numbers | null;
-	defaultChain: string;
-	defaultHardfork: string;
-	defaultCommon: Record<string, unknown> | null;
-	defaultReturnType: ValidTypes;
-	defaultTransactionType: Numbers;
-	defaultMaxPriorityFeePerGas: Numbers;
-	transactionBuilder?: TransactionBuilder;
-	transactionTypeParser?: TransactionTypeParser;
-}
