@@ -521,5 +521,8 @@ Released with 1.0.0-beta.37 code base.
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
 ## [Unreleased]
+### Fixed
+Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+
 
 ## [1.8.0]
