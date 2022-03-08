@@ -1,25 +1,36 @@
+import { getBlock } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
+import { netAPI, Web3Net } from 'web3-net';
 import { Address } from 'web3-utils';
 import { RevertInstructionError, EthExecutionAPI } from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
-import { registryContractAddress } from './config';
+import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
 export class ENS extends Web3Context<EthExecutionAPI> {
-	public registryAddress: string;
+	public registryAddress: string | null;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
+	private _detectedAddress: string | null;
+	private _lastSyncCheck: number | null;
+	public eth: Web3Context<EthExecutionAPI>;
+	public net: SupportedProviders<netAPI> | Web3ContextObject | undefined;
 
 	public constructor(
 		registryAddr?: string,
 		provider?: SupportedProviders<EthExecutionAPI> | Web3ContextObject,
+		netProvider?: SupportedProviders<netAPI> | Web3ContextObject, // Not sure how to use the same provider for eth execution api and net api
 	) {
-		super(provider ?? '');
+		super(provider ?? ''); // ENS extends Web3Context with EthExecutionAPI
 		this._registry = new Registry(registryAddr);
-		this.registryAddress = registryAddr ?? registryContractAddress; // TODO change this when eth.net is finished
+		this.registryAddress = registryAddr ?? null;
 		this._resolver = new Resolver(this._registry);
+		this._lastSyncCheck = null;
+		this._detectedAddress = null;
+		this.eth = new Web3Context(this.provider);
+		this.net = netProvider;
 	}
 
 	/**
@@ -196,14 +207,47 @@ export class ENS extends Web3Context<EthExecutionAPI> {
 	}
 
 	/*
+	 *
+	 */
+	public async checkNetwork() {
+		const now = Date.now() / 1000;
+		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
+			const block = await getBlock(this.eth, 'latest');
+			const headAge = BigInt(now) - BigInt(block.timestamp);
+
+			if (headAge > 3600) {
+				throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
+			}
+
+			this._lastSyncCheck = now;
+		}
+
+		if (this.registryAddress) {
+			return this.registryAddress;
+		}
+
+		if (this._detectedAddress) {
+			return this._detectedAddress;
+		}
+		if (!this.net) {
+			throw new Error('net is not defined');
+		}
+		const net = new Web3Net(this.net);
+		const networkType = await net.getId(); // using web3-net
+		const addr = registryAddresses[networkType];
+
+		if (typeof addr === 'undefined') {
+			throw new Error(`ENS is not supported on network ${networkType}`);
+		}
+
+		this._detectedAddress = addr;
+		return this._detectedAddress;
+	}
+
+	/*
 	 * Returns true if the related Resolver does support the given signature or interfaceId.
 	 */
 	public async supportsInterface(ENSName: string, interfaceId: string) {
 		return this._resolver.supportsInterface(ENSName, interfaceId);
 	}
-
-	// TODO after eth.net.getNetworkType is complete
-	// public checkNetwork (): boolean {
-	// return true;
-	//  };
 }

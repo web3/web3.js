@@ -1,5 +1,3 @@
-export const registryContractAddress = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
-
 // https://docs.ens.domains/contract-developer-guide/writing-a-resolver
 // resolver interface Ids
 export const interfaceIds: { [T: string]: string } = {
@@ -19,4 +17,11 @@ export const methodsInInterface: { [T: string]: string } = {
 	pubkey: 'pubkey',
 	setContenthash: 'contenthash',
 	contenthash: 'contenthash',
+};
+
+export const registryAddresses: { [T: string]: string } = {
+	main: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+	ropsten: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+	rinkeby: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+	goerli: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 };
