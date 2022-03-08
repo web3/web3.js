@@ -10,7 +10,6 @@ export class Registry {
 	private readonly contract: Contract<typeof REGISTRY>;
 
 	public constructor(customRegistryAddress?: Address) {
-		// TODO for contract, when eth.net is finished we can check network
 		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryAddresses.main);
 	}
 	public async getOwner(name: string) {

@@ -19,19 +19,19 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 	public net: Web3Net;
 
 	public constructor(
+		provider:
+			| SupportedProviders<EthExecutionAPI & netAPI>
+			| Web3ContextObject<EthExecutionAPI & netAPI>,
 		registryAddr?: string,
-		provider?:
-			| (SupportedProviders<EthExecutionAPI> & SupportedProviders<netAPI>)
-			| Web3ContextObject,
 	) {
-		super(provider ?? ''); // ENS extends Web3Context with EthExecutionAPI
+		super(provider ?? '');
+		this.registryAddress = registryAddr ?? null; // TODO figure this out using checknetwork
 		this._registry = new Registry(registryAddr);
-		this.registryAddress = registryAddr ?? null;
 		this._resolver = new Resolver(this._registry);
 		this._lastSyncCheck = null;
 		this._detectedAddress = null;
-		this.eth = new Web3Context(this.provider);
-		this.net = new Web3Net(this.provider);
+		this.eth = new Web3Context(provider);
+		this.net = new Web3Net(provider);
 	}
 
 	/**
