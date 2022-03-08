@@ -1,5 +1,8 @@
+import Common from '@ethereumjs/common';
+import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
+import { privateKeyToAddress } from 'web3-eth-accounts';
 import {
 	BlockTags,
 	convertToValidType,
@@ -8,10 +11,7 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
-import { privateKeyToAddress } from 'web3-eth-accounts';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
-import Common from '@ethereumjs/common';
-
+import { isUInt } from 'web3-validator';
 import {
 	Eip1559NotSupportedError,
 	InvalidNonceOrChainIdError,
@@ -20,6 +20,8 @@ import {
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from './errors';
+import { formatTransaction } from './format_transaction';
+import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 import {
 	chain,
 	hardfork,
@@ -28,9 +30,7 @@ import {
 	PopulatedUnsignedTransaction,
 	Transaction,
 } from './types';
-import { getBlock, getGasPrice, getTransactionCount } from './rpc_method_wrappers';
 import { validateChainInfo, validateCustomChainInfo, validateGas } from './validation';
-import { formatTransaction } from './format_transaction';
 
 export const detectTransactionType = (
 	transaction: Transaction,
@@ -80,9 +80,9 @@ export const validateTransactionForSigning = (
 
 	if (
 		formattedTransaction.nonce === undefined ||
+		!isUInt(formattedTransaction.nonce) ||
 		formattedTransaction.chainId === undefined ||
-		formattedTransaction.nonce.startsWith('-') ||
-		formattedTransaction.chainId.startsWith('-')
+		!isUInt(formattedTransaction.chainId)
 	)
 		throw new InvalidNonceOrChainIdError({
 			nonce: transaction.nonce,
@@ -168,7 +168,7 @@ export async function populateTransaction<
 		populatedTransaction.type = web3Context.defaultTransactionType as HexString;
 
 	if (populatedTransaction.type !== undefined) {
-		if (populatedTransaction.type.startsWith('-'))
+		if (!isUInt(populatedTransaction.type))
 			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
 
 		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
