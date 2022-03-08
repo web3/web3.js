@@ -8,7 +8,7 @@ import {
 } from '@ethereumjs/tx';
 
 import * as rpcMethods from '../../src/rpc_methods';
-import { prepareTransactionForSigning } from '../../src/eth_tx';
+import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
 describe('prepareTransactionForSigning', () => {

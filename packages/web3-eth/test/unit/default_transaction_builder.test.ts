@@ -7,7 +7,7 @@ import {
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from '../../src/errors';
-import { defaultTransactionBuilder } from '../../src/eth_tx';
+import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 import * as rpcMethods from '../../src/rpc_methods';
 import {
 	PopulatedUnsignedEip1559Transaction,

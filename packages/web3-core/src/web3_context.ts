@@ -14,6 +14,7 @@ export type Web3ContextObject<
 	API extends Web3APISpec = any,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} = any,
 > = {
 	config: Web3ConfigOptions;
@@ -25,9 +26,11 @@ export type Web3ContextObject<
 };
 
 export type Web3ContextInitOptions<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	API extends Web3APISpec = any,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} = any,
 > = {
 	config?: Partial<Web3ConfigOptions>;
@@ -38,14 +41,14 @@ export type Web3ContextInitOptions<
 };
 
 export type Web3ContextConstructor<
-	// eslint-disable-next-line no-use-before-define
+	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
 	T extends Web3Context<any>,
 	T2 extends unknown[],
 > = new (...args: [...extras: T2, context: Web3ContextObject]) => T;
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextFactory<
-	// eslint-disable-next-line no-use-before-define
+	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
 	T extends Web3Context<any>,
 	T2 extends unknown[],
 > = Web3ContextConstructor<T, T2> & {
@@ -56,6 +59,7 @@ export class Web3Context<
 	API extends Web3APISpec,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} = any,
 > extends Web3Config {
 	public static readonly providers = Web3RequestManager.providers;
@@ -105,6 +109,7 @@ export class Web3Context<
 		return this._subscriptionManager;
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public static fromContextObject<T extends Web3Context<any>, T3 extends unknown[]>(
 		this: Web3ContextConstructor<T, T3>,
 		...args: [Web3ContextObject, ...T3]
@@ -129,6 +134,7 @@ export class Web3Context<
 	 * and link it to current context. This can be used to initiate a global context object
 	 * and then use it to create new objects of any type extended by `Web3Context`.
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public use<T extends Web3Context<any>, T2 extends unknown[]>(
 		ContextRef: Web3ContextConstructor<T, T2>,
 		...args: [...T2]
