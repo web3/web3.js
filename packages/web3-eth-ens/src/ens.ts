@@ -9,19 +9,20 @@ import { Registry } from './registry';
 import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
-export class ENS extends Web3Context<EthExecutionAPI> {
+export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 	public registryAddress: string | null;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
 	private _detectedAddress: string | null;
 	private _lastSyncCheck: number | null;
 	public eth: Web3Context<EthExecutionAPI>;
-	public net: SupportedProviders<netAPI> | Web3ContextObject | undefined;
+	public net: Web3Net;
 
 	public constructor(
 		registryAddr?: string,
-		provider?: SupportedProviders<EthExecutionAPI> | Web3ContextObject,
-		netProvider?: SupportedProviders<netAPI> | Web3ContextObject, // Not sure how to use the same provider for eth execution api and net api
+		provider?:
+			| (SupportedProviders<EthExecutionAPI> & SupportedProviders<netAPI>)
+			| Web3ContextObject,
 	) {
 		super(provider ?? ''); // ENS extends Web3Context with EthExecutionAPI
 		this._registry = new Registry(registryAddr);
@@ -30,7 +31,7 @@ export class ENS extends Web3Context<EthExecutionAPI> {
 		this._lastSyncCheck = null;
 		this._detectedAddress = null;
 		this.eth = new Web3Context(this.provider);
-		this.net = netProvider;
+		this.net = new Web3Net(this.provider);
 	}
 
 	/**
@@ -232,8 +233,7 @@ export class ENS extends Web3Context<EthExecutionAPI> {
 		if (!this.net) {
 			throw new Error('net is not defined');
 		}
-		const net = new Web3Net(this.net);
-		const networkType = await net.getId(); // using web3-net
+		const networkType = await this.net.getId(); // using web3-net
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {

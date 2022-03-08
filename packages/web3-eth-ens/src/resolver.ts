@@ -12,8 +12,8 @@ import { namehash } from './utils';
 export class Resolver {
 	private readonly registry: Registry;
 
-	public constructor(registry: Registry) {
-		this.registry = registry;
+	public constructor(registry?: Registry) {
+		this.registry = registry ?? new Registry();
 	}
 
 	private async getResolverContractAdapter(ENSName: string) {
