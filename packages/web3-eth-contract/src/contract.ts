@@ -220,7 +220,7 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	public async getPastEvents<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		eventName: string | 'allEvents',
+		eventName: keyof ContractEvents<Abi> | 'allEvents',
 		filter?: Omit<Filter, 'address'>,
 		returnType?: ReturnType,
 	) {
