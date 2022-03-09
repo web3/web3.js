@@ -20,8 +20,5 @@ export class Web3Net extends Web3Context<Web3NetAPI> {
 		return rpcMethodsWrappers.isListening(this);
 	}
 }
-export type netAPI = {
-	net_version: () => string; // https://eth.wiki/json-rpc/API#net_version
-	net_peerCount: () => HexString; // https://eth.wiki/json-rpc/API#net_peercount
-	net_listening: () => boolean; // https://eth.wiki/json-rpc/API#net_listening
-};
+
+export { Web3NetAPI };

@@ -1,6 +1,6 @@
 import { getBlock } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
-import { netAPI, Web3Net } from 'web3-net';
+import { Web3NetAPI, Web3Net } from 'web3-net';
 import { Address } from 'web3-utils';
 import { RevertInstructionError, EthExecutionAPI } from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
@@ -9,27 +9,25 @@ import { Registry } from './registry';
 import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
-export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
+export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public registryAddress: string | null;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
 	private _detectedAddress: string | null;
 	private _lastSyncCheck: number | null;
-	public net: Web3Net;
 
 	public constructor(
 		registryAddr?: string,
 		provider?:
-			| SupportedProviders<EthExecutionAPI & netAPI>
-			| Web3ContextObject<EthExecutionAPI & netAPI>,
+			| SupportedProviders<EthExecutionAPI & Web3NetAPI>
+			| Web3ContextObject<EthExecutionAPI & Web3NetAPI>,
 	) {
 		super(provider ?? '');
-		this.registryAddress = registryAddr ?? null; // TODO figure this out using checknetwork
+		this.registryAddress = registryAddr ?? '';
 		this._registry = new Registry(registryAddr);
 		this._resolver = new Resolver(this._registry);
 		this._lastSyncCheck = null;
 		this._detectedAddress = null;
-		this.net = new Web3Net(this) ?? ''; // IT'LL DEEPND ON THE WEB3 OBJECT
 	}
 
 	/**
@@ -211,7 +209,7 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
 		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
-			const block = await getBlock(this);
+			const block = await getBlock(this, 'latest');
 			const headAge = BigInt(now) - BigInt(block.timestamp);
 
 			if (headAge > 3600) {
@@ -228,10 +226,11 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		if (!this.net) {
-			throw new Error('net is not defined');
+		if (!this) {
+			throw new Error('Context is not defined');
 		}
-		const networkType = await this.net.getId(); // using web3-net
+		const net = new Web3Net(this) ?? '';
+		const networkType = await net.getId();
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {

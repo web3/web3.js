@@ -1,6 +1,6 @@
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
-import { netAPI } from 'web3-net';
+import { Web3NetAPI } from 'web3-net';
 import Eth from 'web3-eth';
 import { Iban } from 'web3-eth-iban';
 import { ENS } from 'web3-eth-ens';
@@ -30,7 +30,7 @@ import {
 import { Address } from 'web3-utils';
 import { ContractError } from './errors';
 
-export class Web3 extends Web3Context<EthExecutionAPI | netAPI> {
+export class Web3 extends Web3Context<EthExecutionAPI | Web3NetAPI> {
 	public eth: Eth & {
 		Iban: typeof Iban;
 		ens: ENS;
@@ -62,7 +62,7 @@ export class Web3 extends Web3Context<EthExecutionAPI | netAPI> {
 		};
 	};
 
-	public constructor(provider: SupportedProviders<EthExecutionAPI | netAPI>) {
+	public constructor(provider: SupportedProviders<EthExecutionAPI | Web3NetAPI>) {
 		super({ provider });
 
 		// Have to use local alias to initiate contract context
@@ -74,7 +74,6 @@ export class Web3 extends Web3Context<EthExecutionAPI | netAPI> {
 		// Eth Module
 		this.eth = Object.assign(eth, {
 			// ENS module
-			// TODO: Pass the registry address as a parameter
 			ens: self.use(ENS, ''),
 
 			// Iban helpers
