@@ -24,7 +24,7 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 			| Web3ContextObject<EthExecutionAPI & netAPI>,
 		registryAddr?: string,
 	) {
-		super(provider ?? '');
+		super(provider);
 		this.registryAddress = registryAddr ?? null; // TODO figure this out using checknetwork
 		this._registry = new Registry(registryAddr);
 		this._resolver = new Resolver(this._registry);
