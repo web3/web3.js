@@ -198,7 +198,6 @@ export const transactionBuilder = async (options: {
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI>;
 	privateKey?: HexString | Buffer;
-	propertiesToPopulate?: string[];
 }) =>
 	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
 		...options,
