@@ -1,24 +1,23 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { BlockTags, ValidTypes } from 'web3-utils';
 import HttpProvider from 'web3-providers-http';
-
-import * as rpcMethods from '../../src/rpc_methods';
-import { populateTransaction } from '../../src/eth_tx';
-import {
-	PopulatedUnsignedEip1559Transaction,
-	PopulatedUnsignedEip2930Transaction,
-	Transaction,
-} from '../../src/types';
+import { BlockTags } from 'web3-utils';
 import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from '../../src/errors';
+import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
+import * as rpcMethods from '../../src/rpc_methods';
+import {
+	PopulatedUnsignedEip1559Transaction,
+	PopulatedUnsignedEip2930Transaction,
+	Transaction,
+} from '../../src/types';
 
 jest.mock('../../src/rpc_methods');
 
-describe('populateTransaction', () => {
+describe('defaultTransactionBuilder', () => {
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
 	const expectedNonce = '0x42';
 	const expectedGas = '0x5208';
@@ -26,7 +25,7 @@ describe('populateTransaction', () => {
 	const expectedGasPrice = '0x4a817c800';
 	const expectedBaseFeePerGas = '0x13afe8b904';
 	const expectedMaxPriorityFeePerGas = '0x9502f900';
-	const expectedMaxFeePerGas = '0x27f4d46b08';
+	const expectedMaxFeePerGas = BigInt(171611286280);
 	const defaultTransactionType = '0x0';
 	const transaction: Transaction = {
 		from: expectedFrom,
@@ -107,7 +106,7 @@ describe('populateTransaction', () => {
 	it.skip('should call override method', async () => {
 		// const overrideFunction = jest.fn();
 		// const input = { ...transaction };
-		// await populateTransaction(
+		// await defaultTransactionBuilder(
 		// 	input,
 		// 	web3Context,
 		// 	ValidTypes.HexString,
@@ -122,12 +121,11 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.from;
 
-			const result = await populateTransaction(
-				input,
+			const result = await defaultTransactionBuilder({
+				transaction: input,
 				web3Context,
-				ValidTypes.HexString,
-				'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-			);
+				privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			});
 			expect(result.from).toBe(expectedFrom);
 		});
 
@@ -142,7 +140,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.from;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.from).toBe(expectedFrom);
 		});
 	});
@@ -154,7 +155,7 @@ describe('populateTransaction', () => {
 			delete input.nonce;
 
 			await expect(
-				populateTransaction(input, web3Context, ValidTypes.HexString),
+				defaultTransactionBuilder({ transaction: input, web3Context }),
 			).rejects.toThrow(new UnableToPopulateNonceError());
 		});
 
@@ -162,7 +163,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.nonce;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.nonce).toBe(expectedNonce);
 			expect(getTransactionCountSpy).toHaveBeenCalledWith(
 				web3Context.requestManager,
@@ -177,7 +181,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.value;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.value).toBe('0x');
 		});
 	});
@@ -187,7 +194,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.data;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.data).toBe('0x');
 		});
 	});
@@ -198,7 +208,10 @@ describe('populateTransaction', () => {
 			delete input.chain;
 			delete input.common;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.chain).toBe('mainnet');
 		});
 
@@ -209,7 +222,10 @@ describe('populateTransaction', () => {
 			delete input.chain;
 			delete input.common;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.chain).toBe(web3Context.defaultChain);
 		});
 	});
@@ -220,7 +236,10 @@ describe('populateTransaction', () => {
 			delete input.hardfork;
 			delete input.common;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.hardfork).toBe('london');
 		});
 
@@ -231,7 +250,10 @@ describe('populateTransaction', () => {
 			delete input.hardfork;
 			delete input.common;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
 	});
@@ -242,7 +264,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.chainId;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.chainId).toBe('0x1');
 		});
 	});
@@ -252,7 +277,10 @@ describe('populateTransaction', () => {
 			const input = { ...transaction };
 			delete input.gasLimit;
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.gasLimit).toBe(expectedGasLimit);
 		});
 	});
@@ -263,7 +291,7 @@ describe('populateTransaction', () => {
 			input.type = '0x8'; // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
 
 			await expect(
-				populateTransaction(input, web3Context, ValidTypes.HexString),
+				defaultTransactionBuilder({ transaction: input, web3Context }),
 			).rejects.toThrow(new UnsupportedTransactionTypeError(input.type));
 		});
 
@@ -287,7 +315,10 @@ describe('populateTransaction', () => {
 			input.hardfork = 'istanbul';
 			if (input.common !== undefined) input.common.hardfork = 'istanbul';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.type).toBe(web3Context.defaultTransactionType);
 		});
 	});
@@ -298,7 +329,7 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x0';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({ transaction: input, web3Context });
 			expect(result.gasPrice).toBe(expectedGasPrice);
 		});
 
@@ -307,7 +338,10 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x1';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
 			expect(result.gasPrice).toBe(expectedGasPrice);
 		});
 	});
@@ -318,8 +352,11 @@ describe('populateTransaction', () => {
 			delete input.accessList;
 			input.type = '0x1';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip2930Transaction).accessList).toStrictEqual([]);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip2930Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.accessList).toStrictEqual([]);
 		});
 
 		it('should populate with [] (tx.type 0x2)', async () => {
@@ -327,8 +364,11 @@ describe('populateTransaction', () => {
 			delete input.accessList;
 			input.type = '0x2';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).accessList).toStrictEqual([]);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.accessList).toStrictEqual([]);
 		});
 	});
 
@@ -345,7 +385,7 @@ describe('populateTransaction', () => {
 			input.type = '0x2';
 
 			await expect(
-				populateTransaction(input, web3Context, ValidTypes.HexString),
+				defaultTransactionBuilder({ transaction: input, web3Context }),
 			).rejects.toThrow(new Eip1559NotSupportedError());
 		});
 
@@ -355,13 +395,12 @@ describe('populateTransaction', () => {
 			delete input.maxFeePerGas;
 			input.type = '0x2';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				expectedGasPrice,
-			);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				expectedGasPrice,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
+			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.gasPrice).toBeUndefined();
 		});
 
@@ -372,13 +411,12 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				expectedMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 
 		it('should populate with default maxPriorityFeePerGas and calculated maxFeePerGas (no maxFeePerGas)', async () => {
@@ -387,13 +425,12 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				expectedMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 
 		it('should populate with default maxPriorityFeePerGas and calculated maxFeePerGas (no maxPriorityFeePerGas)', async () => {
@@ -402,13 +439,12 @@ describe('populateTransaction', () => {
 			delete input.gasPrice;
 			input.type = '0x2';
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				expectedMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(expectedMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 
 		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxPriorityFeePerGas and maxFeePerGas)', async () => {
@@ -425,13 +461,12 @@ describe('populateTransaction', () => {
 				},
 			});
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				web3Context.defaultMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 
 		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxFeePerGas)', async () => {
@@ -447,13 +482,12 @@ describe('populateTransaction', () => {
 				},
 			});
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				web3Context.defaultMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 
 		it('should populate with web3Context.defaultMaxPriorityFeePerGas and calculated maxFeePerGas (no maxPriorityFeePerGas)', async () => {
@@ -469,13 +503,12 @@ describe('populateTransaction', () => {
 				},
 			});
 
-			const result = await populateTransaction(input, web3Context, ValidTypes.HexString);
-			expect((result as PopulatedUnsignedEip1559Transaction).maxPriorityFeePerGas).toBe(
-				web3Context.defaultMaxPriorityFeePerGas,
-			); // 2.5 Gwei, hardcoded in populateTransaction;
-			expect((result as PopulatedUnsignedEip1559Transaction).maxFeePerGas).toBe(
-				expectedMaxFeePerGas,
-			);
+			const result = await defaultTransactionBuilder<PopulatedUnsignedEip1559Transaction>({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.maxPriorityFeePerGas).toBe(web3Context.defaultMaxPriorityFeePerGas); // 2.5 Gwei, hardcoded in defaultTransactionBuilder;
+			expect(result.maxFeePerGas).toBe(expectedMaxFeePerGas);
 		});
 	});
 });

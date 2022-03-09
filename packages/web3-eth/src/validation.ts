@@ -8,15 +8,17 @@ import {
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
 } from 'web3-common';
-import { HexString } from 'web3-utils';
-import { isAddress, isHexStrict, isHexString32Bytes } from 'web3-validator';
+import { HexString, ValidTypes } from 'web3-utils';
+import { isAddress, isHexStrict, isHexString32Bytes, isUInt } from 'web3-validator';
 import {
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
 	Eip1559GasPriceError,
 	InvalidGasOrGasPrice,
 	InvalidMaxPriorityFeePerGasOrMaxFeePerGas,
+	InvalidNonceOrChainIdError,
 	InvalidTransactionCall,
+	InvalidTransactionObjectError,
 	InvalidTransactionWithSender,
 	MissingChainOrHardforkError,
 	MissingCustomChainError,
@@ -25,6 +27,7 @@ import {
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
 } from './errors';
+import { formatTransaction } from './utils/format_transaction';
 import { Transaction } from './types';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
@@ -157,14 +160,10 @@ export const validateChainInfo = (transaction: Transaction) => {
 export const validateLegacyGas = (transaction: Transaction<HexString>) => {
 	if (
 		// This check is verifying gas and gasPrice aren't less than 0.
-		// transaction's number properties have been converted to HexStrings.
-		// JavaScript doesn't handle negative hex strings e.g. -0x1, but our
-		// numberToHex method does. -0x1 < 0 would result in false, so we must check if
-		// hex string is negative via the inclusion of -
 		transaction.gas === undefined ||
+		!isUInt(transaction.gas) ||
 		transaction.gasPrice === undefined ||
-		transaction.gas.startsWith('-') ||
-		transaction.gasPrice.startsWith('-')
+		!isUInt(transaction.gasPrice)
 	)
 		throw new InvalidGasOrGasPrice({
 			gas: transaction.gas,
@@ -191,9 +190,9 @@ export const validateFeeMarketGas = (transaction: Transaction<HexString>) => {
 
 	if (
 		transaction.maxFeePerGas === undefined ||
+		!isUInt(transaction.maxFeePerGas) ||
 		transaction.maxPriorityFeePerGas === undefined ||
-		transaction.maxFeePerGas.startsWith('-') ||
-		transaction.maxPriorityFeePerGas.startsWith('-')
+		!isUInt(transaction.maxPriorityFeePerGas)
 	)
 		throw new InvalidMaxPriorityFeePerGasOrMaxFeePerGas({
 			maxPriorityFeePerGas: transaction.maxPriorityFeePerGas,
@@ -235,4 +234,34 @@ export const validateGas = (transaction: Transaction<HexString>) => {
 	(transaction.type !== undefined && transaction.type > '0x1'
 		? validateFeeMarketGas
 		: validateLegacyGas)(transaction);
+};
+
+export const validateTransactionForSigning = (
+	transaction: Transaction,
+	overrideMethod?: (transaction: Transaction) => void,
+) => {
+	if (overrideMethod !== undefined) {
+		overrideMethod(transaction);
+		return;
+	}
+
+	if (typeof transaction !== 'object' || transaction === null)
+		throw new InvalidTransactionObjectError(transaction);
+
+	validateCustomChainInfo(transaction);
+	validateChainInfo(transaction);
+
+	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
+	validateGas(formattedTransaction);
+
+	if (
+		formattedTransaction.nonce === undefined ||
+		formattedTransaction.chainId === undefined ||
+		formattedTransaction.nonce.startsWith('-') ||
+		formattedTransaction.chainId.startsWith('-')
+	)
+		throw new InvalidNonceOrChainIdError({
+			nonce: transaction.nonce,
+			chainId: transaction.chainId,
+		});
 };
