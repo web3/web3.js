@@ -3,7 +3,7 @@ import { SupportedProviders, Web3Context } from 'web3-core';
 import { Web3NetAPI } from 'web3-net';
 import Eth from 'web3-eth';
 import { Iban } from 'web3-eth-iban';
-import { ENS } from 'web3-eth-ens';
+import { ENS, registryAddresses } from 'web3-eth-ens';
 import {
 	ContractAbi,
 	encodeFunctionCall,
@@ -74,7 +74,7 @@ export class Web3 extends Web3Context<EthExecutionAPI | Web3NetAPI> {
 		// Eth Module
 		this.eth = Object.assign(eth, {
 			// ENS module
-			ens: self.use(ENS, ''),
+			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 
 			// Iban helpers
 			Iban,

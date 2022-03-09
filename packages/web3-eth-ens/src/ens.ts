@@ -203,8 +203,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		return this._resolver.getContenthash(ENSName);
 	}
 
-	/*
-	 *
+	/**
+	 * Checks if the current used network is synced and looks for ENS support there.
+	 * Throws an error if not.
 	 */
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
@@ -219,18 +220,11 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 			this._lastSyncCheck = now;
 		}
 
-		if (this.registryAddress) {
-			return this.registryAddress;
-		}
-
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		if (!this) {
-			throw new Error('Context is not defined');
-		}
 		const net = new Web3Net(this);
-		const networkType = await net.getId();
+		const networkType = await net.getId(); // get the network from provider
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {
