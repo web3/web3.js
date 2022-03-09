@@ -229,7 +229,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		if (!this) {
 			throw new Error('Context is not defined');
 		}
-		const net = new Web3Net(this) ?? '';
+		const net = new Web3Net(this);
 		const networkType = await net.getId();
 		const addr = registryAddresses[networkType];
 
