@@ -15,23 +15,21 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 	private readonly _resolver: Resolver;
 	private _detectedAddress: string | null;
 	private _lastSyncCheck: number | null;
-	public eth: Web3Context<EthExecutionAPI>;
 	public net: Web3Net;
 
 	public constructor(
-		provider:
+		registryAddr?: string,
+		provider?:
 			| SupportedProviders<EthExecutionAPI & netAPI>
 			| Web3ContextObject<EthExecutionAPI & netAPI>,
-		registryAddr?: string,
 	) {
-		super(provider);
+		super(provider ?? '');
 		this.registryAddress = registryAddr ?? null; // TODO figure this out using checknetwork
 		this._registry = new Registry(registryAddr);
 		this._resolver = new Resolver(this._registry);
 		this._lastSyncCheck = null;
 		this._detectedAddress = null;
-		this.eth = new Web3Context(provider);
-		this.net = new Web3Net(provider);
+		this.net = new Web3Net(this) ?? ''; // IT'LL DEEPND ON THE WEB3 OBJECT
 	}
 
 	/**
@@ -213,7 +211,7 @@ export class ENS extends Web3Context<EthExecutionAPI & netAPI> {
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
 		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
-			const block = await getBlock(this.eth, 'latest');
+			const block = await getBlock(this);
 			const headAge = BigInt(now) - BigInt(block.timestamp);
 
 			if (headAge > 3600) {

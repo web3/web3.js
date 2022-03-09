@@ -38,7 +38,7 @@ describe('resolver', () => {
 
 describe('ens', () => {
 	it('should construct with expected methods', () => {
-		const ens = new ENS('http://127.0.0.1:8545', registryAddresses.main);
+		const ens = new ENS(registryAddresses.main, 'http://127.0.0.1:8545');
 
 		expect(ens.getResolver).toBeDefined();
 		expect(ens.setResolver).toBeDefined();
