@@ -16,11 +16,13 @@ Object {
     "handleRevert": false,
     "maxListenersWarningThreshold": 100,
     "transactionBlockTimeout": 50,
+    "transactionBuilder": undefined,
     "transactionConfirmationBlocks": 24,
     "transactionConfirmationPollingInterval": null,
     "transactionPollingInterval": 1000,
     "transactionPollingTimeout": 750,
     "transactionReceiptPollingInterval": null,
+    "transactionTypeParser": undefined,
   },
   "provider": HttpProvider {
     "clientUrl": "http://test/abc",

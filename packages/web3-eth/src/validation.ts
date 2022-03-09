@@ -8,7 +8,7 @@ import {
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
 } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { HexString, ValidTypes } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isUInt } from 'web3-validator';
 import {
 	ChainIdMismatchError,
@@ -16,7 +16,9 @@ import {
 	Eip1559GasPriceError,
 	InvalidGasOrGasPrice,
 	InvalidMaxPriorityFeePerGasOrMaxFeePerGas,
+	InvalidNonceOrChainIdError,
 	InvalidTransactionCall,
+	InvalidTransactionObjectError,
 	InvalidTransactionWithSender,
 	MissingChainOrHardforkError,
 	MissingCustomChainError,
@@ -25,6 +27,7 @@ import {
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
 } from './errors';
+import { formatTransaction } from './utils/format_transaction';
 import { Transaction } from './types';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
@@ -231,4 +234,34 @@ export const validateGas = (transaction: Transaction<HexString>) => {
 	(transaction.type !== undefined && transaction.type > '0x1'
 		? validateFeeMarketGas
 		: validateLegacyGas)(transaction);
+};
+
+export const validateTransactionForSigning = (
+	transaction: Transaction,
+	overrideMethod?: (transaction: Transaction) => void,
+) => {
+	if (overrideMethod !== undefined) {
+		overrideMethod(transaction);
+		return;
+	}
+
+	if (typeof transaction !== 'object' || transaction === null)
+		throw new InvalidTransactionObjectError(transaction);
+
+	validateCustomChainInfo(transaction);
+	validateChainInfo(transaction);
+
+	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
+	validateGas(formattedTransaction);
+
+	if (
+		formattedTransaction.nonce === undefined ||
+		formattedTransaction.chainId === undefined ||
+		formattedTransaction.nonce.startsWith('-') ||
+		formattedTransaction.chainId.startsWith('-')
+	)
+		throw new InvalidNonceOrChainIdError({
+			nonce: transaction.nonce,
+			chainId: transaction.chainId,
+		});
 };

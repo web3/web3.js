@@ -1,12 +1,12 @@
 import { Socket } from 'net';
 import {
-	Web3APISpec,
 	JsonRpcPayload,
 	JsonRpcResponse,
 	JsonRpcResult,
+	Web3APISpec,
 	Web3BaseProvider,
 } from 'web3-common';
-import { HexString, Numbers, ValidTypes } from 'web3-utils';
+import { HexString } from 'web3-utils';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(
@@ -40,23 +40,5 @@ export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	net?: Socket,
 ) => Web3BaseProvider<API>;
 
-export interface Web3ConfigOptions {
-	handleRevert: boolean;
-	defaultAccount: HexString | null;
-	defaultBlock: HexString;
-	transactionBlockTimeout: number;
-	transactionConfirmationBlocks: number;
-	transactionPollingInterval: number;
-	transactionPollingTimeout: number;
-	transactionReceiptPollingInterval: number | null;
-	transactionConfirmationPollingInterval: number | null;
-	blockHeaderTimeout: number;
-	maxListenersWarningThreshold: number;
-	defaultNetworkId: Numbers | null;
-	defaultChain: string;
-	defaultHardfork: string;
-	defaultCommon: Record<string, unknown> | null;
-	defaultReturnType: ValidTypes;
-	defaultTransactionType: Numbers;
-	defaultMaxPriorityFeePerGas: Numbers;
-}
+// TODO: When we have `web3-types` package we can share TransactionType
+export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
