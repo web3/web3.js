@@ -10,7 +10,7 @@ import { registryAddresses } from './config';
 import { Resolver } from './resolver';
 
 export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
-	public registryAddress: string | null;
+	public registryAddress: string;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
 	private _detectedAddress: string | null;
