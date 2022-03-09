@@ -1,5 +1,12 @@
-import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
+import {
+	EthExecutionAPI,
+	inputAddressFormatter,
+	inputLogFormatter,
+	LogsInput,
+	Web3EventEmitter,
+} from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
+import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -14,17 +21,17 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { estimateGas, sendTransaction, call } from 'web3-eth';
 import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
+	Filter,
 	HexString,
 	toChecksumAddress,
 	ValidTypes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
-import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
+import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
 import {
@@ -210,6 +217,35 @@ export class Contract<Abi extends ContractAbi>
 			},
 			encodeABI: () => encodeMethodABI(abi as AbiFunctionFragment, args, data),
 		};
+	}
+
+	public async getPastEvents<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		eventName: string | 'allEvents',
+		filter?: Omit<Filter, 'address'>,
+		returnType?: ReturnType,
+	) {
+		const formattedFilter = inputLogFormatter(filter ?? {});
+		const logs = await getLogs(this, formattedFilter, returnType);
+
+		const abi =
+			eventName === 'allEvents'
+				? ({
+						name: 'ALLEVENTS',
+						signature: '',
+						type: 'event',
+						inputs: [],
+				  } as AbiEventFragment & { signature: string })
+				: (this._jsonInterface.find(
+						j => 'name' in j && j.name === eventName,
+				  ) as AbiEventFragment & { signature: string });
+
+		if (!abi) {
+			throw new Error('Nazar');
+		}
+
+		return logs.map(log =>
+			typeof log === 'string' ? log : decodeEventABI(abi, log as LogsInput),
+		);
 	}
 
 	private _parseAndSetAddress(value?: Address) {
