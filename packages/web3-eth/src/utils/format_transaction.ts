@@ -1,6 +1,6 @@
 import { convertToValidType, Numbers, ValidReturnTypes, ValidTypes, mergeDeep } from 'web3-utils';
-import { TransactionDataAndInputError } from './errors';
-import { Transaction } from './types';
+import { TransactionDataAndInputError } from '../errors';
+import { Transaction } from '../types';
 
 export function formatTransaction<
 	DesiredType extends ValidTypes,

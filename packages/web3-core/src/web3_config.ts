@@ -1,7 +1,32 @@
-import { toHex, ValidTypes } from 'web3-utils';
 import { Web3EventEmitter } from 'web3-common';
+import { Numbers, HexString, toHex, ValidTypes } from 'web3-utils';
+import { TransactionTypeParser } from './types';
+// eslint-disable-next-line import/no-cycle
+import { TransactionBuilder } from './web3_context';
 
-import { Web3ConfigOptions } from './types';
+// To avoid cycle dependency declare this
+export interface Web3ConfigOptions {
+	handleRevert: boolean;
+	defaultAccount: HexString | null;
+	defaultBlock: HexString;
+	transactionBlockTimeout: number;
+	transactionConfirmationBlocks: number;
+	transactionPollingInterval: number;
+	transactionPollingTimeout: number;
+	transactionReceiptPollingInterval: number | null;
+	transactionConfirmationPollingInterval: number | null;
+	blockHeaderTimeout: number;
+	maxListenersWarningThreshold: number;
+	defaultNetworkId: Numbers | null;
+	defaultChain: string;
+	defaultHardfork: string;
+	defaultCommon: Record<string, unknown> | null;
+	defaultReturnType: ValidTypes;
+	defaultTransactionType: Numbers;
+	defaultMaxPriorityFeePerGas: Numbers;
+	transactionBuilder?: TransactionBuilder;
+	transactionTypeParser?: TransactionTypeParser;
+}
 
 type ConfigEvent<T, P extends keyof T = keyof T> = P extends unknown
 	? { name: P; oldValue: T[P]; newValue: T[P] }
@@ -35,6 +60,8 @@ export abstract class Web3Config
 		defaultReturnType: ValidTypes.HexString,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
+		transactionBuilder: undefined,
+		transactionTypeParser: undefined,
 	};
 
 	public constructor(options?: Partial<Web3ConfigOptions>) {
@@ -260,6 +287,24 @@ export abstract class Web3Config
 	public set defaultMaxPriorityFeePerGas(val) {
 		this._triggerConfigChange('defaultMaxPriorityFeePerGas', val);
 		this._config.defaultMaxPriorityFeePerGas = val;
+	}
+
+	public get transactionBuilder() {
+		return this._config.transactionBuilder;
+	}
+
+	public set transactionBuilder(val) {
+		this._triggerConfigChange('transactionBuilder', val);
+		this._config.transactionBuilder = val;
+	}
+
+	public get transactionTypeParser() {
+		return this._config.transactionTypeParser;
+	}
+
+	public set transactionTypeParser(val) {
+		this._triggerConfigChange('transactionTypeParser', val);
+		this._config.transactionTypeParser = val;
 	}
 
 	private _triggerConfigChange<K extends keyof Web3ConfigOptions>(
