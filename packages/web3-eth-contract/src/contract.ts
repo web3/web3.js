@@ -31,6 +31,7 @@ import {
 	ValidTypes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
+import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
@@ -68,7 +69,7 @@ export type ContractEventsInterface<
 	Abi extends ContractAbi,
 	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
 > = {
-	[Name in keyof Events]: ContractBoundEvent;
+	[Name in keyof Events | 'allEvents']: ContractBoundEvent;
 } & {
 	[key: string]: ContractBoundEvent;
 };
@@ -229,12 +230,7 @@ export class Contract<Abi extends ContractAbi>
 
 		const abi =
 			eventName === 'allEvents'
-				? ({
-						name: 'ALLEVENTS',
-						signature: '',
-						type: 'event',
-						inputs: [],
-				  } as AbiEventFragment & { signature: string })
+				? ALL_EVENTS_ABI
 				: (this._jsonInterface.find(
 						j => 'name' in j && j.name === eventName,
 				  ) as AbiEventFragment & { signature: string });
@@ -316,6 +312,9 @@ export class Contract<Abi extends ContractAbi>
 				// It's a private type and we don't want to expose it and no need to check
 				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
+
+			const event = this._createContractEvent(ALL_EVENTS_ABI);
+			this._events.allEvents = event;
 
 			result = [...result, abi];
 		}
