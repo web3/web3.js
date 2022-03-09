@@ -240,7 +240,7 @@ export class Contract<Abi extends ContractAbi>
 				  ) as AbiEventFragment & { signature: string });
 
 		if (!abi) {
-			throw new Error('Nazar');
+			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
 
 		return logs.map(log =>
