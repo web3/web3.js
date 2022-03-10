@@ -125,3 +125,4 @@ export interface Filter {
 	readonly address?: Address | Address[];
 	readonly topics?: (Topic | Topic[] | null)[];
 }
+
