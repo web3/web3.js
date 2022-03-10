@@ -2,15 +2,13 @@ import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { Address, convertToValidType, HexString, ValidTypes } from 'web3-utils';
-import {
-	Eip1559NotSupportedError,
-	TransactionDataAndInputError,
-	UnableToPopulateNonceError,
-	UnsupportedTransactionTypeError,
-} from '../errors';
-import { getBlock, getGasPrice, getTransactionCount } from '../rpc_method_wrappers';
+import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionCount } from '../rpc_method_wrappers';
 import { chain, hardfork, Transaction } from '../types';
 import { detectTransactionType } from './detect_transaction_type';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
 export const getTransactionFrom = (
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -49,72 +47,6 @@ export const getTransactionType = (
 			web3Context.defaultTransactionType,
 			ValidTypes.HexString,
 		) as HexString;
-
-	return undefined;
-};
-
-const getEip1559GasPricing = async (
-	transaction: Transaction,
-	web3Context: Web3Context<EthExecutionAPI>,
-) => {
-	// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
-	const block = await getBlock(web3Context);
-
-	if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
-
-	if (transaction.gasPrice !== undefined) {
-		const hexTransactionGasPrice = convertToValidType(
-			transaction.gasPrice,
-			ValidTypes.HexString,
-		) as HexString;
-		return {
-			maxPriorityFeePerGas: hexTransactionGasPrice,
-			maxFeePerGas: hexTransactionGasPrice,
-		};
-	}
-	return {
-		maxPriorityFeePerGas: convertToValidType(
-			transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas,
-			ValidTypes.HexString,
-		) as HexString,
-		maxFeePerGas: convertToValidType(
-			transaction.maxFeePerGas ??
-				BigInt(block.baseFeePerGas) * BigInt(2) +
-					BigInt(
-						transaction.maxPriorityFeePerGas ?? web3Context.defaultMaxPriorityFeePerGas,
-					),
-			ValidTypes.HexString,
-		) as HexString,
-	};
-};
-
-export const getTransactionGasPricing = async (
-	transaction: Transaction,
-	web3Context: Web3Context<EthExecutionAPI>,
-): Promise<
-	| { gasPrice: HexString }
-	| { maxPriorityFeePerGas: HexString; maxFeePerGas: HexString }
-	| undefined
-> => {
-	const transactionType = getTransactionType(transaction, web3Context);
-	if (transactionType !== undefined) {
-		if (transactionType.startsWith('-'))
-			throw new UnsupportedTransactionTypeError(transactionType);
-
-		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
-		if (transactionType < '0x0' || transactionType > '0x7f')
-			throw new UnsupportedTransactionTypeError(transactionType);
-
-		if (
-			transaction.gasPrice === undefined &&
-			(transactionType === '0x0' || transactionType === '0x1')
-		)
-			return { gasPrice: await getGasPrice(web3Context) };
-
-		if (transactionType === '0x2') {
-			return getEip1559GasPricing(transaction, web3Context);
-		}
-	}
 
 	return undefined;
 };
