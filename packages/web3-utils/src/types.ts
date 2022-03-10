@@ -126,4 +126,3 @@ export interface Filter {
 	readonly topics?: (Topic | Topic[] | null)[];
 }
 
-export type Unwrap = <T>(x: T | undefined) => T;
