@@ -10,7 +10,7 @@ import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
-export const getTransactionFrom = (
+export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Buffer,
 ) => {
@@ -61,7 +61,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	let populatedTransaction = { ...options.transaction } as unknown as Transaction;
 
 	if (populatedTransaction.from === undefined)
-		populatedTransaction.from = getTransactionFrom(options.web3Context, options.privateKey);
+		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
 
 	if (populatedTransaction.nonce === undefined)
 		populatedTransaction.nonce = await getTransactionNonce(
