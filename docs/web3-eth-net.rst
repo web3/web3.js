@@ -33,7 +33,6 @@ Returns
 
 ``Promise`` returns ``String``:
     - ``"main"`` for main network
-    - ``"morden"`` for the morden test network
     - ``"ropsten"`` for the morden test network
     - ``"private"`` for undetectable networks.
 
