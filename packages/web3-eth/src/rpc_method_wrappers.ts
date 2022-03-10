@@ -1,6 +1,5 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-
 import { EthExecutionAPI, PromiEvent, ReceiptInfo, TransactionWithSender } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -8,6 +7,7 @@ import {
 	BlockNumberOrTag,
 	convertObjectPropertiesToValidType,
 	convertToValidType,
+	Filter,
 	HexString,
 	HexString32Bytes,
 	HexStringBytes,
@@ -18,7 +18,7 @@ import {
 	ValidReturnTypes,
 	ValidTypes,
 } from 'web3-utils';
-import { validator, isHexString32Bytes, isBlockTag } from 'web3-validator';
+import { isBlockTag, isHexString32Bytes, validator } from 'web3-validator';
 import {
 	convertibleBlockProperties,
 	convertibleFeeHistoryResultProperties,
@@ -30,16 +30,15 @@ import {
 	TransactionPollingTimeoutError,
 	TransactionReceiptMissingBlockNumberError,
 } from './errors';
-import { formatTransaction } from './utils/format_transaction';
-
 import * as rpcMethods from './rpc_methods';
 import {
 	BlockFormatted,
-	Transaction,
-	SendTransactionEvents,
 	SendSignedTransactionEvents,
+	SendTransactionEvents,
+	Transaction,
 	TransactionCall,
 } from './types';
+import { formatTransaction } from './utils/format_transaction';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
@@ -591,4 +590,32 @@ export async function getProof<ReturnType extends ValidTypes = ValidTypes.HexStr
 			value: convertToValidType(proof.value, returnType ?? web3Context.defaultReturnType),
 		})),
 	};
+}
+
+export async function getLogs<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	web3Context: Web3Context<Web3EthExecutionAPI>,
+	filter: Filter,
+	returnType?: ReturnType,
+) {
+	const response = await rpcMethods.getLogs(web3Context.requestManager, filter);
+	const validReturnType = returnType ?? web3Context.defaultReturnType;
+
+	const result = response.map(res => {
+		if (typeof res === 'string') {
+			return res;
+		}
+
+		const { logIndex, transactionIndex, blockNumber } = res;
+
+		return {
+			...res,
+			logIndex: logIndex ? convertToValidType(logIndex, validReturnType) : undefined,
+			transactionIndex: transactionIndex
+				? convertToValidType(transactionIndex, validReturnType)
+				: undefined,
+			blockNumber: blockNumber ? convertToValidType(blockNumber, validReturnType) : undefined,
+		};
+	});
+
+	return result;
 }
