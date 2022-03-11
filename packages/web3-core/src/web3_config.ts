@@ -1,5 +1,5 @@
 import { Web3EventEmitter } from 'web3-common';
-import { Numbers, HexString, toHex, ValidTypes } from 'web3-utils';
+import { Numbers, HexString, toHex, ValidTypes, BlockNumberOrTag } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context';
@@ -8,7 +8,7 @@ import { TransactionBuilder } from './web3_context';
 export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount: HexString | null;
-	defaultBlock: HexString;
+	defaultBlock: BlockNumberOrTag;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingInterval: number;

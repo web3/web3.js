@@ -40,6 +40,8 @@ import {
 } from './types';
 import { formatTransaction } from './utils/format_transaction';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
@@ -381,22 +383,32 @@ function watchTransactionForConfirmations<
 export function sendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
+	options?: {
+		ignoreGasPricing: boolean;
+	},
 ): PromiEvent<ReceiptInfo, SendTransactionEvents> {
-	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
+	let _transaction = formatTransaction(transaction, ValidTypes.HexString);
 	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
-			// TODO - Populate potentially missing gas fields
-			// if (
-			// 	transaction.gasPrice === undefined &&
-			// 	(transaction.maxPriorityFeePerGas === undefined ||
-			// 		transaction.maxFeePerGas === undefined)
-			// ) {
-			// Determine transaction type and fill in required gas properties
-			// }
+			if (
+				!options?.ignoreGasPricing &&
+				transaction.gasPrice === undefined &&
+				(transaction.maxPriorityFeePerGas === undefined ||
+					transaction.maxFeePerGas === undefined)
+			) {
+				_transaction = {
+					..._transaction,
+					...(await getTransactionGasPricing(
+						_transaction,
+						web3Context,
+						ValidTypes.HexString,
+					)),
+				};
+			}
 
 			if (promiEvent.listenerCount('sending') > 0) {
-				promiEvent.emit('sending', formattedTransaction);
+				promiEvent.emit('sending', _transaction);
 			}
 
 			// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
@@ -404,11 +416,11 @@ export function sendTransaction(
 
 			const transactionHash = await rpcMethods.sendTransaction(
 				web3Context.requestManager,
-				formattedTransaction,
+				_transaction,
 			);
 
 			if (promiEvent.listenerCount('sent') > 0) {
-				promiEvent.emit('sent', formattedTransaction);
+				promiEvent.emit('sent', _transaction);
 			}
 
 			if (promiEvent.listenerCount('transactionHash') > 0) {
