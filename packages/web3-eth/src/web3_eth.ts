@@ -150,8 +150,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnType);
 	}
 
-	public async sendTransaction(transaction: Transaction) {
-		return rpcMethodsWrappers.sendTransaction(this, transaction);
+	public async sendTransaction(
+		transaction: Transaction,
+		options?: {
+			ignoreGasPricing: boolean;
+		},
+	) {
+		return rpcMethodsWrappers.sendTransaction(this, transaction, options);
 	}
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {

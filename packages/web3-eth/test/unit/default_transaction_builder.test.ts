@@ -1,7 +1,6 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
-import { BlockTags } from 'web3-utils';
 import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
@@ -25,7 +24,7 @@ describe('defaultTransactionBuilder', () => {
 	const expectedGasPrice = '0x4a817c800';
 	const expectedBaseFeePerGas = '0x13afe8b904';
 	const expectedMaxPriorityFeePerGas = '0x9502f900';
-	const expectedMaxFeePerGas = BigInt(171611286280);
+	const expectedMaxFeePerGas = '0x27f4d46b08';
 	const defaultTransactionType = '0x0';
 	const transaction: Transaction = {
 		from: expectedFrom,
@@ -171,7 +170,7 @@ describe('defaultTransactionBuilder', () => {
 			expect(getTransactionCountSpy).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				expectedFrom,
-				BlockTags.PENDING,
+				web3Context.defaultBlock,
 			);
 		});
 	});
