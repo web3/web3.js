@@ -1,8 +1,13 @@
 import { getBlock } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
-import { Web3NetAPI, Web3Net } from 'web3-net';
+import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
-import { RevertInstructionError, EthExecutionAPI } from 'web3-common';
+import {
+	RevertInstructionError,
+	EthExecutionAPI,
+	ENSUnsupportedNetworkError,
+	ENSNetworkNotSyncedError,
+} from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
@@ -214,7 +219,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 			const headAge = BigInt(now) - BigInt(block.timestamp);
 
 			if (headAge > 3600) {
-				throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
+				throw new ENSNetworkNotSyncedError();
 			}
 
 			this._lastSyncCheck = now;
@@ -223,12 +228,11 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		const net = new Web3Net(this);
-		const networkType = await net.getId(); // get the network from provider
+		const networkType = await getId(this); // get the network from provider
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {
-			throw new Error(`ENS is not supported on network ${networkType}`);
+			throw new ENSUnsupportedNetworkError(networkType);
 		}
 
 		this._detectedAddress = addr;

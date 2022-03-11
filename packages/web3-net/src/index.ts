@@ -20,5 +20,5 @@ export class Web3Net extends Web3Context<Web3NetAPI> {
 		return rpcMethodsWrappers.isListening(this);
 	}
 }
-
 export { Web3NetAPI };
+export * from './rpc_method_wrappers';

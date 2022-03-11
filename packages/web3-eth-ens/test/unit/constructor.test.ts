@@ -23,7 +23,8 @@ describe('registry', () => {
 
 describe('resolver', () => {
 	it('should construct with expected methods', () => {
-		const resolver = new Resolver();
+		const registry = new Registry();
+		const resolver = new Resolver(registry);
 
 		expect(resolver.getAddress).toBeDefined();
 		expect(resolver.checkInterfaceSupport).toBeDefined();
