@@ -1,35 +1,39 @@
+import { Iban } from 'web3-eth-iban';
 import {
+	BlockTags,
+	Filter,
 	fromUtf8,
 	hexToNumber,
 	hexToNumberString,
 	isAddress,
 	isHexStrict,
+	mergeDeep,
 	Numbers,
 	numberToHex,
 	sha3Raw,
 	toChecksumAddress,
 	toNumber,
+	Topic,
 	toUtf8,
 	utf8ToHex,
 } from 'web3-utils';
-import { isBlockTag } from 'web3-validator';
-import { Iban } from 'web3-eth-iban';
+import { isBlockTag, isHex } from 'web3-validator';
 import { FormatterError } from './errors';
 import {
-	Proof,
-	TransactionInput,
-	TransactionOutput,
-	ReceiptInput,
-	ReceiptOutput,
 	BlockInput,
 	BlockOutput,
-	PostOutput,
-	PostInput,
-	SyncInput,
-	SyncOutput,
-	Mutable,
 	LogsInput,
 	LogsOutput,
+	Mutable,
+	PostInput,
+	PostOutput,
+	Proof,
+	ReceiptInput,
+	ReceiptOutput,
+	SyncInput,
+	SyncOutput,
+	TransactionInput,
+	TransactionOutput,
 } from './types';
 
 /**
@@ -243,6 +247,46 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
 	}
 
 	return modifiedTx;
+};
+
+export const inputTopicFormatter = (topic: Topic): Topic | null => {
+	if (topic === null || typeof topic === 'undefined') return null;
+
+	const value = String(topic);
+
+	return isHex(value) ? value : fromUtf8(value);
+};
+
+export const inputLogFormatter = (filter: Filter) => {
+	const val: Mutable<Filter> =
+		filter === undefined ? {} : mergeDeep({}, filter as Record<string, unknown>);
+
+	// If options !== undefined, don't blow out existing data
+	if (val.fromBlock === undefined) {
+		val.fromBlock = BlockTags.LATEST;
+	}
+
+	val.fromBlock = inputBlockNumberFormatter(val.fromBlock);
+
+	if (val.toBlock !== undefined) {
+		val.toBlock = inputBlockNumberFormatter(val.toBlock);
+	}
+
+	// make sure topics, get converted to hex
+	val.topics = val.topics ?? [];
+	val.topics = val.topics.map(topic =>
+		Array.isArray(topic)
+			? (topic.map(inputTopicFormatter) as Topic[])
+			: inputTopicFormatter(topic as Topic),
+	);
+
+	if (val.address) {
+		val.address = Array.isArray(val.address)
+			? val.address.map(addr => inputAddressFormatter(addr))
+			: inputAddressFormatter(val.address);
+	}
+
+	return val as Filter;
 };
 
 /**

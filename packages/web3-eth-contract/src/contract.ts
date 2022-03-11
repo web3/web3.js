@@ -1,5 +1,12 @@
-import { EthExecutionAPI, inputAddressFormatter, Web3EventEmitter } from 'web3-common';
+import {
+	EthExecutionAPI,
+	inputAddressFormatter,
+	inputLogFormatter,
+	LogsInput,
+	Web3EventEmitter,
+} from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
+import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -14,17 +21,18 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { estimateGas, sendTransaction, call } from 'web3-eth';
 import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
+	Filter,
 	HexString,
 	toChecksumAddress,
 	ValidTypes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
-import { decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
+import { ALL_EVENTS_ABI } from './constants';
+import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
 import {
@@ -61,7 +69,7 @@ export type ContractEventsInterface<
 	Abi extends ContractAbi,
 	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
 > = {
-	[Name in keyof Events]: ContractBoundEvent;
+	[Name in keyof Events | 'allEvents']: ContractBoundEvent;
 } & {
 	[key: string]: ContractBoundEvent;
 };
@@ -212,6 +220,30 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
+	public async getPastEvents<ReturnType extends ValidTypes = ValidTypes.HexString>(
+		eventName: keyof ContractEvents<Abi> | 'allEvents',
+		filter?: Omit<Filter, 'address'>,
+		returnType?: ReturnType,
+	) {
+		const formattedFilter = inputLogFormatter(filter ?? {});
+		const logs = await getLogs(this, formattedFilter, returnType);
+
+		const abi =
+			eventName === 'allEvents'
+				? ALL_EVENTS_ABI
+				: (this._jsonInterface.find(
+						j => 'name' in j && j.name === eventName,
+				  ) as AbiEventFragment & { signature: string });
+
+		if (!abi) {
+			throw new Web3ContractError(`Event ${eventName} not found.`);
+		}
+
+		return logs.map(log =>
+			typeof log === 'string' ? log : decodeEventABI(abi, log as LogsInput),
+		);
+	}
+
 	private _parseAndSetAddress(value?: Address) {
 		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : null;
 	}
@@ -280,6 +312,9 @@ export class Contract<Abi extends ContractAbi>
 				// It's a private type and we don't want to expose it and no need to check
 				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
+
+			const event = this._createContractEvent(ALL_EVENTS_ABI);
+			this._events.allEvents = event;
 
 			result = [...result, abi];
 		}
