@@ -1,40 +1,73 @@
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
-import { BlockTags, convertToValidType, HexString, ValidTypes } from 'web3-utils';
-import {
-	Eip1559NotSupportedError,
-	TransactionDataAndInputError,
-	UnableToPopulateNonceError,
-	UnsupportedTransactionTypeError,
-} from '../errors';
-import { getBlock, getGasPrice, getTransactionCount } from '../rpc_method_wrappers';
+import { Address, convertToValidType, HexString, ValidTypes } from 'web3-utils';
+import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionCount } from '../rpc_method_wrappers';
 import { chain, hardfork, Transaction } from '../types';
 import { detectTransactionType } from './detect_transaction_type';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
+export const getTransactionFromAttr = (
+	web3Context: Web3Context<EthExecutionAPI>,
+	privateKey?: HexString | Buffer,
+) => {
+	if (privateKey !== undefined) return privateKeyToAddress(privateKey);
+	if (web3Context.defaultAccount !== null) return web3Context.defaultAccount;
+	// TODO if (web3.eth.accounts.wallet) Try to fill using local wallet
+
+	return undefined;
+};
+
+export const getTransactionNonce = async (
+	web3Context: Web3Context<EthExecutionAPI>,
+	address?: Address,
+) => {
+	if (address === undefined) {
+		// TODO if (web3.eth.accounts.wallet) use address from local wallet
+		throw new UnableToPopulateNonceError();
+	}
+	return getTransactionCount(web3Context, address, web3Context.defaultBlock);
+};
+
+export const getTransactionType = (
+	transaction: Transaction,
+	web3Context: Web3Context<EthExecutionAPI>,
+) => {
+	const inferredType = detectTransactionType(transaction, web3Context);
+
+	if (inferredType !== undefined) return inferredType;
+	if (
+		web3Context.defaultTransactionType !== null ||
+		web3Context.defaultTransactionType !== undefined
+	)
+		return convertToValidType(
+			web3Context.defaultTransactionType,
+			ValidTypes.HexString,
+		) as HexString;
+
+	return undefined;
+};
+
+// Keep in mind that the order the properties of populateTransaction get populated matters
+// as some of the properties are dependent on others
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<EthExecutionAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
-	const populatedTransaction = { ...options.transaction } as unknown as Transaction;
+	let populatedTransaction = { ...options.transaction } as unknown as Transaction;
 
-	if (populatedTransaction.from === undefined) {
-		if (options.privateKey !== undefined) {
-			populatedTransaction.from = privateKeyToAddress(options.privateKey);
-		} else if (options.web3Context.defaultAccount !== null)
-			populatedTransaction.from = options.web3Context.defaultAccount;
-		// TODO Try to fill from using web3.eth.accounts.wallet
-	}
+	if (populatedTransaction.from === undefined)
+		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
 
-	if (populatedTransaction.nonce === undefined) {
-		if (populatedTransaction.from === undefined) throw new UnableToPopulateNonceError();
-		populatedTransaction.nonce = await getTransactionCount(
+	if (populatedTransaction.nonce === undefined)
+		populatedTransaction.nonce = await getTransactionNonce(
 			options.web3Context,
 			populatedTransaction.from,
-			BlockTags.PENDING,
 		);
-	}
 
 	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
 
@@ -77,55 +110,18 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 
-	populatedTransaction.type = detectTransactionType(populatedTransaction, options.web3Context);
+	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
+
 	if (
-		populatedTransaction.type === undefined &&
-		(options.web3Context.defaultTransactionType !== null ||
-			options.web3Context.defaultTransactionType !== undefined)
+		populatedTransaction.accessList === undefined &&
+		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')
 	)
-		populatedTransaction.type = options.web3Context.defaultTransactionType as HexString;
+		populatedTransaction.accessList = [];
 
-	if (populatedTransaction.type !== undefined) {
-		if (populatedTransaction.type.startsWith('-'))
-			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
-
-		// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-2718.md#transactions
-		if (populatedTransaction.type < '0x0' || populatedTransaction.type > '0x7f')
-			throw new UnsupportedTransactionTypeError(populatedTransaction.type);
-
-		if (populatedTransaction.type === '0x0' || populatedTransaction.type === '0x1') {
-			if (populatedTransaction.gasPrice === undefined)
-				populatedTransaction.gasPrice = await getGasPrice(options.web3Context);
-		}
-
-		if (populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2') {
-			if (populatedTransaction.accessList === undefined) populatedTransaction.accessList = [];
-		}
-
-		if (populatedTransaction.type === '0x2') {
-			// Unless otherwise specified by web3Context.defaultBlock, this defaults to latest
-			const block = await getBlock(options.web3Context);
-
-			if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
-
-			if (populatedTransaction.gasPrice !== undefined) {
-				// Logic from 1.x
-				populatedTransaction.maxPriorityFeePerGas = populatedTransaction.gasPrice;
-				populatedTransaction.maxFeePerGas = populatedTransaction.gasPrice;
-				populatedTransaction.gasPrice = undefined;
-			} else {
-				if (populatedTransaction.maxPriorityFeePerGas === undefined)
-					populatedTransaction.maxPriorityFeePerGas = convertToValidType(
-						options.web3Context.defaultMaxPriorityFeePerGas,
-						ValidTypes.HexString,
-					);
-				if (populatedTransaction.maxFeePerGas === undefined)
-					populatedTransaction.maxFeePerGas =
-						BigInt(block.baseFeePerGas) * BigInt(2) +
-						BigInt(populatedTransaction.maxPriorityFeePerGas);
-			}
-		}
-	}
+	populatedTransaction = {
+		...populatedTransaction,
+		...(await getTransactionGasPricing(populatedTransaction, options.web3Context)),
+	};
 
 	return populatedTransaction as ReturnType;
 }
