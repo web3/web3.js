@@ -202,7 +202,7 @@ export interface RLPEncodedTransaction {
     };
 }
 
-export interface TransactionReceipt {
+export type TransactionReceipt = null | {
     status: boolean;
     transactionHash: string;
     transactionIndex: number;
