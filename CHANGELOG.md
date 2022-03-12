@@ -522,4 +522,7 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+- Noted in types that TransactionReceipt can be null, matching documentation (#4841)
+
 ## [1.8.0]
