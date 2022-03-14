@@ -29,7 +29,6 @@ var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Net = require('web3-net');
 
-var ENS = require('web3-eth-ens');
 var Personal = require('web3-eth-personal');
 var BaseContract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
@@ -87,10 +86,6 @@ var Eth = function Eth() {
         setProvider.apply(_this, arguments);
 
         _this.setRequestManager(_this._requestManager);
-
-        // Set detectedAddress/lastSyncCheck back to null because the provider could be connected to a different chain now
-        _this.ens._detectedAddress = null;
-        _this.ens._lastSyncCheck = null;
     };
 
 
@@ -381,9 +376,6 @@ var Eth = function Eth() {
 
     // add ABI
     this.abi = abi;
-
-    // add ENS
-    this.ens = new ENS(this);
 
     var methods = [
         new Method({
@@ -710,4 +702,3 @@ core.addProviders(Eth);
 
 
 module.exports = Eth;
-
