@@ -29,7 +29,7 @@ describe('parameters_api', () => {
 
 	describe('decodeParameters', () => {
 		describe('valid data', () => {
-			it.each(validDecodeParametersData)(
+			it.each(validEncodeParametersData)(
 				'%#: should pass for valid values: %j',
 				({ input: [abi, bytes], output }) => {
 					// Output returns mix of array and object which can't be matched in
@@ -46,8 +46,8 @@ describe('parameters_api', () => {
 					//   ],
 					//   __length__: 2
 					// }
-					expect(JSON.parse(JSON.stringify(decodeParameters(abi, bytes)))).toEqual(
-						output,
+					expect(decodeParameters(abi, output)).toEqual(
+						bytes,
 					);
 				},
 			);

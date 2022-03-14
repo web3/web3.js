@@ -54,11 +54,11 @@ export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 /**
  * Should be used to decode list of params
  */
-export const decodeParametersWith = <ReturnType extends Record<string, unknown>>(
+export const decodeParametersWith = (
 	abis: AbiInput[],
 	bytes: HexString,
 	loose: boolean,
-): ReturnType & { __length__: number } => {
+): unknown[] => {
 	try {
 		if (abis.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
 			throw new AbiError(
@@ -75,10 +75,9 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 			`0x${bytes.replace(/0x/i, '')}`,
 			loose,
 		);
-
+		const returnList: unknown[] = [];
 		const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
 		returnValue.__length__ = 0;
-
 		for (const [i, abi] of abis.entries()) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			let decodedValue = res[returnValue.__length__];
@@ -86,15 +85,16 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
 
 			returnValue[i] = decodedValue;
-
+			returnList.push(decodedValue);
 			if ((typeof abi === 'function' || (!!abi && typeof abi === 'object')) && abi.name) {
 				returnValue[abi.name as string] = decodedValue;
 			}
 
 			returnValue.__length__ += 1;
 		}
+		console.log(returnList);
 
-		return returnValue as ReturnType & { __length__: number };
+		return returnList;
 	} catch (err) {
 		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
 	}
@@ -103,15 +103,27 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 /**
  * Should be used to decode list of params
  */
-export const decodeParameters = <ReturnType extends Record<string, unknown>>(
+export const decodeParameters =(
 	abi: AbiInput[],
 	bytes: HexString,
-) => decodeParametersWith<ReturnType>(abi, bytes, false);
+) => decodeParametersWith(abi, bytes, false);
 
 /**
  * Should be used to decode bytes to plain param
  */
-export const decodeParameter = <ReturnType extends Record<string, unknown>>(
+export const decodeParameter = (
 	abi: AbiInput,
 	bytes: HexString,
-) => decodeParameters<ReturnType>([abi], bytes)['0'];
+) => decodeParameters([abi], bytes);
+
+const abi = ['uint256', 'string'];
+const inputParams = ['2345675643', 'Hello!%'];
+
+
+const encodedOutput = encodeParameters(abi, inputParams);
+
+console.log("decoded params")
+const decodedParams = decodeParameters(abi, encodedOutput);
+
+console.log(inputParams);
+console.log(decodedParams);
