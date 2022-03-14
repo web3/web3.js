@@ -26,7 +26,7 @@ Fixes #(issue)
 - [ ] I ran `npm run dtslint` with success and extended the tests and types if necessary.
 - [ ] I ran `npm run test:cov` and my test cases cover all the lines and branches of the added code.
 - [ ] I ran `npm run build` with success.
-- [ ] I tested the built `dist/web3.min.js` in a browser.
+- [ ] I have tested the built `dist/web3.min.js` in a browser.
 - [ ] I have tested my code on the live network.
 - [ ] I have checked the Deploy Preview and it looks correct.
 - [ ] I have updated the `CHANGELOG.md` file in the root folder.
