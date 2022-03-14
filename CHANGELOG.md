@@ -521,6 +521,11 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
+## [1.7.2]
+
+### Fixed
+-  Replace deprecated String.prototype.substr() (#4855)
+
 ## [Unreleased]
 
 ## [1.8.0]

@@ -50,7 +50,7 @@ const iso13616Prepare = function (iban) {
     const Z = 'Z'.charCodeAt(0);
 
     iban = iban.toUpperCase();
-    iban = iban.substr(4) + iban.substr(0,4);
+    iban = iban.slice(4) + iban.slice(0, 4);
 
     return iban.split('').map(function(n) {
         const code = n.charCodeAt(0);
@@ -220,7 +220,7 @@ class Iban {
      * @returns {String} checksum
      */
     checksum () {
-        return this._iban.substr(2, 2);
+        return this._iban.slice(2, 4);
     };
 
     /**
@@ -231,7 +231,7 @@ class Iban {
      * @returns {String} institution identifier
      */
     institution () {
-        return this.isIndirect() ? this._iban.substr(7, 4) : '';
+        return this.isIndirect() ? this._iban.slice(7, 11) : '';
     };
 
     /**
@@ -242,7 +242,7 @@ class Iban {
      * @returns {String} client identifier
      */
     client () {
-        return this.isIndirect() ? this._iban.substr(11) : '';
+        return this.isIndirect() ? this._iban.slice(11) : '';
     };
 
     /**
@@ -253,7 +253,7 @@ class Iban {
      */
     toAddress () {
         if (this.isDirect()) {
-            const base36 = this._iban.substr(4);
+            const base36 = this._iban.slice(4);
             const asBn = new BigNumber(base36, 36);
             return utils.toChecksumAddress(asBn.toString(16, 20));
         }
