@@ -83,7 +83,6 @@ export const decodeParametersWith = (
 			let decodedValue = res[returnValue.__length__];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
-
 			returnValue[i] = decodedValue;
 			returnList.push(decodedValue);
 			if ((typeof abi === 'function' || (!!abi && typeof abi === 'object')) && abi.name) {
@@ -92,8 +91,6 @@ export const decodeParametersWith = (
 
 			returnValue.__length__ += 1;
 		}
-		console.log(returnList);
-
 		return returnList;
 	} catch (err) {
 		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
@@ -103,27 +100,24 @@ export const decodeParametersWith = (
 /**
  * Should be used to decode list of params
  */
-export const decodeParameters =(
-	abi: AbiInput[],
-	bytes: HexString,
-) => decodeParametersWith(abi, bytes, false);
+export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
+	decodeParametersWith(abi, bytes, false);
 
 /**
  * Should be used to decode bytes to plain param
  */
-export const decodeParameter = (
-	abi: AbiInput,
-	bytes: HexString,
-) => decodeParameters([abi], bytes);
+export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);
 
-const abi = ['uint256', 'string'];
-const inputParams = ['2345675643', 'Hello!%'];
-
-
-const encodedOutput = encodeParameters(abi, inputParams);
-
-console.log("decoded params")
-const decodedParams = decodeParameters(abi, encodedOutput);
-
-console.log(inputParams);
-console.log(decodedParams);
+const inp = [
+	'uint8[]',
+	{
+		ParentStruct: {
+			propertyOne: 'uint256',
+			propertyTwo: 'uint256',
+			ChildStruct: {
+				propertyOne: 'uint256',
+				propertyTwo: 'uint256',
+			},
+		},
+	},
+];
