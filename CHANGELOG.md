@@ -522,5 +522,6 @@ Released with 1.0.0-beta.37 code base.
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
 ## [Unreleased]
+- Improve npm script commands for development purposes (#4848)
 
 ## [1.8.0]
