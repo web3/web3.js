@@ -50,11 +50,12 @@
 		"web3-common": "1.0.0-alpha.0",
 		"web3-core": "4.0.0-alpha.0",
 		"web3-eth": "4.0.0-alpha.1",
-		"web3-eth-contract": "4.0.0-alpha.0",
-		"web3-eth-accounts": "4.0.0-alpha.0",
 		"web3-eth-abi": "4.0.0-alpha.0",
-		"web3-utils": "4.0.0-alpha.1",
+		"web3-eth-accounts": "4.0.0-alpha.0",
+		"web3-eth-contract": "4.0.0-alpha.0",
 		"web3-eth-ens": "4.0.0-alpha.0",
-		"web3-eth-iban": "4.0.0-alpha.0"
+		"web3-eth-iban": "4.0.0-alpha.0",
+		"web3-net": "^4.0.0-alpha.0",
+		"web3-utils": "4.0.0-alpha.1"
 	}
 }

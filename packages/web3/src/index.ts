@@ -2,7 +2,7 @@ import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Eth from 'web3-eth';
 import { Iban } from 'web3-eth-iban';
-import { ENS } from 'web3-eth-ens';
+import { ENS, registryAddresses } from 'web3-eth-ens';
 import {
 	ContractAbi,
 	encodeFunctionCall,
@@ -73,8 +73,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		// Eth Module
 		this.eth = Object.assign(eth, {
 			// ENS module
-			// TODO: Pass the registry address as a parameter
-			ens: self.use(ENS, ''),
+			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 
 			// Iban helpers
 			Iban,
