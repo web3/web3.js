@@ -522,5 +522,7 @@ Released with 1.0.0-beta.37 code base.
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
 ## [Unreleased]
+### Fixed
+-  Removed a circular dependency between web3-eth and web3-eth-ens (#4845)
 
 ## [1.8.0]
