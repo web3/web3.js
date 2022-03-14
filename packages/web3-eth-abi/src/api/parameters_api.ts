@@ -107,17 +107,3 @@ export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
  * Should be used to decode bytes to plain param
  */
 export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);
-
-const inp = [
-	'uint8[]',
-	{
-		ParentStruct: {
-			propertyOne: 'uint256',
-			propertyTwo: 'uint256',
-			ChildStruct: {
-				propertyOne: 'uint256',
-				propertyTwo: 'uint256',
-			},
-		},
-	},
-];
