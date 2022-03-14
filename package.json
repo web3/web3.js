@@ -43,7 +43,7 @@
         "test:e2e:ganache:core": "./scripts/e2e.ganache.core.sh",
         "test:e2e:gnosis:dex": "./scripts/e2e.gnosis.dex.sh",
         "ci": "./scripts/ci.sh",
-        "cov:clean": "rm -rf .nyc_output && rm -rf coverage",
+        "cov:clean": "rimraf .nyc_output && rimraf coverage",
         "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
     },
     "repository": {
