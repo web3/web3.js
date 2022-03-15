@@ -523,4 +523,7 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+- Replaced xhr2-cookies dependency from web3-providers-http module to enable using custom `User-Agent` headers (#4808)
+
 ## [1.8.0]

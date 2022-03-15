@@ -23,7 +23,7 @@
  */
 
 var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
+var XHR2 = require('xhr2-cookies-patched').XMLHttpRequest; // jshint ignore: line
 var http = require('http');
 var https = require('https');
 
