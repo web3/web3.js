@@ -883,7 +883,11 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
-                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
+                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas 
+                         || (
+                             this.requestManager.provider.defaultOnlineGasPrice ? gasPrice
+                             : '0x9502F900' // 2.5 Gwei
+                        );
                         maxFeePerGas = tx.maxFeePerGas ||
                             utils.toHex(
                                 utils.toBN(block.baseFeePerGas)
