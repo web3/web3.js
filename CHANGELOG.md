@@ -507,6 +507,7 @@ Released with 1.0.0-beta.37 code base.
 -  Update the documentation for `methods.myMethod.estimateGas` (#4702)
 -  Fix typos in REVIEW.md and TESTING.md (#4691)
 -  Fix encoding for "0x" string values (#4512)
+-  Fix jsonrpc payload and response types (#4743) (#4761)
 
 
 ### Changed
