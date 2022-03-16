@@ -23,19 +23,13 @@ import {
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
 	ReceiptInfo,
 } from 'web3-common';
-import { HexString, HexString32Bytes, Numbers, Web3Error } from 'web3-utils';
+import { HexString, HexString32Bytes, Numbers, Web3Error, jsonStringify } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
 
 	public constructor(value: unknown) {
-		super(
-			JSON.stringify(
-				value,
-				(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
-			).replace(/['"]+/g, ''),
-			'invalid transaction with sender',
-		);
+		super(jsonStringify(value, true), 'invalid transaction with sender');
 	}
 }
 
@@ -43,13 +37,7 @@ export class InvalidTransactionCall extends Web3Error {
 	public code = ERR_TX_INVALID_CALL;
 
 	public constructor(value: unknown) {
-		super(
-			JSON.stringify(
-				value,
-				(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
-			).replace(/['"]+/g, ''),
-			'invalid transaction call',
-		);
+		super(jsonStringify(value, true), 'invalid transaction call');
 	}
 }
 
