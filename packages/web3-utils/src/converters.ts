@@ -482,3 +482,18 @@ export function convertObjectPropertiesToValidType<
 
 	return convertedObject;
 }
+
+/**
+ * json stringify with bigint support
+ * returns a string
+ */
+export const jsonStringify = (value: unknown, unquotValue = false) => {
+	if (value === undefined) throw new InvalidConvertibleValueError();
+
+	const result = JSON.stringify(
+		value,
+		(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
+	);
+
+	return unquotValue && typeof value !== 'object' ? result.replace(/['"]+/g, '') : result;
+};
