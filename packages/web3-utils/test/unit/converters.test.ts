@@ -1,3 +1,5 @@
+import { jsonStringify } from '../../dist';
+
 import {
 	asciiToHex,
 	bytesToHex,
@@ -24,6 +26,7 @@ import {
 	convertObjectPropertiesToValidType,
 	toChecksumAddress,
 } from '../../src/converters';
+
 import {
 	asciiToHexValidData,
 	bytesToHexInvalidData,
@@ -49,6 +52,7 @@ import {
 	convertObjectPropertiesToValidTypeValidData,
 	convertObjectPropertiesToValidTypeInvalidData,
 	toCheckSumValidData,
+	ConvertJsonStringifyData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -377,6 +381,22 @@ describe('converters', () => {
 					).toThrow(output);
 				},
 			);
+		});
+	});
+
+	describe('jsonStringify', () => {
+		describe('valid cases', () => {
+			it.each(ConvertJsonStringifyData)('%s', (input, output) => {
+				expect(jsonStringify(input, true)).toEqual(output);
+			});
+		});
+
+		describe('invalid case', () => {
+			it('undefined', () => {
+				expect(() => jsonStringify(undefined)).toThrow(
+					'Invalid value given "undefined". Error: cannot convert undefined.',
+				);
+			});
 		});
 	});
 });
