@@ -478,8 +478,6 @@ Released with 1.0.0-beta.37 code base.
 - Correct `web3.rst` example in documentation (#4511)
 - Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
 
-## [Unreleased]
-
 ## [1.7.0]
 
 ### Added
@@ -495,5 +493,34 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.1]
 
+### Added
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+- Add example import for package level types (#4611)
+
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
+-  Use globalThis to locate global object if possible (#4613)
+-  Fix typos in web3-utils.rst (#4662)
+-  Added effectiveGasPrice to TransactionReceipt (#4692)
+-  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
+-  Updated README to include Webpack 5 create-react-app support instructions (#4173)
+-  Update the documentation for `methods.myMethod.estimateGas` (#4702)
+-  Fix typos in REVIEW.md and TESTING.md (#4691)
+-  Fix encoding for "0x" string values (#4512)
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+
+
+### Changed
+-  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
+
+
+### Removed
+- Removed deprecated Morden testnet code (#4339)
+
+
+### Security
+-  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
+
+## [Unreleased]
+
+## [1.8.0]
