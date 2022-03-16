@@ -63,3 +63,14 @@ export interface Filter {
 	readonly address?: string | string[];
 	readonly topics?: (string | string[] | null)[];
 }
+
+export type JsonSchema = {
+	$id?: string;
+	type?: string;
+	eth?: string;
+	items?: JsonSchema | JsonSchema[];
+	properties?: Record<string, JsonSchema>;
+	maxItems?: number;
+	minItems?: number;
+	additionalItems?: boolean;
+};
