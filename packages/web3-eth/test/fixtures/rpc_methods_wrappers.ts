@@ -1339,6 +1339,7 @@ const receiptInfo: ReceiptInfo = {
 	logsBloom: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	root: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	status: '0x1',
+	effectiveGasPrice: '0x80d9594d23495b',
 };
 const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
 	...receiptInfo,
