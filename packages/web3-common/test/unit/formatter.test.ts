@@ -66,6 +66,39 @@ describe('formatter', () => {
 				tuple: [Uint8Array, bigint];
 			}>();
 		});
+
+		typecheck('should format correct scalar type', () => {
+			type T = FormatType<Buffer, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }>;
+
+			return expectTypeOf<T>().toBe<Uint8Array>();
+		});
+
+		typecheck('should not format non=convertible scalar type', () => {
+			type T = FormatType<
+				boolean,
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
+			>;
+
+			return expectTypeOf<T>().toBe<boolean>();
+		});
+
+		typecheck('should format correct array types', () => {
+			type T = FormatType<
+				Buffer[],
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
+			>;
+
+			return expectTypeOf<T>().toBe<Uint8Array[]>();
+		});
+
+		typecheck('should format correct tuple type', () => {
+			type T = FormatType<
+				[Buffer, number],
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
+			>;
+
+			return expectTypeOf<T>().toBe<[Uint8Array, bigint]>();
+		});
 	});
 
 	describe('format', () => {
@@ -286,6 +319,20 @@ describe('formatter', () => {
 			const data = [10, Buffer.from('FF', 'hex')];
 
 			const result = ['0xa', '0xff'];
+
+			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
+				result,
+			);
+		});
+
+		it('should format scalar value', () => {
+			const schema = {
+				eth: 'uint',
+			};
+
+			const data = 10;
+
+			const result = '0xa';
 
 			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
 				result,

@@ -4,6 +4,7 @@ import {
 	hexToBytes,
 	hexToNumber,
 	isHex,
+	isHexStrict,
 	mergeDeep,
 	numberToHex,
 } from 'web3-utils';
@@ -38,21 +39,27 @@ export type ByteTypes = {
 };
 
 export type DataFormat = {
-	number: FMT_NUMBER;
-	bytes: FMT_BYTES;
+	readonly number: FMT_NUMBER;
+	readonly bytes: FMT_BYTES;
 };
 
-export const DEFAULT_FORMAT: DataFormat = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX };
+export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX } as const;
 
-export type FormatType<T, F extends DataFormat> = {
-	[P in keyof T]: T[P] extends number | bigint
-		? NumberTypes[F['number']]
-		: T[P] extends Buffer | Uint8Array
-		? ByteTypes[F['bytes']]
-		: T[P] extends object
-		? FormatType<T[P], F>
-		: T[P];
-};
+export type FormatType<T, F extends DataFormat> = T extends number | bigint
+	? NumberTypes[F['number']]
+	: T extends Buffer | Uint8Array
+	? ByteTypes[F['bytes']]
+	: T extends object
+	? {
+			[P in keyof T]: T[P] extends number | bigint
+				? NumberTypes[F['number']]
+				: T[P] extends Buffer | Uint8Array
+				? ByteTypes[F['bytes']]
+				: T[P] extends object
+				? FormatType<T[P], F>
+				: T[P];
+	  }
+	: T;
 
 const isObject = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' && item !== null && !Array.isArray(item) && !Buffer.isBuffer(item);
@@ -95,11 +102,11 @@ export const getNumberValue = (value: unknown): bigint => {
 		return value;
 	}
 
-	if (typeof value === 'string' && !isHex(value)) {
+	if (typeof value === 'string' && !isHexStrict(value)) {
 		return BigInt(value);
 	}
 
-	if (typeof value === 'string' && isHex(value)) {
+	if (typeof value === 'string' && isHexStrict(value)) {
 		return BigInt(hexToNumber(value));
 	}
 
@@ -116,8 +123,12 @@ export const getBytesValue = (value: unknown): Buffer => {
 		return Buffer.from(value);
 	}
 
-	if (typeof value === 'string' && isHex(value)) {
+	if (typeof value === 'string' && isHexStrict(value)) {
 		return hexToBytes(value);
+	}
+
+	if (typeof value === 'string' && isHex(value)) {
+		return Buffer.from(value, 'hex');
 	}
 
 	throw new Error('Invalid type');
@@ -158,11 +169,16 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 };
 
 export const convert = (
-	data: Record<string, unknown> | unknown[],
+	data: Record<string, unknown> | unknown[] | unknown,
 	schema: JsonSchema,
 	dataPath: string[],
 	format: DataFormat,
 ) => {
+	// If it's a scalar value
+	if (!isObject(data) && !Array.isArray(data)) {
+		return convertScalarValue(data, schema?.eth as string, format);
+	}
+
 	const object = data as Record<string, unknown>;
 
 	for (const [key, value] of Object.entries(object)) {
@@ -252,31 +268,31 @@ export const convert = (
 };
 
 export const format = <
-	DataType extends Record<string, unknown> | unknown[],
+	DataType extends Record<string, unknown> | unknown[] | unknown,
 	ReturnType extends DataFormat,
 >(
 	schema: ValidationSchemaInput | JsonSchema,
 	data: DataType,
 	returnFormat: ReturnType,
 ): FormatType<DataType, ReturnType> => {
-	let dataToParse: Record<string, unknown> | unknown[];
+	let dataToParse: Record<string, unknown> | unknown[] | unknown;
 
 	if (isObject(data)) {
 		dataToParse = mergeDeep({}, data);
 	} else if (Array.isArray(data)) {
 		dataToParse = [...data];
 	} else {
-		throw new Error('Invalid data type');
+		dataToParse = data;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const jsonSchema: JsonSchema = isObject(schema) ? schema : utils.ethAbiToJsonSchema(schema);
 
-	if (!jsonSchema.properties && !jsonSchema.items) {
+	if (!jsonSchema.properties && !jsonSchema.items && !jsonSchema.eth) {
 		throw new Error('Nazar');
 	}
 
-	return convert(dataToParse, jsonSchema, [], returnFormat) as unknown as FormatType<
+	return convert(dataToParse, jsonSchema, [], returnFormat) as FormatType<
 		typeof data,
 		ReturnType
 	>;

@@ -8,5 +8,5 @@ export * from './eth_execution_api';
 export * from './deferred_promise';
 export * from './promi_event';
 export * from './formatters';
-export { format, FMT_NUMBER, FMT_BYTES, DataFormat } from './formatter';
+export * from './formatter';
 export * as jsonRpc from './json_rpc';
