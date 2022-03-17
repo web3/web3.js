@@ -525,6 +525,10 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.2]
 
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+- You want maxPriorityFeePerGas to change its default value to Response.gasprice, Provider enables this by adding the defaultOnlineGasPrice attribute (#4858)
+
 ### Security
 -  `npm audit fix` to update libraries (#4860)
 
@@ -532,5 +536,3 @@ Released with 1.0.0-beta.37 code base.
 -  Fix jsonrpc payload and response types (#4743) (#4761)
 -  Fix Matic gasPrice error (#4858)
 
-### Changed
-- You want maxPriorityFeePerGas to change its default value to Response.gasprice, Provider enables this by adding the defaultOnlineGasPrice attribute
