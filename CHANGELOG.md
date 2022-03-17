@@ -507,7 +507,6 @@ Released with 1.0.0-beta.37 code base.
 -  Update the documentation for `methods.myMethod.estimateGas` (#4702)
 -  Fix typos in REVIEW.md and TESTING.md (#4691)
 -  Fix encoding for "0x" string values (#4512)
--  Fix jsonrpc payload and response types (#4743) (#4761)
 
 
 ### Changed
@@ -521,9 +520,17 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
+
 ## [Unreleased]
 
 ## [1.7.2]
 
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
 ### Fixed
-Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
