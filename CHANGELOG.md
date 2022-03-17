@@ -521,6 +521,13 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
+## [1.7.2]
+### Fixed
+-  Fix Matic gasPrice error (#4858)
+
+### Changed
+- You want maxPriorityFeePerGas to change its default value to Response.gasprice, Provider enables this by adding the defaultOnlineGasPrice attribute
+
 ## [Unreleased]
 
 ## [1.8.0]
