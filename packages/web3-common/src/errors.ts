@@ -47,6 +47,8 @@ import {
 	ERR_IV_LENGTH,
 	ERR_PBKDF2_ITERATIONS,
 	ERR_ENS_CHECK_INTERFACE_SUPPORT,
+	ERR_ENS_UNSUPPORTED_NETWORK,
+	ERR_ENS_NETWORK_NOT_SYNCED,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -487,5 +489,19 @@ export class ENSCheckInterfaceSupportError extends Web3Error {
 	public code = ERR_ENS_CHECK_INTERFACE_SUPPORT;
 	public constructor(errorDetails: string) {
 		super(`ENS resolver check interface support error. "${errorDetails}"`);
+	}
+}
+
+export class ENSUnsupportedNetworkError extends Web3Error {
+	public code = ERR_ENS_UNSUPPORTED_NETWORK;
+	public constructor(networkType: string) {
+		super(`ENS is not supported on network ${networkType}`);
+	}
+}
+
+export class ENSNetworkNotSyncedError extends Web3Error {
+	public code = ERR_ENS_NETWORK_NOT_SYNCED;
+	public constructor() {
+		super(`Network not synced`);
 	}
 }

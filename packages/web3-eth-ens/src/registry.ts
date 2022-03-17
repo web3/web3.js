@@ -3,15 +3,14 @@ import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
 import REGISTRY from './abi/registry';
 import { RESOLVER } from './abi/resolver';
-import { registryContractAddress } from './config';
+import { registryAddresses } from './config';
 import { namehash } from './utils';
 
 export class Registry {
 	private readonly contract: Contract<typeof REGISTRY>;
 
 	public constructor(customRegistryAddress?: Address) {
-		// TODO for contract, when eth.net is finished we can check network
-		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryContractAddress);
+		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryAddresses.main);
 	}
 	public async getOwner(name: string) {
 		try {
