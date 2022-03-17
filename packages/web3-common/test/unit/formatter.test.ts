@@ -10,13 +10,13 @@ describe('formatter', () => {
 					timeout: number;
 					data: Buffer;
 				},
-				{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 			>;
 
 			return expectTypeOf<T>().toBe<{
 				handleRevert: boolean;
-				timeout: string;
-				data: string;
+				timeout: bigint;
+				data: Uint8Array;
 			}>();
 		});
 
@@ -27,13 +27,13 @@ describe('formatter', () => {
 					timeout: number[];
 					data: Buffer[];
 				},
-				{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 			>;
 
 			return expectTypeOf<T>().toBe<{
 				handleRevert: boolean;
-				timeout: string[];
-				data: string[];
+				timeout: bigint[];
+				data: Uint8Array[];
 			}>();
 		});
 
@@ -46,11 +46,11 @@ describe('formatter', () => {
 						data: Buffer[];
 					};
 				},
-				{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 			>;
 
 			return expectTypeOf<T>().toBe<{
-				nested: { handleRevert: boolean; timeout: string[]; data: string[] };
+				nested: { handleRevert: boolean; timeout: bigint[]; data: Uint8Array[] };
 			}>();
 		});
 
@@ -59,11 +59,11 @@ describe('formatter', () => {
 				{
 					tuple: [Buffer, number];
 				},
-				{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+				{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.UINT8ARRAY }
 			>;
 
 			return expectTypeOf<T>().toBe<{
-				tuple: [string, string];
+				tuple: [Uint8Array, bigint];
 			}>();
 		});
 	});
@@ -102,7 +102,49 @@ describe('formatter', () => {
 			expect(result).toEqual(expected);
 		});
 
-		it('should format object with array values', () => {
+		it('should format nested objects', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					nested: {
+						type: 'object',
+						properties: {
+							handleRevert: {
+								eth: 'bool',
+							},
+							timeout: {
+								eth: 'uint',
+							},
+							data: {
+								eth: 'bytes',
+							},
+						},
+					},
+				},
+			};
+
+			const data = {
+				nested: {
+					handleRevert: true,
+					timeout: 10,
+					data: Buffer.from('FE', 'hex'),
+				},
+			};
+
+			const expected = {
+				nested: {
+					handleRevert: true,
+					timeout: '0xa',
+					data: '0xfe',
+				},
+			};
+
+			const result = format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX });
+
+			expect(result).toEqual(expected);
+		});
+
+		it('should format array values with single type', () => {
 			const schema = {
 				type: 'object',
 				properties: {
@@ -134,6 +176,116 @@ describe('formatter', () => {
 				int_arr: ['0xa', '0xa', '0xa'],
 				bytes_arr: ['0xff', '0xff', '0xff'],
 			};
+
+			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
+				result,
+			);
+		});
+
+		it('should format array values with object type', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					arr: {
+						type: 'array',
+						items: {
+							type: 'object',
+							properties: {
+								prop1: {
+									eth: 'uint',
+								},
+								prop2: {
+									eth: 'bytes',
+								},
+							},
+						},
+					},
+				},
+			};
+
+			const data = {
+				arr: [
+					{ prop1: 10, prop2: Buffer.from('FF', 'hex') },
+					{ prop1: 10, prop2: Buffer.from('FF', 'hex') },
+				],
+			};
+
+			const result = {
+				arr: [
+					{ prop1: '0xa', prop2: '0xff' },
+					{ prop1: '0xa', prop2: '0xff' },
+				],
+			};
+
+			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
+				result,
+			);
+		});
+
+		it('should format array values with tuple type', () => {
+			const schema = {
+				type: 'object',
+				properties: {
+					tuple: {
+						type: 'array',
+						items: [
+							{
+								eth: 'uint',
+							},
+							{
+								eth: 'bytes',
+							},
+						],
+					},
+				},
+			};
+
+			const data = {
+				tuple: [10, Buffer.from('FF', 'hex')],
+			};
+
+			const result = {
+				tuple: ['0xa', '0xff'],
+			};
+
+			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
+				result,
+			);
+		});
+
+		it('should format simple arrays', () => {
+			const schema = {
+				type: 'array',
+				items: {
+					eth: 'uint',
+				},
+			};
+
+			const data = [10, 10];
+
+			const result = ['0xa', '0xa'];
+
+			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
+				result,
+			);
+		});
+
+		it('should format simple tuple', () => {
+			const schema = {
+				type: 'array',
+				items: [
+					{
+						eth: 'uint',
+					},
+					{
+						eth: 'bytes',
+					},
+				],
+			};
+
+			const data = [10, Buffer.from('FF', 'hex')];
+
+			const result = ['0xa', '0xff'];
 
 			expect(format(schema, data, { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX })).toEqual(
 				result,
