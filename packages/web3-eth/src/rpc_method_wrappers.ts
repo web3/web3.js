@@ -33,8 +33,10 @@ import {
 import * as rpcMethods from './rpc_methods';
 import {
 	BlockFormatted,
+	ReceiptInfoFormatted,
 	SendSignedTransactionEvents,
 	SendTransactionEvents,
+	SendTransactionOptions,
 	Transaction,
 	TransactionCall,
 } from './types';
@@ -383,12 +385,10 @@ function watchTransactionForConfirmations<
 export function sendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
-	options?: {
-		ignoreGasPricing: boolean;
-	},
-): PromiEvent<ReceiptInfo, SendTransactionEvents> {
+	options?: SendTransactionOptions,
+): PromiEvent<ReceiptInfoFormatted, SendTransactionEvents> {
 	let _transaction = formatTransaction(transaction, ValidTypes.HexString);
-	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
+	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
 			if (

@@ -308,6 +308,24 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
+				describe('sendTransaction', () => {
+					it.each(getTransactionCountValidData)(
+						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',
+						async (input, mockRpcResponse, rpcMethodParameters, output) => {
+							(rpcMethods.getTransactionCount as jest.Mock).mockResolvedValueOnce(
+								mockRpcResponse,
+							);
+							expect(await getTransactionCount(web3Eth, ...input)).toStrictEqual(
+								output,
+							);
+							expect(rpcMethods.getTransactionCount).toHaveBeenCalledWith(
+								web3Eth.requestManager,
+								...rpcMethodParameters,
+							);
+						},
+					);
+				});
+
 				describe('estimateGas', () => {
 					it.each(estimateGasValidData)(
 						'input: %s\nmockRpcResponse: %s\nexpectedRpcMethodToBeCalled: %s\nrpcMethodParameters: %s\noutput: %s',

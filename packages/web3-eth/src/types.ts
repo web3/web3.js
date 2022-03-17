@@ -270,6 +270,11 @@ export type SendTransactionEvents = {
 	};
 };
 
+export interface SendTransactionOptions {
+	returnType?: ValidTypes,
+	ignoreGasPricing?: boolean;
+}
+
 export type SendSignedTransactionEvents = {
 	sending: HexStringBytes;
 	sent: HexStringBytes;
