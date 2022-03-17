@@ -520,9 +520,19 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
+
 ## [Unreleased]
 
+## [1.7.2]
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
 ### Fixed
-- Noted in types that TransactionReceipt can be null, matching documentation (#4841)
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Noted in types that TransactionReceipt can be null, matching documentation (#4841)
 
 ## [1.8.0]
