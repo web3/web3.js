@@ -527,4 +527,4 @@ Released with 1.0.0-beta.37 code base.
 ## [1.7.2]
 
 ### Changed
-- Deprecated event listener removed (#4825) (#4839)
+-  Remove deprecated `close` event listener (#4825) (#4839)
