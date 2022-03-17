@@ -21,7 +21,7 @@ describe('formatters', function () {
                 gasUsed: '0x3e8',
                 timestamp: '0x3e8',
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
-                nonce: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
+                nonce: '0x1fc0f46a3e5325fa',
                 size: '0x3e8'
             }), {
                 hash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
@@ -37,7 +37,7 @@ describe('formatters', function () {
                 gasUsed: 1000,
                 timestamp: 1000,
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
-                nonce: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
+                nonce: '0x1fc0f46a3e5325fa',
                 size: 1000
             });
         });
