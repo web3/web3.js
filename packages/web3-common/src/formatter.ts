@@ -7,8 +7,9 @@ import {
 	mergeDeep,
 	numberToHex,
 } from 'web3-utils';
-import { JsonSchemaNode, utils, ValidationSchemaInput } from 'web3-validator';
-import { parseBaseType } from 'web3-validator/dist/utils';
+import { JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+
+const { parseBaseType } = utils;
 
 export enum FMT_NUMBER {
 	NUMBER = 'NUMBER_NUMBER',
@@ -56,33 +57,35 @@ export type FormatType<T, F extends DataFormat> = {
 const isObject = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' && item !== null && !Array.isArray(item) && !Buffer.isBuffer(item);
 
-const findObjectByPath = (
-	schema: JsonSchemaNode,
-	dataPath: string[],
-): JsonSchemaNode | undefined => {
-	let result: JsonSchemaNode = schema;
+const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchema | undefined => {
+	let result: JsonSchema = { ...schema } as JsonSchema;
 
-	// eslint-disable-next-line @typescript-eslint/prefer-for-of
-	for (let i = 0; i < dataPath.length; i += 1) {
+	for (const dataPart of dataPath) {
 		if (!result.properties && !result.items) {
 			return undefined;
 		}
 
 		if (result.properties) {
-			result = result.properties[dataPath[i]];
-		} else if (result.items) {
-			const node = (result.items as JsonSchemaNode).properties;
+			result = (result.properties as Record<string, JsonSchema>)[dataPart];
+		} else if (result.items && (result.items as JsonSchema).properties) {
+			const node = (result.items as JsonSchema).properties as Record<string, JsonSchema>;
+
 			if (!node) {
 				return undefined;
 			}
 
-			result = node[dataPath[i]];
+			result = node[dataPart];
+		} else if (result.items && isObject(result.items)) {
+			result = result.items;
+		} else if (result.items && Array.isArray(result.items)) {
+			result = (result.items as JsonSchema[])[parseInt(dataPart, 10)];
 		}
 	}
 
 	return result;
 };
 
+// To get one format value so we can convert to other format
 export const getNumberValue = (value: unknown): bigint => {
 	if (typeof value === 'number') {
 		return BigInt(value);
@@ -103,6 +106,7 @@ export const getNumberValue = (value: unknown): bigint => {
 	throw new Error('Invalid type');
 };
 
+// To get one format value so we can convert to other format
 export const getBytesValue = (value: unknown): Buffer => {
 	if (Buffer.isBuffer(value)) {
 		return value;
@@ -119,7 +123,7 @@ export const getBytesValue = (value: unknown): Buffer => {
 	throw new Error('Invalid type');
 };
 
-export const typeCastScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
+export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
 	const { baseType } = parseBaseType(ethType);
 
 	if (baseType === 'int' || baseType === 'uint') {
@@ -153,87 +157,93 @@ export const typeCastScalarValue = (value: unknown, ethType: string, format: Dat
 	return value;
 };
 
-export const recursiveTypeCast = (
+export const convert = (
 	data: Record<string, unknown> | unknown[],
-	schema: JsonSchemaNode,
+	schema: JsonSchema,
 	dataPath: string[],
 	format: DataFormat,
 ) => {
-	const object = data;
+	const object = data as Record<string, unknown>;
 
 	for (const [key, value] of Object.entries(object)) {
 		dataPath.push(key);
-		const schemaProp = findObjectByPath(schema, dataPath);
+		const schemaProp = findSchemaByDataPath(schema, dataPath);
+
+		// If value is a scaler value
+		if (schemaProp === undefined) {
+			delete object[key];
+			dataPath.pop();
+
+			continue;
+		}
 
 		// If value is an object, recurse into it
 		if (isObject(value)) {
 			// dataPath.push(key);
-			recursiveTypeCast(value, schema, [], format);
+			convert(value, schema, dataPath, format);
 			dataPath.pop();
 			continue;
 		}
 
-		// If value is an array and schema for array is an object
-		if (
-			Array.isArray(value) &&
-			!Array.isArray(schemaProp?.items) &&
-			schemaProp?.items?.type === 'object'
-		) {
-			for (const arrObject of value) {
-				recursiveTypeCast(
-					arrObject as Record<string, unknown> | unknown[],
-					schema,
-					dataPath,
-					format,
-				);
+		// If value is an array
+		if (Array.isArray(value)) {
+			if (schemaProp?.items === undefined) {
+				// Can not find schema for array item, delete that item
+				delete object[key];
+				dataPath.pop();
+
+				continue;
 			}
 
-			continue;
-		}
-
-		// If schema for array is an array
-		if (Array.isArray(value)) {
-			for (let i = 0; i < value.length; i += 1) {
-				if (schemaProp === undefined || schemaProp.items === undefined) {
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					delete object[key];
-					dataPath.pop();
-					continue;
+			// If schema for array items is a single type
+			if (isObject(schemaProp.items) && schemaProp.items.eth !== undefined) {
+				for (let i = 0; i < value.length; i += 1) {
+					(object[key] as unknown[])[i] = convertScalarValue(
+						value[i],
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						schemaProp?.items?.eth as string,
+						format,
+					);
 				}
 
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-				// (object[key] as any)[i] = mappers[mode][schemaProp.items.eth](value[i]);
-
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				(object[key] as unknown[])[i] = typeCastScalarValue(
-					value[i],
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-					(schemaProp.items as JsonSchemaNode).eth ?? '',
-					format,
-				);
+				dataPath.pop();
+				continue;
 			}
 
-			dataPath.pop();
+			// If schema for array items is an object
+			if (
+				!Array.isArray(schemaProp?.items) &&
+				(schemaProp?.items as JsonSchema).type === 'object'
+			) {
+				for (const arrObject of value) {
+					convert(
+						arrObject as Record<string, unknown> | unknown[],
+						schema,
+						dataPath,
+						format,
+					);
+				}
 
-			continue;
+				dataPath.pop();
+				continue;
+			}
+
+			// If schema for array is a tuple
+			if (Array.isArray(schemaProp?.items)) {
+				for (let i = 0; i < value.length; i += 1) {
+					(object[key] as unknown[])[i] = convertScalarValue(
+						value[i],
+						(schemaProp.items as JsonSchema[])[i].eth as string,
+						format,
+					);
+				}
+
+				dataPath.pop();
+				continue;
+			}
 		}
 
-		// If value is a scaler value
-		if (schemaProp === undefined) {
-			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-			// @ts-expect-error
-			delete object[key];
-			dataPath.pop();
-			continue;
-		}
-
-		// object[key] = mappers[mode][schemaProp.dataType as unknown as string](value);
-
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-		object[key] = typeCastScalarValue(value, schemaProp.eth, format);
+		object[key] = convertScalarValue(value, schemaProp.eth as string, format);
 
 		dataPath.pop();
 	}
@@ -245,7 +255,7 @@ export const format = <
 	DataType extends Record<string, unknown> | unknown[],
 	ReturnType extends DataFormat,
 >(
-	schema: ValidationSchemaInput | JsonSchemaNode,
+	schema: ValidationSchemaInput | JsonSchema,
 	data: DataType,
 	returnFormat: ReturnType,
 ): FormatType<DataType, ReturnType> => {
@@ -253,18 +263,20 @@ export const format = <
 
 	if (isObject(data)) {
 		dataToParse = mergeDeep({}, data);
-	} else {
+	} else if (Array.isArray(data)) {
 		dataToParse = [...data];
+	} else {
+		throw new Error('Invalid data type');
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const jsonSchema: JsonSchemaNode = isObject(schema) ? schema : utils.ethAbiToJsonSchema(schema);
+	const jsonSchema: JsonSchema = isObject(schema) ? schema : utils.ethAbiToJsonSchema(schema);
 
-	if (!jsonSchema.properties) {
+	if (!jsonSchema.properties && !jsonSchema.items) {
 		throw new Error('Nazar');
 	}
 
-	return recursiveTypeCast(dataToParse, jsonSchema, [], returnFormat) as unknown as FormatType<
+	return convert(dataToParse, jsonSchema, [], returnFormat) as unknown as FormatType<
 		typeof data,
 		ReturnType
 	>;
