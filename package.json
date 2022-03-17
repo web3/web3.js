@@ -34,12 +34,13 @@
 	"scripts": {
 		"build": "yarn clean && lerna run build --stream",
 		"clean": "lerna run clean",
-		"ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion' --account=\"0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e,100000000000000000000\"",
+		"ganache-cli": "npx ganache-cli -m 'smart guide what forget tired jungle always expire rescue boring glue champion' --account=\"0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e,100000000000000000000\" --account=\"0xe9c4ce1b5cbae03712ad5b3a407fecc93ca187fd823ab42e323b836e6b3682a6,100000000000000000000\"",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel",
 		"test": "lerna run test --stream --parallel",
 		"test:unit": "lerna run test:unit --stream --parallel",
+		"test:integration": "lerna run test:integration --stream --parallel",
 		"prepare": "husky install",
 		"postinstall": "yarn build"
 	},

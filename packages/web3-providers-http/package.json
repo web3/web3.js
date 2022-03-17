@@ -22,14 +22,12 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js"
+		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"devDependencies": {
-		"@types/chai": "^4.3.0",
 		"@types/jest": "^27.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",
 		"@typescript-eslint/parser": "^5.4.0",
-		"chai": "^4.3.6",
 		"eslint": "^8.3.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-config-web3-base": "0.1.0",

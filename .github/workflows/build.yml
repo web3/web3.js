@@ -37,3 +37,15 @@ jobs:
             - run: yarn
 
             - run: yarn test:unit
+    integration:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/setup-node@v1
+                with:
+                    node-version: 14
+
+            -   uses: actions/checkout@v2
+
+            -   run: yarn
+
+            -   run: yarn test:integration
