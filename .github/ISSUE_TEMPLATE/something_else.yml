@@ -4,6 +4,7 @@ labels: ["Something Else"]
 body:
   - type: markdown
     attributes:
+      label: Is this a Discussion?
       value: |
         If it's a:
         
