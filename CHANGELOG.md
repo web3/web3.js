@@ -522,9 +522,14 @@ Released with 1.0.0-beta.37 code base.
 
 
 ## [Unreleased]
-- Improve npm script commands for development purposes (#4848)
 
 ## [1.7.2]
+
+### Changed
+
+- Improve npm script commands for development purposes (#4848)
+
+
 
 ### Changed
 -  Remove deprecated `close` event listener (#4825) (#4839)
