@@ -254,7 +254,7 @@ export type EthExecutionAPI = {
 	eth_submitWork: (
 		nonce: HexString8Bytes,
 		seedHash: HexString32Bytes,
-		difficulty: HexString32Bytes,
+		digest: HexString32Bytes,
 	) => boolean;
 	eth_submitHashrate: (hashRate: HexString32Bytes, id: HexString32Bytes) => boolean;
 

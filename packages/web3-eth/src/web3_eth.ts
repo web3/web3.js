@@ -208,9 +208,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public async submitWork(
 		nonce: HexString8Bytes,
 		seedHash: HexString32Bytes,
-		difficulty: HexString32Bytes,
+		digest: HexString32Bytes,
 	) {
-		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, difficulty);
+		return rpcMethods.submitWork(this.requestManager, nonce, seedHash, digest);
 	}
 
 	// TODO - Format addresses
