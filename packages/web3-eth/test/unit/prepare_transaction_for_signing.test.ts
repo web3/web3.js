@@ -12,7 +12,10 @@ import { prepareTransactionForSigning } from '../../src/utils/prepare_transactio
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
 describe('prepareTransactionForSigning', () => {
-	const web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+	const web3Context = new Web3Context<EthExecutionAPI>({
+		provider: new HttpProvider('http://127.0.0.1'),
+		config: { defaultNetworkId: '0x1' },
+	});
 
 	describe('should return an @ethereumjs/tx instance with expected properties', () => {
 		it.each(validTransactions)(
