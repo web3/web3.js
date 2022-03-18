@@ -526,8 +526,12 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.2]
 
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
 ### Security
 -  `npm audit fix` to update libraries (#4860)
 
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
+
