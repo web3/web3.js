@@ -6,7 +6,7 @@ import {
 } from 'web3-common';
 import { toWei } from 'web3-utils';
 import HttpProvider from '../../src/index';
-import accounts from '../fixtures/accounts';
+import { accounts, clientUrl } from '../fixtures/config';
 
 describe('HttpProvider - implemented methods', () => {
 	const account = accounts[0];
@@ -20,7 +20,7 @@ describe('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 
 	beforeAll(() => {
-		httpProvider = new HttpProvider('http://localhost:8545');
+		httpProvider = new HttpProvider(clientUrl);
 	});
 
 	describe('httpProvider.request', () => {
