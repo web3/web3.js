@@ -1,10 +1,10 @@
-type TAccount = {
+type Account = {
 	address: string;
 	privateKey: string;
 	balance: string;
 };
 
-export const accounts: TAccount[] = [
+export const accounts: Account[] = [
 	{
 		address: '0xdc6bad79dab7ea733098f66f6c6f9dd008da3258',
 		privateKey: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e',

@@ -9,18 +9,17 @@ import HttpProvider from '../../src/index';
 import { accounts, clientUrl } from '../fixtures/config';
 
 describe('HttpProvider - implemented methods', () => {
-	const account = accounts[0];
-	const jsonRpcPayload = {
-		jsonrpc: '2.0',
-		id: 42,
-		method: 'eth_getBalance',
-		params: [account.address, 'latest'],
-	} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
-
 	let httpProvider: HttpProvider;
+	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	beforeAll(() => {
 		httpProvider = new HttpProvider(clientUrl);
+		jsonRpcPayload = {
+			jsonrpc: '2.0',
+			id: 42,
+			method: 'eth_getBalance',
+			params: [accounts[0].address, 'latest'],
+		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 
 	describe('httpProvider.request', () => {
@@ -28,7 +27,7 @@ describe('HttpProvider - implemented methods', () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
 			expect(
 				String(parseInt(String((response as JsonRpcResponseWithResult).result), 16)),
-			).toStrictEqual(toWei(account.balance, 'ether'));
+			).toStrictEqual(toWei(accounts[0].balance, 'ether'));
 		});
 	});
 });
