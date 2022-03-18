@@ -140,7 +140,7 @@ export interface Log {
 	readonly blockNumber?: Uint | null;
 	readonly address?: Address;
 	readonly data?: HexStringBytes;
-	readonly topics?: Topic[];
+	readonly topics?: null | Topic | Topic[];
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
