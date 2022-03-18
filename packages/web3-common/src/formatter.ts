@@ -1,14 +1,13 @@
 import {
+	Bytes,
+	bytesToBuffer,
 	bytesToHex,
 	HexString,
-	hexToBytes,
-	hexToNumber,
-	isHex,
-	isHexStrict,
 	mergeDeep,
 	numberToHex,
+	toBigInt,
 } from 'web3-utils';
-import { JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+import { isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 
 const { parseBaseType } = utils;
 
@@ -43,7 +42,7 @@ export type DataFormat = {
 	readonly bytes: FMT_BYTES;
 };
 
-export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX } as const;
+export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } as const;
 
 export type FormatType<T, F extends DataFormat> = T extends number | bigint
 	? NumberTypes[F['number']]
@@ -60,9 +59,6 @@ export type FormatType<T, F extends DataFormat> = T extends number | bigint
 				: T[P];
 	  }
 	: T;
-
-const isObject = (item: unknown): item is Record<string, unknown> =>
-	typeof item === 'object' && item !== null && !Array.isArray(item) && !Buffer.isBuffer(item);
 
 const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchema | undefined => {
 	let result: JsonSchema = { ...schema } as JsonSchema;
@@ -92,61 +88,19 @@ const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchem
 	return result;
 };
 
-// To get one format value so we can convert to other format
-export const getNumberValue = (value: unknown): bigint => {
-	if (typeof value === 'number') {
-		return BigInt(value);
-	}
-
-	if (typeof value === 'bigint') {
-		return value;
-	}
-
-	if (typeof value === 'string' && !isHexStrict(value)) {
-		return BigInt(value);
-	}
-
-	if (typeof value === 'string' && isHexStrict(value)) {
-		return BigInt(hexToNumber(value));
-	}
-
-	throw new Error('Invalid type');
-};
-
-// To get one format value so we can convert to other format
-export const getBytesValue = (value: unknown): Buffer => {
-	if (Buffer.isBuffer(value)) {
-		return value;
-	}
-
-	if (value instanceof Uint8Array) {
-		return Buffer.from(value);
-	}
-
-	if (typeof value === 'string' && isHexStrict(value)) {
-		return hexToBytes(value);
-	}
-
-	if (typeof value === 'string' && isHex(value)) {
-		return Buffer.from(value, 'hex');
-	}
-
-	throw new Error('Invalid type');
-};
-
 export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
 	const { baseType } = parseBaseType(ethType);
 
 	if (baseType === 'int' || baseType === 'uint') {
 		switch (format.number) {
 			case FMT_NUMBER.NUMBER:
-				return Number(getNumberValue(value));
+				return Number(toBigInt(value));
 			case FMT_NUMBER.HEX:
-				return numberToHex(getNumberValue(value));
+				return numberToHex(toBigInt(value));
 			case FMT_NUMBER.STR:
-				return getNumberValue(value).toString();
+				return toBigInt(value).toString();
 			case FMT_NUMBER.BIGINT:
-				return getNumberValue(value);
+				return toBigInt(value);
 			default:
 				throw new Error(`Invalid format: ${String(format.number)}`);
 		}
@@ -155,11 +109,11 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 	if (baseType === 'bytes') {
 		switch (format.bytes) {
 			case FMT_BYTES.HEX:
-				return bytesToHex(getBytesValue(value));
+				return bytesToHex(bytesToBuffer(value as Bytes));
 			case FMT_BYTES.BUFFER:
-				return getBytesValue(value);
+				return bytesToBuffer(value as Bytes);
 			case FMT_BYTES.UINT8ARRAY:
-				return new Uint8Array(getBytesValue(value));
+				return new Uint8Array(bytesToBuffer(value as Bytes));
 			default:
 				throw new Error(`Invalid format: ${String(format.bytes)}`);
 		}

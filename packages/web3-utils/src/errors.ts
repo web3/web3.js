@@ -25,6 +25,12 @@ export class InvalidBytesError extends Web3Error {
 	}
 }
 
+export class InvalidNumberError extends Web3Error {
+	public constructor(value: unknown) {
+		super(value, 'can not parse as number data');
+	}
+}
+
 export class InvalidUnitError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'invalid unit');

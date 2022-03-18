@@ -11,6 +11,7 @@ import {
 	InvalidConvertibleObjectError,
 	InvalidConvertiblePropertiesListError,
 	InvalidConvertibleValueError,
+	InvalidNumberError,
 } from './errors';
 import {
 	Address,
@@ -63,8 +64,7 @@ export const ethUnitMap = {
 
 export type EtherUnits = keyof typeof ethUnitMap;
 
-/** @internal */
-const bytesToBuffer = (data: Bytes): Buffer | never => {
+export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	validator.validate(['bytes'], [data]);
 
 	if (Buffer.isBuffer(data)) {
@@ -75,8 +75,12 @@ const bytesToBuffer = (data: Bytes): Buffer | never => {
 		return Buffer.from(data);
 	}
 
-	if (typeof data === 'string') {
-		return Buffer.from(data.substr(2), 'hex');
+	if (typeof data === 'string' && isHexStrict(data)) {
+		return Buffer.from(data.slice(0, 2), 'hex');
+	}
+
+	if (typeof data === 'string' && !isHexStrict(data)) {
+		return Buffer.from(data, 'hex');
 	}
 
 	throw new InvalidBytesError(data);
@@ -253,6 +257,29 @@ export const toNumber = (value: Numbers): number | bigint => {
 	}
 
 	return hexToNumber(numberToHex(value));
+};
+
+/**
+ * Auto converts any given value into it's bigint representation
+ */
+export const toBigInt = (value: unknown): bigint => {
+	if (typeof value === 'number') {
+		return BigInt(value);
+	}
+
+	if (typeof value === 'bigint') {
+		return value;
+	}
+
+	if (typeof value === 'string' && !isHexStrict(value)) {
+		return BigInt(value);
+	}
+
+	if (typeof value === 'string' && isHexStrict(value)) {
+		return BigInt(hexToNumber(value));
+	}
+
+	throw new InvalidNumberError(value);
 };
 
 /**
