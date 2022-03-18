@@ -37,7 +37,8 @@ jobs:
             - run: yarn
 
             - run: yarn test:unit
-    integration:
+
+    e2e:
         runs-on: ubuntu-latest
         steps:
             -   uses: actions/setup-node@v1
@@ -48,4 +49,4 @@ jobs:
 
             -   run: yarn
 
-            -   run: yarn test:integration
+            -   run: yarn ganache-cli-background && yarn test:integration
