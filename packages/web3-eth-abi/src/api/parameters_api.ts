@@ -5,17 +5,18 @@ import ethersAbiCoder from '../ethers_abi_coder';
 import { AbiInput } from '../types';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
-const doStuff = (abi: {[key: string]: unknown}, input: {[key: string]: unknown}) => {
-	let res:{[key: string]: unknown} = {};
-	// the length of abi will always be 1, just want to grab the key value of abi
 
-			for (const j in abi){
-				// basecase its a string
+/**
+ * Helper function to format the decoded object
+ */
+const formatDecodedObject = (abi: {[key: string]: unknown}, input: {[key: string]: unknown}): {[key: string]: unknown} => {
+	const res: {[key: string]: unknown} = {};
+			for (const j of Object.keys(abi)) {
 				if (typeof(abi[j]) === 'string'){
 					res[j] = input[j]
 				} 
 				if (typeof(abi[j]) === 'object'){
-					res[j] = doStuff(abi[j] as {[key: string]: unknown}, input[j] as {[key: string]: unknown})
+					res[j] = formatDecodedObject(abi[j] as {[key: string]: unknown}, input[j] as {[key: string]: unknown})
 				}
 			}
 		
@@ -95,30 +96,24 @@ export const decodeParametersWith = (
 			loose,
 		);
 		const returnList: unknown[] = [];
-		const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
-		returnValue.__length__ = 0;
 		for (const [i, abi] of abis.entries()) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			let decodedValue = res[returnValue.__length__];
+			let decodedValue = res[i];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
 
-			if(typeof(abi) === 'object'){
-				// the length of abi will always be 1, just want to grab the key value of abi
-				for (const i in abi) {
-					// change name of abiTest
-					const abiTest: {[key: string]: unknown} = abi;
-					if (typeof(abiTest[i]) === 'object'){
-						returnValue[i] = (doStuff(abiTest[i] as  {[key: string]: unknown}, decodedValue));
+			if(!!abi && typeof(abi) === 'object' && !abi.name && !Array.isArray(abi)){
+				// the length of the abi object will always be 1
+				for (const j of Object.keys(abi)) {
+					const abiObject: {[key: string]: unknown} = abi; // abi is readonly have to create a new const
+					if (!!abiObject[j] && typeof(abiObject[j]) === 'object'){
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+						decodedValue = formatDecodedObject(abiObject[j] as  {[key: string]: unknown}, decodedValue);
 					}
 				}
 			}
-			if ((typeof abi === 'function' || (!!abi && typeof abi === 'object')) && abi.name) {
-				returnValue[abi.name as string] = decodedValue;
-			}
-			returnValue[i] = decodedValue;
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			returnList.push(decodedValue);
-			returnValue.__length__ += 1;
 		}
 		return returnList;
 	} catch (err) {
@@ -137,32 +132,3 @@ export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
  */
 export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);
 
-const abiEx = [
-	'uint8[]',
-	{
-		ParentStruct: {
-			propertyOne: 'uint256',
-			propertyTwo: 'uint256',
-			ChildStruct: {
-				propertyOne: 'uint256',
-				propertyTwo: 'uint256',
-			},
-		},
-	},
-];
-
-// const input = [
-// 	['34', '255'],
-// 	{
-// 		propertyOne: '42',
-// 		propertyTwo: '56',
-// 		ChildStruct: {
-// 			propertyOne: '45',
-// 			propertyTwo: '78',
-// 		},
-// 	},
-// ];
-
-const inputBytes = '0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002200000000000000000000000000000000000000000000000000000000000000ff'
-decodeParameters(abiEx, inputBytes)
-// encodeParameters(abiEx, input);
