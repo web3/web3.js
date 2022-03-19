@@ -289,7 +289,7 @@ var outputTransactionReceiptFormatter = function (receipt) {
     }
 
     if (receipt.effectiveGasPrice) {
-        receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
+        receipt.effectiveGasPrice = outputBigNumberFormatter(receipt.effectiveGasPrice)
     }
     if (receipt.contractAddress) {
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
