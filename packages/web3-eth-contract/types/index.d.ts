@@ -30,7 +30,7 @@ export class Contract {
         options?: ContractOptions
     );
 
-    static setProvider(provider: string, accounts?: Accounts): void;
+    static setProvider(provider: provider, accounts?: Accounts): void;
 
     private _address: string;
     private _jsonInterface: AbiItem[];
