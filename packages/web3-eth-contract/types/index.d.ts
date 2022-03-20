@@ -19,6 +19,7 @@
 
 import BN = require('bn.js');
 import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOptions, LogsOptions} from 'web3-core';
+import {Accounts} from 'web3-eth-accounts';
 import {AbiItem} from 'web3-utils';
 
 // TODO: Add generic type!
@@ -29,7 +30,7 @@ export class Contract {
         options?: ContractOptions
     );
 
-    static setProvider(provider: string): void;
+    static setProvider(provider: string, accounts?: Accounts): void;
 
     private _address: string;
     private _jsonInterface: AbiItem[];
