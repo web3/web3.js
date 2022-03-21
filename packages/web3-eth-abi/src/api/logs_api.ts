@@ -17,14 +17,14 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	const clonedData = data ?? '';
 
 	const notIndexedInputs: Array<string | AbiParameter> = [];
-	const indexedParams: Array<string | AbiParameter> = [];
+	const indexedParams: Array<string | unknown> = [];
 	let topicCount = 0;
 
 	// TODO check for anonymous logs?
 	for (const [i, input] of inputs.entries()) {
 		if (input.indexed) {
 			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
-				? (decodeParameter(input.type, clonedTopics[topicCount]) as AbiParameter)
+				? (decodeParameter(input.type, clonedTopics[topicCount])[0] as unknown[])
 				: clonedTopics[topicCount];
 
 			topicCount += 1;
@@ -34,9 +34,9 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	}
 
 	const nonIndexedData = clonedData;
-	const notIndexedParams: Record<string, unknown> = nonIndexedData
-		? decodeParametersWith<ReturnType>(notIndexedInputs, nonIndexedData, true)
-		: {};
+	const notIndexedParams = nonIndexedData
+		? decodeParametersWith(notIndexedInputs, nonIndexedData, true)
+		: [];
 
 	const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
 	returnValue.__length__ = 0;
@@ -44,8 +44,8 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	for (const [i, res] of inputs.entries()) {
 		returnValue[i] = res.type === 'string' ? '' : null;
 
-		if (notIndexedParams[i.toString()]) {
-			returnValue[i] = notIndexedParams[i.toString()];
+		if (notIndexedParams[i]) {
+			returnValue[i] = notIndexedParams[i];
 		}
 		if (indexedParams[i]) {
 			returnValue[i] = indexedParams[i];
@@ -57,6 +57,5 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 
 		returnValue.__length__ += 1;
 	}
-
 	return returnValue as ReturnType & { __length__: number };
 };
