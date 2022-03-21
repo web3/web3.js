@@ -3,13 +3,26 @@ export abstract class Web3Error extends Error {
 	public readonly name: string;
 
 	public constructor(value: unknown, msg: string) {
-		super(`Invalid value given "${String(value)}". Error: ${msg}.`);
+		super(`Invalid value given "${Web3Error.convertToString(value, true)}". Error: ${msg}.`);
 		this.name = this.constructor.name;
 		Error.captureStackTrace(this, Web3Error);
 	}
 
 	public toJSON() {
 		return { name: this.name, message: this.message };
+	}
+
+	public static convertToString(value: unknown, unquotValue = false) {
+		if (value === undefined) return 'undefined';
+
+		const result = JSON.stringify(
+			value,
+			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
+		);
+
+		return unquotValue && ['bigint', 'string'].includes(typeof value)
+			? result.replace(/['\\"]+/g, '')
+			: result;
 	}
 }
 
