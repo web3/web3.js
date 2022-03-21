@@ -5,25 +5,28 @@ import ethersAbiCoder from '../ethers_abi_coder';
 import { AbiInput } from '../types';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
-
 /**
  * Helper function to format the decoded object
  */
-const formatDecodedObject = (abi: {[key: string]: unknown}, input: {[key: string]: unknown}): {[key: string]: unknown} => {
-	const res: {[key: string]: unknown} = {};
-			for (const j of Object.keys(abi)) {
-				if (typeof(abi[j]) === 'string'){
-					res[j] = input[j]
-				} 
-				if (typeof(abi[j]) === 'object'){
-					res[j] = formatDecodedObject(abi[j] as {[key: string]: unknown}, input[j] as {[key: string]: unknown})
-				}
-			}
-		
-	
-	return res;
-}
+const formatDecodedObject = (
+	abi: { [key: string]: unknown },
+	input: { [key: string]: unknown },
+): { [key: string]: unknown } => {
+	const res: { [key: string]: unknown } = {};
+	for (const j of Object.keys(abi)) {
+		if (typeof abi[j] === 'string') {
+			res[j] = input[j];
+		}
+		if (typeof abi[j] === 'object') {
+			res[j] = formatDecodedObject(
+				abi[j] as { [key: string]: unknown },
+				input[j] as { [key: string]: unknown },
+			);
+		}
+	}
 
+	return res;
+};
 
 /**
  * Should be used to encode list of params
@@ -102,17 +105,19 @@ export const decodeParametersWith = (
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
 
-			if(!!abi && typeof(abi) === 'object' && !abi.name && !Array.isArray(abi)){
+			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
 				// the length of the abi object will always be 1
 				for (const j of Object.keys(abi)) {
-					const abiObject: {[key: string]: unknown} = abi; // abi is readonly have to create a new const
-					if (!!abiObject[j] && typeof(abiObject[j]) === 'object'){
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-						decodedValue = formatDecodedObject(abiObject[j] as  {[key: string]: unknown}, decodedValue);
+					const abiObject: { [key: string]: unknown } = abi; // abi is readonly have to create a new const
+					if (!!abiObject[j] && typeof abiObject[j] === 'object') {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						decodedValue = formatDecodedObject(
+							abiObject[j] as { [key: string]: unknown },
+							decodedValue as { [key: string]: unknown },
+						);
 					}
 				}
 			}
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			returnList.push(decodedValue);
 		}
 		return returnList;
@@ -131,4 +136,3 @@ export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
  * Should be used to decode bytes to plain param
  */
 export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);
-
