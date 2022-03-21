@@ -333,7 +333,7 @@ function watchTransactionForConfirmations<
 	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
+	transactionPromiEvent: PromiEvent<ReceiptInfoFormatted, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 ) {
 	if (
