@@ -306,7 +306,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     }
 
                     // check if confirmation listener exists
-                    if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                    if (!canUnsubscribe || defer.eventEmitter.listeners('confirmation').length > 0) {
                         var block;
 
                         // If there was an immediately retrieved receipt, it's already
@@ -339,7 +339,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         }
                         canUnsubscribe = false;
 
-                        if (confirmationCount === method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
+                        if (confirmationCount >= method.transactionConfirmationBlocks + 1) { // add 1 so we account for conf 0
                             sub.unsubscribe();
                             defer.eventEmitter.removeAllListeners();
                         }

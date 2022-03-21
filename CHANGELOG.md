@@ -533,4 +533,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
-
+-  Fix confirmation check not ever finishing in some cases
