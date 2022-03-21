@@ -27,10 +27,13 @@ jobs:
             - run: yarn lint
     unit:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [ 14, 16 ]
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v14
               with:
-                  node-version: 14
+                  node-version: ${{ matrix.node }}
 
             - uses: actions/checkout@v2
 
@@ -40,10 +43,13 @@ jobs:
 
     e2e:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [ 14, 16 ]
         steps:
             -   uses: actions/setup-node@v1
                 with:
-                    node-version: 14
+                    node-version: ${{ matrix.node }}
 
             -   uses: actions/checkout@v2
 
