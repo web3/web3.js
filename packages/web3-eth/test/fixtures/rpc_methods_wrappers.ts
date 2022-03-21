@@ -27,9 +27,7 @@ import {
 	BlockFormatted,
 	FeeHistoryResultFormatted,
 	ReceiptInfoFormatted,
-	SendTransactionOptions,
 	TransactionInfoFormatted,
-	Transaction,
 } from '../../src/types';
 import { AccountObject } from '../../src/web3_eth_execution_api';
 
