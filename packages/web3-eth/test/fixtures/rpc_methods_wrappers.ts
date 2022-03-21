@@ -1576,40 +1576,6 @@ export const getTransactionCountValidData: [
 	],
 ];
 
-export const sendTransactionValidData: [
-	[Transaction, SendTransactionOptions | undefined],
-	ReceiptInfo,
-	[TransactionWithSender | Partial<TransactionWithSender>],
-	ReceiptInfoFormatted,
-][] = [
-	[
-		[
-			{
-				from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
-				gas: '0xc350',
-				gasPrice: '0x4a817c800',
-				input: '0x68656c6c6f21',
-				nonce: '0x15',
-				to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
-				value: '0xf3dbb76162000',
-				v: '0x25',
-				r: '0x1b5e176d927f8e9ab405058b2d2457392da3e20f328b16ddabcebc33eaac5fea',
-				s: '0x4ba69724e8f69de52f0125ad8b3c5c2cef33019bac3249e2c0a2192766d1721c',
-				type: '0x0',
-				maxFeePerGas: '0x1475505aab',
-				maxPriorityFeePerGas: '0x7f324180',
-				chainId: '0x1',
-			},
-			undefined
-		],
-		{
-
-		},
-		[],
-		{}
-	],
-];
-
 // export const getPendingTransactionValidData: [
 // 	ValidTypes | undefined,
 // 	TransactionInfo[],
