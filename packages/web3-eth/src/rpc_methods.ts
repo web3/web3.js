@@ -457,14 +457,14 @@ export async function getWork(requestManager: Web3RequestManager) {
 export async function submitWork(
 	requestManager: Web3RequestManager,
 	nonce: HexString8Bytes,
-	seedHash: HexString32Bytes,
+	hash: HexString32Bytes,
 	digest: HexString32Bytes,
 ) {
-	validator.validate(['bytes8', 'bytes32', 'bytes32'], [nonce, seedHash, digest]);
+	validator.validate(['bytes8', 'bytes32', 'bytes32'], [nonce, hash, digest]);
 
 	return requestManager.send({
 		method: 'eth_submitWork',
-		params: [nonce, seedHash, digest],
+		params: [nonce, hash, digest],
 	});
 }
 

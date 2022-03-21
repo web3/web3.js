@@ -387,11 +387,11 @@ describe('rpc_methods_with_parameters', () => {
 	});
 
 	describe('submitWork', () => {
-		it.each(submitWorkValidData)('%s', async (nonce, seedHash, digest) => {
-			await submitWork(requestManager, nonce, seedHash, digest);
+		it.each(submitWorkValidData)('%s', async (nonce, hash, digest) => {
+			await submitWork(requestManager, nonce, hash, digest);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_submitWork',
-				params: [nonce, seedHash, digest],
+				params: [nonce, hash, digest],
 			});
 		});
 	});
