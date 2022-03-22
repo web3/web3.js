@@ -354,6 +354,7 @@ export function sendTransaction(
 					web3Context,
 					promiEvent,
 					transactionReceipt,
+					transactionHash,
 				);
 			}
 		});
@@ -402,6 +403,7 @@ export const sendSignedTransaction = (
 					web3Context,
 					promiEvent,
 					transactionReceipt,
+					transactionHash,
 				);
 			});
 		},

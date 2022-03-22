@@ -23,7 +23,7 @@ import {
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
 	ReceiptInfo,
 } from 'web3-common';
-import { HexString, HexString32Bytes, Numbers, Web3Error } from 'web3-utils';
+import { HexString, HexString32Bytes, HexStringBytes, Numbers, Web3Error } from 'web3-utils';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
@@ -260,9 +260,15 @@ export class TransactionPollingTimeoutError extends Web3Error {
 export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
-	public constructor(value: { receipt: ReceiptInfo; blockHash: HexString32Bytes }) {
+	public constructor(value: {
+		receipt: ReceiptInfo;
+		blockHash: HexString32Bytes;
+		transactionHash: HexString32Bytes;
+	}) {
 		super(
-			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${value.blockHash}`,
+			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${
+				value.blockHash
+			}, transactionHash: ${value.transactionHash}`,
 			`Receipt missing or blockHash null`,
 		);
 	}

@@ -1,6 +1,6 @@
 import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { numberToHex } from 'web3-utils';
+import { HexString32Bytes, numberToHex } from 'web3-utils';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
@@ -15,6 +15,7 @@ export function watchTransactionForConfirmations<
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionPromiEvent: PromiEvent<ReceiptInfoFormatted, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
+	transactionHash: HexString32Bytes,
 ) {
 	if (
 		transactionReceipt === undefined ||
@@ -25,6 +26,7 @@ export function watchTransactionForConfirmations<
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
 			blockHash: transactionReceipt.blockHash,
+			transactionHash,
 		});
 
 	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
