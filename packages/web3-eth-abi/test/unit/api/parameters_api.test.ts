@@ -1,14 +1,29 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { decodeParameters, encodeParameters } from '../../../src/api/parameters_api';
 import {
 	inValidDecodeParametersData,
 	inValidEncodeParametersData,
 	validDecodeParametersData,
 	validEncodeParametersData,
-	validEncodeDecodeParametersData
+	validEncodeDecodeParametersData,
 } from '../../fixtures/data';
-import {
-	AbiInput
-} from '../../../src/types'
+import { AbiInput } from '../../../src/types';
 
 describe('parameters_api', () => {
 	describe('encodeParameters', () => {
@@ -66,7 +81,7 @@ describe('parameters_api', () => {
 			);
 		});
 	});
-	
+
 	describe('encode and decode', () => {
 		describe('input should be the same as returned value from encode and decode', () => {
 			it.each(validEncodeDecodeParametersData)(
@@ -75,7 +90,7 @@ describe('parameters_api', () => {
 					const rwAbi = abi as AbiInput[];
 					const encodedBytes = encodeParameters(abi, params);
 					expect(encodedBytes).toEqual(output);
-					const decodedBytes = decodeParameters(rwAbi, encodedBytes)
+					const decodedBytes = decodeParameters(rwAbi, encodedBytes);
 					expect(decodedBytes).toEqual(params);
 				},
 			);
