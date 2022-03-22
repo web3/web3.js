@@ -4,7 +4,11 @@ import {
 	inValidEncodeParametersData,
 	validDecodeParametersData,
 	validEncodeParametersData,
+	validEncodeDecodeParametersData
 } from '../../fixtures/data';
+import {
+	AbiInput
+} from '../../../src/types'
 
 describe('parameters_api', () => {
 	describe('encodeParameters', () => {
@@ -58,6 +62,21 @@ describe('parameters_api', () => {
 				'%#: should pass for valid values: %j',
 				({ input: [abi, bytes], output }) => {
 					expect(() => decodeParameters(abi, bytes)).toThrow(output);
+				},
+			);
+		});
+	});
+	
+	describe('encode and decode', () => {
+		describe('input should be the same as returned value from encode and decode', () => {
+			it.each(validEncodeDecodeParametersData)(
+				'%#: should pass for valid values: %j',
+				({ input: [abi, params], output }) => {
+					const rwAbi = abi as AbiInput[];
+					const encodedBytes = encodeParameters(abi, params);
+					expect(encodedBytes).toEqual(output);
+					const decodedBytes = decodeParameters(rwAbi, encodedBytes)
+					expect(decodedBytes).toEqual(params);
 				},
 			);
 		});

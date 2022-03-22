@@ -16,6 +16,11 @@ import {
 
 jest.mock('../../src/rpc_methods');
 
+const expectedNetworkId = '0x4';
+jest.mock('web3-net', () => ({
+	getId: jest.fn().mockImplementation(() => expectedNetworkId),
+}));
+
 describe('defaultTransactionBuilder', () => {
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
 	const expectedNonce = '0x42';
@@ -25,6 +30,7 @@ describe('defaultTransactionBuilder', () => {
 	const expectedBaseFeePerGas = '0x13afe8b904';
 	const expectedMaxPriorityFeePerGas = '0x9502f900';
 	const expectedMaxFeePerGas = '0x27f4d46b08';
+	const expectedChainId = '0x1';
 	const defaultTransactionType = '0x0';
 	const transaction: Transaction = {
 		from: expectedFrom,
@@ -40,12 +46,13 @@ describe('defaultTransactionBuilder', () => {
 		nonce: expectedNonce,
 		chain: 'mainnet',
 		hardfork: 'berlin',
-		chainId: '0x1',
+		chainId: expectedChainId,
+		networkId: expectedNetworkId,
 		common: {
 			customChain: {
 				name: 'foo',
-				networkId: '0x4',
-				chainId: '0x42',
+				networkId: expectedNetworkId,
+				chainId: expectedChainId,
 			},
 			baseChain: 'mainnet',
 			hardfork: 'berlin',
@@ -98,6 +105,9 @@ describe('defaultTransactionBuilder', () => {
 		// @ts-expect-error - Mocked implementation doesn't have correct method signature
 		// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
 		jest.spyOn(rpcMethods, 'getGasPrice').mockImplementation(() => expectedGasPrice);
+		// @ts-expect-error - Mocked implementation doesn't have correct method signature
+		// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
+		jest.spyOn(rpcMethods, 'getChainId').mockImplementation(() => expectedChainId);
 
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
@@ -258,16 +268,29 @@ describe('defaultTransactionBuilder', () => {
 	});
 
 	describe('should populate chainId', () => {
-		// TODO - web3Eth.getChainId not implemented
-		it.skip('should populate with web3Eth.getChainId', async () => {
+		it('should populate with web3Eth.getChainId', async () => {
 			const input = { ...transaction };
 			delete input.chainId;
+			delete input.common;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
-			expect(result.chainId).toBe('0x1');
+			expect(result.chainId).toBe(expectedChainId);
+		});
+	});
+
+	describe('should populate networkId', () => {
+		it('should populate with web3Net.getId', async () => {
+			const input = { ...transaction };
+			delete input.networkId;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.networkId).toBe(expectedNetworkId);
 		});
 	});
 

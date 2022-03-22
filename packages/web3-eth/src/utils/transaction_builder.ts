@@ -2,9 +2,11 @@ import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { Address, convertToValidType, HexString, ValidTypes } from 'web3-utils';
+import { getId, Web3NetAPI } from 'web3-net';
+
 import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionCount } from '../rpc_method_wrappers';
+import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
 import { chain, hardfork, Transaction } from '../types';
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
@@ -55,7 +57,7 @@ export const getTransactionType = (
 // as some of the properties are dependent on others
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
 	transaction: Record<string, unknown>;
-	web3Context: Web3Context<EthExecutionAPI>;
+	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
 	let populatedTransaction = { ...options.transaction } as unknown as Transaction;
@@ -97,15 +99,19 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 			populatedTransaction.hardfork = options.web3Context.defaultHardfork as hardfork;
 	}
 
-	// if (populatedTransaction.chainId === undefined && populatedTransaction.common?.customChain.chainId === undefined)
-	// TODO - web3Eth.getChainId not implemented
-	// populatedTransaction.chainId = await web3Eth.getChainId();
+	if (
+		populatedTransaction.chainId === undefined &&
+		populatedTransaction.common?.customChain.chainId === undefined
+	)
+		populatedTransaction.chainId = await getChainId(
+			options.web3Context,
+			options.web3Context.defaultReturnType,
+		);
 
-	// if (populatedTransaction.networkId === undefined) {
-	// 	populatedTransaction.networkId = web3Context.defaultNetworkId ?? undefined;
-	//  TODO - getNetworkId (net_version) not implemented
-	// 	populatedTransaction.networkId = await getNetworkId();
-	// }
+	if (populatedTransaction.networkId === undefined)
+		populatedTransaction.networkId =
+			options.web3Context.defaultNetworkId ??
+			(await getId(options.web3Context, options.web3Context.defaultReturnType));
 
 	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
 		populatedTransaction.gasLimit = populatedTransaction.gas;

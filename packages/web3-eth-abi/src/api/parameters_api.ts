@@ -6,6 +6,29 @@ import { AbiInput } from '../types';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
 /**
+ * Helper function to format the decoded object
+ */
+const formatDecodedObject = (
+	abi: { [key: string]: unknown },
+	input: { [key: string]: unknown },
+): { [key: string]: unknown } => {
+	const res: { [key: string]: unknown } = {};
+	for (const j of Object.keys(abi)) {
+		if (typeof abi[j] === 'string') {
+			res[j] = input[j];
+		}
+		if (typeof abi[j] === 'object') {
+			res[j] = formatDecodedObject(
+				abi[j] as { [key: string]: unknown },
+				input[j] as { [key: string]: unknown },
+			);
+		}
+	}
+
+	return res;
+};
+
+/**
  * Should be used to encode list of params
  */
 export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string => {
@@ -54,11 +77,11 @@ export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 /**
  * Should be used to decode list of params
  */
-export const decodeParametersWith = <ReturnType extends Record<string, unknown>>(
+export const decodeParametersWith = (
 	abis: AbiInput[],
 	bytes: HexString,
 	loose: boolean,
-): ReturnType & { __length__: number } => {
+): unknown[] => {
 	try {
 		if (abis.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
 			throw new AbiError(
@@ -75,26 +98,29 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 			`0x${bytes.replace(/0x/i, '')}`,
 			loose,
 		);
-
-		const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
-		returnValue.__length__ = 0;
-
+		const returnList: unknown[] = [];
 		for (const [i, abi] of abis.entries()) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			let decodedValue = res[returnValue.__length__];
+			let decodedValue = res[i];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
 
-			returnValue[i] = decodedValue;
-
-			if ((typeof abi === 'function' || (!!abi && typeof abi === 'object')) && abi.name) {
-				returnValue[abi.name as string] = decodedValue;
+			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
+				// the length of the abi object will always be 1
+				for (const j of Object.keys(abi)) {
+					const abiObject: { [key: string]: unknown } = abi; // abi is readonly have to create a new const
+					if (!!abiObject[j] && typeof abiObject[j] === 'object') {
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+						decodedValue = formatDecodedObject(
+							abiObject[j] as { [key: string]: unknown },
+							decodedValue as { [key: string]: unknown },
+						);
+					}
+				}
 			}
-
-			returnValue.__length__ += 1;
+			returnList.push(decodedValue);
 		}
-
-		return returnValue as ReturnType & { __length__: number };
+		return returnList;
 	} catch (err) {
 		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
 	}
@@ -103,15 +129,10 @@ export const decodeParametersWith = <ReturnType extends Record<string, unknown>>
 /**
  * Should be used to decode list of params
  */
-export const decodeParameters = <ReturnType extends Record<string, unknown>>(
-	abi: AbiInput[],
-	bytes: HexString,
-) => decodeParametersWith<ReturnType>(abi, bytes, false);
+export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
+	decodeParametersWith(abi, bytes, false);
 
 /**
  * Should be used to decode bytes to plain param
  */
-export const decodeParameter = <ReturnType extends Record<string, unknown>>(
-	abi: AbiInput,
-	bytes: HexString,
-) => decodeParameters<ReturnType>([abi], bytes)['0'];
+export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);
