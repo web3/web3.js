@@ -1,4 +1,5 @@
 import { ReceiptInfo } from 'web3-common';
+import { HexString } from 'web3-utils';
 import { SendTransactionOptions, Transaction } from '../../../../src/types';
 
 const inputTransaction = {
@@ -44,7 +45,7 @@ export const testData: [
 	string,
 	Transaction,
 	SendTransactionOptions | undefined,
-	string,
+	HexString,
 	ReceiptInfo,
 ][] = [
 	[
