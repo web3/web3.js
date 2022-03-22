@@ -1,23 +1,20 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-
-import { TransactionWithSender } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT, TransactionWithSender } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
-	BlockNumberOrTag,
-	ValidTypes,
 	Address,
-	Uint256,
+	BlockNumberOrTag,
+	Filter,
 	HexString32Bytes,
+	HexString8Bytes,
 	HexStringBytes,
 	Uint,
-	HexString8Bytes,
-	Filter,
+	Uint256,
 } from 'web3-utils';
-
-import { BlockFormatted, Transaction, TransactionCall } from './types';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
@@ -37,34 +34,34 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethods.getMining(this.requestManager);
 	}
 
-	public async getHashRate<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		returnType?: ReturnType,
+	public async getHashRate<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getHashRate(this, returnType);
+		return rpcMethodsWrappers.getHashRate(this, returnFormat);
 	}
 
-	public async getGasPrice<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		returnType?: ReturnType,
+	public async getGasPrice<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getGasPrice(this, returnType);
+		return rpcMethodsWrappers.getGasPrice(this, returnFormat);
 	}
 
 	public async getAccounts() {
 		return rpcMethods.getAccounts(this.requestManager);
 	}
 
-	public async getBlockNumber<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		returnType?: ReturnType,
+	public async getBlockNumber<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getBlockNumber(this, returnType);
+		return rpcMethodsWrappers.getBlockNumber(this, returnFormat);
 	}
 
-	public async getBalance<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getBalance<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnType);
+		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnFormat);
 	}
 
 	public async getStorageAt(
@@ -79,75 +76,83 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethods.getCode(this.requestManager, address, blockNumber);
 	}
 
-	public async getBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		hydrated = false,
-		returnType?: ReturnType,
-	): Promise<BlockFormatted<ReturnType>> {
-		return rpcMethodsWrappers.getBlock(this, block, hydrated, returnType);
-	}
-
-	public async getBlockTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getBlockTransactionCount(this, block, returnType);
+		return rpcMethodsWrappers.getBlock(this, block, hydrated, returnFormat);
 	}
 
-	public async getBlockUncleCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getBlockTransactionCount<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getBlockUncleCount(this, block, returnType);
+		return rpcMethodsWrappers.getBlockTransactionCount(this, block, returnFormat);
 	}
 
-	public async getUncle<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getBlockUncleCount<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getBlockUncleCount(this, block, returnFormat);
+	}
+
+	public async getUncle<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		uncleIndex: Uint,
-		returnType?: ReturnType,
-	): Promise<BlockFormatted<ReturnType>> {
-		return rpcMethodsWrappers.getUncle(this, block, uncleIndex, returnType);
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getUncle(this, block, uncleIndex, returnFormat);
 	}
 
-	public async getTransaction<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transactionHash: HexString32Bytes,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnType);
+		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
 	}
 
-	public async getPendingTransactions<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		returnType?: ReturnType,
-	) {
-		return rpcMethodsWrappers.getPendingTransactions(this, returnType);
+	public async getPendingTransactions<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.getPendingTransactions(this, returnFormat);
 	}
 
-	public async getTransactionFromBlock<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getTransactionFromBlock<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
 		transactionIndex: Uint,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getTransactionFromBlock(
 			this,
 			block,
 			transactionIndex,
-			returnType,
+			returnFormat,
 		);
 	}
 
-	public async getTransactionReceipt<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getTransactionReceipt<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
 		transactionHash: HexString32Bytes,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransactionReceipt(this, transactionHash, returnType);
+		return rpcMethodsWrappers.getTransactionReceipt(this, transactionHash, returnFormat);
 	}
 
-	public async getTransactionCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getTransactionCount<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(
 		address: Address,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnType);
+		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
 
 	public async sendTransaction(
@@ -183,12 +188,12 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	}
 
 	// TODO Missing param
-	public async estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Partial<TransactionWithSender>,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.estimateGas(this, transaction, blockNumber, returnType);
+		return rpcMethodsWrappers.estimateGas(this, transaction, blockNumber, returnFormat);
 	}
 
 	public async getPastLogs(filter: Filter) {
@@ -218,10 +223,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethods.requestAccounts(this.requestManager);
 	}
 
-	public async getChainId<ReturnType extends ValidTypes = ValidTypes.HexString>(
-		returnType?: ReturnType,
+	public async getChainId<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getChainId(this, returnType);
+		return rpcMethodsWrappers.getChainId(this, returnFormat);
 	}
 
 	public async getNodeInfo() {
@@ -229,27 +234,27 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	}
 
 	// TODO - Format input
-	public async getProof<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getProof<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		storageKey: HexString32Bytes,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnType);
+		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnFormat);
 	}
 
-	public async getFeeHistory<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getFeeHistory<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		blockCount: Uint,
 		newestBlock: BlockNumberOrTag = this.defaultBlock,
 		rewardPercentiles: number[],
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getFeeHistory(
 			this,
 			blockCount,
 			newestBlock,
 			rewardPercentiles,
-			returnType,
+			returnFormat,
 		);
 	}
 }

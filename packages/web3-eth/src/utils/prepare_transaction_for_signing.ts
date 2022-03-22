@@ -1,37 +1,57 @@
 import Common from '@ethereumjs/common';
 import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
-import { EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { HexString, toNumber, ValidTypes } from 'web3-utils';
-import { formatTransaction } from './format_transaction';
+import { HexString, toNumber } from 'web3-utils';
 import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
 	PopulatedUnsignedTransaction,
 	Transaction,
 } from '../types';
-import { transactionBuilder } from './transaction_builder';
 import { validateTransactionForSigning } from '../validation';
+import { formatTransaction } from './format_transaction';
+import { transactionBuilder } from './transaction_builder';
 
 const getEthereumjsTxDataFromTransaction = (
-	transaction: PopulatedUnsignedTransaction<HexString>,
+	transaction: FormatType<
+		PopulatedUnsignedTransaction,
+		{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+	>,
 ) => ({
-	nonce: transaction.nonce as HexString,
-	gasPrice: transaction.gasPrice as HexString,
-	gasLimit: transaction.gasLimit as HexString,
-	to: transaction.to as HexString,
-	value: transaction.value as HexString,
+	nonce: transaction.nonce,
+	gasPrice: transaction.gasPrice,
+	gasLimit: transaction.gasLimit,
+	to: transaction.to,
+	value: transaction.value,
 	data: transaction.data,
-	type: transaction.type as HexString,
-	chainId: transaction.chainId as HexString,
-	accessList: (transaction as PopulatedUnsignedEip2930Transaction).accessList,
-	maxPriorityFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction)
-		.maxPriorityFeePerGas as HexString,
-	maxFeePerGas: (transaction as PopulatedUnsignedEip1559Transaction).maxFeePerGas as HexString,
+	type: transaction.type,
+	chainId: transaction.chainId,
+	accessList: (
+		transaction as FormatType<
+			PopulatedUnsignedEip2930Transaction,
+			{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+		>
+	).accessList,
+	maxPriorityFeePerGas: (
+		transaction as FormatType<
+			PopulatedUnsignedEip1559Transaction,
+			{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+		>
+	).maxPriorityFeePerGas,
+	maxFeePerGas: (
+		transaction as FormatType<
+			PopulatedUnsignedEip1559Transaction,
+			{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+		>
+	).maxFeePerGas,
 });
 
 const getEthereumjsTransactionOptions = (
-	transaction: PopulatedUnsignedTransaction<HexString>,
+	transaction: FormatType<
+		PopulatedUnsignedTransaction,
+		{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+	>,
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const hasTransactionSigningOptions =
@@ -75,14 +95,26 @@ export const prepareTransactionForSigning = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Buffer,
 ) => {
-	const populatedTransaction = await transactionBuilder({ transaction, web3Context, privateKey });
+	const populatedTransaction = (await transactionBuilder({
+		transaction,
+		web3Context,
+		privateKey,
+	})) as unknown as PopulatedUnsignedTransaction;
 
-	const formattedTransaction = formatTransaction(
-		populatedTransaction,
-		ValidTypes.HexString,
-	) as PopulatedUnsignedTransaction<HexString>;
+	const formattedTransaction = formatTransaction(populatedTransaction, {
+		number: FMT_NUMBER.HEX,
+		bytes: FMT_BYTES.HEX,
+	}) as unknown as FormatType<
+		PopulatedUnsignedTransaction,
+		{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+	>;
 
-	validateTransactionForSigning(formattedTransaction);
+	validateTransactionForSigning(
+		formattedTransaction as unknown as FormatType<
+			Transaction,
+			{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+		>,
+	);
 
 	return TransactionFactory.fromTxData(
 		getEthereumjsTxDataFromTransaction(formattedTransaction),

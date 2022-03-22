@@ -2,13 +2,14 @@ import {
 	AccessList,
 	AccessListEntry,
 	BaseTransaction,
+	FMT_BYTES,
+	FMT_NUMBER,
 	Transaction1559Unsigned,
 	Transaction2930Unsigned,
 	TransactionCall,
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
 } from 'web3-common';
-import { HexString, ValidTypes } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isUInt } from 'web3-validator';
 import {
 	ChainIdMismatchError,
@@ -28,7 +29,7 @@ import {
 	UnsupportedFeeMarketError,
 } from './errors';
 import { formatTransaction } from './utils/format_transaction';
-import { Transaction } from './types';
+import { InternalTransaction, Transaction } from './types';
 
 export function isBaseTransaction(value: BaseTransaction): boolean {
 	if (value.to !== undefined && value?.to !== null && !isAddress(value.to)) return false;
@@ -123,7 +124,7 @@ export function validateTransactionCall(value: TransactionCall) {
 	if (!isTransactionCall(value)) throw new InvalidTransactionCall(value);
 }
 
-export const validateCustomChainInfo = (transaction: Transaction) => {
+export const validateCustomChainInfo = (transaction: InternalTransaction) => {
 	if (transaction.common !== undefined) {
 		if (transaction.common.customChain === undefined) throw new MissingCustomChainError();
 		if (transaction.common.customChain.chainId === undefined)
@@ -139,7 +140,7 @@ export const validateCustomChainInfo = (transaction: Transaction) => {
 	}
 };
 
-export const validateChainInfo = (transaction: Transaction) => {
+export const validateChainInfo = (transaction: InternalTransaction) => {
 	if (
 		transaction.common !== undefined &&
 		transaction.chain !== undefined &&
@@ -157,7 +158,7 @@ export const validateChainInfo = (transaction: Transaction) => {
 		});
 };
 
-export const validateLegacyGas = (transaction: Transaction<HexString>) => {
+export const validateLegacyGas = (transaction: InternalTransaction) => {
 	if (
 		// This check is verifying gas and gasPrice aren't less than 0.
 		transaction.gas === undefined ||
@@ -176,7 +177,7 @@ export const validateLegacyGas = (transaction: Transaction<HexString>) => {
 		});
 };
 
-export const validateFeeMarketGas = (transaction: Transaction<HexString>) => {
+export const validateFeeMarketGas = (transaction: InternalTransaction) => {
 	// These errors come from 1.x, so they must be checked before
 	// InvalidMaxPriorityFeePerGasOrMaxFeePerGas to throw the same error
 	// for the same code executing in 1.x
@@ -204,7 +205,7 @@ export const validateFeeMarketGas = (transaction: Transaction<HexString>) => {
  * This method checks if all required gas properties are present for either
  * legacy gas (type 0x0 and 0x1) OR fee market transactions (0x2)
  */
-export const validateGas = (transaction: Transaction<HexString>) => {
+export const validateGas = (transaction: InternalTransaction) => {
 	const gasPresent = transaction.gas !== undefined || transaction.gasLimit !== undefined;
 	const legacyGasPresent = gasPresent && transaction.gasPrice !== undefined;
 	const feeMarketGasPresent =
@@ -237,8 +238,8 @@ export const validateGas = (transaction: Transaction<HexString>) => {
 };
 
 export const validateTransactionForSigning = (
-	transaction: Transaction,
-	overrideMethod?: (transaction: Transaction) => void,
+	transaction: InternalTransaction,
+	overrideMethod?: (transaction: InternalTransaction) => void,
 ) => {
 	if (overrideMethod !== undefined) {
 		overrideMethod(transaction);
@@ -251,7 +252,10 @@ export const validateTransactionForSigning = (
 	validateCustomChainInfo(transaction);
 	validateChainInfo(transaction);
 
-	const formattedTransaction = formatTransaction(transaction, ValidTypes.HexString);
+	const formattedTransaction = formatTransaction(transaction as Transaction, {
+		number: FMT_NUMBER.HEX,
+		bytes: FMT_BYTES.HEX,
+	});
 	validateGas(formattedTransaction);
 
 	if (
