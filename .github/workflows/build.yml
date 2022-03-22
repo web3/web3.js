@@ -62,7 +62,7 @@ jobs:
             -   if: (env.TEST_CMD == 'e2e_ganache')
                 run: yarn ganache-cli-background
 
-            -   if: (env.TEST_CMD == 'e2e_eth')
+            -   if: (env.TEST_CMD == 'e2e_geth')
                 run: yarn geth:build && yarn geth
 
             - run: yarn test:integration
