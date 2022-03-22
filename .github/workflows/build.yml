@@ -46,6 +46,13 @@ jobs:
         strategy:
             matrix:
                 node: [ 14, 16 ]
+                testCmd:
+                  [
+                      'e2e_ganache',
+                      'e2e_eth',
+                  ]
+        env:
+            TEST: ${{ matrix.testCmd }}
         steps:
             -   uses: actions/setup-node@v1
                 with:
@@ -54,6 +61,8 @@ jobs:
             -   uses: actions/checkout@v2
 
             -   run: yarn
-            -   run: yarn geth:build && yarn geth && yarn test:integration
+            if: (env.TEST == 'e2e_ganache')
+                run: yarn ganache-cli-background && yarn test:integration
 
-#            -   run: yarn ganache-cli-background && yarn test:integration
+            if: (env.TEST == 'e2e_eth')
+                run: yarn geth:build && yarn geth && yarn test:integration
