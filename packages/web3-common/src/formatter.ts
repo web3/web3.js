@@ -4,6 +4,7 @@ import {
 	bytesToHex,
 	HexString,
 	mergeDeep,
+	Numbers,
 	numberToHex,
 	toBigInt,
 } from 'web3-utils';
@@ -44,19 +45,14 @@ export type DataFormat = {
 
 export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } as const;
 
-export type FormatType<T, F extends DataFormat> = T extends number | bigint
-	? NumberTypes[F['number']]
-	: T extends Buffer | Uint8Array
-	? ByteTypes[F['bytes']]
-	: T extends object
+// Added `undefined` to cover optional type
+export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numbers>
+	? NumberTypes[F['number']] | Exclude<T, Numbers>
+	: Buffer extends Extract<T, Bytes>
+	? ByteTypes[F['bytes']] | Exclude<T, Bytes>
+	: T extends object | undefined
 	? {
-			[P in keyof T]: T[P] extends number | bigint
-				? NumberTypes[F['number']]
-				: T[P] extends Buffer | Uint8Array
-				? ByteTypes[F['bytes']]
-				: T[P] extends object
-				? FormatType<T[P], F>
-				: T[P];
+			[P in keyof T]: FormatType<T[P], F>;
 	  }
 	: T;
 
@@ -149,7 +145,6 @@ export const convert = (
 
 		// If value is an object, recurse into it
 		if (isObject(value)) {
-			// dataPath.push(key);
 			convert(value, schema, dataPath, format);
 			dataPath.pop();
 			continue;
