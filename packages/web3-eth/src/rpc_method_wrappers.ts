@@ -1,6 +1,6 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { EthExecutionAPI, PromiEvent, ReceiptInfo, TransactionWithSender } from 'web3-common';
+import { EthExecutionAPI, PromiEvent, TransactionWithSender } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
 	Address,
