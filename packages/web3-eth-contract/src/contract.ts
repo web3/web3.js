@@ -1,4 +1,6 @@
 import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	inputAddressFormatter,
 	inputLogFormatter,
@@ -28,7 +30,6 @@ import {
 	Filter,
 	HexString,
 	toChecksumAddress,
-	ValidTypes,
 } from 'web3-utils';
 import { validator } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
@@ -201,9 +202,9 @@ export class Contract<Abi extends ContractAbi>
 
 				return promiEvent;
 			},
-			estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+			estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 				options?: PayableCallOptions,
-				returnType?: ReturnType,
+				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
 				delete modifiedOptions.to;
@@ -211,7 +212,7 @@ export class Contract<Abi extends ContractAbi>
 				return this._contractMethodEstimateGas({
 					abi: abi as AbiFunctionFragment,
 					params: args,
-					returnType,
+					returnFormat,
 					options: modifiedOptions,
 					contractOptions,
 				});
@@ -220,13 +221,13 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	public async getPastEvents<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		eventName: keyof ContractEvents<Abi> | 'allEvents',
 		filter?: Omit<Filter, 'address'>,
-		returnType?: ReturnType,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		const formattedFilter = inputLogFormatter(filter ?? {});
-		const logs = await getLogs(this, formattedFilter, returnType);
+		const logs = await getLogs(this, formattedFilter, returnFormat);
 
 		const abi =
 			eventName === 'allEvents'
@@ -335,10 +336,12 @@ export class Contract<Abi extends ContractAbi>
 						this._contractMethodCall(abi, params, options, block),
 					send: (options?: PayableCallOptions) =>
 						this._contractMethodSend(abi, params, options),
-					estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+					estimateGas: async <
+						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+					>(
 						options?: PayableCallOptions,
-						returnType?: ReturnType,
-					) => this._contractMethodEstimateGas({ abi, params, returnType, options }),
+						returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+					) => this._contractMethodEstimateGas({ abi, params, returnFormat, options }),
 					encodeABI: () => encodeMethodABI(abi, params),
 				} as unknown as PayableMethodObject<
 					ContractMethod<T>['Inputs'],
@@ -352,10 +355,10 @@ export class Contract<Abi extends ContractAbi>
 					this._contractMethodCall(abi, params, options, block),
 				send: (options?: NonPayableCallOptions) =>
 					this._contractMethodSend(abi, params, options),
-				estimateGas: async <ReturnType extends ValidTypes = ValidTypes.HexString>(
+				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
-					returnType?: ReturnType,
-				) => this._contractMethodEstimateGas({ abi, params, returnType, options }),
+					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+				) => this._contractMethodEstimateGas({ abi, params, returnFormat, options }),
 				encodeABI: () => encodeMethodABI(abi, params),
 			} as unknown as NonPayableMethodObject<
 				ContractMethod<T>['Inputs'],
@@ -398,17 +401,17 @@ export class Contract<Abi extends ContractAbi>
 
 	private async _contractMethodEstimateGas<
 		Options extends PayableCallOptions | NonPayableCallOptions,
-		ReturnType extends ValidTypes = ValidTypes.HexString,
+		ReturnFormat extends DataFormat,
 	>({
 		abi,
 		params,
-		returnType,
+		returnFormat,
 		options,
 		contractOptions,
 	}: {
 		abi: AbiFunctionFragment;
 		params: unknown[];
-		returnType?: ReturnType;
+		returnFormat: ReturnFormat;
 		options?: Options;
 		contractOptions?: ContractOptions;
 	}) {
@@ -419,7 +422,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: contractOptions ?? this.options,
 		});
 
-		return estimateGas(this, tx, BlockTags.LATEST, returnType);
+		return estimateGas(this, tx, BlockTags.LATEST, returnFormat);
 	}
 
 	// eslint-disable-next-line class-methods-use-this

@@ -7,10 +7,6 @@ import {
 	InvalidBytesError,
 	InvalidUnitError,
 	InvalidTypeAbiInputError,
-	InvalidDesiredTypeError,
-	InvalidConvertibleObjectError,
-	InvalidConvertiblePropertiesListError,
-	InvalidConvertibleValueError,
 	InvalidNumberError,
 } from './errors';
 import {
@@ -19,9 +15,6 @@ import {
 	HexString,
 	Numbers,
 	ValueTypes,
-	ValidTypes,
-	ValidReturnTypes,
-	FormatValidReturnType,
 	JsonFunctionInterface,
 	JsonEventInterface,
 	Components,
@@ -445,67 +438,3 @@ export const jsonInterfaceMethodToString = (
 
 	return `${json.name}(${flattenTypes(false, json.inputs).join(',')})`;
 };
-
-export const convertToValidType = (
-	value: ValidReturnTypes[ValidTypes], // validate this
-	desiredType: ValidTypes,
-) => {
-	if (value === undefined) throw new InvalidConvertibleValueError();
-
-	switch (desiredType) {
-		case ValidTypes.HexString:
-			return numberToHex(value);
-		case ValidTypes.NumberString:
-			return hexToNumberString(numberToHex(value));
-		case ValidTypes.Number:
-			return toNumber(value);
-		case ValidTypes.BigInt:
-			return BigInt(toNumber(value));
-		default:
-			throw new InvalidDesiredTypeError(desiredType);
-	}
-};
-
-// TODO Handle nested objects
-export function convertObjectPropertiesToValidType<
-	// Object can have any properties. Unless specified as [key: string] index type didn't detect the record key correctly
-	// Also objects property types can be arrays, or other customs types as well so we have to specify any to cover all
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	ObjectType extends Record<any, any>,
-	Properties extends (keyof ObjectType)[],
-	ReturnType extends ValidTypes,
->(
-	object: ObjectType,
-	convertibleProperties: Properties,
-	desiredType: ReturnType,
-): FormatValidReturnType<ObjectType, Properties, ReturnType> {
-	if (typeof object !== 'object' || object === null)
-		throw new InvalidConvertibleObjectError(object);
-	if (
-		!Array.isArray(convertibleProperties) ||
-		!convertibleProperties.every(convertibleProperty => typeof convertibleProperty === 'string')
-	)
-		throw new InvalidConvertiblePropertiesListError(convertibleProperties);
-	if (!Object.values(ValidTypes).includes(desiredType))
-		throw new InvalidDesiredTypeError(desiredType);
-
-	const convertedObject = { ...object } as FormatValidReturnType<
-		ObjectType,
-		Properties,
-		ReturnType
-	>;
-
-	for (const convertibleProperty of convertibleProperties) {
-		if (convertedObject[convertibleProperty] === undefined) continue;
-
-		// TODO Check why TS compiler is unable to detect the matching type of the deep properties
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-expect-error
-		convertedObject[convertibleProperty] = convertToValidType(
-			object[convertibleProperty],
-			desiredType,
-		);
-	}
-
-	return convertedObject;
-}
