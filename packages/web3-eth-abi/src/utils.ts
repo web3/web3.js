@@ -124,11 +124,17 @@ export const mapTypes = (
 };
 
 /**
+ * format odd-length bytes to even-length
+ */
+export const formatOddHexstrings = (param: string): string =>
+	param.length % 2 === 1 ? `0x0${param.substring(2)}` : param;
+
+/**
  * Handle some formatting of params for backwards compatibility with Ethers V4
  */
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	let param = _param;
+	const param = _param;
 	const paramTypeBytes = /^bytes([0-9]*)$/;
 	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
 	const paramTypeNumber = /^(u?int)([0-9]*)$/;
@@ -150,16 +156,14 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 		const size = parseInt(match[2] ?? '256', 10);
 		if (size / 8 < (param as { length: number }).length) {
 			// pad to correct bit width
-			param = leftPad(param as string, size);
+			return leftPad(param as string, size);
 		}
 	}
 
 	// Format correct length for bytes[0-9]+
 	match = paramTypeBytes.exec(type);
 	if (match) {
-		if (Buffer.isBuffer(param)) {
-			param = toHex(param);
-		}
+		const hexParam = Buffer.isBuffer(param) ? toHex(param) : param;
 
 		// format to correct length
 		const size = parseInt(match[1], 10);
@@ -169,18 +173,16 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 			if ((param as string).startsWith('0x')) {
 				maxSize += 2;
 			}
-			if ((param as string).length < maxSize) {
-				// pad to correct length
-				param = rightPad(param as string, size * 2);
-			}
+			// pad to correct length
+			const paddedParam =
+				(hexParam as string).length < maxSize
+					? rightPad(param as string, size * 2)
+					: hexParam;
+			return formatOddHexstrings(paddedParam as string);
 		}
 
-		// format odd-length bytes to even-length
-		if ((param as string).length % 2 === 1) {
-			param = `0x0${(param as string).substring(2)}`;
-		}
+		return formatOddHexstrings(hexParam as string);
 	}
-
 	return param;
 };
 
