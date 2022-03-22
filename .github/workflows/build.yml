@@ -54,5 +54,6 @@ jobs:
             -   uses: actions/checkout@v2
 
             -   run: yarn
+            -   run: yarn geth:build && yarn geth && yarn test:integration
 
-            -   run: yarn ganache-cli-background && yarn test:integration
+#            -   run: yarn ganache-cli-background && yarn test:integration
