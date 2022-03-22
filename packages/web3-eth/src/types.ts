@@ -268,14 +268,7 @@ export interface SendTransactionOptions {
 	ignoreGasPricing?: boolean;
 }
 
-export type SendSignedTransactionEvents = {
+export type SendSignedTransactionEvents = SendTransactionEvents & {
 	sending: HexStringBytes;
 	sent: HexStringBytes;
-	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfoFormatted;
-	confirmation: {
-		confirmationNumber: number;
-		receipt: ReceiptInfoFormatted;
-		latestBlockHash: HexString32Bytes;
-	};
 };
