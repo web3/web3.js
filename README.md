@@ -281,6 +281,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 -   Purescript: [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
 -   Python: [Web3.py](https://github.com/ethereum/web3.py)
 -   Ruby: [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
+-   Rust: [rust-web3](https://github.com/tomusdrw/rust-web3)
 -   Scala: [web3j-scala](https://github.com/mslinn/web3j-scala)
 
 [repo]: https://github.com/ethereum/web3.js
