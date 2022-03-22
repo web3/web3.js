@@ -180,7 +180,7 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
 	const result = decodeParameters([...abi.outputs], value);
 
-	if (result.__length__ === 1) {
+	if (result.length === 1) {
 		return result[0];
 	}
 

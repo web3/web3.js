@@ -374,3 +374,7 @@ Released with 1.0.0-beta.37 code base.
 2. `setContent` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver (https://github.com/ensdomains/resolvers/blob/master/contracts/PublicResolver.sol)
 3. `getContent` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver.
 4. `getMultihash` is not supported in web3-eth-ens 4.x as its deprecated in ENS public resolver.
+
+#### web3-eth-abi
+
+1. `decodeParameters` decoding result is now the same format as the input parameter for encoding
