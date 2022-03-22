@@ -54,4 +54,64 @@ export const testData: [
 		expectedTransactionHash,
 		expectedReceiptInfo,
 	],
+	[
+		'Transaction with all hex string values and SendTransactionOptions.ignoreGasPricing = true',
+		inputTransaction,
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
+	[
+		'Transaction with all hex string values, inputTransaction.gasPrice !== undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas === undefined',
+		{
+			...inputTransaction,
+			maxPriorityFeePerGas: undefined,
+			maxFeePerGas: undefined,
+		},
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
+	[
+		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas !== undefined; inputTransaction.maxFeePerGas !== undefined',
+		{
+			...inputTransaction,
+			gasPrice: undefined,
+		},
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
+	[
+		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas !== undefined',
+		{
+			...inputTransaction,
+			maxPriorityFeePerGas: undefined,
+		},
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
+	[
+		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas !== undefined; inputTransaction.maxFeePerGas === undefined',
+		{
+			...inputTransaction,
+			maxFeePerGas: undefined,
+		},
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
+	[
+		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas === undefined',
+		{
+			...inputTransaction,
+			gasPrice: undefined,
+			maxPriorityFeePerGas: undefined,
+			maxFeePerGas: undefined,
+		},
+		{ ignoreGasPricing: true },
+		expectedTransactionHash,
+		expectedReceiptInfo,
+	],
 ];
