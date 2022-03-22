@@ -44,20 +44,25 @@ jobs:
     e2e:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
-#                node: [ 14, 16 ]
+                node: [ 14, 16 ]
                 testCmd: [ 'e2e_ganache', 'e2e_eth' ]
-
+        env:
+            TEST_CMD: ${{ matrix.testCmd }}
         steps:
             -   uses: actions/setup-node@v1
                 with:
-                    node-version: 14
+                    node-version: ${{ matrix.node }}
 
             -   uses: actions/checkout@v2
 
             -   run: yarn
-            if: (matrix.testCmd == 'e2e_ganache')
-                run: yarn ganache-cli-background && yarn test:integration
 
-            if: (matrix.testCmd == 'e2e_eth')
-                run: yarn geth:build && yarn geth && yarn test:integration
+            -   if: (env.TEST_CMD == 'e2e_ganache')
+                run: yarn ganache-cli-background
+
+            -   if: (env.TEST_CMD == 'e2e_eth')
+                run: yarn geth:build && yarn geth
+
+            - run: yarn test:integration
