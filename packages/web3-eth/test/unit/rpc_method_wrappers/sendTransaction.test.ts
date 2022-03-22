@@ -23,10 +23,7 @@ describe('sendTransaction', () => {
 		web3Context = new Web3Context('http://127.0.0.1:8545');
 	});
 
-	afterEach(() => {
-		jest.resetAllMocks();
-		jest.useRealTimers();
-	});
+	afterEach(() => jest.resetAllMocks());
 
 	it.each(testData)(
 		`getTransactionGasPricing is called only when expected\n ${testMessage}`,
