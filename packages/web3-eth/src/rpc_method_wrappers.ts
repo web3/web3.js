@@ -362,41 +362,44 @@ export function sendTransaction(
 	return promiEvent;
 }
 
-export const sendSignedTransaction = async (
+export const sendSignedTransaction = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
-) => {
+): PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents> => {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(async resolve => {
-		promiEvent.emit('sending', transaction);
+	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
+		setImmediate(async () => {
+			promiEvent.emit('sending', transaction);
 
-		const transactionHash = await rpcMethods.sendRawTransaction(
-			web3Context.requestManager,
-			transaction,
-		);
+			const transactionHash = await rpcMethods.sendRawTransaction(
+				web3Context.requestManager,
+				transaction,
+			);
 
-		promiEvent.emit('sent', transaction);
-		promiEvent.emit('transactionHash', transactionHash);
+			promiEvent.emit('sent', transaction);
+			promiEvent.emit('transactionHash', transactionHash);
 
-		let transactionReceipt = await rpcMethods.getTransactionReceipt(
-			web3Context.requestManager,
-			transactionHash,
-		);
+			let transactionReceipt = await rpcMethods.getTransactionReceipt(
+				web3Context.requestManager,
+				transactionHash,
+			);
 
-		// Transaction hasn't been included in a block yet
-		if (transactionReceipt === null)
-			transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
+			// Transaction hasn't been included in a block yet
+			if (transactionReceipt === null)
+				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
 
-		promiEvent.emit('receipt', transactionReceipt);
-		// TODO - Format receipt
-		resolve(transactionReceipt);
+			promiEvent.emit('receipt', transactionReceipt);
+			// TODO - Format receipt
+			resolve(transactionReceipt);
 
-		watchTransactionForConfirmations<SendSignedTransactionEvents>(
-			web3Context,
-			promiEvent,
-			transactionReceipt,
-		);
+			watchTransactionForConfirmations<SendSignedTransactionEvents>(
+				web3Context,
+				promiEvent,
+				transactionReceipt,
+			);
+		});
 	});
 
 	return promiEvent;
