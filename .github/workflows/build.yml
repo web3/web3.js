@@ -46,11 +46,7 @@ jobs:
         strategy:
             matrix:
                 node: [ 14, 16 ]
-                testCmd:
-                  [
-                      'e2e_ganache',
-                      'e2e_eth',
-                  ]
+                testCmd: ['e2e_ganache', 'e2e_eth']
         steps:
             -   uses: actions/setup-node@v1
                 with:
