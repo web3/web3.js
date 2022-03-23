@@ -96,27 +96,3 @@ export class InvalidTypeAbiInputError extends Web3Error {
 		super(value, 'components found but type is not tuple');
 	}
 }
-
-export class InvalidDesiredTypeError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'invalid desired type for conversion given');
-	}
-}
-
-export class InvalidConvertibleObjectError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'invalid object for conversion given');
-	}
-}
-
-export class InvalidConvertiblePropertiesListError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'invalid list of convertible properties for conversion given');
-	}
-}
-
-export class InvalidConvertibleValueError extends Web3Error {
-	public constructor() {
-		super(undefined, 'cannot convert undefined');
-	}
-}

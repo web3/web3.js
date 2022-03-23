@@ -240,7 +240,7 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 		blockNumber ?? web3Context.defaultBlock,
 	);
 
-	format(receiptInfoSchema, response as Numbers, returnFormat);
+	return format({ eth: 'uint' }, response as Numbers, returnFormat);
 }
 
 export async function getPendingTransactions<ReturnFormat extends DataFormat>(

@@ -112,6 +112,12 @@ export const transactionSchema = {
 			type: 'object',
 			properties: {
 				customChain: { ...customChainSchema },
+				baseChain: {
+					...chainSchema,
+				},
+				hardfork: {
+					...hardforkSchema,
+				},
 			},
 		},
 		gasLimit: {

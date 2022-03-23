@@ -64,24 +64,28 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 }): Promise<ReturnType> {
 	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 
-	if (populatedTransaction.from === undefined)
+	if (populatedTransaction.from === undefined) {
 		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
+	}
 
 	// TODO: Debug why need to typecase getTransactionNonce
-	if (populatedTransaction.nonce === undefined)
+	if (populatedTransaction.nonce === undefined) {
 		populatedTransaction.nonce = (await getTransactionNonce(
 			options.web3Context,
 			populatedTransaction.from,
 		)) as unknown as string;
+	}
 
-	if (populatedTransaction.value === undefined) populatedTransaction.value = '0x';
+	if (populatedTransaction.value === undefined) {
+		populatedTransaction.value = '0x';
+	}
 
-	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined)
+	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined) {
 		throw new TransactionDataAndInputError({
 			data: populatedTransaction.data,
 			input: populatedTransaction.input,
 		});
-	else if (populatedTransaction.input !== undefined) {
+	} else if (populatedTransaction.input !== undefined) {
 		populatedTransaction.data = populatedTransaction.input;
 		delete populatedTransaction.input;
 	}
@@ -90,39 +94,46 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		populatedTransaction.data === undefined ||
 		populatedTransaction.data === null ||
 		populatedTransaction.data === ''
-	)
+	) {
 		populatedTransaction.data = '0x';
-	else if (!populatedTransaction.data.startsWith('0x'))
+	} else if (!populatedTransaction.data.startsWith('0x')) {
 		populatedTransaction.data = `0x${populatedTransaction.data}`;
+	}
 
 	if (populatedTransaction.common === undefined) {
-		if (populatedTransaction.chain === undefined)
+		if (populatedTransaction.chain === undefined) {
 			populatedTransaction.chain = options.web3Context.defaultChain as ValidChains;
-		if (populatedTransaction.hardfork === undefined)
+		}
+		if (populatedTransaction.hardfork === undefined) {
 			populatedTransaction.hardfork = options.web3Context.defaultHardfork as Hardfork;
+		}
 	}
 
 	if (
 		populatedTransaction.chainId === undefined &&
 		populatedTransaction.common?.customChain.chainId === undefined
-	)
+	) {
 		populatedTransaction.chainId = await getChainId(options.web3Context, DEFAULT_RETURN_FORMAT);
+	}
 
-	if (populatedTransaction.networkId === undefined)
+	if (populatedTransaction.networkId === undefined) {
 		populatedTransaction.networkId =
 			(options.web3Context.defaultNetworkId as string) ??
 			(await getId(options.web3Context, DEFAULT_RETURN_FORMAT));
+	}
 
-	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined)
+	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined) {
 		populatedTransaction.gasLimit = populatedTransaction.gas;
+	}
 
 	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
 
 	if (
 		populatedTransaction.accessList === undefined &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')
-	)
+	) {
 		populatedTransaction.accessList = [];
+	}
 
 	populatedTransaction = {
 		...populatedTransaction,

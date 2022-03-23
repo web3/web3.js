@@ -69,7 +69,7 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	}
 
 	if (typeof data === 'string' && isHexStrict(data)) {
-		return Buffer.from(data.slice(0, 2), 'hex');
+		return Buffer.from(data.slice(2), 'hex');
 	}
 
 	if (typeof data === 'string' && !isHexStrict(data)) {

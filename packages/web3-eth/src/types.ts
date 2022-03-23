@@ -1,7 +1,6 @@
 import {
 	AccessList,
 	TransactionHash,
-	TransactionInfo,
 	Uncles,
 	FMT_BYTES,
 	FMT_NUMBER,
@@ -49,6 +48,7 @@ export interface ReceiptInfo {
 	readonly to: Address;
 	readonly cumulativeGasUsed: Numbers;
 	readonly gasUsed: Numbers;
+	readonly effectiveGasPrice?: Numbers;
 	readonly contractAddress: Address | null;
 	readonly logs: Log[];
 	readonly logsBloom: Bytes;
@@ -90,6 +90,14 @@ export interface Transaction {
 	v?: Numbers;
 	r?: Bytes;
 	s?: Bytes;
+}
+
+export interface TransactionInfo extends Transaction {
+	readonly blockHash: Bytes | null;
+	readonly blockNumber: Numbers | null;
+	readonly from: Address;
+	readonly hash: Bytes;
+	readonly transactionIndex: Numbers | null;
 }
 
 export type InternalTransaction = FormatType<

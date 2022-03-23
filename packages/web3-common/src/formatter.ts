@@ -85,34 +85,39 @@ const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchem
 };
 
 export const convertScalarValue = (value: unknown, ethType: string, format: DataFormat) => {
-	const { baseType } = parseBaseType(ethType);
+	try {
+		const { baseType } = parseBaseType(ethType);
 
-	if (baseType === 'int' || baseType === 'uint') {
-		switch (format.number) {
-			case FMT_NUMBER.NUMBER:
-				return Number(toBigInt(value));
-			case FMT_NUMBER.HEX:
-				return numberToHex(toBigInt(value));
-			case FMT_NUMBER.STR:
-				return toBigInt(value).toString();
-			case FMT_NUMBER.BIGINT:
-				return toBigInt(value);
-			default:
-				throw new Error(`Invalid format: ${String(format.number)}`);
+		if (baseType === 'int' || baseType === 'uint') {
+			switch (format.number) {
+				case FMT_NUMBER.NUMBER:
+					return Number(toBigInt(value));
+				case FMT_NUMBER.HEX:
+					return numberToHex(toBigInt(value));
+				case FMT_NUMBER.STR:
+					return toBigInt(value).toString();
+				case FMT_NUMBER.BIGINT:
+					return toBigInt(value);
+				default:
+					throw new Error(`Invalid format: ${String(format.number)}`);
+			}
 		}
-	}
 
-	if (baseType === 'bytes') {
-		switch (format.bytes) {
-			case FMT_BYTES.HEX:
-				return bytesToHex(bytesToBuffer(value as Bytes));
-			case FMT_BYTES.BUFFER:
-				return bytesToBuffer(value as Bytes);
-			case FMT_BYTES.UINT8ARRAY:
-				return new Uint8Array(bytesToBuffer(value as Bytes));
-			default:
-				throw new Error(`Invalid format: ${String(format.bytes)}`);
+		if (baseType === 'bytes') {
+			switch (format.bytes) {
+				case FMT_BYTES.HEX:
+					return bytesToHex(bytesToBuffer(value as Bytes));
+				case FMT_BYTES.BUFFER:
+					return bytesToBuffer(value as Bytes);
+				case FMT_BYTES.UINT8ARRAY:
+					return new Uint8Array(bytesToBuffer(value as Bytes));
+				default:
+					throw new Error(`Invalid format: ${String(format.bytes)}`);
+			}
 		}
+	} catch (error) {
+		// TODO: Add debugging to verify the error is thrown by the correct function
+		return value;
 	}
 
 	return value;
