@@ -534,3 +534,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
 -  Fix static tuple encoding (#4673) (#4884)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
