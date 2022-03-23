@@ -9,6 +9,7 @@ import {
 	toBigInt,
 } from 'web3-utils';
 import { isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+import { FormatterError } from './errors';
 
 const { parseBaseType } = utils;
 
@@ -99,7 +100,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 				case FMT_NUMBER.BIGINT:
 					return toBigInt(value);
 				default:
-					throw new Error(`Invalid format: ${String(format.number)}`);
+					throw new FormatterError(`Invalid format: ${String(format.number)}`);
 			}
 		}
 
@@ -112,7 +113,7 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 				case FMT_BYTES.UINT8ARRAY:
 					return new Uint8Array(bytesToBuffer(value as Bytes));
 				default:
-					throw new Error(`Invalid format: ${String(format.bytes)}`);
+					throw new FormatterError(`Invalid format: ${String(format.bytes)}`);
 			}
 		}
 	} catch (error) {
@@ -243,7 +244,7 @@ export const format = <
 	const jsonSchema: JsonSchema = isObject(schema) ? schema : utils.ethAbiToJsonSchema(schema);
 
 	if (!jsonSchema.properties && !jsonSchema.items && !jsonSchema.eth) {
-		throw new Error('Nazar');
+		throw new FormatterError('Invalid json schema for formatting');
 	}
 
 	return convert(dataToParse, jsonSchema, [], returnFormat) as FormatType<
