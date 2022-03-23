@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-validator` contains the ideal setup for a Web3.js package.
+`web3-validator` contains functions for validating objects.
 
 ###### Get it from the NPM Registry
 
