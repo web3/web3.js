@@ -8,8 +8,8 @@ var coder = require('../packages/web3-eth-abi');
 describe('lib/solidity/coder', function () {
     describe('encodeParameter', function () {
         var test = function (t) {
-            it('should turn ' + t.value + ' to ' + t.expected + ' for '+ t.type, function () {
-                assert.equal(coder.encodeParameter(t.type, t.value).replace('0x',''), t.expected);
+            it('should turn ' + (typeof t.value === 'object' ? JSON.stringify(t.value) : t.value) + ' to ' + t.expected + ' for ' + (typeof t.type === 'object' ? JSON.stringify(t.type) : t.type), function () {
+                assert.equal(coder.encodeParameter(t.type, t.value).replace('0x', ''), t.expected);
             });
         };
 
@@ -363,6 +363,11 @@ describe('lib/solidity/coder', function () {
                       '000000000000000000000000000000000000000000000000000000000000002a' +
                       '000000000000000000000000000000000000000000000000000000000000002a'
         });
+        test({
+            type: { components: [{ name: "a", type: "uint256" }], type: "tuple[1]" },
+            value: [{ a: 2 }],
+            expected: '0000000000000000000000000000000000000000000000000000000000000002'
+        })
     });
 });
 
