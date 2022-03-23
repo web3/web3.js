@@ -1,7 +1,7 @@
-## Guidelines for Pull Requests and Releases (Web3 1.x)
+## Guidelines for Pull Requests and Releases (Web3 4.x)
 
 This document provides some ground rules for contributors (including the maintainer(s) of
-the project) about how to make, review and publish changes to 1.x. The most basic requirement is
+the project) about how to make, review and publish changes to 4.x. The most basic requirement is
 that **Web3 not break**.
 
 ### Pull Requests for substantive changes (e.g. everything except comments and docs)
