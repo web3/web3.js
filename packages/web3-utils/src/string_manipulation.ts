@@ -57,7 +57,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 	const largestBit = 2n ** BigInt(nibbleWidth * 4);
 	if (-val >= largestBit) {
-		throw new NibbleWidthError(`value: "${value}", nibbleWidth: "${nibbleWidth}"`);
+		throw new NibbleWidthError(`value: ${value}, nibbleWidth: ${nibbleWidth}`);
 	}
 	const updatedVal = BigInt(val);
 
