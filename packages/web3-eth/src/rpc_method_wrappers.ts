@@ -332,10 +332,15 @@ export const sendSignedTransaction = (
 	transaction: HexStringBytes,
 ): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
 	// TODO - Promise returned in function argument where a void return was expected
+<<<<<<< HEAD
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
+=======
+	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
+		(async () => {
+>>>>>>> 465218f53 (Possible solution without disabling linter for line)
 			promiEvent.emit('sending', transaction);
 
 			const transactionHash = await rpcMethods.sendRawTransaction(
@@ -363,11 +368,15 @@ export const sendSignedTransaction = (
 				web3Context,
 				promiEvent,
 				transactionReceipt,
+<<<<<<< HEAD
 				transactionHash,
 			);
 		});
+=======
+			);
+		})() as unknown;
+>>>>>>> 465218f53 (Possible solution without disabling linter for line)
 	});
-
 	return promiEvent;
 };
 
