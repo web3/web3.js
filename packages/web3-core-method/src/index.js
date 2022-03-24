@@ -557,8 +557,9 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), method.transactionPollingInterval);
         };
 
+        // NewBlockHeaders usage reference is not supported： https://github.com/ChainSafe/web3.js/issues/4857#issuecomment-1070443849
         // If provider do not support event subscription use polling
-        if(!this.requestManager.provider.on) {
+        if(!this.requestManager.provider.on || this.requestManager.provider.notSupportNewBlockHeaders) {
             return startInterval();            
         }
 
@@ -883,6 +884,7 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
+                        // The use of reference: https://github.com/ChainSafe/web3.js/issues/4857#issuecomment-1070443849
                         maxPriorityFeePerGas = tx.maxPriorityFeePerGas 
                          || (
                              method.requestManager.provider.defaultOnlineGasPrice ? gasPrice
