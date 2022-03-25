@@ -158,6 +158,7 @@ export interface ReceiptInfo {
 	readonly logsBloom: HexString256Bytes;
 	readonly root: HexString32Bytes;
 	readonly status: '0x1' | '0x0';
+	readonly effectiveGasPrice: Uint;
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/client.json#L2

@@ -81,15 +81,15 @@ export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[-256, 2],
-		'Invalid value given "value: "-256", nibbleWidth: "2"". Error: value greater than the nibble width.',
+		'Invalid value given "value: -256, nibbleWidth: 2". Error: value greater than the nibble width.',
 	],
 	[
 		['-0x1000', 3],
-		'Invalid value given "value: "-0x1000", nibbleWidth: "3"". Error: value greater than the nibble width.',
+		'Invalid value given "value: -0x1000, nibbleWidth: 3". Error: value greater than the nibble width.',
 	],
 	[
 		[-160000n, 1],
-		'Invalid value given "value: "-160000", nibbleWidth: "1"". Error: value greater than the nibble width.',
+		'Invalid value given "value: -160000, nibbleWidth: 1". Error: value greater than the nibble width.',
 	],
 ];
 
@@ -101,10 +101,10 @@ export const fromTwosComplementInvalidData: [[Numbers, number], string][] = [
 	[['-120.0', 4], 'value "-120.0" at "/0" must pass "int" validation'],
 	[
 		[1000, 2],
-		'Invalid value given "value: "1000", nibbleWidth: "2"". Error: value greater than the nibble width.',
+		'Invalid value given "value: 1000, nibbleWidth: 2". Error: value greater than the nibble width.',
 	],
 	[
 		['0xa05', 1],
-		'Invalid value given "value: "0xa05", nibbleWidth: "1"". Error: value greater than the nibble width.',
+		'Invalid value given "value: 0xa05, nibbleWidth: 1". Error: value greater than the nibble width.',
 	],
 ];
