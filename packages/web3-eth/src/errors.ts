@@ -29,7 +29,7 @@ export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
 
 	public constructor(value: unknown) {
-		super(JSON.stringify(value), 'invalid transaction with sender');
+		super(value, 'invalid transaction with sender');
 	}
 }
 
@@ -37,7 +37,7 @@ export class InvalidTransactionCall extends Web3Error {
 	public code = ERR_TX_INVALID_CALL;
 
 	public constructor(value: unknown) {
-		super(JSON.stringify(value), 'invalid transaction call');
+		super(value, 'invalid transaction call');
 	}
 }
 

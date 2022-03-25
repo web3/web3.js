@@ -22,6 +22,7 @@ import {
 	utf8ToHex,
 	toChecksumAddress,
 } from '../../src/converters';
+
 import {
 	asciiToHexValidData,
 	bytesToHexInvalidData,
