@@ -522,12 +522,21 @@ Released with 1.0.0-beta.37 code base.
 
 
 ## [Unreleased]
-- Improve npm script commands for development purposes (#4848)
 
 ## [1.7.2]
+
+### Changed
+
+- Improve npm script commands for development purposes (#4848)
+
+
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
 
 ### Security
 -  `npm audit fix` to update libraries (#4860)
 
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
+
