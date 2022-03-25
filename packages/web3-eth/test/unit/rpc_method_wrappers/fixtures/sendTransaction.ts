@@ -25,6 +25,7 @@ const expectedReceiptInfo: ReceiptInfo = {
 	from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
 	to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
 	cumulativeGasUsed: '0x33bc', // 13244
+	effectiveGasPrice: '0x13a21bc946', // 84324108614
 	gasUsed: '0x4dc', // 1244
 	contractAddress: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
 	logs: [],
