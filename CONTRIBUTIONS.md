@@ -48,4 +48,5 @@ Emergency releases are allowed to shorten waiting periods depending on the sever
 
 There is precedent set for this in the 1.2.6 release (see [#3351](https://github.com/ethereum/web3.js/pull/3351)), where the consensus view was to make the smallest change necessary to address the emergency while waiving the `rc` process (meaning many existing additions to master were excluded).
 
-This topic is under further org-wide discussion at [ethereum/js-organization#6](https://github.com/ethereum/js-organization/issues/6).
+This topic was under further org-wide discussion [here](https://github.com/ethereum/js-organization/issues/6)
+and [here](https://github.com/ChainSafe/web3.js/issues/3358).
