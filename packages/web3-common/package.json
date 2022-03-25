@@ -30,6 +30,7 @@
 		"web3-eth-iban": "4.0.0-alpha.0"
 	},
 	"devDependencies": {
+		"@humeris/espresso-shot": "^4.0.0",
 		"@types/jest": "^27.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",
 		"@typescript-eslint/parser": "^5.4.0",

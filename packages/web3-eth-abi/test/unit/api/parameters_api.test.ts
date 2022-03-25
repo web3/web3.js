@@ -4,11 +4,9 @@ import {
 	inValidEncodeParametersData,
 	validDecodeParametersData,
 	validEncodeParametersData,
-	validEncodeDecodeParametersData
+	validEncodeDecodeParametersData,
 } from '../../fixtures/data';
-import {
-	AbiInput
-} from '../../../src/types'
+import { AbiInput } from '../../../src/types';
 
 describe('parameters_api', () => {
 	describe('encodeParameters', () => {
@@ -66,7 +64,7 @@ describe('parameters_api', () => {
 			);
 		});
 	});
-	
+
 	describe('encode and decode', () => {
 		describe('input should be the same as returned value from encode and decode', () => {
 			it.each(validEncodeDecodeParametersData)(
@@ -75,7 +73,7 @@ describe('parameters_api', () => {
 					const rwAbi = abi as AbiInput[];
 					const encodedBytes = encodeParameters(abi, params);
 					expect(encodedBytes).toEqual(output);
-					const decodedBytes = decodeParameters(rwAbi, encodedBytes)
+					const decodedBytes = decodeParameters(rwAbi, encodedBytes);
 					expect(decodedBytes).toEqual(params);
 				},
 			);

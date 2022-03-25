@@ -1,5 +1,6 @@
 import { Web3Context } from 'web3-core';
 
+import { DEFAULT_RETURN_FORMAT } from 'web3-common';
 import * as rpcMethods from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sendTransaction } from '../../../src/rpc_method_wrappers';
@@ -33,7 +34,12 @@ describe('sendTransaction', () => {
 				'getTransactionGasPricing',
 			);
 
-			await sendTransaction(web3Context, inputTransaction, sendTransactionOptions);
+			await sendTransaction(
+				web3Context,
+				inputTransaction,
+				DEFAULT_RETURN_FORMAT,
+				sendTransactionOptions,
+			);
 
 			if (
 				sendTransactionOptions?.ignoreGasPricing ||
@@ -54,11 +60,12 @@ describe('sendTransaction', () => {
 			return new Promise(done => {
 				const formattedTransaction = formatTransaction(
 					inputTransaction,
-					web3Context.defaultReturnType,
+					DEFAULT_RETURN_FORMAT,
 				);
 				const promiEvent = sendTransaction(
 					web3Context,
 					inputTransaction,
+					DEFAULT_RETURN_FORMAT,
 					sendTransactionOptions,
 				);
 				promiEvent.on('sending', transaction => {
@@ -72,11 +79,13 @@ describe('sendTransaction', () => {
 	it.each(testData)(
 		`should call rpcMethods.sendTransaction with expected parameters\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions, __, ___) => {
-			const formattedTransaction = formatTransaction(
+			const formattedTransaction = formatTransaction(inputTransaction, DEFAULT_RETURN_FORMAT);
+			await sendTransaction(
+				web3Context,
 				inputTransaction,
-				web3Context.defaultReturnType,
+				DEFAULT_RETURN_FORMAT,
+				sendTransactionOptions,
 			);
-			await sendTransaction(web3Context, inputTransaction, sendTransactionOptions);
 			expect(rpcMethods.sendTransaction).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				formattedTransaction,
@@ -90,11 +99,12 @@ describe('sendTransaction', () => {
 			return new Promise(done => {
 				const formattedTransaction = formatTransaction(
 					inputTransaction,
-					web3Context.defaultReturnType,
+					DEFAULT_RETURN_FORMAT,
 				);
 				const promiEvent = sendTransaction(
 					web3Context,
 					inputTransaction,
+					DEFAULT_RETURN_FORMAT,
 					sendTransactionOptions,
 				);
 				promiEvent.on('sent', transaction => {
@@ -116,6 +126,7 @@ describe('sendTransaction', () => {
 				const promiEvent = sendTransaction(
 					web3Context,
 					inputTransaction,
+					DEFAULT_RETURN_FORMAT,
 					sendTransactionOptions,
 				);
 				promiEvent.on('transactionHash', transactionHash => {
@@ -133,7 +144,12 @@ describe('sendTransaction', () => {
 				expectedTransactionHash,
 			);
 
-			await sendTransaction(web3Context, inputTransaction, sendTransactionOptions);
+			await sendTransaction(
+				web3Context,
+				inputTransaction,
+				DEFAULT_RETURN_FORMAT,
+				sendTransactionOptions,
+			);
 			expect(rpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				expectedTransactionHash,
@@ -154,7 +170,12 @@ describe('sendTransaction', () => {
 			);
 			(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(null);
 
-			await sendTransaction(web3Context, inputTransaction, sendTransactionOptions);
+			await sendTransaction(
+				web3Context,
+				inputTransaction,
+				DEFAULT_RETURN_FORMAT,
+				sendTransactionOptions,
+			);
 
 			expect(rpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
 				web3Context.requestManager,
@@ -178,6 +199,7 @@ describe('sendTransaction', () => {
 				const promiEvent = sendTransaction(
 					web3Context,
 					inputTransaction,
+					DEFAULT_RETURN_FORMAT,
 					sendTransactionOptions,
 				);
 				promiEvent.on('receipt', receiptInfo => {
@@ -195,7 +217,12 @@ describe('sendTransaction', () => {
 				expectedReceiptInfo,
 			);
 			expect(
-				await sendTransaction(web3Context, inputTransaction, sendTransactionOptions),
+				await sendTransaction(
+					web3Context,
+					inputTransaction,
+					DEFAULT_RETURN_FORMAT,
+					sendTransactionOptions,
+				),
 			).toStrictEqual(expectedReceiptInfo);
 		},
 	);
@@ -224,6 +251,7 @@ describe('sendTransaction', () => {
 			const promiEvent = sendTransaction(
 				web3Context,
 				inputTransaction,
+				DEFAULT_RETURN_FORMAT,
 				sendTransactionOptions,
 			);
 			promiEvent.on('confirmation', () => undefined);

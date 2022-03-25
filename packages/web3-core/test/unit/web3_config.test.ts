@@ -1,4 +1,4 @@
-import { toHex, ValidTypes } from 'web3-utils';
+import { toHex } from 'web3-utils';
 import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
@@ -11,7 +11,6 @@ const defaultConfig = {
 	defaultNetworkId: null,
 	defaultCommon: null,
 	defaultHardfork: 'london',
-	defaultReturnType: ValidTypes.HexString,
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,

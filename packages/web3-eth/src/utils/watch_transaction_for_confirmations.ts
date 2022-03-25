@@ -6,14 +6,14 @@ import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '../errors';
-import { ReceiptInfoFormatted, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
+import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfoFormatted, PromiEventEventType>,
+	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 	transactionHash: HexString32Bytes,
 ) {

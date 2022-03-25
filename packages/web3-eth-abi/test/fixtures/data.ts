@@ -443,7 +443,7 @@ export const validDecodeParametersData: {
 		output: [
 			['34', '255'],
 			'0x324567fff0000000000000000000000000000000000000000000000000000000',
-		]
+		],
 	},
 	{
 		input: [

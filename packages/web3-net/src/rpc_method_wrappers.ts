@@ -1,31 +1,25 @@
+import { DataFormat, format } from 'web3-common';
 import { Web3Context } from 'web3-core';
-
-import { convertToValidType, ValidReturnTypes, ValidTypes } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import { Web3NetAPI } from './web3_net_api';
 
-export async function getId<ReturnType extends ValidTypes = ValidTypes.HexString>(
+export async function getId<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3NetAPI>,
-	returnType?: ReturnType,
+	returnFormat: ReturnFormat,
 ) {
 	const response = await rpcMethods.getId(web3Context.requestManager);
 
-	return convertToValidType(
-		response,
-		returnType ?? web3Context.defaultReturnType,
-	) as ValidReturnTypes[ReturnType];
+	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
 }
 
-export async function getPeerCount<ReturnType extends ValidTypes = ValidTypes.HexString>(
+export async function getPeerCount<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3NetAPI>,
-	returnType?: ReturnType,
+	returnFormat: ReturnFormat,
 ) {
 	const response = await rpcMethods.getPeerCount(web3Context.requestManager);
 
-	return convertToValidType(
-		response,
-		returnType ?? web3Context.defaultReturnType,
-	) as ValidReturnTypes[ReturnType];
+	// Data returned is number in hex format
+	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
 }
 
 export const isListening = async (web3Context: Web3Context<Web3NetAPI>) =>

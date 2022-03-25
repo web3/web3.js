@@ -1,12 +1,6 @@
+import { DEFAULT_RETURN_FORMAT } from 'web3-common';
 import { formatTransaction, Transaction } from 'web3-eth';
-import {
-	Address,
-	HexString,
-	isHexStrict,
-	toChecksumAddress,
-	utf8ToHex,
-	ValidTypes,
-} from 'web3-utils';
+import { Address, HexString, isHexStrict, toChecksumAddress, utf8ToHex } from 'web3-utils';
 import { validator } from 'web3-validator';
 import {
 	getAccounts as rpcGetAccounts,
@@ -67,7 +61,7 @@ export const sendTransaction = async (
 	tx: Transaction,
 	passphrase: string,
 ) => {
-	const formattedTx = formatTransaction(tx, ValidTypes.HexString);
+	const formattedTx = formatTransaction(tx, DEFAULT_RETURN_FORMAT);
 
 	return rpcSendTransaction(requestManager, formattedTx, passphrase);
 };
@@ -77,7 +71,7 @@ export const signTransaction = async (
 	tx: Transaction,
 	passphrase: string,
 ) => {
-	const formattedTx = formatTransaction(tx, ValidTypes.HexString);
+	const formattedTx = formatTransaction(tx, DEFAULT_RETURN_FORMAT);
 
 	return rpcSignTransaction(requestManager, formattedTx, passphrase);
 };
