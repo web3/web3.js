@@ -174,6 +174,7 @@ describe('sendTransaction', () => {
 				web3Context,
 				promiEvent,
 				expectedReceiptInfo,
+				expectedTransactionHash,
 			);
 		},
 	);
