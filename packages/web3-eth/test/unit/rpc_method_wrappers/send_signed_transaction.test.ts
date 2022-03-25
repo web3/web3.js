@@ -5,7 +5,7 @@ import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sendSignedTransaction } from '../../../src/rpc_method_wrappers';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
-import { testData } from './fixtures/sendSignedTransaction';
+import { testData } from './fixtures/send_signed_transaction';
 
 jest.mock('../../../src/rpc_methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');

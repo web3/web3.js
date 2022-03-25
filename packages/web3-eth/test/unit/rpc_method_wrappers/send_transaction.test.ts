@@ -7,7 +7,7 @@ import { formatTransaction } from '../../../src';
 import * as GetTransactionGasPricing from '../../../src/utils/get_transaction_gas_pricing';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
-import { testData } from './fixtures/sendTransaction';
+import { testData } from './fixtures/send_transaction';
 
 jest.mock('../../../src/rpc_methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');
