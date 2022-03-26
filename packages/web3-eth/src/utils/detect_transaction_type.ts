@@ -1,6 +1,6 @@
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, FormatType, format } from 'web3-common';
+import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, format } from 'web3-common';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
-import { Transaction } from '../types';
+import { InternalTransaction, Transaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
@@ -22,7 +22,7 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 };
 
 export const detectTransactionType = (
-	transaction: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>,
+	transaction: InternalTransaction,
 	web3Context?: Web3Context<EthExecutionAPI>,
 ) =>
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(
