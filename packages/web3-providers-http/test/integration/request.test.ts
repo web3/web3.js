@@ -27,7 +27,7 @@ describe('HttpProvider - implemented methods', () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
 			expect(
 				String(parseInt(String((response as JsonRpcResponseWithResult).result), 16)),
-			).toStrictEqual(toWei(accounts[0].balance, 'ether'));
+			).toEqual(toWei(accounts[0].balance, 'ether'));
 		});
 	});
 });

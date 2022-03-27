@@ -47,7 +47,7 @@ jobs:
             fail-fast: false
             matrix:
                 node: [ 14, 16 ]
-                testCmd: [ 'e2e_ganache', 'e2e_geth' ]
+                testCmd: [ 'e2e_ganache', 'e2e_geth', 'e2e_browsers' ]
         env:
             TEST_CMD: ${{ matrix.testCmd }}
         steps:
@@ -60,9 +60,11 @@ jobs:
             -   run: yarn
 
             -   if: (env.TEST_CMD == 'e2e_ganache')
-                run: yarn ganache-cli-background
+                run: yarn ganache-cli-background && yarn test:integration
 
             -   if: (env.TEST_CMD == 'e2e_geth')
-                run: yarn geth:build && yarn geth
+                run: yarn geth:build && yarn geth && yarn test:integration
 
-            - run: yarn test:integration
+            -   if: (env.TEST_CMD == 'e2e_browsers')
+                run: yarn ganache-cli-background && yarn test:integration:browsers
+

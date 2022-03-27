@@ -44,6 +44,7 @@
 		"test": "lerna run test --stream --parallel",
 		"test:unit": "lerna run test:unit --stream --parallel",
 		"test:integration": "lerna run test:integration --stream --parallel",
+		"test:integration:browsers": "cd packages/web3-providers-http && yarn test:integration:browsers",
 		"prepare": "husky install",
 		"postinstall": "yarn build"
 	},
