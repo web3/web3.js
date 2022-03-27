@@ -4,7 +4,7 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 } from 'web3-common';
-import { toWei } from 'web3-utils';
+import { toWei, hexToNumber } from 'web3-utils';
 import HttpProvider from '../../src/index';
 import { accounts, clientUrl } from '../fixtures/config';
 
@@ -26,7 +26,7 @@ describe('HttpProvider - implemented methods', () => {
 		it('should return expected response', async () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
 			expect(
-				String(parseInt(String((response as JsonRpcResponseWithResult).result), 16)),
+				String(hexToNumber(String((response as JsonRpcResponseWithResult).result))),
 			).toEqual(toWei(accounts[0].balance, 'ether'));
 		});
 	});
