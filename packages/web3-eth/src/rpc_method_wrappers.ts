@@ -332,15 +332,10 @@ export const sendSignedTransaction = (
 	transaction: HexStringBytes,
 ): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
 	// TODO - Promise returned in function argument where a void return was expected
-<<<<<<< HEAD
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
-=======
-	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
-		(async () => {
->>>>>>> 465218f53 (Possible solution without disabling linter for line)
 			promiEvent.emit('sending', transaction);
 
 			const transactionHash = await rpcMethods.sendRawTransaction(
@@ -363,19 +358,54 @@ export const sendSignedTransaction = (
 			promiEvent.emit('receipt', transactionReceipt);
 			// TODO - Format receipt
 			resolve(transactionReceipt);
+			const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents>(
+				resolve => {
+					setImmediate(() => {
+						(async () => {
+							promiEvent.emit('sending', transaction);
+
+							const transactionHash = await rpcMethods.sendRawTransaction(
+								web3Context.requestManager,
+								transaction,
+							);
+
+							promiEvent.emit('sent', transaction);
+							promiEvent.emit('transactionHash', transactionHash);
+
+							let transactionReceipt = await rpcMethods.getTransactionReceipt(
+								web3Context.requestManager,
+								transactionHash,
+							);
+
+							// Transaction hasn't been included in a block yet
+							if (transactionReceipt === null)
+								transactionReceipt = await waitForTransactionReceipt(
+									web3Context,
+									transactionHash,
+								);
+
+							promiEvent.emit('receipt', transactionReceipt);
+							// TODO - Format receipt
+							resolve(transactionReceipt);
+
+							watchTransactionForConfirmations<SendSignedTransactionEvents>(
+								web3Context,
+								promiEvent,
+								transactionReceipt,
+								transactionHash,
+							);
+						})() as unknown;
+					});
+				},
+			);
 
 			watchTransactionForConfirmations<SendSignedTransactionEvents>(
 				web3Context,
 				promiEvent,
 				transactionReceipt,
-<<<<<<< HEAD
 				transactionHash,
 			);
 		});
-=======
-			);
-		})() as unknown;
->>>>>>> 465218f53 (Possible solution without disabling linter for line)
 	});
 	return promiEvent;
 };
