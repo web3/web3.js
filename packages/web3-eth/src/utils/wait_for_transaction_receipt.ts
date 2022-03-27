@@ -11,29 +11,29 @@ export const waitForTransactionReceipt = async (
 ): Promise<ReceiptInfo> =>
 	new Promise(resolve => {
 		let transactionPollingDuration = 0;
-		// TODO - Promise returned in function argument where a void return was expected
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		const intervalId = setInterval(async () => {
-			transactionPollingDuration +=
-				web3Context.transactionReceiptPollingInterval ??
-				web3Context.transactionPollingInterval;
+		const intervalId = setInterval(() => {
+			(async () => {
+				transactionPollingDuration +=
+					web3Context.transactionReceiptPollingInterval ??
+					web3Context.transactionPollingInterval;
 
-			if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
-				clearInterval(intervalId);
-				throw new TransactionPollingTimeoutError({
-					numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+				if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
+					clearInterval(intervalId);
+					throw new TransactionPollingTimeoutError({
+						numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+						transactionHash,
+					});
+				}
+
+				const response = await getTransactionReceipt(
+					web3Context.requestManager,
 					transactionHash,
-				});
-			}
+				);
 
-			const response = await getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
-
-			if (response !== null) {
-				clearInterval(intervalId);
-				resolve(response);
-			}
+				if (response !== null) {
+					clearInterval(intervalId);
+					resolve(response);
+				}
+			})() as unknown;
 		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 	});

@@ -257,6 +257,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 	// @ts-expect-error Used to format receipt
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions,
+<<<<<<< HEAD
 ): PromiEvent<ReceiptInfo, SendTransactionEvents> {
 	let _transaction = formatTransaction(transaction, {
 		number: FMT_NUMBER.HEX,
@@ -279,48 +280,74 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 					})),
 				};
 			}
+=======
+): PromiEvent<ReceiptInfoFormatted, SendTransactionEvents> {
+	let _transaction = formatTransaction(transaction, ValidTypes.HexString);
+	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendTransactionEvents>(resolve => {
+		setImmediate(() => {
+			(async () => {
+				if (
+					!options?.ignoreGasPricing &&
+					transaction.gasPrice === undefined &&
+					(transaction.maxPriorityFeePerGas === undefined ||
+						transaction.maxFeePerGas === undefined)
+				) {
+					_transaction = {
+						..._transaction,
+						...(await getTransactionGasPricing(
+							_transaction,
+							web3Context,
+							ValidTypes.HexString,
+						)),
+					};
+				}
+>>>>>>> 93f4fe1ab (Add more changes)
 
-			if (promiEvent.listenerCount('sending') > 0) {
-				promiEvent.emit('sending', _transaction);
-			}
+				if (promiEvent.listenerCount('sending') > 0) {
+					promiEvent.emit('sending', _transaction);
+				}
 
-			// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
-			// https://github.com/ChainSafe/web3.js/blob/b32555cfeedde128c657dabbba201102f691f955/packages/web3-core-method/src/index.js#L720
+				// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
+				// https://github.com/ChainSafe/web3.js/blob/b32555cfeedde128c657dabbba201102f691f955/packages/web3-core-method/src/index.js#L720
 
-			const transactionHash = await rpcMethods.sendTransaction(
-				web3Context.requestManager,
-				_transaction,
-			);
+				const transactionHash = await rpcMethods.sendTransaction(
+					web3Context.requestManager,
+					_transaction,
+				);
 
-			if (promiEvent.listenerCount('sent') > 0) {
-				promiEvent.emit('sent', _transaction);
-			}
+				if (promiEvent.listenerCount('sent') > 0) {
+					promiEvent.emit('sent', _transaction);
+				}
 
-			if (promiEvent.listenerCount('transactionHash') > 0) {
-				promiEvent.emit('transactionHash', transactionHash);
-			}
+				if (promiEvent.listenerCount('transactionHash') > 0) {
+					promiEvent.emit('transactionHash', transactionHash);
+				}
 
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
-
-			// Transaction hasn't been included in a block yet
-			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
-
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
-
-			if (promiEvent.listenerCount('confirmation') > 0) {
-				watchTransactionForConfirmations<SendTransactionEvents>(
-					web3Context,
-					promiEvent,
-					transactionReceipt,
+				let transactionReceipt = await rpcMethods.getTransactionReceipt(
+					web3Context.requestManager,
 					transactionHash,
 				);
-			}
+
+				// Transaction hasn't been included in a block yet
+				if (transactionReceipt === null)
+					transactionReceipt = await waitForTransactionReceipt(
+						web3Context,
+						transactionHash,
+					);
+
+				promiEvent.emit('receipt', transactionReceipt);
+				// TODO - Format receipt
+				resolve(transactionReceipt);
+
+				if (promiEvent.listenerCount('confirmation') > 0) {
+					watchTransactionForConfirmations<SendTransactionEvents>(
+						web3Context,
+						promiEvent,
+						transactionReceipt,
+						transactionHash,
+					);
+				}
+			})() as unknown;
 		});
 	});
 
@@ -330,6 +357,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 export const sendSignedTransaction = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
+<<<<<<< HEAD
 ): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -337,6 +365,49 @@ export const sendSignedTransaction = (
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
 			promiEvent.emit('sending', transaction);
+=======
+): PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents> => {
+	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents>(
+		resolve => {
+			setImmediate(() => {
+				(async () => {
+					promiEvent.emit('sending', transaction);
+
+					const transactionHash = await rpcMethods.sendRawTransaction(
+						web3Context.requestManager,
+						transaction,
+					);
+
+					promiEvent.emit('sent', transaction);
+					promiEvent.emit('transactionHash', transactionHash);
+
+					let transactionReceipt = await rpcMethods.getTransactionReceipt(
+						web3Context.requestManager,
+						transactionHash,
+					);
+
+					// Transaction hasn't been included in a block yet
+					if (transactionReceipt === null)
+						transactionReceipt = await waitForTransactionReceipt(
+							web3Context,
+							transactionHash,
+						);
+
+					promiEvent.emit('receipt', transactionReceipt);
+					// TODO - Format receipt
+					resolve(transactionReceipt);
+
+					watchTransactionForConfirmations<SendSignedTransactionEvents>(
+						web3Context,
+						promiEvent,
+						transactionReceipt,
+						transactionHash,
+					);
+				})() as unknown;
+			});
+		},
+	);
+>>>>>>> 93f4fe1ab (Add more changes)
 
 			const transactionHash = await rpcMethods.sendRawTransaction(
 				web3Context.requestManager,
