@@ -13,6 +13,7 @@ const expectedReceiptInfo: ReceiptInfo = {
 	cumulativeGasUsed: '0x33bc', // 13244
 	effectiveGasPrice: '0x13a21bc946', // 84324108614
 	gasUsed: '0x4dc', // 1244
+	effectiveGasPrice: '0x4dc', // 1244
 	contractAddress: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
 	logs: [],
 	logsBloom: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
