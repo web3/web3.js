@@ -2,11 +2,11 @@ const path = require('path');
 const os = require('os');
 const { lstatSync, readdirSync } = require('fs');
 // get listing of packages in the mono repo
-const basePath = path.resolve(__dirname, '..');
+const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
 	return lstatSync(path.join(basePath, name)).isDirectory();
 });
-console.log('packages', packages);
+
 const webpackConfig = {
 	mode: 'development',
 	output: {
@@ -29,10 +29,11 @@ const webpackConfig = {
 	resolve: {
 		extensions: ['.ts', '.js'],
 		modules: [
-			path.join(__dirname, '..'),
-			...packages.map(packageName => path.join(__dirname, '..', packageName, 'node_modules')),
+			path.join(__dirname, 'packages'),
+			...packages.map(packageName =>
+				path.join(__dirname, 'packages', packageName, 'node_modules'),
+			),
 			path.join(__dirname, 'node_modules'),
-			path.join(__dirname, '..', '..', 'node_modules'),
 		],
 		fallback: {
 			crypto: require.resolve('crypto-browserify'),
@@ -74,12 +75,33 @@ module.exports = function (config) {
 		// list of files / patterns to load in the browser
 		// Here I'm including all of the the Jest tests which are all under the __tests__ directory.
 		// You may need to tweak this patter to find your test files/
-		files: [{ pattern: path.join('test', 'integration', '**', '*.ts') }],
+		files: [
+			{
+				pattern: path.join(
+					'packages',
+					'web3-providers-http',
+					'test',
+					'integration',
+					'**',
+					'*.ts',
+				),
+			},
+		],
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
+			// ...packages.reduce((obj,packageName) =>
+			//     path.join(__dirname, 'packages', packageName, 'node_modules'),
+			// ),
 			// Use webpack to bundle our tests files
-			[`${path.join('test', 'integration', '**', '*.ts')}`]: ['webpack'],
+			[`${path.join(
+				'packages',
+				'web3-providers-http',
+				'test',
+				'integration',
+				'**',
+				'*.ts',
+			)}`]: ['webpack'],
 		},
 		webpack: webpackConfig,
 	});

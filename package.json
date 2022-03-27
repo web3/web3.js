@@ -44,21 +44,31 @@
 		"test": "lerna run test --stream --parallel",
 		"test:unit": "lerna run test:unit --stream --parallel",
 		"test:integration": "lerna run test:integration --stream --parallel",
-		"test:integration:browsers": "cd packages/web3-providers-http && yarn test:integration:browsers",
+		"test:integration:browsers": "./node_modules/.bin/karma start karma.config.js",
 		"prepare": "husky install",
 		"postinstall": "yarn build"
 	},
 	"devDependencies": {
 		"@types/node": "*",
+		"buffer": "^6.0.3",
+		"crypto-browserify": "^3.12.0",
 		"eslint": "^8.3.0",
 		"husky": "^7.0.4",
+		"jasmine": "^4.0.2",
 		"jest": "^27.3.1",
+		"karma": "^6.3.17",
+		"karma-chrome-launcher": "^3.1.1",
+		"karma-jasmine": "^4.0.1",
+		"karma-webpack": "^5.0.0",
 		"lerna": "^4.0.0",
 		"lint-staged": "12.1.2",
 		"prettier": "^2.4.1",
+		"stream-browserify": "^3.0.0",
 		"ts-jest": "^27.0.7",
+		"ts-loader": "^9.2.8",
 		"ts-node": "^10.4.0",
-		"typescript": "^4.5.2"
+		"typescript": "^4.5.2",
+		"webpack": "^5.70.0"
 	},
 	"packageManager": "yarn@1.22.15"
 }
