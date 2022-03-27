@@ -132,7 +132,7 @@ export const formatOddHexstrings = (param: string): string =>
 /**
  * Handle some formatting of params for backwards compatibility with Ethers V4
  */
-export const formatParam = (type: string, _param: unknown): unknown => {
+export const formatParam = (type: string, _param: Readonlyunknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	const param = _param;
 	const paramTypeBytes = /^bytes([0-9]*)$/;

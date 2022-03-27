@@ -105,6 +105,7 @@ export const decodeParametersWith = (
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue = decodedValue === '0x' ? null : decodedValue;
 
+			// check if abi is an object
 			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
 				// the length of the abi object will always be 1
 				for (const j of Object.keys(abi)) {
