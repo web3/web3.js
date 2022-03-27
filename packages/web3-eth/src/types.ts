@@ -1,11 +1,4 @@
-import {
-	AccessList,
-	Log,
-	ReceiptInfo,
-	TransactionHash,
-	TransactionInfo,
-	Uncles,
-} from 'web3-common';
+import { AccessList, Log, TransactionHash, TransactionInfo, Uncles } from 'web3-common';
 import {
 	Address,
 	HexString,
@@ -263,22 +256,20 @@ export type SendTransactionEvents = {
 	sending: Transaction;
 	sent: Transaction;
 	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfo;
+	receipt: ReceiptInfoFormatted;
 	confirmation: {
 		confirmationNumber: number;
-		receipt: ReceiptInfo;
+		receipt: ReceiptInfoFormatted;
 		latestBlockHash: HexString32Bytes;
 	};
 };
 
-export type SendSignedTransactionEvents = {
+export interface SendTransactionOptions {
+	returnType?: ValidTypes;
+	ignoreGasPricing?: boolean;
+}
+
+export type SendSignedTransactionEvents = SendTransactionEvents & {
 	sending: HexStringBytes;
 	sent: HexStringBytes;
-	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfo;
-	confirmation: {
-		confirmationNumber: number;
-		receipt: ReceiptInfo;
-		latestBlockHash: HexString32Bytes;
-	};
 };

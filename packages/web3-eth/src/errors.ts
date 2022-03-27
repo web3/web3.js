@@ -260,9 +260,15 @@ export class TransactionPollingTimeoutError extends Web3Error {
 export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
-	public constructor(value: { receipt: ReceiptInfo; blockHash: HexString32Bytes }) {
+	public constructor(value: {
+		receipt: ReceiptInfo;
+		blockHash: HexString32Bytes;
+		transactionHash: HexString32Bytes;
+	}) {
 		super(
-			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${value.blockHash}`,
+			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${
+				value.blockHash
+			}, transactionHash: ${value.transactionHash}`,
 			`Receipt missing or blockHash null`,
 		);
 	}
