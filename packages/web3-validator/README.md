@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-validator` contains the ideal setup for a Web3.js package.
+`web3-validator` contains functions for validating objects.
 
 ###### Get it from the NPM Registry
 
@@ -83,10 +83,10 @@ The implementation of the validator is extension of [JSON-Schema-Draft07](https:
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
-[repo]: https://github.com/ethereum/web3.js
+[repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-validator
 [npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.org/packages/web3-package-tempalte
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-package-tempalte
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-package-tempalte
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-package-tempalte
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-package-tempalte
+[npm-url]: https://npmjs.com/package/web3-validator
+[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-validator
+[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-validator
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-validator
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-validator
