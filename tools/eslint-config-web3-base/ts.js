@@ -12,6 +12,7 @@ module.exports = {
 		'plugin:import/typescript',
 	],
 	rules: {
+		'check-header': ['error'],
 		'class-methods-use-this': ['error'],
 		'no-unused-expressions': ['error'],
 		'no-continue': 'off',
