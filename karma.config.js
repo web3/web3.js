@@ -6,6 +6,9 @@ const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
 	return lstatSync(path.join(basePath, name)).isDirectory();
 });
+const listOfTests = packages.map(packageName =>
+	path.join('packages', packageName, 'test', 'integration', '**', '*.ts'),
+);
 
 const webpackConfig = {
 	mode: 'development',
@@ -29,7 +32,6 @@ const webpackConfig = {
 	resolve: {
 		extensions: ['.ts', '.js'],
 		modules: [
-			path.join(__dirname, 'packages'),
 			...packages.map(packageName =>
 				path.join(__dirname, 'packages', packageName, 'node_modules'),
 			),
@@ -59,8 +61,13 @@ const webpackConfig = {
 };
 module.exports = function (config) {
 	config.set({
-		plugins: ['karma-webpack', 'karma-jasmine', 'karma-chrome-launcher'],
-		browsers: ['ChromeHeadless'],
+		plugins: [
+			'karma-webpack',
+			'karma-jasmine',
+			'karma-chrome-launcher',
+			'karma-firefox-launcher',
+		],
+		browsers: ['ChromeHeadless', 'FirefoxHeadless'],
 		// base path that will be used to resolve all patterns (eg. files, exclude)
 		basePath: '',
 		colors: true,
@@ -75,33 +82,15 @@ module.exports = function (config) {
 		// list of files / patterns to load in the browser
 		// Here I'm including all of the the Jest tests which are all under the __tests__ directory.
 		// You may need to tweak this patter to find your test files/
-		files: [
-			{
-				pattern: path.join(
-					'packages',
-					'web3-providers-http',
-					'test',
-					'integration',
-					'**',
-					'*.ts',
-				),
-			},
-		],
+		files: listOfTests,
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			// ...packages.reduce((obj,packageName) =>
-			//     path.join(__dirname, 'packages', packageName, 'node_modules'),
-			// ),
 			// Use webpack to bundle our tests files
-			[`${path.join(
-				'packages',
-				'web3-providers-http',
-				'test',
-				'integration',
-				'**',
-				'*.ts',
-			)}`]: ['webpack'],
+			...listOfTests.reduce(
+				(res, packagePath) => ({ ...res, [packagePath]: ['webpack'] }),
+				{},
+			),
 		},
 		webpack: webpackConfig,
 	});
