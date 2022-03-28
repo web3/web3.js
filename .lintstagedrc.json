@@ -1,5 +1,5 @@
 {
 	"*.js": ["prettier --write"],
-	"*.ts": ["prettier --write", "eslint"],
+	"*.ts": ["prettier --write", "eslint --rulesdir ./tools/eslint-config-web3-base/rules"],
 	"*.{json,md}": ["prettier --write"]
 }
