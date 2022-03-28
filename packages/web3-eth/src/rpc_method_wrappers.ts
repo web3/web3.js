@@ -257,9 +257,12 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 	// @ts-expect-error Used to format receipt
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions,
-): PromiEvent<ReceiptInfoFormatted, SendTransactionEvents> {
-	let _transaction = formatTransaction(transaction, ValidTypes.HexString);
-	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendTransactionEvents>(resolve => {
+): PromiEvent<ReceiptInfo, SendTransactionEvents> {
+	let _transaction = formatTransaction(transaction, {
+		number: FMT_NUMBER.HEX,
+		bytes: FMT_BYTES.HEX,
+	});
+	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
 		setImmediate(() => {
 			(async () => {
 				if (
@@ -270,11 +273,10 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 				) {
 					_transaction = {
 						..._transaction,
-						...(await getTransactionGasPricing(
-							_transaction,
-							web3Context,
-							ValidTypes.HexString,
-						)),
+						...(await getTransactionGasPricing(_transaction, web3Context, {
+							number: FMT_NUMBER.HEX,
+							bytes: FMT_BYTES.HEX,
+						})),
 					};
 				}
 
@@ -332,116 +334,43 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 export const sendSignedTransaction = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
-): PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents> => {
-	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents>(
-		resolve => {
-			setImmediate(() => {
-				(async () => {
-					promiEvent.emit('sending', transaction);
+): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
+	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
+		setImmediate(() => {
+			(async () => {
+				promiEvent.emit('sending', transaction);
 
-					const transactionHash = await rpcMethods.sendRawTransaction(
-						web3Context.requestManager,
-						transaction,
-					);
+				const transactionHash = await rpcMethods.sendRawTransaction(
+					web3Context.requestManager,
+					transaction,
+				);
 
-					promiEvent.emit('sent', transaction);
-					promiEvent.emit('transactionHash', transactionHash);
+				promiEvent.emit('sent', transaction);
+				promiEvent.emit('transactionHash', transactionHash);
 
-					let transactionReceipt = await rpcMethods.getTransactionReceipt(
-						web3Context.requestManager,
-						transactionHash,
-					);
+				let transactionReceipt = await rpcMethods.getTransactionReceipt(
+					web3Context.requestManager,
+					transactionHash,
+				);
 
-					// Transaction hasn't been included in a block yet
-					if (transactionReceipt === null)
-						transactionReceipt = await waitForTransactionReceipt(
-							web3Context,
-							transactionHash,
-						);
-
-					promiEvent.emit('receipt', transactionReceipt);
-					// TODO - Format receipt
-					resolve(transactionReceipt);
-
-					watchTransactionForConfirmations<SendSignedTransactionEvents>(
+				// Transaction hasn't been included in a block yet
+				if (transactionReceipt === null)
+					transactionReceipt = await waitForTransactionReceipt(
 						web3Context,
-						promiEvent,
-						transactionReceipt,
 						transactionHash,
 					);
-				})() as unknown;
-			});
-		},
-	);
->>>>>>> 93f4fe1ab (Add more changes)
 
-			const transactionHash = await rpcMethods.sendRawTransaction(
-				web3Context.requestManager,
-				transaction,
-			);
+				promiEvent.emit('receipt', transactionReceipt);
+				// TODO - Format receipt
+				resolve(transactionReceipt);
 
-			promiEvent.emit('sent', transaction);
-			promiEvent.emit('transactionHash', transactionHash);
-
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
-
-			// Transaction hasn't been included in a block yet
-			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
-
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
-			const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents>(
-				resolve => {
-					setImmediate(() => {
-						(async () => {
-							promiEvent.emit('sending', transaction);
-
-							const transactionHash = await rpcMethods.sendRawTransaction(
-								web3Context.requestManager,
-								transaction,
-							);
-
-							promiEvent.emit('sent', transaction);
-							promiEvent.emit('transactionHash', transactionHash);
-
-							let transactionReceipt = await rpcMethods.getTransactionReceipt(
-								web3Context.requestManager,
-								transactionHash,
-							);
-
-							// Transaction hasn't been included in a block yet
-							if (transactionReceipt === null)
-								transactionReceipt = await waitForTransactionReceipt(
-									web3Context,
-									transactionHash,
-								);
-
-							promiEvent.emit('receipt', transactionReceipt);
-							// TODO - Format receipt
-							resolve(transactionReceipt);
-
-							watchTransactionForConfirmations<SendSignedTransactionEvents>(
-								web3Context,
-								promiEvent,
-								transactionReceipt,
-								transactionHash,
-							);
-						})() as unknown;
-					});
-				},
-			);
-
-			watchTransactionForConfirmations<SendSignedTransactionEvents>(
-				web3Context,
-				promiEvent,
-				transactionReceipt,
-				transactionHash,
-			);
+				watchTransactionForConfirmations<SendSignedTransactionEvents>(
+					web3Context,
+					promiEvent,
+					transactionReceipt,
+					transactionHash,
+				);
+			})() as unknown;
 		});
 	});
 	return promiEvent;
