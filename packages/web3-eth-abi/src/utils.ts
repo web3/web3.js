@@ -124,17 +124,25 @@ export const mapTypes = (
 };
 
 /**
+ * returns true if input is a hexstring and is odd-lengthed
+ */
+export const isOddHexstring = (param: unknown): boolean =>
+	typeof param === 'string' && /^(-)?0x[0-9a-f]*$/i.test(param) && param.length % 2 === 1;
+
+/**
  * format odd-length bytes to even-length
  */
 export const formatOddHexstrings = (param: string): string =>
-	param.length % 2 === 1 ? `0x0${param.substring(2)}` : param;
+	isOddHexstring(param) ? `0x0${param.substring(2)}` : param;
 
 /**
  * Handle some formatting of params for backwards compatibility with Ethers V4
  */
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const param = _param;
+
+	// clone if _param is an object
+	const param = typeof _param === 'object' && !Array.isArray(_param) ? { ..._param } : _param;
 	const paramTypeBytes = /^bytes([0-9]*)$/;
 	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
 	const paramTypeNumber = /^(u?int)([0-9]*)$/;
