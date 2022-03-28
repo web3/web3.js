@@ -1,3 +1,5 @@
 dist
 jest.config.js
 .eslintrc.js
+rules
+lib
