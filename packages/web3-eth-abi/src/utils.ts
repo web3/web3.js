@@ -155,7 +155,8 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 
 	if (paramTypeBytesArray.exec(type) || paramTypeNumberArray.exec(type)) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return (param as Array<unknown>).map(p => formatParam(type.replace('[]', ''), p));
+		const paramClone = [...(param as Array<unknown>)];
+		return paramClone.map(p => formatParam(type.replace('[]', ''), p));
 	}
 
 	// Format correct width for u?int[0-9]*
