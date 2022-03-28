@@ -257,30 +257,6 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 	// @ts-expect-error Used to format receipt
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions,
-<<<<<<< HEAD
-): PromiEvent<ReceiptInfo, SendTransactionEvents> {
-	let _transaction = formatTransaction(transaction, {
-		number: FMT_NUMBER.HEX,
-		bytes: FMT_BYTES.HEX,
-	});
-	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		setImmediate(async () => {
-			if (
-				!options?.ignoreGasPricing &&
-				transaction.gasPrice === undefined &&
-				(transaction.maxPriorityFeePerGas === undefined ||
-					transaction.maxFeePerGas === undefined)
-			) {
-				_transaction = {
-					..._transaction,
-					...(await getTransactionGasPricing(_transaction, web3Context, {
-						number: FMT_NUMBER.HEX,
-						bytes: FMT_BYTES.HEX,
-					})),
-				};
-			}
-=======
 ): PromiEvent<ReceiptInfoFormatted, SendTransactionEvents> {
 	let _transaction = formatTransaction(transaction, ValidTypes.HexString);
 	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendTransactionEvents>(resolve => {
@@ -301,7 +277,6 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 						)),
 					};
 				}
->>>>>>> 93f4fe1ab (Add more changes)
 
 				if (promiEvent.listenerCount('sending') > 0) {
 					promiEvent.emit('sending', _transaction);
@@ -357,15 +332,6 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 export const sendSignedTransaction = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
-<<<<<<< HEAD
-): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
-	// TODO - Promise returned in function argument where a void return was expected
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		setImmediate(async () => {
-			promiEvent.emit('sending', transaction);
-=======
 ): PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents> => {
 	const promiEvent = new PromiEvent<ReceiptInfoFormatted, SendSignedTransactionEvents>(
 		resolve => {
