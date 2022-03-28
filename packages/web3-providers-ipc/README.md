@@ -12,7 +12,7 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-providers-ipc` contains the ideal setup for a Web3.js package.
+`web3-providers-ipc` contains the Web3.js provider for Inter Process Communication (IPC).
 
 ###### Get it from the NPM Registry
 

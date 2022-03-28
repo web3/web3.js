@@ -140,7 +140,7 @@ export interface Log {
 	readonly blockNumber?: Uint | null;
 	readonly address?: Address;
 	readonly data?: HexStringBytes;
-	readonly topics?: Topic[];
+	readonly topics?: null | Topic | Topic[];
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
@@ -254,8 +254,8 @@ export type EthExecutionAPI = {
 	eth_getWork: () => [HexString32Bytes, HexString32Bytes, HexString32Bytes];
 	eth_submitWork: (
 		nonce: HexString8Bytes,
-		seedHash: HexString32Bytes,
-		difficulty: HexString32Bytes,
+		hash: HexString32Bytes,
+		digest: HexString32Bytes,
 	) => boolean;
 	eth_submitHashrate: (hashRate: HexString32Bytes, id: HexString32Bytes) => boolean;
 
