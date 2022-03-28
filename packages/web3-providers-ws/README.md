@@ -44,10 +44,10 @@ yarn add web3-providers-ws
 | test:unit        | Uses `jest` to run tests under `/test/unit`        |
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
-[repo]: https://github.com/ethereum/web3.js
-[npm-image]: https://img.shields.io/npm/v/web3-core-method.svg
-[npm-url]: https://npmjs.org/packages/web3-package-tempalte
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-package-tempalte
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-package-tempalte
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-package-tempalte
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-package-tempalte
+[repo]: https://github.com/ChainSafe/web3.js/tree/4.x/packages/web3-providers-ws
+[npm-image]: https://img.shields.io/npm/v/web3-providers-ws-method.svg
+[npm-url]: https://npmjs.com/package/web3-providers-ws
+[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=tools/web3-providers-ws
+[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=tools/web3-providers-ws
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=tools/web3-providers-ws
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=tools/web3-providers-ws
