@@ -263,64 +263,68 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 		bytes: FMT_BYTES.HEX,
 	});
 	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		setImmediate(async () => {
-			if (
-				!options?.ignoreGasPricing &&
-				transaction.gasPrice === undefined &&
-				(transaction.maxPriorityFeePerGas === undefined ||
-					transaction.maxFeePerGas === undefined)
-			) {
-				_transaction = {
-					..._transaction,
-					...(await getTransactionGasPricing(_transaction, web3Context, {
-						number: FMT_NUMBER.HEX,
-						bytes: FMT_BYTES.HEX,
-					})),
-				};
-			}
+		setImmediate(() => {
+			(async () => {
+				if (
+					!options?.ignoreGasPricing &&
+					transaction.gasPrice === undefined &&
+					(transaction.maxPriorityFeePerGas === undefined ||
+						transaction.maxFeePerGas === undefined)
+				) {
+					_transaction = {
+						..._transaction,
+						...(await getTransactionGasPricing(_transaction, web3Context, {
+							number: FMT_NUMBER.HEX,
+							bytes: FMT_BYTES.HEX,
+						})),
+					};
+				}
 
-			if (promiEvent.listenerCount('sending') > 0) {
-				promiEvent.emit('sending', _transaction);
-			}
+				if (promiEvent.listenerCount('sending') > 0) {
+					promiEvent.emit('sending', _transaction);
+				}
 
-			// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
-			// https://github.com/ChainSafe/web3.js/blob/b32555cfeedde128c657dabbba201102f691f955/packages/web3-core-method/src/index.js#L720
+				// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
+				// https://github.com/ChainSafe/web3.js/blob/b32555cfeedde128c657dabbba201102f691f955/packages/web3-core-method/src/index.js#L720
 
-			const transactionHash = await rpcMethods.sendTransaction(
-				web3Context.requestManager,
-				_transaction,
-			);
+				const transactionHash = await rpcMethods.sendTransaction(
+					web3Context.requestManager,
+					_transaction,
+				);
 
-			if (promiEvent.listenerCount('sent') > 0) {
-				promiEvent.emit('sent', _transaction);
-			}
+				if (promiEvent.listenerCount('sent') > 0) {
+					promiEvent.emit('sent', _transaction);
+				}
 
-			if (promiEvent.listenerCount('transactionHash') > 0) {
-				promiEvent.emit('transactionHash', transactionHash);
-			}
+				if (promiEvent.listenerCount('transactionHash') > 0) {
+					promiEvent.emit('transactionHash', transactionHash);
+				}
 
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
-
-			// Transaction hasn't been included in a block yet
-			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
-
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
-
-			if (promiEvent.listenerCount('confirmation') > 0) {
-				watchTransactionForConfirmations<SendTransactionEvents>(
-					web3Context,
-					promiEvent,
-					transactionReceipt,
+				let transactionReceipt = await rpcMethods.getTransactionReceipt(
+					web3Context.requestManager,
 					transactionHash,
 				);
-			}
+
+				// Transaction hasn't been included in a block yet
+				if (transactionReceipt === null)
+					transactionReceipt = await waitForTransactionReceipt(
+						web3Context,
+						transactionHash,
+					);
+
+				promiEvent.emit('receipt', transactionReceipt);
+				// TODO - Format receipt
+				resolve(transactionReceipt);
+
+				if (promiEvent.listenerCount('confirmation') > 0) {
+					watchTransactionForConfirmations<SendTransactionEvents>(
+						web3Context,
+						promiEvent,
+						transactionReceipt,
+						transactionHash,
+					);
+				}
+			})() as unknown;
 		});
 	});
 
@@ -331,40 +335,42 @@ export const sendSignedTransaction = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: HexStringBytes,
 ): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
-	// TODO - Promise returned in function argument where a void return was expected
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
-		setImmediate(async () => {
-			promiEvent.emit('sending', transaction);
+		setImmediate(() => {
+			(async () => {
+				promiEvent.emit('sending', transaction);
 
-			const transactionHash = await rpcMethods.sendRawTransaction(
-				web3Context.requestManager,
-				transaction,
-			);
+				const transactionHash = await rpcMethods.sendRawTransaction(
+					web3Context.requestManager,
+					transaction,
+				);
 
-			promiEvent.emit('sent', transaction);
-			promiEvent.emit('transactionHash', transactionHash);
+				promiEvent.emit('sent', transaction);
+				promiEvent.emit('transactionHash', transactionHash);
 
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
-				transactionHash,
-			);
+				let transactionReceipt = await rpcMethods.getTransactionReceipt(
+					web3Context.requestManager,
+					transactionHash,
+				);
 
-			// Transaction hasn't been included in a block yet
-			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
+				// Transaction hasn't been included in a block yet
+				if (transactionReceipt === null)
+					transactionReceipt = await waitForTransactionReceipt(
+						web3Context,
+						transactionHash,
+					);
 
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
+				promiEvent.emit('receipt', transactionReceipt);
+				// TODO - Format receipt
+				resolve(transactionReceipt);
 
-			watchTransactionForConfirmations<SendSignedTransactionEvents>(
-				web3Context,
-				promiEvent,
-				transactionReceipt,
-				transactionHash,
-			);
+				watchTransactionForConfirmations<SendSignedTransactionEvents>(
+					web3Context,
+					promiEvent,
+					transactionReceipt,
+					transactionHash,
+				);
+			})() as unknown;
 		});
 	});
 
