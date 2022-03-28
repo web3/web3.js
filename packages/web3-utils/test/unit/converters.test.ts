@@ -41,6 +41,7 @@ import {
 	convertObjectPropertiesToValidType,
 	toChecksumAddress,
 } from '../../src/converters';
+
 import {
 	asciiToHexValidData,
 	bytesToHexInvalidData,
