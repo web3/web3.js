@@ -1339,6 +1339,7 @@ const receiptInfo: ReceiptInfo = {
 	logsBloom: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	root: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	status: '0x1',
+	effectiveGasPrice: '0x4dc4', // 19908
 };
 const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
 	...receiptInfo,
@@ -1347,6 +1348,7 @@ const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
 	cumulativeGasUsed: '13244',
 	gasUsed: '1244',
 	status: '1',
+	effectiveGasPrice: '19908',
 };
 const receiptInfoNumber: ReceiptInfoFormatted<ValidTypes.Number> = {
 	...receiptInfo,
@@ -1355,6 +1357,7 @@ const receiptInfoNumber: ReceiptInfoFormatted<ValidTypes.Number> = {
 	cumulativeGasUsed: 13244,
 	gasUsed: 1244,
 	status: 1,
+	effectiveGasPrice: 19908,
 };
 const receiptInfoBigInt: ReceiptInfoFormatted<ValidTypes.BigInt> = {
 	...receiptInfo,
@@ -1363,6 +1366,7 @@ const receiptInfoBigInt: ReceiptInfoFormatted<ValidTypes.BigInt> = {
 	cumulativeGasUsed: BigInt('13244'),
 	gasUsed: BigInt('1244'),
 	status: BigInt('1'),
+	effectiveGasPrice: BigInt('19908'),
 };
 /**
  * Array consists of:

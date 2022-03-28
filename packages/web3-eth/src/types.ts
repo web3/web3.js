@@ -205,6 +205,7 @@ export interface ReceiptInfoFormatted<
 	readonly logsBloom: HexString256Bytes;
 	readonly root: HexString32Bytes;
 	readonly status: ReturnType;
+	readonly effectiveGasPrice: ReturnType;
 }
 
 export interface BlockFormatted<

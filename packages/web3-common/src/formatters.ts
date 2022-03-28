@@ -358,6 +358,10 @@ export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): Receip
 		modifiedReceipt.logs = receipt.logs.map(outputLogFormatter);
 	}
 
+	if (receipt.effectiveGasPrice) {
+		modifiedReceipt.effectiveGasPrice = hexToNumber(receipt.effectiveGasPrice);
+	}
+
 	if (receipt.contractAddress) {
 		modifiedReceipt.contractAddress = toChecksumAddress(receipt.contractAddress);
 	}

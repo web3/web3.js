@@ -391,6 +391,20 @@ describe('formatters', () => {
 
 			expect(result.status).toBeFalsy();
 		});
+
+		it('should convert "effectiveGasPrice" from hex to number', () => {
+			const effectiveGasPrice = '0x80d9594d23495b';
+
+			const result = outputTransactionReceiptFormatter({
+				...validReceipt,
+				effectiveGasPrice,
+			});
+
+			expect(utils.hexToNumber).toHaveBeenCalledWith(effectiveGasPrice);
+			expect(result).toEqual(
+				expect.objectContaining({ effectiveGasPrice: hexToNumberResult }),
+			);
+		});
 	});
 
 	describe('outputBlockFormatter', () => {

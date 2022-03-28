@@ -174,6 +174,7 @@ export interface ReceiptInput {
 	readonly logs?: LogsInput[];
 	readonly contractAddress?: HexString;
 	readonly status?: string;
+	readonly effectiveGasPrice?: HexString;
 }
 
 export interface ReceiptOutput {
@@ -184,6 +185,7 @@ export interface ReceiptOutput {
 	readonly logs?: LogsOutput[];
 	readonly contractAddress?: HexString;
 	readonly status: boolean;
+	readonly effectiveGasPrice?: bigint | number;
 }
 
 export interface PostInput {

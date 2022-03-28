@@ -35,6 +35,7 @@ export const convertibleReceiptInfoProperties: (keyof ReceiptInfo)[] = [
 	'cumulativeGasUsed',
 	'gasUsed',
 	'status',
+	'effectiveGasPrice',
 ];
 
 export const convertibleFeeHistoryResultProperties: (keyof FeeHistoryResult)[] = [
