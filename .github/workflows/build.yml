@@ -27,13 +27,44 @@ jobs:
             - run: yarn lint
     unit:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [ 14, 16 ]
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: 14
+                  node-version: ${{ matrix.node }}
 
             - uses: actions/checkout@v2
 
             - run: yarn
 
             - run: yarn test:unit
+
+    e2e:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                node: [ 14, 16 ]
+                testCmd: [ 'e2e_ganache', 'e2e_geth', 'e2e_browsers' ]
+        env:
+            TEST_CMD: ${{ matrix.testCmd }}
+        steps:
+            -   uses: actions/setup-node@v1
+                with:
+                    node-version: ${{ matrix.node }}
+
+            -   uses: actions/checkout@v2
+
+            -   run: yarn
+
+            -   if: (env.TEST_CMD == 'e2e_ganache')
+                run: yarn ganache-background && yarn test:integration
+
+            -   if: (env.TEST_CMD == 'e2e_geth')
+                run: yarn geth:build && yarn geth && yarn test:integration
+
+            -   if: (env.TEST_CMD == 'e2e_browsers')
+                run: yarn ganache-background && yarn test:integration:browsers
+
