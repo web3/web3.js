@@ -1,4 +1,4 @@
-import { ErrorObject } from 'ajv';
+import { ErrorObject, JSONSchemaType } from 'ajv';
 import { AbiParameter } from './private_types';
 
 export { JSONSchemaType } from 'ajv';
@@ -63,3 +63,12 @@ export interface Filter {
 	readonly address?: string | string[];
 	readonly topics?: (string | string[] | null)[];
 }
+
+// To avoid circular dependency to avoid breaking changes in "web3-utils" package.
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+// In `JSONSchemaType` from `ajv` the `type` is required
+// We need to make it optional
+export type JsonSchema = Optional<JSONSchemaType<unknown>, 'type'> & {
+	readonly eth?: string;
+};

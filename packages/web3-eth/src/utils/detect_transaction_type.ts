@@ -1,13 +1,11 @@
-import { EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, format } from 'web3-common';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
-import { convertToValidType, HexString, ValidTypes } from 'web3-utils';
-import { Transaction } from '../types';
+import { InternalTransaction, Transaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 
-	if (tx.type !== undefined)
-		return convertToValidType(tx.type, ValidTypes.HexString) as HexString;
+	if (tx.type !== undefined) return format({ eth: 'uint' }, tx.type, DEFAULT_RETURN_FORMAT);
 
 	if (
 		tx.maxFeePerGas !== undefined ||
@@ -24,7 +22,7 @@ export const defaultTransactionTypeParser: TransactionTypeParser = transaction =
 };
 
 export const detectTransactionType = (
-	transaction: Transaction,
+	transaction: InternalTransaction,
 	web3Context?: Web3Context<EthExecutionAPI>,
 ) =>
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(

@@ -1,7 +1,10 @@
-import { ValidReturnTypes, ValidTypes } from 'web3-utils';
+import { FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-common';
 import { Transaction } from '../../src/types';
 
-export const hexStringTransaction: Transaction<ValidReturnTypes[ValidTypes.HexString]> = {
+export const hexStringTransaction: FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+> = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: '0x174876e800',
@@ -10,7 +13,7 @@ export const hexStringTransaction: Transaction<ValidReturnTypes[ValidTypes.HexSt
 	type: '0x0',
 	maxFeePerGas: '0x1229298c00',
 	maxPriorityFeePerGas: '0x49504f80',
-	data: '0x0',
+	data: '0x',
 	nonce: '0x4',
 	chain: 'mainnet',
 	hardfork: 'berlin',
@@ -30,7 +33,10 @@ export const hexStringTransaction: Transaction<ValidReturnTypes[ValidTypes.HexSt
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
 
-export const numberTransaction: Transaction<ValidReturnTypes[ValidTypes.Number]> = {
+export const numberTransaction: FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: 100000000000,
@@ -39,7 +45,7 @@ export const numberTransaction: Transaction<ValidReturnTypes[ValidTypes.Number]>
 	type: 0,
 	maxFeePerGas: 78000000000,
 	maxPriorityFeePerGas: 1230000000,
-	data: '0x0',
+	data: '0x',
 	nonce: 4,
 	chain: 'mainnet',
 	hardfork: 'berlin',
@@ -59,7 +65,10 @@ export const numberTransaction: Transaction<ValidReturnTypes[ValidTypes.Number]>
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
 
-export const numberStringTransaction: Transaction<ValidReturnTypes[ValidTypes.NumberString]> = {
+export const numberStringTransaction: FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: '100000000000',
@@ -68,7 +77,7 @@ export const numberStringTransaction: Transaction<ValidReturnTypes[ValidTypes.Nu
 	type: '0',
 	maxFeePerGas: '78000000000',
 	maxPriorityFeePerGas: '1230000000',
-	data: '0x0',
+	data: '0x',
 	nonce: '4',
 	chain: 'mainnet',
 	hardfork: 'berlin',
@@ -88,7 +97,10 @@ export const numberStringTransaction: Transaction<ValidReturnTypes[ValidTypes.Nu
 	s: '0x7e1941b264348e80c78c4027afc65a87b0a5e43e86742b8ca0823584c6788fd0',
 };
 
-export const bigIntTransaction: Transaction<ValidReturnTypes[ValidTypes.BigInt]> = {
+export const bigIntTransaction: FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: BigInt(100000000000),
@@ -97,7 +109,7 @@ export const bigIntTransaction: Transaction<ValidReturnTypes[ValidTypes.BigInt]>
 	type: BigInt(0),
 	maxFeePerGas: BigInt(78000000000),
 	maxPriorityFeePerGas: BigInt(1230000000),
-	data: '0x0',
+	data: '0x',
 	nonce: BigInt(4),
 	chain: 'mainnet',
 	hardfork: 'berlin',

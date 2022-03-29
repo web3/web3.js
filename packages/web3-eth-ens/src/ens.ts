@@ -7,6 +7,7 @@ import {
 	EthExecutionAPI,
 	ENSUnsupportedNetworkError,
 	ENSNetworkNotSyncedError,
+	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
 import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
@@ -215,7 +216,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
 		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
-			const block = await getBlock(this, 'latest');
+			const block = await getBlock(this, 'latest', false, DEFAULT_RETURN_FORMAT);
 			const headAge = BigInt(now) - BigInt(block.timestamp);
 
 			if (headAge > 3600) {
@@ -228,7 +229,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		const networkType = await getId(this); // get the network from provider
+		const networkType = await getId(this, DEFAULT_RETURN_FORMAT); // get the network from provider
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {

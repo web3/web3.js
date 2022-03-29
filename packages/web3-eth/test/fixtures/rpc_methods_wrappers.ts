@@ -1,15 +1,15 @@
 import {
-	Block,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
 	FeeHistoryResult,
 	FilterResults,
-	ReceiptInfo,
-	TransactionInfo,
+	FMT_BYTES,
+	FMT_NUMBER,
+	FormatType,
 	TransactionWithSender,
 } from 'web3-common';
 import {
 	HexString32Bytes,
-	ValidTypes,
-	ValidReturnTypes,
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
@@ -21,53 +21,40 @@ import {
 	HexString8Bytes,
 	Numbers,
 } from 'web3-utils';
-
 import {
-	AccountObjectFormatted,
-	BlockFormatted,
-	FeeHistoryResultFormatted,
-	ReceiptInfoFormatted,
-	TransactionInfoFormatted,
+	Block,
+	FeeHistory,
+	ReceiptInfo,
+	Transaction,
+	TransactionInfo,
+	AccountObject,
 } from '../../src/types';
-import { AccountObject } from '../../src/web3_eth_execution_api';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getHashRateValidData: [
-	ValidTypes | undefined,
-	ValidReturnTypes[ValidTypes],
-	ValidReturnTypes[ValidTypes],
-][] = [
+export const getHashRateValidData: [DataFormat | undefined, Numbers, Numbers][] = [
 	[undefined, '0x38a', '0x38a'],
-	[ValidTypes.HexString, '0x38a', '0x38a'],
-	[ValidTypes.NumberString, '0x38a', '906'],
-	[ValidTypes.Number, '0x38a', 906],
-	[ValidTypes.BigInt, '0x38a', BigInt('0x38a')],
+	[DEFAULT_RETURN_FORMAT, '0x38a', '0x38a'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x38a', '906'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x38a', 906],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }, '0x38a', BigInt('0x38a')],
 ];
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getGasPriceValidData: [
-	ValidTypes | undefined,
-	ValidReturnTypes[ValidTypes],
-	ValidReturnTypes[ValidTypes],
-][] = [
+export const getGasPriceValidData: [DataFormat | undefined, any, any][] = [
 	[undefined, '0x1dfd14000', '0x1dfd14000'],
-	[ValidTypes.HexString, '0x1dfd14000', '0x1dfd14000'],
-	[ValidTypes.NumberString, '0x1dfd14000', '8049999872'],
-	[ValidTypes.Number, '0x1dfd14000', 8049999872],
-	[ValidTypes.BigInt, '0x1dfd14000', BigInt('0x1dfd14000')],
+	[DEFAULT_RETURN_FORMAT, '0x1dfd14000', '0x1dfd14000'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x1dfd14000', '8049999872'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x1dfd14000', 8049999872],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }, '0x1dfd14000', BigInt('0x1dfd14000')],
 ];
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getBlockNumberValidData: [
-	ValidTypes | undefined,
-	ValidReturnTypes[ValidTypes],
-	ValidReturnTypes[ValidTypes],
-][] = [
+export const getBlockNumberValidData: [DataFormat | undefined, any, any][] = [
 	[undefined, '0x4b7', '0x4b7'],
-	[ValidTypes.HexString, '0x4b7', '0x4b7'],
-	[ValidTypes.NumberString, '0x4b7', '1207'],
-	[ValidTypes.Number, '0x4b7', 1207],
-	[ValidTypes.BigInt, '0x4b7', BigInt('0x4b7')],
+	[DEFAULT_RETURN_FORMAT, '0x4b7', '0x4b7'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x4b7', '1207'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x4b7', 1207],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }, '0x4b7', BigInt('0x4b7')],
 ];
 
 /**
@@ -78,10 +65,10 @@ export const getBlockNumberValidData: [
  * - expected output
  */
 export const getBalanceValidData: [
-	[Address, BlockNumberOrTag | undefined, ValidTypes | undefined],
-	ValidReturnTypes[ValidTypes],
+	[Address, BlockNumberOrTag | undefined, DataFormat | undefined],
+	any,
 	[Address, BlockNumberOrTag],
-	ValidReturnTypes[ValidTypes],
+	any,
 ][] = [
 	// All possible undefined values
 	[
@@ -109,130 +96,190 @@ export const getBalanceValidData: [
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
-	// Undefined blockNumber, returnType = ValidTypes.HexString
+	// Undefined blockNumber, returnType = DEFAULT_RETURN_FORMAT
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
-	// Defined blockNumber, returnType = ValidTypes.HexString
+	// Defined blockNumber, returnType = DEFAULT_RETURN_FORMAT
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'0xe8d4a51000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'0xe8d4a51000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7'],
 		'0xe8d4a51000',
 	],
-	// Undefined blockNumber, returnType = ValidTypes.NumberString
+	// Undefined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			undefined,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'1000000000000',
 	],
-	// Defined blockNumber, returnType = ValidTypes.NumberString
+	// Defined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'1000000000000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'1000000000000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'1000000000000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x4b7',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7'],
 		'1000000000000',
 	],
-	// Undefined blockNumber, returnType = ValidTypes.Number
+	// Undefined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			undefined,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		1000000000000,
 	],
-	// Defined blockNumber, returnType = ValidTypes.Number
+	// Defined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		1000000000000,
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		1000000000000,
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		1000000000000,
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x4b7',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7'],
 		1000000000000,
 	],
-	// Undefined blockNumber, returnType = ValidTypes.BigInt
+	// Undefined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			undefined,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		BigInt(1000000000000),
 	],
-	// Defined blockNumber, returnType = ValidTypes.BigInt
+	// Defined blockNumber, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		BigInt(1000000000000),
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		BigInt(1000000000000),
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		BigInt(1000000000000),
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			'0x4b7',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7'],
 		BigInt(1000000000000),
@@ -271,6 +318,7 @@ const block: Block = {
 	hash: '0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
 	baseFeePerGas: '0x13afe8b904',
 };
+
 const transactionInfo: TransactionInfo = {
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
 	blockNumber: '0x5daf3b',
@@ -292,9 +340,16 @@ const transactionInfo: TransactionInfo = {
 	chainId: '0x1',
 };
 const hydratedTransactions: TransactionInfo[] = [transactionInfo, transactionInfo, transactionInfo];
-const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
+
+const blockFormattedNumberString: FormatType<
+	Block,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
 	...block,
-	transactions: hydratedTransactions,
+	transactions: hydratedTransactions as FormatType<
+		TransactionInfo,
+		{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+	>[],
 	difficulty: '21109876668',
 	number: '436',
 	gasLimit: '5000',
@@ -305,33 +360,37 @@ const blockFormattedNumberString: BlockFormatted<ValidTypes.NumberString> = {
 	baseFeePerGas: '84555643140',
 	size: '544',
 };
-const blockFormattedNumber: BlockFormatted<ValidTypes.Number> = {
-	...block,
-	transactions: hydratedTransactions,
-	difficulty: 21109876668,
-	number: 436,
-	gasLimit: 5000,
-	gasUsed: 29978227,
-	timestamp: 1438271100,
-	nonce: 7534616740,
-	totalDifficulty: 8310116004413,
-	baseFeePerGas: 84555643140,
-	size: 544,
-};
-const blockFormattedBigInt: BlockFormatted<ValidTypes.BigInt> = {
-	...block,
-	transactions: hydratedTransactions,
-	// TODO Change this to TransactionInfoFormatted
-	difficulty: BigInt('21109876668'),
-	number: BigInt('436'),
-	gasLimit: BigInt('5000'),
-	gasUsed: BigInt('29978227'),
-	timestamp: BigInt('1438271100'),
-	nonce: BigInt('7534616740'),
-	totalDifficulty: BigInt('8310116004413'),
-	baseFeePerGas: BigInt('84555643140'),
-	size: BigInt('544'),
-};
+
+const blockFormattedNumber: FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }> =
+	{
+		...block,
+		transactions: hydratedTransactions,
+		difficulty: 21109876668,
+		number: 436,
+		gasLimit: 5000,
+		gasUsed: 29978227,
+		timestamp: 1438271100,
+		nonce: 7534616740,
+		totalDifficulty: 8310116004413,
+		baseFeePerGas: 84555643140,
+		size: 544,
+	};
+
+const blockFormattedBigInt: FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }> =
+	{
+		...block,
+		transactions: hydratedTransactions,
+		// TODO Change this to TransactionInfoFormatted
+		difficulty: BigInt('21109876668'),
+		number: BigInt('436'),
+		gasLimit: BigInt('5000'),
+		gasUsed: BigInt('29978227'),
+		timestamp: BigInt('1438271100'),
+		nonce: BigInt('7534616740'),
+		totalDifficulty: BigInt('8310116004413'),
+		baseFeePerGas: BigInt('84555643140'),
+		size: BigInt('544'),
+	};
 
 /**
  * Array consists of:
@@ -342,15 +401,15 @@ const blockFormattedBigInt: BlockFormatted<ValidTypes.BigInt> = {
  * - expected output
  */
 export const getBlockValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, boolean | undefined, ValidTypes | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, boolean | undefined, DataFormat | undefined],
 	Block,
 	'getBlockByHash' | 'getBlockByNumber',
 	[HexString32Bytes | BlockNumberOrTag, boolean],
 	(
-		| BlockFormatted
-		| BlockFormatted<ValidTypes.NumberString>
-		| BlockFormatted<ValidTypes.Number>
-		| BlockFormatted<ValidTypes.BigInt>
+		| Block
+		| FormatType<Block, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// All possible undefined values
@@ -359,7 +418,7 @@ export const getBlockValidData: [
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
-		block as BlockFormatted,
+		block,
 	],
 	// Defined block, undefined hydrated and returnType
 	[
@@ -371,28 +430,28 @@ export const getBlockValidData: [
 		block,
 		'getBlockByHash',
 		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', false],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.LATEST, undefined, undefined],
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.EARLIEST, undefined, undefined],
 		block,
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, false],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.PENDING, undefined, undefined],
 		block,
 		'getBlockByNumber',
 		[BlockTags.PENDING, false],
-		block as BlockFormatted,
+		block,
 	],
 	// Defined block, hydrated = true, and undefined returnType
 	[
@@ -406,7 +465,7 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
 	[
 		[BlockTags.EARLIEST, true, undefined],
@@ -419,7 +478,7 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
 	[
 		[BlockTags.PENDING, true, undefined],
@@ -432,7 +491,7 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
 	// Defined block, hydrated = false, and undefined returnType
 	[
@@ -440,25 +499,25 @@ export const getBlockValidData: [
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.EARLIEST, false, undefined],
 		block,
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, false],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.PENDING, false, undefined],
 		block,
 		'getBlockByNumber',
 		[BlockTags.PENDING, false],
-		block as BlockFormatted,
+		block,
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.HexString
+	// Defined block, hydrated = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
-		[BlockTags.LATEST, true, ValidTypes.HexString],
+		[BlockTags.LATEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -468,10 +527,10 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
 	[
-		[BlockTags.EARLIEST, true, ValidTypes.HexString],
+		[BlockTags.EARLIEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -481,10 +540,10 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
 	[
-		[BlockTags.PENDING, true, ValidTypes.HexString],
+		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -494,11 +553,11 @@ export const getBlockValidData: [
 		{
 			...block,
 			transactions: hydratedTransactions,
-		} as BlockFormatted,
+		},
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.NumberString
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[BlockTags.LATEST, true, ValidTypes.NumberString],
+		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -508,7 +567,7 @@ export const getBlockValidData: [
 		blockFormattedNumberString,
 	],
 	[
-		[BlockTags.EARLIEST, true, ValidTypes.NumberString],
+		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -518,7 +577,7 @@ export const getBlockValidData: [
 		blockFormattedNumberString,
 	],
 	[
-		[BlockTags.PENDING, true, ValidTypes.NumberString],
+		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -527,9 +586,9 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true],
 		blockFormattedNumberString,
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[BlockTags.LATEST, true, ValidTypes.Number],
+		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -539,7 +598,7 @@ export const getBlockValidData: [
 		blockFormattedNumber,
 	],
 	[
-		[BlockTags.EARLIEST, true, ValidTypes.Number],
+		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -549,7 +608,7 @@ export const getBlockValidData: [
 		blockFormattedNumber,
 	],
 	[
-		[BlockTags.PENDING, true, ValidTypes.Number],
+		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -558,9 +617,9 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true],
 		blockFormattedNumber,
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.BigInt
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[BlockTags.LATEST, true, ValidTypes.BigInt],
+		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -570,7 +629,7 @@ export const getBlockValidData: [
 		blockFormattedBigInt,
 	],
 	[
-		[BlockTags.EARLIEST, true, ValidTypes.BigInt],
+		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -580,7 +639,7 @@ export const getBlockValidData: [
 		blockFormattedBigInt,
 	],
 	[
-		[BlockTags.PENDING, true, ValidTypes.BigInt],
+		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
 			transactions: hydratedTransactions,
@@ -600,11 +659,11 @@ export const getBlockValidData: [
  * - expected output
  */
 export const getBlockTransactionCountValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, ValidTypes | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
 	HexString,
 	'getBlockTransactionCountByHash' | 'getBlockTransactionCountByNumber',
 	[HexString32Bytes | BlockNumberOrTag],
-	ValidReturnTypes[ValidTypes],
+	any,
 ][] = [
 	// All possible undefined values
 	[[undefined, undefined], '0xb', 'getBlockTransactionCountByNumber', [BlockTags.LATEST], '0xb'],
@@ -637,89 +696,89 @@ export const getBlockTransactionCountValidData: [
 		[BlockTags.PENDING],
 		'0xb',
 	],
-	// Defined block and returnType = ValidTypes.HexString
+	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
-		[BlockTags.LATEST, ValidTypes.HexString],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.LATEST],
 		'0xb',
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.HexString],
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.EARLIEST],
 		'0xb',
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.HexString],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.PENDING],
 		'0xb',
 	],
-	// Defined block and returnType = ValidTypes.NumberString
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[BlockTags.LATEST, ValidTypes.NumberString],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.LATEST],
 		'11',
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.NumberString],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.EARLIEST],
 		'11',
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.NumberString],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.PENDING],
 		'11',
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[BlockTags.LATEST, ValidTypes.Number],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.LATEST],
 		11,
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.Number],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.EARLIEST],
 		11,
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.Number],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.PENDING],
 		11,
 	],
-	// Defined block and returnType = ValidTypes.BigInt
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[BlockTags.LATEST, ValidTypes.BigInt],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.LATEST],
 		BigInt('0xb'),
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.BigInt],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.EARLIEST],
 		BigInt('0xb'),
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.BigInt],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.PENDING],
@@ -736,11 +795,11 @@ export const getBlockTransactionCountValidData: [
  * - expected output
  */
 export const getBlockUncleCountValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, ValidTypes | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
 	HexString,
 	'getUncleCountByBlockHash' | 'getUncleCountByBlockNumber',
 	[HexString32Bytes | BlockNumberOrTag],
-	ValidReturnTypes[ValidTypes],
+	any,
 ][] = [
 	// All possible undefined values
 	[[undefined, undefined], '0xb', 'getUncleCountByBlockNumber', [BlockTags.LATEST], '0xb'],
@@ -767,89 +826,89 @@ export const getBlockUncleCountValidData: [
 		[BlockTags.PENDING],
 		'0xb',
 	],
-	// Defined block and returnType = ValidTypes.HexString
+	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
-		[BlockTags.LATEST, ValidTypes.HexString],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.LATEST],
 		'0xb',
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.HexString],
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.EARLIEST],
 		'0xb',
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.HexString],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.PENDING],
 		'0xb',
 	],
-	// Defined block and returnType = ValidTypes.NumberString
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[BlockTags.LATEST, ValidTypes.NumberString],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.LATEST],
 		'11',
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.NumberString],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.EARLIEST],
 		'11',
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.NumberString],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.PENDING],
 		'11',
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[BlockTags.LATEST, ValidTypes.Number],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.LATEST],
 		11,
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.Number],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.EARLIEST],
 		11,
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.Number],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.PENDING],
 		11,
 	],
-	// Defined block and returnType = ValidTypes.BigInt
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[BlockTags.LATEST, ValidTypes.BigInt],
+		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.LATEST],
 		BigInt('0xb'),
 	],
 	[
-		[BlockTags.EARLIEST, ValidTypes.BigInt],
+		[BlockTags.EARLIEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.EARLIEST],
 		BigInt('0xb'),
 	],
 	[
-		[BlockTags.PENDING, ValidTypes.BigInt],
+		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.PENDING],
@@ -866,15 +925,15 @@ export const getBlockUncleCountValidData: [
  * - expected output
  */
 export const getUncleValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, ValidTypes | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat | undefined],
 	Block,
 	'getUncleByBlockHashAndIndex' | 'getUncleByBlockNumberAndIndex',
 	[HexString32Bytes | BlockNumberOrTag, Uint],
 	(
-		| BlockFormatted
-		| BlockFormatted<ValidTypes.NumberString>
-		| BlockFormatted<ValidTypes.Number>
-		| BlockFormatted<ValidTypes.BigInt>
+		| Block
+		| FormatType<Block, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// All possible undefined values
@@ -883,7 +942,7 @@ export const getUncleValidData: [
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
@@ -891,28 +950,28 @@ export const getUncleValidData: [
 		block,
 		'getUncleByBlockHashAndIndex',
 		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.LATEST, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
@@ -920,47 +979,47 @@ export const getUncleValidData: [
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
-	// Defined block, uncleIndex = true, and returnType = ValidTypes.HexString
+	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.HexString],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.HexString],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.HexString],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
-		block as BlockFormatted,
+		block,
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.NumberString
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.NumberString],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
@@ -970,7 +1029,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.NumberString],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
@@ -980,7 +1039,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.NumberString],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -989,9 +1048,9 @@ export const getUncleValidData: [
 			transactions: block.transactions,
 		},
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.Number
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.Number],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
@@ -1001,7 +1060,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.Number],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
@@ -1011,7 +1070,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.Number],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1020,9 +1079,9 @@ export const getUncleValidData: [
 			transactions: block.transactions,
 		},
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.BigInt
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.BigInt],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
@@ -1032,7 +1091,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.BigInt],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
@@ -1042,7 +1101,7 @@ export const getUncleValidData: [
 		},
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.BigInt],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1053,7 +1112,10 @@ export const getUncleValidData: [
 	],
 ];
 
-const transactionInfoNumberString: TransactionInfoFormatted<ValidTypes.NumberString> = {
+const transactionInfoNumberString: FormatType<
+	ReceiptInfo,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
 	...transactionInfo,
 	blockNumber: '6139707',
 	gas: '50000',
@@ -1067,7 +1129,10 @@ const transactionInfoNumberString: TransactionInfoFormatted<ValidTypes.NumberStr
 	maxPriorityFeePerGas: '2134000000',
 	chainId: '1',
 };
-const transactionInfoNumber: TransactionInfoFormatted<ValidTypes.Number> = {
+const transactionInfoNumber: FormatType<
+	ReceiptInfo,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
 	...transactionInfo,
 	blockNumber: 6139707,
 	gas: 50000,
@@ -1081,7 +1146,10 @@ const transactionInfoNumber: TransactionInfoFormatted<ValidTypes.Number> = {
 	maxPriorityFeePerGas: 2134000000,
 	chainId: 1,
 };
-const transactionInfoBigInt: TransactionInfoFormatted<ValidTypes.BigInt> = {
+const transactionInfoBigInt: FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
 	...transactionInfo,
 	blockNumber: BigInt('6139707'),
 	gas: BigInt('50000'),
@@ -1103,14 +1171,14 @@ const transactionInfoBigInt: TransactionInfoFormatted<ValidTypes.BigInt> = {
  * - expected output
  */
 export const getTransactionValidData: [
-	[HexString32Bytes, ValidTypes | undefined],
+	[HexString32Bytes, DataFormat | undefined],
 	TransactionInfo | null,
 	[HexString32Bytes],
 	(
-		| TransactionInfoFormatted
-		| TransactionInfoFormatted<ValidTypes.NumberString>
-		| TransactionInfoFormatted<ValidTypes.Number>
-		| TransactionInfoFormatted<ValidTypes.BigInt>
+		| TransactionInfo
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// Defined transactionHash, undefined returnType
@@ -1120,36 +1188,42 @@ export const getTransactionValidData: [
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		transactionInfo,
 	],
-	// Defined transactionHash and returnType = ValidTypes.HexString
+	// Defined transactionHash and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[
 			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		transactionInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		transactionInfo,
 	],
-	// Defined transactionHash and returnType = ValidTypes.NumberString
+	// Defined transactionHash and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
 		[
 			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		transactionInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		transactionInfoNumberString,
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.Number],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		transactionInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		transactionInfoNumber,
 	],
-	// Defined block and returnType = ValidTypes.BigInt
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.BigInt],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		transactionInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		transactionInfoBigInt,
@@ -1165,15 +1239,15 @@ export const getTransactionValidData: [
  * - expected output
  */
 export const getTransactionFromBlockValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, ValidTypes | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat | undefined],
 	TransactionInfo,
 	'getTransactionByBlockHashAndIndex' | 'getTransactionByBlockNumberAndIndex',
 	[HexString32Bytes | BlockNumberOrTag, Uint],
 	(
-		| TransactionInfoFormatted
-		| TransactionInfoFormatted<ValidTypes.NumberString>
-		| TransactionInfoFormatted<ValidTypes.Number>
-		| TransactionInfoFormatted<ValidTypes.BigInt>
+		| TransactionInfo
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<TransactionInfo, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// All possible undefined values
@@ -1235,89 +1309,89 @@ export const getTransactionFromBlockValidData: [
 		[BlockTags.PENDING, '0x0'],
 		transactionInfo,
 	],
-	// Defined block, uncleIndex = true, and returnType = ValidTypes.HexString
+	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.HexString],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.HexString],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.HexString],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
 		transactionInfo,
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.NumberString
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.NumberString],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfoNumberString,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.NumberString],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfoNumberString,
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.NumberString],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
 		transactionInfoNumberString,
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.Number
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.Number],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfoNumber,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.Number],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfoNumber,
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.Number],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
 		transactionInfoNumber,
 	],
-	// Defined block, uncleIndex = '0x0', and returnType = ValidTypes.BigInt
+	// Defined block, uncleIndex = '0x0', and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[BlockTags.LATEST, '0x0', ValidTypes.BigInt],
+		[BlockTags.LATEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfoBigInt,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', ValidTypes.BigInt],
+		[BlockTags.EARLIEST, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfoBigInt,
 	],
 	[
-		[BlockTags.PENDING, '0x0', ValidTypes.BigInt],
+		[BlockTags.PENDING, '0x0', { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1341,8 +1415,11 @@ const receiptInfo: ReceiptInfo = {
 	status: '0x1',
 	effectiveGasPrice: '0x4dc4', // 19908
 };
-const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
-	...receiptInfo,
+const receiptInfoNumberString: FormatType<
+	ReceiptInfo,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
+	...(receiptInfo as FormatType<ReceiptInfo, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>),
 	transactionIndex: '65',
 	blockNumber: '6139707',
 	cumulativeGasUsed: '13244',
@@ -1350,8 +1427,15 @@ const receiptInfoNumberString: ReceiptInfoFormatted<ValidTypes.NumberString> = {
 	status: '1',
 	effectiveGasPrice: '19908',
 };
-const receiptInfoNumber: ReceiptInfoFormatted<ValidTypes.Number> = {
-	...receiptInfo,
+
+const receiptInfoNumber: FormatType<
+	ReceiptInfo,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
+	...(receiptInfo as FormatType<
+		ReceiptInfo,
+		{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+	>),
 	transactionIndex: 65,
 	blockNumber: 6139707,
 	cumulativeGasUsed: 13244,
@@ -1359,8 +1443,15 @@ const receiptInfoNumber: ReceiptInfoFormatted<ValidTypes.Number> = {
 	status: 1,
 	effectiveGasPrice: 19908,
 };
-const receiptInfoBigInt: ReceiptInfoFormatted<ValidTypes.BigInt> = {
-	...receiptInfo,
+
+const receiptInfoBigInt: FormatType<
+	ReceiptInfo,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
+	...(receiptInfo as FormatType<
+		ReceiptInfo,
+		{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+	>),
 	transactionIndex: BigInt('65'),
 	blockNumber: BigInt('6139707'),
 	cumulativeGasUsed: BigInt('13244'),
@@ -1376,14 +1467,14 @@ const receiptInfoBigInt: ReceiptInfoFormatted<ValidTypes.BigInt> = {
  * - expected output
  */
 export const getTransactionReceiptValidData: [
-	[HexString32Bytes, ValidTypes | undefined],
+	[HexString32Bytes, DataFormat | undefined],
 	ReceiptInfo | null,
 	[HexString32Bytes],
 	(
-		| ReceiptInfoFormatted
-		| ReceiptInfoFormatted<ValidTypes.NumberString>
-		| ReceiptInfoFormatted<ValidTypes.Number>
-		| ReceiptInfoFormatted<ValidTypes.BigInt>
+		| ReceiptInfo
+		| FormatType<ReceiptInfo, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<ReceiptInfo, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<ReceiptInfo, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// Defined block, undefined returnType
@@ -1393,36 +1484,42 @@ export const getTransactionReceiptValidData: [
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfo,
 	],
-	// Defined block and returnType = ValidTypes.HexString
+	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[
 			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		receiptInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfo,
 	],
-	// Defined block and returnType = ValidTypes.NumberString
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
 		[
 			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		receiptInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfoNumberString,
 	],
-	// Defined block, hydrated = true, and returnType = ValidTypes.Number
+	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.Number],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		receiptInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfoNumber,
 	],
-	// Defined block and returnType = ValidTypes.BigInt
+	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', ValidTypes.BigInt],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		receiptInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfoBigInt,
@@ -1437,10 +1534,10 @@ export const getTransactionReceiptValidData: [
  * - expected output
  */
 export const getTransactionCountValidData: [
-	[Address, HexString32Bytes | BlockNumberOrTag | undefined, ValidTypes | undefined],
+	[Address, HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
 	string,
 	[Address, HexString32Bytes | BlockNumberOrTag],
-	ValidReturnTypes[ValidTypes],
+	any,
 ][] = [
 	// All possible undefined values
 	[
@@ -1500,78 +1597,114 @@ export const getTransactionCountValidData: [
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'0x42',
 	],
-	// Defined block, uncleIndex = true, and returnType = ValidTypes.HexString
+	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.HexString],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'0x42',
 	],
-	// Defined block, uncleIndex = and returnType = ValidTypes.NumberString
+	// Defined block, uncleIndex = and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'66',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'66',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.NumberString],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'66',
 	],
-	// Defined block, uncleIndex = and returnType = ValidTypes.Number
+	// Defined block, uncleIndex = and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		66,
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		66,
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.Number],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		66,
 	],
-	// Defined block, uncleIndex = and returnType = ValidTypes.BigInt
+	// Defined block, uncleIndex = and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		BigInt('0x42'),
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		BigInt('0x42'),
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, ValidTypes.BigInt],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		BigInt('0x42'),
@@ -1579,13 +1712,13 @@ export const getTransactionCountValidData: [
 ];
 
 // export const getPendingTransactionValidData: [
-// 	ValidTypes | undefined,
+// 	DataFormat | undefined,
 // 	TransactionInfo[],
 // 	(
 // 		| TransactionInfoFormatted
-// 		| TransactionInfoFormatted<ValidTypes.NumberString>
-// 		| TransactionInfoFormatted<ValidTypes.Number>
-// 		| TransactionInfoFormatted<ValidTypes.BigInt>
+// 		| TransactionInfoFormatted<{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}>
+// 		| TransactionInfoFormatted<{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}>
+// 		| TransactionInfoFormatted<{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}>
 // 	)[],
 // ][] = [
 // 	[
@@ -1594,22 +1727,22 @@ export const getTransactionCountValidData: [
 // 		[transactionInfo, transactionInfo, transactionInfo],
 // 	],
 // [
-// 	ValidTypes.HexString,
+// 	DEFAULT_RETURN_FORMAT,
 // 	[transactionInfo, transactionInfo, transactionInfo],
 // 	[transactionInfo, transactionInfo, transactionInfo],
 // ],
 // [
-// 	ValidTypes.Number,
+// 	{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER},
 // 	[transactionInfo, transactionInfo, transactionInfo],
 // 	[transactionInfoNumber, transactionInfoNumber, transactionInfoNumber],
 // ],
 // [
-// 	ValidTypes.NumberString,
+// 	{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR},
 // 	[transactionInfo, transactionInfo, transactionInfo],
 // 	[transactionInfoNumberString, transactionInfoNumberString, transactionInfoNumberString],
 // ],
 // [
-// 	ValidTypes.BigInt,
+// 	{...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT},
 // 	[transactionInfo, transactionInfo, transactionInfo],
 // 	[transactionInfoBigInt, transactionInfoBigInt, transactionInfoBigInt],
 // ],
@@ -1640,11 +1773,11 @@ export const estimateGasValidData: [
 	[
 		Partial<TransactionWithSender>,
 		HexString32Bytes | BlockNumberOrTag | undefined,
-		ValidTypes | undefined,
+		DataFormat | undefined,
 	],
 	string,
 	[Partial<TransactionWithSender>, HexString32Bytes | BlockNumberOrTag],
-	ValidReturnTypes[ValidTypes],
+	any,
 ][] = [
 	// All possible undefined values
 	[
@@ -1704,78 +1837,114 @@ export const estimateGasValidData: [
 		[transactionWithSender, BlockTags.PENDING],
 		'0x5208',
 	],
-	// Defined transaction and block number, returnType = ValidTypes.HexString
+	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
-		[transactionWithSender, BlockTags.LATEST, ValidTypes.HexString],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
 		[transactionWithSender, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
-		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.HexString],
+		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
 		[transactionWithSender, BlockTags.EARLIEST],
 		'0x5208',
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, ValidTypes.HexString],
+		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x5208',
 		[transactionWithSender, BlockTags.PENDING],
 		'0x5208',
 	],
-	// Defined transaction and block number, returnType = ValidTypes.NumberString
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		[transactionWithSender, BlockTags.LATEST, ValidTypes.NumberString],
+		[
+			transactionWithSender,
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.LATEST],
 		'21000',
 	],
 	[
-		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.NumberString],
+		[
+			transactionWithSender,
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.EARLIEST],
 		'21000',
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, ValidTypes.NumberString],
+		[
+			transactionWithSender,
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.PENDING],
 		'21000',
 	],
-	// Defined transaction and block number, returnType = ValidTypes.Number
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		[transactionWithSender, BlockTags.LATEST, ValidTypes.Number],
+		[
+			transactionWithSender,
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.LATEST],
 		21000,
 	],
 	[
-		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.Number],
+		[
+			transactionWithSender,
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.EARLIEST],
 		21000,
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, ValidTypes.Number],
+		[
+			transactionWithSender,
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.PENDING],
 		21000,
 	],
-	// Defined transaction and block number, returnType = ValidTypes.BigInt
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		[transactionWithSender, BlockTags.LATEST, ValidTypes.BigInt],
+		[
+			transactionWithSender,
+			BlockTags.LATEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.LATEST],
 		BigInt('0x5208'),
 	],
 	[
-		[transactionWithSender, BlockTags.EARLIEST, ValidTypes.BigInt],
+		[
+			transactionWithSender,
+			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.EARLIEST],
 		BigInt('0x5208'),
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, ValidTypes.BigInt],
+		[
+			transactionWithSender,
+			BlockTags.PENDING,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
 		'0x5208',
 		[transactionWithSender, BlockTags.PENDING],
 		BigInt('0x5208'),
@@ -1787,20 +1956,34 @@ const feeHistoryResult: FeeHistoryResult = {
 	baseFeePerGas: '0x9',
 	reward: [],
 };
-const feeHistoryResultNumberString: FeeHistoryResultFormatted<ValidTypes.NumberString> = {
+
+const feeHistoryResultNumberString: FormatType<
+	FeeHistory,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
 	...feeHistoryResult,
 	oldestBlock: '10684752',
 	baseFeePerGas: '9',
+	reward: [],
 };
-const feeHistoryResultNumber: FeeHistoryResultFormatted<ValidTypes.Number> = {
+
+const feeHistoryResultNumber: FormatType<
+	FeeHistory,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
 	...feeHistoryResult,
 	oldestBlock: 10684752,
 	baseFeePerGas: 9,
 };
-const feeHistoryResultBigInt: FeeHistoryResultFormatted<ValidTypes.BigInt> = {
+
+const feeHistoryResultBigInt: FormatType<
+	FeeHistory,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
 	...feeHistoryResult,
 	oldestBlock: BigInt('0xa30950'),
 	baseFeePerGas: BigInt('0x9'),
+	reward: [],
 };
 /**
  * Array consists of:
@@ -1810,14 +1993,14 @@ const feeHistoryResultBigInt: FeeHistoryResultFormatted<ValidTypes.BigInt> = {
  * - expected output
  */
 export const getFeeHistoryValidData: [
-	[Uint, HexString32Bytes | BlockNumberOrTag | undefined, number[], ValidTypes | undefined],
+	[Uint, HexString32Bytes | BlockNumberOrTag | undefined, number[], DataFormat | undefined],
 	FeeHistoryResult,
 	[Uint, HexString32Bytes | BlockNumberOrTag, number[]],
 	(
-		| FeeHistoryResultFormatted
-		| FeeHistoryResultFormatted<ValidTypes.NumberString>
-		| FeeHistoryResultFormatted<ValidTypes.Number>
-		| FeeHistoryResultFormatted<ValidTypes.BigInt>
+		| FeeHistory
+		| FormatType<FeeHistory, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<FeeHistory, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<FeeHistory, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// All possible undefined values
@@ -1876,78 +2059,78 @@ export const getFeeHistoryValidData: [
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResult,
 	],
-	// Defined transaction and block number, returnType = ValidTypes.HexString
+	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
-		['0x4', BlockTags.LATEST, [], ValidTypes.HexString],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], ValidTypes.HexString],
+		['0x4', BlockTags.EARLIEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], ValidTypes.HexString],
+		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResult,
 	],
-	// Defined transaction and block number, returnType = ValidTypes.NumberString
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
-		['0x4', BlockTags.LATEST, [], ValidTypes.NumberString],
+		['0x4', BlockTags.LATEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResultNumberString,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], ValidTypes.NumberString],
+		['0x4', BlockTags.EARLIEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResultNumberString,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], ValidTypes.NumberString],
+		['0x4', BlockTags.PENDING, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResultNumberString,
 	],
-	// Defined transaction and block number, returnType = ValidTypes.Number
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
-		['0x4', BlockTags.LATEST, [], ValidTypes.Number],
+		['0x4', BlockTags.LATEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResultNumber,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], ValidTypes.Number],
+		['0x4', BlockTags.EARLIEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResultNumber,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], ValidTypes.Number],
+		['0x4', BlockTags.PENDING, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResultNumber,
 	],
-	// Defined transaction and block number, returnType = ValidTypes.BigInt
+	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
-		['0x4', BlockTags.LATEST, [], ValidTypes.BigInt],
+		['0x4', BlockTags.LATEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResultBigInt,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], ValidTypes.BigInt],
+		['0x4', BlockTags.EARLIEST, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResultBigInt,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], ValidTypes.BigInt],
+		['0x4', BlockTags.PENDING, [], { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResultBigInt,
@@ -2223,7 +2406,10 @@ const accountObject: AccountObject = {
 		},
 	],
 };
-const accountObjectNumberString: AccountObjectFormatted<string> = {
+const accountObjectNumberString: FormatType<
+	AccountObject,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
 	accountProof: [
 		'0xf90211a090dcaf88c40c7bbc95a912cbdde67c175767b31173df9ee4b0d733bfdd511c43a0babe369f6b12092f49181ae04ca173fb68d1a5456f18d20fa32cba73954052bda0473ecf8a7e36a829e75039a3b055e51b8332cbf03324ab4af2066bbd6fbf0021a0bbda34753d7aa6c38e603f360244e8f59611921d9e1f128372fec0d586d4f9e0a04e44caecff45c9891f74f6a2156735886eedf6f1a733628ebc802ec79d844648a0a5f3f2f7542148c973977c8a1e154c4300fec92f755f7846f1b734d3ab1d90e7a0e823850f50bf72baae9d1733a36a444ab65d0a6faaba404f0583ce0ca4dad92da0f7a00cbe7d4b30b11faea3ae61b7f1f2b315b61d9f6bd68bfe587ad0eeceb721a07117ef9fc932f1a88e908eaead8565c19b5645dc9e5b1b6e841c5edbdfd71681a069eb2de283f32c11f859d7bcf93da23990d3e662935ed4d6b39ce3673ec84472a0203d26456312bbc4da5cd293b75b840fc5045e493d6f904d180823ec22bfed8ea09287b5c21f2254af4e64fca76acc5cd87399c7f1ede818db4326c98ce2dc2208a06fc2d754e304c48ce6a517753c62b1a9c1d5925b89707486d7fc08919e0a94eca07b1c54f15e299bd58bdfef9741538c7828b5d7d11a489f9c20d052b3471df475a051f9dd3739a927c89e357580a4c97b40234aa01ed3d5e0390dc982a7975880a0a089d613f26159af43616fd9455bb461f4869bfede26f2130835ed067a8b967bfb80',
 		'0xf90211a0395d87a95873cd98c21cf1df9421af03f7247880a2554e20738eec2c7507a494a0bcf6546339a1e7e14eb8fb572a968d217d2a0d1f3bc4257b22ef5333e9e4433ca012ae12498af8b2752c99efce07f3feef8ec910493be749acd63822c3558e6671a0dbf51303afdc36fc0c2d68a9bb05dab4f4917e7531e4a37ab0a153472d1b86e2a0ae90b50f067d9a2244e3d975233c0a0558c39ee152969f6678790abf773a9621a01d65cd682cc1be7c5e38d8da5c942e0a73eeaef10f387340a40a106699d494c3a06163b53d956c55544390c13634ea9aa75309f4fd866f312586942daf0f60fb37a058a52c1e858b1382a8893eb9c1f111f266eb9e21e6137aff0dddea243a567000a037b4b100761e02de63ea5f1fcfcf43e81a372dafb4419d126342136d329b7a7ba032472415864b08f808ba4374092003c8d7c40a9f7f9fe9cc8291f62538e1cc14a074e238ff5ec96b810364515551344100138916594d6af966170ff326a092fab0a0d31ac4eef14a79845200a496662e92186ca8b55e29ed0f9f59dbc6b521b116fea090607784fe738458b63c1942bba7c0321ae77e18df4961b2bc66727ea996464ea078f757653c1b63f72aff3dcc3f2a2e4c8cb4a9d36d1117c742833c84e20de994a0f78407de07f4b4cb4f899dfb95eedeb4049aeb5fc1635d65cf2f2f4dfd25d1d7a0862037513ba9d45354dd3e36264aceb2b862ac79d2050f14c95657e43a51b85c80',
@@ -2247,7 +2433,10 @@ const accountObjectNumberString: AccountObjectFormatted<string> = {
 		},
 	],
 };
-const accountObjectNumber: AccountObjectFormatted<number> = {
+const accountObjectNumber: FormatType<
+	AccountObject,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
 	accountProof: [
 		'0xf90211a090dcaf88c40c7bbc95a912cbdde67c175767b31173df9ee4b0d733bfdd511c43a0babe369f6b12092f49181ae04ca173fb68d1a5456f18d20fa32cba73954052bda0473ecf8a7e36a829e75039a3b055e51b8332cbf03324ab4af2066bbd6fbf0021a0bbda34753d7aa6c38e603f360244e8f59611921d9e1f128372fec0d586d4f9e0a04e44caecff45c9891f74f6a2156735886eedf6f1a733628ebc802ec79d844648a0a5f3f2f7542148c973977c8a1e154c4300fec92f755f7846f1b734d3ab1d90e7a0e823850f50bf72baae9d1733a36a444ab65d0a6faaba404f0583ce0ca4dad92da0f7a00cbe7d4b30b11faea3ae61b7f1f2b315b61d9f6bd68bfe587ad0eeceb721a07117ef9fc932f1a88e908eaead8565c19b5645dc9e5b1b6e841c5edbdfd71681a069eb2de283f32c11f859d7bcf93da23990d3e662935ed4d6b39ce3673ec84472a0203d26456312bbc4da5cd293b75b840fc5045e493d6f904d180823ec22bfed8ea09287b5c21f2254af4e64fca76acc5cd87399c7f1ede818db4326c98ce2dc2208a06fc2d754e304c48ce6a517753c62b1a9c1d5925b89707486d7fc08919e0a94eca07b1c54f15e299bd58bdfef9741538c7828b5d7d11a489f9c20d052b3471df475a051f9dd3739a927c89e357580a4c97b40234aa01ed3d5e0390dc982a7975880a0a089d613f26159af43616fd9455bb461f4869bfede26f2130835ed067a8b967bfb80',
 		'0xf90211a0395d87a95873cd98c21cf1df9421af03f7247880a2554e20738eec2c7507a494a0bcf6546339a1e7e14eb8fb572a968d217d2a0d1f3bc4257b22ef5333e9e4433ca012ae12498af8b2752c99efce07f3feef8ec910493be749acd63822c3558e6671a0dbf51303afdc36fc0c2d68a9bb05dab4f4917e7531e4a37ab0a153472d1b86e2a0ae90b50f067d9a2244e3d975233c0a0558c39ee152969f6678790abf773a9621a01d65cd682cc1be7c5e38d8da5c942e0a73eeaef10f387340a40a106699d494c3a06163b53d956c55544390c13634ea9aa75309f4fd866f312586942daf0f60fb37a058a52c1e858b1382a8893eb9c1f111f266eb9e21e6137aff0dddea243a567000a037b4b100761e02de63ea5f1fcfcf43e81a372dafb4419d126342136d329b7a7ba032472415864b08f808ba4374092003c8d7c40a9f7f9fe9cc8291f62538e1cc14a074e238ff5ec96b810364515551344100138916594d6af966170ff326a092fab0a0d31ac4eef14a79845200a496662e92186ca8b55e29ed0f9f59dbc6b521b116fea090607784fe738458b63c1942bba7c0321ae77e18df4961b2bc66727ea996464ea078f757653c1b63f72aff3dcc3f2a2e4c8cb4a9d36d1117c742833c84e20de994a0f78407de07f4b4cb4f899dfb95eedeb4049aeb5fc1635d65cf2f2f4dfd25d1d7a0862037513ba9d45354dd3e36264aceb2b862ac79d2050f14c95657e43a51b85c80',
@@ -2271,7 +2460,10 @@ const accountObjectNumber: AccountObjectFormatted<number> = {
 		},
 	],
 };
-const accountObjectBigInt: AccountObjectFormatted<bigint> = {
+const accountObjectBigInt: FormatType<
+	AccountObject,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
 	accountProof: [
 		'0xf90211a090dcaf88c40c7bbc95a912cbdde67c175767b31173df9ee4b0d733bfdd511c43a0babe369f6b12092f49181ae04ca173fb68d1a5456f18d20fa32cba73954052bda0473ecf8a7e36a829e75039a3b055e51b8332cbf03324ab4af2066bbd6fbf0021a0bbda34753d7aa6c38e603f360244e8f59611921d9e1f128372fec0d586d4f9e0a04e44caecff45c9891f74f6a2156735886eedf6f1a733628ebc802ec79d844648a0a5f3f2f7542148c973977c8a1e154c4300fec92f755f7846f1b734d3ab1d90e7a0e823850f50bf72baae9d1733a36a444ab65d0a6faaba404f0583ce0ca4dad92da0f7a00cbe7d4b30b11faea3ae61b7f1f2b315b61d9f6bd68bfe587ad0eeceb721a07117ef9fc932f1a88e908eaead8565c19b5645dc9e5b1b6e841c5edbdfd71681a069eb2de283f32c11f859d7bcf93da23990d3e662935ed4d6b39ce3673ec84472a0203d26456312bbc4da5cd293b75b840fc5045e493d6f904d180823ec22bfed8ea09287b5c21f2254af4e64fca76acc5cd87399c7f1ede818db4326c98ce2dc2208a06fc2d754e304c48ce6a517753c62b1a9c1d5925b89707486d7fc08919e0a94eca07b1c54f15e299bd58bdfef9741538c7828b5d7d11a489f9c20d052b3471df475a051f9dd3739a927c89e357580a4c97b40234aa01ed3d5e0390dc982a7975880a0a089d613f26159af43616fd9455bb461f4869bfede26f2130835ed067a8b967bfb80',
 		'0xf90211a0395d87a95873cd98c21cf1df9421af03f7247880a2554e20738eec2c7507a494a0bcf6546339a1e7e14eb8fb572a968d217d2a0d1f3bc4257b22ef5333e9e4433ca012ae12498af8b2752c99efce07f3feef8ec910493be749acd63822c3558e6671a0dbf51303afdc36fc0c2d68a9bb05dab4f4917e7531e4a37ab0a153472d1b86e2a0ae90b50f067d9a2244e3d975233c0a0558c39ee152969f6678790abf773a9621a01d65cd682cc1be7c5e38d8da5c942e0a73eeaef10f387340a40a106699d494c3a06163b53d956c55544390c13634ea9aa75309f4fd866f312586942daf0f60fb37a058a52c1e858b1382a8893eb9c1f111f266eb9e21e6137aff0dddea243a567000a037b4b100761e02de63ea5f1fcfcf43e81a372dafb4419d126342136d329b7a7ba032472415864b08f808ba4374092003c8d7c40a9f7f9fe9cc8291f62538e1cc14a074e238ff5ec96b810364515551344100138916594d6af966170ff326a092fab0a0d31ac4eef14a79845200a496662e92186ca8b55e29ed0f9f59dbc6b521b116fea090607784fe738458b63c1942bba7c0321ae77e18df4961b2bc66727ea996464ea078f757653c1b63f72aff3dcc3f2a2e4c8cb4a9d36d1117c742833c84e20de994a0f78407de07f4b4cb4f899dfb95eedeb4049aeb5fc1635d65cf2f2f4dfd25d1d7a0862037513ba9d45354dd3e36264aceb2b862ac79d2050f14c95657e43a51b85c80',
@@ -2303,14 +2495,14 @@ const accountObjectBigInt: AccountObjectFormatted<bigint> = {
  * - expected output
  */
 export const getProofValidData: [
-	[Address, HexString32Bytes, BlockNumberOrTag | undefined, ValidTypes | undefined],
+	[Address, HexString32Bytes, BlockNumberOrTag | undefined, DataFormat | undefined],
 	AccountObject,
 	[Address, HexString32Bytes, BlockNumberOrTag],
 	(
 		| AccountObject
-		| AccountObjectFormatted<string>
-		| AccountObjectFormatted<number>
-		| AccountObjectFormatted<bigint>
+		| FormatType<AccountObject, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>
+		| FormatType<AccountObject, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>
+		| FormatType<AccountObject, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
 	// All possible undefined values
@@ -2390,13 +2582,13 @@ export const getProofValidData: [
 		],
 		accountObject,
 	],
-	// Defined block number, returnType = ValidTypes.HexString
+	// Defined block number, returnType = DEFAULT_RETURN_FORMAT
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2411,7 +2603,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2426,7 +2618,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2441,7 +2633,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			ValidTypes.HexString,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2451,13 +2643,13 @@ export const getProofValidData: [
 		],
 		accountObject,
 	],
-	// Defined block number, returnType = ValidTypes.NumberString
+	// Defined block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		accountObject,
 		[
@@ -2472,7 +2664,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		accountObject,
 		[
@@ -2487,7 +2679,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		accountObject,
 		[
@@ -2502,7 +2694,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			ValidTypes.NumberString,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		accountObject,
 		[
@@ -2512,13 +2704,13 @@ export const getProofValidData: [
 		],
 		accountObjectNumberString,
 	],
-	// Defined block number, returnType = ValidTypes.Number
+	// Defined block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			ValidTypes.Number,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		accountObject,
 		[
@@ -2533,7 +2725,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			ValidTypes.Number,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		accountObject,
 		[
@@ -2548,7 +2740,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			ValidTypes.Number,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		accountObject,
 		[
@@ -2563,7 +2755,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			ValidTypes.Number,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		accountObject,
 		[
@@ -2573,13 +2765,13 @@ export const getProofValidData: [
 		],
 		accountObjectNumber,
 	],
-	// Defined block number, returnType = ValidTypes.BigInt
+	// Defined block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			ValidTypes.BigInt,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		accountObject,
 		[
@@ -2594,7 +2786,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			ValidTypes.BigInt,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		accountObject,
 		[
@@ -2609,7 +2801,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			ValidTypes.BigInt,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		accountObject,
 		[
@@ -2624,7 +2816,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			ValidTypes.BigInt,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		accountObject,
 		[
@@ -2636,10 +2828,10 @@ export const getProofValidData: [
 	],
 ];
 
-export const getChainIdValidData: [ValidTypes | undefined, Uint, Numbers][] = [
+export const getChainIdValidData: [DataFormat | undefined, Uint, Numbers][] = [
 	[undefined, '0x3d', '0x3d'],
-	[ValidTypes.HexString, '0x3d', '0x3d'],
-	[ValidTypes.Number, '0x3d', 61],
-	[ValidTypes.NumberString, '0x3d', '61'],
-	[ValidTypes.BigInt, '0x3d', BigInt('0x3d')],
+	[DEFAULT_RETURN_FORMAT, '0x3d', '0x3d'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x3d', 61],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x3d', '61'],
+	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }, '0x3d', BigInt('0x3d')],
 ];

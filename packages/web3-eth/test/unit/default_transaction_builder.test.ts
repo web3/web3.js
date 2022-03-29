@@ -94,20 +94,12 @@ describe('defaultTransactionBuilder', () => {
 	let getTransactionCountSpy: jest.SpyInstance;
 
 	beforeEach(() => {
-		// @ts-expect-error - Mocked implementation doesn't have correct method signature
-		// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-		jest.spyOn(rpcMethods, 'getBlockByNumber').mockImplementation(() => mockBlockData);
+		jest.spyOn(rpcMethods, 'getBlockByNumber').mockResolvedValue(mockBlockData);
 		getTransactionCountSpy = jest
 			.spyOn(rpcMethods, 'getTransactionCount')
-			// @ts-expect-error - Mocked implementation doesn't have correct method signature
-			// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-			.mockImplementation(() => expectedNonce);
-		// @ts-expect-error - Mocked implementation doesn't have correct method signature
-		// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-		jest.spyOn(rpcMethods, 'getGasPrice').mockImplementation(() => expectedGasPrice);
-		// @ts-expect-error - Mocked implementation doesn't have correct method signature
-		// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-		jest.spyOn(rpcMethods, 'getChainId').mockImplementation(() => expectedChainId);
+			.mockResolvedValue(expectedNonce);
+		jest.spyOn(rpcMethods, 'getGasPrice').mockResolvedValue(expectedGasPrice);
+		jest.spyOn(rpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
 
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
