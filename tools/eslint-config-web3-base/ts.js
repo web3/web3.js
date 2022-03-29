@@ -14,8 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-const path = require('path');
-
 module.exports = {
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],
@@ -30,7 +28,7 @@ module.exports = {
 		'plugin:import/typescript',
 	],
 	rules: {
-		'check-header': ['error', path.join(__dirname, '../../LICENSE')],
+		'check-header': ['error'],
 		'class-methods-use-this': ['error'],
 		'no-unused-expressions': ['error'],
 		'no-continue': 'off',

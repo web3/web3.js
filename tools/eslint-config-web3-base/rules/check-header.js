@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 function cleanComment(node) {
 	let comment = node.value;
@@ -21,10 +22,10 @@ module.exports = {
 	},
 	create(context) {
 		// const copyright = context.options[1];
-		const { options } = context;
-		const [path] = options;
-		const copyrightRaw = readLicenseFile(path).trim();
-		// console.log('**', copyrightRaw);
+		// const { options } = context;
+		// const [path] = options;
+		const copyrightRaw = readLicenseFile(path.join(__dirname, '../../../LICENSE')).trim();
+		// , path.join(__dirname, './LICENSE')]
 		const copyright = copyrightRaw
 			.replace(/^\s*\*\s?/gm, '')
 			.replace(/\s+/g, ' ')
@@ -36,8 +37,16 @@ module.exports = {
 		return {
 			Program(node) {
 				const comments = context.getAllComments().map(cleanComment);
+				const sourceCode = context.getSourceCode();
+				// console.log('******', sourceCode);
 				if (!comments.some(hasCopyright)) {
-					context.report(node, 'Unable to find copyright.');
+					context.report({
+						node,
+						message: 'Unable to find license in code file.',
+						fix(fixer) {
+							fixer.insertTextBefore(sourceCode.ast, copyright);
+						},
+					});
 				}
 			},
 		};
@@ -49,7 +58,9 @@ module.exports = {
 
 			try {
 				return fs.readFileSync(path, 'utf-8');
+				// return fs.readlinkSync(path, 'utf-8');
 			} catch (e) {
+				console.log('**', e);
 				throw new Error(`could not read license header from <${path}>`);
 			}
 		}
