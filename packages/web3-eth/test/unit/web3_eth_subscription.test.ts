@@ -1,8 +1,8 @@
-import { ExampleSubscription } from '../fixtures/example_subscription';
+import { NewHeadsSubscription } from '../fixtures/example_subscription';
 
 describe('Web3Subscription', () => {
 	let requestManager: any;
-	let sub: ExampleSubscription;
+	let sub: NewHeadsSubscription;
 
 	beforeEach(() => {
 		requestManager = {
@@ -10,7 +10,7 @@ describe('Web3Subscription', () => {
 			on: jest.fn(),
 			provider: { on: jest.fn(), removeListener: jest.fn() },
 		};
-		sub = new ExampleSubscription({ param1: 'value' }, { requestManager });
+		sub = new NewHeadsSubscription({ param1: 'value' }, { requestManager });
 	});
 
 	describe('subscribe', () => {
