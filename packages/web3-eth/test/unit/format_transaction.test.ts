@@ -1,4 +1,4 @@
-import { ValidTypes } from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-common';
 import { formatTransaction } from '../../src/utils/format_transaction';
 import {
 	bigIntTransaction,
@@ -10,87 +10,123 @@ import {
 describe('formatTransaction', () => {
 	it.skip('should call override method', () => {
 		const overrideFunction = jest.fn();
-		formatTransaction(hexStringTransaction, ValidTypes.Number);
+		formatTransaction(hexStringTransaction, DEFAULT_RETURN_FORMAT);
 		expect(overrideFunction).toHaveBeenCalledWith(hexStringTransaction);
 	});
 
 	describe('should convert hex string properties to expected type', () => {
 		it('numbers', () => {
-			expect(formatTransaction(hexStringTransaction, ValidTypes.Number)).toStrictEqual(
-				numberTransaction,
-			);
+			expect(
+				formatTransaction(hexStringTransaction, {
+					number: FMT_NUMBER.NUMBER,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberTransaction);
 		});
 
 		it('number strings', () => {
-			expect(formatTransaction(hexStringTransaction, ValidTypes.NumberString)).toStrictEqual(
-				numberStringTransaction,
-			);
+			expect(
+				formatTransaction(hexStringTransaction, {
+					number: FMT_NUMBER.STR,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberStringTransaction);
 		});
 
 		it('BigInts', () => {
-			expect(formatTransaction(hexStringTransaction, ValidTypes.BigInt)).toStrictEqual(
-				bigIntTransaction,
-			);
+			expect(
+				formatTransaction(hexStringTransaction, {
+					number: FMT_NUMBER.BIGINT,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(bigIntTransaction);
 		});
 	});
 
 	describe('should convert number properties to expected type', () => {
 		it('hex string', () => {
-			expect(formatTransaction(numberTransaction, ValidTypes.HexString)).toStrictEqual(
-				hexStringTransaction,
-			);
+			expect(
+				formatTransaction(numberTransaction, {
+					number: FMT_NUMBER.HEX,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(hexStringTransaction);
 		});
 
 		it('number strings', () => {
-			expect(formatTransaction(numberTransaction, ValidTypes.NumberString)).toStrictEqual(
-				numberStringTransaction,
-			);
+			expect(
+				formatTransaction(numberTransaction, {
+					number: FMT_NUMBER.STR,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberStringTransaction);
 		});
 
 		it('BigInts', () => {
-			expect(formatTransaction(numberTransaction, ValidTypes.BigInt)).toStrictEqual(
-				bigIntTransaction,
-			);
+			expect(
+				formatTransaction(numberTransaction, {
+					number: FMT_NUMBER.BIGINT,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(bigIntTransaction);
 		});
 	});
 
 	describe('should convert number string properties to expected type', () => {
 		it('hex strings', () => {
-			expect(formatTransaction(numberStringTransaction, ValidTypes.HexString)).toStrictEqual(
-				hexStringTransaction,
-			);
+			expect(
+				formatTransaction(numberStringTransaction, {
+					number: FMT_NUMBER.HEX,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(hexStringTransaction);
 		});
 
 		it('numbers', () => {
-			expect(formatTransaction(numberStringTransaction, ValidTypes.Number)).toStrictEqual(
-				numberTransaction,
-			);
+			expect(
+				formatTransaction(numberStringTransaction, {
+					number: FMT_NUMBER.NUMBER,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberTransaction);
 		});
 
 		it('BigInts', () => {
-			expect(formatTransaction(numberStringTransaction, ValidTypes.BigInt)).toStrictEqual(
-				bigIntTransaction,
-			);
+			expect(
+				formatTransaction(numberStringTransaction, {
+					number: FMT_NUMBER.BIGINT,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(bigIntTransaction);
 		});
 	});
 
 	describe('should convert bigint properties to expected type', () => {
 		it('hex strings', () => {
-			expect(formatTransaction(bigIntTransaction, ValidTypes.HexString)).toStrictEqual(
-				hexStringTransaction,
-			);
+			expect(
+				formatTransaction(bigIntTransaction, {
+					number: FMT_NUMBER.HEX,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(hexStringTransaction);
 		});
 
 		it('numbers', () => {
-			expect(formatTransaction(bigIntTransaction, ValidTypes.Number)).toStrictEqual(
-				numberTransaction,
-			);
+			expect(
+				formatTransaction(bigIntTransaction, {
+					number: FMT_NUMBER.NUMBER,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberTransaction);
 		});
 
 		it('number strings', () => {
-			expect(formatTransaction(bigIntTransaction, ValidTypes.NumberString)).toStrictEqual(
-				numberStringTransaction,
-			);
+			expect(
+				formatTransaction(bigIntTransaction, {
+					number: FMT_NUMBER.STR,
+					bytes: FMT_BYTES.HEX,
+				}),
+			).toStrictEqual(numberStringTransaction);
 		});
 	});
 });

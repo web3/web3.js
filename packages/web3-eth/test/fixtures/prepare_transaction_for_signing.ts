@@ -1,5 +1,4 @@
 import { AccessList, Block } from 'web3-common';
-// import { Block } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Common, Transaction } from '../../src/types';
 

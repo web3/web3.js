@@ -92,32 +92,6 @@ export type JsonEventInterface = {
 	anonymous: boolean;
 };
 
-// TODO need to create Json Contract interface constructor, receive, and fallback
-
-export enum ValidTypes {
-	HexString = 'HexString',
-	NumberString = 'NumberString',
-	Number = 'Number',
-	BigInt = 'BigInt',
-}
-
-export type ValidReturnTypes = {
-	[ValidTypes.HexString]: string;
-	[ValidTypes.NumberString]: string;
-	[ValidTypes.Number]: number;
-	[ValidTypes.BigInt]: bigint;
-};
-
-export type FormatValidReturnType<
-	ObjectType,
-	Properties extends (keyof ObjectType)[],
-	ReturnType extends ValidTypes,
-> = {
-	[P in keyof ObjectType]: P extends Properties[number]
-		? ValidReturnTypes[ReturnType]
-		: ObjectType[P];
-};
-
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
