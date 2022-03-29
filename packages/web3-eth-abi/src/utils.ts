@@ -124,11 +124,25 @@ export const mapTypes = (
 };
 
 /**
+ * returns true if input is a hexstring and is odd-lengthed
+ */
+export const isOddHexstring = (param: unknown): boolean =>
+	typeof param === 'string' && /^(-)?0x[0-9a-f]*$/i.test(param) && param.length % 2 === 1;
+
+/**
+ * format odd-length bytes to even-length
+ */
+export const formatOddHexstrings = (param: string): string =>
+	isOddHexstring(param) ? `0x0${param.substring(2)}` : param;
+
+/**
  * Handle some formatting of params for backwards compatibility with Ethers V4
  */
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	let param = _param;
+
+	// clone if _param is an object
+	const param = typeof _param === 'object' && !Array.isArray(_param) ? { ..._param } : _param;
 	const paramTypeBytes = /^bytes([0-9]*)$/;
 	const paramTypeBytesArray = /^bytes([0-9]*)\[\]$/;
 	const paramTypeNumber = /^(u?int)([0-9]*)$/;
@@ -141,7 +155,8 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 
 	if (paramTypeBytesArray.exec(type) || paramTypeNumberArray.exec(type)) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return (param as Array<unknown>).map(p => formatParam(type.replace('[]', ''), p));
+		const paramClone = [...(param as Array<unknown>)];
+		return paramClone.map(p => formatParam(type.replace('[]', ''), p));
 	}
 
 	// Format correct width for u?int[0-9]*
@@ -150,16 +165,14 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 		const size = parseInt(match[2] ?? '256', 10);
 		if (size / 8 < (param as { length: number }).length) {
 			// pad to correct bit width
-			param = leftPad(param as string, size);
+			return leftPad(param as string, size);
 		}
 	}
 
 	// Format correct length for bytes[0-9]+
 	match = paramTypeBytes.exec(type);
 	if (match) {
-		if (Buffer.isBuffer(param)) {
-			param = toHex(param);
-		}
+		const hexParam = Buffer.isBuffer(param) ? toHex(param) : param;
 
 		// format to correct length
 		const size = parseInt(match[1], 10);
@@ -169,18 +182,16 @@ export const formatParam = (type: string, _param: unknown): unknown => {
 			if ((param as string).startsWith('0x')) {
 				maxSize += 2;
 			}
-			if ((param as string).length < maxSize) {
-				// pad to correct length
-				param = rightPad(param as string, size * 2);
-			}
+			// pad to correct length
+			const paddedParam =
+				(hexParam as string).length < maxSize
+					? rightPad(param as string, size * 2)
+					: hexParam;
+			return formatOddHexstrings(paddedParam as string);
 		}
 
-		// format odd-length bytes to even-length
-		if ((param as string).length % 2 === 1) {
-			param = `0x0${(param as string).substring(2)}`;
-		}
+		return formatOddHexstrings(hexParam as string);
 	}
-
 	return param;
 };
 
