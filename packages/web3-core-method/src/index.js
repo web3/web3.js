@@ -455,7 +455,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 to: parsedTx.to,
                                                 from: parsedTx.from,
                                                 gas: parsedTx.gasLimit.toHexString(),
-                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                gasPrice: parsedTx.gasPrice ? parsedTx.gasPrice.toHexString() : undefined,
                                                 value: parsedTx.value.toHexString()
                                             });
                                         }
