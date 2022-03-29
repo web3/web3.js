@@ -21,13 +21,13 @@ export class LogsSubscription extends Web3Subscription<
 	{ address?: HexString; topics?: HexString[] }
 > {}
 
-export class PendingTransactionsSubscription extends Web3Subscription<
+export class NewPendingTransactionsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: HexString;
 	}
 > {}
 
-export class NewBlockHeadersSubscription extends Web3Subscription<
+export class NewHeadsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: BlockOutput;
 	}

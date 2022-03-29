@@ -1,4 +1,4 @@
-import { ExampleSubscription } from './fixtures/example_subscription';
+import { ExampleSubscription } from '../fixtures/example_subscription';
 
 describe('Web3Subscription', () => {
 	let requestManager: any;
