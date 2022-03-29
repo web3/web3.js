@@ -1,25 +1,16 @@
 import {
 	AccessList,
-	Log,
-	ReceiptInfo,
 	TransactionHash,
-	TransactionInfo,
 	Uncles,
+	FMT_BYTES,
+	FMT_NUMBER,
+	FormatType,
+	ReceiptInfo as ReceiptInfoEthType,
 } from 'web3-common';
-import {
-	Address,
-	HexString,
-	HexString256Bytes,
-	HexString32Bytes,
-	HexStringBytes,
-	Numbers,
-	Uint,
-	ValidReturnTypes,
-	ValidTypes,
-} from 'web3-utils';
+import { Address, Bytes, HexString32Bytes, HexStringBytes, Numbers } from 'web3-utils';
 
-export type chain = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
-export type hardfork =
+export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
+export type Hardfork =
 	| 'arrowGlacier'
 	| 'berlin'
 	| 'byzantium'
@@ -36,237 +27,151 @@ export type hardfork =
 	| 'spuriousDragon'
 	| 'tangerineWhistle';
 
-export interface CustomChain<NumberType = Numbers> {
+export interface Log {
+	readonly removed?: boolean;
+	readonly logIndex?: Numbers;
+	readonly transactionIndex?: Numbers;
+	readonly transactionHash?: Bytes | null;
+	readonly blockHash?: Bytes | null;
+	readonly blockNumber?: Numbers;
+	readonly address?: Address;
+	readonly data?: Bytes;
+	readonly topics?: Bytes[];
+}
+
+export interface ReceiptInfo {
+	readonly transactionHash: Bytes;
+	readonly transactionIndex: Numbers;
+	readonly blockHash: Bytes;
+	readonly blockNumber: Numbers;
+	readonly from: Address;
+	readonly to: Address;
+	readonly cumulativeGasUsed: Numbers;
+	readonly gasUsed: Numbers;
+	readonly effectiveGasPrice?: Numbers;
+	readonly contractAddress: Address | null;
+	readonly logs: Log[];
+	readonly logsBloom: Bytes;
+	readonly root: Bytes;
+	readonly status: Numbers;
+}
+
+export interface CustomChain {
 	name?: string;
-	networkId: NumberType;
-	chainId: NumberType;
+	networkId: Numbers;
+	chainId: Numbers;
 }
 
-export interface Common<NumberType = Numbers> {
-	customChain: CustomChain<NumberType>;
-	baseChain?: chain;
-	hardfork?: hardfork;
+export interface Common {
+	customChain: CustomChain;
+	baseChain?: ValidChains;
+	hardfork?: Hardfork;
 }
 
-export interface Transaction<NumberType extends Numbers = Numbers> {
+export interface Transaction {
+	value?: Numbers;
+	accessList?: AccessList;
+	common?: Common;
 	from?: Address;
 	to?: Address | null;
-	value?: NumberType;
-	gas?: NumberType;
-	gasPrice?: NumberType;
-	type?: NumberType;
-	maxFeePerGas?: NumberType;
-	maxPriorityFeePerGas?: NumberType;
-	accessList?: AccessList;
-	data?: HexStringBytes;
-	input?: HexStringBytes;
-	nonce?: NumberType;
-	chain?: chain;
-	hardfork?: hardfork;
-	chainId?: NumberType;
-	networkId?: NumberType;
-	common?: Common<NumberType>;
-	gasLimit?: NumberType;
-	v?: NumberType;
-	r?: HexString;
-	s?: HexString;
+	gas?: Numbers;
+	gasPrice?: Numbers;
+	type?: Numbers;
+	maxFeePerGas?: Numbers;
+	maxPriorityFeePerGas?: Numbers;
+	data?: Bytes;
+	input?: Bytes;
+	nonce?: Numbers;
+	chain?: ValidChains;
+	hardfork?: Hardfork;
+	chainId?: Numbers;
+	networkId?: Numbers;
+	gasLimit?: Numbers;
+	v?: Numbers;
+	r?: Bytes;
+	s?: Bytes;
 }
 
-export interface TransactionCall<NumberType extends Numbers = Numbers>
-	extends Transaction<NumberType> {
+export interface TransactionInfo extends Transaction {
+	readonly blockHash: Bytes | null;
+	readonly blockNumber: Numbers | null;
+	readonly from: Address;
+	readonly hash: Bytes;
+	readonly transactionIndex: Numbers | null;
+}
+
+export type InternalTransaction = FormatType<
+	Transaction,
+	{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
+>;
+
+export interface TransactionCall extends Transaction {
 	to: Address;
 }
 
-export interface PopulatedUnsignedBaseTransaction<NumberType extends Numbers = Numbers> {
+export interface PopulatedUnsignedBaseTransaction {
 	from: Address;
 	to?: Address;
 	value: Numbers;
 	gas?: Numbers;
 	gasPrice: Numbers;
 	type: Numbers;
-	data: HexStringBytes;
+	data: Bytes;
 	nonce: Numbers;
 	networkId: Numbers;
-	chain: chain;
-	hardfork: hardfork;
+	chain: ValidChains;
+	hardfork: Hardfork;
 	chainId: Numbers;
-	common: Common<NumberType>;
+	common: Common;
 	gasLimit: Numbers;
 }
-export interface PopulatedUnsignedEip2930Transaction<NumberType extends Numbers = Numbers>
-	extends PopulatedUnsignedBaseTransaction<NumberType> {
+
+export interface PopulatedUnsignedEip2930Transaction extends PopulatedUnsignedBaseTransaction {
 	accessList: AccessList;
 }
-export interface PopulatedUnsignedEip1559Transaction<NumberType extends Numbers = Numbers>
-	extends PopulatedUnsignedEip2930Transaction<NumberType> {
+
+export interface PopulatedUnsignedEip1559Transaction extends PopulatedUnsignedEip2930Transaction {
 	gasPrice: never;
-	maxFeePerGas: NumberType;
-	maxPriorityFeePerGas: NumberType;
+	maxFeePerGas: Numbers;
+	maxPriorityFeePerGas: Numbers;
 }
-export type PopulatedUnsignedTransaction<NumberType extends Numbers = Numbers> =
-	| PopulatedUnsignedBaseTransaction<NumberType>
-	| PopulatedUnsignedEip2930Transaction<NumberType>
-	| PopulatedUnsignedEip1559Transaction<NumberType>;
+export type PopulatedUnsignedTransaction =
+	| PopulatedUnsignedBaseTransaction
+	| PopulatedUnsignedEip2930Transaction
+	| PopulatedUnsignedEip1559Transaction;
 
-interface BaseTransactionFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> {
-	readonly to?: Address | null;
-	readonly type: ReturnType;
-	readonly nonce: ReturnType;
-	readonly gas: ReturnType;
-	readonly value: ReturnType;
-	readonly input: HexStringBytes;
-	readonly chainId?: ReturnType;
-}
-
-interface Transaction1559UnsignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends BaseTransactionFormatted<DesiredType> {
-	readonly maxFeePerGas: ReturnType;
-	readonly maxPriorityFeePerGas: ReturnType;
-	readonly accessList: AccessList;
-}
-
-interface Transaction1559SignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends Transaction1559UnsignedFormatted<DesiredType> {
-	readonly yParity: ReturnType;
-	readonly r: ReturnType;
-	readonly s: ReturnType;
-}
-
-interface Transaction2930UnsignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends BaseTransactionFormatted<DesiredType> {
-	readonly gasPrice: ReturnType;
-	readonly accessList: AccessList;
-}
-
-interface Transaction2930SignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends Transaction2930UnsignedFormatted<DesiredType> {
-	readonly yParity: ReturnType;
-	readonly r: ReturnType;
-	readonly s: ReturnType;
-}
-
-interface TransactionLegacyUnsignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends BaseTransactionFormatted<DesiredType> {
-	readonly gasPrice: ReturnType;
-}
-
-interface TransactionLegacySignedFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> extends TransactionLegacyUnsignedFormatted<DesiredType> {
-	readonly v: ReturnType;
-	readonly r: Uint;
-	readonly s: Uint;
-}
-
-type TransactionSignedFormatted<DesiredType extends ValidTypes = ValidTypes.HexString> =
-	| Transaction1559SignedFormatted<DesiredType>
-	| Transaction2930SignedFormatted<DesiredType>
-	| TransactionLegacySignedFormatted<DesiredType>;
-
-export type TransactionInfoFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> = TransactionSignedFormatted<DesiredType> & {
-	readonly blockHash: HexString32Bytes | null;
-	readonly blockNumber: ReturnType | null;
-	readonly from: Address;
-	readonly hash: HexString32Bytes;
-	readonly transactionIndex: ReturnType | null;
-};
-
-export interface ReceiptInfoFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> {
-	readonly transactionHash: HexString32Bytes;
-	readonly transactionIndex: ReturnType;
-	readonly blockHash: HexString32Bytes;
-	readonly blockNumber: ReturnType;
-	readonly from: Address;
-	readonly to: Address;
-	readonly cumulativeGasUsed: ReturnType;
-	readonly gasUsed: ReturnType;
-	readonly contractAddress: Address | null;
-	readonly logs: Log[];
-	readonly logsBloom: HexString256Bytes;
-	readonly root: HexString32Bytes;
-	readonly status: ReturnType;
-	readonly effectiveGasPrice: ReturnType;
-}
-
-export interface BlockFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> {
-	readonly parentHash: HexString32Bytes;
-	readonly sha3Uncles: HexString32Bytes;
-	readonly miner: HexString;
-	readonly stateRoot: HexString32Bytes;
-	readonly transactionsRoot: HexString32Bytes;
-	readonly receiptsRoot: HexString32Bytes;
-	readonly logsBloom: HexString256Bytes | null;
-	readonly difficulty?: ReturnType;
-	readonly number: ReturnType;
-	readonly gasLimit: ReturnType;
-	readonly gasUsed: ReturnType;
-	readonly timestamp: ReturnType;
-	readonly extraData: HexStringBytes;
-	readonly mixHash: HexString32Bytes;
-	readonly nonce: ReturnType;
-	readonly totalDifficulty: ReturnType;
-	readonly baseFeePerGas?: ReturnType;
-	readonly size: ReturnType;
+export interface Block {
+	readonly parentHash: Bytes;
+	readonly sha3Uncles: Bytes;
+	readonly miner: Bytes;
+	readonly stateRoot: Bytes;
+	readonly transactionsRoot: Bytes;
+	readonly receiptsRoot: Bytes;
+	readonly logsBloom: Bytes | null;
+	readonly difficulty?: Numbers;
+	readonly number: Numbers;
+	readonly gasLimit: Numbers;
+	readonly gasUsed: Numbers;
+	readonly timestamp: Numbers;
+	readonly extraData: Bytes;
+	readonly mixHash: Bytes;
+	readonly nonce: Numbers;
+	readonly totalDifficulty: Numbers;
+	readonly baseFeePerGas?: Numbers;
+	readonly size: Numbers;
 	readonly transactions: TransactionHash[] | TransactionInfo[];
 	readonly uncles: Uncles;
-	readonly hash: HexString32Bytes | null;
-}
-
-export interface FeeHistoryResultFormatted<
-	DesiredType extends ValidTypes = ValidTypes.HexString,
-	ReturnType = ValidReturnTypes[DesiredType],
-> {
-	readonly oldestBlock: ReturnType;
-	readonly baseFeePerGas: ReturnType;
-	readonly reward: number[][];
-}
-
-export interface StorageProofFormatted<NumberType extends Numbers = Numbers> {
-	readonly key: HexString32Bytes;
-	readonly value: NumberType;
-	readonly proof: HexString32Bytes[];
-}
-
-export interface AccountObjectFormatted<NumberType extends Numbers = Numbers> {
-	readonly balance: NumberType;
-	readonly codeHash: HexString32Bytes;
-	readonly nonce: NumberType;
-	readonly storageHash: HexString32Bytes;
-	readonly accountProof: HexString32Bytes[];
-	readonly storageProof: StorageProofFormatted<NumberType>[];
+	readonly hash: Bytes | null;
 }
 
 export type SendTransactionEvents = {
-	sending: Transaction;
-	sent: Transaction;
+	sending: InternalTransaction;
+	sent: InternalTransaction;
 	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfo;
+	receipt: ReceiptInfoEthType;
 	confirmation: {
 		confirmationNumber: number;
-		receipt: ReceiptInfo;
+		receipt: ReceiptInfoEthType;
 		latestBlockHash: HexString32Bytes;
 	};
 };
@@ -275,10 +180,31 @@ export type SendSignedTransactionEvents = {
 	sending: HexStringBytes;
 	sent: HexStringBytes;
 	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfo;
+	receipt: ReceiptInfoEthType;
 	confirmation: {
 		confirmationNumber: number;
-		receipt: ReceiptInfo;
+		receipt: ReceiptInfoEthType;
 		latestBlockHash: HexString32Bytes;
 	};
 };
+
+export interface FeeHistory {
+	readonly oldestBlock: Numbers;
+	readonly baseFeePerGas: Numbers;
+	readonly reward: Numbers[][];
+}
+
+export interface StorageProof {
+	readonly key: Bytes;
+	readonly value: Numbers;
+	readonly proof: Bytes[];
+}
+
+export interface AccountObject {
+	readonly balance: Numbers;
+	readonly codeHash: Bytes;
+	readonly nonce: Numbers;
+	readonly storageHash: Bytes;
+	readonly accountProof: Bytes[];
+	readonly storageProof: StorageProof[];
+}

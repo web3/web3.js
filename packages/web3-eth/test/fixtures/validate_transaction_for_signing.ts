@@ -1,4 +1,4 @@
-import { ValidReturnTypes, ValidTypes } from 'web3-utils';
+import { FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-common';
 import {
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
@@ -19,7 +19,7 @@ import { Transaction } from '../../src/types';
 export const invalidTransactionObject: any[] = ['42', false, '0x0', BigInt(42), () => {}];
 
 export const validateCustomChainInfoData: [
-	Transaction<ValidReturnTypes[ValidTypes.HexString]> | any,
+	FormatType<Transaction, { number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }> | any,
 	undefined | MissingCustomChainError | MissingCustomChainIdError | ChainIdMismatchError,
 ][] = [
 	[
@@ -162,7 +162,7 @@ export const validateCustomChainInfoData: [
 ];
 
 export const validateChainInfoData: [
-	Transaction<ValidReturnTypes[ValidTypes.HexString]> | any,
+	FormatType<Transaction, { number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }> | any,
 	undefined | CommonOrChainAndHardforkError | MissingChainOrHardforkError,
 ][] = [
 	[
@@ -288,7 +288,7 @@ export const validateChainInfoData: [
 ];
 
 export const validateGasData: [
-	Transaction<ValidReturnTypes[ValidTypes.HexString]> | any,
+	FormatType<Transaction, { number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }> | any,
 	(
 		| undefined
 		| MissingGasError
@@ -719,7 +719,7 @@ export const validateGasData: [
 ];
 
 export const invalidNonceOrChainIdData: [
-	Transaction<ValidReturnTypes[ValidTypes.HexString]> | any,
+	FormatType<Transaction, { number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }> | any,
 	undefined | InvalidNonceOrChainIdError,
 ][] = [
 	[

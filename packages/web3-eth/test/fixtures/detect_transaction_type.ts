@@ -1,7 +1,7 @@
-import { ValidReturnTypes, ValidTypes } from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT, FormatType } from 'web3-common';
 import { Transaction } from '../../src/types';
 
-export const transactionType0x0: Transaction<ValidReturnTypes[ValidTypes.HexString]>[] = [
+export const transactionType0x0: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -16,7 +16,7 @@ export const transactionType0x0: Transaction<ValidReturnTypes[ValidTypes.HexStri
 	},
 ];
 
-export const transactionType0x1: Transaction<ValidReturnTypes[ValidTypes.HexString]>[] = [
+export const transactionType0x1: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -73,7 +73,7 @@ export const transactionType0x1: Transaction<ValidReturnTypes[ValidTypes.HexStri
 	},
 ];
 
-export const transactionType0x2: Transaction<ValidReturnTypes[ValidTypes.HexString]>[] = [
+export const transactionType0x2: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -139,7 +139,7 @@ export const transactionType0x2: Transaction<ValidReturnTypes[ValidTypes.HexStri
 	},
 ];
 
-export const transactionTypeUndefined: Transaction<ValidReturnTypes[ValidTypes.HexString]>[] = [
+export const transactionTypeUndefined: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',

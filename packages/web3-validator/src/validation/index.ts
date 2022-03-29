@@ -8,3 +8,4 @@ export * from './filter';
 export * from './numbers';
 export * from './string';
 export * from './topic';
+export * from './object';

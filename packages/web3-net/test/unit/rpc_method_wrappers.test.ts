@@ -18,8 +18,9 @@ describe('rpc_method_wrappers', () => {
 				'returnType: %s mockRpcResponse: %s output: %s',
 				async (returnType, mockRpcResponse, output) => {
 					(rpcMethods.getId as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+					const result = await getId(web3Net, returnType);
 
-					expect(await getId(web3Net, returnType)).toBe(output);
+					expect(result).toBe(output);
 					expect(rpcMethods.getId).toHaveBeenCalledWith(web3Net.requestManager);
 				},
 			);

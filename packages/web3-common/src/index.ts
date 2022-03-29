@@ -8,4 +8,5 @@ export * from './eth_execution_api';
 export * from './deferred_promise';
 export * from './promi_event';
 export * from './formatters';
+export * from './formatter';
 export * as jsonRpc from './json_rpc';
