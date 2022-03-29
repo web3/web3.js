@@ -25,7 +25,8 @@ var http = require('web3-http');
 var {defaultAbiCoder, Interface} = require('@ethersproject/abi');
 var {hexConcat} = require('@ethersproject/bytes');
 
-const ENCODED_CCIP_READ_FUNCTION_SELECTOR = '556f1830';
+//keccak256 hash of: OffchainLookup(address,string[],bytes,bytes4,bytes)
+const ENCODED_CCIP_READ_ERROR_SELECTOR = '0x556f1830';
 const MAX_REDIRECT_COUNT = 4;
 const OFFCHAIN_LOOKUP_PARAMETER_TYPES = ['address', 'string[]', 'bytes', 'bytes4', 'bytes'];
 
@@ -34,14 +35,14 @@ const CCIP_READ_INTERFACE = new Interface([
 ]);
 
 var gatewayQuery = function (url, to, calldata) {
+    if(!url) throw new Error('No gateway url was provided');
+
     var httpObject = new http.Http();
 
     const lowerTo = to.toLowerCase();
     const lowerCalldata = calldata.toLowerCase();
 
     const senderUrl = url.replace('{sender}', lowerTo);
-
-    if(!url) throw new Error('No gateway url was provided');
 
     if(url.includes('{data}')) {
         return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}.json`);
@@ -60,7 +61,7 @@ var isUrlAllowed = function (urlInstance, allowList) {
 };
 
 var hasCcipReadFunctionSelector = function (encodedString) {
-    return encodedString && encodedString.substring(0, 10) === `0x${ENCODED_CCIP_READ_FUNCTION_SELECTOR}`;
+    return encodedString && encodedString.substring(0, 10) === ENCODED_CCIP_READ_ERROR_SELECTOR;
 };
 
 //Errors are handled differently depending on the environment
@@ -166,14 +167,17 @@ var isOffChainLookup = function (err, result) {
 };
 
 /**
- * Should be used to encode list of params
+ * Gather off-chain data via the CCIP-read protocol
  *
- * @method encodeParameters
+ * @method ccipReadCall
  *
- * @param {Array<String|Object>} types
- * @param {Array<any>} params
+ * @param {Error} errorObject
+ * @param {Object} result
+ * @param {Object} payload
+ * @param {Function} send
+ * @param {Object} options
  *
- * @return {String} encoded list of params
+ * @return {Object} Result of calling send with off-chain data
  */
 var ccipReadCall = async function (errorObject, result, payload, send, options) {
     if (send.ccipReadCalls) {
@@ -181,7 +185,7 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
     } else {
         send.ccipReadCalls = 1;
     }
-    if (send.ccipReadCalls > MAX_REDIRECT_COUNT) {
+    if (send.ccipReadCalls > (options.ccipReadMaxRedirectCount || MAX_REDIRECT_COUNT)) {
         throw new Error('Too many CCIP-read redirects');
     }
 

@@ -239,6 +239,19 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'ccipReadMaxRedirectCount', {
+        get: function () {
+            if (_this.options.ccipReadMaxRedirectCount) {
+                return _this.options.ccipReadMaxRedirectCount;
+            }
+
+            return this.constructor.ccipReadMaxRedirectCount;
+        },
+        set: function (val) {
+            _this.options.ccipReadMaxRedirectCount = val;
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'defaultCommon', {
         get: function () {
             return _this.options.common || this.constructor.defaultCommon;
@@ -330,7 +343,7 @@ var Contract = function Contract(jsonInterface, address, options) {
             _this.options.blockHeaderTimeout = val;
         },
         enumerable: true
-    });    
+    });
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
             return defaultAccount;
@@ -1032,6 +1045,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 ccipReadGatewayCallback: _this._parent.ccipReadGatewayCallback,
                 ccipReadGatewayUrls: _this._parent.ccipReadGatewayUrls,
                 ccipReadGatewayAllowList: _this._parent.ccipReadGatewayAllowList,
+                ccipReadMaxRedirectCount: _this._parent.ccipReadMaxRedirectCount,
                 abiCoder: abi
             })).createFunction();
 
@@ -1113,6 +1127,8 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 handleRevert: _this._parent.handleRevert,
                 ccipReadGatewayCallback: _this._parent.ccipReadGatewayCallback,
                 ccipReadGatewayUrls: _this._parent.ccipReadGatewayUrls,
+                ccipReadGatewayAllowList: _this._parent.ccipReadGatewayAllowList,
+                ccipReadMaxRedirectCount: _this._parent.ccipReadMaxRedirectCount,
                 extraFormatters: extraFormatters,
                 abiCoder: abi
             })).createFunction();

@@ -107,6 +107,7 @@ var Eth = function Eth() {
     var ccipReadGatewayCallback = null;
     var ccipReadGatewayUrls = [];
     var ccipReadGatewayAllowList = [];
+    var ccipReadMaxRedirectCount = 4;
 
     Object.defineProperty(this, 'handleRevert', {
         get: function () {
@@ -172,6 +173,23 @@ var Eth = function Eth() {
             // update ccipReadGatewayAllowList
             methods.forEach(function(method) {
                 method.ccipReadGatewayAllowList = ccipReadGatewayAllowList;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'ccipReadMaxRedirectCount', {
+        get: function () {
+            return ccipReadMaxRedirectCount;
+        },
+        set: function (val) {
+            ccipReadMaxRedirectCount = val;
+
+            // also set on the Contract object
+            _this.Contract.ccipReadMaxRedirectCount = ccipReadMaxRedirectCount;
+
+            // update ccipReadMaxRedirectCount
+            methods.forEach(function(method) {
+                method.ccipReadMaxRedirectCount = ccipReadMaxRedirectCount;
             });
         },
         enumerable: true
@@ -429,6 +447,7 @@ var Eth = function Eth() {
     this.Contract.ccipReadGatewayCallback = this.ccipReadGatewayCallback;
     this.Contract.ccipReadGatewayUrls = this.ccipReadGatewayUrls;
     this.Contract.ccipReadGatewayAllowList = this.ccipReadGatewayAllowList;
+    this.Contract.ccipReadMaxRedirectCount = this.ccipReadMaxRedirectCount;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
     this.Contract.currentProvider = this._requestManager.provider;
@@ -761,6 +780,7 @@ var Eth = function Eth() {
         method.ccipReadGatewayCallback = _this.ccipReadGatewayCallback;
         method.ccipReadGatewayUrls = _this.ccipReadGatewayUrls;
         method.ccipReadGatewayAllowList = _this.ccipReadGatewayAllowList;
+        method.ccipReadMaxRedirectCount = _this.ccipReadMaxRedirectCount;
     });
 
 };
