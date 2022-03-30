@@ -34,3 +34,6 @@ tsconfig.tsbuildinfo
 
 # Unsupported lock files
 package-lock.json
+
+# npm config file
+.npmrc
