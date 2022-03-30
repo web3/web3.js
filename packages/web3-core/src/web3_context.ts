@@ -1,4 +1,5 @@
-import { Web3APISpec } from 'web3-common';
+import { Web3AccountProvider } from 'web3-common';
+import { Web3APISpec, Web3BaseWallet, Web3BaseWalletAccount } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { SupportedProviders } from './types';
 import { isSupportedProvider } from './utils';
@@ -23,6 +24,8 @@ export type Web3ContextObject<
 	subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs> | undefined;
 	registeredSubscriptions?: RegisteredSubs;
 	providers: typeof Web3RequestManager.providers;
+	accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
+	wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 };
 
 export type Web3ContextInitOptions<
@@ -38,6 +41,8 @@ export type Web3ContextInitOptions<
 	requestManager?: Web3RequestManager<API>;
 	subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs> | undefined;
 	registeredSubscriptions?: RegisteredSubs;
+	accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
+	wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 };
 
 export type Web3ContextConstructor<
@@ -67,6 +72,8 @@ export class Web3Context<
 	public readonly providers = Web3RequestManager.providers;
 	private _requestManager: Web3RequestManager<API>;
 	private _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
+	private _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
+	private _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 
 	public constructor(
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
@@ -84,8 +91,15 @@ export class Web3Context<
 			return;
 		}
 
-		const { config, provider, requestManager, subscriptionManager, registeredSubscriptions } =
-			providerOrContext as Partial<Web3ContextObject<API, RegisteredSubs>>;
+		const {
+			config,
+			provider,
+			requestManager,
+			subscriptionManager,
+			registeredSubscriptions,
+			accountProvider,
+			wallet,
+		} = providerOrContext as Partial<Web3ContextObject<API, RegisteredSubs>>;
 
 		this.setConfig(config ?? {});
 
@@ -99,6 +113,14 @@ export class Web3Context<
 				registeredSubscriptions,
 			);
 		}
+
+		if (accountProvider) {
+			this._accountProvider = accountProvider;
+		}
+
+		if (wallet) {
+			this._wallet = wallet;
+		}
 	}
 
 	public get requestManager() {
@@ -107,6 +129,14 @@ export class Web3Context<
 
 	public get subscriptionManager() {
 		return this._subscriptionManager;
+	}
+
+	private get wallet() {
+		return this._wallet;
+	}
+
+	private get accountProvider() {
+		return this._accountProvider;
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,6 +156,8 @@ export class Web3Context<
 			registeredSubscriptions: this.subscriptionManager
 				?.registeredSubscriptions as RegisteredSubs,
 			providers: this.providers,
+			wallet: this.wallet,
+			accountProvider: this.accountProvider,
 		};
 	}
 
@@ -159,6 +191,8 @@ export class Web3Context<
 		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
 		this._subscriptionManager = parentContext.subscriptionManager;
+		this._wallet = parentContext.wallet;
+		this._accountProvider = parentContext._accountProvider;
 
 		parentContext.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
