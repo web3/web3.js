@@ -1,5 +1,9 @@
-import { Web3AccountProvider } from 'web3-common';
-import { Web3APISpec, Web3BaseWallet, Web3BaseWalletAccount } from 'web3-common';
+import {
+	Web3APISpec,
+	Web3BaseWallet,
+	Web3BaseWalletAccount,
+	Web3AccountProvider,
+} from 'web3-common';
 import { HexString } from 'web3-utils';
 import { SupportedProviders } from './types';
 import { isSupportedProvider } from './utils';
@@ -131,11 +135,11 @@ export class Web3Context<
 		return this._subscriptionManager;
 	}
 
-	private get wallet() {
+	public get wallet() {
 		return this._wallet;
 	}
 
-	private get accountProvider() {
+	public get accountProvider() {
 		return this._accountProvider;
 	}
 

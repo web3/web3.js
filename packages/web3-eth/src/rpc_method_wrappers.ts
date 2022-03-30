@@ -16,6 +16,7 @@ import {
 	Address,
 	BlockNumberOrTag,
 	Filter,
+	HexString,
 	HexString32Bytes,
 	HexStringBytes,
 	hexToNumber,
@@ -373,13 +374,29 @@ export function sendTransaction(
 				promiEvent.emit('sending', _transaction);
 			}
 
-			// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
-			// https://github.com/ChainSafe/web3.js/blob/b32555cfeedde128c657dabbba201102f691f955/packages/web3-core-method/src/index.js#L720
+			let transactionHash: HexString;
 
-			const transactionHash = await rpcMethods.sendTransaction(
-				web3Context.requestManager,
-				_transaction,
-			);
+			if (
+				web3Context.wallet &&
+				transaction.from &&
+				web3Context.wallet.get(transaction.from)
+			) {
+				const wallet = web3Context.wallet.get(transaction.from);
+
+				const signedTransaction = wallet.signTransaction(_transaction);
+
+				await rpcMethods.sendRawTransaction(
+					web3Context.requestManager,
+					signedTransaction.rawTransaction,
+				);
+
+				transactionHash = signedTransaction.transactionHash;
+			} else {
+				transactionHash = await rpcMethods.sendTransaction(
+					web3Context.requestManager,
+					_transaction,
+				);
+			}
 
 			if (promiEvent.listenerCount('sent') > 0) {
 				promiEvent.emit('sent', _transaction);
