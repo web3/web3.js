@@ -1,21 +1,23 @@
-import { EthExecutionAPI, PromiEvent, ReceiptInfo } from 'web3-common';
+import { DataFormat, EthExecutionAPI, format, PromiEvent } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { HexString32Bytes, numberToHex } from 'web3-utils';
+import { Bytes, numberToHex } from 'web3-utils';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '../errors';
-import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
+import { ReceiptInfo, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
+	ReturnFormat extends DataFormat,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
-	transactionHash: HexString32Bytes,
+	transactionHash: Bytes,
+	returnFormat: ReturnFormat,
 ) {
 	if (
 		transactionReceipt === undefined ||
@@ -25,8 +27,8 @@ export function watchTransactionForConfirmations<
 	)
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
-			blockHash: transactionReceipt.blockHash,
-			transactionHash,
+			blockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
+			transactionHash: format({ eth: 'bytes32' }, transactionHash, returnFormat),
 		});
 
 	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
@@ -41,8 +43,9 @@ export function watchTransactionForConfirmations<
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const intervalId = setInterval(async () => {
-		if (confirmationNumber >= web3Context.transactionConfirmationBlocks)
+		if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
 			clearInterval(intervalId);
+		}
 
 		const nextBlock = await getBlockByNumber(
 			web3Context.requestManager,
@@ -53,9 +56,9 @@ export function watchTransactionForConfirmations<
 		if (nextBlock?.hash !== null) {
 			confirmationNumber += 1;
 			transactionPromiEvent.emit('confirmation', {
-				confirmationNumber,
+				confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),
 				receipt: transactionReceipt,
-				latestBlockHash: nextBlock.hash,
+				latestBlockHash: format({ eth: 'bytes32' }, nextBlock.hash, returnFormat),
 			});
 		}
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);

@@ -8,13 +8,13 @@ import {
 	TransactionWithSender,
 	FMT_BYTES,
 	FMT_NUMBER,
-	ReceiptInfo,
 	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
 	Address,
 	BlockNumberOrTag,
+	Bytes,
 	Filter,
 	HexString32Bytes,
 	HexStringBytes,
@@ -36,6 +36,7 @@ import {
 	Block,
 	FeeHistory,
 	Log,
+	ReceiptInfo,
 	SendSignedTransactionEvents,
 	SendTransactionEvents,
 	SendTransactionOptions,
@@ -45,6 +46,7 @@ import {
 import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
+// eslint-disable-next-line import/no-cycle
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
@@ -211,17 +213,24 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionHash: HexString32Bytes,
+	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ) {
 	const response = await rpcMethods.getTransactionReceipt(
 		web3Context.requestManager,
-		transactionHash,
+		format({ eth: 'bytes32' }, transactionHash, {
+			number: FMT_NUMBER.HEX,
+			bytes: FMT_BYTES.HEX,
+		}),
 	);
 
 	return response === null
 		? response
-		: format(receiptInfoSchema, response as unknown as ReceiptInfo, returnFormat);
+		: (format(
+				receiptInfoSchema,
+				response as unknown as ReceiptInfo,
+				returnFormat,
+		  ) as ReceiptInfo);
 }
 
 export async function getTransactionCount<ReturnFormat extends DataFormat>(
@@ -253,12 +262,10 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 export function sendTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
-	// TODO
-	// @ts-expect-error Used to format receipt
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions,
 ): PromiEvent<ReceiptInfo, SendTransactionEvents> {
-	let _transaction = formatTransaction(transaction, {
+	let transactionFormatted = formatTransaction(transaction, {
 		number: FMT_NUMBER.HEX,
 		bytes: FMT_BYTES.HEX,
 	});
@@ -271,9 +278,9 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 				(transaction.maxPriorityFeePerGas === undefined ||
 					transaction.maxFeePerGas === undefined)
 			) {
-				_transaction = {
-					..._transaction,
-					...(await getTransactionGasPricing(_transaction, web3Context, {
+				transactionFormatted = {
+					...transactionFormatted,
+					...(await getTransactionGasPricing(transactionFormatted, web3Context, {
 						number: FMT_NUMBER.HEX,
 						bytes: FMT_BYTES.HEX,
 					})),
@@ -281,7 +288,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 			}
 
 			if (promiEvent.listenerCount('sending') > 0) {
-				promiEvent.emit('sending', _transaction);
+				promiEvent.emit('sending', transactionFormatted);
 			}
 
 			// TODO - If an account is available in wallet, sign transaction and call sendRawTransaction
@@ -289,36 +296,52 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 
 			const transactionHash = await rpcMethods.sendTransaction(
 				web3Context.requestManager,
-				_transaction,
+				transactionFormatted,
+			);
+			const transactionHashFormatted = format(
+				{ eth: 'bytes32' },
+				transactionHash,
+				returnFormat,
 			);
 
 			if (promiEvent.listenerCount('sent') > 0) {
-				promiEvent.emit('sent', _transaction);
+				promiEvent.emit('sent', transactionFormatted);
 			}
 
 			if (promiEvent.listenerCount('transactionHash') > 0) {
-				promiEvent.emit('transactionHash', transactionHash);
+				promiEvent.emit('transactionHash', transactionHashFormatted);
 			}
 
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
+			let transactionReceipt = await getTransactionReceipt(
+				web3Context,
 				transactionHash,
+				returnFormat,
 			);
 
 			// Transaction hasn't been included in a block yet
 			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
+				transactionReceipt = await waitForTransactionReceipt(
+					web3Context,
+					transactionHash,
+					returnFormat,
+				);
 
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
+			const transactionReceiptFormatted = format(
+				receiptInfoSchema,
+				transactionReceipt,
+				returnFormat,
+			);
+
+			promiEvent.emit('receipt', transactionReceiptFormatted as ReceiptInfo);
+			resolve(transactionReceiptFormatted as ReceiptInfo);
 
 			if (promiEvent.listenerCount('confirmation') > 0) {
-				watchTransactionForConfirmations<SendTransactionEvents>(
+				watchTransactionForConfirmations<SendTransactionEvents, ReturnFormat>(
 					web3Context,
 					promiEvent,
-					transactionReceipt,
+					transactionReceiptFormatted as ReceiptInfo,
 					transactionHash,
+					returnFormat,
 				);
 			}
 		});
@@ -327,49 +350,72 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 	return promiEvent;
 }
 
-export const sendSignedTransaction = (
+export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: HexStringBytes,
-): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> => {
+	signedTransaction: HexStringBytes,
+	returnFormat: ReturnFormat,
+): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
-			promiEvent.emit('sending', transaction);
+			const signedTransactionFormatted = format(
+				{ eth: 'bytes' },
+				signedTransaction,
+				returnFormat,
+			);
+
+			promiEvent.emit('sending', signedTransactionFormatted);
 
 			const transactionHash = await rpcMethods.sendRawTransaction(
 				web3Context.requestManager,
-				transaction,
+				signedTransaction,
+			);
+			const transactionHashFormatted = format(
+				{ eth: 'bytes32' },
+				transactionHash,
+				returnFormat,
 			);
 
-			promiEvent.emit('sent', transaction);
-			promiEvent.emit('transactionHash', transactionHash);
+			promiEvent.emit('sent', signedTransactionFormatted);
+			promiEvent.emit('transactionHash', transactionHashFormatted);
 
-			let transactionReceipt = await rpcMethods.getTransactionReceipt(
-				web3Context.requestManager,
+			let transactionReceipt = await getTransactionReceipt(
+				web3Context,
 				transactionHash,
+				returnFormat,
 			);
 
 			// Transaction hasn't been included in a block yet
 			if (transactionReceipt === null)
-				transactionReceipt = await waitForTransactionReceipt(web3Context, transactionHash);
+				transactionReceipt = await waitForTransactionReceipt(
+					web3Context,
+					transactionHash,
+					returnFormat,
+				);
 
-			promiEvent.emit('receipt', transactionReceipt);
-			// TODO - Format receipt
-			resolve(transactionReceipt);
+			const transactionReceiptFormatted = format(
+				receiptInfoSchema,
+				transactionReceipt,
+				returnFormat,
+			);
 
-			watchTransactionForConfirmations<SendSignedTransactionEvents>(
+			promiEvent.emit('receipt', transactionReceiptFormatted);
+			resolve(transactionReceiptFormatted);
+
+			watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat>(
 				web3Context,
 				promiEvent,
-				transactionReceipt,
+				transactionReceiptFormatted,
 				transactionHash,
+				returnFormat,
 			);
 		});
 	});
 
 	return promiEvent;
-};
+}
 
 // TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 // https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
