@@ -12,7 +12,7 @@ async function delay(secs=0){
 
 // A workaround for how flaky the infura connection can be...
 // Tries to fetch data 10x w/ 1 sec delays. Exits on first success.
-async function getBlockWithRetry(web3){
+async function getBlockWithRetry(web3, provider){
   let i = 0;
   let block;
 
@@ -28,12 +28,47 @@ async function getBlockWithRetry(web3){
 
       i++;
       if (i === 10){
-        throw new Error('Failed to connect to Infura over websockets after 10 tries');
+        if (provider === 'infura') {
+          throw new Error('Failed to connect to Infura over websockets after 10 tries');
+        } else if (provider === 'linkpool') {
+          throw new Error('Failed to connect to LinkPool over websockets after 10 tries');
+        }
       }
 
     }
   }
   return block;
+}
+
+async function tryMultipleProviders(infuraProvider) {
+  try {
+    const web3 = new Web3(infuraProvider);
+    const block = await getBlockWithRetry(web3, 'infura');
+    return [
+      web3,
+      block
+    ];
+  } catch (error) {
+    if (infuraProvider.includes("wss")) {
+      // Fetched provider from https://medium.com/linkpool/release-of-public-ethereum-rpcs-f5dd57455d2e
+      const linkpoolProvider = "wss://main-light.eth.linkpool.io/ws";
+      const web3 = new Web3(linkpoolProvider);
+      const block = await getBlockWithRetry(web3, 'linkpool');
+      return [
+        web3,
+        block
+      ];
+    } else {
+      // Fetched provider from https://medium.com/linkpool/release-of-public-ethereum-rpcs-f5dd57455d2e
+      const linkpoolProvider = "https://main-light.eth.linkpool.io";
+      const web3 = new Web3(linkpoolProvider);
+      const block = await getBlockWithRetry(web3, 'linkpool');
+      return [
+        web3,
+        block
+      ];
+    }
+  }
 }
 
 async function main(){
@@ -47,8 +82,7 @@ async function main(){
   log('>>>>>>');
 
   // Http
-  web3 = new Web3(process.env.INFURA_HTTP);
-  block = await getBlockWithRetry(web3);
+  [ web3, block ] = await tryMultipleProviders(process.env.INFURA_HTTP);
   log(util.inspect(block));
 
   log();
@@ -57,8 +91,7 @@ async function main(){
   log('>>>>>>');
 
   // WebSockets
-  web3 = new Web3(process.env.INFURA_WSS);
-  block = await getBlockWithRetry(web3);
+  [ web3, block ] = await tryMultipleProviders(process.env.INFURA_WSS);
   web3.currentProvider.disconnect();
   log(util.inspect(block));
 
@@ -89,4 +122,3 @@ main()
     log(err);
     process.exit(1)
   });
-
