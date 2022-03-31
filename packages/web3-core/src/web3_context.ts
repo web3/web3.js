@@ -5,7 +5,13 @@ import { isSupportedProvider } from './utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
-import { Web3SubscriptionConstructor } from './web3_subscriptions';
+import {
+	Web3SubscriptionConstructor,
+	LogsSubscription,
+	NewHeadsSubscription,
+	NewPendingTransactionsSubscription,
+	SyncingSubscription,
+} from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
 
 // To avoid circular dependencies, we need to export type from here.
@@ -98,7 +104,21 @@ export class Web3Context<
 				this.requestManager,
 				registeredSubscriptions,
 			);
+		} else {
+			this._subscriptionManager = new Web3SubscriptionManager(
+				this.requestManager,
+				Web3Context.getDefaultRegisteredSubscriptions(),
+			);
 		}
+	}
+
+	private static getDefaultRegisteredSubscriptions(): any {
+		return {
+			logs: LogsSubscription,
+			newPendingTransactions: NewPendingTransactionsSubscription,
+			newHeads: NewHeadsSubscription,
+			syncing: SyncingSubscription,
+		};
 	}
 
 	public get requestManager() {

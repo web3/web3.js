@@ -17,6 +17,13 @@ import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
+enum SubscriptionNames {
+	logs = 'logs',
+	newPendingTransactions = 'newPendingTransactions',
+	newHeads = 'newHeads',
+	syncing = 'syncing',
+}
+
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
@@ -256,5 +263,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 			rewardPercentiles,
 			returnFormat,
 		);
+	}
+
+	public subscribe(name: SubscriptionNames, args: unknown): Promise<any> | undefined {
+		return this.subscriptionManager?.subscribe(name, args);
+	}
+
+	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+		return this.subscriptionManager?.unsubscribe(notClearSyncing);
 	}
 }

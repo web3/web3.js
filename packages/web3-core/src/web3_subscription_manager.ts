@@ -83,11 +83,13 @@ export class Web3SubscriptionManager<
 		this._subscriptions.delete(sub.id);
 	}
 
-	public async unsubscribe() {
+	public async unsubscribe(notClearSyncing = false) {
 		const result = [];
 
-		for (const [, sub] of this._subscriptions.entries()) {
-			result.push(this.removeSubscription(sub));
+		for (const [name, sub] of this._subscriptions.entries()) {
+			if (!(notClearSyncing && name === 'syncing')) {
+				result.push(this.removeSubscription(sub));
+			}
 		}
 
 		return Promise.all(result);

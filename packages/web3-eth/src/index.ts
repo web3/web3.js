@@ -4,7 +4,6 @@ export * from './web3_eth';
 export * from './types';
 export * from './validation';
 export * from './rpc_method_wrappers';
-export * from './web3_subscriptions';
 export * from './utils/format_transaction';
 export * from './utils/prepare_transaction_for_signing';
 export { detectTransactionType } from './utils/detect_transaction_type';
