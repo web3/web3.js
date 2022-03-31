@@ -1,4 +1,4 @@
-import { getBlock } from 'web3-eth';
+import { getBlock, ReceiptInfo } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
@@ -9,7 +9,7 @@ import {
 	ENSNetworkNotSyncedError,
 	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
-import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
+import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
 import { registryAddresses } from './config';
@@ -50,7 +50,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setResolver(name, address, txConfig);
 	}
 
@@ -64,7 +64,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
 	}
 
@@ -75,7 +75,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		operator: Address,
 		approved: boolean,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setApprovalForAll(operator, approved, txConfig);
 	}
 
@@ -101,7 +101,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setSubnodeOwner(name, label, address, txConfig);
 	}
 
@@ -119,7 +119,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setTTL(name, ttl, txConfig);
 	}
 
@@ -137,7 +137,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setOwner(name, address, txConfig);
 	}
 
@@ -150,7 +150,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
 	}
 
@@ -161,7 +161,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setAddress(name, address, txConfig);
 	}
 
@@ -173,7 +173,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		x: string,
 		y: string,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setPubkey(name, x, y, txConfig);
 	}
 
@@ -184,7 +184,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		hash: string,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setContenthash(name, hash, txConfig);
 	}
 

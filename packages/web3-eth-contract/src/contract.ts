@@ -396,7 +396,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: contractOptions ?? this.options,
 		});
 
-		return sendTransaction(this, tx);
+		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
 	}
 
 	private async _contractMethodEstimateGas<

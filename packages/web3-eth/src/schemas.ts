@@ -79,6 +79,9 @@ export const transactionSchema = {
 		gasPrice: {
 			eth: 'uint',
 		},
+		effectiveGasPrice: {
+			eth: 'uint',
+		},
 		type: {
 			eth: 'uint',
 		},

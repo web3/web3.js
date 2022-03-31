@@ -43,8 +43,9 @@ export interface BaseTransaction {
 	readonly nonce: Uint;
 	readonly gas: Uint;
 	readonly value: Uint;
-	// TODO - Investigate if this should actually be data instead of input
+	// TODO - https://github.com/ethereum/execution-apis/pull/201
 	readonly input: HexStringBytes;
+	readonly data?: HexStringBytes;
 	readonly chainId?: Uint;
 }
 
