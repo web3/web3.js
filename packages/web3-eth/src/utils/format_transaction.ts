@@ -11,17 +11,14 @@ export function formatTransaction<
 	transaction: TransactionType,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ): FormatType<TransactionType, ReturnFormat> {
-	const formattedTransaction = mergeDeep(
-		{},
-		transaction as Record<string, unknown>,
-	) as Transaction;
+	let formattedTransaction = mergeDeep({}, transaction as Record<string, unknown>) as Transaction;
 	if (transaction.common !== undefined) {
 		formattedTransaction.common = { ...transaction.common };
 		if (transaction.common.customChain !== undefined)
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
 
-	const result = format(transactionSchema, formattedTransaction, returnFormat);
+	formattedTransaction = format(transactionSchema, formattedTransaction, returnFormat);
 
 	if (formattedTransaction.data !== undefined && formattedTransaction.input !== undefined)
 		throw new TransactionDataAndInputError({
@@ -33,5 +30,5 @@ export function formatTransaction<
 		delete formattedTransaction.input;
 	}
 
-	return result as FormatType<TransactionType, ReturnFormat>;
+	return formattedTransaction as FormatType<TransactionType, ReturnFormat>;
 }
