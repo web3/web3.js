@@ -21,9 +21,10 @@ import {
 	ERR_TX_POLLING_TIMEOUT,
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
-	ReceiptInfo,
 } from 'web3-common';
-import { HexString, HexString32Bytes, Numbers, Web3Error } from 'web3-utils';
+import { Bytes, HexString, Numbers, Web3Error } from 'web3-utils';
+
+import { ReceiptInfo } from './types';
 
 export class InvalidTransactionWithSender extends Web3Error {
 	public code = ERR_TX_INVALID_SENDER;
@@ -249,9 +250,9 @@ export class TransactionDataAndInputError extends Web3Error {
 export class TransactionPollingTimeoutError extends Web3Error {
 	public code = ERR_TX_POLLING_TIMEOUT;
 
-	public constructor(value: { numberOfSeconds: number; transactionHash: HexString32Bytes }) {
+	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
 		super(
-			`transactionHash: ${value.transactionHash}`,
+			`transactionHash: ${value.transactionHash.toString()}`,
 			`Transaction was not mined within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`,
 		);
 	}
@@ -260,9 +261,11 @@ export class TransactionPollingTimeoutError extends Web3Error {
 export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
-	public constructor(value: { receipt: ReceiptInfo; blockHash: HexString32Bytes }) {
+	public constructor(value: { receipt: ReceiptInfo; blockHash: Bytes; transactionHash: Bytes }) {
 		super(
-			`receipt: ${JSON.stringify(value.receipt)}, blockHash: ${value.blockHash}`,
+			`receipt: ${JSON.stringify(
+				value.receipt,
+			)}, blockHash: ${value.blockHash.toString()}, transactionHash: ${value.transactionHash.toString()}`,
 			`Receipt missing or blockHash null`,
 		);
 	}
