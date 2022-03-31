@@ -110,11 +110,15 @@ export class Wallet<
 		password: string,
 		options?: Record<string, unknown> | undefined,
 	) {
-		await Promise.all(
+		const results = await Promise.all(
 			encryptedWallets.map(async wallet =>
 				this._accountProvider.decrypt(wallet, password, options),
 			),
 		);
+
+		for (const res of results) {
+			this.add(res);
+		}
 
 		return this;
 	}
