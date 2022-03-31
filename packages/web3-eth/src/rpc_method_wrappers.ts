@@ -250,6 +250,17 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 		: formatTransaction(response as unknown as Transaction, returnFormat);
 }
 
+export async function getPendingTransactions<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	returnFormat: ReturnFormat,
+) {
+	const response = await rpcMethods.getPendingTransactions(web3Context.requestManager);
+
+	return response.map(transaction =>
+		formatTransaction(transaction as unknown as Transaction, returnFormat),
+	);
+}
+
 export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
@@ -325,17 +336,6 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 	);
 
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
-}
-
-export async function getPendingTransactions<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<EthExecutionAPI>,
-	returnFormat: ReturnFormat,
-) {
-	const response = await rpcMethods.getPendingTransactions(web3Context.requestManager);
-
-	return response.map(transaction =>
-		formatTransaction(transaction as unknown as Transaction, returnFormat),
-	);
 }
 
 export function sendTransaction<ReturnFormat extends DataFormat>(
@@ -555,38 +555,22 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
 }
 
-export async function getFeeHistory<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<EthExecutionAPI>,
-	blockCount: Numbers,
-	newestBlock: BlockNumberOrTag = web3Context.defaultBlock,
-	rewardPercentiles: Numbers[],
+export async function getLogs<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<Web3EthExecutionAPI>,
+	filter: Filter,
 	returnFormat: ReturnFormat,
 ) {
-	const blockCountFormatted = format({ eth: 'uint' }, blockCount, DEFAULT_RETURN_FORMAT);
-	const newestBlockFormatted = isBlockTag(newestBlock as string)
-		? (newestBlock as BlockTag)
-		: format({ eth: 'uint' }, newestBlock as Numbers, DEFAULT_RETURN_FORMAT);
-	const rewardPercentilesFormatted = format(
-		{
-			type: 'array',
-			items: {
-				eth: 'uint',
-			},
-		},
-		rewardPercentiles,
-		{
-			number: FMT_NUMBER.NUMBER,
-			bytes: FMT_BYTES.HEX,
-		},
-	);
-	const response = await rpcMethods.getFeeHistory(
-		web3Context.requestManager,
-		blockCountFormatted,
-		newestBlockFormatted,
-		rewardPercentilesFormatted,
-	);
+	const response = await rpcMethods.getLogs(web3Context.requestManager, filter);
 
-	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
+	const result = response.map(res => {
+		if (typeof res === 'string') {
+			return res;
+		}
+
+		return format(logSchema, res as unknown as Log, returnFormat);
+	});
+
+	return result;
 }
 
 export async function getChainId<ReturnFormat extends DataFormat>(
@@ -624,20 +608,36 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	return format(accountSchema, response as unknown as AccountObject, returnFormat);
 }
 
-export async function getLogs<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<Web3EthExecutionAPI>,
-	filter: Filter,
+export async function getFeeHistory<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	blockCount: Numbers,
+	newestBlock: BlockNumberOrTag = web3Context.defaultBlock,
+	rewardPercentiles: Numbers[],
 	returnFormat: ReturnFormat,
 ) {
-	const response = await rpcMethods.getLogs(web3Context.requestManager, filter);
+	const blockCountFormatted = format({ eth: 'uint' }, blockCount, DEFAULT_RETURN_FORMAT);
+	const newestBlockFormatted = isBlockTag(newestBlock as string)
+		? (newestBlock as BlockTag)
+		: format({ eth: 'uint' }, newestBlock as Numbers, DEFAULT_RETURN_FORMAT);
+	const rewardPercentilesFormatted = format(
+		{
+			type: 'array',
+			items: {
+				eth: 'uint',
+			},
+		},
+		rewardPercentiles,
+		{
+			number: FMT_NUMBER.NUMBER,
+			bytes: FMT_BYTES.HEX,
+		},
+	);
+	const response = await rpcMethods.getFeeHistory(
+		web3Context.requestManager,
+		blockCountFormatted,
+		newestBlockFormatted,
+		rewardPercentilesFormatted,
+	);
 
-	const result = response.map(res => {
-		if (typeof res === 'string') {
-			return res;
-		}
-
-		return format(logSchema, res as unknown as Log, returnFormat);
-	});
-
-	return result;
+	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
 }
