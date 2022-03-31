@@ -27,6 +27,7 @@ import {
 } from 'web3-utils';
 import { isBlockTag, isHexString32Bytes, validator } from 'web3-validator';
 import {
+	SignatureError,
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionPollingTimeoutError,
 	TransactionReceiptMissingBlockNumberError,
@@ -472,13 +473,26 @@ export const sendSignedTransaction = async (
 	return promiEvent;
 };
 
-// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
-// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
 export const sign = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	message: HexStringBytes,
-	address: Address,
-) => rpcMethods.sign(web3Context.requestManager, address, message);
+	addressOrIndex: Address | number,
+) => {
+	if (web3Context.wallet?.get(addressOrIndex)) {
+		const wallet = web3Context.wallet.get(addressOrIndex);
+
+		return wallet.sign(message);
+	}
+
+	if (typeof addressOrIndex === 'number') {
+		throw new SignatureError(
+			message,
+			'RPC method "eth_sign" does not support index signatures',
+		);
+	}
+
+	return rpcMethods.sign(web3Context.requestManager, addressOrIndex, message);
+};
 
 export const signTransaction = async (
 	web3Context: Web3Context<EthExecutionAPI>,
