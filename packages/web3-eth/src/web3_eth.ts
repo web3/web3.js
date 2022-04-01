@@ -28,6 +28,8 @@ enum SubscriptionNames {
 	newPendingTransactions = 'newPendingTransactions',
 	newHeads = 'newHeads',
 	syncing = 'syncing',
+	newBlockHeaders = 'newHeads',
+	pendingTransactions = 'newPendingTransactions',
 }
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
