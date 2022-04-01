@@ -23,13 +23,13 @@ import {
 	SyncingSubscription,
 } from './web3_subscriptions';
 
-enum SubscriptionNames {
+export enum SubscriptionNames {
 	logs = 'logs',
 	newPendingTransactions = 'newPendingTransactions',
 	newHeads = 'newHeads',
 	syncing = 'syncing',
-	newBlockHeaders = 'newHeads',
-	pendingTransactions = 'newPendingTransactions',
+	newBlockHeaders = 'newBlockHeaders',
+	pendingTransactions = 'pendingTransactions',
 }
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
@@ -284,7 +284,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		);
 	}
 
-	public subscribe(name: SubscriptionNames, args: unknown): Promise<any> | undefined {
+	public subscribe(
+		name: keyof typeof SubscriptionNames,
+		args: unknown,
+	): Promise<any> | undefined {
 		return this.subscriptionManager?.subscribe(name, args);
 	}
 
