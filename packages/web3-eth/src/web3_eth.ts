@@ -1,7 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT, TransactionWithSender } from 'web3-common';
-import { Web3Context } from 'web3-core';
+import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -16,6 +16,12 @@ import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+import {
+	LogsSubscription,
+	NewPendingTransactionsSubscription,
+	NewHeadsSubscription,
+	SyncingSubscription,
+} from './web3_subscriptions';
 
 enum SubscriptionNames {
 	logs = 'logs',
@@ -25,6 +31,18 @@ enum SubscriptionNames {
 }
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
+	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
+		super(providerOrContext);
+		this.setRegisteredSubscriptions({
+			logs: LogsSubscription,
+			newPendingTransactions: NewPendingTransactionsSubscription,
+			newHeads: NewHeadsSubscription,
+			syncing: SyncingSubscription,
+			pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+			newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+		});
+	}
+
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}

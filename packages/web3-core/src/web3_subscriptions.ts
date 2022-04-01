@@ -11,7 +11,6 @@ import {
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 	jsonRpc,
-	SyncOutput,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -107,40 +106,3 @@ export type Web3SubscriptionConstructor<
 	args: any,
 	options: { requestManager: Web3RequestManager<API> },
 ) => SubscriptionType;
-
-type CommonSubscriptionEvents = {
-	error: Error;
-	connected: number;
-};
-
-export class LogsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: { fromBlock: number; address: HexString | HexString[]; topics: (HexString | null)[] };
-		changed: {
-			fromBlock: number;
-			address: HexString | HexString[];
-			topics: (HexString | null)[];
-			removed: true;
-		};
-	},
-	{ address?: HexString; topics?: HexString[] }
-> {}
-
-export class NewPendingTransactionsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: HexString;
-	}
-> {}
-
-export class NewHeadsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: BlockOutput;
-	}
-> {}
-
-export class SyncingSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: SyncOutput;
-		changed: boolean;
-	}
-> {}
