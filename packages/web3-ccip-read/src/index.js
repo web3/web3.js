@@ -45,7 +45,7 @@ var gatewayQuery = function (url, to, calldata) {
     const senderUrl = url.replace('{sender}', lowerTo);
 
     if(url.includes('{data}')) {
-        return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}.json`);
+        return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}`);
     }
 
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
@@ -107,7 +107,7 @@ var normalizeResponse = function (error, result) {
  * @method callGateways
  *
  * @param {Array} urls
- * @param {} to
+ * @param {String} to
  * @param {Error} err
  * @param {Object} result
  *

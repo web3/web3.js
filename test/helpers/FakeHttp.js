@@ -11,19 +11,45 @@ var FakeHttp = function Http() {
 
 FakeHttp.prototype.get = function(queryUrl) {
     console.log('FAKEHTTP');
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolve({
             status: 200,
-            result: 'result'
+            method: 'get',
+            queryUrl
         });
     });
 };
 
 FakeHttp.prototype.post = function(queryUrl, payload) {
-    return new Promise((resolve, reject) => {
+    console.log('queryUrl: ', queryUrl);
+
+    if(queryUrl.includes('4xx')) {
+        return new Promise((_, reject) => {
+            reject({
+                status: 400,
+                statusText: 'statusText',
+                responseText: 'responseText'
+            });
+        });
+    }
+
+    if(queryUrl.includes('5xx')) {
+        return new Promise((_, reject) => {
+            reject({
+                status: 500,
+                statusText: 'statusText',
+                responseText: 'responseText'
+            });
+        });
+    }
+
+
+    return new Promise((resolve) => {
         resolve({
             status: 200,
-            result: 'post'
+            method: 'post',
+            queryUrl,
+            payload
         });
     });
 };

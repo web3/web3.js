@@ -41,24 +41,72 @@ describe('CCIP read', () => {
     });
 
     describe('callGateways', () => {
-        it.only('should skip malformed url', async () => {
+        it('should skip malformed url', async () => {
             const urls = ['malformedUrl', 'https://example.com'];
             const to = 'to';
             const callData = 'callData';
             const allowList = null;
 
             const result = await callGateways(urls, to, callData, allowList);
-            debugger;
-            console.log('result: ', result);
+            assert.equal(result.result, 'post');
         });
 
-        it.skip('should handle 4xx error');
-        it.skip('should throw if all urls fail');
-        it.skip('should send GET request if {data} is in the url template');
-        it.skip('should send POST request if {data} is not in the url');
-        it.skip('should substitute {sender} if in url');
+        it('should handle 4xx error', async () => {
+            const urls = ['https://example.com/4xx'];
+            const to = 'to';
+            const callData = 'callData';
+            const allowList = null;
 
-        it.skip('should allow call if allow list and block list are NOT provided');
+            try {
+                await callGateways(urls, to, callData, allowList);
+            } catch (e) {
+                assert.equal(e.message.includes('400 statusText'), true);
+            }
+        });
+        it('should throw if all urls fail', async () => {
+            const urls = ['https://example.com/5xx', 'https://anexample.com/5xx', 'https://anotherexample.com/5xx'];
+            const to = 'to';
+            const callData = 'callData';
+            const allowList = null;
+
+            try {
+                await callGateways(urls, to, callData, allowList);
+            } catch (e) {
+                assert.equal(e.message.includes('500 statusText'), true);
+            }
+        });
+        it('should send GET request if {data} is in the url template, and substitute paramaters correctly', async () => {
+            const urls = ['https://example.com/gateway/{sender}/{data}.json'];
+            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
+            const callData = '0x00112233';
+            const allowList = null;
+
+            const result = await callGateways(urls, to, callData, allowList);
+            assert.equal(result.method, 'get');
+            assert.equal(result.queryUrl, `https://example.com/gateway/${to}/${callData}.json`);
+        });
+        it('should send POST request if {data} is not in the url and substitute the parameters correctly', async () => {
+            const urls = ['https://example.com/gateway/{sender}.json'];
+            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
+            const callData = '0x00112233';
+            const allowList = null;
+
+            const result = await callGateways(urls, to, callData, allowList);
+            assert.equal(result.method, 'post');
+            assert.equal(result.queryUrl, `https://example.com/gateway/${to}.json`);
+        });
+
+        //check for content-type
+        it('should send a POST with a payload that follows the correct schema', async () => {
+            const urls = ['https://example.com/gateway/{sender}.json'];
+            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
+            const callData = '0x00112233';
+            const allowList = null;
+
+            const result = await callGateways(urls, to, callData, allowList);
+            assert.equal(result.method, 'post');
+            assert.equal(JSON.stringify(result.payload), JSON.stringify({ sender: to, data: callData}));
+        });
 
         describe('Allow list', () => {
             it.skip('should allow call if no allow list is provided');
