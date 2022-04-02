@@ -8,6 +8,7 @@
 // } from 'web3-common';
 // import { httpStringProvider, wsStringProvider, ipcStringProvider } from '../fixtures/config';
 // import net from 'net';
+import path from 'path';
 import { ipcStringProvider } from '../../fixtures/config';
 
 import { Web3 } from '../../../src/index';
@@ -45,7 +46,9 @@ describe('Web3 instance', () => {
 		it('should create instance with string of IPC provider', () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			// eslint-disable-next-line no-new
-			const ipcProvider = new Web3.providers.IpcProvider(ipcStringProvider);
+			const fullIpcPath = path.join(__dirname, ipcStringProvider);
+			const ipcProvider = new Web3.providers.IpcProvider(fullIpcPath);
+			// const ipcProvider = new Web3.providers.IpcProvider('/home/nikos/Desktop/web3.js/.github/geth/data/geth.ipc');
 			const web3 = new Web3(ipcProvider);
 			expect(web3).toBeInstanceOf(Web3);
 			// const status = (web3.currentProvider as Web3BaseProvider).getStatus();

@@ -18,4 +18,4 @@ export const accounts: Account[] = [
 ];
 export const httpStringProvider = 'http://localhost:8545';
 export const wsStringProvider = 'ws://localhost:8546';
-export const ipcStringProvider = '../../../../.github.com/docker-data/geth.ipc';
+export const ipcStringProvider = '../../../../../.github/geth/data/geth.ipc';
