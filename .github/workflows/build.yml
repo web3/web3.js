@@ -60,7 +60,7 @@ jobs:
             -   run: yarn
 
             -   if: (env.TEST_CMD == 'e2e_ganache')
-                run: yarn ganache-background && yarn test:integration
+                run: yarn ganache-background && yarn test:integration:ganache
 
             -   if: (env.TEST_CMD == 'e2e_geth')
                 run: yarn geth:install-ubuntu && yarn geth-local && yarn test:integration
