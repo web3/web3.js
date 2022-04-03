@@ -25,12 +25,7 @@ import {
 	Uint256,
 } from 'web3-utils';
 import { isBlockTag, isHexString32Bytes, validator } from 'web3-validator';
-import {
-	SignatureError,
-	TransactionMissingReceiptOrBlockHashError,
-	TransactionPollingTimeoutError,
-	TransactionReceiptMissingBlockNumberError,
-} from './errors';
+import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -310,7 +305,9 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 			) {
 				const wallet = web3Context.wallet.get(transaction.from);
 
-				const signedTransaction = wallet.signTransaction(transaction);
+				const signedTransaction = wallet.signTransaction(
+					transaction as Record<string, unknown>,
+				);
 
 				await rpcMethods.sendRawTransaction(
 					web3Context.requestManager,
@@ -321,7 +318,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 			} else {
 				transactionHash = await rpcMethods.sendTransaction(
 					web3Context.requestManager,
-					transaction,
+					transaction as Partial<TransactionWithSender>,
 				);
 			}
 
