@@ -14,7 +14,7 @@ import {
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { Transaction, TransactionCall } from './types';
+import { SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
@@ -155,13 +155,12 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
 
-	public async sendTransaction(
+	public async sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
-		options?: {
-			ignoreGasPricing: boolean;
-		},
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+		options?: SendTransactionOptions,
 	) {
-		return rpcMethodsWrappers.sendTransaction(this, transaction, options);
+		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
 	}
 
 	public async sendSignedTransaction(transaction: HexStringBytes) {
