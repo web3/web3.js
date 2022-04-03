@@ -306,7 +306,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 				const wallet = web3Context.wallet.get(transaction.from);
 
 				const signedTransaction = wallet.signTransaction(
-					transaction as Record<string, unknown>,
+					transactionFormatted as Record<string, unknown>,
 				);
 
 				await rpcMethods.sendRawTransaction(
@@ -318,7 +318,7 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 			} else {
 				transactionHash = await rpcMethods.sendTransaction(
 					web3Context.requestManager,
-					transaction as Partial<TransactionWithSender>,
+					transactionFormatted as Partial<TransactionWithSender>,
 				);
 			}
 
