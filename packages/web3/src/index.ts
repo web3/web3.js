@@ -61,6 +61,9 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 	};
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	private readonly _contracts: Contract<any>[] = [];
+
 	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
 		super({ provider });
 
@@ -69,6 +72,29 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		const self = this;
 
 		const eth = self.use(Eth);
+
+		function ContractBuilder<Abi extends ContractAbi>(
+			this: typeof ContractBuilder,
+			jsonInterface: Abi,
+			address?: Address,
+			options?: ContractInitOptions,
+		) {
+			if (!(this instanceof ContractBuilder)) {
+				throw new ContractError('Please use the "new" keyword to instantiate a contract.');
+			}
+
+			const contract = self.use(Contract, jsonInterface, address, options);
+
+			self._contracts.push(contract);
+
+			return contract;
+		}
+
+		ContractBuilder.setProvider = (_provider: SupportedProviders<EthExecutionAPI>) => {
+			for (const contract of self._contracts) {
+				contract.provider = _provider;
+			}
+		};
 
 		// Eth Module
 		this.eth = Object.assign(eth, {
@@ -79,20 +105,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			Iban,
 
 			// Contract helper and module
-			Contract: function ContractBuilder<Abi extends ContractAbi>(
-				this: typeof ContractBuilder,
-				jsonInterface: Abi,
-				address?: Address,
-				options?: ContractInitOptions,
-			) {
-				if (!(this instanceof ContractBuilder)) {
-					throw new ContractError(
-						'Please use the "new" keyword to instantiate a contract.',
-					);
-				}
-
-				return self.use(Contract, jsonInterface, address, options);
-			} as unknown as new <Abi extends ContractAbi>(
+			Contract: ContractBuilder as unknown as new <Abi extends ContractAbi>(
 				jsonInterface: Abi,
 				address?: Address,
 				options?: ContractInitOptions,
