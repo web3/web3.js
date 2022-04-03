@@ -41,7 +41,9 @@ describe('Web3 instance', () => {
 		// afterAll(() => server.close());
 
 		it('should create instance with string of ws provider', async () => {
-			const web3 = new Web3(wsStringProvider);
+			// const web3 = new Web3(wsStringProvider);
+			const wsStringProviderWithPort = `${wsStringProvider}:${process.env.WSPORT ?? 8546}`;
+			const web3 = new Web3(wsStringProviderWithPort);
 			// 	// .on('connect', msg => {
 			// 	// });
 			// 	// (web3.currentProvider as Web3BaseProvider).once();

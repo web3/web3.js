@@ -60,10 +60,10 @@ jobs:
             -   run: yarn
 
             -   if: (env.TEST_CMD == 'e2e_ganache')
-                run: yarn ganache-background && yarn test:integration:ganache
+                run: WSPORT=8545 yarn ganache-background && yarn test:integration:ganache
 
             -   if: (env.TEST_CMD == 'e2e_geth')
-                run: yarn geth:install-ubuntu && yarn geth-local && yarn test:integration
+                run: WSPORT=8546 yarn geth:install-ubuntu && yarn geth-local && yarn test:integration
 
             -   if: (env.TEST_CMD == 'e2e_browsers')
                 run: yarn ganache-background && yarn test:integration:browsers

@@ -17,5 +17,5 @@ export const accounts: Account[] = [
 	},
 ];
 export const httpStringProvider = 'http://localhost:8545';
-export const wsStringProvider = 'ws://localhost:8546';
+export const wsStringProvider = 'ws://localhost';
 export const ipcStringProvider = '../../../../../.github/geth/data/geth.ipc';
