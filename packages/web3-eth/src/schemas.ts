@@ -138,6 +138,7 @@ export const transactionSchema = {
 export const transactionInfoSchema = {
 	type: 'object',
 	properties: {
+		...transactionSchema.properties,
 		blockHash: {
 			eth: 'bytes32',
 		},
@@ -293,6 +294,9 @@ export const receiptInfoSchema = {
 			eth: 'uint',
 		},
 		gasUsed: {
+			eth: 'uint',
+		},
+		effectiveGasPrice: {
 			eth: 'uint',
 		},
 		contractAddress: {

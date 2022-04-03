@@ -10,6 +10,7 @@ import {
 	FMT_NUMBER,
 	ReceiptInfo,
 	DEFAULT_RETURN_FORMAT,
+	TransactionInfo,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -39,6 +40,7 @@ import {
 	feeHistorySchema,
 	logSchema,
 	receiptInfoSchema,
+	transactionInfoSchema,
 } from './schemas';
 import {
 	AccountObject,
@@ -188,7 +190,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 
 	return response === null
 		? response
-		: formatTransaction(response as unknown as Transaction, returnFormat);
+		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
 
 export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
@@ -212,7 +214,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 
 	return response === null
 		? response
-		: formatTransaction(response as unknown as Transaction, returnFormat);
+		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
 
 export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
