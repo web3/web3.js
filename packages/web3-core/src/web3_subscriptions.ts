@@ -15,10 +15,12 @@ import {
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
 
+type Callback = (error: Error | null, data: unknown) => void;
+
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	ArgsType = any,
+	ArgsType = { cb?: Callback } & any,
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
@@ -52,6 +54,11 @@ export abstract class Web3Subscription<
 			_: Error | null,
 			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 		) => {
+			// @ts-expect-error We accept any type of arguments here and don't deal with this type internally
+			if (typeof this.args?.cb === 'function') {
+				// @ts-expect-error We accept any type of arguments here and don't deal with this type internally
+				(this.args?.cb as Callback)(_, data);
+			}
 			if (data && jsonRpc.isResponseWithNotification(data)) {
 				this._processSubscriptionResult(data?.params.result);
 			}
@@ -103,6 +110,6 @@ export type Web3SubscriptionConstructor<
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	args: any,
+	args: { cb?: Callback } & any,
 	options: { requestManager: Web3RequestManager<API> },
 ) => SubscriptionType;

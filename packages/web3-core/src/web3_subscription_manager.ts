@@ -3,6 +3,13 @@ import { isSupportSubscriptions } from './utils';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 
+type ShouldUnsubscribeCondition = ({
+	id: sub,
+}: {
+	id: string;
+	sub: unknown;
+}) => boolean | undefined;
+
 export class Web3SubscriptionManager<
 	API extends Web3APISpec,
 	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> },
@@ -78,16 +85,15 @@ export class Web3SubscriptionManager<
 		if (!this._subscriptions.has(sub.id)) {
 			throw new SubscriptionError(`Subscription with id "${sub.id}" does not exists`);
 		}
-
+		const { id } = sub;
 		await sub.unsubscribe();
-		this._subscriptions.delete(sub.id);
+		this._subscriptions.delete(id);
 	}
 
-	public async unsubscribe(notClearSyncing = false) {
+	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
 		const result = [];
-
-		for (const [name, sub] of this._subscriptions.entries()) {
-			if (!(notClearSyncing && name === 'syncing')) {
+		for (const [id, sub] of this._subscriptions.entries()) {
+			if (!condition || (typeof condition === 'function' && condition({ id, sub }))) {
 				result.push(this.removeSubscription(sub));
 			}
 		}

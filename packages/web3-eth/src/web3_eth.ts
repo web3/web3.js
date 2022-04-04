@@ -21,9 +21,11 @@ import {
 	NewPendingTransactionsSubscription,
 	NewHeadsSubscription,
 	SyncingSubscription,
+	LogParams,
+	LogArguments,
 } from './web3_subscriptions';
 
-export enum SubscriptionNames {
+enum SubscriptionNames {
 	logs = 'logs',
 	newPendingTransactions = 'newPendingTransactions',
 	newHeads = 'newHeads',
@@ -31,6 +33,8 @@ export enum SubscriptionNames {
 	newBlockHeaders = 'newBlockHeaders',
 	pendingTransactions = 'pendingTransactions',
 }
+
+type Callback = (error: Error, result: LogParams) => void;
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
@@ -286,12 +290,23 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 
 	public subscribe(
 		name: keyof typeof SubscriptionNames,
-		args: unknown,
+		args?: LogArguments | undefined,
+		cb?: Callback,
 	): Promise<any> | undefined {
-		return this.subscriptionManager?.subscribe(name, args);
+		return this.subscriptionManager?.subscribe(name, {
+			...(args ?? {}),
+			cb,
+		});
+	}
+
+	private static shouldClearSubscription({ sub }: { sub: unknown }): boolean {
+		return !(sub instanceof SyncingSubscription);
 	}
 
 	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
-		return this.subscriptionManager?.unsubscribe(notClearSyncing);
+		return this.subscriptionManager?.unsubscribe(
+			// eslint-disable-next-line
+			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
+		);
 	}
 }

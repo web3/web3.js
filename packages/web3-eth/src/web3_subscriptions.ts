@@ -8,34 +8,58 @@ type CommonSubscriptionEvents = {
 	connected: number;
 };
 
-export class LogsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: { fromBlock: number; address: HexString | HexString[]; topics: (HexString | null)[] };
-		changed: {
-			fromBlock: number;
-			address: HexString | HexString[];
-			topics: (HexString | null)[];
-			removed: true;
-		};
-	},
-	{ address?: HexString; topics?: HexString[] }
-> {}
+export type LogArguments = {
+	fromBlock?: number;
+	address?: HexString | HexString[];
+	topics?: (HexString | null)[];
+	cb?: (error: Error | null, data: any) => void;
+};
+export type LogParams = CommonSubscriptionEvents & {
+	data: LogArguments;
+	changed: {
+		fromBlock: number;
+		address: HexString | HexString[];
+		topics: (HexString | null)[];
+		removed: true;
+	};
+};
+
+export class LogsSubscription extends Web3Subscription<CommonSubscriptionEvents & LogArguments> {
+	protected _buildSubscriptionParams() {
+		return ['logs', this.args] as ['logs', any];
+	}
+}
 
 export class NewPendingTransactionsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: HexString;
 	}
-> {}
+> {
+	// eslint-disable-next-line
+	protected _buildSubscriptionParams() {
+		return ['newPendingTransactions'] as ['newPendingTransactions'];
+	}
+}
 
 export class NewHeadsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: BlockOutput;
 	}
-> {}
+> {
+	// eslint-disable-next-line
+	protected _buildSubscriptionParams() {
+		return ['newHeads'] as ['newHeads'];
+	}
+}
 
 export class SyncingSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
 		data: SyncOutput;
 		changed: boolean;
 	}
-> {}
+> {
+	// eslint-disable-next-line
+	protected _buildSubscriptionParams() {
+		return ['syncing'] as ['syncing'];
+	}
+}
