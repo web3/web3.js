@@ -33,6 +33,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js"
 	},
 	"devDependencies": {
+		"@truffle/hdwallet-provider": "^2.0.4",
 		"@types/jest": "^27.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",
 		"@typescript-eslint/parser": "^5.4.0",
