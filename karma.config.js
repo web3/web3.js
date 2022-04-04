@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const os = require('os');
 const { lstatSync, readdirSync } = require('fs');
@@ -40,6 +41,7 @@ const webpackConfig = {
 		fallback: {
 			crypto: require.resolve('crypto-browserify'),
 			stream: require.resolve('stream-browserify'),
+			buffer: require.resolve('buffer'),
 		},
 	},
 	watch: false,
@@ -57,7 +59,14 @@ const webpackConfig = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [
+		new webpack.ProvidePlugin({
+			Buffer: ['buffer', 'Buffer'],
+		}),
+		new webpack.ProvidePlugin({
+			process: 'process/browser',
+		}),
+	],
 };
 module.exports = function (config) {
 	config.set({
