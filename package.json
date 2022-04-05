@@ -37,7 +37,8 @@
 		"ganache": "npx ganache -m 'smart guide what forget tired jungle always expire rescue boring glue champion' --account=\"0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e,100000000000000000000\" --account=\"0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3,100000000000000000000\"",
 		"ganache-background": "yarn ganache > /dev/null & client=$! npx wait-port 8545",
 		"geth:build": "docker build ./.github -t gethnode -f .github/Dockerfile",
-		"geth": "docker run -d -p 8545:8545 gethnode --datadir data --networkid 15 --http.addr 0.0.0.0 --http.port 8545 --http",
+		"geth": "docker run -p 8545:8545 gethnode --datadir data --networkid 15 --http --http.addr 0.0.0.0 --http.port 8545 --ws --ws.addr 0.0.0.0 --ws.port 8545",
+		"geth-background": "yarn geth -d",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel",
@@ -50,6 +51,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "*",
+		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
 		"crypto-browserify": "^3.12.0",
 		"eslint": "^8.3.0",

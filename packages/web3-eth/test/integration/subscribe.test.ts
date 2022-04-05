@@ -19,19 +19,19 @@ describe('unsubscribe', () => {
 		it('newHeads', async () => {
 			await web3Eth.subscribe('newHeads');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
-			const inst = subs?.get(Array.from(subs.keys())[0]); // web3Eth.subscriptionManager?.subscriptions.get(_id);
+			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
 		});
 		it('syncing', async () => {
 			await web3Eth.subscribe('syncing');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
-			const inst = subs?.get(Array.from(subs.keys())[0]); // web3Eth.subscriptionManager?.subscriptions.get(_id);
+			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
 		});
 		it('newPendingTransactions', async () => {
 			await web3Eth.subscribe('newPendingTransactions');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
-			const inst = subs?.get(Array.from(subs.keys())[0]); // web3Eth.subscriptionManager?.subscriptions.get(_id);
+			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
 		});
 		it('logs', async () => {
@@ -40,7 +40,7 @@ describe('unsubscribe', () => {
 				topics: ['0xd78a0cb8bb633d06981248b816e7bd33c2a35a6089241d099fa519e361cab902'],
 			});
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
-			const inst = subs?.get(Array.from(subs.keys())[0]); // web3Eth.subscriptionManager?.subscriptions.get(_id);
+			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
 		});
 	});
