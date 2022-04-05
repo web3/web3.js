@@ -111,6 +111,7 @@ export const decodeEventABI = (
 		});
 
 		if (indexedInputs > 0 && data?.topics && data?.topics.length !== indexedInputs + 1) {
+			// checks if event is anonymous
 			modifiedEvent = {
 				...modifiedEvent,
 				anonymous: true,
