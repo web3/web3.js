@@ -37,7 +37,6 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 			Array.isArray(abi) ? (abi as AbiInput[]) : ([abi] as unknown as AbiInput[]),
 		);
 		const modifiedParams: Array<unknown> = [];
-
 		for (const [index, param] of params.entries()) {
 			const item = modifiedTypes[index];
 			let type: string;
@@ -58,7 +57,6 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 
 			modifiedParams.push(newParam);
 		}
-
 		return ethersAbiCoder.encode(
 			modifiedTypes.map(p => ParamType.from(p)),
 			modifiedParams,
@@ -103,9 +101,13 @@ export const decodeParametersWith = (
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			let decodedValue = res[i];
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			decodedValue = decodedValue === '0x' ? null : decodedValue;
+			const isStringObject = typeof abi === 'object' && abi.type && abi.type === 'string';
+			const isStringType = typeof abi === 'string' && abi === 'string';
 
-			// check if abi is an object
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			decodedValue =
+				decodedValue === '0x' && !isStringObject && !isStringType ? null : decodedValue;
+
 			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
 				// the length of the abi object will always be 1
 				for (const j of Object.keys(abi)) {

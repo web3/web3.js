@@ -1,5 +1,5 @@
 import { HexString } from 'web3-utils';
-import { AbiEventFragment, AbiParameter } from '../types';
+import { AbiParameter } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 // import { mapTypes } from '../utils';
 
@@ -13,7 +13,6 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	data: HexString,
 	topics: string | string[],
 ) => {
-
 	const clonedTopics = Array.isArray(topics) ? topics : [topics];
 
 	const clonedData = data ?? '';
@@ -22,22 +21,11 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	const indexedParams: Array<string | unknown> = [];
 	let topicCount = 0;
 
-	// TODO check for anonymous logs?
 	for (const [i, input] of inputs.entries()) {
-
-		if (input.type === 'event') {
-			const event = input as AbiEventFragment;
-			// check if it has anonymous logs
-			if (!!event.anonymous && event.anonymous === true){
-				// check if indexed
-				
-			}
-
 		if (input.indexed) {
 			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
 				? (decodeParameter(input.type, clonedTopics[topicCount])[0] as unknown[])
 				: clonedTopics[topicCount];
-
 			topicCount += 1;
 		} else {
 			notIndexedInputs[i] = input as unknown as AbiParameter;
@@ -48,7 +36,6 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	const notIndexedParams = nonIndexedData
 		? decodeParametersWith(notIndexedInputs, nonIndexedData, true)
 		: [];
-
 	const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
 	returnValue.__length__ = 0;
 
