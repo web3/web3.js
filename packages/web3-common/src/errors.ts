@@ -69,6 +69,29 @@ export abstract class Web3Error extends Error {
 	}
 }
 
+export abstract class InvalidValueError extends Web3Error {
+	public constructor(value: unknown, msg: string) {
+		super(
+			`Invalid value given "${InvalidValueError.convertToString(
+				value,
+				true,
+			)}". Error: ${msg}.`,
+		);
+	}
+
+	public static convertToString(value: unknown, unquotValue = false) {
+		if (value === undefined) return 'undefined';
+
+		const result = JSON.stringify(
+			value,
+			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
+		);
+
+		return unquotValue && ['bigint', 'string'].includes(typeof value)
+			? result.replace(/['\\"]+/g, '')
+			: result;
+	}
+}
 export class InvalidNumberOfParamsError extends Web3Error {
 	public code = ERR_PARAM;
 
