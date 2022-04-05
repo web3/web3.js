@@ -11,7 +11,7 @@ import {
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Address, BlockTag, Bytes, Filter, HexString32Bytes, Numbers } from 'web3-utils';
-import { isBlockTag, isHexString32Bytes } from 'web3-validator';
+import { isBlockTag, isBytes, isHexString32Bytes } from 'web3-validator';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -128,15 +128,20 @@ export const getCode = async (
 
 export async function getBlock<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	hydrated = false,
 	returnFormat: ReturnFormat,
 ) {
 	let response;
-	if (isHexString32Bytes(block as string)) {
+	if (isBytes(block)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			block as Bytes,
+			DEFAULT_RETURN_FORMAT,
+		);
 		response = await rpcMethods.getBlockByHash(
 			web3Context.requestManager,
-			block as HexString32Bytes,
+			blockHashFormatted,
 			hydrated,
 		);
 	} else {
@@ -155,14 +160,19 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 
 export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
 	let response;
-	if (isHexString32Bytes(block as string)) {
+	if (isBytes(block)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			block as Bytes,
+			DEFAULT_RETURN_FORMAT,
+		);
 		response = await rpcMethods.getBlockTransactionCountByHash(
 			web3Context.requestManager,
-			block as HexString32Bytes,
+			blockHashFormatted,
 		);
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
@@ -179,14 +189,19 @@ export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 
 export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
 	let response;
-	if (isHexString32Bytes(block as string)) {
+	if (isBytes(block)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			block as Bytes,
+			DEFAULT_RETURN_FORMAT,
+		);
 		response = await rpcMethods.getUncleCountByBlockHash(
 			web3Context.requestManager,
-			block as HexString32Bytes,
+			blockHashFormatted,
 		);
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
@@ -203,17 +218,22 @@ export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 
 export async function getUncle<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	uncleIndex: Numbers,
 	returnFormat: ReturnFormat,
 ) {
 	const uncleIndexFormatted = format({ eth: 'uint' }, uncleIndex, DEFAULT_RETURN_FORMAT);
 
 	let response;
-	if (isHexString32Bytes(block as string)) {
+	if (isBytes(block)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			block as Bytes,
+			DEFAULT_RETURN_FORMAT,
+		);
 		response = await rpcMethods.getUncleByBlockHashAndIndex(
 			web3Context.requestManager,
-			block as HexString32Bytes,
+			blockHashFormatted,
 			uncleIndexFormatted,
 		);
 	} else {
@@ -263,7 +283,7 @@ export async function getPendingTransactions<ReturnFormat extends DataFormat>(
 
 export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	block: HexString32Bytes | BlockNumberOrTag = web3Context.defaultBlock,
+	block: Bytes | BlockNumberOrTag = web3Context.defaultBlock,
 	transactionIndex: Numbers,
 	returnFormat: ReturnFormat,
 ) {
@@ -274,10 +294,15 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	);
 
 	let response;
-	if (isHexString32Bytes(block as string)) {
+	if (isBytes(block)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			block as Bytes,
+			DEFAULT_RETURN_FORMAT,
+		);
 		response = await rpcMethods.getTransactionByBlockHashAndIndex(
 			web3Context.requestManager,
-			block as HexString32Bytes,
+			blockHashFormatted,
 			transactionIndexFormatted,
 		);
 	} else {
