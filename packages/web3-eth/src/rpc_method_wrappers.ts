@@ -10,8 +10,8 @@ import {
 	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Address, BlockTag, Bytes, Filter, HexString32Bytes, Numbers } from 'web3-utils';
-import { isBlockTag, isBytes, isHexString32Bytes } from 'web3-validator';
+import { Address, BlockTag, Bytes, Filter, Numbers } from 'web3-utils';
+import { isBlockTag, isBytes } from 'web3-validator';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
