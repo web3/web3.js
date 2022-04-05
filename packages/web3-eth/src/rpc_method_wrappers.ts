@@ -462,6 +462,7 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		setImmediate(async () => {
+			// Formatting signedTransaction as per returnFormat to be returned to user
 			const signedTransactionFormatted = format(
 				{ eth: 'bytes' },
 				signedTransaction,
@@ -470,6 +471,7 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 
 			promiEvent.emit('sending', signedTransactionFormatted);
 
+			// Formatting signedTransaction to be send to RPC endpoint
 			const signedTransactionFormattedHex = format(
 				{ eth: 'bytes' },
 				signedTransaction,
