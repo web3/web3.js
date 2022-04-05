@@ -93,6 +93,7 @@ module.exports = function (config) {
 			'karma-jasmine',
 			'karma-chrome-launcher',
 			'karma-firefox-launcher',
+			// 'karma-requirejs',
 			// 'karma-browserify',
 		],
 		browsers: ['ChromeHeadless', 'FirefoxHeadless'],
@@ -122,5 +123,9 @@ module.exports = function (config) {
 			),
 		},
 		webpack: webpackConfig,
+		captureTimeout: 210000,
+		browserDisconnectTolerance: 3,
+		browserDisconnectTimeout: 210000,
+		browserNoActivityTimeout: 210000,
 	});
 };
