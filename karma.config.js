@@ -30,6 +30,11 @@ const webpackConfig = {
 			},
 		],
 	},
+	externals: {
+		fs: 'commonjs fs',
+		path: 'commonjs path',
+		net: 'commonjs net',
+	},
 	resolve: {
 		extensions: ['.ts', '.js'],
 		modules: [
@@ -40,8 +45,21 @@ const webpackConfig = {
 		],
 		fallback: {
 			crypto: require.resolve('crypto-browserify'),
-			stream: require.resolve('stream-browserify'),
-			buffer: require.resolve('buffer'),
+			stream: 'readable-stream',
+			// stream: require.resolve('stream-browserify'),
+			path: require.resolve('path-browserify'),
+			assert: require.resolve('assert/'),
+			// buffer: require.resolve('buffer/'),
+			hdwalletprovider: require.resolve('@truffle/hdwallet-provider'),
+			// fs: require.resolve('fs/'),
+			// net: require.resolve('net-browserify'),
+			// util: require.resolve('util/'),
+			// assert: require.resolve('assert/'),
+			// url: false,
+			// fs: false,
+			// net: false,
+			// util: false,
+			// assert: false,
 		},
 	},
 	watch: false,
@@ -75,6 +93,7 @@ module.exports = function (config) {
 			'karma-jasmine',
 			'karma-chrome-launcher',
 			'karma-firefox-launcher',
+			// 'karma-browserify',
 		],
 		browsers: ['ChromeHeadless', 'FirefoxHeadless'],
 		// base path that will be used to resolve all patterns (eg. files, exclude)
@@ -87,6 +106,7 @@ module.exports = function (config) {
 		concurrency: 10,
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
+		// frameworks: ['webpack', 'jasmine', 'karma-browserify'],
 		frameworks: ['webpack', 'jasmine'],
 		// list of files / patterns to load in the browser
 		// Here I'm including all of the the Jest tests which are all under the __tests__ directory.
