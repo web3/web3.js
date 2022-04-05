@@ -41,10 +41,11 @@ describe('CCIP read', () => {
     });
 
     describe('callGateways', () => {
+        const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
+        const callData = '0x00112233';
+
         it('should skip malformed url', async () => {
             const urls = ['malformedUrl', 'https://example.com'];
-            const to = 'to';
-            const callData = 'callData';
             const allowList = null;
 
             const result = await callGateways(urls, to, callData, allowList);
@@ -53,8 +54,6 @@ describe('CCIP read', () => {
 
         it('should handle 4xx error', async () => {
             const urls = ['https://example.com/4xx'];
-            const to = 'to';
-            const callData = 'callData';
             const allowList = null;
 
             try {
@@ -65,8 +64,6 @@ describe('CCIP read', () => {
         });
         it('should throw if all urls fail', async () => {
             const urls = ['https://example.com/5xx', 'https://anexample.com/5xx', 'https://anotherexample.com/5xx'];
-            const to = 'to';
-            const callData = 'callData';
             const allowList = null;
 
             try {
@@ -77,8 +74,6 @@ describe('CCIP read', () => {
         });
         it('should send GET request if {data} is in the url template, and substitute paramaters correctly', async () => {
             const urls = ['https://example.com/gateway/{sender}/{data}.json'];
-            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
-            const callData = '0x00112233';
             const allowList = null;
 
             const result = await callGateways(urls, to, callData, allowList);
@@ -87,8 +82,6 @@ describe('CCIP read', () => {
         });
         it('should send POST request if {data} is not in the url and substitute the parameters correctly', async () => {
             const urls = ['https://example.com/gateway/{sender}.json'];
-            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
-            const callData = '0x00112233';
             const allowList = null;
 
             const result = await callGateways(urls, to, callData, allowList);
@@ -99,8 +92,6 @@ describe('CCIP read', () => {
         //check for content-type
         it('should send a POST with a payload that follows the correct schema', async () => {
             const urls = ['https://example.com/gateway/{sender}.json'];
-            const to = '0xaabbccddeeaabbccddeeaabbccddeeaabbccddee';
-            const callData = '0x00112233';
             const allowList = null;
 
             const result = await callGateways(urls, to, callData, allowList);
@@ -108,10 +99,67 @@ describe('CCIP read', () => {
             assert.equal(JSON.stringify(result.payload), JSON.stringify({ sender: to, data: callData}));
         });
 
+        it.skip('should skip gateway if it does not reply with application/json');
+        it.skip('should lowercase calldata and sender');
+        it.skip('should continue to next url if response body fails to parse');
+        it.skip('should handle ccip-read compliant gateway error message');
+
         describe('Allow list', () => {
-            it.skip('should allow call if no allow list is provided');
-            it.skip('should allow call if allow list is provided and domain is on allow list');
-            it.skip('should NOT allow call if allow list is provided and domain is NOT on allow list');
+            it('should allow call if no allow list is provided', async () => {
+                const urls = ['https://example.com/gateway/{sender}.json'];
+                const allowList = null;
+
+                const result = await callGateways(urls, to, callData, allowList);
+                assert.equal(result.method, 'post');
+            });
+            it('should allow call if allow list is provided and domain is on allow list', async () => {
+                const urls = ['https://example.com/gateway/{sender}.json'];
+                const allowList = ['example.com'];
+
+                const result = await callGateways(urls, to, callData, allowList);
+                assert.equal(result.method, 'post');
+            });
+            it('should NOT allow call if allow list is provided and domain is NOT on allow list', async () => {
+                const urls = ['https://example.com/gateway/{sender}.json'];
+                const allowList = ['foo.com'];
+
+                try {
+                    await callGateways(urls, to, callData, allowList);
+                } catch (e) {
+                    assert(e.message.includes('All gateways failed'));
+                }
+            });
+            it('should NOT allow call if allow list is provided and domain is part another allowed domain', async () => {
+                const urls = ['https://example.com/gateway/{sender}.json'];
+                const allowList = ['test.example.com'];
+
+                try {
+                    await callGateways(urls, to, callData, allowList);
+                } catch (e) {
+                    assert(e.message.includes('All gateways failed'));
+                    return;
+                }
+                assert.fail();
+            });
+            it('should NOT allow call if subdomain of allowed domain', async () => {
+                const urls = ['https://test.example.com/gateway/{sender}.json'];
+                const allowList = ['example.com'];
+
+                try {
+                    await callGateways(urls, to, callData, allowList);
+                } catch (e) {
+                    assert(e.message.includes('All gateways failed'));
+                    return;
+                }
+                assert.fail();
+            });
+            it('should skip over disallowed urls and call allowed url if one is present', async () => {
+                const urls = ['https://bar.com/{sender}.json', 'https://foo.com/{sender}.json', 'https://test.example.com/gateway/{sender}.json'];
+                const allowList = ['bar.com', 'foo.com', 'test.example.com'];
+
+                const result = await callGateways(urls, to, callData, allowList);
+                assert.equal(result.status, 200);
+            });
         });
     });
 

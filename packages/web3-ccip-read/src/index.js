@@ -46,13 +46,14 @@ var gatewayQuery = function (url, to, calldata) {
 
     if(url.includes('{data}')) {
         return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}`);
+        // return httpObject.get(`${senderUrl.replace('{data}', '23fweefsd')}`);
     }
 
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
 };
 
 var formatGatewayError = function (errorResponse) {
-    return `Gateway query error: ${errorResponse.status} ${errorResponse.statusText} \n ${errorResponse.responseText}`;
+    return `Gateway query error: ${errorResponse.status}\n ${errorResponse.responseText} \n ${errorResponse.responseBody && errorResponse.responseBody.message} \n ${errorResponse.customError || ''}`;
 };
 
 var isUrlAllowed = function (urlInstance, allowList) {
@@ -60,7 +61,7 @@ var isUrlAllowed = function (urlInstance, allowList) {
     return allowList.includes(urlInstance.hostname);
 };
 
-var hasCcipReadFunctionSelector = function (encodedString) {
+var hasCcipReadErrorSelector = function (encodedString) {
     return encodedString && encodedString.substring(0, 10) === ENCODED_CCIP_READ_ERROR_SELECTOR;
 };
 
@@ -77,13 +78,13 @@ var normalizeResponse = function (error, result) {
         return defaultResponse;
     }
 
-    if (typeof error === "string" && hasCcipReadFunctionSelector(error)) {
+    if (typeof error === "string" && hasCcipReadErrorSelector(error)) {
         return {
             data: error
         };
     }
 
-    if (typeof result === "string" && hasCcipReadFunctionSelector(result)) {
+    if (typeof result === "string" && hasCcipReadErrorSelector(result)) {
         return {
             data: result
         };
@@ -91,7 +92,7 @@ var normalizeResponse = function (error, result) {
 
     if (
         typeof error === 'object' &&
-        hasCcipReadFunctionSelector(error && error.data)
+        hasCcipReadErrorSelector(error && error.data)
     ) {
         return {
             data: error.data
@@ -119,7 +120,7 @@ var callGateways = async function (urls, to, callData, allowList) {
         try {
             urlInstance = new URL(url);
         } catch(e) {
-            console.warn('Skipping gateway url ${url} as it is malformed');
+            console.warn(`Skipping gateway url ${url} as it is malformed`);
             continue;
         }
 
@@ -131,24 +132,29 @@ var callGateways = async function (urls, to, callData, allowList) {
         let response;
         try {
             response = await gatewayQuery(url, to, callData);
-            console.log('response: ', response);
+
+            if(!response.request.getResponseHeader('content-type').includes('application/json')) {
+                console.warn(`Skipping gateway url ${url} as it did not return application/json`);
+                continue;
+            }
+
             if (response.status >= 200 && response.status <= 299) {
                 return response;
             }
+
         } catch (errorResponse) {
-            console.log('errorResponse: ', errorResponse);
             const formattedError = formatGatewayError(errorResponse);
 
             if (errorResponse.status >= 400 && errorResponse.status <= 499) {
                 throw new Error(formattedError);
             }
 
-            //5xx errors
+            //5xx or client errors
             console.warn(formattedError);
         }
     }
 
-    // throw new Error('All gateways failed');
+    throw new Error('All gateways failed');
 };
 
 /**
@@ -227,7 +233,7 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         }
     } else {
         const result = await callGateways(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
-        gatewayResult = result.response.data;
+        gatewayResult = result.responseBody.data;
     }
 
     const nextCall = hexConcat([

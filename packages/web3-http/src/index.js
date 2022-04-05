@@ -59,6 +59,14 @@ Http.prototype._prepareRequest = function(){
     return request;
 };
 
+Http.prototype._responseObject = function(status, responseBody, request) {
+    return ({
+        status,
+        responseBody,
+        request
+    });
+};
+
 Http.prototype.get = function(queryUrl) {
     return new Promise((resolve, reject) => {
         var _this = this;
@@ -77,18 +85,24 @@ Http.prototype.get = function(queryUrl) {
 
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
-                var response = request.responseText;
+                var responseBody;
 
                 try {
-                    response = JSON.parse(response);
+                    responseBody = JSON.parse(request.responseText);
                 } catch(e) {
+                    reject(request.customError = 'Error parsing response body');
+                }
+
+                if(request.status >= 400) {
+                    request.responseBody = responseBody;
                     reject(request);
                 }
 
                 _this.connected = true;
                 resolve({
                     status: request.status,
-                    response
+                    responseBody,
+                    request
                 });
             }
         };
@@ -126,6 +140,10 @@ Http.prototype.post = function(queryUrl, payload= {}) {
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
                 var response = request.responseText;
+
+                if(response.status >=400) {
+                    reject(request);
+                }
 
                 try {
                     response = JSON.parse(response);

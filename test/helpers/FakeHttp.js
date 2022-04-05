@@ -1,6 +1,5 @@
 
 var FakeHttp = function Http() {
-
 };
 
 //TODO: check for valid URL
@@ -9,26 +8,40 @@ var FakeHttp = function Http() {
 //
 // }
 
+/*
+    normal server response
+    {status: request.status
+    response: json parsed server response)
+
+    error response
+
+    response:  { status: 400, response: { message: 'Invalid request format' } }
+
+ */
+
 FakeHttp.prototype.get = function(queryUrl) {
-    console.log('FAKEHTTP');
     return new Promise((resolve) => {
         resolve({
             status: 200,
+            responseBody: {},
+            request: {},
             method: 'get',
-            queryUrl
+            data: '0x',
+            queryUrl,
         });
     });
 };
 
 FakeHttp.prototype.post = function(queryUrl, payload) {
-    console.log('queryUrl: ', queryUrl);
-
     if(queryUrl.includes('4xx')) {
         return new Promise((_, reject) => {
             reject({
                 status: 400,
                 statusText: 'statusText',
-                responseText: 'responseText'
+                responseText: 'responseText',
+                responseBody: {
+                    message: 'error message'
+                },
             });
         });
     }
@@ -38,7 +51,10 @@ FakeHttp.prototype.post = function(queryUrl, payload) {
             reject({
                 status: 500,
                 statusText: 'statusText',
-                responseText: 'responseText'
+                responseText: 'responseText',
+                responseBody: {
+                    message: 'error message'
+                }
             });
         });
     }
@@ -47,6 +63,8 @@ FakeHttp.prototype.post = function(queryUrl, payload) {
     return new Promise((resolve) => {
         resolve({
             status: 200,
+            responseBody: {},
+            request: {},
             method: 'post',
             queryUrl,
             payload
