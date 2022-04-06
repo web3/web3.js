@@ -1,0 +1,21 @@
+import { AbiEventFragment } from 'web3-eth-abi';
+import { LogsInput } from 'web3-common';
+
+export const decodeEventABIData: [AbiEventFragment & { signature: string }, LogsInput, any ][] = [
+    [ {
+        "type":"event",
+        "inputs": [{"name":"a","type":"string","indexed":false},{"name":"b","type":"uint","indexed":false}, {"name":"a","type":"string","indexed": false}],
+        "name":"EventNotAnonymous",
+        "signature":"0x7bbee60e68739c7319c204bae2f54caab4114edf476c64bfc5be98af25f446f5"
+        },
+        {
+            address:'',
+            topics:['0x7bbee60e68739c7319c204bae2f54caab4114edf476c64bfc5be98af25f446f5'],
+            data:'0x0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000001800000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000001610000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000016300000000000000000000000000000000000000000000000000000000000000'
+        },
+        {
+            
+        }
+
+    ]
+];
