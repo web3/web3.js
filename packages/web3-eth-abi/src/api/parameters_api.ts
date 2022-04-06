@@ -37,7 +37,6 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 			Array.isArray(abi) ? (abi as AbiInput[]) : ([abi] as unknown as AbiInput[]),
 		);
 		const modifiedParams: Array<unknown> = [];
-
 		for (const [index, param] of params.entries()) {
 			const item = modifiedTypes[index];
 			let type: string;
@@ -58,7 +57,6 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 
 			modifiedParams.push(newParam);
 		}
-
 		return ethersAbiCoder.encode(
 			modifiedTypes.map(p => ParamType.from(p)),
 			modifiedParams,

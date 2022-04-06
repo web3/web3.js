@@ -1,9 +1,8 @@
-import { getBlock } from 'web3-eth';
+import { getBlock, ReceiptInfo } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
 import {
-	ReceiptInfo,
 	RevertInstructionError,
 	EthExecutionAPI,
 	ENSUnsupportedNetworkError,

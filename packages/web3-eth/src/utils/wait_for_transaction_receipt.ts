@@ -1,15 +1,18 @@
-import { EthExecutionAPI, ReceiptInfo } from 'web3-common';
+import { DataFormat, EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { HexString32Bytes } from 'web3-utils';
+import { Bytes } from 'web3-utils';
 
-import { getTransactionReceipt } from '../rpc_methods';
+import { ReceiptInfo } from '../types';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionReceipt } from '../rpc_method_wrappers';
 import { TransactionPollingTimeoutError } from '../errors';
 
-export const waitForTransactionReceipt = async (
+export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionHash: HexString32Bytes,
-): Promise<ReceiptInfo> =>
-	new Promise(resolve => {
+	transactionHash: Bytes,
+	returnFormat: ReturnFormat,
+): Promise<ReceiptInfo> {
+	return new Promise(resolve => {
 		let transactionPollingDuration = 0;
 		const intervalId = setInterval(() => {
 			(async () => {
@@ -26,8 +29,9 @@ export const waitForTransactionReceipt = async (
 				}
 
 				const response = await getTransactionReceipt(
-					web3Context.requestManager,
+					web3Context,
 					transactionHash,
+					returnFormat,
 				);
 
 				if (response !== null) {
@@ -37,3 +41,4 @@ export const waitForTransactionReceipt = async (
 			})() as unknown;
 		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 	});
+}

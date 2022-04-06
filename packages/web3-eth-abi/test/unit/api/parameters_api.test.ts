@@ -5,6 +5,7 @@ import {
 	validDecodeParametersData,
 	validEncodeParametersData,
 	validEncodeDecodeParametersData,
+	validEncodeDoesNotMutateData,
 } from '../../fixtures/data';
 import { AbiInput } from '../../../src/types';
 
@@ -24,6 +25,21 @@ describe('parameters_api', () => {
 				'%#: should pass for valid values: %j',
 				({ input: [abi, params], output }) => {
 					expect(() => encodeParameters(abi, params)).toThrow(output);
+				},
+			);
+		});
+	});
+
+	describe('encodeParametersDoesNotMutate', () => {
+		describe('valid data', () => {
+			it.each(validEncodeDoesNotMutateData)(
+				'%#: should pass for valid values: %j',
+				({ input: [abi, params], output, expectedInput }) => {
+					expect(encodeParameters(abi, params)).toEqual(output);
+					// check that params has not been mutated
+					expect(JSON.parse(JSON.stringify(params))).toEqual(
+						JSON.parse(JSON.stringify(expectedInput)),
+					);
 				},
 			);
 		});

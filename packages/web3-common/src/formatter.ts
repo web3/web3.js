@@ -117,7 +117,8 @@ export const convertScalarValue = (value: unknown, ethType: string, format: Data
 			}
 		}
 	} catch (error) {
-		// TODO: Add debugging to verify the error is thrown by the correct function
+		// If someone did't used `eth` keyword we can return original value
+		// as the scope of this code is formatting not validation
 		return value;
 	}
 
