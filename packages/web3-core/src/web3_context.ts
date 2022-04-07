@@ -7,6 +7,7 @@ import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
+import { Web3BatchRequest } from './web3_batch_request';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
@@ -67,6 +68,7 @@ export class Web3Context<
 	public readonly providers = Web3RequestManager.providers;
 	private _requestManager: Web3RequestManager<API>;
 	private _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
+	private static readonly _batchRequest = Web3BatchRequest;
 
 	public constructor(
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
@@ -180,6 +182,10 @@ export class Web3Context<
 
 	public set currentProvider(provider: SupportedProviders<API>) {
 		this.requestManager.setProvider(provider);
+	}
+
+	public get BatchRequest() {
+		return new Web3Context._batchRequest(this._requestManager as unknown as Web3RequestManager);
 	}
 }
 
