@@ -532,6 +532,12 @@ Released with 1.0.0-beta.37 code base.
 -  Fix jsonrpc payload and response types (#4743) (#4761)
 -  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
 
+## [1.7.3]
+
+### Fixed
+
+-  fixed build issues of 1.7.2
+
 ## [Unreleased]
 
-## [1.7.3]
+## [1.7.4]
