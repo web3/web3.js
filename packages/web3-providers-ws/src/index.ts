@@ -115,7 +115,12 @@ export default class WebSocketProvider<
 
 	public connect(): void {
 		try {
-			this._webSocketConnection = new WebSocket(this._clientUrl, this._wsProviderOptions);
+			this._webSocketConnection = new WebSocket(
+				this._clientUrl,
+				this._wsProviderOptions && Object.keys(this._wsProviderOptions).length === 0
+					? undefined
+					: this._wsProviderOptions,
+			);
 
 			this._addSocketListeners();
 

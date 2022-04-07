@@ -14,7 +14,7 @@ describe('unsubscribe', () => {
 				{ delay: 1, autoReconnect: true, maxAttempts: 1 },
 			),
 		);
-
+		// const a = jest.fn();
 		console.log(web3Eth); //  eslint-disable-line
 	});
 

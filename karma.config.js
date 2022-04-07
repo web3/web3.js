@@ -12,7 +12,7 @@ const packages = readdirSync(basePath).filter(name => {
 });
 
 const listOfTests = packages.map(packageName =>
-	path.join('packages', packageName, 'test', 'integration', '**', '*.ts'),
+	path.join('packages', packageName, 'test', 'integration', '**', '*.test.ts'),
 );
 
 const outputPath = path.join(os.tmpdir(), '_karma_webpack_');
@@ -32,18 +32,18 @@ const webpackConfig = {
 				test: /\.ts?$/,
 				use: 'ts-loader',
 				exclude: [
-					...packages.map(packageName =>
-						path.resolve(__dirname, 'packages', packageName, 'test', 'unit'),
-					),
-					...packages.map(packageName =>
-						path.resolve(__dirname, 'packages', packageName, 'test', 'fixtures'),
-					),
-					...packages.map(
-						packageName =>
-							new RegExp(path.join('packages', packageName, 'test', 'fixtures')),
-						// path.resolve(__dirname, 'packages', packageName, 'test', 'fixtures'),
-					),
+					// ...packages.map(packageName =>
+					// 	path.resolve(__dirname, 'packages', packageName, 'test', 'unit'),
+					// ),
+					// ...packages.map(packageName =>
+					// 	path.resolve(__dirname, 'packages', packageName, 'test', 'fixtures'),
+					// ),
+					// ...packages.map(
+					// 	packageName =>
+					// 		new RegExp(path.join('packages', packageName, 'test', 'fixtures')),
+					// ),
 					/node_modules/,
+					/unit/,
 				],
 			},
 		],
@@ -53,6 +53,7 @@ const webpackConfig = {
 		path: 'commonjs path',
 		net: 'commonjs net',
 	},
+
 	resolve: {
 		extensions: ['.ts', '.js'],
 		modules: [
@@ -64,7 +65,11 @@ const webpackConfig = {
 		fallback: {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
-			assert: require.resolve('assert'),
+			// assert: require.resolve('assert'),
+		},
+		alias: {
+			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
+			jest: path.join(__dirname, 'node_modules', 'jest'),
 		},
 	},
 	watch: false,
@@ -114,16 +119,8 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		// frameworks to use
-		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		// list of files / patterns to load in the browser
-		// Here I'm including all of the the Jest tests which are all under the __tests__ directory.
-		// You may need to tweak this patter to find your test files/
 		files: listOfTests,
-		// preprocess matching files before serving them to the browser
-		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			// Use webpack to bundle our tests files
 			...listOfTests.reduce(
 				(res, packagePath) => ({ ...res, [packagePath]: ['webpack', 'browserify'] }),
 				{},
