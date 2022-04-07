@@ -520,9 +520,6 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
-
-## [Unreleased]
-
 ## [1.7.2]
 
 ### Changed
@@ -533,9 +530,12 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+
+
 ## [Unreleased]
 
 ## [1.7.3]
 
+### Fixed
 -  Fix dead link in web3-eth.rst (#4916)
--  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
