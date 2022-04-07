@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var core = require('web3-core');
 var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
@@ -42,23 +41,23 @@ var formatter = helpers.formatters;
 
 
 var blockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionFromBlockCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
 };
 
 var getBlockTransactionCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (typeof args[0] === 'string' && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
 
@@ -101,6 +100,8 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var transactionPollingInterval = 1000;
+    var blockHeaderTimeout = 10; // 10 seconds
     var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
 
@@ -189,6 +190,23 @@ var Eth = function Eth() {
         },
         enumerable: true
     });
+    Object.defineProperty(this, 'transactionPollingInterval', {
+        get: function () {
+            return transactionPollingInterval;
+        },
+        set: function (val) {
+            transactionPollingInterval = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionPollingInterval = transactionPollingInterval;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionPollingInterval = transactionPollingInterval;
+            });
+        },
+        enumerable: true
+    });
     Object.defineProperty(this, 'transactionConfirmationBlocks', {
         get: function () {
             return transactionConfirmationBlocks;
@@ -219,6 +237,23 @@ var Eth = function Eth() {
             // update defaultBlock
             methods.forEach(function(method) {
                 method.transactionBlockTimeout = transactionBlockTimeout;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'blockHeaderTimeout', {
+        get: function () {
+            return blockHeaderTimeout;
+        },
+        set: function (val) {
+            blockHeaderTimeout = val;
+
+            // also set on the Contract object
+            _this.Contract.blockHeaderTimeout = blockHeaderTimeout;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.blockHeaderTimeout = blockHeaderTimeout;
             });
         },
         enumerable: true
@@ -334,6 +369,8 @@ var Eth = function Eth() {
     this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+    this.Contract.transactionPollingInterval = this.transactionPollingInterval;
+    this.Contract.blockHeaderTimeout = this.blockHeaderTimeout;
     this.Contract.handleRevert = this.handleRevert;
     this.Contract._requestManager = this._requestManager;
     this.Contract._ethAccounts = this.accounts;
@@ -385,6 +422,12 @@ var Eth = function Eth() {
             call: 'eth_gasPrice',
             params: 0,
             outputFormatter: formatter.outputBigNumberFormatter
+        }),
+        new Method({
+            name: 'getFeeHistory',
+            call: 'eth_feeHistory',
+            params: 3,
+            inputFormatter: [utils.numberToHex, formatter.inputBlockNumberFormatter, null]
         }),
         new Method({
             name: 'getAccounts',
@@ -560,6 +603,12 @@ var Eth = function Eth() {
             params: 0,
             outputFormatter: formatter.outputTransactionFormatter
         }),
+        new Method({
+            name: 'createAccessList',
+            call: 'eth_createAccessList',
+            params: 2,
+            inputFormatter: [formatter.inputTransactionFormatter, formatter.inputDefaultBlockNumberFormatter],
+        }),
 
         // subscriptions
         new Subscriptions({
@@ -588,7 +637,7 @@ var Eth = function Eth() {
                             this.emit('data', output);
                         }
 
-                        if (_.isFunction(this.callback)) {
+                        if (typeof this.callback === 'function') {
                             this.callback(null, output, this);
                         }
                     }
@@ -604,14 +653,14 @@ var Eth = function Eth() {
                             this._isSyncing = true;
                             this.emit('changed', _this._isSyncing);
 
-                            if (_.isFunction(this.callback)) {
+                            if (typeof this.callback === 'function') {
                                 this.callback(null, _this._isSyncing, this);
                             }
 
                             setTimeout(function () {
                                 _this.emit('data', output);
 
-                                if (_.isFunction(_this.callback)) {
+                                if (typeof _this.callback === 'function') {
                                     _this.callback(null, output, _this);
                                 }
                             }, 0);
@@ -619,7 +668,7 @@ var Eth = function Eth() {
                             // fire sync status
                         } else {
                             this.emit('data', output);
-                            if (_.isFunction(_this.callback)) {
+                            if ( typeof _this.callback === 'function') {
                                 this.callback(null, output, this);
                             }
 
@@ -630,7 +679,7 @@ var Eth = function Eth() {
                                     _this._isSyncing = false;
                                     _this.emit('changed', _this._isSyncing);
 
-                                    if (_.isFunction(_this.callback)) {
+                                    if ( typeof _this.callback === 'function') {
                                         _this.callback(null, _this._isSyncing, _this);
                                     }
                                 }
@@ -650,6 +699,7 @@ var Eth = function Eth() {
         method.transactionBlockTimeout = _this.transactionBlockTimeout;
         method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
         method.transactionPollingTimeout = _this.transactionPollingTimeout;
+        method.transactionPollingInterval = _this.transactionPollingInterval;
         method.handleRevert = _this.handleRevert;
     });
 

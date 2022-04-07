@@ -37,6 +37,6 @@ If this property is ``null`` you should connect to a remote/local node.
 
     // In Node.js use: const Web3 = require('web3');
 
-    let web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
+    const web3 = new Web3(Web3.givenProvider || "ws://localhost:8545");
 
 That's it! now you can use the ``web3`` object.

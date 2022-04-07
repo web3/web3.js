@@ -32,7 +32,8 @@ import {
     TransactionConfig,
     hardfork,
     Common,
-    chain
+    chain,
+    FeeHistoryResult
 } from 'web3-eth';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
@@ -177,6 +178,15 @@ eth.getChainId((error: Error, chainId: number) => {});
 eth.getGasPrice();
 // $ExpectType Promise<string>
 eth.getGasPrice((error: Error, gasPrice: string) => {});
+
+// $ExpectType Promise<FeeHistoryResult>
+eth.getFeeHistory(
+    4, "0xA30953", []
+);
+// $ExpectType Promise<FeeHistoryResult>
+eth.getFeeHistory(
+    4, "0xA30953", [],
+    (error: Error, feeHistory: FeeHistoryResult) => {});
 
 // $ExpectType Promise<string[]>
 eth.getAccounts();

@@ -23,7 +23,6 @@
 var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
 var errors = require('web3-core-helpers').errors;
-var _ = require('underscore');
 var interfaceIds = require('../config').interfaceIds;
 
 /**
@@ -78,7 +77,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
         await self.parent.checkInterfaceSupport(resolver, self.methodName);
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
     }).catch(function(error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -107,7 +106,7 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
         await self.parent.checkInterfaceSupport(resolver, self.methodName);
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
     }).catch(function(error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -135,7 +134,7 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
                 result = outputFormatter(result);
             }
 
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
                 callback(result, result);
 
@@ -144,7 +143,7 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
 
             promiEvent.resolve(result);
         }).catch(function (error) {
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(error, null);
 
                 return;
@@ -184,7 +183,7 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
             promiEvent.eventEmitter.emit('receipt', receipt);
             promiEvent.resolve(receipt);
 
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
                 callback(receipt, receipt);
             }
@@ -192,7 +191,7 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
         .on('error', function (error) {
             promiEvent.eventEmitter.emit('error', error);
 
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(error, null);
 
                 return;

@@ -191,6 +191,11 @@ describe('lib/web3/method', function () {
             // generate send function
             var send = method.buildCall();
 
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
             // add results
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_gasPrice');
@@ -204,7 +209,8 @@ describe('lib/web3/method', function () {
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     data: '0xa123456',
-                    gasPrice: '0xffffdddd'
+                    gasPrice: '0x1234567453543456321456321',
+                    type: '0x2'
                 }]);
 
                 done();
@@ -215,7 +221,81 @@ describe('lib/web3/method', function () {
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                type: '0x2'
+            });
+
+        });
+
+        it('should send legacy tx even though network supports EIP-1559', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+            provider.injectResult({
+                baseFeePerGas: "0x7",
+                difficulty: "0x6cd6be3a",
+                extraData: "0x796f75747562652e636f6d2f77617463683f763d6451773477395767586351",
+                gasLimit: "0x1c9c381",
+                gasUsed: "0x8dc073",
+                hash: "0x846880b1158f434884f3637802ed09bac77eafc35b5f03b881ac88ce38a54907",
+                logsBloom: "0x4020001000000000000000008000010000000000400200000001002140000008000000010000810020000840000204304000081000000b00400010000822200004200020020140000001000882000064000021303200020000400008800000000002202102000084010000090020a8000800002000000010000030300000000000000006001005000040080001010000010040018100004c0050004000000000420000000021000200000010020008100000004000080000000000000040000900080102004002000080210201081014004030200148101000002020108025000018020020102040000204240500010000002200048000401300080088000002",
+                miner: "0x86864f1edf10eaf105b1bdc6e9aa8232b4c6aa00",
+                mixHash: "0xa29afb1fa1aea9eeac72ff435a8fc420bbc1fa1be08223eb61f294ee32250bde",
+                nonce: "0x122af1a5ccd78f3b",
+                number: "0xa0d600",
+                parentHash: "0x28f49150e1fe6f245655925b290f59e707d1e5c646dadaa22937169433b30294",
+                receiptsRoot: "0xc97d4f9980d680053606318a5820261a1dccb556d1056b70f0d48fb384986be5",
+                sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+                size: "0x2042",
+                stateRoot: "0x116981b10423133ade5bd44f03c54cc3c57f4467a1c3d4b0c6d8d33a76c361ad",
+                timestamp: "0x60dc24ec",
+                totalDifficulty: "0x78828f2d886cbb",
+                transactions: [],
+                transactionsRoot: "0x738f53f745d58169da93ebbd52cc49e0c979d6ca68a6513007b546b19ab78ba4",
+                uncles: []
+            });
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_gasPrice');
+                assert.deepEqual(payload.params, []);
+            });
+            provider.injectResult('0xffffdddd'); // gas price
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456',
+                    type: '0x0',
+                    gasPrice: '0xffffdddd',
+                }]);
+
+                done();
+
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456',
+                type: '0x0'
             });
 
         });
@@ -1023,6 +1103,67 @@ describe('lib/web3/method', function () {
             provider.injectResult(null);
 
             // third poll
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+                done();
+            });
+            provider.injectResult(null);
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa',
+                gasPrice: '23435234234'
+            })
+        });
+
+        it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', function (done) {
+            const provider = new FakeHttpProvider();
+            // provider with method 'on' but no subscription capabilities should use polling
+            provider.on = (...args) => {}
+            const eth = new Eth(provider);
+
+            const method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+            method.blockHeaderTimeout = 1;
+
+            // generate send function
+            const send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    value: '0xa',
+                    gasPrice: "0x574d94bba"
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
+                // here is the check.
+                // first will try subscribing with `eth_subscribe`.
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult(null);
+
+            // after failing with `eth_subscribe`,
+            // it should start polling with `eth_getTransactionReceipt`
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234567453543456321456321']);

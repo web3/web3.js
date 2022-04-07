@@ -20,7 +20,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var config = require('./config');
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
@@ -92,7 +91,7 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
 
         return resolver.methods.supportsInterface(interfaceId).call(callback);
     }).catch(function(error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -452,7 +451,7 @@ ENS.prototype.setContenthash = function (name, hash, txConfig, callback) {
     } catch(err){
         var error = new Error('Could not encode ' + hash + '. See docs for supported hash protocols.');
 
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;

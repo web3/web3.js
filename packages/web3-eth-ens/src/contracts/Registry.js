@@ -20,7 +20,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var Contract = require('web3-eth-contract');
 var namehash = require('eth-ens-namehash');
 var PromiEvent = require('web3-core-promievent');
@@ -84,7 +83,7 @@ Registry.prototype.getOwner = function (name, callback) {
     this.contract.then(function (contract) {
         return contract.methods.owner(namehash.hash(name)).call();
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -93,7 +92,7 @@ Registry.prototype.getOwner = function (name, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -124,7 +123,7 @@ Registry.prototype.setOwner = function (name, address, txConfig, callback) {
     this.contract.then(function (contract) {
         return contract.methods.setOwner(namehash.hash(name), formatters.inputAddressFormatter(address)).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -133,7 +132,7 @@ Registry.prototype.setOwner = function (name, address, txConfig, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -162,7 +161,7 @@ Registry.prototype.getTTL = function (name, callback) {
     this.contract.then(function (contract) {
         return contract.methods.ttl(namehash.hash(name)).call();
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -171,7 +170,7 @@ Registry.prototype.getTTL = function (name, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -202,7 +201,7 @@ Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
     this.contract.then(function (contract) {
         return contract.methods.setTTL(namehash.hash(name), ttl).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -211,7 +210,7 @@ Registry.prototype.setTTL = function (name, ttl, txConfig, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -251,7 +250,7 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, c
             formatters.inputAddressFormatter(address)
         ).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -260,7 +259,7 @@ Registry.prototype.setSubnodeOwner = function (name, label, address, txConfig, c
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -298,7 +297,7 @@ Registry.prototype.setRecord = function (name, owner, resolver, ttl, txConfig, c
             ttl
         ).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -307,7 +306,7 @@ Registry.prototype.setRecord = function (name, owner, resolver, ttl, txConfig, c
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -351,7 +350,7 @@ Registry.prototype.setSubnodeRecord = function (name, label, owner, resolver, tt
             ttl
         ).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -360,7 +359,7 @@ Registry.prototype.setSubnodeRecord = function (name, label, owner, resolver, tt
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -391,7 +390,7 @@ Registry.prototype.setApprovalForAll = function (operator, approved, txConfig, c
     this.contract.then(function (contract) {
         return contract.methods.setApprovalForAll(formatters.inputAddressFormatter(operator), approved).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -400,7 +399,7 @@ Registry.prototype.setApprovalForAll = function (operator, approved, txConfig, c
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -433,7 +432,7 @@ Registry.prototype.isApprovedForAll = function (owner, operator, callback) {
             formatters.inputAddressFormatter(operator)
         ).call();
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -442,7 +441,7 @@ Registry.prototype.isApprovedForAll = function (owner, operator, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -471,7 +470,7 @@ Registry.prototype.recordExists = function (name, callback) {
     this.contract.then(function (contract) {
         return contract.methods.recordExists(namehash.hash(name)).call();
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -480,7 +479,7 @@ Registry.prototype.recordExists = function (name, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -531,7 +530,7 @@ Registry.prototype.getResolver = function (name, callback) {
         var contract = new Contract(RESOLVER_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
 
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the contract to the first argument to be backward compatible and to have the required consistency
             callback(contract, contract);
 
@@ -540,7 +539,7 @@ Registry.prototype.getResolver = function (name, callback) {
 
         return contract;
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;
@@ -569,7 +568,7 @@ Registry.prototype.setResolver = function (name, address, txConfig, callback) {
     this.contract.then(function (contract) {
         return contract.methods.setResolver(namehash.hash(name), formatters.inputAddressFormatter(address)).send(txConfig);
     }).then(function (receipt) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             // It's required to pass the receipt to the first argument to be backward compatible and to have the required consistency
             callback(receipt, receipt);
 
@@ -578,7 +577,7 @@ Registry.prototype.setResolver = function (name, address, txConfig, callback) {
 
         promiEvent.resolve(receipt);
     }).catch(function (error) {
-        if (_.isFunction(callback)) {
+        if (typeof callback === 'function') {
             callback(error, null);
 
             return;

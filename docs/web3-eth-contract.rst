@@ -317,6 +317,27 @@ Returns
 
 ------------------------------------------------------------------------------
 
+.. _eth-contract-blockHeaderTimeout:
+
+blockHeaderTimeout
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.blockHeaderTimeout
+    contract.blockHeaderTimeout // on contract instance
+
+The ``blockHeaderTimeout`` is used over socket-based connections. This option defines the amount seconds it should wait for "newBlockHeaders" event before falling back to polling to fetch transaction receipt.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of blockHeaderTimeout (default: 10 seconds)
+
+------------------------------------------------------------------------------
+
 .. _eth-contract-module-transactionconfirmationblocks:
 
 transactionConfirmationBlocks
@@ -356,6 +377,27 @@ Returns
 -------
 
 ``number``: The current value of transactionPollingTimeout (default: 750)
+
+------------------------------------------------------------------------------
+
+.. _eth-contract-module-transactionpollinginterval:
+
+transactionPollingInterval
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Contract.transactionPollingInterval
+    contract.transactionPollingInterval // on contract instance
+
+The ``transactionPollingInterval`` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingInterval (default: 1000ms)
 
 ------------------------------------------------------------------------------
 
@@ -592,6 +634,7 @@ Returns
 - ``Function`` - :ref:`send <contract-send>`: Will deploy the contract. The promise will resolve with the new contract instance, instead of the receipt!
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used for deploying. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI of the deployment, which is contract data + constructor parameters
+- ``Function`` - :ref:`createAccessList <contract-createAccessList>`: Returns an EIP-2930 access list for specified contract method Note: You must specify a ``from`` address and possible ``gas``
 
 -------
 Example
@@ -663,7 +706,7 @@ methods
 
     myContract.methods.myMethod([param1[, param2[, ...]]])
 
-Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`, or :ref:`ABI encoded <contract-encodeABI>`.
+Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`, :ref:`createAccessList  <contract-createAccessList>` , or :ref:`ABI encoded <contract-encodeABI>`.
 
 The methods of this smart contract are available through:
 
@@ -690,6 +733,7 @@ Returns
 - ``Function`` - :ref:`send <contract-send>`: Will send a transaction to the smart contract and execute its method (Can alter the smart contract state).
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain. Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
+- ``Function`` - :ref:`createAccessList <contract-createAccessList>`: Returns an EIP-2930 access list for specified contract method Note: You must specify a ``from`` address and ``gas`` if it's not specified in ``options`` when instantiating parent contract object (e.g. ``new web3.eth.Contract(jsonInterface[, address][, options])``).
 
 -------
 Example
@@ -836,7 +880,9 @@ Parameters
     * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
-    * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the transaction in wei.
+    * ``value`` - ``Number|String|BN|BigNumber`` (optional): The value transferred for the transaction in wei.
+    * ``nonce`` - ``Number`` (optional): the nonce number of transaction
+
 2. ``callback`` - ``Function`` (optional): This callback will be fired first with the "transactionHash", or with an error object as the first argument.
 
 -------
@@ -935,8 +981,8 @@ methods.myMethod.estimateGas
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
 
-Will call to estimate the gas a method execution will take when executed in the EVM.
-The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
+Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain. The returned amount can be used as a gas estimate for executing the transaction publicly. The actual gas used can be different when sending the transaction later, as the state of the smart contract can be different at that time.
+
 Note: You must specify a ``from`` address otherwise you may experience odd behavior.
 
 ----------
@@ -1013,6 +1059,73 @@ Example
 
     myContract.methods.myMethod(123).encodeABI();
     > '0x58cf5f1000000000000000000000000000000000000000000000000000000000000007B'
+
+
+------------------------------------------------------------------------------
+
+.. _contract-createAccessList:
+
+methods.myMethod.createAccessList
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]]).createAccessList(options, blockHashOrBlockNumber [, callback])
+
+Will call to create an access list a method execution will access when executed in the EVM.
+Note: Currently `eth_createAccessList` seems to only be supported by Geth.
+Note: You must specify a ``from`` address and ``gas`` if it's not specified in ``options`` when instantiating parent contract object (e.g. ``new web3.eth.Contract(jsonInterface[, address][, options])``).
+
+----------
+Parameters
+----------
+
+1. ``options`` - ``Object``: The options used for calling.
+    * ``from`` - ``String``: The address the call "transaction" should be made from.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. Access list response will return amount of gas used.
+2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the access list generation as the second argument, or with an error object as the first argument.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Object``: The generated access list for transaction.
+
+.. code-block:: javascript
+
+    {
+        "accessList": [
+            {
+                "address": "0x00f5f5f3a25f142fafd0af24a754fafa340f32c7",
+                "storageKeys": [
+                    "0x0000000000000000000000000000000000000000000000000000000000000000"
+                ]
+            }
+        ],
+        "gasUsed": "0x644e"
+    }
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    // using the callback
+    myContract.methods.myMethod(123).createAccessList({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', gas: 5000000}, function(error, accessList){
+        ...
+    });
+
+    // using the promise
+    myContract.methods.myMethod(123).createAccessList({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', gas: 5000000})
+    .then(function(accessList){
+        ...
+    })
+    .catch(function(error){
+        ...
+    });
 
 
 ------------------------------------------------------------------------------

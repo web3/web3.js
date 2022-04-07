@@ -87,8 +87,18 @@ export interface PromiEvent<T> extends Promise<T> {
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
     once(
-        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
-        handler: (error: Error | TransactionReceipt | string) => void
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
+        handler: (error: Error | TransactionReceipt | string | object) => void
+    ): PromiEvent<T>;
+
+    on(
+        type: 'sending',
+        handler: (payload: object) => void
+    ): PromiEvent<T>;
+
+    on(
+        type: 'sent',
+        handler: (payload: object) => void
     ): PromiEvent<T>;
 
     on(
@@ -109,8 +119,8 @@ export interface PromiEvent<T> extends Promise<T> {
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>;
 
     on(
-        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash',
-        handler: (error: Error | TransactionReceipt | string) => void
+        type: 'error' | 'confirmation' | 'receipt' | 'transactionHash' | 'sent' | 'sending',
+        handler: (error: Error | TransactionReceipt | string | object) => void
     ): PromiEvent<T>;
 }
 
@@ -124,6 +134,8 @@ export interface Transaction {
     to: string | null;
     value: string;
     gasPrice: string;
+    maxPriorityFeePerGas?: number | string | BN;
+    maxFeePerGas?: number | string | BN;
     gas: number;
     input: string;
 }
@@ -134,6 +146,8 @@ export interface TransactionConfig {
     value?: number | string | BN;
     gas?: number | string;
     gasPrice?: number | string | BN;
+    maxPriorityFeePerGas?: number | string | BN;
+    maxFeePerGas?: number | string | BN;
     data?: string;
     nonce?: number;
     chainId?: number;
@@ -199,6 +213,7 @@ export interface TransactionReceipt {
     contractAddress?: string;
     cumulativeGasUsed: number;
     gasUsed: number;
+    effectiveGasPrice: number;
     logs: Log[];
     logsBloom: string;
     events?: {

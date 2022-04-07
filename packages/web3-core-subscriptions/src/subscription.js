@@ -22,16 +22,19 @@
 
 "use strict";
 
-var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 var formatters = require('web3-core-helpers').formatters;
+
+function identity(value) { //used to return the exact same replica of the value given to it as the argument
+    return value;
+}
 
 function Subscription(options) {
     EventEmitter.call(this);
 
     this.id = null;
-    this.callback = _.identity;
+    this.callback = identity;
     this.arguments = null;
     this.lastBlock = null; // "from" block tracker for backfilling events on reconnection
 
@@ -56,7 +59,7 @@ Subscription.prototype.constructor = Subscription;
  */
 
 Subscription.prototype._extractCallback = function (args) {
-    if (_.isFunction(args[args.length - 1])) {
+    if (typeof args[args.length - 1] === 'function') {
         return args.pop(); // modify the args array!
     }
 };
@@ -136,7 +139,7 @@ Subscription.prototype._formatOutput = function (result) {
  */
 Subscription.prototype._toPayload = function (args) {
     var params = [];
-    this.callback = this._extractCallback(args) || _.identity;
+    this.callback = this._extractCallback(args) || identity;
 
     if (!this.subscriptionMethod) {
         this.subscriptionMethod = args.shift();
@@ -226,7 +229,7 @@ Subscription.prototype.subscribe = function() {
 
     // Re-subscription only: continue fetching from the last block we received.
     // a dropped connection may have resulted in gaps in the logs...
-    if (this.lastBlock && _.isObject(this.options.params)){
+    if (this.lastBlock && !!this.options.params && typeof this.options.params === 'object'){
         payload.params[1] = this.options.params;
         payload.params[1].fromBlock = formatters.inputBlockNumberFormatter(this.lastBlock + 1);
     }
@@ -240,7 +243,7 @@ Subscription.prototype.subscribe = function() {
     this.options.params = payload.params[1];
 
     // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+    if(payload.params[0] === 'logs' && !!payload.params[1] && typeof payload.params[1] === 'object' && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         // send the subscription request
 
         // copy the params to avoid race-condition with deletion below this block
@@ -278,12 +281,11 @@ Subscription.prototype.subscribe = function() {
         if(!err && result) {
             _this.id = result;
             _this.method = payload.params[0];
-            _this.emit('connected', result);
 
             // call callback on notifications
             _this.options.requestManager.addSubscription(_this, function(error, result) {
                 if (!error) {
-                    if (!_.isArray(result)) {
+                    if (!Array.isArray(result)) {
                         result = [result];
                     }
 
@@ -291,9 +293,9 @@ Subscription.prototype.subscribe = function() {
                         var output = _this._formatOutput(resultItem);
 
                         // Track current block (for gaps introduced by dropped connections)
-                        _this.lastBlock = _.isObject(output) ? output.blockNumber : null;
+                        _this.lastBlock = !!output && typeof output === 'object' ? output.blockNumber : null;
 
-                        if (_.isFunction(_this.options.subscription.subscriptionHandler)) {
+                        if (typeof _this.options.subscription.subscriptionHandler === 'function' ) {
                             return _this.options.subscription.subscriptionHandler.call(_this, output);
                         } else {
                             _this.emit('data', output);
@@ -307,6 +309,7 @@ Subscription.prototype.subscribe = function() {
                     _this.emit('error', error);
                 }
             });
+            _this.emit('connected', result);
         } else {
             setTimeout(function(){
                 _this.callback(err, false, _this);

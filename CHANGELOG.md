@@ -392,9 +392,145 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
+- Changed Geth Docker verision from `stable` to `1.10.3` in `e2e.geth.instamine.sh` and `scripts/e2e.geth.automine.sh` (#4154)
+
+## [1.4.1]
+
 ### Removes
+
+- Removing the underscore package 
+
+## [1.5.0]
+
+### Added
+
+- London transaction support (#4155)
+- RPC support `eth_feehistory` call (#4191)
+- Add `toNumber` method to `web3.utils` (#4191)
+
+### Changed
+ - Grammar fix (#4088) and updated Swarm (#4151)and Whisper doc links (#4170)
+ - Removed deprecation notice for HttpProvider (#4008)
+ - Nonce added to send options in documentation and types (#4052)
+ - Updated Solidity example to modern syntax (#4147)
+ - Changing web3 connection example from lets to const (#3967)
+ - Updated the documentation for the transaction object to include EIP-2718 and EIP-1559 options (#4188)
+
+## [1.5.1]
+
+### Added
+
+- `maxPriorityFeePerGas` and `maxFeePerGas` now included in `_txInputFormatter` (#4217)
+- If `maxPriorityFeePerGas` of `maxFeePerGas` present `_txInputFormatter` deletes `tx.gasPrice` (fixes #4211) (#4217)
+- Add block tag support (e.g. `latest`, `pending`, `earliest`) to `getFeeHistory` (#4224)
+- Support for EIP-1559 to `web3.eth.sendTransaction` (#4220)
+
+## [1.5.2]
+
+### Fixed
+
+- Remove transaction `type` defaulting for `eth.sendTransaction`, `eth.sendRawTransaction` (#4241)
+- `type: 0x0` was being added to legacy transaction when using `eth.signTransaction` (#4241)
+
+## [1.5.3]
+
+### Fixed
+
+- Unable to send legacy transaction if network supported EIP-1559 (#4277)
+- Fixed bug in sending transaction with providers not support "newBlockHeaders" event (#3891)
+
+### Changed
+
+- ethers from 5.1.4 to 5.4.4 (#4231)
+- karma from 5.2.3 to 6.3.4 (#4231)
+- lerna from 3.22.1 to 4.0.0 (#4231)
+- Dropped build tests in CI for Node v8 and v10, and added support for Node v14 (#4231)
+- Change default value for `maxPriorityFeePerGas` from `1 Gwei` to `2.5 Gwei` (#4284)
+- Fixed bug in signTransaction (#4295)
+
+## [1.6.0]
+
+### Changed
+
+- Partially replace usage of [eth-lib](https://github.com/MaiaVictor/eth-lib) with [ethereumjs-util](https://github.com/ethereumjs/ethereumjs-monorepo/tree/master/packages/util) (#4390)
+
+## [1.6.1]
+
+### Added
+
+- Support for `eth_createAccessList` as both an rpc call (`web3.eth.createAccessList`) and property of contract method wrappers (`contractInstance.methods.getValue().createAccessList`) (#4332)
+
+### Changed
+
+- Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
+- Added missing PromiEvent handler types (#4194) 
+- Updated README to include Webpack 5 angular support instructions (#4174)
+- Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
+- Emit subscription id with connect event when creating a subscription (#4300)
+- Introduced new configuration "blockHeaderTimeout" for waiting of block headers for transaction receipt  (#3891)
+- Format `block.baseFeePerGas` to number (#4330)
+- Correct `web3-eth-personal.sendTransaction` example in documentation (#4409)
+- Updated README to include Webpack 5 angular support instructions (#4174)
+
+### Fixed
+
+- Fix 1.6.1 build size issue with removing static asset files (#4506)
+- Correct `web3.rst` example in documentation (#4511)
+- Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
+
+## [1.7.0]
+
+### Added
+- `maxPriorityFeePerGas` and `maxFeePerGas` added to `Transaction` and `TransactionConfig` interfaces (#4232) (#4585)
+
+### Fixed
+ -  Fix readthedoc's build for web3js documentation (#4425)
+ -  Fix response sorting for batch requests (#4250)
+
+### Changed
+
+ - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
+
+## [1.7.1]
+
+### Added
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+- Add example import for package level types (#4611)
+
+### Fixed
+-  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
+-  Use globalThis to locate global object if possible (#4613)
+-  Fix typos in web3-utils.rst (#4662)
+-  Added effectiveGasPrice to TransactionReceipt (#4692)
+-  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
+-  Updated README to include Webpack 5 create-react-app support instructions (#4173)
+-  Update the documentation for `methods.myMethod.estimateGas` (#4702)
+-  Fix typos in REVIEW.md and TESTING.md (#4691)
+-  Fix encoding for "0x" string values (#4512)
+
+
+### Changed
+-  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
+
+
+### Removed
+- Removed deprecated Morden testnet code (#4339)
+
+
+### Security
+-  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
 
 ## [Unreleased]
 
-## [1.4.1]
+## [1.7.2]
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
+### Fixed
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)

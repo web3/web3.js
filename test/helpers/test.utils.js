@@ -25,7 +25,7 @@ var mine = async function(web3, account) {
     await web3.eth.sendTransaction({
         from: account,
         to: account,
-        gasPrice: '1',
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 4000000,
         value: web3.utils.toWei('0', 'ether'),
     });

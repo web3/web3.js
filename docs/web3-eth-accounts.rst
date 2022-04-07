@@ -151,7 +151,7 @@ Parameters
 
 1. ``tx`` - ``Object``: The transaction object as follows:
     - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount() <eth-gettransactioncount>`.
-    - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId() <net-getid>`.
+    - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.getChainId() <getChainId>`. Web3 will ignore this field if `common.customChain.chainId` is provided.
     - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.

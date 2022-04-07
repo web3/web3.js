@@ -1,0 +1,39 @@
+name: Feature Request
+description: Request a feature
+labels: ["Feature Request"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the feature you're requesting
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    attributes:
+      label: Feature Request
+      description: A concise description of the feature you're requesting
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Use Cases
+      description: A concise description of use cases for the feature you're requesting
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Implementation Ideas
+      description: Do you have ideas regarding the implementation of this feature?
+  - type: textarea
+    attributes:
+      label: Feature Examples/References
+      description: Do you have any examples or references regarding this feature?
+      placeholder: |
+        - [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)
+        - [Ethers' implementation](https://github.com/ethers-io/ethers.js/blob/master/packages/abstract-signer/src.ts/index.ts)
+  - type: checkboxes
+    attributes:
+      label: Are you willing to implement this feature?
+      options:
+        - label: "Yes"

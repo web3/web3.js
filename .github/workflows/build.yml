@@ -46,7 +46,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: [8, 10, 11, 12, 13]
+                node: [11, 12, 13, 14]
         env:
             TEST: "unit"
         steps:
@@ -79,7 +79,7 @@ jobs:
                         'e2e_browsers',
                         'e2e_ganache',
                         'e2e_mosaic',
-                        'e2e_gnosis_dex',
+                        #'e2e_gnosis_dex',
                     ]
         env:
             TEST: ${{ matrix.testCmd }}
@@ -125,7 +125,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: [10, 11, 12, 13]
+                node: [ 11, 12, 13, 14]
         env:
             TEST: "eth2"
         steps:

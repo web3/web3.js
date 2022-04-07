@@ -22,8 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
-
 var getNetworkType = function (callback) {
     var _this = this,
         id;
@@ -43,10 +41,6 @@ var getNetworkType = function (callback) {
                 id === 1) {
                 returnValue = 'main';
             }
-            if (genesis.hash === '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303' &&
-                id === 2) {
-                returnValue = 'morden';
-            }
             if (genesis.hash === '0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d' &&
                 id === 3) {
                 returnValue = 'ropsten';
@@ -64,14 +58,14 @@ var getNetworkType = function (callback) {
                 returnValue = 'kovan';
             }
 
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(null, returnValue);
             }
 
             return returnValue;
         })
         .catch(function (err) {
-            if (_.isFunction(callback)) {
+            if (typeof callback === 'function') {
                 callback(err);
             } else {
                 throw err;

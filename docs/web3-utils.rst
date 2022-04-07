@@ -57,7 +57,7 @@ The `randomHex <https://github.com/frozeman/randomHex>`_ library to generate cry
 Parameters
 ----------
 
-1. ``size`` - ``Number``: The byte size for the HEX string, e.g. ``32`` will result in a 32 bytes HEX string with 64 characters preficed with "0x".
+1. ``size`` - ``Number``: The byte size for the HEX string, e.g. ``32`` will result in a 32 bytes HEX string with 64 characters prefixed with "0x".
 
 -------
 Returns
@@ -86,36 +86,6 @@ Example
     web3.utils.randomHex(0)
     > "0x"
 
-
-
-
-------------------------------------------------------------------------------
-
-_
-=====================
-
-.. code-block:: javascript
-
-    web3.utils._()
-
-The `underscore <http://underscorejs.org>`_ library for many convenience JavaScript functions.
-
-See the `underscore API reference <http://underscorejs.org>`_ for details.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    var _ = web3.utils._;
-
-    _.union([1,2],[3]);
-    > [1,2,3]
-
-    _.each({my: 'object'}, function(value, key){ ... })
-
-    ...
 
 
 
@@ -182,7 +152,7 @@ Checks if a given value is a `BN.js <https://github.com/indutny/bn.js/>`_ instan
 Parameters
 ----------
 
-1. ``bn`` - ``Object``: An `BN.js <https://github.com/indutny/bn.js/>`_ instance.
+1. ``bn`` - ``Object``: A `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Returns
@@ -299,7 +269,7 @@ sha3Raw
 
     web3.utils.sha3Raw(string)
 
-Will calculate the sha3 of the input but does return the hash value instead of ``null`` if for example a empty string is passed.
+Will calculate the sha3 of the input but does return the hash value instead of ``null`` if for example an empty string is passed.
 
 .. note::  Further details about this function can be seen here :ref:`sha3 <utils-sha3>`
 
@@ -419,7 +389,7 @@ soliditySha3Raw
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
 This means arguments will be ABI converted and tightly packed before being hashed.
-The difference between this function and the ``soliditySha3`` function is that it will return the hash value instead of ``null`` if for example a empty string is given.
+The difference between this function and the ``soliditySha3`` function is that it will return the hash value instead of ``null`` if for example an empty string is given.
 
 
 .. note::  Further details about this function can be seen here :ref:`soliditySha3 <utils-soliditysha3>`
@@ -623,7 +593,7 @@ Parameters
 Returns
 -------
 
-``Boolean``: ``true`` when the checksum of the address is valid, ``false`` if its not a checksum address, or the checksum is invalid.
+``Boolean``: ``true`` when the checksum of the address is valid, ``false`` if it's not a checksum address, or the checksum is invalid.
 
 -------
 Example
@@ -646,7 +616,7 @@ toHex
     web3.utils.toHex(mixed)
 
 Will auto convert any given value to HEX.
-Number strings will interpreted as numbers.
+Number strings will be interpreted as numbers.
 Text strings will be interpreted as UTF-8 strings.
 
 ----------
@@ -919,7 +889,7 @@ Returns the ASCII string representation of a given HEX value.
 Parameters
 ----------
 
-1. ``hex`` - ``String``: A HEX string to convert to a ASCII string.
+1. ``hex`` - ``String``: A HEX string to convert to an ASCII string.
 
 -------
 Returns
@@ -993,7 +963,7 @@ Returns the HEX representation of a given ASCII string.
 Parameters
 ----------
 
-1. ``string`` - ``String``: A ASCII string to convert to a HEX string.
+1. ``string`` - ``String``: An ASCII string to convert to a HEX string.
 
 -------
 Returns
@@ -1166,7 +1136,7 @@ fromWei
     web3.utils.fromWei(number [, unit])
 
 
-Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_ value into a `ether value <http://ethdocs.org/en/latest/ether.html>`_.
+Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_ value into an `ether value <http://ethdocs.org/en/latest/ether.html>`_.
 
 .. note:: "wei" are the smallest ether unit, and you should always make calculations in wei and convert only for display reasons.
 
@@ -1407,7 +1377,7 @@ toTwosComplement
     web3.utils.toTwosComplement(number)
 
 
-Converts a negative numer into a two's complement.
+Converts a negative number into a two's complement.
 
 
 ----------

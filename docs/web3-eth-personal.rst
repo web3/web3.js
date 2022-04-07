@@ -275,7 +275,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.sendTransaction({
+    web3.eth.personal.sendTransaction({
         from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0",
         gasPrice: "20000000000",
         gas: "21000",

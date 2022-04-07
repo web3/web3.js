@@ -17,7 +17,7 @@ describe('contract.events [ @E2E ]', function() {
 
     var basicOptions = {
         data: Basic.bytecode,
-        gasPrice: '1',
+        gasPrice: 1000000000,// Default gasPrice set by Geth
         gas: 4000000
     };
 
@@ -289,7 +289,7 @@ describe('contract.events [ @E2E ]', function() {
         let contract;
 
         const options = {
-            gasPrice: '1',
+            gasPrice: 1000000000,// Default gasPrice set by Geth
             gas: 4000000
         };
 
@@ -336,7 +336,7 @@ describe('contract.events [ @E2E ]', function() {
     // and geth instamine's websockets connection is too fragile for the tests in this file.
     it('backfills missed events when auto-reconnecting', function(){
         if(!process.env.GANACHE) return;
-        this.timeout(10000);
+        this.timeout(20000);
 
         let counter = 0;
         const acc = accounts[0];

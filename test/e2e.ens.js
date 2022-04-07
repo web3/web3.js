@@ -27,7 +27,7 @@ describe('ENS [ @E2E ]', function () {
         options = {
             from: account,
             gas: 4000000,
-            gasPrice: 1
+            gasPrice: 1000000000 // Default gasPrice set by Geth
         }
     });
 

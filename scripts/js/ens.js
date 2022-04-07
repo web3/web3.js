@@ -12,7 +12,7 @@ async function setupENS(web3) {
 
     const options = {
         bytecode: undefined,
-        gasPrice: '1',
+        gasPrice: 1000000000, // Default gasPrice set by Geth
         gas: 5500000
     }
 

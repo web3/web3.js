@@ -1,0 +1,38 @@
+name: Something Else
+description: Have something that's not a Bug Report, Feature Request, or related to Documentation?
+labels: ["Something Else"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If it's a:
+        
+        - Announcement
+        - General Discussion
+        - Idea
+        - Question
+        - You'd like show everyone something you've built
+        
+        please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue
+  - type: checkboxes
+    attributes:
+      label: This is not a Bug Report, Feature Request, or related to Documentation
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for this
+      options:
+        - label: I have searched the existing issues
+          required: true
+  - type: textarea
+    attributes:
+      label: What's up?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Examples/References
+      description: Do you have any examples or references regarding this?

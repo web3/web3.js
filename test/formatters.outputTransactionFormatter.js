@@ -38,7 +38,7 @@ describe('formatters', function () {
                 to: null,
                 value: '0x3e8',
                 gas: '0x3e8',
-                gasPrice: '0x3e8',
+                gasPrice: null,
                 nonce: '0xb',
                 transactionIndex: null,
                 blockNumber: null,
@@ -49,11 +49,46 @@ describe('formatters', function () {
                 to: null,
                 value: 1000,
                 gas: 1000,
-                gasPrice: '1000',
+                gasPrice: null,
                 nonce: 11,
                 blockNumber: null,
                 blockHash: null,
                 transactionIndex: null
+            });
+        });
+
+        it('should format EIP1559 values correctly', function () {
+
+            assert.deepEqual(formatters.outputTransactionFormatter({
+                accessList: [],
+                input: '0x3454645634534',
+                from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                to: null,
+                value: '0x3e8',
+                gas: '0x3e8',
+                gasPrice: '0x3e8',
+                maxFeePerGas: '0x104c533c00',
+                maxPriorityFeePerGas: '0x1a13b8600',
+                nonce: '0xb',
+                transactionIndex: null,
+                type: '0x2',
+                blockNumber: null,
+                blockHash: null
+            }), {
+                accessList: [],
+                input: '0x3454645634534',
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: null,
+                value: '1000',
+                gas: 1000,
+                gasPrice: '1000',
+                maxFeePerGas: '70000000000',
+                maxPriorityFeePerGas: '7000000000',
+                nonce: 11,
+                blockNumber: null,
+                blockHash: null,
+                transactionIndex: null,
+                type: 2
             });
         });
     });

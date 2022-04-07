@@ -2,8 +2,8 @@ var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../packages/web3');
 var Accounts = require("./../packages/web3-eth-accounts");
 var chai = require('chai');
-var _ = require('underscore');
 var assert = chai.assert;
+var bn = require('bn.js');
 
 var common = {
     baseChain: 'mainnet',
@@ -25,6 +25,63 @@ var commonBerlin = {
     hardfork: 'berlin'
 };
 
+var commonLondon = {
+    baseChain: 'mainnet',
+    customChain: {
+        name: 'custom-network',
+        networkId: 1,
+        chainId: 1,
+    },
+    hardfork: 'london'
+};
+
+var preEip1559Block = {
+    difficulty: "0x4ea3f27bc",
+    extraData: "0x476574682f4c5649562f76312e302e302f6c696e75782f676f312e342e32",
+    gasLimit: "0x1388",
+    gasUsed: "0x0",
+    hash: "0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae",
+    logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    miner: "0xbb7b8287f3f0a933474a79eae42cbca977791171",
+    mixHash: "0x4fffe9ae21f1c9e15207b1f472d5bbdd68c9595d461666602f2be20daf5e7843",
+    nonce: "0x689056015818adbe",
+    number: "0x1b4",
+    parentHash: "0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54",
+    receiptsRoot: "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    size: "0x220",
+    stateRoot: "0xddc8b0234c2e0cad087c8b389aa7ef01f7d79b2570bccb77ce48648aa61c904d",
+    timestamp: "0x55ba467c",
+    totalDifficulty: "0x78ed983323d",
+    transactions: [],
+    transactionsRoot: "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    uncles: []
+}
+
+var postEip1559Block = {
+    baseFeePerGas: "0x7",
+    difficulty: "0x6cd6be3a",
+    extraData: "0x796f75747562652e636f6d2f77617463683f763d6451773477395767586351",
+    gasLimit: "0x1c9c381",
+    gasUsed: "0x8dc073",
+    hash: "0x846880b1158f434884f3637802ed09bac77eafc35b5f03b881ac88ce38a54907",
+    logsBloom: "0x4020001000000000000000008000010000000000400200000001002140000008000000010000810020000840000204304000081000000b00400010000822200004200020020140000001000882000064000021303200020000400008800000000002202102000084010000090020a8000800002000000010000030300000000000000006001005000040080001010000010040018100004c0050004000000000420000000021000200000010020008100000004000080000000000000040000900080102004002000080210201081014004030200148101000002020108025000018020020102040000204240500010000002200048000401300080088000002",
+    miner: "0x86864f1edf10eaf105b1bdc6e9aa8232b4c6aa00",
+    mixHash: "0xa29afb1fa1aea9eeac72ff435a8fc420bbc1fa1be08223eb61f294ee32250bde",
+    nonce: "0x122af1a5ccd78f3b",
+    number: "0xa0d600",
+    parentHash: "0x28f49150e1fe6f245655925b290f59e707d1e5c646dadaa22937169433b30294",
+    receiptsRoot: "0xc97d4f9980d680053606318a5820261a1dccb556d1056b70f0d48fb384986be5",
+    sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    size: "0x2042",
+    stateRoot: "0x116981b10423133ade5bd44f03c54cc3c57f4467a1c3d4b0c6d8d33a76c361ad",
+    timestamp: "0x60dc24ec",
+    totalDifficulty: "0x78828f2d886cbb",
+    transactions: [],
+    transactionsRoot: "0x738f53f745d58169da93ebbd52cc49e0c979d6ca68a6513007b546b19ab78ba4",
+    uncles: []
+  }
+
 var accessList = [
     {
       address: '0x0000000000000000000000000000000000000101',
@@ -35,7 +92,7 @@ var accessList = [
     }
 ];
 
-var clone = function (object) { return object ? _.clone(object) : []; };
+var clone = function (object) { return object ? Object.assign({},object) : []; };
 
 var tests = [
     {
@@ -500,6 +557,147 @@ var tests = [
         transactionHash: "0xbac5b9b1d381034a2eaee9d574acaff42b39dc3bc236a6022928828bdb189b92",
         messageHash: "0x19920e15ec80c033dec688ccc2cb414144a0dac23f6f36f503390228cc4672eb"
     },
+    {
+        // test #24
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            maxFeePerGas: '0xB2D05E00',
+            gas: 27200,
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon,
+            accessList: accessList
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f8ca0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a0e86d3360f40f934686e1f9e53d5f49634adb0227169dd8a93b66683eb32b9c1ca04e5851b4601e2e9178148ca0f4f8360d9fba16baf272931debdf270ffa6fafc9",
+        oldSignature: "0x02f8ca0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a701a0e86d3360f40f934686e1f9e53d5f49634adb0227169dd8a93b66683eb32b9c1ca04e5851b4601e2e9178148ca0f4f8360d9fba16baf272931debdf270ffa6fafc9",
+        transactionHash: "0xc102cf9a2cfa23b06d013970497793077c2fa2a203ec32ddeee2ec87a4ab1cb8",
+        messageHash: "0x69325a2750893097fb1b7ab621bacef5fc20fd33374e1c3f44a79f9f35602b59"
+    },
+    {
+        // test #25
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            maxFeePerGas: '0xB2D05E00',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        oldSignature: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        transactionHash: "0x82c19b39a6b7eaa0492863a8b236fad5018f267b4977c270ddd5228c4cbda60e",
+        messageHash: "0xe3beea0918f445c21eb2f42e3cbc3c5d54321ec642f47d12c473b2765df97f2b"
+    },
+    {
+        // test #26
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        oldSignature: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        transactionHash: "0x488a813f2286f7c015947aa13133bdae49ec75ae1c8f5eba80034d71a038dca8",
+        messageHash: "0xcd6d6dee80ecc38f1b22f2d128bf6043dc41079fc913183a8995b5b3e187df61"
+    },
+    {
+        // test #27
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon,
+            accessList: accessList
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f8ca0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a780a0e3a2e10c7d3af3407ec2d38c64788d6673926e9b28d6d2e7df3c94cdf0548233a00ad3e5faafaf3a9350ab16c1be0198ce9ff3c6bef0b91e05488d757f07de9557",
+        oldSignature: "0x02f8ca0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080f85bf859940000000000000000000000000000000000000101f842a00000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000060a780a0e3a2e10c7d3af3407ec2d38c64788d6673926e9b28d6d2e7df3c94cdf0548233a00ad3e5faafaf3a9350ab16c1be0198ce9ff3c6bef0b91e05488d757f07de9557",
+        transactionHash: "0xbc2c9edab3d4e3a795fa402b52d6149e874de15f0cc6c0858eb34e1fe1ef31fe",
+        messageHash: "0xa3a2cdc45e9cefb9a614ead90ce65f68bcf8a90dbe0ccbd84c1b62403bd05346"
+    },
+    {
+        // test #28
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            maxPriorityFeePerGas: new bn('0x3B9ACA00'),
+            maxFeePerGas: new bn('0xB2D05E00'),
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
+        oldSignature: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
+        transactionHash: "0xd5b7290a477b9c421d39e61d0f566ec33276fb49b9ff85cfd6152a18f1c92dab",
+        messageHash: "0x17e20e530a889ce52057de228b5b97edcad6002468d723346cd0b6b7a9943457"
+    },
+    {
+        // test #29
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            maxPriorityFeePerGas: '1000000000',
+            maxFeePerGas: '3000000000',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        oldSignature: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        transactionHash: "0x82c19b39a6b7eaa0492863a8b236fad5018f267b4977c270ddd5228c4cbda60e",
+        messageHash: "0xe3beea0918f445c21eb2f42e3cbc3c5d54321ec642f47d12c473b2765df97f2b"
+    },
 ];
 
 describe("eth", function () {
@@ -528,7 +726,27 @@ describe("eth", function () {
             } else {
 
                 it("signTransaction must compare to eth_signTransaction", function(done) {
-                    var ethAccounts = new Accounts();
+                    var provider = new FakeHttpProvider();
+                    var web3 = new Web3(provider);
+
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
+                    provider.injectResult('0x5022');
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_gasPrice');
+                        assert.deepEqual(payload.params, []);
+                    });
+
+                    var ethAccounts = new Accounts(web3);
 
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
@@ -541,11 +759,26 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
                 it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function(done) {
-                    var ethAccounts = new Accounts();
+                    var provider = new FakeHttpProvider();
+                    var web3 = new Web3(provider);
+
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
+
+                    var ethAccounts = new Accounts(web3);
 
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
@@ -559,6 +792,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -571,6 +805,16 @@ describe("eth", function () {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, 'eth_getTransactionCount');
                         assert.deepEqual(payload.params, [test.address, "latest"]);
+                    });
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
                     });
 
                     var ethAccounts = new Accounts(web3);
@@ -588,6 +832,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -595,6 +840,16 @@ describe("eth", function () {
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
                     provider.injectResult('0x5022');
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
@@ -618,18 +873,24 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
+                
 
-                it("signTransaction will call for chainId", function(done) {
+                it("signTransaction should not call for chainId if common.customChain.chainId provided", function(done) {
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
-                    provider.injectResult(1);
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'eth_chainId');
-                        assert.deepEqual(payload.params, []);
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
                     });
 
                     var ethAccounts = new Accounts(web3);
@@ -648,6 +909,50 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
+                    });
+                });
+
+                it("signTransaction should call for chainId if common.customChain.chainId not provided", function(done) {
+                    var provider = new FakeHttpProvider();
+                    var web3 = new Web3(provider);
+
+                    provider.injectResult(1);
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_chainId');
+                        assert.deepEqual(payload.params, []);
+                    });
+
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
+
+                    var ethAccounts = new Accounts(web3);
+
+                    var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
+                    assert.equal(testAccount.address, test.address);
+
+                    var transaction = clone(test.transaction);
+                    delete transaction.chainId;
+                    delete transaction.common;
+                    testAccount.signTransaction(transaction)
+                    .then(function (tx) {
+                        assert.isObject(tx);
+                        assert.isString(tx.rawTransaction);
+
+                        done();
+                    })
+                    .catch(e => {
+                        console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -655,6 +960,22 @@ describe("eth", function () {
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
 
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
+                    provider.injectResult('0x5022');
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_gasPrice');
+                        assert.deepEqual(payload.params, []);
+                    });
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
@@ -678,6 +999,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
@@ -694,14 +1016,24 @@ describe("eth", function () {
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'eth_gasPrice');
-                        assert.deepEqual(payload.params, []);
+                        assert.equal(payload.method, 'eth_getTransactionCount');
+                        assert.deepEqual(payload.params, [test.address, "latest"]);
+                    });
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
                     });
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'eth_getTransactionCount');
-                        assert.deepEqual(payload.params, [test.address, "latest"]);
+                        assert.equal(payload.method, 'eth_gasPrice');
+                        assert.deepEqual(payload.params, []);
                     });
                     provider.injectResult(1);
                     provider.injectValidation(function (payload) {
@@ -729,11 +1061,26 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     });
                 });
 
                 it("recoverTransaction, must recover signature", function(done) {
-                    var ethAccounts = new Accounts();
+                    var provider = new FakeHttpProvider();
+                    var web3 = new Web3(provider);
+
+                    provider.injectResult(
+                        test.transaction.common.hardfork === 'london' ?
+                        postEip1559Block:
+                        preEip1559Block
+                    );
+                    provider.injectValidation(function (payload) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, 'eth_getBlockByNumber');
+                        assert.deepEqual(payload.params, ['latest', false]);
+                    });
+
+                    var ethAccounts = new Accounts(web3);
 
                     var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                     assert.equal(testAccount.address, test.address);
@@ -743,6 +1090,7 @@ describe("eth", function () {
                     })
                     .catch(e => {
                         console.log(i, e)
+                        done(e);
                     })
                 });
             }

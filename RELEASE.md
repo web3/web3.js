@@ -56,7 +56,9 @@ To provide safety over longer periods, it is important to have versions tagged a
 | Release |    Status     | Initial Release |   LTS Start   | End-of-Life |
 | :-----: | :-----------: | :-------------: | :-----------: | :---------: |
 |   1.x   |      LTS      |  24. Jul. 2017  | 23. Jul. 2019 |     TBD     |
-|   2.x   | Alpha Preview |  13. Jul. 2019  |      TBD      |     TBD     |
+|   2.x   |   Deprecated  |  13. Jul. 2019  | 13. Jul. 2019 | 13. Jul. 2020 |
+|   3.x   |   Deprecated  |   9. Apr. 2021  |  9. Apr. 2021 | 26. Jan. 2022 |
+|   4.x   |  Development  |    Apr. 2022    |      TBD.     |     TBD.    |
 
 ## Deprecation Rules
 
@@ -79,25 +81,27 @@ The following describes the steps required to release a new version of `web3.js`
 1.  Update and commit `CHANGELOG.md`.
     1.  Move section header `[Unreleased]` to bottom.
     1.  Add next anticipated release version number to bottom (as a placeholder for new changelog entries).
-1.  Create release commit and tags e.g. `lerna version 1.2.7-rc.0 --no-push`
+1.  In the project root, run `npm run build` and commit changes after using a commit message like: `Build for 1.0.0-rc.0`
+    1. The next step will also build each package, but Lerna makes the tagged commit before building the packages (so they're not included)
+3.  Create release commit and tags e.g. `lerna version 1.2.7-rc.0 --no-push`
     1.  (updates package version numbers, builds minified file (for `1.x`), creates release commit and tags.)
-1.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
-1.  Create release PR as draft ([example](https://github.com/ethereum/web3.js/pull/3351)).
-1.  Ensure CI is green / passing.
+4.  Push release branch to origin with tags `git push origin release/1.2.7 --follow-tags`.
+5.  Create release PR as draft ([example](https://github.com/ethereum/web3.js/pull/3351)).
+6.  Ensure CI is green / passing.
     1.  (spend time here inspecting the CI logs to ensure everything looks valid and results were reported correctly)
-1.  Run `npm run publish from-package -- --dist-tag rc`.
+7.  Run `npm run publish from-package -- --dist-tag rc`.
     1. Lerna can sometimes have difficulty with the number of packages we have. If the above command is unsuccessful, for every unpublished package run: `lerna publish --scope="package-name"` `npm dist-tag add <package-name>@<version> rc`)
-1.  Publish the GitHub release.
-1.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
+8.  Publish the GitHub release.
+9.  A GitHub Webhook should trigger the ReadTheDocs build after the release is published.
     1.  (The build may sometimes need to be manually triggered in ReadTheDocs admin panel. If the version does not appear, create a build of a previous version to refresh the list.)
     1.  Activate the new version.
-1.  Request PR review from key contributors:
+10.  Request PR review from key contributors:
     1.  Chris from EthereumJS ([@cgewecke](https://github.com/cgewecke))
     1.  Patricio from Nomic Labs ([@alcuadrado](https://github.com/alcuadrado))
     1.  Michael from Embark ([@michaelsbradleyjr](https://github.com/michaelsbradleyjr))
     1.  Nicholas from Truffle ([@gnidan](https://github.com/gnidan))
     1.  If touches or affects ENS: Nick Johnson ([@Arachnid](https://github.com/Arachnid))
-1.  Wait 1 week for community discourse and 2 reviewer approvals.
+11.  Wait 1 week for community discourse and 2 reviewer approvals.
     1.  (if release is an emergency patch, time limit may be reduced relative to severity.)
 
 ## Formal Release Procedure

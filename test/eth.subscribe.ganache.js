@@ -54,6 +54,18 @@ describe('subscription connect/reconnect', function () {
             });
     });
 
+    it('unsubscribe should remove the subscription object from the subscriptions and send eth_unsubscribe to the node', function (done) {
+        subscription = web3.eth
+            .subscribe('newBlockHeaders')
+            .on('connected', function () {
+                const id = subscription.id;
+                assert(subscription.options.requestManager.subscriptions.has(id));
+                subscription.unsubscribe(); // Send eth_unsubscribe to the node
+                assert(!subscription.options.requestManager.subscriptions.has(id));
+                done();
+            });
+    });
+
     it('clearSubscriptions', async function() {
         web3.eth.subscribe('newBlockHeaders');
         await waitSeconds(1); // Sub need a little time to set up
