@@ -121,7 +121,6 @@ export const decodeEventABI = (
 	}
 
 	const argTopics = modifiedEvent.anonymous ? data.topics : (data.topics ?? []).slice(1);
-
 	return {
 		...result,
 		returnValue: decodeLog([...event.inputs], data.data, argTopics),

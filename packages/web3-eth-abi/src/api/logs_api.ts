@@ -13,13 +13,11 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	topics: string | string[],
 ) => {
 	const clonedTopics = Array.isArray(topics) ? topics : [topics];
-
 	const clonedData = data ?? '';
 
 	const notIndexedInputs: Array<string | AbiParameter> = [];
 	const indexedParams: Array<string | unknown> = [];
 	let topicCount = 0;
-
 	for (const [i, input] of inputs.entries()) {
 		if (input.indexed) {
 			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
