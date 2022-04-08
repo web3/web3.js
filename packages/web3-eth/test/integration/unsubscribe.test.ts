@@ -1,5 +1,5 @@
-import { Web3BaseProvider } from 'web3-common';
 import WebSocketProvider from 'web3-providers-ws/dist';
+import { SupportedProviders } from 'web3-core';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
 
@@ -16,7 +16,7 @@ describe('unsubscribe', () => {
 
 	describe('unsubscribe from', () => {
 		it('should clearSubscriptions', async () => {
-			web3Eth = new Web3Eth(provider);
+			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
 			await web3Eth.subscribe('newHeads');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
@@ -26,7 +26,7 @@ describe('unsubscribe', () => {
 		});
 
 		it('subscribe to all and clear all except syncing', async () => {
-			web3Eth = new Web3Eth(provider);
+			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
 			await web3Eth.subscribe('newHeads');
 			await web3Eth.subscribe('newPendingTransactions');
 			await web3Eth.subscribe('syncing');
