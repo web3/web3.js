@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const os = require('os');
 const { lstatSync, readdirSync } = require('fs');
-// get listing of packages in the mono repo
 const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
 	if (name === 'web3-providers-ipc') {
@@ -31,20 +30,7 @@ const webpackConfig = {
 			{
 				test: /\.ts?$/,
 				use: 'ts-loader',
-				exclude: [
-					// ...packages.map(packageName =>
-					// 	path.resolve(__dirname, 'packages', packageName, 'test', 'unit'),
-					// ),
-					// ...packages.map(packageName =>
-					// 	path.resolve(__dirname, 'packages', packageName, 'test', 'fixtures'),
-					// ),
-					// ...packages.map(
-					// 	packageName =>
-					// 		new RegExp(path.join('packages', packageName, 'test', 'fixtures')),
-					// ),
-					/node_modules/,
-					/unit/,
-				],
+				exclude: [/node_modules/, /unit/],
 			},
 		],
 	},
@@ -65,7 +51,8 @@ const webpackConfig = {
 		fallback: {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
-			// assert: require.resolve('assert'),
+			assert: require.resolve('assert'),
+			// jest: require.resolve('jest'),
 		},
 		alias: {
 			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),

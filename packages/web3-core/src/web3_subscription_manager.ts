@@ -41,7 +41,6 @@ export class Web3SubscriptionManager<
 		}
 
 		const Klass = this.registeredSubscriptions[name];
-
 		if (!Klass) {
 			throw new SubscriptionError('Invalid subscription type');
 		}
