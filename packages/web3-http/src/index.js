@@ -86,24 +86,21 @@ Http.prototype.get = function(queryUrl) {
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
                 var responseBody;
-
                 try {
                     responseBody = JSON.parse(request.responseText);
+                    request.responseBody = responseBody;
                 } catch(e) {
-                    reject(request.customError = 'Error parsing response body');
+                    console.log('request: ', request);
+                    request.customError = 'Error parsing response body';
+                    reject(request);
                 }
 
                 if(request.status >= 400) {
-                    request.responseBody = responseBody;
                     reject(request);
                 }
 
                 _this.connected = true;
-                resolve({
-                    status: request.status,
-                    responseBody,
-                    request
-                });
+                resolve(request);
             }
         };
 
@@ -139,23 +136,23 @@ Http.prototype.post = function(queryUrl, payload= {}) {
 
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
-                var response = request.responseText;
-
-                if(response.status >=400) {
+                var responseBody;
+                try {
+                    responseBody = JSON.parse(request.responseText);
+                    request.responseBody = responseBody;
+                } catch(e) {
+                    console.log('request: ', request);
+                    request.customError = 'Error parsing response body';
                     reject(request);
                 }
 
-                try {
-                    response = JSON.parse(response);
-                } catch(e) {
+                if(request.status >= 400) {
                     reject(request);
                 }
 
                 _this.connected = true;
-                resolve({
-                    status: request.status,
-                    response
-                });
+                resolve(request);
+
             }
         };
 

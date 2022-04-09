@@ -69,7 +69,6 @@ var hasCcipReadErrorSelector = function (encodedString) {
 var normalizeResponse = function (error, result) {
     console.log('error: ', error);
     console.log('result: ', result);
-
     const defaultResponse = {
         data: ''
     };
@@ -133,7 +132,7 @@ var callGateways = async function (urls, to, callData, allowList) {
         try {
             response = await gatewayQuery(url, to, callData);
 
-            if(!response.request.getResponseHeader('content-type').includes('application/json')) {
+            if(!response.getResponseHeader('content-type').includes('application/json')) {
                 console.warn(`Skipping gateway url ${url} as it did not return application/json`);
                 continue;
             }
@@ -186,12 +185,14 @@ var isOffChainLookup = function (err, result) {
  * @return {Object} Result of calling send with off-chain data
  */
 var ccipReadCall = async function (errorObject, result, payload, send, options) {
+    console.log({ errorObject, result, payload, send, options});
     if (send.ccipReadCalls) {
         send.ccipReadCalls++;
     } else {
         send.ccipReadCalls = 1;
     }
-    if (send.ccipReadCalls > (options.ccipReadMaxRedirectCount || MAX_REDIRECT_COUNT)) {
+    const maxRedirectCount = options.ccipReadMaxRedirectCount || MAX_REDIRECT_COUNT;
+    if (send.ccipReadCalls > maxRedirectCount) {
         throw new Error('Too many CCIP-read redirects');
     }
 
@@ -204,11 +205,15 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         abi.decodeParameters(OFFCHAIN_LOOKUP_PARAMETER_TYPES, `${normalizedResponse.data.substring(10)}`)
     );
 
+    console.log('sender: ', sender);
+    console.log('normalisedresponse: ', normalizedResponse.data);
+    console.log('urls: ', urls);
+
     if (
         (sender && sender.toLowerCase()) !==
         (payload && payload.params && payload.params[0] && payload.params[0].to && payload.params[0].to.toLowerCase())
     ) {
-        throw new Error('CCIP-read error: sender does match contract address');
+        throw new Error('CCIP-read error: sender does not match contract address');
     }
 
 
@@ -219,18 +224,15 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         finalUrls = urls;
     }
 
+    console.log('finalUrls: ', finalUrls);
+
     if(!finalUrls.length) {
         throw new Error('No gateway urls provided');
     }
 
     let gatewayResult;
     if(options.ccipReadGatewayCallback) {
-        try{
-            gatewayResult = await options.ccipReadGatewayCallback(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
-        } catch(e) {
-            console.error('ccipReadGatewayCallback error.');
-            throw e;
-        }
+        gatewayResult = await options.ccipReadGatewayCallback(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
     } else {
         const result = await callGateways(finalUrls, sender, callData, options.ccipReadGatewayAllowList);
         gatewayResult = result.responseBody.data;
