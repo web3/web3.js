@@ -1,7 +1,12 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT, TransactionWithSender } from 'web3-common';
-import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
+import {
+	SupportedProviders,
+	Web3Context,
+	Web3ContextInitOptions,
+	Web3Subscription,
+} from 'web3-core';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -21,8 +26,8 @@ import {
 	NewPendingTransactionsSubscription,
 	NewHeadsSubscription,
 	SyncingSubscription,
-	LogParams,
 	LogArguments,
+	Web3DataEvent,
 } from './web3_subscriptions';
 
 enum SubscriptionNames {
@@ -34,7 +39,13 @@ enum SubscriptionNames {
 	pendingTransactions = 'pendingTransactions',
 }
 
-type Callback = (error: Error, result: LogParams) => void;
+type SomeSubscription =
+	| LogsSubscription
+	| NewPendingTransactionsSubscription
+	| NewHeadsSubscription
+	| SyncingSubscription;
+
+type Callback = (error: Error | null, result: any) => void;
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
@@ -288,15 +299,58 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		);
 	}
 
-	public subscribe(
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	private getSubscribeInputArguments(
+		args: LogArguments | Callback | undefined,
+		cb: Callback | undefined,
+	): { options: LogArguments; callBack?: Callback } {
+		if (typeof cb === 'function') {
+			return { options: args as LogArguments, callBack: cb };
+		}
+		if (typeof args === 'function') {
+			return { options: {} as LogArguments, callBack: args };
+		}
+		return {
+			options: args as LogArguments,
+		};
+	}
+
+	public async subscribe(
 		name: keyof typeof SubscriptionNames,
-		args?: LogArguments | undefined,
+		args?: LogArguments | Callback | undefined,
 		cb?: Callback,
-	): Promise<any> | undefined {
-		return this.subscriptionManager?.subscribe(name, {
-			...(args ?? {}),
-			cb,
-		});
+	): Promise<SomeSubscription> {
+		const { callBack, options } = this.getSubscribeInputArguments(args, cb);
+
+		const subscription = (await this.subscriptionManager?.subscribe(
+			name,
+			options ?? {},
+		)) as Web3Subscription<any>;
+		if (typeof callBack === 'function') {
+			subscription.on('data', (data: any) => callBack(null, data));
+			subscription.on('error', (error: Error) => callBack(error, null));
+		}
+		if (
+			subscription &&
+			name === SubscriptionNames.logs &&
+			typeof options === 'object' &&
+			options.fromBlock &&
+			Number.isFinite(Number(options.fromBlock))
+		) {
+			setImmediate(() => {
+				this.getPastLogs({ fromBlock: String(options.fromBlock) })
+					.then(logs => {
+						for (const log of logs) {
+							subscription.emit(Web3DataEvent.data, log);
+						}
+					})
+					.catch(e => {
+						subscription.emit(Web3DataEvent.error, e);
+					});
+			});
+		}
+
+		return subscription as SomeSubscription;
 	}
 
 	private static shouldClearSubscription({ sub }: { sub: unknown }): boolean {

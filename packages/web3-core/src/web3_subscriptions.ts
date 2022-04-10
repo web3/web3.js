@@ -51,16 +51,14 @@ export abstract class Web3Subscription<
 		});
 
 		const messageListener = (
-			_: Error | null,
+			err: Error | null,
 			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 		) => {
-			// @ts-expect-error We accept any type of arguments here and don't deal with this type internally
-			if (typeof this.args?.cb === 'function') {
-				// @ts-expect-error We accept any type of arguments here and don't deal with this type internally
-				(this.args?.cb as Callback)(_, data);
-			}
 			if (data && jsonRpc.isResponseWithNotification(data)) {
 				this._processSubscriptionResult(data?.params.result);
+			}
+			if (err) {
+				this._processSubscriptionError(err);
 			}
 		};
 
@@ -74,25 +72,39 @@ export abstract class Web3Subscription<
 		await this.subscribe();
 	}
 
-	public async unsubscribe() {
-		if (!this.id) {
-			return;
+	public async unsubscribe(cb?: Callback) {
+		try {
+			if (!this.id) {
+				return;
+			}
+
+			await this._requestManager.send({
+				method: 'eth_unsubscribe',
+				params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
+			});
+
+			this._id = undefined;
+			(this._requestManager.provider as Web3BaseProvider).removeListener(
+				'message',
+				this._messageListener as never,
+			);
+			if (typeof cb === 'function') {
+				cb(null, true);
+			}
+		} catch (e) {
+			if (typeof cb === 'function') {
+				cb(e as Error, null);
+			}
 		}
-
-		await this._requestManager.send({
-			method: 'eth_unsubscribe',
-			params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
-		});
-
-		this._id = undefined;
-		(this._requestManager.provider as Web3BaseProvider).removeListener(
-			'message',
-			this._messageListener as never,
-		);
 	}
 
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
 	protected _processSubscriptionResult(_data: unknown) {
+		// Do nothing - This should be overridden in subclass.
+	}
+
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	protected _processSubscriptionError(_err: Error) {
 		// Do nothing - This should be overridden in subclass.
 	}
 
@@ -110,6 +122,6 @@ export type Web3SubscriptionConstructor<
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	args: { cb?: Callback } & any,
+	args: any,
 	options: { requestManager: Web3RequestManager<API> },
 ) => SubscriptionType;
