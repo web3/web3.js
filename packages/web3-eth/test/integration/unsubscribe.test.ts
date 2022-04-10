@@ -45,7 +45,7 @@ describe('unsubscribe', () => {
 		it('unsubscribe callback', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
 			const sub = (await web3Eth.subscribe('newHeads')) as SyncingSubscription;
-			await sub.unsubscribe((err: Error | null, unsubscribed: boolean) => {
+			await sub.unsubscribe((err: Error | null, unsubscribed: any) => {
 				expect(err).toBeNull();
 				expect(unsubscribed).toBe(true);
 			});
