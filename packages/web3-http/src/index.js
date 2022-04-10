@@ -29,7 +29,7 @@ var http = require('http');
 var Http = function(options) {
     options = options || {};
     this.withCredentials = options.withCredentials || false;
-    this.timeout = options.timeout || 0;
+    this.timeout = options.timeout || 100000;
     this.headers = options.headers;
     this.connected = false;
 
@@ -90,7 +90,6 @@ Http.prototype.get = function(queryUrl) {
                     responseBody = JSON.parse(request.responseText);
                     request.responseBody = responseBody;
                 } catch(e) {
-                    console.log('request: ', request);
                     request.customError = 'Error parsing response body';
                     reject(request);
                 }
@@ -141,7 +140,6 @@ Http.prototype.post = function(queryUrl, payload= {}) {
                     responseBody = JSON.parse(request.responseText);
                     request.responseBody = responseBody;
                 } catch(e) {
-                    console.log('request: ', request);
                     request.customError = 'Error parsing response body';
                     reject(request);
                 }

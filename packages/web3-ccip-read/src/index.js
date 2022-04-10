@@ -46,7 +46,6 @@ var gatewayQuery = function (url, to, calldata) {
 
     if(url.includes('{data}')) {
         return httpObject.get(`${senderUrl.replace('{data}', lowerCalldata)}`);
-        // return httpObject.get(`${senderUrl.replace('{data}', '23fweefsd')}`);
     }
 
     return httpObject.post(senderUrl, {sender: lowerTo, data: lowerCalldata});
@@ -67,8 +66,6 @@ var hasCcipReadErrorSelector = function (encodedString) {
 
 //Errors are handled differently depending on the environment
 var normalizeResponse = function (error, result) {
-    console.log('error: ', error);
-    console.log('result: ', result);
     const defaultResponse = {
         data: ''
     };
@@ -185,7 +182,6 @@ var isOffChainLookup = function (err, result) {
  * @return {Object} Result of calling send with off-chain data
  */
 var ccipReadCall = async function (errorObject, result, payload, send, options) {
-    console.log({ errorObject, result, payload, send, options});
     if (send.ccipReadCalls) {
         send.ccipReadCalls++;
     } else {
@@ -205,10 +201,6 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         abi.decodeParameters(OFFCHAIN_LOOKUP_PARAMETER_TYPES, `${normalizedResponse.data.substring(10)}`)
     );
 
-    console.log('sender: ', sender);
-    console.log('normalisedresponse: ', normalizedResponse.data);
-    console.log('urls: ', urls);
-
     if (
         (sender && sender.toLowerCase()) !==
         (payload && payload.params && payload.params[0] && payload.params[0].to && payload.params[0].to.toLowerCase())
@@ -216,15 +208,12 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         throw new Error('CCIP-read error: sender does not match contract address');
     }
 
-
     let finalUrls;
     if(options.ccipReadGatewayUrls.length) {
         finalUrls = options.ccipReadGatewayUrls;
     } else {
         finalUrls = urls;
     }
-
-    console.log('finalUrls: ', finalUrls);
 
     if(!finalUrls.length) {
         throw new Error('No gateway urls provided');
