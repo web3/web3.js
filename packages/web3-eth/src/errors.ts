@@ -21,6 +21,7 @@ import {
 	ERR_TX_POLLING_TIMEOUT,
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
+	ERR_SIGNATURE_FAILED,
 } from 'web3-common';
 import { Bytes, HexString, Numbers, Web3Error } from 'web3-utils';
 
@@ -277,4 +278,8 @@ export class TransactionReceiptMissingBlockNumberError extends Web3Error {
 	public constructor(value: { receipt: ReceiptInfo }) {
 		super(`receipt: ${JSON.stringify(value.receipt)}`, `Receipt missing block number`);
 	}
+}
+
+export class SignatureError extends Web3Error {
+	public code = ERR_SIGNATURE_FAILED;
 }
