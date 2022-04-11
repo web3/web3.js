@@ -37,15 +37,14 @@ import {
 } from 'web3-common';
 import {
 	signatureObject,
-	signFunction,
 	signResult,
-	signTransactionFunction,
 	signTransactionResult,
 	KeyStore,
 	ScryptParams,
 	PBKDF2SHA256Params,
 	CipherOptions,
 	keyStoreSchema,
+	Web3Account,
 } from './types';
 
 /**
@@ -358,32 +357,27 @@ export const encrypt = async (
 /**
  * Get account from private key
  */
-export const privateKeyToAccount = (
-	privateKey: string | Buffer,
-): {
-	address: string;
-	privateKey: string;
-	signTransaction: signTransactionFunction; // From 1.x
-	sign: signFunction;
-	encrypt: (privateKey: string, password: string) => Promise<KeyStore>;
-} => ({
-	address: privateKeyToAddress(privateKey),
-	privateKey: Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey,
-	signTransaction,
-	sign,
-	encrypt,
-});
+export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
+	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
+
+	return {
+		address: privateKeyToAddress(pKey),
+		privateKey: pKey,
+		signTransaction: (tx: Record<string, unknown>) => signTransaction(tx, pKey),
+		sign: (data: Record<string, unknown> | string) =>
+			sign(typeof data === 'string' ? data : JSON.stringify(data), pKey),
+		encrypt: async (password: string, options?: Record<string, unknown>) => {
+			const data = await encrypt(pKey, password, options);
+
+			return JSON.stringify(data);
+		},
+	};
+};
 
 /**
  * Returns an acoount
  */
-export const create = (): {
-	address: HexString;
-	privateKey: HexString;
-	signTransaction: signTransactionFunction; // From 1.x
-	sign: signFunction;
-	encrypt: (a: string, b: string) => Promise<KeyStore>;
-} => {
+export const create = (): Web3Account => {
 	const privateKey = utils.randomPrivateKey();
 
 	return privateKeyToAccount(`0x${Buffer.from(privateKey).toString('hex')}`);
@@ -397,13 +391,7 @@ export const decrypt = async (
 	keystore: KeyStore | string,
 	password: string | Buffer,
 	nonStrict?: boolean,
-): Promise<{
-	address: string;
-	privateKey: HexString;
-	signTransaction: signTransactionFunction; // From 1.x
-	sign: signFunction;
-	encrypt: (privateKey: HexString, password: string) => Promise<KeyStore>;
-}> => {
+): Promise<Web3Account> => {
 	const json =
 		typeof keystore === 'object'
 			? keystore

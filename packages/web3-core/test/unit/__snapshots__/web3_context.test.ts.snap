@@ -2,6 +2,7 @@
 
 exports[`Web3Context getContextObject should return correct context object 1`] = `
 Object {
+  "accountProvider": undefined,
   "config": Object {
     "blockHeaderTimeout": 10,
     "defaultAccount": null,
@@ -46,5 +47,6 @@ Object {
     },
   },
   "subscriptionManager": undefined,
+  "wallet": undefined,
 }
 `;
