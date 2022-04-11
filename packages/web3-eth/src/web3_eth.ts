@@ -1,10 +1,12 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { Web3Context,SupportedProviders,
+import {
+	SupportedProviders,
 	Web3Context,
 	Web3ContextInitOptions,
-	Web3Subscription } from 'web3-core';
+	Web3Subscription,
+} from 'web3-core';
 import {
 	Address,
 	Bytes,
@@ -16,7 +18,7 @@ import {
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { BlockNumberOrTag, SendTransactionOptions, Transaction, TransactionCall } from './types';
+import { SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
