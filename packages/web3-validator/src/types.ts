@@ -5,7 +5,7 @@ export { JSONSchemaType } from 'ajv';
 export { DataValidateFunction, DataValidationCxt } from 'ajv/dist/types';
 
 export type Web3ValidationErrorObject = ErrorObject;
-export type ValidInputTypes = Buffer | bigint | string | number | boolean;
+export type ValidInputTypes = ArrayBuffer | Buffer | bigint | string | number | boolean;
 
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
 export type EthBaseTypesWithMeta =
