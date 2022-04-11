@@ -6,7 +6,7 @@ import {
 	FMT_NUMBER,
 	FormatType,
 } from 'web3-common';
-import { Address, BlockTag, Bytes, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =
@@ -211,5 +211,3 @@ export interface AccountObject {
 	readonly accountProof: Bytes[];
 	readonly storageProof: StorageProof[];
 }
-
-export type BlockNumberOrTag = Numbers | BlockTag;
