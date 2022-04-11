@@ -1,20 +1,11 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { DataFormat, DEFAULT_RETURN_FORMAT, TransactionWithSender } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import {
-	Address,
-	BlockNumberOrTag,
-	Filter,
-	HexString32Bytes,
-	HexString8Bytes,
-	HexStringBytes,
-	Uint,
-	Uint256,
-} from 'web3-utils';
+import { Address, Bytes, Filter, HexString32Bytes, HexString8Bytes, Numbers } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions, Transaction, TransactionCall } from './types';
+import { BlockNumberOrTag, SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
@@ -66,14 +57,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 
 	public async getStorageAt(
 		address: Address,
-		storageSlot: Uint256,
+		storageSlot: Numbers,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 	) {
-		return rpcMethods.getStorageAt(this.requestManager, address, storageSlot, blockNumber);
+		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber);
 	}
 
 	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
-		return rpcMethods.getCode(this.requestManager, address, blockNumber);
+		return rpcMethodsWrappers.getCode(this, address, blockNumber);
 	}
 
 	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -102,14 +93,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 
 	public async getUncle<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		uncleIndex: Uint,
+		uncleIndex: Numbers,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getUncle(this, block, uncleIndex, returnFormat);
 	}
 
 	public async getTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		transactionHash: HexString32Bytes,
+		transactionHash: Bytes,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
@@ -125,7 +116,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 	>(
 		block: HexString32Bytes | BlockNumberOrTag = this.defaultBlock,
-		transactionIndex: Uint,
+		transactionIndex: Numbers,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getTransactionFromBlock(
@@ -138,10 +129,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 
 	public async getTransactionReceipt<
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(
-		transactionHash: HexString32Bytes,
-		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-	) {
+	>(transactionHash: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
 		return rpcMethodsWrappers.getTransactionReceipt(this, transactionHash, returnFormat);
 	}
 
@@ -163,14 +151,16 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
 	}
 
-	public async sendSignedTransaction(transaction: HexStringBytes) {
-		return rpcMethods.sendRawTransaction(this.requestManager, transaction);
+	public async sendSignedTransaction<
+		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+	>(transaction: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
 	}
 
 	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
-	public async sign(message: HexStringBytes, address: Address) {
-		return rpcMethods.sign(this.requestManager, message, address);
+	public async sign(message: Bytes, address: Address) {
+		return rpcMethodsWrappers.sign(this, message, address);
 	}
 
 	public async signTransaction(transaction: Transaction) {
@@ -186,23 +176,19 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.call(this, transaction, blockNumber);
 	}
 
-	// TODO Missing param
 	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		transaction: Partial<TransactionWithSender>,
+		transaction: Transaction,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.estimateGas(this, transaction, blockNumber, returnFormat);
 	}
 
-	public async getPastLogs(filter: Filter) {
-		return rpcMethods.getLogs(this.requestManager, {
-			...filter,
-			// These defaults are carried over from 1.x
-			// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#getpastlogs
-			fromBlock: filter.fromBlock ?? this.defaultBlock,
-			toBlock: filter.toBlock ?? this.defaultBlock,
-		});
+	public async getPastLogs<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		filter: Filter,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getLogs(this, filter, returnFormat);
 	}
 
 	public async getWork() {
@@ -232,10 +218,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethods.getNodeInfo(this.requestManager);
 	}
 
-	// TODO - Format input
 	public async getProof<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
-		storageKey: HexString32Bytes,
+		storageKey: Bytes,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
@@ -243,9 +228,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 	}
 
 	public async getFeeHistory<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		blockCount: Uint,
+		blockCount: Numbers,
 		newestBlock: BlockNumberOrTag = this.defaultBlock,
-		rewardPercentiles: number[],
+		rewardPercentiles: Numbers[],
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
 		return rpcMethodsWrappers.getFeeHistory(
