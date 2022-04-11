@@ -1,11 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 module.exports = testPaths => {
-	let conditions = ['ipc'];
+	const conditions = ['ipc', 'ws'];
 	const allowedTests = testPaths
-		.filter(file => !conditions.some(con => file.includes('ipc')))
+		.filter(file => !conditions.some(con => file.includes(con)))
 		.map(path => {
 			return { test: path };
 		});
-	console.log('**********\n', allowedTests);
 	return {
 		filtered: allowedTests,
 	};
