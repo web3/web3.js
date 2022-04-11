@@ -38,7 +38,7 @@
 		"ganache-background": "yarn ganache > /dev/null & client=$! npx wait-port 8545",
 		"geth:install-ubuntu": "sudo add-apt-repository -y ppa:ethereum/ethereum && sudo apt-get update && sudo apt-get install ethereum && geth init --datadir .github/geth/data `pwd`/.github/geth/genesis.json && sudo apt install screen",
 		"geth:build": "docker build ./.github -t gethnode -f .github/Dockerfile",
-		"geth-local": "screen -dmS geth --datadir .github/geth/data --networkid 15 --http.addr 0.0.0.0 --http.port 8545 --http --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins '*' --ipcpath=./.github/geth/data/geth.ipc </dev/null &>/dev/null &",
+		"geth-local": "screen -dmS geth --datadir .github/geth/data --networkid 15 --http.addr 0.0.0.0 --http.port 8545 --http --ws --ws.addr 0.0.0.0 --ws.port 8545 --ws.origins '*' --ipcpath=./.github/geth/data/geth.ipc </dev/null &>/dev/null &",
 		"geth": "docker run --ipc=host -v `pwd`/.github/docker-data:/data -d -p 8545:8545 -p 8546:8546 gethnode --datadir data --networkid 15 --http.addr 0.0.0.0 --http.port 8545 --http --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins '*'",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
