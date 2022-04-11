@@ -63,7 +63,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	};
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private readonly _contracts: Contract<any>[] = [];
+	protected readonly _contracts: Contract<any>[];
 
 	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
 		const accountProvider = {
@@ -79,6 +79,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		const wallet = new Wallet(accountProvider);
 
 		super({ provider, wallet, accountProvider });
+
+		this._contracts = [];
 
 		// Have to use local alias to initiate contract context
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
