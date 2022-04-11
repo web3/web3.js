@@ -5,9 +5,8 @@ import {
 	FMT_BYTES,
 	FMT_NUMBER,
 	FormatType,
-	ReceiptInfo as ReceiptInfoEthType,
 } from 'web3-common';
-import { Address, Bytes, HexString32Bytes, HexStringBytes, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =
@@ -165,26 +164,30 @@ export interface Block {
 }
 
 export type SendTransactionEvents = {
-	sending: InternalTransaction;
-	sent: InternalTransaction;
-	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfoEthType;
+	sending: Transaction;
+	sent: Transaction;
+	transactionHash: Bytes;
+	receipt: ReceiptInfo;
 	confirmation: {
-		confirmationNumber: number;
-		receipt: ReceiptInfoEthType;
-		latestBlockHash: HexString32Bytes;
+		confirmationNumber: Numbers;
+		receipt: ReceiptInfo;
+		latestBlockHash: Bytes;
 	};
 };
 
-export type SendSignedTransactionEvents = {
-	sending: HexStringBytes;
-	sent: HexStringBytes;
-	transactionHash: HexString32Bytes;
-	receipt: ReceiptInfoEthType;
+export interface SendTransactionOptions {
+	ignoreGasPricing?: boolean;
+}
+
+export type SendSignedTransactionEvents = SendTransactionEvents & {
+	sending: Bytes;
+	sent: Bytes;
+	transactionHash: Bytes;
+	receipt: ReceiptInfo;
 	confirmation: {
-		confirmationNumber: number;
-		receipt: ReceiptInfoEthType;
-		latestBlockHash: HexString32Bytes;
+		confirmationNumber: Numbers;
+		receipt: ReceiptInfo;
+		latestBlockHash: Bytes;
 	};
 };
 
