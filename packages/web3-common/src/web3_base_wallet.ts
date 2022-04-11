@@ -1,3 +1,5 @@
+import { HexString } from 'web3-utils';
+
 export type Web3EncryptedWallet = string;
 
 export interface Web3BaseWalletAccount {
@@ -5,20 +7,20 @@ export interface Web3BaseWalletAccount {
 	readonly address: string;
 	readonly privateKey: string;
 	readonly signTransaction: (tx: Record<string, unknown>) => {
-		readonly messageHash: string;
-		readonly r: string;
-		readonly s: string;
-		readonly v: string;
-		readonly rawTransaction: string;
-		readonly transactionHash: string;
+		readonly messageHash: HexString;
+		readonly r: HexString;
+		readonly s: HexString;
+		readonly v: HexString;
+		readonly rawTransaction: HexString;
+		readonly transactionHash: HexString;
 	};
 	readonly sign: (data: Record<string, unknown> | string) => {
-		readonly messageHash: string;
-		readonly r: string;
-		readonly s: string;
-		readonly v: string;
+		readonly messageHash: HexString;
+		readonly r: HexString;
+		readonly s: HexString;
+		readonly v: HexString;
 		readonly message?: string;
-		readonly signature: string;
+		readonly signature: HexString;
 	};
 	readonly encrypt: (
 		password: string,
