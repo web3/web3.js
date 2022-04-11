@@ -260,7 +260,7 @@ export const getFeeHistoryValidData: [Uint, BlockNumberOrTag, number[]][] = [
 export const getProofValidData: [Address, HexString32Bytes, BlockNumberOrTag, AccountObject][] = [
 	[
 		'0x1234567890123456789012345678901234567890',
-		'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+		'0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
 		'0x1',
 		{
 			accountProof: [
@@ -289,7 +289,7 @@ export const getProofValidData: [Address, HexString32Bytes, BlockNumberOrTag, Ac
 	],
 	[
 		'0x1234567890123456789012345678901234567890',
-		'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+		'0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
 		BlockTags.EARLIEST,
 		{
 			accountProof: [
@@ -318,7 +318,7 @@ export const getProofValidData: [Address, HexString32Bytes, BlockNumberOrTag, Ac
 	],
 	[
 		'0x1234567890123456789012345678901234567890',
-		'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+		'0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
 		BlockTags.LATEST,
 		{
 			accountProof: [
@@ -347,7 +347,7 @@ export const getProofValidData: [Address, HexString32Bytes, BlockNumberOrTag, Ac
 	],
 	[
 		'0x1234567890123456789012345678901234567890',
-		'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+		'0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421',
 		BlockTags.PENDING,
 		{
 			accountProof: [
