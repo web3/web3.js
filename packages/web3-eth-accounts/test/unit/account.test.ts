@@ -41,7 +41,7 @@ describe('accounts', () => {
 	describe('privateKeyToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validPrivateKeytoAccountData)('%s', (input, output) => {
-				expect(privateKeyToAccount(input)).toEqual(output);
+				expect(JSON.stringify(privateKeyToAccount(input))).toEqual(JSON.stringify(output));
 			});
 		});
 
@@ -138,17 +138,19 @@ describe('accounts', () => {
 				});
 
 				// make sure decrypt does not throw invalid password error
-				const result = await decrypt(keystore, input[1]).catch(err => {
-					throw err;
-				});
-				expect(result).toEqual(privateKeyToAccount(input[3].slice(2)));
+				const result = await decrypt(keystore, input[1]);
+
+				expect(JSON.stringify(result)).toEqual(
+					JSON.stringify(privateKeyToAccount(input[3].slice(2))),
+				);
 
 				const keystoreString = JSON.stringify(keystore);
 
-				const stringResult = await decrypt(keystoreString, input[1], true).catch(err => {
-					throw err;
-				});
-				expect(stringResult).toEqual(privateKeyToAccount(input[3].slice(2)));
+				const stringResult = await decrypt(keystoreString, input[1], true);
+
+				expect(JSON.stringify(stringResult)).toEqual(
+					JSON.stringify(privateKeyToAccount(input[3].slice(2))),
+				);
 			});
 		});
 

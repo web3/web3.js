@@ -189,20 +189,20 @@ describe('Wallet', () => {
 	});
 
 	describe('encrypt', () => {
-		it('should encrypt all accounts and return array', () => {
+		it('should encrypt all accounts and return array', async () => {
 			const account1 = {
 				address: 'my_address1',
-				encrypt: jest.fn().mockReturnValue('encrypted_account1'),
+				encrypt: jest.fn().mockResolvedValue('encrypted_account1'),
 			} as any;
 			const account2 = {
 				address: 'my_address2',
-				encrypt: jest.fn().mockReturnValue('encrypted_account2'),
+				encrypt: jest.fn().mockResolvedValue('encrypted_account2'),
 			} as any;
 			const options = { myOptions: 'myOptions' };
 			wallet.add(account1);
 			wallet.add(account2);
 
-			const result = wallet.encrypt('password', options);
+			const result = await wallet.encrypt('password', options);
 
 			expect(account1.encrypt).toHaveBeenCalledTimes(1);
 			expect(account1.encrypt).toHaveBeenCalledWith('password', options);
@@ -213,7 +213,7 @@ describe('Wallet', () => {
 	});
 
 	describe('decrypt', () => {
-		it('should decrypt all accounts and add to wallet', () => {
+		it('should decrypt all accounts and add to wallet', async () => {
 			const encryptedAccount1 = 'encrypted_account1';
 			const encryptedAccount2 = 'encrypted_account2';
 			const account1 = { address: 'my_address1' } as any;
@@ -222,12 +222,12 @@ describe('Wallet', () => {
 
 			when(accountProvider.decrypt)
 				.calledWith(encryptedAccount1, 'password', options)
-				.mockReturnValue(account1);
+				.mockResolvedValue(account1);
 			when(accountProvider.decrypt)
 				.calledWith(encryptedAccount2, 'password', options)
-				.mockReturnValue(account2);
+				.mockResolvedValue(account2);
 
-			wallet.decrypt([encryptedAccount1, encryptedAccount2], 'password', options);
+			await wallet.decrypt([encryptedAccount1, encryptedAccount2], 'password', options);
 
 			expect(accountProvider.decrypt).toHaveBeenCalledTimes(2);
 			expect(accountProvider.decrypt).toHaveBeenCalledWith(
@@ -247,17 +247,17 @@ describe('Wallet', () => {
 	});
 
 	describe('save', () => {
-		it('should throw error if local storage not present', () => {
+		it('should throw error if local storage not present', async () => {
 			jest.spyOn(Wallet, 'getStorage').mockReturnValue(undefined);
 
-			expect(() => wallet.save('password')).toThrow('Local storage not available.');
+			return expect(wallet.save('password')).rejects.toThrow('Local storage not available.');
 		});
 
-		it('should encrypt wallet and store with local storage for given key', () => {
+		it('should encrypt wallet and store with local storage for given key', async () => {
 			const encryptedWallet = ['encryptedWallet'];
-			jest.spyOn(wallet, 'encrypt').mockReturnValue(encryptedWallet);
+			jest.spyOn(wallet, 'encrypt').mockResolvedValue(encryptedWallet);
 
-			wallet.save('password', 'myKey');
+			await wallet.save('password', 'myKey');
 
 			expect(wallet.encrypt).toHaveBeenCalledTimes(1);
 			expect(wallet.encrypt).toHaveBeenCalledWith('password');
@@ -268,11 +268,11 @@ describe('Wallet', () => {
 			);
 		});
 
-		it('should encrypt wallet and store with local storage with default key', () => {
+		it('should encrypt wallet and store with local storage with default key', async () => {
 			const encryptedWallet = ['encryptedWallet'];
-			jest.spyOn(wallet, 'encrypt').mockReturnValue(encryptedWallet);
+			jest.spyOn(wallet, 'encrypt').mockResolvedValue(encryptedWallet);
 
-			wallet.save('password');
+			await wallet.save('password');
 
 			expect(wallet.encrypt).toHaveBeenCalledTimes(1);
 			expect(wallet.encrypt).toHaveBeenCalledWith('password');
@@ -285,19 +285,19 @@ describe('Wallet', () => {
 	});
 
 	describe('load', () => {
-		it('should throw error if local storage not present', () => {
+		it('should throw error if local storage not present', async () => {
 			jest.spyOn(Wallet, 'getStorage').mockReturnValue(undefined);
 
-			expect(() => wallet.load('password')).toThrow('Local storage not available.');
+			return expect(wallet.load('password')).rejects.toThrow('Local storage not available.');
 		});
 
-		it('should load wallet from local storage for given key and decrypt', () => {
+		it('should load wallet from local storage for given key and decrypt', async () => {
 			const encryptedWallet = JSON.stringify(['encryptedWallet']);
 
 			when(localStorageSpy.getItem).calledWith('myKey').mockReturnValue(encryptedWallet);
-			jest.spyOn(wallet, 'decrypt').mockReturnValue({} as never);
+			jest.spyOn(wallet, 'decrypt').mockResolvedValue({} as never);
 
-			wallet.load('password', 'myKey');
+			await wallet.load('password', 'myKey');
 
 			expect(wallet.decrypt).toHaveBeenCalledTimes(1);
 			expect(wallet.decrypt).toHaveBeenCalledWith(['encryptedWallet'], 'password');
@@ -305,15 +305,15 @@ describe('Wallet', () => {
 			expect(localStorageSpy.getItem).toHaveBeenCalledWith('myKey');
 		});
 
-		it('should load wallet from local storage for default key and decrypt', () => {
+		it('should load wallet from local storage for default key and decrypt', async () => {
 			const encryptedWallet = JSON.stringify(['encryptedWallet']);
 
 			when(localStorageSpy.getItem)
 				.calledWith('web3js_wallet')
 				.mockReturnValue(encryptedWallet);
-			jest.spyOn(wallet, 'decrypt').mockReturnValue({} as never);
+			jest.spyOn(wallet, 'decrypt').mockResolvedValue({} as never);
 
-			wallet.load('password');
+			await wallet.load('password');
 
 			expect(wallet.decrypt).toHaveBeenCalledTimes(1);
 			expect(wallet.decrypt).toHaveBeenCalledWith(['encryptedWallet'], 'password');
