@@ -1,14 +1,14 @@
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
 
-import { getBalance as rpcMethodsGetBalance } from '../../../src/rpc_methods';
+import { getCode as rpcMethodsGetCode } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
-import { getBalance } from '../../../src/rpc_method_wrappers';
-import { testData } from './fixtures/get_balance';
+import { getCode } from '../../../src/rpc_method_wrappers';
+import { testData } from './fixtures/get_code';
 
 jest.mock('../../../src/rpc_methods');
 
-describe('getBlockNumber', () => {
+describe('getCode', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 	beforeAll(() => {
@@ -16,7 +16,7 @@ describe('getBlockNumber', () => {
 	});
 
 	it.each(testData)(
-		`should call rpcMethods.getBalance with expected parameters\nTitle: %s\nInput parameters: %s\n`,
+		`should call rpcMethods.getCode with expected parameters\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters, __) => {
 			const [inputAddress, inputBlockNumber] = inputParameters;
 
@@ -32,8 +32,8 @@ describe('getBlockNumber', () => {
 				);
 			}
 
-			await getBalance(web3Context, ...inputParameters);
-			expect(rpcMethodsGetBalance).toHaveBeenCalledWith(
+			await getCode(web3Context, ...inputParameters);
+			expect(rpcMethodsGetCode).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
 				inputBlockNumberFormatted,
@@ -42,14 +42,14 @@ describe('getBlockNumber', () => {
 	);
 
 	it.each(testData)(
-		`should format return value using provided return format\nTitle: %s\nInput parameters: %s\n`,
+		`should format return value using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters, mockRpcResponse) => {
 			const [__, ___, returnFormat] = inputParameters;
-			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
-			(rpcMethodsGetBalance as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			const expectedFormattedResult = format({ eth: 'bytes' }, mockRpcResponse, returnFormat);
+			(rpcMethodsGetCode as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getBalance(web3Context, ...inputParameters);
-			expect(result).toBe(expectedFormattedResult);
+			const result = await getCode(web3Context, ...inputParameters);
+			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);
 });

@@ -1,11 +1,12 @@
 import { DataFormat, format } from 'web3-common';
-import { Address, BlockTags, Numbers } from 'web3-utils';
+import { Address, BlockTags, Bytes } from 'web3-utils';
 
 import { BlockNumberOrTag } from '../../../../src/types';
 import { returnFormats } from './return_formats';
 
 const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
-const mockRpcResponse = '0xe8d4a51000';
+const mockRpcResponse =
+	'0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056';
 
 /**
  * Array consists of:
@@ -15,6 +16,7 @@ const mockRpcResponse = '0xe8d4a51000';
  *     - blockNumber
  */
 export const testCases: [string, [Address, BlockNumberOrTag | undefined]][] = [
+	// Testing blockNumber cases
 	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
 	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],
 	['blockNumber = BlockTags.PENDING', [address, BlockTags.PENDING]],
@@ -34,7 +36,7 @@ export const testCases: [string, [Address, BlockNumberOrTag | undefined]][] = [
  *     - returnFormat
  * - mockRpcResponse (formatted as returnFormat)
  */
-type TestData = [string, [Address, BlockNumberOrTag | undefined, DataFormat], Numbers];
+type TestData = [string, [Address, BlockNumberOrTag | undefined, DataFormat], Bytes];
 
 /**
  * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
@@ -45,7 +47,11 @@ export const testData = (() => {
 	for (const testCase of testCases) {
 		for (const returnFormat of returnFormats) {
 			const [testTitle, inputParameters] = testCase;
-			const mockRpcResponseFormatted = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
+			const mockRpcResponseFormatted = format(
+				{ eth: 'bytes' },
+				mockRpcResponse,
+				returnFormat,
+			);
 			_testData.push([
 				testTitle,
 				[...inputParameters, returnFormat],
