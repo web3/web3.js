@@ -246,7 +246,7 @@ describe('web3_eth_methods_with_parameters', () => {
 			});
 
 			describe("doesn't have returnFormat parameter", () => {
-				describe('getStorageAt', () => {
+				describe.skip('getStorageAt', () => {
 					it.each(getStorageAtValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
@@ -259,7 +259,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
-				describe('getCode', () => {
+				describe.skip('getCode', () => {
 					it.each(getCodeValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
@@ -272,7 +272,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
-				describe('sendSignedTransaction', () => {
+				describe.skip('sendSignedTransaction', () => {
 					it.each(sendSignedTransactionValidData)('input: %s', async input => {
 						await web3Eth.sendSignedTransaction(input);
 						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
@@ -282,7 +282,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					});
 				});
 
-				describe('sign', () => {
+				describe.skip('sign', () => {
 					it.each(signValidData)('input: %s', async input => {
 						await web3Eth.sign(...input);
 						expect(rpcMethods.sign).toHaveBeenCalledWith(
@@ -292,7 +292,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					});
 				});
 
-				describe('getPastLogs', () => {
+				describe.skip('getPastLogs', () => {
 					it.each(getPastLogsValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {

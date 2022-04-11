@@ -47,7 +47,7 @@
 		"test:unit": "lerna run test:unit --stream --parallel",
 		"test:integration": "lerna run test:integration --stream --parallel",
 		"test:integration:browsers": "./node_modules/.bin/karma start karma.config.js",
-		"test:integration:ganache": "WSPORT=8545 lerna run test:integration -- --filter=`pwd`/packages/web3/test/filter-tests.js",
+		"test:integration:ganache": "WSPORT=8545 lerna run test:integration",
 		"prepare": "husky install",
 		"postinstall": "yarn build"
 	},

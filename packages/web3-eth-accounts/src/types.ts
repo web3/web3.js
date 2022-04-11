@@ -1,4 +1,5 @@
 import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from '@ethereumjs/tx';
+import { Web3BaseWalletAccount } from 'web3-common';
 import { HexString } from 'web3-utils';
 
 export type signatureObject = {
@@ -37,8 +38,11 @@ export type signTransactionResult = signatureObject & {
 };
 
 export type signTransactionFunction = (
-	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
-	privateKey: string,
+	transaction:
+		| TxData
+		| AccessListEIP2930TxData
+		| FeeMarketEIP1559TxData
+		| Record<string, unknown>,
 ) => signTransactionResult;
 
 export type signResult = signatureObject & {
@@ -92,3 +96,8 @@ export type KeyStore = {
 	version: 3;
 	address: string;
 };
+
+export interface Web3Account extends Web3BaseWalletAccount {
+	address: HexString;
+	privateKey: HexString;
+}
