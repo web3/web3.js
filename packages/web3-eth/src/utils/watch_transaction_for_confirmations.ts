@@ -40,26 +40,25 @@ export function watchTransactionForConfirmations<
 	// Having a transactionReceipt means that the transaction has already been included
 	// in at least one block, so we start with 1
 	let confirmationNumber = 1;
-	// TODO - Promise returned in function argument where a void return was expected
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const intervalId = setInterval(async () => {
-		if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
-			clearInterval(intervalId);
-		}
+	const intervalId = setInterval(() => {
+		(async () => {
+			if (confirmationNumber >= web3Context.transactionConfirmationBlocks)
+				clearInterval(intervalId);
 
-		const nextBlock = await getBlockByNumber(
-			web3Context.requestManager,
-			numberToHex(BigInt(transactionReceipt.blockNumber) + BigInt(confirmationNumber)),
-			false,
-		);
+			const nextBlock = await getBlockByNumber(
+				web3Context.requestManager,
+				numberToHex(BigInt(transactionReceipt.blockNumber) + BigInt(confirmationNumber)),
+				false,
+			);
 
-		if (nextBlock?.hash !== null) {
-			confirmationNumber += 1;
-			transactionPromiEvent.emit('confirmation', {
-				confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),
-				receipt: transactionReceipt,
-				latestBlockHash: format({ eth: 'bytes32' }, nextBlock.hash, returnFormat),
-			});
-		}
+			if (nextBlock?.hash !== null) {
+				confirmationNumber += 1;
+				transactionPromiEvent.emit('confirmation', {
+					confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),
+					receipt: transactionReceipt,
+					latestBlockHash: format({ eth: 'bytes32' }, nextBlock.hash, returnFormat),
+				});
+			}
+		})() as unknown;
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 }
