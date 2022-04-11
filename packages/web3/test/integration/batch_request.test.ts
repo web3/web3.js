@@ -29,8 +29,10 @@ describe('Batch Request', () => {
 
 		const batch = new web3.BatchRequest();
 
-		await batch.add(request1);
-		await batch.add(request2);
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		batch.add(request1);
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		batch.add(request2);
 		const response = await batch.execute();
 		const hexWeiBalances = accounts.map(acc => balanceWeiHex(acc.balance));
 
