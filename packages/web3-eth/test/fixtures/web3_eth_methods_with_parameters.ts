@@ -24,20 +24,20 @@ export const getBalanceValidData: [
 	// All possible undefined values
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined blockNumber, undefined returnType
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Undefined blockNumber, returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -261,7 +261,7 @@ export const getBlockValidData: [
 	// All possible undefined values
 	[
 		[undefined, undefined, undefined],
-		[BlockTags.LATEST, false, undefined],
+		[BlockTags.LATEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, undefined hydrated and returnType
 	[
@@ -270,45 +270,49 @@ export const getBlockValidData: [
 			undefined,
 			undefined,
 		],
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', false, undefined],
+		[
+			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			false,
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[BlockTags.LATEST, undefined, undefined],
-		[BlockTags.LATEST, false, undefined],
+		[BlockTags.LATEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, undefined, undefined],
-		[BlockTags.EARLIEST, false, undefined],
+		[BlockTags.EARLIEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, undefined, undefined],
-		[BlockTags.PENDING, false, undefined],
+		[BlockTags.PENDING, false, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, hydrated = true, and undefined returnType
 	[
 		[BlockTags.LATEST, true, undefined],
-		[BlockTags.LATEST, true, undefined],
+		[BlockTags.LATEST, true, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, true, undefined],
-		[BlockTags.EARLIEST, true, undefined],
+		[BlockTags.EARLIEST, true, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, true, undefined],
-		[BlockTags.PENDING, true, undefined],
+		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, hydrated = false, and undefined returnType
 	[
 		[BlockTags.LATEST, false, undefined],
-		[BlockTags.LATEST, false, undefined],
+		[BlockTags.LATEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, false, undefined],
-		[BlockTags.EARLIEST, false, undefined],
+		[BlockTags.EARLIEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, false, undefined],
-		[BlockTags.PENDING, false, undefined],
+		[BlockTags.PENDING, false, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, hydrated = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -376,24 +380,27 @@ export const getBlockTransactionCountValidData: [
 	// All possible undefined values
 	[
 		[undefined, undefined],
-		[BlockTags.LATEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, undefined returnType
 	[
 		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
+		[
+			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[BlockTags.LATEST, undefined],
-		[BlockTags.LATEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, undefined],
-		[BlockTags.EARLIEST, undefined],
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, undefined],
-		[BlockTags.PENDING, undefined],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -461,24 +468,27 @@ export const getBlockUncleCountValidData: [
 	// All possible undefined values
 	[
 		[undefined, undefined],
-		[BlockTags.LATEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, undefined returnType
 	[
 		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
+		[
+			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[BlockTags.LATEST, undefined],
-		[BlockTags.LATEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, undefined],
-		[BlockTags.EARLIEST, undefined],
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, undefined],
-		[BlockTags.PENDING, undefined],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -546,37 +556,41 @@ export const getUncleValidData: [
 	// All possible undefined values
 	[
 		[undefined, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
 		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
-		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		[
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			'0x0',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[BlockTags.LATEST, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
 		[BlockTags.LATEST, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -646,7 +660,10 @@ export const getTransactionValidData: [
 	// Defined transactionHash, undefined returnType
 	[
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	// Defined transactionHash and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -706,37 +723,41 @@ export const getTransactionFromBlockValidData: [
 	// All possible undefined values
 	[
 		[undefined, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
 		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
-		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		[
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			'0x0',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	[
 		[BlockTags.LATEST, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
 		[BlockTags.LATEST, '0x0', undefined],
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -804,7 +825,10 @@ export const getTransactionReceiptValidData: [
 	// Defined block, undefined returnType
 	[
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			DEFAULT_RETURN_FORMAT,
+		],
 	],
 	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -864,7 +888,7 @@ export const getTransactionCountValidData: [
 	// All possible undefined values
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined address and block number, undefined returnType
 	[
@@ -876,33 +900,33 @@ export const getTransactionCountValidData: [
 		[
 			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = and undefined returnType
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -1046,7 +1070,7 @@ export const estimateGasValidData: [
 	// All possible undefined values
 	[
 		[transactionWithSender, undefined, undefined],
-		[transactionWithSender, BlockTags.LATEST, undefined],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, undefined returnType
 	[
@@ -1058,33 +1082,33 @@ export const estimateGasValidData: [
 		[
 			transactionWithSender,
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
 		[transactionWithSender, BlockTags.LATEST, undefined],
-		[transactionWithSender, BlockTags.LATEST, undefined],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, undefined],
-		[transactionWithSender, BlockTags.EARLIEST, undefined],
+		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, undefined],
-		[transactionWithSender, BlockTags.PENDING, undefined],
+		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, undefined returnType
 	[
 		[transactionWithSender, BlockTags.LATEST, undefined],
-		[transactionWithSender, BlockTags.LATEST, undefined],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, undefined],
-		[transactionWithSender, BlockTags.EARLIEST, undefined],
+		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, undefined],
-		[transactionWithSender, BlockTags.PENDING, undefined],
+		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -1224,7 +1248,7 @@ export const getFeeHistoryValidData: [
 	// All possible undefined values
 	[
 		['0x4', undefined, [], undefined],
-		['0x4', BlockTags.LATEST, [], undefined],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, undefined returnType
 	[
@@ -1238,33 +1262,33 @@ export const getFeeHistoryValidData: [
 			'0x4',
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
 			[],
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
 		['0x4', BlockTags.LATEST, [], undefined],
-		['0x4', BlockTags.LATEST, [], undefined],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x4', BlockTags.EARLIEST, [], undefined],
-		['0x4', BlockTags.EARLIEST, [], undefined],
+		['0x4', BlockTags.EARLIEST, [], DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x4', BlockTags.PENDING, [], undefined],
-		['0x4', BlockTags.PENDING, [], undefined],
+		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, undefined returnType
 	[
 		['0x4', BlockTags.LATEST, [], undefined],
-		['0x4', BlockTags.LATEST, [], undefined],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x4', BlockTags.EARLIEST, [], undefined],
-		['0x4', BlockTags.EARLIEST, [], undefined],
+		['0x4', BlockTags.EARLIEST, [], DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x4', BlockTags.PENDING, [], undefined],
-		['0x4', BlockTags.PENDING, [], undefined],
+		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 	],
 	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -1501,7 +1525,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	// Defined block number, undefined returnType
@@ -1516,7 +1540,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
@@ -1530,7 +1554,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
@@ -1544,7 +1568,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	[
@@ -1558,7 +1582,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 	],
 	// Defined block number, returnType = DEFAULT_RETURN_FORMAT
