@@ -59,20 +59,11 @@ Http.prototype._prepareRequest = function(){
     return request;
 };
 
-Http.prototype._responseObject = function(status, responseBody, request) {
-    return ({
-        status,
-        responseBody,
-        request
-    });
-};
-
-Http.prototype.get = function(queryUrl) {
+Http.prototype._sendRequest = function(queryUrl, method, payload) {
     return new Promise((resolve, reject) => {
         var _this = this;
         var request = this._prepareRequest(queryUrl);
-        request.open('GET', queryUrl, true);
-        request.setRequestHeader('Content-Type','application/json');
+        request.open(method, queryUrl, true);
 
         request.timeout = this.timeout;
         request.withCredentials = this.withCredentials;
@@ -86,12 +77,15 @@ Http.prototype.get = function(queryUrl) {
         request.onreadystatechange = function() {
             if (request.readyState === 4 && request.timeout !== 1) {
                 var responseBody;
-                try {
-                    responseBody = JSON.parse(request.responseText);
-                    request.responseBody = responseBody;
-                } catch(e) {
-                    request.customError = 'Error parsing response body';
-                    reject(request);
+
+                if(request.getResponseHeader('content-type').includes('application/json')) {
+                    try {
+                        responseBody = JSON.parse(request.responseText);
+                        request.responseBody = responseBody;
+                    } catch(e) {
+                        request.customError = 'Error parsing response body';
+                        reject(request);
+                    }
                 }
 
                 if(request.status >= 400) {
@@ -109,63 +103,25 @@ Http.prototype.get = function(queryUrl) {
         };
 
         try {
-            request.send();
+            if (method === 'POST') {
+                request.setRequestHeader('Content-Type','application/json');
+                request.send(JSON.stringify(payload));
+            } else {
+                request.send();
+            }
         } catch(error) {
             this.connected = false;
             reject(request);
         }
     });
+}
+
+Http.prototype.get = function(queryUrl) {
+    return this._sendRequest(queryUrl, 'GET', {});
 };
 
 Http.prototype.post = function(queryUrl, payload= {}) {
-    return new Promise((resolve, reject) => {
-        var _this = this;
-        var request = this._prepareRequest(queryUrl);
-        request.open('POST', queryUrl, true);
-        request.setRequestHeader('Content-Type','application/json');
-
-        request.timeout = this.timeout;
-        request.withCredentials = this.withCredentials;
-
-        if (this.headers) {
-            this.headers.forEach(function (header) {
-                request.setRequestHeader(header.name, header.value);
-            });
-        }
-
-        request.onreadystatechange = function() {
-            if (request.readyState === 4 && request.timeout !== 1) {
-                var responseBody;
-                try {
-                    responseBody = JSON.parse(request.responseText);
-                    request.responseBody = responseBody;
-                } catch(e) {
-                    request.customError = 'Error parsing response body';
-                    reject(request);
-                }
-
-                if(request.status >= 400) {
-                    reject(request);
-                }
-
-                _this.connected = true;
-                resolve(request);
-
-            }
-        };
-
-        request.ontimeout = function() {
-            _this.connected = false;
-            reject(errors.ConnectionTimeout(this.timeout));
-        };
-
-        try {
-            request.send(JSON.stringify(payload));
-        } catch(error) {
-            this.connected = false;
-            reject(request);
-        }
-    });
+    return this._sendRequest(queryUrl, 'POST', payload);
 };
 
 module.exports = { Http };
