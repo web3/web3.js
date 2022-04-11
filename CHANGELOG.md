@@ -541,3 +541,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.4]
+
+### Fixed
+-  Fix dead link in web3-eth.rst (#4916)
