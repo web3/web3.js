@@ -55,16 +55,27 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnFormat);
 	}
 
-	public async getStorageAt(
+	public async getStorageAt<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		storageSlot: Numbers,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber);
+		return rpcMethodsWrappers.getStorageAt(
+			this,
+			address,
+			storageSlot,
+			blockNumber,
+			returnFormat,
+		);
 	}
 
-	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
-		return rpcMethodsWrappers.getCode(this, address, blockNumber);
+	public async getCode<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getCode(this, address, blockNumber, returnFormat);
 	}
 
 	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(

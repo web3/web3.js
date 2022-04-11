@@ -97,34 +97,42 @@ export async function getBalance<ReturnFormat extends DataFormat>(
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
 }
 
-export const getStorageAt = async (
+export async function getStorageAt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address: Address,
 	storageSlot: Numbers,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) => {
+	returnFormat: ReturnFormat,
+) {
 	const storageSlotFormatted = format({ eth: 'uint' }, storageSlot, DEFAULT_RETURN_FORMAT);
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
-	return rpcMethods.getStorageAt(
+	const response = await rpcMethods.getStorageAt(
 		web3Context.requestManager,
 		address,
 		storageSlotFormatted,
 		blockNumberFormatted,
 	);
-};
+	return format({ eth: 'bytes' }, response, returnFormat);
+}
 
-export const getCode = async (
+export async function getCode<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address: Address,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) => {
+	returnFormat: ReturnFormat,
+) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
-	return rpcMethods.getCode(web3Context.requestManager, address, blockNumberFormatted);
-};
+	const response = await rpcMethods.getCode(
+		web3Context.requestManager,
+		address,
+		blockNumberFormatted,
+	);
+	return format({ eth: 'bytes' }, response, returnFormat);
+}
 
 export async function getBlock<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
