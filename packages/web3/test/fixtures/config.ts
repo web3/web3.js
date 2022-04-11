@@ -19,3 +19,7 @@ export const accounts: Account[] = [
 export const httpStringProvider = 'http://localhost:8545';
 export const wsStringProvider = 'ws://localhost';
 export const ipcStringProvider = '../../../../../.github/geth/data/geth.ipc';
+export const externalHttpsStringProvider =
+	'https://mainnet.infura.io/v3/6120b2e72c304b4eadafe2bf33862ac4';
+export const externalWssStringProvider =
+	'wss://mainnet.infura.io/ws/v3/6120b2e72c304b4eadafe2bf33862ac4';
