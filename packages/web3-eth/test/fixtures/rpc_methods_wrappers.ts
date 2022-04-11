@@ -1785,6 +1785,22 @@ export const transactionWithSender: TransactionWithSender = {
 	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	chainId: '0x1',
 };
+
+export const transactionWithSenderData: Partial<TransactionWithSender> = {
+	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	type: '0x0',
+	nonce: '0x1',
+	gas: '0xc350',
+	value: '0x1',
+	data: '0x',
+	maxFeePerGas: '0x1475505aab',
+	maxPriorityFeePerGas: '0x7f324180',
+	accessList: [],
+	gasPrice: '0x4a817c800',
+	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	chainId: '0x1',
+};
+
 /**
  * Array consists of:
  * - array of inputs
@@ -1802,7 +1818,7 @@ export const estimateGasValidData: [
 	[
 		[transactionWithSender, undefined, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	// Defined transaction and block number, undefined returnType
@@ -1814,7 +1830,7 @@ export const estimateGasValidData: [
 		],
 		'0x5208',
 		[
-			transactionWithSender,
+			transactionWithSenderData,
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
 		],
 		'0x5208',
@@ -1822,57 +1838,57 @@ export const estimateGasValidData: [
 	[
 		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, undefined returnType
 	[
 		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
 		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
@@ -1883,7 +1899,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'21000',
 	],
 	[
@@ -1893,7 +1909,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'21000',
 	],
 	[
@@ -1903,7 +1919,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'21000',
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
@@ -1914,7 +1930,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		21000,
 	],
 	[
@@ -1924,7 +1940,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		21000,
 	],
 	[
@@ -1934,7 +1950,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		21000,
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
@@ -1945,7 +1961,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		BigInt('0x5208'),
 	],
 	[
@@ -1955,7 +1971,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		BigInt('0x5208'),
 	],
 	[
@@ -1965,7 +1981,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		BigInt('0x5208'),
 	],
 ];
