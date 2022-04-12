@@ -530,7 +530,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
--  Fix static tuple encoding (#4673) (#4884)
 -  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
 
 ## [1.7.3]
@@ -546,3 +545,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 -  Fix dead link in web3-eth.rst (#4916)
 -  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
