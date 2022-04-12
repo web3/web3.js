@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,14 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ErrorObject } from 'ajv';
+import { ErrorObject, JSONSchemaType } from 'ajv';
 import { AbiParameter } from './private_types';
 
 export { JSONSchemaType } from 'ajv';
 export { DataValidateFunction, DataValidationCxt } from 'ajv/dist/types';
 
 export type Web3ValidationErrorObject = ErrorObject;
-export type ValidInputTypes = Buffer | bigint | string | number | boolean;
+export type ValidInputTypes = ArrayBuffer | Buffer | bigint | string | number | boolean;
 
 export type EthBaseTypes = 'bool' | 'bytes' | 'string' | 'uint' | 'int' | 'address' | 'tuple';
 export type EthBaseTypesWithMeta =
@@ -80,3 +80,12 @@ export interface Filter {
 	readonly address?: string | string[];
 	readonly topics?: (string | string[] | null)[];
 }
+
+// To avoid circular dependency to avoid breaking changes in "web3-utils" package.
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+// In `JSONSchemaType` from `ajv` the `type` is required
+// We need to make it optional
+export type JsonSchema = Optional<JSONSchemaType<unknown>, 'type'> & {
+	readonly eth?: string;
+};

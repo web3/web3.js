@@ -37,8 +37,6 @@ import {
 	toUtf8,
 	toWei,
 	utf8ToHex,
-	convertToValidType,
-	convertObjectPropertiesToValidType,
 	toChecksumAddress,
 } from '../../src/converters';
 
@@ -62,10 +60,6 @@ import {
 	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
-	convertToValidTypeValidData,
-	convertToValidTypeInvalidData,
-	convertObjectPropertiesToValidTypeValidData,
-	convertObjectPropertiesToValidTypeInvalidData,
 	toCheckSumValidData,
 } from '../fixtures/converters';
 
@@ -355,46 +349,6 @@ describe('converters', () => {
 		});
 		describe('invalid cases', () => {
 			it.todo('should throw error for invalid cases');
-		});
-	});
-	describe('convertToValidType', () => {
-		describe('valid cases', () => {
-			it.each(convertToValidTypeValidData)(
-				'convert %s to %s and get %s',
-				(input, convertTo, output) => {
-					expect(convertToValidType(input, convertTo)).toEqual(output);
-				},
-			);
-		});
-		describe('invalid cases', () => {
-			it.each(convertToValidTypeInvalidData)(
-				'trying to convert %s to %s',
-				(input, convertTo, output) => {
-					expect(() => convertToValidType(input, convertTo)).toThrow(output);
-				},
-			);
-		});
-	});
-	describe('convertObjectPropertiesToValidType', () => {
-		describe('valid cases', () => {
-			it.each(convertObjectPropertiesToValidTypeValidData)(
-				'valid cases',
-				(input, convertibleProperties, convertTo, output) => {
-					expect(
-						convertObjectPropertiesToValidType(input, convertibleProperties, convertTo),
-					).toStrictEqual(output);
-				},
-			);
-		});
-		describe('invalid cases', () => {
-			it.each(convertObjectPropertiesToValidTypeInvalidData)(
-				'trying to convert %s with convertible properties: %s',
-				(input, convertibleProperties, convertTo, output) => {
-					expect(() =>
-						convertObjectPropertiesToValidType(input, convertibleProperties, convertTo),
-					).toThrow(output);
-				},
-			);
 		});
 	});
 });

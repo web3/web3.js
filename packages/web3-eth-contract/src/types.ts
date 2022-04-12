@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,11 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, ReceiptInfo } from 'web3-common';
+import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	EthExecutionAPI,
+	FormatType,
+	ReceiptInfo,
+} from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import { sendTransaction } from 'web3-eth';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Uint, ValidTypes } from 'web3-utils';
+import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -80,10 +86,10 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: NonPayableCallOptions): ReturnType<typeof sendTransaction>;
-	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: NonPayableCallOptions,
-		returnType?: ReturnType,
-	): Promise<ReturnType>;
+		returnFormat?: ReturnFormat,
+	): Promise<FormatType<Numbers, ReturnFormat>>;
 	encodeABI(): string;
 }
 
@@ -91,9 +97,9 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(tx?: PayableCallOptions): ReturnType<typeof sendTransaction>;
-	estimateGas<ReturnType extends ValidTypes = ValidTypes.HexString>(
+	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: PayableCallOptions,
-		returnType?: ReturnType,
-	): Promise<ReturnType>;
+		returnFormat?: ReturnFormat,
+	): Promise<FormatType<Numbers, ReturnFormat>>;
 	encodeABI(): HexString;
 }

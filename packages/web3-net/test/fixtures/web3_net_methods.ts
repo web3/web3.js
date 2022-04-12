@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,20 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ValidTypes } from 'web3-utils';
+import { DataFormat, FMT_BYTES, FMT_NUMBER } from 'web3-common';
 
-export const getIdValidData: [ValidTypes | undefined][] = [
-	[undefined],
-	[ValidTypes.HexString],
-	[ValidTypes.NumberString],
-	[ValidTypes.Number],
-	[ValidTypes.BigInt],
-];
-
-export const getPeerCountValidData: [ValidTypes | undefined][] = [
-	[undefined],
-	[ValidTypes.HexString],
-	[ValidTypes.NumberString],
-	[ValidTypes.Number],
-	[ValidTypes.BigInt],
+export const getDataFormat: DataFormat[] = [
+	{ number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX },
+	{ number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER },
+	{ number: FMT_NUMBER.BIGINT, bytes: FMT_BYTES.BUFFER },
+	{ number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.UINT8ARRAY },
 ];

@@ -191,7 +191,10 @@ describe('EthPersonal', () => {
 			await ethPersonal.sendTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, 'HexString');
+			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
+				bytes: 'BYTES_HEX',
+				number: 'NUMBER_HEX',
+			});
 		});
 	});
 
@@ -221,7 +224,10 @@ describe('EthPersonal', () => {
 			await ethPersonal.signTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, 'HexString');
+			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
+				bytes: 'BYTES_HEX',
+				number: 'NUMBER_HEX',
+			});
 		});
 	});
 

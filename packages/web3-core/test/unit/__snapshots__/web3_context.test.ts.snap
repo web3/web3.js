@@ -2,6 +2,7 @@
 
 exports[`Web3Context getContextObject should return correct context object 1`] = `
 Object {
+  "accountProvider": undefined,
   "config": Object {
     "blockHeaderTimeout": 10,
     "defaultAccount": null,
@@ -11,7 +12,6 @@ Object {
     "defaultHardfork": "london",
     "defaultMaxPriorityFeePerGas": "0x9502f900",
     "defaultNetworkId": null,
-    "defaultReturnType": "HexString",
     "defaultTransactionType": "0x0",
     "handleRevert": false,
     "maxListenersWarningThreshold": 100,
@@ -47,5 +47,6 @@ Object {
     },
   },
   "subscriptionManager": undefined,
+  "wallet": undefined,
 }
 `;

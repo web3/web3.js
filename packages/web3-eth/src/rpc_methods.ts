@@ -545,6 +545,11 @@ export async function getProof(
 	storageKey: HexString32Bytes,
 	blockNumber: BlockNumberOrTag,
 ) {
+	validator.validate(
+		['address', 'bytes32', 'blockNumberOrTag'],
+		[address, storageKey, blockNumber],
+	);
+
 	return requestManager.send({
 		method: 'eth_getProof',
 		params: [address, storageKey, blockNumber],

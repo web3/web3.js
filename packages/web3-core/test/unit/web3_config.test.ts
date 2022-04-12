@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { toHex, ValidTypes } from 'web3-utils';
+import { toHex } from 'web3-utils';
 import { Web3Config, Web3ConfigEvent } from '../../src/web3_config';
 
 class MyConfigObject extends Web3Config {}
@@ -28,7 +28,6 @@ const defaultConfig = {
 	defaultNetworkId: null,
 	defaultCommon: null,
 	defaultHardfork: 'london',
-	defaultReturnType: ValidTypes.HexString,
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,

@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { VALID_ETH_BASE_TYPES } from './constants';
 import {
 	FullValidationSchema,
+	JsonSchema,
 	ShortValidationSchema,
 	ValidationSchemaInput,
 	ValidInputTypes,
@@ -68,16 +69,6 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	}
 
 	return { baseType: strippedType as unknown as T, isArray, baseTypeSize, arraySizes };
-};
-
-type JsonSchema = {
-	$id?: string;
-	type?: string;
-	eth?: string;
-	items?: JsonSchema | JsonSchema[];
-	maxItems?: number;
-	minItems?: number;
-	additionalItems?: boolean;
 };
 
 export const abiSchemaToJsonSchema = (

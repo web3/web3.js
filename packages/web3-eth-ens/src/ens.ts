@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getBlock } from 'web3-eth';
+import { getBlock, ReceiptInfo } from 'web3-eth';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
@@ -24,8 +24,9 @@ import {
 	EthExecutionAPI,
 	ENSUnsupportedNetworkError,
 	ENSNetworkNotSyncedError,
+	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
-import { NonPayableCallOptions, TransactionReceipt, Contract } from 'web3-eth-contract';
+import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
 import { registryAddresses } from './config';
@@ -66,7 +67,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setResolver(name, address, txConfig);
 	}
 
@@ -80,7 +81,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
 	}
 
@@ -91,7 +92,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		operator: Address,
 		approved: boolean,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setApprovalForAll(operator, approved, txConfig);
 	}
 
@@ -117,7 +118,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setSubnodeOwner(name, label, address, txConfig);
 	}
 
@@ -135,7 +136,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setTTL(name, ttl, txConfig);
 	}
 
@@ -153,7 +154,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setOwner(name, address, txConfig);
 	}
 
@@ -166,7 +167,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._registry.setRecord(name, owner, resolver, ttl, txConfig);
 	}
 
@@ -177,7 +178,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setAddress(name, address, txConfig);
 	}
 
@@ -189,7 +190,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		x: string,
 		y: string,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setPubkey(name, x, y, txConfig);
 	}
 
@@ -200,7 +201,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		hash: string,
 		txConfig: NonPayableCallOptions,
-	): Promise<TransactionReceipt | RevertInstructionError> {
+	): Promise<ReceiptInfo | RevertInstructionError> {
 		return this._resolver.setContenthash(name, hash, txConfig);
 	}
 
@@ -232,7 +233,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public async checkNetwork() {
 		const now = Date.now() / 1000;
 		if (!this._lastSyncCheck || now - this._lastSyncCheck > 3600) {
-			const block = await getBlock(this, 'latest');
+			const block = await getBlock(this, 'latest', false, DEFAULT_RETURN_FORMAT);
 			const headAge = BigInt(now) - BigInt(block.timestamp);
 
 			if (headAge > 3600) {
@@ -245,7 +246,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		const networkType = await getId(this); // get the network from provider
+		const networkType = await getId(this, DEFAULT_RETURN_FORMAT); // get the network from provider
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {

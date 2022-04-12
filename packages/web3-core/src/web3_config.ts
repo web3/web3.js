@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3EventEmitter } from 'web3-common';
-import { Numbers, HexString, toHex, ValidTypes, BlockNumberOrTag } from 'web3-utils';
+import { Numbers, HexString, toHex, BlockNumberOrTag } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context';
@@ -38,7 +38,6 @@ export interface Web3ConfigOptions {
 	defaultChain: string;
 	defaultHardfork: string;
 	defaultCommon: Record<string, unknown> | null;
-	defaultReturnType: ValidTypes;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
 	transactionBuilder?: TransactionBuilder;
@@ -74,7 +73,6 @@ export abstract class Web3Config
 		defaultHardfork: 'london',
 		// TODO - Check if there is a default Common
 		defaultCommon: null,
-		defaultReturnType: ValidTypes.HexString,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 		transactionBuilder: undefined,
@@ -275,16 +273,6 @@ export abstract class Web3Config
 		this._triggerConfigChange('defaultCommon', val);
 
 		this._config.defaultCommon = val;
-	}
-
-	public get defaultReturnType() {
-		return this._config.defaultReturnType;
-	}
-
-	public set defaultReturnType(val) {
-		this._triggerConfigChange('defaultReturnType', val);
-
-		this._config.defaultReturnType = val;
 	}
 
 	public get defaultTransactionType() {

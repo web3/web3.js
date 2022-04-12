@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3Net } from '../../src';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
-import { getIdValidData, getPeerCountValidData } from '../fixtures/web3_net_methods';
+import { getDataFormat } from '../fixtures/web3_net_methods';
 
 jest.mock('../../src/rpc_method_wrappers');
 
@@ -30,14 +30,14 @@ describe('web3_eth_methods', () => {
 
 	describe('should call RPC method', () => {
 		describe('getId', () => {
-			it.each(getIdValidData)('returnType: %s', async returnType => {
+			it.each(getDataFormat)('returnType: %s', async returnType => {
 				await web3Net.getId(returnType);
 				expect(rpcMethodWrappers.getId).toHaveBeenCalledWith(web3Net, returnType);
 			});
 		});
 
 		describe('getPeerCount', () => {
-			it.each(getPeerCountValidData)('returnType: %s', async returnType => {
+			it.each(getDataFormat)('returnType: %s', async returnType => {
 				await web3Net.getPeerCount(returnType);
 				expect(rpcMethodWrappers.getPeerCount).toHaveBeenCalledWith(web3Net, returnType);
 			});

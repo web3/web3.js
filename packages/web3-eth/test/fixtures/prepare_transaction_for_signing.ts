@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AccessList, Block } from 'web3-common';
-// import { Block } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Common, Transaction } from '../../src/types';
 
