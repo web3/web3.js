@@ -23,8 +23,9 @@ describe('getHashRate', () => {
 	it.each(returnFormats)(
 		`should format return value using provided return format: %s`,
 		async returnFormat => {
-			const expectedFormattedResult = format({ eth: 'uint' }, '0x38a', returnFormat);
-			(rpcMethodsGetHashRate as jest.Mock).mockResolvedValueOnce(expectedFormattedResult);
+			const mockRpcResponse = '0x38a';
+			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
+			(rpcMethodsGetHashRate as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getHashRate(web3Context, returnFormat);
 			expect(result).toBe(expectedFormattedResult);

@@ -23,8 +23,9 @@ describe('getBlockNumber', () => {
 	it.each(returnFormats)(
 		`should format return value using provided return format: %s`,
 		async returnFormat => {
-			const expectedFormattedResult = format({ eth: 'uint' }, '0x4b7', returnFormat);
-			(rpcMethodsGetBlockNumber as jest.Mock).mockResolvedValueOnce(expectedFormattedResult);
+			const mockRpcResponse = '0x4b7';
+			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
+			(rpcMethodsGetBlockNumber as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getBlockNumber(web3Context, returnFormat);
 			expect(result).toBe(expectedFormattedResult);

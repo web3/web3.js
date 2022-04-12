@@ -4,16 +4,17 @@ import { isBytes } from 'web3-validator';
 import { Bytes } from 'web3-utils';
 
 import {
-	getBlockTransactionCountByHash,
-	getBlockTransactionCountByNumber,
+	getUncleByBlockHashAndIndex,
+	getUncleByBlockNumberAndIndex,
 } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
-import { getBlockTransactionCount } from '../../../src/rpc_method_wrappers';
-import { testData } from './fixtures/get_block_transaction_count';
+import { getUncle } from '../../../src/rpc_method_wrappers';
+import { testData } from './fixtures/get_uncle';
+import { blockSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
 
-describe('getBlockTransactionCount', () => {
+describe('getUncle', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 	beforeAll(() => {
@@ -21,12 +22,12 @@ describe('getBlockTransactionCount', () => {
 	});
 
 	it.each(testData)(
-		`should call rpcMethods.getBlock with expected parameters\nTitle: %s\nInput parameters: %s\n`,
+		`should call rpcMethods.getUncle with expected parameters\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters, __) => {
-			const [inputBlock] = inputParameters;
+			const [inputBlock, inputUncleIndex] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 
-			let inputBlockFormatted;
+			let inputBlockFormatted, inputUncleIndexFormatted;
 
 			if (inputBlockIsBytes) {
 				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, DEFAULT_RETURN_FORMAT);
@@ -36,28 +37,30 @@ describe('getBlockTransactionCount', () => {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
 			}
 
-			await getBlockTransactionCount(web3Context, ...inputParameters);
+			inputUncleIndexFormatted = format({ eth: 'uint' }, inputUncleIndex, DEFAULT_RETURN_FORMAT);
+
+			await getUncle(web3Context, ...inputParameters);
 			expect(
 				inputBlockIsBytes
-					? getBlockTransactionCountByHash
-					: getBlockTransactionCountByNumber,
-			).toHaveBeenCalledWith(web3Context.requestManager, inputBlockFormatted);
+					? getUncleByBlockHashAndIndex
+					: getUncleByBlockNumberAndIndex,
+			).toHaveBeenCalledWith(web3Context.requestManager, inputBlockFormatted, inputUncleIndexFormatted);
 		},
 	);
 
 	it.each(testData)(
 		`should format return value using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters, mockRpcResponse) => {
-			const [inputBlock, returnFormat] = inputParameters;
-			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
+			const [inputBlock, __, returnFormat] = inputParameters;
+			const expectedFormattedResult = format(blockSchema, mockRpcResponse, returnFormat);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
-					? getBlockTransactionCountByHash
-					: getBlockTransactionCountByNumber) as jest.Mock
+					? getUncleByBlockHashAndIndex
+					: getUncleByBlockNumberAndIndex) as jest.Mock
 			).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getBlockTransactionCount(web3Context, ...inputParameters);
+			const result = await getUncle(web3Context, ...inputParameters);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

@@ -1,6 +1,5 @@
-import { Block, DataFormat, format } from 'web3-common';
+import { Block, DataFormat } from 'web3-common';
 import { BlockTags, Bytes } from 'web3-utils';
-import { blockSchema } from '../../../../src/schemas';
 
 import { BlockNumberOrTag } from '../../../../src/types';
 import { returnFormats } from './return_formats';
@@ -203,7 +202,7 @@ type TestData = [string, [Bytes | BlockNumberOrTag | undefined, boolean, DataFor
 
 /**
  * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse formatted as returnFormat
+ * This also adds mockRpcResponse to each testCase
  */
 export const testData = (() => {
 	const _testData: TestData[] = [];
@@ -211,15 +210,10 @@ export const testData = (() => {
 		for (const returnFormat of returnFormats) {
 			const [testTitle, inputParameters] = testCase;
 			const [_, hydrated] = inputParameters;
-			const mockRpcResponseFormatted = format(
-				blockSchema,
-				hydrated ? mockRpcResponseHydrated : mockRpcResponse,
-				returnFormat,
-			);
 			_testData.push([
 				testTitle,
 				[...inputParameters, returnFormat],
-				mockRpcResponseFormatted,
+				hydrated ? mockRpcResponseHydrated : mockRpcResponse,
 			]);
 		}
 	}

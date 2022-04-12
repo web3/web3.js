@@ -23,8 +23,9 @@ describe('getGasPrice', () => {
 	it.each(returnFormats)(
 		`should format return value using provided return format: %s`,
 		async returnFormat => {
-			const expectedFormattedResult = format({ eth: 'uint' }, '0x1dfd14000', returnFormat);
-			(rpcMethodsGetGasPrice as jest.Mock).mockResolvedValueOnce(expectedFormattedResult);
+			const mockRpcResponse = '0x1dfd14000';
+			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
+			(rpcMethodsGetGasPrice as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getGasPrice(web3Context, returnFormat);
 			expect(result).toBe(expectedFormattedResult);

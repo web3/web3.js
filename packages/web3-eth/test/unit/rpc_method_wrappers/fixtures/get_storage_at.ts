@@ -1,4 +1,4 @@
-import { DataFormat, format } from 'web3-common';
+import { DataFormat } from 'web3-common';
 import { Address, BlockTags, Bytes, Numbers } from 'web3-utils';
 
 import { BlockNumberOrTag } from '../../../../src/types';
@@ -55,22 +55,17 @@ type TestData = [string, [Address, Numbers, BlockNumberOrTag | undefined, DataFo
 
 /**
  * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse formatted as returnFormat
+ * This also adds mockRpcResponse to each testCase
  */
 export const testData = (() => {
 	const _testData: TestData[] = [];
 	for (const testCase of testCases) {
 		for (const returnFormat of returnFormats) {
 			const [testTitle, inputParameters] = testCase;
-			const mockRpcResponseFormatted = format(
-				{ eth: 'bytes' },
-				mockRpcResponse,
-				returnFormat,
-			);
 			_testData.push([
 				testTitle,
 				[...inputParameters, returnFormat],
-				mockRpcResponseFormatted,
+				mockRpcResponse,
 			]);
 		}
 	}
