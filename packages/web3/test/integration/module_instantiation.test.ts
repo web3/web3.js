@@ -79,10 +79,7 @@ describe('Module instantiations', () => {
 		// const serializedTx = tx.serialize();
 
 		// const res = await web3.eth.sendSignedTransaction(`0x${serializedTx.toString('hex')}`);
-		const signedTx: signTransactionResult = acc.signTransaction(
-			rawTx,
-			defaultAccount.privateKey,
-		);
+		const signedTx: signTransactionResult = acc.signTransaction(rawTx);
 
 		const res = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
 		console.warn(res);
