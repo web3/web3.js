@@ -21,18 +21,10 @@ import {
 	HexString8Bytes,
 	Numbers,
 } from 'web3-utils';
-import {
-	Block,
-	FeeHistory,
-	ReceiptInfo,
-	Transaction,
-	TransactionInfo,
-	AccountObject,
-} from '../../src/types';
+import { Block, FeeHistory, ReceiptInfo, TransactionInfo, AccountObject } from '../../src/types';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getHashRateValidData: [DataFormat | undefined, Numbers, Numbers][] = [
-	[undefined, '0x38a', '0x38a'],
+export const getHashRateValidData: [DataFormat, Numbers, Numbers][] = [
 	[DEFAULT_RETURN_FORMAT, '0x38a', '0x38a'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x38a', '906'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x38a', 906],
@@ -40,8 +32,7 @@ export const getHashRateValidData: [DataFormat | undefined, Numbers, Numbers][] 
 ];
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getGasPriceValidData: [DataFormat | undefined, any, any][] = [
-	[undefined, '0x1dfd14000', '0x1dfd14000'],
+export const getGasPriceValidData: [DataFormat, any, any][] = [
 	[DEFAULT_RETURN_FORMAT, '0x1dfd14000', '0x1dfd14000'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x1dfd14000', '8049999872'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x1dfd14000', 8049999872],
@@ -49,8 +40,7 @@ export const getGasPriceValidData: [DataFormat | undefined, any, any][] = [
 ];
 
 // Array consists of: returnType parameter, mock RPC result, expected output
-export const getBlockNumberValidData: [DataFormat | undefined, any, any][] = [
-	[undefined, '0x4b7', '0x4b7'],
+export const getBlockNumberValidData: [DataFormat, any, any][] = [
 	[DEFAULT_RETURN_FORMAT, '0x4b7', '0x4b7'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x4b7', '1207'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x4b7', 1207],
@@ -65,33 +55,33 @@ export const getBlockNumberValidData: [DataFormat | undefined, any, any][] = [
  * - expected output
  */
 export const getBalanceValidData: [
-	[Address, BlockNumberOrTag | undefined, DataFormat | undefined],
+	[Address, BlockNumberOrTag | undefined, DataFormat],
 	any,
 	[Address, BlockNumberOrTag],
 	any,
 ][] = [
 	// All possible undefined values
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
 	// Defined blockNumber, undefined returnType
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xe8d4a51000',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0xe8d4a51000',
@@ -339,17 +329,73 @@ const transactionInfo: TransactionInfo = {
 	maxPriorityFeePerGas: '0x7f324180',
 	chainId: '0x1',
 };
-const hydratedTransactions: TransactionInfo[] = [transactionInfo, transactionInfo, transactionInfo];
+const transactionInfoNumberString: FormatType<
+	TransactionInfo,
+	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+> = {
+	...(transactionInfo as FormatType<
+		TransactionInfo,
+		{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
+	>),
+	blockNumber: '6139707',
+	gas: '50000',
+	gasPrice: '20000000000',
+	type: '0',
+	nonce: '21',
+	transactionIndex: '65',
+	value: '4290000000000000',
+	v: '37',
+	maxFeePerGas: '87867546283',
+	maxPriorityFeePerGas: '2134000000',
+	chainId: '1',
+};
+const transactionInfoNumber: FormatType<
+	TransactionInfo,
+	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+> = {
+	...(transactionInfo as FormatType<
+		TransactionInfo,
+		{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
+	>),
+	blockNumber: 6139707,
+	gas: 50000,
+	gasPrice: 20000000000,
+	type: 0,
+	nonce: 21,
+	transactionIndex: 65,
+	value: 4290000000000000,
+	v: 37,
+	maxFeePerGas: 87867546283,
+	maxPriorityFeePerGas: 2134000000,
+	chainId: 1,
+};
+const transactionInfoBigInt: FormatType<
+	TransactionInfo,
+	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+> = {
+	...(transactionInfo as FormatType<
+		TransactionInfo,
+		{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
+	>),
+	blockNumber: BigInt('6139707'),
+	gas: BigInt('50000'),
+	gasPrice: BigInt('20000000000'),
+	type: BigInt('0'),
+	nonce: BigInt('21'),
+	transactionIndex: BigInt('65'),
+	value: BigInt('4290000000000000'),
+	v: BigInt('37'),
+	maxFeePerGas: BigInt('87867546283'),
+	maxPriorityFeePerGas: BigInt('2134000000'),
+	chainId: BigInt('1'),
+};
 
 const blockFormattedNumberString: FormatType<
 	Block,
 	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
 > = {
-	...block,
-	transactions: hydratedTransactions as FormatType<
-		TransactionInfo,
-		{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
-	>[],
+	...(block as FormatType<Block, { number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }>),
+	transactions: [transactionInfoNumberString],
 	difficulty: '21109876668',
 	number: '436',
 	gasLimit: '5000',
@@ -363,8 +409,8 @@ const blockFormattedNumberString: FormatType<
 
 const blockFormattedNumber: FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }> =
 	{
-		...block,
-		transactions: hydratedTransactions,
+		...(block as FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }>),
+		transactions: [transactionInfoNumber],
 		difficulty: 21109876668,
 		number: 436,
 		gasLimit: 5000,
@@ -378,8 +424,8 @@ const blockFormattedNumber: FormatType<Block, { number: FMT_NUMBER.NUMBER; bytes
 
 const blockFormattedBigInt: FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }> =
 	{
-		...block,
-		transactions: hydratedTransactions,
+		...(block as FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>),
+		transactions: [transactionInfoBigInt],
 		// TODO Change this to TransactionInfoFormatted
 		difficulty: BigInt('21109876668'),
 		number: BigInt('436'),
@@ -401,7 +447,7 @@ const blockFormattedBigInt: FormatType<Block, { number: FMT_NUMBER.BIGINT; bytes
  * - expected output
  */
 export const getBlockValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, boolean | undefined, DataFormat | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, boolean | undefined, DataFormat],
 	Block,
 	'getBlockByHash' | 'getBlockByNumber',
 	[HexString32Bytes | BlockNumberOrTag, boolean],
@@ -414,7 +460,7 @@ export const getBlockValidData: [
 ][] = [
 	// All possible undefined values
 	[
-		[undefined, undefined, undefined],
+		[undefined, undefined, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
@@ -425,7 +471,7 @@ export const getBlockValidData: [
 		[
 			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
 			undefined,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		block,
 		'getBlockByHash',
@@ -433,21 +479,21 @@ export const getBlockValidData: [
 		block,
 	],
 	[
-		[BlockTags.LATEST, undefined, undefined],
+		[BlockTags.LATEST, undefined, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
 		block,
 	],
 	[
-		[BlockTags.EARLIEST, undefined, undefined],
+		[BlockTags.EARLIEST, undefined, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, false],
 		block,
 	],
 	[
-		[BlockTags.PENDING, undefined, undefined],
+		[BlockTags.PENDING, undefined, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.PENDING, false],
@@ -455,61 +501,61 @@ export const getBlockValidData: [
 	],
 	// Defined block, hydrated = true, and undefined returnType
 	[
-		[BlockTags.LATEST, true, undefined],
+		[BlockTags.LATEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.LATEST, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	[
-		[BlockTags.EARLIEST, true, undefined],
+		[BlockTags.EARLIEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	[
-		[BlockTags.PENDING, true, undefined],
+		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.PENDING, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	// Defined block, hydrated = false, and undefined returnType
 	[
-		[BlockTags.LATEST, false, undefined],
+		[BlockTags.LATEST, false, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.LATEST, false],
 		block,
 	],
 	[
-		[BlockTags.EARLIEST, false, undefined],
+		[BlockTags.EARLIEST, false, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, false],
 		block,
 	],
 	[
-		[BlockTags.PENDING, false, undefined],
+		[BlockTags.PENDING, false, DEFAULT_RETURN_FORMAT],
 		block,
 		'getBlockByNumber',
 		[BlockTags.PENDING, false],
@@ -520,39 +566,39 @@ export const getBlockValidData: [
 		[BlockTags.LATEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.LATEST, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	[
 		[BlockTags.EARLIEST, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	[
 		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.PENDING, true],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 	],
 	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
@@ -560,7 +606,7 @@ export const getBlockValidData: [
 		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.LATEST, true],
@@ -570,7 +616,7 @@ export const getBlockValidData: [
 		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, true],
@@ -580,7 +626,7 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.PENDING, true],
@@ -591,7 +637,7 @@ export const getBlockValidData: [
 		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.LATEST, true],
@@ -601,7 +647,7 @@ export const getBlockValidData: [
 		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, true],
@@ -611,7 +657,7 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.PENDING, true],
@@ -622,7 +668,7 @@ export const getBlockValidData: [
 		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.LATEST, true],
@@ -632,7 +678,7 @@ export const getBlockValidData: [
 		[BlockTags.EARLIEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.EARLIEST, true],
@@ -642,7 +688,7 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		{
 			...block,
-			transactions: hydratedTransactions,
+			transactions: [transactionInfo],
 		},
 		'getBlockByNumber',
 		[BlockTags.PENDING, true],
@@ -659,38 +705,47 @@ export const getBlockValidData: [
  * - expected output
  */
 export const getBlockTransactionCountValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat],
 	HexString,
 	'getBlockTransactionCountByHash' | 'getBlockTransactionCountByNumber',
 	[HexString32Bytes | BlockNumberOrTag],
 	any,
 ][] = [
 	// All possible undefined values
-	[[undefined, undefined], '0xb', 'getBlockTransactionCountByNumber', [BlockTags.LATEST], '0xb'],
+	[
+		[undefined, DEFAULT_RETURN_FORMAT],
+		'0xb',
+		'getBlockTransactionCountByNumber',
+		[BlockTags.LATEST],
+		'0xb',
+	],
 	// Defined block, undefined returnType
 	[
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
+		[
+			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			DEFAULT_RETURN_FORMAT,
+		],
 		'0xb',
 		'getBlockTransactionCountByHash',
 		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae'],
 		'0xb',
 	],
 	[
-		[BlockTags.LATEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.LATEST],
 		'0xb',
 	],
 	[
-		[BlockTags.EARLIEST, undefined],
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.EARLIEST],
 		'0xb',
 	],
 	[
-		[BlockTags.PENDING, undefined],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getBlockTransactionCountByNumber',
 		[BlockTags.PENDING],
@@ -795,32 +850,47 @@ export const getBlockTransactionCountValidData: [
  * - expected output
  */
 export const getBlockUncleCountValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, DataFormat],
 	HexString,
 	'getUncleCountByBlockHash' | 'getUncleCountByBlockNumber',
 	[HexString32Bytes | BlockNumberOrTag],
 	any,
 ][] = [
 	// All possible undefined values
-	[[undefined, undefined], '0xb', 'getUncleCountByBlockNumber', [BlockTags.LATEST], '0xb'],
+	[
+		[undefined, DEFAULT_RETURN_FORMAT],
+		'0xb',
+		'getUncleCountByBlockNumber',
+		[BlockTags.LATEST],
+		'0xb',
+	],
 	// Defined block, undefined returnType
 	[
-		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae', undefined],
+		[
+			'0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae',
+			DEFAULT_RETURN_FORMAT,
+		],
 		'0xb',
 		'getUncleCountByBlockHash',
 		['0xdc0818cf78f21a8e70579cb46a43643f78291264dda342ae31049421c82d21ae'],
 		'0xb',
 	],
-	[[BlockTags.LATEST, undefined], '0xb', 'getUncleCountByBlockNumber', [BlockTags.LATEST], '0xb'],
 	[
-		[BlockTags.EARLIEST, undefined],
+		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
+		'0xb',
+		'getUncleCountByBlockNumber',
+		[BlockTags.LATEST],
+		'0xb',
+	],
+	[
+		[BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.EARLIEST],
 		'0xb',
 	],
 	[
-		[BlockTags.PENDING, undefined],
+		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0xb',
 		'getUncleCountByBlockNumber',
 		[BlockTags.PENDING],
@@ -925,7 +995,7 @@ export const getBlockUncleCountValidData: [
  * - expected output
  */
 export const getUncleValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat],
 	Block,
 	'getUncleByBlockHashAndIndex' | 'getUncleByBlockNumberAndIndex',
 	[HexString32Bytes | BlockNumberOrTag, Uint],
@@ -938,7 +1008,7 @@ export const getUncleValidData: [
 ][] = [
 	// All possible undefined values
 	[
-		[undefined, '0x0', undefined],
+		[undefined, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
@@ -946,28 +1016,32 @@ export const getUncleValidData: [
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
-		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		[
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			'0x0',
+			DEFAULT_RETURN_FORMAT,
+		],
 		block,
 		'getUncleByBlockHashAndIndex',
 		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0'],
 		block,
 	],
 	[
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		block,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		block,
 	],
 	[
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -975,21 +1049,21 @@ export const getUncleValidData: [
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		block,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		block,
 	],
 	[
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		block,
 		'getUncleByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1112,57 +1186,6 @@ export const getUncleValidData: [
 	],
 ];
 
-const transactionInfoNumberString: FormatType<
-	ReceiptInfo,
-	{ number: FMT_NUMBER.STR; bytes: FMT_BYTES.HEX }
-> = {
-	...transactionInfo,
-	blockNumber: '6139707',
-	gas: '50000',
-	gasPrice: '20000000000',
-	type: '0',
-	nonce: '21',
-	transactionIndex: '65',
-	value: '4290000000000000',
-	v: '37',
-	maxFeePerGas: '87867546283',
-	maxPriorityFeePerGas: '2134000000',
-	chainId: '1',
-};
-const transactionInfoNumber: FormatType<
-	ReceiptInfo,
-	{ number: FMT_NUMBER.NUMBER; bytes: FMT_BYTES.HEX }
-> = {
-	...transactionInfo,
-	blockNumber: 6139707,
-	gas: 50000,
-	gasPrice: 20000000000,
-	type: 0,
-	nonce: 21,
-	transactionIndex: 65,
-	value: 4290000000000000,
-	v: 37,
-	maxFeePerGas: 87867546283,
-	maxPriorityFeePerGas: 2134000000,
-	chainId: 1,
-};
-const transactionInfoBigInt: FormatType<
-	Transaction,
-	{ number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }
-> = {
-	...transactionInfo,
-	blockNumber: BigInt('6139707'),
-	gas: BigInt('50000'),
-	gasPrice: BigInt('20000000000'),
-	type: BigInt('0'),
-	nonce: BigInt('21'),
-	transactionIndex: BigInt('65'),
-	value: BigInt('4290000000000000'),
-	v: BigInt('37'),
-	maxFeePerGas: BigInt('87867546283'),
-	maxPriorityFeePerGas: BigInt('2134000000'),
-	chainId: BigInt('1'),
-};
 /**
  * Array consists of:
  * - array of inputs
@@ -1171,7 +1194,7 @@ const transactionInfoBigInt: FormatType<
  * - expected output
  */
 export const getTransactionValidData: [
-	[HexString32Bytes, DataFormat | undefined],
+	[HexString32Bytes, DataFormat],
 	TransactionInfo | null,
 	[HexString32Bytes],
 	(
@@ -1181,13 +1204,6 @@ export const getTransactionValidData: [
 		| FormatType<TransactionInfo, { number: FMT_NUMBER.BIGINT; bytes: FMT_BYTES.HEX }>
 	),
 ][] = [
-	// Defined transactionHash, undefined returnType
-	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
-		transactionInfo,
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
-		transactionInfo,
-	],
 	// Defined transactionHash and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[
@@ -1239,7 +1255,7 @@ export const getTransactionValidData: [
  * - expected output
  */
 export const getTransactionFromBlockValidData: [
-	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat | undefined],
+	[HexString32Bytes | BlockNumberOrTag | undefined, Uint, DataFormat],
 	TransactionInfo,
 	'getTransactionByBlockHashAndIndex' | 'getTransactionByBlockNumberAndIndex',
 	[HexString32Bytes | BlockNumberOrTag, Uint],
@@ -1252,7 +1268,7 @@ export const getTransactionFromBlockValidData: [
 ][] = [
 	// All possible undefined values
 	[
-		[undefined, '0x0', undefined],
+		[undefined, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
@@ -1260,28 +1276,32 @@ export const getTransactionFromBlockValidData: [
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
-		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0', undefined],
+		[
+			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
+			'0x0',
+			DEFAULT_RETURN_FORMAT,
+		],
 		transactionInfo,
 		'getTransactionByBlockHashAndIndex',
 		['0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1289,21 +1309,21 @@ export const getTransactionFromBlockValidData: [
 	],
 	// Defined block, uncleIndex = '0x0', and undefined returnType
 	[
-		[BlockTags.LATEST, '0x0', undefined],
+		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.LATEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.EARLIEST, '0x0', undefined],
+		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.EARLIEST, '0x0'],
 		transactionInfo,
 	],
 	[
-		[BlockTags.PENDING, '0x0', undefined],
+		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 		transactionInfo,
 		'getTransactionByBlockNumberAndIndex',
 		[BlockTags.PENDING, '0x0'],
@@ -1467,7 +1487,7 @@ const receiptInfoBigInt: FormatType<
  * - expected output
  */
 export const getTransactionReceiptValidData: [
-	[HexString32Bytes, DataFormat | undefined],
+	[HexString32Bytes, DataFormat],
 	ReceiptInfo | null,
 	[HexString32Bytes],
 	(
@@ -1479,7 +1499,10 @@ export const getTransactionReceiptValidData: [
 ][] = [
 	// Defined block, undefined returnType
 	[
-		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547', undefined],
+		[
+			'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
+			DEFAULT_RETURN_FORMAT,
+		],
 		receiptInfo,
 		['0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547'],
 		receiptInfo,
@@ -1534,14 +1557,14 @@ export const getTransactionReceiptValidData: [
  * - expected output
  */
 export const getTransactionCountValidData: [
-	[Address, HexString32Bytes | BlockNumberOrTag | undefined, DataFormat | undefined],
+	[Address, HexString32Bytes | BlockNumberOrTag | undefined, DataFormat],
 	string,
 	[Address, HexString32Bytes | BlockNumberOrTag],
 	any,
 ][] = [
 	// All possible undefined values
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0x42',
@@ -1551,7 +1574,7 @@ export const getTransactionCountValidData: [
 		[
 			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		'0x42',
 		[
@@ -1561,38 +1584,38 @@ export const getTransactionCountValidData: [
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'0x42',
 	],
 	// Defined block, uncleIndex = and undefined returnType
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.EARLIEST],
 		'0x42',
 	],
 	[
-		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x42',
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		'0x42',
@@ -1762,6 +1785,22 @@ export const transactionWithSender: TransactionWithSender = {
 	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	chainId: '0x1',
 };
+
+export const transactionWithSenderData: Partial<TransactionWithSender> = {
+	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	type: '0x0',
+	nonce: '0x1',
+	gas: '0xc350',
+	value: '0x1',
+	data: '0x',
+	maxFeePerGas: '0x1475505aab',
+	maxPriorityFeePerGas: '0x7f324180',
+	accessList: [],
+	gasPrice: '0x4a817c800',
+	from: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+	chainId: '0x1',
+};
+
 /**
  * Array consists of:
  * - array of inputs
@@ -1770,20 +1809,16 @@ export const transactionWithSender: TransactionWithSender = {
  * - expected output
  */
 export const estimateGasValidData: [
-	[
-		Partial<TransactionWithSender>,
-		HexString32Bytes | BlockNumberOrTag | undefined,
-		DataFormat | undefined,
-	],
+	[Partial<TransactionWithSender>, HexString32Bytes | BlockNumberOrTag | undefined, DataFormat],
 	string,
 	[Partial<TransactionWithSender>, HexString32Bytes | BlockNumberOrTag],
 	any,
 ][] = [
 	// All possible undefined values
 	[
-		[transactionWithSender, undefined, undefined],
+		[transactionWithSender, undefined, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	// Defined transaction and block number, undefined returnType
@@ -1791,69 +1826,69 @@ export const estimateGasValidData: [
 		[
 			transactionWithSender,
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		'0x5208',
 		[
-			transactionWithSender,
+			transactionWithSenderData,
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
 		],
 		'0x5208',
 	],
 	[
-		[transactionWithSender, BlockTags.LATEST, undefined],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
-		'0x5208',
-	],
-	[
-		[transactionWithSender, BlockTags.EARLIEST, undefined],
-		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, undefined],
+		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.EARLIEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
+		'0x5208',
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, undefined returnType
 	[
-		[transactionWithSender, BlockTags.LATEST, undefined],
+		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
-		'0x5208',
-	],
-	[
-		[transactionWithSender, BlockTags.EARLIEST, undefined],
-		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
-		[transactionWithSender, BlockTags.PENDING, undefined],
+		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.EARLIEST],
+		'0x5208',
+	],
+	[
+		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
+		'0x5208',
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, returnType = DEFAULT_RETURN_FORMAT
 	[
 		[transactionWithSender, BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.EARLIEST, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'0x5208',
 	],
 	[
 		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'0x5208',
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
@@ -1864,7 +1899,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		'21000',
 	],
 	[
@@ -1874,7 +1909,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		'21000',
 	],
 	[
@@ -1884,7 +1919,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		'21000',
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
@@ -1895,7 +1930,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		21000,
 	],
 	[
@@ -1905,7 +1940,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		21000,
 	],
 	[
@@ -1915,7 +1950,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		21000,
 	],
 	// Defined transaction and block number, returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
@@ -1926,7 +1961,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.LATEST],
+		[transactionWithSenderData, BlockTags.LATEST],
 		BigInt('0x5208'),
 	],
 	[
@@ -1936,7 +1971,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.EARLIEST],
+		[transactionWithSenderData, BlockTags.EARLIEST],
 		BigInt('0x5208'),
 	],
 	[
@@ -1946,7 +1981,7 @@ export const estimateGasValidData: [
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		'0x5208',
-		[transactionWithSender, BlockTags.PENDING],
+		[transactionWithSenderData, BlockTags.PENDING],
 		BigInt('0x5208'),
 	],
 ];
@@ -1993,7 +2028,7 @@ const feeHistoryResultBigInt: FormatType<
  * - expected output
  */
 export const getFeeHistoryValidData: [
-	[Uint, HexString32Bytes | BlockNumberOrTag | undefined, number[], DataFormat | undefined],
+	[Uint, HexString32Bytes | BlockNumberOrTag | undefined, number[], DataFormat],
 	FeeHistoryResult,
 	[Uint, HexString32Bytes | BlockNumberOrTag, number[]],
 	(
@@ -2005,7 +2040,7 @@ export const getFeeHistoryValidData: [
 ][] = [
 	// All possible undefined values
 	[
-		['0x4', undefined, [], undefined],
+		['0x4', undefined, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResult,
@@ -2016,45 +2051,45 @@ export const getFeeHistoryValidData: [
 			'0x4',
 			'0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2',
 			[],
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		feeHistoryResult,
 		['0x4', '0xc3073501c72f0d9372a18015637c86a394c7d52b633ced791d64e88969cfa3e2', []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.LATEST, [], undefined],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], undefined],
+		['0x4', BlockTags.EARLIEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], undefined],
+		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResult,
 	],
 	// Defined transaction and block number, undefined returnType
 	[
-		['0x4', BlockTags.LATEST, [], undefined],
+		['0x4', BlockTags.LATEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.LATEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.EARLIEST, [], undefined],
+		['0x4', BlockTags.EARLIEST, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.EARLIEST, []],
 		feeHistoryResult,
 	],
 	[
-		['0x4', BlockTags.PENDING, [], undefined],
+		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 		feeHistoryResult,
 		['0x4', BlockTags.PENDING, []],
 		feeHistoryResult,
@@ -2495,7 +2530,7 @@ const accountObjectBigInt: FormatType<
  * - expected output
  */
 export const getProofValidData: [
-	[Address, HexString32Bytes, BlockNumberOrTag | undefined, DataFormat | undefined],
+	[Address, HexString32Bytes, BlockNumberOrTag | undefined, DataFormat],
 	AccountObject,
 	[Address, HexString32Bytes, BlockNumberOrTag],
 	(
@@ -2511,7 +2546,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			undefined,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2527,7 +2562,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			'0x1',
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2542,7 +2577,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.EARLIEST,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2557,7 +2592,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.LATEST,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2572,7 +2607,7 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
 			BlockTags.PENDING,
-			undefined,
+			DEFAULT_RETURN_FORMAT,
 		],
 		accountObject,
 		[
@@ -2828,8 +2863,7 @@ export const getProofValidData: [
 	],
 ];
 
-export const getChainIdValidData: [DataFormat | undefined, Uint, Numbers][] = [
-	[undefined, '0x3d', '0x3d'],
+export const getChainIdValidData: [DataFormat, Uint, Numbers][] = [
 	[DEFAULT_RETURN_FORMAT, '0x3d', '0x3d'],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }, '0x3d', 61],
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }, '0x3d', '61'],

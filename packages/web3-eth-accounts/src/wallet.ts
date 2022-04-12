@@ -99,35 +99,46 @@ export class Wallet<
 		return this;
 	}
 
-	public encrypt(password: string, options?: Record<string, unknown> | undefined) {
-		return Object.values(this._accounts).map(account => account.encrypt(password, options));
+	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
+		return Promise.all(
+			Object.values(this._accounts).map(async account => account.encrypt(password, options)),
+		);
 	}
 
-	public decrypt(
+	public async decrypt(
 		encryptedWallets: string[],
 		password: string,
 		options?: Record<string, unknown> | undefined,
 	) {
-		for (const wallet of encryptedWallets) {
-			this.add(this._accountProvider.decrypt(wallet, password, options));
+		const results = await Promise.all(
+			encryptedWallets.map(async wallet =>
+				this._accountProvider.decrypt(wallet, password, options),
+			),
+		);
+
+		for (const res of results) {
+			this.add(res);
 		}
 
 		return this;
 	}
 
-	public save(password: string, keyName?: string) {
+	public async save(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
 
 		if (!storage) {
 			throw new Error('Local storage not available.');
 		}
 
-		storage.setItem(keyName ?? this._defaultKeyName, JSON.stringify(this.encrypt(password)));
+		storage.setItem(
+			keyName ?? this._defaultKeyName,
+			JSON.stringify(await this.encrypt(password)),
+		);
 
 		return true;
 	}
 
-	public load(password: string, keyName?: string) {
+	public async load(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
 
 		if (!storage) {
@@ -137,7 +148,7 @@ export class Wallet<
 		const keystore = storage.getItem(keyName ?? this._defaultKeyName);
 
 		if (keystore) {
-			this.decrypt((JSON.parse(keystore) as Web3EncryptedWallet[]) || [], password);
+			await this.decrypt((JSON.parse(keystore) as Web3EncryptedWallet[]) || [], password);
 		}
 
 		return this;
