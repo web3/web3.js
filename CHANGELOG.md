@@ -544,4 +544,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix dead link in web3-eth.rst (#4916)
--  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
