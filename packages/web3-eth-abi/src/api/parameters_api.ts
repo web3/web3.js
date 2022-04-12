@@ -100,8 +100,14 @@ export const decodeParametersWith = (
 		for (const [i, abi] of abis.entries()) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			let decodedValue = res[i];
+
+			const isStringObject = typeof abi === 'object' && abi.type && abi.type === 'string';
+			const isStringType = typeof abi === 'string' && abi === 'string';
+
+			// only convert `0x` to null if it's not string value
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			decodedValue = decodedValue === '0x' ? null : decodedValue;
+			decodedValue =
+				decodedValue === '0x' && !isStringObject && !isStringType ? null : decodedValue;
 
 			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
 				// the length of the abi object will always be 1
