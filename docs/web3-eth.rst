@@ -894,7 +894,7 @@ Returns
 
 ``Promise`` returns ``String`` - The current balance for the given address in :ref:`wei <what-is-wei>`.
 
-See the :ref:`A note on dealing with big numbers in JavaScript <big-numbers-in-javascript>`.
+See the :ref:`A note on dealing with big numbers in JavaScript <utils-bn>`.
 
 -------
 Example
