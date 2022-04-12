@@ -19,7 +19,7 @@
 
 import { AbiInput, AbiItem } from 'web3-utils';
 
-declare class AbiCoder {
+export class AbiCoder {
     encodeFunctionSignature(functionName: string | AbiItem): string;
 
     encodeEventSignature(functionName: string | AbiItem): string;
