@@ -12,9 +12,9 @@ export function formatTransaction<
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ): FormatType<TransactionType, ReturnFormat> {
 	let formattedTransaction = mergeDeep({}, transaction as Record<string, unknown>) as Transaction;
-	if (transaction.common !== undefined) {
+	if (transaction?.common !== undefined) {
 		formattedTransaction.common = { ...transaction.common };
-		if (transaction.common.customChain !== undefined)
+		if (transaction.common?.customChain !== undefined)
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
 
