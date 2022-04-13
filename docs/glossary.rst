@@ -12,7 +12,7 @@ Glossary
 json interface
 =====================
 
-The json interface is a json object describing the `Application Binary Interface (ABI) <https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI>`_ for an Ethereum smart contract.
+The json interface is a json object describing the `Application Binary Interface (ABI) <https://docs.soliditylang.org/en/develop/abi-spec.html>`_ for an Ethereum smart contract.
 
 Using this json interface web3.js is able to create JavaScript object representing the smart contract and its methods and events using the :ref:`web3.eth.Contract object <eth-contract>`.
 
