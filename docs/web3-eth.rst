@@ -781,7 +781,7 @@ getFeeHistory
     web3.eth.getFeeHistory(blockCount, newestBlock, rewardPercentiles, [callback])
 
 Transaction fee history
-Returns base fee per gas and transaction effective priority fee per gas history for the requested block range if available. 
+Returns base fee per gas and transaction effective priority fee per gas history for the requested block range if available.
 The range between headBlock-4 and headBlock is guaranteed to be available while retrieving data from the pending block and older
 history are optional to support. For pre-EIP-1559 blocks the gas prices are returned as rewards and zeroes are returned for the base fee per gas.
 
@@ -1515,7 +1515,7 @@ Parameters
     - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
     - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
     - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
-    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction. 
+    - ``type`` - ``Number|String|BN|BigNumber``: (optional) A positive unsigned 8-bit number between 0 and 0x7f that represents the type of the transaction.
     - ``maxFeePerGas`` - ``Number|String|BN``: (optional, defaulted to ``(2 * block.baseFeePerGas) + maxPriorityFeePerGas``) The maximum fee per gas that the transaction is willing to pay in total
     - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``2.5 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee)
     - ``accessList`` - ``List of hexstrings`` (optional) a list of addresses and storage keys that the transaction plans to access
@@ -2172,6 +2172,242 @@ Example
             }
         ]
     }
+
+------------------------------------------------------------------------------
+
+.. _eth-ccipReadGatewayAllowList:
+
+ccipReadGatewayAllowList
+========
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadGatewayAllowList = ['foo.com'];
+
+Determines which domains are allowed to be queried during an off-chain lookup, as described here `EIP-1186 <https://eips.ethereum.org/EIPS/eip-3668>`_.
+Defaults to ``[]`` meaning all domains are allowed.
+
+Can also be set on the contract level and the contract instance:
+
+.. code-block:: javascript
+
+    web3.eth.Contract.ccipReadGatewayAllowList = ['foo.com'];
+
+    let instance = await TokenContract.deploy({
+                            data: Token.bytecode,
+                            arguments: [tokenName, tokenSymbol, initialSupply],
+                         }).send({from: accounts[0]});
+
+    instance.ccipReadGatewayAllowList = ['foo.com'];
+
+
+-------
+Returns
+-------
+
+``string[]``: The current value of ``ccipReadGatewayAllowList`` (default: ``[]``)
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadGatewayAllowList;
+    > []
+
+    // set an allowList
+    web3.eth.ccipReadGatewayAllowList = ['foo.com'];
+
+------------------------------------------------------------------------------
+
+.. _eth-ccipReadGatewayCallback:
+
+ccipReadGatewayCallback
+========
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadGatewayCallback = (urls, to, callData, allowList) => {
+        //logic to handle call to CCIP-Read compliant gateway
+    }
+
+Sets the function that ``web3.js`` will use to call out to CCIP-Read gateways.
+Should adhere to behaviour outlined here: `EIP-1186 <https://eips.ethereum.org/EIPS/eip-3668>`_.
+See ``web3-ccipread/src/index.js`` for a reference implementation.
+
+Can also be set on the contract level and the contract instance:
+
+.. code-block:: javascript
+
+    web3.eth.Contract.ccipReadGatewayCallback = () => {};
+
+    let instance = await TokenContract.deploy({
+                            data: Token.bytecode,
+                            arguments: [tokenName, tokenSymbol, initialSupply],
+                         }).send({from: accounts[0]});
+
+    instance.ccipReadGatewayCallback = () => {};
+
+
+
+----------
+Parameters
+----------
+
+1. ``urls`` - ```String[]``: List of gateway urls.
+2. ``to`` - ```String``:  The address of the contract to call.
+3. ``callData`` - ``String``: Call data from the error thrown by the contract.
+4. ``allowList`` - ``String[]``: List of allowed gateway domains.
+
+-------
+Returns
+-------
+
+``Promise<String>`` - Data string returned by the gateway.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+      web3.eth.ccipReadGatewayCallback = async function (urls, to, callData, allowList) {
+         for (const url of urls) {
+             let urlInstance;
+             try {
+                 urlInstance = new URL(url);
+             } catch(e) {
+                 console.warn(`Skipping gateway url ${url} as it is malformed`);
+                 continue;
+             }
+
+             if(!isUrlAllowed(urlInstance, allowList)) {
+                 console.warn(`Gateway at ${url} not called due to allow list rules`);
+                 continue;
+             }
+
+             let response;
+             try {
+                 response = await gatewayQuery(url, to, callData);
+
+                 if(!response.getResponseHeader('content-type').includes('application/json')) {
+                     console.warn(`Skipping gateway url ${url} as it did not return application/json`);
+                     continue;
+                 }
+
+                 if (response.status >= 200 && response.status <= 299) {
+                     return JSON.parse(response.responseText).data;
+                 }
+
+             } catch (errorResponse) {
+                 const formattedError = formatGatewayError(errorResponse);
+
+                 if (errorResponse.status >= 400 && errorResponse.status <= 499) {
+                     throw new Error(formattedError);
+                 }
+
+                 //5xx or client errors
+                 console.warn(formattedError);
+             }
+         }
+
+         throw new Error('All gateways failed');
+     };
+
+------------------------------------------------------------------------------
+
+.. _eth-ccipReadMaxRedirectCount:
+
+ccipReadMaxRedirectCount
+========
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadMaxRedirectCount = 2;
+
+Determines how many CCIP read redirects will be permitted, as describd here `EIP-1186 <https://eips.ethereum.org/EIPS/eip-3668>`_.
+Defaults to ``4``.
+
+Can also be set on the contract level and the contract instance:
+
+.. code-block:: javascript
+
+    web3.eth.Contract.ccipReadMaxRedirectCount = 2;
+
+    let instance = await TokenContract.deploy({
+                            data: Token.bytecode,
+                            arguments: [tokenName, tokenSymbol, initialSupply],
+                         }).send({from: accounts[0]});
+
+    instance.ccipReadMaxRedirectCount = 2;
+
+
+-------
+Returns
+-------
+
+``Number``: The current value of ``ccipReadMaxRedirectCount`` (default: ``4``)
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadMaxRedirectCount;
+    > 4
+
+    // set a max redirect amount
+    web3.eth.ccipReadMaxRedirectCount = 2;
+
+------------------------------------------------------------------------------
+
+.. _eth-ccipReadGatewayUrls:
+
+ccipReadGatewayUrls
+========
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadGatewayUrls = ['https://foo.com'];
+
+Specifies a list of urls to be called during an off-chain lookup, as describd here `EIP-1186 <https://eips.ethereum.org/EIPS/eip-3668>`_.
+Defaults to ``[]`` meaning the list of urls returned by the contract will be used.
+
+Can also be set on the contract level and the contract instance:
+
+.. code-block:: javascript
+
+    web3.eth.Contract.ccipReadGatewayUrls = ['https://foo.com'];
+
+    let instance = await TokenContract.deploy({
+                            data: Token.bytecode,
+                            arguments: [tokenName, tokenSymbol, initialSupply],
+                         }).send({from: accounts[0]});
+
+    instance.ccipReadGatewayUrls = ['https://foo.com'];
+
+
+-------
+Returns
+-------
+
+``string[]``: The current value of ``ccipReadGatewayUrls`` (default: ``[]``)
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ccipReadGatewayUrls;
+    > []
+
+    // set a gateway url
+    web3.eth.ccipReadGatewayUrls = ['https://foo.com'];
 
 ------------------------------------------------------------------------------
 

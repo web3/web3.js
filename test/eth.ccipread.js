@@ -236,7 +236,7 @@ describe('CCIP read', () => {
                         mockPayload,
                         send,
                         Object.assign(mockOptions, {
-                            ccipReadGatewayCallback: thisRef.options.ccipReadGatewayUrls || mockOptions.ccipReadGatewayUrls
+                            ccipReadGatewayCallback: thisRef.options.ccipReadGatewayCallback || mockOptions.ccipReadGatewayCallback
                         }),
                     );
                 };

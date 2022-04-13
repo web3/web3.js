@@ -61,7 +61,7 @@ var isUrlAllowed = function (urlInstance, allowList) {
 };
 
 var hasCcipReadErrorSelector = function (encodedString) {
-    return encodedString && encodedString.substring(0, 10) === ENCODED_CCIP_READ_ERROR_SELECTOR;
+    return encodedString && encodedString.substring && encodedString.substring(0, 10) === ENCODED_CCIP_READ_ERROR_SELECTOR;
 };
 
 //Errors are handled differently depending on the environment
@@ -182,12 +182,16 @@ var isOffChainLookup = function (err, result) {
  * @return {Object} Result of calling send with off-chain data
  */
 var ccipReadCall = async function (errorObject, result, payload, send, options) {
-    if (send.ccipReadCalls) {
+    debugger;
+
+    if (send.ccipReadCalls >= 0) {
         send.ccipReadCalls++;
     } else {
         send.ccipReadCalls = 1;
     }
-    const maxRedirectCount = options.ccipReadMaxRedirectCount || MAX_REDIRECT_COUNT;
+    const maxRedirectCount = typeof options.ccipReadMaxRedirectCount === 'number' ?
+        options.ccipReadMaxRedirectCount
+        : MAX_REDIRECT_COUNT;
     if (send.ccipReadCalls > maxRedirectCount) {
         throw new Error('Too many CCIP-read redirects');
     }
@@ -231,6 +235,7 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         callbackFunction,
         defaultAbiCoder.encode(CCIP_READ_INTERFACE.getFunction('callback').inputs, [gatewayResult, extraData]),
     ]);
+
 
     return send({
         to: sender,

@@ -13,7 +13,7 @@ let { Http } = SandboxedModule.require('../packages/web3-http', {
 
 var { Http: RawHttp } = require('../packages/web3-http');
 
-describe('web3-http', () => {
+describe.skip('web3-http', () => {
     describe('_prepareRequest', () => {
         it('should create correct request object when in the browser', async () => {
             const http = new RawHttp();
