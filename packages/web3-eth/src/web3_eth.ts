@@ -1,12 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import {
-	SupportedProviders,
-	Web3Context,
-	Web3ContextInitOptions,
-	Web3Subscription,
-} from 'web3-core';
+import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	Address,
 	Bytes,
@@ -25,31 +20,20 @@ import {
 	NewPendingTransactionsSubscription,
 	NewHeadsSubscription,
 	SyncingSubscription,
-	LogArguments,
-	Web3DataEvent,
 } from './web3_subscriptions';
 
-enum SubscriptionNames {
-	logs = 'logs',
-	newPendingTransactions = 'newPendingTransactions',
-	newHeads = 'newHeads',
-	syncing = 'syncing',
-	newBlockHeaders = 'newBlockHeaders',
-	pendingTransactions = 'pendingTransactions',
-}
+type RegisteredSubscription = {
+	logs: typeof LogsSubscription;
+	newPendingTransactions: typeof NewPendingTransactionsSubscription;
+	pendingTransactions: typeof NewPendingTransactionsSubscription;
+	newHeads: typeof NewHeadsSubscription;
+	newBlockHeaders: typeof NewHeadsSubscription;
+	syncing: typeof SyncingSubscription;
+};
 
-type SomeSubscription =
-	| LogsSubscription
-	| NewPendingTransactionsSubscription
-	| NewHeadsSubscription
-	| SyncingSubscription;
-
-type Callback = (error: Error | null, result: any) => void;
-
-export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
+export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
-		super(providerOrContext);
-		this.setRegisteredSubscriptions({
+		super(providerOrContext, {
 			logs: LogsSubscription,
 			newPendingTransactions: NewPendingTransactionsSubscription,
 			newHeads: NewHeadsSubscription,
@@ -292,58 +276,34 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		);
 	}
 
-	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
-	private getSubscribeInputArguments(
-		args: LogArguments | Callback | undefined,
-		cb: Callback | undefined,
-	): { options: LogArguments; callBack?: Callback } {
-		if (typeof cb === 'function') {
-			return { options: args as LogArguments, callBack: cb };
-		}
-		if (typeof args === 'function') {
-			return { options: {} as LogArguments, callBack: args };
-		}
-		return {
-			options: args as LogArguments,
-		};
-	}
-
-	public async subscribe(
-		name: keyof typeof SubscriptionNames,
-		args?: LogArguments | Callback | undefined,
-		cb?: Callback,
-	): Promise<SomeSubscription> {
-		const { callBack, options } = this.getSubscribeInputArguments(args, cb);
-
+	public async subscribe<T extends keyof RegisteredSubscription>(
+		name: T,
+		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
+	): Promise<InstanceType<RegisteredSubscription[T]>> {
 		const subscription = (await this.subscriptionManager?.subscribe(
 			name,
-			options ?? {},
-		)) as Web3Subscription<any>;
-		if (typeof callBack === 'function') {
-			subscription.on('data', (data: any) => callBack(null, data));
-			subscription.on('error', (error: Error) => callBack(error, null));
-		}
+			args,
+		)) as InstanceType<RegisteredSubscription[T]>;
 		if (
-			subscription &&
-			name === SubscriptionNames.logs &&
-			typeof options === 'object' &&
-			options.fromBlock &&
-			Number.isFinite(Number(options.fromBlock))
+			subscription instanceof LogsSubscription &&
+			name === 'logs' &&
+			typeof args === 'object' &&
+			args.fromBlock &&
+			Number.isFinite(Number(args.fromBlock))
 		) {
 			setImmediate(() => {
-				this.getPastLogs({ fromBlock: String(options.fromBlock) })
+				this.getPastLogs({ fromBlock: String(args.fromBlock) })
 					.then(logs => {
 						for (const log of logs) {
-							subscription.emit(Web3DataEvent.data, log);
+							subscription._processSubscriptionResult(log);
 						}
 					})
 					.catch(e => {
-						subscription.emit(Web3DataEvent.error, e);
+						subscription._processSubscriptionError(e as Error);
 					});
 			});
 		}
-
-		return subscription as SomeSubscription;
+		return subscription;
 	}
 
 	private static shouldClearSubscription({ sub }: { sub: unknown }): boolean {

@@ -40,7 +40,7 @@ export class Web3SubscriptionManager<
 			throw new ProviderError('Provider not available');
 		}
 
-		const Klass = this.registeredSubscriptions[name];
+		const Klass: RegisteredSubs[T] = this.registeredSubscriptions[name];
 		if (!Klass) {
 			throw new SubscriptionError('Invalid subscription type');
 		}
@@ -91,7 +91,7 @@ export class Web3SubscriptionManager<
 
 	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
 		const result = [];
-		for (const [id, sub] of this._subscriptions.entries()) {
+		for (const [id, sub] of this.subscriptions.entries()) {
 			if (!condition || (typeof condition === 'function' && condition({ id, sub }))) {
 				result.push(this.removeSubscription(sub));
 			}

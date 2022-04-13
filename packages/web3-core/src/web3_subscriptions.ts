@@ -15,12 +15,10 @@ import {
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
 
-type Callback = (error: Error | null, data: unknown) => void;
-
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	ArgsType = { cb?: Callback } & any,
+	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
@@ -72,30 +70,21 @@ export abstract class Web3Subscription<
 		await this.subscribe();
 	}
 
-	public async unsubscribe(cb?: Callback) {
-		try {
-			if (!this.id) {
-				return;
-			}
-
-			await this._requestManager.send({
-				method: 'eth_unsubscribe',
-				params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
-			});
-
-			this._id = undefined;
-			(this._requestManager.provider as Web3BaseProvider).removeListener(
-				'message',
-				this._messageListener as never,
-			);
-			if (typeof cb === 'function') {
-				cb(null, true);
-			}
-		} catch (e) {
-			if (typeof cb === 'function') {
-				cb(e as Error, null);
-			}
+	public async unsubscribe() {
+		if (!this.id) {
+			return;
 		}
+
+		await this._requestManager.send({
+			method: 'eth_unsubscribe',
+			params: [this.id] as Web3APIParams<API, 'eth_unsubscribe'>,
+		});
+
+		this._id = undefined;
+		(this._requestManager.provider as Web3BaseProvider).removeListener(
+			'message',
+			this._messageListener as never,
+		);
 	}
 
 	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars

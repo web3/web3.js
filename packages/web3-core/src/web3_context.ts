@@ -81,9 +81,9 @@ export class Web3Context<
 
 	public constructor(
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
+		defaultRegisteredSubscriptions?: RegisteredSubs,
 	) {
 		super();
-
 		if (
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
@@ -91,6 +91,12 @@ export class Web3Context<
 			this._requestManager = new Web3RequestManager<API>(
 				providerOrContext as SupportedProviders<API>,
 			);
+			if (defaultRegisteredSubscriptions) {
+				this._subscriptionManager = new Web3SubscriptionManager(
+					this.requestManager,
+					defaultRegisteredSubscriptions,
+				);
+			}
 
 			return;
 		}
@@ -135,15 +141,6 @@ export class Web3Context<
 		return this._subscriptionManager;
 	}
 
-	protected setRegisteredSubscriptions(registeredSubscriptions: RegisteredSubs): void {
-		if (!this.subscriptionManager) {
-			this._subscriptionManager = new Web3SubscriptionManager(
-				this.requestManager,
-				registeredSubscriptions,
-			);
-		}
-	}
-	
 	public get wallet() {
 		return this._wallet;
 	}
