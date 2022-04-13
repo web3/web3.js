@@ -34,7 +34,7 @@ function prepareProviderForSetter(provider, signature, types, params, error) {
                 gas: '0x64',
                 gasPrice: '0x64',
                 nonce: '0x1',
-                data: sha3(signature).slice(0, 10) + abiCoder.encodeParameters(types, params).substr(2),
+                data: sha3(signature).slice(0, 10) + abiCoder.encodeParameters(types, params).slice(2),
                 to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e'
             }]
         );
