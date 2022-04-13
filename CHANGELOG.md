@@ -520,11 +520,6 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
-<<<<<<< rm-deprecated-substr
-## [Unreleased]
-
-=======
->>>>>>> 1.x
 ## [1.7.2]
 
 ### Changed
@@ -536,9 +531,6 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 -  Fix jsonrpc payload and response types (#4743) (#4761)
 -  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
-<<<<<<< rm-deprecated-substr
--  Replace deprecated String.prototype.substr() (#4855)
-=======
 
 ## [1.7.3]
 
@@ -555,4 +547,6 @@ Released with 1.0.0-beta.37 code base.
 -  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
->>>>>>> 1.x
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)
