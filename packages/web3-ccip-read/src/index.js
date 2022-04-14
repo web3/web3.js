@@ -56,7 +56,7 @@ var formatGatewayError = function (errorResponse) {
 };
 
 var isUrlAllowed = function (urlInstance, allowList) {
-    if(!allowList || !(allowList && allowList.length)) return true;
+    if(!(allowList && allowList.length)) return true;
     return allowList.includes(urlInstance.hostname);
 };
 
