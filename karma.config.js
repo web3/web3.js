@@ -54,11 +54,13 @@ const webpackConfig = {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
 			assert: require.resolve('assert'),
+			constants: require.resolve('constants-browserify'),
 			// jest: require.resolve('jest'),
 		},
 		alias: {
 			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
 			jest: path.join(__dirname, 'node_modules', 'jest'),
+			module: path.join('node_modules', '@types', 'node', 'module.d.ts'),
 		},
 	},
 	watch: false,
@@ -93,7 +95,7 @@ module.exports = function (config) {
 			'karma-webpack',
 			'karma-jasmine',
 			'karma-chrome-launcher',
-			'karma-firefox-launcher',
+			// 'karma-firefox-launcher',
 		],
 		browsers: [
 			// 'Chrome',
@@ -108,8 +110,9 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		files: listOfTests,
+		files: ['./karma-setup.js', ...listOfTests],
 		preprocessors: {
+			'./karma-setup.js': ['webpack'],
 			...listOfTests.reduce(
 				(res, packagePath) => ({ ...res, [packagePath]: ['webpack', 'browserify'] }),
 				{},
