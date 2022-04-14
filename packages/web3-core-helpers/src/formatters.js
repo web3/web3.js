@@ -157,7 +157,7 @@ var _txInputFormatter = function (options) {
     if (options.gas || options.gasLimit) {
         options.gas = options.gas || options.gasLimit;
     }
-    
+
     if (options.maxPriorityFeePerGas || options.maxFeePerGas) {
         delete options.gasPrice;
     }
@@ -402,7 +402,7 @@ var outputLogFormatter = function (log) {
         typeof log.transactionHash === 'string' &&
         typeof log.logIndex === 'string') {
         var shaId = utils.sha3(log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', ''));
-        log.id = 'log_' + shaId.replace('0x', '').substr(0, 8);
+        log.id = 'log_' + shaId.replace('0x', '').slice(0, 8);
     } else if (!log.id) {
         log.id = null;
     }

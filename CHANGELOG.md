@@ -398,7 +398,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Removes
 
-- Removing the underscore package 
+- Removing the underscore package
 
 ## [1.5.0]
 
@@ -463,7 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
-- Added missing PromiEvent handler types (#4194) 
+- Added missing PromiEvent handler types (#4194)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)
@@ -491,8 +491,6 @@ Released with 1.0.0-beta.37 code base.
 
  - Changed getFeeHistory first parameter type from `number` to `hex` according to the [spec](https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/eth1.0-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false) (#4529)
 
-## [Unreleased]
-
 ## [1.7.1]
 
 ### Added
@@ -514,5 +512,41 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 -  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
 
+
+### Removed
+- Removed deprecated Morden testnet code (#4339)
+
+
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
+
+## [1.7.2]
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
+### Fixed
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+
+## [1.7.3]
+
+### Fixed
+
+-  fixed build issues of 1.7.2
+
+## [Unreleased]
+
+## [1.7.4]
+
+### Fixed
+-  Fix dead link in web3-eth.rst (#4916)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
+-  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)

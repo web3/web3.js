@@ -115,7 +115,7 @@ If you are using create-react-app version >=5 you may run into issues building. 
 
 If you are using yarn:
 ```bash
-yarn add --dev react-app-rewired crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer
+yarn add --dev react-app-rewired process crypto-browserify stream-browserify assert stream-http https-browserify os-browserify url buffer
 ```
 
 If you are using npm:
@@ -277,7 +277,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 
 -   Haskell: [hs-web3](https://github.com/airalab/hs-web3)
 -   Java: [web3j](https://github.com/web3j/web3j)
--   PHP: [web3.php](https://github.com/sc0Vu/web3.php)
+-   PHP: [web3.php](https://github.com/web3p/web3.php)
 -   Purescript: [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
 -   Python: [Web3.py](https://github.com/ethereum/web3.py)
 -   Ruby: [ethereum.rb](https://github.com/EthWorks/ethereum.rb)

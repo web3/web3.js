@@ -173,7 +173,7 @@ var hexToAscii = function(hex) {
         i = 2;
     }
     for (; i < l; i+=2) {
-        var code = parseInt(hex.substr(i, 2), 16);
+        var code = parseInt(hex.slice(i, i + 2), 16);
         str += String.fromCharCode(code);
     }
 
@@ -350,7 +350,7 @@ var compareBlockNumbers = function(a, b) {
             return 1;
         } else {
             // b !== ("pending" OR "latest"), thus a > b
-            return -1 
+            return -1
         }
     } else if (a == "pending") {
         // b (== OR <) "latest", thus a > b

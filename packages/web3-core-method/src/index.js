@@ -81,7 +81,7 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
 
 Method.prototype.createFunction = function (requestManager, accounts) {
     var func = this.buildCall();
-    func.call = this.call;
+    Object.defineProperty(func, 'call', { configurable: true, writable: true, value: this.call });
 
     this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
 
@@ -90,7 +90,7 @@ Method.prototype.createFunction = function (requestManager, accounts) {
 
 Method.prototype.attachToObject = function (obj) {
     var func = this.buildCall();
-    func.call = this.call;
+    Object.defineProperty(func, 'call', { configurable: true, writable: true, value: this.call });
     var name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
@@ -460,7 +460,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 to: parsedTx.to,
                                                 from: parsedTx.from,
                                                 gas: parsedTx.gasLimit.toHexString(),
-                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                gasPrice: parsedTx.gasPrice ? parsedTx.gasPrice.toHexString() : undefined,
                                                 value: parsedTx.value.toHexString()
                                             });
                                         }
