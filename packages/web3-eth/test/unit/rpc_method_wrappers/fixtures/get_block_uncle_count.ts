@@ -1,18 +1,17 @@
-import { DataFormat } from 'web3-common';
-import { BlockTags, Bytes, HexString } from 'web3-utils';
+import { BlockTags, Bytes } from 'web3-utils';
 
 import { BlockNumberOrTag } from '../../../../src/types';
-import { returnFormats } from './return_formats';
 
-const mockRpcResponse = '0xb';
+export const mockRpcResponse = '0xb';
 
 /**
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - block (identifier e.g. hash, block number, or BlockTag)
+ *     - blockNumber
  */
-export const testCases: [string, [Bytes | BlockNumberOrTag | undefined]][] = [
+type TestData = [string, [Bytes | BlockNumberOrTag | undefined]];
+export const testData: TestData[] = [
 	// Testing block cases
 	// blockNumber = bytes
 	[
@@ -43,32 +42,3 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined]][] = [
 	['blockNumber = BigInt("0x4b7")', [BigInt('0x4b7')]],
 	['blockNumber = undefined', [undefined]],
 ];
-
-/**
- * Array consists of:
- * - Test title
- * - Input parameters:
- *     - blockNumber
- *     - returnFormat
- * - mockRpcResponse (formatted as returnFormat)
- */
-type TestData = [string, [Bytes | BlockNumberOrTag | undefined, DataFormat], HexString];
-
-/**
- * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse to each testCase
- */
-export const testData = (() => {
-	const _testData: TestData[] = [];
-	for (const testCase of testCases) {
-		for (const returnFormat of returnFormats) {
-			const [testTitle, inputParameters] = testCase;
-			_testData.push([
-				testTitle,
-				[...inputParameters, returnFormat],
-				mockRpcResponse,
-			]);
-		}
-	}
-	return _testData;
-})();

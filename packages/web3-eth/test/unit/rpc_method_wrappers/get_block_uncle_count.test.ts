@@ -1,15 +1,12 @@
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 import { isBytes } from 'web3-validator';
 import { Bytes } from 'web3-utils';
 
-import {
-	getUncleCountByBlockHash,
-	getUncleCountByBlockNumber,
-} from '../../../src/rpc_methods';
+import { getUncleCountByBlockHash, getUncleCountByBlockNumber } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getBlockUncleCount } from '../../../src/rpc_method_wrappers';
-import { testData } from './fixtures/get_block_uncle_count';
+import { mockRpcResponse, testData } from './fixtures/get_block_uncle_count';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -22,7 +19,7 @@ describe('getBlockUncleCount', () => {
 
 	it.each(testData)(
 		`should call rpcMethods.getBlockUncleCount with expected parameters\nTitle: %s\nInput parameters: %s\n`,
-		async (_, inputParameters, __) => {
+		async (_, inputParameters) => {
 			const [inputBlock] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 
@@ -36,20 +33,23 @@ describe('getBlockUncleCount', () => {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
 			}
 
-			await getBlockUncleCount(web3Context, ...inputParameters);
+			await getBlockUncleCount(web3Context, inputBlock, DEFAULT_RETURN_FORMAT);
 			expect(
-				inputBlockIsBytes
-					? getUncleCountByBlockHash
-					: getUncleCountByBlockNumber,
+				inputBlockIsBytes ? getUncleCountByBlockHash : getUncleCountByBlockNumber,
 			).toHaveBeenCalledWith(web3Context.requestManager, inputBlockFormatted);
 		},
 	);
 
 	it.each(testData)(
-		`should format return value using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
-		async (_, inputParameters, mockRpcResponse) => {
-			const [inputBlock, returnFormat] = inputParameters;
-			const expectedFormattedResult = format({ eth: 'uint'}, mockRpcResponse, returnFormat);
+		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
+		async (_, inputParameters) => {
+			const [inputBlock] = inputParameters;
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedFormattedResult = format(
+				{ eth: 'uint' },
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
@@ -57,7 +57,7 @@ describe('getBlockUncleCount', () => {
 					: getUncleCountByBlockNumber) as jest.Mock
 			).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getBlockUncleCount(web3Context, ...inputParameters);
+			const result = await getBlockUncleCount(web3Context, inputBlock, expectedReturnFormat);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

@@ -1,10 +1,8 @@
-import { DataFormat } from 'web3-common';
 import { BlockTags, Bytes, Numbers } from 'web3-utils';
 
 import { BlockNumberOrTag, Transaction } from '../../../../src/types';
-import { returnFormats } from './return_formats';
 
-const mockRpcResponse: Transaction = {
+export const mockRpcResponse: Transaction = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: '0x174876e800',
@@ -28,10 +26,13 @@ const mockRpcResponse: Transaction = {
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - block (identifier e.g. hash, block number, or BlockTag)
- *	   - transactionIndex
+ *     - blockNumber
+ *     - uncleIndex
+ *     - returnFormat
+ * - mockRpcResponse
  */
-export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]][] = [
+ type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
+export const testData: TestData[] = [
 	// blockNumber = Bytes, transactionIndex = HexString
 	[
 		'blockNumber = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", transactionIndex = "0x0"',
@@ -48,7 +49,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			'0x0'
+			'0x0',
 		],
 	],
 	// blockNumber = BlockTag, transactionIndex = HexString
@@ -78,7 +79,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			0
+			0,
 		],
 	],
 	// blockNumber = BlockTag, transactionIndex = number
@@ -108,7 +109,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			'0'
+			'0',
 		],
 	],
 	// blockNumber = BlockTag, transactionIndex = NumberString
@@ -138,47 +139,29 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			BigInt('0x0')
+			BigInt('0x0'),
 		],
 	],
 	// blockNumber = BlockTag, transactionIndex = BigInt
-	['blockNumber = BlockTags.LATEST, transactionIndex = BigInt("0x0")', [BlockTags.LATEST, BigInt('0x0')]],
-	['blockNumber = BlockTags.EARLIEST, transactionIndex = BigInt("0x0")', [BlockTags.EARLIEST, BigInt('0x0')]],
-	['blockNumber = BlockTags.PENDING, transactionIndex = BigInt("0x0")', [BlockTags.PENDING, BigInt('0x0')]],
+	[
+		'blockNumber = BlockTags.LATEST, transactionIndex = BigInt("0x0")',
+		[BlockTags.LATEST, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.EARLIEST, transactionIndex = BigInt("0x0")',
+		[BlockTags.EARLIEST, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.PENDING, transactionIndex = BigInt("0x0")',
+		[BlockTags.PENDING, BigInt('0x0')],
+	],
 	// blockNumber = Numbers, transactionIndex = BigInt
 	['blockNumber = "0x4b7", transactionIndex = BigInt("0x0")', ['0x4b7', BigInt('0x0')]],
 	['blockNumber = 1207, transactionIndex = BigInt("0x0")', [1207, BigInt('0x0')]],
 	['blockNumber = "1207", transactionIndex = BigInt("0x0")', ['1207', BigInt('0x0')]],
-	['blockNumber = BigInt("0x4b7"), transactionIndex = BigInt("0x0")', [BigInt('0x4b7'), BigInt('0x0')]],
+	[
+		'blockNumber = BigInt("0x4b7"), transactionIndex = BigInt("0x0")',
+		[BigInt('0x4b7'), BigInt('0x0')],
+	],
 	['blockNumber = undefined, transactionIndex = BigInt("0x0")', [undefined, BigInt('0x0')]],
 ];
-
-/**
- * Array consists of:
- * - Test title
- * - Input parameters:
- *     - blockNumber
- *     - uncleIndex
- *     - returnFormat
- * - mockRpcResponse
- */
-type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers, DataFormat], Transaction];
-
-/**
- * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse to each testCase
- */
-export const testData = (() => {
-	const _testData: TestData[] = [];
-	for (const testCase of testCases) {
-		for (const returnFormat of returnFormats) {
-			const [testTitle, inputParameters] = testCase;
-			_testData.push([
-				testTitle,
-				[...inputParameters, returnFormat],
-				mockRpcResponse
-			]);
-		}
-	}
-	return _testData;
-})();

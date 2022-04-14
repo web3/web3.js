@@ -1,11 +1,10 @@
-import { DataFormat } from 'web3-common';
-import { Address, BlockTags, Bytes, Numbers } from 'web3-utils';
+import { Address, BlockTags, Numbers } from 'web3-utils';
 
 import { BlockNumberOrTag } from '../../../../src/types';
-import { returnFormats } from './return_formats';
+
+export const mockRpcResponse = '0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234';
 
 const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
-const mockRpcResponse = '0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234';
 
 /**
  * Array consists of:
@@ -15,7 +14,8 @@ const mockRpcResponse = '0x033456732123ffff2342342dd12342434324234234fd234fd23fd
  *     - storageSlot
  *     - blockNumber
  */
-export const testCases: [string, [Address, Numbers, BlockNumberOrTag | undefined]][] = [
+ type TestData = [string, [Address, Numbers, BlockNumberOrTag | undefined]];
+export const testData: TestData[] = [
 	// Testing storageSlot cases
 	['storageSlot = "0x4b7", blockNumber = undefined', [address, '0x4b7', undefined]],
 	['storageSlot = 1207, blockNumber = undefined', [address, 1207, undefined]],
@@ -40,34 +40,3 @@ export const testCases: [string, [Address, Numbers, BlockNumberOrTag | undefined
 	['storageSlot = "0x4b7", blockNumber = BigInt("0x4b7")', [address, '0x4b7', BigInt('0x4b7')]],
 	['storageSlot = "0x4b7", blockNumber = undefined', [address, '0x4b7', undefined]],
 ];
-
-/**
- * Array consists of:
- * - Test title
- * - Input parameters:
- *     - address
- *     - storageSlot
- *     - blockNumber
- *     - returnFormat
- * - mockRpcResponse (formatted as returnFormat)
- */
-type TestData = [string, [Address, Numbers, BlockNumberOrTag | undefined, DataFormat], Bytes];
-
-/**
- * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse to each testCase
- */
-export const testData = (() => {
-	const _testData: TestData[] = [];
-	for (const testCase of testCases) {
-		for (const returnFormat of returnFormats) {
-			const [testTitle, inputParameters] = testCase;
-			_testData.push([
-				testTitle,
-				[...inputParameters, returnFormat],
-				mockRpcResponse,
-			]);
-		}
-	}
-	return _testData;
-})();

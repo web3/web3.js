@@ -1,10 +1,9 @@
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 
 import { getBlockNumber as rpcMethodsGetBlockNumber } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getBlockNumber } from '../../../src/rpc_method_wrappers';
-import { returnFormats } from './fixtures/return_formats';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -20,15 +19,17 @@ describe('getBlockNumber', () => {
 		expect(rpcMethodsGetBlockNumber).toHaveBeenCalledWith(web3Context.requestManager);
 	});
 
-	it.each(returnFormats)(
-		`should format return value using provided return format: %s`,
-		async returnFormat => {
-			const mockRpcResponse = '0x4b7';
-			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, returnFormat);
-			(rpcMethodsGetBlockNumber as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+	it('should format mockRpcResponse using provided return format', async () => {
+		const mockRpcResponse = '0x4b7';
+		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+		const expectedFormattedResult = format(
+			{ eth: 'uint' },
+			mockRpcResponse,
+			expectedReturnFormat,
+		);
+		(rpcMethodsGetBlockNumber as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getBlockNumber(web3Context, returnFormat);
-			expect(result).toBe(expectedFormattedResult);
-		},
-	);
+		const result = await getBlockNumber(web3Context, expectedReturnFormat);
+		expect(result).toBe(expectedFormattedResult);
+	});
 });

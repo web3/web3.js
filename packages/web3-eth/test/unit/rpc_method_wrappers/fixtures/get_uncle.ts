@@ -1,10 +1,9 @@
-import { Block, DataFormat } from 'web3-common';
+import { Block } from 'web3-common';
 import { BlockTags, Bytes, Numbers } from 'web3-utils';
 
 import { BlockNumberOrTag } from '../../../../src/types';
-import { returnFormats } from './return_formats';
 
-const mockRpcResponse: Block = {
+export const mockRpcResponse: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',
 	sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
 	miner: '0xbb7b8287f3f0a933474a79eae42cbca977791171',
@@ -41,10 +40,11 @@ const mockRpcResponse: Block = {
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - block (identifier e.g. hash, block number, or BlockTag)
- *	   - uncleIndex
+ *     - blockNumber
+ *     - uncleIndex
  */
-export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]][] = [
+ type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
+export const testData: TestData[] = [
 	// blockNumber = Bytes, uncleIndex = HexString
 	[
 		'blockNumber = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", uncleIndex = "0x0"',
@@ -61,7 +61,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			'0x0'
+			'0x0',
 		],
 	],
 	// blockNumber = BlockTag, uncleIndex = HexString
@@ -91,7 +91,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			0
+			0,
 		],
 	],
 	// blockNumber = BlockTag, uncleIndex = number
@@ -121,7 +121,7 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			'0'
+			'0',
 		],
 	],
 	// blockNumber = BlockTag, uncleIndex = NumberString
@@ -151,13 +151,22 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
 			]),
-			BigInt('0x0')
+			BigInt('0x0'),
 		],
 	],
 	// blockNumber = BlockTag, uncleIndex = BigInt
-	['blockNumber = BlockTags.LATEST, uncleIndex = BigInt("0x0")', [BlockTags.LATEST, BigInt('0x0')]],
-	['blockNumber = BlockTags.EARLIEST, uncleIndex = BigInt("0x0")', [BlockTags.EARLIEST, BigInt('0x0')]],
-	['blockNumber = BlockTags.PENDING, uncleIndex = BigInt("0x0")', [BlockTags.PENDING, BigInt('0x0')]],
+	[
+		'blockNumber = BlockTags.LATEST, uncleIndex = BigInt("0x0")',
+		[BlockTags.LATEST, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.EARLIEST, uncleIndex = BigInt("0x0")',
+		[BlockTags.EARLIEST, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.PENDING, uncleIndex = BigInt("0x0")',
+		[BlockTags.PENDING, BigInt('0x0')],
+	],
 	// blockNumber = Numbers, uncleIndex = BigInt
 	['blockNumber = "0x4b7", uncleIndex = BigInt("0x0")', ['0x4b7', BigInt('0x0')]],
 	['blockNumber = 1207, uncleIndex = BigInt("0x0")', [1207, BigInt('0x0')]],
@@ -165,33 +174,3 @@ export const testCases: [string, [Bytes | BlockNumberOrTag | undefined, Numbers]
 	['blockNumber = BigInt("0x4b7"), uncleIndex = BigInt("0x0")', [BigInt('0x4b7'), BigInt('0x0')]],
 	['blockNumber = undefined, uncleIndex = BigInt("0x0")', [undefined, BigInt('0x0')]],
 ];
-
-/**
- * Array consists of:
- * - Test title
- * - Input parameters:
- *     - blockNumber
- *     - uncleIndex
- *     - returnFormat
- * - mockRpcResponse
- */
-type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers, DataFormat], Block];
-
-/**
- * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse to each testCase
- */
-export const testData = (() => {
-	const _testData: TestData[] = [];
-	for (const testCase of testCases) {
-		for (const returnFormat of returnFormats) {
-			const [testTitle, inputParameters] = testCase;
-			_testData.push([
-				testTitle,
-				[...inputParameters, returnFormat],
-				mockRpcResponse
-			]);
-		}
-	}
-	return _testData;
-})();

@@ -536,23 +536,31 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 
 // TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
 // https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
-export const sign = async (
+export async function sign<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	message: Bytes,
 	address: Address,
-) => {
+	returnFormat: ReturnFormat,
+) {
 	const messageFormatted = format({ eth: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
-	return rpcMethods.sign(web3Context.requestManager, address, messageFormatted);
-};
+	const response = await rpcMethods.sign(web3Context.requestManager, address, messageFormatted);
+	return format({ eth: 'bytes' }, response, returnFormat);
+}
 
-export const signTransaction = async (
+export async function signTransaction<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
-) =>
-	rpcMethods.signTransaction(
+	returnFormat: ReturnFormat,
+) {
+	const response = await rpcMethods.signTransaction(
 		web3Context.requestManager,
 		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
 	);
+	return {
+		raw: format({ eth: 'bytes' }, response, returnFormat),
+		tx: formatTransaction(transaction, returnFormat),
+	};
+}
 
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076

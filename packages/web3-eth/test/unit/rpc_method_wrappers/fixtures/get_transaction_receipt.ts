@@ -1,10 +1,7 @@
-import { DataFormat, ReceiptInfo } from 'web3-common';
+import { ReceiptInfo } from 'web3-common';
 import { Bytes } from 'web3-utils';
 
-import { Transaction } from '../../../../src/types';
-import { returnFormats } from './return_formats';
-
-const mockRpcResponse: ReceiptInfo = {
+export const mockRpcResponse: ReceiptInfo = {
 	transactionHash: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	transactionIndex: '0x41',
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
@@ -26,8 +23,11 @@ const mockRpcResponse: ReceiptInfo = {
  * - Test title
  * - Input parameters:
  *     - transactionHash
+ *     - returnFormat
+ * - mockRpcResponse
  */
-export const testCases: [string, [Bytes]][] = [
+ type TestData = [string, [Bytes]];
+export const testData: TestData[] = [
 	// transactionHash = Bytes
 	[
 		'transactionHash = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"',
@@ -43,36 +43,7 @@ export const testCases: [string, [Bytes]][] = [
 			new Uint8Array([
 				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
 				251, 248,
-			])
+			]),
 		],
 	],
 ];
-
-/**
- * Array consists of:
- * - Test title
- * - Input parameters:
- *     - transactionHash
- *     - returnFormat
- * - mockRpcResponse
- */
-type TestData = [string, [Bytes, DataFormat], Transaction];
-
-/**
- * For each testCase in testCases, we add a version of testCase with each returnFormat in returnFormats.
- * This also adds mockRpcResponse to each testCase
- */
-export const testData = (() => {
-	const _testData: TestData[] = [];
-	for (const testCase of testCases) {
-		for (const returnFormat of returnFormats) {
-			const [testTitle, inputParameters] = testCase;
-			_testData.push([
-				testTitle,
-				[...inputParameters, returnFormat],
-				mockRpcResponse
-			]);
-		}
-	}
-	return _testData;
-})();

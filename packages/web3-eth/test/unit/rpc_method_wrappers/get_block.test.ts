@@ -1,12 +1,12 @@
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 import { isBytes } from 'web3-validator';
 import { Bytes } from 'web3-utils';
 
 import { getBlockByHash, getBlockByNumber } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getBlock } from '../../../src/rpc_method_wrappers';
-import { testData } from './fixtures/get_block';
+import { mockRpcResponse, mockRpcResponseHydrated, testData } from './fixtures/get_block';
 import { blockSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
@@ -20,7 +20,7 @@ describe('getBlock', () => {
 
 	it.each(testData)(
 		`should call rpcMethods.getBlock with expected parameters\nTitle: %s\nInput parameters: %s\n`,
-		async (_, inputParameters, __) => {
+		async (_, inputParameters) => {
 			const [inputBlock, hydrated] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 
@@ -34,7 +34,7 @@ describe('getBlock', () => {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
 			}
 
-			await getBlock(web3Context, ...inputParameters);
+			await getBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(inputBlockIsBytes ? getBlockByHash : getBlockByNumber).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputBlockFormatted,
@@ -44,16 +44,22 @@ describe('getBlock', () => {
 	);
 
 	it.each(testData)(
-		`should format return value using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
-		async (_, inputParameters, mockRpcResponse) => {
-			const [inputBlock, __, returnFormat] = inputParameters;
-			const expectedFormattedResult = format(blockSchema, mockRpcResponse, returnFormat);
+		`should format expectedMockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
+		async (_, inputParameters) => {
+			const [inputBlock, hydrated] = inputParameters;
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedMockRpcResponse = hydrated ? mockRpcResponseHydrated : mockRpcResponse;
+			const expectedFormattedResult = format(
+				blockSchema,
+				expectedMockRpcResponse,
+				expectedReturnFormat,
+			);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes ? getBlockByHash : getBlockByNumber) as jest.Mock
-			).mockResolvedValueOnce(mockRpcResponse);
+			).mockResolvedValueOnce(expectedMockRpcResponse);
 
-			const result = await getBlock(web3Context, ...inputParameters);
+			const result = await getBlock(web3Context, ...inputParameters, expectedReturnFormat);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

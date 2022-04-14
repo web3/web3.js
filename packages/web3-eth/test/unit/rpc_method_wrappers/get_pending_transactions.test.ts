@@ -1,13 +1,10 @@
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-common';
 
-import {
-	getPendingTransactions as rpcMethodsGetPendingTransactions,
-} from '../../../src/rpc_methods';
+import { getPendingTransactions as rpcMethodsGetPendingTransactions } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getPendingTransactions } from '../../../src/rpc_method_wrappers';
 import { formatTransaction } from '../../../src';
-import { returnFormats } from './fixtures/return_formats';
 import { mockRpcResponse } from './fixtures/get_pending_transactions';
 
 jest.mock('../../../src/rpc_methods');
@@ -25,13 +22,15 @@ describe('getPendingTransactions', () => {
 		expect(rpcMethodsGetPendingTransactions).toHaveBeenCalledWith(web3Context.requestManager);
 	});
 
-	it.each(returnFormats)(
-		`should format return value using provided return format: %s`,
-		async returnFormat => {
-			const expectedFormattedResult = mockRpcResponse.map(transaction => formatTransaction(transaction, returnFormat));
+	it('should format return value using provided return format',
+		async () => {
+			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+			const expectedFormattedResult = mockRpcResponse.map(transaction =>
+				formatTransaction(transaction, expectedReturnFormat),
+			);
 			(rpcMethodsGetPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getPendingTransactions(web3Context, returnFormat);
+			const result = await getPendingTransactions(web3Context, expectedReturnFormat);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);
