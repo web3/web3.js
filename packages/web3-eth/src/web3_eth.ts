@@ -33,14 +33,22 @@ type RegisteredSubscription = {
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
-		super(providerOrContext, {
-			logs: LogsSubscription,
-			newPendingTransactions: NewPendingTransactionsSubscription,
-			newHeads: NewHeadsSubscription,
-			syncing: SyncingSubscription,
-			pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
-			newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
-		});
+		super(
+			typeof providerOrContext === 'object' &&
+				(providerOrContext as Web3ContextInitOptions).provider
+				? providerOrContext
+				: {
+						provider: providerOrContext as SupportedProviders<any>,
+						registeredSubscriptions: {
+							logs: LogsSubscription,
+							newPendingTransactions: NewPendingTransactionsSubscription,
+							newHeads: NewHeadsSubscription,
+							syncing: SyncingSubscription,
+							pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+							newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+						},
+				  },
+		);
 	}
 
 	public async getProtocolVersion() {
