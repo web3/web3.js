@@ -1,6 +1,6 @@
 {
     "name": "web3-ccip-read",
-    "version": "1.0.0",
+    "version": "1.0.0-alpha.0",
     "description": "Handles ccip-read calls. This is an internal package",
     "repository": "https://github.com/ethereum/web3.js/tree/1.x/packages/web3-ccip-read",
     "license": "LGPL-3.0",
