@@ -12,26 +12,22 @@ import { getBlockByNumber } from '../rpc_methods';
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends SendTransactionEvents | SendSignedTransactionEvents,
 	ReturnFormat extends DataFormat,
+	ResolveType = ReceiptInfo,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
+	transactionPromiEvent: PromiEvent<ResolveType, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ) {
-	if (
-		transactionReceipt === undefined ||
-		transactionReceipt === null ||
-		transactionReceipt.blockHash === undefined ||
-		transactionReceipt.blockHash === null
-	)
+	if (!transactionReceipt || !transactionReceipt.blockHash)
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
 			blockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
 			transactionHash: format({ eth: 'bytes32' }, transactionHash, returnFormat),
 		});
 
-	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
+	if (!transactionReceipt.blockNumber)
 		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
 	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
@@ -53,7 +49,7 @@ export function watchTransactionForConfirmations<
 			false,
 		);
 
-		if (nextBlock?.hash !== null) {
+		if (nextBlock?.hash) {
 			confirmationNumber += 1;
 			transactionPromiEvent.emit('confirmation', {
 				confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),

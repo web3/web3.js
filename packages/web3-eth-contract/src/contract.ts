@@ -2,13 +2,15 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
+	format,
 	inputAddressFormatter,
 	inputLogFormatter,
 	LogsInput,
+	PromiEvent,
 	Web3EventEmitter,
 } from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
+import { call, estimateGas, getLogs, sendTransaction, SendTransactionEvents } from 'web3-eth';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -27,6 +29,7 @@ import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
+	Bytes,
 	Filter,
 	HexString,
 	toChecksumAddress,
@@ -173,40 +176,45 @@ export class Contract<Abi extends ContractAbi>
 			throw new Web3ContractError('No constructor interface found.');
 		}
 
-		if (!deployOptions?.data) {
+		const data = format(
+			{ eth: 'bytes' },
+			deployOptions?.data ?? this.options.data,
+			DEFAULT_RETURN_FORMAT,
+		);
+
+		if (!data || data.trim() === '0x') {
 			throw new Web3ContractError('No data provided.');
 		}
-		const data = deployOptions?.data ?? this.options.data;
+
 		const args = deployOptions?.arguments ?? [];
-		validator.validate(['string'], args);
 
 		const contractOptions = { ...this.options, data };
 
 		return {
 			arguments: args,
-			send: async (options?: PayableCallOptions) => {
+			send: (
+				options?: PayableCallOptions,
+			): PromiEvent<Contract<Abi>, SendTransactionEvents> => {
 				const modifiedOptions = { ...options };
+
+				// Remove to address
+				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
 				delete modifiedOptions.to;
 
-				const promiEvent = this._contractMethodSend(
+				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
 					args,
 					modifiedOptions,
 					contractOptions,
 				);
-
-				// eslint-disable-next-line no-void
-				void promiEvent.then(res => {
-					this._address = res.contractAddress;
-				});
-
-				return promiEvent;
 			},
 			estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 				options?: PayableCallOptions,
 				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
+
+				// Remove to address
 				delete modifiedOptions.to;
 
 				return this._contractMethodEstimateGas({
@@ -217,7 +225,12 @@ export class Contract<Abi extends ContractAbi>
 					contractOptions,
 				});
 			},
-			encodeABI: () => encodeMethodABI(abi as AbiFunctionFragment, args, data),
+			encodeABI: () =>
+				encodeMethodABI(
+					abi as AbiFunctionFragment,
+					args,
+					format({ eth: 'bytes' }, data as Bytes, DEFAULT_RETURN_FORMAT),
+				),
 		};
 	}
 
@@ -397,6 +410,35 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+	}
+
+	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		options?: Options,
+		contractOptions?: ContractOptions,
+	) {
+		const tx = getSendTxParams({
+			abi,
+			params,
+			options,
+			contractOptions: contractOptions ?? this.options,
+		});
+
+		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+			transactionResolver: receipt => {
+				if (receipt.status === '0x0') {
+					throw new Web3ContractError('contract deployment error');
+				}
+
+				const newContract = this.clone();
+
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+				newContract.options.address = receipt.contractAddress as HexString;
+
+				return newContract;
+			},
+		});
 	}
 
 	private async _contractMethodEstimateGas<

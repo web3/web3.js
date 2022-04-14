@@ -6,7 +6,7 @@ import {
 } from 'web3-common';
 import { toWei, hexToNumber } from 'web3-utils';
 import HttpProvider from '../../src/index';
-import { accounts, clientUrl } from '../fixtures/config';
+import { accounts, clientUrl } from '../shared_fixtures/integration_test_accounts';
 
 describe('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;

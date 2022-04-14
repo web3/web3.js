@@ -17,7 +17,9 @@ export const getSendTxParams = ({
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	if (!options?.to && !contractOptions.address) {
+	const deploymentCall = options?.data ?? contractOptions.data;
+
+	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
 
@@ -36,10 +38,10 @@ export const getSendTxParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (!txParams.data) {
+	if (!txParams.data || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data),
+			data: encodeMethodABI(abi, params, txParams.data as string),
 		};
 	}
 
