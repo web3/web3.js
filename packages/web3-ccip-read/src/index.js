@@ -182,8 +182,6 @@ var isOffChainLookup = function (err, result) {
  * @return {Object} Result of calling send with off-chain data
  */
 var ccipReadCall = async function (errorObject, result, payload, send, options) {
-    debugger;
-
     if (send.ccipReadCalls >= 0) {
         send.ccipReadCalls++;
     } else {
@@ -235,7 +233,6 @@ var ccipReadCall = async function (errorObject, result, payload, send, options) 
         callbackFunction,
         defaultAbiCoder.encode(CCIP_READ_INTERFACE.getFunction('callback').inputs, [gatewayResult, extraData]),
     ]);
-
 
     return send({
         to: sender,

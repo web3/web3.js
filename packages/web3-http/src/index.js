@@ -114,7 +114,7 @@ Http.prototype._sendRequest = function(queryUrl, method, payload) {
             reject(request);
         }
     });
-}
+};
 
 Http.prototype.get = function(queryUrl) {
     return this._sendRequest(queryUrl, 'GET', {});

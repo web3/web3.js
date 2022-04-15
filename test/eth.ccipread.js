@@ -74,7 +74,7 @@ describe('CCIP read', () => {
             }
         });
 
-        it('should send GET request if {data} is in the url template, and substitute paramaters correctly', async () => {
+        it('should send GET request if {data} is in the url template, and substitute parameters correctly', async () => {
             const urls = ['https://example.com/gateway/{sender}/{data}.json'];
             const allowList = null;
 
