@@ -79,7 +79,6 @@ export class Web3Context<
 	private _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 	private _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	private _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
-	private static readonly _batchRequest = Web3BatchRequest;
 
 	public constructor(
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
@@ -223,10 +222,7 @@ export class Web3Context<
 	}
 
 	public get BatchRequest() {
-		return Web3Context._batchRequest.bind(
-			null,
-			this._requestManager as unknown as Web3RequestManager,
-		);
+		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
 	}
 }
 
