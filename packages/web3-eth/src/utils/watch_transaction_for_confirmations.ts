@@ -34,9 +34,31 @@ export function watchTransactionForConfirmations<
 	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
 		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
-	// TODO - Should check: (web3Context.requestManager.provider as Web3BaseProvider).supportsSubscriptions
 	// so a subscription for newBlockHeaders can be made instead of polling
-
+	// const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
+	// if (provider.supportsSubscriptions()) {
+	// 	setImmediate(async () => {
+	// 		const subscription = await web3Context.subscriptionManager?.subscribe('newHeads');
+	// 		subscription.on('data', (data: BlockOutput) => {
+	// 			const confirmationNumber = 1;
+	// 			if (
+	// 				data.number ===
+	// 				BigInt(transactionReceipt.blockNumber) + BigInt(confirmationNumber)
+	// 			) {
+	// 				transactionPromiEvent.emit('confirmation', {
+	// 					confirmationNumber: format(
+	// 						{ eth: 'uint' },
+	// 						confirmationNumber + 1,
+	// 						returnFormat,
+	// 					),
+	// 					receipt: transactionReceipt,
+	// 					latestBlockHash: format({ eth: 'bytes32' }, data.parentHash, returnFormat),
+	// 				});
+	// 				subscription.unsubscribe();
+	// 			}
+	// 		});
+	// 	});
+	// } else {
 	// Having a transactionReceipt means that the transaction has already been included
 	// in at least one block, so we start with 1
 	let confirmationNumber = 1;
@@ -61,4 +83,5 @@ export function watchTransactionForConfirmations<
 			}
 		})() as unknown;
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
+	// }
 }
