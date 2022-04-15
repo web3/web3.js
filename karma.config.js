@@ -14,7 +14,6 @@ const packages = readdirSync(basePath).filter(name => {
 const listOfTests = packages.map(packageName =>
 	path.join('packages', packageName, 'test', 'integration', '**', '*.test.ts'),
 );
-
 const outputPath = path.join(os.tmpdir(), '_karma_webpack_');
 
 const webpackConfig = {
@@ -55,7 +54,6 @@ const webpackConfig = {
 			stream: 'readable-stream',
 			assert: require.resolve('assert'),
 			constants: require.resolve('constants-browserify'),
-			// jest: require.resolve('jest'),
 		},
 		alias: {
 			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
@@ -110,7 +108,8 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		files: ['./karma-setup.js', ...listOfTests],
+		files: listOfTests,
+		exclude: ['**/web3_instance_ipc_string.test.ts'],
 		preprocessors: {
 			'./karma-setup.js': ['webpack'],
 			...listOfTests.reduce(
