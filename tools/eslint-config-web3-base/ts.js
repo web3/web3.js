@@ -1,3 +1,4 @@
+/* eslint-disable header/header */
 /*
 This file is part of web3.js.
 
@@ -14,9 +15,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+const fs = require('fs');
+let licenseText = fs.readFileSync('../../LICENSE', 'utf-8');
+
 module.exports = {
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint'],
+	plugins: ['@typescript-eslint', 'header'],
 	extends: [
 		'airbnb-base',
 		'eslint:recommended',
@@ -28,7 +32,7 @@ module.exports = {
 		'plugin:import/typescript',
 	],
 	rules: {
-		'check-header': ['error'],
+		'header/header': [2, 'block', licenseText, 1],
 		'class-methods-use-this': ['error'],
 		'no-unused-expressions': ['error'],
 		'no-continue': 'off',

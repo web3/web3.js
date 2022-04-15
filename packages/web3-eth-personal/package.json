@@ -14,7 +14,7 @@
 		"prebuild": "rimraf dist",
 		"build": "tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
-		"lint": "eslint --ext .js,.ts . --rulesdir ../../tools/eslint-config-web3-base/rules",
+		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts . --rulesdir ../../tools/eslint-config-web3-base/rules",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
