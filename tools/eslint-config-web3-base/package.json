@@ -29,7 +29,7 @@
 	"main": "ts.js",
 	"scripts": {
 		"lint": "eslint --ext .js,.ts .",
-		"lint:fix": "eslint --fix --ext .js,.ts . --rulesdir ../../tools/eslint-config-web3-base/rules",
+		"lint:fix": "eslint --fix --ext .js,.ts . ",
 		"format": "prettier --write '**/*'"
 	},
 	"dependencies": {
