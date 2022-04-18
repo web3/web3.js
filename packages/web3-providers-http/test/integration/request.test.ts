@@ -4,30 +4,28 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 } from 'web3-common';
-import { toWei, hexToNumber } from 'web3-utils';
 import HttpProvider from '../../src/index';
-import { accounts, clientUrl } from '../fixtures/config';
+import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/test_utils';
 
 describe('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	beforeAll(() => {
-		httpProvider = new HttpProvider(clientUrl);
+		httpProvider = new HttpProvider(getSystemTestProvider());
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [accounts[0].address, 'latest'],
+			params: [getSystemTestAccounts()[0], 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 
 	describe('httpProvider.request', () => {
 		it('should return expected response', async () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
-			expect(
-				String(hexToNumber(String((response as JsonRpcResponseWithResult).result))),
-			).toEqual(toWei(accounts[0].balance, 'ether'));
+
+			expect((response as JsonRpcResponseWithResult).result).toBeDefined();
 		});
 	});
 });
