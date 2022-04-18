@@ -52,7 +52,7 @@ jest.mock('../../src/rpc_method_wrappers', () => ({
 	getFeeHistory: jest.fn(),
 	getProof: jest.fn(),
 	getBlockTransactionCount: jest.fn(),
-	// getLogs: jest.fn()
+	sendSignedTransaction: jest.fn(),
 }));
 jest.spyOn(rpcMethods, 'getLogs').mockResolvedValue([
 	'0x1234567890123456789012345678901234567890',
@@ -295,13 +295,17 @@ describe('web3_eth_methods_with_parameters', () => {
 				});
 
 				describe('sendSignedTransaction', () => {
-					it.each(sendSignedTransactionValidData)('input: %s', async input => {
-						await web3Eth.sendSignedTransaction(input);
-						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
-							web3Eth.requestManager,
-							input,
-						);
-					});
+					it.each(sendSignedTransactionValidData)(
+						'input: %s',
+						async (input, rpcMethodParameters) => {
+							await web3Eth.sendSignedTransaction(input);
+							expect(rpcMethodWrappers.sendSignedTransaction).toHaveBeenCalledWith(
+								web3Eth,
+								input,
+								rpcMethodParameters,
+							);
+						},
+					);
 				});
 
 				describe('sign', () => {

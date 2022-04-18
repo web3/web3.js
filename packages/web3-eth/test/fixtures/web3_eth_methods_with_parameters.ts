@@ -1407,8 +1407,11 @@ export const getCodeValidData: [
  * - input
  * - mock RPC result
  */
-export const sendSignedTransactionValidData: [HexStringBytes][] = [
-	['0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'],
+export const sendSignedTransactionValidData: [HexStringBytes, DataFormat][] = [
+	[
+		'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+		DEFAULT_RETURN_FORMAT,
+	],
 ];
 
 /**
