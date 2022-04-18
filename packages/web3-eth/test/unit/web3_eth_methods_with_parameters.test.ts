@@ -1,5 +1,4 @@
 /* eslint-disable import/namespace */
-
 import Web3Eth from '../../src/index';
 import * as rpcMethods from '../../src/rpc_methods';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
@@ -34,8 +33,31 @@ import {
 } from '../fixtures/web3_eth_methods_with_parameters';
 
 jest.mock('../../src/rpc_methods');
-jest.mock('../../src/rpc_method_wrappers');
-
+jest.mock('../../src/rpc_method_wrappers', () => ({
+	...jest.requireActual('../../src/rpc_method_wrappers'),
+	getHashRate: jest.fn(),
+	getGasPrice: jest.fn(),
+	getBlockNumber: jest.fn(),
+	getChainId: jest.fn(),
+	getBalance: jest.fn(),
+	getBlock: jest.fn(),
+	getTransactionCount: jest.fn(),
+	getBlockUncleCount: jest.fn(),
+	getUncle: jest.fn(),
+	getTransaction: jest.fn(),
+	getTransactionFromBlock: jest.fn(),
+	getTransactionReceipt: jest.fn(),
+	GetTransactioCount: jest.fn(),
+	estimateGas: jest.fn(),
+	getFeeHistory: jest.fn(),
+	getProof: jest.fn(),
+	getBlockTransactionCount: jest.fn(),
+	// getLogs: jest.fn()
+}));
+jest.spyOn(rpcMethods, 'getLogs').mockResolvedValue([
+	'0x1234567890123456789012345678901234567890',
+	'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+]);
 describe('web3_eth_methods_with_parameters', () => {
 	let web3Eth: Web3Eth;
 
@@ -246,7 +268,7 @@ describe('web3_eth_methods_with_parameters', () => {
 			});
 
 			describe("doesn't have returnFormat parameter", () => {
-				describe.skip('getStorageAt', () => {
+				describe('getStorageAt', () => {
 					it.each(getStorageAtValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
@@ -259,7 +281,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
-				describe.skip('getCode', () => {
+				describe('getCode', () => {
 					it.each(getCodeValidData)(
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
@@ -272,7 +294,7 @@ describe('web3_eth_methods_with_parameters', () => {
 					);
 				});
 
-				describe.skip('sendSignedTransaction', () => {
+				describe('sendSignedTransaction', () => {
 					it.each(sendSignedTransactionValidData)('input: %s', async input => {
 						await web3Eth.sendSignedTransaction(input);
 						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
@@ -282,21 +304,22 @@ describe('web3_eth_methods_with_parameters', () => {
 					});
 				});
 
-				describe.skip('sign', () => {
+				describe('sign', () => {
 					it.each(signValidData)('input: %s', async input => {
 						await web3Eth.sign(...input);
 						expect(rpcMethods.sign).toHaveBeenCalledWith(
 							web3Eth.requestManager,
-							...input,
+							input[1], // Address
+							input[0], // Bytes
 						);
 					});
 				});
 
-				describe.skip('getPastLogs', () => {
+				describe('getPastLogs', () => {
 					it.each(getPastLogsValidData)(
 						'input: %s\nrpcMethodParameters: %s',
-						async (input, rpcMethodParameters) => {
-							await web3Eth.getPastLogs(input);
+						async (_input, rpcMethodParameters) => {
+							await web3Eth.getPastLogs(rpcMethodParameters);
 							expect(rpcMethods.getLogs).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								rpcMethodParameters,
