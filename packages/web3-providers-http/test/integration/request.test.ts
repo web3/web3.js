@@ -5,9 +5,9 @@ import {
 	JsonRpcResponseWithResult,
 } from 'web3-common';
 import HttpProvider from '../../src/index';
-import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/test_utils';
+import { getSystemTestAccounts, getSystemTestProvider, describeIf } from '../fixtures/test_utils';
 
-describe('HttpProvider - implemented methods', () => {
+describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
