@@ -19,9 +19,9 @@ start() {
 	echo "Geth started..."
 
 	echo "Fetching accounts..."
-	accounts=$(curl =s -X POST -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"id","method":"eth_accounts","params":[]}' "http://localhost:$WEB3_SYSTEM_TEST_HTTP_PORT")
+	accounts=$(curl -s -X POST -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"id","method":"eth_accounts","params":[]}' "http://localhost:$WEB3_SYSTEM_TEST_HTTP_PORT")
 	echo "Got response: \n $accounts"
-	echo "Setting env variable \"$WEB3_SYSTEM_TEST_ACCOUNTS\""
+	echo "Setting env variable \"WEB3_SYSTEM_TEST_ACCOUNTS\""
 	WEB3_SYSTEM_TEST_ACCOUNTS=$(node -e "console.log(JSON.stringify(JSON.parse(process.argv[1]).result))" -- $accounts)
 	echo $WEB3_SYSTEM_TEST_ACCOUNTS
 }
@@ -31,7 +31,6 @@ stop() {
 	docker stop geth-client
 }
 
-echo $1
 case $1 in
 start) start ;;
 stop) stop ;;
