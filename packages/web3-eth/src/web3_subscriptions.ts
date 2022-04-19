@@ -14,6 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// eslint-disable-next-line max-classes-per-file
 import { BlockOutput, SyncOutput } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3Subscription } from 'web3-core';
