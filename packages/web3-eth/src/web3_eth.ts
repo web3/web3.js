@@ -1,7 +1,7 @@
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { Web3Context } from 'web3-core';
+import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	Address,
 	Bytes,
@@ -15,8 +15,42 @@ import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+import {
+	LogsSubscription,
+	NewPendingTransactionsSubscription,
+	NewHeadsSubscription,
+	SyncingSubscription,
+} from './web3_subscriptions';
 
-export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
+type RegisteredSubscription = {
+	logs: typeof LogsSubscription;
+	newPendingTransactions: typeof NewPendingTransactionsSubscription;
+	pendingTransactions: typeof NewPendingTransactionsSubscription;
+	newHeads: typeof NewHeadsSubscription;
+	newBlockHeaders: typeof NewHeadsSubscription;
+	syncing: typeof SyncingSubscription;
+};
+
+export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
+	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
+		super(
+			typeof providerOrContext === 'object' &&
+				(providerOrContext as Web3ContextInitOptions).provider
+				? providerOrContext
+				: {
+						provider: providerOrContext as SupportedProviders<any>,
+						registeredSubscriptions: {
+							logs: LogsSubscription,
+							newPendingTransactions: NewPendingTransactionsSubscription,
+							newHeads: NewHeadsSubscription,
+							syncing: SyncingSubscription,
+							pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+							newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+						},
+				  },
+		);
+	}
+
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
@@ -247,6 +281,47 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 			newestBlock,
 			rewardPercentiles,
 			returnFormat,
+		);
+	}
+
+	public async subscribe<T extends keyof RegisteredSubscription>(
+		name: T,
+		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
+	): Promise<InstanceType<RegisteredSubscription[T]>> {
+		const subscription = (await this.subscriptionManager?.subscribe(
+			name,
+			args,
+		)) as InstanceType<RegisteredSubscription[T]>;
+		if (
+			subscription instanceof LogsSubscription &&
+			name === 'logs' &&
+			typeof args === 'object' &&
+			args.fromBlock &&
+			Number.isFinite(Number(args.fromBlock))
+		) {
+			setImmediate(() => {
+				this.getPastLogs({ fromBlock: String(args.fromBlock) })
+					.then(logs => {
+						for (const log of logs) {
+							subscription._processSubscriptionResult(log);
+						}
+					})
+					.catch(e => {
+						subscription._processSubscriptionError(e as Error);
+					});
+			});
+		}
+		return subscription;
+	}
+
+	private static shouldClearSubscription({ sub }: { sub: unknown }): boolean {
+		return !(sub instanceof SyncingSubscription);
+	}
+
+	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+		return this.subscriptionManager?.unsubscribe(
+			// eslint-disable-next-line
+			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
 		);
 	}
 }

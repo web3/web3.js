@@ -1,7 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import {
 	BlockOutput,
-	SyncOutput,
 	Web3BaseProvider,
 	Web3EventEmitter,
 	Web3EventMap,
@@ -16,10 +15,6 @@ import {
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
 
-type CommonSubscriptionEvents = {
-	error: Error;
-	connected: number;
-};
 export abstract class Web3Subscription<
 	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,18 +43,20 @@ export abstract class Web3Subscription<
 	}
 
 	public async subscribe() {
-		const result = await this._requestManager.send({
+		this._id = await this._requestManager.send({
 			method: 'eth_subscribe',
 			params: this._buildSubscriptionParams(),
 		});
-		this._id = result;
 
 		const messageListener = (
-			_: Error | null,
+			err: Error | null,
 			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 		) => {
 			if (data && jsonRpc.isResponseWithNotification(data)) {
 				this._processSubscriptionResult(data?.params.result);
+			}
+			if (err) {
+				this._processSubscriptionError(err);
 			}
 		};
 
@@ -95,6 +92,11 @@ export abstract class Web3Subscription<
 		// Do nothing - This should be overridden in subclass.
 	}
 
+	// eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-unused-vars
+	protected _processSubscriptionError(_err: Error) {
+		// Do nothing - This should be overridden in subclass.
+	}
+
 	// eslint-disable-next-line class-methods-use-this
 	protected _buildSubscriptionParams(): Web3APIParams<API, 'eth_subscribe'> {
 		// This should be overridden in the subclass
@@ -112,39 +114,3 @@ export type Web3SubscriptionConstructor<
 	args: any,
 	options: { requestManager: Web3RequestManager<API> },
 ) => SubscriptionType;
-
-// TODO: This class to be moved `web3-eth` package.
-export class LogsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: { fromBlock: number; address: HexString | HexString[]; topics: (HexString | null)[] };
-		changed: {
-			fromBlock: number;
-			address: HexString | HexString[];
-			topics: (HexString | null)[];
-			removed: true;
-		};
-	},
-	{ address?: HexString; topics?: HexString[] }
-> {}
-
-// TODO: This class to be moved `web3-eth` package.
-export class PendingTransactionsSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: HexString;
-	}
-> {}
-
-// TODO: This class to be moved `web3-eth` package.
-export class NewBlockHeadersSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: BlockOutput;
-	}
-> {}
-
-// TODO: This class to be moved `web3-eth` package.
-export class SyncingSubscription extends Web3Subscription<
-	CommonSubscriptionEvents & {
-		data: SyncOutput;
-		changed: boolean;
-	}
-> {}
