@@ -185,7 +185,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
 
-	public async sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,

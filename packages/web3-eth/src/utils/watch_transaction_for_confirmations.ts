@@ -45,7 +45,7 @@ const waitByPolling = ({
 				false,
 			);
 
-			if (nextBlock?.hash !== null) {
+			if (nextBlock?.hash) {
 				confirmationNumber += 1;
 				transactionPromiEvent.emit('confirmation', {
 					confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),
@@ -90,15 +90,16 @@ export function watchTransactionForConfirmations<
 				?.subscribe('newHeads')
 				.then((subscription: NewHeadsSubscription) => {
 					subscription.on('data', async (data: BlockOutput) => {
-						const confirmationNumber = 1;
-						if (
-							data.number ===
-							BigInt(transactionReceipt.blockNumber) + BigInt(confirmationNumber)
-						) {
+						if (!data?.number) {
+							return;
+						}
+						const confirmationNumber =
+							BigInt(data.number) - BigInt(transactionReceipt.blockNumber);
+						if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
 							transactionPromiEvent.emit('confirmation', {
 								confirmationNumber: format(
 									{ eth: 'uint' },
-									confirmationNumber + 1,
+									confirmationNumber,
 									returnFormat,
 								),
 								receipt: transactionReceipt,
