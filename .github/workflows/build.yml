@@ -63,7 +63,7 @@ jobs:
                 run: yarn ganache-background && yarn test:integration
 
             -   if: (env.TEST_CMD == 'e2e_geth')
-                run: yarn geth:build && yarn geth && yarn test:integration
+                run: yarn geth:build && yarn geth-background && yarn test:integration
 
             -   if: (env.TEST_CMD == 'e2e_browsers')
                 run: yarn ganache-background && yarn test:integration:browsers

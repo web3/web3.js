@@ -14,10 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3Subscription } from 'web3-core';
 
-import { Web3Subscription } from '../../../src';
-
-export class ExampleSubscription extends Web3Subscription<
+export class NewHeadsSubscription extends Web3Subscription<
 	{ data: string },
 	{ param1: string },
 	{ eth_subscribe: (newHeads: string) => void }
