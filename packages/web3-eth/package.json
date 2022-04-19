@@ -22,7 +22,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js --forceExit"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
@@ -45,8 +45,9 @@
 		"web3-common": "1.0.0-alpha.0",
 		"web3-core": "4.0.0-alpha.0",
 		"web3-eth-accounts": "4.0.0-alpha.0",
+		"web3-net": "4.0.0-alpha.0",
+		"web3-providers-ws": "4.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1",
-		"web3-validator": "^0.1.0-alpha.0",
-		"web3-net": "4.0.0-alpha.0"
+		"web3-validator": "^0.1.0-alpha.0"
 	}
 }

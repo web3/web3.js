@@ -3,6 +3,13 @@ import { isSupportSubscriptions } from './utils';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 
+type ShouldUnsubscribeCondition = ({
+	id: sub,
+}: {
+	id: string;
+	sub: unknown;
+}) => boolean | undefined;
+
 export class Web3SubscriptionManager<
 	API extends Web3APISpec,
 	RegisteredSubs extends { [key: string]: Web3SubscriptionConstructor<API> },
@@ -33,8 +40,7 @@ export class Web3SubscriptionManager<
 			throw new ProviderError('Provider not available');
 		}
 
-		const Klass = this.registeredSubscriptions[name];
-
+		const Klass: RegisteredSubs[T] = this.registeredSubscriptions[name];
 		if (!Klass) {
 			throw new SubscriptionError('Invalid subscription type');
 		}
@@ -78,16 +84,17 @@ export class Web3SubscriptionManager<
 		if (!this._subscriptions.has(sub.id)) {
 			throw new SubscriptionError(`Subscription with id "${sub.id}" does not exists`);
 		}
-
+		const { id } = sub;
 		await sub.unsubscribe();
-		this._subscriptions.delete(sub.id);
+		this._subscriptions.delete(id);
 	}
 
-	public async unsubscribe() {
+	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
 		const result = [];
-
-		for (const [, sub] of this._subscriptions.entries()) {
-			result.push(this.removeSubscription(sub));
+		for (const [id, sub] of this.subscriptions.entries()) {
+			if (!condition || (typeof condition === 'function' && condition({ id, sub }))) {
+				result.push(this.removeSubscription(sub));
+			}
 		}
 
 		return Promise.all(result);
