@@ -42,20 +42,12 @@ const inputTransaction = {
  * - Expected transaction hash
  * - Expected receipt info
  */
-export const testData: [
-	string,
-	Transaction,
-	SendTransactionOptions | undefined,
-][] = [
-	[
-		'Transaction with all hex string values',
-		inputTransaction,
-		undefined
-	],
+export const testData: [string, Transaction, SendTransactionOptions | undefined][] = [
+	['Transaction with all hex string values', inputTransaction, undefined],
 	[
 		'Transaction with all hex string values and SendTransactionOptions.ignoreGasPricing = true',
 		inputTransaction,
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 	[
 		'Transaction with all hex string values, inputTransaction.gasPrice !== undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas === undefined',
@@ -64,7 +56,7 @@ export const testData: [
 			maxPriorityFeePerGas: undefined,
 			maxFeePerGas: undefined,
 		},
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 	[
 		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas !== undefined; inputTransaction.maxFeePerGas !== undefined',
@@ -72,7 +64,7 @@ export const testData: [
 			...inputTransaction,
 			gasPrice: undefined,
 		},
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 	[
 		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas !== undefined',
@@ -80,7 +72,7 @@ export const testData: [
 			...inputTransaction,
 			maxPriorityFeePerGas: undefined,
 		},
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 	[
 		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas !== undefined; inputTransaction.maxFeePerGas === undefined',
@@ -88,7 +80,7 @@ export const testData: [
 			...inputTransaction,
 			maxFeePerGas: undefined,
 		},
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 	[
 		'Transaction with all hex string values, inputTransaction.gasPrice === undefined; inputTransaction.maxPriorityFeePerGas === undefined; inputTransaction.maxFeePerGas === undefined',
@@ -98,6 +90,6 @@ export const testData: [
 			maxPriorityFeePerGas: undefined,
 			maxFeePerGas: undefined,
 		},
-		{ ignoreGasPricing: true }
+		{ ignoreGasPricing: true },
 	],
 ];

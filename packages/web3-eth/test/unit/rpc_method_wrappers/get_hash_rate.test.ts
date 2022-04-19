@@ -19,15 +19,17 @@ describe('getHashRate', () => {
 		expect(rpcMethodsGetHashRate).toHaveBeenCalledWith(web3Context.requestManager);
 	});
 
-	it('should format return value using provided return format',
-		async () => {
-			const mockRpcResponse = '0x38a';
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = format({ eth: 'uint' }, mockRpcResponse, expectedReturnFormat);
-			(rpcMethodsGetHashRate as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+	it('should format return value using provided return format', async () => {
+		const mockRpcResponse = '0x38a';
+		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+		const expectedFormattedResult = format(
+			{ eth: 'uint' },
+			mockRpcResponse,
+			expectedReturnFormat,
+		);
+		(rpcMethodsGetHashRate as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getHashRate(web3Context, expectedReturnFormat);
-			expect(result).toBe(expectedFormattedResult);
-		},
-	);
+		const result = await getHashRate(web3Context, expectedReturnFormat);
+		expect(result).toBe(expectedFormattedResult);
+	});
 });

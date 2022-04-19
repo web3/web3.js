@@ -43,7 +43,7 @@ export const mockRpcResponse: Block = {
  *     - blockNumber
  *     - uncleIndex
  */
- type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
+type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
 export const testData: TestData[] = [
 	// blockNumber = Bytes, uncleIndex = HexString
 	[

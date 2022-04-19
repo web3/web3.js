@@ -22,16 +22,14 @@ describe('getPendingTransactions', () => {
 		expect(rpcMethodsGetPendingTransactions).toHaveBeenCalledWith(web3Context.requestManager);
 	});
 
-	it('should format return value using provided return format',
-		async () => {
-			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = mockRpcResponse.map(transaction =>
-				formatTransaction(transaction, expectedReturnFormat),
-			);
-			(rpcMethodsGetPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+	it('should format return value using provided return format', async () => {
+		const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
+		const expectedFormattedResult = mockRpcResponse.map(transaction =>
+			formatTransaction(transaction, expectedReturnFormat),
+		);
+		(rpcMethodsGetPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getPendingTransactions(web3Context, expectedReturnFormat);
-			expect(result).toStrictEqual(expectedFormattedResult);
-		},
-	);
+		const result = await getPendingTransactions(web3Context, expectedReturnFormat);
+		expect(result).toStrictEqual(expectedFormattedResult);
+	});
 });

@@ -13,7 +13,7 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  *     - address
  *     - blockNumber
  */
- type TestData = [string, [Address, BlockNumberOrTag | undefined]];
+type TestData = [string, [Address, BlockNumberOrTag | undefined]];
 export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
 	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],

@@ -26,7 +26,7 @@ export const mockRpcResponse: ReceiptInfo = {
  *     - returnFormat
  * - mockRpcResponse
  */
- type TestData = [string, [Bytes]];
+type TestData = [string, [Bytes]];
 export const testData: TestData[] = [
 	// transactionHash = Bytes
 	[

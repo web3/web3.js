@@ -38,10 +38,17 @@ describe('getTransaction', () => {
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = formatTransaction(mockRpcResponse, expectedReturnFormat);
+			const expectedFormattedResult = formatTransaction(
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			(getTransactionByHash as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getTransaction(web3Context, ...inputParameters, expectedReturnFormat);
+			const result = await getTransaction(
+				web3Context,
+				...inputParameters,
+				expectedReturnFormat,
+			);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

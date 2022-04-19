@@ -14,7 +14,7 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  *     - storageSlot
  *     - blockNumber
  */
- type TestData = [string, [Address, Numbers, BlockNumberOrTag | undefined]];
+type TestData = [string, [Address, Numbers, BlockNumberOrTag | undefined]];
 export const testData: TestData[] = [
 	// Testing storageSlot cases
 	['storageSlot = "0x4b7", blockNumber = undefined', [address, '0x4b7', undefined]],

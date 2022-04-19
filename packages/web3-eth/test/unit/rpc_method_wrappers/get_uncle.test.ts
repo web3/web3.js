@@ -26,8 +26,13 @@ describe('getUncle', () => {
 		async (_, inputParameters) => {
 			const [inputBlock, inputUncleIndex] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
+			const inputUncleIndexFormatted = format(
+				{ eth: 'uint' },
+				inputUncleIndex,
+				DEFAULT_RETURN_FORMAT,
+			);
 
-			let inputBlockFormatted, inputUncleIndexFormatted;
+			let inputBlockFormatted;
 
 			if (inputBlockIsBytes) {
 				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, DEFAULT_RETURN_FORMAT);
@@ -36,12 +41,6 @@ describe('getUncle', () => {
 			} else {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
 			}
-
-			inputUncleIndexFormatted = format(
-				{ eth: 'uint' },
-				inputUncleIndex,
-				DEFAULT_RETURN_FORMAT,
-			);
 
 			await getUncle(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(
@@ -59,7 +58,11 @@ describe('getUncle', () => {
 		async (_, inputParameters) => {
 			const [inputBlock] = inputParameters;
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = format(blockSchema, mockRpcResponse, expectedReturnFormat);
+			const expectedFormattedResult = format(
+				blockSchema,
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes

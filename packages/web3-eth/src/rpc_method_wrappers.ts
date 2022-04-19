@@ -564,21 +564,24 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
-export const call = async (
+export async function call<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
-) => {
+	returnFormat: ReturnFormat,
+) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
-	return rpcMethods.call(
+	const response = await rpcMethods.call(
 		web3Context.requestManager,
 		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
 		blockNumberFormatted,
 	);
-};
+	return format({ eth: 'bytes' }, response, returnFormat);
+}
 
+// TODO - Investigate whether response is padded as 1.x docs suggest
 export async function estimateGas<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
@@ -598,6 +601,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
 }
 
+// TODO - Add input formatting to filter
 export async function getLogs<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3EthExecutionAPI>,
 	filter: Filter,

@@ -26,8 +26,13 @@ describe('getTransactionFromBlock', () => {
 		async (_, inputParameters) => {
 			const [inputBlock, inputTransactionIndex] = inputParameters;
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
+			const inputTransactionIndexFormatted = format(
+				{ eth: 'uint' },
+				inputTransactionIndex,
+				DEFAULT_RETURN_FORMAT,
+			);
 
-			let inputBlockFormatted, inputTransactionIndexFormatted;
+			let inputBlockFormatted;
 
 			if (inputBlockIsBytes) {
 				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, DEFAULT_RETURN_FORMAT);
@@ -36,12 +41,6 @@ describe('getTransactionFromBlock', () => {
 			} else {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
 			}
-
-			inputTransactionIndexFormatted = format(
-				{ eth: 'uint' },
-				inputTransactionIndex,
-				DEFAULT_RETURN_FORMAT,
-			);
 
 			await getTransactionFromBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(
@@ -61,7 +60,10 @@ describe('getTransactionFromBlock', () => {
 		async (_, inputParameters) => {
 			const [inputBlock] = inputParameters;
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = formatTransaction(mockRpcResponse, expectedReturnFormat);
+			const expectedFormattedResult = formatTransaction(
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
@@ -69,7 +71,11 @@ describe('getTransactionFromBlock', () => {
 					: getTransactionByBlockNumberAndIndex) as jest.Mock
 			).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getTransactionFromBlock(web3Context, ...inputParameters, expectedReturnFormat);
+			const result = await getTransactionFromBlock(
+				web3Context,
+				...inputParameters,
+				expectedReturnFormat,
+			);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

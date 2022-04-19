@@ -51,10 +51,18 @@ describe('getStorageAt', () => {
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\nMock Rpc Response: %s\n`,
 		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = format({ eth: 'bytes' }, mockRpcResponse, expectedReturnFormat);
+			const expectedFormattedResult = format(
+				{ eth: 'bytes' },
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			(rpcMethodsGetStorageAt as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getStorageAt(web3Context, ...inputParameters, expectedReturnFormat);
+			const result = await getStorageAt(
+				web3Context,
+				...inputParameters,
+				expectedReturnFormat,
+			);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

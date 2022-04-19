@@ -1,14 +1,15 @@
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 
-import { getTransactionCount as rpcMethodsGetTransactionCount } from '../../../src/rpc_methods';
+import { getProof as rpcMethodsGetProof } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
-import { getTransactionCount } from '../../../src/rpc_method_wrappers';
-import { mockRpcResponse, testData } from './fixtures/get_transaction_count';
+import { getProof } from '../../../src/rpc_method_wrappers';
+import { mockRpcResponse, testData } from './fixtures/get_proof';
+import { accountSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
 
-describe('getTransactionCount', () => {
+describe('getProof', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
 
 	beforeAll(() => {
@@ -16,9 +17,14 @@ describe('getTransactionCount', () => {
 	});
 
 	it.each(testData)(
-		`should call rpcMethods.getBalance with expected parameters\nTitle: %s\nInput parameters: %s\n`,
+		`should call rpcMethods.getProof with expected parameters\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
-			const [inputAddress, inputBlockNumber] = inputParameters;
+			const [inputAddress, inputStorageKey, inputBlockNumber] = inputParameters;
+			const inputStorageKeyFormatted = format(
+				{ eth: 'bytes' },
+				inputStorageKey,
+				DEFAULT_RETURN_FORMAT,
+			);
 
 			let inputBlockNumberFormatted;
 
@@ -32,10 +38,11 @@ describe('getTransactionCount', () => {
 				);
 			}
 
-			await getTransactionCount(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsGetTransactionCount).toHaveBeenCalledWith(
+			await getProof(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
+			expect(rpcMethodsGetProof).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
+				inputStorageKeyFormatted,
 				inputBlockNumberFormatted,
 			);
 		},
@@ -46,18 +53,14 @@ describe('getTransactionCount', () => {
 		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
 			const expectedFormattedResult = format(
-				{ eth: 'uint' },
+				accountSchema,
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(rpcMethodsGetTransactionCount as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(rpcMethodsGetProof as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getTransactionCount(
-				web3Context,
-				...inputParameters,
-				expectedReturnFormat,
-			);
-			expect(result).toBe(expectedFormattedResult);
+			const result = await getProof(web3Context, ...inputParameters, expectedReturnFormat);
+			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);
 });

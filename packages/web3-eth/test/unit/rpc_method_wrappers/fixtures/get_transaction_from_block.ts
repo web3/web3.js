@@ -31,7 +31,7 @@ export const mockRpcResponse: Transaction = {
  *     - returnFormat
  * - mockRpcResponse
  */
- type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
+type TestData = [string, [Bytes | BlockNumberOrTag | undefined, Numbers]];
 export const testData: TestData[] = [
 	// blockNumber = Bytes, transactionIndex = HexString
 	[

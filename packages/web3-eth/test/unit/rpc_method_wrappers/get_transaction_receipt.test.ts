@@ -45,7 +45,11 @@ describe('getTransactionReceipt', () => {
 			);
 			(rpcMethodsGetTransactionReceipt as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
-			const result = await getTransactionReceipt(web3Context, ...inputParameters, expectedReturnFormat);
+			const result = await getTransactionReceipt(
+				web3Context,
+				...inputParameters,
+				expectedReturnFormat,
+			);
 			expect(result).toStrictEqual(expectedFormattedResult);
 		},
 	);

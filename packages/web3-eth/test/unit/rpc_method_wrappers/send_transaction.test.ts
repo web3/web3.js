@@ -8,7 +8,11 @@ import { formatTransaction } from '../../../src';
 import * as GetTransactionGasPricing from '../../../src/utils/get_transaction_gas_pricing';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
-import { expectedReceiptInfo, expectedTransactionHash, testData } from './fixtures/send_transaction';
+import {
+	expectedReceiptInfo,
+	expectedTransactionHash,
+	testData,
+} from './fixtures/send_transaction';
 import { receiptInfoSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
@@ -240,11 +244,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`watchTransactionForConfirmations is called when expected\n ${testMessage}`,
-		async (
-			_,
-			inputTransaction,
-			sendTransactionOptions,
-		) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const watchTransactionForConfirmationsSpy = jest.spyOn(
 				WatchTransactionForConfirmations,
 				'watchTransactionForConfirmations',

@@ -11,7 +11,7 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  *     - message
  *     - address
  */
- type TestData = [string, [Bytes, Address]];
+type TestData = [string, [Bytes, Address]];
 export const testData: TestData[] = [
 	[
 		'message = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"',

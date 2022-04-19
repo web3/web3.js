@@ -36,9 +36,13 @@ describe('sign', () => {
 
 	it.each(testData)(
 		`should format mockRpcResponse using provided return format\nTitle: %s\nInput parameters: %s\n`,
-		async (_, inputParameters, ) => {
+		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
-			const expectedFormattedResult = format({ eth: 'bytes' }, mockRpcResponse, expectedReturnFormat);
+			const expectedFormattedResult = format(
+				{ eth: 'bytes' },
+				mockRpcResponse,
+				expectedReturnFormat,
+			);
 			(rpcMethodsSign as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await sign(web3Context, ...inputParameters, expectedReturnFormat);
