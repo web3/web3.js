@@ -176,8 +176,6 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
 	}
 
-	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
-	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
 	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		message: Bytes,
 		address: Address,
