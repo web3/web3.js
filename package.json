@@ -34,9 +34,9 @@
 	"scripts": {
 		"build": "yarn clean && lerna run build --stream",
 		"clean": "lerna run clean",
-		"ganache:start": ". ./scripts/ganache.sh start",
+		"ganache:start": "/bin/bash -c 'scripts/ganache.sh start'",
 		"ganache:stop": "./scripts/ganache.sh stop",
-		"geth:start": ". ./scripts/geth.sh start",
+		"geth:start": "/bin/bash -c 'scripts/geth.sh start'",
 		"geth:stop": "./scripts/geth.sh stop",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
