@@ -14,16 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// const fs = require('fs');
 
-// const licenseText = ['\r', ...fs.readFileSync('../../LICENSE').toString().split('\n')];
-// console.log(
-// 	'*****************************\n*****************************\n*****************************\n',
-// );
-// console.log(licenseText);
-// console.log(
-// 	'*****************************\n*****************************\n*****************************\n',
-// );
 const license = [
 	'',
 	'This file is part of web3.js.',

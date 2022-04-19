@@ -15,7 +15,7 @@
 		"build": "tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",
-		"lint:fix": "eslint --fix --ext .js,.ts . ",
+		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
 		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
