@@ -27,7 +27,6 @@ import {
 import {
 	AccountObject,
 	Block,
-	// BlockNumberOrTag,
 	FeeHistory,
 	Log,
 	ReceiptInfo,
