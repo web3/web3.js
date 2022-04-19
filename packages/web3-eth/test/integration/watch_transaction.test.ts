@@ -18,13 +18,27 @@ describe('watch transaction', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let providerHttp: HttpProvider;
-	beforeAll(() => {
+	// let web3Personal: Web3Personal;
+	beforeAll(async () => {
 		providerWs = new WebSocketProvider(
 			'ws://127.0.0.1:8545',
 			{},
 			{ delay: 1, autoReconnect: true, maxAttempts: 1 },
 		);
 		providerHttp = new HttpProvider('http://127.0.0.1:8545');
+		// web3Personal = new Web3Personal(providerHttp as SupportedProviders<any>);
+		// const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
+		// 	a.toUpperCase(),
+		// );
+		// if (
+		// 	!(
+		// 		existsAccounts?.length > 0 &&
+		// 		existsAccounts.includes(accounts[0].address.toUpperCase())
+		// 	)
+		// ) {
+		// 	await web3Personal.importRawKey(accounts[0].privateKey.substring(2), '123456');
+		// 	await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+		// }
 	});
 
 	describe('wait for confirmation', () => {
