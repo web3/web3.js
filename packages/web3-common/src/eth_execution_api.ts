@@ -291,7 +291,7 @@ export type EthExecutionAPI = {
 			| ['logs', { address?: HexString; topics?: HexString[] }]
 	) => HexString;
 	eth_unsubscribe: (subscriptionId: HexString) => HexString;
-
+	eth_clearSubscriptions: (keepSyncing?: boolean) => void;
 	// Non-supported by execution-apis specs
 	eth_getCompilers: () => string[];
 	eth_compileSolidity: (code: string) => CompileResult;
