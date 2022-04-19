@@ -38,7 +38,7 @@
 		"ganache-background": "yarn ganache > /dev/null & client=$! npx wait-port 8545",
 		"geth:build": "docker build ./.github -t gethnode -f .github/Dockerfile",
 		"geth": "docker run -p 8545:8545 gethnode --datadir data --networkid 15 --http --http.addr 0.0.0.0 --http.port 8545 --ws --ws.addr 0.0.0.0 --ws.port 8545",
-		"geth-background": "docker run -d -p 8545:8545 gethnode --datadir data --networkid 15 --http --http.addr 0.0.0.0 --http.port 8545 --ws --ws.addr 0.0.0.0 --ws.port 8545",
+		"geth-background": "docker run -d -p 8545:8545 -p 8546:8546 gethnode --datadir data --networkid 15 --http --http.addr 0.0.0.0 --http.port 8545 --ws --ws.addr 0.0.0.0 --ws.port 8546 --http.api personal,web3,eth,admin,debug,miner,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --nodiscover",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel",
