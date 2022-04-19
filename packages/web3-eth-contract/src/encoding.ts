@@ -111,6 +111,7 @@ export const decodeEventABI = (
 		});
 
 		if (indexedInputs > 0 && data?.topics && data?.topics.length !== indexedInputs + 1) {
+			// checks if event is anonymous
 			modifiedEvent = {
 				...modifiedEvent,
 				anonymous: true,
@@ -120,7 +121,6 @@ export const decodeEventABI = (
 	}
 
 	const argTopics = modifiedEvent.anonymous ? data.topics : (data.topics ?? []).slice(1);
-
 	return {
 		...result,
 		returnValue: decodeLog([...event.inputs], data.data, argTopics),

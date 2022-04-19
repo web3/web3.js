@@ -380,7 +380,7 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: this.options,
 		});
 
-		return decodeMethodReturn(abi, await call(this, tx, block));
+		return decodeMethodReturn(abi, await call(this, tx, block, DEFAULT_RETURN_FORMAT));
 	}
 
 	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
