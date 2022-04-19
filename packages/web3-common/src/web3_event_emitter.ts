@@ -43,4 +43,8 @@ export class Web3EventEmitter<T extends Web3EventMap> implements Web3Emitter<T> 
 	public eventNames() {
 		return this._emitter.eventNames();
 	}
+
+	public removeAllListeners() {
+		return this._emitter.removeAllListeners();
+	}
 }
