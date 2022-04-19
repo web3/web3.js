@@ -2,7 +2,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import HttpProvider from 'web3-providers-http';
 import { SupportedProviders } from 'web3-core';
 import { PromiEvent } from 'web3-common';
-import Web3Eth, { SendTransactionEvents, Transaction, ReceiptInfo } from '../../src';
+import Web3Eth, { SendTransactionEvents, ReceiptInfo } from '../../src';
 import { accounts } from '../../../../.github/test.config'; // eslint-disable-line
 type Resolve = (value?: unknown) => void;
 const setupWeb3 = (web3Eth: Web3Eth) => {
@@ -44,46 +44,37 @@ describe('watch transaction', () => {
 				},
 				undefined,
 			);
-			// eslint-disable-next-line
-			web3Eth.sendTransaction({
-				to,
-				value,
-				from,
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				sentTx.on(
+					'confirmation',
+					({ confirmationNumber }: { confirmationNumber: string | number | bigint }) => {
+						expect(confirmationNumber).toBe('0x2');
+						resolve();
+					},
+				);
+			});
+			await new Promise((resolve: Resolve) => {
+				sentTx.on('receipt', (params: ReceiptInfo) => {
+					expect(params.status).toBe('0x1');
+					resolve();
+				});
 			});
 			// eslint-disable-next-line
-			web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
+			const sentTx2: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction(
+				{
+					to,
+					value,
+					from,
+				},
+			);
 
-			await Promise.all([
-				new Promise((resolve: Resolve) => {
-					sentTx.on('receipt', (params: ReceiptInfo) => {
-						expect(params.status).toBe('0x1');
-						resolve();
-					});
-				}),
-				new Promise((resolve: Resolve) => {
-					sentTx.on(
-						'confirmation',
-						({
-							confirmationNumber,
-						}: {
-							confirmationNumber: string | number | bigint;
-						}) => {
-							expect(confirmationNumber).toBe('0x2');
-							resolve();
-						},
-					);
-				}),
-				new Promise((resolve: Resolve) => {
-					sentTx.on('sent', (tx: Transaction) => {
-						expect(tx.to).toBe(to);
-						resolve();
-					});
-				}),
-			]);
+			await new Promise((resolve: Resolve) => {
+				sentTx2.on('receipt', (params: ReceiptInfo) => {
+					expect(params.status).toBe('0x1');
+					resolve();
+				});
+			});
+			await confirmationPromise;
 		});
 		it('subscription to heads', async () => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);

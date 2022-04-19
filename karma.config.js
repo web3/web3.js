@@ -16,8 +16,6 @@ const listOfTests = packages.map(packageName =>
 
 const outputPath = path.join(os.tmpdir(), '_karma_webpack_');
 
-var builtins = require('browserify/lib/builtins.js');
-builtins.timers = require.resolve('timers-browserify-full');
 const webpackConfig = {
 	mode: 'development',
 	output: {
@@ -108,8 +106,9 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		files: listOfTests,
+		files: ['./karma.setup.js', ...listOfTests],
 		preprocessors: {
+			'./karma.setup.js': ['webpack', 'browserify'],
 			...listOfTests.reduce(
 				(res, packagePath) => ({ ...res, [packagePath]: ['webpack', 'browserify'] }),
 				{},
