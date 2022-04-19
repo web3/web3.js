@@ -1,6 +1,6 @@
-import { BlockTags } from 'web3-utils';
+import { BlockNumberOrTag, BlockTags } from 'web3-utils';
 
-import { BlockNumberOrTag, TransactionCall } from '../../../../src/types';
+import { TransactionCall } from '../../../../src/types';
 
 export const mockRpcResponse = '0x000000000000000000000000000000000000000000000000000000000000000a';
 

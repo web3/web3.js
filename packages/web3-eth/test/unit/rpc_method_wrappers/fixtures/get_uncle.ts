@@ -1,7 +1,5 @@
 import { Block } from 'web3-common';
-import { BlockTags, Bytes, Numbers } from 'web3-utils';
-
-import { BlockNumberOrTag } from '../../../../src/types';
+import { BlockNumberOrTag, BlockTags, Bytes, Numbers } from 'web3-utils';
 
 export const mockRpcResponse: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',

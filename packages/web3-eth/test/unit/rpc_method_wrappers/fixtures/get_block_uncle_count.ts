@@ -1,6 +1,4 @@
-import { BlockTags, Bytes } from 'web3-utils';
-
-import { BlockNumberOrTag } from '../../../../src/types';
+import { BlockNumberOrTag, BlockTags, Bytes } from 'web3-utils';
 
 export const mockRpcResponse = '0xb';
 

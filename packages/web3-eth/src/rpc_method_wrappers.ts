@@ -90,7 +90,7 @@ export async function getBalance<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getBalance(
@@ -109,7 +109,7 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const storageSlotFormatted = format({ eth: 'uint' }, storageSlot, DEFAULT_RETURN_FORMAT);
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getStorageAt(
@@ -127,7 +127,7 @@ export async function getCode<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getCode(
@@ -149,7 +149,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
 		response = await rpcMethods.getBlockByHash(
 			web3Context.requestManager,
-			blockHashFormatted,
+			blockHashFormatted as HexString,
 			hydrated,
 		);
 	} else {
@@ -176,7 +176,7 @@ export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
 		response = await rpcMethods.getBlockTransactionCountByHash(
 			web3Context.requestManager,
-			blockHashFormatted,
+			blockHashFormatted as HexString,
 		);
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
@@ -201,7 +201,7 @@ export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
 		response = await rpcMethods.getUncleCountByBlockHash(
 			web3Context.requestManager,
-			blockHashFormatted,
+			blockHashFormatted as HexString,
 		);
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
@@ -229,7 +229,7 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
 		response = await rpcMethods.getUncleByBlockHashAndIndex(
 			web3Context.requestManager,
-			blockHashFormatted,
+			blockHashFormatted as HexString,
 			uncleIndexFormatted,
 		);
 	} else {
@@ -294,7 +294,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
 		response = await rpcMethods.getTransactionByBlockHashAndIndex(
 			web3Context.requestManager,
-			blockHashFormatted,
+			blockHashFormatted as HexString,
 			transactionIndexFormatted,
 		);
 	} else {
@@ -343,7 +343,7 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getTransactionCount(
@@ -594,7 +594,7 @@ export async function call<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.call(
@@ -613,7 +613,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const transactionFormatted = formatTransaction(transaction, DEFAULT_RETURN_FORMAT);
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.estimateGas(
@@ -666,7 +666,7 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const storageKeyFormatted = format({ eth: 'bytes' }, storageKey, DEFAULT_RETURN_FORMAT);
-	const blockNumberFormatted = isBlockTag(blockNumber)
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getProof(
@@ -687,7 +687,7 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const blockCountFormatted = format({ eth: 'uint' }, blockCount, DEFAULT_RETURN_FORMAT);
-	const newestBlockFormatted = isBlockTag(newestBlock)
+	const newestBlockFormatted = isBlockTag(newestBlock as string)
 		? (newestBlock as BlockTag)
 		: format({ eth: 'uint' }, newestBlock as Numbers, DEFAULT_RETURN_FORMAT);
 	const rewardPercentilesFormatted = format(

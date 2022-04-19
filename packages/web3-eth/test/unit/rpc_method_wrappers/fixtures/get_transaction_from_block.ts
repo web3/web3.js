@@ -1,6 +1,6 @@
-import { BlockTags, Bytes, Numbers } from 'web3-utils';
+import { BlockNumberOrTag, BlockTags, Bytes, Numbers } from 'web3-utils';
 
-import { BlockNumberOrTag, Transaction } from '../../../../src/types';
+import { Transaction } from '../../../../src/types';
 
 export const mockRpcResponse: Transaction = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
