@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
-import { ClientOptions, CloseEvent, MessageEvent, WebSocket } from 'isomorphic-ws';
+import WebSocket, { ClientOptions, CloseEvent, MessageEvent } from 'isomorphic-ws';
 import {
 	ConnectionNotOpenError,
 	EthExecutionAPI,
