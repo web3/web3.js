@@ -545,10 +545,7 @@ export const sign = async (
 	}
 
 	if (typeof addressOrIndex === 'number') {
-		throw new SignatureError(
-			message,
-			'RPC method "eth_sign" does not support index signatures',
-		);
+		throw new SignatureError('RPC method "eth_sign" does not support index signatures');
 	}
 
 	return rpcMethods.sign(web3Context.requestManager, addressOrIndex, messageFormatted);
