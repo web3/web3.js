@@ -1,6 +1,6 @@
-import { Web3Subscription } from '../../../src';
+import { Web3Subscription } from 'web3-core';
 
-export class ExampleSubscription extends Web3Subscription<
+export class NewHeadsSubscription extends Web3Subscription<
 	{ data: string },
 	{ param1: string },
 	{ eth_subscribe: (newHeads: string) => void }
