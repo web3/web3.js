@@ -29,26 +29,28 @@ describe('watch transaction', () => {
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
-		web3Eth = new Web3Eth(clientUrl);
-		await web3Eth.sendTransaction({
-			from: await web3Eth.getCoinbase(),
-			to: accounts[0].address,
-			value: toWei(100, 'ether'),
-		});
-		web3Personal = new EthPersonal(clientUrl);
-		const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
-			a.toUpperCase(),
-		);
-		if (
-			!(
-				existsAccounts?.length > 0 &&
-				existsAccounts.includes(accounts[0].address.toUpperCase())
-			)
-		) {
-			await web3Personal.importRawKey(accounts[0].privateKey.substring(2), '123456');
-			await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
-		} else {
-			await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+		if (process.env.TEST_CMD === 'e2e_geth') {
+			web3Eth = new Web3Eth(clientUrl);
+			await web3Eth.sendTransaction({
+				from: await web3Eth.getCoinbase(),
+				to: accounts[0].address,
+				value: toWei(100, 'ether'),
+			});
+			web3Personal = new EthPersonal(clientUrl);
+			const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
+				a.toUpperCase(),
+			);
+			if (
+				!(
+					existsAccounts?.length > 0 &&
+					existsAccounts.includes(accounts[0].address.toUpperCase())
+				)
+			) {
+				await web3Personal.importRawKey(accounts[0].privateKey.substring(2), '123456');
+				await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+			} else {
+				await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+			}
 		}
 	});
 	afterAll(() => {
