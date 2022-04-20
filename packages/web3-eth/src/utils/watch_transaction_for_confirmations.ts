@@ -19,18 +19,19 @@ import { NewHeadsSubscription } from '../web3_subscriptions';
 
 type PromiEventEventTypeBase = SendTransactionEvents | SendSignedTransactionEvents;
 type ReturnFormatBase = DataFormat;
-type WaitByPollingProps = {
+type WaitProps = {
 	web3Context: Web3Context<EthExecutionAPI>;
 	transactionReceipt: ReceiptInfo;
 	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventTypeBase>;
 	returnFormat: ReturnFormatBase;
 };
+
 const waitByPolling = ({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
 	returnFormat,
-}: WaitByPollingProps) => {
+}: WaitProps) => {
 	// Having a transactionReceipt means that the transaction has already been included
 	// in at least one block, so we start with 1
 	let confirmationNumber = 1;
@@ -55,6 +56,59 @@ const waitByPolling = ({
 			}
 		})() as unknown;
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
+};
+
+const waitBySubscription = ({
+	web3Context,
+	transactionReceipt,
+	transactionPromiEvent,
+	returnFormat,
+}: WaitProps) => {
+	setImmediate(() => {
+		web3Context.subscriptionManager
+			?.subscribe('newHeads')
+			.then((subscription: NewHeadsSubscription) => {
+				subscription.on('data', async (data: BlockOutput) => {
+					if (!data?.number) {
+						return;
+					}
+					const confirmationNumber =
+						BigInt(data.number) - BigInt(transactionReceipt.blockNumber);
+					if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
+						transactionPromiEvent.emit('confirmation', {
+							confirmationNumber: format(
+								{ eth: 'uint' },
+								confirmationNumber,
+								returnFormat,
+							),
+							receipt: transactionReceipt,
+							latestBlockHash: format(
+								{ eth: 'bytes32' },
+								data.parentHash as HexString32Bytes,
+								returnFormat,
+							),
+						});
+						await subscription.unsubscribe();
+					}
+				});
+				subscription.on('error', () => {
+					waitByPolling({
+						web3Context,
+						transactionReceipt,
+						transactionPromiEvent,
+						returnFormat,
+					});
+				});
+			})
+			.catch(() => {
+				waitByPolling({
+					web3Context,
+					transactionReceipt,
+					transactionPromiEvent,
+					returnFormat,
+				});
+			});
+	});
 };
 
 export function watchTransactionForConfirmations<
@@ -85,50 +139,11 @@ export function watchTransactionForConfirmations<
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
 	if (provider.supportsSubscriptions()) {
-		setImmediate(() => {
-			web3Context.subscriptionManager
-				?.subscribe('newHeads')
-				.then((subscription: NewHeadsSubscription) => {
-					subscription.on('data', async (data: BlockOutput) => {
-						if (!data?.number) {
-							return;
-						}
-						const confirmationNumber =
-							BigInt(data.number) - BigInt(transactionReceipt.blockNumber);
-						if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
-							transactionPromiEvent.emit('confirmation', {
-								confirmationNumber: format(
-									{ eth: 'uint' },
-									confirmationNumber,
-									returnFormat,
-								),
-								receipt: transactionReceipt,
-								latestBlockHash: format(
-									{ eth: 'bytes32' },
-									data.parentHash as HexString32Bytes,
-									returnFormat,
-								),
-							});
-							await subscription.unsubscribe();
-						}
-					});
-					subscription.on('error', () => {
-						waitByPolling({
-							web3Context,
-							transactionReceipt,
-							transactionPromiEvent,
-							returnFormat,
-						});
-					});
-				})
-				.catch(() => {
-					waitByPolling({
-						web3Context,
-						transactionReceipt,
-						transactionPromiEvent,
-						returnFormat,
-					});
-				});
+		waitBySubscription({
+			web3Context,
+			transactionReceipt,
+			transactionPromiEvent,
+			returnFormat,
 		});
 	} else {
 		waitByPolling({ web3Context, transactionReceipt, transactionPromiEvent, returnFormat });
