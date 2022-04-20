@@ -2,18 +2,7 @@ import { Web3BaseProvider } from 'web3-common';
 import { Contract } from '../../src';
 import { accounts } from '../shared_fixtures/integration_test_accounts';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
-
-// eslint-disable-next-line no-promise-executor-return
-// const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-const processAsync = async (
-	processFunc: (resolver: (value: unknown) => void) => Promise<unknown>,
-) =>
-	new Promise(resolve => {
-		(async () => {
-			await processFunc(resolve);
-		})() as unknown;
-	});
+import { processAsync } from '../shared_fixtures/utils';
 
 describe('contract', () => {
 	describe('events', () => {

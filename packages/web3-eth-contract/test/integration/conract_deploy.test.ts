@@ -1,10 +1,8 @@
 import { Contract } from '../../src';
 import { accounts } from '../shared_fixtures/integration_test_accounts';
+import { sleep, processAsync } from '../shared_fixtures/utils';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
 import { deployRevertAbi, deployRevertByteCode } from '../shared_fixtures/sources/DeployRevert';
-
-// eslint-disable-next-line no-promise-executor-return
-const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -74,46 +72,35 @@ describe('contract', () => {
 		});
 
 		it('should emit the "transactionHash" event', async () => {
-			const transactionHashHandler = jest.fn();
-
-			contract
-				.deploy(deployOptions)
-				.send(sendOptions)
-				.on('transactionHash', transactionHashHandler);
-
-			await sleep(100);
-
-			expect(transactionHashHandler).toHaveBeenCalled();
+			return expect(
+				processAsync(resolve => {
+					contract.deploy(deployOptions).send(sendOptions).on('transactionHash', resolve);
+				}),
+			).resolves.toBeDefined();
 		});
 
 		it('should emit the "sending" event', async () => {
-			const sendingHandler = jest.fn();
-
-			contract.deploy(deployOptions).send(sendOptions).on('sending', sendingHandler);
-
-			await sleep(100);
-
-			expect(sendingHandler).toHaveBeenCalled();
+			return expect(
+				processAsync(resolve => {
+					contract.deploy(deployOptions).send(sendOptions).on('sending', resolve);
+				}),
+			).resolves.toBeDefined();
 		});
 
 		it('should emit the "sent" event', async () => {
-			const sentHashHandler = jest.fn();
-
-			contract.deploy(deployOptions).send(sendOptions).on('sent', sentHashHandler);
-
-			await sleep(100);
-
-			expect(sentHashHandler).toHaveBeenCalled();
+			return expect(
+				processAsync(resolve => {
+					contract.deploy(deployOptions).send(sendOptions).on('sent', resolve);
+				}),
+			).resolves.toBeDefined();
 		});
 
 		it('should emit the "receipt" event', async () => {
-			const receiptHandler = jest.fn();
-
-			contract.deploy(deployOptions).send(sendOptions).on('receipt', receiptHandler);
-
-			await sleep(100);
-
-			expect(receiptHandler).toHaveBeenCalled();
+			return expect(
+				processAsync(resolve => {
+					contract.deploy(deployOptions).send(sendOptions).on('receipt', resolve);
+				}),
+			).resolves.toBeDefined();
 		});
 
 		it('should fail with errors on "intrinic gas too low" OOG', async () => {
