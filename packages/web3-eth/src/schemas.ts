@@ -148,14 +148,62 @@ export const transactionInfoSchema = {
 		blockNumber: {
 			eth: 'uint',
 		},
-		from: {
-			eth: 'address',
-		},
 		hash: {
 			eth: 'bytes32',
 		},
 		transactionIndex: {
 			eth: 'uint',
+		},
+		from: {
+			eth: 'address',
+		},
+		to: {
+			eth: 'address',
+		},
+		value: {
+			eth: 'uint',
+		},
+		gas: {
+			eth: 'uint',
+		},
+		gasPrice: {
+			eth: 'uint',
+		},
+		effectiveGasPrice: {
+			eth: 'uint',
+		},
+		type: {
+			eth: 'uint',
+		},
+		maxFeePerGas: {
+			eth: 'uint',
+		},
+		maxPriorityFeePerGas: {
+			eth: 'uint',
+		},
+		accessList: {
+			...accessListSchema,
+		},
+		data: {
+			eth: 'bytes',
+		},
+		input: {
+			eth: 'bytes',
+		},
+		nonce: {
+			eth: 'uint',
+		},
+		gasLimit: {
+			eth: 'uint',
+		},
+		v: {
+			eth: 'uint',
+		},
+		r: {
+			eth: 'bytes',
+		},
+		s: {
+			eth: 'bytes',
 		},
 	},
 };

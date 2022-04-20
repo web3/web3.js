@@ -97,16 +97,27 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnFormat);
 	}
 
-	public async getStorageAt(
+	public async getStorageAt<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		storageSlot: Numbers,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber);
+		return rpcMethodsWrappers.getStorageAt(
+			this,
+			address,
+			storageSlot,
+			blockNumber,
+			returnFormat,
+		);
 	}
 
-	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
-		return rpcMethodsWrappers.getCode(this, address, blockNumber);
+	public async getCode<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getCode(this, address, blockNumber, returnFormat);
 	}
 
 	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -199,23 +210,29 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
 	}
 
-	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
-	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
-	public async sign(message: Bytes, address: Address) {
-		return rpcMethodsWrappers.sign(this, message, address);
+	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		message: Bytes,
+		address: Address,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.sign(this, message, address, returnFormat);
 	}
 
-	public async signTransaction(transaction: Transaction) {
-		return rpcMethodsWrappers.signTransaction(this, transaction);
+	public async signTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: Transaction,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.signTransaction(this, transaction, returnFormat);
 	}
 
 	// TODO Decide what to do with transaction.to
 	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
-	public async call(
+	public async call<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: TransactionCall,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.call(this, transaction, blockNumber);
+		return rpcMethodsWrappers.call(this, transaction, blockNumber, returnFormat);
 	}
 
 	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
