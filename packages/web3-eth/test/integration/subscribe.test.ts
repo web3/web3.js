@@ -7,16 +7,21 @@ import {
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
 } from '../../src/web3_subscriptions';
+// eslint-disable-next-line
+import { clientWsUrl } from '../../../../.github/test.config';
 
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {
 		provider = new WebSocketProvider(
-			'ws://127.0.0.1:8545',
+			clientWsUrl,
 			{},
-			{ delay: 1, autoReconnect: true, maxAttempts: 1 },
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
+	});
+	afterAll(() => {
+		provider.disconnect();
 	});
 
 	describe('subscribe to', () => {
@@ -26,6 +31,7 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
+			await web3Eth.clearSubscriptions();
 		});
 		it('syncing', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -33,6 +39,7 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(SyncingSubscription);
+			await web3Eth.clearSubscriptions();
 		});
 		it('newPendingTransactions', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -40,6 +47,7 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewPendingTransactionsSubscription);
+			await web3Eth.clearSubscriptions();
 		});
 		it('logs', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -50,6 +58,7 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(LogsSubscription);
+			await web3Eth.clearSubscriptions();
 		});
 	});
 });

@@ -4,15 +4,15 @@ import {
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 } from 'web3-common';
-import { hexToNumber } from 'web3-utils';
 import HttpProvider from '../../src/index';
-import { accounts, clientUrl } from './config';
+// eslint-disable-next-line
+import { accounts, clientUrl } from '../../../../.github/test.config';
 
 describe('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		httpProvider = new HttpProvider(clientUrl);
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
@@ -25,9 +25,7 @@ describe('HttpProvider - implemented methods', () => {
 	describe('httpProvider.request', () => {
 		it('should return expected response', async () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
-			expect(
-				hexToNumber(String((response as JsonRpcResponseWithResult).result)),
-			).toBeGreaterThan(1);
+			expect(Number((response as JsonRpcResponseWithResult).id)).toBeGreaterThan(0);
 		});
 	});
 });
