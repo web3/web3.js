@@ -50,10 +50,11 @@ export const importRawKey = async (
 	requestManager: EthPersonalAPIManager,
 	keyData: HexString,
 	passphrase: string,
-) =>
-	// validator.validate(['bytes', 'string'], [keyData, passphrase]);
+) => {
+	validator.validate(['string', 'string'], [keyData, passphrase]);
 
-	rpcImportRawKey(requestManager, keyData, passphrase);
+	return rpcImportRawKey(requestManager, keyData, passphrase);
+};
 
 export const sendTransaction = async (
 	requestManager: EthPersonalAPIManager,

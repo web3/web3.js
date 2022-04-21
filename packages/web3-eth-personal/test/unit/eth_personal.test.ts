@@ -142,7 +142,7 @@ describe('EthPersonal', () => {
 
 			expect(validateSpy).toHaveBeenCalledTimes(1);
 			expect(validateSpy).toHaveBeenCalledWith(
-				['bytes', 'string'],
+				['string', 'string'],
 				['0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password'],
 			);
 		});
