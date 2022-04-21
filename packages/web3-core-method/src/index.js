@@ -1,4 +1,4 @@
-/*
+``/*
     This file is part of web3.js.
 
     web3.js is free software: you can redistribute it and/or modify
@@ -152,7 +152,7 @@ Method.prototype.formatInput = function (args) {
     }
 
     return this.inputFormatter.map(function (formatter, index) {
-        // bind this for defaultBlock, and defaultAccount
+        // bind this for defaultBlock, and defaultAccount       
         return formatter ? formatter.call(_this, args[index]) : args[index];
     });
 };
@@ -637,6 +637,7 @@ Method.prototype.buildCall = function () {
     var send = function () {
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
+            console.log('payload: ', payload);
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {

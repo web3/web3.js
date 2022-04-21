@@ -74,6 +74,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var outputFormatter = this.outputFormatter || null;
 
     this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
+        debugger;
         await self.parent.checkInterfaceSupport(resolver, self.methodName);
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
     }).catch(function(error) {
@@ -89,6 +90,15 @@ ResolverMethodHandler.prototype.call = function (callback) {
     return promiEvent.eventEmitter;
 };
 
+
+/**
+ * Resolves record according to ENSIP-10
+ *
+ * @returns {eventifiedPromise}
+ */
+ ResolverMethodHandler.prototype.resolve = function (callback) {
+
+};
 
 /**
  * Executes send
@@ -237,6 +247,7 @@ ResolverMethodHandler.prototype.checkInterfaceSupport = async function (resolver
 
     var supported = false;
     try {
+        debugger
         supported = await resolver
             .methods
             .supportsInterface(interfaceIds[methodName])

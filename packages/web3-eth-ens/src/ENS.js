@@ -20,12 +20,61 @@
 
 "use strict";
 
-var config = require('./config');
-var formatters = require('web3-core-helpers').formatters;
+var {hexConcat, arrayify} = require('@ethersproject/bytes');
+var { formatters } = require('web3-core-helpers');
 var utils = require('web3-utils');
+var Method = require('web3-core-method');
+var AbiEncoder = require('web3-eth-abi');
+
+
+var config = require('./config');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 var contenthash = require('./lib/contentHash');
+var { dnsEncode } = require('./utils');
+
+
+function numPad(value) {
+    const result = arrayify(value);
+    if (result.length > 32) { throw new Error("internal; should not happen"); }
+
+    const padded = new Uint8Array(32);
+    padded.set(result, 32 - result.length);
+    return padded;
+}
+
+function bytesPad(value) {
+    if ((value.length % 32) === 0) { return value; }
+
+    const result = new Uint8Array(Math.ceil(value.length / 32) * 32);
+    result.set(value);
+    return result;
+}
+
+function encodeBytes(datas) {
+    const result = [ ];
+    let byteCount = 0;
+
+    // Add place-holders for pointers as we add items
+    for (let i = 0; i < datas.length; i++) {
+        result.push(null);
+        byteCount += 32;
+    }
+
+    for (let i = 0; i < datas.length; i++) {
+        const data = arrayify(datas[i]);
+
+        // Update the bytes offset
+        result[i] = numPad(byteCount);
+
+        // The length and padded value of data
+        result.push(numPad(data.length));
+        result.push(bytesPad(data));
+        byteCount += 32 + Math.ceil(data.length / 32) * 32;
+    }
+
+    return hexConcat(result);
+}
 
 /**
  * Constructs a new instance of ENS
@@ -101,6 +150,16 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
     });
 };
 
+ENS.prototype.parent = function(name) {
+    if(!name) throw 'No name provided';
+    if(typeof name !== 'string') throw 'name should be a string';
+
+    const splitString = name.split('.');
+    if(splitString.length <= 1) return '';
+
+    return splitString.slice(1).join('.');
+};
+
 /**
  * Returns the Resolver by the given address
  *
@@ -119,7 +178,7 @@ ENS.prototype.resolver = function (name, callback) {
 };
 
 /**
- * Returns the Resolver by the given address
+ * Returns the Resolver by the given name
  *
  * @method getResolver
  *
@@ -129,8 +188,102 @@ ENS.prototype.resolver = function (name, callback) {
  * @callback callback callback(error, result)
  * @returns {Promise<Contract>}
  */
-ENS.prototype.getResolver = function (name, callback) {
+ENS.prototype.getResolver = async function (name, callback) {
     return this.registry.getResolver(name, callback);
+};
+
+ENS.prototype.resolve = async function (name, func, ...args) {
+    const resolver = await this.getResolver(name);
+    if(resolver.options.address === null) {
+        return null;
+    }
+    const supportsENSIP10 = await resolver.methods.supportsInterface('0x9061b923').call();
+    if(supportsENSIP10) {
+
+        const jsonInterfaceAddr = {
+            name: 'addr',
+            type: 'function',
+            inputs: [{
+                type: 'bytes32',
+                name: 'node',
+            }],
+        };
+
+        const calldata = AbiEncoder.encodeFunctionCall(jsonInterfaceAddr, args);
+
+        // const calldata = resolver.methods[func](...args).encodeABI();
+        // const result = resolver.methods.resolve(dnsEncode(name), calldata);
+
+        const jsonInterface = {
+            name: 'resolve',
+            type: 'function',
+            inputs: [{
+                type: 'bytes',
+                name: 'name',
+            }, {
+                type: 'bytes',
+                name: 'data',
+            }],
+        };
+
+        const encodedFunctionCall = AbiEncoder.encodeFunctionCall(jsonInterface, [dnsEncode(name), calldata]);
+
+        // const dnsEncoding = dnsEncode(name);
+        // const encodedBytes = encodeBytes([ dnsEncode(name), calldata ]);
+        // const hexConcated = hexConcat([ "0x9061b923", encodeBytes([ dnsEncode(name), calldata ]) ]);
+
+        const tx = {
+            to: resolver.options.address,
+            data: encodedFunctionCall,
+        };
+
+        const method = new Method({
+            name: 'call',
+            call: 'eth_call',
+            params: 2,
+            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
+            abiCoder: AbiEncoder
+        });
+        method.setRequestManager(this.eth._requestManager);
+        method.defaultBlock = 'latest';
+        method.handleRevert = false;
+        method.defaultAccount = null;
+        method.defaultBlock = 'latest';
+        method.transactionBlockTimeout = 50;
+        method.transactionConfirmationBlocks = 24;
+        method.transactionPollingTimeout = 750;
+        method.transactionPollingInterval = 1000;
+        method.blockHeaderTimeout = 10; // 10 seconds
+        method.maxListenersWarningThreshold = 100;
+        method.ccipReadGatewayCallback = null;
+        method.ccipReadGatewayUrls = [];
+        method.ccipReadGatewayAllowList = [];
+        method.ccipReadMaxRedirectCount = 4;
+
+        const send = method.buildCall();
+        const result = await send(tx);
+
+        function _parseBytes(result, start) {
+            if (result === "0x") { return null; }
+        
+            const offset = BigNumber.from(hexDataSlice(result, start, start + 32)).toNumber();
+            const length = BigNumber.from(hexDataSlice(result, offset, offset + 32)).toNumber();
+        
+            return hexDataSlice(result, offset + 32, offset + 32 + length);
+        }
+
+
+        console.log('result: ', result);
+        const decoded = AbiEncoder.decodeParameter('address', result);
+        console.log('decoded; ', decoded);
+        return decoded;
+
+        // return resolver[func].decodeReturnData(result);
+    } else if(name === resolver.currentName) {
+        return resolver[func](...args);
+    } else {
+        return null;
+    }
 };
 
 /**
@@ -331,6 +484,7 @@ ENS.prototype.setOwner = function (name, address, txConfig, callback) {
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getAddress = function (name, callback) {
+    debugger
     return this.resolverMethodHandler.method(name, 'addr', []).call(callback);
 };
 

@@ -9,6 +9,7 @@ var abiCoder = require('web3-eth-abi');
 var utils = require('web3-utils');
 var namehash = require('eth-ens-namehash');
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
+var { dnsEncode } = require('../packages/web3-eth-ens/src/utils');
 
 /**
  * Injects the required validations and results for the `eth_sendTransaction` call
@@ -1611,6 +1612,14 @@ describe('ens', function () {
             });
         });
 
+        it('should return resolver Contract without address if resolver is not found', async function() {
+
+        });
+
+        it('should return resolver Contract with address if resolver is found', async function() {
+
+        });
+
         it('should call getAddress and return the expected address (promise)', async function () {
             const resolverSig = 'resolver(bytes32)';
             const addrSig = 'addr(bytes32)';
@@ -2486,5 +2495,31 @@ describe('ens', function () {
             assert.equal(currentRegistry, formatters.inputAddressFormatter(address));
             assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
+    });
+
+    describe('parent', function () {
+        it.skip('should return the parent domain if one exists', function() {
+
+        });
+
+        it.skip('should return an empty string if called on a tld', function() {
+
+        });
+
+        it.skip('should throw an error if no name is provided', function() {
+
+        });
+
+        it.skip('should throw an error if argument is not a string', function() {
+
+        });
+    });
+
+});
+
+describe('dnsEncode', function() {
+    it('should encode name as specified in section 3.1 of RFC1035', function() {
+        const result = dnsEncode('nick.eth');
+        assert(result === '0x046e69636b0365746800');
     });
 });
