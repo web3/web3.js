@@ -7,8 +7,7 @@ import {
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
 } from '../../src/web3_subscriptions';
-// eslint-disable-next-line
-import { clientWsUrl } from '../../../../.github/test.config';
+import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
 
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;

@@ -2,8 +2,7 @@ import WebSocketProvider from 'web3-providers-ws/dist';
 import { SupportedProviders } from 'web3-core';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
-// eslint-disable-next-line
-import { clientWsUrl } from '../../../../.github/test.config';
+import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
 
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;

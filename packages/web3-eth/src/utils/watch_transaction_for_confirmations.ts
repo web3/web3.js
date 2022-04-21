@@ -26,7 +26,7 @@ type WaitProps = {
 	returnFormat: ReturnFormatBase;
 };
 
-const waitByPolling = ({
+const watchByPolling = ({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
@@ -58,7 +58,7 @@ const waitByPolling = ({
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 };
 
-const waitBySubscription = ({
+const watchBySubscription = ({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
@@ -73,26 +73,27 @@ const waitBySubscription = ({
 						return;
 					}
 					const confirmationNumber =
-						BigInt(data.number) - BigInt(transactionReceipt.blockNumber);
+						BigInt(data.number) - BigInt(transactionReceipt.blockNumber) + BigInt(1);
+					transactionPromiEvent.emit('confirmation', {
+						confirmationNumber: format(
+							{ eth: 'uint' },
+							confirmationNumber,
+							returnFormat,
+						),
+						receipt: transactionReceipt,
+						latestBlockHash: format(
+							{ eth: 'bytes32' },
+							data.parentHash as HexString32Bytes,
+							returnFormat,
+						),
+					});
 					if (confirmationNumber >= web3Context.transactionConfirmationBlocks) {
-						transactionPromiEvent.emit('confirmation', {
-							confirmationNumber: format(
-								{ eth: 'uint' },
-								confirmationNumber,
-								returnFormat,
-							),
-							receipt: transactionReceipt,
-							latestBlockHash: format(
-								{ eth: 'bytes32' },
-								data.parentHash as HexString32Bytes,
-								returnFormat,
-							),
-						});
 						await subscription.unsubscribe();
 					}
 				});
-				subscription.on('error', () => {
-					waitByPolling({
+				subscription.on('error', async () => {
+					await subscription.unsubscribe();
+					watchByPolling({
 						web3Context,
 						transactionReceipt,
 						transactionPromiEvent,
@@ -100,13 +101,10 @@ const waitBySubscription = ({
 					});
 				});
 			})
-			.catch(() => {
-				waitByPolling({
-					web3Context,
-					transactionReceipt,
-					transactionPromiEvent,
-					returnFormat,
-				});
+			.catch((err: Error) => {
+				throw new Error(
+					`Failed to subscribe to new newBlockHeaders to confirmation.${err.message}`,
+				);
 			});
 	});
 };
@@ -139,13 +137,13 @@ export function watchTransactionForConfirmations<
 	// so a subscription for newBlockHeaders can be made instead of polling
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
 	if (provider.supportsSubscriptions()) {
-		waitBySubscription({
+		watchBySubscription({
 			web3Context,
 			transactionReceipt,
 			transactionPromiEvent,
 			returnFormat,
 		});
 	} else {
-		waitByPolling({ web3Context, transactionReceipt, transactionPromiEvent, returnFormat });
+		watchByPolling({ web3Context, transactionReceipt, transactionPromiEvent, returnFormat });
 	}
 }

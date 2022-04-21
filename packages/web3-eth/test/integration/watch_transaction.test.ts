@@ -3,18 +3,45 @@ import HttpProvider from 'web3-providers-http';
 import { SupportedProviders } from 'web3-core';
 import { PromiEvent } from 'web3-common';
 import { toWei } from 'web3-utils';
-// eslint-disable-next-line
-import { EthPersonal } from 'web3-eth-personal';
+import { EthPersonal } from 'web3-eth-personal'; // eslint-disable-line  import/no-extraneous-dependencies
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
-import { accounts, clientUrl, clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import { accounts, clientUrl, clientWsUrl } from '../../../../.github/test.config';
+
+const waitConfirmations = 5;
 type Resolve = (value?: unknown) => void;
 const setupWeb3 = (web3Eth: Web3Eth) => {
-	web3Eth.setConfig({ transactionConfirmationBlocks: 1 });
+	web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
 	const account = web3Eth?.accountProvider?.privateKeyToAccount(accounts[0].privateKey);
 	if (account && web3Eth?.wallet?.add) {
 		web3Eth?.wallet?.add(account);
 	}
+};
+type SendFewTxParams = {
+	web3Eth: Web3Eth;
+	to: string;
+	from: string;
+	value: string;
+};
+const sendFewTxes = async ({ web3Eth, to, value, from }: SendFewTxParams) => {
+	const prs = [];
+	for (let i = 0; i < waitConfirmations; i += 1) {
+		const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+			to,
+			value,
+			from,
+		});
+		prs.push(
+			new Promise((resolve: Resolve) => {
+				tx.on('receipt', (params: ReceiptInfo) => {
+					expect(params.status).toBe('0x1');
+					resolve();
+				});
+			}),
+		);
+	}
+	return Promise.all(prs);
 };
 
 describe('watch transaction', () => {
@@ -66,22 +93,20 @@ describe('watch transaction', () => {
 			const to = accounts[1].address;
 			const value = `0x1`;
 
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction(
-				{
-					to,
-					value,
-					from,
-				},
-				undefined,
-			);
+			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
+			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on(
-					'confirmation',
-					({ confirmationNumber }: { confirmationNumber: string | number | bigint }) => {
-						expect(confirmationNumber).toBe('0x2');
+				sentTx.on('confirmation', ({ confirmationNumber }) => {
+					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+					shouldBe += 1;
+					if (shouldBe >= waitConfirmations) {
 						resolve();
-					},
-				);
+					}
+				});
 			});
 			await new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
@@ -89,21 +114,8 @@ describe('watch transaction', () => {
 					resolve();
 				});
 			});
-			// eslint-disable-next-line
-			const sentTx2: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction(
-				{
-					to,
-					value,
-					from,
-				},
-			);
 
-			await new Promise((resolve: Resolve) => {
-				sentTx2.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
-					resolve();
-				});
-			});
+			await sendFewTxes({ web3Eth, from, to, value });
 			await confirmationPromise;
 		});
 		it('subscription to heads', async () => {
@@ -113,14 +125,11 @@ describe('watch transaction', () => {
 			const from = accounts[0].address;
 			const to = accounts[1].address;
 			const value = `0x1`;
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction(
-				{
-					to,
-					value,
-					from,
-				},
-				undefined,
-			);
+			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
@@ -128,23 +137,19 @@ describe('watch transaction', () => {
 					resolve();
 				});
 			});
-			const cPromise = new Promise((resolve: Resolve) => {
-				sentTx.on(
-					'confirmation',
-					({ confirmationNumber }: { confirmationNumber: string | number | bigint }) => {
-						resolve(confirmationNumber);
-					},
-				);
+			let shouldBe = 2;
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				sentTx.on('confirmation', ({ confirmationNumber }) => {
+					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+					shouldBe += 1;
+					if (shouldBe >= waitConfirmations) {
+						resolve();
+					}
+				});
 			});
 			await receiptPromise;
-			// eslint-disable-next-line
-			web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
-			const confirmationNumber = await cPromise;
-			expect(confirmationNumber).toBe('0x1');
+			await sendFewTxes({ web3Eth, from, to, value });
+			await confirmationPromise;
 		});
 	});
 });

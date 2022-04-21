@@ -39,8 +39,6 @@
 		"geth:build": "docker build ./.github -t gethnode -f .github/Dockerfile",
 		"geth": "docker run -p 8545:8545 ethereum/client-go --nodiscover --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev",
 		"geth-background": "docker run -d -p 8545:8545 ethereum/client-go --nodiscover --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev",
-		"geth-old": "docker run -p 8545:8545 gethnode --datadir data --networkid 4224 --nodiscover --nat \"any\" --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --unlock 0xdc6bad79dab7ea733098f66f6c6f9dd008da3258 --dev --dev.period 1 --password /pass",
-		"geth-background-old": "docker run -d -p 8545:8545 gethnode --datadir data --networkid 4224 --nodiscover --nat \"any\" --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,miner,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --unlock 0 --mine --miner.noverify --password /pass",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel",
