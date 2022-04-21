@@ -124,14 +124,15 @@ export default class WebSocketProvider<
 
 			this._addSocketListeners();
 
-			if (this.getStatus() === 'connecting') {
-				// Rejecting promises if provider is not connected even after reattempts
-				setTimeout(() => {
-					if (this.getStatus() === 'disconnected') {
-						this._clearQueues(undefined);
-					}
-				}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
-			}
+			// TODO: Debug why this is needed
+			// if (this.getStatus() === 'connecting') {
+			// 	// Rejecting promises if provider is not connected even after reattempts
+			// 	setTimeout(() => {
+			// 		if (this.getStatus() === 'disconnected') {
+			// 			this._clearQueues(undefined);
+			// 		}
+			// 	}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
+			// }
 		} catch (e) {
 			throw new InvalidConnectionError(this._clientUrl);
 		}
@@ -318,8 +319,8 @@ export default class WebSocketProvider<
 	}
 
 	private _removeSocketListeners(): void {
-		this._webSocketConnection?.removeEventListener('message', this._onMessage.bind(this));
-		this._webSocketConnection?.removeEventListener('open', this._onConnect.bind(this));
-		this._webSocketConnection?.removeEventListener('close', this._onClose.bind(this));
+		this._webSocketConnection?.removeAllListeners('message');
+		this._webSocketConnection?.removeAllListeners('open');
+		this._webSocketConnection?.removeAllListeners('close');
 	}
 }
