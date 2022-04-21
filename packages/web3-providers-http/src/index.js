@@ -26,7 +26,7 @@ var errors = require('web3-core-helpers').errors;
 var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
 var http = require('http');
 var https = require('https');
-
+var url = require('url');
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -43,8 +43,10 @@ var HttpProvider = function HttpProvider(host, options) {
     // keepAlive is true unless explicitly set to false
     const keepAlive = options.keepAlive !== false;
     this.host = host || 'http://localhost:8545';
+    const _url = new URL(host);
+
     if (!this.agent) {
-        if (this.host.substring(0,5) === "https") {
+        if (_url.protocol === "https:") {
             this.httpsAgent = new https.Agent({ keepAlive });
         } else {
             this.httpAgent = new http.Agent({ keepAlive });
