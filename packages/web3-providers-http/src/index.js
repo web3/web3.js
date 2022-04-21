@@ -43,7 +43,7 @@ var HttpProvider = function HttpProvider(host, options) {
     // keepAlive is true unless explicitly set to false
     const keepAlive = options.keepAlive !== false;
     this.host = host || 'http://localhost:8545';
-    const _url = new URL(host);
+    const _url = new url.URL(host);
 
     if (!this.agent) {
         if (_url.protocol === "https:") {
