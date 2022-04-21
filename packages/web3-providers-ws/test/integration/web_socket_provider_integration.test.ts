@@ -1,8 +1,16 @@
+/* eslint-disable jest/no-disabled-tests */
 /* eslint-disable jest/no-done-callback */
-import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
+import {
+	EthExecutionAPI,
+	JsonRpcId,
+	Web3APIPayload,
+	DeferredPromise,
+	JsonRpcResponse,
+} from 'web3-common';
 import WebSocketProvider from '../../src/index';
 import { Web3WSProviderError } from '../../src/errors';
 import { accounts } from '../fixtures/config';
+import { WSRequestItem } from '../../src/types';
 
 describe('WebSocketProvider - implemented methods', () => {
 	let webSocketProvider: WebSocketProvider;
@@ -68,14 +76,41 @@ describe('WebSocketProvider - implemented methods', () => {
 			// Manually emit an error event - accessing private emitter
 			webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
 		});
-		it.skip('should subscribe on close', done => {
-			webSocketProvider.on('close', (err, res) => {
-				console.warn(err);
-				console.warn(res);
-				done();
-			});
-			console.warn(webSocketProvider.getStatus());
-			webSocketProvider.disconnect(1000, 'close');
+		// it.skip('should subscribe on close', done => {
+		// 	webSocketProvider.on('close', (err, res) => {
+		// 		console.warn(err);
+		// 		console.warn(res);
+		// 		done();
+		// 	});
+		// 	console.warn(webSocketProvider.getStatus());
+		// 	webSocketProvider.disconnect(1000, 'close');
+		// });
+	});
+	describe('disconnect and reset test', () => {
+		// it.skip('should disconnect', async () => {});
+		it('should reset', async () => {
+			jsonRpcPayload = {
+				jsonrpc: '2.0',
+				id: 42,
+				method: 'eth_getBalance',
+				params: [accounts[0].address, 'latest'],
+			} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
+			const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
+
+			const reqItem: WSRequestItem<any, any, any> = {
+				payload: jsonRpcPayload,
+				deferredPromise: defPromise,
+			};
+
+			webSocketProvider['_requestQueue'].set(jsonRpcPayload.id as JsonRpcId, reqItem);
+			expect(webSocketProvider['_requestQueue'].size).toBe(1);
+
+			webSocketProvider['_sentQueue'].set(jsonRpcPayload.id as JsonRpcId, reqItem);
+			expect(webSocketProvider['_sentQueue'].size).toBe(1);
+
+			webSocketProvider.reset();
+			expect(webSocketProvider['_requestQueue'].size).toBe(0);
+			expect(webSocketProvider['_sentQueue'].size).toBe(0);
 		});
 	});
 });
