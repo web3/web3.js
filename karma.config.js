@@ -55,6 +55,7 @@ const webpackConfig = {
 			// jest: require.resolve('jest'),
 		},
 		alias: {
+			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
 			jest: path.join(__dirname, 'node_modules', 'jest'),
 		},
 	},

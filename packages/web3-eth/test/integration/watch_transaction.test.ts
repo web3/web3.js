@@ -25,23 +25,20 @@ type SendFewTxParams = {
 	value: string;
 };
 const sendFewTxes = async ({ web3Eth, to, value, from }: SendFewTxParams) => {
-	const prs = [];
 	for (let i = 0; i < waitConfirmations; i += 1) {
 		const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
 			to,
 			value,
 			from,
 		});
-		prs.push(
-			new Promise((resolve: Resolve) => {
-				tx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
-					resolve();
-				});
-			}),
-		);
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise((resolve: Resolve) => {
+			tx.on('receipt', (params: ReceiptInfo) => {
+				expect(params.status).toBe('0x1');
+				resolve();
+			});
+		});
 	}
-	return Promise.all(prs);
 };
 
 describe('watch transaction', () => {

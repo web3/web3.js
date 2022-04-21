@@ -7,7 +7,7 @@ import {
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
 } from '../../src/web3_subscriptions';
-import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
+import { clientWsUrl, accounts } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
 
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;
@@ -51,8 +51,7 @@ describe('unsubscribe', () => {
 		it('logs', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
 			await web3Eth.subscribe('logs', {
-				address: '0x8320fe7702b96808f7bbc0d4a888ed1468216cfd',
-				topics: ['0xd78a0cb8bb633d06981248b816e7bd33c2a35a6089241d099fa519e361cab902'],
+				address: accounts[0].address,
 			});
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
