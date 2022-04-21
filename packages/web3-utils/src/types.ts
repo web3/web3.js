@@ -30,7 +30,7 @@ export enum BlockTags {
 	PENDING = 'pending',
 }
 export type BlockTag = 'earliest' | 'latest' | 'pending';
-export type BlockNumberOrTag = Uint | BlockTag;
+export type BlockNumberOrTag = Numbers | BlockTag;
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
