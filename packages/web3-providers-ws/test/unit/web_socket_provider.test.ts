@@ -1,4 +1,4 @@
-import { WebSocket } from 'isomorphic-ws';
+import WebSocket from 'ws';
 import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
 import WebSocketProvider from '../../src/index';
 import {
@@ -7,7 +7,7 @@ import {
 	wsProviderOptions,
 } from '../fixtures/test_data';
 
-jest.mock('isomorphic-ws');
+jest.mock('ws');
 
 describe('WebSocketProvider', () => {
 	let wsProvider: WebSocketProvider;

@@ -1,6 +1,9 @@
 import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
-import { ClientOptions, CloseEvent, MessageEvent, WebSocket } from 'isomorphic-ws';
+import WebSocket from 'ws';
+import { ClientOptions, CloseEvent, MessageEvent } from 'isomorphic-ws';
+// const a = new WebSocket('ws://127.0.0.1:8545');
+// console.log('aaaa', a);
 import {
 	ConnectionNotOpenError,
 	EthExecutionAPI,
@@ -117,6 +120,7 @@ export default class WebSocketProvider<
 		try {
 			this._webSocketConnection = new WebSocket(
 				this._clientUrl,
+				undefined,
 				this._wsProviderOptions && Object.keys(this._wsProviderOptions).length === 0
 					? undefined
 					: this._wsProviderOptions,
