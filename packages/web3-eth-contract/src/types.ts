@@ -8,7 +8,7 @@ import {
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import { SendTransactionEvents, ReceiptInfo } from 'web3-eth';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
+import { Address, BlockNumberOrTag, Bytes, HexString, Numbers, Uint } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -23,7 +23,7 @@ export interface EventLog {
 }
 
 export interface ContractEventOptions {
-	filter?: Filter;
+	filter?: Record<string, unknown>;
 	fromBlock?: BlockNumberOrTag;
 	topics?: string[];
 }
@@ -59,6 +59,7 @@ export interface NonPayableCallOptions {
 	maxPriorityFeePerGas?: HexString;
 	maxFeePerGas?: HexString;
 	gasPrice?: string;
+	type?: string | number;
 }
 
 export interface PayableCallOptions extends NonPayableCallOptions {

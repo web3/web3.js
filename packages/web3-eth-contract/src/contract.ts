@@ -239,9 +239,6 @@ export class Contract<Abi extends ContractAbi>
 		filter?: Omit<Filter, 'address'>,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		const formattedFilter = inputLogFormatter(filter ?? {});
-		const logs = await getLogs(this, formattedFilter, returnFormat);
-
 		const abi =
 			eventName === 'allEvents'
 				? ALL_EVENTS_ABI
@@ -252,6 +249,12 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
+
+		const { fromBlock, toBlock, topics, address } = inputLogFormatter(
+			encodeEventABI(this.options, abi, filter ?? {}),
+		);
+
+		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 
 		return logs.map(log =>
 			typeof log === 'string' ? log : decodeEventABI(abi, log as LogsInput),

@@ -458,6 +458,8 @@ export function sendTransaction<
 								transactionReceiptFormatted,
 							) as unknown as ResolveType,
 						);
+					} else if (transactionReceipt.status === '0x0') {
+						reject(transactionReceiptFormatted as unknown as ResolveType);
 					} else {
 						resolve(transactionReceiptFormatted as unknown as ResolveType);
 					}
