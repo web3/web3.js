@@ -1,4 +1,3 @@
-import { Web3BaseProvider } from 'web3-common';
 import { Contract } from '../../src';
 import { accounts } from '../shared_fixtures/integration_test_accounts';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
@@ -22,10 +21,6 @@ describe('contract', () => {
 		sendOptions = { from: accounts[0].address, gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
-	});
-
-	afterAll(async () => {
-		(contract.provider as Web3BaseProvider).disconnect(1000, 'message');
 	});
 
 	describe('events', () => {
