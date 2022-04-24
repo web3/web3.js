@@ -1,6 +1,6 @@
 import { TransactionWithSender } from 'web3-common';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { mergeDeep } from 'web3-utils';
+import { HexString, mergeDeep } from 'web3-utils';
 import { TransactionCall } from 'web3-eth';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -41,7 +41,7 @@ export const getSendTxParams = ({
 	if (!txParams.data || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data as string),
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
 	}
 

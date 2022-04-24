@@ -8,6 +8,7 @@ import {
 	LogsInput,
 	PromiEvent,
 	Web3EventEmitter,
+	ReceiptInfo,
 } from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
 import { call, estimateGas, getLogs, sendTransaction, SendTransactionEvents } from 'web3-eth';
@@ -45,8 +46,10 @@ import {
 	ContractOptions,
 	NonPayableCallOptions,
 	NonPayableMethodObject,
+	NonPayableTxOptions,
 	PayableCallOptions,
 	PayableMethodObject,
+	PayableTxOptions,
 } from './types';
 import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './utils';
 
@@ -193,7 +196,7 @@ export class Contract<Abi extends ContractAbi>
 		return {
 			arguments: args,
 			send: (
-				options?: PayableCallOptions,
+				options?: PayableTxOptions,
 			): PromiEvent<Contract<Abi>, SendTransactionEvents> => {
 				const modifiedOptions = { ...options };
 
@@ -350,7 +353,7 @@ export class Contract<Abi extends ContractAbi>
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(abi, params, options, block),
-					send: (options?: PayableCallOptions) =>
+					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(abi, params, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -369,7 +372,7 @@ export class Contract<Abi extends ContractAbi>
 				arguments: params,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(abi, params, options, block),
-				send: (options?: NonPayableCallOptions) =>
+				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(abi, params, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
@@ -431,7 +434,10 @@ export class Contract<Abi extends ContractAbi>
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
 				if (receipt.status === '0x0') {
-					throw new Web3ContractError('contract deployment error');
+					throw new Web3ContractError(
+						'contract deployment error',
+						receipt as ReceiptInfo,
+					);
 				}
 
 				const newContract = this.clone();
