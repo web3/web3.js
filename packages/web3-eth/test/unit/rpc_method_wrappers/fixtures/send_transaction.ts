@@ -1,5 +1,4 @@
-import { ReceiptInfo } from 'web3-common';
-import { SendTransactionOptions, Transaction } from '../../../../src/types';
+import { SendTransactionOptions, Transaction, ReceiptInfo } from '../../../../src/types';
 
 export const expectedTransactionHash =
 	'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547';
