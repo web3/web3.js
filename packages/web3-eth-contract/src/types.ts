@@ -66,11 +66,14 @@ export interface PayableCallOptions extends NonPayableCallOptions {
 	value?: string;
 }
 
+export type NonPayableTxOptions = NonPayableCallOptions;
+export type PayableTxOptions = PayableCallOptions;
+
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(
-		tx?: NonPayableCallOptions,
+		tx?: NonPayableTxOptions,
 	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: NonPayableCallOptions,
@@ -83,7 +86,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(
-		tx?: PayableCallOptions,
+		tx?: PayableTxOptions,
 	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: PayableCallOptions,
