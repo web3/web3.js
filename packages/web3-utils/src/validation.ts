@@ -1,3 +1,4 @@
+import { Numbers } from 'web3-common';
 import {
 	checkAddressCheckSum as checkAddressCheckSumValidator,
 	isAddress as isAddressValidator,
@@ -11,7 +12,6 @@ import {
 	isUserEthereumAddressInBloom as isUserEthereumAddressInBloomValidator,
 } from 'web3-validator';
 import { InvalidBlockError } from './errors';
-import { Numbers } from './types';
 
 /**
  * @deprecated Will be removed in next release. Please use `web3-validator` package instead.

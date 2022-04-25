@@ -1,4 +1,4 @@
-import { HexString } from 'web3-utils';
+import { HexString } from 'web3-common';
 
 export type Web3NetAPI = {
 	net_version: () => string; // https://eth.wiki/json-rpc/API#net_version

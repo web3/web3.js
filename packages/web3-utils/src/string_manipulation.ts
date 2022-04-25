@@ -1,8 +1,9 @@
 import { isHexStrict, validator, utils as validatorUtils } from 'web3-validator';
-import { numberToHex, toHex, toNumber } from './converters';
-import { Numbers } from './types';
+import { toNumber, numberToHex, Numbers } from 'web3-common';
+import { toHex } from './converters';
 import { NibbleWidthError } from './errors';
 
+// TO DO: use padLeft from web3-common utils and reexport from here
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
  */

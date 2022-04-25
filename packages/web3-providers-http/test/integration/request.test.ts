@@ -3,8 +3,9 @@ import {
 	Web3APIPayload,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
+	hexToNumber,
 } from 'web3-common';
-import { toWei, hexToNumber } from 'web3-utils';
+import { toWei } from 'web3-utils';
 import HttpProvider from '../../src/index';
 import { accounts, clientUrl } from '../fixtures/config';
 
