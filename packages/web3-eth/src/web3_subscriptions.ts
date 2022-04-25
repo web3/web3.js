@@ -1,6 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { BlockOutput, SyncOutput } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { BlockOutput, SyncOutput, HexString } from 'web3-common';
 import { Web3Subscription } from 'web3-core';
 
 type CommonSubscriptionEvents = {

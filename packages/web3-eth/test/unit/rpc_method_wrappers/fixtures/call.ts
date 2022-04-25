@@ -1,4 +1,4 @@
-import { BlockNumberOrTag, BlockTags } from 'web3-utils';
+import { BlockNumberOrTag, BlockTags } from 'web3-common';
 
 import { TransactionCall } from '../../../../src/types';
 

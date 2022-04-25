@@ -1,4 +1,4 @@
-import { Address, BlockNumberOrTag, BlockTags, Numbers } from 'web3-utils';
+import { Address, BlockNumberOrTag, BlockTags, Numbers } from 'web3-common';
 
 export const mockRpcResponse = '0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234';
 

@@ -1,5 +1,4 @@
-import { FilterResults } from 'web3-common';
-import { Filter } from 'web3-utils';
+import { FilterResults, Filter } from 'web3-common';
 
 export const mockRpcResponse: FilterResults = [
 	{

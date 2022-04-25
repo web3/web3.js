@@ -1,4 +1,4 @@
-import { Bytes } from 'web3-utils';
+import { Bytes } from 'web3-common';
 
 import { Transaction } from '../../../../src/types';
 

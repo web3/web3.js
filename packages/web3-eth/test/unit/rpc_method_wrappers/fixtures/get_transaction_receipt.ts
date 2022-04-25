@@ -1,5 +1,4 @@
-import { ReceiptInfo } from 'web3-common';
-import { Bytes } from 'web3-utils';
+import { ReceiptInfo, Bytes } from 'web3-common';
 
 export const mockRpcResponse: ReceiptInfo = {
 	transactionHash: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',

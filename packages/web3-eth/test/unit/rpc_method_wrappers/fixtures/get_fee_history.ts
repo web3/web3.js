@@ -1,5 +1,4 @@
-import { FeeHistoryResult } from 'web3-common';
-import { BlockNumberOrTag, BlockTags, Numbers } from 'web3-utils';
+import { FeeHistoryResult, BlockNumberOrTag, BlockTags, Numbers } from 'web3-common';
 
 export const mockRpcResponse: FeeHistoryResult = {
 	oldestBlock: '0xa30950',

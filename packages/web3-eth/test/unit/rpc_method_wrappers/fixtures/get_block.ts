@@ -1,5 +1,4 @@
-import { Block, TransactionInfo } from 'web3-common';
-import { BlockNumberOrTag, BlockTags, Bytes } from 'web3-utils';
+import { Block, TransactionInfo, BlockNumberOrTag, BlockTags, Bytes } from 'web3-common';
 
 export const mockRpcResponse: Block = {
 	parentHash: '0xe99e022112df268087ea7eafaf4790497fd21dbeeb6bd7a1721df161a6657a54',

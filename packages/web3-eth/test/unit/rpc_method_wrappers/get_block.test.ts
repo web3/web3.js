@@ -1,7 +1,6 @@
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, Bytes } from 'web3-common';
 import { isBytes } from 'web3-validator';
-import { Bytes } from 'web3-utils';
 
 import { getBlockByHash, getBlockByNumber } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';

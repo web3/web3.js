@@ -14,7 +14,7 @@ export enum BlockTags {
 	PENDING = 'pending',
 }
 export type BlockTag = 'earliest' | 'latest' | 'pending';
-export type BlockNumberOrTag = Uint | BlockTag;
+export type BlockNumberOrTag = Numbers | BlockTag;
 
 // Hex encoded 256 byte
 export type HexString256Bytes = HexString;

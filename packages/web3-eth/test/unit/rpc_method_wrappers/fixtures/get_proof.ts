@@ -1,4 +1,4 @@
-import { Address, BlockNumberOrTag, BlockTags, Bytes } from 'web3-utils';
+import { Address, BlockNumberOrTag, BlockTags, Bytes } from 'web3-common';
 
 export const mockRpcResponse = {
 	accountProof: [

@@ -1,4 +1,4 @@
-import { Address, Bytes } from 'web3-utils';
+import { Address, Bytes } from 'web3-common';
 
 export const mockRpcResponse = '0x736f796c656e7420677265656e2069732070656f706c65';
 
