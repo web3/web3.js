@@ -1,6 +1,12 @@
-import { DEFAULT_RETURN_FORMAT } from 'web3-common';
+import {
+	DEFAULT_RETURN_FORMAT,
+	utf8ToHex,
+	toChecksumAddress,
+	Address,
+	HexString,
+} from 'web3-common';
 import { formatTransaction, Transaction } from 'web3-eth';
-import { Address, HexString, isHexStrict, toChecksumAddress, utf8ToHex } from 'web3-utils';
+import { isHexStrict } from 'web3-utils';
 import { validator } from 'web3-validator';
 import {
 	getAccounts as rpcGetAccounts,

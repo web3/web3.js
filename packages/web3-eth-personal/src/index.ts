@@ -1,6 +1,6 @@
 import { Web3Context } from 'web3-core';
 import { Transaction } from 'web3-eth';
-import { Address, HexString } from 'web3-utils';
+import { Address, HexString } from 'web3-common';
 import { EthPersonalAPI } from './eth_personal_api';
 import * as rpcWrappers from './rpc_method_wrappers';
 

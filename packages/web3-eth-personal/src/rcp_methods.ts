@@ -1,5 +1,5 @@
 import { Transaction } from 'web3-eth';
-import { Address, HexString } from 'web3-utils';
+import { Address, HexString } from 'web3-common';
 import { EthPersonalAPIManager } from './types';
 
 export const getAccounts = async (requestManager: EthPersonalAPIManager) =>

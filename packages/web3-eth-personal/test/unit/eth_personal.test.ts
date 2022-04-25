@@ -1,8 +1,10 @@
+import * as common from 'web3-common';
 import * as utils from 'web3-utils';
 import * as eth from 'web3-eth';
 import { validator } from 'web3-validator';
 import { EthPersonal } from '../../src/index';
 
+jest.mock('web3-common');
 jest.mock('web3-utils');
 jest.mock('web3-eth');
 
@@ -38,8 +40,8 @@ describe('EthPersonal', () => {
 
 			await ethPersonal.getAccounts();
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledTimes(1);
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith(result[0], 0, result);
+			expect(common.toChecksumAddress).toHaveBeenCalledTimes(1);
+			expect(common.toChecksumAddress).toHaveBeenCalledWith(result[0], 0, result);
 		});
 	});
 
@@ -66,8 +68,8 @@ describe('EthPersonal', () => {
 
 			await ethPersonal.newAccount('password');
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledTimes(1);
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith(result);
+			expect(common.toChecksumAddress).toHaveBeenCalledTimes(1);
+			expect(common.toChecksumAddress).toHaveBeenCalledWith(result);
 		});
 	});
 
@@ -232,12 +234,12 @@ describe('EthPersonal', () => {
 			const data = '0x1234';
 
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
-			jest.spyOn(utils, 'utf8ToHex').mockReturnValue(data);
+			jest.spyOn(common, 'utf8ToHex').mockReturnValue(data);
 
 			await ethPersonal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
 
-			expect(utils.utf8ToHex).toHaveBeenCalledTimes(1);
-			expect(utils.utf8ToHex).toHaveBeenCalledWith(data);
+			expect(common.utf8ToHex).toHaveBeenCalledTimes(1);
+			expect(common.utf8ToHex).toHaveBeenCalledWith(data);
 		});
 
 		it('should not convert input if data is already hex', async () => {
@@ -247,7 +249,7 @@ describe('EthPersonal', () => {
 
 			await ethPersonal.sign(data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password');
 
-			expect(utils.utf8ToHex).toHaveBeenCalledTimes(0);
+			expect(common.utf8ToHex).toHaveBeenCalledTimes(0);
 		});
 
 		it('should validate user input', async () => {
@@ -283,12 +285,12 @@ describe('EthPersonal', () => {
 			const data = '0x1234';
 
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
-			jest.spyOn(utils, 'utf8ToHex').mockReturnValue(data);
+			jest.spyOn(common, 'utf8ToHex').mockReturnValue(data);
 
 			await ethPersonal.ecRecover(data, 'password');
 
-			expect(utils.utf8ToHex).toHaveBeenCalledTimes(1);
-			expect(utils.utf8ToHex).toHaveBeenCalledWith(data);
+			expect(common.utf8ToHex).toHaveBeenCalledTimes(1);
+			expect(common.utf8ToHex).toHaveBeenCalledWith(data);
 		});
 
 		it('should not convert input if data is already hex', async () => {
@@ -298,7 +300,7 @@ describe('EthPersonal', () => {
 
 			await ethPersonal.ecRecover(data, 'password');
 
-			expect(utils.utf8ToHex).toHaveBeenCalledTimes(0);
+			expect(common.utf8ToHex).toHaveBeenCalledTimes(0);
 		});
 
 		it('should validate user input', async () => {

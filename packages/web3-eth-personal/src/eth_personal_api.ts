@@ -1,4 +1,4 @@
-import { Address, HexString } from 'web3-utils';
+import { Address, HexString } from 'web3-common';
 import { Transaction } from 'web3-eth';
 
 export type EthPersonalAPI = {
