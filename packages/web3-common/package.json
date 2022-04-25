@@ -25,9 +25,8 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-utils": "4.0.0-alpha.1",
 		"web3-validator": "^0.1.0-alpha.0",
-		"web3-eth-iban": "4.0.0-alpha.0"
+		"ethereum-cryptography": "^0.2.1"
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
