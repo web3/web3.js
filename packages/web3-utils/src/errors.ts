@@ -1,110 +1,105 @@
 /* eslint-disable max-classes-per-file */
-export abstract class Web3Error extends Error {
-	public readonly name: string;
 
-	public constructor(value: unknown, msg: string) {
-		super(`Invalid value given "${Web3Error.convertToString(value, true)}". Error: ${msg}.`);
-		this.name = this.constructor.name;
-		Error.captureStackTrace(this, Web3Error);
-	}
+import {
+	InvalidValueError,
+	ERR_INVALID_STRING,
+	ERR_INVALID_UNIT,
+	ERR_INVALID_TYPE_ABI,
+	ERR_INVALID_HEX,
+	ERR_INVALID_NIBBLE_WIDTH,
+	ERR_INVALID_TYPE,
+	ERR_INVALID_BOOLEAN,
+	ERR_INVALID_UNSIGNED_INTEGER,
+	ERR_INVALID_SIZE,
+	ERR_INVALID_LARGE_VALUE,
+	ERR_INVALID_BLOCK,
+} from 'web3-common';
 
-	public toJSON() {
-		return { name: this.name, message: this.message };
-	}
+export class InvalidStringError extends InvalidValueError {
+	public code = ERR_INVALID_STRING;
 
-	public static convertToString(value: unknown, unquotValue = false) {
-		if (value === undefined) return 'undefined';
-
-		const result = JSON.stringify(
-			value,
-			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
-		);
-
-		return unquotValue && ['bigint', 'string'].includes(typeof value)
-			? result.replace(/['\\"]+/g, '')
-			: result;
-	}
-}
-
-export class InvalidStringError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'not a valid string');
 	}
 }
 
-export class InvalidBytesError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'can not parse as byte data');
-	}
-}
+export class InvalidUnitError extends InvalidValueError {
+	public code = ERR_INVALID_UNIT;
 
-export class InvalidNumberError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'can not parse as number data');
-	}
-}
-
-export class InvalidUnitError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'invalid unit');
 	}
 }
 
-export class InvalidAddressError extends Web3Error {
-	public constructor(value: unknown) {
-		super(value, 'invalid ethereum address');
-	}
-}
+export class HexProcessingError extends InvalidValueError {
+	public code = ERR_INVALID_HEX;
 
-export class HexProcessingError extends Web3Error {
 	public constructor(value: unknown) {
 		super(value, 'can not be converted to hex');
 	}
 }
 
-export class NibbleWidthError extends Web3Error {
+export class NibbleWidthError extends InvalidValueError {
+	public code = ERR_INVALID_NIBBLE_WIDTH;
+
 	public constructor(value: string) {
 		super(value, 'value greater than the nibble width');
 	}
 }
 
-export class InvalidTypeError extends Web3Error {
+export class InvalidTypeError extends InvalidValueError {
+	public code = ERR_INVALID_TYPE;
+
 	public constructor(value: unknown) {
 		super(value, 'invalid type, type not supported');
 	}
 }
 
-export class InvalidBooleanError extends Web3Error {
+export class InvalidBooleanError extends InvalidValueError {
+	public code = ERR_INVALID_BOOLEAN;
+
 	public constructor(value: unknown) {
 		super(value, 'not a valid boolean.');
 	}
 }
 
-export class InvalidUnsignedIntegerError extends Web3Error {
+export class InvalidUnsignedIntegerError extends InvalidValueError {
+	public code = ERR_INVALID_UNSIGNED_INTEGER;
+
 	public constructor(value: unknown) {
 		super(value, 'not a valid unsigned integer.');
 	}
 }
 
-export class InvalidSizeError extends Web3Error {
+export class InvalidSizeError extends InvalidValueError {
+	public code = ERR_INVALID_SIZE;
+
 	public constructor(value: unknown) {
 		super(value, 'invalid size given.');
+		this.code = ERR_INVALID_SIZE;
 	}
 }
 
-export class InvalidLargeValueError extends Web3Error {
+export class InvalidLargeValueError extends InvalidValueError {
+	public code = ERR_INVALID_LARGE_VALUE;
+
 	public constructor(value: unknown) {
 		super(value, 'value is larger than size.');
+		this.code = ERR_INVALID_LARGE_VALUE;
 	}
 }
 
-export class InvalidBlockError extends Web3Error {
+export class InvalidBlockError extends InvalidValueError {
+	public code = ERR_INVALID_BLOCK;
+
 	public constructor(value: string) {
 		super(value, 'invalid string given');
 	}
 }
 
-export class InvalidTypeAbiInputError extends Web3Error {
+export class InvalidTypeAbiInputError extends InvalidValueError {
+	public code = ERR_INVALID_TYPE_ABI;
+
 	public constructor(value: string) {
 		super(value, 'components found but type is not tuple');
 	}
