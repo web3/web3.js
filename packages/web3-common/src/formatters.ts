@@ -1,25 +1,7 @@
-import { Iban } from 'web3-eth-iban';
+import { isBlockTag, isHex, isAddress, isHexStrict } from 'web3-validator';
 import {
-	BlockTags,
-	Filter,
-	fromUtf8,
-	hexToNumber,
-	hexToNumberString,
-	isAddress,
-	isHexStrict,
-	mergeDeep,
 	Numbers,
-	numberToHex,
-	sha3Raw,
-	toChecksumAddress,
-	toNumber,
-	Topic,
-	toUtf8,
-	utf8ToHex,
-} from 'web3-utils';
-import { isBlockTag, isHex } from 'web3-validator';
-import { FormatterError } from './errors';
-import {
+	BlockTags,
 	BlockInput,
 	BlockOutput,
 	LogsInput,
@@ -35,6 +17,24 @@ import {
 	TransactionInput,
 	TransactionOutput,
 } from './types';
+import { Filter, Topic } from './eth_execution_api';
+import {
+	hexToNumber,
+	mergeDeep,
+	fromUtf8,
+	hexToNumberString,
+	sha3Raw,
+	toChecksumAddress,
+	toNumber,
+	toUtf8,
+	utf8ToHex,
+	numberToHex,
+	isValidIBAN,
+	isDirectIBAN,
+	IBANtoAddress,
+} from './common_utils';
+
+import { FormatterError } from './errors';
 
 /**
  * Will format the given storage key array values to hex strings.
@@ -93,10 +93,8 @@ export const inputDefaultBlockNumberFormatter = (
 };
 
 export const inputAddressFormatter = (address: string): string | never => {
-	if (Iban.isValid(address) && Iban.isDirect(address)) {
-		const iban = new Iban(address);
-
-		return iban.toAddress().toLowerCase();
+	if (isValidIBAN(address) && isDirectIBAN(address)) {
+		return IBANtoAddress(address).toLowerCase();
 	}
 
 	if (isAddress(address)) {
