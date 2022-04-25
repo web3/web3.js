@@ -1,4 +1,4 @@
-import { sha3Raw } from 'web3-utils';
+import { sha3Raw } from 'web3-common';
 import { toAscii } from 'idna-uts46-hx';
 
 export const normalize = (name: string) =>
