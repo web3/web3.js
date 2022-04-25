@@ -1,4 +1,4 @@
-import { hexToBytes } from '../../src/converters';
+import { hexToBytes } from 'web3-common';
 import { TypedObject, TypedObjectAbbreviated } from '../../src/types';
 
 export const sha3Data: [string, string | null][] = [
@@ -9,21 +9,6 @@ export const sha3Data: [string, string | null][] = [
 	],
 	['1234', '0x387a8233c96e1fc0ad5e284353276177af2186e7afa85296f106336e376669f7'],
 	['helloworld', '0xfa26db7ca85ead399216e7c6316bc50ed24393c3122b582735e7f3b0f91b93f0'],
-];
-
-export const sha3ValidData: [string, string | null][] = [
-	...sha3Data,
-	['', null],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
-	],
-	['0x80', '0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421'],
-	[
-		'0x265385c7f4132228a0d54eb1a9e7460b91c0cc68',
-		'0xb549c60e309fa734059e547a595c28b5ebada949c16229fbf2192650807694f5',
-	],
-	['0x1234', '0x56570de287d73cd1cb6092bb8fdee6173974955fdef345ae579ee9f475ea7432'],
 ];
 
 export const compareSha3JSValidData: [string, any | null][] = [

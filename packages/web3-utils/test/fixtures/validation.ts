@@ -1,5 +1,5 @@
+import { Numbers } from 'web3-common';
 import { InvalidBlockError } from '../../src/errors';
-import { Numbers } from '../../src/types';
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[1, 1], 0],

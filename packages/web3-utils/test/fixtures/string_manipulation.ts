@@ -1,4 +1,4 @@
-import { HexString, Numbers } from '../../src/types';
+import { HexString, Numbers } from 'web3-common';
 
 export const padLeftData: [[Numbers, number, string], HexString][] = [
 	[[0, 10, '0'], '0x0000000000'],

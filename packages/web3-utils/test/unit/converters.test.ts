@@ -1,37 +1,23 @@
+import { fromUtf8 } from 'web3-common';
 import {
 	asciiToHex,
-	bytesToHex,
 	fromAscii,
 	fromDecimal,
-	fromUtf8,
 	fromWei,
 	hexToAscii,
-	hexToBytes,
-	hexToNumber,
-	hexToNumberString,
 	hexToString,
-	hexToUtf8,
-	numberToHex,
 	stringToHex,
 	toAscii,
 	toDecimal,
 	toHex,
-	toNumber,
-	toUtf8,
 	toWei,
-	utf8ToHex,
-	toChecksumAddress,
 } from '../../src/converters';
 
 import {
 	asciiToHexValidData,
-	bytesToHexInvalidData,
-	bytesToHexValidData,
 	fromWeiInvalidData,
 	fromWeiValidData,
 	hexToAsciiValidData,
-	hexToBytesInvalidData,
-	hexToBytesValidData,
 	hexToNumberInvalidData,
 	hexToNumberValidData,
 	hexToUtf8InvalidData,
@@ -43,52 +29,9 @@ import {
 	toWeiValidData,
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
-	toCheckSumValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
-	describe('bytesToHex', () => {
-		describe('valid cases', () => {
-			it.each(bytesToHexValidData)('%s', (input, output) => {
-				expect(bytesToHex(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(bytesToHexInvalidData)('%s', (input, output) => {
-				expect(() => bytesToHex(input)).toThrow(output);
-			});
-		});
-	});
-
-	describe('hexToBytes', () => {
-		describe('valid cases', () => {
-			it.each(hexToBytesValidData)('%s', (input, output) => {
-				expect(hexToBytes(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(hexToBytesInvalidData)('%s', (input, output) => {
-				expect(() => hexToBytes(input)).toThrow(output);
-			});
-		});
-	});
-
-	describe('numberToHex', () => {
-		describe('valid cases', () => {
-			it.each(numberToHexValidData)('%s', (input, output) => {
-				expect(numberToHex(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(numberToHexInvalidData)('%s', (input, output) => {
-				expect(() => numberToHex(input)).toThrow(output);
-			});
-		});
-	});
-
 	describe('fromDecimal', () => {
 		describe('valid cases', () => {
 			it.each(numberToHexValidData)('%s', (input, output) => {
@@ -103,20 +46,6 @@ describe('converters', () => {
 		});
 	});
 
-	describe('hexToNumber', () => {
-		describe('valid cases', () => {
-			it.each(hexToNumberValidData)('%s', (input, output) => {
-				expect(hexToNumber(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(hexToNumberInvalidData)('%s', (input, output) => {
-				expect(() => hexToNumber(input)).toThrow(output);
-			});
-		});
-	});
-
 	describe('toDecimal', () => {
 		describe('valid cases', () => {
 			it.each(hexToNumberValidData)('%s', (input, output) => {
@@ -127,26 +56,6 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(hexToNumberInvalidData)('%s', (input, output) => {
 				expect(() => toDecimal(input)).toThrow(output);
-			});
-		});
-	});
-
-	describe('hexToNumberString', () => {
-		it.each(hexToNumberValidData)('%s', (input, output) => {
-			expect(hexToNumberString(input)).toEqual(output.toString());
-		});
-	});
-
-	describe('utf8ToHex', () => {
-		describe('valid cases', () => {
-			it.each(utf8ToHexValidData)('%s', (input, output) => {
-				expect(utf8ToHex(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(utf8ToHexInvalidData)('%s', (input, output) => {
-				expect(() => utf8ToHex(input)).toThrow(output);
 			});
 		});
 	});
@@ -175,34 +84,6 @@ describe('converters', () => {
 		describe('invalid cases', () => {
 			it.each(utf8ToHexInvalidData)('%s', (input, output) => {
 				expect(() => stringToHex(input)).toThrow(output);
-			});
-		});
-	});
-
-	describe('hexToUtf8', () => {
-		describe('valid cases', () => {
-			it.each(hexToUtf8ValidData)('%s', (input, output) => {
-				expect(hexToUtf8(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(hexToUtf8InvalidData)('%s', (input, output) => {
-				expect(() => hexToUtf8(input)).toThrow(output);
-			});
-		});
-	});
-
-	describe('toUtf8', () => {
-		describe('valid cases', () => {
-			it.each(hexToUtf8ValidData)('%s', (input, output) => {
-				expect(toUtf8(input)).toEqual(output);
-			});
-		});
-
-		describe('invalid cases', () => {
-			it.each(hexToUtf8InvalidData)('%s', (input, output) => {
-				expect(() => toUtf8(input)).toThrow(output);
 			});
 		});
 	});
@@ -291,12 +172,6 @@ describe('converters', () => {
 		});
 	});
 
-	describe('toNumber', () => {
-		it.each([...hexToNumberValidData, [123, 123], ['123', 123]])('%s', (input, output) => {
-			expect(toNumber(input)).toEqual(output);
-		});
-	});
-
 	describe('fromWei', () => {
 		describe('valid cases', () => {
 			it.each(fromWeiValidData)('%s', (input, output) => {
@@ -322,16 +197,6 @@ describe('converters', () => {
 			it.each(toWeiInvalidData)('%s', (input, output) => {
 				expect(() => toWei(input[0], input[1])).toThrow(output);
 			});
-		});
-	});
-	describe('toChecksumAddress', () => {
-		describe('valid cases', () => {
-			it.each(toCheckSumValidData)('%s', (input, output) => {
-				expect(toChecksumAddress(input)).toEqual(output);
-			});
-		});
-		describe('invalid cases', () => {
-			it.todo('should throw error for invalid cases');
 		});
 	});
 });

@@ -1,52 +1,6 @@
+import { Address, Bytes, HexString, Numbers } from 'web3-common';
 import { EtherUnits } from '../../src/converters';
-import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
-
-export const bytesToHexValidData: [Bytes, HexString][] = [
-	[new Uint8Array([72]), '0x48'],
-	[new Uint8Array([72, 12]), '0x480c'],
-	[Buffer.from('0c12', 'hex'), '0x0c12'],
-	['0x9c12', '0x9c12'],
-	['0X12c6', '0x12c6'],
-];
-
-export const bytesToHexInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'value "9.5,12.9" at "/0" must pass "bytes" validation'],
-	[[-72, 12], 'value "-72,12" at "/0" must pass "bytes" validation'],
-	[[567, 10098], 'value "567,10098" at "/0" must pass "bytes" validation'],
-	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
-	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
-	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
-	['data', 'value "data" at "/0" must pass "bytes" validation'],
-	[12, 'value "12" at "/0" must pass "bytes" validation'],
-	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
-	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
-	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
-];
-
-export const hexToBytesValidData: [HexString, Buffer][] = [
-	['0x48', Buffer.from([72])],
-	['0x3772', Buffer.from('3772', 'hex')],
-	['0x480c', Buffer.from([72, 12])],
-	['0x0c12', Buffer.from('0c12', 'hex')],
-	['0x9c12', Buffer.from('9c12', 'hex')],
-	['0X12c6', Buffer.from('12c6', 'hex')],
-];
-
-export const hexToBytesInvalidData: [any, string][] = [
-	[[9.5, 12.9], 'value "9.5,12.9" at "/0" must pass "bytes" validation'],
-	[[-72, 12], 'value "-72,12" at "/0" must pass "bytes" validation'],
-	[[567, 10098], 'value "567,10098" at "/0" must pass "bytes" validation'],
-	[[786, 12, 34, -2, 3], 'value "786,12,34,-2,3" at "/0" must pass "bytes" validation'],
-	['0x0c1g', 'value "0x0c1g" at "/0" must pass "bytes" validation'],
-	['0c1g', 'value "0c1g" at "/0" must pass "bytes" validation'],
-	['data', 'value "data" at "/0" must pass "bytes" validation'],
-	[12, 'value "12" at "/0" must pass "bytes" validation'],
-	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
-	[null, 'value at "/0" must pass "bytes" validation'],
-	[undefined, 'value at "/0" must pass "bytes" validation'],
-	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
-];
+import { ValueTypes } from '../../src/types';
 
 export const numberToHexValidData: [Numbers, HexString][] = [
 	[1, '0x1'],
