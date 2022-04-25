@@ -4,11 +4,17 @@ import {
 	EthExecutionAPI,
 	FormatType,
 	ReceiptInfo,
+	Address,
+	BlockNumberOrTag,
+	Bytes,
+	Filter,
+	HexString,
+	Numbers,
+	Uint,
 } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import { sendTransaction } from 'web3-eth';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
 
 export interface EventLog {
 	event: string;

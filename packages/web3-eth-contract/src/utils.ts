@@ -1,6 +1,5 @@
-import { TransactionWithSender } from 'web3-common';
+import { TransactionWithSender, mergeDeep } from 'web3-common';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { mergeDeep } from 'web3-utils';
 import { TransactionCall } from 'web3-eth';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';

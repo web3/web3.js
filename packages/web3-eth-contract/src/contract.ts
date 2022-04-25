@@ -6,6 +6,12 @@ import {
 	inputLogFormatter,
 	LogsInput,
 	Web3EventEmitter,
+	toChecksumAddress,
+	Address,
+	BlockNumberOrTag,
+	BlockTags,
+	Filter,
+	HexString,
 } from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
 import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
@@ -23,14 +29,6 @@ import {
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import {
-	Address,
-	BlockNumberOrTag,
-	BlockTags,
-	Filter,
-	HexString,
-	toChecksumAddress,
-} from 'web3-utils';
 import { validator } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
