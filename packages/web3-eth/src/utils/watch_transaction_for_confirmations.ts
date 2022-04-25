@@ -104,7 +104,7 @@ const watchBySubscription = ({
 			})
 			.catch(() => {
 				throw new SubscriptionError(
-					`Failed to subscribe to new newBlockHeaders to confirmation. ${JSON.stringify(
+					`Failed to subscribe to new newBlockHeaders to confirmation. ${SubscriptionError.convertToString(
 						transactionReceipt,
 					)}`,
 				);
