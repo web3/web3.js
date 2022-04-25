@@ -12,6 +12,7 @@ import { clientWsUrl, accounts } from '../../../../.github/test.config'; // esli
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
+
 	beforeAll(() => {
 		provider = new WebSocketProvider(
 			clientWsUrl,
@@ -19,8 +20,13 @@ describe('unsubscribe', () => {
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
 	});
+
 	afterAll(() => {
 		provider.disconnect();
+	});
+
+	afterEach(async () => {
+		await web3Eth.clearSubscriptions();
 	});
 
 	describe('subscribe to', () => {
@@ -30,7 +36,6 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
-			await web3Eth.clearSubscriptions();
 		});
 		it('syncing', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -38,7 +43,6 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(SyncingSubscription);
-			await web3Eth.clearSubscriptions();
 		});
 		it('newPendingTransactions', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -46,7 +50,6 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewPendingTransactionsSubscription);
-			await web3Eth.clearSubscriptions();
 		});
 		it('logs', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
@@ -56,7 +59,6 @@ describe('unsubscribe', () => {
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(LogsSubscription);
-			await web3Eth.clearSubscriptions();
 		});
 	});
 });
