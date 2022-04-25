@@ -1,4 +1,6 @@
 import * as errors from '../../src/errors';
+import { InvalidValueError } from '../../src/errors';
+import { ConvertValueToString } from '../fixtures/errors';
 
 describe('errors', () => {
 	it('should have unique codes for each error', () => {
@@ -234,6 +236,12 @@ describe('errors', () => {
 	describe('ContractNoFromAddressDefinedError', () => {
 		it('should have valid json structure', () => {
 			expect(new errors.ContractNoFromAddressDefinedError().toJSON()).toMatchSnapshot();
+		});
+	});
+
+	describe('value toString', () => {
+		it.each(ConvertValueToString)('%s', (input, output) => {
+			expect(InvalidValueError.convertToString(input, true)).toEqual(output);
 		});
 	});
 });

@@ -1,6 +1,6 @@
-import { Address, Bytes, Numbers } from 'web3-utils';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import { FMT_BYTES, FMT_NUMBER, format, FormatType } from '../../src/formatter';
+import { Address, Bytes, Numbers } from '../../src/types';
 
 type TestTransactionInfoType = {
 	readonly blockHash: Bytes | null;

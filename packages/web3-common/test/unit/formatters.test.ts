@@ -1,5 +1,4 @@
-import * as utils from 'web3-utils';
-import { Iban } from 'web3-eth-iban';
+import * as validatorUtils from 'web3-validator';
 import {
 	inputAddressFormatter,
 	inputBlockNumberFormatter,
@@ -16,29 +15,14 @@ import {
 } from '../../src/formatters';
 
 import * as formatters from '../../src/formatters';
+import { BlockTags } from '../../src/types';
 
-jest.mock('web3-eth-iban');
-jest.mock('web3-utils');
+jest.mock('web3-validator');
 
 describe('formatters', () => {
-	const toNumberResult = 12345;
-	const numberToHexResult = '0xff';
-	const hexToNumberResult = 123;
-	const sha3Result = 'sha3Result';
-	const toChecksumAddressResult = 'toChecksumAddress';
-	const hexToNumberStringResult = '1234';
-
 	beforeEach(() => {
-		jest.spyOn(utils, 'toChecksumAddress').mockReturnValue(toChecksumAddressResult);
-		jest.spyOn(utils, 'hexToNumberString').mockReturnValue(hexToNumberStringResult);
-		jest.spyOn(utils, 'toNumber').mockReturnValue(toNumberResult);
-		jest.spyOn(utils, 'numberToHex').mockReturnValue(numberToHexResult);
-		jest.spyOn(utils, 'hexToNumber').mockReturnValue(hexToNumberResult);
-		jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
-		jest.spyOn(utils, 'isAddress').mockReturnValue(true);
-		jest.spyOn(utils, 'sha3Raw').mockReturnValue(sha3Result);
-		jest.spyOn(Iban, 'isValid').mockImplementation(() => false);
-		jest.spyOn(Iban, 'isDirect').mockImplementation(() => false);
+		jest.spyOn(validatorUtils, 'isHexStrict').mockReturnValue(true);
+		jest.spyOn(validatorUtils, 'isAddress').mockReturnValue(true);
 	});
 
 	describe('outputProofFormatter', () => {
@@ -49,16 +33,10 @@ describe('formatters', () => {
 				balance: '0xFA',
 			});
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith(
-				'0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b',
-			);
-			expect(utils.hexToNumberString).toHaveBeenCalledWith('0xFF');
-			expect(utils.hexToNumberString).toHaveBeenCalledWith('0xFA');
-
 			expect(result).toEqual({
-				address: toChecksumAddressResult,
-				balance: hexToNumberStringResult,
-				nonce: hexToNumberStringResult,
+				address: '0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b',
+				balance: '250',
+				nonce: '255',
 			});
 		});
 	});
@@ -67,8 +45,7 @@ describe('formatters', () => {
 		it('should convert input to number', () => {
 			const result = outputBigIntegerFormatter(12n);
 
-			expect(utils.toNumber).toHaveBeenCalledWith(12n);
-			expect(result).toEqual(toNumberResult);
+			expect(result).toBe(12);
 		});
 	});
 
@@ -77,7 +54,7 @@ describe('formatters', () => {
 			expect(inputBlockNumberFormatter(undefined)).toBeUndefined();
 		});
 
-		it.each([utils.BlockTags.EARLIEST, utils.BlockTags.LATEST, utils.BlockTags.PENDING])(
+		it.each([BlockTags.EARLIEST, BlockTags.LATEST, BlockTags.PENDING])(
 			'should return "%s" values for "%s" block numbers',
 			blockNumber => {
 				expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);
@@ -89,56 +66,57 @@ describe('formatters', () => {
 		});
 
 		it('should return lower case hex value for a valid hex string', () => {
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
+			jest.spyOn(validatorUtils, 'isHexStrict').mockReturnValue(true);
 			const result = inputBlockNumberFormatter('0xAF0AF');
 
-			expect(utils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
-			expect(utils.numberToHex).not.toHaveBeenCalled();
+			expect(validatorUtils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
 			expect(result).toBe('0xaf0af');
 		});
 
 		it('should try parsing number if given value is not valid hex string', () => {
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
+			jest.spyOn(validatorUtils, 'isHexStrict').mockReturnValue(false);
 			const result = inputBlockNumberFormatter('0xAF0AF');
 
-			expect(utils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
-			expect(utils.numberToHex).toHaveBeenCalledWith('0xAF0AF');
-			expect(result).toEqual(numberToHexResult);
+			expect(validatorUtils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
+			expect(result).toBeUndefined();
 		});
 	});
 
 	describe('inputDefaultBlockNumberFormatter', () => {
 		it('should return default block if block number not provided', () => {
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0xff');
+
 			expect(inputDefaultBlockNumberFormatter(undefined, 255)).toBe('0xff');
+
+			expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(255);
 		});
 
 		it('should return block number if block number provided', () => {
-			expect(inputDefaultBlockNumberFormatter(10, 255)).toEqual(numberToHexResult);
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0xa');
 
-			expect(utils.numberToHex).toHaveBeenCalledWith(10);
+			expect(inputDefaultBlockNumberFormatter(10, 255)).toBe('0xa');
+
+			expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(10);
 		});
 	});
 
 	describe('inputAddressFormatter', () => {
 		it('should return lowercase address if given value is iban', () => {
 			const address = '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8';
-			Iban.prototype.toAddress = jest.fn(() => address);
 
-			jest.spyOn(Iban, 'isValid').mockImplementation(() => true);
-			jest.spyOn(Iban, 'isDirect').mockImplementation(() => true);
+			jest.spyOn(validatorUtils.utils, 'padLeft').mockReturnValue(address);
 
 			expect(inputAddressFormatter('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS')).toBe(address);
-			expect(Iban.prototype.toAddress).toHaveBeenCalled();
 		});
 
 		it('should return lower case value if valid address', () => {
-			jest.spyOn(utils, 'isAddress').mockReturnValue(true);
+			jest.spyOn(validatorUtils, 'isAddress').mockReturnValue(true);
 
 			expect(inputAddressFormatter('0xAcb')).toBe('0xacb');
 		});
 
 		it('should throw error if not a valid address or iban', () => {
-			jest.spyOn(utils, 'isAddress').mockReturnValue(false);
+			jest.spyOn(validatorUtils, 'isAddress').mockReturnValue(false);
 
 			expect(() => inputAddressFormatter('0xAcb')).toThrow(
 				'Provided address 0xAcb is invalid',
@@ -150,7 +128,7 @@ describe('formatters', () => {
 		let txInput: any;
 
 		beforeEach(() => {
-			jest.spyOn(utils, 'isAddress').mockReturnValue(true);
+			jest.spyOn(validatorUtils, 'isAddress').mockReturnValue(true);
 			txInput = {
 				to: '0xabcd',
 			};
@@ -184,25 +162,30 @@ describe('formatters', () => {
 		});
 
 		it('should throw error if "data" is not a valid hex string', () => {
-			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
+			jest.spyOn(validatorUtils, 'isHexStrict').mockReturnValue(false);
 
 			expect(() => txInputOptionsFormatter({ ...txInput, data: 'ff0011' })).toThrow(
 				'The data field must be HEX encoded data.',
 			);
-			expect(utils.isHexStrict).toHaveBeenCalledWith('0xff0011');
+			expect(validatorUtils.isHexStrict).toHaveBeenCalledWith('0xff0011');
 		});
 		it('should set "gas" equal to "gas" if provided', () => {
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0x7b');
+
 			expect(txInputOptionsFormatter({ ...txInput, data: '0xff0011', gas: '123' })).toEqual(
-				expect.objectContaining({ gas: numberToHexResult }),
+				expect.objectContaining({ gas: '0x7b' }),
 			);
-			expect(utils.toNumber).toHaveBeenCalledWith('123');
+
+			expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(123);
 		});
 
 		it('should set "gas" equal to "gasLimit" if "gas" not provided', () => {
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0x1be');
 			expect(
 				txInputOptionsFormatter({ ...txInput, data: '0xff0011', gasLimit: '446' }),
-			).toEqual(expect.objectContaining({ gas: numberToHexResult }));
-			expect(utils.toNumber).toHaveBeenCalledWith('446');
+			).toEqual(expect.objectContaining({ gas: '0x1be' }));
+
+			expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(446);
 		});
 
 		it('should remove "gasPrice" if "maxPriorityFeePerGas" or "maxFeePerGas" is given', () => {
@@ -226,26 +209,26 @@ describe('formatters', () => {
 		it.each(['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce'])(
 			'should convert "%s" number value to hex',
 			attr => {
-				jest.spyOn(utils, 'toNumber').mockReturnValue(5678n);
+				jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0x162e');
 
 				expect(
 					txInputOptionsFormatter({ ...txInput, data: '0xff0011', [attr]: 5678n }),
-				).toEqual(expect.objectContaining({ [attr]: numberToHexResult }));
+				).toEqual(expect.objectContaining({ [attr]: '0x162e' }));
 
-				expect(utils.numberToHex).toHaveBeenCalledWith(5678n);
+				expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(5678n);
 			},
 		);
 	});
 
 	describe('outputLogFormatter', () => {
 		it('should set log id from "blockHash", "transactionHash" and "logIndex"', () => {
+			const sha3Result = 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+
 			const result = outputLogFormatter({
 				blockHash: 'blockHash',
 				transactionHash: 'transactionHash',
-				logIndex: 'logIndex',
+				logIndex: '0x1',
 			});
-
-			expect(utils.sha3Raw).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
 
 			expect(result.id).toEqual(`log_${sha3Result.substr(0, 8)}`);
 		});
@@ -254,24 +237,22 @@ describe('formatters', () => {
 			const result = outputLogFormatter({
 				blockHash: 'blockHash',
 				transactionHash: 'transactionHash',
-				logIndex: 'logIndex',
+				logIndex: '0x1',
 				blockNumber: '0xFF0011',
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('0xFF0011');
-			expect(result.blockNumber).toEqual(hexToNumberResult);
+			expect(result.blockNumber).toBe(16711697);
 		});
 
 		it('should convert "transactionIndex" from hex to number', () => {
 			const result = outputLogFormatter({
 				blockHash: 'blockHash',
 				transactionHash: 'transactionHash',
-				logIndex: 'logIndex',
+				logIndex: '0x1',
 				transactionIndex: '0xFF0011',
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('0xFF0011');
-			expect(result.transactionIndex).toEqual(hexToNumberResult);
+			expect(result.transactionIndex).toBe(16711697);
 		});
 
 		it('should convert "logIndex" from hex to number', () => {
@@ -280,9 +261,7 @@ describe('formatters', () => {
 				transactionHash: 'transactionHash',
 				logIndex: '0xFF0011',
 			});
-
-			expect(utils.hexToNumber).toHaveBeenCalledWith('0xFF0011');
-			expect(result.logIndex).toEqual(hexToNumberResult);
+			expect(result.logIndex).toBe(16711697);
 		});
 
 		it('should convert "address" to checksum address', () => {
@@ -290,11 +269,10 @@ describe('formatters', () => {
 				blockHash: 'blockHash',
 				transactionHash: 'transactionHash',
 				logIndex: '0xFF0011',
-				address: 'address',
+				address: '0x09d7bd9e185fbc2d265d8dbe81e5e888e391688b',
 			});
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith('address');
-			expect(result.address).toEqual(toChecksumAddressResult);
+			expect(result.address).toBe('0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b');
 		});
 	});
 
@@ -307,8 +285,7 @@ describe('formatters', () => {
 				blockNumber: '0x12',
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('0x12');
-			expect(result).toEqual(expect.objectContaining({ blockNumber: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ blockNumber: 18 }));
 		});
 
 		it('should convert "transactionIndex" from hex to number', () => {
@@ -317,10 +294,7 @@ describe('formatters', () => {
 				transactionIndex: '0x12',
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('0x12');
-			expect(result).toEqual(
-				expect.objectContaining({ transactionIndex: hexToNumberResult }),
-			);
+			expect(result).toEqual(expect.objectContaining({ transactionIndex: 18 }));
 		});
 
 		it('should convert "cumulativeGasUsed" from hex to number', () => {
@@ -328,10 +302,7 @@ describe('formatters', () => {
 				...validReceipt,
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith(validReceipt.cumulativeGasUsed);
-			expect(result).toEqual(
-				expect.objectContaining({ cumulativeGasUsed: hexToNumberResult }),
-			);
+			expect(result).toEqual(expect.objectContaining({ cumulativeGasUsed: 4660 }));
 		});
 
 		it('should convert "gasUsed" from hex to number', () => {
@@ -339,8 +310,7 @@ describe('formatters', () => {
 				...validReceipt,
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith(validReceipt.gasUsed);
-			expect(result).toEqual(expect.objectContaining({ gasUsed: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ gasUsed: 17767 }));
 		});
 
 		it('should format "logs" if available', () => {
@@ -365,12 +335,13 @@ describe('formatters', () => {
 		it('should convert "contractAddress" to checksum address', () => {
 			const result = outputTransactionReceiptFormatter({
 				...validReceipt,
-				contractAddress: '0x12',
+				contractAddress: '0x09d7bd9e185fbc2d265d8dbe81e5e888e391688b',
 			});
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith('0x12');
 			expect(result).toEqual(
-				expect.objectContaining({ contractAddress: toChecksumAddressResult }),
+				expect.objectContaining({
+					contractAddress: '0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b',
+				}),
 			);
 		});
 
@@ -400,54 +371,48 @@ describe('formatters', () => {
 				effectiveGasPrice,
 			});
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith(effectiveGasPrice);
 			expect(result).toEqual(
-				expect.objectContaining({ effectiveGasPrice: hexToNumberResult }),
+				expect.objectContaining({ effectiveGasPrice: 36267774588438875n }),
 			);
 		});
 	});
 
 	describe('outputBlockFormatter', () => {
 		const validBlock = {
-			gasLimit: 'gasLimit',
-			gasUsed: 'gasUsed',
-			size: 'size',
-			timestamp: 'timestamp',
+			gasLimit: '0x1034',
+			gasUsed: '0xa3',
+			size: '0x400',
+			timestamp: '0x2626CC97F',
 		};
 
 		it('should convert "gasLimit" from hex to number', () => {
 			const result = outputBlockFormatter({ ...validBlock } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('gasLimit');
-			expect(result).toEqual(expect.objectContaining({ gasLimit: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ gasLimit: 4148 }));
 		});
 
 		it('should convert "gasUsed" from hex to number', () => {
 			const result = outputBlockFormatter({ ...validBlock } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('gasUsed');
-			expect(result).toEqual(expect.objectContaining({ gasUsed: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ gasUsed: 163 }));
 		});
 
 		it('should convert "size" from hex to number', () => {
 			const result = outputBlockFormatter({ ...validBlock } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('size');
-			expect(result).toEqual(expect.objectContaining({ size: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ size: 1024 }));
 		});
 
 		it('should convert "timestamp" from hex to number', () => {
 			const result = outputBlockFormatter({ ...validBlock } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('timestamp');
-			expect(result).toEqual(expect.objectContaining({ timestamp: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ timestamp: 10241231231 }));
 		});
 
 		it('should convert "number" from hex to number', () => {
-			const result = outputBlockFormatter({ ...validBlock, number: 'number' } as any);
+			const result = outputBlockFormatter({ ...validBlock, number: '0x4004a' } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('number');
-			expect(result).toEqual(expect.objectContaining({ number: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ number: 262218 }));
 		});
 
 		it('should convert "difficulty" to bigint', () => {
@@ -511,43 +476,50 @@ describe('formatters', () => {
 		});
 
 		it('should convert "miner" to checksum address', () => {
-			const result = outputBlockFormatter({ ...validBlock, miner: 'miner' } as any);
+			const result = outputBlockFormatter({
+				...validBlock,
+				miner: '0x09d7bd9e185fbc2d265d8dbe81e5e888e391688b',
+			} as any);
 
-			expect(utils.toChecksumAddress).toHaveBeenCalledWith('miner');
-			expect(result).toEqual(expect.objectContaining({ miner: toChecksumAddressResult }));
+			expect(result).toEqual(
+				expect.objectContaining({ miner: '0x09d7bD9E185fbC2d265D8DBe81e5e888E391688b' }),
+			);
 		});
 
 		it('should convert "baseFeePerGas" from hex to number', () => {
 			const result = outputBlockFormatter({
 				...validBlock,
-				baseFeePerGas: 'baseFeePerGas',
+				baseFeePerGas: '0xa452b',
 			} as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('baseFeePerGas');
-			expect(result).toEqual(expect.objectContaining({ baseFeePerGas: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ baseFeePerGas: 673067 }));
 		});
 	});
 
 	describe('inputPostFormatter', () => {
 		it('should convert "ttl" from number to hex', () => {
-			const result = inputPostFormatter({ ttl: 'ttl' } as any);
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue('0x64');
 
-			expect(utils.numberToHex).toHaveBeenCalledWith('ttl');
-			expect(result).toEqual(expect.objectContaining({ ttl: numberToHexResult }));
+			const result = inputPostFormatter({ ttl: 100 } as any);
+
+			expect(validatorUtils.utils.numberToHex).toHaveBeenCalledWith(100);
+			expect(result).toEqual(expect.objectContaining({ ttl: '0x64' }));
 		});
 
 		it('should convert "workToProve" from number to hex', () => {
-			const result = inputPostFormatter({ workToProve: 'workToProve' } as any);
+			const numberTohexResult = '0x2D6671';
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue(numberTohexResult);
+			const result = inputPostFormatter({ workToProve: 2975345 } as any);
 
-			expect(utils.numberToHex).toHaveBeenCalledWith('workToProve');
-			expect(result).toEqual(expect.objectContaining({ workToProve: numberToHexResult }));
+			expect(result).toEqual(expect.objectContaining({ workToProve: numberTohexResult }));
 		});
 
 		it('should convert "priority" from number to hex', () => {
-			const result = inputPostFormatter({ priority: 'priority' } as any);
+			const numberTohexResult = '0x2D6671';
+			jest.spyOn(validatorUtils.utils, 'numberToHex').mockReturnValue(numberTohexResult);
+			const result = inputPostFormatter({ priority: 2975345 } as any);
 
-			expect(utils.numberToHex).toHaveBeenCalledWith('priority');
-			expect(result).toEqual(expect.objectContaining({ priority: numberToHexResult }));
+			expect(result).toEqual(expect.objectContaining({ priority: numberTohexResult }));
 		});
 
 		it('should convert "topics" to array if single value provided', () => {
@@ -557,44 +529,37 @@ describe('formatters', () => {
 		});
 
 		it('should convert "topics" to hex if not already', () => {
-			jest.spyOn(utils, 'fromUtf8').mockReturnValue('fromUtf8Result');
 			const result = inputPostFormatter({ topics: ['0x123', 'non-hex-value'] } as any);
 
-			expect(utils.fromUtf8).toHaveBeenCalledTimes(1);
-			expect(utils.fromUtf8).toHaveBeenCalledWith('non-hex-value');
 			expect(result).toEqual(
-				expect.objectContaining({ topics: ['0x123', 'fromUtf8Result'] }),
+				expect.objectContaining({ topics: ['0x123', '0x6e6f6e2d6865782d76616c7565'] }),
 			);
 		});
 	});
 
 	describe('outputPostFormatter', () => {
 		it('should convert "expiry" from hex to number', () => {
-			const result = outputPostFormatter({ expiry: 'expiry' } as any);
+			const result = outputPostFormatter({ expiry: '0x1a' } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('expiry');
-			expect(result).toEqual(expect.objectContaining({ expiry: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ expiry: 26 }));
 		});
 
 		it('should convert "sent" from hex to number', () => {
-			const result = outputPostFormatter({ sent: 'sent' } as any);
+			const result = outputPostFormatter({ sent: '0x1a23' } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('sent');
-			expect(result).toEqual(expect.objectContaining({ sent: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ sent: 6691 }));
 		});
 
 		it('should convert "ttl" from hex to number', () => {
-			const result = outputPostFormatter({ ttl: 'ttl' } as any);
+			const result = outputPostFormatter({ ttl: '0x10' } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('ttl');
-			expect(result).toEqual(expect.objectContaining({ ttl: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ ttl: 16 }));
 		});
 
 		it('should convert "workProved" from hex to number', () => {
-			const result = outputPostFormatter({ workProved: 'workProved' } as any);
+			const result = outputPostFormatter({ workProved: '0x10' } as any);
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('workProved');
-			expect(result).toEqual(expect.objectContaining({ workProved: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ workProved: 16 }));
 		});
 
 		it('should set "topics" to empty array if not provided', () => {
@@ -603,63 +568,52 @@ describe('formatters', () => {
 			expect(result).toEqual(expect.objectContaining({ topics: [] }));
 		});
 
-		it('should convert "topics" from utf8 to hex', () => {
-			const topics = ['0x123', 'non-hex-value'];
-			jest.spyOn(utils, 'toUtf8').mockReturnValue('toUtf8Result');
+		it('should convert "topics" from hex to utf8', () => {
+			const topics = ['0x76616c75655265636569766564', '0x66756e64735472616e73666572726564'];
 
 			const result = outputPostFormatter({ topics } as any);
 
-			expect(utils.toUtf8).toHaveBeenCalledTimes(topics.length);
-
-			expect(utils.toUtf8).toHaveBeenCalledWith(topics[0], 0, topics);
-
-			expect(utils.toUtf8).toHaveBeenCalledWith(topics[1], 1, topics);
 			expect(result).toEqual(
-				expect.objectContaining({ topics: ['toUtf8Result', 'toUtf8Result'] }),
+				expect.objectContaining({ topics: ['valueReceived', 'fundsTransferred'] }),
 			);
 		});
 	});
 
 	describe('outputSyncingFormatter', () => {
 		const validObject = {
-			startingBlock: 'startingBlock',
-			currentBlock: 'currentBlock',
-			highestBlock: 'highestBlock',
+			startingBlock: '0x11',
+			currentBlock: '0x43a',
+			highestBlock: '0x7b843',
 		};
 
 		it('should convert "startingBlock" from hex to number', () => {
 			const result = outputSyncingFormatter({ ...validObject });
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('startingBlock');
-			expect(result).toEqual(expect.objectContaining({ startingBlock: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ startingBlock: 17 }));
 		});
 
 		it('should convert "currentBlock" from hex to number', () => {
 			const result = outputSyncingFormatter({ ...validObject });
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('currentBlock');
-			expect(result).toEqual(expect.objectContaining({ currentBlock: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ currentBlock: 1082 }));
 		});
 
 		it('should convert "highestBlock" from hex to number', () => {
 			const result = outputSyncingFormatter({ ...validObject });
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('highestBlock');
-			expect(result).toEqual(expect.objectContaining({ highestBlock: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ highestBlock: 505923 }));
 		});
 
 		it('should convert "knownStates" from hex to number', () => {
-			const result = outputSyncingFormatter({ ...validObject, knownStates: 'knownStates' });
+			const result = outputSyncingFormatter({ ...validObject, knownStates: '0x231' });
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('highestBlock');
-			expect(result).toEqual(expect.objectContaining({ knownStates: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ knownStates: 561 }));
 		});
 
 		it('should convert "pulledStates" from hex to number', () => {
-			const result = outputSyncingFormatter({ ...validObject, pulledStates: 'pulledStates' });
+			const result = outputSyncingFormatter({ ...validObject, pulledStates: '0x423' });
 
-			expect(utils.hexToNumber).toHaveBeenCalledWith('highestBlock');
-			expect(result).toEqual(expect.objectContaining({ pulledStates: hexToNumberResult }));
+			expect(result).toEqual(expect.objectContaining({ pulledStates: 1059 }));
 		});
 	});
 });
