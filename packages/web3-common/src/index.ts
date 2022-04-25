@@ -9,4 +9,5 @@ export * from './deferred_promise';
 export * from './promi_event';
 export * from './formatters';
 export * from './formatter';
+export * from './common_utils';
 export * as jsonRpc from './json_rpc';
