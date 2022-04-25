@@ -1,45 +1,24 @@
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { isAddress, isHexStrict } from 'web3-validator';
-import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
+import { isAddress } from 'web3-validator';
+import {
+	toNumber,
+	utf8ToHex,
+	sha3,
+	Numbers,
+	InvalidAddressError,
+	InvalidBytesError,
+	sha3Raw,
+} from 'web3-common';
+import { TypedObject, TypedObjectAbbreviated, EncodingTypes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
-import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import {
 	InvalidStringError,
 	InvalidTypeError,
 	InvalidBooleanError,
-	InvalidAddressError,
 	InvalidSizeError,
 	InvalidLargeValueError,
 	InvalidUnsignedIntegerError,
-	InvalidBytesError,
 } from './errors';
-
-const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
-
-/**
- *
- * computes the Keccak-256 hash of the input and returns a hexstring
- */
-export const sha3 = (data: Bytes): string | null => {
-	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
-
-	const hash = bytesToHex(keccak256(Buffer.from(updatedData as Buffer)));
-
-	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-	return hash === SHA3_EMPTY_BYTES ? null : hash;
-};
-
-/**
- *Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
- */
-export const sha3Raw = (data: Bytes): string => {
-	const hash = sha3(data);
-	if (hash === null) {
-		return SHA3_EMPTY_BYTES;
-	}
-
-	return hash;
-};
 
 export { keccak256 };
 

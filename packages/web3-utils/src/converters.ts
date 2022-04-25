@@ -1,24 +1,19 @@
-import { validator, isAddress, isHexStrict, utils as validatorUtils } from 'web3-validator';
-import { keccak256 } from 'ethereum-cryptography/keccak';
+import { validator, isAddress, isHexStrict } from 'web3-validator';
 
 import {
-	HexProcessingError,
-	InvalidAddressError,
-	InvalidBytesError,
-	InvalidUnitError,
-	InvalidTypeAbiInputError,
-	InvalidNumberError,
-} from './errors';
-import {
+	numberToHex,
+	hexToNumber,
+	utf8ToHex,
+	toNumber,
+	hexToUtf8,
+	bytesToBuffer,
 	Address,
 	Bytes,
 	HexString,
 	Numbers,
-	ValueTypes,
-	JsonFunctionInterface,
-	JsonEventInterface,
-	Components,
-} from './types';
+} from 'web3-common';
+import { HexProcessingError, InvalidUnitError, InvalidTypeAbiInputError } from './errors';
+import { ValueTypes, JsonFunctionInterface, JsonEventInterface, Components } from './types';
 
 const base = BigInt(10);
 const expo10 = (expo: number) => base ** BigInt(expo);
@@ -57,111 +52,20 @@ export const ethUnitMap = {
 
 export type EtherUnits = keyof typeof ethUnitMap;
 
-export const bytesToBuffer = (data: Bytes): Buffer | never => {
-	validator.validate(['bytes'], [data]);
-
-	if (Buffer.isBuffer(data)) {
-		return data;
-	}
-
-	if (data instanceof Uint8Array || Array.isArray(data)) {
-		return Buffer.from(data);
-	}
-
-	if (typeof data === 'string' && isHexStrict(data)) {
-		return Buffer.from(data.slice(2), 'hex');
-	}
-
-	if (typeof data === 'string' && !isHexStrict(data)) {
-		return Buffer.from(data, 'hex');
-	}
-
-	throw new InvalidBytesError(data);
-};
-
-/** @internal */
-const bufferToHexString = (data: Buffer) => `0x${data.toString('hex')}`;
-
-/**
- * Convert a byte array to a hex string
- */
-export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToBuffer(bytes));
-
-/**
- * Convert a hex string to a byte array
- */
-export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
-
-/**
- * Converts value to it's number representation
- */
-export const hexToNumber = (value: HexString): bigint | number => {
-	validator.validate(['hex'], [value]);
-
-	// To avoid duplicate code and circular dependency we will
-	// use `hexToNumber` implementation from `web3-validator`
-	return validatorUtils.hexToNumber(value);
-};
-
 /**
  * Converts value to it's number representation @alias `hexToNumber`
  */
 export const toDecimal = hexToNumber;
 
 /**
- * Converts value to it's hex representation
- */
-export const numberToHex = (value: Numbers): HexString => {
-	validator.validate(['int'], [value]);
-
-	// To avoid duplicate code and circular dependency we will
-	// use `numberToHex` implementation from `web3-validator`
-	return validatorUtils.numberToHex(value);
-};
-/**
  * Converts value to it's hex representation @alias `numberToHex`
  */
 export const fromDecimal = numberToHex;
 
 /**
- * Converts value to it's decimal representation in string
- */
-export const hexToNumberString = (data: HexString): string => hexToNumber(data).toString();
-
-/**
- * Should be called to get hex representation (prefixed by 0x) of utf8 string
- */
-export const utf8ToHex = (str: string): HexString => {
-	validator.validate(['string'], [str]);
-
-	// To be compatible with 1.x trim null character
-	// eslint-disable-next-line no-control-regex
-	let strWithoutNullCharacter = str.replace(/^(?:\u0000)/, '');
-	// eslint-disable-next-line no-control-regex
-	strWithoutNullCharacter = strWithoutNullCharacter.replace(/(?:\u0000)$/, '');
-
-	return `0x${Buffer.from(strWithoutNullCharacter, 'utf8').toString('hex')}`;
-};
-
-/**
- * @alias `utf8ToHex`
- */
-
-export const fromUtf8 = utf8ToHex;
-/**
  * @alias `utf8ToHex`
  */
 export const stringToHex = utf8ToHex;
-
-/**
- * Should be called to get utf8 from it's hex representation
- */
-export const hexToUtf8 = (str: HexString): string => bytesToBuffer(str).toString('utf8');
-
-/**
- * @alias `hexToUtf8`
- */
-export const toUtf8 = hexToUtf8;
 
 /**
  * @alias `hexToUtf8`
@@ -232,47 +136,6 @@ export const toHex = (
 	}
 
 	throw new HexProcessingError(value);
-};
-
-/**
- * Auto converts any given value into it's hex representation,
- * then converts hex to number.
- */
-export const toNumber = (value: Numbers): number | bigint => {
-	if (typeof value === 'number') {
-		return value;
-	}
-
-	if (typeof value === 'bigint') {
-		return value >= Number.MIN_SAFE_INTEGER && value <= Number.MAX_SAFE_INTEGER
-			? Number(value)
-			: value;
-	}
-
-	return hexToNumber(numberToHex(value));
-};
-
-/**
- * Auto converts any given value into it's bigint representation
- */
-export const toBigInt = (value: unknown): bigint => {
-	if (typeof value === 'number') {
-		return BigInt(value);
-	}
-
-	if (typeof value === 'bigint') {
-		return value;
-	}
-
-	if (typeof value === 'string' && !isHexStrict(value)) {
-		return BigInt(value);
-	}
-
-	if (typeof value === 'string' && isHexStrict(value)) {
-		return BigInt(hexToNumber(value));
-	}
-
-	throw new InvalidNumberError(value);
 };
 
 /**
@@ -363,36 +226,6 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	// Add zeros to make length equal to required decimal points
 	// If string is larger than decimal points required then remove last zeros
 	return updatedValue.toString().padStart(decimals, '0').slice(0, -decimals);
-};
-
-export const toChecksumAddress = (address: Address): string => {
-	if (!isAddress(address, false)) {
-		throw new InvalidAddressError(address);
-	}
-
-	const lowerCaseAddress = address.toLowerCase().replace(/^0x/i, '');
-
-	const hash = bytesToHex(keccak256(Buffer.from(lowerCaseAddress)));
-
-	if (
-		hash === null ||
-		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
-	)
-		return ''; // // EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-
-	const addressHash = hash.replace(/^0x/i, '');
-
-	let checksumAddress = '0x';
-
-	for (let i = 0; i < lowerCaseAddress.length; i += 1) {
-		// If ith character is 8 to f then make it uppercase
-		if (parseInt(addressHash[i], 16) > 7) {
-			checksumAddress += lowerCaseAddress[i].toUpperCase();
-		} else {
-			checksumAddress += lowerCaseAddress[i];
-		}
-	}
-	return checksumAddress;
 };
 
 /**
