@@ -1,7 +1,5 @@
-import { Web3Error } from 'web3-utils';
+import { Web3Error, ERR_CONTRACT_INSTANCE_CREATION } from 'web3-common';
 
 export class ContractError extends Web3Error {
-	public constructor(message: string) {
-		super('ContractError', message);
-	}
+	public code = ERR_CONTRACT_INSTANCE_CREATION;
 }
