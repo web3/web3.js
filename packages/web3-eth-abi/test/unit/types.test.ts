@@ -1,4 +1,4 @@
-import { Address, Bytes, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers } from 'web3-common';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import { MatchPrimitiveType } from '../../src/types';
 

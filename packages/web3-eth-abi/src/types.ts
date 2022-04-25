@@ -1,4 +1,5 @@
-import { Address, Bytes, FixedSizeArray, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers } from 'web3-common';
+import { FixedSizeArray } from 'web3-utils';
 import { ConvertToNumber } from './number_map_type';
 
 export interface AbiStruct {
