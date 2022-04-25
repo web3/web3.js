@@ -10,17 +10,7 @@ import { ecdsaSign, ecdsaRecover } from 'secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
 import { encrypt as createCipheriv, decrypt as createDecipheriv } from 'ethereum-cryptography/aes';
-import {
-	toChecksumAddress,
-	bytesToHex,
-	sha3Raw,
-	HexString,
-	randomBytes,
-	hexToBytes,
-	Address,
-	isHexStrict,
-	utf8ToHex,
-} from 'web3-utils';
+import { randomBytes, isHexStrict } from 'web3-utils';
 import { validator, isBuffer, isHexString32Bytes, isString } from 'web3-validator';
 import {
 	InvalidPrivateKeyError,
@@ -34,6 +24,13 @@ import {
 	InvalidPasswordError,
 	IVLengthError,
 	PBKDF2IterationsError,
+	bytesToHex,
+	hexToBytes,
+	utf8ToHex,
+	toChecksumAddress,
+	sha3Raw,
+	HexString,
+	Address,
 } from 'web3-common';
 import {
 	signatureObject,
