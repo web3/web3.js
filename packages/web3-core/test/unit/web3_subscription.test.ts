@@ -5,6 +5,7 @@ describe('Web3Subscription', () => {
 	let sub: ExampleSubscription;
 
 	beforeEach(() => {
+		// const web3 = new Web3('http://localhost:8545');
 		requestManager = {
 			send: jest.fn(),
 			on: jest.fn(),

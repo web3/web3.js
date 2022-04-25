@@ -83,7 +83,6 @@ export class Web3Context<
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
 		super();
-
 		if (
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)

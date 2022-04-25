@@ -1,4 +1,4 @@
-import { Web3Subscription } from '../../../src/web3_subscriptions';
+import { Web3Subscription } from '../../../src';
 
 export class ExampleSubscription extends Web3Subscription<
 	{ data: string },
