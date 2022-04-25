@@ -49,6 +49,10 @@ import {
 	ERR_ENS_CHECK_INTERFACE_SUPPORT,
 	ERR_ENS_UNSUPPORTED_NETWORK,
 	ERR_ENS_NETWORK_NOT_SYNCED,
+	ERR_INVALID_BYTES,
+	ERR_INVALID_NUMBER,
+	ERR_INVALID_ADDRESS,
+	ERR_INVALID_VALUE,
 } from './constants';
 import { isResponseWithError } from './json_rpc';
 
@@ -70,6 +74,8 @@ export abstract class Web3Error extends Error {
 }
 
 export abstract class InvalidValueError extends Web3Error {
+	public code = ERR_INVALID_VALUE;
+
 	public constructor(value: unknown, msg: string) {
 		super(
 			`Invalid value given "${InvalidValueError.convertToString(
@@ -526,5 +532,29 @@ export class ENSNetworkNotSyncedError extends Web3Error {
 	public code = ERR_ENS_NETWORK_NOT_SYNCED;
 	public constructor() {
 		super(`Network not synced`);
+	}
+}
+
+export class InvalidBytesError extends InvalidValueError {
+	public code = ERR_INVALID_BYTES;
+
+	public constructor(value: unknown) {
+		super(value, 'can not parse as byte data');
+	}
+}
+
+export class InvalidNumberError extends InvalidValueError {
+	public code = ERR_INVALID_NUMBER;
+
+	public constructor(value: unknown) {
+		super(value, 'can not parse as number data');
+	}
+}
+
+export class InvalidAddressError extends InvalidValueError {
+	public code = ERR_INVALID_ADDRESS;
+
+	public constructor(value: unknown) {
+		super(value, 'invalid ethereum address');
 	}
 }
