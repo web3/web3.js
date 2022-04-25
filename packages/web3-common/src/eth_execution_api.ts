@@ -9,9 +9,18 @@ import {
 	HexStringSingleByte,
 	Uint,
 	Uint256,
-	Topic,
-	Filter,
-} from 'web3-utils';
+} from './types';
+
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
+export type Topic = HexString32Bytes;
+
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
+export interface Filter {
+	readonly fromBlock?: BlockNumberOrTag;
+	readonly toBlock?: BlockNumberOrTag;
+	readonly address?: Address | Address[];
+	readonly topics?: (Topic | Topic[] | null)[];
+}
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis

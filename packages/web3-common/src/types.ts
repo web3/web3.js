@@ -1,4 +1,33 @@
-import { HexString, HexString32Bytes } from 'web3-utils';
+export type HexString = string;
+// Hex encoded unsigned integer
+export type Uint = HexString;
+
+export type Numbers = number | bigint | string | HexString;
+export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
+
+// Hex encoded address
+export type Address = HexString;
+
+export enum BlockTags {
+	EARLIEST = 'earliest',
+	LATEST = 'latest',
+	PENDING = 'pending',
+}
+export type BlockTag = 'earliest' | 'latest' | 'pending';
+export type BlockNumberOrTag = Uint | BlockTag;
+
+// Hex encoded 256 byte
+export type HexString256Bytes = HexString;
+// Hex encoded 8 bytes
+export type HexString8Bytes = HexString;
+// Hex encoded 32 bytes
+export type HexString32Bytes = HexString;
+// Hex encoded 1 byte
+export type HexStringBytes = HexString;
+// Hex encoded 1 byte
+export type HexStringSingleByte = HexString;
+// Hex encoded unsigned integer 32 bytes
+export type Uint256 = HexString;
 
 export type JsonRpcId = string | number | null;
 export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
