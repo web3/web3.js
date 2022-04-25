@@ -2,6 +2,7 @@ import {
 	BlockOutput,
 	DataFormat,
 	EthExecutionAPI,
+	SubscriptionError,
 	format,
 	PromiEvent,
 	Web3BaseProvider,
@@ -101,9 +102,11 @@ const watchBySubscription = ({
 					});
 				});
 			})
-			.catch((err: Error) => {
-				throw new Error(
-					`Failed to subscribe to new newBlockHeaders to confirmation.${err.message}`,
+			.catch(() => {
+				throw new SubscriptionError(
+					`Failed to subscribe to new newBlockHeaders to confirmation. ${JSON.stringify(
+						transactionReceipt,
+					)}`,
 				);
 			});
 	});
