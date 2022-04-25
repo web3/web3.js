@@ -41,6 +41,7 @@
 	},
 	"dependencies": {
 		"web3-validator": "^0.1.0-alpha.0",
-		"ethereum-cryptography": "^0.2.0"
+		"ethereum-cryptography": "^0.2.0",
+		"web3-common": "^1.0.0-alpha.0"
 	}
 }
