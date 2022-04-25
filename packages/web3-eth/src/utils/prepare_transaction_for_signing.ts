@@ -1,8 +1,14 @@
 import Common from '@ethereumjs/common';
 import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
-import { EthExecutionAPI, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-common';
+import {
+	EthExecutionAPI,
+	FMT_BYTES,
+	FMT_NUMBER,
+	FormatType,
+	toNumber,
+	HexString,
+} from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { HexString, toNumber } from 'web3-utils';
 import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,

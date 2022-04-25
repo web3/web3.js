@@ -1,4 +1,4 @@
-import { EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI, Address } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Eth from 'web3-eth';
 import { Iban } from 'web3-eth-iban';
@@ -27,7 +27,6 @@ import {
 	decrypt,
 	Wallet,
 } from 'web3-eth-accounts';
-import { Address } from 'web3-utils';
 import { ContractError } from './errors';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {

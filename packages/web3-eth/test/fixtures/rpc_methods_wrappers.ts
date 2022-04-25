@@ -7,8 +7,6 @@ import {
 	FMT_NUMBER,
 	FormatType,
 	TransactionWithSender,
-} from 'web3-common';
-import {
 	HexString32Bytes,
 	Address,
 	BlockNumberOrTag,
@@ -20,7 +18,8 @@ import {
 	Filter,
 	HexString8Bytes,
 	Numbers,
-} from 'web3-utils';
+} from 'web3-common';
+
 import { Block, FeeHistory, ReceiptInfo, TransactionInfo, AccountObject } from '../../src/types';
 
 // Array consists of: returnType parameter, mock RPC result, expected output

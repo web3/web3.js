@@ -1,5 +1,11 @@
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, FormatType } from 'web3-common';
-import { bytesToBuffer, mergeDeep } from 'web3-utils';
+import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	FormatType,
+	bytesToBuffer,
+	mergeDeep,
+} from 'web3-common';
 import { TransactionDataAndInputError } from '../errors';
 import { transactionSchema } from '../schemas';
 import { Transaction } from '../types';

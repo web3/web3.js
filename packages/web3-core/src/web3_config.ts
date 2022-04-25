@@ -1,5 +1,5 @@
-import { Web3EventEmitter } from 'web3-common';
-import { Numbers, HexString, toHex, BlockNumberOrTag } from 'web3-utils';
+import { Web3EventEmitter, HexString, Numbers, BlockNumberOrTag } from 'web3-common';
+import { toHex } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context';

@@ -1,8 +1,14 @@
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, FormatType, format } from 'web3-common';
+import {
+	EthExecutionAPI,
+	DEFAULT_RETURN_FORMAT,
+	FormatType,
+	format,
+	Address,
+	HexString,
+} from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, HexString } from 'web3-utils';
 import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';

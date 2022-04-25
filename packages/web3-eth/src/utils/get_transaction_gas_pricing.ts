@@ -4,9 +4,9 @@ import {
 	DataFormat,
 	format,
 	DEFAULT_RETURN_FORMAT,
+	Numbers,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Numbers } from 'web3-utils';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlock, getGasPrice } from '../rpc_method_wrappers';

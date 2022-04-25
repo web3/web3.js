@@ -1,5 +1,6 @@
-import { TransactionCall, TransactionWithSender } from 'web3-common';
 import {
+	TransactionCall,
+	TransactionWithSender,
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
@@ -8,7 +9,7 @@ import {
 	HexStringBytes,
 	Uint,
 	Uint256,
-} from 'web3-utils';
+} from 'web3-common';
 
 import { AccountObject } from '../../src/web3_eth_execution_api';
 

@@ -1,6 +1,6 @@
-import { TransactionWithSender, TransactionCall } from 'web3-common';
-import { Web3RequestManager } from 'web3-core';
 import {
+	TransactionWithSender,
+	TransactionCall,
 	Address,
 	BlockNumberOrTag,
 	Uint256,
@@ -9,7 +9,8 @@ import {
 	Uint,
 	Filter,
 	HexString8Bytes,
-} from 'web3-utils';
+} from 'web3-common';
+import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 

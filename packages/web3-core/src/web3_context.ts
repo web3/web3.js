@@ -3,8 +3,8 @@ import {
 	Web3BaseWallet,
 	Web3BaseWalletAccount,
 	Web3AccountProvider,
+	HexString,
 } from 'web3-common';
-import { HexString } from 'web3-utils';
 import { SupportedProviders } from './types';
 import { isSupportedProvider } from './utils';
 // eslint-disable-next-line import/no-cycle

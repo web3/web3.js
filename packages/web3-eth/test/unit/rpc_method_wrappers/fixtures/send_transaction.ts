@@ -1,5 +1,4 @@
-import { ReceiptInfo } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { ReceiptInfo, HexString } from 'web3-common';
 import { SendTransactionOptions, Transaction } from '../../../../src/types';
 
 const inputTransaction = {

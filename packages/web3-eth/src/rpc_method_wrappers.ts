@@ -10,9 +10,15 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
 	TransactionWithSender,
+	Address,
+	BlockTag,
+	BlockNumberOrTag,
+	Bytes,
+	Filter,
+	HexString,
+	Numbers,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Address, BlockTag, BlockNumberOrTag, Bytes, Filter, HexString, Numbers } from 'web3-utils';
 import { isBlockTag, isBytes } from 'web3-validator';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';

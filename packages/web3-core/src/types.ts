@@ -5,8 +5,8 @@ import {
 	JsonRpcResult,
 	Web3APISpec,
 	Web3BaseProvider,
+	HexString,
 } from 'web3-common';
-import { HexString } from 'web3-utils';
 
 export type LegacyRequestProvider = {
 	request: <R = JsonRpcResult, P = unknown>(

@@ -1,14 +1,7 @@
-import {
-	Bytes,
-	bytesToBuffer,
-	bytesToHex,
-	HexString,
-	mergeDeep,
-	Numbers,
-	numberToHex,
-	toBigInt,
-} from 'web3-utils';
 import { isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+import { HexString, Numbers, Bytes } from './types';
+
+import { bytesToBuffer, bytesToHex, mergeDeep, numberToHex, toBigInt } from './common_utils';
 import { FormatterError } from './errors';
 
 const { parseBaseType } = utils;

@@ -1,6 +1,5 @@
-import { DataFormat, EthExecutionAPI, format, PromiEvent } from 'web3-common';
+import { DataFormat, EthExecutionAPI, format, PromiEvent, numberToHex, Bytes } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Bytes, numberToHex } from 'web3-utils';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,

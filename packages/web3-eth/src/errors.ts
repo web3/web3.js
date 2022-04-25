@@ -24,8 +24,10 @@ import {
 	Web3Error,
 	InvalidValueError,
 	ERR_SIGNATURE_FAILED,
+	Bytes,
+	HexString,
+	Numbers,
 } from 'web3-common';
-import { Bytes, HexString, Numbers } from 'web3-utils';
 
 import { ReceiptInfo } from './types';
 

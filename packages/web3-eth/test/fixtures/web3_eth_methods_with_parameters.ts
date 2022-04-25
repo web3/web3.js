@@ -1,5 +1,8 @@
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER, TransactionWithSender } from 'web3-common';
 import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	FMT_NUMBER,
+	TransactionWithSender,
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
@@ -9,7 +12,8 @@ import {
 	HexStringBytes,
 	Uint,
 	Uint256,
-} from 'web3-utils';
+} from 'web3-common';
+
 import { transactionWithSender } from './rpc_methods_wrappers';
 
 /**

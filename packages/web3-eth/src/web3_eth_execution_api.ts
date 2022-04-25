@@ -1,5 +1,11 @@
-import { EthExecutionAPI, TransactionInfo } from 'web3-common';
-import { Address, BlockNumberOrTag, HexString32Bytes, Uint } from 'web3-utils';
+import {
+	EthExecutionAPI,
+	TransactionInfo,
+	Address,
+	BlockNumberOrTag,
+	HexString32Bytes,
+	Uint,
+} from 'web3-common';
 
 export interface StorageProof {
 	readonly key: HexString32Bytes;

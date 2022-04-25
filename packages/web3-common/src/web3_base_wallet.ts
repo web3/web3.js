@@ -1,4 +1,4 @@
-import { HexString } from 'web3-utils';
+import { HexString } from './types';
 
 export type Web3EncryptedWallet = string;
 
