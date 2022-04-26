@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
-// eslint-disable-next-line
+// eslint-disable-next-line import/no-relative-packages
 import { accounts, clientUrl } from '../../../../.github/test.config';
 
 describe('contract', () => {
