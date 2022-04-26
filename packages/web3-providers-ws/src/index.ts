@@ -43,6 +43,11 @@ export default class WebSocketProvider<
 	private _reconnectAttempts!: number;
 	private readonly _reconnectOptions: ReconnectOptions;
 
+	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
+	private readonly _onMessageHandler: (event: MessageEvent) => void;
+	private readonly _onOpenHandler: () => void;
+	private readonly _onCloseHandler: (event: CloseEvent) => void;
+
 	public constructor(
 		clientUrl: string,
 		wsProviderOptions?: ClientOptions | ClientRequestArgs,
@@ -68,6 +73,10 @@ export default class WebSocketProvider<
 
 		this._requestQueue = new Map<JsonRpcId, WSRequestItem<any, any, any>>();
 		this._sentQueue = new Map<JsonRpcId, WSRequestItem<any, any, any>>();
+
+		this._onMessageHandler = this._onMessage.bind(this);
+		this._onOpenHandler = this._onConnect.bind(this);
+		this._onCloseHandler = this._onClose.bind(this);
 
 		this._init();
 		this.connect();
@@ -225,9 +234,9 @@ export default class WebSocketProvider<
 	}
 
 	private _addSocketListeners(): void {
-		this._webSocketConnection?.addEventListener('message', this._onMessage.bind(this));
-		this._webSocketConnection?.addEventListener('open', this._onConnect.bind(this));
-		this._webSocketConnection?.addEventListener('close', this._onClose.bind(this));
+		this._webSocketConnection?.addEventListener('message', this._onMessageHandler);
+		this._webSocketConnection?.addEventListener('open', this._onOpenHandler);
+		this._webSocketConnection?.addEventListener('close', this._onCloseHandler);
 	}
 
 	private _reconnect(): void {
@@ -319,8 +328,8 @@ export default class WebSocketProvider<
 	}
 
 	private _removeSocketListeners(): void {
-		this._webSocketConnection?.removeAllListeners('message');
-		this._webSocketConnection?.removeAllListeners('open');
-		this._webSocketConnection?.removeAllListeners('close');
+		this._webSocketConnection?.removeEventListener('message', this._onMessageHandler);
+		this._webSocketConnection?.removeEventListener('open', this._onOpenHandler);
+		this._webSocketConnection?.removeEventListener('close', this._onCloseHandler);
 	}
 }
