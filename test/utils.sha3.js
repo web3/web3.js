@@ -20,8 +20,8 @@ describe('web3.sha3', function () {
     });
     it('should return sha3 with hex prefix when hex input', function() {
         var sha3Hex = function(value){
-            if (value.length > 2 && value.substr(0, 2) === '0x') {
-                value = value.substr(2);
+            if (value.length > 2 && value.startsWith('0x')) {
+                value = value.slice(2);
             }
             value = CryptoJS.enc.Hex.parse(value);
 

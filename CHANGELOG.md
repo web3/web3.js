@@ -520,9 +520,6 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
-
-## [Unreleased]
-
 ## [1.7.2]
 
 ### Changed
@@ -538,4 +535,20 @@ Released with 1.0.0-beta.37 code base.
 ## [1.7.3]
 
 ### Fixed
+-  fixed build issues of 1.7.2
+
+## [Unreleased]
+
+## [1.7.4]
+
+### Fixed
+-  Fix dead link in web3-eth.rst (#4916)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
+-  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix Windows e2e tests by adding linkpool provider as a backup (#4869)
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)
+-  exporting AbiCoder as coder (#4937)
+
