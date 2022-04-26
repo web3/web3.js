@@ -1,34 +1,31 @@
 #!/usr/bin/env bash
 
+ORIGARGS=("$@")
+
 helpFunction() {
-	echo "Usage: $0 [start|stop]"
+	echo "Usage: $0 [start|stop] [background]"
 	exit 1 # Exit script after printing help
 }
 
 start() {
 	source scripts/env.sh
-	WEB3_SYSTEM_TEST_BACKEND="geth"
 
-	echo "Starting geth..."
-	echo "npx geth-dev-assistant --tag 'latest' --accounts 5 --password \"$WEB3_SYSTEM_TEST_PASSWORD\" --port $WEB3_SYSTEM_TEST_HTTP_PORT"
-	npx geth-dev-assistant --tag 'latest' --accounts 5 --password \"$WEB3_SYSTEM_TEST_PASSWORD\" --port $WEB3_SYSTEM_TEST_HTTP_PORT
-
-	echo "Waiting for geth..."
-	npx wait-port "$WEB3_SYSTEM_TEST_HTTP_PORT"
-	sleep 2
-	echo "Geth started..."
-
-	echo "Fetching accounts..."
-	accounts=$(curl -s -X POST -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"id","method":"eth_accounts","params":[]}' "http://localhost:$WEB3_SYSTEM_TEST_HTTP_PORT")
-	echo "Got response: \n $accounts"
-	echo "Setting env variable \"WEB3_SYSTEM_TEST_ACCOUNTS\""
-	WEB3_SYSTEM_TEST_ACCOUNTS=$(node -e "console.log(JSON.stringify(JSON.parse(process.argv[1]).result))" -- $accounts)
-	echo $WEB3_SYSTEM_TEST_ACCOUNTS
+	if [ -z "${ORIGARGS[1]}" ]; then
+		echo "Starting geth..."
+		echo "docker run -p $WEB3_SYSTEM_TEST_HTTP_PORT:$WEB3_SYSTEM_TEST_HTTP_PORT -p $WEB3_SYSTEM_TEST_WS_PORT:$WEB3_SYSTEM_TEST_WS_PORT --name web3-geth-client ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_WS_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_HTTP_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev"
+		docker run -p $WEB3_SYSTEM_TEST_HTTP_PORT:$WEB3_SYSTEM_TEST_HTTP_PORT -p $WEB3_SYSTEM_TEST_WS_PORT:$WEB3_SYSTEM_TEST_WS_PORT ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_WS_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_HTTP_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev
+	else
+		echo "Starting geth..."
+		echo "docker run -p $WEB3_SYSTEM_TEST_HTTP_PORT:$WEB3_SYSTEM_TEST_HTTP_PORT -p $WEB3_SYSTEM_TEST_WS_PORT:$WEB3_SYSTEM_TEST_WS_PORT --name web3-geth-client ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_WS_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_HTTP_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev"
+		docker run -d -p $WEB3_SYSTEM_TEST_HTTP_PORT:$WEB3_SYSTEM_TEST_HTTP_PORT -p $WEB3_SYSTEM_TEST_WS_PORT:$WEB3_SYSTEM_TEST_WS_PORT ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_WS_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_HTTP_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev
+		echo "Waiting for geth..."
+		npx wait-port "$WEB3_SYSTEM_TEST_HTTP_PORT"
+	fi
 }
 
 stop() {
 	echo "Stopping geth ..."
-	docker stop geth-client
+	docker stop web3-geth-client
 }
 
 case $1 in

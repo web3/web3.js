@@ -5,19 +5,23 @@ import {
 	JsonRpcResponseWithResult,
 } from 'web3-common';
 import HttpProvider from '../../src/index';
-import { getSystemTestAccounts, getSystemTestProvider, describeIf } from '../fixtures/test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	describeIf,
+} from '../fixtures/system_test_utils';
 
 describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		httpProvider = new HttpProvider(getSystemTestProvider());
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [getSystemTestAccounts()[0], 'latest'],
+			params: [(await getSystemTestAccounts())[0], 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 
