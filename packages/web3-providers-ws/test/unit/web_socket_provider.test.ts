@@ -1,5 +1,5 @@
-import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
 import WebSocket from 'isomorphic-ws';
+import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
 import WebSocketProvider from '../../src/index';
 import {
 	invalidConnectionStrings,
@@ -16,7 +16,6 @@ describe('WebSocketProvider', () => {
 
 	beforeAll(() => {
 		jest.spyOn(WebSocket.prototype, 'send');
-		//
 		wsProvider = new WebSocketProvider('ws://localhost:8545');
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
@@ -80,6 +79,7 @@ describe('WebSocketProvider', () => {
 
 				expect(result).toEqual(jsonRpcResponse);
 			});
+
 			it('should emit message with response and "null" error', async () => {
 				const messageSpy = jest.fn();
 				wsProvider.on('message', messageSpy);
