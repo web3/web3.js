@@ -11,6 +11,9 @@ var namehash = require('eth-ens-namehash');
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
 var { dnsEncode } = require('../packages/web3-eth-ens/src/utils');
 
+//Used to check if resolver supports wildcard resolution
+const wildcardInterfaceId = "9061b923";
+
 /**
  * Injects the required validations and results for the `eth_sendTransaction` call
  *
@@ -1639,6 +1642,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + addrInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -1674,6 +1687,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1717,6 +1740,17 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+            
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1778,6 +1812,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + addrInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -1832,6 +1876,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + pubkeyInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -1873,6 +1927,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1927,6 +1991,17 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1995,6 +2070,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + pubkeyInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2056,6 +2141,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contentInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2092,6 +2187,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2138,6 +2243,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2193,6 +2308,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2522,4 +2647,11 @@ describe('dnsEncode', function() {
         const result = dnsEncode('nick.eth');
         assert(result === '0x046e69636b0365746800');
     });
+});
+
+describe('ResolverMethodHandler', function() {
+    describe('call', function() {
+        it.skip('should resolve promise with Result object if there are multiple results');
+        it.skip('should resolve with the decoded result if it is a single result');
+    })
 });

@@ -192,100 +192,6 @@ ENS.prototype.getResolver = async function (name, callback) {
     return this.registry.getResolver(name, callback);
 };
 
-ENS.prototype.resolve = async function (name, func, ...args) {
-    const resolver = await this.getResolver(name);
-    if(resolver.options.address === null) {
-        return null;
-    }
-    const supportsENSIP10 = await resolver.methods.supportsInterface('0x9061b923').call();
-    if(supportsENSIP10) {
-
-        const jsonInterfaceAddr = {
-            name: 'addr',
-            type: 'function',
-            inputs: [{
-                type: 'bytes32',
-                name: 'node',
-            }],
-        };
-
-        const calldata = AbiEncoder.encodeFunctionCall(jsonInterfaceAddr, args);
-
-        // const calldata = resolver.methods[func](...args).encodeABI();
-        // const result = resolver.methods.resolve(dnsEncode(name), calldata);
-
-        const jsonInterface = {
-            name: 'resolve',
-            type: 'function',
-            inputs: [{
-                type: 'bytes',
-                name: 'name',
-            }, {
-                type: 'bytes',
-                name: 'data',
-            }],
-        };
-
-        const encodedFunctionCall = AbiEncoder.encodeFunctionCall(jsonInterface, [dnsEncode(name), calldata]);
-
-        // const dnsEncoding = dnsEncode(name);
-        // const encodedBytes = encodeBytes([ dnsEncode(name), calldata ]);
-        // const hexConcated = hexConcat([ "0x9061b923", encodeBytes([ dnsEncode(name), calldata ]) ]);
-
-        const tx = {
-            to: resolver.options.address,
-            data: encodedFunctionCall,
-        };
-
-        const method = new Method({
-            name: 'call',
-            call: 'eth_call',
-            params: 2,
-            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
-            abiCoder: AbiEncoder
-        });
-        method.setRequestManager(this.eth._requestManager);
-        method.defaultBlock = 'latest';
-        method.handleRevert = false;
-        method.defaultAccount = null;
-        method.defaultBlock = 'latest';
-        method.transactionBlockTimeout = 50;
-        method.transactionConfirmationBlocks = 24;
-        method.transactionPollingTimeout = 750;
-        method.transactionPollingInterval = 1000;
-        method.blockHeaderTimeout = 10; // 10 seconds
-        method.maxListenersWarningThreshold = 100;
-        method.ccipReadGatewayCallback = null;
-        method.ccipReadGatewayUrls = [];
-        method.ccipReadGatewayAllowList = [];
-        method.ccipReadMaxRedirectCount = 4;
-
-        const send = method.buildCall();
-        const result = await send(tx);
-
-        function _parseBytes(result, start) {
-            if (result === "0x") { return null; }
-        
-            const offset = BigNumber.from(hexDataSlice(result, start, start + 32)).toNumber();
-            const length = BigNumber.from(hexDataSlice(result, offset, offset + 32)).toNumber();
-        
-            return hexDataSlice(result, offset + 32, offset + 32 + length);
-        }
-
-
-        console.log('result: ', result);
-        const decoded = AbiEncoder.decodeParameter('address', result);
-        console.log('decoded; ', decoded);
-        return decoded;
-
-        // return resolver[func].decodeReturnData(result);
-    } else if(name === resolver.currentName) {
-        return resolver[func](...args);
-    } else {
-        return null;
-    }
-};
-
 /**
  * Does set the resolver of the given name
  *
@@ -484,7 +390,6 @@ ENS.prototype.setOwner = function (name, address, txConfig, callback) {
  * @returns {PromiEvent<TransactionReceipt | TransactionRevertInstructionError>}
  */
 ENS.prototype.getAddress = function (name, callback) {
-    debugger
     return this.resolverMethodHandler.method(name, 'addr', []).call(callback);
 };
 
