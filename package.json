@@ -34,8 +34,8 @@
 	"scripts": {
 		"build": "yarn clean && lerna run build --stream",
 		"clean": "lerna run clean",
-		"ganache:start": "source scripts/env.sh && WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
-		"ganache:start:background": "source scripts/env.sh && WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
+		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
+		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
 		"ganache:stop": "./scripts/ganache.sh stop",
 		"geth:start": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth.sh start",
 		"geth:start:background": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth.sh start 1",
