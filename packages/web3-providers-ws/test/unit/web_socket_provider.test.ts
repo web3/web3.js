@@ -1,4 +1,3 @@
-// import WebSocket from 'isomorphic-ws';
 import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
 import WebSocket from 'isomorphic-ws';
 import WebSocketProvider from '../../src/index';
@@ -7,17 +6,8 @@ import {
 	validConnectionStrings,
 	wsProviderOptions,
 } from '../fixtures/test_data';
-// const { WebSocket } = jest.genMockFromModule('isomorphic-ws');
-// let WebSocket: any;
-jest.mock('isomorphic-ws', (): { __esModule: boolean; default: WebSocket } => {
-	const originalModule = jest.createMockFromModule('ws');
-	// jest.spyOn(originalModule.WebSocket, 'send');
-	// Mock the default export and named export 'foo'
-	return {
-		__esModule: true,
-		default: originalModule.WebSocket,
-	} as { __esModule: boolean; default: WebSocket };
-});
+
+jest.mock('isomorphic-ws');
 
 describe('WebSocketProvider', () => {
 	let wsProvider: WebSocketProvider;
@@ -28,8 +18,6 @@ describe('WebSocketProvider', () => {
 		jest.spyOn(WebSocket.prototype, 'send');
 		//
 		wsProvider = new WebSocketProvider('ws://localhost:8545');
-		// wsProvider.request = jest.fn(d => d);
-		//
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,

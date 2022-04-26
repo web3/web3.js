@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 
-export class WebSocket extends EventEmitter {
+export default class WebSocket extends EventEmitter {
 	public readyState: number;
 
 	public constructor(...args: any[]) {
