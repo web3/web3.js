@@ -51,7 +51,7 @@ export const importRawKey = async (
 	keyData: HexString,
 	passphrase: string,
 ) => {
-	validator.validate(['bytes', 'string'], [keyData, passphrase]);
+	validator.validate(['string', 'string'], [keyData, passphrase]);
 
 	return rpcImportRawKey(requestManager, keyData, passphrase);
 };

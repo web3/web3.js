@@ -17,3 +17,4 @@ export const accounts: Account[] = [
 	},
 ];
 export const clientUrl = 'http://localhost:8545';
+export const clientWsUrl = 'ws://localhost:8545';
