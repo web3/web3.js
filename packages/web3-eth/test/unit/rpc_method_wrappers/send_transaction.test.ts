@@ -24,7 +24,11 @@ import { formatTransaction } from '../../../src';
 import * as GetTransactionGasPricing from '../../../src/utils/get_transaction_gas_pricing';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
-import { testData } from './fixtures/send_transaction';
+import {
+	expectedReceiptInfo,
+	expectedTransactionHash,
+	testData,
+} from './fixtures/send_transaction';
 import { receiptInfoSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
@@ -45,7 +49,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`getTransactionGasPricing is called only when expected\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, ___) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const getTransactionGasPricingSpy = jest.spyOn(
 				GetTransactionGasPricing,
 				'getTransactionGasPricing',
@@ -73,7 +77,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`sending event should emit with formattedTransaction\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, ___) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
 				const formattedTransaction = formatTransaction(
 					inputTransaction,
@@ -95,7 +99,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`should call rpcMethods.sendTransaction with expected parameters\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, ___) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedTransaction = formatTransaction(inputTransaction, DEFAULT_RETURN_FORMAT);
 			await sendTransaction(
 				web3Context,
@@ -112,7 +116,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`sent event should emit with formattedTransaction\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, ___) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
 				const formattedTransaction = formatTransaction(
 					inputTransaction,
@@ -134,7 +138,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`transactionHash event should emit with expectedTransactionHash\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, expectedTransactionHash, __) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
 				(rpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 					expectedTransactionHash,
@@ -156,7 +160,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`should call rpcMethods.getTransactionReceipt with expected parameters\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, expectedTransactionHash, __) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			(rpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
@@ -176,7 +180,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`waitForTransactionReceipt is called when expected\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, expectedTransactionHash, __) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const waitForTransactionReceiptSpy = jest.spyOn(
 				WaitForTransactionReceipt,
 				'waitForTransactionReceipt',
@@ -208,7 +212,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`receipt event should emit with expectedReceiptInfo\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, expectedReceiptInfo) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
 				const formattedReceiptInfo = format(
 					receiptInfoSchema,
@@ -234,7 +238,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`should resolve promiEvent with expectedReceiptInfo\n ${testMessage}`,
-		async (_, inputTransaction, sendTransactionOptions, __, expectedReceiptInfo) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedReceiptInfo = format(
 				receiptInfoSchema,
 				expectedReceiptInfo,
@@ -256,13 +260,7 @@ describe('sendTransaction', () => {
 
 	it.each(testData)(
 		`watchTransactionForConfirmations is called when expected\n ${testMessage}`,
-		async (
-			_,
-			inputTransaction,
-			sendTransactionOptions,
-			expectedTransactionHash,
-			expectedReceiptInfo,
-		) => {
+		async (_, inputTransaction, sendTransactionOptions) => {
 			const watchTransactionForConfirmationsSpy = jest.spyOn(
 				WatchTransactionForConfirmations,
 				'watchTransactionForConfirmations',
