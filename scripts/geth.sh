@@ -8,7 +8,7 @@ helpFunction() {
 }
 
 start() {
-	./scripts/env.sh
+	. scripts/env.sh
 
 	if [ -z "${ORIGARGS[1]}" ]; then
 		echo "Starting geth..."
