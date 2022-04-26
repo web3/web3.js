@@ -139,7 +139,12 @@ export function watchTransactionForConfirmations<
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ) {
-	if (!transactionReceipt || !transactionReceipt.blockHash)
+	if (
+		transactionReceipt === undefined ||
+		transactionReceipt === null ||
+		transactionReceipt.blockHash === undefined ||
+		transactionReceipt.blockHash === null
+	)
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
 			blockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
