@@ -16,7 +16,9 @@ describe('WebSocketProvider', () => {
 
 	beforeAll(() => {
 		jest.spyOn(WebSocket.prototype, 'send');
+
 		wsProvider = new WebSocketProvider('ws://localhost:8545');
+
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
