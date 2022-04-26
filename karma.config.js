@@ -106,8 +106,9 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		files: listOfTests,
+		files: ['./karma.setup.js', ...listOfTests],
 		preprocessors: {
+			'./karma.setup.js': ['webpack', 'browserify'],
 			...listOfTests.reduce(
 				(res, packagePath) => ({ ...res, [packagePath]: ['webpack', 'browserify'] }),
 				{},
