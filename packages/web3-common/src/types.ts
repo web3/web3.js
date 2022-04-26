@@ -163,6 +163,7 @@ export interface BlockOutput {
 	readonly transactions?: TransactionOutput[];
 	readonly miner?: HexString;
 	readonly baseFeePerGas?: bigint | number;
+	readonly parentHash?: HexString32Bytes;
 }
 
 export interface ReceiptInput {
