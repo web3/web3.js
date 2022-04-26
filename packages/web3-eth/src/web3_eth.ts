@@ -196,7 +196,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
 
-	public async sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
@@ -204,9 +204,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
 	}
 
-	public async sendSignedTransaction<
-		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(transaction: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+	public sendSignedTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: Bytes,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
 		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
 	}
 

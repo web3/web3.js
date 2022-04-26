@@ -64,6 +64,18 @@ export abstract class Web3Error extends Error {
 		Error.captureStackTrace(this, Web3Error);
 	}
 
+	public static convertToString(value: unknown, unquotValue = false) {
+		if (value === undefined) return 'undefined';
+
+		const result = JSON.stringify(
+			value,
+			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,
+		);
+
+		return unquotValue && ['bigint', 'string'].includes(typeof value)
+			? result.replace(/['\\"]+/g, '')
+			: result;
+	}
 	public toJSON() {
 		return { name: this.name, code: this.code, message: this.message };
 	}

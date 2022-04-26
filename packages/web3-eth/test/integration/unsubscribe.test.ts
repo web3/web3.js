@@ -2,16 +2,20 @@ import WebSocketProvider from 'web3-providers-ws/dist';
 import { SupportedProviders } from 'web3-core';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
+import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
 
 describe('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {
 		provider = new WebSocketProvider(
-			'ws://127.0.0.1:8545',
+			clientWsUrl,
 			{},
-			{ delay: 1, autoReconnect: true, maxAttempts: 1 },
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
+	});
+	afterAll(() => {
+		provider.disconnect();
 	});
 
 	describe('unsubscribe from', () => {
