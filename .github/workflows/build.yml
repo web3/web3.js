@@ -1,61 +1,62 @@
 name: "Build"
 on:
-    push:
-        branches:
-            - "4.x"
-        tags:
-            - v4*
-    pull_request:
-        branches:
-            - "4.x"
-        types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - "4.x"
+    tags:
+      - v4*
+  pull_request:
+    branches:
+      - "4.x"
+    types: [opened, reopened, synchronize]
+
 jobs:
-    lint:
-        runs-on: ubuntu-latest
-        env:
-            TEST: "build_and_lint"
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 14
+  build: 
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/setup-node@v1
+        with: 
+          node-version: 14
+      - uses: actions/checkout@v2
+      - run: yarn
 
-            - uses: actions/checkout@v2
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      TEST: "build_and_lint"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - run: yarn lint
 
-            - run: yarn
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 14, 16 ]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/checkout@v2
+      - run: yarn
+      - run: yarn test:unit
 
-            - run: yarn lint
-    unit:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 14, 16 ]
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node }}
-
-            - uses: actions/checkout@v2
-
-            - run: yarn
-
-            - run: yarn test:unit
-
-    e2e:
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                node: [ 14, 16 ]
-                testCmd: [ 'test:e2e:ganache:http', 'test:e2e:ganache:ws', 'test:e2e:geth:http', 'test:e2e:geth:ws', 'test:e2e:browsers:http', 'test:e2e:browsers:ws' ]
-        env:
-            TEST_CMD: ${{ matrix.testCmd }}
-        steps:
-            -   uses: actions/setup-node@v1
-                with:
-                    node-version: ${{ matrix.node }}
-
-            -   uses: actions/checkout@v2
-            -   run: yarn
-            -   run: yarn ${{ env.TEST_CMD }}
+  e2e:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 16 ]
+        backend: ['geth', 'ganache', 'browsers']
+        mode: ['http', 'ws']
+    env:
+      TEST_CMD: ${{ matrix.testCmd }}
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      -   uses: actions/checkout@v2
+      -   run: yarn
+      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
 
