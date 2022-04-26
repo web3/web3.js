@@ -1,7 +1,8 @@
 import { Contract } from '../../src';
-import { accounts } from '../shared_fixtures/integration_test_accounts';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
 import { processAsync } from '../shared_fixtures/utils';
+// eslint-disable-next-line
+import { accounts, clientWsUrl } from '../../../../.github/test.config';
 
 describe('contract', () => {
 	let contract: Contract<typeof basicContractAbi>;
@@ -10,7 +11,7 @@ describe('contract', () => {
 
 	beforeEach(async () => {
 		contract = new Contract(basicContractAbi, undefined, {
-			provider: 'ws://localhost:8545',
+			provider: clientWsUrl,
 		});
 
 		deployOptions = {

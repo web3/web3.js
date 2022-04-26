@@ -1,6 +1,7 @@
 import { Contract } from '../../src';
-import { accounts } from '../shared_fixtures/integration_test_accounts';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
+// eslint-disable-next-line
+import { accounts, clientUrl } from '../../../../.github/test.config';
 
 describe('contract', () => {
 	describe('clone', () => {
@@ -10,7 +11,7 @@ describe('contract', () => {
 
 		beforeEach(() => {
 			contract = new Contract(greeterContractAbi, undefined, {
-				provider: 'http://localhost:8545',
+				provider: clientUrl,
 			});
 
 			deployOptions = {

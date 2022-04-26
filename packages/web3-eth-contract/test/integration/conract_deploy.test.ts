@@ -1,8 +1,9 @@
 import { Contract } from '../../src';
-import { accounts } from '../shared_fixtures/integration_test_accounts';
 import { sleep, processAsync } from '../shared_fixtures/utils';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
 import { deployRevertAbi, deployRevertByteCode } from '../shared_fixtures/sources/DeployRevert';
+// eslint-disable-next-line
+import { accounts, clientUrl } from '../../../../.github/test.config';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -12,7 +13,7 @@ describe('contract', () => {
 
 		beforeEach(() => {
 			contract = new Contract(greeterContractAbi, undefined, {
-				provider: 'http://localhost:8545',
+				provider: clientUrl,
 			});
 
 			deployOptions = {
