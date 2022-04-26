@@ -397,7 +397,6 @@ export function sendTransaction<ReturnFormat extends DataFormat>(
 					const signedTransaction = wallet.signTransaction(
 						transactionFormatted as Record<string, unknown>,
 					);
-
 					await rpcMethods.sendRawTransaction(
 						web3Context.requestManager,
 						signedTransaction.rawTransaction,

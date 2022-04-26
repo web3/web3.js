@@ -24,8 +24,7 @@ describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implement
 	describe('httpProvider.request', () => {
 		it('should return expected response', async () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
-
-			expect((response as JsonRpcResponseWithResult).result).toBeDefined();
+			expect(Number((response as JsonRpcResponseWithResult).id)).toBeGreaterThan(0);
 		});
 	});
 });
