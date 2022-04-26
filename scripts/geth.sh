@@ -25,7 +25,7 @@ start() {
 
 stop() {
 	echo "Stopping geth ..."
-	docker stop web3-geth-client
+	docker ps -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
 }
 
 case $1 in
