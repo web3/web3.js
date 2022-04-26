@@ -1,5 +1,6 @@
-import WebSocket from 'isomorphic-ws';
+// import WebSocket from 'isomorphic-ws';
 import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
+import WebSocket from 'isomorphic-ws';
 import WebSocketProvider from '../../src/index';
 import {
 	invalidConnectionStrings,
@@ -7,15 +8,17 @@ import {
 	wsProviderOptions,
 } from '../fixtures/test_data';
 // const { WebSocket } = jest.genMockFromModule('isomorphic-ws');
-jest.mock('isomorphic-ws', () => {
-	const originalModule = jest.createMockFromModule('isomorphic-ws');
+// let WebSocket: any;
+jest.mock('isomorphic-ws', (): { __esModule: boolean; default: WebSocket } => {
+	const originalModule = jest.createMockFromModule('ws');
 	// jest.spyOn(originalModule.WebSocket, 'send');
 	// Mock the default export and named export 'foo'
 	return {
 		__esModule: true,
 		default: originalModule.WebSocket,
-	};
+	} as { __esModule: boolean; default: WebSocket };
 });
+
 describe('WebSocketProvider', () => {
 	let wsProvider: WebSocketProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
@@ -25,7 +28,7 @@ describe('WebSocketProvider', () => {
 		jest.spyOn(WebSocket.prototype, 'send');
 		//
 		wsProvider = new WebSocketProvider('ws://localhost:8545');
-		wsProvider.request = jest.fn(d => d);
+		// wsProvider.request = jest.fn(d => d);
 		//
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
@@ -89,39 +92,39 @@ describe('WebSocketProvider', () => {
 
 				expect(result).toEqual(jsonRpcResponse);
 			});
-			// it('should emit message with response and "null" error', async () => {
-			// 	const messageSpy = jest.fn();
-			// 	wsProvider.on('message', messageSpy);
-			//
-			// 	await wsProvider.request(jsonRpcPayload);
-			//
-			// 	expect(messageSpy).toHaveBeenCalledWith(null, jsonRpcResponse);
-			// });
+			it('should emit message with response and "null" error', async () => {
+				const messageSpy = jest.fn();
+				wsProvider.on('message', messageSpy);
+
+				await wsProvider.request(jsonRpcPayload);
+
+				expect(messageSpy).toHaveBeenCalledWith(null, jsonRpcResponse);
+			});
 		});
 
-		// describe('error response', () => {
-		// 	it('should reject with response', async () => {
-		// 		// Set `error` attribute to reject from mock
-		// 		const payload = { ...jsonRpcPayload, error: 'my-error' };
-		//
-		// 		await expect(wsProvider.request(payload)).rejects.toEqual(payload);
-		// 	});
-		//
-		// 	it('should emit message with response as error', async () => {
-		// 		// Set `error` attribute to reject from mock
-		// 		const payload = { ...jsonRpcPayload, error: 'my-error' };
-		//
-		// 		const messageSpy = jest.fn();
-		// 		wsProvider.on('message', messageSpy);
-		//
-		// 		try {
-		// 			await wsProvider.request(payload);
-		// 		} catch {
-		// 			// Do nothing on error
-		// 		}
-		//
-		// 		expect(messageSpy).toHaveBeenCalledWith(payload, null);
-		// 	});
-		// });
+		describe('error response', () => {
+			it('should reject with response', async () => {
+				// Set `error` attribute to reject from mock
+				const payload = { ...jsonRpcPayload, error: 'my-error' };
+
+				await expect(wsProvider.request(payload)).rejects.toEqual(payload);
+			});
+
+			it('should emit message with response as error', async () => {
+				// Set `error` attribute to reject from mock
+				const payload = { ...jsonRpcPayload, error: 'my-error' };
+
+				const messageSpy = jest.fn();
+				wsProvider.on('message', messageSpy);
+
+				try {
+					await wsProvider.request(payload);
+				} catch {
+					// Do nothing on error
+				}
+
+				expect(messageSpy).toHaveBeenCalledWith(payload, null);
+			});
+		});
 	});
 });
