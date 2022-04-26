@@ -56,6 +56,7 @@
 		"bufferutil": "^4.0.6",
 		"crypto-browserify": "^3.12.0",
 		"eslint": "^8.3.0",
+		"eslint-plugin-header": "^3.1.1",
 		"https-browserify": "^1.0.0",
 		"husky": "^7.0.4",
 		"jasmine": "^4.0.2",
