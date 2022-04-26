@@ -59,4 +59,4 @@ jobs:
       -   uses: actions/checkout@v2
       -   run: yarn
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-
+          shell: bash
