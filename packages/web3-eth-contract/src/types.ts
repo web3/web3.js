@@ -20,12 +20,12 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	FormatType,
-	ReceiptInfo,
+	PromiEvent,
 } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
-import { sendTransaction } from 'web3-eth';
-import { Address, BlockNumberOrTag, Bytes, Filter, HexString, Numbers, Uint } from 'web3-utils';
+import { SendTransactionEvents, ReceiptInfo } from 'web3-eth';
+import { Address, BlockNumberOrTag, Bytes, HexString, Numbers, Uint } from 'web3-utils';
 
 export interface EventLog {
 	event: string;
@@ -40,7 +40,7 @@ export interface EventLog {
 }
 
 export interface ContractEventOptions {
-	filter?: Filter;
+	filter?: Record<string, unknown>;
 	fromBlock?: BlockNumberOrTag;
 	topics?: string[];
 }
@@ -76,16 +76,22 @@ export interface NonPayableCallOptions {
 	maxPriorityFeePerGas?: HexString;
 	maxFeePerGas?: HexString;
 	gasPrice?: string;
+	type?: string | number;
 }
 
 export interface PayableCallOptions extends NonPayableCallOptions {
 	value?: string;
 }
 
+export type NonPayableTxOptions = NonPayableCallOptions;
+export type PayableTxOptions = PayableCallOptions;
+
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: NonPayableCallOptions): ReturnType<typeof sendTransaction>;
+	send(
+		tx?: NonPayableTxOptions,
+	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: NonPayableCallOptions,
 		returnFormat?: ReturnFormat,
@@ -96,7 +102,9 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
-	send(tx?: PayableCallOptions): ReturnType<typeof sendTransaction>;
+	send(
+		tx?: PayableTxOptions,
+	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: PayableCallOptions,
 		returnFormat?: ReturnFormat,

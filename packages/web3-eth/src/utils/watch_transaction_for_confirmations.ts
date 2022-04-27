@@ -36,19 +36,19 @@ import { NewHeadsSubscription } from '../web3_subscriptions';
 
 type PromiEventEventTypeBase = SendTransactionEvents | SendSignedTransactionEvents;
 type ReturnFormatBase = DataFormat;
-type WaitProps = {
+type WaitProps<ResolveType = ReceiptInfo> = {
 	web3Context: Web3Context<EthExecutionAPI>;
 	transactionReceipt: ReceiptInfo;
-	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventTypeBase>;
+	transactionPromiEvent: PromiEvent<ResolveType, PromiEventEventTypeBase>;
 	returnFormat: ReturnFormatBase;
 };
 
-const watchByPolling = ({
+const watchByPolling = <ResolveType = ReceiptInfo>({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
 	returnFormat,
-}: WaitProps) => {
+}: WaitProps<ResolveType>) => {
 	// Having a transactionReceipt means that the transaction has already been included
 	// in at least one block, so we start with 1
 	let confirmationNumber = 1;
@@ -75,12 +75,12 @@ const watchByPolling = ({
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 };
 
-const watchBySubscription = ({
+const watchBySubscription = <ResolveType = ReceiptInfo>({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
 	returnFormat,
-}: WaitProps) => {
+}: WaitProps<ResolveType>) => {
 	setImmediate(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
@@ -130,10 +130,11 @@ const watchBySubscription = ({
 
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends PromiEventEventTypeBase,
-	ReturnFormat extends ReturnFormatBase,
+	ReturnFormat extends DataFormat,
+	ResolveType = ReceiptInfo,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ReceiptInfo, PromiEventEventType>,
+	transactionPromiEvent: PromiEvent<ResolveType, PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
@@ -150,7 +151,7 @@ export function watchTransactionForConfirmations<
 			transactionHash: format({ eth: 'bytes32' }, transactionHash, returnFormat),
 		});
 
-	if (transactionReceipt.blockNumber === undefined || transactionReceipt.blockNumber === null)
+	if (!transactionReceipt.blockNumber)
 		throw new TransactionReceiptMissingBlockNumberError({ receipt: transactionReceipt });
 
 	// so a subscription for newBlockHeaders can be made instead of polling

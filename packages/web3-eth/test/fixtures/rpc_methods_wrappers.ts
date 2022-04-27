@@ -1461,7 +1461,7 @@ const receiptInfoNumberString: FormatType<
 	blockNumber: '6139707',
 	cumulativeGasUsed: '13244',
 	gasUsed: '1244',
-	status: '1',
+	status: '0x1',
 	effectiveGasPrice: '19908',
 };
 

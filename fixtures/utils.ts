@@ -14,17 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+export const processAsync = async (
+	processFunc: (resolver: (value: unknown) => void) => Promise<unknown> | unknown,
+) =>
+	new Promise(resolve => {
+		(async () => {
+			await processFunc(resolve);
+		})() as unknown;
+	});
 
-
-import { Web3Error, ERR_CONTRACT, ReceiptInfo } from 'web3-common';
-
-export class Web3ContractError extends Web3Error {
-	public code = ERR_CONTRACT;
-	public receipt?: ReceiptInfo;
-
-	public constructor(message: string, receipt?: ReceiptInfo) {
-		super(message);
-
-		this.receipt = receipt;
-	}
-}
+export const sleep = async (ms: number) =>
+	new Promise(resolve => {
+		const id = setTimeout(() => {
+			resolve(true);
+			clearTimeout(id);
+		}, ms);
+	});

@@ -60,6 +60,11 @@ export default class WebSocketProvider<
 	private _reconnectAttempts!: number;
 	private readonly _reconnectOptions: ReconnectOptions;
 
+	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
+	private readonly _onMessageHandler: (event: MessageEvent) => void;
+	private readonly _onOpenHandler: () => void;
+	private readonly _onCloseHandler: (event: CloseEvent) => void;
+
 	public constructor(
 		clientUrl: string,
 		wsProviderOptions?: ClientOptions | ClientRequestArgs,
@@ -85,6 +90,10 @@ export default class WebSocketProvider<
 
 		this._requestQueue = new Map<JsonRpcId, WSRequestItem<any, any, any>>();
 		this._sentQueue = new Map<JsonRpcId, WSRequestItem<any, any, any>>();
+
+		this._onMessageHandler = this._onMessage.bind(this);
+		this._onOpenHandler = this._onConnect.bind(this);
+		this._onCloseHandler = this._onClose.bind(this);
 
 		this._init();
 		this.connect();
@@ -141,14 +150,15 @@ export default class WebSocketProvider<
 
 			this._addSocketListeners();
 
-			if (this.getStatus() === 'connecting') {
-				// Rejecting promises if provider is not connected even after reattempts
-				setTimeout(() => {
-					if (this.getStatus() === 'disconnected') {
-						this._clearQueues(undefined);
-					}
-				}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
-			}
+			// TODO: Debug why this is needed
+			// if (this.getStatus() === 'connecting') {
+			// 	// Rejecting promises if provider is not connected even after reattempts
+			// 	setTimeout(() => {
+			// 		if (this.getStatus() === 'disconnected') {
+			// 			this._clearQueues(undefined);
+			// 		}
+			// 	}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
+			// }
 		} catch (e) {
 			throw new InvalidConnectionError(this._clientUrl);
 		}
@@ -241,9 +251,9 @@ export default class WebSocketProvider<
 	}
 
 	private _addSocketListeners(): void {
-		this._webSocketConnection?.addEventListener('message', this._onMessage.bind(this));
-		this._webSocketConnection?.addEventListener('open', this._onConnect.bind(this));
-		this._webSocketConnection?.addEventListener('close', this._onClose.bind(this));
+		this._webSocketConnection?.addEventListener('message', this._onMessageHandler);
+		this._webSocketConnection?.addEventListener('open', this._onOpenHandler);
+		this._webSocketConnection?.addEventListener('close', this._onCloseHandler);
 	}
 
 	private _reconnect(): void {
@@ -335,8 +345,8 @@ export default class WebSocketProvider<
 	}
 
 	private _removeSocketListeners(): void {
-		this._webSocketConnection?.removeEventListener('message', this._onMessage.bind(this));
-		this._webSocketConnection?.removeEventListener('open', this._onConnect.bind(this));
-		this._webSocketConnection?.removeEventListener('close', this._onClose.bind(this));
+		this._webSocketConnection?.removeEventListener('message', this._onMessageHandler);
+		this._webSocketConnection?.removeEventListener('open', this._onOpenHandler);
+		this._webSocketConnection?.removeEventListener('close', this._onCloseHandler);
 	}
 }
