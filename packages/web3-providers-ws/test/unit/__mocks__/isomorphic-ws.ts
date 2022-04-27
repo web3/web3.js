@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter } from 'events';
 
-export class WebSocket extends EventEmitter {
+export default class WebSocket extends EventEmitter {
 	public readyState: number;
 
 	public constructor(...args: any[]) {
