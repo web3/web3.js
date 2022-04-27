@@ -43,7 +43,7 @@
 		"format": "lerna run format --stream --parallel",
 		"test": "lerna run test --stream --parallel",
 		"test:unit": "lerna run test:unit --stream --parallel",
-		"test:integration": "lerna run test:integration --stream --parallel",
+		"test:integration": "lerna run test:integration --stream",
 		"test:integration:browsers": "./node_modules/.bin/karma start karma.config.js",
 		"prepare": "husky install",
 		"postinstall": "yarn build"
