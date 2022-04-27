@@ -4,7 +4,7 @@ const os = require('os');
 const { lstatSync, readdirSync } = require('fs');
 const basePath = path.resolve(__dirname, 'packages');
 const packages = readdirSync(basePath).filter(name => {
-	if (name === 'web3-providers-ipc') {
+	if (name === 'web3-providers-ipc' || name === 'web3-eth-contract') {
 		return false;
 	}
 	return lstatSync(path.join(basePath, name)).isDirectory();

@@ -353,7 +353,7 @@ Released with 1.0.0-beta.37 code base.
 
 1. Event logs does not support types for indexed properties but named properties supported.
 2. Types for overloaded ABI functions are not yet supported.
-3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use `web3-eth-transaction` package
+3. `signTransaction` will not fill any default values and it will only sign and return result. For filling default values use `web3-eth` package
 4. `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default this function will assume data is not hashed.
 5. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
 6. `Wallet.create` function doesn't accepts `entropy` param
