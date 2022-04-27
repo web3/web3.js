@@ -15,16 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexStrict } from 'web3-validator';
-import { HexString, toChecksumAddress } from 'web3-utils';
+import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
 import { accounts, clientUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
 
 describe('set up account', () => {
 	let ethPersonal: EthPersonal;
-	let testAccount: HexString;
-	beforeAll(async () => {
+	beforeAll(() => {
 		ethPersonal = new EthPersonal(clientUrl);
-		testAccount = await ethPersonal.newAccount('abc');
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
@@ -32,23 +30,45 @@ describe('set up account', () => {
 	});
 
 	it('sign', async () => {
-		const signature = await ethPersonal.sign('0x1234', testAccount, 'abc');
-		expect(isHexStrict(signature)).toBe(true);
+		if (process.env.TEST_CMD === 'e2e_geth') {
+			// ganache does not support ecRecover
+			await ethPersonal.importRawKey(accounts[1].privateKey.slice(2), '123');
+			const signature = await ethPersonal.sign('0xdeadbeaf', accounts[1].address, '123');
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(signature).toBe(
+				'0x2f835b77e8fbb14951830b57e3b9c81cec6f2ec25bf749ac37cbeaa859baf5877797effc174048187a9491f17af3a37a6fa8044f773d89b2ced4d8f2c188c7e01c',
+			);
+		}
 	});
 
 	it('ecRecover', async () => {
-		const signature = await ethPersonal.sign('0x2313', testAccount, 'abc');
-		const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
-		expect(toChecksumAddress(publicKey)).toBe(testAccount);
+		if (process.env.TEST_CMD === 'e2e_geth') {
+			// ganache does not support ecRecover
+			const signature = await ethPersonal.sign('0x2313', accounts[0].address, 'abc');
+			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
+			// eslint-disable-next-line jest/no-conditional-expect
+			expect(toChecksumAddress(publicKey)).toBe(accounts[0].address);
+		}
 	});
 
 	it('lock account', async () => {
-		const lockAccount = await ethPersonal.lockAccount(testAccount);
+		// ganache requires prefixxed
+		const rawKey =
+			process.env.TEST_CMD === 'e2e_geth'
+				? '4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e'
+				: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e';
+		const newAccount = await ethPersonal.importRawKey(rawKey, '123');
+		const lockAccount = await ethPersonal.lockAccount(newAccount);
 		expect(lockAccount).toBe(true);
 	});
 
 	it('unlock account', async () => {
-		const unlockedAccount = await ethPersonal.unlockAccount(testAccount, 'abc', 10000);
+		const rawKey =
+			process.env.TEST_CMD === 'e2e_geth'
+				? '4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e'
+				: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e';
+		const newAccount = await ethPersonal.importRawKey(rawKey, '123');
+		const unlockedAccount = await ethPersonal.unlockAccount(newAccount, '123', 10000);
 		expect(unlockedAccount).toBe(true);
 	});
 
@@ -62,18 +82,22 @@ describe('set up account', () => {
 	});
 
 	it('importRawKey', async () => {
-		const key = await ethPersonal.importRawKey(
-			'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d',
-			'password123',
-		);
+		const rawKey =
+			process.env.TEST_CMD === 'e2e_geth'
+				? 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
+				: '0xcd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d';
+		const key = await ethPersonal.importRawKey(rawKey, 'password123');
 		expect(key).toBe('0x7a5fe9d95ece090694b0ad8c50ca078f1d3ee021');
 	});
 
 	it('signTransaction', async () => {
-		await ethPersonal.importRawKey(accounts[0].privateKey.slice(2), 'password123');
+		const rawKey =
+			process.env.TEST_CMD === 'e2e_geth'
+				? 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
+				: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e';
+		await ethPersonal.importRawKey(rawKey, 'password123');
 
 		const from = accounts[0].address;
-		// const password = accounts[0].privateKey;
 		const to = accounts[1].address;
 		const value = `10000`;
 		const tx = {
@@ -86,27 +110,35 @@ describe('set up account', () => {
 			nonce: 0,
 		};
 		const signedTx = await ethPersonal.signTransaction(tx, 'password123');
-		const expectedResult = {
-			raw: '0x02f86e82053980841dcd65008459682f0082520894962f9a9c2a6c092474d24def35eccb3d9363265e82271080c001a0bbfbe91f1c160296709b7bbfdc6801f70dea7f2907e96d99d57b56d9ed7e08d7a0252567d33a5578574b4425f74bc91954ad40f4f1660d7f875712f91d8b45cbd7',
-			tx: {
-				type: '0x2',
-				nonce: '0x0',
-				gasPrice: null,
-				maxPriorityFeePerGas: '0x1dcd6500',
-				maxFeePerGas: '0x59682f00',
-				gas: '0x5208',
-				value: '0x2710',
-				input: '0x',
-				v: '0x1',
-				r: '0xbbfbe91f1c160296709b7bbfdc6801f70dea7f2907e96d99d57b56d9ed7e08d7',
-				s: '0x252567d33a5578574b4425f74bc91954ad40f4f1660d7f875712f91d8b45cbd7',
-				to: '0x962f9a9c2a6c092474d24def35eccb3d9363265e',
-				chainId: '0x539',
-				accessList: [],
-				hash: '0x866889c524d0f2977adc2fcfac5b9dc7be5b366b6602590794dde2686cf993b7',
-			},
+
+		const expectedResult =
+			'0x02f86e82053980841dcd65008459682f0082520894962f9a9c2a6c092474d24def35eccb3d9363265e82271080c001a0bbfbe91f1c160296709b7bbfdc6801f70dea7f2907e96d99d57b56d9ed7e08d7a0252567d33a5578574b4425f74bc91954ad40f4f1660d7f875712f91d8b45cbd7';
+		expect(signedTx).toEqual(expectedResult);
+	});
+
+	it('sendTransaction', async () => {
+		const rawKey =
+			process.env.TEST_CMD === 'e2e_geth'
+				? 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
+				: '0xcd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d';
+
+		await ethPersonal.importRawKey(rawKey, 'password123');
+
+		const from = accounts[0].address;
+		const to = accounts[1].address;
+		const value = `10000`;
+		const tx = {
+			from,
+			to,
+			value,
+			gas: '21000',
+			maxFeePerGas: '0x59682F00',
+			maxPriorityFeePerGas: '0x1DCD6500',
+			nonce: 0,
 		};
-		expect(JSON.parse(JSON.stringify(signedTx))).toEqual(
+		const receipt = await ethPersonal.sendTransaction(tx, 'password123');
+		const expectedResult = '0x866889c524d0f2977adc2fcfac5b9dc7be5b366b6602590794dde2686cf993b7';
+		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
 		);
 	});
