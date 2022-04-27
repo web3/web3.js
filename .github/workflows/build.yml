@@ -12,7 +12,7 @@ on:
 
 jobs:
   build: 
-    name: Build All Packages
+    name: Build Packages
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/setup-node@v1
@@ -37,6 +37,7 @@ jobs:
 
   unit:
     name: Unit Tests
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -51,6 +52,7 @@ jobs:
 
   integration:
     name: Integration
+    needs: unit
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -69,6 +71,7 @@ jobs:
 
   e2e:
     name: End-to-End
+    needs: unit
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -83,4 +86,3 @@ jobs:
       -   run: yarn
       -   run: test:e2e:browsers:${{ matrix.browser }}
           shell: bash
-          
