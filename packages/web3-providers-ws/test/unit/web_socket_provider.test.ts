@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,8 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { WebSocket } from 'isomorphic-ws';
+import WebSocket from 'isomorphic-ws';
 import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
 import WebSocketProvider from '../../src/index';
 import {
