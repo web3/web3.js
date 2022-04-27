@@ -52,7 +52,8 @@ const webpackConfig = {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
 			assert: require.resolve('assert'),
-			// jest: require.resolve('jest'),
+			jest: require.resolve('jest'),
+			expect: require.resolve('expect'),
 		},
 		alias: {
 			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
