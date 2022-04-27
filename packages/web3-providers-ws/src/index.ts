@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
-import { ClientOptions, CloseEvent, MessageEvent, WebSocket } from 'isomorphic-ws';
+import WebSocket, { ClientOptions, CloseEvent, MessageEvent } from 'isomorphic-ws';
 import {
 	ConnectionNotOpenError,
 	EthExecutionAPI,
@@ -143,6 +143,7 @@ export default class WebSocketProvider<
 		try {
 			this._webSocketConnection = new WebSocket(
 				this._clientUrl,
+				undefined,
 				this._wsProviderOptions && Object.keys(this._wsProviderOptions).length === 0
 					? undefined
 					: this._wsProviderOptions,
