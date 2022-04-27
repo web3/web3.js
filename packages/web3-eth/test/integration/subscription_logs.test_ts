@@ -1,0 +1,91 @@
+import WebSocketProvider from 'web3-providers-ws';
+import { SupportedProviders } from 'web3-core';
+import { Contract } from 'web3-eth-contract';
+import { HexString } from 'web3-utils';
+import { Web3Eth } from '../../src';
+import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+// eslint-disable-next-line import/no-relative-packages
+import { accounts, clientWsUrl } from '../../../../.github/test.config';
+import { prepareNetwork, sendFewTxes, setupWeb3, Resolve } from './helper';
+import { LogsSubscription } from '../../src/web3_subscriptions';
+
+const checkTxCount = 2;
+
+describe('subscription', () => {
+	let web3Eth: Web3Eth;
+	let providerWs: WebSocketProvider;
+	let contract: Contract<typeof basicContractAbi>;
+	let deployOptions: Record<string, unknown>;
+	let sendOptions: Record<string, unknown>;
+	beforeAll(async () => {
+		providerWs = new WebSocketProvider(
+			clientWsUrl,
+			{},
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+		);
+		await prepareNetwork();
+	});
+	afterAll(() => {
+		providerWs.disconnect();
+	});
+
+	describe('logs', () => {
+		it(`wait for ${checkTxCount} logs`, async () => {
+			const from = accounts[0].address;
+			contract = new Contract(basicContractAbi, undefined, {
+				provider: clientWsUrl,
+			});
+
+			deployOptions = {
+				from,
+				data: basicContractByteCode,
+				arguments: [10, 'string init value'],
+			};
+
+			sendOptions = { from: accounts[0].address, gas: '1000000' };
+
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			setupWeb3(web3Eth, checkTxCount);
+			const to = accounts[1].address;
+			const value = `0x1`;
+			const fromBlock = await web3Eth.getTransactionCount(from);
+			console.log('fromBlock', fromBlock);
+			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
+			console.log('11111');
+			const fromBlock2 = await web3Eth.getTransactionCount(from);
+			console.log('fromBlock2', fromBlock2);
+			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
+				fromBlock,
+				address: accounts[0].address ,
+			});
+
+			console.log('2222');
+			const pr = new Promise((resolve: Resolve) => {
+				sub.on('data', async (data: any) => {
+					console.log('data', data);
+
+					resolve();
+				});
+			});
+			console.log('3333');
+			// sub.on('error', e => {
+			// 	console.log('errr', e);
+			// });
+
+			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
+			console.log('444');
+			await pr;
+			console.log('555');
+		});
+		it(`clear`, async () => {
+			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			setupWeb3(web3Eth, checkTxCount);
+			const sub: LogsSubscription = await web3Eth.subscribe('logs');
+			expect(sub.id).toBeDefined();
+			await web3Eth.clearSubscriptions();
+			expect(sub.id).toBeUndefined();
+		});
+	});
+});
