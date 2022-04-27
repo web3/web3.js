@@ -1,6 +1,22 @@
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { JsonRpcOptionalRequest } from 'web3-common';
-import { toWei, numberToHex } from 'web3-utils';
 
 import { httpStringProvider, accounts } from '../fixtures/config';
 import { Web3 } from '../../src/index';
@@ -21,9 +37,6 @@ describe('Batch Request', () => {
 		};
 	});
 
-	const balanceWeiHex = (balance: string) =>
-		numberToHex(toWei(parseInt(balance, 10), 'ether')).toString();
-
 	it('should execute batch requests', async () => {
 		const web3 = new Web3(httpStringProvider);
 
@@ -34,15 +47,21 @@ describe('Batch Request', () => {
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
 		batch.add(request2);
 		const response = await batch.execute();
-		const hexWeiBalances = accounts.map(acc => balanceWeiHex(acc.balance));
 
 		// todo need to expose expect in browser and not call jasmine
 		const arrayContaining = expect.arrayContaining ?? jasmine.arrayContaining;
 		const objectContaining = expect.objectContaining ?? jasmine.objectContaining;
+		const stringMatching = expect.stringMatching ?? jasmine.stringMatching;
 		expect(response).toEqual(
 			arrayContaining([
-				objectContaining({ id: request1.id, result: hexWeiBalances[0] }),
-				objectContaining({ id: request2.id, result: hexWeiBalances[1] }),
+				objectContaining({
+					id: request1.id,
+					result: stringMatching(/0[xX][0-9a-fA-F]+/),
+				}),
+				objectContaining({
+					id: request2.id,
+					result: stringMatching(/0[xX][0-9a-fA-F]+/),
+				}),
 			]),
 		);
 	});

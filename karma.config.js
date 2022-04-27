@@ -1,3 +1,19 @@
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 const path = require('path');
 const webpack = require('webpack');
 const os = require('os');
@@ -53,12 +69,11 @@ const webpackConfig = {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
 			assert: require.resolve('assert'),
-			constants: require.resolve('constants-browserify'),
+			// jest: require.resolve('jest'),
 		},
 		alias: {
 			'isomorphic-ws': path.join(__dirname, 'tools', 'isomorphic-ws'),
 			jest: path.join(__dirname, 'node_modules', 'jest'),
-			module: path.join('node_modules', '@types', 'node', 'module.d.ts'),
 		},
 	},
 	watch: false,
@@ -108,10 +123,10 @@ module.exports = function (config) {
 		singleRun: true,
 		port: 9876,
 		concurrency: 10,
-		files: listOfTests,
+		files: ['./karma.setup.js', ...listOfTests],
 		exclude: ['**/web3_instance_ipc_string.test.ts'],
 		preprocessors: {
-			'./karma-setup.js': ['webpack'],
+			'./karma.setup.js': ['webpack', 'browserify'],
 			...listOfTests.reduce(
 				(res, packagePath) => ({ ...res, [packagePath]: ['webpack', 'browserify'] }),
 				{},

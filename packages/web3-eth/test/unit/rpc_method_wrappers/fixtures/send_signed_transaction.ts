@@ -1,9 +1,25 @@
-import { ReceiptInfo } from 'web3-common';
-import { HexString } from 'web3-utils';
+/*
+This file is part of web3.js.
 
-const expectedTransactionHash =
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+import { ReceiptInfo } from 'web3-common';
+import { Bytes } from 'web3-utils';
+
+export const expectedTransactionHash =
 	'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547';
-const expectedReceiptInfo: ReceiptInfo = {
+export const expectedReceiptInfo: ReceiptInfo = {
 	transactionHash: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	transactionIndex: '0x41',
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',
@@ -23,15 +39,27 @@ const expectedReceiptInfo: ReceiptInfo = {
 /**
  * Array consists of:
  * - Test title
- * - Input signed transaction
- * - Expected transaction hash
- * - Expected receipt info
+ * - Input parameters:
+ *     - signedTransaction
  */
-export const testData: [string, HexString, HexString, ReceiptInfo][] = [
+export const testData: [string, Bytes][] = [
 	[
-		'Signed transaction',
+		'signedTransaction = HexString',
 		'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
-		expectedTransactionHash,
-		expectedReceiptInfo,
+	],
+	[
+		'signedTransaction = Buffer',
+		Buffer.from(
+			'0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+		),
+	],
+	[
+		'signedTransaction = Uint8Array',
+		new Uint8Array([
+			30, 78, 64, 34, 36, 65, 38, 64, 64, 36, 37, 63, 35, 64, 33, 32, 62, 65, 38, 64, 34, 36,
+			65, 38, 64, 64, 36, 37, 63, 35, 64, 33, 32, 62, 65, 38, 30, 35, 38, 62, 62, 38, 65, 62,
+			39, 37, 30, 38, 37, 30, 66, 30, 37, 32, 34, 34, 35, 36, 37, 35, 30, 35, 38, 62, 62, 38,
+			65, 62, 39, 37, 30, 38, 37, 30, 66, 30, 37, 32, 34, 34, 35, 36, 37, 35,
+		]),
 	],
 ];
