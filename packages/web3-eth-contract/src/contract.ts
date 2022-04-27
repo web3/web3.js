@@ -19,13 +19,16 @@ import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
+	format,
 	inputAddressFormatter,
 	inputLogFormatter,
 	LogsInput,
+	PromiEvent,
 	Web3EventEmitter,
+	ReceiptInfo,
 } from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
+import { call, estimateGas, getLogs, sendTransaction, SendTransactionEvents } from 'web3-eth';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -44,6 +47,7 @@ import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
+	Bytes,
 	Filter,
 	HexString,
 	toChecksumAddress,
@@ -59,8 +63,10 @@ import {
 	ContractOptions,
 	NonPayableCallOptions,
 	NonPayableMethodObject,
+	NonPayableTxOptions,
 	PayableCallOptions,
 	PayableMethodObject,
+	PayableTxOptions,
 } from './types';
 import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './utils';
 
@@ -190,40 +196,45 @@ export class Contract<Abi extends ContractAbi>
 			throw new Web3ContractError('No constructor interface found.');
 		}
 
-		if (!deployOptions?.data) {
+		const data = format(
+			{ eth: 'bytes' },
+			deployOptions?.data ?? this.options.data,
+			DEFAULT_RETURN_FORMAT,
+		);
+
+		if (!data || data.trim() === '0x') {
 			throw new Web3ContractError('No data provided.');
 		}
-		const data = deployOptions?.data ?? this.options.data;
+
 		const args = deployOptions?.arguments ?? [];
-		validator.validate(['string'], args);
 
 		const contractOptions = { ...this.options, data };
 
 		return {
 			arguments: args,
-			send: async (options?: PayableCallOptions) => {
+			send: (
+				options?: PayableTxOptions,
+			): PromiEvent<Contract<Abi>, SendTransactionEvents> => {
 				const modifiedOptions = { ...options };
+
+				// Remove to address
+				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
 				delete modifiedOptions.to;
 
-				const promiEvent = this._contractMethodSend(
+				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
 					args,
 					modifiedOptions,
 					contractOptions,
 				);
-
-				// eslint-disable-next-line no-void
-				void promiEvent.then(res => {
-					this._address = res.contractAddress;
-				});
-
-				return promiEvent;
 			},
 			estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 				options?: PayableCallOptions,
 				returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 			) => {
 				const modifiedOptions = { ...options };
+
+				// Remove to address
 				delete modifiedOptions.to;
 
 				return this._contractMethodEstimateGas({
@@ -234,7 +245,12 @@ export class Contract<Abi extends ContractAbi>
 					contractOptions,
 				});
 			},
-			encodeABI: () => encodeMethodABI(abi as AbiFunctionFragment, args, data),
+			encodeABI: () =>
+				encodeMethodABI(
+					abi as AbiFunctionFragment,
+					args,
+					format({ eth: 'bytes' }, data as Bytes, DEFAULT_RETURN_FORMAT),
+				),
 		};
 	}
 
@@ -243,9 +259,6 @@ export class Contract<Abi extends ContractAbi>
 		filter?: Omit<Filter, 'address'>,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		const formattedFilter = inputLogFormatter(filter ?? {});
-		const logs = await getLogs(this, formattedFilter, returnFormat);
-
 		const abi =
 			eventName === 'allEvents'
 				? ALL_EVENTS_ABI
@@ -256,6 +269,12 @@ export class Contract<Abi extends ContractAbi>
 		if (!abi) {
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
+
+		const { fromBlock, toBlock, topics, address } = inputLogFormatter(
+			encodeEventABI(this.options, abi, filter ?? {}),
+		);
+
+		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
 
 		return logs.map(log =>
 			typeof log === 'string' ? log : decodeEventABI(abi, log as LogsInput),
@@ -351,7 +370,7 @@ export class Contract<Abi extends ContractAbi>
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(abi, params, options, block),
-					send: (options?: PayableCallOptions) =>
+					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(abi, params, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -370,7 +389,7 @@ export class Contract<Abi extends ContractAbi>
 				arguments: params,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(abi, params, options, block),
-				send: (options?: NonPayableCallOptions) =>
+				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(abi, params, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
@@ -414,6 +433,38 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+	}
+
+	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		options?: Options,
+		contractOptions?: ContractOptions,
+	) {
+		const tx = getSendTxParams({
+			abi,
+			params,
+			options,
+			contractOptions: contractOptions ?? this.options,
+		});
+
+		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
+			transactionResolver: receipt => {
+				if (receipt.status === '0x0') {
+					throw new Web3ContractError(
+						'contract deployment error',
+						receipt as ReceiptInfo,
+					);
+				}
+
+				const newContract = this.clone();
+
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+				newContract.options.address = receipt.contractAddress as HexString;
+
+				return newContract;
+			},
+		});
 	}
 
 	private async _contractMethodEstimateGas<

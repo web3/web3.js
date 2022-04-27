@@ -14,17 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+export const deployRevertByteCode =
+	'0x6080604052348015600f57600080fd5b506000601a57600080fd5b603f8060276000396000f3fe6080604052600080fdfea2646970667358221220bd4503b0171d547f437e87e066ac1e967afdde3a3c7e227ed5e414684011238664736f6c634300080d0033';
 
-
-import { Web3Error, ERR_CONTRACT, ReceiptInfo } from 'web3-common';
-
-export class Web3ContractError extends Web3Error {
-	public code = ERR_CONTRACT;
-	public receipt?: ReceiptInfo;
-
-	public constructor(message: string, receipt?: ReceiptInfo) {
-		super(message);
-
-		this.receipt = receipt;
-	}
-}
+export const deployRevertAbi = [
+	{ inputs: [], stateMutability: 'nonpayable', type: 'constructor' },
+] as const;
