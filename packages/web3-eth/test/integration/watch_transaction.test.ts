@@ -57,7 +57,7 @@ describe('watch transaction', () => {
 				});
 			});
 
-			await sendFewTxes({ web3Eth, from, to, value, waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});
 		it('subscription to heads', async () => {
@@ -90,7 +90,7 @@ describe('watch transaction', () => {
 				});
 			});
 			await receiptPromise;
-			await sendFewTxes({ web3Eth, from, to, value, waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});
 	});

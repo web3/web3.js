@@ -1,152 +1,63 @@
 import WebSocketProvider from 'web3-providers-ws';
-import HttpProvider from 'web3-providers-http';
 import { SupportedProviders } from 'web3-core';
-import { PromiEvent } from 'web3-common';
-import { toWei } from 'web3-utils';
-import { EthPersonal } from 'web3-eth-personal'; // eslint-disable-line  import/no-extraneous-dependencies
-import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
+import { BlockOutput } from 'web3-common';
+import { Web3Eth } from '../../src';
 // eslint-disable-next-line import/no-relative-packages
-import { accounts, clientUrl, clientWsUrl } from '../../../../.github/test.config';
+import { accounts, clientWsUrl } from '../../../../.github/test.config';
+import { prepareNetwork, sendFewTxes, setupWeb3, Resolve } from './helper';
+import { NewHeadsSubscription } from '../../src/web3_subscriptions';
 
-const waitConfirmations = 5;
-type Resolve = (value?: unknown) => void;
-const setupWeb3 = (web3Eth: Web3Eth) => {
-	web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
+const checkTxCount = 5;
+type SubName = 'newHeads' | 'newBlockHeaders';
+const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
 
-	const account = web3Eth?.accountProvider?.privateKeyToAccount(accounts[0].privateKey);
-	if (account && web3Eth?.wallet?.add) {
-		web3Eth?.wallet?.add(account);
-	}
-};
-type SendFewTxParams = {
-	web3Eth: Web3Eth;
-	to: string;
-	from: string;
-	value: string;
-};
-const sendFewTxes = async ({ web3Eth, to, value, from }: SendFewTxParams) => {
-	for (let i = 0; i < waitConfirmations; i += 1) {
-		const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-			to,
-			value,
-			from,
-		});
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise((resolve: Resolve) => {
-			tx.on('receipt', (params: ReceiptInfo) => {
-				expect(params.status).toBe('0x1');
-				resolve();
-			});
-		});
-	}
-};
-
-describe('watch transaction', () => {
+describe('subscription', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let providerHttp: HttpProvider;
-	let web3Personal: EthPersonal;
 	beforeAll(async () => {
-		providerHttp = new HttpProvider(clientUrl);
 		providerWs = new WebSocketProvider(
 			clientWsUrl,
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
-		if (process.env.TEST_CMD === 'e2e_geth') {
-			web3Eth = new Web3Eth(clientUrl);
-			await web3Eth.sendTransaction({
-				from: await web3Eth.getCoinbase(),
-				to: accounts[0].address,
-				value: toWei(100, 'ether'),
-			});
-			web3Personal = new EthPersonal(clientUrl);
-			const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
-				a.toUpperCase(),
-			);
-			if (
-				!(
-					existsAccounts?.length > 0 &&
-					existsAccounts.includes(accounts[0].address.toUpperCase())
-				)
-			) {
-				await web3Personal.importRawKey(accounts[0].privateKey.substring(2), '123456');
-				await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
-			} else {
-				await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
-			}
-		}
+		await prepareNetwork();
 	});
 	afterAll(() => {
 		providerWs.disconnect();
 	});
 
-	describe('wait for confirmation', () => {
-		it('polling', async () => {
-			web3Eth = new Web3Eth(providerHttp as SupportedProviders<any>);
-			setupWeb3(web3Eth);
-
-			const from = accounts[0].address;
-			const to = accounts[1].address;
-			const value = `0x1`;
-
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
-			let shouldBe = 2;
-			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
-					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
-						resolve();
-					}
-				});
-			});
-			await new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
-					resolve();
-				});
-			});
-
-			await sendFewTxes({ web3Eth, from, to, value });
-			await confirmationPromise;
-		});
-		it('subscription to heads', async () => {
+	describe('heads', () => {
+		it.each(subNames)(`wait for ${checkTxCount} newHeads`, async (subName: SubName) => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
-			setupWeb3(web3Eth);
-
+			setupWeb3(web3Eth, checkTxCount);
+			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			const from = accounts[0].address;
 			const to = accounts[1].address;
 			const value = `0x1`;
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
 
-			const receiptPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
-					resolve();
-				});
-			});
-			let shouldBe = 2;
-			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
-					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
+			let times = 0;
+			const pr = new Promise((resolve: Resolve) => {
+				sub.on('data', async (data: BlockOutput) => {
+					if (data.parentHash) {
+						times += 1;
+					}
+					expect(times).toBeGreaterThanOrEqual(times);
+					if (times >= checkTxCount) {
 						resolve();
 					}
 				});
 			});
-			await receiptPromise;
-			await sendFewTxes({ web3Eth, from, to, value });
-			await confirmationPromise;
+
+			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
+			await pr;
+		});
+		it.each(subNames)(`clear`, async (subName: SubName) => {
+			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			setupWeb3(web3Eth, checkTxCount);
+			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
+			expect(sub.id).toBeDefined();
+			await web3Eth.clearSubscriptions();
+			expect(sub.id).toBeUndefined();
 		});
 	});
 });
