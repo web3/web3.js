@@ -12,6 +12,7 @@ on:
 
 jobs:
   build: 
+    name: Build All Packages
     runs-on: ubuntu-latest
     steps: 
       - uses: actions/setup-node@v1
@@ -21,6 +22,8 @@ jobs:
       - run: yarn
 
   lint:
+    name: Lint
+    needs: build
     runs-on: ubuntu-latest
     env:
       TEST: "build_and_lint"
@@ -30,10 +33,10 @@ jobs:
         with: 
           node-version: 14
       - uses: actions/checkout@v2
-      - run: yarn
       - run: yarn lint
 
   unit:
+    name: Unit Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,16 +49,15 @@ jobs:
       - run: yarn
       - run: yarn test:unit
 
-  e2e:
+  integration:
+    name: Integration
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         node: [ 14, 16 ]
-        backend: ['geth', 'ganache', 'browsers']
+        backend: ['geth', 'ganache']
         mode: ['http', 'ws']
-    env:
-      TEST_CMD: ${{ matrix.testCmd }}
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -64,3 +66,21 @@ jobs:
       -   run: yarn
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
+
+  e2e:
+    name: End-to-End
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 16 ]
+        browser: ['electron', 'chrome', 'firefox']
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      -   uses: actions/checkout@v2
+      -   run: yarn
+      -   run: test:e2e:browsers:${{ matrix.browser }}
+          shell: bash
+          
