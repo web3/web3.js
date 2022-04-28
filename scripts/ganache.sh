@@ -26,10 +26,7 @@ start() {
 
 stop() {
 	echo "Stopping ganache ..."
-	pkill -15 ganache
-
-	# Exit with zero even if ganache is not running
-	return 0
+	pkill -15 ganache || echo "Gancahe could not found running..."
 }
 
 case $1 in
