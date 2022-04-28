@@ -16,8 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { SupportedProviders } from 'web3-core';
-import { Contract } from 'web3-eth-contract';
-import { decodeEventABI } from 'web3-eth-contract/dist/encoding';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Contract, decodeEventABI } from 'web3-eth-contract';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3Eth } from '../../src';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
