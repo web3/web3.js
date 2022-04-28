@@ -15,10 +15,11 @@ jobs:
     name: Build Packages
     runs-on: ubuntu-latest
     steps: 
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
         with: 
           node-version: 14
-      - uses: actions/checkout@v2
+          cache: yarn
       - run: yarn
 
   lint:
@@ -26,13 +27,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      TEST: "build_and_lint"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps: 
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
         with: 
           node-version: 14
-      - uses: actions/checkout@v2
+          cache: yarn
+      - run: yarn
       - run: yarn lint
 
   unit:
