@@ -97,11 +97,20 @@ export default class WebSocketProvider<
 	public getStatus(): Web3BaseProviderStatus {
 		if (this._webSocketConnection === undefined) return 'disconnected';
 
+		// console.warn(
+		// 	'^^^^',
+		// 	typeof WebSocket.OPEN,
+		// 	WebSocket.OPEN,
+		// 	this._webSocketConnection.OPEN,
+		// 	this._webSocketConnection.readyState,
+		// );
 		switch (this._webSocketConnection.readyState) {
-			case this._webSocketConnection.CONNECTING: {
+			// case this._webSocketConnection.CONNECTING: {
+			case 0: {
 				return 'connecting';
 			}
-			case this._webSocketConnection.OPEN: {
+			// case this._webSocketConnection.OPEN: {
+			case 1: {
 				return 'connected';
 			}
 			default: {
@@ -122,6 +131,7 @@ export default class WebSocketProvider<
 		this._wsEventEmitter.on(type, callback);
 	}
 
+	/// //////
 	public once<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void {
 		this._wsEventEmitter.once(type, callback);
 	}
@@ -141,14 +151,14 @@ export default class WebSocketProvider<
 
 			this._addSocketListeners();
 
-			if (this.getStatus() === 'connecting') {
-				// Rejecting promises if provider is not connected even after reattempts
-				setTimeout(() => {
-					if (this.getStatus() === 'disconnected') {
-						this._clearQueues(undefined);
-					}
-				}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
-			}
+			// if (this.getStatus() === 'connecting') {
+			// 	// Rejecting promises if provider is not connected even after reattempts
+			// 	setTimeout(() => {
+			// 		if (this.getStatus() === 'disconnected') {
+			// 			this._clearQueues(undefined);
+			// 		}
+			// 	}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
+			// }
 		} catch (e) {
 			throw new InvalidConnectionError(this._clientUrl);
 		}
