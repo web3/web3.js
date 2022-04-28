@@ -398,7 +398,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Removes
 
-- Removing the underscore package 
+- Removing the underscore package
 
 ## [1.5.0]
 
@@ -463,7 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
-- Added missing PromiEvent handler types (#4194) 
+- Added missing PromiEvent handler types (#4194)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)
@@ -507,7 +507,6 @@ Released with 1.0.0-beta.37 code base.
 -  Update the documentation for `methods.myMethod.estimateGas` (#4702)
 -  Fix typos in REVIEW.md and TESTING.md (#4691)
 -  Fix encoding for "0x" string values (#4512)
--  Fix jsonrpc payload and response types (#4743) (#4761)
 
 
 ### Changed
@@ -521,7 +520,35 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
 
+## [1.7.2]
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
+### Fixed
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+
+## [1.7.3]
+
+### Fixed
+
+-  fixed build issues of 1.7.2
+
 ## [Unreleased]
 - Improve npm script commands for development purposes (#4848)
 
-## [1.8.0]
+## [1.7.4]
+
+### Fixed
+-  Fix dead link in web3-eth.rst (#4916)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
+-  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)
+-  exporting AbiCoder as coder (#4937)
