@@ -16,26 +16,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
-
-const accounts: string[] = [];
-const clientWsUrl = 'ws://localhost:8546';
+import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof basicContractAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
+	let accounts: string[];
 
 	beforeEach(async () => {
 		contract = new Contract(basicContractAbi, undefined, {
-			provider: clientWsUrl,
+			provider: getSystemTestProvider(),
 		});
+
+		accounts = await getSystemTestAccounts();
 
 		deployOptions = {
 			data: basicContractByteCode,
 			arguments: [10, 'string init value'],
 		};
 
-		sendOptions = { from: accounts[0].address, gas: '1000000' };
+		sendOptions = { from: accounts[0], gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
