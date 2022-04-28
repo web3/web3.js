@@ -26,7 +26,7 @@ start() {
 
 stop() {
 	echo "Stopping ganache ..."
-	pkill -15 ganache || echo "Gancahe could not found running..."
+	pkill -15 ganache 2>/dev/null
 }
 
 case $1 in
