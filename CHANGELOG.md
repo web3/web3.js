@@ -539,6 +539,7 @@ Released with 1.0.0-beta.37 code base.
 -  fixed build issues of 1.7.2
 
 ## [Unreleased]
+- Improve npm script commands for development purposes (#4848)
 
 ## [1.7.4]
 
