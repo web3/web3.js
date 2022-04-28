@@ -202,7 +202,7 @@ export const fromAscii = asciiToHex;
 /**
  * Should be called to get ascii from it's hex representation
  */
-export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toString('ascii');
+export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toString('ascii').trim();
 
 /**
  * @alias `hexToAscii`
