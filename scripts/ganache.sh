@@ -26,7 +26,7 @@ start() {
 
 stop() {
 	echo "Stopping ganache ..."
-	pkill -15 ganache 2>/dev/null
+	# pkill -15 ganache 2>/dev/null
 }
 
 case $1 in
