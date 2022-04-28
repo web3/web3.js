@@ -18,8 +18,9 @@ import { Contract } from '../../src';
 import { sleep, processAsync } from '../shared_fixtures/utils';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
 import { deployRevertAbi, deployRevertByteCode } from '../shared_fixtures/sources/DeployRevert';
-// eslint-disable-next-line import/no-relative-packages
-import { accounts, clientUrl } from '../../../../.github/test.config';
+
+const accounts: string[] = [];
+const clientUrl = 'http://localhost:8545';
 
 describe('contract', () => {
 	describe('deploy', () => {

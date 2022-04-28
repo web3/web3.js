@@ -45,10 +45,11 @@ jobs:
       matrix:
         node: [ 14, 16 ]
     steps:
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/checkout@v2
+          cache: yarn
       - run: yarn
       - run: yarn test:unit
 
@@ -63,10 +64,11 @@ jobs:
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
-      - uses: actions/setup-node@v1
+      -   uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      -   uses: actions/checkout@v2
+          cache: yarn
       -   run: yarn
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
@@ -81,10 +83,11 @@ jobs:
         node: [ 14, 16 ]
         browser: ['electron', 'chrome', 'firefox']
     steps:
-      - uses: actions/setup-node@v1
+      -   uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      -   uses: actions/checkout@v2
+          cache: yarn
       -   run: yarn
       -   run: test:e2e:browsers:${{ matrix.browser }}
           shell: bash
