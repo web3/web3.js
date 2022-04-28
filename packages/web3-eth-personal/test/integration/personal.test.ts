@@ -93,11 +93,11 @@ describe('set up account', () => {
 	it('signTransaction', async () => {
 		const rawKey =
 			process.env.TEST_CMD === 'e2e_geth'
-				? 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
-				: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e';
+				? accounts[2].privateKey.slice(2)
+				: accounts[2].privateKey;
 		await ethPersonal.importRawKey(rawKey, 'password123');
 
-		const from = accounts[0].address;
+		const from = accounts[2].address;
 		const to = accounts[1].address;
 		const value = `10000`;
 		const tx = {
@@ -112,7 +112,7 @@ describe('set up account', () => {
 		const signedTx = await ethPersonal.signTransaction(tx, 'password123');
 
 		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f0082520894962f9a9c2a6c092474d24def35eccb3d9363265e82271080c001a0bbfbe91f1c160296709b7bbfdc6801f70dea7f2907e96d99d57b56d9ed7e08d7a0252567d33a5578574b4425f74bc91954ad40f4f1660d7f875712f91d8b45cbd7';
+			'0x02f86e82053980841dcd65008459682f0082520894962f9a9c2a6c092474d24def35eccb3d9363265e82271080c001a02661e510e0a64d65694808278f11dacbee33f3d8bcb589d37a168e911ba5f97fa0488b98a76e25487e28d393757b25d22f7272e0a0b39da4c1b8c8cd45e3173819';
 		expect(signedTx).toEqual(expectedResult);
 	});
 
@@ -124,7 +124,7 @@ describe('set up account', () => {
 
 		await ethPersonal.importRawKey(rawKey, 'password123');
 
-		const from = accounts[0].address;
+		const from = accounts[2].address;
 		const to = accounts[1].address;
 		const value = `10000`;
 		const tx = {
@@ -137,7 +137,7 @@ describe('set up account', () => {
 			nonce: 0,
 		};
 		const receipt = await ethPersonal.sendTransaction(tx, 'password123');
-		const expectedResult = '0x866889c524d0f2977adc2fcfac5b9dc7be5b366b6602590794dde2686cf993b7';
+		const expectedResult = '0x38be8c210b979484dd2e9dbec12c535cc012abf11f3ca7399632227be205c805';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
 		);
