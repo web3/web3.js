@@ -40,8 +40,15 @@ export const accounts: Account[] = [
 		balance: '100',
 	},
 	{
+		// ganache account for personal tests
 		address: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
 		privateKey: '0x6a56d57b7d8ba43929e84234c576587bbb2526a57b3e3823b0c97065767985fc',
+		balance: '100',
+	},
+	{
+		// geth account for personal tests
+		address: '0x420ab031E4EbCD4E7f0C198D344dd954Df1ca4b9',
+		privateKey: '9e0c4d12677882ddf99775ce67305206c08e8db25f49902316771e5d0d27c08a',
 		balance: '100',
 	},
 ];
