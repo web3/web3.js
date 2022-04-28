@@ -29,7 +29,7 @@ stop() {
 	pkill -15 ganache
 
 	# Exit with zero even if ganache is not running
-	exit 0
+	return 0
 }
 
 case $1 in
