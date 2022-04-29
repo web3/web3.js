@@ -25,7 +25,7 @@ import {
 	InvalidUnitError,
 	InvalidTypeAbiInputError,
 	InvalidNumberError,
-} from './errors';
+} from 'web3-errors';
 import {
 	Address,
 	Bytes,
