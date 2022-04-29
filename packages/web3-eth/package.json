@@ -40,6 +40,7 @@
 		"web3-providers-http": "4.0.0-alpha.1"
 	},
 	"dependencies": {
+		"web3-errors": "1.0.0-alpha.0",
 		"@ethereumjs/common": "^2.6.1",
 		"@ethereumjs/tx": "^3.4.0",
 		"web3-common": "1.0.0-alpha.0",
