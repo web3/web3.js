@@ -19,17 +19,13 @@ import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
 import WebSocket, { ClientOptions, CloseEvent, MessageEvent } from 'isomorphic-ws';
 import {
-	ConnectionNotOpenError,
 	EthExecutionAPI,
-	InvalidClientError,
-	InvalidConnectionError,
 	JsonRpcId,
 	JsonRpcNotification,
 	JsonRpcResponse,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
-	PendingRequestsOnReconnectingError,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
@@ -39,7 +35,13 @@ import {
 	Web3BaseProviderStatus,
 	DeferredPromise,
 } from 'web3-common';
-import { Web3WSProviderError } from './errors';
+import {
+	InvalidClientError,
+	InvalidConnectionError,
+	ConnectionNotOpenError,
+	PendingRequestsOnReconnectingError,
+	Web3WSProviderError,
+} from 'web3-errors';
 import { ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
