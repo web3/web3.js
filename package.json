@@ -70,6 +70,7 @@
 		"lerna": "^4.0.0",
 		"lint-staged": "12.1.2",
 		"prettier": "^2.4.1",
+		"prettier-plugin-solidity": "^1.0.0-beta.19",
 		"ts-jest": "^27.0.7",
 		"ts-loader": "^9.2.8",
 		"ts-node": "^10.4.0",
@@ -78,5 +79,6 @@
 		"watchify": "^4.0.0",
 		"webpack": "^5.70.0"
 	},
-	"packageManager": "yarn@1.22.15"
+	"packageManager": "yarn@1.22.15",
+	"dependencies": {}
 }
