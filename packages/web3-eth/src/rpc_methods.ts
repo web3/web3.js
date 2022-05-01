@@ -15,11 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionWithSender, TransactionCall } from 'web3-common';
+import { BlockNumberOrTag, TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
-	BlockNumberOrTag,
 	Uint256,
 	HexString32Bytes,
 	HexStringBytes,
