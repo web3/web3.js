@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
 	Address,
-	BlockNumberOrTag,
 	HexString,
 	HexString256Bytes,
 	HexString8Bytes,
@@ -210,6 +209,9 @@ export interface CompileResult {
 		};
 	};
 }
+
+export type BlockTag = 'earliest' | 'latest' | 'pending';
+export type BlockNumberOrTag = HexString | BlockTag;
 
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {
