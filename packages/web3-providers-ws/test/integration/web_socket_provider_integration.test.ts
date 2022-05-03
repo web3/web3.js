@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable jest/no-disabled-tests */
 /* eslint-disable jest/no-done-callback */
+// todo remove console
 import {
 	EthExecutionAPI,
 	JsonRpcId,
@@ -25,7 +26,7 @@ import {
 	JsonRpcResponse,
 } from 'web3-common';
 // import WebSocketProvider from '../../src/index';
-import WebSocketProvider from '../../src';
+import WebSocketProvider from '../../src/index';
 import { Web3WSProviderError } from '../../src/errors';
 import { WSRequestItem } from '../../src/types';
 
@@ -38,18 +39,18 @@ describe('WebSocketProvider - implemented methods', () => {
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	// helper function
 	let currentAttempt = 0;
-	const waitForOpenConnection = async (provider: WebSocketProvider) => {
+	const waitForOpenConnection = async (provider: WebSocketProvider, status = 'connected') => {
 		return new Promise<void>((resolve, reject) => {
 			const maxNumberOfAttempts = 10;
 			const intervalTime = 5000; // ms
 
 			const interval = setInterval(() => {
-				console.warn('currentAttemp', currentAttempt);
+				// console.warn('currentAttemp', currentAttempt);
 				console.warn(webSocketProvider.getStatus());
 				if (currentAttempt > maxNumberOfAttempts - 1) {
 					clearInterval(interval);
 					reject(new Error('Maximum number of attempts exceeded'));
-				} else if (provider.getStatus() === 'connected') {
+				} else if (provider.getStatus() === status) {
 					clearInterval(interval);
 					resolve();
 				}
@@ -65,8 +66,15 @@ describe('WebSocketProvider - implemented methods', () => {
 			method: 'eth_getBalance',
 			params: [accounts[0].address, 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
-		webSocketProvider = new WebSocketProvider('ws://localhost:8545');
+		webSocketProvider = new WebSocketProvider(
+			clientWsUrl,
+			{},
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+		);
 		currentAttempt = 0;
+	});
+	afterEach(() => {
+		webSocketProvider.disconnect();
 	});
 
 	describe('websocker provider tests', () => {
@@ -98,37 +106,50 @@ describe('WebSocketProvider - implemented methods', () => {
 				done();
 			});
 			// Manually emit an error event - accessing private emitter
+			// todo change it
 			webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
 		});
-		// it.skip('should subscribe on close', done => {
-		// 	webSocketProvider.on('close', (err, res) => {
-		// 		console.warn(err);
-		// 		console.warn(res);
-		// 		done();
-		// 	});
-		// 	console.warn(webSocketProvider.getStatus());
-		// 	webSocketProvider.disconnect(1000, 'close');
-		// });
+		// eslint-disable-next-line jest/expect-expect
+		it.skip('should subscribe on connect', done => {
+			webSocketProvider.on('open', () => {
+				done();
+			});
+		});
+		it('should subscribe on close', done => {
+			webSocketProvider.on('close', err => {
+				console.warn(err);
+				done();
+			});
+			waitForOpenConnection(webSocketProvider)
+				.then(() => {
+					webSocketProvider.disconnect(1001, '1001');
+				})
+				.catch(() => {
+					done.fail();
+				});
+		});
 	});
 	describe('disconnect and reset test', () => {
 		// eslint-disable-next-line jest/expect-expect
-		it('should disconnect', async () => {
+		it.skip('should disconnect', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-shadow
-			const webSocketProvider = new WebSocketProvider(
-				'ws://mainnet.infura.io/v3/6120b2e72c304b4eadafe2bf33862ac4',
-				{},
-				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-			);
-			await waitForOpenConnection(webSocketProvider);
+			// const webSocketProvider = new WebSocketProvider(
+			// 	clientWsUrl,
+			// 	// {},
+			// 	// { delay: 1, autoReconnect: false, maxAttempts: 1 },
+			// );
+			// console.warn(typeof webSocketProvider.disconnect);
 
-			// await webSocketProvider.disconnect(1000, 'done');
-			console.warn(webSocketProvider.getStatus());
+			// // await webSocketProvider.disconnect(1000, 'done');
+			// console.warn(webSocketProvider.getStatus());
 			const provider = new WebSocketProvider(
 				clientWsUrl,
 				{},
 				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 			);
-			provider.disconnect();
+			await waitForOpenConnection(provider);
+			provider.disconnect(1000);
+			await waitForOpenConnection(provider, 'disconnected');
 		});
 		it.skip('should reset', async () => {
 			jsonRpcPayload = {
@@ -157,15 +178,15 @@ describe('WebSocketProvider - implemented methods', () => {
 	});
 }); // eslint-disable-line import/no-relative-packages
 
-describe('unsubscribe', () => {
-	let provider: WebSocketProvider;
+// describe('unsubscribe', () => {
+// 	let provider: WebSocketProvider;
 
-	it('test', () => {
-		provider = new WebSocketProvider(
-			clientWsUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
-		provider.disconnect();
-	});
-});
+// 	it('test', () => {
+// 		provider = new WebSocketProvider(
+// 			clientWsUrl,
+// 			{},
+// 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+// 		);
+// 		provider.disconnect();
+// 	});
+// });

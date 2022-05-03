@@ -305,6 +305,8 @@ export default class WebSocketProvider<
 	private _onConnect() {
 		this._reconnectAttempts = 0;
 
+		this._wsEventEmitter.emit('open');
+
 		if (this._requestQueue.size > 0) {
 			for (const value of this._requestQueue.values()) {
 				// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
@@ -322,6 +324,11 @@ export default class WebSocketProvider<
 			return;
 		}
 
+		console.warn(event);
+		this._wsEventEmitter.emit('close', {
+			code: event.code,
+			reason: event.reason,
+		});
 		this._clearQueues(event);
 		this._removeSocketListeners();
 	}
