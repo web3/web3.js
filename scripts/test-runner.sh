@@ -32,12 +32,12 @@ fi
 export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
-yarn "$BACKEND:start:background"
+TEST_COMMAND=""
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
-	yarn test:integration
+	TEST_COMMAND = "test:integration"
 else
-	yarn "lerna run test:e2e:$ENGINE --stream"
+	TEST_COMMAND = "lerna run test:e2e:$ENGINE --stream"
 fi
 
-yarn "$BACKEND:stop"
+yarn "$BACKEND:start:background" && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
