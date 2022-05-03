@@ -105,12 +105,10 @@ export default class WebSocketProvider<
 		// 	this._webSocketConnection.readyState,
 		// );
 		switch (this._webSocketConnection.readyState) {
-			// case this._webSocketConnection.CONNECTING: {
-			case 0: {
+			case this._webSocketConnection.CONNECTING: {
 				return 'connecting';
 			}
-			// case this._webSocketConnection.OPEN: {
-			case 1: {
+			case this._webSocketConnection.OPEN: {
 				return 'connected';
 			}
 			default: {
@@ -131,7 +129,6 @@ export default class WebSocketProvider<
 		this._wsEventEmitter.on(type, callback);
 	}
 
-	/// //////
 	public once<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void {
 		this._wsEventEmitter.once(type, callback);
 	}
