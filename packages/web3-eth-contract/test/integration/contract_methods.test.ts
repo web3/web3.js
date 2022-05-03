@@ -51,12 +51,8 @@ describe('contract', () => {
 
 			describe('revert handling', () => {
 				it('should returns the expected revert reason string', async () => {
-					return expect(contract.methods.reverts().call()).rejects.toEqual(
-						expect.objectContaining({
-							error: expect.objectContaining({
-								message: expect.stringContaining('REVERTED WITH REVERT'),
-							}),
-						}),
+					return expect(contract.methods.reverts().call()).rejects.toThrow(
+						'REVERTED WITH REVERT',
 					);
 				});
 			});

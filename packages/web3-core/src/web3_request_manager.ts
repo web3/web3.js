@@ -146,9 +146,16 @@ export class Web3RequestManager<
 			: jsonRpc.toPayload(request);
 
 		if (isWeb3Provider(provider)) {
-			const response = await provider.request<Method, ResponseType>(
-				payload as Web3APIPayload<API, Method>,
-			);
+			let response;
+
+			try {
+				response = await provider.request<Method, ResponseType>(
+					payload as Web3APIPayload<API, Method>,
+				);
+			} catch (error) {
+				// Check if the provider throw an error instead of reject with error
+				response = error as JsonRpcResponse<ResponseType>;
+			}
 
 			return this._processJsonRpcResponse(payload, response);
 		}
@@ -194,7 +201,11 @@ export class Web3RequestManager<
 		payload: JsonRpcPayload<RequestType>,
 		response: JsonRpcResponse<ResultType, ErrorType>,
 	): JsonRpcResponse<ResultType> | never {
-		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
+		if (
+			jsonRpc.isBatchRequest(payload) &&
+			!Array.isArray(response) &&
+			!(response instanceof Error)
+		) {
 			throw new ResponseError(response, 'Got normal response for a batch request.');
 		}
 
@@ -221,6 +232,10 @@ export class Web3RequestManager<
 
 		if (jsonRpc.isResponseWithResult<ResultType>(response)) {
 			return response;
+		}
+
+		if ((response as unknown) instanceof Error) {
+			throw response;
 		}
 
 		throw new ResponseError(response, 'Invalid response');
