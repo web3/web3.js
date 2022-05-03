@@ -200,7 +200,7 @@ describe('WebSocketProvider - implemented methods', () => {
 		});
 	});
 
-	describe('getStatus get and validate all status tests', () => {
+	describe.skip('getStatus get and validate all status tests', () => {
 		it('test getStatus `connecting`', () => {
 			expect(webSocketProvider.getStatus()).toBe('connecting');
 		});
@@ -213,6 +213,59 @@ describe('WebSocketProvider - implemented methods', () => {
 			await waitForOpenConnection(webSocketProvider);
 			webSocketProvider.disconnect();
 			expect(webSocketProvider.getStatus()).toBe('disconnected');
+		});
+	});
+	describe('send multiple Requests on same connection with valid payload and receive response tests', () => {
+		// eslint-disable-next-line jest/expect-expect
+		let jsonRpcPayload2: Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
+		let jsonRpcPayload3: Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
+		beforeAll(() => {
+			jsonRpcPayload2 = {
+				jsonrpc: '2.0',
+				id: 43,
+				method: 'eth_mining',
+			} as Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
+			jsonRpcPayload3 = {
+				jsonrpc: '2.0',
+				id: 44,
+				method: 'eth_hashrate',
+			} as Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
+		});
+		it('multiple requests', done => {
+			const prom1 = webSocketProvider.request(jsonRpcPayload);
+
+			const prom2 = webSocketProvider.request(jsonRpcPayload2);
+
+			const prom3 = webSocketProvider.request(jsonRpcPayload3);
+
+			Promise.all([prom1, prom2, prom3])
+				.then(values => {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(values).toEqual(
+						expect.arrayContaining([
+							expect.objectContaining({ id: jsonRpcPayload.id }),
+							expect.objectContaining({ id: jsonRpcPayload2.id }),
+							expect.objectContaining({ id: jsonRpcPayload3.id }),
+						]),
+					);
+					// Execute request in connected stated too
+					prom3
+						.then(value => {
+							// eslint-disable-next-line jest/no-conditional-expect
+							expect(value).toEqual(
+								expect.objectContaining({
+									id: jsonRpcPayload3.id,
+								}),
+							);
+							done();
+						})
+						.catch(err => {
+							done.fail(err.message);
+						});
+				})
+				.catch(err => {
+					done.fail(err.message);
+				});
 		});
 	});
 });
