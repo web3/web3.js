@@ -24,11 +24,14 @@ import {
 	Web3APIPayload,
 	DeferredPromise,
 	JsonRpcResponse,
+	JsonRpcNotification,
+	JsonRpcSubscriptionResult,
 } from 'web3-common';
 // import WebSocketProvider from '../../src/index';
+// import { CloseEvent } from 'isomorphic-ws';
 import WebSocketProvider from '../../src/index';
-import { Web3WSProviderError } from '../../src/errors';
-import { WSRequestItem } from '../../src/types';
+// import { Web3WSProviderError } from '../../src/errors';
+import { WSRequestItem, OnCloseEvent } from '../../src/types';
 
 // eslint-disable-next-line import/no-relative-packages
 import { clientWsUrl, accounts } from '../../../../.github/test.config';
@@ -46,7 +49,7 @@ describe('WebSocketProvider - implemented methods', () => {
 
 			const interval = setInterval(() => {
 				// console.warn('currentAttemp', currentAttempt);
-				console.warn(webSocketProvider.getStatus());
+				// console.warn(webSocketProvider.getStatus());
 				if (currentAttempt > maxNumberOfAttempts - 1) {
 					clearInterval(interval);
 					reject(new Error('Maximum number of attempts exceeded'));
@@ -73,8 +76,12 @@ describe('WebSocketProvider - implemented methods', () => {
 		);
 		currentAttempt = 0;
 	});
-	afterEach(() => {
-		webSocketProvider.disconnect();
+	afterEach(async () => {
+		if (webSocketProvider.getStatus() !== 'disconnected') {
+			// make sure we try to close the connection after it is established
+			await waitForOpenConnection(webSocketProvider);
+			webSocketProvider.disconnect();
+		}
 	});
 
 	describe('websocker provider tests', () => {
@@ -87,42 +94,58 @@ describe('WebSocketProvider - implemented methods', () => {
 
 	describe('subscribe event tests', () => {
 		it.skip('should subscribe on message', done => {
-			webSocketProvider.on('message', (err, res) => {
-				if (err) {
-					done.fail(err);
-				}
-				expect(res?.id).toBe(jsonRpcPayload.id);
-				done();
-			});
+			webSocketProvider.on(
+				'message',
+				(
+					error: Error | null,
+					result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
+				) => {
+					if (error) {
+						done.fail(error);
+					}
+					expect(result?.id).toBe(jsonRpcPayload.id);
+					done();
+				},
+			);
 			webSocketProvider.request(jsonRpcPayload).catch(err => {
 				done.fail(err);
 			});
 		});
 
-		it.skip('should subscribe on error', done => {
-			const errorMsg = 'Custom WebSocket error occured';
-			webSocketProvider.on('error', err => {
-				expect(err?.message).toBe(errorMsg);
-				done();
-			});
-			// Manually emit an error event - accessing private emitter
-			// todo change it
-			webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
-		});
+		// it.skip('should subscribe on error', done => {
+		// 	const errorMsg = 'Custom WebSocket error occured';
+		// 	webSocketProvider.on('error', err => {
+		// 		expect(err?.message).toBe(errorMsg);
+		// 		done();
+		// 	});
+		// 	// Manually emit an error event - accessing private emitter
+		// 	// todo change it
+		// 	webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
+		// });
+
 		// eslint-disable-next-line jest/expect-expect
 		it.skip('should subscribe on connect', done => {
 			webSocketProvider.on('open', () => {
 				done();
 			});
 		});
-		it('should subscribe on close', done => {
-			webSocketProvider.on('close', err => {
-				console.warn(err);
-				done();
-			});
+		it.skip('should subscribe on close', done => {
+			const code = 1001;
+			const reason = '1001';
+			webSocketProvider.on(
+				'close',
+				(err: Error | null, event: OnCloseEvent | null | undefined) => {
+					if (err) {
+						done.fail(err);
+					}
+					expect(event!.code).toEqual(code);
+					expect(event!.reason).toEqual(reason);
+					done();
+				},
+			);
 			waitForOpenConnection(webSocketProvider)
 				.then(() => {
-					webSocketProvider.disconnect(1001, '1001');
+					webSocketProvider.disconnect(code, reason);
 				})
 				.catch(() => {
 					done.fail();
@@ -176,17 +199,20 @@ describe('WebSocketProvider - implemented methods', () => {
 			expect(webSocketProvider['_sentQueue'].size).toBe(0);
 		});
 	});
-}); // eslint-disable-line import/no-relative-packages
 
-// describe('unsubscribe', () => {
-// 	let provider: WebSocketProvider;
+	describe('getStatus get and validate all status tests', () => {
+		it('test getStatus `connecting`', () => {
+			expect(webSocketProvider.getStatus()).toBe('connecting');
+		});
 
-// 	it('test', () => {
-// 		provider = new WebSocketProvider(
-// 			clientWsUrl,
-// 			{},
-// 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-// 		);
-// 		provider.disconnect();
-// 	});
-// });
+		it('test getStatus `connected`', async () => {
+			await waitForOpenConnection(webSocketProvider);
+			expect(webSocketProvider.getStatus()).toBe('connected');
+		});
+		it('test getStatus `disconnected`', async () => {
+			await waitForOpenConnection(webSocketProvider);
+			webSocketProvider.disconnect();
+			expect(webSocketProvider.getStatus()).toBe('disconnected');
+		});
+	});
+});
