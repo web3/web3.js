@@ -37,7 +37,7 @@ yarn "$BACKEND:start:background"
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	yarn test:integration
 else
-	yarn "test:e2e:$ENGINE"
+	yarn "lerna run test:e2e:$ENGINE --stream"
 fi
 
 yarn "$BACKEND:stop"

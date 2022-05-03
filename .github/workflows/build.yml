@@ -89,5 +89,5 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: yarn
       -   run: yarn
-      -   run: yarn test:e2e:browsers:${{ matrix.browser }}
+      -   run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
           shell: bash

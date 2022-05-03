@@ -52,7 +52,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 		return _accounts;
 	}
 
-	const clientUrl = `http://localhost:${process.env.WEB3_SYSTEM_TEST_PORT ?? 8545}`;
+	const clientUrl = getSystemTestProvider();
 
 	if (getSystemTestBackend() === 'geth') {
 		const web3Eth = new Web3Eth(clientUrl);
