@@ -52,7 +52,8 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 		return _accounts;
 	}
 
-	const clientUrl = getSystemTestProvider();
+	// For this script we need to connect over http
+	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
 
 	if (getSystemTestBackend() === 'geth') {
 		const web3Eth = new Web3Eth(clientUrl);
