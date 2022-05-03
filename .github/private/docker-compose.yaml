@@ -1,0 +1,18 @@
+version: '3'
+services:
+   node1:
+       image: gethnodeprivate
+       command: --datadir data  --nodiscover --identity privateChain  --netrestrict 127.0.0.0/24 --gcmode archive --bootnodes enode://a06a85030299155ea480a7ab25754996a8a4e5f4178e446834687abc7a4e5c5c7295d8b29f47981d908df333297f2cba23d9c4d018f09b6a41453da87b46e252@127.0.0.1:30304?discport=0 --port 30305 --networkid 4224 --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,txpool,net --mine --miner.noverify --unlock 0 --snapshot=false --syncmode full  --verbosity 5 --password /pass
+       ports:
+           - "8545:8545"
+           - "30305:30305"
+
+   node2:
+       image: gethnodeprivate
+       command: --datadir data  --nodiscover --identity privateChain  --netrestrict 127.0.0.0/24 --gcmode archive --bootnodes enode://a06a85030299155ea480a7ab25754996a8a4e5f4178e446834687abc7a4e5c5c7295d8b29f47981d908df333297f2cba23d9c4d018f09b6a41453da87b46e252@127.0.0.1:30305?discport=0 --port 30304 --networkid 4224 --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,txpool,net --mine --miner.noverify --unlock 0 --snapshot=false --syncmode full  --verbosity 5 --password /pass
+       ports:
+           - "8546:8545"
+           - "30304:30304"
+networks:
+    privnet:
+        driver: bridge
