@@ -40,7 +40,7 @@ import {
 	DeferredPromise,
 } from 'web3-common';
 import { Web3WSProviderError } from './errors';
-import { ReconnectOptions, WSRequestItem } from './types';
+import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
@@ -97,6 +97,7 @@ export default class WebSocketProvider<
 	public getStatus(): Web3BaseProviderStatus {
 		if (this._webSocketConnection === undefined) return 'disconnected';
 
+		// todo clean
 		// console.warn(
 		// 	'^^^^',
 		// 	typeof WebSocket.OPEN,
@@ -124,7 +125,7 @@ export default class WebSocketProvider<
 
 	public on<T = JsonRpcResult>(
 		type: 'message' | string,
-		callback: Web3BaseProviderCallback<T>,
+		callback: Web3BaseProviderCallback<T> | EventEmittedCallback,
 	): void {
 		this._wsEventEmitter.on(type, callback);
 	}
@@ -321,11 +322,10 @@ export default class WebSocketProvider<
 			return;
 		}
 
-		console.warn(event);
-		this._wsEventEmitter.emit('close', {
+		this._wsEventEmitter.emit('close', null, {
 			code: event.code,
 			reason: event.reason,
-		});
+		} as OnCloseEvent);
 		this._clearQueues(event);
 		this._removeSocketListeners();
 	}
