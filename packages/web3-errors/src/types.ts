@@ -15,8 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Error, ERR_PROVIDER } from 'web3-common';
+// duplicate types from web3-common for avoiding cyclic dep between web3-errors and web3-common
+export type ConnectionEvent = {
+	code: number;
+	reason: string;
+	wasClean?: boolean; // if WS connection was closed properly
+};
 
-export class Web3WSProviderError extends Web3Error {
-	public code = ERR_PROVIDER;
-}
+export type Receipt = Record<string, unknown>;

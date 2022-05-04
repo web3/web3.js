@@ -19,11 +19,8 @@ import { EventEmitter } from 'events';
 import { existsSync } from 'fs';
 import { Socket } from 'net';
 import {
-	ConnectionNotOpenError,
 	DeferredPromise,
 	EthExecutionAPI,
-	InvalidClientError,
-	InvalidConnectionError,
 	JsonRpcId,
 	JsonRpcNotification,
 	JsonRpcResponse,
@@ -38,6 +35,7 @@ import {
 	Web3BaseProviderCallback,
 	Web3BaseProviderStatus,
 } from 'web3-common';
+import { ConnectionNotOpenError, InvalidClientError, InvalidConnectionError } from 'web3-errors';
 
 export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,

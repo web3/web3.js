@@ -44,7 +44,7 @@ import {
 	Wallet,
 } from 'web3-eth-accounts';
 import { Address } from 'web3-utils';
-import { ContractError } from './errors';
+import { ContractInstantiationError } from 'web3-errors';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Eth & {
@@ -111,7 +111,9 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			options?: ContractInitOptions,
 		) {
 			if (!(this instanceof ContractBuilder)) {
-				throw new ContractError('Please use the "new" keyword to instantiate a contract.');
+				throw new ContractInstantiationError(
+					'Please use the "new" keyword to instantiate a contract.',
+				);
 			}
 
 			const contract = self.use(Contract, jsonInterface, address, options);
