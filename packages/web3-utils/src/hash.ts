@@ -15,11 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { keccak256 } from 'ethereum-cryptography/keccak';
-import { isAddress, isHexStrict } from 'web3-validator';
-import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
-import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
-import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 import {
 	InvalidStringError,
 	InvalidTypeError,
@@ -29,7 +24,12 @@ import {
 	InvalidLargeValueError,
 	InvalidUnsignedIntegerError,
 	InvalidBytesError,
-} from './errors';
+} from 'web3-errors';
+import { keccak256 } from 'ethereum-cryptography/keccak';
+import { isAddress, isHexStrict } from 'web3-validator';
+import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
+import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
+import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
