@@ -1,0 +1,30 @@
+version: '3'
+services:
+   node1:
+       image: gethnodeprivate
+       command: --datadir data --port 30303 --nodiscover --networkid 4224 --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,txpool,net --mine --syncmode full --unlock 0 --verbosity 5 --password /pass
+#       expose:
+#           -   30303
+       ports:
+           - "8545:8545"
+           - "30303:30303"
+#       networks:
+#           privnet:
+#               ipv4_address: 10.6.0.100
+
+   node2:
+       image: gethnodeprivate
+       command: --datadir data --port 30304 --nodiscover --networkid 4224 --ws --ws.addr 0.0.0.0 --ws.port 8545 --http --http.addr 0.0.0.0 --http.port 8545 --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,txpool,net --syncmode full --unlock 0 --verbosity 5 --password /pass
+#           -   30303
+       ports:
+           - "8546:8545"
+           - "30304:30304"
+#       networks:
+#           privnet:
+#               ipv4_address: 10.6.0.101
+#networks:
+#    privnet:
+#        driver: bridge
+#        ipam:
+#            config:
+#                - subnet: 10.6.0.0/24
