@@ -218,7 +218,11 @@ export class Eth {
     getBlock(blockHashOrBlockNumber: BlockNumber | string): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: boolean
+        returnTransactionObjects: false
+    ): Promise<BlockTransactionString>;
+    getBlock(
+        blockHashOrBlockNumber: BlockNumber | string,
+        returnTransactionObjects: true
     ): Promise<BlockTransactionObject>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
@@ -226,7 +230,12 @@ export class Eth {
     ): Promise<BlockTransactionString>;
     getBlock(
         blockHashOrBlockNumber: BlockNumber | string,
-        returnTransactionObjects: boolean,
+        returnTransactionObjects: false,
+        callback?: (error: Error, block: BlockTransactionString) => void
+    ): Promise<BlockTransactionString>;
+    getBlock(
+        blockHashOrBlockNumber: BlockNumber | string,
+        returnTransactionObjects: true,
         callback?: (error: Error, block: BlockTransactionObject) => void
     ): Promise<BlockTransactionObject>;
 
