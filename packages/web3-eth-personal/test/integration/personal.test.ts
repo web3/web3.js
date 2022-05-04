@@ -18,11 +18,14 @@ import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
 import { accounts, clientUrl } from '../config/personal.test.config'; // eslint-disable-line import/no-relative-packages
+import { getSystemTestBackend, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('set up account', () => {
 	let ethPersonal: EthPersonal;
-	beforeAll(() => {
+	let account: string[];
+	beforeAll( async () => {
 		ethPersonal = new EthPersonal(clientUrl);
+		account = await getSystemTestAccounts();
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
@@ -30,7 +33,7 @@ describe('set up account', () => {
 	});
 
 	it('sign', async () => {
-		if (process.env.TEST_CMD === 'e2e_geth') {
+		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support sign
 
 			await ethPersonal.importRawKey(accounts[0].privateKey.slice(2), '123');
@@ -43,7 +46,7 @@ describe('set up account', () => {
 	});
 
 	it('ecRecover', async () => {
-		if (process.env.TEST_CMD === 'e2e_geth') {
+		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support ecRecover
 
 			await ethPersonal.importRawKey(accounts[2].privateKey, 'abc'); // import account
@@ -57,11 +60,11 @@ describe('set up account', () => {
 	it('lock account', async () => {
 		// ganache requires prefixed, must be apart of account ganache command
 		let key;
-		if (process.env.TEST_CMD === 'e2e_geth') {
+		if (getSystemTestBackend() === 'geth') {
 			key = await ethPersonal.newAccount('123');
 			key = key.slice(2);
 		} else {
-			key = await ethPersonal.importRawKey(accounts[0].privateKey, '123');
+			key = account[1];
 		}
 		const lockAccount = await ethPersonal.lockAccount(key);
 		expect(lockAccount).toBe(true);
@@ -69,13 +72,13 @@ describe('set up account', () => {
 
 	it('unlock account', async () => {
 		let key;
-		if (process.env.TEST_CMD === 'e2e_geth') {
+		if (getSystemTestBackend() === 'geth') {
 			key = await ethPersonal.newAccount('123');
 			key = key.slice(2);
 		} else {
-			key = await ethPersonal.importRawKey(accounts[3].privateKey, '123');
+			key = account[0];
 		}
-		const unlockedAccount = await ethPersonal.unlockAccount(key, '123', 10000);
+		const unlockedAccount = await ethPersonal.unlockAccount(key, '', 10000);
 		expect(unlockedAccount).toBe(true);
 	});
 
@@ -89,14 +92,14 @@ describe('set up account', () => {
 	});
 
 	it('importRawKey', async () => {
-		const account = process.env.TEST_CMD === 'e2e_geth' ? accounts[4] : accounts[5];
+		const account = getSystemTestBackend() === 'geth' ? accounts[4] : accounts[5];
 		const key = await ethPersonal.importRawKey(account.privateKey, 'password123');
 		expect(toChecksumAddress(key)).toBe(account.address);
 	});
 
 	it('signTransaction', async () => {
 		const rawKey =
-			process.env.TEST_CMD === 'e2e_geth'
+			getSystemTestBackend() === 'geth'
 				? accounts[0].privateKey.slice(2)
 				: accounts[0].privateKey;
 		await ethPersonal.importRawKey(rawKey, 'password123');
@@ -116,39 +119,52 @@ describe('set up account', () => {
 		const signedTx = await ethPersonal.signTransaction(tx, 'password123');
 
 		const expectedResult =
-			process.env.TEST_CMD === 'e2e_geth'
+			getSystemTestBackend() === 'geth'
 				? '0x02f86e82053980841dcd65008459682f0082520894962f9a9c2a6c092474d24def35eccb3d9363265e82271080c001a02661e510e0a64d65694808278f11dacbee33f3d8bcb589d37a168e911ba5f97fa0488b98a76e25487e28d393757b25d22f7272e0a0b39da4c1b8c8cd45e3173819'
 				: '0x02f86e82053980841dcd65008459682f008252089462ff0b7cfd7c46e2d647359608592ae91ed2faad82271080c001a0164b80af6236765677e1cc5e14f9b50e967ce9867a1b6df099be589cb734fe22a01a3e79c19373ae1601f26c40e5f9cd9a26befc24e462c8921b1830d8d0afc82c';
 		expect(signedTx).toEqual(expectedResult);
 	});
 
 	it('sendTransaction', async () => {
-		const rawKey =
-			process.env.TEST_CMD === 'e2e_geth'
-				? 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
-				: accounts[1].privateKey;
-
-		await ethPersonal.importRawKey(rawKey, 'password123');
-
-		const from = accounts[0].address;
+		let from;
 		const to = accounts[2].address;
 		const value = `10000`;
-		const tx = {
-			from,
-			to,
-			value,
-			gas: '21000',
-			maxFeePerGas: '0x59682F00',
-			maxPriorityFeePerGas: '0x1DCD6500',
-			nonce: 0,
-		};
-		const receipt = await ethPersonal.sendTransaction(tx, 'password123');
+		
+		
+		if (getSystemTestBackend() === 'geth') {
+			const rawKey = 'cd3376bb711cb332ee3fb2ca04c6a8b9f70c316fcdf7a1f44ef4c7999483295d'
+			await ethPersonal.importRawKey(rawKey, 'password123');
+			from = accounts[0].address;
+			const tx = {
+				from,
+				to,
+				value,
+				gas: '21000',
+				maxFeePerGas: '0x59682F00',
+				maxPriorityFeePerGas: '0x1DCD6500'
+			};
+			const receipt = await ethPersonal.sendTransaction(tx, '');
 		const expectedResult =
-			process.env.TEST_CMD === 'e2e_geth'
+			getSystemTestBackend() === 'geth'
 				? '0x38be8c210b979484dd2e9dbec12c535cc012abf11f3ca7399632227be205c805'
 				: '0x3ca91d8071d31cef11f39cf58fa4307e31b4b24eb4a4c8d0d95da5ba3d554bc8';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
 		);
+		} else if (getSystemTestBackend() === 'ganache' ) {
+			from = account[0];
+			const tx = {
+				from,
+				to,
+				value,
+				gas: '21000',
+				maxFeePerGas: '0x59682F00',
+				maxPriorityFeePerGas: '0x1DCD6500'
+			};
+			const receipt = await ethPersonal.sendTransaction(tx, '');
+			expect(isHexStrict(receipt)).toBe(true);
+		}
+		
+		
 	});
 });
