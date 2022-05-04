@@ -52,8 +52,7 @@ const webpackConfig = {
 			crypto: require.resolve('crypto-browserify'),
 			stream: 'readable-stream',
 			assert: require.resolve('assert'),
-			jest: require.resolve('jest'),
-			expect: require.resolve('expect'),
+			// jest: require.resolve('jest'),
 		},
 		alias: {
 			jest: path.join(__dirname, 'node_modules', 'jest'),
