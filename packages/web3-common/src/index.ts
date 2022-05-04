@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export * from './errors';
-export * from './constants';
 export * from './types';
 export * from './web3_base_provider';
 export * from './web3_base_wallet';

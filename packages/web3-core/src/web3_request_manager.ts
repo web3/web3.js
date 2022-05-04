@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
+import { ProviderError } from 'web3-errors';
 import {
 	EthExecutionAPI,
 	InvalidResponseError,
@@ -24,7 +25,6 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
 	JsonRpcResponse,
-	ProviderError,
 	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,

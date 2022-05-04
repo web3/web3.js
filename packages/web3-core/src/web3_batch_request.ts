@@ -22,9 +22,8 @@ import {
 	jsonRpc,
 	JsonRpcRequest,
 	ResponseError,
-	OperationAbortError,
-	OperationTimeoutError,
 } from 'web3-common';
+import { OperationAbortError, OperationTimeoutError } from 'web3-errors';
 import { Web3RequestManager } from './web3_request_manager';
 
 export const DEFAULT_BATCH_REQUEST_TIMEOUT = 1000;
