@@ -69,7 +69,10 @@ export class Iban {
 	 * return the bigint of the given string with the specified base
 	 */
 	private static readonly _parseInt = (str: string, base: number): bigint =>
-		[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
+		[...str].reduce(
+			(acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc,
+			BigInt(0),
+		);
 
 	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
