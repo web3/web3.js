@@ -3,7 +3,7 @@ import * as jest from 'jest-mock';
 // window.test = window.it;
 window.it.each = inputs => async (testName, test) => {
 	for (const inp of inputs) {
-		window.it(testName, async () => await test(...args));
+		window.it(testName, async () => await test(...inp));
 	}
 };
 window.jest = jest;
