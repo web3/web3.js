@@ -398,7 +398,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Removes
 
-- Removing the underscore package 
+- Removing the underscore package
 
 ## [1.5.0]
 
@@ -463,7 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
-- Added missing PromiEvent handler types (#4194) 
+- Added missing PromiEvent handler types (#4194)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)

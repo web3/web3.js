@@ -207,7 +207,7 @@ var hexToUtf8 = function(hex) {
     var l = hex.length;
 
     for (var i=0; i < l; i+=2) {
-        code = parseInt(hex.substr(i, 2), 16);
+        code = parseInt(hex.slice(i, i + 2), 16);
         // if (code !== 0) {
         str += String.fromCharCode(code);
         // }
@@ -273,7 +273,7 @@ var numberToHex = function (value) {
     var number = toBN(value);
     var result = number.toString(16);
 
-    return number.lt(new BN(0)) ? '-0x' + result.substr(1) : '0x' + result;
+    return number.lt(new BN(0)) ? '-0x' + result.slice(1) : '0x' + result;
 };
 
 
@@ -315,7 +315,7 @@ var hexToBytes = function(hex) {
     hex = hex.replace(/^0x/i,'');
 
     for (var bytes = [], c = 0; c < hex.length; c += 2)
-        bytes.push(parseInt(hex.substr(c, 2), 16));
+        bytes.push(parseInt(hex.slice(c, c + 2), 16));
     return bytes;
 };
 
