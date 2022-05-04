@@ -23,15 +23,21 @@ import {
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
 } from '../../src/web3_subscriptions';
-import { clientWsUrl, accounts } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
+import {
+	getSystemTestProvider,
+	describeIf,
+	getSystemTestAccounts,
+} from '../fixtures/system_test_utils';
 
-describe('unsubscribe', () => {
+describeIf(getSystemTestProvider().startsWith('ws'))('subscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
+	let accounts: string[];
 
-	beforeAll(() => {
+	beforeAll(async () => {
+		accounts = await getSystemTestAccounts();
 		provider = new WebSocketProvider(
-			clientWsUrl,
+			getSystemTestProvider(),
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
@@ -70,7 +76,7 @@ describe('unsubscribe', () => {
 		it('logs', async () => {
 			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
 			await web3Eth.subscribe('logs', {
-				address: accounts[0].address,
+				address: accounts[0],
 			});
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);

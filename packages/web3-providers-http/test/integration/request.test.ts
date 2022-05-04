@@ -22,20 +22,23 @@ import {
 	JsonRpcResponseWithResult,
 } from 'web3-common';
 import HttpProvider from '../../src/index';
-// eslint-disable-next-line
-import { accounts, clientUrl } from '../../../../.github/test.config';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	describeIf,
+} from '../fixtures/system_test_utils';
 
-describe('HttpProvider - implemented methods', () => {
+describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	beforeAll(async () => {
-		httpProvider = new HttpProvider(clientUrl);
+		httpProvider = new HttpProvider(getSystemTestProvider());
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [accounts[0].address, 'latest'],
+			params: [(await getSystemTestAccounts())[0], 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 

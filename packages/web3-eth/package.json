@@ -22,7 +22,10 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand"
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
+		"test:e2e:electron": "npx cypress run --headless --browser electron",
+		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",

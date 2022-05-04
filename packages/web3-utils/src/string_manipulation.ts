@@ -72,7 +72,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 	if (val >= 0) return padLeft(toHex(val), nibbleWidth);
 
-	const largestBit = 2n ** BigInt(nibbleWidth * 4);
+	const largestBit = BigInt(2) ** BigInt(nibbleWidth * 4);
 	if (-val >= largestBit) {
 		throw new NibbleWidthError(`value: ${value}, nibbleWidth: ${nibbleWidth}`);
 	}
@@ -101,7 +101,7 @@ export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | b
 	// check the largest bit to see if negative
 	if (nibbleWidth * 4 !== largestBit) return val;
 
-	const complement = 2n ** (BigInt(nibbleWidth) * 4n);
+	const complement = BigInt(2) ** (BigInt(nibbleWidth) * BigInt(4));
 
 	return toNumber(BigInt(val) - complement);
 };
