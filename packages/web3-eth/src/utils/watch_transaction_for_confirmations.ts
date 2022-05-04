@@ -18,11 +18,11 @@ import {
 	BlockOutput,
 	DataFormat,
 	EthExecutionAPI,
-	SubscriptionError,
 	format,
 	PromiEvent,
 	Web3BaseProvider,
 } from 'web3-common';
+import { SubscriptionError } from 'web3-errors';
 import { Web3Context } from 'web3-core';
 import { Bytes, HexString32Bytes, numberToHex } from 'web3-utils';
 

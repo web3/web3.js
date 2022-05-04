@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { OperationTimeoutError } from './errors';
+import { OperationTimeoutError } from 'web3-errors';
 
 export class DeferredPromise<T> implements Promise<T> {
 	// public tag to treat object as promise by different libs

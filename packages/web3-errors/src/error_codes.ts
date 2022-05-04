@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ export const ERR_CONTRACT_RESERVED_EVENT = 305;
 export const ERR_CONTRACT_MISSING_DEPLOY_DATA = 306;
 export const ERR_CONTRACT_MISSING_ADDRESS = 307;
 export const ERR_CONTRACT_MISSING_FROM_ADDRESS = 308;
+export const ERR_CONTRACT_INSTANTIATION = 309;
 
 // Transaction error codes
 export const ERR_TX = 400;
@@ -84,6 +85,7 @@ export const ERR_PROVIDER = 600;
 export const ERR_INVALID_PROVIDER = 601;
 export const ERR_INVALID_CLIENT = 602;
 export const ERR_SUBSCRIPTION = 603;
+export const ERR_WS_PROVIDER = 604;
 
 // Account error codes
 export const ERR_PRIVATE_KEY_LENGTH = 701;
@@ -109,6 +111,23 @@ export const JSONRPC_ERR_UNSUPPORTED_METHOD = 4200;
 export const JSONRPC_ERR_DISCONNECTED = 4900;
 export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
 
+// ENS error codes
 export const ERR_ENS_CHECK_INTERFACE_SUPPORT = 901;
 export const ERR_ENS_UNSUPPORTED_NETWORK = 902;
 export const ERR_ENS_NETWORK_NOT_SYNCED = 903;
+
+// Utils error codes
+export const ERR_INVALID_STRING = 1001;
+export const ERR_INVALID_BYTES = 1002;
+export const ERR_INVALID_NUMBER = 1003;
+export const ERR_INVALID_UNIT = 1004;
+export const ERR_INVALID_ADDRESS = 1005;
+export const ERR_INVALID_HEX = 1006;
+export const ERR_INVALID_TYPE = 1007;
+export const ERR_INVALID_BOOLEAN = 1008;
+export const ERR_INVALID_UNSIGNED_INTEGER = 1009;
+export const ERR_INVALID_SIZE = 1010;
+export const ERR_INVALID_LARGE_VALUE = 1011;
+export const ERR_INVALID_BLOCK = 1012;
+export const ERR_INVALID_TYPE_ABI = 1013;
+export const ERR_INVALID_NIBBLE_WIDTH = 1014;

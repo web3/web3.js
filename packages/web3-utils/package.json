@@ -40,6 +40,7 @@
 		"typescript": "^4.5.2"
 	},
 	"dependencies": {
+		"web3-errors": "1.0.0-alpha.0",
 		"web3-validator": "^0.1.0-alpha.0",
 		"ethereum-cryptography": "^0.2.0"
 	}
