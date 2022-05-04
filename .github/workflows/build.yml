@@ -23,7 +23,7 @@ jobs:
       - run: yarn
 
   lint:
-    name: Lint
+    name: lint
     needs: build
     runs-on: ubuntu-latest
     env:
