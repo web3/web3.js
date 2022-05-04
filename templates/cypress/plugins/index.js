@@ -12,11 +12,21 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const webpackPreprocessor = require('@cypress/webpack-preprocessor');
+const webpackOptions = require('../webpack.config.js');
+
 /**
  * @type {Cypress.PluginConfig}
  */
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
-	// `on` is used to hook into various events Cypress emits
-	// `config` is the resolved Cypress config
+	on('file:preprocessor', webpackPreprocessor({ webpackOptions }));
+
+	config.env.WEB3_SYSTEM_TEST_ENV = process.env.WEB3_SYSTEM_TEST_ENV;
+	config.env.WEB3_SYSTEM_TEST_BACKEND = process.env.WEB3_SYSTEM_TEST_BACKEND;
+	config.env.WEB3_SYSTEM_TEST_MNEMONIC = process.env.WEB3_SYSTEM_TEST_MNEMONIC;
+	config.env.WEB3_SYSTEM_TEST_PORT = process.env.WEB3_SYSTEM_TEST_PORT;
+	config.env.WEB3_SYSTEM_TEST_PROVIDER = process.env.WEB3_SYSTEM_TEST_PROVIDER;
+
+	return config;
 };

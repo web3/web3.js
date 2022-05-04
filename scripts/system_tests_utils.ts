@@ -26,12 +26,21 @@ import { Web3Eth } from 'web3-eth';
 
 let _accounts: string[] = [];
 
+/**
+ * Get the env variable from Cypress if it exists or node process
+ */
+export const getEnvVar = (name: string): string | undefined =>
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-expect-error
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+	global.Cypress ? Cypress.env(name) : process.env[name];
+
 export const getSystemTestProvider = (): string =>
-	process.env.WEB3_SYSTEM_TEST_PROVIDER ?? 'http://localhost:8545';
+	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? 'http://localhost:8545';
 
-export const getSystemTestMnemonic = (): string => process.env.WEB3_SYSTEM_TEST_MNEMONIC ?? '';
+export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
-export const getSystemTestBackend = (): string => process.env.WEB3_SYSTEM_TEST_BACKEND ?? '';
+export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
 
 const accounts: {
 	address: string;
