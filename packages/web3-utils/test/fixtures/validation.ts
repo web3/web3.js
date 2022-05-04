@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InvalidBlockError } from '../../src/errors';
+import { InvalidBlockError } from 'web3-errors';
 import { Numbers } from '../../src/types';
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
@@ -24,7 +24,7 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[2, 1], 1],
 	[[BigInt(1), BigInt(1)], 0],
 	[[BigInt(1), BigInt(2)], -1],
-	[[BigInt(2), BigInt(1)], 1],
+	[[BigInt(2), 1n], 1],
 	[[1, BigInt(1)], 0],
 	[[1, BigInt(2)], -1],
 	[[2, BigInt(1)], 1],
@@ -34,6 +34,7 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['pending', 'pending'], 0],
 	[['latest', 'latest'], 0],
 	[['earliest', 2], -1],
+	[['earliest', 2n], -1],
 	[['earliest', 'pending'], -1],
 	[['genesis', 2], -1],
 	[['genesis', 'latest'], -1],
@@ -42,7 +43,7 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[13532346, 13532300], 1],
 	[['pending', 'latest'], 1],
 	[['latest', 0], 1],
-	[['latest', BigInt(1)], 1],
+	[['latest', 1n], 1],
 	[['pending', 0], 1],
 	[['pending', BigInt(1)], 1],
 ];

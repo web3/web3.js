@@ -57,9 +57,9 @@
 		"postinstall": "yarn build"
 	},
 	"devDependencies": {
+		"@cypress/webpack-preprocessor": "^5.11.1",
 		"@types/node": "*",
 		"assert": "^2.0.0",
-		"browserify": "^17.0.0",
 		"buffer": "^6.0.3",
 		"bufferutil": "^4.0.6",
 		"crypto-browserify": "^3.12.0",
@@ -67,7 +67,9 @@
 		"cypress-jest-adapter": "^0.1.1",
 		"eslint": "^8.3.0",
 		"eslint-plugin-header": "^3.1.1",
+		"http-browserify": "^1.7.0",
 		"https-browserify": "^1.0.0",
+		"process": "^0.11.10",
 		"husky": "^7.0.4",
 		"jest": "^27.3.1",
 		"lerna": "^4.0.0",
@@ -77,9 +79,8 @@
 		"ts-loader": "^9.2.8",
 		"ts-node": "^10.4.0",
 		"typescript": "^4.5.2",
-		"webpack": "^5.70.0",
 		"utf-8-validate": "^5.0.9",
-		"watchify": "^4.0.0"
+		"webpack": "^5.72.0"
 	},
 	"packageManager": "yarn@1.22.15"
 }

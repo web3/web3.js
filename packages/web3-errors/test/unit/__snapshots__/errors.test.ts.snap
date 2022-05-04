@@ -1,0 +1,246 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`errors ConnectionCloseError should have valid json structure 1`] = `
+Object {
+  "code": 504,
+  "errorCode": 10,
+  "errorReason": "reason",
+  "message": "CONNECTION ERROR: The connection got closed with the close code 10 and the following reason string reason",
+  "name": "ConnectionCloseError",
+}
+`;
+
+exports[`errors ConnectionError should have valid json structure 1`] = `
+Object {
+  "code": 500,
+  "errorCode": 10,
+  "errorReason": "reason",
+  "message": "error message",
+  "name": "ConnectionError",
+}
+`;
+
+exports[`errors ConnectionNotOpenError should have valid json structure 1`] = `
+Object {
+  "code": 503,
+  "errorCode": 10,
+  "errorReason": "reason",
+  "message": "Connection not open",
+  "name": "ConnectionNotOpenError",
+}
+`;
+
+exports[`errors ConnectionTimeoutError should have valid json structure 1`] = `
+Object {
+  "code": 502,
+  "duration": 5000,
+  "errorCode": undefined,
+  "errorReason": undefined,
+  "message": "CONNECTION TIMEOUT: timeout of 5000ms achieved",
+  "name": "ConnectionTimeoutError",
+}
+`;
+
+exports[`errors ContractCodeNotStoredError should have valid json structure 1`] = `
+Object {
+  "code": 404,
+  "message": "The contract code couldn't be stored, please check your gas limit.",
+  "name": "ContractCodeNotStoredError",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+}
+`;
+
+exports[`errors ContractEventDoesNotExistError should have valid json structure 1`] = `
+Object {
+  "code": 304,
+  "eventName": "eventName",
+  "message": "Event \\"eventName\\" doesn't exist in this contract.",
+  "name": "ContractEventDoesNotExistError",
+}
+`;
+
+exports[`errors ContractMissingABIError should have valid json structure 1`] = `
+Object {
+  "code": 302,
+  "message": "You must provide the json interface of the contract when instantiating a contract object.",
+  "name": "ContractMissingABIError",
+}
+`;
+
+exports[`errors ContractMissingDeployDataError should have valid json structure 1`] = `
+Object {
+  "code": 306,
+  "message": "No \\"data\\" specified in neither the given options, nor the default options.",
+  "name": "ContractMissingDeployDataError",
+}
+`;
+
+exports[`errors ContractNoAddressDefinedError should have valid json structure 1`] = `
+Object {
+  "code": 307,
+  "message": "This contract object doesn't have address set yet, please set an address first.",
+  "name": "ContractNoAddressDefinedError",
+}
+`;
+
+exports[`errors ContractNoFromAddressDefinedError should have valid json structure 1`] = `
+Object {
+  "code": 308,
+  "message": "No \\"from\\" address specified in neither the given options, nor the default options.",
+  "name": "ContractNoFromAddressDefinedError",
+}
+`;
+
+exports[`errors ContractOnceRequiresCallbackError should have valid json structure 1`] = `
+Object {
+  "code": 303,
+  "message": "Once requires a callback as the second parameter.",
+  "name": "ContractOnceRequiresCallbackError",
+}
+`;
+
+exports[`errors ContractReservedEventError should have valid json structure 1`] = `
+Object {
+  "code": 305,
+  "message": "Event \\"type\\" doesn't exist in this contract.",
+  "name": "ContractReservedEventError",
+  "type": "type",
+}
+`;
+
+exports[`errors InvalidConnectionError should have valid json structure 1`] = `
+Object {
+  "code": 501,
+  "errorCode": 10,
+  "errorReason": "reason",
+  "host": "my host",
+  "message": "CONNECTION ERROR: Couldn't connect to node my host.",
+  "name": "InvalidConnectionError",
+}
+`;
+
+exports[`errors InvalidNumberOfParamsError should have valid json structure 1`] = `
+Object {
+  "code": 200,
+  "expected": 20,
+  "got": 10,
+  "message": "Invalid number of parameters for \\"method\\". Got \\"10\\" expected \\"20\\"!",
+  "method": "method",
+  "name": "InvalidNumberOfParamsError",
+}
+`;
+
+exports[`errors InvalidProviderError should have valid json structure 1`] = `
+Object {
+  "code": 601,
+  "message": "Provider with url \\"my url\\" is not set or invalid",
+  "name": "InvalidProviderError",
+}
+`;
+
+exports[`errors MaxAttemptsReachedOnReconnectingError should have valid json structure 1`] = `
+Object {
+  "code": 505,
+  "errorCode": undefined,
+  "errorReason": undefined,
+  "message": "Maximum number of reconnect attempts reached!",
+  "name": "MaxAttemptsReachedOnReconnectingError",
+}
+`;
+
+exports[`errors NoContractAddressFoundError should have valid json structure 1`] = `
+Object {
+  "code": 403,
+  "message": "The transaction receipt didn't contain a contract address.",
+  "name": "NoContractAddressFoundError",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+}
+`;
+
+exports[`errors PendingRequestsOnReconnectingError should have valid json structure 1`] = `
+Object {
+  "code": 506,
+  "errorCode": undefined,
+  "errorReason": undefined,
+  "message": "CONNECTION ERROR: Provider started to reconnect before the response got received!",
+  "name": "PendingRequestsOnReconnectingError",
+}
+`;
+
+exports[`errors ResolverMethodMissingError should have valid json structure 1`] = `
+Object {
+  "address": "address",
+  "code": 301,
+  "message": "The resolver at address does not implement requested method: \\"name\\".",
+  "name": "name",
+}
+`;
+
+exports[`errors RevertInstructionError should have valid json structure 1`] = `
+Object {
+  "code": 401,
+  "message": "Your request got reverted with the following reason string: message",
+  "name": "RevertInstructionError",
+  "reason": "message",
+  "signature": "signature",
+}
+`;
+
+exports[`errors TransactionError should have valid json structure 1`] = `
+Object {
+  "code": 400,
+  "message": "message",
+  "name": "TransactionError",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+}
+`;
+
+exports[`errors TransactionOutOfGasError should have valid json structure 1`] = `
+Object {
+  "code": 406,
+  "message": "Transaction ran out of gas. Please provide more gas:
+ {
+  \\"attr1\\": \\"attr1\\"
+}",
+  "name": "TransactionOutOfGasError",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+}
+`;
+
+exports[`errors TransactionRevertError should have valid json structure 1`] = `
+Object {
+  "code": 402,
+  "message": "Transaction has been reverted by the EVM:
+ {
+  \\"attr1\\": \\"attr1\\"
+}",
+  "name": "TransactionRevertError",
+  "reason": "message",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+  "signature": "signature",
+}
+`;
+
+exports[`errors TransactionRevertedWithoutReasonError should have valid json structure 1`] = `
+Object {
+  "code": 405,
+  "message": "Transaction has been reverted by the EVM:
+ {
+  \\"attr1\\": \\"attr1\\"
+}",
+  "name": "TransactionRevertedWithoutReasonError",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+}
+`;

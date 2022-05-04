@@ -24,7 +24,7 @@ import {
 	InvalidPasswordError,
 	IVLengthError,
 	PBKDF2IterationsError,
-} from 'web3-common';
+} from 'web3-errors';
 import { sign, signTransaction, encrypt } from '../../src/account';
 import { CipherOptions, KeyStore } from '../../src/types';
 
