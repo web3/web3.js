@@ -18,9 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 import {
 	EthExecutionAPI,
-	InvalidClientError,
 	JsonRpcResponse,
-	MethodNotImplementedError,
 	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -29,6 +27,7 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderStatus,
 } from 'web3-common';
+import { InvalidClientError, MethodNotImplementedError } from 'web3-errors';
 import { HttpProviderOptions } from './types';
 
 export default class HttpProvider<

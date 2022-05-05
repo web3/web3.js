@@ -1,70 +1,94 @@
 name: "Build"
 on:
-    push:
-        branches:
-            - "4.x"
-        tags:
-            - v4*
-    pull_request:
-        branches:
-            - "4.x"
-        types: [opened, reopened, synchronize]
+  push:
+    branches:
+      - "4.x"
+    tags:
+      - v4*
+  pull_request:
+    branches:
+      - "4.x"
+    types: [opened, reopened, synchronize]
+
 jobs:
-    lint:
-        runs-on: ubuntu-latest
-        env:
-            TEST: "build_and_lint"
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: 14
+  build: 
+    name: Build Packages
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: 14
+          cache: yarn
+      - run: yarn
 
-            - uses: actions/checkout@v2
+  lint:
+    name: lint
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      TEST: "build_and_lint"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps: 
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
+        with: 
+          node-version: 14
+          cache: yarn
+      - run: yarn
+      - run: yarn lint
 
-            - run: yarn
+  unit:
+    name: Unit Tests
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 14, 16 ]
+    steps:
+      - uses: actions/checkout@v3    
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      - run: yarn
+      - run: yarn test:unit
 
-            - run: yarn lint
-    unit:
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [ 14, 16 ]
-        steps:
-            - uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node }}
+  integration:
+    name: Integration
+    needs: unit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 16 ]
+        backend: ['geth', 'ganache']
+        mode: ['http', 'ws']
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      -   run: yarn
+      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash
 
-            - uses: actions/checkout@v2
-
-            - run: yarn
-
-            - run: yarn test:unit
-
-    e2e:
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                node: [ 14, 16 ]
-                testCmd: [ 'e2e_ganache', 'e2e_geth', 'e2e_browsers' ]
-        env:
-            TEST_CMD: ${{ matrix.testCmd }}
-        steps:
-            -   uses: actions/setup-node@v1
-                with:
-                    node-version: ${{ matrix.node }}
-
-            -   uses: actions/checkout@v2
-
-            -   run: yarn
-
-            -   if: (env.TEST_CMD == 'e2e_ganache')
-                run: yarn ganache-background && yarn test:integration
-
-            -   if: (env.TEST_CMD == 'e2e_geth')
-                run: yarn geth-background && yarn test:integration
-
-            -   if: (env.TEST_CMD == 'e2e_browsers')
-                run: yarn ganache-background && yarn test:integration:browsers
-
+  e2e:
+    name: End-to-End
+    needs: unit
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 16 ]
+        browser: ['electron', 'chrome', 'firefox']
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
+      -   run: yarn
+      -   run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+          shell: bash

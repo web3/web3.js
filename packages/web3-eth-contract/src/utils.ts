@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { TransactionWithSender } from 'web3-common';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { mergeDeep } from 'web3-utils';
+import { HexString, mergeDeep } from 'web3-utils';
 import { TransactionCall } from 'web3-eth';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -34,7 +34,9 @@ export const getSendTxParams = ({
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
 }): TransactionCall => {
-	if (!options?.to && !contractOptions.address) {
+	const deploymentCall = options?.data ?? contractOptions.data;
+
+	if (!deploymentCall && !options?.to && !contractOptions.address) {
 		throw new Web3ContractError('Contract address not specified');
 	}
 
@@ -53,10 +55,10 @@ export const getSendTxParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (!txParams.data) {
+	if (!txParams.data || abi.type === 'constructor') {
 		txParams = {
 			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data),
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
 		};
 	}
 

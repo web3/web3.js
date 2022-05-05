@@ -22,12 +22,14 @@ import {
 	AbiFunctionFragment,
 	decodeLog,
 	decodeParameters,
+	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
 	encodeParameters,
 	isAbiConstructorFragment,
+	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { Filter, HexString, Uint } from 'web3-utils';
+import { BlockNumberOrTag, Filter, HexString, Topic } from 'web3-utils';
 import { Web3ContractError } from './errors';
 import { ContractOptions } from './types';
 
@@ -35,17 +37,17 @@ export const encodeEventABI = (
 	{ address }: ContractOptions,
 	event: AbiEventFragment & { signature: string },
 	options?: {
-		fromBlock?: Uint;
-		toBlock?: Uint;
+		fromBlock?: BlockNumberOrTag;
+		toBlock?: BlockNumberOrTag;
 		filter?: Filter;
-		topics?: HexString | HexString[];
+		topics?: (Topic | Topic[] | null)[];
 	},
 ) => {
 	const opts: {
 		filter: Filter;
 		fromBlock?: string;
 		toBlock?: string;
-		topics?: HexString[];
+		topics?: (Topic | Topic[])[];
 		address?: HexString;
 	} = {
 		filter: options?.filter ?? {},
@@ -60,13 +62,15 @@ export const encodeEventABI = (
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
-		opts.topics = [...options.topics];
+		opts.topics = [...options.topics].filter(Boolean) as Topic[];
 	} else {
 		opts.topics = [];
 
 		// add event signature
 		if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
-			opts.topics.push(event.signature);
+			opts.topics.push(
+				event.signature ?? encodeEventSignature(jsonInterfaceMethodToString(event)),
+			);
 		}
 
 		// add event topics (indexed arguments)
@@ -163,10 +167,10 @@ export const encodeMethodABI = (
 		);
 	}
 
-	const params =
-		(Array.isArray(abi.inputs) ? abi.inputs : []).map(i =>
-			encodeParameters([i], args).replace('0x', ''),
-		)[0] ?? '';
+	const params = encodeParameters(Array.isArray(abi.inputs) ? abi.inputs : [], args).replace(
+		'0x',
+		'',
+	);
 
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)

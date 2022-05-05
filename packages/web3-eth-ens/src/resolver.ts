@@ -17,7 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Address, sha3, isHexStrict } from 'web3-utils';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
-import { inputAddressFormatter, ResolverMethodMissingError } from 'web3-common';
+import { inputAddressFormatter } from 'web3-common';
+import { ResolverMethodMissingError } from 'web3-errors';
 import { interfaceIds, methodsInInterface } from './config';
 import { Registry } from './registry';
 import { RESOLVER } from './abi/resolver';

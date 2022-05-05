@@ -20,10 +20,9 @@ import {
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
 	JsonRpcOptionalRequest,
-	OperationAbortError,
 	DeferredPromise,
-	OperationTimeoutError,
 } from 'web3-common';
+import { OperationAbortError, OperationTimeoutError } from 'web3-errors';
 import { Web3BatchRequest } from '../../src/web3_batch_request';
 
 describe('Web3BatchRequest', () => {

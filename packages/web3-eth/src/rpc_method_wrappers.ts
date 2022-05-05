@@ -27,6 +27,7 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
 	TransactionWithSender,
+	FormatType,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Address, BlockTag, BlockNumberOrTag, Bytes, Filter, HexString, Numbers } from 'web3-utils';
@@ -371,107 +372,130 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
 }
 
-export function sendTransaction<ReturnFormat extends DataFormat>(
+export function sendTransaction<
+	ReturnFormat extends DataFormat,
+	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
+>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction,
 	returnFormat: ReturnFormat,
-	options?: SendTransactionOptions,
-): PromiEvent<ReceiptInfo, SendTransactionEvents> {
+	options?: SendTransactionOptions<ResolveType>,
+): PromiEvent<ResolveType, SendTransactionEvents> {
 	let transactionFormatted = formatTransaction(transaction, DEFAULT_RETURN_FORMAT);
 
-	const promiEvent = new PromiEvent<ReceiptInfo, SendTransactionEvents>(resolve => {
+	const promiEvent = new PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
 		setImmediate(() => {
 			(async () => {
-				if (
-					!options?.ignoreGasPricing &&
-					transaction.gasPrice === undefined &&
-					(transaction.maxPriorityFeePerGas === undefined ||
-						transaction.maxFeePerGas === undefined)
-				) {
-					transactionFormatted = {
-						...transactionFormatted,
-						...(await getTransactionGasPricing(
-							transactionFormatted,
+				try {
+					if (
+						!options?.ignoreGasPricing &&
+						transaction.gasPrice === undefined &&
+						(transaction.maxPriorityFeePerGas === undefined ||
+							transaction.maxFeePerGas === undefined)
+					) {
+						transactionFormatted = {
+							...transactionFormatted,
+							...(await getTransactionGasPricing(
+								transactionFormatted,
+								web3Context,
+								DEFAULT_RETURN_FORMAT,
+							)),
+						};
+					}
+
+					if (promiEvent.listenerCount('sending') > 0) {
+						promiEvent.emit('sending', transactionFormatted);
+					}
+
+					let transactionHash: HexString;
+
+					if (
+						web3Context.wallet &&
+						transaction.from &&
+						web3Context.wallet.get(transaction.from)
+					) {
+						const wallet = web3Context.wallet.get(transaction.from);
+
+						const signedTransaction = wallet.signTransaction(
+							transactionFormatted as Record<string, unknown>,
+						);
+
+						await rpcMethods.sendRawTransaction(
+							web3Context.requestManager,
+							signedTransaction.rawTransaction,
+						);
+
+						transactionHash = signedTransaction.transactionHash;
+					} else {
+						transactionHash = await rpcMethods.sendTransaction(
+							web3Context.requestManager,
+							transactionFormatted as Partial<TransactionWithSender>,
+						);
+					}
+
+					const transactionHashFormatted = format(
+						{ eth: 'bytes32' },
+						transactionHash,
+						returnFormat,
+					);
+
+					if (promiEvent.listenerCount('sent') > 0) {
+						promiEvent.emit('sent', transactionFormatted);
+					}
+
+					if (promiEvent.listenerCount('transactionHash') > 0) {
+						promiEvent.emit('transactionHash', transactionHashFormatted);
+					}
+
+					let transactionReceipt = await getTransactionReceipt(
+						web3Context,
+						transactionHash,
+						returnFormat,
+					);
+
+					// Transaction hasn't been included in a block yet
+					if (transactionReceipt === null)
+						transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
-							DEFAULT_RETURN_FORMAT,
-						)),
-					};
-				}
+							transactionHash,
+							returnFormat,
+						);
 
-				if (promiEvent.listenerCount('sending') > 0) {
-					promiEvent.emit('sending', transactionFormatted);
-				}
-
-				let transactionHash: HexString;
-
-				if (
-					web3Context.wallet &&
-					transaction.from &&
-					web3Context.wallet.get(transaction.from)
-				) {
-					const wallet = web3Context.wallet.get(transaction.from);
-
-					const signedTransaction = wallet.signTransaction(
-						transactionFormatted as Record<string, unknown>,
-					);
-					await rpcMethods.sendRawTransaction(
-						web3Context.requestManager,
-						signedTransaction.rawTransaction,
-					);
-
-					transactionHash = signedTransaction.transactionHash;
-				} else {
-					transactionHash = await rpcMethods.sendTransaction(
-						web3Context.requestManager,
-						transactionFormatted as Partial<TransactionWithSender>,
-					);
-				}
-
-				const transactionHashFormatted = format(
-					{ eth: 'bytes32' },
-					transactionHash,
-					returnFormat,
-				);
-
-				if (promiEvent.listenerCount('sent') > 0) {
-					promiEvent.emit('sent', transactionFormatted);
-				}
-
-				if (promiEvent.listenerCount('transactionHash') > 0) {
-					promiEvent.emit('transactionHash', transactionHashFormatted);
-				}
-
-				let transactionReceipt = await getTransactionReceipt(
-					web3Context,
-					transactionHash,
-					returnFormat,
-				);
-
-				// Transaction hasn't been included in a block yet
-				if (transactionReceipt === null)
-					transactionReceipt = await waitForTransactionReceipt(
-						web3Context,
-						transactionHash,
+					const transactionReceiptFormatted = format(
+						receiptInfoSchema,
+						transactionReceipt,
 						returnFormat,
 					);
 
-				const transactionReceiptFormatted = format(
-					receiptInfoSchema,
-					transactionReceipt,
-					returnFormat,
-				);
+					promiEvent.emit('receipt', transactionReceiptFormatted as ReceiptInfo);
 
-				promiEvent.emit('receipt', transactionReceiptFormatted as ReceiptInfo);
-				resolve(transactionReceiptFormatted as ReceiptInfo);
+					if (options?.transactionResolver) {
+						resolve(
+							options?.transactionResolver(
+								transactionReceiptFormatted,
+							) as unknown as ResolveType,
+						);
+					} else if (transactionReceipt.status === '0x0') {
+						reject(transactionReceiptFormatted as unknown as ResolveType);
+					} else {
+						resolve(transactionReceiptFormatted as unknown as ResolveType);
+					}
 
-				if (promiEvent.listenerCount('confirmation') > 0) {
-					watchTransactionForConfirmations<SendTransactionEvents, ReturnFormat>(
-						web3Context,
-						promiEvent,
-						transactionReceiptFormatted as ReceiptInfo,
-						transactionHash,
-						returnFormat,
-					);
+					if (promiEvent.listenerCount('confirmation') > 0) {
+						watchTransactionForConfirmations<
+							SendTransactionEvents,
+							ReturnFormat,
+							ResolveType
+						>(
+							web3Context,
+							promiEvent,
+							transactionReceiptFormatted as ReceiptInfo,
+							transactionHash,
+							returnFormat,
+						);
+					}
+				} catch (error) {
+					reject(error);
 				}
 			})() as unknown;
 		});

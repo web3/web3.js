@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Error } from 'web3-utils';
+// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('jest-extended');
 
-export class ContractError extends Web3Error {
-	public constructor(message: string) {
-		super('ContractError', message);
-	}
-}
+// @todo extend jest to have "toHaveBeenCalledOnceWith" matcher.
+
+process.env.NODE_ENV = 'test';

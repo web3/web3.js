@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,8 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Error, ERR_CONTRACT } from 'web3-common';
+import { ReceiptInfo } from 'web3-common';
+import { ERR_CONTRACT, Web3Error } from 'web3-errors';
 
 export class Web3ContractError extends Web3Error {
 	public code = ERR_CONTRACT;
+	public receipt?: ReceiptInfo;
+
+	public constructor(message: string, receipt?: ReceiptInfo) {
+		super(message);
+
+		this.receipt = receipt;
+	}
 }
