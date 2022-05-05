@@ -20,7 +20,7 @@ import { EthPersonal } from '../../src/index';
 import { accounts, clientUrl } from '../config/personal.test.config'; // eslint-disable-line import/no-relative-packages
 import { getSystemTestBackend, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
-describe('set up account', () => {
+describe.only('set up account', () => {
 	let ethPersonal: EthPersonal;
 	let account: string[];
 	beforeAll( async () => {
