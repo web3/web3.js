@@ -37,7 +37,7 @@ describe('set up account', () => {
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support sign
-			const key = await ethPersonal.importRawKey(accounts[0].privateKey, '123');
+			const key = await ethPersonal.importRawKey(accounts[0].privateKey.slice(2), '123');
 			const signature = await ethPersonal.sign('0xdeadbeaf', key, '123');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
