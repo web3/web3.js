@@ -64,7 +64,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
-		[from] = accounts;
+		[, from] = accounts;
 		providerWs = new WebSocketProvider(
 			clientUrl,
 			{},
