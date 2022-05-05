@@ -97,7 +97,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			let count = 0;
 
 			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', async (data: any) => {
+				sub.on('data', (data: any) => {
 					count += 1;
 					const decodedData = decodeEventABI(
 						eventAbi as AbiEventFragment & { signature: string },
@@ -129,7 +129,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			let count = 0;
 
 			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', async (data: any) => {
+				sub.on('data', (data: any) => {
 					count += 1;
 					const decodedData = decodeEventABI(
 						eventAbi as AbiEventFragment & { signature: string },

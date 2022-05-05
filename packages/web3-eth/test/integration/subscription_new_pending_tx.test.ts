@@ -20,7 +20,7 @@ import { ReceiptInfo } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewPendingTransactionsSubscription } from '../../src/web3_subscriptions';
-// eslint-disable-next-line import/no-relative-packages
+// eslint-disable-next-line import/no-relative-package
 import { describeIf, getSystemTestAccounts, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
 
 const checkTxCount = 5;
@@ -57,7 +57,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			let times = 0;
 			const txHashes: string[] = [];
 			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', async (data: string) => {
+				sub.on('data', (data: string) => {
 					txHashes.push(data);
 					times += 1;
 					if (times >= checkTxCount) {

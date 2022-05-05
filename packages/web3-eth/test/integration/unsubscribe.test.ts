@@ -46,7 +46,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('unsubscribe', () => {
 		});
 
 		it('subscribe to all and clear all except syncing', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3(provider as SupportedProviders<any>);
 			await web3Eth.subscribe('newHeads');
 			await web3Eth.subscribe('newPendingTransactions');
 			await web3Eth.subscribe('syncing');

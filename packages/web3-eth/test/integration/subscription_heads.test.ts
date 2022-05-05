@@ -55,7 +55,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 
 			let times = 0;
 			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', async (data: BlockOutput) => {
+				sub.on('data', (data: BlockOutput) => {
 					if (data.parentHash) {
 						times += 1;
 					}
