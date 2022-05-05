@@ -23,9 +23,10 @@ import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3Eth } from '../../src';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
 // eslint-disable-next-line import/no-relative-packages
-import { accounts, clientWsUrl } from '../../../../.github/test.config';
-import { prepareNetwork, setupWeb3, Resolve } from './helper';
+import { Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
+// eslint-disable-next-line import/no-relative-packages
+import { describeIf, getSystemTestAccounts, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
 
 const checkEventCount = 3;
 
@@ -48,8 +49,11 @@ const makeFewTxToContract = async ({
 	}
 	await Promise.all(prs);
 };
-describe('subscription', () => {
-	let web3Eth: Web3Eth;
+describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
+
+    let clientUrl: string;
+    let accounts: string[] = [];
+    let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let contract: Contract<typeof basicContractAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -57,15 +61,16 @@ describe('subscription', () => {
 	let from: string;
 	const testDataString = 'someTestString';
 	beforeAll(async () => {
-		from = accounts[0].address;
-		await prepareNetwork();
-		providerWs = new WebSocketProvider(
-			clientWsUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+        clientUrl = getSystemTestProvider();
+        accounts = await getSystemTestAccounts();
+		[from] = accounts;
+        providerWs = new WebSocketProvider(
+            clientUrl,
+            {},
+            { delay: 1, autoReconnect: false, maxAttempts: 1 },
+        );
 		contract = new Contract(basicContractAbi, undefined, {
-			provider: clientWsUrl,
+			provider: clientUrl,
 		});
 
 		deployOptions = {
@@ -84,7 +89,6 @@ describe('subscription', () => {
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs`, async () => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
-			setupWeb3(web3Eth);
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
 				address: contract.options.address,
@@ -113,7 +117,6 @@ describe('subscription', () => {
 		});
 		it(`wait for ${checkEventCount} logs with from block`, async () => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
-			setupWeb3(web3Eth);
 			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
 
 			await makeFewTxToContract({ contract, sendOptions, testDataString });
@@ -144,7 +147,6 @@ describe('subscription', () => {
 		});
 		it(`clear`, async () => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
-			setupWeb3(web3Eth);
 			const sub: LogsSubscription = await web3Eth.subscribe('logs');
 			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();

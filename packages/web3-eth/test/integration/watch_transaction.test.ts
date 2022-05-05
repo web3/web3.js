@@ -15,73 +15,53 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import HttpProvider from 'web3-providers-http';
 import { SupportedProviders } from 'web3-core';
 import { PromiEvent } from 'web3-common';
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
-// eslint-disable-next-line import/no-relative-packages
-import { accounts, clientUrl, clientWsUrl } from '../../../../.github/test.config';
-import { prepareNetwork, sendFewTxes, setupWeb3, Resolve } from './helper';
+import { sendFewTxes } from './helper';
+
+
+import {
+	getSystemTestProvider,
+	describeIf,
+	getSystemTestAccounts,
+    // eslint-disable-next-line import/no-relative-packages
+} from '../fixtures/system_test_utils';
 
 const waitConfirmations = 5;
 
-describe('watch transaction', () => {
+type Resolve = (value?: unknown) => void;
+
+describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transaction', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let providerHttp: HttpProvider;
+	let accounts: string[] = [];
+	let clientUrl: string;
+
+
 	beforeAll(async () => {
-		providerHttp = new HttpProvider(clientUrl);
+		clientUrl = getSystemTestProvider();
+		accounts = await getSystemTestAccounts();
+
 		providerWs = new WebSocketProvider(
-			clientWsUrl,
+			clientUrl,
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
-		await prepareNetwork();
 	});
 	afterAll(() => {
 		providerWs.disconnect();
 	});
 
-	describe('wait for confirmation', () => {
-		it('polling', async () => {
-			web3Eth = new Web3Eth(providerHttp as SupportedProviders<any>);
-			setupWeb3(web3Eth, waitConfirmations);
-
-			const from = accounts[0].address;
-			const to = accounts[1].address;
-			const value = `0x1`;
-
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
-			let shouldBe = 2;
-			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
-					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
-						resolve();
-					}
-				});
-			});
-			await new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
-					resolve();
-				});
-			});
-
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
-			await confirmationPromise;
-		});
+	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
 			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
-			setupWeb3(web3Eth, waitConfirmations);
 
-			const from = accounts[0].address;
-			const to = accounts[1].address;
+			// setupWeb3(web3Eth, waitConfirmations);
+			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
+
+			const from = accounts[0];
+			const to = accounts[1];
 			const value = `0x1`;
 			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
 				to,
@@ -110,4 +90,53 @@ describe('watch transaction', () => {
 			await confirmationPromise;
 		});
 	});
+});
+
+describeIf(getSystemTestProvider().startsWith('http'))('watch polling transaction', () => {
+    let web3Eth: Web3Eth;
+    let accounts: string[] = [];
+    let clientUrl: string;
+
+
+    beforeAll(async () => {
+        clientUrl = getSystemTestProvider();
+        accounts = await getSystemTestAccounts();
+    });
+
+    describe('wait for confirmation polling', () => {
+        it('polling', async () => {
+
+            web3Eth = new Web3Eth(clientUrl as SupportedProviders<any>);
+            web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
+
+            const from = accounts[0];
+            const to = accounts[1];
+            const value = `0x1`;
+
+            const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+                to,
+                value,
+                from,
+            });
+            let shouldBe = 2;
+            const confirmationPromise = new Promise((resolve: Resolve) => {
+                sentTx.on('confirmation', ({ confirmationNumber }) => {
+                    expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+                    shouldBe += 1;
+                    if (shouldBe >= waitConfirmations) {
+                        resolve();
+                    }
+                });
+            });
+            await new Promise((resolve: Resolve) => {
+                sentTx.on('receipt', (params: ReceiptInfo) => {
+                    expect(params.status).toBe('0x1');
+                    resolve();
+                });
+            });
+
+            await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+            await confirmationPromise;
+        });
+    });
 });
