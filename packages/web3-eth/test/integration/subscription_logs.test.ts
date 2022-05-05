@@ -47,9 +47,9 @@ const makeFewTxToContract = async ({
 }: MakeFewTxToContract): Promise<void> => {
 	const prs = [];
 	for (let i = 0; i < checkEventCount; i += 1) {
-		prs.push(contract.methods?.firesStringEvent(testDataString).send(sendOptions));
+		// eslint-disable-next-line no-await-in-loop
+		prs.push(await contract.methods?.firesStringEvent(testDataString).send(sendOptions));
 	}
-	await Promise.all(prs);
 };
 describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 	let clientUrl: string;
