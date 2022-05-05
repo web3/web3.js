@@ -20,12 +20,14 @@ import { EthPersonal } from '../../src/index';
 import { accounts, clientUrl } from '../config/personal.test.config'; // eslint-disable-line import/no-relative-packages
 import { getSystemTestBackend, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
-describe.only('set up account', () => {
+describe('set up account', () => {
 	let ethPersonal: EthPersonal;
 	let account: string[];
 	beforeAll( async () => {
 		ethPersonal = new EthPersonal(clientUrl);
+		if (getSystemTestBackend() === 'ganache') { 
 		account = await getSystemTestAccounts();
+		}
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
@@ -48,7 +50,6 @@ describe.only('set up account', () => {
 	it('ecRecover', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support ecRecover
-
 			await ethPersonal.importRawKey(accounts[2].privateKey, 'abc'); // import account
 			const signature = await ethPersonal.sign('0x2313', accounts[2].address, 'abc');
 			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase

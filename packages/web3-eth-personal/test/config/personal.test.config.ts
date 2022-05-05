@@ -37,7 +37,7 @@ export const accounts: Account[] = [
 	{
 		// geth account for sign test
 		address: '0x62FF0b7cfD7c46E2D647359608592AE91Ed2Faad',
-		privateKey: 'c8a91240e0f1fc62562321a98ab5d519d00da6fd2a317e0ce63464ef3b8b51eb',
+		privateKey: '0xc8a91240e0f1fc62562321a98ab5d519d00da6fd2a317e0ce63464ef3b8b51eb',
 		balance: '100',
 	},
 	{
@@ -49,7 +49,7 @@ export const accounts: Account[] = [
 	{
 		// geth
 		address: '0xcE6859c4891bd2552C3090FA6Fb701479B2571CC',
-		privateKey: 'eb1ef1c6b1bffa4e118f1769420107a5076ee36b4741ecae29329ae7278d8cb7',
+		privateKey: '0xeb1ef1c6b1bffa4e118f1769420107a5076ee36b4741ecae29329ae7278d8cb7',
 		balance: '100',
 	},
 	{
