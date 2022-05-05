@@ -20,8 +20,7 @@ import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/
 import { deployRevertAbi, deployRevertByteCode } from '../shared_fixtures/sources/DeployRevert';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
-// TODO: Debug the "UncaughtException" caused after recent merge of 4.x
-describe.skip('contract', () => {
+describe('contract', () => {
 	describe('deploy', () => {
 		let contract: Contract<typeof greeterContractAbi>;
 		let deployOptions: Record<string, unknown>;
@@ -51,7 +50,7 @@ describe.skip('contract', () => {
 
 		it('should deploy the contract if data is provided at initiation', async () => {
 			contract = new Contract(greeterContractAbi, undefined, {
-				provider: 'http://localhost:8545',
+				provider: getSystemTestProvider(),
 				data: greeterByteCode,
 				from: accounts[0],
 				gas: '1000000',
@@ -74,7 +73,7 @@ describe.skip('contract', () => {
 		});
 
 		// TODO: It works fine but tests hangs because of confirmation handler
-		it.skip('should emit the "confirmation" event', async () => {
+		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
 			contract
@@ -92,7 +91,7 @@ describe.skip('contract', () => {
 		});
 
 		it('should emit the "transactionHash" event', async () => {
-			return expect(
+			await expect(
 				processAsync(resolve => {
 					contract.deploy(deployOptions).send(sendOptions).on('transactionHash', resolve);
 				}),
@@ -100,7 +99,7 @@ describe.skip('contract', () => {
 		});
 
 		it('should emit the "sending" event', async () => {
-			return expect(
+			await expect(
 				processAsync(resolve => {
 					contract.deploy(deployOptions).send(sendOptions).on('sending', resolve);
 				}),
@@ -108,7 +107,7 @@ describe.skip('contract', () => {
 		});
 
 		it('should emit the "sent" event', async () => {
-			return expect(
+			await expect(
 				processAsync(resolve => {
 					contract.deploy(deployOptions).send(sendOptions).on('sent', resolve);
 				}),
@@ -116,26 +115,20 @@ describe.skip('contract', () => {
 		});
 
 		it('should emit the "receipt" event', async () => {
-			return expect(
+			await expect(
 				processAsync(resolve => {
 					contract.deploy(deployOptions).send(sendOptions).on('receipt', resolve);
 				}),
 			).resolves.toBeDefined();
 		});
 
-		it('should fail with errors on "intrinic gas too low" OOG', async () => {
-			return expect(
+		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
+			await expect(
 				contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
-			).rejects.toEqual(
-				expect.objectContaining({
-					error: expect.objectContaining({
-						message: expect.stringContaining('intrinsic gas too low'),
-					}),
-				}),
-			);
+			).rejects.toThrow('Returned error: intrinsic gas too low');
 		});
 
-		it.skip('should fail with errors deploying a zero length bytecode', async () => {
+		it('should fail with errors deploying a zero length bytecode', async () => {
 			return expect(() =>
 				contract
 					.deploy({
@@ -147,11 +140,11 @@ describe.skip('contract', () => {
 		});
 
 		// TODO: Debug this test why it's failing when run with all other tests
-		it.skip('should fail with errors on revert', async () => {
+		it('should fail with errors on revert', async () => {
 			const revert = new Contract(deployRevertAbi);
-			revert.provider = 'http://localhost:8545';
+			revert.provider = getSystemTestProvider();
 
-			return expect(() =>
+			await expect(
 				revert
 					.deploy({
 						data: deployRevertByteCode,

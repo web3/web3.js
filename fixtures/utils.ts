@@ -26,7 +26,7 @@ export const processAsync = async (
 export const sleep = async (ms: number) =>
 	new Promise(resolve => {
 		const id = setTimeout(() => {
-			resolve(true);
 			clearTimeout(id);
+			resolve(true);
 		}, ms);
 	});
