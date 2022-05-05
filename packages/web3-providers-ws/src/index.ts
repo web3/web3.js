@@ -97,14 +97,6 @@ export default class WebSocketProvider<
 	public getStatus(): Web3BaseProviderStatus {
 		if (this._webSocketConnection === undefined) return 'disconnected';
 
-		// todo clean
-		// console.warn(
-		// 	'^^^^',
-		// 	typeof WebSocket.OPEN,
-		// 	WebSocket.OPEN,
-		// 	this._webSocketConnection.OPEN,
-		// 	this._webSocketConnection.readyState,
-		// );
 		switch (this._webSocketConnection.readyState) {
 			case this._webSocketConnection.CONNECTING: {
 				return 'connecting';
@@ -149,14 +141,14 @@ export default class WebSocketProvider<
 
 			this._addSocketListeners();
 
-			// if (this.getStatus() === 'connecting') {
-			// 	// Rejecting promises if provider is not connected even after reattempts
-			// 	setTimeout(() => {
-			// 		if (this.getStatus() === 'disconnected') {
-			// 			this._clearQueues(undefined);
-			// 		}
-			// 	}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
-			// }
+			if (this.getStatus() === 'connecting') {
+				// Rejecting promises if provider is not connected even after reattempts
+				setTimeout(() => {
+					if (this.getStatus() === 'disconnected') {
+						this._clearQueues(undefined);
+					}
+				}, this._reconnectOptions.delay * (this._reconnectOptions.maxAttempts + 1));
+			}
 		} catch (e) {
 			throw new InvalidConnectionError(this._clientUrl);
 		}
