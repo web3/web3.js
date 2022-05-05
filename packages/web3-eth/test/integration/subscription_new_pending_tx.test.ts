@@ -20,8 +20,11 @@ import { ReceiptInfo } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewPendingTransactionsSubscription } from '../../src/web3_subscriptions';
-// eslint-disable-next-line import/no-relative-package
-import { describeIf, getSystemTestAccounts, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
+import {
+	describeIf,
+	getSystemTestAccounts,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 
 const checkTxCount = 5;
 
@@ -31,16 +34,16 @@ const subNames: SubName[] = ['pendingTransactions', 'newPendingTransactions'];
 describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-    let clientUrl: string;
-    let accounts: string[] = [];
+	let clientUrl: string;
+	let accounts: string[] = [];
 	beforeAll(async () => {
-        clientUrl = getSystemTestProvider();
-        accounts = await getSystemTestAccounts();
-        providerWs = new WebSocketProvider(
-            clientUrl,
-            {},
-            { delay: 1, autoReconnect: false, maxAttempts: 1 },
-        );
+		clientUrl = getSystemTestProvider();
+		accounts = await getSystemTestAccounts();
+		providerWs = new WebSocketProvider(
+			clientUrl,
+			{},
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+		);
 	});
 	afterAll(() => {
 		providerWs.disconnect();

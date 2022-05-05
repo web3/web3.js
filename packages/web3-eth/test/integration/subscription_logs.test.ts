@@ -22,11 +22,13 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3Eth } from '../../src';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
-// eslint-disable-next-line import/no-relative-packages
 import { Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
-// eslint-disable-next-line import/no-relative-packages
-import { describeIf, getSystemTestAccounts, getSystemTestProvider } from '../../../../scripts/system_tests_utils';
+import {
+	describeIf,
+	getSystemTestAccounts,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 
 const checkEventCount = 3;
 
@@ -50,10 +52,9 @@ const makeFewTxToContract = async ({
 	await Promise.all(prs);
 };
 describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
-
-    let clientUrl: string;
-    let accounts: string[] = [];
-    let web3Eth: Web3Eth;
+	let clientUrl: string;
+	let accounts: string[] = [];
+	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let contract: Contract<typeof basicContractAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -61,14 +62,14 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 	let from: string;
 	const testDataString = 'someTestString';
 	beforeAll(async () => {
-        clientUrl = getSystemTestProvider();
-        accounts = await getSystemTestAccounts();
+		clientUrl = getSystemTestProvider();
+		accounts = await getSystemTestAccounts();
 		[from] = accounts;
-        providerWs = new WebSocketProvider(
-            clientUrl,
-            {},
-            { delay: 1, autoReconnect: false, maxAttempts: 1 },
-        );
+		providerWs = new WebSocketProvider(
+			clientUrl,
+			{},
+			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+		);
 		contract = new Contract(basicContractAbi, undefined, {
 			provider: clientUrl,
 		});
