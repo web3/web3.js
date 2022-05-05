@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { SupportedProviders } from 'web3-core';
-import { BlockOutput } from 'web3-common';
+import { BlockOutput, Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewHeadsSubscription } from '../../src/web3_subscriptions';
@@ -50,7 +49,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 
 	describe('heads', () => {
 		it.each(subNames)(`wait for ${checkTxCount} newHeads`, async (subName: SubName) => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			const from = accounts[0];
 			const to = accounts[1];
@@ -73,7 +72,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			await pr;
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();

@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { SupportedProviders } from 'web3-core';
-import { ReceiptInfo } from 'web3-common';
+import { ReceiptInfo, Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewPendingTransactionsSubscription } from '../../src/web3_subscriptions';
@@ -51,7 +50,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 
 	describe('new pending transaction', () => {
 		it.each(subNames)(`wait ${checkTxCount} transaction - ${subNames[0]}`, async subName => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(subName);
 			const from = accounts[0];
 			const to = accounts[1];
@@ -81,7 +80,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			await web3Eth.clearSubscriptions();
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(subName);
 			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();

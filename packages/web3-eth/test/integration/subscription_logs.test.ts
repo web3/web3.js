@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { SupportedProviders } from 'web3-core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
+import { Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
 import { Resolve } from './helper';
@@ -89,7 +89,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs`, async () => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
 				address: contract.options.address,
@@ -117,7 +117,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			await web3Eth.clearSubscriptions();
 		});
 		it(`wait for ${checkEventCount} logs with from block`, async () => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
 
 			await makeFewTxToContract({ contract, sendOptions, testDataString });
@@ -147,7 +147,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			await web3Eth.clearSubscriptions();
 		});
 		it(`clear`, async () => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: LogsSubscription = await web3Eth.subscribe('logs');
 			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();

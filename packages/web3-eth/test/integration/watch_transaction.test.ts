@@ -15,17 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { SupportedProviders } from 'web3-core';
-import { PromiEvent } from 'web3-common';
+import { PromiEvent, Web3BaseProvider } from 'web3-common';
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
 import { sendFewTxes } from './helper';
-
 
 import {
 	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
-    // eslint-disable-next-line import/no-relative-packages
+	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 5;
@@ -37,7 +35,6 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 	let providerWs: WebSocketProvider;
 	let accounts: string[] = [];
 	let clientUrl: string;
-
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
@@ -55,7 +52,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
-			web3Eth = new Web3Eth(providerWs as SupportedProviders<any>);
+			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 
 			// setupWeb3(web3Eth, waitConfirmations);
 			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
@@ -93,50 +90,48 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 });
 
 describeIf(getSystemTestProvider().startsWith('http'))('watch polling transaction', () => {
-    let web3Eth: Web3Eth;
-    let accounts: string[] = [];
-    let clientUrl: string;
+	let web3Eth: Web3Eth;
+	let accounts: string[] = [];
+	let clientUrl: string;
 
+	beforeAll(async () => {
+		clientUrl = getSystemTestProvider();
+		accounts = await getSystemTestAccounts();
+	});
 
-    beforeAll(async () => {
-        clientUrl = getSystemTestProvider();
-        accounts = await getSystemTestAccounts();
-    });
+	describe('wait for confirmation polling', () => {
+		it('polling', async () => {
+			web3Eth = new Web3Eth(clientUrl);
+			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
-    describe('wait for confirmation polling', () => {
-        it('polling', async () => {
+			const from = accounts[0];
+			const to = accounts[1];
+			const value = `0x1`;
 
-            web3Eth = new Web3Eth(clientUrl as SupportedProviders<any>);
-            web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
+			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
+			let shouldBe = 2;
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				sentTx.on('confirmation', ({ confirmationNumber }) => {
+					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+					shouldBe += 1;
+					if (shouldBe >= waitConfirmations) {
+						resolve();
+					}
+				});
+			});
+			await new Promise((resolve: Resolve) => {
+				sentTx.on('receipt', (params: ReceiptInfo) => {
+					expect(params.status).toBe('0x1');
+					resolve();
+				});
+			});
 
-            const from = accounts[0];
-            const to = accounts[1];
-            const value = `0x1`;
-
-            const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-                to,
-                value,
-                from,
-            });
-            let shouldBe = 2;
-            const confirmationPromise = new Promise((resolve: Resolve) => {
-                sentTx.on('confirmation', ({ confirmationNumber }) => {
-                    expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
-                    shouldBe += 1;
-                    if (shouldBe >= waitConfirmations) {
-                        resolve();
-                    }
-                });
-            });
-            await new Promise((resolve: Resolve) => {
-                sentTx.on('receipt', (params: ReceiptInfo) => {
-                    expect(params.status).toBe('0x1');
-                    resolve();
-                });
-            });
-
-            await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
-            await confirmationPromise;
-        });
-    });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await confirmationPromise;
+		});
+	});
 });
