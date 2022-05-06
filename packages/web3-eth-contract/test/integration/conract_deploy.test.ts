@@ -72,7 +72,6 @@ describe('contract', () => {
 			expect(deployedContract.options.address).toBeDefined();
 		});
 
-		// TODO: It works fine but tests hangs because of confirmation handler
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
@@ -81,11 +80,15 @@ describe('contract', () => {
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
 
+			// Wait for sometime to allow the transaction to be processed
+			await sleep(500);
+
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
 			await contract.deploy(deployOptions).send(sendOptions);
 
-			await sleep(1000);
+			// Wait for some fraction of time to trigger the handler
+			await sleep(100);
 
 			expect(confirmationHandler).toHaveBeenCalled();
 		});
@@ -128,7 +131,7 @@ describe('contract', () => {
 			).rejects.toThrow('Returned error: intrinsic gas too low');
 		});
 
-		it('should fail with errors deploying a zero length bytecode', async () => {
+		it('should fail with errors deploying a zero length bytecode', () => {
 			return expect(() =>
 				contract
 					.deploy({
@@ -139,7 +142,6 @@ describe('contract', () => {
 			).toThrow('No data provided.');
 		});
 
-		// TODO: Debug this test why it's failing when run with all other tests
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(deployRevertAbi);
 			revert.provider = getSystemTestProvider();
