@@ -23,8 +23,6 @@ import {
 	JsonRpcId,
 	JsonRpcNotification,
 	JsonRpcResponse,
-	JsonRpcResponseWithError,
-	JsonRpcResponseWithResult,
 	JsonRpcResult,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -34,6 +32,7 @@ import {
 	Web3BaseProviderCallback,
 	Web3BaseProviderStatus,
 	DeferredPromise,
+	jsonRpc,
 } from 'web3-common';
 import {
 	InvalidClientError,
@@ -188,18 +187,21 @@ export default class WebSocketProvider<
 		if (this._webSocketConnection === undefined)
 			throw new Web3WSProviderError('WebSocket connection is undefined');
 
-		if (request.id === undefined) throw new Web3WSProviderError('Request Id not defined');
+		const requestId = jsonRpc.isBatchRequest(request) ? request[0].id : request.id;
+
+		if (!requestId) throw new Web3WSProviderError('Request Id not defined');
 
 		if (
 			this._webSocketConnection.readyState === this._webSocketConnection.CLOSED ||
 			this._webSocketConnection.readyState === this._webSocketConnection.CLOSING
 		) {
-			this._requestQueue.delete(request.id);
+			this._requestQueue.delete(requestId);
 
 			throw new ConnectionNotOpenError();
 		}
 
-		const requestItem = this._requestQueue.get(request.id);
+		const requestItem = this._requestQueue.get(requestId);
+
 		if (this._webSocketConnection.readyState === this._webSocketConnection.CONNECTING) {
 			if (requestItem === undefined) {
 				const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
@@ -209,7 +211,7 @@ export default class WebSocketProvider<
 					deferredPromise: defPromise,
 				};
 
-				this._requestQueue.set(request.id, reqItem);
+				this._requestQueue.set(requestId, reqItem);
 				return defPromise;
 			}
 
@@ -219,8 +221,8 @@ export default class WebSocketProvider<
 		let promise;
 
 		if (requestItem !== undefined) {
-			this._sentQueue.set(request.id, requestItem);
-			this._requestQueue.delete(request.id);
+			this._sentQueue.set(requestId, requestItem);
+			this._requestQueue.delete(requestId);
 			promise = requestItem.deferredPromise;
 		} else {
 			const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
@@ -230,14 +232,14 @@ export default class WebSocketProvider<
 				deferredPromise: defPromise,
 			};
 
-			this._sentQueue.set(request.id, reqItem);
+			this._sentQueue.set(requestId, reqItem);
 			promise = defPromise;
 		}
 
 		try {
 			this._webSocketConnection.send(JSON.stringify(request));
 		} catch (error) {
-			this._sentQueue.delete(request.id);
+			this._sentQueue.delete(requestId);
 			throw error;
 		}
 
@@ -276,33 +278,33 @@ export default class WebSocketProvider<
 		}
 	}
 
-	private _onMessage(e: MessageEvent): void {
-		if (typeof e.data === 'string') {
-			/* eslint-disable  @typescript-eslint/no-unsafe-assignment */
-			const response:
-				| JsonRpcResponseWithError
-				| JsonRpcResponseWithResult
-				| JsonRpcNotification = JSON.parse(e.data);
+	private _onMessage(event: MessageEvent): void {
+		const response = JSON.parse(event.data as string) as unknown as JsonRpcResponse;
 
-			if ('method' in response && response.method.endsWith('_subscription')) {
-				this._wsEventEmitter.emit('message', null, response);
-				return;
-			}
-
-			if (response.id && this._sentQueue.has(response.id)) {
-				const requestItem = this._sentQueue.get(response.id);
-
-				if ('result' in response && response.result !== undefined) {
-					this._wsEventEmitter.emit('message', null, response);
-					requestItem?.deferredPromise.resolve(response);
-				} else if ('error' in response && response.error !== undefined) {
-					this._wsEventEmitter.emit('message', response, null);
-					requestItem?.deferredPromise.reject(response);
-				}
-
-				this._sentQueue.delete(response.id);
-			}
+		if (
+			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
+			(response as JsonRpcNotification).method.endsWith('_subscription')
+		) {
+			this._wsEventEmitter.emit('message', null, response);
+			return;
 		}
+
+		const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
+		const requestItem = this._sentQueue.get(requestId);
+
+		if (!requestItem) {
+			return;
+		}
+
+		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+			this._wsEventEmitter.emit('message', null, response);
+			requestItem.deferredPromise.resolve(response);
+		} else {
+			this._wsEventEmitter.emit('message', response, null);
+			requestItem?.deferredPromise.reject(response);
+		}
+
+		this._sentQueue.delete(requestId);
 	}
 
 	private _onConnect() {
