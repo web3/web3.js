@@ -38,7 +38,7 @@ describe('set up account', () => {
 			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
-				'0x2f835b77e8fbb14951830b57e3b9c81cec6f2ec25bf749ac37cbeaa859baf5877797effc174048187a9491f17af3a37a6fa8044f773d89b2ced4d8f2c188c7e01c',
+				'0x386c838352f41c42fb1161f4adbec8f5fc2aef8e6c93c181d6514e671c68ea5339da166cefb7aa62d873f44b468de77ad8b7ea83c09bf371c0bc18f0f745fc211b',
 			);
 		}
 	});
@@ -49,7 +49,7 @@ describe('set up account', () => {
 			const signature = await ethPersonal.sign('0x2313', account[0], '');
 			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(toChecksumAddress(publicKey)).toBe(accounts[0]);
+			expect(toChecksumAddress(publicKey)).toBe(account[0]);
 		}
 	});
 
@@ -75,14 +75,17 @@ describe('set up account', () => {
 	});
 
 	it('importRawKey', async () => {
-		const rawKey = accounts[4].privateKey;
-		const key = await ethPersonal.importRawKey(rawKey.slice(2), 'password123');
+		const rawKey =
+			getSystemTestBackend() === 'geth'
+				? accounts[4].privateKey.slice(2)
+				: accounts[4].privateKey;
+		const key = await ethPersonal.importRawKey(rawKey, 'password123');
 		expect(toChecksumAddress(key)).toBe(accounts[4].address);
 	});
 
 	it('signTransaction', async () => {
-		const from = account[0];
-		const to = account[2];
+		const from = account[3];
+		const to = account[3];
 		const value = `10000`;
 		const tx = {
 			from,
@@ -91,6 +94,7 @@ describe('set up account', () => {
 			gas: '21000',
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
+			nonce: 0,
 		};
 		const signedTx = await ethPersonal.signTransaction(tx, '');
 
@@ -113,7 +117,10 @@ describe('set up account', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
 		const receipt = await ethPersonal.sendTransaction(tx, '');
-		const expectedResult = '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
+		const expectedResult =
+			getSystemTestBackend() === 'geth'
+				? '0x2622954cb04ece8d74f0285d75b82530e581d84c8cb96c488f4a8cc250eec99f'
+				: '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
 		);
