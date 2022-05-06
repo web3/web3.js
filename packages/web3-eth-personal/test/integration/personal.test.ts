@@ -35,7 +35,7 @@ describe('set up account', () => {
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support sign
-			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '123');
+			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
 				'0x2f835b77e8fbb14951830b57e3b9c81cec6f2ec25bf749ac37cbeaa859baf5877797effc174048187a9491f17af3a37a6fa8044f773d89b2ced4d8f2c188c7e01c',
@@ -46,7 +46,7 @@ describe('set up account', () => {
 	it('ecRecover', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support ecRecover
-			const signature = await ethPersonal.sign('0x2313', account[0], 'abc');
+			const signature = await ethPersonal.sign('0x2313', account[0], '');
 			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(toChecksumAddress(publicKey)).toBe(accounts[0]);
@@ -76,7 +76,7 @@ describe('set up account', () => {
 
 	it('importRawKey', async () => {
 		const rawKey = accounts[4].privateKey;
-		const key = await ethPersonal.importRawKey(rawKey, 'password123');
+		const key = await ethPersonal.importRawKey(rawKey.slice(2), 'password123');
 		expect(toChecksumAddress(key)).toBe(accounts[4].address);
 	});
 
@@ -95,7 +95,7 @@ describe('set up account', () => {
 		const signedTx = await ethPersonal.signTransaction(tx, '');
 
 		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f008252089462ff0b7cfd7c46e2d647359608592ae91ed2faad82271080c001a0164b80af6236765677e1cc5e14f9b50e967ce9867a1b6df099be589cb734fe22a01a3e79c19373ae1601f26c40e5f9cd9a26befc24e462c8921b1830d8d0afc82c';
+			'0x02f86e82053980841dcd65008459682f0082520894ccfe90c862d2501ce233107d1a1f40afd50d09d082271080c001a0567617b322c9acb53697bcef1a2fae60c42cc9d66b04d779ed967cc02e055640a003aae813dff1508b4ec1fcea720c9803aeec67e97c000fa10cb1d12eb8822f58';
 		expect(signedTx).toEqual(expectedResult);
 	});
 
@@ -113,7 +113,7 @@ describe('set up account', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
 		const receipt = await ethPersonal.sendTransaction(tx, '');
-		const expectedResult = '0x3ca91d8071d31cef11f39cf58fa4307e31b4b24eb4a4c8d0d95da5ba3d554bc8';
+		const expectedResult = '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
 		);
