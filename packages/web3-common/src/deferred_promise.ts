@@ -76,15 +76,15 @@ export class DeferredPromise<T> implements Promise<T> {
 	}
 
 	public resolve(value: T | PromiseLike<T>): void {
-		this._resolve(value);
 		this._state = 'fulfilled';
 		this._clearTimeout();
+		this._resolve(value);
 	}
 
 	public reject(reason?: unknown): void {
-		this._reject(reason);
 		this._state = 'rejected';
 		this._clearTimeout();
+		this._reject(reason);
 	}
 
 	public startTimer() {
