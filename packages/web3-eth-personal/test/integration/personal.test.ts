@@ -91,9 +91,8 @@ describe('set up account', () => {
 			gas: '21000',
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
-			nonce: 0,
 		};
-		const signedTx = await ethPersonal.signTransaction(tx, 'password123');
+		const signedTx = await ethPersonal.signTransaction(tx, '');
 
 		const expectedResult =
 			'0x02f86e82053980841dcd65008459682f008252089462ff0b7cfd7c46e2d647359608592ae91ed2faad82271080c001a0164b80af6236765677e1cc5e14f9b50e967ce9867a1b6df099be589cb734fe22a01a3e79c19373ae1601f26c40e5f9cd9a26befc24e462c8921b1830d8d0afc82c';
@@ -104,7 +103,7 @@ describe('set up account', () => {
 		const to = accounts[2].address;
 		const value = `10000`;
 
-		const from = accounts[0].address;
+		const from = account[0];
 		const tx = {
 			from,
 			to,
