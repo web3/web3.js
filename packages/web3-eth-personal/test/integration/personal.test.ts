@@ -49,7 +49,7 @@ describe('set up account', () => {
 			const signature = await ethPersonal.sign('0x2313', account[0], '');
 			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(toChecksumAddress(publicKey)).toBe(account[0]);
+			expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(account[0]));
 		}
 	});
 
@@ -85,7 +85,7 @@ describe('set up account', () => {
 
 	it('signTransaction', async () => {
 		const from = account[3];
-		const to = account[3];
+		const to = account[0];
 		const value = `10000`;
 		const tx = {
 			from,
@@ -99,7 +99,7 @@ describe('set up account', () => {
 		const signedTx = await ethPersonal.signTransaction(tx, '');
 
 		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f0082520894ccfe90c862d2501ce233107d1a1f40afd50d09d082271080c001a0567617b322c9acb53697bcef1a2fae60c42cc9d66b04d779ed967cc02e055640a003aae813dff1508b4ec1fcea720c9803aeec67e97c000fa10cb1d12eb8822f58';
+			'0x02f86e82053980841dcd65008459682f00825208946e599da0bff7a6598ac1224e4985430bf16458a482271080c080a080dfd8ea310fd2b56f46de72d02c540b7076ea3d8f9b946dc83a7785301bc027a0696332df244fabec85a6e777f565c2f69ba0d4d607ced23ac03a0b503fae4659';
 		expect(signedTx).toEqual(expectedResult);
 	});
 
