@@ -38,7 +38,7 @@ describe('set up account', () => {
 			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
-				'0x386c838352f41c42fb1161f4adbec8f5fc2aef8e6c93c181d6514e671c68ea5339da166cefb7aa62d873f44b468de77ad8b7ea83c09bf371c0bc18f0f745fc211b',
+				'0xaf5d09b660fca0ab7db2fbe7c4ee3f43fde88df7af81f45b901b7c5c0301ac8342f2f67085bbb7572497b5a23c4c4a48d24eb932320e058c08269e4f30d9bdb11c',
 			);
 		}
 	});
