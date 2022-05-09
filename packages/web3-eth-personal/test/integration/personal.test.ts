@@ -87,8 +87,8 @@ describe('peronsal integration tests', () => {
 	});
 
 	it('sendTransaction', async () => {
-		const to = account[3];
-		const value = `10000`;
+		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
+		const value = `0`;
 
 		const from = account[0];
 		await ethPersonal.unlockAccount(from, '', 100000);
