@@ -34,14 +34,11 @@ describe('set up account', () => {
 
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
-			const rawKey = accounts[2].privateKey.slice(2);
-			const key = await ethPersonal.importRawKey(rawKey, 'password123');
 			// ganache does not support sign
-			const signature = await ethPersonal.sign('0xdeadbeaf', key, '');
+			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
+			const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(signature).toBe(
-				'0xac6121223605547bfdf74541f98b4c745a93fc214a6a7bfc5f9162b26c63ebe373394444f0986745c64ef77d58363a39640e12101bb85e2dd6c764a69457b6f51c',
-			);
+			expect(account[0]).toBe(address);
 		}
 	});
 
