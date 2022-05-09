@@ -17,17 +17,21 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
-import { accounts, clientUrl } from '../config/personal.test.config';
-import { getSystemTestBackend, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { importedAccount } from '../config/personal.test.config';
+import {
+	getSystemTestBackend,
+	getSystemTestAccounts,
+	getSystemTestProvider,
+} from '../fixtures/system_test_utils';
 
-describe('peronsal integration tests', () => {
+describe('personal integration tests', () => {
 	let ethPersonal: EthPersonal;
-	let account: string[];
+	let accounts: string[];
 	beforeAll(() => {
-		ethPersonal = new EthPersonal(clientUrl);
+		ethPersonal = new EthPersonal(getSystemTestProvider());
 	});
 	beforeEach(async () => {
-		account = await getSystemTestAccounts();
+		accounts = await getSystemTestAccounts();
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
@@ -37,21 +41,21 @@ describe('peronsal integration tests', () => {
 	it('ecRecover', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support ecRecover
-			const signature = await ethPersonal.sign('0x2313', account[0], '');
+			const signature = await ethPersonal.sign('0x2313', accounts[0], '');
 			const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(account[0]));
+			expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(accounts[0]));
 		}
 	});
 
 	it('lock account', async () => {
 		// ganache requires prefixed, must be apart of account ganache command
-		const lockAccount = await ethPersonal.lockAccount(account[1]);
+		const lockAccount = await ethPersonal.lockAccount(accounts[1]);
 		expect(lockAccount).toBe(true);
 	});
 
 	it('unlock account', async () => {
-		const key = account[0];
+		const key = accounts[0];
 		const unlockedAccount = await ethPersonal.unlockAccount(key, '', 100000);
 		expect(unlockedAccount).toBe(true);
 	});
@@ -59,12 +63,12 @@ describe('peronsal integration tests', () => {
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support sign
-			const key = account[0];
+			const key = accounts[0];
 			await ethPersonal.unlockAccount(key, '', 100000);
-			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
+			const signature = await ethPersonal.sign('0xdeadbeaf', accounts[0], '');
 			const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 			// eslint-disable-next-line jest/no-conditional-expect
-			expect(account[0]).toBe(address);
+			expect(accounts[0]).toBe(address);
 		}
 	});
 
@@ -80,18 +84,18 @@ describe('peronsal integration tests', () => {
 	it('importRawKey', async () => {
 		const rawKey =
 			getSystemTestBackend() === 'geth'
-				? accounts[4].privateKey.slice(2)
-				: accounts[4].privateKey;
+				? importedAccount.privateKey.slice(2)
+				: importedAccount.privateKey;
 		const key = await ethPersonal.importRawKey(rawKey, 'password123');
-		expect(toChecksumAddress(key)).toBe(accounts[4].address);
+		expect(toChecksumAddress(key)).toBe(importedAccount.address);
 	});
 
 	it('signTransaction', async () => {
 		if (getSystemTestBackend() === 'ganache') {
 			// geth doesn't have signTransaction method within docs
-			const key = account[0];
+			const key = accounts[0];
 			await ethPersonal.unlockAccount(key, '', 100000);
-			const from = account[0];
+			const from = accounts[0];
 			const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
 			const value = `10000`;
 			const tx = {
@@ -115,7 +119,7 @@ describe('peronsal integration tests', () => {
 		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
 		const value = `0`;
 
-		const from = account[0];
+		const from = accounts[0];
 		await ethPersonal.unlockAccount(from, '', 100000);
 		const tx = {
 			from,
