@@ -135,7 +135,7 @@ describe.skip('contract', () => {
 			);
 		});
 
-		it.skip('should fail with errors deploying a zero length bytecode', async () => {
+		it.skip('should fail with errors deploying a zero length bytecode',  () => {
 			return expect(() =>
 				contract
 					.deploy({

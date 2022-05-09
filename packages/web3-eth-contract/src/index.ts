@@ -17,6 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Contract } from './contract';
 
+export * from './encoding';
+
 export * from './contract';
 export * from './types';
 
