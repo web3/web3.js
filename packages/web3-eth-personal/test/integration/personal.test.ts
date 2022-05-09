@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
-import { accounts, clientUrl } from '../config/personal.test.config'; // eslint-disable-line import/no-relative-packages
+import { accounts, clientUrl } from '../config/personal.test.config';
 import { getSystemTestBackend, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('set up account', () => {
@@ -34,8 +34,9 @@ describe('set up account', () => {
 
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
+			const rawKey = accounts[4].privateKey.slice(2);
 			// ganache does not support sign
-			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
+			const signature = await ethPersonal.sign('0xdeadbeaf', rawKey, '');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
 				'0xaf5d09b660fca0ab7db2fbe7c4ee3f43fde88df7af81f45b901b7c5c0301ac8342f2f67085bbb7572497b5a23c4c4a48d24eb932320e058c08269e4f30d9bdb11c',
@@ -84,8 +85,13 @@ describe('set up account', () => {
 	});
 
 	it('signTransaction', async () => {
-		const from = account[3];
-		const to = account[0];
+		const rawKey =
+			getSystemTestBackend() === 'geth'
+				? accounts[4].privateKey.slice(2)
+				: accounts[4].privateKey;
+		const key = await ethPersonal.importRawKey(rawKey, 'password123');
+		const from = key;
+		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
 		const value = `10000`;
 		const tx = {
 			from,
