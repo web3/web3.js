@@ -79,14 +79,14 @@ export default class WebSocketProvider<
 		this._clientUrl = clientUrl;
 		this._wsProviderOptions = wsProviderOptions;
 
-		const DEFAULT_WS_PROVIDER_OPTIONS = {
+		const DEFAULT_RECON_WS_PROVIDER_OPTIONS = {
 			autoReconnect: true,
 			delay: 5000,
 			maxAttempts: 5,
 		};
 
 		this._reconnectOptions = {
-			...DEFAULT_WS_PROVIDER_OPTIONS,
+			...DEFAULT_RECON_WS_PROVIDER_OPTIONS,
 			...reconnectOptions,
 		};
 
@@ -168,7 +168,8 @@ export default class WebSocketProvider<
 	}
 
 	public disconnect(code?: number, reason?: string): void {
-		this._removeSocketListeners();
+		// todo Is next line really needed? onClose will never be called
+		// this._removeSocketListeners();
 		this._webSocketConnection?.close(code, reason);
 	}
 

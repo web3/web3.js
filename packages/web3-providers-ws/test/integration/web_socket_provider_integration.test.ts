@@ -141,9 +141,10 @@ describeIf(getSystemTestProvider().includes('ws'))(
 						done();
 					});
 				});
+
 				it('should subscribe on close', done => {
 					const code = 1001;
-					const reason = '1001';
+					// const provider = new WebSocketProvider(clientWsUrl);
 					webSocketProvider.on(
 						'close',
 						(err: Error | null, event: OnCloseEvent | null | undefined) => {
@@ -151,13 +152,13 @@ describeIf(getSystemTestProvider().includes('ws'))(
 								done.fail(err);
 							}
 							expect(event!.code).toEqual(code);
-							expect(event!.reason).toEqual(reason);
 							done();
 						},
 					);
+					currentAttempt = 0;
 					waitForOpenConnection(webSocketProvider)
 						.then(() => {
-							webSocketProvider.disconnect(code, reason);
+							webSocketProvider.disconnect(code);
 						})
 						.catch(() => {
 							done.fail();
@@ -174,7 +175,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					await waitForOpenConnection(provider);
 					provider.disconnect(1000);
 					await waitForOpenConnection(provider, 'disconnected');
-					expect(provider.getStatus).toBe('disconnected');
+					expect(provider.getStatus()).toBe('disconnected');
 				});
 				it('should reset', () => {
 					jsonRpcPayload = {
