@@ -15,9 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable jest/no-disabled-tests */
 /* eslint-disable jest/no-done-callback */
-// todo remove console
 import {
 	EthExecutionAPI,
 	JsonRpcId,
@@ -27,19 +25,15 @@ import {
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 } from 'web3-common';
-// import express, { Express } from 'express';
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-// import morgan from 'morgan';
-// import WebSocketProvider from '../../src/index';
-// import { CloseEvent } from 'isomorphic-ws';
+
 import { Server } from 'http';
+import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 // import { Web3WSProviderError } from '../../src/errors';
 import { WSRequestItem, OnCloseEvent } from '../../src/types';
 
-// eslint-disable-next-line import/no-relative-packages
-// import { clientWsUrl, accounts } from '../../../../.github/test.config';
 import {
 	getSystemTestProvider,
 	describeIf,
@@ -101,7 +95,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			});
 
 			describe('websocker provider tests', () => {
-				it.skip('should connect', async () => {
+				it('should connect', async () => {
 					await waitForOpenConnection(webSocketProvider);
 					expect(webSocketProvider).toBeInstanceOf(WebSocketProvider);
 					expect(webSocketProvider.getStatus()).toBe('connected');
@@ -109,7 +103,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			});
 
 			describe('subscribe event tests', () => {
-				it.skip('should subscribe on message', done => {
+				it('should subscribe on message', done => {
 					webSocketProvider.on(
 						'message',
 						(
@@ -128,24 +122,26 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					});
 				});
 
-				// it.skip('should subscribe on error', done => {
-				// 	const errorMsg = 'Custom WebSocket error occured';
-				// 	webSocketProvider.on('error', err => {
-				// 		expect(err?.message).toBe(errorMsg);
-				// 		done();
-				// 	});
-				// 	// Manually emit an error event - accessing private emitter
-				// 	// todo change it
-				// 	webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
-				// });
+				it('should subscribe on error', done => {
+					const errorMsg = 'Custom WebSocket error occured';
+					webSocketProvider.on('error', (err: any) => {
+						expect(err?.message).toBe(errorMsg);
+						done();
+					});
+
+					webSocketProvider['_wsEventEmitter'].emit(
+						'error',
+						new Web3WSProviderError(errorMsg),
+					);
+				});
 
 				// eslint-disable-next-line jest/expect-expect
-				it.skip('should subscribe on connect', done => {
+				it('should subscribe on connect', done => {
 					webSocketProvider.on('open', () => {
 						done();
 					});
 				});
-				it.skip('should subscribe on close', done => {
+				it('should subscribe on close', done => {
 					const code = 1001;
 					const reason = '1001';
 					webSocketProvider.on(
@@ -169,17 +165,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				});
 			});
 			describe('disconnect and reset test', () => {
-				// eslint-disable-next-line jest/expect-expect
-				it.skip('should disconnect', async () => {
-					// eslint-disable-next-line @typescript-eslint/no-shadow
-					// const webSocketProvider = new WebSocketProvider(
-					// 	clientWsUrl,
-					// 	// {},
-					// 	// { delay: 1, autoReconnect: false, maxAttempts: 1 },
-					// );
-
-					// // await webSocketProvider.disconnect(1000, 'done');
-					// console.warn(webSocketProvider.getStatus());
+				it('should disconnect', async () => {
 					const provider = new WebSocketProvider(
 						clientWsUrl,
 						{},
@@ -188,8 +174,9 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					await waitForOpenConnection(provider);
 					provider.disconnect(1000);
 					await waitForOpenConnection(provider, 'disconnected');
+					expect(provider.getStatus).toBe('disconnected');
 				});
-				it.skip('should reset', async () => {
+				it('should reset', () => {
 					jsonRpcPayload = {
 						jsonrpc: '2.0',
 						id: 42,
@@ -215,7 +202,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				});
 			});
 
-			describe.skip('getStatus get and validate all status tests', () => {
+			describe('getStatus get and validate all status tests', () => {
 				it('test getStatus `connecting`', () => {
 					expect(webSocketProvider.getStatus()).toBe('connecting');
 				});
@@ -291,11 +278,6 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				const PORT = 3000;
 				const HOST = 'localhost';
 
-				// const wsProxy = createProxyMiddleware({
-				// 	target: clientWsUrl,
-				// 	ws: true,
-				// 	logLevel: 'debug',
-				// });
 				const wsProxy = createProxyMiddleware({
 					target: clientWsUrl,
 					changeOrigin: true,
@@ -304,17 +286,12 @@ describeIf(getSystemTestProvider().includes('ws'))(
 						console.warn('************** proxy error');
 					},
 					logLevel: 'silent',
-					// onProxyReqWs: () => {
-					// 	console.warn('socket is destroyed');
-					// },
 				});
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				app.use(wsProxy);
 				server = app.listen(PORT, HOST);
-				// server.on('upgrade', () => {
-				// 	console.warn('***********');
-				// });
+
 				server.on('upgrade', (req, socket, head) => {
 					if (
 						!req.headers.authorization ||
@@ -340,8 +317,6 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			});
 			// eslint-disable-next-line jest/expect-expect
 			it('should connect with basic auth', async () => {
-				// await waitForOpenConnection(webSocketProvider);
-				// webSocketProvider.disconnect();
 				webSocketProvider = new WebSocketProvider(
 					'ws://geth:authpass@localhost:3000',
 					{},
@@ -350,15 +325,6 @@ describeIf(getSystemTestProvider().includes('ws'))(
 
 				await waitForOpenConnection(webSocketProvider);
 				webSocketProvider.disconnect();
-				// webSocketProvider = new WebSocketProvider('ws://localhost:80', {
-				// 	rejectUnauthorized: false,
-				// 	headers: {
-				// 		// authorization: `Basic ${Buffer.from('geth:authpass').toString('base64')}`,
-				// 		authorization: 'Basic Z2V0aDphdXRocGFzcw==',
-				// 	},
-				// });
-				// webSocketProvider = new WebSocketProvider('ws://localhost:8545');
-				// await waitForOpenConnection(webSocketProvider);
 			});
 		});
 	},
