@@ -35,6 +35,8 @@ describe('set up account', () => {
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
 			// ganache does not support sign
+			const key = account[0];
+			await ethPersonal.unlockAccount(key, '', 10000);
 			const signature = await ethPersonal.sign('0xdeadbeaf', account[0], '');
 			const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 			// eslint-disable-next-line jest/no-conditional-expect
