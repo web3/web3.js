@@ -125,7 +125,7 @@ describe('peronsal integration tests', () => {
 		const receipt = await ethPersonal.sendTransaction(tx, '');
 		const expectedResult =
 			getSystemTestBackend() === 'geth'
-				? '0xbae20bf334cdb8779056db78ab9130e4587a47937d5abfd36b1ff70e8e22c6a8'
+				? '0x0761906d26530ddd872719b49918d1925f1bd333480b4e451d445774774a1241'
 				: '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
