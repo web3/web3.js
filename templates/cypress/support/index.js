@@ -24,3 +24,11 @@ import 'cypress-jest-adapter';
 // Enable the hook to match Jest
 global.beforeAll = global.before;
 global.afterAll = global.after;
+global.it = it;
+global.it.each = data => (describe, test) => {
+	const prs = [];
+	for (const d of data) {
+		prs.push(global.it(describe, test.bind(undefined, d)));
+	}
+	return Promise.all(prs);
+};

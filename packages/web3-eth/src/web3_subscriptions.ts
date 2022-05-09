@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line max-classes-per-file
 import { BlockOutput, SyncOutput } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { Address, BlockNumberOrTag, HexString, Topic } from 'web3-utils';
 import { Web3Subscription } from 'web3-core';
 
 type CommonSubscriptionEvents = {
@@ -30,9 +30,9 @@ export class LogsSubscription extends Web3Subscription<
 		data: any;
 	},
 	{
-		fromBlock?: number;
-		address?: HexString | HexString[];
-		topics?: (HexString | null)[];
+		readonly fromBlock?: BlockNumberOrTag;
+		readonly address?: Address | Address[];
+		readonly topics?: (Topic | null)[];
 	}
 > {
 	protected _buildSubscriptionParams() {

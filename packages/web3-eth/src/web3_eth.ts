@@ -335,7 +335,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			Number.isFinite(Number(args.fromBlock))
 		) {
 			setImmediate(() => {
-				this.getPastLogs({ fromBlock: String(args.fromBlock) })
+				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
 							subscription._processSubscriptionResult(log);
