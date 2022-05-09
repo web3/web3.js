@@ -86,33 +86,11 @@ describe('peronsal integration tests', () => {
 		expect(toChecksumAddress(key)).toBe(accounts[4].address);
 	});
 
-	it('signTransaction', async () => {
-		const key = account[0];
-		await ethPersonal.unlockAccount(key, '', 100000);
-		const from = account[0];
-		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
-		const value = `10000`;
-		const tx = {
-			from,
-			to,
-			value,
-			gas: '21000',
-			maxFeePerGas: '0x59682F00',
-			maxPriorityFeePerGas: '0x1DCD6500',
-			nonce: 0,
-		};
-		const signedTx = await ethPersonal.signTransaction(tx, '');
-
-		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f00825208946e599da0bff7a6598ac1224e4985430bf16458a482271080c080a080dfd8ea310fd2b56f46de72d02c540b7076ea3d8f9b946dc83a7785301bc027a0696332df244fabec85a6e777f565c2f69ba0d4d607ced23ac03a0b503fae4659';
-		expect(signedTx).toEqual(expectedResult);
-	});
-
 	it('sendTransaction', async () => {
-		const to = accounts[2].address;
+		const to = account[3];
 		const value = `10000`;
 
-		const from = account[2];
+		const from = account[0];
 		await ethPersonal.unlockAccount(from, '', 100000);
 		const tx = {
 			from,
@@ -123,13 +101,7 @@ describe('peronsal integration tests', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
 		const receipt = await ethPersonal.sendTransaction(tx, '');
-		const expectedResult =
-			getSystemTestBackend() === 'geth'
-				? '0x0761906d26530ddd872719b49918d1925f1bd333480b4e451d445774774a1241'
-				: '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
-		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
-			JSON.parse(JSON.stringify(expectedResult)),
-		);
+
 		expect(isHexStrict(receipt)).toBe(true);
 	});
 });
