@@ -15,13 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Error } from '../../src/errors';
-import { ConvertValueToString } from '../fixtures/errors';
+// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('../config/setup');
 
-describe('Errors', () => {
-	describe('value toString', () => {
-		it.each(ConvertValueToString)('%s', (input, output) => {
-			expect(Web3Error.convertToString(input, true)).toEqual(output);
-		});
-	});
-});
+const jestTimeout = 15000;
+
+jest.setTimeout(jestTimeout);

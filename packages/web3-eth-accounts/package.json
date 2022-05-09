@@ -40,6 +40,7 @@
 		"jest-when": "^3.4.1"
 	},
 	"dependencies": {
+		"web3-errors": "1.0.0-alpha.0",
 		"@ethereumjs/tx": "^3.4.0",
 		"ethereum-cryptography": "^0.2.1",
 		"secp256k1": "^4.0.2",

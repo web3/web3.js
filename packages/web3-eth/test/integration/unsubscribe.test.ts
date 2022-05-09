@@ -18,14 +18,14 @@ import WebSocketProvider from 'web3-providers-ws/dist';
 import { SupportedProviders } from 'web3-core';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
-import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
+import { getSystemTestProvider, describeIf } from '../fixtures/system_test_utils';
 
-describe('unsubscribe', () => {
+describeIf(getSystemTestProvider().startsWith('ws'))('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {
 		provider = new WebSocketProvider(
-			clientWsUrl,
+			getSystemTestProvider(),
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);

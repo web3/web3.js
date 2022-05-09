@@ -22,7 +22,10 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js"
+		"test:integration": "jest --config=./test/integration/jest.config.js",
+		"test:e2e:electron": "npx cypress run --headless --browser electron",
+		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
@@ -41,6 +44,7 @@
 		"typescript": "^4.5.2"
 	},
 	"dependencies": {
+		"web3-errors": "1.0.0-alpha.0",
 		"cross-fetch": "^3.1.4",
 		"web3-common": "1.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1"

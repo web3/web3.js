@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { FormatterError } from 'web3-errors';
 import { Iban } from 'web3-eth-iban';
 import {
 	BlockTags,
@@ -35,7 +36,6 @@ import {
 	utf8ToHex,
 } from 'web3-utils';
 import { isBlockTag, isHex } from 'web3-validator';
-import { FormatterError } from './errors';
 import {
 	BlockInput,
 	BlockOutput,

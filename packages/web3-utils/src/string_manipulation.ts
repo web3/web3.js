@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { NibbleWidthError } from 'web3-errors';
 import { isHexStrict, validator, utils as validatorUtils } from 'web3-validator';
 import { numberToHex, toHex, toNumber } from './converters';
 import { Numbers } from './types';
-import { NibbleWidthError } from './errors';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
@@ -72,7 +72,7 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 	if (val >= 0) return padLeft(toHex(val), nibbleWidth);
 
-	const largestBit = 2n ** BigInt(nibbleWidth * 4);
+	const largestBit = BigInt(2) ** BigInt(nibbleWidth * 4);
 	if (-val >= largestBit) {
 		throw new NibbleWidthError(`value: ${value}, nibbleWidth: ${nibbleWidth}`);
 	}
@@ -101,7 +101,7 @@ export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | b
 	// check the largest bit to see if negative
 	if (nibbleWidth * 4 !== largestBit) return val;
 
-	const complement = 2n ** (BigInt(nibbleWidth) * 4n);
+	const complement = BigInt(2) ** (BigInt(nibbleWidth) * BigInt(4));
 
 	return toNumber(BigInt(val) - complement);
 };

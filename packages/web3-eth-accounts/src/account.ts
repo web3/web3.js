@@ -15,6 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {
+	InvalidPrivateKeyError,
+	PrivateKeyLengthError,
+	UndefinedRawTransactionError,
+	SignerError,
+	InvalidSignatureError,
+	InvalidKdfError,
+	KeyDerivationError,
+	KeyStoreVersionError,
+	InvalidPasswordError,
+	IVLengthError,
+	PBKDF2IterationsError,
+} from 'web3-errors';
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import {
@@ -39,19 +52,6 @@ import {
 	utf8ToHex,
 } from 'web3-utils';
 import { validator, isBuffer, isHexString32Bytes, isString } from 'web3-validator';
-import {
-	InvalidPrivateKeyError,
-	PrivateKeyLengthError,
-	UndefinedRawTransactionError,
-	SignerError,
-	InvalidSignatureError,
-	InvalidKdfError,
-	KeyDerivationError,
-	KeyStoreVersionError,
-	InvalidPasswordError,
-	IVLengthError,
-	PBKDF2IterationsError,
-} from 'web3-common';
 import {
 	signatureObject,
 	signResult,

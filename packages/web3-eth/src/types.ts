@@ -192,8 +192,9 @@ export type SendTransactionEvents = {
 	};
 };
 
-export interface SendTransactionOptions {
+export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
 	ignoreGasPricing?: boolean;
+	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
 }
 
 export type SendSignedTransactionEvents = SendTransactionEvents & {

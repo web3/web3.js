@@ -15,14 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	toChecksumAddress,
-	isAddress,
-	leftPad,
-	hexToNumber,
-	HexString,
-	InvalidAddressError,
-} from 'web3-utils';
+import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString } from 'web3-utils';
+import { InvalidAddressError } from 'web3-errors';
 import { IbanOptions } from './types';
 
 export class Iban {
@@ -75,7 +69,10 @@ export class Iban {
 	 * return the bigint of the given string with the specified base
 	 */
 	private static readonly _parseInt = (str: string, base: number): bigint =>
-		[...str].reduce((acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc, 0n);
+		[...str].reduce(
+			(acc, curr) => BigInt(parseInt(curr, base)) + BigInt(base) * acc,
+			BigInt(0),
+		);
 
 	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
