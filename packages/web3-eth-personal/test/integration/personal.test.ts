@@ -34,9 +34,10 @@ describe('set up account', () => {
 
 	it('sign', async () => {
 		if (getSystemTestBackend() === 'geth') {
-			const rawKey = accounts[4].privateKey.slice(2);
+			const rawKey = accounts[2].privateKey.slice(2);
+			const key = await ethPersonal.importRawKey(rawKey, 'password123');
 			// ganache does not support sign
-			const signature = await ethPersonal.sign('0xdeadbeaf', rawKey, '');
+			const signature = await ethPersonal.sign('0xdeadbeaf', key, '');
 			// eslint-disable-next-line jest/no-conditional-expect
 			expect(signature).toBe(
 				'0xaf5d09b660fca0ab7db2fbe7c4ee3f43fde88df7af81f45b901b7c5c0301ac8342f2f67085bbb7572497b5a23c4c4a48d24eb932320e058c08269e4f30d9bdb11c',
@@ -87,8 +88,8 @@ describe('set up account', () => {
 	it('signTransaction', async () => {
 		const rawKey =
 			getSystemTestBackend() === 'geth'
-				? accounts[4].privateKey.slice(2)
-				: accounts[4].privateKey;
+				? accounts[3].privateKey.slice(2)
+				: accounts[3].privateKey;
 		const key = await ethPersonal.importRawKey(rawKey, 'password123');
 		const from = key;
 		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
@@ -125,7 +126,7 @@ describe('set up account', () => {
 		const receipt = await ethPersonal.sendTransaction(tx, '');
 		const expectedResult =
 			getSystemTestBackend() === 'geth'
-				? '0x2622954cb04ece8d74f0285d75b82530e581d84c8cb96c488f4a8cc250eec99f'
+				? '0xbae20bf334cdb8779056db78ab9130e4587a47937d5abfd36b1ff70e8e22c6a8'
 				: '0xce8c0649b6d8bc6fa933cd7b610c6435436d85b51095bf47d35dd52b7f0c5b0b';
 		expect(JSON.parse(JSON.stringify(receipt))).toEqual(
 			JSON.parse(JSON.stringify(expectedResult)),
