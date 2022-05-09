@@ -28,7 +28,8 @@ describe('personal integration tests', () => {
 	let ethPersonal: EthPersonal;
 	let accounts: string[];
 	beforeAll(() => {
-		ethPersonal = new EthPersonal(getSystemTestProvider());
+		const clientUrl = getSystemTestProvider();
+		ethPersonal = new EthPersonal(clientUrl);
 	});
 	beforeEach(async () => {
 		accounts = await getSystemTestAccounts();
@@ -49,7 +50,6 @@ describe('personal integration tests', () => {
 	});
 
 	it('lock account', async () => {
-		// ganache requires prefixed, must be apart of account ganache command
 		const lockAccount = await ethPersonal.lockAccount(accounts[1]);
 		expect(lockAccount).toBe(true);
 	});
@@ -92,16 +92,13 @@ describe('personal integration tests', () => {
 
 	it('signTransaction', async () => {
 		if (getSystemTestBackend() === 'ganache') {
-			// geth doesn't have signTransaction method within docs
-			const key = accounts[0];
-			await ethPersonal.unlockAccount(key, '', 100000);
+			// geth doesn't have signTransaction method
 			const from = accounts[0];
-			const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
-			const value = `10000`;
+			await ethPersonal.unlockAccount(from, '', 100000);
 			const tx = {
 				from,
-				to,
-				value,
+				to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
+				value: '10000',
 				gas: '21000',
 				maxFeePerGas: '0x59682F00',
 				maxPriorityFeePerGas: '0x1DCD6500',
@@ -116,15 +113,12 @@ describe('personal integration tests', () => {
 	});
 
 	it('sendTransaction', async () => {
-		const to = '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2';
-		const value = `0`;
-
 		const from = accounts[0];
 		await ethPersonal.unlockAccount(from, '', 100000);
 		const tx = {
 			from,
-			to,
-			value,
+			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
+			value: `0`,
 			gas: '21000',
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
