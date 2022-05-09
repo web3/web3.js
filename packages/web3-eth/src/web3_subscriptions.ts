@@ -32,7 +32,7 @@ export class LogsSubscription extends Web3Subscription<
 	{
 		readonly fromBlock?: BlockNumberOrTag;
 		readonly address?: Address | Address[];
-		readonly topics?: (Topic | Topic[] | null)[];
+		readonly topics?: (Topic | null)[];
 	}
 > {
 	protected _buildSubscriptionParams() {
