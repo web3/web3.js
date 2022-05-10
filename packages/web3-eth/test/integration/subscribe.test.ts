@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { SupportedProviders } from 'web3-core';
+import { Web3BaseProvider } from 'web3-common';
 import Web3Eth from '../../src/index';
 import {
 	NewHeadsSubscription,
@@ -53,28 +53,28 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscribe', () => {
 
 	describe('subscribe to', () => {
 		it('newHeads', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('newHeads');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewHeadsSubscription);
 		});
 		it('syncing', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('syncing');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(SyncingSubscription);
 		});
 		it('newPendingTransactions', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('newPendingTransactions');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
 			expect(inst).toBeInstanceOf(NewPendingTransactionsSubscription);
 		});
 		it('logs', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('logs', {
 				address: accounts[0],
 			});
