@@ -877,7 +877,7 @@ function _handleTxPricing(method, tx) {
             Promise.all([
                 getBlockByNumber(),
                 getGasPrice()
-            ]).then(responses => {
+            ]).then(async responses => {
                 const [block, gasPrice] = responses;
                 if (
                     (tx.type === '0x2' || tx.type === undefined) &&
