@@ -1,0 +1,6 @@
+{
+	"integrationFolder": "test/integration",
+	"testFiles": "**/**/*.test.ts",
+	"screenshotOnRunFailure": false,
+	"video": false
+}

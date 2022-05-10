@@ -15,17 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws/dist';
-import { SupportedProviders } from 'web3-core';
+import { Web3BaseProvider } from 'web3-common';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
-import { clientWsUrl } from '../../../../.github/test.config'; // eslint-disable-line import/no-relative-packages
+import { getSystemTestProvider, describeIf } from '../fixtures/system_test_utils';
 
-describe('unsubscribe', () => {
+describeIf(getSystemTestProvider().startsWith('ws'))('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {
 		provider = new WebSocketProvider(
-			clientWsUrl,
+			getSystemTestProvider(),
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
@@ -36,7 +36,7 @@ describe('unsubscribe', () => {
 
 	describe('unsubscribe from', () => {
 		it('should clearSubscriptions', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('newHeads');
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);
@@ -46,7 +46,7 @@ describe('unsubscribe', () => {
 		});
 
 		it('subscribe to all and clear all except syncing', async () => {
-			web3Eth = new Web3Eth(provider as SupportedProviders<any>);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('newHeads');
 			await web3Eth.subscribe('newPendingTransactions');
 			await web3Eth.subscribe('syncing');
