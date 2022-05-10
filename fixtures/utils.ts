@@ -30,3 +30,29 @@ export const sleep = async (ms: number) =>
 			clearTimeout(id);
 		}, ms);
 	});
+
+type InObj = {
+	[key: string]: unknown;
+};
+const getNameValue = <R extends object>(
+	data: Partial<R>,
+	obj: InObj,
+	keys: string[],
+	result: Array<R>,
+) => {
+	if (keys.length === 0) {
+		result.push(data as R);
+	}
+
+	const key: keyof InObj = keys.pop()!;
+	if (obj[key]) {
+		(obj[key] as []).map(v => getNameValue({ ...data, [key]: v }, obj, [...keys], result));
+	}
+};
+
+export const toAllVariants = <R extends object>(obj: InObj): R[] => {
+	const keys: string[] = Object.keys(obj);
+	const result: Array<R> = [];
+	getNameValue<R>({}, obj, keys, result);
+	return result;
+};

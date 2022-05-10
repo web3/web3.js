@@ -23,6 +23,7 @@ import { Web3Eth } from '../../src';
 
 import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_test_utils';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+import { toAllVariants } from '../shared_fixtures/utils';
 
 const mapFormatToType = {
 	[FMT_NUMBER.NUMBER]: 'number',
@@ -30,6 +31,13 @@ const mapFormatToType = {
 	[FMT_NUMBER.STR]: 'string',
 	[FMT_NUMBER.BIGINT]: 'bigint',
 };
+/*
+{
+        block:['earliest', 'latest', 'pending'],
+        hydrated:[true,false]
+    }
+ */
+
 // type Resolve = (value?: unknown) => void;
 //
 // type SendFewTxParams = {
@@ -170,8 +178,35 @@ describe('rpc', () => {
 			);
 
 			expect(hexToNumber(resNumber)).toBe(numberData);
+			// todo investigate why resString is not equal to stringData
 			expect(resString).toBeDefined();
 			expect(Boolean(hexToNumber(resBool))).toBe(boolData);
+		});
+		it.each(Object.values(FMT_NUMBER))('getCode', async format => {
+			const code = await web3Eth.getCode(contract?.options?.address as string, undefined, {
+				number: format,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(code).toBeDefined();
+			expect(basicContractByteCode.slice(-100)).toBe(code.slice(-100));
+		});
+
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending';
+				hydrated: boolean;
+				format: string;
+			}>({
+				block: ['earliest', 'latest', 'pending'],
+				hydrated: [true, false],
+				format: Object.values(FMT_NUMBER),
+			}),
+		)('getCode', async ({ hydrated, block, format }) => {
+			const b = await web3Eth.getBlock(block, hydrated, {
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(b.hash?.length).toBe(66);
 		});
 	});
 });
