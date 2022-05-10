@@ -552,7 +552,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
 -  Exporting AbiCoder as coder (#4937)
--  Github build workflow updated min build for node.js 12 and tests for 12 and 16 (#5014)
+-  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
 
 ### Added
 - Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
