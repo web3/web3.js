@@ -16,26 +16,28 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
-// eslint-disable-next-line import/no-relative-packages
-import { accounts, clientUrl } from '../../../../.github/test.config';
+import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('clone', () => {
 		let contract: Contract<typeof greeterContractAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
+		let accounts: string[];
 
-		beforeEach(() => {
+		beforeEach(async () => {
 			contract = new Contract(greeterContractAbi, undefined, {
-				provider: clientUrl,
+				provider: getSystemTestProvider(),
 			});
+
+			accounts = await getSystemTestAccounts();
 
 			deployOptions = {
 				data: greeterByteCode,
 				arguments: ['My Greeting'],
 			};
 
-			sendOptions = { from: accounts[0].address, gas: '1000000' };
+			sendOptions = { from: accounts[0], gas: '1000000' };
 		});
 
 		it('should clone the contract but with same address', async () => {

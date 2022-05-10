@@ -15,13 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Error } from '../../src/errors';
-import { ConvertValueToString } from '../fixtures/errors';
+import { ERR_SIGNATURE_FAILED } from '../error_codes';
+import { Web3Error } from '../web3_error_base';
 
-describe('Errors', () => {
-	describe('value toString', () => {
-		it.each(ConvertValueToString)('%s', (input, output) => {
-			expect(Web3Error.convertToString(input, true)).toEqual(output);
-		});
-	});
-});
+export class SignerError extends Web3Error {
+	public code = ERR_SIGNATURE_FAILED;
+	public constructor(errorDetails: string) {
+		super(`Invalid signature. "${errorDetails}"`);
+	}
+}
