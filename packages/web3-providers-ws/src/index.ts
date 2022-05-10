@@ -71,6 +71,7 @@ export default class WebSocketProvider<
 		clientUrl: string,
 		wsProviderOptions?: ClientOptions | ClientRequestArgs,
 		reconnectOptions?: ReconnectOptions,
+		autoConnect?: boolean,
 	) {
 		super();
 		if (!WebSocketProvider._validateProviderUrl(clientUrl))
@@ -98,7 +99,9 @@ export default class WebSocketProvider<
 		this._onCloseHandler = this._onClose.bind(this);
 
 		this._init();
-		this.connect();
+		if(autoConnect!==false){
+			this.connect();
+		}
 	}
 
 	private static _validateProviderUrl(providerUrl: string): boolean {
@@ -185,6 +188,7 @@ export default class WebSocketProvider<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponse<ResponseType>> {
+		this.connect();
 		if (this._webSocketConnection === undefined)
 			throw new Web3WSProviderError('WebSocket connection is undefined');
 
