@@ -29,6 +29,8 @@ if [[ ! " ${SUPPORTED_ENGINES[*]} " =~ " ${ENGINE} " ]]; then
 	helpFunction
 fi
 
+echo "$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
+echo $BACKEND
 export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
