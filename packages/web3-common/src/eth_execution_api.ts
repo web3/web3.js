@@ -28,6 +28,7 @@ import {
 	Topic,
 	Filter,
 } from 'web3-utils';
+import { BlockNumberOrTag } from 'web3-validator';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
@@ -209,9 +210,6 @@ export interface CompileResult {
 		};
 	};
 }
-
-export type BlockTag = 'earliest' | 'latest' | 'pending';
-export type BlockNumberOrTag = HexString | BlockTag;
 
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {

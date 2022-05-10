@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { BlockNumberOrTag, TransactionWithSender, TransactionCall } from 'web3-common';
+import { TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
@@ -26,7 +26,7 @@ import {
 	Filter,
 	HexString8Bytes,
 } from 'web3-utils';
-import { validator } from 'web3-validator';
+import { BlockNumberOrTag, validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
