@@ -31,12 +31,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
 
-import { getUncleCountByBlockHash } from '../../../src/rpc_methods';
-import { testData } from './fixtures/get_uncle_count_by_block_hash';
+import { sendTransaction } from '../../../src/rpc_methods';
+import { testData } from './fixtures/send_transaction';
 
 jest.mock('web3-validator');
 
-describe('getUncleCountByBlockHash', () => {
+describe('sendTransaction', () => {
 	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
@@ -47,22 +47,23 @@ describe('getUncleCountByBlockHash', () => {
 	});
 
 	it.each(testData)(
-		'should call requestManager.send with getUncleCountByBlockHash method and expect parameters\n Title: %s\n Input parameters: %s',
+		'should call requestManager.send with sendTransaction method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await getUncleCountByBlockHash(requestManager, ...inputParameters);
+			await sendTransaction(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'eth_getUncleCountByBlockHash',
+				method: 'eth_sendTransaction',
 				params: inputParameters,
 			});
 		},
 	);
 
-	it.each(testData)(
+	// TODO Validation for sendTransaction method not implemented
+	it.skip.each(testData)(
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getUncleCountByBlockHash(requestManager, ...inputParameters);
-			expect(validatorSpy).toHaveBeenCalledWith(['bytes32'], inputParameters);
+			await sendTransaction(requestManager, ...inputParameters);
+			expect(validatorSpy).toHaveBeenCalledWith([''], inputParameters);
 		},
 	);
 });

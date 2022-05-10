@@ -23,6 +23,4 @@ import { Uint } from 'web3-utils';
  *     - filterIdentifier
  */
 type TestData = [string, [Uint]];
-export const testData: TestData[] = [
-	['filterIdentifier = "0x4b7"', ['0x4b7']],
-];
+export const testData: TestData[] = [['filterIdentifier = "0x4b7"', ['0x4b7']]];

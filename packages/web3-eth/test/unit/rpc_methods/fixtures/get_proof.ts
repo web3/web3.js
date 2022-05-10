@@ -14,13 +14,22 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Uint } from 'web3-utils';
+import { Address, HexString32Bytes, Uint } from 'web3-utils';
+
+const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
 
 /**
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - filterIdentifier
+ *     - address
+ *     - storageKey
+ *     - blockNumber
  */
-type TestData = [string, [Uint]];
-export const testData: TestData[] = [['filterIdentifier = "0x4b7"', ['0x4b7']]];
+type TestData = [string, [Address, HexString32Bytes, Uint]];
+export const testData: TestData[] = [
+	[
+		'address = "0x407d73d8a49eeb85d32cf465507dd71d507100c1", storageKey = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b", blockNumber = "0x88"',
+		[address, '0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b', '0x88'],
+	],
+];
