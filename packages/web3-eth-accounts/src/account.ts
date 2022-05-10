@@ -244,7 +244,7 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 
 	const publicKey = getPublicKey(stringPrivateKeyNoPrefix);
 
-	const publicKeyString = `0x${publicKey.slice(2).toString()}`;
+	const publicKeyString = `0x${publicKey.slice(2)}`;
 	const publicHash = sha3Raw(publicKeyString);
 	const publicHashHex = bytesToHex(publicHash);
 	return toChecksumAddress(publicHashHex.slice(-40)); // To get the address, take the last 20 bytes of the public hash
