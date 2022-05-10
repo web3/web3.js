@@ -548,10 +548,12 @@ Released with 1.0.0-beta.37 code base.
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix resolve type of getBlock function (#4911)
+-  Fix resolve issue with to low priority fee on polygon (#4857)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
 -  Exporting AbiCoder as coder (#4937)
+-  `web3-core-method._handleTxPricing` uses now `eth_feeHistory` for priority fee calculation on EIP-1559 compatible chains (#5018)
 
 ### Added
 - Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
