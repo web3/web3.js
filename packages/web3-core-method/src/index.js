@@ -861,6 +861,18 @@ function _handleTxPricing(method, tx) {
                 call: 'eth_gasPrice',
                 params: 0
             })).createFunction(method.requestManager);
+            var getFeeHistory = new Method({
+                name: "getFeeHistory",
+                call: "eth_feeHistory",
+                params: 3,
+                inputFormatter: [
+                    utils.numberToHex,
+                    function (blockNumber) {
+                        return blockNumber ? utils.toHex(blockNumber) : "latest";
+                    },
+                    null,
+                ],
+            }).createFunction(method.requestManager);
 
             Promise.all([
                 getBlockByNumber(),
@@ -883,7 +895,13 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
-                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
+                        const feeHistory = await getFeeHistory(1);
+                        const [baseFee] = feeHistory.baseFeePerGas;
+                        const priorityFee = utils.numberToHex(
+                            utils.hexToNumber(gasPrice) - utils.hexToNumber(baseFee)
+                        );
+
+                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || priorityFee || '0x9502F900'; // 2.5 Gwei
                         maxFeePerGas = tx.maxFeePerGas ||
                             utils.toHex(
                                 utils.toBN(block.baseFeePerGas)
