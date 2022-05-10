@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, BlockTags } from 'web3-utils';
 import { BlockNumberOrTag } from 'web3-common';
+import { Address, BlockTags, Uint256 } from 'web3-utils';
 
-export const mockRpcResponse = '0xe8d4a51000';
+export const mockRpcResponse = '0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234';
 
 const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
 
@@ -26,12 +26,20 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  * - Test title
  * - Input parameters:
  *     - address
+ *     - storageSlot
  *     - blockNumber
  */
-type TestData = [string, [Address, BlockNumberOrTag]];
+type TestData = [string, [Address, Uint256, BlockNumberOrTag]];
 export const testData: TestData[] = [
-	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
-	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],
-	['blockNumber = BlockTags.PENDING', [address, BlockTags.PENDING]],
-	['blockNumber = "0x4b7"', [address, '0x4b7']],
+	// Testing blockNumber cases
+	['storageSlot = "0x4b7", blockNumber = BlockTags.LATEST', [address, '0x4b7', BlockTags.LATEST]],
+	[
+		'storageSlot = "0x4b7", blockNumber = BlockTags.EARLIEST',
+		[address, '0x4b7', BlockTags.EARLIEST],
+	],
+	[
+		'storageSlot = "0x4b7", blockNumber = BlockTags.PENDING',
+		[address, '0x4b7', BlockTags.PENDING],
+	],
+	['storageSlot = "0x4b7", blockNumber = "0x4b7"', [address, '0x4b7', '0x4b7']],
 ];

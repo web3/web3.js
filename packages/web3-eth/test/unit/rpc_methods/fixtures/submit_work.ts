@@ -14,24 +14,20 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, BlockTags } from 'web3-utils';
-import { BlockNumberOrTag } from 'web3-common';
-
-export const mockRpcResponse = '0xe8d4a51000';
-
-const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
+import { HexString32Bytes, HexString8Bytes } from 'web3-utils';
 
 /**
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - address
- *     - blockNumber
+ *     - nonce
+ *     - hash
+ *     - digest
  */
-type TestData = [string, [Address, BlockNumberOrTag]];
+type TestData = [string, [HexString8Bytes, HexString32Bytes, HexString32Bytes]];
 export const testData: TestData[] = [
-	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
-	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],
-	['blockNumber = BlockTags.PENDING', [address, BlockTags.PENDING]],
-	['blockNumber = "0x4b7"', [address, '0x4b7']],
+	[
+		'nonce = "0x0000000000000001", hash = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef", digest = "0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000"',
+		['0x0000000000000001', '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef', '0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000'],
+	],
 ];

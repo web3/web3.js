@@ -16,9 +16,9 @@
 // */
 import { Web3RequestManager } from 'web3-core';
 
-import { getSyncing } from '../../../src/rpc_methods';
+import { getCompilers } from '../../../src/rpc_methods';
 
-describe('getSyncing', () => {
+describe('getCompilers', () => {
 	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
@@ -28,10 +28,10 @@ describe('getSyncing', () => {
 		requestManager.send = requestManagerSendSpy;
 	});
 
-	it('should call requestManager.send with getSyncing method', async () => {
-		await getSyncing(requestManager);
+	it('should call requestManager.send with getCompilers method', async () => {
+		await getCompilers(requestManager);
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
-			method: 'eth_syncing',
+			method: 'eth_getCompilers',
 			params: [],
 		});
 	});

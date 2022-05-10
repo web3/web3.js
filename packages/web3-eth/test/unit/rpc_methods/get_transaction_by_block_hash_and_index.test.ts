@@ -17,12 +17,12 @@
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
 
-import { getBalance } from '../../../src/rpc_methods';
-import { testData } from './fixtures/get_balance';
+import { getTransactionByBlockHashAndIndex } from '../../../src/rpc_methods';
+import { testData } from './fixtures/get_transaction_by_block_hash_and_index';
 
 jest.mock('web3-validator');
 
-describe('getBalance', () => {
+describe('getTransactionByBlockHashAndIndex', () => {
 	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
@@ -33,11 +33,11 @@ describe('getBalance', () => {
 	});
 
 	it.each(testData)(
-		'should call requestManager.send with getBalance method and expect parameters\n Title: %s\n Input parameters: %s\n',
+		'should call requestManager.send with getTransactionByBlockHashAndIndex method and expect parameters\n Title: %s\n Input parameters: %s\n',
 		async (_, inputParameters) => {
-			await getBalance(requestManager, ...inputParameters);
+			await getTransactionByBlockHashAndIndex(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'eth_getBalance',
+				method: 'eth_getTransactionByBlockHashAndIndex',
 				params: inputParameters,
 			});
 		},
@@ -47,11 +47,8 @@ describe('getBalance', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s\n',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getBalance(requestManager, ...inputParameters);
-			expect(validatorSpy).toHaveBeenCalledWith(
-				['address', 'blockNumberOrTag'],
-				inputParameters,
-			);
+			await getTransactionByBlockHashAndIndex(requestManager, ...inputParameters);
+			expect(validatorSpy).toHaveBeenCalledWith(['bytes32', 'hex'], inputParameters);
 		},
 	);
 });

@@ -14,24 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, BlockTags } from 'web3-utils';
 import { BlockNumberOrTag } from 'web3-common';
+import { BlockTags } from 'web3-utils';
 
-export const mockRpcResponse = '0xe8d4a51000';
-
-const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
+export const mockRpcResponse = '0xb';
 
 /**
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - address
  *     - blockNumber
  */
-type TestData = [string, [Address, BlockNumberOrTag]];
+type TestData = [string, [BlockNumberOrTag, boolean]];
 export const testData: TestData[] = [
-	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
-	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],
-	['blockNumber = BlockTags.PENDING', [address, BlockTags.PENDING]],
-	['blockNumber = "0x4b7"', [address, '0x4b7']],
+	[
+		'blockNumber = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"',
+		['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', true],
+	],
+	['blockNumber = BlockTags.LATEST', [BlockTags.LATEST, true]],
+	['blockNumber = BlockTags.EARLIEST', [BlockTags.EARLIEST, true]],
+	['blockNumber = BlockTags.PENDING', [BlockTags.PENDING, true]],
+	['blockNumber = "0x4b7"', ['0x4b7', true]],
 ];

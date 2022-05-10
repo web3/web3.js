@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, BlockTags } from 'web3-utils';
 import { BlockNumberOrTag } from 'web3-common';
+import { Address, BlockTags } from 'web3-utils';
 
-export const mockRpcResponse = '0xe8d4a51000';
+export const mockRpcResponse = '0xb';
 
 const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
 
@@ -25,13 +25,14 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - address
  *     - blockNumber
  */
 type TestData = [string, [Address, BlockNumberOrTag]];
 export const testData: TestData[] = [
+	// blockNumber = BlockTag
 	['blockNumber = BlockTags.LATEST', [address, BlockTags.LATEST]],
 	['blockNumber = BlockTags.EARLIEST', [address, BlockTags.EARLIEST]],
 	['blockNumber = BlockTags.PENDING', [address, BlockTags.PENDING]],
+	// blockNumber = Numbers
 	['blockNumber = "0x4b7"', [address, '0x4b7']],
 ];

@@ -15,10 +15,14 @@
 // along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
+import { validator } from 'web3-validator';
 
-import { getSyncing } from '../../../src/rpc_methods';
+import { getTransactionReceipt } from '../../../src/rpc_methods';
+import { testData } from './fixtures/get_transaction_receipt';
 
-describe('getSyncing', () => {
+jest.mock('web3-validator');
+
+describe('getTransactionReceipt', () => {
 	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
@@ -28,11 +32,23 @@ describe('getSyncing', () => {
 		requestManager.send = requestManagerSendSpy;
 	});
 
-	it('should call requestManager.send with getSyncing method', async () => {
-		await getSyncing(requestManager);
-		expect(requestManagerSendSpy).toHaveBeenCalledWith({
-			method: 'eth_syncing',
-			params: [],
-		});
-	});
+	it.each(testData)(
+		'should call requestManager.send with getTransactionReceipt method and expect parameters\n Title: %s\n Input parameters: %s\n',
+		async (_, inputParameters) => {
+			await getTransactionReceipt(requestManager, ...inputParameters);
+			expect(requestManagerSendSpy).toHaveBeenCalledWith({
+				method: 'eth_getTransactionReceipt',
+				params: inputParameters,
+			});
+		},
+	);
+
+	it.each(testData)(
+		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s\n',
+		async (_, inputParameters) => {
+			const validatorSpy = jest.spyOn(validator, 'validate');
+			await getTransactionReceipt(requestManager, ...inputParameters);
+			expect(validatorSpy).toHaveBeenCalledWith(['bytes32'], inputParameters);
+		},
+	);
 });

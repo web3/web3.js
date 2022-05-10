@@ -17,12 +17,12 @@
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
 
-import { getBalance } from '../../../src/rpc_methods';
-import { testData } from './fixtures/get_balance';
+import { getUncleCountByBlockNumber } from '../../../src/rpc_methods';
+import { testData } from './fixtures/get_uncle_count_by_block_number';
 
 jest.mock('web3-validator');
 
-describe('getBalance', () => {
+describe('getUncleCountByBlockNumber', () => {
 	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
@@ -33,11 +33,11 @@ describe('getBalance', () => {
 	});
 
 	it.each(testData)(
-		'should call requestManager.send with getBalance method and expect parameters\n Title: %s\n Input parameters: %s\n',
+		'should call requestManager.send with getUncleCountByBlockNumber method and expect parameters\n Title: %s\n Input parameters: %s\n',
 		async (_, inputParameters) => {
-			await getBalance(requestManager, ...inputParameters);
+			await getUncleCountByBlockNumber(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
-				method: 'eth_getBalance',
+				method: 'eth_getUncleCountByBlockNumber',
 				params: inputParameters,
 			});
 		},
@@ -47,11 +47,8 @@ describe('getBalance', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s\n',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getBalance(requestManager, ...inputParameters);
-			expect(validatorSpy).toHaveBeenCalledWith(
-				['address', 'blockNumberOrTag'],
-				inputParameters,
-			);
+			await getUncleCountByBlockNumber(requestManager, ...inputParameters);
+			expect(validatorSpy).toHaveBeenCalledWith(['blockNumberOrTag'], inputParameters);
 		},
 	);
 });

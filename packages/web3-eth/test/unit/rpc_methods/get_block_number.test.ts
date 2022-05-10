@@ -19,20 +19,20 @@ import { Web3RequestManager } from 'web3-core';
 import { getBlockNumber } from '../../../src/rpc_methods';
 
 describe('getBlockNumber', () => {
-    let requestManagerSendSpy: jest.Mock;
+	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
 	beforeAll(() => {
 		requestManager = new Web3RequestManager('http://127.0.0.1:8545');
-        requestManagerSendSpy = jest.fn();
-        requestManager.send = requestManagerSendSpy;
+		requestManagerSendSpy = jest.fn();
+		requestManager.send = requestManagerSendSpy;
 	});
 
 	it('should call requestManager.send with getBlockNumber method', async () => {
 		await getBlockNumber(requestManager);
-        expect(requestManagerSendSpy).toHaveBeenCalledWith({
-            method: 'eth_blockNumber',
-            params: [],
-        });
+		expect(requestManagerSendSpy).toHaveBeenCalledWith({
+			method: 'eth_blockNumber',
+			params: [],
+		});
 	});
 });

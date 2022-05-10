@@ -19,20 +19,20 @@ import { Web3RequestManager } from 'web3-core';
 import { getMining } from '../../../src/rpc_methods';
 
 describe('getMining', () => {
-    let requestManagerSendSpy: jest.Mock;
+	let requestManagerSendSpy: jest.Mock;
 	let requestManager: Web3RequestManager;
 
 	beforeAll(() => {
 		requestManager = new Web3RequestManager('http://127.0.0.1:8545');
-        requestManagerSendSpy = jest.fn();
-        requestManager.send = requestManagerSendSpy;
+		requestManagerSendSpy = jest.fn();
+		requestManager.send = requestManagerSendSpy;
 	});
 
 	it('should call requestManager.send with getMining method', async () => {
 		await getMining(requestManager);
-        expect(requestManagerSendSpy).toHaveBeenCalledWith({
-            method: 'eth_mining',
-            params: [],
-        });
+		expect(requestManagerSendSpy).toHaveBeenCalledWith({
+			method: 'eth_mining',
+			params: [],
+		});
 	});
 });
