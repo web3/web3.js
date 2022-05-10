@@ -2684,6 +2684,10 @@ var runTests = function(contractFactory) {
 
             provider.injectResult('0x45656456456456');
 
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_feeHistory')
+                assert.deepEqual(payload.params, ['0x1', 'latest', null])
+            })
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
