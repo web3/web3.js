@@ -25,7 +25,12 @@ export abstract class Web3Error extends Error {
 	public constructor(msg: string) {
 		super(msg);
 		this.name = this.constructor.name;
-		this.stack = Web3Error.createStack(this);
+
+		if (typeof Error.captureStackTrace === 'function') {
+			Error.captureStackTrace(this, new.target.constructor);
+		} else {
+			this.stack = new Error().stack;
+		}
 	}
 
 	public static convertToString(value: unknown, unquotValue = false) {
@@ -43,12 +48,6 @@ export abstract class Web3Error extends Error {
 
 	public toJSON() {
 		return { name: this.name, code: this.code, message: this.message };
-	}
-
-	public static createStack<T extends Error>(error: T): string | undefined {
-		return typeof Error.captureStackTrace === 'function'
-			? (Error.captureStackTrace(error, error.constructor) as string | undefined)
-			: new Error().stack;
 	}
 }
 
