@@ -42,7 +42,7 @@ describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implement
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 
-	describe.skip('httpProvider.request', () => {
+	describe('httpProvider.request', () => {
 		it('should return expected response', async () => {
 			const response: JsonRpcResponse = await httpProvider.request(jsonRpcPayload);
 			expect(Number((response as JsonRpcResponseWithResult).id)).toBeGreaterThan(0);
