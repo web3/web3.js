@@ -895,7 +895,7 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
-                        let maxPriorityFeePerGas =  tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
+                        maxPriorityFeePerGas =  tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
 
                         // if no priority fee is set in the tx try to get it from the rpc
                         if(maxPriorityFeePerGas === '0x9502F900') {
