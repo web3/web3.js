@@ -895,13 +895,16 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
-                        const feeHistory = await getFeeHistory(1);
-                        const [baseFee] = feeHistory.baseFeePerGas;
-                        const priorityFee = utils.numberToHex(
-                            utils.hexToNumber(gasPrice) - utils.hexToNumber(baseFee)
-                        );
+                        let maxPriorityFeePerGas =  tx.maxPriorityFeePerGas || '0x9502F900'; // 2.5 Gwei
 
-                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || priorityFee || '0x9502F900'; // 2.5 Gwei
+                        // if no priority fee is set in the tx try to get it from the rpc
+                        if(maxPriorityFeePerGas === '0x9502F900') {
+                            const feeHistory = await getFeeHistory(1);
+                            if(feeHistory && feeHistory.baseFeePerGas) {
+                                const [baseFee] = feeHistory.baseFeePerGas;
+                                maxPriorityFeePerGas = utils.numberToHex(utils.hexToNumber(gasPrice) - utils.hexToNumber(baseFee));
+                            }
+                        }
                         maxFeePerGas = tx.maxFeePerGas ||
                             utils.toHex(
                                 utils.toBN(block.baseFeePerGas)
