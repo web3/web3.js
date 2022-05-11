@@ -88,7 +88,8 @@ describe('contract', () => {
 			await contract.deploy(deployOptions).send(sendOptions);
 
 			// Wait for some fraction of time to trigger the handler
-			await sleep(100);
+			// On http we use polling to get confirmation, so wait a bit longer
+			await sleep(getSystemTestProvider().startsWith('ws') ? 500 : 2000);
 
 			expect(confirmationHandler).toHaveBeenCalled();
 		});
