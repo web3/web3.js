@@ -20,11 +20,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 export abstract class Web3Error extends Error {
 	public readonly name: string;
 	public abstract readonly code: number;
+	public stack: string | undefined;
 
 	public constructor(msg: string) {
 		super(msg);
 		this.name = this.constructor.name;
-		Error.captureStackTrace(this, Web3Error);
+
+		if (typeof Error.captureStackTrace === 'function') {
+			Error.captureStackTrace(this, new.target.constructor);
+		} else {
+			this.stack = new Error().stack;
+		}
 	}
 
 	public static convertToString(value: unknown, unquotValue = false) {
@@ -39,6 +45,7 @@ export abstract class Web3Error extends Error {
 			? result.replace(/['\\"]+/g, '')
 			: result;
 	}
+
 	public toJSON() {
 		return { name: this.name, code: this.code, message: this.message };
 	}
