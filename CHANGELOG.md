@@ -536,10 +536,9 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
--  fixed build issues of 1.7.2
+-  Fixed build issues of 1.7.2
 
 ## [Unreleased]
-- Improve npm script commands for development purposes (#4848)
 
 ## [1.7.4]
 
@@ -548,7 +547,12 @@ Released with 1.0.0-beta.37 code base.
 -  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
+-  Fix resolve type of getBlock function (#4911)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
--  exporting AbiCoder as coder (#4937)
+-  Exporting AbiCoder as coder (#4937)
+
+### Added
+- Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
+- Improve npm script commands for development purposes (#4848)
