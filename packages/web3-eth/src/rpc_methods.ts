@@ -464,10 +464,10 @@ export async function getLogs(requestManager: Web3RequestManager, filter: Filter
 	});
 }
 
-export async function getWork(requestManager: Web3RequestManager) {
+export async function getWork(filterId: number, requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_getWork',
-		params: [],
+		params: [filterId],
 	});
 }
 

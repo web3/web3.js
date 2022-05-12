@@ -268,8 +268,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethodsWrappers.getLogs(this, filter, returnFormat);
 	}
 
-	public async getWork() {
-		return rpcMethods.getWork(this.requestManager);
+	public async getWork(filterId: number) {
+		return rpcMethods.getWork(filterId, this.requestManager);
 	}
 
 	public async submitWork(

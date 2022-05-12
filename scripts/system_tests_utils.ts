@@ -22,6 +22,9 @@ import fetch from 'cross-fetch';
 import { EthPersonal } from 'web3-eth-personal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { create as createAccount } from 'web3-eth-accounts';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Eth } from 'web3-eth';
 
 let _accounts: string[] = [];
@@ -55,6 +58,21 @@ const accounts: {
 		privateKey: '0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3',
 	},
 ];
+
+export const createNewAccount = async (): Promise<{ address: string; privateKey: string }> => {
+	const acc = createAccount();
+	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
+	const web3Personal = new EthPersonal(clientUrl);
+	await web3Personal.importRawKey(acc.privateKey.substring(2), '123456');
+	await web3Personal.unlockAccount(acc.address, '123456', 500);
+	const web3Eth = new Web3Eth(clientUrl);
+	await web3Eth.sendTransaction({
+		from: await web3Eth.getCoinbase(),
+		to: accounts[0].address,
+		value: '100000000000000000000',
+	});
+	return { address: acc.address, privateKey: acc.privateKey };
+};
 
 export const getSystemTestAccounts = async (): Promise<string[]> => {
 	if (_accounts.length > 0) {

@@ -17,50 +17,31 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-common';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Contract } from 'web3-eth-contract';
+import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { hexToNumber } from 'web3-utils';
-import { Web3Eth } from '../../src';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { AbiEventFragment } from 'web3-eth-abi';
+import { ReceiptInfo, Web3Eth } from '../../src';
 
-import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestBackend,
+	getSystemTestProvider,
+	itIf,
+} from '../fixtures/system_test_utils';
 import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
+import { sendFewTxes } from './helper';
 
-const mapFormatToType = {
+const mapFormatToType: { [key: string]: string } = {
 	[FMT_NUMBER.NUMBER]: 'number',
 	[FMT_NUMBER.HEX]: 'string',
 	[FMT_NUMBER.STR]: 'string',
 	[FMT_NUMBER.BIGINT]: 'bigint',
 };
-/*
-{
-        block:['earliest', 'latest', 'pending'],
-        hydrated:[true,false]
-    }
- */
-
-// type Resolve = (value?: unknown) => void;
-//
-// type SendFewTxParams = {
-//     web3Eth: Web3Eth;
-//     to: string;
-//     from: string;
-//     value: string;
-// };
-// const sendTx = async ({ web3Eth, to, value, from }: SendFewTxParams) => {
-//         const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-//             to,
-//             value,
-//             from,
-//         });
-//         // eslint-disable-next-line no-await-in-loop
-//         await new Promise((resolve: Resolve) => {
-//             tx.on('receipt', (params: ReceiptInfo) => {
-//                 expect(params.status).toBe('0x1');
-//                 resolve();
-//             });
-//         });
-// };
-
+const eventAbi: AbiEventFragment = basicContractAbi.find((e: any) => {
+	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
+})! as AbiEventFragment;
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
@@ -99,23 +80,31 @@ describe('rpc', () => {
 			const version = await web3Eth.getProtocolVersion();
 			expect(parseInt(version, 16)).toBeGreaterThan(0);
 		});
+
 		it('isSyncing', async () => {
 			const isSyncing = await web3Eth.isSyncing();
 			expect(isSyncing).toBe(false);
 		});
+
 		it('getCoinbase', async () => {
 			const coinbase = await web3Eth.getCoinbase();
 			expect(coinbase.startsWith('0x')).toBe(true);
 			expect(coinbase).toHaveLength(42);
 		});
+
 		it('isMining', async () => {
 			const isMining = await web3Eth.isMining();
 			expect(isMining).toBe(true);
 		});
+
 		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
-			const hashRate = await web3Eth.getHashRate({ number: format, bytes: FMT_BYTES.HEX });
-			expect(typeof hashRate).toBe(mapFormatToType[format]);
+			const hashRate = await web3Eth.getHashRate({
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
 		});
+
 		it('getAccounts', async () => {
 			const accList = await web3Eth.getAccounts();
 			expect(accounts).toHaveLength(accList.length);
@@ -123,27 +112,36 @@ describe('rpc', () => {
 				expect(accounts).toContain(acc);
 			}
 		});
-		describe.each(['getBlockNumber', 'getGasPrice'])(
-			'check method with format',
-			(methodName: string) => {
-				it.each(Object.values(FMT_NUMBER))(`check method ${methodName}`, async format => {
-					// @ts-expect-error call any method
-					// eslint-disable-next-line
-					const res = await web3Eth[methodName]({ number: format, bytes: FMT_BYTES.HEX });
-					expect(typeof res).toBe(mapFormatToType[format]);
-					expect(parseInt(String(res), 16)).toBeGreaterThan(0);
+
+		it.each(
+			toAllVariants<{
+				method: 'getBlockNumber' | 'getGasPrice';
+				format: FMT_NUMBER[keyof FMT_NUMBER];
+			}>({
+				method: ['getBlockNumber', 'getGasPrice'],
+				format: Object.values(FMT_NUMBER),
+			}),
+		)(
+			`check method list of methods: getBlockNumber,getBlockNumber`,
+			async ({ format, method }) => {
+				const res = await web3Eth[method]({
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
 				});
+				expect(typeof res).toBe(mapFormatToType[format as string]);
+				expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 			},
 		);
 
 		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			const res = await web3Eth.getBalance(accounts[0], undefined, {
-				number: format,
+				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
-			expect(typeof res).toBe(mapFormatToType[format]);
+			expect(typeof res).toBe(mapFormatToType[format as string]);
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
+
 		it('getStorageAt', async () => {
 			const numberData = 10;
 			const stringData = 'str';
@@ -182,9 +180,10 @@ describe('rpc', () => {
 			expect(resString).toBeDefined();
 			expect(Boolean(hexToNumber(resBool))).toBe(boolData);
 		});
+
 		it.each(Object.values(FMT_NUMBER))('getCode', async format => {
 			const code = await web3Eth.getCode(contract?.options?.address as string, undefined, {
-				number: format,
+				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
 			expect(code).toBeDefined();
@@ -207,6 +206,197 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			expect(b.hash?.length).toBe(66);
+		});
+
+		it('getTransactionCount', async () => {
+			const countBefore = await web3Eth.getTransactionCount(accounts[0], 'latest', {
+				number: FMT_NUMBER.NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+
+			await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 3,
+			});
+
+			const countAfter = await web3Eth.getTransactionCount(accounts[0], 'latest', {
+				number: FMT_NUMBER.NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(countAfter - countBefore).toBe(3);
+		});
+
+		it('getBlockTransactionCount', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getBlockTransactionCount(
+				(receipt as ReceiptInfo).blockHash as string,
+			);
+			expect(res).toBe('0x1');
+		});
+
+		it('getBlockUncleCount', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getBlockUncleCount(
+				(receipt as ReceiptInfo).blockHash as string,
+			);
+			// todo create uncle block somehow
+			expect(res).toBe('0x0');
+		});
+
+		it('getUncle', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getUncle((receipt as ReceiptInfo).blockHash as string, 0);
+			// todo create uncle block somehow
+			expect(res).toBeNull();
+		});
+
+		it('getTransaction', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getTransaction((receipt as ReceiptInfo).transactionHash);
+			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
+		});
+
+		itIf(getSystemTestBackend() === 'geth')('getPendingTransactions', async () => {
+			const pr = sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getPendingTransactions();
+			await pr;
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(res).toBeDefined();
+		});
+
+		it('getTransactionFromBlock', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getTransactionFromBlock(
+				(receipt as ReceiptInfo).blockHash as string,
+				0,
+			);
+			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
+		});
+		it('getTransactionReceipt', async () => {
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: accounts[0],
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+
+			const res = await web3Eth.getTransactionReceipt(
+				(receipt as ReceiptInfo).transactionHash as string,
+			);
+			expect(res?.transactionHash).toBe((receipt as ReceiptInfo).transactionHash);
+		});
+
+		it('getChainId', async () => {
+			const res = await web3Eth.getChainId({
+				number: FMT_NUMBER.NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(res).toBeGreaterThan(0);
+		});
+
+		it('getNodeInfo', async () => {
+			const res = await web3Eth.getNodeInfo();
+			expect(res).toBeDefined();
+		});
+
+		it('getWork', async () => {
+			const res = await web3Eth.getWork(0);
+			expect(res).toEqual([]);
+		});
+
+		itIf(getSystemTestBackend() === 'geth')('requestAccounts', async () => {
+			const res = await web3Eth.requestAccounts();
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(res[0]).toEqual(accounts[0]);
+		});
+
+		// eslint-disable-next-line jest/no-standalone-expect
+		itIf(getSystemTestBackend() === 'geth')('getProof', async () => {
+			const numberData = 10;
+			const stringData = 'str';
+			const boolData = true;
+			const sendRes = await contract.methods
+				?.setValues(numberData, stringData, boolData)
+				.send(sendOptions);
+			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined, {
+				number: FMT_NUMBER.BIGINT,
+				bytes: FMT_BYTES.HEX,
+			});
+			const res = await web3Eth.getProof(
+				contract.options.address as string,
+				'0x0000000000000000000000000000000000000000000000000000000000000001',
+				sendRes?.blockNumber,
+			);
+			// todo add prove data check
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(res.storageProof).toBeDefined();
+		});
+
+		it('getPastLogs', async () => {
+			const listOfStrings = ['t1', 't2', 't3'];
+			const prs = [];
+			for (const l of listOfStrings) {
+				prs.push(contract.methods?.firesStringEvent(l).send(sendOptions));
+			}
+			const resTx = await Promise.all(prs);
+			const res: Array<any> = await web3Eth.getPastLogs({
+				address: contract.options.address as string,
+				fromBlock: (resTx[0] as ReceiptInfo).blockNumber,
+			});
+			const results = res.map(
+				r =>
+					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r)
+						.returnValue[0],
+			);
+			expect(results).toContain(listOfStrings[0]);
+			expect(results).toContain(listOfStrings[1]);
+			expect(results).toContain(listOfStrings[2]);
 		});
 	});
 });
