@@ -83,6 +83,5 @@
 		"utf-8-validate": "^5.0.9",
 		"webpack": "^5.72.0"
 	},
-	"packageManager": "yarn@1.22.15",
-	"dependencies": {}
+	"packageManager": "yarn@1.22.15"
 }
