@@ -28,7 +28,14 @@ import {
 	ReceiptInfo,
 } from 'web3-common';
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { call, estimateGas, getLogs, sendTransaction, SendTransactionEvents } from 'web3-eth';
+import {
+	call,
+	estimateGas,
+	getLogs,
+	sendTransaction,
+	SendTransactionEvents,
+	NewHeadsSubscription,
+} from 'web3-eth';
 import {
 	AbiEventFragment,
 	AbiFunctionFragment,
@@ -109,7 +116,14 @@ export type ContractEventEmitterInterface<
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
 export class Contract<Abi extends ContractAbi>
-	extends Web3Context<EthExecutionAPI, { logs: typeof LogsSubscription }>
+	extends Web3Context<
+		EthExecutionAPI,
+		{
+			logs: typeof LogsSubscription;
+			newHeads: typeof NewHeadsSubscription;
+			newBlockHeaders: typeof NewHeadsSubscription;
+		}
+	>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
 	public readonly options: ContractOptions;
@@ -134,13 +148,26 @@ export class Contract<Abi extends ContractAbi>
 		jsonInterface: Abi,
 		address?: Address,
 		options?: ContractInitOptions,
-		context?: Partial<Web3ContextObject<EthExecutionAPI, { logs: typeof LogsSubscription }>>,
+		context?: Partial<
+			Web3ContextObject<
+				EthExecutionAPI,
+				{
+					logs: typeof LogsSubscription;
+					newHeads: typeof NewHeadsSubscription;
+					newBlockHeaders: typeof NewHeadsSubscription;
+				}
+			>
+		>,
 	) {
 		super({
 			...context,
 			// Pass an empty string to avoid type issue. Error will be thrown from underlying validation
 			provider: options?.provider ?? context?.provider ?? Contract.givenProvider ?? '',
-			registeredSubscriptions: { logs: LogsSubscription },
+			registeredSubscriptions: {
+				logs: LogsSubscription,
+				newHeads: NewHeadsSubscription,
+				newBlockHeaders: NewHeadsSubscription,
+			},
 		});
 
 		this._parseAndSetAddress(address);
