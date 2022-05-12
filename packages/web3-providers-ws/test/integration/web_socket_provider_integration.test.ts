@@ -191,15 +191,21 @@ describeIf(getSystemTestProvider().includes('ws'))(
 						deferredPromise: defPromise,
 					};
 
-					webSocketProvider['_requestQueue'].set(jsonRpcPayload.id as JsonRpcId, reqItem);
-					expect(webSocketProvider['_requestQueue'].size).toBe(1);
+					webSocketProvider['_pendingRequestsQueue'].set(
+						jsonRpcPayload.id as JsonRpcId,
+						reqItem,
+					);
+					expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(1);
 
-					webSocketProvider['_sentQueue'].set(jsonRpcPayload.id as JsonRpcId, reqItem);
-					expect(webSocketProvider['_sentQueue'].size).toBe(1);
+					webSocketProvider['_sentRequestsQueue'].set(
+						jsonRpcPayload.id as JsonRpcId,
+						reqItem,
+					);
+					expect(webSocketProvider['_sentRequestsQueue'].size).toBe(1);
 
 					webSocketProvider.reset();
-					expect(webSocketProvider['_requestQueue'].size).toBe(0);
-					expect(webSocketProvider['_sentQueue'].size).toBe(0);
+					expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(0);
+					expect(webSocketProvider['_sentRequestsQueue'].size).toBe(0);
 				});
 			});
 
