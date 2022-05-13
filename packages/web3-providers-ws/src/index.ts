@@ -80,14 +80,14 @@ export default class WebSocketProvider<
 		this._clientUrl = clientUrl;
 		this._wsProviderOptions = wsProviderOptions;
 
-		const DEFAULT_RECON_WS_PROVIDER_OPTIONS = {
+		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
 			autoReconnect: true,
 			delay: 5000,
 			maxAttempts: 5,
 		};
 
 		this._reconnectOptions = {
-			...DEFAULT_RECON_WS_PROVIDER_OPTIONS,
+			...DEFAULT_PROVIDER_RECONNECTION_OPTIONS,
 			...reconnectOptions,
 		};
 

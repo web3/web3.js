@@ -31,7 +31,6 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Server } from 'http';
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
-// import { Web3WSProviderError } from '../../src/errors';
 import { WSRequestItem, OnCloseEvent } from '../../src/types';
 
 import {
@@ -144,7 +143,6 @@ describeIf(getSystemTestProvider().includes('ws'))(
 
 				it('should subscribe on close', done => {
 					const code = 1001;
-					// const provider = new WebSocketProvider(clientWsUrl);
 					webSocketProvider.on(
 						'close',
 						(err: Error | null, event: OnCloseEvent | null | undefined) => {
