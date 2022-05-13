@@ -68,7 +68,7 @@ describe('personal integration tests', () => {
 			jsonrpc: '2.0',
 			error: { code: 101, message: 'could not decrypt key with given password' },
 		};
-		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow(
+		await expect(ethPersonal.sendTransaction(tx, '123')).rejects.toThrow(
 			new InvalidResponseError(errorResponse),
 		);
 	});
