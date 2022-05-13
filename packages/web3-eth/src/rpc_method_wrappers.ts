@@ -467,7 +467,9 @@ export function sendTransaction<
 						returnFormat,
 					);
 
-					promiEvent.emit('receipt', transactionReceiptFormatted as ReceiptInfo);
+					if (promiEvent.listenerCount('receipt') > 0) {
+						promiEvent.emit('receipt', transactionReceiptFormatted as ReceiptInfo);
+					}
 
 					if (options?.transactionResolver) {
 						resolve(
@@ -539,8 +541,13 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 					returnFormat,
 				);
 
-				promiEvent.emit('sent', signedTransactionFormatted);
-				promiEvent.emit('transactionHash', transactionHashFormatted);
+				if (promiEvent.listenerCount('sent') > 0) {
+					promiEvent.emit('sent', signedTransactionFormatted);
+				}
+
+				if (promiEvent.listenerCount('transactionHash') > 0) {
+					promiEvent.emit('transactionHash', transactionHashFormatted);
+				}
 
 				let transactionReceipt = await getTransactionReceipt(
 					web3Context,
@@ -562,7 +569,10 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 					returnFormat,
 				);
 
-				promiEvent.emit('receipt', transactionReceiptFormatted);
+				if (promiEvent.listenerCount('receipt') > 0) {
+					promiEvent.emit('receipt', transactionReceiptFormatted);
+				}
+
 				resolve(transactionReceiptFormatted);
 
 				watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat>(

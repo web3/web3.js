@@ -26,9 +26,6 @@ jobs:
     name: lint
     needs: build
     runs-on: ubuntu-latest
-    env:
-      TEST: "build_and_lint"
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps: 
       - uses: actions/checkout@v3    
       - uses: actions/setup-node@v3

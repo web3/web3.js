@@ -79,6 +79,7 @@ export const ERR_CONN_NOT_OPEN = 503;
 export const ERR_CONN_CLOSE = 504;
 export const ERR_CONN_MAX_ATTEMPTS = 505;
 export const ERR_CONN_PENDING_REQUESTS = 506;
+export const ERR_REQ_ALREADY_SENT = 507;
 
 // Provider error codes
 export const ERR_PROVIDER = 600;
