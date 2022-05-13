@@ -22,7 +22,7 @@ export const mockRpcResponse = '0xb';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - blockNumber
+ *     - blockHash
  */
 type TestData = [string, [HexString32Bytes]];
 export const testData: TestData[] = [

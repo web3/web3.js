@@ -21,7 +21,7 @@ import { Filter } from 'web3-utils';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - code
+ *     - filter
  */
 type TestData = [string, [Filter]];
 export const testData: TestData[] = [

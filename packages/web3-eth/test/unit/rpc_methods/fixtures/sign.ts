@@ -24,7 +24,10 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - blockNumber
+ *     - address
+ *     - message
  */
 type TestData = [string, [Address, HexStringBytes]];
-export const testData: TestData[] = [['blockNumber = "0x4b7"', [address, '0x4b7']]];
+export const testData: TestData[] = [
+	[`address = ${address}, message = "0x4b7"`, [address, '0x4b7']],
+];

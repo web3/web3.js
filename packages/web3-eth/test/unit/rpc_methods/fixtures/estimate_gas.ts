@@ -14,8 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag, TransactionWithSender } from 'web3-common';
+import { TransactionWithSender } from 'web3-common';
 import { BlockTags } from 'web3-utils';
+import { BlockNumberOrTag } from 'web3-validator';
 
 export const mockRpcResponse = '0x5208';
 

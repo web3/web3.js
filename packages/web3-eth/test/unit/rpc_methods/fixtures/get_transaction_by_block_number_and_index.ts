@@ -22,6 +22,7 @@ import { BlockTags, Uint } from 'web3-utils';
  * - Test title
  * - Input parameters:
  *     - blockNumber
+ *     - transactionIndex
  */
 type TestData = [string, [BlockNumberOrTag, Uint]];
 export const testData: TestData[] = [

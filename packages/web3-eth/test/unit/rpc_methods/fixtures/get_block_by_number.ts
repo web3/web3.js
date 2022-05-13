@@ -24,6 +24,7 @@ export const mockRpcResponse = '0xb';
  * - Test title
  * - Input parameters:
  *     - blockNumber
+ *     - hydrated
  */
 type TestData = [string, [BlockNumberOrTag, boolean]];
 export const testData: TestData[] = [

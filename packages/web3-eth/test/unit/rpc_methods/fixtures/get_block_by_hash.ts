@@ -23,6 +23,7 @@ export const mockRpcResponse = '0xb';
  * - Test title
  * - Input parameters:
  *     - blockNumber
+ *     - hydrated
  */
 type TestData = [string, [HexString32Bytes, boolean]];
 export const testData: TestData[] = [

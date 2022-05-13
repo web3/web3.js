@@ -35,7 +35,6 @@ const transaction: Partial<TransactionWithSender> = {
  * - Test title
  * - Input parameters:
  * 	   - transaction
- *     - blockNumber
  */
 type TestData = [string, [TransactionWithSender | Partial<TransactionWithSender>]];
 export const testData: TestData[] = [[`${JSON.stringify(transaction)}`, [transaction]]];

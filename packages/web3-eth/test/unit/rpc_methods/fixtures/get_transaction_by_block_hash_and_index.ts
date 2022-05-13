@@ -21,6 +21,7 @@ import { HexString32Bytes, Uint } from 'web3-utils';
  * - Test title
  * - Input parameters:
  *     - transactionHash
+ *     - transactionIndex
  */
 type TestData = [string, [HexString32Bytes, Uint]];
 export const testData: TestData[] = [

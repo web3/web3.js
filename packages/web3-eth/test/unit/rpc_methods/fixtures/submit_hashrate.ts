@@ -20,13 +20,13 @@ import { HexString32Bytes } from 'web3-utils';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - hashrate
+ *     - hashRate
  *     - id
  */
 type TestData = [string, [HexString32Bytes, HexString32Bytes]];
 export const testData: TestData[] = [
 	[
-		'hashrate = "0x0000000000000000000000000000000000000000000000000000000000500000", id = "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c"',
+		'hashRate = "0x0000000000000000000000000000000000000000000000000000000000500000", id = "0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c"',
 		[
 			'0x0000000000000000000000000000000000000000000000000000000000500000',
 			'0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c',

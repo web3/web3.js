@@ -22,12 +22,12 @@ export const mockRpcResponse = '0xb';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - blockNumber
+ *     - blockHash
  */
 type TestData = [string, [BlockNumberOrTag]];
 export const testData: TestData[] = [
 	[
-		'blockNumber = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b"',
+		'blockHash = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b"',
 		['0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b'],
 	],
 ];

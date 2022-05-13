@@ -22,16 +22,17 @@ export const mockRpcResponse = '0xb';
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - blockNumber
+ *     - blockHash
+ *     - uncleIndex
  */
 type TestData = [string, [HexString32Bytes, Uint]];
 export const testData: TestData[] = [
 	[
-		'blockNumber = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b", hydrated = true',
+		'blockHash = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b", uncleIndex = "0x88"',
 		['0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b', '0x88'],
 	],
 	[
-		'blockNumber = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b", hydrated = false',
+		'blockHash = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b", uncleIndex = "0x88"',
 		['0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b', '0x88'],
 	],
 ];
