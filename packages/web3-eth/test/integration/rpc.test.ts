@@ -18,7 +18,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-common';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber, numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { ReceiptInfo, Web3Eth } from '../../src';
@@ -226,7 +226,7 @@ describe('rpc', () => {
 				number: FMT_NUMBER.NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
-			expect(countAfter - countBefore).toBe(3);
+			expect(Number(countAfter) - Number(countBefore)).toBe(3);
 		});
 
 		it('getBlockTransactionCount', async () => {
@@ -256,7 +256,6 @@ describe('rpc', () => {
 			const res = await web3Eth.getBlockUncleCount(
 				(receipt as ReceiptInfo).blockHash as string,
 			);
-			// todo create uncle block somehow
 			expect(res).toBe('0x0');
 		});
 
@@ -270,7 +269,6 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getUncle((receipt as ReceiptInfo).blockHash as string, 0);
-			// todo create uncle block somehow
 			expect(res).toBeNull();
 		});
 
@@ -287,7 +285,7 @@ describe('rpc', () => {
 			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
 		});
 
-		itIf(getSystemTestBackend() === 'geth')('getPendingTransactions', async () => {
+		itIf(getSystemTestBackend() !== 'ganache')('getPendingTransactions', async () => {
 			const pr = sendFewTxes({
 				web3Eth,
 				from: accounts[0],
@@ -317,6 +315,7 @@ describe('rpc', () => {
 			);
 			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
 		});
+
 		it('getTransactionReceipt', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
@@ -345,19 +344,19 @@ describe('rpc', () => {
 			expect(res).toBeDefined();
 		});
 
-		it('getWork', async () => {
-			const res = await web3Eth.getWork(0);
+		itIf(getSystemTestBackend() !== 'ganache')('getWork', async () => {
+			const res = await web3Eth.getWork();
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res).toEqual([]);
 		});
 
-		itIf(getSystemTestBackend() === 'geth')('requestAccounts', async () => {
+		itIf(getSystemTestBackend() !== 'ganache')('requestAccounts', async () => {
 			const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res[0]).toEqual(accounts[0]);
 		});
 
-		// eslint-disable-next-line jest/no-standalone-expect
-		itIf(getSystemTestBackend() === 'geth')('getProof', async () => {
+		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
 			const numberData = 10;
 			const stringData = 'str';
 			const boolData = true;
@@ -387,16 +386,18 @@ describe('rpc', () => {
 			const resTx = await Promise.all(prs);
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contract.options.address as string,
-				fromBlock: (resTx[0] as ReceiptInfo).blockNumber,
+				fromBlock: numberToHex(
+					Math.min(...resTx.map(d => Number(hexToNumber(d.blockNumber)))),
+				),
 			});
 			const results = res.map(
 				r =>
 					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r)
 						.returnValue[0],
 			);
-			expect(results).toContain(listOfStrings[0]);
-			expect(results).toContain(listOfStrings[1]);
-			expect(results).toContain(listOfStrings[2]);
+			for (const l of listOfStrings) {
+				expect(results).toContain(l);
+			}
 		});
 	});
 });
