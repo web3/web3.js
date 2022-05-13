@@ -17,6 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { OperationTimeoutError } from 'web3-errors';
 
+export const promiseTimeout = async <T = void>(ms: number, message: string): Promise<T> =>
+	new Promise((_, reject) => {
+		const id = setTimeout(() => {
+			clearTimeout(id);
+			reject(new OperationTimeoutError(message ?? `Timed out in ${ms}ms.`));
+		}, ms);
+	});
+
 export class DeferredPromise<T> implements Promise<T> {
 	// public tag to treat object as promise by different libs
 	public [Symbol.toStringTag]: 'Promise';
@@ -25,9 +33,6 @@ export class DeferredPromise<T> implements Promise<T> {
 	private _resolve!: (value: T | PromiseLike<T>) => void;
 	private _reject!: (reason?: unknown) => void;
 	private _state: 'pending' | 'fulfilled' | 'rejected' = 'pending';
-	private _timeoutId?: NodeJS.Timeout;
-	private readonly _timeoutInterval?: number;
-	private readonly _timeoutMessage: string;
 
 	public constructor(
 		{
@@ -40,16 +45,19 @@ export class DeferredPromise<T> implements Promise<T> {
 			timeoutMessage: 'DeferredPromise timed out',
 		},
 	) {
-		this._promise = new Promise<T>((resolve, reject) => {
-			this._resolve = resolve;
-			this._reject = reject;
-		});
-
-		this._timeoutMessage = timeoutMessage;
-		this._timeoutInterval = timeout;
-
 		if (eagerStart) {
-			this.startTimer();
+			this._promise = Promise.race([
+				new Promise<T>((resolve, reject) => {
+					this._resolve = resolve;
+					this._reject = reject;
+				}),
+				promiseTimeout(timeout, timeoutMessage),
+			]) as Promise<T>;
+		} else {
+			this._promise = new Promise<T>((resolve, reject) => {
+				this._resolve = resolve;
+				this._reject = reject;
+			});
 		}
 	}
 
@@ -76,32 +84,12 @@ export class DeferredPromise<T> implements Promise<T> {
 	}
 
 	public resolve(value: T | PromiseLike<T>): void {
-		this._resolve(value);
 		this._state = 'fulfilled';
-		this._clearTimeout();
+		this._resolve(value);
 	}
 
 	public reject(reason?: unknown): void {
-		this._reject(reason);
 		this._state = 'rejected';
-		this._clearTimeout();
-	}
-
-	public startTimer() {
-		if (this._timeoutInterval && this._timeoutInterval > 0) {
-			this._timeoutId = setTimeout(this._checkTimeout.bind(this), this._timeoutInterval);
-		}
-	}
-
-	private _checkTimeout() {
-		if (this._state === 'pending' && this._timeoutId) {
-			this.reject(new OperationTimeoutError(this._timeoutMessage));
-		}
-	}
-
-	private _clearTimeout() {
-		if (this._timeoutId) {
-			clearTimeout(this._timeoutId);
-		}
+		this._reject(reason);
 	}
 }
