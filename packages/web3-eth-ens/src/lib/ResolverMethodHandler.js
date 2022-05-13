@@ -73,7 +73,6 @@ ResolverMethodHandler.prototype.method = function (ensName, methodName, methodAr
 };
 
 ResolverMethodHandler.prototype.resolve = async function (resolver, name, func, args, promiEvent, outputFormatter, callback) {
-    debugger
     if (resolver.options.address === null) {
         return null;
     }
@@ -125,18 +124,12 @@ ResolverMethodHandler.prototype.resolve = async function (resolver, name, func, 
     const send = method.buildCall();
     const result = await send(tx);
 
-    function _parseBytes(result, start) {
-        if (result === "0x") { return null; }
-
-        const offset = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, start, start + 32))));
+    let parsedBytes = null;
+    if (result !== "0x") { 
+        const offset = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, 0, 32))));
         const length = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, offset, offset + 32)))) ;
-
-        debugger;
-        return hexDataSlice(result, offset + 32, offset + 32 + length);
+        parsedBytes =  hexDataSlice(result, offset + 32, offset + 32 + length);
     }
-
-    const parsedBytes = _parseBytes(result, 0);
-    console.log('parsedBytes: ', parsedBytes);
 
     const outputs = resolverAbi.find(x => x.name === func).outputs
     const decoded = AbiCoder.decodeParameters(outputs, parsedBytes);
@@ -173,7 +166,6 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var outputFormatter = this.outputFormatter || null;
 
     this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
-        debugger
         const supportsENSIP10 = await resolver.methods.supportsInterface(wildcardInterfaceId).call();
 
         if (supportsENSIP10) {
@@ -236,7 +228,6 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, outputFormatter, callback) {
     method.apply(this, preparedArguments).call()
         .then(function (result) {
-            debugger
             if (outputFormatter) {
                 result = outputFormatter(result);
             }
@@ -341,6 +332,8 @@ ResolverMethodHandler.prototype.prepareArguments = function (name, methodArgumen
 ResolverMethodHandler.prototype.checkInterfaceSupport = async function (resolver, methodName) {
     // Skip validation for undocumented interface ids (ex: multihash)
     if (!interfaceIds[methodName]) return;
+
+    debugger;
 
     var supported = false;
     try {
