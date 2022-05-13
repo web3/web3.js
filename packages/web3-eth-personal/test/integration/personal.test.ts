@@ -65,10 +65,6 @@ describe('personal integration tests', () => {
 		await ethPersonal.unlockAccount(key, '', 100000);
 		const signature = await ethPersonal.sign('0xdeadbeaf', accounts[0], '');
 		const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
-		const expectedSignature =
-			'0xb82a8b1f9cbb10917d1a7e4e97aa3709f9f221138069afe5dda94549a52465be3b5611a8ec3e698edf3fc4bbbcfc8915e019bc29b4a7d03ff6e1eb096acbe5701b';
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(signature).toBe(expectedSignature);
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(accounts[0]).toBe(address);
 	});
