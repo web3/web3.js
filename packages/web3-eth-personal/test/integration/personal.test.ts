@@ -66,7 +66,7 @@ describe('personal integration tests', () => {
 		const errorResponse: JsonRpcResponse = {
 			id: 1,
 			jsonrpc: '2.0',
-			error: { code: 101, message: 'could not decrypt key with given password' },
+			error: { code: 101, message: 'could not decrypt key with given passphrase' },
 		};
 		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow(
 			new InvalidResponseError(errorResponse),
@@ -75,7 +75,7 @@ describe('personal integration tests', () => {
 
 	it('unlock account', async () => {
 		const key = accounts[0];
-		const unlockedAccount = await ethPersonal.unlockAccount(key, '', 1000);
+		const unlockedAccount = await ethPersonal.unlockAccount(key, '123', 1000);
 		expect(unlockedAccount).toBe(true);
 
 		const from = accounts[0];
@@ -124,7 +124,7 @@ describe('personal integration tests', () => {
 	// geth doesn't have signTransaction method
 	itIf(getSystemTestBackend() === 'ganache')('signTransaction', async () => {
 		const from = accounts[0];
-		await ethPersonal.unlockAccount(from, '', 100000);
+		await ethPersonal.unlockAccount(from, '123', 100000);
 		const tx = {
 			from,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
@@ -143,7 +143,7 @@ describe('personal integration tests', () => {
 
 	it('sendTransaction', async () => {
 		const from = accounts[0];
-		await ethPersonal.unlockAccount(from, '', 100000);
+		await ethPersonal.unlockAccount(from, '123', 100000);
 		const tx = {
 			from,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
