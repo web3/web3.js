@@ -73,11 +73,11 @@ describe('personal integration tests', () => {
 
 	it('getAccounts', async () => {
 		const accountList = await ethPersonal.getAccounts();
-		const accountsLength = accountList.length;
 		// create a new account
-		await ethPersonal.newAccount('cde');
+		const account = await ethPersonal.newAccount('cde');
 		const updatedAccountList = await ethPersonal.getAccounts();
-		expect(updatedAccountList).toHaveLength(accountsLength + 1);
+		accountList.push(account);
+		expect(updatedAccountList).toBe(accountList);
 	});
 
 	it('importRawKey', async () => {
