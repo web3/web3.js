@@ -66,6 +66,8 @@ describe('personal integration tests', () => {
 		const signature = await ethPersonal.sign('0xdeadbeaf', accounts[0], '');
 		const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 		// eslint-disable-next-line jest/no-standalone-expect
+		expect(signature).toBe('123');
+		// eslint-disable-next-line jest/no-standalone-expect
 		expect(accounts[0]).toBe(address);
 	});
 
