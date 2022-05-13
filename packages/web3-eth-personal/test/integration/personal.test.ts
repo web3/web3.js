@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
-import { importedAccount } from '../config/personal.test.config';
+import { importedAccount } from '../config/personal.config';
 import {
 	getSystemTestBackend,
 	getSystemTestAccounts,

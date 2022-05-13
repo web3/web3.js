@@ -1,1 +1,1 @@
-./web3-eth-contract/test/fixtures/system_test_utils.ts
+../../../../scripts/system_tests_utils.ts
