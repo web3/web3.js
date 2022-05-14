@@ -139,4 +139,89 @@ HttpProvider.prototype.supportsSubscriptions = function () {
     return false;
 };
 
+HttpProvider.prototype._prepareGeneralRequest = function(){
+    var request;
+
+    // the current runtime is a browser
+    if (typeof XMLHttpRequest !== 'undefined') {
+        request = new XMLHttpRequest();
+    } else {
+        request = new XHR2();
+        var agents = {httpsAgent: this.httpsAgent, httpAgent: this.httpAgent};
+        if (this.agent) {
+            agents.httpsAgent = this.agent.https;
+            agents.httpAgent = this.agent.http;
+        }
+        request.nodejsSet(agents);
+    }
+
+    return request;
+};
+
+
+HttpProvider.prototype._sendRequest = function(queryUrl, method, payload) {
+    return new Promise((resolve, reject) => {
+        var _this = this;
+        var request = this._prepareGeneralRequest(queryUrl);
+        request.open(method, queryUrl, true);
+
+        request.timeout = this.timeout;
+        request.withCredentials = this.withCredentials;
+
+        if (this.headers) {
+            this.headers.forEach(function (header) {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
+
+        request.onreadystatechange = function() {
+            if (request.readyState === 4 && request.timeout !== 1) {
+                var responseBody;
+
+                if(request.getResponseHeader('content-type').includes('application/json')) {
+                    try {
+                        responseBody = JSON.parse(request.responseText);
+                        request.responseBody = responseBody;
+                    } catch(e) {
+                        request.customError = 'Error parsing response body';
+                        reject(request);
+                    }
+                }
+
+                if(request.status >= 400) {
+                    reject(request);
+                }
+
+                _this.connected = true;
+                resolve(request);
+            }
+        };
+
+        request.ontimeout = function() {
+            _this.connected = false;
+            reject(errors.ConnectionTimeout(this.timeout));
+        };
+
+        try {
+            if (method === 'POST') {
+                request.setRequestHeader('Content-Type','application/json');
+                request.send(JSON.stringify(payload));
+            } else {
+                request.send();
+            }
+        } catch(error) {
+            this.connected = false;
+            reject(request);
+        }
+    });
+};
+
+HttpProvider.prototype.get = function(queryUrl) {
+    return this._sendRequest(queryUrl, 'GET', {});
+};
+
+HttpProvider.prototype.post = function(queryUrl, payload= {}) {
+    return this._sendRequest(queryUrl, 'POST', payload);
+};
+
 module.exports = HttpProvider;

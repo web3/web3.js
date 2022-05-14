@@ -102,4 +102,5 @@ FakeHttp.prototype.post = function(queryUrl, payload) {
     });
 };
 
-module.exports = { Http: FakeHttp };
+module.exports = FakeHttp;
+

@@ -3,6 +3,9 @@ const utils = require('./helpers/test.utils');
 const Web3 = utils.getWeb3();
 const assert = require('assert');
 
+const addressZero = "0x0000000000000000000000000000000000000000";
+const addressOne = "0x0000000000000000000000000000000000000001";
+
 describe('ENS [ @E2E ]', function () {
     this.timeout(50000);
 
@@ -177,6 +180,12 @@ describe('ENS [ @E2E ]', function () {
             assert(err.message.includes(`Could not encode ${hash}`));
             done();
         });
+    });
+
+    it('should perform wildcard lookup', async function() {
+        const name = 'sub.sub.wildcard';
+        const address = await web3.eth.ens.getAddress(name);
+        assert.equal(address, addressOne);
     });
 });
 

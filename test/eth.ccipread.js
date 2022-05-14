@@ -5,7 +5,7 @@ var SandboxedModule = require('sandboxed-module');
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var { isOffChainLookup, ccipReadCall, callGateways } = SandboxedModule.require('../packages/web3-ccip-read', {
     requires: {
-        'web3-http': require('./helpers/FakeHttp'),
+        'web3-providers-http': require('./helpers/FakeHttp'),
     },
     globals: {
         URL: global.URL

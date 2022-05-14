@@ -2,6 +2,7 @@ const ENSArtifact = require("@ensdomains/ens/build/contracts/ENSRegistry");
 const FIFSRegistrarArtifact = require("@ensdomains/ens/build/contracts/FIFSRegistrar");
 const ReverseRegistrarArtifact = require("@ensdomains/ens/build/contracts/ReverseRegistrar");
 const PublicResolverArtifact = require("@ensdomains/resolver/build/contracts/PublicResolver");
+const WildcardResolverArtifact = require("../../test/sources/WildcardResolver");
 const namehash = require('eth-ens-namehash');
 
 const addressZero = "0x0000000000000000000000000000000000000000";
@@ -30,12 +31,18 @@ async function setupENS(web3) {
     // PublicResolver
     options.data = PublicResolverArtifact.bytecode;
     const PublicResolver = new web3.eth.Contract(PublicResolverArtifact.abi, options)
-
     const resolver = await PublicResolver
         .deploy({ arguments: [ens.options.address] })
         .send(from);
-
     await setupResolver(ens, resolver, accounts[0], web3);
+
+    //WildcardResolver
+    options.data = WildcardResolverArtifact.bytecode;
+    const WildcardResolver = new web3.eth.Contract(WildcardResolverArtifact.abi, options);
+    const wildcardResolver = await WildcardResolver
+        .deploy({ arguments: [ens.options.address] })
+        .send(from);
+    await setupWildcardResolvers(ens, wildcardResolver, accounts[0], web3);
 
     // Registrar
     options.data = FIFSRegistrarArtifact.bytecode;
@@ -82,6 +89,47 @@ async function setupResolver(ens, resolver, account, web3) {
     await resolver
         .methods
         .setAddr(node, addressOne)
+        .send({from: account});
+}
+
+async function setupWildcardResolvers(ens, resolver, account, web3) {
+    const node = namehash.hash("wildcard");
+    const subNode = namehash.hash("sub.wildcard");
+    const subSubNode = namehash.hash("sub.sub.wildcard");
+
+    const label = web3.utils.sha3("wildcard");
+    const subLabel = web3.utils.sha3("sub");
+
+    await ens
+        .methods
+        .setSubnodeOwner(addressZero, label, account)
+        .send({from: account});
+    await ens
+        .methods
+        .setResolver(node, resolver.options.address)
+        .send({from: account});
+
+    await ens
+        .methods
+        .setSubnodeOwner(node, subLabel, account)
+        .send({from: account});
+    await ens
+        .methods
+        .setResolver(subNode, addressZero)
+        .send({from: account});
+
+    await ens
+        .methods
+        .setSubnodeOwner(subNode, subLabel, account)
+        .send({from: account});
+    await ens
+        .methods
+        .setResolver(subSubNode, addressZero)
+        .send({from: account});
+
+    await resolver
+        .methods
+        .setAddr(subSubNode, addressOne)
         .send({from: account});
 }
 
