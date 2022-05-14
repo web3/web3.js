@@ -14,7 +14,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "@ethersproject/abi": "5.0.7",
+        "@ethersproject/abi": "5.6.1",
         "web3-utils": "1.7.3"
     },
     "devDependencies": {
