@@ -15,24 +15,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
-import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
-	let contract: Contract<typeof basicContractAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let accounts: string[];
 
 	beforeEach(async () => {
-		contract = new Contract(basicContractAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
 		accounts = await getSystemTestAccounts();
 
 		deployOptions = {
-			data: basicContractByteCode,
+			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 

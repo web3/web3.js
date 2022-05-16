@@ -15,25 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
-import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
+import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('clone', () => {
-		let contract: Contract<typeof greeterContractAbi>;
+		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let accounts: string[];
 
 		beforeEach(async () => {
-			contract = new Contract(greeterContractAbi, undefined, {
+			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
 			accounts = await getSystemTestAccounts();
 
 			deployOptions = {
-				data: greeterByteCode,
+				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 
