@@ -133,6 +133,7 @@
         "typescript": "^3.9.7",
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
-        "webpack-cli": "^4.9.1"
+        "webpack-cli": "^4.9.1",
+        "@types/prettier":"2.6.0"
     }
 }
