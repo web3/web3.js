@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { InvalidResponseError, JsonRpcResponse } from 'web3-common';
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import { EthPersonal } from '../../src/index';
@@ -63,19 +62,15 @@ describe('personal integration tests', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
 		// locked accounts will error
-		const errorResponse: JsonRpcResponse = {
-			id: 1,
-			jsonrpc: '2.0',
-			error: { code: 101, message: 'could not decrypt key with given passphrase' },
-		};
-		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow(
-			new InvalidResponseError(errorResponse),
-		);
+		await expect(ethPersonal.sendTransaction(tx, '')).rejects.toThrow();
 	});
 
 	it('unlock account', async () => {
 		const key = accounts[0];
-		const unlockedAccount = await ethPersonal.unlockAccount(key, '123', 1000);
+		const unlockedAccount =
+			getSystemTestBackend() === 'ganache'
+				? await ethPersonal.unlockAccount(key, '123', 1000)
+				: await ethPersonal.unlockAccount(key, '', 1000);
 		expect(unlockedAccount).toBe(true);
 
 		const from = accounts[0];
@@ -143,7 +138,13 @@ describe('personal integration tests', () => {
 
 	it('sendTransaction', async () => {
 		const from = accounts[0];
-		await ethPersonal.unlockAccount(from, '123', 100000);
+
+		const unlockedAccount =
+			getSystemTestBackend() === 'ganache'
+				? await ethPersonal.unlockAccount(from, '123', 1000)
+				: await ethPersonal.unlockAccount(from, '', 1000);
+		expect(unlockedAccount).toBe(true);
+
 		const tx = {
 			from,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
