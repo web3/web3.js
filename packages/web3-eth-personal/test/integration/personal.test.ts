@@ -66,15 +66,13 @@ describe('personal integration tests', () => {
 	});
 
 	it('unlock account', async () => {
-		const key = accounts[0];
+		const from = accounts[0];
 		const unlockedAccount =
 			getSystemTestBackend() === 'ganache'
-				? await ethPersonal.unlockAccount(key, '123', 1000)
-				: await ethPersonal.unlockAccount(key, '', 1000);
+				? await ethPersonal.unlockAccount(from, '123', 1000)
+				: await ethPersonal.unlockAccount(from, '', 1000);
 		expect(unlockedAccount).toBe(true);
 
-		const from = accounts[0];
-		await ethPersonal.unlockAccount(from, '', 1000);
 		const tx = {
 			from,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
@@ -83,7 +81,10 @@ describe('personal integration tests', () => {
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
-		const receipt = await ethPersonal.sendTransaction(tx, '');
+		const receipt =
+			getSystemTestBackend() === 'ganache'
+				? await ethPersonal.sendTransaction(tx, '123')
+				: await ethPersonal.sendTransaction(tx, '');
 
 		expect(isHexStrict(receipt)).toBe(true);
 	});
@@ -129,7 +130,7 @@ describe('personal integration tests', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 			nonce: 0,
 		};
-		const signedTx = await ethPersonal.signTransaction(tx, '');
+		const signedTx = await ethPersonal.signTransaction(tx, '123');
 		const expectedResult =
 			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c080a0d75090f88d6e3e9525fc6d4b1230726b97b4cb07b7aebd683aa9e5c62bb71220a05b7169e0670f70f62fd25f95fbf90f34decd81bf06b3da6fd5500df9cec83cda';
 		// eslint-disable-next-line jest/no-standalone-expect
@@ -153,7 +154,10 @@ describe('personal integration tests', () => {
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
-		const receipt = await ethPersonal.sendTransaction(tx, '');
+		const receipt =
+			getSystemTestBackend() === 'ganache'
+				? await ethPersonal.sendTransaction(tx, '123')
+				: await ethPersonal.sendTransaction(tx, '');
 
 		expect(isHexStrict(receipt)).toBe(true);
 	});
