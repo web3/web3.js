@@ -26,7 +26,7 @@ import { hexToNumber } from 'web3-utils';
 import { Web3Eth } from '../../src';
 
 import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_test_utils';
-import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
 
 describe('eth', () => {
@@ -34,7 +34,7 @@ describe('eth', () => {
 	let accounts: string[] = [];
 	let clientUrl: string;
 
-	let contract: Contract<typeof basicContractAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
@@ -43,12 +43,12 @@ describe('eth', () => {
 		accounts = await getSystemTestAccounts();
 		web3Eth = new Web3Eth(clientUrl);
 
-		contract = new Contract(basicContractAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 
 		deployOptions = {
-			data: basicContractByteCode,
+			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 

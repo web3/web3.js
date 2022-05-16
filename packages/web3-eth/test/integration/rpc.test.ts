@@ -29,7 +29,7 @@ import {
 	getSystemTestProvider,
 	itIf,
 } from '../fixtures/system_test_utils';
-import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sendFewTxes } from './helper';
 
@@ -39,7 +39,7 @@ const mapFormatToType: { [key: string]: string } = {
 	[FMT_NUMBER.STR]: 'string',
 	[FMT_NUMBER.BIGINT]: 'bigint',
 };
-const eventAbi: AbiEventFragment = basicContractAbi.find((e: any) => {
+const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
 describe('rpc', () => {
@@ -47,7 +47,7 @@ describe('rpc', () => {
 	let accounts: string[] = [];
 	let clientUrl: string;
 
-	let contract: Contract<typeof basicContractAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
@@ -56,12 +56,12 @@ describe('rpc', () => {
 		accounts = await getSystemTestAccounts();
 		web3Eth = new Web3Eth(clientUrl);
 
-		contract = new Contract(basicContractAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 
 		deployOptions = {
-			data: basicContractByteCode,
+			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
@@ -188,7 +188,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			expect(code).toBeDefined();
-			expect(basicContractByteCode.slice(-100)).toBe(code.slice(-100));
+			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
 		it.each(
