@@ -21,7 +21,7 @@
  */
 
 var abi = require('web3-eth-abi');
-var http = require('web3-http');
+var Web3HttpProvider = require('web3-providers-http');
 var {defaultAbiCoder, Interface} = require('@ethersproject/abi');
 var {hexConcat} = require('@ethersproject/bytes');
 
@@ -37,7 +37,7 @@ const CCIP_READ_INTERFACE = new Interface([
 var gatewayQuery = function (url, to, calldata) {
     if(!url) throw new Error('No gateway url was provided');
 
-    var httpObject = new http.Http();
+    var httpObject = new Web3HttpProvider();
 
     const lowerTo = to.toLowerCase();
     const lowerCalldata = calldata.toLowerCase();
@@ -105,8 +105,8 @@ var normalizeResponse = function (error, result) {
  *
  * @param {Array} urls
  * @param {String} to
- * @param {Error} err
- * @param {Object} result
+ * @param {String} callData
+ * @param {Array} allowList
  *
  * @return {Boolean} true if reversion was a CCIP-Read error
  */

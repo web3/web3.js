@@ -2,23 +2,6 @@
 var FakeHttp = function Http() {
 };
 
-//TODO: check for valid URL
-
-// var generateResponse = function() {
-//
-// }
-
-/*
-    normal server response
-    {status: request.status
-    response: json parsed server response)
-
-    error response
-
-    response:  { status: 400, response: { message: 'Invalid request format' } }
-
- */
-
 const generateMockXMLHHTTPRequestObject = (requestContentType = 'application/json; charset=utf-8') => ({
     getResponseHeader: () => {
         return requestContentType;
@@ -102,4 +85,5 @@ FakeHttp.prototype.post = function(queryUrl, payload) {
     });
 };
 
-module.exports = { Http: FakeHttp };
+module.exports = FakeHttp;
+

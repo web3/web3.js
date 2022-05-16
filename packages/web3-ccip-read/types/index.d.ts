@@ -13,22 +13,38 @@
 */
 /**
  * @file index.d.ts
- * @author Samuel Furter <samuel@ethereum.org>
- * @date 2018
+ * @author Leon Talbert <leon@ens.domains>
+ * @date 2022
  */
 
-import {JsonRpcPayload} from 'web3-core-helpers';
+interface ErrorObject { }
 
-export interface Method {
-    name: string;
-    call: string;
-    params?: number;
-    inputFormatter?: Array<(() => void) | null>;
-    outputFormatter?: () => void;
-    transformPayload?: () => void;
-    extraFormatters?: any;
-    defaultBlock?: string;
-    defaultAccount?: string | null;
-    abiCoder?: any;
-    handleRevert?: boolean;
+interface ResultObject { }
+
+interface PayloadObject { }
+
+interface XMLHttpRequest { }
+
+interface Options {
+    ccipReadGatewayCallback: () => null,
+    ccipReadGatewayUrls: [string],
+    ccipReadGatewayAllowList: [string],
+    ccipReadMaxRedirectCount: number
 }
+
+export function ccipReadCall(
+    errorObject: ErrorObject,
+    result: ResultObject,
+    payload: PayloadObject,
+    send: () => null,
+    options: Options
+): any;
+
+export function isOffChainLookup(err: ErrorObject, result: ResultObject): boolean
+
+export function callGateways(
+    urls: [string],
+    to: string,
+    callData: string,
+    allowList: [string]
+): XMLHttpRequest

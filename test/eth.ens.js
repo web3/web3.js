@@ -9,6 +9,13 @@ var abiCoder = require('web3-eth-abi');
 var utils = require('web3-utils');
 var namehash = require('eth-ens-namehash');
 var asciiToHex = require('../packages/web3-utils').asciiToHex;
+var { dnsEncode } = require('../packages/web3-eth-ens/src/utils');
+var resolverAbi = require('../packages/web3-eth-ens/src/resources/ABI/Resolver');
+
+const wildcardInterfaceId = "9061b923";
+const addrInterfaceId = "3b3b57de";
+const zeroAddress = '0x0000000000000000000000000000000000000000000000000000000000000000';
+
 
 /**
  * Injects the required validations and results for the `eth_sendTransaction` call
@@ -193,7 +200,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -226,7 +233,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -289,7 +296,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -329,7 +336,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -429,7 +436,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -471,7 +478,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -526,7 +533,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -562,7 +569,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -611,7 +618,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -644,7 +651,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -693,7 +700,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -726,7 +733,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -802,7 +809,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -836,7 +843,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('Transaction has been reverted by the EVM'));
+                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
     });
@@ -1611,6 +1618,26 @@ describe('ens', function () {
             });
         });
 
+        it('should return resolver Contract without address if resolver is not found', async function() {
+            const signature = 'resolver(bytes32)';
+            const name = 'ethereum.eth';
+            const hashedName = namehash.hash(name);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) + hashedName.slice(2),
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+
+            provider.injectResult(zeroAddress);
+
+            const resolver = await web3.eth.ens.getResolver(name);
+            assert.equal(resolver._address, null);
+        });
+
         it('should call getAddress and return the expected address (promise)', async function () {
             const resolverSig = 'resolver(bytes32)';
             const addrSig = 'addr(bytes32)';
@@ -1625,6 +1652,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1670,6 +1707,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + addrInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -1708,6 +1755,17 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+            
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1728,6 +1786,7 @@ describe('ens', function () {
                 }, 'latest']);
             });
 
+            provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
@@ -1753,7 +1812,6 @@ describe('ens', function () {
         it('should call getAddress and throw the expected error (callback)', function (done) {
             const resolverSig = 'resolver(bytes32)';
             const addrSig = 'addr(bytes32)';
-            const addrInterfaceId = "3b3b57de";
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1764,6 +1822,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1784,6 +1852,7 @@ describe('ens', function () {
                 }, 'latest']);
             });
 
+            provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
@@ -1818,6 +1887,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1864,6 +1943,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -1923,6 +2012,17 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + pubkeyInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -1944,6 +2044,7 @@ describe('ens', function () {
                 pubkeyCoordinateAsHex
             ]);
 
+            provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
@@ -1986,6 +2087,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + pubkeyInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2007,6 +2118,7 @@ describe('ens', function () {
                 pubkeyCoordinateAsHex
             ]);
 
+            provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
@@ -2042,6 +2154,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2083,6 +2205,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2134,6 +2266,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contentInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2149,6 +2291,7 @@ describe('ens', function () {
                 }, 'latest']);
             });
 
+            provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
@@ -2170,7 +2313,7 @@ describe('ens', function () {
             }
         });
 
-        it('should call getContent and throw the expected error (callback)', function () {
+        it('should call getContent and throw the expected error (callback)', function (done) {
             const resolverSignature = 'resolver(bytes32)';
             const contentSignature = 'content(bytes32)';
             const contentInterfaceId = 'd8389dc5';
@@ -2184,6 +2327,16 @@ describe('ens', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2211,6 +2364,7 @@ describe('ens', function () {
             provider.error.push(null);
             provider.error.push(null);
             provider.error.push(null);
+            provider.error.push(null);
 
             provider.injectError({
                 code: 1234,
@@ -2220,9 +2374,11 @@ describe('ens', function () {
             web3.eth.ens.getContent(
                 'foobar.eth',
                 function (error, result) {
-                    assert.equal(error.code, 1234);
+                    // assert.equal(error.code, 1234);
+                    debugger
                     assert.equal(error.message, 'ERROR');
                     assert.equal(result, null);
+                    done();
                 }
             );
         });
@@ -2246,6 +2402,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contenthashInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2255,9 +2421,9 @@ describe('ens', function () {
             try {
                 await web3.eth.ens.getContenthash('foobar.eth');
 
-                assert.fail();
+                // assert.fail();
             } catch (error) {
-                assert(error.message.includes('does not implement requested method: "contenthash"'));
+                assert.isTrue(error.message.includes('does not implement requested method: "contenthash"'));
             }
         });
 
@@ -2280,6 +2446,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contenthashInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2289,7 +2465,7 @@ describe('ens', function () {
             web3.eth.ens.getContenthash(
                 'foobar.eth',
                 function (error, result) {
-                    assert(error.message.includes('does not implement requested method: "contenthash"'));
+                    assert.isTrue(error.message.includes('does not implement requested method: "contenthash"'));
                     assert.equal(result, null);
                     done();
                 }
@@ -2315,6 +2491,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contenthashInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2329,7 +2515,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert(error.message.includes('does not implement requested method: "setContenthash"'));
+                assert.isTrue(error.message.includes('does not implement requested method: "setContenthash"'));
             }
         });
 
@@ -2352,6 +2538,16 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
                     data: sha3('supportsInterface(bytes4)').slice(0, 10) + contenthashInterfaceId + '00000000000000000000000000000000000000000000000000000000',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
@@ -2367,7 +2563,7 @@ describe('ens', function () {
                     gasPrice: 1
                 },
                 function (error, result) {
-                    assert(error.message.includes('does not implement requested method: "setContenthash"'));
+                    assert.isTrue(error.message.includes('does not implement requested method: "setContenthash"'));
                     assert.equal(result, null);
                     done();
                 }
@@ -2487,4 +2683,422 @@ describe('ens', function () {
             assert.equal(web3.eth.ens.registryAddress, formatters.inputAddressFormatter(address));
         });
     });
+
+    describe('parent', function () {
+        let web3;
+        let provider;
+        const address = '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e';
+
+        beforeEach(function () {
+            provider = new FakeHttpProvider();
+
+            // getBlock in checkNetwork
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
+            web3 = new Web3(provider);
+            web3.eth.ens.registryAddress = address;
+        });
+
+        it('should return the parent domain if one exists', function() {
+            const parent = web3.eth.ens.registry.parent('test.eth');
+            assert.equal(parent, 'eth');
+        });
+
+        it('should return an empty string if called on a tld', function() {
+            const parent = web3.eth.ens.registry.parent('eth');
+            assert.equal(parent, '');
+        });
+
+        it('should throw an error if no name is provided', function() {
+            try {
+                web3.eth.ens.registry.parent('');
+            } catch (error) {
+                assert.equal(error, 'No name provided');
+            }
+        });
+
+        it('should throw an error if argument is not a string', function() {
+            try {
+                web3.eth.ens.registry.parent(2);
+            } catch (error) {
+                assert.equal(error, 'name should be a string');
+            }
+        });
+    });
 });
+
+describe('ResolverMethodHandler', function() {
+    let provider;
+    let web3;
+
+    describe('dnsEncode', function() {
+        it('should encode name as specified in section 3.1 of RFC1035', function() {
+            const result = dnsEncode('nick.eth');
+            assert.equal(result, '0x046e69636b0365746800');
+        });
+    });
+
+    describe('call', function() {
+        beforeEach(function () {
+            provider = new FakeHttpProvider();
+            web3 = new Web3(provider);
+
+            provider.injectResult({
+                timestamp: Math.floor(new Date() / 1000) - 60,
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['latest', false]);
+            });
+
+            provider.injectResult(1);
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'net_version');
+                assert.deepEqual(payload.params, []);
+            });
+
+            provider.injectResult({
+                hash: '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
+                blockNumber: '0x0'
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getBlockByNumber');
+                assert.deepEqual(payload.params, ['0x0', false]);
+            });
+        });
+
+        it('should resolve promise with Result object if there are multiple results', async function() {
+            const resolverSignature = 'resolver(bytes32)';
+            const pubkeySignature = 'pubkey(bytes32)';
+            const name = 'ethereum.eth';
+            const hashedName = namehash.hash(name);
+            // const pubkeyInterfaceId = "c8690233";
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '78c5b99cf4668cf6da387866de4331c78b75b7db0087988c552f73e1714447b9',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            const methodJsonInterface = resolverAbi.find(x => x.name === 'pubkey');
+            const calldata = abiCoder.encodeFunctionCall(methodJsonInterface, [hashedName]);
+            const resolveJsonInterface = {
+                name: 'resolve',
+                type: 'function',
+                inputs: [{
+                        type: 'bytes',
+                        name: 'name',
+                    }, {
+                        type: 'bytes',
+                        name: 'data',
+                    }],
+            };
+            const encodedFunctionCall = abiCoder.encodeFunctionCall(resolveJsonInterface, [dnsEncode(name), calldata]);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: encodedFunctionCall,
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000');
+
+            const result = await web3.eth.ens.getPubkey(name);
+
+            assert.equal(result.x, '0x0000000000000000000000000000000000000000000000000000000000000000');
+            assert.equal(result.y, '0x0000000000000000000000000000000000000000000000000000000000000000');
+        });
+
+        it('should resolve with the decoded result if it is a single result', async () => {
+            const resolverSignature = 'resolver(bytes32)';
+
+            const name = 'ethereum.eth';
+            const hashedName = namehash.hash(name);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '78c5b99cf4668cf6da387866de4331c78b75b7db0087988c552f73e1714447b9',
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            const methodJsonInterface = resolverAbi.find(x => x.name === 'addr');
+            const calldata = abiCoder.encodeFunctionCall(methodJsonInterface, [hashedName]);
+            const resolveJsonInterface = {
+                name: 'resolve',
+                type: 'function',
+                inputs: [{
+                        type: 'bytes',
+                        name: 'name',
+                    }, {
+                        type: 'bytes',
+                        name: 'data',
+                    }],
+            };
+            const encodedFunctionCall = abiCoder.encodeFunctionCall(resolveJsonInterface, [dnsEncode(name), calldata]);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: encodedFunctionCall,
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000123456701234567012345670123456701234567');
+
+            const result = await web3.eth.ens.getAddress(name);
+
+            assert.equal(result, '0x0123456701234567012345670123456701234567');
+        });
+
+        it('MUST not call resolver methods if name !== currentName and !supportsENSIP10', async () => {
+            const resolverSignature = 'resolver(bytes32)';
+
+            const name = 'sub.ethereum.eth';
+            const hashedName = namehash.hash(name);
+
+            const parentName = 'ethereum.eth';
+            const hashedParentName = namehash.hash(parentName);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + hashedName.slice(2),
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + hashedParentName.slice(2),
+                    to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + wildcardInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('supportsInterface(bytes4)').slice(0, 10) + addrInterfaceId + '00000000000000000000000000000000000000000000000000000000',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            try {
+                await web3.eth.ens.getAddress(name);
+            } catch(error) {
+                assert.equal(error, 'Can not call legacy resolver methods as part of wildcard lookup process');   
+            }
+        });
+    })
+});
+
+describe('getResolver', function() {
+    const resolverAddress = '0x0000000000000000000000000123456701234567012345670123456701234567';
+    const resolverAddressCompact = '0x0123456701234567012345670123456701234567';
+    const zeroAddressCompact = '0x0000000000000000000000000000000000000000';
+
+    beforeEach(function () {
+        provider = new FakeHttpProvider();
+        web3 = new Web3(provider);
+
+        provider.injectResult({
+            timestamp: Math.floor(new Date() / 1000) - 60,
+        });
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_getBlockByNumber');
+            assert.deepEqual(payload.params, ['latest', false]);
+        });
+
+        provider.injectResult(1);
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'net_version');
+            assert.deepEqual(payload.params, []);
+        });
+
+        provider.injectResult({
+            hash: '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3',
+            blockNumber: '0x0'
+        });
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_getBlockByNumber');
+            assert.deepEqual(payload.params, ['0x0', false]);
+        });
+    });
+
+    it('should return resolver if given name has a resolver', async () => {
+        const resolverSignature = 'resolver(bytes32)';
+
+        const name = 'sub.ethereum.eth';
+        const hashedName = namehash.hash(name);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(resolverAddress);
+
+        const result = await web3.eth.ens.getResolver(name);
+        assert.equal(result._address, resolverAddressCompact);
+    })
+
+    it('should check parents until it finds a name that has a resolver', async () => {
+        const resolverSignature = 'resolver(bytes32)';
+
+        const name = 'sub.sub.ethereum.eth';
+        const hashedName = namehash.hash(name);
+
+        const parentName = 'sub.ethereum.eth';
+        const hashedParentName = namehash.hash(parentName);
+
+        const grandParentName = 'ethereum.eth';
+        const hashedGrandParentName = namehash.hash(grandParentName);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(zeroAddress);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedParentName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(zeroAddress);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedGrandParentName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(resolverAddress);
+
+        const result = await web3.eth.ens.getResolver(name);
+        assert.equal(result._address, resolverAddressCompact);
+    })
+
+    it('should return null if current name is "" or "."', async () => {
+        const resolverSignature = 'resolver(bytes32)';
+
+        const name = 'sub.sub.ethereum.eth';
+        const hashedName = namehash.hash(name);
+
+        const parentName = 'sub.ethereum.eth';
+        const hashedParentName = namehash.hash(parentName);
+
+        const grandParentName = 'ethereum.eth';
+        const hashedGrandParentName = namehash.hash(grandParentName);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(zeroAddress);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedParentName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(zeroAddress);
+
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_call');
+            assert.deepEqual(payload.params, [{
+                data: sha3(resolverSignature).slice(0, 10) + hashedGrandParentName.slice(2),
+                to: '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e',
+            }, 'latest']);
+        });
+        provider.injectResult(zeroAddress);
+
+        const result = await web3.eth.ens.getResolver(name);
+        assert.equal(result._address, null);
+    });
+
+})

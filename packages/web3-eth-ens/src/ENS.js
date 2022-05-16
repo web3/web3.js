@@ -20,12 +20,15 @@
 
 "use strict";
 
-var config = require('./config');
-var formatters = require('web3-core-helpers').formatters;
+var { formatters } = require('web3-core-helpers');
 var utils = require('web3-utils');
+
+
+var config = require('./config');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 var contenthash = require('./lib/contentHash');
+
 
 /**
  * Constructs a new instance of ENS
@@ -101,6 +104,16 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
     });
 };
 
+ENS.prototype.parent = function(name) {
+    if(!name) throw 'No name provided';
+    if(typeof name !== 'string') throw 'name should be a string';
+
+    const splitString = name.split('.');
+    if(splitString.length <= 1) return '';
+
+    return splitString.slice(1).join('.');
+};
+
 /**
  * Returns the Resolver by the given address
  *
@@ -119,7 +132,7 @@ ENS.prototype.resolver = function (name, callback) {
 };
 
 /**
- * Returns the Resolver by the given address
+ * Returns the Resolver by the given name
  *
  * @method getResolver
  *

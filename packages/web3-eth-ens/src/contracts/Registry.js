@@ -510,6 +510,16 @@ Registry.prototype.resolver = function (name, callback) {
     return this.getResolver(name, callback);
 };
 
+Registry.prototype.parent = function(name) {
+    if(!name) throw 'No name provided';
+    if(typeof name !== 'string') throw 'name should be a string';
+
+    const splitString = name.split('.');
+    if(splitString.length <= 1) return '';
+
+    return splitString.slice(1).join('.');
+};
+
 /**
  * Returns the resolver contract associated with a name.
  *
@@ -521,32 +531,42 @@ Registry.prototype.resolver = function (name, callback) {
  * @callback callback callback(error, result)
  * @returns {Promise<Contract>}
  */
-Registry.prototype.getResolver = function (name, callback) {
+Registry.prototype.getResolver = async function (name, callback) {
     var self = this;
 
-    return this.contract.then(function (contract) {
-        return contract.methods.resolver(namehash.hash(name)).call();
-    }).then(function (address) {
-        var contract = new Contract(RESOLVER_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
+    try {
+        let resolver;
 
-        if (typeof callback === 'function') {
-            // It's required to pass the contract to the first argument to be backward compatible and to have the required consistency
-            callback(contract, contract);
+        for(let currentName = name; currentName !== ''; currentName = this.parent(currentName)) {
+            const currentContract = await this.contract;
+            const resolverAddress = await currentContract.methods.resolver(namehash.hash(currentName)).call();
+            resolver = new Contract(RESOLVER_ABI, resolverAddress);
+            resolver.setProvider(self.ens.eth.currentProvider);
 
+            resolver.currentName = currentName;
+            if(resolver.options.address !== '0x0000000000000000000000000000000000000000') {
+                if(typeof callback === 'function') {
+                    callback(resolver, resolver);
+                    return;
+                }
+                return resolver;
+            }
+        }
+    
+        if(typeof callback === 'function') {
+            callback(resolver, resolver);
             return;
         }
+        return resolver;
 
-        return contract;
-    }).catch(function (error) {
+    } catch (error) {
         if (typeof callback === 'function') {
             callback(error, null);
-
             return;
         }
 
-        throw error;
-    });
+        throw error;   
+    }
 };
 
 /**

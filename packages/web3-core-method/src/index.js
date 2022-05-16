@@ -152,7 +152,7 @@ Method.prototype.formatInput = function (args) {
     }
 
     return this.inputFormatter.map(function (formatter, index) {
-        // bind this for defaultBlock, and defaultAccount
+        // bind this for defaultBlock, and defaultAccount       
         return formatter ? formatter.call(_this, args[index]) : args[index];
     });
 };

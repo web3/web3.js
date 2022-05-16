@@ -20,10 +20,20 @@
 
 "use strict";
 
+var { hexDataSlice } = require("@ethersproject/bytes");
 var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
-var errors = require('web3-core-helpers').errors;
+var { errors, formatters } = require('web3-core-helpers');
 var interfaceIds = require('../config').interfaceIds;
+var AbiCoder = require('web3-eth-abi');
+var Method = require('web3-core-method');
+
+var { dnsEncode } = require('../utils');
+
+var resolverAbi = require('../resources/ABI/Resolver');
+
+const wildcardInterfaceId = "0x9061b923";
+
 
 /**
  * @param {Registry} registry
@@ -62,6 +72,88 @@ ResolverMethodHandler.prototype.method = function (ensName, methodName, methodAr
     };
 };
 
+ResolverMethodHandler.prototype.resolve = async function (resolver, name, func, args, promiEvent, outputFormatter, callback) {
+    if (resolver.options.address === null) {
+        return null;
+    }
+    const methodJsonInterface = resolverAbi.find(x => x.name === func)
+    const calldata = AbiCoder.encodeFunctionCall(methodJsonInterface, args);
+
+    const resolveJsonInterface = {
+        name: 'resolve',
+        type: 'function',
+        inputs: [{
+            type: 'bytes',
+            name: 'name',
+        }, {
+            type: 'bytes',
+            name: 'data',
+        }],
+    };
+    const encodedFunctionCall = AbiCoder.encodeFunctionCall(resolveJsonInterface, [dnsEncode(name), calldata]);
+
+    const tx = {
+        to: resolver.options.address,
+        data: encodedFunctionCall,
+    };
+
+    const method = new Method({
+        name: 'call',
+        call: 'eth_call',
+        params: 2,
+        inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
+        abiCoder: AbiCoder
+    });
+
+    method.setRequestManager(this.registry.ens.eth._requestManager);
+    method.defaultBlock = 'latest';
+    method.handleRevert = false;
+    method.defaultAccount = null;
+    method.defaultBlock = 'latest';
+    method.transactionBlockTimeout = 50;
+    method.transactionConfirmationBlocks = 24;
+    method.transactionPollingTimeout = 750;
+    method.transactionPollingInterval = 1000;
+    method.blockHeaderTimeout = 10; // 10 seconds
+    method.maxListenersWarningThreshold = 100;
+    method.ccipReadGatewayCallback = null;
+    method.ccipReadGatewayUrls = [];
+    method.ccipReadGatewayAllowList = [];
+    method.ccipReadMaxRedirectCount = 4;
+
+    const send = method.buildCall();
+    const result = await send(tx);
+
+    let parsedBytes = null;
+    if (result !== "0x") { 
+        const offset = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, 0, 32))));
+        const length = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, offset, offset + 32)))) ;
+        parsedBytes =  hexDataSlice(result, offset + 32, offset + 32 + length);
+    }
+
+    const outputs = resolverAbi.find(x => x.name === func).outputs
+    const decoded = AbiCoder.decodeParameters(outputs, parsedBytes);
+
+    let finalResult;
+    if(outputs.length === 1) {
+        finalResult =  decoded[0];
+    } else {
+        finalResult =  decoded;
+    }
+
+    if(outputFormatter) {
+        finalResult = outputFormatter(finalResult);
+    }
+
+    if (typeof callback === 'function') {
+        // It's required to pass the receipt to the second argument to be backwards compatible and to have the required consistency
+        callback(finalResult, finalResult);
+        return;
+    }
+
+    promiEvent.resolve(finalResult);
+};
+
 /**
  * Executes call
  *
@@ -74,12 +166,18 @@ ResolverMethodHandler.prototype.call = function (callback) {
     var outputFormatter = this.outputFormatter || null;
 
     this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
-        await self.parent.checkInterfaceSupport(resolver, self.methodName);
-        self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
-    }).catch(function(error) {
+        const supportsENSIP10 = await resolver.methods.supportsInterface(wildcardInterfaceId).call();
+
+        if (supportsENSIP10) {
+            await self.parent.resolve(resolver, self.ensName, self.methodName, preparedArguments, promiEvent, outputFormatter, callback)
+        } else {
+            await self.parent.checkInterfaceSupport(resolver, self.methodName);
+            self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
+        }
+
+    }).catch(function (error) {
         if (typeof callback === 'function') {
             callback(error, null);
-
             return;
         }
 
@@ -105,7 +203,7 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     this.parent.registry.getResolver(this.ensName).then(async function (resolver) {
         await self.parent.checkInterfaceSupport(resolver, self.methodName);
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
-    }).catch(function(error) {
+    }).catch(function (error) {
         if (typeof callback === 'function') {
             callback(error, null);
 
@@ -130,7 +228,7 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, outputFormatter, callback) {
     method.apply(this, preparedArguments).call()
         .then(function (result) {
-            if (outputFormatter){
+            if (outputFormatter) {
                 result = outputFormatter(result);
             }
 
@@ -241,11 +339,11 @@ ResolverMethodHandler.prototype.checkInterfaceSupport = async function (resolver
             .methods
             .supportsInterface(interfaceIds[methodName])
             .call();
-    } catch(err) {
+    } catch (err) {
         console.warn('Could not verify interface of resolver contract at "' + resolver.options.address + '". ');
     }
 
-    if (!supported){
+    if (!supported) {
         throw errors.ResolverMethodMissingError(resolver.options.address, methodName);
     }
 };
