@@ -14,7 +14,7 @@ start() {
 	then
 		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123"
 	else
-		echo "Starting gancahe ..."
+		echo "Starting ganache ..."
 		echo "npx ganache ethereum -m \"$WEB3_SYSTEM_TEST_MNEMONIC\" -a 5 -p $WEB3_SYSTEM_TEST_PORT &"
 		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT >/dev/null --wallet.passphrase "123" &
 
