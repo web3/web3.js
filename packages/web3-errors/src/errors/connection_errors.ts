@@ -25,6 +25,7 @@ import {
 	ERR_CONN_CLOSE,
 	ERR_CONN_MAX_ATTEMPTS,
 	ERR_CONN_PENDING_REQUESTS,
+	ERR_REQ_ALREADY_SENT,
 } from '../error_codes';
 import { ConnectionEvent } from '../types';
 import { Web3Error } from '../web3_error_base';
@@ -100,5 +101,12 @@ export class PendingRequestsOnReconnectingError extends ConnectionError {
 	public constructor() {
 		super('CONNECTION ERROR: Provider started to reconnect before the response got received!');
 		this.code = ERR_CONN_PENDING_REQUESTS;
+	}
+}
+
+export class RequestAlreadySentError extends ConnectionError {
+	public constructor(id: number | string) {
+		super(`Request already sent with following id: ${id}`);
+		this.code = ERR_REQ_ALREADY_SENT;
 	}
 }

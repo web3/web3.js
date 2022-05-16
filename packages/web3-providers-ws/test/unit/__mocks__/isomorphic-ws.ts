@@ -20,6 +20,9 @@ import { EventEmitter } from 'events';
 export default class WebSocket extends EventEmitter {
 	public readyState: number;
 
+	public CONNECTING = 0;
+	public OPEN = 1;
+
 	public constructor(...args: any[]) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		super(...args);
