@@ -2708,19 +2708,19 @@ describe('ens', function () {
 
         it('should return the parent domain if one exists', function() {
             const parent = web3.eth.ens.registry.parent('test.eth');
-            assert.equal(parent === 'eth');
+            assert.equal(parent, 'eth');
         });
 
         it('should return an empty string if called on a tld', function() {
             const parent = web3.eth.ens.registry.parent('eth');
-            assert.equal(parent === '');
+            assert.equal(parent, '');
         });
 
         it('should throw an error if no name is provided', function() {
             try {
                 web3.eth.ens.registry.parent('');
             } catch (error) {
-                assert.equal(error === 'No name provided');
+                assert.equal(error, 'No name provided');
             }
         });
 
@@ -2728,7 +2728,7 @@ describe('ens', function () {
             try {
                 web3.eth.ens.registry.parent(2);
             } catch (error) {
-                assert.equal(error === 'Name should be a string');
+                assert.equal(error, 'name should be a string');
             }
         });
     });
@@ -2741,7 +2741,7 @@ describe('ResolverMethodHandler', function() {
     describe('dnsEncode', function() {
         it('should encode name as specified in section 3.1 of RFC1035', function() {
             const result = dnsEncode('nick.eth');
-            assert.equal(result === '0x046e69636b0365746800');
+            assert.equal(result, '0x046e69636b0365746800');
         });
     });
 

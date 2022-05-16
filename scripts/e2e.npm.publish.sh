@@ -24,7 +24,7 @@ fi
 npm install -g verdaccio@4.4.4
 npm install -g npm-auth-to-token@1.0.0
 npm install -g lerna@^3.20.2
-npm install -g typescript@^3.9.5
+npm install -g typescript@^4.6.4
 npm install -g webpack@^4.44.1 webpack-cli@^3.3.12 clean-webpack-plugin@^3.0.0
 
 # Launch npm proxy registry and save pid to kill server (req. in Windows env)
