@@ -708,18 +708,21 @@ export async function getChainId<ReturnFormat extends DataFormat>(
 export async function getProof<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3EthExecutionAPI>,
 	address: Address,
-	storageKey: Bytes,
+	storageKeys: Bytes[],
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const storageKeyFormatted = format({ eth: 'bytes' }, storageKey, DEFAULT_RETURN_FORMAT);
+	const storageKeysFormatted = storageKeys.map(storageKey =>
+		format({ eth: 'bytes' }, storageKey, DEFAULT_RETURN_FORMAT),
+	);
+
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
 		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
 	const response = await rpcMethods.getProof(
 		web3Context.requestManager,
 		address,
-		storageKeyFormatted,
+		storageKeysFormatted,
 		blockNumberFormatted,
 	);
 
