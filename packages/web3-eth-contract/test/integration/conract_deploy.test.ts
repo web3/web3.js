@@ -16,26 +16,26 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { sleep, processAsync } from '../shared_fixtures/utils';
-import { greeterByteCode, greeterContractAbi } from '../shared_fixtures/sources/Greeter';
-import { deployRevertAbi, deployRevertByteCode } from '../shared_fixtures/sources/DeployRevert';
+import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
+import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
-		let contract: Contract<typeof greeterContractAbi>;
+		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let accounts: string[];
 
 		beforeEach(async () => {
-			contract = new Contract(greeterContractAbi, undefined, {
+			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
 			accounts = await getSystemTestAccounts();
 
 			deployOptions = {
-				data: greeterByteCode,
+				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 
@@ -49,9 +49,9 @@ describe('contract', () => {
 		});
 
 		it('should deploy the contract if data is provided at initiation', async () => {
-			contract = new Contract(greeterContractAbi, undefined, {
+			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
-				data: greeterByteCode,
+				data: GreeterBytecode,
 				from: accounts[0],
 				gas: '1000000',
 			});
@@ -144,13 +144,13 @@ describe('contract', () => {
 		});
 
 		it('should fail with errors on revert', async () => {
-			const revert = new Contract(deployRevertAbi);
+			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
 
 			await expect(
 				revert
 					.deploy({
-						data: deployRevertByteCode,
+						data: DeployRevertBytecode,
 					})
 					.send(sendOptions),
 			).rejects.toThrow('contract deployment error');
