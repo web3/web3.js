@@ -54,10 +54,12 @@
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
 		"prepare": "husky install",
-		"postinstall": "yarn build"
+		"postinstall": "yarn build",
+		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.11.1",
+		"@openzeppelin/contracts": "^4.6.0",
 		"@types/node": "*",
 		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
@@ -74,8 +76,8 @@
 		"lerna": "^4.0.0",
 		"lint-staged": "12.1.2",
 		"prettier": "^2.4.1",
-		"prettier-plugin-solidity": "^1.0.0-beta.19",
 		"process": "^0.11.10",
+		"solc": "^0.8.13",
 		"ts-jest": "^27.0.7",
 		"ts-loader": "^9.2.8",
 		"ts-node": "^10.4.0",
