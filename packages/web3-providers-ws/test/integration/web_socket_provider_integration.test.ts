@@ -25,10 +25,7 @@ import {
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 } from 'web3-common';
-import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 
-import { Server } from 'http';
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import { WSRequestItem, OnCloseEvent } from '../../src/types';
@@ -258,62 +255,6 @@ describeIf(getSystemTestProvider().includes('ws'))(
 							done.fail(err.message);
 						});
 				});
-			});
-		});
-		describe('Support of Basic Auth', () => {
-			let server: Server;
-			beforeAll(() => {
-				const app = express();
-				const PORT = 3000;
-				const HOST = 'localhost';
-
-				const wsProxy = createProxyMiddleware({
-					target: clientWsUrl,
-					changeOrigin: true,
-					ws: true,
-					onError: () => {
-						console.warn('************** proxy error');
-					},
-					logLevel: 'silent',
-				});
-
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				app.use(wsProxy);
-				server = app.listen(PORT, HOST);
-
-				server.on('upgrade', (req, socket, head) => {
-					if (
-						!req.headers.authorization ||
-						!req.headers.authorization?.includes('Basic ')
-					) {
-						socket.emit('error');
-						socket.destroy();
-					}
-					const base64Credentials: string = req.headers.authorization!.split(' ')[1];
-					const credentials: string = Buffer.from(base64Credentials, 'base64').toString(
-						'ascii',
-					);
-					const [username, password] = credentials.split(':');
-					if (username !== 'geth' || password !== 'authpass') {
-						socket.emit('error');
-						socket.destroy();
-					}
-					return wsProxy.upgrade?.(req as any, socket as any, head);
-				});
-			});
-			afterAll(() => {
-				server.close();
-			});
-			// eslint-disable-next-line jest/expect-expect
-			it('should connect with basic auth', async () => {
-				webSocketProvider = new WebSocketProvider(
-					'ws://geth:authpass@localhost:3000',
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-				);
-
-				await waitForOpenConnection(webSocketProvider, currentAttempt);
-				webSocketProvider.disconnect();
 			});
 		});
 	},
