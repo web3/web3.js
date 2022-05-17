@@ -29,22 +29,18 @@ import {
 describe('personal integration tests', () => {
 	let ethPersonal: EthPersonal;
 	let accounts: string[];
-	let webSocketProvider: WebSocketProvider;
+	let clientUrl: string;
 	beforeAll(() => {
-		const clientUrl = getSystemTestProvider();
-		if (getSystemTestProvider().includes('ws'))
-			webSocketProvider = new WebSocketProvider(
-				clientUrl,
-				{},
-				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-			);
+		clientUrl = getSystemTestProvider();
 		ethPersonal = new EthPersonal(clientUrl);
 	});
 	beforeEach(async () => {
 		accounts = await getSystemTestAccounts();
 	});
 	afterAll(async () => {
-		if (getSystemTestProvider().includes('ws')) webSocketProvider.disconnect();
+		if (clientUrl.startsWith('ws')) {
+			(ethPersonal.provider as WebSocketProvider).disconnect();
+		}
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
