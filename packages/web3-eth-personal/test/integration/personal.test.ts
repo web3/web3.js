@@ -73,7 +73,7 @@ describe('personal integration tests', () => {
 	});
 
 	it('unlock account', async () => {
-		const from = accounts[0];
+		const from = accounts[4];
 		const unlockedAccount =
 			getSystemTestBackend() === 'ganache'
 				? await ethPersonal.unlockAccount(from, '123', 1000)
@@ -145,7 +145,7 @@ describe('personal integration tests', () => {
 	});
 
 	it('sendTransaction', async () => {
-		const from = accounts[0];
+		const from = accounts[5];
 
 		const unlockedAccount =
 			getSystemTestBackend() === 'ganache'
