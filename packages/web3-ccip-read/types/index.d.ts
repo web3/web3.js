@@ -17,15 +17,7 @@
  * @date 2022
  */
 
-interface ErrorObject { }
-
-interface ResultObject { }
-
-interface PayloadObject { }
-
-interface XMLHttpRequest { }
-
-interface Options {
+export interface Options {
     ccipReadGatewayCallback: () => null,
     ccipReadGatewayUrls: [string],
     ccipReadGatewayAllowList: [string],
@@ -33,18 +25,18 @@ interface Options {
 }
 
 export function ccipReadCall(
-    errorObject: ErrorObject,
-    result: ResultObject,
-    payload: PayloadObject,
+    errorObject: {},
+    result: {},
+    payload: {},
     send: () => null,
     options: Options
 ): any;
 
-export function isOffChainLookup(err: ErrorObject, result: ResultObject): boolean
+export function isOffChainLookup(err: {}, result: {}): boolean
 
 export function callGateways(
     urls: [string],
     to: string,
     callData: string,
     allowList: [string]
-): XMLHttpRequest
+): {}

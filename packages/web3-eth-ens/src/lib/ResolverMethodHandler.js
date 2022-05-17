@@ -125,23 +125,21 @@ ResolverMethodHandler.prototype.resolve = async function (resolver, name, func, 
     const result = await send(tx);
 
     let parsedBytes = null;
-    if (result !== "0x") { 
-        const offset = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, 0, 32))));
-        const length = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, offset, offset + 32)))) ;
-        parsedBytes =  hexDataSlice(result, offset + 32, offset + 32 + length);
-    }
+    const offset = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, 0, 32))));
+    const length = Number(BigInt.asIntN(16, BigInt(hexDataSlice(result, offset, offset + 32))));
+    parsedBytes = hexDataSlice(result, offset + 32, offset + 32 + length);
 
-    const outputs = resolverAbi.find(x => x.name === func).outputs
+    const outputs = methodJsonInterface.outputs
     const decoded = AbiCoder.decodeParameters(outputs, parsedBytes);
 
     let finalResult;
-    if(outputs.length === 1) {
-        finalResult =  decoded[0];
+    if (outputs.length === 1) {
+        finalResult = decoded[0];
     } else {
-        finalResult =  decoded;
+        finalResult = decoded;
     }
 
-    if(outputFormatter) {
+    if (outputFormatter) {
         finalResult = outputFormatter(finalResult);
     }
 
@@ -171,6 +169,9 @@ ResolverMethodHandler.prototype.call = function (callback) {
         if (supportsENSIP10) {
             await self.parent.resolve(resolver, self.ensName, self.methodName, preparedArguments, promiEvent, outputFormatter, callback)
         } else {
+            if (self.ensName !== resolver.currentName) {
+                throw 'Can not call legacy resolver methods as part of wildcard lookup process';
+            }
             await self.parent.checkInterfaceSupport(resolver, self.methodName);
             self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, outputFormatter, callback);
         }

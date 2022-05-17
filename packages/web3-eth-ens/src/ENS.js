@@ -104,16 +104,6 @@ ENS.prototype.supportsInterface = function (name, interfaceId, callback) {
     });
 };
 
-ENS.prototype.parent = function(name) {
-    if(!name) throw 'No name provided';
-    if(typeof name !== 'string') throw 'name should be a string';
-
-    const splitString = name.split('.');
-    if(splitString.length <= 1) return '';
-
-    return splitString.slice(1).join('.');
-};
-
 /**
  * Returns the Resolver by the given address
  *

@@ -23,6 +23,6 @@
     },
     "devDependencies": {
         "dtslint": "^3.4.1",
-        "typescript": "^4.0.3"
+        "typescript": "^3.9.5"
     }
 }

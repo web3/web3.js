@@ -200,7 +200,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -233,7 +233,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -296,7 +296,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -336,7 +336,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -436,7 +436,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -478,7 +478,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -533,7 +533,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -569,7 +569,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -618,7 +618,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -651,7 +651,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -700,7 +700,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -733,7 +733,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
 
@@ -809,7 +809,7 @@ describe('ens', function () {
                     nonce: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                    assert(error.message.includes('Transaction has been reverted by the EVM'));
                     assert.equal(result, null);
 
                     done();
@@ -843,7 +843,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('Transaction has been reverted by the EVM'));
+                assert(error.message.includes('Transaction has been reverted by the EVM'));
             }
         });
     });
@@ -2374,8 +2374,7 @@ describe('ens', function () {
             web3.eth.ens.getContent(
                 'foobar.eth',
                 function (error, result) {
-                    // assert.equal(error.code, 1234);
-                    debugger
+                    assert.equal(error.code, 1234);
                     assert.equal(error.message, 'ERROR');
                     assert.equal(result, null);
                     done();
@@ -2421,9 +2420,9 @@ describe('ens', function () {
             try {
                 await web3.eth.ens.getContenthash('foobar.eth');
 
-                // assert.fail();
+                assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('does not implement requested method: "contenthash"'));
+                assert(error.message.includes('does not implement requested method: "contenthash"'));
             }
         });
 
@@ -2465,7 +2464,7 @@ describe('ens', function () {
             web3.eth.ens.getContenthash(
                 'foobar.eth',
                 function (error, result) {
-                    assert.isTrue(error.message.includes('does not implement requested method: "contenthash"'));
+                    assert(error.message.includes('does not implement requested method: "contenthash"'));
                     assert.equal(result, null);
                     done();
                 }
@@ -2515,7 +2514,7 @@ describe('ens', function () {
 
                 assert.fail();
             } catch (error) {
-                assert.isTrue(error.message.includes('does not implement requested method: "setContenthash"'));
+                assert(error.message.includes('does not implement requested method: "setContenthash"'));
             }
         });
 
@@ -2563,7 +2562,7 @@ describe('ens', function () {
                     gasPrice: 1
                 },
                 function (error, result) {
-                    assert.isTrue(error.message.includes('does not implement requested method: "setContenthash"'));
+                    assert(error.message.includes('does not implement requested method: "setContenthash"'));
                     assert.equal(result, null);
                     done();
                 }
@@ -2606,7 +2605,7 @@ describe('ens', function () {
                 await web3.eth.ens.getAddress('foobar.eth');
                 assert.fail();
             } catch (err) {
-                assert.isTrue(err instanceof Error, 'Should throw error');
+                assert(err instanceof Error, 'Should throw error');
             }
         });
 
@@ -2627,7 +2626,7 @@ describe('ens', function () {
                 await web3.eth.ens.getAddress('foobar.eth');
                 assert.fail();
             } catch (err) {
-                assert.isTrue(err instanceof Error, 'Should throw error');
+                assert(err instanceof Error, 'Should throw error');
             }
         });
 
@@ -2783,7 +2782,6 @@ describe('ResolverMethodHandler', function() {
             const pubkeySignature = 'pubkey(bytes32)';
             const name = 'ethereum.eth';
             const hashedName = namehash.hash(name);
-            // const pubkeyInterfaceId = "c8690233";
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
@@ -2945,6 +2943,7 @@ describe('ResolverMethodHandler', function() {
 
             try {
                 await web3.eth.ens.getAddress(name);
+                assert.fail();
             } catch(error) {
                 assert.equal(error, 'Can not call legacy resolver methods as part of wildcard lookup process');   
             }

@@ -535,16 +535,18 @@ Registry.prototype.getResolver = async function (name, callback) {
     var self = this;
 
     try {
+        const currentContract = await this.contract;
         let resolver;
+        let resolverAddress
 
         for(let currentName = name; currentName !== ''; currentName = this.parent(currentName)) {
-            const currentContract = await this.contract;
-            const resolverAddress = await currentContract.methods.resolver(namehash.hash(currentName)).call();
-            resolver = new Contract(RESOLVER_ABI, resolverAddress);
-            resolver.setProvider(self.ens.eth.currentProvider);
+            resolverAddress = await currentContract.methods.resolver(namehash.hash(currentName)).call();
 
-            resolver.currentName = currentName;
-            if(resolver.options.address !== '0x0000000000000000000000000000000000000000') {
+            if(resolverAddress !== '0x0000000000000000000000000000000000000000') {
+                resolver = new Contract(RESOLVER_ABI, resolverAddress);
+                resolver.setProvider(self.ens.eth.currentProvider);
+                resolver.currentName = currentName;
+
                 if(typeof callback === 'function') {
                     callback(resolver, resolver);
                     return;
@@ -552,6 +554,8 @@ Registry.prototype.getResolver = async function (name, callback) {
                 return resolver;
             }
         }
+
+        resolver = new Contract(RESOLVER_ABI, resolverAddress);
     
         if(typeof callback === 'function') {
             callback(resolver, resolver);
