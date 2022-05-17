@@ -22,7 +22,7 @@ describe('logs_api', () => {
 	describe('decodeLog', () => {
 		describe('valid data', () => {
 			it.each(validDecodeLogsData)(
-				'should pass for valid values: %s',
+				'should pass for valid values: %j',
 				({ input: { abi, data, topics }, output }) => {
 					expect(decodeLog(abi, data, topics)).toEqual(output);
 				},

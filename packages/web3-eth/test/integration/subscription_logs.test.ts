@@ -21,7 +21,7 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
-import { basicContractAbi, basicContractByteCode } from '../shared_fixtures/sources/Basic';
+import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
@@ -32,12 +32,12 @@ import {
 
 const checkEventCount = 3;
 
-const eventAbi: AbiEventFragment = basicContractAbi.find((e: any) => {
+const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
 type MakeFewTxToContract = {
 	sendOptions: Record<string, unknown>;
-	contract: Contract<typeof basicContractAbi>;
+	contract: Contract<typeof BasicAbi>;
 	testDataString: string;
 };
 const makeFewTxToContract = async ({
@@ -56,7 +56,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 	let accounts: string[] = [];
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let contract: Contract<typeof basicContractAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let from: string;
@@ -70,12 +70,12 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
-		contract = new Contract(basicContractAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 
 		deployOptions = {
-			data: basicContractByteCode,
+			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
