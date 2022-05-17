@@ -24,7 +24,7 @@ export const waitForOpenConnection = async (
 ) => {
 	return new Promise<void>((resolve, reject) => {
 		const maxNumberOfAttempts = 10;
-		const intervalTime = 1000; // ms
+		const intervalTime = 2000; // ms
 
 		const interval = setInterval(() => {
 			if (currentAttempt > maxNumberOfAttempts - 1) {

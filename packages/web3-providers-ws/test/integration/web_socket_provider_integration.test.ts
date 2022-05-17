@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable jest/no-done-callback */
 import {
 	EthExecutionAPI,
 	JsonRpcId,
@@ -29,13 +28,15 @@ import {
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import { WSRequestItem, OnCloseEvent } from '../../src/types';
-import { waitForOpenConnection } from './helpers';
+import { waitForOpenConnection } from '../fixtures/helpers';
 
 import {
 	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
 } from '../fixtures/system_test_utils';
+
+type Resolve = (value?: unknown) => void;
 
 describeIf(getSystemTestProvider().includes('ws'))(
 	'WebSocketProvider - implemented methods',
@@ -82,65 +83,71 @@ describeIf(getSystemTestProvider().includes('ws'))(
 		});
 
 		describe('subscribe event tests', () => {
-			it('should subscribe to `message` event', done => {
-				webSocketProvider.on(
-					'message',
-					(
-						error: Error | null,
-						result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
-					) => {
-						if (error) {
-							done.fail(error);
-						}
-						expect(result?.id).toBe(jsonRpcPayload.id);
-						done();
-					},
-				);
-				webSocketProvider.request(jsonRpcPayload).catch(err => {
-					done.fail(err);
+			it('should subscribe to `message` event', async () => {
+				const messagePromise = new Promise((resolve: Resolve) => {
+					webSocketProvider.on(
+						'message',
+						(
+							error: Error | null,
+							result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
+						) => {
+							if (error) {
+								throw new Error(error.message);
+							}
+							expect(result?.id).toBe(jsonRpcPayload.id);
+							resolve();
+						},
+					);
 				});
+				await webSocketProvider.request(jsonRpcPayload);
+				await messagePromise;
 			});
 
-			it('should subscribe to `error` event', done => {
+			it('should subscribe to `error` event', async () => {
 				const errorMsg = 'Custom WebSocket error occured';
-				webSocketProvider.on('error', (err: any) => {
-					expect(err?.message).toBe(errorMsg);
-					done();
+
+				const errorPromise = new Promise((resolve: Resolve) => {
+					webSocketProvider.on('error', (err: any) => {
+						expect(err?.message).toBe(errorMsg);
+						resolve();
+					});
 				});
 
 				webSocketProvider['_wsEventEmitter'].emit(
 					'error',
 					new Web3WSProviderError(errorMsg),
 				);
+				await errorPromise;
 			});
 
-			// eslint-disable-next-line jest/expect-expect
-			it('should subscribe to `connect` event', done => {
-				webSocketProvider.on('open', () => {
-					done();
-				});
-			});
-
-			it('should subscribe to `close` event', done => {
-				const code = 1001;
-				webSocketProvider.on(
-					'close',
-					(err: Error | null, event: OnCloseEvent | null | undefined) => {
-						if (err) {
-							done.fail(err);
-						}
-						expect(event!.code).toEqual(code);
-						done();
-					},
-				);
-				currentAttempt = 0;
-				waitForOpenConnection(webSocketProvider, currentAttempt)
-					.then(() => {
-						webSocketProvider.disconnect(code);
-					})
-					.catch(() => {
-						done.fail();
+			it('should subscribe to `connect` event', async () => {
+				const openPromise = new Promise((resolve: Resolve) => {
+					webSocketProvider.on('open', () => {
+						resolve('resolved');
 					});
+				});
+				await expect(openPromise).resolves.toBe('resolved');
+			});
+
+			it('should subscribe to `close` event', async () => {
+				const code = 1001;
+
+				const closePromise = new Promise((resolve: Resolve) => {
+					webSocketProvider.on(
+						'close',
+						(err: Error | null, event: OnCloseEvent | null | undefined) => {
+							if (err) {
+								throw new Error(err.message);
+							}
+							expect(event!.code).toEqual(code);
+							resolve();
+						},
+					);
+				});
+				currentAttempt = 0;
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
+				webSocketProvider.disconnect(code);
+				await closePromise;
 			});
 		});
 		describe('disconnect and reset test', () => {
@@ -219,41 +226,29 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				} as Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
 			});
 
-			it('should send multiple requests', done => {
+			it('should send multiple requests', async () => {
 				const prom1 = webSocketProvider.request(jsonRpcPayload);
 
 				const prom2 = webSocketProvider.request(jsonRpcPayload2);
 
 				const prom3 = webSocketProvider.request(jsonRpcPayload3);
 
-				Promise.all([prom1, prom2, prom3])
-					.then(values => {
-						// eslint-disable-next-line jest/no-conditional-expect
-						expect(values).toEqual(
-							expect.arrayContaining([
-								expect.objectContaining({ id: jsonRpcPayload.id }),
-								expect.objectContaining({ id: jsonRpcPayload2.id }),
-								expect.objectContaining({ id: jsonRpcPayload3.id }),
-							]),
-						);
-						// Execute request in connected stated too
-						prom3
-							.then(value => {
-								// eslint-disable-next-line jest/no-conditional-expect
-								expect(value).toEqual(
-									expect.objectContaining({
-										id: jsonRpcPayload3.id,
-									}),
-								);
-								done();
-							})
-							.catch(err => {
-								done.fail(err.message);
-							});
-					})
-					.catch(err => {
-						done.fail(err.message);
-					});
+				const values = await Promise.all([prom1, prom2, prom3]);
+				expect(values).toEqual(
+					expect.arrayContaining([
+						expect.objectContaining({ id: jsonRpcPayload.id }),
+						expect.objectContaining({ id: jsonRpcPayload2.id }),
+						expect.objectContaining({ id: jsonRpcPayload3.id }),
+					]),
+				);
+
+				// Execute request in connected stated too
+				const prom3Value = await prom3;
+				expect(prom3Value).toEqual(
+					expect.objectContaining({
+						id: jsonRpcPayload3.id,
+					}),
+				);
 			});
 		});
 	},
