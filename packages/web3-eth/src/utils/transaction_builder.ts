@@ -27,6 +27,7 @@ import { ValidChains, Hardfork, Transaction, InternalTransaction } from '../type
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
+import { transactionSchema } from '../schemas';
 
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -75,7 +76,7 @@ export const getTransactionType = (
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
-	transaction: Record<string, unknown>;
+	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
@@ -161,7 +162,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		)),
 	};
 
-	return populatedTransaction as ReturnType;
+	return format(transactionSchema, populatedTransaction, DEFAULT_RETURN_FORMAT) as ReturnType;
 }
 
 export const transactionBuilder = async <ReturnType = Record<string, unknown>>(options: {
