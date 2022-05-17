@@ -382,11 +382,11 @@ describe('rpc', () => {
 
 		it('getPastLogs', async () => {
 			const listOfStrings = ['t1', 't2', 't3'];
-			const prs = [];
+			const resTx = [];
 			for (const l of listOfStrings) {
-				prs.push(contract.methods?.firesStringEvent(l).send(sendOptions));
+				// eslint-disable-next-line  no-await-in-loop
+				resTx.push(await contract.methods?.firesStringEvent(l).send(sendOptions));
 			}
-			const resTx = await Promise.all(prs);
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contract.options.address as string,
 				fromBlock: numberToHex(

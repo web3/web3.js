@@ -114,8 +114,10 @@ describe('eth', () => {
 			batch.add(request1).catch(console.error);
 			batch.add(request2).catch(console.error);
 			const [response1, response2] = await batch.execute();
-			expect(hexToNumber(String(response1.result))).toBeGreaterThan(0);
-			expect(hexToNumber(String(response2.result))).toBeGreaterThan(0);
+			expect(response1.result).toBeDefined();
+			expect(response2.result).toBeDefined();
+			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
+			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
 		it('defaults', async () => {
 			const config = web3Eth.getConfig();
