@@ -114,25 +114,22 @@ describe('rpc', () => {
 			}
 		});
 
-		it.each(
-			toAllVariants<{
-				method: 'getBlockNumber' | 'getGasPrice';
-				format: FMT_NUMBER[keyof FMT_NUMBER];
-			}>({
-				method: ['getBlockNumber', 'getGasPrice'],
-				format: Object.values(FMT_NUMBER),
-			}),
-		)(
-			`check method list of methods: getBlockNumber,getBlockNumber`,
-			async ({ format, method }) => {
-				const res = await web3Eth[method]({
-					number: format as FMT_NUMBER,
-					bytes: FMT_BYTES.HEX,
-				});
-				expect(typeof res).toBe(mapFormatToType[format as string]);
-				expect(parseInt(String(res), 16)).toBeGreaterThan(0);
-			},
-		);
+		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
+			const res = await web3Eth.getBlockNumber({
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(typeof res).toBe(mapFormatToType[format as string]);
+			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
+		});
+		it.each(Object.values(FMT_NUMBER))('getGasPrice', async format => {
+			const res = await web3Eth.getGasPrice({
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			expect(typeof res).toBe(mapFormatToType[format as string]);
+			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
+		});
 
 		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			const res = await web3Eth.getBalance(accounts[0], undefined, {
