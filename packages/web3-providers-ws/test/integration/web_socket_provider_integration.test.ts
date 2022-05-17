@@ -67,11 +67,11 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				currentAttempt = 0;
 			});
 			afterEach(async () => {
-				if (webSocketProvider.getStatus() !== 'disconnected') {
-					// make sure we try to close the connection after it is established
-					await waitForOpenConnection(webSocketProvider);
-					webSocketProvider.disconnect();
+				// make sure we try to close the connection after it is established
+				if (webSocketProvider.getStatus() === 'connecting') {
+					await waitForOpenConnection(webSocketProvider, currentAttempt);
 				}
+				webSocketProvider.disconnect();
 			});
 
 			describe('websocker provider tests', () => {
@@ -116,13 +116,13 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				});
 
 				// eslint-disable-next-line jest/expect-expect
-				it('should subscribe on connect', done => {
+				it('should subscribe to connect event', done => {
 					webSocketProvider.on('open', () => {
 						done();
 					});
 				});
 
-				it('should subscribe on close', done => {
+				it('should subscribe to close event', done => {
 					const code = 1001;
 					webSocketProvider.on(
 						'close',
