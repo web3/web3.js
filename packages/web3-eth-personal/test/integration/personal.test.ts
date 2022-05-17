@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
+import WebSocketProvider from 'web3-providers-ws';
 import { EthPersonal } from '../../src/index';
 import { importedAccount } from '../config/personal.config';
 import {
@@ -28,12 +29,18 @@ import {
 describe('personal integration tests', () => {
 	let ethPersonal: EthPersonal;
 	let accounts: string[];
+	let clientUrl: string;
 	beforeAll(() => {
-		const clientUrl = getSystemTestProvider();
+		clientUrl = getSystemTestProvider();
 		ethPersonal = new EthPersonal(clientUrl);
 	});
 	beforeEach(async () => {
 		accounts = await getSystemTestAccounts();
+	});
+	afterAll(async () => {
+		if (clientUrl.startsWith('ws')) {
+			(ethPersonal.provider as WebSocketProvider).disconnect();
+		}
 	});
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
