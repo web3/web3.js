@@ -132,7 +132,7 @@ describe('contract', () => {
 			).rejects.toThrow('Returned error: intrinsic gas too low');
 		});
 
-		it.skip('should fail with errors deploying a zero length bytecode', () => {
+		it('should fail with errors deploying a zero length bytecode', () => {
 			return expect(() =>
 				contract
 					.deploy({
