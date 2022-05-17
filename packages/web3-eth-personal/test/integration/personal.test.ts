@@ -32,13 +32,13 @@ describe('personal integration tests', () => {
 	let webSocketProvider: WebSocketProvider;
 	beforeAll(() => {
 		const clientUrl = getSystemTestProvider();
-		ethPersonal = new EthPersonal(clientUrl);
 		if (getSystemTestProvider().includes('ws'))
 			webSocketProvider = new WebSocketProvider(
 				clientUrl,
 				{},
 				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 			);
+		ethPersonal = new EthPersonal(clientUrl);
 	});
 	beforeEach(async () => {
 		accounts = await getSystemTestAccounts();
