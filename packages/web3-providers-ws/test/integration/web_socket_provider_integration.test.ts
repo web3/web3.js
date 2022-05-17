@@ -32,6 +32,7 @@ import { Server } from 'http';
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import { WSRequestItem, OnCloseEvent } from '../../src/types';
+import { waitForOpenConnection } from './helpers';
 
 import {
 	getSystemTestProvider,
@@ -48,24 +49,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 		let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 		// helper function
 		let currentAttempt = 0;
-		const waitForOpenConnection = async (provider: WebSocketProvider, status = 'connected') => {
-			return new Promise<void>((resolve, reject) => {
-				const maxNumberOfAttempts = 10;
-				const intervalTime = 5000; // ms
 
-				const interval = setInterval(() => {
-					if (currentAttempt > maxNumberOfAttempts - 1) {
-						clearInterval(interval);
-						reject(new Error('Maximum number of attempts exceeded'));
-					} else if (provider.getStatus() === status) {
-						clearInterval(interval);
-						resolve();
-					}
-					// eslint-disable-next-line no-plusplus
-					currentAttempt++;
-				}, intervalTime);
-			});
-		};
 		beforeAll(async () => {
 			clientWsUrl = getSystemTestProvider();
 			accounts = await getSystemTestAccounts();
@@ -95,7 +79,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 
 			describe('websocker provider tests', () => {
 				it('should connect', async () => {
-					await waitForOpenConnection(webSocketProvider);
+					await waitForOpenConnection(webSocketProvider, currentAttempt);
 					expect(webSocketProvider).toBeInstanceOf(WebSocketProvider);
 					expect(webSocketProvider.getStatus()).toBe('connected');
 				});
@@ -154,7 +138,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 						},
 					);
 					currentAttempt = 0;
-					waitForOpenConnection(webSocketProvider)
+					waitForOpenConnection(webSocketProvider, currentAttempt)
 						.then(() => {
 							webSocketProvider.disconnect(code);
 						})
@@ -170,9 +154,9 @@ describeIf(getSystemTestProvider().includes('ws'))(
 						{},
 						{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 					);
-					await waitForOpenConnection(provider);
+					await waitForOpenConnection(provider, currentAttempt);
 					provider.disconnect(1000);
-					await waitForOpenConnection(provider, 'disconnected');
+					await waitForOpenConnection(provider, currentAttempt, 'disconnected');
 					expect(provider.getStatus()).toBe('disconnected');
 				});
 				it('should reset', () => {
@@ -213,11 +197,11 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				});
 
 				it('test getStatus `connected`', async () => {
-					await waitForOpenConnection(webSocketProvider);
+					await waitForOpenConnection(webSocketProvider, currentAttempt);
 					expect(webSocketProvider.getStatus()).toBe('connected');
 				});
 				it('test getStatus `disconnected`', async () => {
-					await waitForOpenConnection(webSocketProvider);
+					await waitForOpenConnection(webSocketProvider, currentAttempt);
 					webSocketProvider.disconnect();
 					expect(webSocketProvider.getStatus()).toBe('disconnected');
 				});
@@ -328,7 +312,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 				);
 
-				await waitForOpenConnection(webSocketProvider);
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
 				webSocketProvider.disconnect();
 			});
 		});
