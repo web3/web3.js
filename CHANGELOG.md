@@ -579,6 +579,7 @@ Released with 1.0.0-beta.37 code base.
 -  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 -  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
 -  Fixed unit tests & removed dead code for web3-providers-http (#5228)
+-  Improvement using provided gas options for eip-1559 transactions (#5012)
 
 ### Security
 -  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
