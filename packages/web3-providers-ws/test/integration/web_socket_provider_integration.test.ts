@@ -51,210 +51,209 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			clientWsUrl = getSystemTestProvider();
 			accounts = await getSystemTestAccounts();
 		});
-		describe('tests', () => {
-			beforeEach(() => {
+		beforeEach(() => {
+			jsonRpcPayload = {
+				jsonrpc: '2.0',
+				id: 42,
+				method: 'eth_getBalance',
+				params: [accounts[0], 'latest'],
+			} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
+			webSocketProvider = new WebSocketProvider(
+				clientWsUrl,
+				{},
+				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+			);
+			currentAttempt = 0;
+		});
+		afterEach(async () => {
+			// make sure we try to close the connection after it is established
+			if (webSocketProvider.getStatus() === 'connecting') {
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
+			}
+			webSocketProvider.disconnect();
+		});
+
+		describe('websocker provider tests', () => {
+			it('should connect', async () => {
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
+				expect(webSocketProvider).toBeInstanceOf(WebSocketProvider);
+				expect(webSocketProvider.getStatus()).toBe('connected');
+			});
+		});
+
+		describe('subscribe event tests', () => {
+			it('should subscribe to `message` event', done => {
+				webSocketProvider.on(
+					'message',
+					(
+						error: Error | null,
+						result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
+					) => {
+						if (error) {
+							done.fail(error);
+						}
+						expect(result?.id).toBe(jsonRpcPayload.id);
+						done();
+					},
+				);
+				webSocketProvider.request(jsonRpcPayload).catch(err => {
+					done.fail(err);
+				});
+			});
+
+			it('should subscribe to `error` event', done => {
+				const errorMsg = 'Custom WebSocket error occured';
+				webSocketProvider.on('error', (err: any) => {
+					expect(err?.message).toBe(errorMsg);
+					done();
+				});
+
+				webSocketProvider['_wsEventEmitter'].emit(
+					'error',
+					new Web3WSProviderError(errorMsg),
+				);
+			});
+
+			// eslint-disable-next-line jest/expect-expect
+			it('should subscribe to `connect` event', done => {
+				webSocketProvider.on('open', () => {
+					done();
+				});
+			});
+
+			it('should subscribe to `close` event', done => {
+				const code = 1001;
+				webSocketProvider.on(
+					'close',
+					(err: Error | null, event: OnCloseEvent | null | undefined) => {
+						if (err) {
+							done.fail(err);
+						}
+						expect(event!.code).toEqual(code);
+						done();
+					},
+				);
+				currentAttempt = 0;
+				waitForOpenConnection(webSocketProvider, currentAttempt)
+					.then(() => {
+						webSocketProvider.disconnect(code);
+					})
+					.catch(() => {
+						done.fail();
+					});
+			});
+		});
+		describe('disconnect and reset test', () => {
+			it('should disconnect', async () => {
+				const provider = new WebSocketProvider(
+					clientWsUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				);
+				await waitForOpenConnection(provider, currentAttempt);
+				provider.disconnect(1000);
+				await waitForOpenConnection(provider, currentAttempt, 'disconnected');
+				expect(provider.getStatus()).toBe('disconnected');
+			});
+			it('should reset', () => {
 				jsonRpcPayload = {
 					jsonrpc: '2.0',
 					id: 42,
 					method: 'eth_getBalance',
 					params: [accounts[0], 'latest'],
 				} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
-				webSocketProvider = new WebSocketProvider(
-					clientWsUrl,
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
+
+				const reqItem: WSRequestItem<any, any, any> = {
+					payload: jsonRpcPayload,
+					deferredPromise: defPromise,
+				};
+
+				webSocketProvider['_pendingRequestsQueue'].set(
+					jsonRpcPayload.id as JsonRpcId,
+					reqItem,
 				);
-				currentAttempt = 0;
+				expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(1);
+
+				webSocketProvider['_sentRequestsQueue'].set(
+					jsonRpcPayload.id as JsonRpcId,
+					reqItem,
+				);
+				expect(webSocketProvider['_sentRequestsQueue'].size).toBe(1);
+
+				webSocketProvider.reset();
+				expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(0);
+				expect(webSocketProvider['_sentRequestsQueue'].size).toBe(0);
 			});
-			afterEach(async () => {
-				// make sure we try to close the connection after it is established
-				if (webSocketProvider.getStatus() === 'connecting') {
-					await waitForOpenConnection(webSocketProvider, currentAttempt);
-				}
+		});
+
+		describe('getStatus get and validate all status tests', () => {
+			it('should getStatus `connecting`', () => {
+				expect(webSocketProvider.getStatus()).toBe('connecting');
+			});
+
+			it('should getStatus `connected`', async () => {
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
+				expect(webSocketProvider.getStatus()).toBe('connected');
+			});
+			it('should getStatus `disconnected`', async () => {
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
 				webSocketProvider.disconnect();
+				expect(webSocketProvider.getStatus()).toBe('disconnected');
+			});
+		});
+		describe('send multiple Requests on same connection with valid payload and receive response tests', () => {
+			// eslint-disable-next-line jest/expect-expect
+			let jsonRpcPayload2: Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
+			let jsonRpcPayload3: Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
+			beforeAll(() => {
+				jsonRpcPayload2 = {
+					jsonrpc: '2.0',
+					id: 43,
+					method: 'eth_mining',
+				} as Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
+				jsonRpcPayload3 = {
+					jsonrpc: '2.0',
+					id: 44,
+					method: 'eth_hashrate',
+				} as Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
 			});
 
-			describe('websocker provider tests', () => {
-				it('should connect', async () => {
-					await waitForOpenConnection(webSocketProvider, currentAttempt);
-					expect(webSocketProvider).toBeInstanceOf(WebSocketProvider);
-					expect(webSocketProvider.getStatus()).toBe('connected');
-				});
-			});
+			it('should send multiple requests', done => {
+				const prom1 = webSocketProvider.request(jsonRpcPayload);
 
-			describe('subscribe event tests', () => {
-				it('should subscribe on message', done => {
-					webSocketProvider.on(
-						'message',
-						(
-							error: Error | null,
-							result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
-						) => {
-							if (error) {
-								done.fail(error);
-							}
-							expect(result?.id).toBe(jsonRpcPayload.id);
-							done();
-						},
-					);
-					webSocketProvider.request(jsonRpcPayload).catch(err => {
-						done.fail(err);
+				const prom2 = webSocketProvider.request(jsonRpcPayload2);
+
+				const prom3 = webSocketProvider.request(jsonRpcPayload3);
+
+				Promise.all([prom1, prom2, prom3])
+					.then(values => {
+						// eslint-disable-next-line jest/no-conditional-expect
+						expect(values).toEqual(
+							expect.arrayContaining([
+								expect.objectContaining({ id: jsonRpcPayload.id }),
+								expect.objectContaining({ id: jsonRpcPayload2.id }),
+								expect.objectContaining({ id: jsonRpcPayload3.id }),
+							]),
+						);
+						// Execute request in connected stated too
+						prom3
+							.then(value => {
+								// eslint-disable-next-line jest/no-conditional-expect
+								expect(value).toEqual(
+									expect.objectContaining({
+										id: jsonRpcPayload3.id,
+									}),
+								);
+								done();
+							})
+							.catch(err => {
+								done.fail(err.message);
+							});
+					})
+					.catch(err => {
+						done.fail(err.message);
 					});
-				});
-
-				it('should subscribe on error', done => {
-					const errorMsg = 'Custom WebSocket error occured';
-					webSocketProvider.on('error', (err: any) => {
-						expect(err?.message).toBe(errorMsg);
-						done();
-					});
-
-					webSocketProvider['_wsEventEmitter'].emit(
-						'error',
-						new Web3WSProviderError(errorMsg),
-					);
-				});
-
-				// eslint-disable-next-line jest/expect-expect
-				it('should subscribe to connect event', done => {
-					webSocketProvider.on('open', () => {
-						done();
-					});
-				});
-
-				it('should subscribe to close event', done => {
-					const code = 1001;
-					webSocketProvider.on(
-						'close',
-						(err: Error | null, event: OnCloseEvent | null | undefined) => {
-							if (err) {
-								done.fail(err);
-							}
-							expect(event!.code).toEqual(code);
-							done();
-						},
-					);
-					currentAttempt = 0;
-					waitForOpenConnection(webSocketProvider, currentAttempt)
-						.then(() => {
-							webSocketProvider.disconnect(code);
-						})
-						.catch(() => {
-							done.fail();
-						});
-				});
-			});
-			describe('disconnect and reset test', () => {
-				it('should disconnect', async () => {
-					const provider = new WebSocketProvider(
-						clientWsUrl,
-						{},
-						{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-					);
-					await waitForOpenConnection(provider, currentAttempt);
-					provider.disconnect(1000);
-					await waitForOpenConnection(provider, currentAttempt, 'disconnected');
-					expect(provider.getStatus()).toBe('disconnected');
-				});
-				it('should reset', () => {
-					jsonRpcPayload = {
-						jsonrpc: '2.0',
-						id: 42,
-						method: 'eth_getBalance',
-						params: [accounts[0], 'latest'],
-					} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
-					const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
-
-					const reqItem: WSRequestItem<any, any, any> = {
-						payload: jsonRpcPayload,
-						deferredPromise: defPromise,
-					};
-
-					webSocketProvider['_pendingRequestsQueue'].set(
-						jsonRpcPayload.id as JsonRpcId,
-						reqItem,
-					);
-					expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(1);
-
-					webSocketProvider['_sentRequestsQueue'].set(
-						jsonRpcPayload.id as JsonRpcId,
-						reqItem,
-					);
-					expect(webSocketProvider['_sentRequestsQueue'].size).toBe(1);
-
-					webSocketProvider.reset();
-					expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(0);
-					expect(webSocketProvider['_sentRequestsQueue'].size).toBe(0);
-				});
-			});
-
-			describe('getStatus get and validate all status tests', () => {
-				it('test getStatus `connecting`', () => {
-					expect(webSocketProvider.getStatus()).toBe('connecting');
-				});
-
-				it('test getStatus `connected`', async () => {
-					await waitForOpenConnection(webSocketProvider, currentAttempt);
-					expect(webSocketProvider.getStatus()).toBe('connected');
-				});
-				it('test getStatus `disconnected`', async () => {
-					await waitForOpenConnection(webSocketProvider, currentAttempt);
-					webSocketProvider.disconnect();
-					expect(webSocketProvider.getStatus()).toBe('disconnected');
-				});
-			});
-			describe('send multiple Requests on same connection with valid payload and receive response tests', () => {
-				// eslint-disable-next-line jest/expect-expect
-				let jsonRpcPayload2: Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
-				let jsonRpcPayload3: Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
-				beforeAll(() => {
-					jsonRpcPayload2 = {
-						jsonrpc: '2.0',
-						id: 43,
-						method: 'eth_mining',
-					} as Web3APIPayload<EthExecutionAPI, 'eth_mining'>;
-					jsonRpcPayload3 = {
-						jsonrpc: '2.0',
-						id: 44,
-						method: 'eth_hashrate',
-					} as Web3APIPayload<EthExecutionAPI, 'eth_hashrate'>;
-				});
-				it('multiple requests', done => {
-					const prom1 = webSocketProvider.request(jsonRpcPayload);
-
-					const prom2 = webSocketProvider.request(jsonRpcPayload2);
-
-					const prom3 = webSocketProvider.request(jsonRpcPayload3);
-
-					Promise.all([prom1, prom2, prom3])
-						.then(values => {
-							// eslint-disable-next-line jest/no-conditional-expect
-							expect(values).toEqual(
-								expect.arrayContaining([
-									expect.objectContaining({ id: jsonRpcPayload.id }),
-									expect.objectContaining({ id: jsonRpcPayload2.id }),
-									expect.objectContaining({ id: jsonRpcPayload3.id }),
-								]),
-							);
-							// Execute request in connected stated too
-							prom3
-								.then(value => {
-									// eslint-disable-next-line jest/no-conditional-expect
-									expect(value).toEqual(
-										expect.objectContaining({
-											id: jsonRpcPayload3.id,
-										}),
-									);
-									done();
-								})
-								.catch(err => {
-									done.fail(err.message);
-								});
-						})
-						.catch(err => {
-							done.fail(err.message);
-						});
-				});
 			});
 		});
 	},
