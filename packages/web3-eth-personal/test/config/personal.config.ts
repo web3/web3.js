@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,19 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { isHexStrict } from '../../src/validation';
-import { randomHex } from '../../src/random';
-import { randomHexData } from '../fixtures/random';
+type Account = {
+	address: string;
+	privateKey: string;
+	balance: string;
+};
 
-describe('random library tests', () => {
-	describe('randomHex', () => {
-		describe('valid cases', () => {
-			it.each(randomHexData)('%s', input => {
-				const hexResult = randomHex(input);
-				// eslint-disable-next-line deprecation/deprecation
-				expect(isHexStrict(hexResult)).toBe(true);
-				expect(hexResult.length === input * 2 + 2).toBe(true); // bytes + 2 because of hex prefix '0x'
-			});
-		});
-	});
-});
+export const importedAccount: Account = {
+	// geth
+	address: '0xcE6859c4891bd2552C3090FA6Fb701479B2571CC',
+	privateKey: '0xeb1ef1c6b1bffa4e118f1769420107a5076ee36b4741ecae29329ae7278d8cb7',
+	balance: '100',
+};

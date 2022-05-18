@@ -12,11 +12,11 @@ start() {
 	
 	if [ -z "${ORIGARGS[1]}" ]
 	then
-		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT
+		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123"
 	else
-		echo "Starting gancahe ..."
+		echo "Starting ganache ..."
 		echo "npx ganache ethereum -m \"$WEB3_SYSTEM_TEST_MNEMONIC\" -a 5 -p $WEB3_SYSTEM_TEST_PORT &"
-		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT >/dev/null &
+		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT >/dev/null --wallet.passphrase "123" &
 
 		echo "Waiting for ganache..."
 		npx wait-port "$WEB3_SYSTEM_TEST_PORT"
