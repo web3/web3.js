@@ -40,13 +40,13 @@ describe('hash', () => {
 
 		describe('compare with js-sha3 normal cases', () => {
 			it.each(sha3Data)('%s', input => {
-				expect(sha3(input)).toEqual(`0x${keccak256(input)}`);
+				expect(sha3(input)).toBe(`0x${keccak256(input)}`);
 			});
 		});
 
 		describe('compare with js-sha3 buffer cases', () => {
 			it.each(compareSha3JSValidData)('%s', (input, output) => {
-				expect(sha3(input)).toEqual(`0x${keccak256(output)}`);
+				expect(sha3(input)).toBe(`0x${keccak256(output)}`);
 			});
 		});
 	});
@@ -59,7 +59,7 @@ describe('hash', () => {
 		});
 		describe('comparing with js-sha3 cases', () => {
 			it.each(compareSha3JSRawValidData)('%s', (input, output) => {
-				expect(sha3Raw(input)).toEqual(`0x${keccak256(output)}`);
+				expect(sha3Raw(input)).toBe(`0x${keccak256(output)}`);
 			});
 		});
 	});
