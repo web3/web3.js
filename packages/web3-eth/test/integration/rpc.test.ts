@@ -24,9 +24,9 @@ import { AbiEventFragment } from 'web3-eth-abi';
 import { ReceiptInfo, Web3Eth } from '../../src';
 
 import {
-	getSystemTestAccounts,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	createNewAccount,
 	itIf,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
@@ -53,7 +53,9 @@ describe('rpc', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
 		web3Eth = new Web3Eth(clientUrl);
 
 		contract = new Contract(BasicAbi, undefined, {
@@ -108,10 +110,8 @@ describe('rpc', () => {
 
 		it('getAccounts', async () => {
 			const accList = await web3Eth.getAccounts();
-			expect(accounts).toHaveLength(accList.length);
-			for (const acc of accList) {
-				expect(accounts).toContain(acc);
-			}
+			expect(accList).toContain(accounts[0].toLowerCase());
+			expect(accList).toContain(accounts[1].toLowerCase());
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {

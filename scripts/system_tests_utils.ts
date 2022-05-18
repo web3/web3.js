@@ -59,18 +59,32 @@ const accounts: {
 	},
 ];
 
-export const createNewAccount = async (): Promise<{ address: string; privateKey: string }> => {
+export const createNewAccount = async (config?: {
+	unlock?: boolean;
+	refill?: boolean;
+}): Promise<{ address: string; privateKey: string }> => {
 	const acc = createAccount();
 	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
-	const web3Personal = new EthPersonal(clientUrl);
-	await web3Personal.importRawKey(acc.privateKey.substring(2), '123456');
-	await web3Personal.unlockAccount(acc.address, '123456', 500);
-	const web3Eth = new Web3Eth(clientUrl);
-	await web3Eth.sendTransaction({
-		from: await web3Eth.getCoinbase(),
-		to: accounts[0].address,
-		value: '100000000000000000000',
-	});
+	if (config?.unlock) {
+		const web3Personal = new EthPersonal(clientUrl);
+		await web3Personal.importRawKey(
+			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
+			'123456',
+		);
+		await web3Personal.unlockAccount(acc.address, '123456', 500);
+	}
+
+	if (config?.refill) {
+		const web3Personal = new EthPersonal(clientUrl);
+		const web3Eth = new Web3Eth(clientUrl);
+		const accList = await web3Personal.getAccounts();
+		await web3Eth.sendTransaction({
+			from: accList[0],
+			to: acc.address,
+			value: '1000000000000000000',
+		});
+	}
+
 	return { address: acc.address, privateKey: acc.privateKey };
 };
 

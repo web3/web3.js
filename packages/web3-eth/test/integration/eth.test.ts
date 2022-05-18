@@ -25,7 +25,7 @@ import IpcProvider from 'web3-providers-ipc';
 import { hexToNumber } from 'web3-utils';
 import { Web3Eth } from '../../src';
 
-import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_test_utils';
+import { createNewAccount, getSystemTestProvider } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
 
@@ -40,7 +40,9 @@ describe('eth', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
 		web3Eth = new Web3Eth(clientUrl);
 
 		contract = new Contract(BasicAbi, undefined, {
