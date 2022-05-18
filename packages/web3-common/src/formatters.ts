@@ -328,7 +328,7 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 				'',
 			)}${log.logIndex.replace('0x', '')}`,
 		);
-		modifiedLog.id = `log_${shaId.replace('0x', '').substr(0, 8)}`;
+		modifiedLog.id = `log_${shaId.replace('0x', '').slice(0, 8)}`;
 	} else if (!log.id) {
 		modifiedLog.id = undefined;
 	}
