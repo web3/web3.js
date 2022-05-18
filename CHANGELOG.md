@@ -567,3 +567,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-  Fix remove wallet using an index when an account address and address lowercase are equal (#5049)
