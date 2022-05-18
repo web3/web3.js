@@ -383,5 +383,5 @@ Released with 1.0.0-beta.37 code base.
 
 1. `givenProvider` default value is undefined
 2. `defaultHardfork` default value is 'london'
-   `defaultAccount` default value is null
-   `defaultNetworkId` default value is null
+3. `defaultAccount` default value is null
+4. `defaultNetworkId` default value is null
