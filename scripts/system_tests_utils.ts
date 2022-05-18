@@ -71,7 +71,7 @@ export const createNewAccount = async (config?: {
 			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
 			'123456',
 		);
-		await web3Personal.unlockAccount(acc.address, '123456', 500);
+		await web3Personal.unlockAccount(acc.address, '123456', 1000);
 	}
 
 	if (config?.refill) {
