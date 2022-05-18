@@ -22,7 +22,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand"
 	},
 	"dependencies": {
 		"web3-common": "1.0.0-alpha.0",
@@ -43,6 +43,7 @@
 		"jest-extended": "^1.1.0",
 		"prettier": "^2.4.1",
 		"ts-jest": "^27.0.7",
-		"typescript": "^4.5.2"
+		"typescript": "^4.5.2",
+		"web3-providers-ws": "4.0.0-alpha.0"
 	}
 }
