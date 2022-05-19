@@ -90,6 +90,7 @@ describe('rpc', () => {
 			expect(isSyncing).toBe(false);
 		});
 
+// TODO: in future release, set coinbase account in node and match actual address here
 		it('getCoinbase', async () => {
 			const coinbase = await web3Eth.getCoinbase();
 			expect(coinbase.startsWith('0x')).toBe(true);
