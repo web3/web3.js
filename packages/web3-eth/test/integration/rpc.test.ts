@@ -190,6 +190,7 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
+// TODO: in next release add tests for getBlock with get block by hash and get block by number, also add test for validating all block fields (blocknum, hash, baseFeePerGas,nonce,stateRoot,sizegasLimit, ....etc) instead of parentHash only
 		it.each(
 			toAllVariants<{
 				block: 'earliest' | 'latest' | 'pending';
