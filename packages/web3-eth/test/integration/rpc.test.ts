@@ -84,6 +84,7 @@ describe('rpc', () => {
 			expect(parseInt(version, 16)).toBeGreaterThan(0);
 		});
 
+// TODO:in beta,  test eth_syncing during sync mode with return obj having ( startingblock, currentBlock, heighestBlock )
 		it('isSyncing', async () => {
 			const isSyncing = await web3Eth.isSyncing();
 			expect(isSyncing).toBe(false);
