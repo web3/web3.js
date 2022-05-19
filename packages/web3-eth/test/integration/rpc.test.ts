@@ -285,6 +285,11 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransaction((receipt as ReceiptInfo).transactionHash);
+// TODO: after alpha release add tests for validation of transaction fields (nonce, blockhash, blocknum, tx index, from, to ,value, gasPrice, gas, inputData)
+// TODO: after alpha release add tests for matching following (first get nonce of account sending tx and validate nonce with tx is incremented)
+// TODO: after alpha release add tests for matching following (from and to addresses)
+// TODO: after alpha release add tests for matching following (value transferred)
+// TODO: after alpha release add tests for matching following (specify some random inputData in tx and validate in test with getTransaction)
 			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
 		});
 
