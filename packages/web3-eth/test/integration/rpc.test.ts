@@ -133,6 +133,7 @@ describe('rpc', () => {
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
+// TODO: In future release, create account, transfer some amount from coinbase acct to that and check exact balance is equal with this getBalance call
 		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			const res = await web3Eth.getBalance(accounts[0], undefined, {
 				number: format as FMT_NUMBER,
