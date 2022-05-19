@@ -123,6 +123,7 @@ describe('eth', () => {
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
 		it('defaults', async () => {
+// TODO: in future release add tests for setting default and matching with new values
 			const config = web3Eth.getConfig();
 			expect(config.defaultAccount).toBeNull();
 			expect(config.handleRevert).toBe(false);
