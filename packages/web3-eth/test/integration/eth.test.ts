@@ -118,6 +118,7 @@ describe('eth', () => {
 			const [response1, response2] = await batch.execute();
 			expect(response1.result).toBeDefined();
 			expect(response2.result).toBeDefined();
+// TODO: in future release add test for validation of returned results , ( match balance )
 			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
