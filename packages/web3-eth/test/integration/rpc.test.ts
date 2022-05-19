@@ -109,6 +109,7 @@ describe('rpc', () => {
 			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
 		});
 
+// TODO: in future release, add accounts in node wallet via eth_personal API and match address in tests
 		it('getAccounts', async () => {
 			const accList = await web3Eth.getAccounts();
 			expect(accList).toContain(accounts[0].toLowerCase());
