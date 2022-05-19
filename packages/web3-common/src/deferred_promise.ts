@@ -18,37 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable max-classes-per-file */
 import { OperationTimeoutError } from 'web3-errors';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
-// const util = require('util');
-
-class PromiseTimeout<T = void> {
-	public _id!: NodeJS.Timeout;
-	private readonly _promise: Promise<T>;
-
-	// private id: NodeJS.Timeout;
-	// private readonly _promise: Promise<T>;
-	public constructor(ms: number, message: string) {
-		const CustomPromise = Promise.bind(this);
-		this._promise = new CustomPromise((_, reject) => {
-			this._id = setTimeout(() => {
-				// clearTimeout(this.id);
-				reject(new OperationTimeoutError(message ?? `Timed out in ${ms}ms.`));
-
-				// setInterval(() => {
-				// 	console.log(util.inspect(this.id));
-				// }, 1000);
-			}, ms);
-		});
-	}
-	public get id(): NodeJS.Timeout {
-		return this._id;
-	}
-
-	public get promise(): Promise<T> {
-		return this._promise;
-	}
-}
-
 export class DeferredPromise<T> implements Promise<T> {
 	// public tag to treat object as promise by different libs
 	public [Symbol.toStringTag]: 'Promise';
@@ -57,7 +26,9 @@ export class DeferredPromise<T> implements Promise<T> {
 	private _resolve!: (value: T | PromiseLike<T>) => void;
 	private _reject!: (reason?: unknown) => void;
 	private _state: 'pending' | 'fulfilled' | 'rejected' = 'pending';
-	private readonly _promiseTimeOut: PromiseTimeout | undefined;
+	private _timeoutId?: NodeJS.Timeout;
+	private readonly _timeoutInterval?: number;
+	private readonly _timeoutMessage: string;
 
 	public constructor(
 		{
@@ -70,33 +41,16 @@ export class DeferredPromise<T> implements Promise<T> {
 			timeoutMessage: 'DeferredPromise timed out',
 		},
 	) {
-		if (eagerStart) {
-			const tempPromise = new Promise<T>((resolve, reject) => {
-				this._resolve = resolve;
-				this._reject = reject;
-			});
-			// tempPromise.then(() => {
-			// 	console.log('TEMPPROMISERESOLVED\n****\n***');
-			// });
+		this._promise = new Promise<T>((resolve, reject) => {
+			this._resolve = resolve;
+			this._reject = reject;
+		});
 
-			this._promiseTimeOut = new PromiseTimeout(timeout, timeoutMessage);
-			// promTimeOut
-			// 	.then(() => {
-			// 		console.log('TIME PROMISERESOLVED\n****\n***');
-			// 	})
-			// 	.catch(error => {
-			// 		console.warn('PROMISE TIMEOUT REJECTED');
-			// 		console.warn(error);
-			// 	});
-			this._promise = Promise.race([tempPromise, this._promiseTimeOut.promise]) as Promise<T>;
-			// this._promise.then(() => {
-			// 	console.log('PROMISERESOLVED\n****\n***');
-			// });
-		} else {
-			this._promise = new Promise<T>((resolve, reject) => {
-				this._resolve = resolve;
-				this._reject = reject;
-			});
+		this._timeoutMessage = timeoutMessage;
+		this._timeoutInterval = timeout;
+
+		if (eagerStart) {
+			this.startTimer();
 		}
 	}
 
@@ -123,20 +77,32 @@ export class DeferredPromise<T> implements Promise<T> {
 	}
 
 	public resolve(value: T | PromiseLike<T>): void {
-		this._state = 'fulfilled';
 		this._resolve(value);
-		this.clearPromiseTimeOut();
+		this._state = 'fulfilled';
+		this._clearTimeout();
 	}
 
 	public reject(reason?: unknown): void {
-		this._state = 'rejected';
 		this._reject(reason);
-		this.clearPromiseTimeOut();
+		this._state = 'rejected';
+		this._clearTimeout();
 	}
 
-	private clearPromiseTimeOut(): void {
-		if (this._promiseTimeOut) {
-			clearTimeout(this._promiseTimeOut.id);
+	public startTimer() {
+		if (this._timeoutInterval && this._timeoutInterval > 0) {
+			this._timeoutId = setTimeout(this._checkTimeout.bind(this), this._timeoutInterval);
+		}
+	}
+
+	private _checkTimeout() {
+		if (this._state === 'pending' && this._timeoutId) {
+			this.reject(new OperationTimeoutError(this._timeoutMessage));
+		}
+	}
+
+	private _clearTimeout() {
+		if (this._timeoutId) {
+			clearTimeout(this._timeoutId);
 		}
 	}
 }
