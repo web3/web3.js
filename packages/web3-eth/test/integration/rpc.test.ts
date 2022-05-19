@@ -209,6 +209,7 @@ describe('rpc', () => {
 			expect(b.parentHash?.length).toBe(66);
 		});
 
+// TODO: add tests infuture for get tx count till specific blocknumber , earliest, and pending
 		it('getTransactionCount', async () => {
 			const countBefore = await web3Eth.getTransactionCount(accounts[0], 'latest', {
 				number: FMT_NUMBER.NUMBER,
