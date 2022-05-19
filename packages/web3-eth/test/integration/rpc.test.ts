@@ -84,13 +84,13 @@ describe('rpc', () => {
 			expect(parseInt(version, 16)).toBeGreaterThan(0);
 		});
 
-// TODO:in beta,  test eth_syncing during sync mode with return obj having ( startingblock, currentBlock, heighestBlock )
+		// TODO:in beta,  test eth_syncing during sync mode with return obj having ( startingblock, currentBlock, heighestBlock )
 		it('isSyncing', async () => {
 			const isSyncing = await web3Eth.isSyncing();
 			expect(isSyncing).toBe(false);
 		});
 
-// TODO: in future release, set coinbase account in node and match actual address here
+		// TODO: in future release, set coinbase account in node and match actual address here
 		it('getCoinbase', async () => {
 			const coinbase = await web3Eth.getCoinbase();
 			expect(coinbase.startsWith('0x')).toBe(true);
@@ -110,7 +110,7 @@ describe('rpc', () => {
 			expect(typeof hashRate).toBe(mapFormatToType[format as string]);
 		});
 
-// TODO: in future release, add accounts in node wallet via eth_personal API and match address in tests
+		// TODO: in future release, add accounts in node wallet via eth_personal API and match address in tests
 		it('getAccounts', async () => {
 			const accList = await web3Eth.getAccounts();
 			expect(accList).toContain(accounts[0].toLowerCase());
@@ -134,7 +134,7 @@ describe('rpc', () => {
 			expect(parseInt(String(res), 16)).toBeGreaterThan(0);
 		});
 
-// TODO: In future release, create account, transfer some amount from coinbase acct to that and check exact balance is equal with this getBalance call
+		// TODO: In future release, create account, transfer some amount from coinbase acct to that and check exact balance is equal with this getBalance call
 		it.each(Object.values(FMT_NUMBER))('getBalance', async format => {
 			const res = await web3Eth.getBalance(accounts[0], undefined, {
 				number: format as FMT_NUMBER,
@@ -192,7 +192,7 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
-// TODO: in next release add tests for getBlock with get block by hash and get block by number, also add test for validating all block fields (blocknum, hash, baseFeePerGas,nonce,stateRoot,sizegasLimit, ....etc) instead of parentHash only
+		// TODO: in next release add tests for getBlock with get block by hash and get block by number, also add test for validating all block fields (blocknum, hash, baseFeePerGas,nonce,stateRoot,sizegasLimit, ....etc) instead of parentHash only
 		it.each(
 			toAllVariants<{
 				block: 'earliest' | 'latest' | 'pending';
@@ -211,7 +211,7 @@ describe('rpc', () => {
 			expect(b.parentHash?.length).toBe(66);
 		});
 
-// TODO: add tests infuture for get tx count till specific blocknumber , earliest, and pending
+		// TODO: add tests infuture for get tx count till specific blocknumber , earliest, and pending
 		it('getTransactionCount', async () => {
 			const countBefore = await web3Eth.getTransactionCount(accounts[0], 'latest', {
 				number: FMT_NUMBER.NUMBER,
@@ -233,7 +233,7 @@ describe('rpc', () => {
 			expect(Number(countAfter) - Number(countBefore)).toBe(3);
 		});
 
-// TODO: add tests for get tx count in block with block num param, `latest` and `pending` params
+		// TODO: add tests for get tx count in block with block num param, `latest` and `pending` params
 		it('getBlockTransactionCount', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
@@ -258,7 +258,7 @@ describe('rpc', () => {
 				times: 1,
 			});
 
-// TODO: After alpha release add more scenarios coverage with getBlockUncleCount with block number, 
+			// TODO: After alpha release add more scenarios coverage with getBlockUncleCount with block number,
 			const res = await web3Eth.getBlockUncleCount(
 				(receipt as ReceiptInfo).blockHash as string,
 			);
@@ -288,11 +288,11 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransaction((receipt as ReceiptInfo).transactionHash);
-// TODO: after alpha release add tests for validation of transaction fields (nonce, blockhash, blocknum, tx index, from, to ,value, gasPrice, gas, inputData)
-// TODO: after alpha release add tests for matching following (first get nonce of account sending tx and validate nonce with tx is incremented)
-// TODO: after alpha release add tests for matching following (from and to addresses)
-// TODO: after alpha release add tests for matching following (value transferred)
-// TODO: after alpha release add tests for matching following (specify some random inputData in tx and validate in test with getTransaction)
+			// TODO: after alpha release add tests for validation of transaction fields (nonce, blockhash, blocknum, tx index, from, to ,value, gasPrice, gas, inputData)
+			// TODO: after alpha release add tests for matching following (first get nonce of account sending tx and validate nonce with tx is incremented)
+			// TODO: after alpha release add tests for matching following (from and to addresses)
+			// TODO: after alpha release add tests for matching following (value transferred)
+			// TODO: after alpha release add tests for matching following (specify some random inputData in tx and validate in test with getTransaction)
 			expect(res?.hash).toBe((receipt as ReceiptInfo).transactionHash);
 		});
 
@@ -307,8 +307,8 @@ describe('rpc', () => {
 
 			const res = await web3Eth.getPendingTransactions();
 			await pr;
+			// TODO: validate pending tx fields match with submitted tx
 			// eslint-disable-next-line jest/no-standalone-expect
-// TODO: validate pending tx fields match with submitted tx
 			expect(res).toBeDefined();
 		});
 
@@ -322,7 +322,7 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransactionFromBlock(
-// TODO: add test with block number for getting getTransactionFromBlock and also validate transaction fields
+				// TODO: add test with block number for getting getTransactionFromBlock and also validate transaction fields
 				(receipt as ReceiptInfo).blockHash as string,
 				0,
 			);
@@ -339,7 +339,7 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransactionReceipt(
-// TODO: add more scenarios in future release with block number and validate tx receipt fields
+				// TODO: add more scenarios in future release with block number and validate tx receipt fields
 				(receipt as ReceiptInfo).transactionHash as string,
 			);
 			expect(res?.transactionHash).toBe((receipt as ReceiptInfo).transactionHash);
@@ -350,13 +350,13 @@ describe('rpc', () => {
 				number: FMT_NUMBER.NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
-// TODO: in next release validate chain ID , it should match with chain id of connected client
+			// TODO: in next release validate chain ID , it should match with chain id of connected client
 			expect(res).toBeGreaterThan(0);
 		});
 
 		it('getNodeInfo', async () => {
 			const res = await web3Eth.getNodeInfo();
-// TODO: in next release, it should also be validated
+			// TODO: in next release, it should also be validated
 			expect(res).toBeDefined();
 		});
 
