@@ -341,6 +341,7 @@ describe('rpc', () => {
 				number: FMT_NUMBER.NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
+// TODO: in next release validate chain ID , it should match with chain id of connected client
 			expect(res).toBeGreaterThan(0);
 		});
 
