@@ -346,6 +346,7 @@ describe('rpc', () => {
 
 		it('getNodeInfo', async () => {
 			const res = await web3Eth.getNodeInfo();
+// TODO: in next release, it should also be validated
 			expect(res).toBeDefined();
 		});
 
