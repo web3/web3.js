@@ -314,6 +314,7 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransactionFromBlock(
+// TODO: add test with block number for getting getTransactionFromBlock and also validate transaction fields
 				(receipt as ReceiptInfo).blockHash as string,
 				0,
 			);
