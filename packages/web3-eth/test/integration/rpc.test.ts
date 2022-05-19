@@ -230,6 +230,7 @@ describe('rpc', () => {
 			expect(Number(countAfter) - Number(countBefore)).toBe(3);
 		});
 
+// TODO: add tests for get tx count in block with block num param, `latest` and `pending` params
 		it('getBlockTransactionCount', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
