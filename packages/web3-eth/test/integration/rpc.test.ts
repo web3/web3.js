@@ -255,6 +255,7 @@ describe('rpc', () => {
 				times: 1,
 			});
 
+// TODO: After alpha release add more scenarios coverage with getBlockUncleCount with block number, 
 			const res = await web3Eth.getBlockUncleCount(
 				(receipt as ReceiptInfo).blockHash as string,
 			);
