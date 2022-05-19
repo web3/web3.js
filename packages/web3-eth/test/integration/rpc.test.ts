@@ -300,6 +300,7 @@ describe('rpc', () => {
 			const res = await web3Eth.getPendingTransactions();
 			await pr;
 			// eslint-disable-next-line jest/no-standalone-expect
+// TODO: validate pending tx fields match with submitted tx
 			expect(res).toBeDefined();
 		});
 
