@@ -330,6 +330,7 @@ describe('rpc', () => {
 			});
 
 			const res = await web3Eth.getTransactionReceipt(
+// TODO: add more scenarios in future release with block number and validate tx receipt fields
 				(receipt as ReceiptInfo).transactionHash as string,
 			);
 			expect(res?.transactionHash).toBe((receipt as ReceiptInfo).transactionHash);
