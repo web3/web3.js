@@ -382,16 +382,16 @@ Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(opt
     var gasPrice = options.gasPrice ? String(options.gasPrice): null;
     var from = options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
 
-    options.data = options.data || this.options.data;
-
-    options.from = from || this.options.from;
-    options.gasPrice = gasPrice || this.options.gasPrice;
-    options.gas = options.gas || options.gasLimit || this.options.gas;
-
     // TODO replace with only gasLimit?
-    delete options.gasLimit;
+    const { gasLimit, ...restOptions } = options;
 
-    return options;
+    return {
+        ...restOptions,
+        data: options.data || this.options.data,
+        from: from || this.options.from,
+        gasPrice: gasPrice || this.options.gasPrice,
+        gas: options.gas || options.gasLimit || this.options.gas,
+    };
 };
 
 
