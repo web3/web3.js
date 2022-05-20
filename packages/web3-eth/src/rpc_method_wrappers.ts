@@ -49,6 +49,7 @@ import {
 	Log,
 	ReceiptInfo,
 	SendSignedTransactionEvents,
+	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
 	Transaction,
@@ -506,85 +507,109 @@ export function sendTransaction<
 	return promiEvent;
 }
 
-export function sendSignedTransaction<ReturnFormat extends DataFormat>(
+export function sendSignedTransaction<
+	ReturnFormat extends DataFormat,
+	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
+>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	signedTransaction: Bytes,
 	returnFormat: ReturnFormat,
-): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> {
+	options?: SendSignedTransactionOptions<ResolveType>,
+): PromiEvent<ResolveType, SendSignedTransactionEvents> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
-		setImmediate(() => {
-			(async () => {
-				// Formatting signedTransaction as per returnFormat to be returned to user
-				const signedTransactionFormatted = format(
-					{ eth: 'bytes' },
-					signedTransaction,
-					returnFormat,
-				);
+	const promiEvent = new PromiEvent<ResolveType, SendSignedTransactionEvents>(
+		(resolve, reject) => {
+			setImmediate(() => {
+				(async () => {
+					try {
+						// Formatting signedTransaction as per returnFormat to be returned to user
+						const signedTransactionFormatted = format(
+							{ eth: 'bytes' },
+							signedTransaction,
+							returnFormat,
+						);
 
-				promiEvent.emit('sending', signedTransactionFormatted);
+						if (promiEvent.listenerCount('sending') > 0) {
+							promiEvent.emit('sending', signedTransactionFormatted);
+						}
 
-				// Formatting signedTransaction to be send to RPC endpoint
-				const signedTransactionFormattedHex = format(
-					{ eth: 'bytes' },
-					signedTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
-				const transactionHash = await rpcMethods.sendRawTransaction(
-					web3Context.requestManager,
-					signedTransactionFormattedHex,
-				);
-				const transactionHashFormatted = format(
-					{ eth: 'bytes32' },
-					transactionHash,
-					returnFormat,
-				);
+						// Formatting signedTransaction to be send to RPC endpoint
+						const signedTransactionFormattedHex = format(
+							{ eth: 'bytes' },
+							signedTransaction,
+							DEFAULT_RETURN_FORMAT,
+						);
+						const transactionHash = await rpcMethods.sendRawTransaction(
+							web3Context.requestManager,
+							signedTransactionFormattedHex,
+						);
+						const transactionHashFormatted = format(
+							{ eth: 'bytes32' },
+							transactionHash,
+							returnFormat,
+						);
 
-				if (promiEvent.listenerCount('sent') > 0) {
-					promiEvent.emit('sent', signedTransactionFormatted);
-				}
+						if (promiEvent.listenerCount('sent') > 0) {
+							promiEvent.emit('sent', signedTransactionFormatted);
+						}
 
-				if (promiEvent.listenerCount('transactionHash') > 0) {
-					promiEvent.emit('transactionHash', transactionHashFormatted);
-				}
+						if (promiEvent.listenerCount('transactionHash') > 0) {
+							promiEvent.emit('transactionHash', transactionHashFormatted);
+						}
 
-				let transactionReceipt = await getTransactionReceipt(
-					web3Context,
-					transactionHash,
-					returnFormat,
-				);
+						let transactionReceipt = await getTransactionReceipt(
+							web3Context,
+							transactionHash,
+							returnFormat,
+						);
 
-				// Transaction hasn't been included in a block yet
-				if (transactionReceipt === null)
-					transactionReceipt = await waitForTransactionReceipt(
-						web3Context,
-						transactionHash,
-						returnFormat,
-					);
+						// Transaction hasn't been included in a block yet
+						if (transactionReceipt === null)
+							transactionReceipt = await waitForTransactionReceipt(
+								web3Context,
+								transactionHash,
+								returnFormat,
+							);
 
-				const transactionReceiptFormatted = format(
-					receiptInfoSchema,
-					transactionReceipt,
-					returnFormat,
-				);
+						const transactionReceiptFormatted = format(
+							receiptInfoSchema,
+							transactionReceipt,
+							returnFormat,
+						);
 
-				if (promiEvent.listenerCount('receipt') > 0) {
-					promiEvent.emit('receipt', transactionReceiptFormatted);
-				}
+						if (promiEvent.listenerCount('receipt') > 0) {
+							promiEvent.emit('receipt', transactionReceiptFormatted);
+						}
 
-				resolve(transactionReceiptFormatted);
+						if (options?.transactionResolver) {
+							resolve(
+								options?.transactionResolver(
+									transactionReceiptFormatted,
+								) as unknown as ResolveType,
+							);
+						} else if (transactionReceipt.status === '0x0') {
+							reject(transactionReceiptFormatted as unknown as ResolveType);
+						} else {
+							resolve(transactionReceiptFormatted as unknown as ResolveType);
+						}
 
-				watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat>(
-					web3Context,
-					promiEvent,
-					transactionReceiptFormatted,
-					transactionHash,
-					returnFormat,
-				);
-			})() as unknown;
-		});
-	});
+						if (promiEvent.listenerCount('confirmation') > 0) {
+							watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat, ResolveType>(
+								web3Context,
+								promiEvent,
+								transactionReceiptFormatted as ReceiptInfo,
+								transactionHash,
+								returnFormat,
+							);
+						}
+					} catch (error) {
+						reject(error);
+					}
+				})() as unknown;
+			});
+		},
+	);
 
 	return promiEvent;
 }

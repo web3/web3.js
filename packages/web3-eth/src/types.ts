@@ -197,6 +197,10 @@ export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
 	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
 }
 
+export interface SendSignedTransactionOptions<ResolveType = ReceiptInfo> {
+	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
+}
+
 export type SendSignedTransactionEvents = SendTransactionEvents & {
 	sending: Bytes;
 	sent: Bytes;
