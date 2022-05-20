@@ -22,7 +22,7 @@ import Web3Eth from 'web3-eth';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
 import HDWalletProvider from '@truffle/hdwallet-provider';
 import { Web3 } from '../../src/index';
-import { greeterContractAbi } from '../shared_fixtures/Greeter';
+import { GreeterAbi } from '../shared_fixtures/Greeter';
 
 import {
 	getSystemTestProvider,
@@ -175,7 +175,7 @@ describe('Web3 instance', () => {
 					decrypt: expect.any(Function),
 				}),
 			);
-			const greeterContract = new web3.eth.Contract(greeterContractAbi);
+			const greeterContract = new web3.eth.Contract(GreeterAbi);
 			expect(greeterContract).toBeInstanceOf(Contract);
 		});
 	});

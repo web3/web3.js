@@ -1,1 +1,1 @@
-../../../../fixtures/sources/Greeter.ts
+../../../../fixtures/build/Greeter.ts

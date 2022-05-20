@@ -237,8 +237,11 @@ export class Web3Context<
 		this.requestManager.setProvider(provider);
 	}
 
-	public get BatchRequest() {
-		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
+	public get BatchRequest(): Web3RequestManager<API> {
+		return Web3BatchRequest.bind(
+			null,
+			this._requestManager as unknown as Web3RequestManager<API>,
+		);
 	}
 }
 
