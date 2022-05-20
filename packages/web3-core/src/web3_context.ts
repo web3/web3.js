@@ -240,8 +240,8 @@ export class Web3Context<
 	public get BatchRequest(): Web3RequestManager<API> {
 		return Web3BatchRequest.bind(
 			null,
-			this._requestManager as unknown as Web3RequestManager<API>,
-		);
+			this._requestManager as unknown as Web3RequestManager,
+		) as unknown as Web3RequestManager<API>;
 	}
 }
 
