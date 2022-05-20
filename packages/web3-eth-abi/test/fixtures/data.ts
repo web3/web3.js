@@ -348,6 +348,42 @@ export const validDecodeLogsData: {
 			str: 'b',
 		},
 	},
+	{
+		input: {
+			abi: [
+				{
+					indexed: true,
+					name: 'from',
+					type: 'address',
+				},
+				{
+					indexed: true,
+					name: 'to',
+					type: 'address',
+				},
+				{
+					indexed: false,
+					name: 'value',
+					type: 'uint256',
+				},
+			],
+			topics: [
+				'0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+				'0x0000000000000000000000006e599da0bff7a6598ac1224e4985430bf16458a4',
+				'0x0000000000000000000000006f1df96865d09d21e8f3f9a7fba3b17a11c7c53c',
+			],
+			data: '0x00000000000000000000000000000000000000000000000000000000000186a0',
+		},
+		output: {
+			'0': '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
+			'1': '0x6f1DF96865D09d21e8f3f9a7fbA3b17A11c7C53C',
+			'2': '100000',
+			__length__: 3,
+			from: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
+			to: '0x6f1DF96865D09d21e8f3f9a7fbA3b17A11c7C53C',
+			value: '100000',
+		},
+	},
 ];
 
 export const validEncodeDecodeParametersData: {

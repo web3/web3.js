@@ -19,7 +19,6 @@ import { TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
-	BlockNumberOrTag,
 	Uint256,
 	HexString32Bytes,
 	HexStringBytes,
@@ -27,7 +26,7 @@ import {
 	Filter,
 	HexString8Bytes,
 } from 'web3-utils';
-import { validator } from 'web3-validator';
+import { BlockNumberOrTag, validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {

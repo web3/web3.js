@@ -30,3 +30,11 @@ export const sleep = async (ms: number) =>
 			resolve(true);
 		}, ms);
 	});
+
+export const toUpperCaseHex = (str: string) => {
+	if (str.startsWith('0x') || str.startsWith('0X')) {
+		return `0x${str.toUpperCase().slice(2)}`;
+	}
+
+	return `0x${str.toUpperCase()}`;
+};

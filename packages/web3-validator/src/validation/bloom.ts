@@ -54,7 +54,7 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		return false;
 	}
 
-	const buffer = typeof value === 'string' ? Buffer.from(value.substr(2), 'hex') : value;
+	const buffer = typeof value === 'string' ? Buffer.from(value.slice(2), 'hex') : value;
 
 	const hash = Buffer.from(keccak256(buffer) as Buffer)
 		.toString('hex')
@@ -64,7 +64,8 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		// calculate bit position in bloom filter that must be active
 		const bitpos =
 			// eslint-disable-next-line no-bitwise
-			((parseInt(hash.substr(i, 2), 16) << 8) + parseInt(hash.substr(i + 2, 2), 16)) & 2047;
+			((parseInt(hash.slice(i, i + 2), 16) << 8) + parseInt(hash.slice(i + 2, i + 4), 16)) &
+			2047;
 
 		// test if bitpos in bloom is active
 		const code = codePointToInt(bloom.charCodeAt(bloom.length - 1 - Math.floor(bitpos / 4)));

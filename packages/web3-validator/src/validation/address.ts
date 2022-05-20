@@ -24,7 +24,7 @@ import { isHexStrict } from './string';
  */
 export const checkAddressCheckSum = (data: string): boolean => {
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(data)) return false;
-	const address = data.substr(2);
+	const address = data.slice(2);
 	const updatedData = Buffer.from(address.toLowerCase(), 'utf-8');
 
 	const addressHash = Buffer.from(keccak256(updatedData) as Buffer)
