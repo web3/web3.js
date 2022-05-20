@@ -1,0 +1,1 @@
+../../../../fixtures/sources/Greeter.ts
