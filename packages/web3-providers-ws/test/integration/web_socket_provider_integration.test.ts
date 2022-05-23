@@ -17,17 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
 	EthExecutionAPI,
-	JsonRpcId,
 	Web3APIPayload,
-	DeferredPromise,
-	JsonRpcResponse,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 } from 'web3-common';
 
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
-import { WSRequestItem, OnCloseEvent } from '../../src/types';
+import { OnCloseEvent } from '../../src/types';
 import { waitForOpenConnection } from '../fixtures/helpers';
 
 import {
@@ -162,35 +159,16 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				await waitForOpenConnection(provider, currentAttempt, 'disconnected');
 				expect(provider.getStatus()).toBe('disconnected');
 			});
-			it('should reset', () => {
-				jsonRpcPayload = {
-					jsonrpc: '2.0',
-					id: 42,
-					method: 'eth_getBalance',
-					params: [accounts[0], 'latest'],
-				} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
-				const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
 
-				const reqItem: WSRequestItem<any, any, any> = {
-					payload: jsonRpcPayload,
-					deferredPromise: defPromise,
-				};
-
-				webSocketProvider['_pendingRequestsQueue'].set(
-					jsonRpcPayload.id as JsonRpcId,
-					reqItem,
-				);
-				expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(1);
-
-				webSocketProvider['_sentRequestsQueue'].set(
-					jsonRpcPayload.id as JsonRpcId,
-					reqItem,
-				);
-				expect(webSocketProvider['_sentRequestsQueue'].size).toBe(1);
-
+			it('should reset', async () => {
+				await waitForOpenConnection(webSocketProvider, currentAttempt);
 				webSocketProvider.reset();
-				expect(webSocketProvider['_pendingRequestsQueue'].size).toBe(0);
-				expect(webSocketProvider['_sentRequestsQueue'].size).toBe(0);
+				const openPromise = new Promise((resolve: Resolve) => {
+					webSocketProvider.on('open', () => {
+						resolve('resolved');
+					});
+				});
+				await expect(openPromise).resolves.toBe('resolved');
 			});
 		});
 

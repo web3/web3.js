@@ -169,8 +169,8 @@ export default class WebSocketProvider<
 	}
 
 	public disconnect(code?: number, reason?: string): void {
-		// todo Is next line really needed? onClose will never be called
-		// this._removeSocketListeners();
+		this._emitCloseEvent(code, reason);
+		this._removeSocketListeners();
 		this._webSocketConnection?.close(code, reason);
 	}
 
@@ -321,10 +321,7 @@ export default class WebSocketProvider<
 			return;
 		}
 
-		this._wsEventEmitter.emit('close', null, {
-			code: event.code,
-			reason: event.reason,
-		} as OnCloseEvent);
+		this._emitCloseEvent(event.code, event.reason);
 		this._clearQueues(event);
 		this._removeSocketListeners();
 	}
@@ -355,5 +352,12 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.removeEventListener('message', this._onMessageHandler);
 		this._webSocketConnection?.removeEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.removeEventListener('close', this._onCloseHandler);
+	}
+
+	private _emitCloseEvent(code?: number, reason?: string): void {
+		this._wsEventEmitter.emit('close', null, {
+			code,
+			reason,
+		} as OnCloseEvent);
 	}
 }
