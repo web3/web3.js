@@ -36,7 +36,7 @@ const license = [
 
 module.exports = {
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint', 'header', 'deprecation'],
+	plugins: ['@typescript-eslint', 'header', 'deprecation', 'eslint-plugin-tsdoc'],
 	extends: [
 		'airbnb-base',
 		'eslint:recommended',

@@ -22,6 +22,8 @@
 		"prebuild": "rimraf dist",
 		"build": "tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
+		"build:api:docs:local": "npx api-extractor run --local",
+		"build:api:docs": "npx api-extractor run",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",

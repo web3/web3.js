@@ -1,0 +1,59 @@
+{
+	"$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+	"projectFolder": ".",
+	"mainEntryPointFilePath": "<projectFolder>/dist/index.d.ts",
+	"bundledPackages": [],
+	"compiler": {
+		"tsconfigFilePath": "<projectFolder>/tsconfig.json",
+		"overrideTsconfig": {},
+		"skipLibCheck": false
+	},
+	"apiReport": {
+		"enabled": true,
+		"reportFileName": "<unscopedPackageName>.api.md",
+		"reportFolder": "<projectFolder>/etc/"
+	},
+	"docModel": {
+		"enabled": true,
+		"apiJsonFilePath": "<projectFolder>/dist/<unscopedPackageName>.api.json"
+	},
+
+	"dtsRollup": {
+		"enabled": false,
+		"untrimmedFilePath": "<projectFolder>/dist/<unscopedPackageName>.d.ts",
+		"alphaTrimmedFilePath": "",
+		"betaTrimmedFilePath": "",
+		"publicTrimmedFilePath": "",
+		"omitTrimmingComments": true
+	},
+
+	"tsdocMetadata": {
+		"enabled": true
+	},
+
+	"newlineKind": "lf",
+
+	"messages": {
+		"compilerMessageReporting": {
+			"default": {
+				"logLevel": "none",
+				"addToApiReportFile": false
+			}
+		},
+
+		"extractorMessageReporting": {
+			"ae-missing-release-tag": {
+				"logLevel": "none"
+			},
+			"default": {
+				"logLevel": "warning"
+			}
+		},
+
+		"tsdocMessageReporting": {
+			"default": {
+				"logLevel": "warning"
+			}
+		}
+	}
+}

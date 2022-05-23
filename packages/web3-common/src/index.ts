@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import * as jsonRpc from './json_rpc';
+
 export * from './errors';
 export * from './types';
 export * from './web3_base_provider';
@@ -25,4 +27,4 @@ export * from './deferred_promise';
 export * from './promi_event';
 export * from './formatters';
 export * from './formatter';
-export * as jsonRpc from './json_rpc';
+export { jsonRpc };
