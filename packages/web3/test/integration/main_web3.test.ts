@@ -14,15 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-/* eslint-disable jest/no-standalone-expect */
 import Contract from 'web3-eth-contract';
 import { ENS } from 'web3-eth-ens';
 import Web3Eth from 'web3-eth';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
 import HDWalletProvider from '@truffle/hdwallet-provider';
-import { Web3 } from '../../src/index';
-import { GreeterAbi } from '../shared_fixtures/Greeter';
+
+import { BasicAbi } from '../shared_fixtures/Basic';
+import { validEncodeParametersData } from '../shared_fixtures/data';
 
 import {
 	getSystemTestProvider,
@@ -31,6 +30,7 @@ import {
 	getSystemTestAccounts,
 	accounts as accountsAddrAndPriv,
 } from '../shared_fixtures/system_tests_utils';
+import { Web3 } from '../../src/index';
 
 const waitForOpenConnection = async (
 	web3Inst: Web3,
@@ -74,7 +74,7 @@ describe('Web3 instance', () => {
 			if ((web3.provider as unknown as Web3BaseProvider).getStatus() === 'connecting') {
 				await waitForOpenConnection(web3, currentAttempt);
 			}
-			(web3.provider as unknown as Web3BaseProvider).disconnect();
+			(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
 		}
 	});
 
@@ -92,6 +92,7 @@ describe('Web3 instance', () => {
 					: false,
 			)('should create instance with string of external http provider', async () => {
 				web3 = new Web3(process.env.INFURA_GOERLI_HTTP!);
+				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
 			});
 
@@ -126,6 +127,7 @@ describe('Web3 instance', () => {
 					: false,
 			)('should create instance with string of external http provider', async () => {
 				web3 = new Web3(process.env.INFURA_GOERLI_WS!);
+				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
 			});
 		},
@@ -175,8 +177,8 @@ describe('Web3 instance', () => {
 					decrypt: expect.any(Function),
 				}),
 			);
-			const greeterContract = new web3.eth.Contract(GreeterAbi);
-			expect(greeterContract).toBeInstanceOf(Contract);
+			const basicContract = new web3.eth.Contract(BasicAbi);
+			expect(basicContract).toBeInstanceOf(Contract);
 		});
 	});
 
@@ -228,7 +230,6 @@ describe('Web3 instance', () => {
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			batch.add(request2);
 			const response = await batch.execute();
-			// console.warn('***', response);
 
 			expect(response).toEqual(
 				expect.arrayContaining([
@@ -242,6 +243,20 @@ describe('Web3 instance', () => {
 					}),
 				]),
 			);
+		});
+	});
+
+	describe('Abi requests', () => {
+		const validData = validEncodeParametersData[0];
+
+		it('hash correctly', async () => {
+			web3 = new Web3(clientUrl);
+
+			const encodedParameters = web3.eth.abi.encodeParameters(
+				validData.input[0],
+				validData.input[1],
+			);
+			expect(encodedParameters).toEqual(validData.output);
 		});
 	});
 });
