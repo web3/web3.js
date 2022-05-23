@@ -22,8 +22,8 @@ import {Common, PromiEvent, provider, hardfork, chain, BlockNumber, PastLogsOpti
 import {Accounts} from 'web3-eth-accounts';
 import {AbiItem} from 'web3-utils';
 
-// TODO: Add generic type!
-export class Contract {
+// Here you can provide generated types for methods and events from your contract
+export class Contract<Methods = any, Events = any> {
     constructor(
         jsonInterface: AbiItem[],
         address?: string,
@@ -50,7 +50,7 @@ export class Contract {
 
     deploy(options: DeployOptions): ContractSendMethod;
 
-    methods: any;
+    methods: Methods;
 
     once(
         event: string,
@@ -62,7 +62,7 @@ export class Contract {
         callback: (error: Error, event: EventData) => void
     ): void;
 
-    events: any;
+    events: Events;
 
     getPastEvents(event: string): Promise<EventData[]>;
     getPastEvents(

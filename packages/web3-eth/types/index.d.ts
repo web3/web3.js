@@ -65,11 +65,12 @@ export class Eth {
     constructor(provider: provider);
     constructor(provider: provider, net: net.Socket);
 
-    Contract: new (
+    // Here you can provide generated types for methods and events from your contract
+    Contract: new <Methods = any, Events = any>(
         jsonInterface: AbiItem[] | AbiItem,
         address?: string,
         options?: ContractOptions
-    ) => Contract;
+    ) => Contract<Methods, Events>;
     Iban: new (iban: string) => Iban;
     personal: Personal;
     accounts: Accounts;
