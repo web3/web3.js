@@ -56,9 +56,9 @@ export default class WebSocketProvider<
 	private _webSocketConnection?: WebSocket;
 
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	private readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
+	protected readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	private readonly _sentRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
+	protected readonly _sentRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
 
 	private _reconnectAttempts!: number;
 	private readonly _reconnectOptions: ReconnectOptions;

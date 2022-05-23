@@ -20,11 +20,14 @@ import {
 	Web3APIPayload,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
+	JsonRpcId,
+	DeferredPromise,
+	JsonRpcResponse,
 } from 'web3-common';
 
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
-import { OnCloseEvent } from '../../src/types';
+import { OnCloseEvent, WSRequestItem } from '../../src/types';
 import { waitForOpenConnection } from '../fixtures/helpers';
 
 import {
@@ -68,7 +71,8 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			if (webSocketProvider.getStatus() === 'connecting') {
 				await waitForOpenConnection(webSocketProvider, currentAttempt);
 			}
-			webSocketProvider.disconnect();
+
+			webSocketProvider.disconnect(1000);
 		});
 
 		describe('websocker provider tests', () => {
@@ -127,7 +131,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			});
 
 			it('should subscribe to `close` event', async () => {
-				const code = 1001;
+				const code = 1000;
 
 				const closePromise = new Promise((resolve: Resolve) => {
 					webSocketProvider.on(
@@ -161,14 +165,49 @@ describeIf(getSystemTestProvider().includes('ws'))(
 			});
 
 			it('should reset', async () => {
-				await waitForOpenConnection(webSocketProvider, currentAttempt);
-				webSocketProvider.reset();
-				const openPromise = new Promise((resolve: Resolve) => {
-					webSocketProvider.on('open', () => {
-						resolve('resolved');
-					});
-				});
-				await expect(openPromise).resolves.toBe('resolved');
+				class TestReset extends WebSocketProvider {
+					public pendigRequestsSize() {
+						return this._pendingRequestsQueue.size;
+					}
+
+					public sentRequestsSize() {
+						return this._pendingRequestsQueue.size;
+					}
+
+					public setPendingRequest(id: JsonRpcId, reqItem: WSRequestItem<any, any, any>) {
+						this._pendingRequestsQueue.set(id, reqItem);
+					}
+
+					public setSentRequest(id: JsonRpcId, reqItem: WSRequestItem<any, any, any>) {
+						this._sentRequestsQueue.set(id, reqItem);
+					}
+				}
+				const testResetProvider = new TestReset(
+					clientWsUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				);
+
+				await waitForOpenConnection(testResetProvider, currentAttempt);
+
+				const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
+
+				const reqItem: WSRequestItem<any, any, any> = {
+					payload: jsonRpcPayload,
+					deferredPromise: defPromise,
+				};
+
+				testResetProvider.setPendingRequest(jsonRpcPayload.id as JsonRpcId, reqItem);
+				expect(testResetProvider.pendigRequestsSize()).toBe(1);
+
+				testResetProvider.setSentRequest(jsonRpcPayload.id as JsonRpcId, reqItem);
+				expect(testResetProvider.sentRequestsSize()).toBe(1);
+
+				testResetProvider.reset();
+				expect(testResetProvider.pendigRequestsSize()).toBe(0);
+				expect(testResetProvider.sentRequestsSize()).toBe(0);
+
+				testResetProvider.disconnect(1000);
 			});
 		});
 
