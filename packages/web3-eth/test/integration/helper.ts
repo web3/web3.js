@@ -24,14 +24,14 @@ type SendFewTxParams = {
 	value: string;
 	times?: number;
 };
-export type Resolve = (value?: unknown) => void;
+export type Resolve = (value?: ReceiptInfo) => void;
 export const sendFewTxes = async ({
 	web3Eth,
 	to,
 	value,
 	from,
 	times = 3,
-}: SendFewTxParams): Promise<unknown[]> => {
+}: SendFewTxParams): Promise<ReceiptInfo[]> => {
 	const res = [];
 	for (let i = 0; i < times; i += 1) {
 		const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
@@ -41,12 +41,12 @@ export const sendFewTxes = async ({
 		});
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
-			await new Promise((resolve: Resolve) => {
+			(await new Promise((resolve: Resolve) => {
 				tx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe('0x1');
 					resolve(params);
 				});
-			}),
+			})) as ReceiptInfo,
 		);
 	}
 	return res;
