@@ -43,7 +43,7 @@ import {
 	Web3WSProviderError,
 	RequestAlreadySentError,
 } from 'web3-errors';
-import { ReconnectOptions, WSRequestItem } from './types';
+import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
@@ -56,9 +56,9 @@ export default class WebSocketProvider<
 	private _webSocketConnection?: WebSocket;
 
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	private readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
+	protected readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	private readonly _sentRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
+	protected readonly _sentRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
 
 	private _reconnectAttempts!: number;
 	private readonly _reconnectOptions: ReconnectOptions;
@@ -80,14 +80,14 @@ export default class WebSocketProvider<
 		this._clientUrl = clientUrl;
 		this._wsProviderOptions = wsProviderOptions;
 
-		const DEFAULT_WS_PROVIDER_OPTIONS = {
+		const DEFAULT_PROVIDER_RECONNECTION_OPTIONS = {
 			autoReconnect: true,
 			delay: 5000,
 			maxAttempts: 5,
 		};
 
 		this._reconnectOptions = {
-			...DEFAULT_WS_PROVIDER_OPTIONS,
+			...DEFAULT_PROVIDER_RECONNECTION_OPTIONS,
 			...reconnectOptions,
 		};
 
@@ -129,7 +129,7 @@ export default class WebSocketProvider<
 
 	public on<T = JsonRpcResult>(
 		type: 'message' | string,
-		callback: Web3BaseProviderCallback<T>,
+		callback: Web3BaseProviderCallback<T> | EventEmittedCallback,
 	): void {
 		this._wsEventEmitter.on(type, callback);
 	}
@@ -169,6 +169,7 @@ export default class WebSocketProvider<
 	}
 
 	public disconnect(code?: number, reason?: string): void {
+		this._emitCloseEvent(code, reason);
 		this._removeSocketListeners();
 		this._webSocketConnection?.close(code, reason);
 	}
@@ -299,6 +300,7 @@ export default class WebSocketProvider<
 
 	private _onConnect() {
 		this._reconnectAttempts = 0;
+		this._wsEventEmitter.emit('open');
 		this._sendPendingRequests();
 	}
 
@@ -319,6 +321,7 @@ export default class WebSocketProvider<
 			return;
 		}
 
+		this._emitCloseEvent(event.code, event.reason);
 		this._clearQueues(event);
 		this._removeSocketListeners();
 	}
@@ -349,5 +352,12 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.removeEventListener('message', this._onMessageHandler);
 		this._webSocketConnection?.removeEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.removeEventListener('close', this._onCloseHandler);
+	}
+
+	private _emitCloseEvent(code?: number, reason?: string): void {
+		this._wsEventEmitter.emit('close', null, {
+			code,
+			reason,
+		} as OnCloseEvent);
 	}
 }
