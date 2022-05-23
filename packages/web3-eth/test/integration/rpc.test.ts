@@ -119,7 +119,12 @@ describe('rpc', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		web3Eth = new Web3Eth(clientUrl);
+		web3Eth = new Web3Eth({
+			provider: clientUrl,
+			config: {
+				transactionPollingTimeout: 2000,
+			},
+		});
 
 		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
