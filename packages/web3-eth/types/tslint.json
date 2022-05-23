@@ -1,6 +1,7 @@
 {
     "extends": "dtslint/dtslint.json",
     "rules": {
+        "no-unnecessary-generics": false,
         "semicolon": false,
         "no-import-default-of-export-equals": false,
         "file-name-casing": [true, "kebab-case"],

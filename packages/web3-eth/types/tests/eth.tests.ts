@@ -77,7 +77,7 @@ eth.transactionBlockTimeout;
 // $ExpectType boolean
 eth.handleRevert;
 
-// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
+// $ExpectType new <Methods = any, Events = any>(jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract<Methods, Events>
 eth.Contract;
 
 // $ExpectType new (iban: string) => Iban
