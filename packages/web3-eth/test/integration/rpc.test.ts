@@ -339,7 +339,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 
-			const count = 3;
+			const count = 2;
 			await sendFewTxes({
 				web3Eth,
 				from: accounts[0],
