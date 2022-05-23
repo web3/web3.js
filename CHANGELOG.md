@@ -555,6 +555,7 @@ Released with 1.0.0-beta.37 code base.
 -  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
 
 ### Added
+- Generic types for `Contract`, now you can add types for your contract methods and events
 - Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
 - Improve npm script commands for development purposes (#4848)
 
