@@ -378,3 +378,10 @@ Released with 1.0.0-beta.37 code base.
 #### web3-eth-abi
 
 1. `decodeParameters` decoding result is now the same format as the input parameter for encoding
+
+#### web3-eth
+
+1. `givenProvider` default value is undefined
+2. `defaultHardfork` default value is 'london'
+3. `defaultAccount` default value is null
+4. `defaultNetworkId` default value is null

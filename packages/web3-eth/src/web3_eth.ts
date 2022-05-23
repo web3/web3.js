@@ -67,7 +67,6 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				  },
 		);
 	}
-
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
@@ -297,11 +296,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 
 	public async getProof<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
-		storageKey: Bytes,
+		storageKeys: Bytes[],
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnFormat);
+		return rpcMethodsWrappers.getProof(this, address, storageKeys, blockNumber, returnFormat);
 	}
 
 	public async getFeeHistory<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(

@@ -541,17 +541,17 @@ export async function getChainId(requestManager: Web3RequestManager<Web3EthExecu
 export async function getProof(
 	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
 	address: Address,
-	storageKey: HexString32Bytes,
+	storageKeys: HexString32Bytes[],
 	blockNumber: BlockNumberOrTag,
 ) {
 	validator.validate(
-		['address', 'bytes32', 'blockNumberOrTag'],
-		[address, storageKey, blockNumber],
+		['address', 'bytes32[]', 'blockNumberOrTag'],
+		[address, storageKeys, blockNumber],
 	);
 
 	return requestManager.send({
 		method: 'eth_getProof',
-		params: [address, storageKey, blockNumber],
+		params: [address, storageKeys, blockNumber],
 	});
 }
 
