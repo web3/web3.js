@@ -14,5 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+export const TypedArray = Object.getPrototypeOf(Uint8Array);
+
 export const isObject = (item: unknown): item is Record<string, unknown> =>
-	typeof item === 'object' && item !== null && !Array.isArray(item) && !Buffer.isBuffer(item);
+	typeof item === 'object' &&
+	item !== null &&
+	!Array.isArray(item) &&
+	!Buffer.isBuffer(item) &&
+	!(item instanceof TypedArray);

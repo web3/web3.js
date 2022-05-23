@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
 	Address,
-	BlockNumberOrTag,
 	HexString,
 	HexString256Bytes,
 	HexString8Bytes,
@@ -29,6 +28,7 @@ import {
 	Topic,
 	Filter,
 } from 'web3-utils';
+import { BlockNumberOrTag } from 'web3-validator';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
