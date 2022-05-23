@@ -47,7 +47,7 @@ export type Web3EthExecutionAPI = EthExecutionAPI & {
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1186.md
 	eth_getProof: (
 		address: Address,
-		storageKey: HexString32Bytes,
+		storageKeys: HexString32Bytes[],
 		blockNumber: BlockNumberOrTag,
 	) => AccountObject;
 };

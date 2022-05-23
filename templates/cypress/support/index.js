@@ -25,7 +25,6 @@ import 'cypress-jest-adapter';
 global.beforeAll = global.before;
 global.afterAll = global.after;
 
-
 // In e2e tests we just need to use jest mocking API
 global.jest = {
 	fn: global.cy.stub,
@@ -33,6 +32,7 @@ global.jest = {
 };
 
 global.it = it;
+global.test = it;
 global.it.each = data => (describe, test) => {
 	const prs = [];
 	for (const d of data) {

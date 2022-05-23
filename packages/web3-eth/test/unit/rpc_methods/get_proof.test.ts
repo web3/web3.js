@@ -63,7 +63,7 @@ describe('getProof', () => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
 			await getProof(requestManager, ...inputParameters);
 			expect(validatorSpy).toHaveBeenCalledWith(
-				['address', 'bytes32', 'blockNumberOrTag'],
+				['address', 'bytes32[]', 'blockNumberOrTag'],
 				inputParameters,
 			);
 		},

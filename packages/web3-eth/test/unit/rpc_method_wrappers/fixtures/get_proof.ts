@@ -51,28 +51,30 @@ const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
  * 	   - storageKey
  *  	   - blockNumber
  */
-type TestData = [string, [Address, Bytes, BlockNumberOrTag | undefined]];
+type TestData = [string, [Address, Bytes[] | Buffer[], BlockNumberOrTag | undefined]];
 export const testData: TestData[] = [
 	// Testing storageKey cases
 	// storageKey = HexString
 	[
-		'storageKey = "0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", blockNumber = "0x1"',
-		[address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', '0x1'],
+		'storageKey = ["0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8"], blockNumber = "0x1"',
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], '0x1'],
 	],
 	// storageKey = Buffer
 	[
-		'storageKey = Buffer.from("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex"), blockNumber = "0x1"',
-		[address, Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex'), '0x1'],
+		'storageKey = [Buffer.from("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8", "hex")], blockNumber = "0x1"',
+		[address, [Buffer.from('0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 'hex')], '0x1'],
 	],
 	// storageKey = Uint8Array
 	[
-		'storageKey = Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8"), blockNumber = "0x1"',
+		'storageKey = [Uint8Array("d5677cf67b5aa051bb40496e68ad359eb97cfbf8")], blockNumber = "0x1"',
 		[
 			address,
-			new Uint8Array([
-				213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185, 124,
-				251, 248,
-			]),
+			[
+				new Uint8Array([
+					213, 103, 124, 246, 123, 90, 160, 81, 187, 64, 73, 110, 104, 173, 53, 158, 185,
+					124, 251, 248,
+				]),
+			],
 			'0x1',
 		],
 	],
@@ -81,23 +83,26 @@ export const testData: TestData[] = [
 	// blockNumber = BlockTag
 	[
 		'blockNumber = BlockTags.LATEST',
-		[address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', BlockTags.LATEST],
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.LATEST],
 	],
 	[
 		'blockNumber = BlockTags.EARLIEST',
-		[address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', BlockTags.EARLIEST],
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.EARLIEST],
 	],
 	[
 		'blockNumber = BlockTags.PENDING',
-		[address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', BlockTags.PENDING],
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.PENDING],
 	],
 	// blockNumber = Numbers
-	['blockNumber = "0x4b7"', [address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', '0x4b7']],
-	['blockNumber = 1207', [address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', 1207]],
-	['blockNumber = "1207"', [address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', '1207']],
+	['blockNumber = "0x4b7"', [address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], '0x4b7']],
+	['blockNumber = 1207', [address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], 1207]],
+	['blockNumber = "1207"', [address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], '1207']],
 	[
 		'blockNumber = BigInt("0x4b7")',
-		[address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', BigInt('0x4b7')],
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BigInt('0x4b7')],
 	],
-	['blockNumber = undefined', [address, '0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8', undefined]],
+	[
+		'blockNumber = undefined',
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], undefined],
+	],
 ];

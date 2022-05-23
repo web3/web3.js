@@ -22,6 +22,9 @@ import fetch from 'cross-fetch';
 import { EthPersonal } from 'web3-eth-personal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { create as createAccount } from 'web3-eth-accounts';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Eth } from 'web3-eth';
 
 let _accounts: string[] = [];
@@ -55,6 +58,35 @@ const accounts: {
 		privateKey: '0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3',
 	},
 ];
+
+export const createNewAccount = async (config?: {
+	unlock?: boolean;
+	refill?: boolean;
+}): Promise<{ address: string; privateKey: string }> => {
+	const acc = createAccount();
+	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
+	if (config?.unlock) {
+		const web3Personal = new EthPersonal(clientUrl);
+		await web3Personal.importRawKey(
+			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
+			'123456',
+		);
+		await web3Personal.unlockAccount(acc.address, '123456', 1000);
+	}
+
+	if (config?.refill) {
+		const web3Personal = new EthPersonal(clientUrl);
+		const web3Eth = new Web3Eth(clientUrl);
+		const accList = await web3Personal.getAccounts();
+		await web3Eth.sendTransaction({
+			from: accList[0],
+			to: acc.address,
+			value: '1000000000000000000',
+		});
+	}
+
+	return { address: acc.address, privateKey: acc.privateKey };
+};
 
 export const getSystemTestAccounts = async (): Promise<string[]> => {
 	if (_accounts.length > 0) {
