@@ -32,6 +32,7 @@ global.jest = {
 };
 
 global.it = it;
+global.test = it;
 global.it.each = data => (describe, test) => {
 	const prs = [];
 	for (const d of data) {
