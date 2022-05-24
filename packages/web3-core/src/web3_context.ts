@@ -237,6 +237,15 @@ export class Web3Context<
 		this.requestManager.setProvider(provider);
 	}
 
+	// eslint-disable-next-line class-methods-use-this
+	public get givenProvider() {
+		return Web3Context.givenProvider;
+	}
+
+	public setProvider(provider: SupportedProviders<API>) {
+		this.provider = provider;
+	}
+
 	public get BatchRequest(): new () => Web3BatchRequest {
 		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
 	}

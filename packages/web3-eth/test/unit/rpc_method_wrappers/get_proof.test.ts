@@ -36,10 +36,8 @@ describe('getProof', () => {
 		`should call rpcMethods.getProof with expected parameters\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
 			const [inputAddress, inputStorageKey, inputBlockNumber] = inputParameters;
-			const inputStorageKeyFormatted = format(
-				{ eth: 'bytes' },
-				inputStorageKey,
-				DEFAULT_RETURN_FORMAT,
+			const inputStorageKeyFormatted = inputStorageKey.map(s =>
+				format({ eth: 'bytes' }, s, DEFAULT_RETURN_FORMAT),
 			);
 
 			let inputBlockNumberFormatted;
