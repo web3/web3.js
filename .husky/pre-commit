@@ -2,7 +2,3 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npx lint-staged
-
-# TODO: Enable it back after resovling CRLF and LF issue with newlines 
-# on auto-generated files
-# yarn build:api:docs

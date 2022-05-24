@@ -41,7 +41,52 @@ const config = {
 		locales: ['en'],
 	},
 
-	plugins: ['@docusaurus/theme-live-codeblock'],
+	plugins: [
+		'@docusaurus/theme-live-codeblock',
+		[
+			'docusaurus-plugin-typedoc',
+
+			// Plugin / TypeDoc options
+			{
+				entryPoints: [
+					'../packages/web3',
+					'../packages/web3-common',
+					'../packages/web3-core',
+					'../packages/web3-errors',
+					'../packages/web3-eth',
+					'../packages/web3-eth-abi',
+					'../packages/web3-eth-accounts',
+					'../packages/web3-eth-contract',
+					'../packages/web3-eth-ens',
+					'../packages/web3-eth-iban',
+					'../packages/web3-eth-personal',
+					'../packages/web3-net',
+					'../packages/web3-providers-http',
+					'../packages/web3-providers-ws',
+					'../packages/web3-providers-ipc',
+					'../packages/web3-utils',
+					'../packages/web3-validator',
+				],
+				entryPointStrategy: 'packages',
+				cleanOutputDir: true,
+				sidebar: {
+					fullNames: true,
+				},
+				plugin: [
+					// Link the cross package types
+					'typedoc-monorepo-link-types',
+					// Provide some extra formatting features for the generated docs
+					'typedoc-plugin-extras',
+					// Provide support to allow relative includes in the JSDoc comments.
+					'@droppedcode/typedoc-plugin-relative-includes',
+					// Adds support for linking references to global types like `HTMLElement`, `Date`
+					'typedoc-plugin-mdn-links',
+				],
+				// Don't cross reference the non-exported members
+				noMissingExports: true,
+			},
+		],
+	],
 
 	presets: [
 		[
@@ -67,8 +112,8 @@ const config = {
 			navbar: {
 				title: 'Web3.js',
 				logo: {
-					alt: 'Logo',
-					src: 'img/logo.svg',
+					alt: 'Web3.js Logo',
+					src: 'img/web3js.svg',
 				},
 				items: [
 					{
@@ -82,7 +127,6 @@ const config = {
 						activeBasePath: 'docs',
 						label: 'API',
 						position: 'left',
-						sidebarPath: 'apiSidebar',
 					},
 					{
 						href: 'https://github.com/ChainSafe/web3.js',

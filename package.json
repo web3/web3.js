@@ -33,8 +33,6 @@
 	},
 	"scripts": {
 		"build": "yarn clean && lerna run build --stream",
-		"build:api:docs:local": "lerna run build:api:docs:local --stream --parallel",
-		"build:api:docs": "lerna run build:api:docs --stream --parallel",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
 		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
@@ -60,8 +58,6 @@
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
 	},
 	"devDependencies": {
-		"@microsoft/api-extractor": "^7.24.1",
-		"@microsoft/api-documenter": "^7.17.15",
 		"@cypress/webpack-preprocessor": "^5.11.1",
 		"@openzeppelin/contracts": "^4.6.0",
 		"@types/node": "*",
@@ -87,6 +83,12 @@
 		"ts-loader": "^9.2.8",
 		"ts-node": "^10.4.0",
 		"typescript": "^4.5.2",
+		"typedoc": "^0.22.15",
+		"typedoc-plugin-markdown": "^3.12.1",
+		"typedoc-monorepo-link-types": "^0.0.2",
+		"typedoc-plugin-extras": "^2.2.3",
+		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
+		"typedoc-plugin-mdn-links": "^1.0.6",
 		"utf-8-validate": "^5.0.9",
 		"webpack": "^5.72.0"
 	},

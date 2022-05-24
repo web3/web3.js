@@ -35,6 +35,3 @@ tsconfig.tsbuildinfo
 # Unsupported lock files
 package-lock.json
 
-# API-Extraction Files
-# Extraction tool write the API report temporarily to compare
-temp

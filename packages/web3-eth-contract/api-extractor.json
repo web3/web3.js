@@ -1,4 +1,0 @@
-{
-	"extends": "../../templates/api-extractor.json",
-	"projectFolder": "."
-}
