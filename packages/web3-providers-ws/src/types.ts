@@ -31,3 +31,10 @@ export interface WSRequestItem<
 	payload: Web3APIPayload<API, Method>;
 	deferredPromise: DeferredPromise<ResponseType>;
 }
+
+export type OnCloseEvent = {
+	code: number;
+	reason: string;
+};
+
+export type EventEmittedCallback = (error: Error | null, event?: OnCloseEvent | null) => void;

@@ -29,6 +29,7 @@ import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
+import { Web3BatchRequest } from './web3_batch_request';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
@@ -234,6 +235,19 @@ export class Web3Context<
 
 	public set currentProvider(provider: SupportedProviders<API>) {
 		this.requestManager.setProvider(provider);
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	public get givenProvider() {
+		return Web3Context.givenProvider;
+	}
+
+	public setProvider(provider: SupportedProviders<API>) {
+		this.provider = provider;
+	}
+
+	public get BatchRequest() {
+		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
 	}
 }
 
