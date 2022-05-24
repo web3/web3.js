@@ -19,7 +19,8 @@ import { ENS } from 'web3-eth-ens';
 import Web3Eth from 'web3-eth';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
 import HDWalletProvider from '@truffle/hdwallet-provider';
-
+import { SupportedProviders } from 'web3-core';
+import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 
@@ -143,6 +144,46 @@ describe('Web3 instance', () => {
 			const response = await web3.eth.getBalance(accounts[0]);
 
 			expect(response).toMatch(/0[xX][0-9a-fA-F]+/);
+		});
+
+		it('setProvider', async () => {
+			let newProvider: Web3BaseProvider;
+			web3 = new Web3('http://dummy.com');
+			if (clientUrl.startsWith('http')) {
+				newProvider = new Web3.providers.HttpProvider(clientUrl);
+			} else {
+				newProvider = new Web3.providers.WebsocketProvider(clientUrl);
+			}
+			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
+
+			expect(web3.provider).toBe(newProvider);
+		});
+
+		it('providers', async () => {
+			const res = Web3.providers;
+
+			expect(res.HttpProvider).toBeDefined();
+			expect(res.WebsocketProvider).toBeDefined();
+			expect(res.IpcProvider).toBeDefined();
+		});
+
+		it('currentProvider', async () => {
+			web3 = new Web3(clientUrl);
+
+			let checkWithClass;
+			if (clientUrl.startsWith('ws')) {
+				checkWithClass = Web3.providers.WebsocketProvider;
+			} else if (clientUrl.startsWith('http')) {
+				checkWithClass = Web3.providers.HttpProvider;
+			} else {
+				checkWithClass = Web3.providers.IpcProvider;
+			}
+			expect(web3.currentProvider).toBeInstanceOf(checkWithClass);
+		});
+
+		it('givenProvider', async () => {
+			const { givenProvider } = web3;
+			expect(givenProvider).toBeUndefined();
 		});
 	});
 
