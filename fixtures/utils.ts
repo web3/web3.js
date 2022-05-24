@@ -26,7 +26,15 @@ export const processAsync = async (
 export const sleep = async (ms: number) =>
 	new Promise(resolve => {
 		const id = setTimeout(() => {
-			resolve(true);
 			clearTimeout(id);
+			resolve(true);
 		}, ms);
 	});
+
+export const toUpperCaseHex = (str: string) => {
+	if (str.startsWith('0x') || str.startsWith('0X')) {
+		return `0x${str.toUpperCase().slice(2)}`;
+	}
+
+	return `0x${str.toUpperCase()}`;
+};
