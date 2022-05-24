@@ -15,12 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import * as utils from './utils';
-
 export * from './web3_validator';
 export * from './default_validator';
 export * from './types';
 export * from './validation';
+export * as utils from './utils';
 export * from './errors';
 export * from './constants';
-export { utils };
