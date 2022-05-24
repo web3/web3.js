@@ -49,6 +49,7 @@
 		"web3-core": "4.0.0-alpha.0",
 		"web3-errors": "1.0.0-alpha.0",
 		"web3-eth-accounts": "4.0.0-alpha.0",
+		"web3-eth-contract": "^1.7.3",
 		"web3-net": "4.0.0-alpha.0",
 		"web3-providers-ws": "4.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1",
