@@ -595,7 +595,11 @@ export function sendSignedTransaction<
 						}
 
 						if (promiEvent.listenerCount('confirmation') > 0) {
-							watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat, ResolveType>(
+							watchTransactionForConfirmations<
+								SendSignedTransactionEvents,
+								ReturnFormat,
+								ResolveType
+							>(
 								web3Context,
 								promiEvent,
 								transactionReceiptFormatted as ReceiptInfo,
