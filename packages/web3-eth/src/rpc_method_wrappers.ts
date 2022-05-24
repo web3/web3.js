@@ -396,6 +396,8 @@ export function sendTransaction<
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
+							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+							// should not be included if undefined, but currently are
 							...(await getTransactionGasPricing(
 								transactionFormatted,
 								web3Context,
@@ -565,12 +567,13 @@ export function sendSignedTransaction<
 						);
 
 						// Transaction hasn't been included in a block yet
-						if (transactionReceipt === null)
+						if (transactionReceipt === null) {
 							transactionReceipt = await waitForTransactionReceipt(
 								web3Context,
 								transactionHash,
 								returnFormat,
 							);
+						}
 
 						const transactionReceiptFormatted = format(
 							receiptInfoSchema,
