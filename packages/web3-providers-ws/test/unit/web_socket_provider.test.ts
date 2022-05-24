@@ -1,5 +1,21 @@
-import { WebSocket } from 'isomorphic-ws';
-import { EthExecutionAPI, Web3APIPayload } from 'web3-common';
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+import WebSocket from 'isomorphic-ws';
+import { EthExecutionAPI, ResponseError, Web3APIPayload } from 'web3-common';
 import WebSocketProvider from '../../src/index';
 import {
 	invalidConnectionStrings,
@@ -14,7 +30,7 @@ describe('WebSocketProvider', () => {
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	let jsonRpcResponse: Record<string, unknown>;
 
-	beforeAll(() => {
+	beforeEach(() => {
 		jest.spyOn(WebSocket.prototype, 'send');
 
 		wsProvider = new WebSocketProvider('ws://localhost:8545');
@@ -97,7 +113,9 @@ describe('WebSocketProvider', () => {
 				// Set `error` attribute to reject from mock
 				const payload = { ...jsonRpcPayload, error: 'my-error' };
 
-				await expect(wsProvider.request(payload)).rejects.toEqual(payload);
+				await expect(wsProvider.request(payload)).rejects.toThrow(
+					new ResponseError(payload as any),
+				);
 			});
 
 			it('should emit message with response as error', async () => {
@@ -107,11 +125,7 @@ describe('WebSocketProvider', () => {
 				const messageSpy = jest.fn();
 				wsProvider.on('message', messageSpy);
 
-				try {
-					await wsProvider.request(payload);
-				} catch {
-					// Do nothing on error
-				}
+				await expect(wsProvider.request(payload)).rejects.toThrow();
 
 				expect(messageSpy).toHaveBeenCalledWith(payload, null);
 			});

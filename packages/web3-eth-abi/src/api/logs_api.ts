@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { HexString } from 'web3-utils';
 import { AbiParameter } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
@@ -13,39 +30,48 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	topics: string | string[],
 ) => {
 	const clonedTopics = Array.isArray(topics) ? topics : [topics];
-	const clonedData = data ?? '';
 
-	const notIndexedInputs: Array<string | AbiParameter> = [];
-	const indexedParams: Array<string | unknown> = [];
-	let topicCount = 0;
+	const indexedInputs: Record<number, AbiParameter> = {};
+	const nonIndexedInputs: Record<number, AbiParameter> = {};
+
 	for (const [i, input] of inputs.entries()) {
 		if (input.indexed) {
-			indexedParams[i] = STATIC_TYPES.some(s => input.type.startsWith(s))
-				? (decodeParameter(input.type, clonedTopics[topicCount])[0] as unknown[])
-				: clonedTopics[topicCount];
-
-			topicCount += 1;
+			indexedInputs[i] = input;
 		} else {
-			notIndexedInputs[i] = input as unknown as AbiParameter;
+			nonIndexedInputs[i] = input;
 		}
 	}
 
-	const nonIndexedData = clonedData;
-	const notIndexedParams = nonIndexedData
-		? decodeParametersWith(notIndexedInputs, nonIndexedData, true)
+	const decodedNonIndexedInputs = data
+		? decodeParametersWith(Object.values(nonIndexedInputs), data, true)
 		: [];
+
+	// If topics are more than indexed inputs, that means first topic is the event signature
+	const offset = clonedTopics.length - Object.keys(indexedInputs).length;
+
+	const decodedIndexedInputs = Object.values(indexedInputs).map((input, index) =>
+		STATIC_TYPES.some(s => input.type.startsWith(s))
+			? (decodeParameter(input.type, clonedTopics[index + offset])[0] as unknown[])
+			: clonedTopics[index + offset],
+	);
 
 	const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
 	returnValue.__length__ = 0;
 
+	let indexedCounter = 0;
+	let nonIndexedCounter = 0;
+
 	for (const [i, res] of inputs.entries()) {
 		returnValue[i] = res.type === 'string' ? '' : null;
 
-		if (notIndexedParams[i]) {
-			returnValue[i] = notIndexedParams[i];
+		if (indexedInputs[i]) {
+			returnValue[i] = decodedIndexedInputs[indexedCounter];
+			indexedCounter += 1;
 		}
-		if (indexedParams[i]) {
-			returnValue[i] = indexedParams[i];
+
+		if (nonIndexedInputs[i]) {
+			returnValue[i] = decodedNonIndexedInputs[nonIndexedCounter];
+			nonIndexedCounter += 1;
 		}
 
 		if (res.name) {
@@ -54,5 +80,6 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 
 		returnValue.__length__ += 1;
 	}
+
 	return returnValue as ReturnType & { __length__: number };
 };

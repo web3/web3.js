@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /* eslint-disable max-classes-per-file */
 import {
 	ERR_TX_CHAIN_ID_MISMATCH,
@@ -22,12 +39,13 @@ import {
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
 	ERR_SIGNATURE_FAILED,
-} from 'web3-common';
-import { Bytes, HexString, Numbers, Web3Error } from 'web3-utils';
+	InvalidValueError,
+} from 'web3-errors';
+import { Bytes, HexString, Numbers } from 'web3-utils';
 
 import { ReceiptInfo } from './types';
 
-export class InvalidTransactionWithSender extends Web3Error {
+export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;
 
 	public constructor(value: unknown) {
@@ -35,7 +53,7 @@ export class InvalidTransactionWithSender extends Web3Error {
 	}
 }
 
-export class InvalidTransactionCall extends Web3Error {
+export class InvalidTransactionCall extends InvalidValueError {
 	public code = ERR_TX_INVALID_CALL;
 
 	public constructor(value: unknown) {
@@ -43,7 +61,7 @@ export class InvalidTransactionCall extends Web3Error {
 	}
 }
 
-export class MissingCustomChainError extends Web3Error {
+export class MissingCustomChainError extends InvalidValueError {
 	public code = ERR_TX_MISSING_CUSTOM_CHAIN;
 
 	public constructor() {
@@ -54,7 +72,7 @@ export class MissingCustomChainError extends Web3Error {
 	}
 }
 
-export class MissingCustomChainIdError extends Web3Error {
+export class MissingCustomChainIdError extends InvalidValueError {
 	public code = ERR_TX_MISSING_CUSTOM_CHAIN_ID;
 
 	public constructor() {
@@ -65,7 +83,7 @@ export class MissingCustomChainIdError extends Web3Error {
 	}
 }
 
-export class ChainIdMismatchError extends Web3Error {
+export class ChainIdMismatchError extends InvalidValueError {
 	public code = ERR_TX_CHAIN_ID_MISMATCH;
 
 	public constructor(value: { txChainId: unknown; customChainId: unknown }) {
@@ -77,7 +95,7 @@ export class ChainIdMismatchError extends Web3Error {
 	}
 }
 
-export class CommonOrChainAndHardforkError extends Web3Error {
+export class CommonOrChainAndHardforkError extends InvalidValueError {
 	public code = ERR_TX_INVALID_CHAIN_INFO;
 
 	public constructor() {
@@ -88,7 +106,7 @@ export class CommonOrChainAndHardforkError extends Web3Error {
 	}
 }
 
-export class MissingChainOrHardforkError extends Web3Error {
+export class MissingChainOrHardforkError extends InvalidValueError {
 	public code = ERR_TX_MISSING_CHAIN_INFO;
 
 	public constructor(value: { chain: string | undefined; hardfork: string | undefined }) {
@@ -101,7 +119,7 @@ export class MissingChainOrHardforkError extends Web3Error {
 	}
 }
 
-export class MissingGasError extends Web3Error {
+export class MissingGasError extends InvalidValueError {
 	public code = ERR_TX_MISSING_GAS;
 
 	public constructor(value: {
@@ -122,7 +140,7 @@ export class MissingGasError extends Web3Error {
 	}
 }
 
-export class TransactionGasMismatchError extends Web3Error {
+export class TransactionGasMismatchError extends InvalidValueError {
 	public code = ERR_TX_MISSING_GAS;
 
 	public constructor(value: {
@@ -143,7 +161,7 @@ export class TransactionGasMismatchError extends Web3Error {
 	}
 }
 
-export class InvalidGasOrGasPrice extends Web3Error {
+export class InvalidGasOrGasPrice extends InvalidValueError {
 	public code = ERR_TX_INVALID_LEGACY_GAS;
 
 	public constructor(value: { gas: Numbers | undefined; gasPrice: Numbers | undefined }) {
@@ -154,7 +172,7 @@ export class InvalidGasOrGasPrice extends Web3Error {
 	}
 }
 
-export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends Web3Error {
+export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends InvalidValueError {
 	public code = ERR_TX_INVALID_FEE_MARKET_GAS;
 
 	public constructor(value: {
@@ -170,7 +188,7 @@ export class InvalidMaxPriorityFeePerGasOrMaxFeePerGas extends Web3Error {
 	}
 }
 
-export class Eip1559GasPriceError extends Web3Error {
+export class Eip1559GasPriceError extends InvalidValueError {
 	public code = ERR_TX_INVALID_FEE_MARKET_GAS_PRICE;
 
 	public constructor(value: unknown) {
@@ -178,7 +196,7 @@ export class Eip1559GasPriceError extends Web3Error {
 	}
 }
 
-export class UnsupportedFeeMarketError extends Web3Error {
+export class UnsupportedFeeMarketError extends InvalidValueError {
 	public code = ERR_TX_INVALID_LEGACY_FEE_MARKET;
 
 	public constructor(value: {
@@ -194,7 +212,7 @@ export class UnsupportedFeeMarketError extends Web3Error {
 	}
 }
 
-export class InvalidTransactionObjectError extends Web3Error {
+export class InvalidTransactionObjectError extends InvalidValueError {
 	public code = ERR_TX_INVALID_OBJECT;
 
 	public constructor(value: unknown) {
@@ -202,7 +220,7 @@ export class InvalidTransactionObjectError extends Web3Error {
 	}
 }
 
-export class InvalidNonceOrChainIdError extends Web3Error {
+export class InvalidNonceOrChainIdError extends InvalidValueError {
 	public code = ERR_TX_INVALID_NONCE_OR_CHAIN_ID;
 
 	public constructor(value: { nonce: Numbers | undefined; chainId: Numbers | undefined }) {
@@ -213,7 +231,7 @@ export class InvalidNonceOrChainIdError extends Web3Error {
 	}
 }
 
-export class UnableToPopulateNonceError extends Web3Error {
+export class UnableToPopulateNonceError extends InvalidValueError {
 	public code = ERR_TX_UNABLE_TO_POPULATE_NONCE;
 
 	public constructor() {
@@ -221,7 +239,7 @@ export class UnableToPopulateNonceError extends Web3Error {
 	}
 }
 
-export class Eip1559NotSupportedError extends Web3Error {
+export class Eip1559NotSupportedError extends InvalidValueError {
 	public code = ERR_TX_UNSUPPORTED_EIP_1559;
 
 	public constructor() {
@@ -229,7 +247,7 @@ export class Eip1559NotSupportedError extends Web3Error {
 	}
 }
 
-export class UnsupportedTransactionTypeError extends Web3Error {
+export class UnsupportedTransactionTypeError extends InvalidValueError {
 	public code = ERR_TX_UNSUPPORTED_TYPE;
 
 	public constructor(value: unknown) {
@@ -237,7 +255,7 @@ export class UnsupportedTransactionTypeError extends Web3Error {
 	}
 }
 
-export class TransactionDataAndInputError extends Web3Error {
+export class TransactionDataAndInputError extends InvalidValueError {
 	public code = ERR_TX_DATA_AND_INPUT;
 
 	public constructor(value: { data: HexString | undefined; input: HexString | undefined }) {
@@ -248,7 +266,7 @@ export class TransactionDataAndInputError extends Web3Error {
 	}
 }
 
-export class TransactionPollingTimeoutError extends Web3Error {
+export class TransactionPollingTimeoutError extends InvalidValueError {
 	public code = ERR_TX_POLLING_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
@@ -259,7 +277,7 @@ export class TransactionPollingTimeoutError extends Web3Error {
 	}
 }
 
-export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
+export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
 	public constructor(value: { receipt: ReceiptInfo; blockHash: Bytes; transactionHash: Bytes }) {
@@ -272,7 +290,7 @@ export class TransactionMissingReceiptOrBlockHashError extends Web3Error {
 	}
 }
 
-export class TransactionReceiptMissingBlockNumberError extends Web3Error {
+export class TransactionReceiptMissingBlockNumberError extends InvalidValueError {
 	public code = ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER;
 
 	public constructor(value: { receipt: ReceiptInfo }) {
@@ -280,6 +298,6 @@ export class TransactionReceiptMissingBlockNumberError extends Web3Error {
 	}
 }
 
-export class SignatureError extends Web3Error {
+export class SignatureError extends InvalidValueError {
 	public code = ERR_SIGNATURE_FAILED;
 }

@@ -1,3 +1,20 @@
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import {
 	Web3APISpec,
 	Web3BaseWallet,
@@ -12,6 +29,7 @@ import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
 import { Web3RequestManager } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 import { Web3SubscriptionManager } from './web3_subscription_manager';
+import { Web3BatchRequest } from './web3_batch_request';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
@@ -83,7 +101,6 @@ export class Web3Context<
 		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
 		super();
-
 		if (
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
@@ -218,6 +235,19 @@ export class Web3Context<
 
 	public set currentProvider(provider: SupportedProviders<API>) {
 		this.requestManager.setProvider(provider);
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	public get givenProvider() {
+		return Web3Context.givenProvider;
+	}
+
+	public setProvider(provider: SupportedProviders<API>) {
+		this.provider = provider;
+	}
+
+	public get BatchRequest() {
+		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
 	}
 }
 

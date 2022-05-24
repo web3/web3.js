@@ -1,3 +1,21 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import { FormatterError } from 'web3-errors';
 import { Iban } from 'web3-eth-iban';
 import {
 	BlockTags,
@@ -18,7 +36,6 @@ import {
 	utf8ToHex,
 } from 'web3-utils';
 import { isBlockTag, isHex } from 'web3-validator';
-import { FormatterError } from './errors';
 import {
 	BlockInput,
 	BlockOutput,
@@ -311,7 +328,7 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 				'',
 			)}${log.logIndex.replace('0x', '')}`,
 		);
-		modifiedLog.id = `log_${shaId.replace('0x', '').substr(0, 8)}`;
+		modifiedLog.id = `log_${shaId.replace('0x', '').slice(0, 8)}`;
 	} else if (!log.id) {
 		modifiedLog.id = undefined;
 	}

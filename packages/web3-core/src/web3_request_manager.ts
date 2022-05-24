@@ -1,4 +1,22 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { Socket } from 'net';
+import { ProviderError } from 'web3-errors';
 import {
 	EthExecutionAPI,
 	InvalidResponseError,
@@ -7,7 +25,6 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
 	JsonRpcResponse,
-	ProviderError,
 	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -129,9 +146,16 @@ export class Web3RequestManager<
 			: jsonRpc.toPayload(request);
 
 		if (isWeb3Provider(provider)) {
-			const response = await provider.request<Method, ResponseType>(
-				payload as Web3APIPayload<API, Method>,
-			);
+			let response;
+
+			try {
+				response = await provider.request<Method, ResponseType>(
+					payload as Web3APIPayload<API, Method>,
+				);
+			} catch (error) {
+				// Check if the provider throw an error instead of reject with error
+				response = error as JsonRpcResponse<ResponseType>;
+			}
 
 			return this._processJsonRpcResponse(payload, response);
 		}
@@ -177,7 +201,11 @@ export class Web3RequestManager<
 		payload: JsonRpcPayload<RequestType>,
 		response: JsonRpcResponse<ResultType, ErrorType>,
 	): JsonRpcResponse<ResultType> | never {
-		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
+		if (
+			jsonRpc.isBatchRequest(payload) &&
+			!Array.isArray(response) &&
+			!(response instanceof Error)
+		) {
 			throw new ResponseError(response, 'Got normal response for a batch request.');
 		}
 
@@ -204,6 +232,10 @@ export class Web3RequestManager<
 
 		if (jsonRpc.isResponseWithResult<ResultType>(response)) {
 			return response;
+		}
+
+		if ((response as unknown) instanceof Error) {
+			throw response;
 		}
 
 		throw new ResponseError(response, 'Invalid response');

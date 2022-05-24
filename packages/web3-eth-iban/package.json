@@ -1,7 +1,7 @@
 {
 	"name": "web3-eth-iban",
 	"version": "4.0.0-alpha.0",
-	"description": "This package converts Ethereum addresses to IBAN addresses a vice versa.",
+	"description": "This package converts Ethereum addresses to IBAN addresses and vice versa.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
@@ -22,7 +22,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
@@ -39,6 +39,7 @@
 		"typescript": "^4.5.2"
 	},
 	"dependencies": {
+		"web3-errors": "1.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1"
 	}
 }

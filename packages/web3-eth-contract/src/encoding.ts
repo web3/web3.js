@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { inputBlockNumberFormatter, LogsInput, outputLogFormatter } from 'web3-common';
 import {
 	AbiConstructorFragment,
@@ -5,12 +22,14 @@ import {
 	AbiFunctionFragment,
 	decodeLog,
 	decodeParameters,
+	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
 	encodeParameters,
 	isAbiConstructorFragment,
+	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { Filter, HexString, Uint } from 'web3-utils';
+import { BlockNumberOrTag, Filter, HexString, Topic } from 'web3-utils';
 import { Web3ContractError } from './errors';
 import { ContractOptions } from './types';
 
@@ -18,17 +37,17 @@ export const encodeEventABI = (
 	{ address }: ContractOptions,
 	event: AbiEventFragment & { signature: string },
 	options?: {
-		fromBlock?: Uint;
-		toBlock?: Uint;
+		fromBlock?: BlockNumberOrTag;
+		toBlock?: BlockNumberOrTag;
 		filter?: Filter;
-		topics?: HexString | HexString[];
+		topics?: (Topic | Topic[] | null)[];
 	},
 ) => {
 	const opts: {
 		filter: Filter;
 		fromBlock?: string;
 		toBlock?: string;
-		topics?: HexString[];
+		topics?: (Topic | Topic[])[];
 		address?: HexString;
 	} = {
 		filter: options?.filter ?? {},
@@ -43,13 +62,15 @@ export const encodeEventABI = (
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
-		opts.topics = [...options.topics];
+		opts.topics = [...options.topics].filter(Boolean) as Topic[];
 	} else {
 		opts.topics = [];
 
 		// add event signature
 		if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
-			opts.topics.push(event.signature);
+			opts.topics.push(
+				event.signature ?? encodeEventSignature(jsonInterfaceMethodToString(event)),
+			);
 		}
 
 		// add event topics (indexed arguments)
@@ -146,10 +167,10 @@ export const encodeMethodABI = (
 		);
 	}
 
-	const params =
-		(Array.isArray(abi.inputs) ? abi.inputs : []).map(i =>
-			encodeParameters([i], args).replace('0x', ''),
-		)[0] ?? '';
+	const params = encodeParameters(Array.isArray(abi.inputs) ? abi.inputs : [], args).replace(
+		'0x',
+		'',
+	);
 
 	if (isAbiConstructorFragment(abi)) {
 		if (!deployData)

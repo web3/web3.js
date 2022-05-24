@@ -1,3 +1,20 @@
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER, TransactionWithSender } from 'web3-common';
 import {
 	Address,
@@ -1510,20 +1527,20 @@ export const submitWorkValidData: [[HexString8Bytes, HexString32Bytes, HexString
  * - array of passed RPC parameters (excluding Web3Context) - This is to account for any defaults set by the method
  */
 export const getProofValidData: [
-	[Address, HexString32Bytes, BlockNumberOrTag | undefined, DataFormat | undefined],
-	[Address, HexString32Bytes, BlockNumberOrTag, DataFormat | undefined],
+	[Address, HexString32Bytes[], BlockNumberOrTag | undefined, DataFormat | undefined],
+	[Address, HexString32Bytes[], BlockNumberOrTag, DataFormat | undefined],
 ][] = [
 	// All possible undefined values
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			undefined,
 			undefined,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1532,13 +1549,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			undefined,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1546,13 +1563,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			undefined,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1560,13 +1577,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			undefined,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1574,13 +1591,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			undefined,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1589,13 +1606,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			DEFAULT_RETURN_FORMAT,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1603,13 +1620,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			DEFAULT_RETURN_FORMAT,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1617,13 +1634,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			DEFAULT_RETURN_FORMAT,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1631,13 +1648,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			DEFAULT_RETURN_FORMAT,
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			DEFAULT_RETURN_FORMAT,
 		],
@@ -1646,13 +1663,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
@@ -1660,13 +1677,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
@@ -1674,13 +1691,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
@@ -1688,13 +1705,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
@@ -1703,13 +1720,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
@@ -1717,13 +1734,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
@@ -1731,13 +1748,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
@@ -1745,13 +1762,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
@@ -1760,13 +1777,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			'0x1',
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
@@ -1774,13 +1791,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.EARLIEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
@@ -1788,13 +1805,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.LATEST,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
@@ -1802,13 +1819,13 @@ export const getProofValidData: [
 	[
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 		[
 			'0x1234567890123456789012345678901234567890',
-			'0x295a70b2de5e3953354a6a8344e616ed314d7251',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],

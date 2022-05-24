@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { ValidInputTypes } from '../types';
 import { codePointToInt, padLeft } from '../utils';
@@ -37,7 +54,7 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		return false;
 	}
 
-	const buffer = typeof value === 'string' ? Buffer.from(value.substr(2), 'hex') : value;
+	const buffer = typeof value === 'string' ? Buffer.from(value.slice(2), 'hex') : value;
 
 	const hash = Buffer.from(keccak256(buffer) as Buffer)
 		.toString('hex')
@@ -47,7 +64,8 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 		// calculate bit position in bloom filter that must be active
 		const bitpos =
 			// eslint-disable-next-line no-bitwise
-			((parseInt(hash.substr(i, 2), 16) << 8) + parseInt(hash.substr(i + 2, 2), 16)) & 2047;
+			((parseInt(hash.slice(i, i + 2), 16) << 8) + parseInt(hash.slice(i + 2, i + 4), 16)) &
+			2047;
 
 		// test if bitpos in bloom is active
 		const code = codePointToInt(bloom.charCodeAt(bloom.length - 1 - Math.floor(bitpos / 4)));

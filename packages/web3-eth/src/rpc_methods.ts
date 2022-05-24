@@ -1,8 +1,24 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
-	BlockNumberOrTag,
 	Uint256,
 	HexString32Bytes,
 	HexStringBytes,
@@ -10,7 +26,7 @@ import {
 	Filter,
 	HexString8Bytes,
 } from 'web3-utils';
-import { validator } from 'web3-validator';
+import { BlockNumberOrTag, validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
@@ -525,17 +541,17 @@ export async function getChainId(requestManager: Web3RequestManager<Web3EthExecu
 export async function getProof(
 	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
 	address: Address,
-	storageKey: HexString32Bytes,
+	storageKeys: HexString32Bytes[],
 	blockNumber: BlockNumberOrTag,
 ) {
 	validator.validate(
-		['address', 'bytes32', 'blockNumberOrTag'],
-		[address, storageKey, blockNumber],
+		['address', 'bytes32[]', 'blockNumberOrTag'],
+		[address, storageKeys, blockNumber],
 	);
 
 	return requestManager.send({
 		method: 'eth_getProof',
-		params: [address, storageKey, blockNumber],
+		params: [address, storageKeys, blockNumber],
 	});
 }
 

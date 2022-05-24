@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import * as utils from 'web3-utils';
 import { Iban } from 'web3-eth-iban';
 import {
@@ -247,7 +264,7 @@ describe('formatters', () => {
 
 			expect(utils.sha3Raw).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
 
-			expect(result.id).toEqual(`log_${sha3Result.substr(0, 8)}`);
+			expect(result.id).toEqual(`log_${sha3Result.slice(0, 8)}`);
 		});
 
 		it('should convert "blockNumber" from hex to number', () => {

@@ -1,7 +1,24 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { Web3Context } from 'web3-core';
+import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	Address,
 	Bytes,
@@ -15,8 +32,41 @@ import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions, Transaction, TransactionCall } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+import {
+	LogsSubscription,
+	NewPendingTransactionsSubscription,
+	NewHeadsSubscription,
+	SyncingSubscription,
+} from './web3_subscriptions';
 
-export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
+type RegisteredSubscription = {
+	logs: typeof LogsSubscription;
+	newPendingTransactions: typeof NewPendingTransactionsSubscription;
+	pendingTransactions: typeof NewPendingTransactionsSubscription;
+	newHeads: typeof NewHeadsSubscription;
+	newBlockHeaders: typeof NewHeadsSubscription;
+	syncing: typeof SyncingSubscription;
+};
+
+export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
+	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
+		super(
+			typeof providerOrContext === 'object' &&
+				(providerOrContext as Web3ContextInitOptions).provider
+				? providerOrContext
+				: {
+						provider: providerOrContext as SupportedProviders<any>,
+						registeredSubscriptions: {
+							logs: LogsSubscription,
+							newPendingTransactions: NewPendingTransactionsSubscription,
+							newHeads: NewHeadsSubscription,
+							syncing: SyncingSubscription,
+							pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+							newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+						},
+				  },
+		);
+	}
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
@@ -63,16 +113,27 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getBalance(this, address, blockNumber, returnFormat);
 	}
 
-	public async getStorageAt(
+	public async getStorageAt<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
 		storageSlot: Numbers,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getStorageAt(this, address, storageSlot, blockNumber);
+		return rpcMethodsWrappers.getStorageAt(
+			this,
+			address,
+			storageSlot,
+			blockNumber,
+			returnFormat,
+		);
 	}
 
-	public async getCode(address: Address, blockNumber: BlockNumberOrTag = this.defaultBlock) {
-		return rpcMethodsWrappers.getCode(this, address, blockNumber);
+	public async getCode<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		address: Address,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.getCode(this, address, blockNumber, returnFormat);
 	}
 
 	public async getBlock<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -151,7 +212,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.getTransactionCount(this, address, blockNumber, returnFormat);
 	}
 
-	public async sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: Transaction,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
@@ -159,29 +220,36 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 		return rpcMethodsWrappers.sendTransaction(this, transaction, returnFormat, options);
 	}
 
-	public async sendSignedTransaction<
-		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
-	>(transaction: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
+	public sendSignedTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: Bytes,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
 		return rpcMethodsWrappers.sendSignedTransaction(this, transaction, returnFormat);
 	}
 
-	// TODO address can be an address or the index of a local wallet in web3.eth.accounts.wallet
-	// https://web3js.readthedocs.io/en/v1.5.2/web3-eth.html?highlight=sendTransaction#sign
-	public async sign(message: Bytes, address: Address) {
-		return rpcMethodsWrappers.sign(this, message, address);
+	public async sign<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		message: Bytes,
+		address: Address,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.sign(this, message, address, returnFormat);
 	}
 
-	public async signTransaction(transaction: Transaction) {
-		return rpcMethodsWrappers.signTransaction(this, transaction);
+	public async signTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: Transaction,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.signTransaction(this, transaction, returnFormat);
 	}
 
 	// TODO Decide what to do with transaction.to
 	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
-	public async call(
+	public async call<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		transaction: TransactionCall,
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.call(this, transaction, blockNumber);
+		return rpcMethodsWrappers.call(this, transaction, blockNumber, returnFormat);
 	}
 
 	public async estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -228,11 +296,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 
 	public async getProof<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		address: Address,
-		storageKey: Bytes,
+		storageKeys: Bytes[],
 		blockNumber: BlockNumberOrTag = this.defaultBlock,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getProof(this, address, storageKey, blockNumber, returnFormat);
+		return rpcMethodsWrappers.getProof(this, address, storageKeys, blockNumber, returnFormat);
 	}
 
 	public async getFeeHistory<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
@@ -247,6 +315,47 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI> {
 			newestBlock,
 			rewardPercentiles,
 			returnFormat,
+		);
+	}
+
+	public async subscribe<T extends keyof RegisteredSubscription>(
+		name: T,
+		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
+	): Promise<InstanceType<RegisteredSubscription[T]>> {
+		const subscription = (await this.subscriptionManager?.subscribe(
+			name,
+			args,
+		)) as InstanceType<RegisteredSubscription[T]>;
+		if (
+			subscription instanceof LogsSubscription &&
+			name === 'logs' &&
+			typeof args === 'object' &&
+			args.fromBlock &&
+			Number.isFinite(Number(args.fromBlock))
+		) {
+			setImmediate(() => {
+				this.getPastLogs(args)
+					.then(logs => {
+						for (const log of logs) {
+							subscription._processSubscriptionResult(log);
+						}
+					})
+					.catch(e => {
+						subscription._processSubscriptionError(e as Error);
+					});
+			});
+		}
+		return subscription;
+	}
+
+	private static shouldClearSubscription({ sub }: { sub: unknown }): boolean {
+		return !(sub instanceof SyncingSubscription);
+	}
+
+	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+		return this.subscriptionManager?.unsubscribe(
+			// eslint-disable-next-line
+			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
 		);
 	}
 }

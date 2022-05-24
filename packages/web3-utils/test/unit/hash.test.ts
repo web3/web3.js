@@ -1,3 +1,20 @@
+﻿/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { keccak256 } from 'js-sha3';
 import { sha3, sha3Raw, soliditySha3, soliditySha3Raw, encodePacked } from '../../src/hash';
 import {
@@ -23,13 +40,13 @@ describe('hash', () => {
 
 		describe('compare with js-sha3 normal cases', () => {
 			it.each(sha3Data)('%s', input => {
-				expect(sha3(input)).toEqual(`0x${keccak256(input)}`);
+				expect(sha3(input)).toBe(`0x${keccak256(input)}`);
 			});
 		});
 
 		describe('compare with js-sha3 buffer cases', () => {
 			it.each(compareSha3JSValidData)('%s', (input, output) => {
-				expect(sha3(input)).toEqual(`0x${keccak256(output)}`);
+				expect(sha3(input)).toBe(`0x${keccak256(output)}`);
 			});
 		});
 	});
@@ -42,7 +59,7 @@ describe('hash', () => {
 		});
 		describe('comparing with js-sha3 cases', () => {
 			it.each(compareSha3JSRawValidData)('%s', (input, output) => {
-				expect(sha3Raw(input)).toEqual(`0x${keccak256(output)}`);
+				expect(sha3Raw(input)).toBe(`0x${keccak256(output)}`);
 			});
 		});
 	});

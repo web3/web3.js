@@ -1,14 +1,30 @@
+/*
+This file is part of web3.js.
+
+web3.js is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+web3.js is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 import { getBlock, ReceiptInfo } from 'web3-eth';
+import {
+	RevertInstructionError,
+	ENSNetworkNotSyncedError,
+	ENSUnsupportedNetworkError,
+} from 'web3-errors';
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
-import {
-	RevertInstructionError,
-	EthExecutionAPI,
-	ENSUnsupportedNetworkError,
-	ENSNetworkNotSyncedError,
-	DEFAULT_RETURN_FORMAT,
-} from 'web3-common';
+import { EthExecutionAPI, DEFAULT_RETURN_FORMAT } from 'web3-common';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
