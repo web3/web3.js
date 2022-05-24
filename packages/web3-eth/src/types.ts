@@ -70,6 +70,7 @@ export interface ReceiptInfo {
 	readonly logsBloom: Bytes;
 	readonly root: Bytes;
 	readonly status: Numbers;
+	readonly type?: Numbers;
 }
 
 export interface CustomChain {
