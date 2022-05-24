@@ -76,11 +76,16 @@ export const getTransactionType = (
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
-	transaction: Transaction;
+	transaction: Record<string, unknown>;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
-	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	let populatedTransaction = format(
+		transactionSchema,
+		options.transaction,
+		DEFAULT_RETURN_FORMAT,
+	) as InternalTransaction;
 
 	if (populatedTransaction.from === undefined) {
 		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
@@ -162,7 +167,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		)),
 	};
 
-	return format(transactionSchema, populatedTransaction, DEFAULT_RETURN_FORMAT) as ReturnType;
+	return populatedTransaction as ReturnType;
 }
 
 export const transactionBuilder = async <ReturnType = Record<string, unknown>>(options: {
