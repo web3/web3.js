@@ -76,4 +76,46 @@ describe('Web3Eth.sendTransaction', () => {
 			expect(response.status).toBe('0x1');
 		});
 	});
+
+	describe('Transaction Types', () => {
+		it('should send a successful type 0x0 transaction', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x0',
+			};
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.type).toBe('0x0');
+			expect(response.status).toBe('0x1');
+		});
+
+		it('should send a successful type 0x1 transaction', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x1',
+				// TODO If this property is not included, tx gets default to type: 0x0
+				// from what I can tell our library isn't doing this, but it happens
+				// with both Geth and Ganache, so I'm not sure
+				accessList: [],
+			};
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.type).toBe('0x1');
+			expect(response.status).toBe('0x1');
+		});
+
+		it('should send a successful type 0x2 transaction', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x2',
+			};
+			const response = await web3Eth.sendTransaction(transaction);
+			expect(response.type).toBe('0x2');
+			expect(response.status).toBe('0x1');
+		});
+	});
 });
