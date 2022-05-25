@@ -28,10 +28,20 @@ import {
 	TransactionInfo,
 	TransactionWithSender,
 	FormatType,
+	SignedTransactionInfo,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Address, BlockTag, BlockNumberOrTag, Bytes, Filter, HexString, Numbers } from 'web3-utils';
-import { isBlockTag, isBytes } from 'web3-validator';
+import {
+	Address,
+	BlockTag,
+	BlockNumberOrTag,
+	Bytes,
+	Filter,
+	HexString,
+	Numbers,
+	HexStringBytes,
+} from 'web3-utils';
+import { isBlockTag, isBytes, isString } from 'web3-validator';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -659,9 +669,12 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 		web3Context.requestManager,
 		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
 	);
+	const unformattedResponse = isString(response as string)
+		? { raw: response as HexStringBytes, tx: transaction }
+		: (response as SignedTransactionInfo);
 	return {
-		raw: format({ eth: 'bytes' }, response, returnFormat),
-		tx: formatTransaction(transaction, returnFormat),
+		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),
+		tx: formatTransaction(unformattedResponse.tx, returnFormat),
 	};
 }
 
