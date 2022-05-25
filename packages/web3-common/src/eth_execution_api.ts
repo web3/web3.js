@@ -120,6 +120,11 @@ export type TransactionInfo = TransactionSigned & {
 	readonly transactionIndex: Uint | null;
 };
 
+export interface SignedTransactionInfo {
+	raw: HexStringBytes;
+	tx: TransactionSigned;
+}
+
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L24
 export type TransactionWithSender = TransactionUnsigned & { from: Address };
 
@@ -281,7 +286,7 @@ export type EthExecutionAPI = {
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
 	eth_signTransaction: (
 		transaction: TransactionWithSender | Partial<TransactionWithSender>,
-	) => HexStringBytes;
+	) => HexStringBytes | SignedTransactionInfo;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
 	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
