@@ -669,7 +669,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 		web3Context.requestManager,
 		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
 	);
-	const unformattedResponse = isString(response as string)
+	const unformattedResponse = isString(response as HexStringBytes)
 		? { raw: response as HexStringBytes, tx: transaction }
 		: (response as SignedTransactionInfo);
 	return {
