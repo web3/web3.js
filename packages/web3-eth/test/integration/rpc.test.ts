@@ -40,6 +40,7 @@ const mapFormatToType: { [key: string]: string } = {
 	[FMT_NUMBER.STR]: 'string',
 	[FMT_NUMBER.BIGINT]: 'bigint',
 };
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
@@ -326,6 +327,7 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
+		// eslint-disable-next-line jest/expect-expect
 		it.each(
 			toAllVariants<{
 				block: number | bigint | string;
@@ -455,6 +457,7 @@ describe('rpc', () => {
 		});
 
 		it.each([blockHash, blockNumber])('getTransactionFromBlock', async block => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const tx = (await web3Eth.getTransactionFromBlock(block, transactionIndex))!;
 			validateTransaction(tx as TransactionInfo);
 			expect(tx?.hash).toBe(transactionHash);
@@ -468,7 +471,7 @@ describe('rpc', () => {
 				value: '0x1',
 				times: 1,
 			});
-
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const res: ReceiptInfo = (await web3Eth.getTransactionReceipt(
 				// TODO: add more scenarios in future release with block number
 				receipt.transactionHash as string,
@@ -498,7 +501,7 @@ describe('rpc', () => {
 			expect(res[0]).toBeDefined();
 		});
 
-		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', async () => {
+		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(true).toBe(true);

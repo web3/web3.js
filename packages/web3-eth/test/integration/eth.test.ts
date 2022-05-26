@@ -65,7 +65,7 @@ describe('eth', () => {
 	});
 
 	describe('methods', () => {
-		it('setProvider', async () => {
+		it('setProvider', () => {
 			const url = getSystemTestProvider();
 			let newProvider;
 			if (url.startsWith('http')) {
@@ -77,14 +77,14 @@ describe('eth', () => {
 
 			expect(web3Eth.provider).toBe(newProvider);
 		});
-		it('providers', async () => {
+		it('providers', () => {
 			const res = web3Eth.providers;
 
 			expect(res.HttpProvider).toBeDefined();
 			expect(res.WebsocketProvider).toBeDefined();
 			expect(res.IpcProvider).toBeDefined();
 		});
-		it('currentProvider', async () => {
+		it('currentProvider', () => {
 			const { currentProvider } = web3Eth;
 			const url = getSystemTestProvider();
 			let checkWithClass;
@@ -97,7 +97,7 @@ describe('eth', () => {
 			}
 			expect(currentProvider).toBeInstanceOf(checkWithClass);
 		});
-		it('givenProvider', async () => {
+		it('givenProvider', () => {
 			const { givenProvider } = web3Eth;
 			expect(givenProvider).toBeUndefined();
 		});
@@ -118,12 +118,12 @@ describe('eth', () => {
 			const [response1, response2] = await batch.execute();
 			expect(response1.result).toBeDefined();
 			expect(response2.result).toBeDefined();
-// TODO: in future release add test for validation of returned results , ( match balance )
+			// TODO: in future release add test for validation of returned results , ( match balance )
 			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
-		it('defaults', async () => {
-// TODO: in future release add tests for setting default and matching with new values
+		it('defaults', () => {
+			// TODO: in future release add tests for setting default and matching with new values
 			const config = web3Eth.getConfig();
 			expect(config.defaultAccount).toBeNull();
 			expect(config.handleRevert).toBe(false);

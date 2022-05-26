@@ -57,7 +57,7 @@ describe('defaults', () => {
 	});
 
 	describe('defaults', () => {
-		it('defaultAccount', async () => {
+		it('defaultAccount', () => {
 			// default
 			expect(web3Eth.defaultAccount).toBeNull();
 
@@ -79,7 +79,7 @@ describe('defaults', () => {
 			// check utils
 			expect(getTransactionFromAttr(eth2)).toBe(accounts[1]);
 		});
-		it('handleRevert', async () => {
+		it('handleRevert', () => {
 			// default
 			expect(web3Eth.handleRevert).toBe(false);
 
@@ -126,7 +126,7 @@ describe('defaults', () => {
 			const balanceLatest = await eth2.getBalance(accounts[0]);
 			expect(hexToNumber(balanceLatest)).toBeGreaterThan(0);
 		});
-		it('transactionBlockTimeout', async () => {
+		it('transactionBlockTimeout', () => {
 			// default
 			expect(web3Eth.transactionBlockTimeout).toBe(50);
 
@@ -145,7 +145,7 @@ describe('defaults', () => {
 			});
 			expect(eth2.transactionBlockTimeout).toBe(120);
 		});
-		it('transactionConfirmationBlocks', async () => {
+		it('transactionConfirmationBlocks', () => {
 			// default
 			expect(web3Eth.transactionConfirmationBlocks).toBe(24);
 
@@ -165,7 +165,7 @@ describe('defaults', () => {
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
 			// implementation tested here ./watch_transaction.test.ts
 		});
-		it('transactionPollingInterval and transactionPollingTimeout', async () => {
+		it('transactionPollingInterval and transactionPollingTimeout', () => {
 			// default
 			expect(web3Eth.transactionPollingInterval).toBe(1000);
 			expect(web3Eth.transactionPollingTimeout).toBe(750);
@@ -189,7 +189,7 @@ describe('defaults', () => {
 			expect(eth2.transactionPollingInterval).toBe(400);
 			expect(eth2.transactionPollingTimeout).toBe(10);
 		});
-		it('transactionReceiptPollingInterval and transactionConfirmationPollingInterval', async () => {
+		it('transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
 			// default
 			expect(web3Eth.transactionReceiptPollingInterval).toBeNull();
 			expect(web3Eth.transactionConfirmationPollingInterval).toBeNull();

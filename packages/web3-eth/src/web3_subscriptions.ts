@@ -27,7 +27,7 @@ type CommonSubscriptionEvents = {
 
 export class LogsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
-		data: any;
+		data: unknown;
 	},
 	{
 		readonly fromBlock?: BlockNumberOrTag;
@@ -36,9 +36,10 @@ export class LogsSubscription extends Web3Subscription<
 	}
 > {
 	protected _buildSubscriptionParams() {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return ['logs', this.args] as ['logs', any];
 	}
-
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public _processSubscriptionResult(data: any) {
 		this.emit('data', data);
 	}

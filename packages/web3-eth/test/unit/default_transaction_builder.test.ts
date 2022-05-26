@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+/* eslint-disable jest/no-disabled-tests */
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
@@ -121,18 +121,19 @@ describe('defaultTransactionBuilder', () => {
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
 
-	it.skip('should call override method', async () => {
-		// const overrideFunction = jest.fn();
-		// const input = { ...transaction };
-		// await defaultTransactionBuilder(
-		// 	input,
-		// 	web3Context,
-		// 	ValidTypes.HexString,
-		// 	'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-		// 	overrideFunction,
-		// );
-		// expect(overrideFunction).toHaveBeenCalledWith(input);
-	});
+	/* eslint-disable jest/no-commented-out-tests */
+	// it.skip('should call override method', async () => {
+	// const overrideFunction = jest.fn();
+	// const input = { ...transaction };
+	// await defaultTransactionBuilder(
+	// 	input,
+	// 	web3Context,
+	// 	ValidTypes.HexString,
+	// 	'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+	// 	overrideFunction,
+	// );
+	// expect(overrideFunction).toHaveBeenCalledWith(input);
+	// });
 
 	describe('should populate from', () => {
 		it('should use privateKey to populate', async () => {

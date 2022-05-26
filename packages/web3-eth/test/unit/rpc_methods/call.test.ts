@@ -59,9 +59,11 @@ describe('call', () => {
 
 	it.each(testData)(
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
 			await call(requestManager, ...inputParameters);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const [__, expectedBlockNumber] = inputParameters;
 			expect(validatorSpy).toHaveBeenCalledWith(['blockNumberOrTag'], [expectedBlockNumber]);
 		},
