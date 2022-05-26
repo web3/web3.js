@@ -433,7 +433,9 @@ function _handleTxPricing(_this, tx) {
                             throw Error("Network doesn't support eip-1559")
                         resolve({ gasPrice });
                     }
-                })
+                }).catch((error) => {
+                    reject(error);
+                });
             }
         } catch (error) {
             reject(error)
