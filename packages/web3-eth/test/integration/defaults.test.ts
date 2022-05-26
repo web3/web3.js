@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
-import { hexToNumber } from 'web3-utils';
+import { hexToNumber, numberToHex } from 'web3-utils';
 import { Web3Eth } from '../../src';
 
 import { createNewAccount, getSystemTestProvider } from '../fixtures/system_test_utils';
@@ -212,6 +212,172 @@ describe('defaults', () => {
 			});
 			expect(eth2.transactionReceiptPollingInterval).toBe(400);
 			expect(eth2.transactionConfirmationPollingInterval).toBe(10);
+		});
+		it('blockHeaderTimeout', () => {
+			// default
+			expect(web3Eth.blockHeaderTimeout).toBe(10);
+
+			// after set
+			web3Eth.setConfig({
+				blockHeaderTimeout: 3,
+			});
+			expect(web3Eth.blockHeaderTimeout).toBe(3);
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					blockHeaderTimeout: 4,
+				},
+			});
+			expect(eth2.blockHeaderTimeout).toBe(4);
+		});
+		it('maxListenersWarningThreshold', () => {
+			// default
+			expect(web3Eth.maxListenersWarningThreshold).toBe(100);
+
+			// after set
+			web3Eth.setConfig({
+				maxListenersWarningThreshold: 3,
+			});
+			expect(web3Eth.maxListenersWarningThreshold).toBe(3);
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					maxListenersWarningThreshold: 4,
+				},
+			});
+			expect(eth2.maxListenersWarningThreshold).toBe(4);
+		});
+		it('defaultNetworkId', () => {
+			// default
+			expect(web3Eth.defaultNetworkId).toBeNull();
+
+			// after set
+			web3Eth.setConfig({
+				defaultNetworkId: 3,
+			});
+			expect(web3Eth.defaultNetworkId).toBe(3);
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultNetworkId: 4,
+				},
+			});
+			expect(eth2.defaultNetworkId).toBe(4);
+		});
+		it('defaultChain', () => {
+			// default
+			expect(web3Eth.defaultChain).toBe('mainnet');
+
+			// after set
+			web3Eth.setConfig({
+				defaultChain: 'ropsten',
+			});
+			expect(web3Eth.defaultChain).toBe('ropsten');
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultChain: 'rinkeby',
+				},
+			});
+			expect(eth2.defaultChain).toBe('rinkeby');
+		});
+		it('defaultHardfork', () => {
+			// default
+			expect(web3Eth.defaultHardfork).toBe('london');
+
+			// after set
+			web3Eth.setConfig({
+				defaultHardfork: 'dao',
+			});
+			expect(web3Eth.defaultHardfork).toBe('dao');
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultHardfork: 'istanbul',
+				},
+			});
+			expect(eth2.defaultHardfork).toBe('istanbul');
+		});
+		it('defaultCommon', () => {
+			// default
+			expect(web3Eth.defaultCommon).toBeNull();
+			const common = {
+				customChain: {
+					name: 'test',
+					networkId: 123,
+					chainId: 1234,
+				},
+				baseChain: 12345,
+				hardfork: 'dao',
+			};
+			// after set
+			web3Eth.setConfig({
+				defaultCommon: common,
+			});
+			expect(web3Eth.defaultCommon).toBe(common);
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultCommon: common,
+				},
+			});
+			expect(eth2.defaultCommon).toBe(common);
+		});
+		it('defaultTransactionType', () => {
+			// default
+			expect(web3Eth.defaultTransactionType).toBe('0x0');
+			// after set
+			web3Eth.setConfig({
+				defaultTransactionType: '0x3',
+			});
+			expect(web3Eth.defaultTransactionType).toBe('0x3');
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultTransactionType: '0x4',
+				},
+			});
+			expect(eth2.defaultTransactionType).toBe('0x4');
+		});
+		it('defaultMaxPriorityFeePerGas', () => {
+			// default
+			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2500000000));
+			// after set
+			web3Eth.setConfig({
+				defaultMaxPriorityFeePerGas: numberToHex(2100000000),
+			});
+			expect(web3Eth.defaultMaxPriorityFeePerGas).toBe(numberToHex(2100000000));
+
+			// set by create new instance
+			const eth2 = new Web3Eth({
+				provider: clientUrl,
+				config: {
+					defaultMaxPriorityFeePerGas: numberToHex(1200000000),
+				},
+			});
+			expect(eth2.defaultMaxPriorityFeePerGas).toBe(numberToHex(1200000000));
+		});
+		it('transactionBuilder', () => {
+			// default
+			expect(web3Eth.transactionBuilder).toBeUndefined();
+		});
+		it('transactionTypeParser', () => {
+			// default
+			expect(web3Eth.transactionTypeParser).toBeUndefined();
 		});
 	});
 });
