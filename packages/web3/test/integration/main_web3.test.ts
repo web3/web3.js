@@ -159,6 +159,7 @@ describe('Web3 instance', () => {
 			} else {
 				newProvider = new Web3.providers.WebsocketProvider(clientUrl);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
 
 			expect(web3.provider).toBe(newProvider);
@@ -218,12 +219,14 @@ describe('Web3 instance', () => {
 		it('should execute batch requests', async () => {
 			web3 = new Web3(clientUrl);
 
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
 			const batch = new web3.BatchRequest();
 
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
 			batch.add(request1);
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
 			batch.add(request2);
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
 			const response = await batch.execute();
 
 			expect(response).toEqual(
