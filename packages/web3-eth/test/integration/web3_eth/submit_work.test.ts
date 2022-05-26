@@ -18,7 +18,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 
 import Web3Eth from '../../../src';
-import { getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestBackend,
+	getSystemTestProvider,
+	itIf,
+} from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.submitWork', () => {
 	let web3Eth: Web3Eth;
@@ -33,12 +37,14 @@ describe('Web3Eth.submitWork', () => {
 		}
 	});
 
-	it('should submit work', async () => {
+	// Geth doesn't support eth_submitWork
+	itIf(getSystemTestBackend() !== 'geth')('should submit work', async () => {
 		const response = await web3Eth.submitWork(
 			'0x0000000000000001',
 			'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
 			'0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
 		);
+		// eslint-disable-next-line jest/no-standalone-expect
 		expect(response).toBe(false);
 	});
 });
