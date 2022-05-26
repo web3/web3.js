@@ -14,15 +14,18 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import HttpProvider from 'web3-providers-http';
+import WebsocketProvider from 'web3-providers-ws';
+import IpcProvider from 'web3-providers-ipc';
 import Contract from 'web3-eth-contract';
-import { ENS } from 'web3-eth-ens';
-import Web3Eth from 'web3-eth';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
 import HDWalletProvider from '@truffle/hdwallet-provider';
-
+import { SupportedProviders } from 'web3-core';
+import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';
+import { Web3Account } from 'web3-eth-accounts';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
-
 import {
 	getSystemTestProvider,
 	describeIf,
@@ -71,7 +74,10 @@ describe('Web3 instance', () => {
 	afterEach(async () => {
 		if (getSystemTestProvider().startsWith('ws')) {
 			// make sure we try to close the connection after it is established
-			if ((web3.provider as unknown as Web3BaseProvider).getStatus() === 'connecting') {
+			if (
+				web3.provider &&
+				(web3.provider as unknown as Web3BaseProvider).getStatus() === 'connecting'
+			) {
 				await waitForOpenConnection(web3, currentAttempt);
 			}
 			(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
@@ -125,7 +131,7 @@ describe('Web3 instance', () => {
 				process.env.INFURA_GOERLI_WS
 					? process.env.INFURA_GOERLI_WS.toString().includes('ws')
 					: false,
-			)('should create instance with string of external http provider', async () => {
+			)('should create instance with string of external ws provider', async () => {
 				web3 = new Web3(process.env.INFURA_GOERLI_WS!);
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
@@ -144,65 +150,54 @@ describe('Web3 instance', () => {
 
 			expect(response).toMatch(/0[xX][0-9a-fA-F]+/);
 		});
+
+		it('setProvider', async () => {
+			let newProvider: Web3BaseProvider;
+			web3 = new Web3('http://dummy.com');
+			if (clientUrl.startsWith('http')) {
+				newProvider = new Web3.providers.HttpProvider(clientUrl);
+			} else {
+				newProvider = new Web3.providers.WebsocketProvider(clientUrl);
+			}
+			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
+
+			expect(web3.provider).toBe(newProvider);
+		});
+
+		it('providers', async () => {
+			const res = Web3.providers;
+
+			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
+			expect(res.WebsocketProvider).toBe(WebsocketProvider);
+			expect(res.IpcProvider).toBe(IpcProvider);
+		});
+
+		it('currentProvider', async () => {
+			web3 = new Web3(clientUrl);
+
+			let checkWithClass;
+			if (clientUrl.startsWith('ws')) {
+				checkWithClass = Web3.providers.WebsocketProvider;
+			} else if (clientUrl.startsWith('http')) {
+				checkWithClass = Web3.providers.HttpProvider;
+			} else {
+				checkWithClass = Web3.providers.IpcProvider;
+			}
+			expect(web3.currentProvider).toBeInstanceOf(checkWithClass);
+		});
+
+		it('givenProvider', async () => {
+			const { givenProvider } = web3;
+			expect(givenProvider).toBeUndefined();
+		});
 	});
 
 	describe('Module instantiations', () => {
-		it('should create module instances', () => {
-			web3 = new Web3(clientUrl);
-
-			expect(web3.eth).toBeInstanceOf(Web3Eth);
-			expect(web3.eth.ens).toBeInstanceOf(ENS);
-			expect(web3.eth.abi).toEqual(
-				expect.objectContaining({
-					encodeEventSignature: expect.any(Function),
-					encodeFunctionCall: expect.any(Function),
-					encodeFunctionSignature: expect.any(Function),
-					encodeParameter: expect.any(Function),
-					encodeParameters: expect.any(Function),
-					decodeParameter: expect.any(Function),
-					decodeParameters: expect.any(Function),
-					decodeLog: expect.any(Function),
-				}),
-			);
-			expect(web3.eth.accounts).toEqual(
-				expect.objectContaining({
-					create: expect.any(Function),
-					privateKeyToAccount: expect.any(Function),
-					signTransaction: expect.any(Function),
-					recoverTransaction: expect.any(Function),
-					hashMessage: expect.any(Function),
-					sign: expect.any(Function),
-					recover: expect.any(Function),
-					encrypt: expect.any(Function),
-					decrypt: expect.any(Function),
-				}),
-			);
+		it('should create contract', () => {
 			const basicContract = new web3.eth.Contract(BasicAbi);
 			expect(basicContract).toBeInstanceOf(Contract);
 		});
 	});
-
-	describeIf(getSystemTestProvider().startsWith('http'))(
-		'Create Web3 class instance with external providers',
-		() => {
-			let provider: HDWalletProvider;
-			beforeAll(() => {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				provider = new HDWalletProvider({
-					privateKeys: [accountsAddrAndPriv[0].privateKey],
-					providerOrUrl: clientUrl,
-				});
-			});
-			afterAll(() => {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-				provider.engine.stop();
-			});
-			it('should create instance with external wallet provider', async () => {
-				web3 = new Web3(provider);
-				expect(web3).toBeInstanceOf(Web3);
-			});
-		},
-	);
 
 	describe('Batch Request', () => {
 		let request1: JsonRpcOptionalRequest;
@@ -258,5 +253,48 @@ describe('Web3 instance', () => {
 			);
 			expect(encodedParameters).toEqual(validData.output);
 		});
+	});
+	describe('Account module', () => {
+		it('should create account', async () => {
+			web3 = new Web3(clientUrl);
+			const account: Web3Account = web3.eth.accounts.create();
+			expect(account).toEqual(
+				expect.objectContaining({
+					address: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
+					privateKey: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
+				}),
+			);
+		});
+		it('should create account from private key', async () => {
+			web3 = new Web3(clientUrl);
+			const acc = accountsAddrAndPriv[0];
+			const createdAccount: Web3Account = web3.eth.accounts.privateKeyToAccount(
+				acc.privateKey,
+			);
+			expect(acc.address.toLowerCase()).toBe(createdAccount.address.toLowerCase());
+		});
+	});
+});
+
+describe('Create Web3 class instance with external providers', () => {
+	let provider: HDWalletProvider;
+	let clientUrl: string;
+	let web3: Web3;
+
+	beforeAll(async () => {
+		clientUrl = getSystemTestProvider();
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		provider = new HDWalletProvider({
+			privateKeys: [accountsAddrAndPriv[0].privateKey],
+			providerOrUrl: clientUrl,
+		});
+	});
+	afterAll(async () => {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		provider.engine.stop();
+	});
+	it('should create instance with external wallet provider', async () => {
+		web3 = new Web3(provider);
+		expect(web3).toBeInstanceOf(Web3);
 	});
 });
