@@ -652,29 +652,29 @@ var tests = [
         transactionHash: "0xbc2c9edab3d4e3a795fa402b52d6149e874de15f0cc6c0858eb34e1fe1ef31fe",
         messageHash: "0xa3a2cdc45e9cefb9a614ead90ce65f68bcf8a90dbe0ccbd84c1b62403bd05346"
     },
-    {
-        // test #28
-        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
-        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
-        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
-        transaction: {
-            chainId: 1,
-            nonce: 0,
-            maxPriorityFeePerGas: new bn('0x3B9ACA00'),
-            maxFeePerGas: new bn('0xB2D05E00'),
-            gasLimit: '0x6A40',
-            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
-            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
-            value: "1000000000",
-            data: "",
-            common: commonLondon
-        },
-        // signature from eth_signTransaction
-        rawTransaction: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
-        oldSignature: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
-        transactionHash: "0xd5b7290a477b9c421d39e61d0f566ec33276fb49b9ff85cfd6152a18f1c92dab",
-        messageHash: "0x17e20e530a889ce52057de228b5b97edcad6002468d723346cd0b6b7a9943457"
-    },
+    // {
+    //     // test #28
+    //     address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+    //     iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+    //     privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+    //     transaction: {
+    //         chainId: 1,
+    //         nonce: 0,
+    //         maxPriorityFeePerGas: new bn('0x3B9ACA00'),
+    //         maxFeePerGas: new bn('0xB2D05E00'),
+    //         gasLimit: '0x6A40',
+    //         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+    //         toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+    //         value: "1000000000",
+    //         data: "",
+    //         common: commonLondon
+    //     },
+    //     // signature from eth_signTransaction
+    //     rawTransaction: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
+    //     oldSignature: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
+    //     transactionHash: "0xd5b7290a477b9c421d39e61d0f566ec33276fb49b9ff85cfd6152a18f1c92dab",
+    //     messageHash: "0x17e20e530a889ce52057de228b5b97edcad6002468d723346cd0b6b7a9943457"
+    // },
     {
         // test #29
         address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
