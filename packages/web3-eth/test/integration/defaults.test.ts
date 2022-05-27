@@ -124,15 +124,15 @@ describe('defaults', () => {
 				},
 			});
 			expect(eth2.defaultBlock).toBe('earliest');
-
+			const acc = await createNewAccount({ refill: true });
 			// check implementation
-			const balance = await eth2.getBalance(accounts[0]);
+			const balance = await eth2.getBalance(acc.address);
 			expect(balance).toBe('0x0');
 			eth2.setConfig({
 				defaultBlock: 'latest',
 			});
-			const balanceLatest = await eth2.getBalance(accounts[0]);
-			expect(hexToNumber(balanceLatest)).toBeGreaterThan(0);
+			const balanceLatest = await eth2.getBalance(acc.address);
+			expect(Number(hexToNumber(balanceLatest))).toBeGreaterThan(0);
 		});
 		it('transactionBlockTimeout', () => {
 			// default
