@@ -19,14 +19,18 @@
  *   Marek Kotewicz <marek@parity.io>
  *   Marian Oancea
  *   Fabian Vogelsteller <fabian@ethereum.org>
+ *   AyanamiTech <ayanami0330@protonmail.com>
  * @date 2015
  */
 
 var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
+var fetch = require('cross-fetch');
 var http = require('http');
 var https = require('https');
 
+// Apply missing polyfill for IE
+require('es6-promise').polyfill();
+require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -34,14 +38,14 @@ var https = require('https');
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
 
-    this.withCredentials = options.withCredentials || false;
+    this.withCredentials = options.withCredentials;
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
     this.agent = options.agent;
     this.connected = false;
 
     // keepAlive is true unless explicitly set to false
-    const keepAlive = options.keepAlive !== false;
+    var keepAlive = options.keepAlive !== false;
     this.host = host || 'http://localhost:8545';
     if (!this.agent) {
         if (this.host.substring(0,5) === "https") {
@@ -52,37 +56,67 @@ var HttpProvider = function HttpProvider(host, options) {
     }
 };
 
-HttpProvider.prototype._prepareRequest = function(){
-    var request;
+HttpProvider.prototype._prepareRequest = function(payload = {}){
+    var options = {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    };
+    var headers = {};
+    var controller;
 
-    // the current runtime is a browser
-    if (typeof XMLHttpRequest !== 'undefined') {
-        request = new XMLHttpRequest();
+    if (typeof AbortController !== 'undefined') {
+        controller = new AbortController();
+    } else if (typeof AbortController === 'undefined' && typeof window !== 'undefined' && typeof window.AbortController !== 'undefined') {
+        // Some chrome version doesn't recognize new AbortController(); so we are using it from window instead
+        // https://stackoverflow.com/questions/55718778/why-abortcontroller-is-not-defined
+        controller = new window.AbortController();
     } else {
-        request = new XHR2();
-        var agents = {httpsAgent: this.httpsAgent, httpAgent: this.httpAgent, baseUrl: this.baseUrl};
+        // Disable user defined timeout
+        this.timeout = 0;
+    }
+
+    // the current runtime is node
+    if (typeof XMLHttpRequest === 'undefined') {
+        // https://github.com/node-fetch/node-fetch#custom-agent
+        var agents = {httpsAgent: this.httpsAgent, httpAgent: this.httpAgent};
 
         if (this.agent) {
             agents.httpsAgent = this.agent.https;
             agents.httpAgent = this.agent.http;
-            agents.baseUrl = this.agent.baseUrl;
         }
 
-        request.nodejsSet(agents);
+        if (this.host.substring(0,5) === "https") {
+            options.agent = agents.httpsAgent;
+        } else {
+            options.agent = agents.httpAgent;
+        }
     }
-
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type','application/json');
-    request.timeout = this.timeout;
-    request.withCredentials = this.withCredentials;
 
     if(this.headers) {
         this.headers.forEach(function(header) {
-            request.setRequestHeader(header.name, header.value);
+            headers[header.name] = header.value;
         });
     }
 
-    return request;
+    // Default headers
+    if (!headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included
+    if (['include', 'same-origin', 'omit'].indexOf(this.withCredentials) !== -1) {
+      options.credentials = this.withCredentials;
+    }
+
+    options.headers = headers;
+
+    if (this.timeout > 0) {
+        this.timeoutId = setTimeout(function() {
+            controller.abort();
+        }, this.timeout);
+    }
+
+    return fetch(this.host, options);
 };
 
 /**
@@ -93,32 +127,50 @@ HttpProvider.prototype._prepareRequest = function(){
  * @param {Function} callback triggered on end with (err, result)
  */
 HttpProvider.prototype.send = function (payload, callback) {
-    var _this = this;
-    var request = this._prepareRequest();
+    var request = this._prepareRequest.bind(this);
 
-    request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
-            var result = request.responseText;
-            var error = null;
+    var success = function(response) {
+        if (this.timeoutId !== undefined) {
+            clearTimeout(this.timeoutId);
+        }
+        var result = response;
+        var isOk = result.ok;
+        var error = null;
 
-            try {
-                result = JSON.parse(result);
-            } catch(e) {
-                error = errors.InvalidResponse(request.responseText);
-            }
-
-            _this.connected = true;
-            callback(error, result);
+        try {
+            // Response is a stream data so should be awaited for json response
+            result.json().then(function(data) {
+                result = data;
+                if (!isOk) {
+                    error = errors.InvalidResponse(data);
+                }
+                this.connected = true;
+                callback(error, result);
+            });
+        } catch (e) {
+            this.connected = true;
+            callback(errors.InvalidResponse(result));
         }
     };
 
-    request.ontimeout = function() {
-        _this.connected = false;
-        callback(errors.ConnectionTimeout(this.timeout));
-    };
+    var failed = function(error) {
+        if (this.timeoutId !== undefined) {
+            clearTimeout(this.timeoutId);
+        }
+
+        if (error.name === 'AbortError') {
+            this.connected = false;
+            callback(errors.ConnectionTimeout(this.timeout));
+        }
+
+        this.connected = true;
+        callback(errors.InvalidConnection(this.host));
+    }
 
     try {
-        request.send(JSON.stringify(payload));
+        request(payload)
+            .then(success.bind(this))
+            .catch(failed.bind(this));
     } catch(error) {
         this.connected = false;
         callback(errors.InvalidConnection(this.host));

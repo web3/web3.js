@@ -30,7 +30,6 @@ export interface HttpHeader {
 }
 
 export interface HttpProviderAgent {
-    baseUrl?: string;
     http?: http.Agent;
     https?: https.Agent;
 }
@@ -46,8 +45,9 @@ export interface HttpProviderOptions {
 export class HttpProvider extends HttpProviderBase {
     host: string;
 
-    withCredentials: boolean;
+    withCredentials?: string;
     timeout: number;
+    timeoutId?: NodeJS.Timeout | number;
     headers?: HttpHeader[];
     agent?: HttpProviderAgent;
     connected: boolean;
