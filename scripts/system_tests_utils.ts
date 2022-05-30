@@ -45,7 +45,7 @@ export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_M
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
 
-export const accounts: {
+const accounts: {
 	address: string;
 	privateKey: string;
 }[] = [

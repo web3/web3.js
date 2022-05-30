@@ -31,7 +31,7 @@ import {
 	describeIf,
 	itIf,
 	getSystemTestAccounts,
-	accounts as accountsAddrAndPriv,
+	createNewAccount,
 } from '../shared_fixtures/system_tests_utils';
 import { Web3 } from '../../src/index';
 
@@ -219,14 +219,11 @@ describe('Web3 instance', () => {
 		it('should execute batch requests', async () => {
 			web3 = new Web3(clientUrl);
 
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
 			const batch = new web3.BatchRequest();
 
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
-			batch.add(request1);
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
-			batch.add(request2);
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-call
+			await batch.add(request1);
+			await batch.add(request2);
+
 			const response = await batch.execute();
 
 			expect(response).toEqual(
@@ -270,7 +267,7 @@ describe('Web3 instance', () => {
 		});
 		it('should create account from private key', async () => {
 			web3 = new Web3(clientUrl);
-			const acc = accountsAddrAndPriv[0];
+			const acc = await createNewAccount();
 			const createdAccount: Web3Account = web3.eth.accounts.privateKeyToAccount(
 				acc.privateKey,
 			);
@@ -286,9 +283,10 @@ describe('Create Web3 class instance with external providers', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
+		const account = await createNewAccount();
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		provider = new HDWalletProvider({
-			privateKeys: [accountsAddrAndPriv[0].privateKey],
+			privateKeys: [account.privateKey],
 			providerOrUrl: clientUrl,
 		});
 	});
