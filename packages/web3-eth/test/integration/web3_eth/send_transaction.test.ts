@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
+import { isHexStrict } from 'web3-validator';
 
 import Web3Eth, { Transaction } from '../../../src';
 import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
@@ -116,6 +117,111 @@ describe('Web3Eth.sendTransaction', () => {
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.type).toBe('0x2');
 			expect(response.status).toBe('0x1');
+		});
+	});
+
+	describe('Transaction PromiEvents', () => {
+		let transaction: Transaction;
+
+		beforeEach(() => {
+			transaction = {
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+			};
+		});
+
+		it('should listen to the sending event', async () => {
+			return new Promise(done => {
+				const promiEvent = web3Eth.sendTransaction(transaction);
+				promiEvent.on('sending', data => {
+					expect(data).toMatchObject(transaction);
+					done(null);
+				});
+			});
+		});
+
+		it('should listen to the sent event', async () => {
+			return new Promise(done => {
+				const promiEvent = web3Eth.sendTransaction(transaction);
+				promiEvent.on('sent', data => {
+					expect(data).toMatchObject(transaction);
+					done(null);
+				});
+			});
+		});
+
+		it('should listen to the transactionHash event', async () => {
+			return new Promise(done => {
+				const promiEvent = web3Eth.sendTransaction(transaction);
+				promiEvent.on('transactionHash', data => {
+					expect(isHexStrict(data)).toBe(true);
+					done(null);
+				});
+			});
+		});
+
+		it('should listen to the receipt event', async () => {
+			return new Promise(done => {
+				const expectedTransactionReceipt = {
+					blockHash: expect.any(String),
+					blockNumber: expect.any(String),
+					cumulativeGasUsed: expect.any(String),
+					effectiveGasPrice: expect.any(String),
+					gasUsed: expect.any(String),
+					logs: [],
+					logsBloom:
+						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+					status: '0x1',
+					from: transaction.from,
+					to: transaction.to,
+					transactionHash: expect.any(String),
+					transactionIndex: '0x0',
+					type: '0x0',
+				};
+				const promiEvent = web3Eth.sendTransaction(transaction);
+				promiEvent.on('receipt', data => {
+					expect(data).toEqual(expect.objectContaining(expectedTransactionReceipt));
+					done(null);
+				});
+			});
+		});
+
+		it('should listen to the confirmation event', async () => {
+			return new Promise(done => {
+				const expectedTransactionConfirmation = {
+					confirmationNumber: '0x2',
+					receipt: {
+						blockHash: expect.any(String),
+						blockNumber: expect.any(String),
+						cumulativeGasUsed: expect.any(String),
+						effectiveGasPrice: expect.any(String),
+						gasUsed: expect.any(String),
+						logs: [],
+						logsBloom:
+							'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+						status: '0x1',
+						from: transaction.from,
+						to: transaction.to,
+						transactionHash: expect.any(String),
+						transactionIndex: '0x0',
+						type: '0x0',
+					},
+					latestBlockHash: expect.any(String),
+				};
+				const promiEvent = web3Eth.sendTransaction(transaction);
+				promiEvent.on('confirmation', data => {
+					expect(data).toEqual(expect.objectContaining(expectedTransactionConfirmation));
+					done(null);
+				});
+
+				// TODO Confirmations are dependent on the next block being mined,
+				// this is manually triggering the next block to be created since both
+				// Geth and Ganache wait for transaction before mining a block.
+				// This should be revisted to implement a better solution
+				await promiEvent;
+				await web3Eth.sendTransaction(transaction);
+			});
 		});
 	});
 });
