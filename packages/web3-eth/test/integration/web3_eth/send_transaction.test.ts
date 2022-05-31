@@ -181,7 +181,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		it('should listen to the confirmation event', async () => {
 			const expectedTransactionConfirmation = {
-				confirmationNumber: '0x2',
+				confirmationNumber: expect.any(String),
 				receipt: {
 					blockHash: expect.any(String),
 					blockNumber: expect.any(String),
