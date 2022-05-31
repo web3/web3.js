@@ -86,8 +86,8 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	}
 
 	if (typeof data === 'string' && isHexStrict(data)) {
-		const finalData = data.length % 2 === 0 ? data : `0${data}`;
-		return Buffer.from(finalData.slice(2), 'hex');
+		const finalData = `${/^(..)*$/.test(data) ? '' : '0'}${data.replace(/0x/, '')}`;
+		return Buffer.from(finalData, 'hex');
 	}
 
 	if (typeof data === 'string' && !isHexStrict(data)) {
