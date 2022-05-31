@@ -403,7 +403,7 @@ export function sendTransaction<
 			(async () => {
 				try {
 					let transactionFrom: string | undefined;
-					if (transaction.from) {
+					if (transaction.from !== undefined) {
 						if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
 							transactionFrom = transaction.from;
 						} else if (isNumber(transaction.from)) {
