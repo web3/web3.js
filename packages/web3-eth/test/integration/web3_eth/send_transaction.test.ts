@@ -45,6 +45,22 @@ describe('Web3Eth.sendTransaction', () => {
 		};
 		const response = await web3Eth.sendTransaction(transaction);
 		expect(response.status).toBe('0x1');
+
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
+
+	it('should make a transaction with no value transfer', async () => {
+		const transaction: Transaction = {
+			from: accounts[0],
+			to: '0x0000000000000000000000000000000000000000',
+			value: '0x0',
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.status).toBe('0x1');
+
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
 	});
 
 	describe('Deploy and interact with contract', () => {
@@ -61,6 +77,13 @@ describe('Web3Eth.sendTransaction', () => {
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.status).toBe('0x1');
 			expect(response.contractAddress).toBeDefined();
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject({
+				from: accounts[0],
+				input: greeterContractDeploymentData,
+				gas: '0x740b8',
+			});
 
 			greeterContractAddress = response.contractAddress as string;
 		});
