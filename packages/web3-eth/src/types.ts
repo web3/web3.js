@@ -23,7 +23,7 @@ import {
 	FMT_NUMBER,
 	FormatType,
 } from 'web3-common';
-import { Address, Bytes, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers, Uint } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =
@@ -104,6 +104,7 @@ export interface Transaction {
 	chainId?: Numbers;
 	networkId?: Numbers;
 	gasLimit?: Numbers;
+	yParity?: Uint;
 	v?: Numbers;
 	r?: Bytes;
 	s?: Bytes;
