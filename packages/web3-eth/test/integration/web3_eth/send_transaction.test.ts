@@ -19,7 +19,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 
-import Web3Eth, { Transaction } from '../../../src';
+import Web3Eth, { Transaction, TransactionWithLocalWalletIndex } from '../../../src';
 import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sendTransaction', () => {
@@ -40,6 +40,19 @@ describe('Web3Eth.sendTransaction', () => {
 	it('should make a simple value transfer', async () => {
 		const transaction: Transaction = {
 			from: accounts[0],
+			to: '0x0000000000000000000000000000000000000000',
+			value: '0x1',
+		};
+		const response = await web3Eth.sendTransaction(transaction);
+		expect(response.status).toBe('0x1');
+
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject(transaction);
+	});
+
+	it('should make a simple value transfer - with local wallet indexed sender', async () => {
+		const transaction: TransactionWithLocalWalletIndex = {
+			from: 0,
 			to: '0x0000000000000000000000000000000000000000',
 			value: '0x1',
 		};
