@@ -87,7 +87,15 @@ describe('defaults', () => {
 			// check utils
 			expect(getTransactionFromAttr(eth2)).toBe(accounts[1]);
 		});
-		it('handleRevert', () => {
+//TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
+/* set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
+
+web3.eth.call()
+web3.eth.sendTransaction()
+contract.methods.myMethod(…).send(…)
+contract.methods.myMethod(…).call(…)
+
+*/
 			// default
 			expect(web3Eth.handleRevert).toBe(false);
 
