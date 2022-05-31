@@ -41,8 +41,13 @@ import {
 	Numbers,
 	HexStringBytes,
 } from 'web3-utils';
+import { isAddress, isNumber } from 'web3-validator';
 import { isBlockTag, isBytes, isString } from 'web3-validator';
-import { SignatureError } from './errors';
+import {
+	InvalidTransactionWithSender,
+	LocalWalletNotAvailableError,
+	SignatureError,
+} from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -64,6 +69,7 @@ import {
 	SendTransactionOptions,
 	Transaction,
 	TransactionCall,
+	TransactionWithLocalWalletIndex,
 } from './types';
 import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
@@ -388,16 +394,42 @@ export function sendTransaction<
 	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: Transaction,
+	transaction: Transaction | TransactionWithLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions<ResolveType>,
 ): PromiEvent<ResolveType, SendTransactionEvents> {
-	let transactionFormatted = formatTransaction(transaction, DEFAULT_RETURN_FORMAT);
-
 	const promiEvent = new PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
 		setImmediate(() => {
 			(async () => {
 				try {
+					let transactionFrom: string | undefined;
+					if (transaction.from) {
+						if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
+							transactionFrom = transaction.from;
+						} else if (isNumber(transaction.from)) {
+							if (web3Context.wallet) {
+								transactionFrom = web3Context.wallet.get(
+									format({ eth: 'uint' }, transaction.from, {
+										number: FMT_NUMBER.NUMBER,
+										bytes: FMT_BYTES.HEX,
+									}),
+								).address;
+							} else {
+								throw new LocalWalletNotAvailableError();
+							}
+						} else {
+							throw new InvalidTransactionWithSender(transaction.from);
+						}
+					}
+
+					let transactionFormatted = formatTransaction(
+						{
+							...transaction,
+							from: transactionFrom,
+						},
+						DEFAULT_RETURN_FORMAT,
+					);
+
 					if (
 						!options?.ignoreGasPricing &&
 						transaction.gasPrice === undefined &&
@@ -424,10 +456,10 @@ export function sendTransaction<
 
 					if (
 						web3Context.wallet &&
-						transaction.from &&
-						web3Context.wallet.get(transaction.from)
+						transactionFrom &&
+						web3Context.wallet.get(transactionFrom)
 					) {
-						const wallet = web3Context.wallet.get(transaction.from);
+						const wallet = web3Context.wallet.get(transactionFrom);
 
 						const signedTransaction = wallet.signTransaction(
 							transactionFormatted as Record<string, unknown>,

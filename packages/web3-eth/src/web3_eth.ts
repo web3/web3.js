@@ -30,7 +30,12 @@ import {
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions, Transaction, TransactionCall } from './types';
+import {
+	SendTransactionOptions,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
+} from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
@@ -213,7 +218,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		transaction: Transaction,
+		transaction: Transaction | TransactionWithLocalWalletIndex,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
