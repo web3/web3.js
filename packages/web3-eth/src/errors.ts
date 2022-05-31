@@ -309,7 +309,7 @@ export class LocalWalletNotAvailableError extends InvalidValueError {
 	public constructor() {
 		super(
 			'LocalWalletNotAvailableError',
-			`Attempted to index account in local wallet, but no accounts are available`,
+			`Attempted to index account in local wallet, but no wallet is available`,
 		);
 	}
 }
