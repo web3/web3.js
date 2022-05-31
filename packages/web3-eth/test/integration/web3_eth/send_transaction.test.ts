@@ -75,6 +75,13 @@ describe('Web3Eth.sendTransaction', () => {
 			};
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject({
+				from: accounts[0],
+				to: greeterContractAddress,
+				input: contractFunctionCall,
+			});
 		});
 	});
 
@@ -89,6 +96,9 @@ describe('Web3Eth.sendTransaction', () => {
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.type).toBe('0x0');
 			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
 		it('should send a successful type 0x1 transaction', async () => {
@@ -105,6 +115,9 @@ describe('Web3Eth.sendTransaction', () => {
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.type).toBe('0x1');
 			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
 		});
 
 		it('should send a successful type 0x2 transaction', async () => {
@@ -117,6 +130,9 @@ describe('Web3Eth.sendTransaction', () => {
 			const response = await web3Eth.sendTransaction(transaction);
 			expect(response.type).toBe('0x2');
 			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
 		});
 	});
 
