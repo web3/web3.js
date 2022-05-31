@@ -159,7 +159,7 @@ const config = {
 						items: [
 							{
 								label: 'Stack Overflow',
-								href: 'https://stackoverflow.com/questions/tagged/web3.js',
+								href: 'https://stackoverflow.com/questions/tagged/web3js',
 							},
 							{
 								label: 'Discord',
