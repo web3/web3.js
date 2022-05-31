@@ -85,11 +85,10 @@ export interface Common {
 	hardfork?: Hardfork;
 }
 
-export interface Transaction {
+interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;
 	common?: Common;
-	from?: Address;
 	to?: Address | null;
 	gas?: Numbers;
 	gasPrice?: Numbers;
@@ -108,6 +107,14 @@ export interface Transaction {
 	v?: Numbers;
 	r?: Bytes;
 	s?: Bytes;
+}
+
+export interface Transaction extends TransactionBase {
+	from?: Address;
+}
+
+export interface TransactionWithLocalWalletIndex extends TransactionBase {
+	from?: Numbers;
 }
 
 export interface TransactionInfo extends Transaction {
