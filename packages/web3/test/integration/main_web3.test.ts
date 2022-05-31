@@ -221,20 +221,24 @@ describe('Web3 instance', () => {
 
 			const batch = new web3.BatchRequest();
 
-			await batch.add(request1);
-			await batch.add(request2);
+			const request1Promise = batch.add(request1);
+			const request2Promise = batch.add(request2);
 
-			const response = await batch.execute();
+			const executePromise = batch.execute();
+			const response = await Promise.all([request1Promise, request2Promise, executePromise]);
 
-			expect(response).toEqual(
+			expect(response[0]).toEqual(expect.stringMatching(/0[xX][0-9a-fA-F]+/));
+			expect(response[1]).toEqual(expect.stringMatching(/0[xX][0-9a-fA-F]+/));
+
+			expect(response[2]).toEqual(
 				expect.arrayContaining([
 					expect.objectContaining({
 						id: request1.id,
-						result: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
+						result: response[0],
 					}),
 					expect.objectContaining({
 						id: request2.id,
-						result: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
+						result: response[1],
 					}),
 				]),
 			);
