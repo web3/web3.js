@@ -22,7 +22,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
 	title: 'Web3.js',
 	tagline: 'The ultimate JavaScript library for Ethereum',
-	url: 'https://docs.web3js.com',
+	url: 'https://docs.web3js.org',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
 	onBrokenMarkdownLinks: 'warn',
@@ -163,12 +163,12 @@ const config = {
 							},
 							{
 								label: 'Discord',
-								href: 'https://discord.gg/uH8JRuv5',
+								href: 'https://discord.com/invite/pb3U4zE8ca',
 							},
 						],
 					},
 				],
-				copyright: `Copyright © ${new Date().getFullYear()} Web3.js, Inc. Built with Docusaurus.`,
+				copyright: `Copyright © ${new Date().getFullYear()} Web3.js . Built with Docusaurus.`,
 			},
 			prism: {
 				theme: lightCodeTheme,
