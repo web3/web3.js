@@ -18,8 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
 
-import { DEFAULT_RETURN_FORMAT, EthExecutionAPI, SignedTransactionInfo } from 'web3-common';
-import { Web3Context } from 'web3-core';
+import { DEFAULT_RETURN_FORMAT, SignedTransactionInfo } from 'web3-common';
 import { isHexStrict } from 'web3-validator';
 import Web3Eth, { InternalTransaction, Transaction } from '../../../src';
 import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
@@ -40,24 +39,85 @@ describe('Web3Eth.sendSignedTransaction', () => {
 		}
 	});
 
-	it('should send a signed simple value transfer', async () => {
-		const accountNonce = await web3Eth.getTransactionCount(accounts[0]);
-		const transaction: InternalTransaction = {
-			nonce: accountNonce,
-			from: accounts[0],
-			to: '0x0000000000000000000000000000000000000000',
-			value: '0x1',
-			type: '0x0',
-			gas: '0x5208',
-		};
-		const gasPricing = await getTransactionGasPricing(
-			transaction,
-			web3Eth.getContextObject() as unknown as Web3Context<EthExecutionAPI>,
-			DEFAULT_RETURN_FORMAT,
-		);
-		const signedTransaction = await web3Eth.signTransaction({ ...transaction, ...gasPricing });
-		const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
-		expect(response.status).toBe('0x1');
+	describe('Transaction Types', () => {
+		it('should send a signed simple value transfer - type 0x0', async () => {
+			const accountNonce = await web3Eth.getTransactionCount(accounts[0]);
+			const transaction: InternalTransaction = {
+				nonce: accountNonce,
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x0',
+				gas: '0x5208',
+			};
+			const gasPricing = await getTransactionGasPricing(
+				transaction,
+				web3Eth,
+				DEFAULT_RETURN_FORMAT,
+			);
+			const signedTransaction = await web3Eth.signTransaction({
+				...transaction,
+				...gasPricing,
+			});
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
+			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a signed simple value transfer - type 0x1', async () => {
+			const accountNonce = await web3Eth.getTransactionCount(accounts[0]);
+			const transaction: InternalTransaction = {
+				nonce: accountNonce,
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x1',
+				gas: '0x5208',
+				accessList: [],
+			};
+			const gasPricing = await getTransactionGasPricing(
+				transaction,
+				web3Eth,
+				DEFAULT_RETURN_FORMAT,
+			);
+			const signedTransaction = await web3Eth.signTransaction({
+				...transaction,
+				...gasPricing,
+			});
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
+			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
+
+		it('should send a signed simple value transfer - type 0x2', async () => {
+			const accountNonce = await web3Eth.getTransactionCount(accounts[0]);
+			const transaction: InternalTransaction = {
+				nonce: accountNonce,
+				from: accounts[0],
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				type: '0x2',
+				gas: '0x5208',
+			};
+			const gasPricing = await getTransactionGasPricing(
+				transaction,
+				web3Eth,
+				DEFAULT_RETURN_FORMAT,
+			);
+			const signedTransaction = await web3Eth.signTransaction({
+				...transaction,
+				...gasPricing,
+			});
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
+			expect(response.status).toBe('0x1');
+
+			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+			expect(minedTransactionData).toMatchObject(transaction);
+		});
 	});
 
 	it('should send a signed contract deployment', async () => {
@@ -73,12 +133,21 @@ describe('Web3Eth.sendSignedTransaction', () => {
 		};
 		const gasPricing = await getTransactionGasPricing(
 			transaction,
-			web3Eth.getContextObject() as unknown as Web3Context<EthExecutionAPI>,
+			web3Eth,
 			DEFAULT_RETURN_FORMAT,
 		);
 		const signedTransaction = await web3Eth.signTransaction({ ...transaction, ...gasPricing });
 		const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
 		expect(response.status).toBe('0x1');
+
+		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		expect(minedTransactionData).toMatchObject({
+			nonce: accountNonce,
+			from: accounts[0],
+			input: greeterContractDeploymentData,
+			type: '0x0',
+			gas: '0x740b8',
+		});
 	});
 
 	describe('Transaction PromiEvents', () => {
@@ -97,7 +166,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			};
 			const gasPricing = await getTransactionGasPricing(
 				transaction as InternalTransaction,
-				web3Eth.getContextObject() as unknown as Web3Context<EthExecutionAPI>,
+				web3Eth,
 				DEFAULT_RETURN_FORMAT,
 			);
 			// TODO
