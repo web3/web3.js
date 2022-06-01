@@ -47,7 +47,6 @@ export class HttpProvider extends HttpProviderBase {
 
     withCredentials?: string;
     timeout: number;
-    timeoutId?: NodeJS.Timeout | number;
     headers?: HttpHeader[];
     agent?: HttpProviderAgent;
     connected: boolean;

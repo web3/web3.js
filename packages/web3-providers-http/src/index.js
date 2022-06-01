@@ -103,11 +103,7 @@ HttpProvider.prototype._prepareRequest = function(payload = {}){
         headers['Content-Type'] = 'application/json';
     }
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch#sending_a_request_with_credentials_included
-    if (['include', 'same-origin', 'omit'].indexOf(this.withCredentials) !== -1) {
-      options.credentials = this.withCredentials;
-    }
-
+    options.credentials = this.withCredentials;
     options.headers = headers;
 
     if (this.timeout > 0) {
@@ -142,13 +138,16 @@ HttpProvider.prototype.send = function (payload, callback) {
             result.json().then(function(data) {
                 result = data;
                 if (!isOk) {
+                    this.connected = false;
                     error = errors.InvalidResponse(data);
+                    callback(error, result);
+                    return;
                 }
                 this.connected = true;
                 callback(error, result);
             });
         } catch (e) {
-            this.connected = true;
+            this.connected = false;
             callback(errors.InvalidResponse(result));
         }
     };
@@ -163,7 +162,7 @@ HttpProvider.prototype.send = function (payload, callback) {
             callback(errors.ConnectionTimeout(this.timeout));
         }
 
-        this.connected = true;
+        this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
 
