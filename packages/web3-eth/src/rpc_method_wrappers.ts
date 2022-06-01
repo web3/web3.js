@@ -54,6 +54,8 @@ import {
 	Transaction,
 	TransactionCall,
 } from './types';
+// eslint-disable-next-line import/no-cycle
+import { getTransactionFromAttr } from './utils/transaction_builder';
 import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
@@ -381,7 +383,12 @@ export function sendTransaction<
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions<ResolveType>,
 ): PromiEvent<ResolveType, SendTransactionEvents> {
-	let transactionFormatted = formatTransaction(transaction, DEFAULT_RETURN_FORMAT);
+	const fromAddress = transaction.from ?? getTransactionFromAttr(web3Context);
+
+	let transactionFormatted = formatTransaction(
+		{ ...transaction, from: fromAddress },
+		DEFAULT_RETURN_FORMAT,
+	);
 
 	const promiEvent = new PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
 		setImmediate(() => {
@@ -411,10 +418,10 @@ export function sendTransaction<
 
 					if (
 						web3Context.wallet &&
-						transaction.from &&
-						web3Context.wallet.get(transaction.from)
+						transactionFormatted.from &&
+						web3Context.wallet.get(transactionFormatted.from)
 					) {
-						const wallet = web3Context.wallet.get(transaction.from);
+						const wallet = web3Context.wallet.get(transactionFormatted.from);
 
 						const signedTransaction = wallet.signTransaction(
 							transactionFormatted as Record<string, unknown>,
