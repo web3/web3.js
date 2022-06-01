@@ -15,8 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-
 import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { isNullish } from 'web3-validator';
+
 import * as rpcMethods from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sendTransaction } from '../../../src/rpc_method_wrappers';
@@ -64,9 +65,9 @@ describe('sendTransaction', () => {
 
 			if (
 				sendTransactionOptions?.ignoreGasPricing ||
-				inputTransaction.gasPrice !== undefined ||
-				(inputTransaction.maxPriorityFeePerGas !== undefined &&
-					inputTransaction.maxFeePerGas !== undefined)
+				!isNullish(inputTransaction.gasPrice) ||
+				(!isNullish(inputTransaction.maxPriorityFeePerGas) &&
+					!isNullish(inputTransaction.maxFeePerGas))
 			)
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(getTransactionGasPricingSpy).not.toHaveBeenCalled();

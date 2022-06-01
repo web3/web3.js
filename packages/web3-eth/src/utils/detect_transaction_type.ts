@@ -17,22 +17,23 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, format } from 'web3-common';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
+import { isNullish } from 'web3-validator';
 import { InternalTransaction, Transaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 
-	if (tx.type !== undefined) return format({ eth: 'uint' }, tx.type, DEFAULT_RETURN_FORMAT);
+	if (!isNullish(tx.type)) return format({ eth: 'uint' }, tx.type, DEFAULT_RETURN_FORMAT);
 
 	if (
-		tx.maxFeePerGas !== undefined ||
-		tx.maxPriorityFeePerGas !== undefined ||
+		!isNullish(tx.maxFeePerGas) ||
+		!isNullish(tx.maxPriorityFeePerGas) ||
 		tx.hardfork === 'london' ||
 		tx.common?.hardfork === 'london'
 	)
 		return '0x2';
 
-	if (tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin')
+	if (!isNullish(tx.accessList) || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin')
 		return '0x1';
 
 	return undefined;

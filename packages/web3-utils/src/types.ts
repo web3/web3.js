@@ -114,5 +114,5 @@ export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
 	readonly toBlock?: BlockNumberOrTag;
 	readonly address?: Address | Address[];
-	readonly topics?: (Topic | Topic[] | null)[];
+	readonly topics?: (Topic | Topic[])[];
 }

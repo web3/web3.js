@@ -25,11 +25,11 @@ import {
 } from '../../src/formatter';
 
 type TestTransactionInfoType = {
-	readonly blockHash: Bytes | null;
-	readonly blockNumber: Numbers | null;
+	readonly blockHash?: Bytes;
+	readonly blockNumber?: Numbers;
 	readonly from: Address;
 	readonly hash: Bytes;
-	readonly transactionIndex: Numbers | null;
+	readonly transactionIndex?: Numbers;
 };
 
 type TestBlockType = {
@@ -39,21 +39,21 @@ type TestBlockType = {
 	readonly stateRoot: Bytes;
 	readonly transactionsRoot: Bytes;
 	readonly receiptsRoot: Bytes;
-	readonly logsBloom: Bytes | null;
+	readonly logsBloom?: Bytes;
 	readonly difficulty?: Numbers;
-	readonly number: Numbers | null;
+	readonly number?: Numbers;
 	readonly gasLimit: Numbers;
 	readonly gasUsed: Numbers;
 	readonly timestamp: Numbers;
 	readonly extraData: Bytes;
 	readonly mixHash: Bytes;
-	readonly nonce: Numbers | null;
+	readonly nonce?: Numbers;
 	readonly totalDifficulty: Numbers;
 	readonly baseFeePerGas?: Numbers;
 	readonly size: Numbers;
 	readonly transactions: Bytes[] | TestTransactionInfoType[];
 	readonly uncles: Bytes[];
-	readonly hash: Bytes | null;
+	readonly hash?: Bytes;
 };
 
 describe('formatter', () => {
@@ -298,29 +298,29 @@ describe('formatter', () => {
 					readonly stateRoot: string;
 					readonly transactionsRoot: string;
 					readonly receiptsRoot: string;
-					readonly logsBloom: string | null;
+					readonly logsBloom?: string;
 					readonly difficulty?: string;
-					readonly number: string | null;
+					readonly number?: string;
 					readonly gasLimit: string;
 					readonly gasUsed: string;
 					readonly timestamp: string;
 					readonly extraData: string;
 					readonly mixHash: string;
-					readonly nonce: string | null;
+					readonly nonce?: string;
 					readonly totalDifficulty: string;
 					readonly baseFeePerGas?: string;
 					readonly size: string;
 					readonly transactions:
 						| string[]
 						| {
-								readonly blockHash: string | null;
-								readonly blockNumber: string | null;
+								readonly blockHash?: string;
+								readonly blockNumber?: string;
 								readonly from: Address;
 								readonly hash: string;
-								readonly transactionIndex: string | null;
+								readonly transactionIndex?: string;
 						  }[];
 					readonly uncles: string[];
-					readonly hash: string | null;
+					readonly hash?: string;
 				}>();
 			});
 
@@ -337,29 +337,29 @@ describe('formatter', () => {
 					readonly stateRoot: Buffer;
 					readonly transactionsRoot: Buffer;
 					readonly receiptsRoot: Buffer;
-					readonly logsBloom: Buffer | null;
+					readonly logsBloom?: Buffer;
 					readonly difficulty?: bigint;
-					readonly number: bigint | null;
+					readonly number?: bigint;
 					readonly gasLimit: bigint;
 					readonly gasUsed: bigint;
 					readonly timestamp: bigint;
 					readonly extraData: Buffer;
 					readonly mixHash: Buffer;
-					readonly nonce: bigint | null;
+					readonly nonce?: bigint;
 					readonly totalDifficulty: bigint;
 					readonly baseFeePerGas?: bigint;
 					readonly size: bigint;
 					readonly transactions:
 						| Buffer[]
 						| {
-								readonly blockHash: Buffer | null;
-								readonly blockNumber: bigint | null;
+								readonly blockHash?: Buffer;
+								readonly blockNumber?: bigint;
 								readonly from: Address;
 								readonly hash: Buffer;
-								readonly transactionIndex: bigint | null;
+								readonly transactionIndex?: bigint;
 						  }[];
 					readonly uncles: Buffer[];
-					readonly hash: Buffer | null;
+					readonly hash?: Buffer;
 				}>();
 			});
 
@@ -378,29 +378,29 @@ describe('formatter', () => {
 						readonly stateRoot: Uint8Array;
 						readonly transactionsRoot: Uint8Array;
 						readonly receiptsRoot: Uint8Array;
-						readonly logsBloom: Uint8Array | null;
+						readonly logsBloom?: Uint8Array;
 						readonly difficulty?: number;
-						readonly number: number | null;
+						readonly number?: number;
 						readonly gasLimit: number;
 						readonly gasUsed: number;
 						readonly timestamp: number;
 						readonly extraData: Uint8Array;
 						readonly mixHash: Uint8Array;
-						readonly nonce: number | null;
+						readonly nonce?: number;
 						readonly totalDifficulty: number;
 						readonly baseFeePerGas?: number;
 						readonly size: number;
 						readonly transactions:
 							| Uint8Array[]
 							| {
-									readonly blockHash: Uint8Array | null;
-									readonly blockNumber: number | null;
+									readonly blockHash?: Uint8Array;
+									readonly blockNumber?: number;
 									readonly from: Address;
 									readonly hash: Uint8Array;
-									readonly transactionIndex: number | null;
+									readonly transactionIndex?: number;
 							  }[];
 						readonly uncles: Uint8Array[];
-						readonly hash: Uint8Array | null;
+						readonly hash?: Uint8Array;
 					}>();
 				},
 			);

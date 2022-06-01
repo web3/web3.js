@@ -43,6 +43,7 @@ import {
 	Web3WSProviderError,
 	RequestAlreadySentError,
 } from 'web3-errors';
+import { isNullish } from 'web3-utils';
 import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
@@ -107,7 +108,7 @@ export default class WebSocketProvider<
 	}
 
 	public getStatus(): Web3BaseProviderStatus {
-		if (this._webSocketConnection === undefined) return 'disconnected';
+		if (isNullish(this._webSocketConnection)) return 'disconnected';
 
 		switch (this._webSocketConnection.readyState) {
 			case this._webSocketConnection.CONNECTING: {

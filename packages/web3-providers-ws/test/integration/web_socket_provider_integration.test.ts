@@ -197,10 +197,10 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					deferredPromise: defPromise,
 				};
 
-				testResetProvider.setPendingRequest(jsonRpcPayload.id as JsonRpcId, reqItem);
+				testResetProvider.setPendingRequest(jsonRpcPayload.id, reqItem);
 				expect(testResetProvider.pendigRequestsSize()).toBe(1);
 
-				testResetProvider.setSentRequest(jsonRpcPayload.id as JsonRpcId, reqItem);
+				testResetProvider.setSentRequest(jsonRpcPayload.id, reqItem);
 				expect(testResetProvider.sentRequestsSize()).toBe(1);
 
 				testResetProvider.reset();

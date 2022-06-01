@@ -36,6 +36,8 @@ export abstract class Web3Error extends Error {
 	public static convertToString(value: unknown, unquotValue = false) {
 		if (value === undefined) return 'undefined';
 
+		if (value === null) return 'undefined';
+
 		const result = JSON.stringify(
 			value,
 			(_, v) => (typeof v === 'bigint' ? v.toString() : v) as unknown,

@@ -78,7 +78,7 @@ export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
 	readonly toBlock?: BlockNumberOrTag;
 	readonly address?: string | string[];
-	readonly topics?: (string | string[] | null)[];
+	readonly topics?: (string | string[])[];
 }
 
 // To avoid circular dependency to avoid breaking changes in "web3-utils" package.

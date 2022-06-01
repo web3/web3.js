@@ -51,7 +51,7 @@ import {
 	isHexStrict,
 	utf8ToHex,
 } from 'web3-utils';
-import { validator, isBuffer, isHexString32Bytes, isString } from 'web3-validator';
+import { validator, isBuffer, isHexString32Bytes, isString, isNullish } from 'web3-validator';
 import {
 	signatureObject,
 	signResult,
@@ -82,6 +82,9 @@ export const hashMessage = (message: string): string => {
 
 /**
  * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ *
+ * @param data
+ * @param privateKey
  */
 export const sign = (data: string, privateKey: HexString): signResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
@@ -113,6 +116,9 @@ export const sign = (data: string, privateKey: HexString): signResult => {
 
 /**
  *  Signs an Ethereum transaction with a given private key.
+ *
+ * @param transaction
+ * @param privateKey
  */
 export const signTransaction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
@@ -123,7 +129,7 @@ export const signTransaction = (
 
 	const tx = TransactionFactory.fromTxData(transaction);
 	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
-	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
+	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
 
 	const validationErrors = signedTx.validate(true);
@@ -152,9 +158,11 @@ export const signTransaction = (
 
 /**
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
+ *
+ * @param rawTransaction
  */
 export const recoverTransaction = (rawTransaction: HexString): Address => {
-	if (rawTransaction === undefined) throw new UndefinedRawTransactionError();
+	if (isNullish(rawTransaction)) throw new UndefinedRawTransactionError();
 
 	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
 
@@ -163,6 +171,10 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 
 /**
  * Recovers the Ethereum address which was used to sign the given data
+ *
+ * @param data
+ * @param signature
+ * @param hashed
  */
 export const recover = (
 	data: string | signatureObject,
@@ -174,7 +186,7 @@ export const recover = (
 		return recover(data.messageHash, signatureStr, true);
 	}
 
-	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
+	if (isNullish(signature)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = hashed ? data : hashMessage(data);
@@ -253,6 +265,10 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 /**
  * encrypt a private key given a password, returns a V3 JSON Keystore
  * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+ *
+ * @param privateKey
+ * @param password
+ * @param options
  */
 export const encrypt = async (
 	privateKey: HexString,
@@ -373,6 +389,8 @@ export const encrypt = async (
 
 /**
  * Get account from private key
+ *
+ * @param privateKey
  */
 export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
 	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
@@ -403,7 +421,10 @@ export const create = (): Web3Account => {
 /**
  *  Decrypts a v3 keystore JSON, and creates the account.
  *
- * */
+ * @param keystore
+ * @param password
+ * @param nonStrict
+ */
 export const decrypt = async (
 	keystore: KeyStore | string,
 	password: string | Buffer,

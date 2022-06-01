@@ -18,9 +18,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const TypedArray = Object.getPrototypeOf(Uint8Array);
 
+export const isNullish = (item: unknown): item is undefined | null =>
+	item === undefined || item === null;
+
 export const isObject = (item: unknown): item is Record<string, unknown> =>
 	typeof item === 'object' &&
-	item !== null &&
+	!isNullish(item) &&
 	!Array.isArray(item) &&
 	!Buffer.isBuffer(item) &&
 	!(item instanceof TypedArray);

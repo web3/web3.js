@@ -23,6 +23,8 @@ import { encodeParameters } from './parameters_api';
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+ *
+ * @param functionName
  */
 export const encodeFunctionSignature = (functionName: string | AbiFunctionFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiFunctionFragment(functionName)) {
@@ -42,6 +44,9 @@ export const encodeFunctionSignature = (functionName: string | AbiFunctionFragme
 
 /**
  * Encodes a function call from its json interface and parameters.
+ *
+ * @param jsonInterface
+ * @param params
  */
 export const encodeFunctionCall = (
 	jsonInterface: AbiFunctionFragment,

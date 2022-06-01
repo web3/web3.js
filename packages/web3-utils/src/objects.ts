@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { isNullish } from 'web3-validator';
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const TypedArray = Object.getPrototypeOf(Uint8Array);
 
@@ -46,7 +48,7 @@ export const mergeDeep = (
 					result[key] as Record<string, unknown>,
 					src[key] as Record<string, unknown>,
 				);
-			} else if (src[key] !== undefined && src[key] !== null) {
+			} else if (!isNullish(src[key])) {
 				if (Array.isArray(src[key]) || src[key] instanceof TypedArray) {
 					result[key] = (src[key] as unknown[]).slice(0);
 				} else {

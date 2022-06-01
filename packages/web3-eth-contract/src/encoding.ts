@@ -40,7 +40,7 @@ export const encodeEventABI = (
 		fromBlock?: BlockNumberOrTag;
 		toBlock?: BlockNumberOrTag;
 		filter?: Filter;
-		topics?: (Topic | Topic[] | null)[];
+		topics?: (Topic | Topic[])[];
 	},
 ) => {
 	const opts: {

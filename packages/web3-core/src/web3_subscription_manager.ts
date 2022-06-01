@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3APISpec } from 'web3-common';
 import { ProviderError, SubscriptionError } from 'web3-errors';
+import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils';
 import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_manager';
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
@@ -87,7 +88,7 @@ export class Web3SubscriptionManager<
 
 		await sub.subscribe();
 
-		if (sub.id === undefined) {
+		if (isNullish(sub.id)) {
 			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}
 
@@ -95,12 +96,14 @@ export class Web3SubscriptionManager<
 	}
 
 	public async removeSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
-		if (sub.id === undefined) {
+		if (isNullish(sub.id)) {
 			throw new SubscriptionError('Subscription is not subscribed yet.');
 		}
 
 		if (!this._subscriptions.has(sub.id)) {
-			throw new SubscriptionError(`Subscription with id "${sub.id}" does not exists`);
+			throw new SubscriptionError(
+				`Subscription with id "${sub.id.toString()}" does not exists`,
+			);
 		}
 		const { id } = sub;
 		await sub.unsubscribe();
