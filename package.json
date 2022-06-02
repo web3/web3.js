@@ -99,7 +99,7 @@
         "@ensdomains/ens": "^0.6.0",
         "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
-        "@types/bn.js": "^4.11.6",
+        "@types/bn.js": "^5.1.0",
         "@types/node": "^12.12.68",
         "@types/prettier": "2.6.0",
         "babel-loader": "^8.1.0",
