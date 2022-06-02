@@ -128,6 +128,19 @@ export class Contract<Abi extends ContractAbi>
 {
 	public readonly options: ContractOptions;
 
+	public static defaultAccount?: HexString;
+	public static defaultBlock?: BlockNumberOrTag;
+	public static defaultHardfork?: string;
+	public static defaultCommon?: Record<string, unknown>;
+	public static transactionBlockTimeout?: number;
+	public static transactionConfirmationBlocks?: number;
+	public static transactionPollingInterval?: number;
+	public static transactionPollingTimeout?: number;
+	public static transactionReceiptPollingInterval?: number;
+	public static transactionConfirmationPollingInterval?: number;
+	public static blockHeaderTimeout?: number;
+	public static handleRevert?: boolean;
+
 	private _jsonInterface!: Abi;
 	private _address?: Address | null;
 	private _functions: Record<
@@ -192,6 +205,120 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value),
 			get: () => this._jsonInterface,
 		});
+	}
+
+	public get defaultAccount() {
+		return (this.constructor as typeof Contract).defaultAccount ?? super.defaultAccount;
+	}
+
+	public set defaultAccount(value: Address | undefined) {
+		super.defaultAccount = value;
+	}
+
+	public get defaultBlock() {
+		return (this.constructor as typeof Contract).defaultBlock ?? super.defaultBlock;
+	}
+
+	public set defaultBlock(value: BlockNumberOrTag) {
+		super.defaultBlock = value;
+	}
+
+	public get defaultHardfork() {
+		return (this.constructor as typeof Contract).defaultHardfork ?? super.defaultHardfork;
+	}
+
+	public set defaultHardfork(value: string) {
+		super.defaultHardfork = value;
+	}
+
+	public get defaultCommon() {
+		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
+	}
+
+	public set defaultCommon(value: Record<string, unknown> | undefined) {
+		super.defaultCommon = value;
+	}
+
+	public get transactionBlockTimeout() {
+		return (
+			(this.constructor as typeof Contract).transactionBlockTimeout ??
+			super.transactionBlockTimeout
+		);
+	}
+
+	public set transactionBlockTimeout(value: number) {
+		super.transactionBlockTimeout = value;
+	}
+
+	public get transactionConfirmationBlocks() {
+		return (
+			(this.constructor as typeof Contract).transactionConfirmationBlocks ??
+			super.transactionConfirmationBlocks
+		);
+	}
+
+	public set transactionConfirmationBlocks(value: number) {
+		super.transactionConfirmationBlocks = value;
+	}
+
+	public get transactionPollingInterval() {
+		return (
+			(this.constructor as typeof Contract).transactionPollingInterval ??
+			super.transactionPollingInterval
+		);
+	}
+
+	public set transactionPollingInterval(value: number) {
+		super.transactionPollingInterval = value;
+	}
+
+	public get transactionPollingTimeout() {
+		return (
+			(this.constructor as typeof Contract).transactionPollingTimeout ??
+			super.transactionPollingTimeout
+		);
+	}
+
+	public set transactionPollingTimeout(value: number) {
+		super.transactionPollingTimeout = value;
+	}
+
+	public get transactionReceiptPollingInterval() {
+		return (
+			(this.constructor as typeof Contract).transactionReceiptPollingInterval ??
+			super.transactionReceiptPollingInterval
+		);
+	}
+
+	public set transactionReceiptPollingInterval(value: number | undefined) {
+		super.transactionReceiptPollingInterval = value;
+	}
+
+	public get transactionConfirmationPollingInterval() {
+		return (
+			(this.constructor as typeof Contract).transactionConfirmationPollingInterval ??
+			super.transactionConfirmationPollingInterval
+		);
+	}
+
+	public set transactionConfirmationPollingInterval(value: number | undefined) {
+		super.transactionConfirmationPollingInterval = value;
+	}
+
+	public get blockHeaderTimeout() {
+		return (this.constructor as typeof Contract).blockHeaderTimeout ?? super.blockHeaderTimeout;
+	}
+
+	public set blockHeaderTimeout(value: number) {
+		super.blockHeaderTimeout = value;
+	}
+
+	public get handleRevert() {
+		return (this.constructor as typeof Contract).handleRevert ?? super.handleRevert;
+	}
+
+	public set handleRevert(value: boolean) {
+		super.handleRevert = value;
 	}
 
 	public get events() {
@@ -452,11 +579,17 @@ export class Contract<Abi extends ContractAbi>
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
+		let modifiedContractOptions = contractOptions ?? this.options;
+		modifiedContractOptions = {
+			...modifiedContractOptions,
+			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
+		};
+
 		const tx = getSendTxParams({
 			abi,
 			params,
 			options,
-			contractOptions: contractOptions ?? this.options,
+			contractOptions: modifiedContractOptions,
 		});
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
@@ -468,11 +601,17 @@ export class Contract<Abi extends ContractAbi>
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
+		let modifiedContractOptions = contractOptions ?? this.options;
+		modifiedContractOptions = {
+			...modifiedContractOptions,
+			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
+		};
+
 		const tx = getSendTxParams({
 			abi,
 			params,
 			options,
-			contractOptions: contractOptions ?? this.options,
+			contractOptions: modifiedContractOptions,
 		});
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {

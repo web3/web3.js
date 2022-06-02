@@ -118,27 +118,28 @@ describe('eth', () => {
 			const [response1, response2] = await batch.execute();
 			expect(response1.result).toBeDefined();
 			expect(response2.result).toBeDefined();
-// TODO: in future release add test for validation of returned results , ( match balance )
+			// TODO: in future release add test for validation of returned results , ( match balance )
 			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
-		it('defaults', async () => {
-// TODO: in future release add tests for setting default and matching with new values
+
+		it('defaults', () => {
+			// TODO: in future release add tests for setting default and matching with new values
 			const config = web3Eth.getConfig();
-			expect(config.defaultAccount).toBeNull();
+			expect(config.defaultAccount).toBeUndefined();
 			expect(config.handleRevert).toBe(false);
 			expect(config.defaultBlock).toBe('latest');
 			expect(config.transactionBlockTimeout).toBe(50);
 			expect(config.transactionConfirmationBlocks).toBe(24);
 			expect(config.transactionPollingInterval).toBe(1000);
 			expect(config.transactionPollingTimeout).toBe(750);
-			expect(config.transactionReceiptPollingInterval).toBeNull();
-			expect(config.transactionConfirmationPollingInterval).toBeNull();
+			expect(config.transactionReceiptPollingInterval).toBeUndefined();
+			expect(config.transactionConfirmationPollingInterval).toBeUndefined();
 			expect(config.blockHeaderTimeout).toBe(10);
 			expect(config.maxListenersWarningThreshold).toBe(100);
-			expect(config.defaultNetworkId).toBeNull();
+			expect(config.defaultNetworkId).toBeUndefined();
 			expect(config.defaultChain).toBe('mainnet');
-			expect(config.defaultCommon).toBeNull();
+			expect(config.defaultCommon).toBeUndefined();
 			expect(config.defaultTransactionType).toBe('0x0');
 			expect(hexToNumber(config.defaultMaxPriorityFeePerGas as string)).toBeGreaterThan(0);
 			expect(config.transactionBuilder).toBeUndefined();
