@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// eslint-disable-next-line max-classes-per-file
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Eth from 'web3-eth';
@@ -44,17 +45,14 @@ import {
 	Wallet,
 } from 'web3-eth-accounts';
 import { Address } from 'web3-utils';
-import { ContractInstantiationError } from 'web3-errors';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Eth & {
 		Iban: typeof Iban;
 		ens: ENS;
-		Contract: new <Abi extends ContractAbi>(
-			jsonInterface: Abi,
-			address?: Address,
-			options?: ContractInitOptions,
-		) => Contract<Abi>;
+		Contract: typeof Contract & {
+			setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
+		};
 		abi: {
 			encodeEventSignature: typeof encodeFunctionSignature;
 			encodeFunctionCall: typeof encodeFunctionCall;
@@ -78,9 +76,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	protected readonly _contracts: Contract<any>[];
-
 	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
 		const accountProvider = {
 			create,
@@ -96,38 +91,32 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 		super({ provider, wallet, accountProvider });
 
-		this._contracts = [];
-
 		// Have to use local alias to initiate contract context
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const self = this;
 
-		const eth = self.use(Eth);
+		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			private static readonly _contracts: Contract<any>[] = [];
 
-		function ContractBuilder<Abi extends ContractAbi>(
-			this: typeof ContractBuilder,
-			jsonInterface: Abi,
-			address?: Address,
-			options?: ContractInitOptions,
-		) {
-			if (!(this instanceof ContractBuilder)) {
-				throw new ContractInstantiationError(
-					'Please use the "new" keyword to instantiate a contract.',
-				);
+			public constructor(
+				jsonInterface: Abi,
+				address?: Address,
+				options?: ContractInitOptions,
+			) {
+				super(jsonInterface, address, options, self.getContextObject());
+
+				ContractBuilder._contracts.push(this);
 			}
 
-			const contract = self.use(Contract, jsonInterface, address, options);
-
-			self._contracts.push(contract);
-
-			return contract;
+			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>) {
+				for (const contract of ContractBuilder._contracts) {
+					contract.provider = _provider;
+				}
+			}
 		}
 
-		ContractBuilder.setProvider = (_provider: SupportedProviders<EthExecutionAPI>) => {
-			for (const contract of self._contracts) {
-				contract.provider = _provider;
-			}
-		};
+		const eth = self.use(Eth);
 
 		// Eth Module
 		this.eth = Object.assign(eth, {
@@ -138,11 +127,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			Iban,
 
 			// Contract helper and module
-			Contract: ContractBuilder as unknown as new <Abi extends ContractAbi>(
-				jsonInterface: Abi,
-				address?: Address,
-				options?: ContractInitOptions,
-			) => Contract<Abi>,
+			Contract: ContractBuilder,
 
 			// ABI Helpers
 			abi: {
