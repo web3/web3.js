@@ -128,6 +128,14 @@ const watchBySubscription = <ResolveType = ReceiptInfo>({
 	});
 };
 
+/**
+ *
+ * @param web3Context
+ * @param transactionPromiEvent
+ * @param transactionReceipt
+ * @param transactionHash
+ * @param returnFormat
+ */
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends PromiEventEventTypeBase,
 	ReturnFormat extends DataFormat,

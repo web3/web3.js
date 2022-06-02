@@ -19,6 +19,8 @@ import { ValidInputTypes } from '../types';
 
 /**
  * checks input if typeof data is valid string input
+ *
+ * @param value
  */
 export const isString = (value: ValidInputTypes) => typeof value === 'string';
 

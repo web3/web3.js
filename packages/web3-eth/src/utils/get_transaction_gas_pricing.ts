@@ -31,6 +31,12 @@ import { InternalTransaction, Transaction } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionType } from './transaction_builder';
 
+/**
+ *
+ * @param transaction
+ * @param web3Context
+ * @param returnFormat
+ */
 async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	transaction: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -70,6 +76,12 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	};
 }
 
+/**
+ *
+ * @param transaction
+ * @param web3Context
+ * @param returnFormat
+ */
 export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	transaction: InternalTransaction,
 	web3Context: Web3Context<EthExecutionAPI>,

@@ -47,6 +47,9 @@ const formatDecodedObject = (
 
 /**
  * Should be used to encode list of params
+ *
+ * @param abi
+ * @param params
  */
 export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string => {
 	try {
@@ -85,12 +88,19 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 
 /**
  * Should be used to encode plain param
+ *
+ * @param abi
+ * @param param
  */
 export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 	encodeParameters([abi], [param]);
 
 /**
  * Should be used to decode list of params
+ *
+ * @param abis
+ * @param bytes
+ * @param loose
  */
 export const decodeParametersWith = (
 	abis: AbiInput[],
@@ -149,11 +159,17 @@ export const decodeParametersWith = (
 
 /**
  * Should be used to decode list of params
+ *
+ * @param abi
+ * @param bytes
  */
 export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
 	decodeParametersWith(abi, bytes, false);
 
 /**
  * Should be used to decode bytes to plain param
+ *
+ * @param abi
+ * @param bytes
  */
 export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);

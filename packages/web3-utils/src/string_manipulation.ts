@@ -22,6 +22,10 @@ import { Numbers } from './types';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
+ *
+ * @param value
+ * @param characterAmount
+ * @param sign
  */
 export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): string => {
 	// To avoid duplicate code and circular dependency we will
@@ -38,6 +42,10 @@ export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): st
 
 /**
  * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string.
+ *
+ * @param value
+ * @param characterAmount
+ * @param sign
  */
 export const padRight = (value: Numbers, characterAmount: number, sign = '0'): string => {
 	if (typeof value === 'string' && !isHexStrict(value)) {
@@ -64,6 +72,9 @@ export const leftPad = padLeft;
 
 /**
  * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles.
+ *
+ * @param value
+ * @param nibbleWidth
  */
 export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 	validator.validate(['int'], [value]);
@@ -85,6 +96,9 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 /**
  * Converts the twos complement into a decimal number or big int.
+ *
+ * @param value
+ * @param nibbleWidth
  */
 export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | bigint => {
 	validator.validate(['int'], [value]);

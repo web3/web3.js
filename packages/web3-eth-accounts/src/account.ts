@@ -82,6 +82,9 @@ export const hashMessage = (message: string): string => {
 
 /**
  * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ *
+ * @param data
+ * @param privateKey
  */
 export const sign = (data: string, privateKey: HexString): signResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
@@ -113,6 +116,9 @@ export const sign = (data: string, privateKey: HexString): signResult => {
 
 /**
  *  Signs an Ethereum transaction with a given private key.
+ *
+ * @param transaction
+ * @param privateKey
  */
 export const signTransaction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
@@ -152,6 +158,8 @@ export const signTransaction = (
 
 /**
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
+ *
+ * @param rawTransaction
  */
 export const recoverTransaction = (rawTransaction: HexString): Address => {
 	if (rawTransaction === undefined) throw new UndefinedRawTransactionError();
@@ -163,6 +171,10 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 
 /**
  * Recovers the Ethereum address which was used to sign the given data
+ *
+ * @param data
+ * @param signature
+ * @param hashed
  */
 export const recover = (
 	data: string | signatureObject,
@@ -253,6 +265,10 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 /**
  * encrypt a private key given a password, returns a V3 JSON Keystore
  * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+ *
+ * @param privateKey
+ * @param password
+ * @param options
  */
 export const encrypt = async (
 	privateKey: HexString,
@@ -373,6 +389,8 @@ export const encrypt = async (
 
 /**
  * Get account from private key
+ *
+ * @param privateKey
  */
 export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
 	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
@@ -403,7 +421,10 @@ export const create = (): Web3Account => {
 /**
  *  Decrypts a v3 keystore JSON, and creates the account.
  *
- * */
+ * @param keystore
+ * @param password
+ * @param nonStrict
+ */
 export const decrypt = async (
 	keystore: KeyStore | string,
 	password: string | Buffer,
