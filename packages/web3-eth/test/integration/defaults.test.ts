@@ -67,7 +67,7 @@ describe('defaults', () => {
 	describe('defaults', () => {
 		it('defaultAccount', () => {
 			// default
-			expect(web3Eth.defaultAccount).toBeNull();
+			expect(web3Eth.defaultAccount).toBeUndefined();
 
 			// after set
 			web3Eth.setConfig({
@@ -208,8 +208,8 @@ describe('defaults', () => {
 		});
 		it('transactionReceiptPollingInterval and transactionConfirmationPollingInterval', () => {
 			// default
-			expect(web3Eth.transactionReceiptPollingInterval).toBeNull();
-			expect(web3Eth.transactionConfirmationPollingInterval).toBeNull();
+			expect(web3Eth.transactionReceiptPollingInterval).toBeUndefined();
+			expect(web3Eth.transactionConfirmationPollingInterval).toBeUndefined();
 
 			// after set
 			web3Eth.setConfig({
@@ -270,7 +270,7 @@ describe('defaults', () => {
 		});
 		it('defaultNetworkId', async () => {
 			// default
-			expect(web3Eth.defaultNetworkId).toBeNull();
+			expect(web3Eth.defaultNetworkId).toBeUndefined();
 
 			// after set
 			web3Eth.setConfig({
@@ -363,7 +363,7 @@ describe('defaults', () => {
 		});
 		it('defaultCommon', () => {
 			// default
-			expect(web3Eth.defaultCommon).toBeNull();
+			expect(web3Eth.defaultCommon).toBeUndefined();
 			const common = {
 				customChain: {
 					name: 'test',
