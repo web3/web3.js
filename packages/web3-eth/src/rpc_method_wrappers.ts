@@ -349,7 +349,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -408,7 +408,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -434,7 +434,7 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: (format(
 				receiptInfoSchema,
@@ -562,7 +562,7 @@ export function sendTransaction<
 					);
 
 					// Transaction hasn't been included in a block yet
-					if (transactionReceipt === null)
+					if (isNullish(transactionReceipt))
 						transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
@@ -670,7 +670,7 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 				);
 
 				// Transaction hasn't been included in a block yet
-				if (transactionReceipt === null)
+				if (isNullish(transactionReceipt))
 					transactionReceipt = await waitForTransactionReceipt(
 						web3Context,
 						transactionHash,

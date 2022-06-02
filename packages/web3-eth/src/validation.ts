@@ -304,7 +304,7 @@ export const validateTransactionForSigning = (
 		return;
 	}
 
-	if (typeof transaction !== 'object' || transaction === null)
+	if (typeof transaction !== 'object' || isNullish(transaction))
 		throw new InvalidTransactionObjectError(transaction);
 
 	validateCustomChainInfo(transaction);

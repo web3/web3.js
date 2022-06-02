@@ -30,6 +30,8 @@ export const invalidClients = [
 	'http//localhost:8545',
 	'ws://localhost:8545',
 	'',
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	null,
 	undefined,
 	/* eslint-disable @typescript-eslint/no-magic-numbers */
@@ -38,7 +40,7 @@ export const invalidClients = [
 
 export const httpProviderOptions = {
 	providerOptions: {
-		body: null,
+		body: undefined,
 		cache: 'force-cache',
 		credentials: 'same-origin',
 		headers: {
@@ -51,8 +53,8 @@ export const httpProviderOptions = {
 		redirect: 'error',
 		referrer: 'foo',
 		referrerPolicy: 'same-origin',
-		signal: null,
-		window: null,
+		signal: undefined,
+		window: undefined,
 	} as RequestInit,
 };
 

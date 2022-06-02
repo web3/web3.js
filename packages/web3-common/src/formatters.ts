@@ -287,8 +287,12 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
 	return modifiedTx;
 };
 
-export const inputTopicFormatter = (topic: Topic): Topic | undefined => {
-	if (isNullish(topic)) return undefined;
+// To align with specification we use the type "null" here
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const inputTopicFormatter = (topic: Topic): Topic | null => {
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	if (isNullish(topic)) return null;
 
 	const value = String(topic);
 
@@ -312,13 +316,12 @@ export const inputLogFormatter = (filter: Filter) => {
 	}
 
 	// make sure topics, get converted to hex
-	val.topics = (val.topics ?? [])
-		.map(topic =>
-			Array.isArray(topic)
-				? (topic.map(inputTopicFormatter).filter(isNullish) as Topic[])
-				: inputTopicFormatter(topic),
-		)
-		.filter(isNullish) as Topic[];
+	val.topics = val.topics ?? [];
+	val.topics = val.topics.map(topic =>
+		Array.isArray(topic)
+			? (topic.map(inputTopicFormatter) as Topic[])
+			: inputTopicFormatter(topic as Topic),
+	);
 
 	if (val.address) {
 		val.address = Array.isArray(val.address)

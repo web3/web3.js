@@ -36,7 +36,7 @@ export const isFilterObject = (value: Filter) => {
 		'address',
 		'topics',
 	];
-	if (value === null || typeof value !== 'object') return false;
+	if (isNullish(value) || typeof value !== 'object') return false;
 
 	if (
 		!Object.keys(value).every(property =>
@@ -60,7 +60,7 @@ export const isFilterObject = (value: Filter) => {
 	if (!isNullish(value.topics)) {
 		if (
 			!value.topics.every(topic => {
-				if (topic === null) return true;
+				if (isNullish(topic)) return true;
 
 				if (Array.isArray(topic)) {
 					return topic.every(nestedTopic => isTopic(nestedTopic));

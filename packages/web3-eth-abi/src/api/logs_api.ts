@@ -66,7 +66,7 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	let nonIndexedCounter = 0;
 
 	for (const [i, res] of inputs.entries()) {
-		returnValue[i] = res.type === 'string' ? '' : null;
+		returnValue[i] = res.type === 'string' ? '' : undefined;
 
 		if (indexedInputs[i]) {
 			returnValue[i] = decodedIndexedInputs[indexedCounter];

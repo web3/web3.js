@@ -42,7 +42,7 @@ describe('PromiEvent', () => {
 
 			p.on('data', data => {
 				expect(data).toBe('resolved value');
-				done(null);
+				done(undefined);
 			});
 
 			p.then(data => {
@@ -71,7 +71,7 @@ describe('PromiEvent', () => {
 
 			p.on('data', data => {
 				expect(data).toBe('emitted data');
-				done(null);
+				done(undefined);
 			});
 		});
 	});

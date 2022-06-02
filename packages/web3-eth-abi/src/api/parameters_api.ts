@@ -134,6 +134,8 @@ export const decodeParametersWith = (
 			// only convert `0x` to null if it's not string value
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue =
+				// Using "null" value to match with legacy behavior
+				// eslint-disable-next-line no-null/no-null
 				decodedValue === '0x' && !isStringObject && !isStringType ? null : decodedValue;
 
 			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {

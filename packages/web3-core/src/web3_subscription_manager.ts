@@ -64,7 +64,7 @@ export class Web3SubscriptionManager<
 			throw new SubscriptionError('Invalid subscription type');
 		}
 
-		const subscription = new Klass(args ?? null, {
+		const subscription = new Klass(args ?? undefined, {
 			requestManager: this.requestManager,
 		}) as InstanceType<RegisteredSubs[T]>;
 

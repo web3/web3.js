@@ -89,7 +89,7 @@ describeIf(getSystemTestProvider().includes('ws'))(
 					webSocketProvider.on(
 						'message',
 						(
-							error: Error | null,
+							error: Error | undefined,
 							result?: JsonRpcSubscriptionResult | JsonRpcNotification<any>,
 						) => {
 							if (error) {
@@ -134,16 +134,13 @@ describeIf(getSystemTestProvider().includes('ws'))(
 				const code = 1000;
 
 				const closePromise = new Promise((resolve: Resolve) => {
-					webSocketProvider.on(
-						'close',
-						(err: Error | null, event: OnCloseEvent | null | undefined) => {
-							if (err) {
-								throw new Error(err.message);
-							}
-							expect(event!.code).toEqual(code);
-							resolve();
-						},
-					);
+					webSocketProvider.on('close', (err?: Error, event?: OnCloseEvent) => {
+						if (err) {
+							throw new Error(err.message);
+						}
+						expect(event?.code).toEqual(code);
+						resolve();
+					});
 				});
 				currentAttempt = 0;
 				await waitForOpenConnection(webSocketProvider, currentAttempt);

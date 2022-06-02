@@ -277,7 +277,7 @@ export default class WebSocketProvider<
 			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 			(response as JsonRpcNotification).method.endsWith('_subscription')
 		) {
-			this._wsEventEmitter.emit('message', null, response);
+			this._wsEventEmitter.emit('message', undefined, response);
 			return;
 		}
 
@@ -289,10 +289,10 @@ export default class WebSocketProvider<
 		}
 
 		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._wsEventEmitter.emit('message', null, response);
+			this._wsEventEmitter.emit('message', undefined, response);
 			requestItem.deferredPromise.resolve(response);
 		} else {
-			this._wsEventEmitter.emit('message', response, null);
+			this._wsEventEmitter.emit('message', response, undefined);
 			requestItem?.deferredPromise.reject(new ResponseError(response));
 		}
 
@@ -356,7 +356,7 @@ export default class WebSocketProvider<
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
-		this._wsEventEmitter.emit('close', null, {
+		this._wsEventEmitter.emit('close', undefined, {
 			code,
 			reason,
 		} as OnCloseEvent);

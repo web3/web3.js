@@ -149,7 +149,7 @@ export default class IpcProvider<
 			| JsonRpcNotification;
 
 		if ('method' in response && response.method.endsWith('_subscription')) {
-			this._emitter.emit('message', null, response);
+			this._emitter.emit('message', undefined, response);
 			return;
 		}
 
@@ -157,10 +157,10 @@ export default class IpcProvider<
 			const requestItem = this._requestQueue.get(response.id);
 
 			if ('result' in response && !isNullish(response.result)) {
-				this._emitter.emit('message', null, response);
+				this._emitter.emit('message', undefined, response);
 				requestItem?.resolve(response);
 			} else if ('error' in response && !isNullish(response.error)) {
-				this._emitter.emit('message', response, null);
+				this._emitter.emit('message', response, undefined);
 				requestItem?.reject(response);
 			}
 
