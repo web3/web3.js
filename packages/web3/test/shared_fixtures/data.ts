@@ -14,24 +14,17 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { encodeParameters } from 'web3-eth-abi';
 
-const path = require('path');
-const { lstatSync, readdirSync } = require('fs');
-// get listing of packages in the mono repo
-const basePath = path.resolve(__dirname, 'packages');
-const packages = readdirSync(basePath).filter(name =>
-	lstatSync(path.join(basePath, name)).isDirectory(),
-);
-module.exports = {
-	preset: 'ts-jest',
-	testEnvironment: 'node',
-	moduleNameMapper: {
-		...packages.reduce(
-			(acc, name) => ({
-				...acc,
-				[`${name}(.*)$`]: `<rootDir>/packages/./${name}/$1`,
-			}),
-			{},
-		),
+export const validEncodeParametersData: {
+	input: Parameters<typeof encodeParameters>;
+	output: ReturnType<typeof encodeParameters>;
+}[] = [
+	{
+		input: [
+			['uint256', 'string'],
+			['2345675643', 'Hello!%'],
+		],
+		output: '0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000',
 	},
-};
+];

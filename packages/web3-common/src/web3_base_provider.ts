@@ -87,6 +87,6 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;
-	public abstract disconnect(code: number, reason: string): void;
+	public abstract disconnect(code?: number, reason?: string): void;
 	public abstract reset(): void;
 }
