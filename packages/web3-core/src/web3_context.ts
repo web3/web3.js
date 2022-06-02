@@ -246,7 +246,7 @@ export class Web3Context<
 		this.provider = provider;
 	}
 
-	public get BatchRequest() {
+	public get BatchRequest(): new () => Web3BatchRequest {
 		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
 	}
 }

@@ -55,6 +55,9 @@ jobs:
     name: Integration
     needs: unit
     runs-on: ubuntu-latest
+    env:
+        INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
     strategy:
       fail-fast: false
       matrix:
