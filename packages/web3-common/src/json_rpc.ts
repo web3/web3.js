@@ -37,8 +37,9 @@ export const isResponseWithResult = <Result = unknown, Error = unknown>(
 	!Array.isArray(response) &&
 	!!response &&
 	response.jsonrpc === '2.0' &&
-	!isNullish(response.result) &&
-	!response.error &&
+	// JSON RPC consider "null" as valid response
+	'result' in response &&
+	isNullish(response.error) &&
 	(typeof response.id === 'number' || typeof response.id === 'string');
 
 export const isResponseWithError = <Error = unknown, Result = unknown>(
@@ -48,7 +49,8 @@ export const isResponseWithError = <Error = unknown, Result = unknown>(
 	response.jsonrpc === '2.0' &&
 	!!response &&
 	isNullish(response.result) &&
-	!isNullish(response.error) &&
+	// JSON RPC consider "null" as valid response
+	'error' in response &&
 	(typeof response.id === 'number' || typeof response.id === 'string');
 
 export const isResponseWithNotification = <Result>(
@@ -66,8 +68,9 @@ export const isSubscriptionResult = <Result>(
 	!Array.isArray(response) &&
 	!!response &&
 	response.jsonrpc === '2.0' &&
-	!isNullish(response.id) &&
-	!isNullish(response.result);
+	'id' in response &&
+	// JSON RPC consider "null" as valid response
+	'result' in response;
 
 export const validateResponse = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,
