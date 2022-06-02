@@ -39,6 +39,8 @@ export const bytesToHexInvalidData: [any, string][] = [
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
+	['1', 'value "1" at "/0" must pass "bytes" validation'],
+	['0', 'value "0" at "/0" must pass "bytes" validation'],
 ];
 
 export const hexToBytesValidData: [HexString, Buffer][] = [
@@ -276,6 +278,10 @@ export const bytesToBufferValidData: [Bytes, Buffer][] = [
 	['0x9c12', Buffer.from('9c12', 'hex')],
 	['0X12c6', Buffer.from('12c6', 'hex')],
 	['0X1', Buffer.from('01', 'hex')],
+	['0x1', Buffer.from('01', 'hex')],
+	['0x0', Buffer.from('00', 'hex')],
+	['0X0', Buffer.from('00', 'hex')],
 	['0X123', Buffer.from('0123', 'hex')],
+	['0x1234', Buffer.from('1234', 'hex')],
 	[Buffer.from('0c12', 'hex'), Buffer.from('0c12', 'hex')],
 ];
