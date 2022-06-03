@@ -398,7 +398,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Removes
 
-- Removing the underscore package 
+- Removing the underscore package
 
 ## [1.5.0]
 
@@ -463,7 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
-- Added missing PromiEvent handler types (#4194) 
+- Added missing PromiEvent handler types (#4194)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)
@@ -536,7 +536,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 
--  fixed build issues of 1.7.2
+-  Fixed build issues of 1.7.2
 
 ## [Unreleased]
 
@@ -544,3 +544,19 @@ Released with 1.0.0-beta.37 code base.
 
 ### Fixed
 -  Fix dead link in web3-eth.rst (#4916)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
+-  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
+-  Fix resolve type of getBlock function (#4911)
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)
+-  Exporting AbiCoder as coder (#4937)
+-  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
+
+### Added
+- Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
+- Improve npm script commands for development purposes (#4848)
+
+### Security
+-  `npm audit fix` to address vulnerabilities and update libraries (#5014)
