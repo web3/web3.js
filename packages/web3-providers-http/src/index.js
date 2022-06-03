@@ -139,12 +139,6 @@ HttpProvider.prototype.send = function (payload, callback) {
             // Response is a stream data so should be awaited for json response
             result.json().then(function(data) {
                 result = data;
-                if (!isOk) {
-                    _this.connected = false;
-                    error = errors.InvalidResponse(data);
-                    callback(error, result);
-                    return;
-                }
                 _this.connected = true;
                 callback(error, result);
             });
