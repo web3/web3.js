@@ -35,7 +35,9 @@ export type LegacyRequestProvider = {
 export type LegacySendProvider = {
 	send: <R = JsonRpcResult, P = unknown>(
 		payload: JsonRpcPayload<P>,
-		cb: (err: Error | undefined, response: JsonRpcResponse<R>) => void,
+		// Used "null" value to match the legacy version
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		cb: (err?: Error | null, response?: JsonRpcResponse<R>) => void,
 	) => void;
 };
 
