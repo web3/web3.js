@@ -123,6 +123,8 @@ HttpProvider.prototype._prepareRequest = function(payload = {}){
  * @param {Function} callback triggered on end with (err, result)
  */
 HttpProvider.prototype.send = function (payload, callback) {
+    // Prevent global leak of connected
+    var _this = this;
     var request = this._prepareRequest.bind(this);
 
     var success = function(response) {
@@ -138,16 +140,16 @@ HttpProvider.prototype.send = function (payload, callback) {
             result.json().then(function(data) {
                 result = data;
                 if (!isOk) {
-                    this.connected = false;
+                    _this.connected = false;
                     error = errors.InvalidResponse(data);
                     callback(error, result);
                     return;
                 }
-                this.connected = true;
+                _this.connected = true;
                 callback(error, result);
             });
         } catch (e) {
-            this.connected = false;
+            _this.connected = false;
             callback(errors.InvalidResponse(result));
         }
     };
@@ -158,11 +160,11 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
 
         if (error.name === 'AbortError') {
-            this.connected = false;
+            _this.connected = false;
             callback(errors.ConnectionTimeout(this.timeout));
         }
 
-        this.connected = false;
+        _this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
 
