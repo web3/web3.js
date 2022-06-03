@@ -15,12 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Wallet } from 'web3-eth-accounts';
 import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
+import { create, decrypt, privateKeyToAccount } from 'web3-eth-accounts';
 
 import Web3Eth, { Transaction, TransactionWithLocalWalletIndex } from '../../../src';
-import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestAccountsWithKeys,
+	getSystemTestProvider,
+} from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -51,16 +57,39 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	it('should make a simple value transfer - with local wallet indexed sender', async () => {
+		const accountsWithKeys = getSystemTestAccountsWithKeys();
+		const accountProvider = {
+			create,
+			privateKeyToAccount,
+			decrypt: async (
+				keystore: string,
+				password: string,
+				options?: Record<string, unknown>,
+			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
+		};
+		const web3Wallet = new Wallet(accountProvider);
+		const web3EthWithWallet = new Web3Eth({
+			provider: getSystemTestProvider(),
+			wallet: web3Wallet,
+		});
+		web3Wallet.add(accountsWithKeys[0].privateKey);
+
 		const transaction: TransactionWithLocalWalletIndex = {
 			from: 0,
 			to: '0x0000000000000000000000000000000000000000',
 			value: '0x1',
 		};
-		const response = await web3Eth.sendTransaction(transaction);
+		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe('0x1');
 
-		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
-		expect(minedTransactionData).toMatchObject(transaction);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
+		expect(minedTransactionData).toMatchObject({
+			from: accountsWithKeys[0].address.toLowerCase(),
+			to: '0x0000000000000000000000000000000000000000',
+			value: '0x1',
+		});
 	});
 
 	it('should make a transaction with no value transfer', async () => {
