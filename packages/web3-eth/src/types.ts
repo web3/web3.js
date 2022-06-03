@@ -65,7 +65,7 @@ export interface ReceiptInfo {
 	readonly cumulativeGasUsed: Numbers;
 	readonly gasUsed: Numbers;
 	readonly effectiveGasPrice?: Numbers;
-	readonly contractAddress: Address;
+	readonly contractAddress?: Address;
 	readonly logs: Log[];
 	readonly logsBloom: Bytes;
 	readonly root: Bytes;
