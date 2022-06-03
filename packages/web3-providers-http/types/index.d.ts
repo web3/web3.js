@@ -19,8 +19,8 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-import * as http from 'http';
-import * as https from 'https';
+import type { Agent as HTTPAgent } from 'http';
+import type { Agent as HTTPSAgent } from 'https';
 
 import { HttpProviderBase, JsonRpcResponse } from 'web3-core-helpers';
 
@@ -30,8 +30,8 @@ export interface HttpHeader {
 }
 
 export interface HttpProviderAgent {
-    http?: http.Agent;
-    https?: https.Agent;
+    http?: HTTPAgent;
+    https?: HTTPSAgent;
 }
 
 export interface HttpProviderOptions {
