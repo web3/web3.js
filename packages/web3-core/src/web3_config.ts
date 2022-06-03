@@ -24,20 +24,20 @@ import { TransactionBuilder } from './web3_context';
 // To avoid cycle dependency declare this
 export interface Web3ConfigOptions {
 	handleRevert: boolean;
-	defaultAccount: HexString | null;
+	defaultAccount?: HexString;
 	defaultBlock: BlockNumberOrTag;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingInterval: number;
 	transactionPollingTimeout: number;
-	transactionReceiptPollingInterval: number | null;
-	transactionConfirmationPollingInterval: number | null;
+	transactionReceiptPollingInterval?: number;
+	transactionConfirmationPollingInterval?: number;
 	blockHeaderTimeout: number;
 	maxListenersWarningThreshold: number;
-	defaultNetworkId: Numbers | null;
+	defaultNetworkId?: Numbers;
 	defaultChain: string;
 	defaultHardfork: string;
-	defaultCommon: Record<string, unknown> | null;
+	defaultCommon?: Record<string, unknown>;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
 	transactionBuilder?: TransactionBuilder;
@@ -58,21 +58,21 @@ export abstract class Web3Config
 {
 	private _config: Web3ConfigOptions = {
 		handleRevert: false,
-		defaultAccount: null,
+		defaultAccount: undefined,
 		defaultBlock: 'latest',
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750,
-		transactionReceiptPollingInterval: null,
-		transactionConfirmationPollingInterval: null,
+		transactionReceiptPollingInterval: undefined,
+		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
-		defaultNetworkId: null,
+		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
 		// TODO - Check if there is a default Common
-		defaultCommon: null,
+		defaultCommon: undefined,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 		transactionBuilder: undefined,
