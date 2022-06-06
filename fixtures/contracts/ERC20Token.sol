@@ -8,4 +8,7 @@ contract ERC20Token is ERC20 {
 	constructor(uint256 initialSupply) ERC20('Gold', 'GLD') {
 		_mint(msg.sender, initialSupply);
 	}
+    function test() public view returns (string memory) {
+        return _msgSender();
+    }
 }

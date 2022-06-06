@@ -29,14 +29,17 @@ import {
 	getTransactionType,
 } from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
+import { ERC20TokenAbi, ERC20TokenBytecode } from '../shared_fixtures/build/ERC20Token';
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
+import { sendFewTxes } from './helper';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;
 	let contract: Contract<typeof BasicAbi>;
+	let contractERC20: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
@@ -48,15 +51,25 @@ describe('defaults', () => {
 		web3Eth = new Web3Eth(clientUrl);
 
 		contract = new Contract(BasicAbi, undefined, undefined, web3Eth.getContextObject() as any);
-
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-
 		sendOptions = { from: accounts[0], gas: '1000000' };
-
 		contract = await contract.deploy(deployOptions).send(sendOptions);
+
+		contractERC20 = new Contract(
+			ERC20TokenAbi,
+			undefined,
+			undefined,
+			web3Eth.getContextObject() as any,
+		);
+		contractERC20 = await contractERC20
+			.deploy({
+				data: ERC20TokenBytecode,
+				arguments: ['1000000000000000000'],
+			})
+			.send({ from: accounts[1], gas: '2700000' });
 	});
 	afterAll(() => {
 		if (clientUrl.startsWith('ws')) {
@@ -65,7 +78,7 @@ describe('defaults', () => {
 	});
 
 	describe('defaults', () => {
-		it('defaultAccount', () => {
+		it('defaultAccount', async () => {
 			// default
 			expect(web3Eth.defaultAccount).toBeUndefined();
 
@@ -86,25 +99,48 @@ describe('defaults', () => {
 
 			// check utils
 			expect(getTransactionFromAttr(eth2)).toBe(accounts[1]);
+			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
+			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
+			contractERC20.setConfig({
+				defaultAccount: accounts[1],
+			});
+
+			const tx = await contractERC20.methods
+				?.transfer(accounts[0], '100')
+				.send({ gas: '1000000' });
+			const txSend = await web3Eth.sendTransaction({
+				to: accounts[1],
+				value: '0x1',
+			});
+
+			expect(tx.from).toBe(accounts[1].toLowerCase());
+			expect(txSend.from).toBe(accounts[0].toLowerCase());
+
+			const tx2 = await contractERC20.methods?.transfer(accounts[1], '2').send({
+				gas: '1000000',
+				from: accounts[0],
+			});
+			const tx2Send = await web3Eth.sendTransaction({
+				to: accounts[0],
+				value: '0x1',
+				from: accounts[1],
+			});
+			expect(tx2.from).toBe(accounts[0].toLowerCase());
+			expect(tx2Send.from).toBe(accounts[1].toLowerCase());
 		});
-		// TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
-		/* set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 
-        web3.eth.call()
-        web3.eth.sendTransaction()
-        contract.methods.myMethod(…).send(…)
-        contract.methods.myMethod(…).call(…)
 
-        */
-//TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
-/* set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
-
-web3.eth.call()
-web3.eth.sendTransaction()
-contract.methods.myMethod(…).send(…)
-contract.methods.myMethod(…).call(…)
-
-*/
+		it('handleRevert', () => {
+			/*
+			//TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
+			/* set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
+			
+			web3.eth.call()
+			web3.eth.sendTransaction()
+			contract.methods.myMethod(…).send(…)
+			contract.methods.myMethod(…).call(…)
+			
+			*/
 			// default
 			expect(web3Eth.handleRevert).toBe(false);
 
@@ -141,14 +177,57 @@ contract.methods.myMethod(…).call(…)
 				},
 			});
 			expect(eth2.defaultBlock).toBe('earliest');
-			const acc = await createNewAccount({ refill: true });
+
 			// check implementation
+			const acc = await createNewAccount({ refill: true, unlock: true });
+
+			await sendFewTxes({
+				web3Eth: eth2,
+				from: acc.address,
+				to: accounts[1],
+				times: 1,
+				value: '0x1',
+			});
 			const balance = await eth2.getBalance(acc.address);
+			const code = await eth2.getCode(contract?.options?.address as string);
+			const storage = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const transactionCount = await eth2.getTransactionCount(acc.address);
+			expect(storage).toBe('0x');
+			expect(code).toBe('0x');
 			expect(balance).toBe('0x0');
+			expect(transactionCount).toBe('0x0');
+
+			// pass blockNumber to rewrite defaultBlockNumber
+			const balanceWithBlockNumber = await eth2.getBalance(acc.address, 'latest');
+			const transactionCountWithBlockNumber = await eth2.getTransactionCount(
+				acc.address,
+				'latest',
+			);
+			const codeWithBlockNumber = await eth2.getCode(
+				contract?.options?.address as string,
+				'latest',
+			);
+			const storageWithBlockNumber = await eth2.getStorageAt(
+				contract?.options?.address as string,
+				0,
+				'latest',
+			);
+			expect(storageWithBlockNumber).toBe('0x0a');
+			expect(transactionCountWithBlockNumber).toBe('0x1');
+			expect(Number(hexToNumber(balanceWithBlockNumber))).toBeGreaterThan(0);
+			expect(codeWithBlockNumber.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
+
+			// set new default block to config
 			eth2.setConfig({
 				defaultBlock: 'latest',
 			});
 			const balanceLatest = await eth2.getBalance(acc.address);
+			const codeLatest = await eth2.getCode(contract?.options?.address as string);
+			const storageLatest = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const transactionCountLatest = await eth2.getTransactionCount(acc.address);
+			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
+			expect(storageLatest).toBe('0x0a');
+			expect(transactionCountLatest).toBe('0x1');
 			expect(Number(hexToNumber(balanceLatest))).toBeGreaterThan(0);
 		});
 		it('transactionBlockTimeout', () => {
@@ -304,6 +383,20 @@ contract.methods.myMethod(…).call(…)
 				web3Context: eth2 as Web3Context<any>,
 			});
 			expect(res.networkId).toBe(4);
+
+			// pass network id
+			const resWithPassNetworkId = await defaultTransactionBuilder({
+				transaction: {
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					networkId: 5,
+				},
+				web3Context: eth2 as Web3Context<any>,
+			});
+
+			expect(resWithPassNetworkId.networkId).toBe(5);
 		});
 		it('defaultChain', async () => {
 			// default
@@ -428,6 +521,134 @@ contract.methods.myMethod(…).call(…)
 				eth2,
 			);
 			expect(res).toBe('0x4444');
+
+			// test override to 0x2 if:
+			// tx.maxFeePerGas !== undefined ||
+			// tx.maxPriorityFeePerGas !== undefined ||
+			// tx.hardfork === 'london' ||
+			// tx.common?.hardfork === 'london'
+			const maxFeePerGasOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					maxFeePerGas: '0x32',
+				},
+				eth2,
+			);
+			expect(maxFeePerGasOverride).toBe('0x2');
+			const maxPriorityFeePerGasOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					maxPriorityFeePerGas: '0x32',
+				},
+				eth2,
+			);
+			expect(maxPriorityFeePerGasOverride).toBe('0x2');
+			const hardforkOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					hardfork: 'london',
+				},
+				eth2,
+			);
+			expect(hardforkOverride).toBe('0x2');
+			const commonOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					common: {
+						customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
+						hardfork: 'london',
+					},
+				},
+				eth2,
+			);
+			expect(commonOverride).toBe('0x2');
+
+			// override to 0x1 if:
+			// tx.accessList !== undefined || tx.hardfork === 'berlin' || tx.common?.hardfork === 'berlin'
+
+			const accessListOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					accessList: [
+						{
+							address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+							storageKeys: ['0x3535353535353535353535353535353535353535'],
+						},
+					],
+				},
+				eth2,
+			);
+			expect(accessListOverride).toBe('0x1');
+
+			const hardforkBerlinOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					hardfork: 'berlin',
+				},
+				eth2,
+			);
+			expect(hardforkBerlinOverride).toBe('0x1');
+
+			const commonBerlinOverride = getTransactionType(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+					common: {
+						customChain: { name: 'ropsten', networkId: '2', chainId: '0x1' },
+						hardfork: 'berlin',
+					},
+				},
+				eth2,
+			);
+			expect(commonBerlinOverride).toBe('0x1');
 		});
 		it('defaultMaxPriorityFeePerGas', async () => {
 			// default
