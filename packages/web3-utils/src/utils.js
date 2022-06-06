@@ -534,8 +534,18 @@ var toNumber = function(value) {
     return typeof value === 'number' ? value : hexToNumber(toHex(value));
 }
 
+//1.x currenly accepts 0x... strings, bn.js after update doesn't. it would be a breaking change
+var BNwrapped = function (value) {
+   if (typeof value == "string" && value.startsWith("0x")) {
+        let trimmedValue = value.toLowerCase().replace("0x", "");
+        return new BN(trimmedValue, 16);
+    } else {
+        return new BN(value);
+    }
+};
+
 module.exports = {
-    BN: BN,
+    BN: BNwrapped,
     isBN: isBN,
     isBigNumber: isBigNumber,
     toBN: toBN,
