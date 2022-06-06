@@ -132,7 +132,6 @@ HttpProvider.prototype.send = function (payload, callback) {
             clearTimeout(this.timeoutId);
         }
         var result = response;
-        var isOk = result.ok;
         var error = null;
 
         try {
