@@ -39,6 +39,8 @@ export const bytesToHexInvalidData: [any, string][] = [
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
+	['1', 'value "1" at "/0" must pass "bytes" validation'],
+	['0', 'value "0" at "/0" must pass "bytes" validation'],
 ];
 
 export const hexToBytesValidData: [HexString, Buffer][] = [
@@ -266,4 +268,20 @@ export const toCheckSumValidData: [string, string][] = [
 	['0x0089d53f703f7e0843953d48133f74ce247184c2', '0x0089d53F703f7E0843953D48133f74cE247184c2'],
 	['0x5fbc2b6c19ee3dd5f9af96ff337ddc89e30ceaef', '0x5FBc2b6C19EE3DD5f9Af96ff337DDC89e30ceAef'],
 	['0xa54D3c09E34aC96807c1CC397404bF2B98DC4eFb', '0xa54d3c09E34aC96807c1CC397404bF2B98DC4eFb'],
+];
+
+export const bytesToBufferInvalidData: [any, string][] = bytesToHexInvalidData;
+
+export const bytesToBufferValidData: [Bytes, Buffer][] = [
+	[new Uint8Array([72]), Buffer.from('48', 'hex')],
+	[new Uint8Array([72, 12]), Buffer.from('480c', 'hex')],
+	['0x9c12', Buffer.from('9c12', 'hex')],
+	['0X12c6', Buffer.from('12c6', 'hex')],
+	['0X1', Buffer.from('01', 'hex')],
+	['0x1', Buffer.from('01', 'hex')],
+	['0x0', Buffer.from('00', 'hex')],
+	['0X0', Buffer.from('00', 'hex')],
+	['0X123', Buffer.from('0123', 'hex')],
+	['0x1234', Buffer.from('1234', 'hex')],
+	[Buffer.from('0c12', 'hex'), Buffer.from('0c12', 'hex')],
 ];
