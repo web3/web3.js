@@ -29,7 +29,7 @@ tmp
 # Distribution directory
 .vscode
 lib/
-dist/
+*/**/dist/
 tsconfig.tsbuildinfo
 
 # Unsupported lock files
