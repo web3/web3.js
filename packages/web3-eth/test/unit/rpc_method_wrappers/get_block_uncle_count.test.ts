@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
-import { isBytes } from 'web3-validator';
+import { isBytes, isNullish } from 'web3-validator';
 import { Bytes } from 'web3-utils';
 
 import { getUncleCountByBlockHash, getUncleCountByBlockNumber } from '../../../src/rpc_methods';
@@ -43,7 +43,7 @@ describe('getBlockUncleCount', () => {
 
 			if (inputBlockIsBytes) {
 				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, DEFAULT_RETURN_FORMAT);
-			} else if (inputBlock === undefined) {
+			} else if (isNullish(inputBlock)) {
 				inputBlockFormatted = web3Context.defaultBlock;
 			} else {
 				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);

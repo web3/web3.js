@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Filter } from '../../src/types';
+
 export const validUintData: any[] = [
 	'0x48',
 	'0x123c',
@@ -24,6 +26,8 @@ export const validUintData: any[] = [
 	BigInt(12),
 ];
 
+// Using "null" value intentionally for validation
+// eslint-disable-next-line no-null/no-null
 export const invalidUintData: any[] = ['-0x48', '-12', -1, true, undefined, null];
 
 export const validUintDataWithSize: [any, number][] = [
@@ -65,6 +69,8 @@ export const validIntData: any[] = [
 	BigInt(-12),
 ];
 
+// Using "null" value intentionally for validation
+// eslint-disable-next-line no-null/no-null
 export const invalidIntData: any[] = [true, undefined, null];
 
 export const validIntDataWithSize: [any, number][] = [
@@ -348,7 +354,7 @@ export const invalidBooleanData = invalidHexStrictData.filter(
 	data => data !== 1 && data !== 0 && data !== '0' && data !== '1' && typeof data !== 'boolean',
 );
 
-export const validFilterObjectData: Record<string, unknown>[] = [
+export const validFilterObjectData: Filter[] = [
 	{
 		fromBlock: '0xc0ff3',
 	},
@@ -367,6 +373,8 @@ export const validFilterObjectData: Record<string, unknown>[] = [
 	{
 		topics: [
 			'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+			// Using "null" value intentionally for validation
+			// eslint-disable-next-line no-null/no-null
 			null,
 			[
 				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
@@ -383,6 +391,8 @@ export const validFilterObjectData: Record<string, unknown>[] = [
 		],
 		topics: [
 			'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+			// Using "null" value intentionally for validation
+			// eslint-disable-next-line no-null/no-null
 			null,
 			[
 				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
@@ -406,12 +416,16 @@ export const invalidFilterObjectData: any[] = [
 		address: [
 			'0x98afe7a8d28bbc88dcf41f8e06d97c74958a47dc',
 			'0xdfd5293d8e347dfe59e90efd55b2956a1343963d',
+			// Using "null" value intentionally for validation
+			// eslint-disable-next-line no-null/no-null
 			null,
 		],
 	},
 	{
 		topics: [
 			'0x00000000000000000000000',
+			// Using "null" value intentionally for validation
+			// eslint-disable-next-line no-null/no-null
 			null,
 			[
 				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
@@ -429,6 +443,8 @@ export const invalidFilterObjectData: any[] = [
 		],
 		topics: [
 			'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+			// Using "null" value intentionally for validation
+			// eslint-disable-next-line no-null/no-null
 			null,
 			[
 				'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',

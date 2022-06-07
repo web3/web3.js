@@ -40,7 +40,9 @@ export const encodeEventABI = (
 		fromBlock?: BlockNumberOrTag;
 		toBlock?: BlockNumberOrTag;
 		filter?: Filter;
-		topics?: (Topic | Topic[] | null)[];
+		// Using "null" type intentionally to match specifications
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		topics?: (null | Topic | Topic[])[];
 	},
 ) => {
 	const opts: {
@@ -146,7 +148,7 @@ export const decodeEventABI = (
 		...result,
 		returnValue: decodeLog([...event.inputs], data.data, argTopics),
 		event: event.name,
-		signature: event.anonymous || !data.topics[0] ? null : data.topics[0],
+		signature: event.anonymous || !data.topics[0] ? undefined : data.topics[0],
 		raw: {
 			data: data.data,
 			topics: data.topics,
@@ -195,6 +197,8 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 
 	if (!returnValues) {
+		// Using "null" value intentionally to match legacy behavior
+		// eslint-disable-next-line no-null/no-null
 		return null;
 	}
 

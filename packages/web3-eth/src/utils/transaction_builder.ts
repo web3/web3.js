@@ -20,6 +20,7 @@ import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address, HexString } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
@@ -32,8 +33,8 @@ export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	privateKey?: HexString | Buffer,
 ) => {
-	if (privateKey !== undefined) return privateKeyToAddress(privateKey);
-	if (web3Context.defaultAccount !== null) return web3Context.defaultAccount;
+	if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
+	if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
 	// TODO if (web3.eth.accounts.wallet) Try to fill using local wallet
 
 	return undefined;
@@ -43,7 +44,7 @@ export const getTransactionNonce = async (
 	web3Context: Web3Context<EthExecutionAPI>,
 	address?: Address,
 ) => {
-	if (address === undefined) {
+	if (isNullish(address)) {
 		// TODO if (web3.eth.accounts.wallet) use address from local wallet
 		throw new UnableToPopulateNonceError();
 	}
@@ -62,11 +63,8 @@ export const getTransactionType = (
 ) => {
 	const inferredType = detectTransactionType(transaction, web3Context);
 
-	if (inferredType !== undefined) return inferredType;
-	if (
-		web3Context.defaultTransactionType !== null ||
-		web3Context.defaultTransactionType !== undefined
-	)
+	if (!isNullish(inferredType)) return inferredType;
+	if (!isNullish(web3Context.defaultTransactionType))
 		return format({ eth: 'uint' }, web3Context.defaultTransactionType, DEFAULT_RETURN_FORMAT);
 
 	return undefined;
@@ -74,6 +72,13 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
+/**
+ *
+ * @param options
+ * @param options.transaction
+ * @param options.web3Context
+ * @param options.privateKey
+ */
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
@@ -81,72 +86,68 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 }): Promise<ReturnType> {
 	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 
-	if (populatedTransaction.from === undefined) {
+	if (isNullish(populatedTransaction.from)) {
 		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
 	}
 
 	// TODO: Debug why need to typecase getTransactionNonce
-	if (populatedTransaction.nonce === undefined) {
+	if (isNullish(populatedTransaction.nonce)) {
 		populatedTransaction.nonce = (await getTransactionNonce(
 			options.web3Context,
 			populatedTransaction.from,
 		)) as unknown as string;
 	}
 
-	if (populatedTransaction.value === undefined) {
+	if (isNullish(populatedTransaction.value)) {
 		populatedTransaction.value = '0x';
 	}
 
-	if (populatedTransaction.data !== undefined && populatedTransaction.input !== undefined) {
+	if (!isNullish(populatedTransaction.data) && !isNullish(populatedTransaction.input)) {
 		throw new TransactionDataAndInputError({
 			data: populatedTransaction.data,
 			input: populatedTransaction.input,
 		});
-	} else if (populatedTransaction.input !== undefined) {
+	} else if (!isNullish(populatedTransaction.input)) {
 		populatedTransaction.data = populatedTransaction.input;
 		delete populatedTransaction.input;
 	}
 
-	if (
-		populatedTransaction.data === undefined ||
-		populatedTransaction.data === null ||
-		populatedTransaction.data === ''
-	) {
+	if (isNullish(populatedTransaction.data) || populatedTransaction.data === '') {
 		populatedTransaction.data = '0x';
 	} else if (!populatedTransaction.data.startsWith('0x')) {
 		populatedTransaction.data = `0x${populatedTransaction.data}`;
 	}
 
-	if (populatedTransaction.common === undefined) {
-		if (populatedTransaction.chain === undefined) {
+	if (isNullish(populatedTransaction.common)) {
+		if (isNullish(populatedTransaction.chain)) {
 			populatedTransaction.chain = options.web3Context.defaultChain as ValidChains;
 		}
-		if (populatedTransaction.hardfork === undefined) {
+		if (isNullish(populatedTransaction.hardfork)) {
 			populatedTransaction.hardfork = options.web3Context.defaultHardfork as Hardfork;
 		}
 	}
 
 	if (
-		populatedTransaction.chainId === undefined &&
-		populatedTransaction.common?.customChain.chainId === undefined
+		isNullish(populatedTransaction.chainId) &&
+		isNullish(populatedTransaction.common?.customChain.chainId)
 	) {
 		populatedTransaction.chainId = await getChainId(options.web3Context, DEFAULT_RETURN_FORMAT);
 	}
 
-	if (populatedTransaction.networkId === undefined) {
+	if (isNullish(populatedTransaction.networkId)) {
 		populatedTransaction.networkId =
 			(options.web3Context.defaultNetworkId as string) ??
 			(await getId(options.web3Context, DEFAULT_RETURN_FORMAT));
 	}
 
-	if (populatedTransaction.gasLimit === undefined && populatedTransaction.gas !== undefined) {
+	if (isNullish(populatedTransaction.gasLimit) && !isNullish(populatedTransaction.gas)) {
 		populatedTransaction.gasLimit = populatedTransaction.gas;
 	}
 
 	populatedTransaction.type = getTransactionType(populatedTransaction, options.web3Context);
 
 	if (
-		populatedTransaction.accessList === undefined &&
+		isNullish(populatedTransaction.accessList) &&
 		(populatedTransaction.type === '0x1' || populatedTransaction.type === '0x2')
 	) {
 		populatedTransaction.accessList = [];

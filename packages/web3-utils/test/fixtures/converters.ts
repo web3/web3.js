@@ -36,6 +36,8 @@ export const bytesToHexInvalidData: [any, string][] = [
 	['data', 'value "data" at "/0" must pass "bytes" validation'],
 	[12, 'value "12" at "/0" must pass "bytes" validation'],
 	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
@@ -62,6 +64,8 @@ export const hexToBytesInvalidData: [any, string][] = [
 	['data', 'value "data" at "/0" must pass "bytes" validation'],
 	[12, 'value "12" at "/0" must pass "bytes" validation'],
 	[['string'], 'value "string" at "/0" must pass "bytes" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
@@ -87,6 +91,8 @@ export const numberToHexInvalidData: [any, string][] = [
 	[12.2, 'value "12.2" at "/0" must pass "int" validation'],
 	['0xag', 'value "0xag" at "/0" must pass "int" validation'],
 	['122g', 'value "122g" at "/0" must pass "int" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "int" validation'],
 	[undefined, 'value at "/0" must pass "int" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "int" validation'],
@@ -131,6 +137,8 @@ export const utf8ToHexInvalidData: [any, string][] = [
 	[12, 'value "12" at "/0" must pass "string" validation'],
 	[BigInt(12), 'value "12" at "/0" must pass "string" validation'],
 	[12n, 'value "12" at "/0" must pass "string" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "string" validation'],
 	[undefined, 'value at "/0" must pass "string" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "string" validation'],
@@ -154,6 +162,8 @@ export const hexToUtf8InvalidData: [any, string][] = [
 		'value "0x4920686176652031303g0c2a3" at "/0" must pass "bytes" validation',
 	],
 	['afde', 'value "afde" at "/0" must pass "bytes" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "bytes" validation'],
 	[undefined, 'value at "/0" must pass "bytes" validation'],
 	[{}, 'value "[object Object]" at "/0" must pass "bytes" validation'],
@@ -250,6 +260,8 @@ export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
 
 export const fromWeiInvalidData: [[any, any], string][] = [
 	[['123.34', 'kwei'], 'value "123.34" at "/0" must pass "int" validation'],
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[[null, 'kwei'], 'value at "/0" must pass "int" validation'],
 	[[undefined, 'kwei'], 'value at "/0" must pass "int" validation'],
 	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "int" validation'],
@@ -258,6 +270,8 @@ export const fromWeiInvalidData: [[any, any], string][] = [
 ];
 
 export const toWeiInvalidData: [[any, any], string][] = [
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	[[null, 'kwei'], 'value at "/0" must pass "number" validation'],
 	[[undefined, 'kwei'], 'value at "/0" must pass "number" validation'],
 	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "number" validation'],

@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
+import { isNullish } from 'web3-validator';
 import {
 	AccessListEIP2930Transaction,
 	FeeMarketEIP1559Transaction,
@@ -88,18 +89,15 @@ describe('prepareTransactionForSigning', () => {
 				expect(messageToSign).toBe(expectedMessageToSign);
 
 				// should have expected v, r, and s
-				const v =
-					signedTransaction.v !== undefined
-						? `0x${signedTransaction.v.toString('hex')}`
-						: '';
-				const r =
-					signedTransaction.r !== undefined
-						? `0x${signedTransaction.r.toString('hex')}`
-						: '';
-				const s =
-					signedTransaction.s !== undefined
-						? `0x${signedTransaction.s.toString('hex')}`
-						: '';
+				const v = !isNullish(signedTransaction.v)
+					? `0x${signedTransaction.v.toString('hex')}`
+					: '';
+				const r = !isNullish(signedTransaction.r)
+					? `0x${signedTransaction.r.toString('hex')}`
+					: '';
+				const s = !isNullish(signedTransaction.s)
+					? `0x${signedTransaction.s.toString('hex')}`
+					: '';
 				expect(v).toBe(expectedV);
 				expect(r).toBe(expectedR);
 				expect(s).toBe(expectedS);

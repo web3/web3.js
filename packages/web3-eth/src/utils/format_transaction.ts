@@ -17,10 +17,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, FormatType } from 'web3-common';
 import { bytesToBuffer, mergeDeep } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import { TransactionDataAndInputError } from '../errors';
 import { transactionSchema } from '../schemas';
 import { Transaction } from '../types';
 
+/**
+ *
+ * @param transaction
+ * @param returnFormat
+ */
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 	TransactionType extends Transaction = Transaction,
@@ -29,20 +35,20 @@ export function formatTransaction<
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ): FormatType<TransactionType, ReturnFormat> {
 	let formattedTransaction = mergeDeep({}, transaction as Record<string, unknown>) as Transaction;
-	if (transaction?.common !== undefined) {
+	if (!isNullish(transaction?.common)) {
 		formattedTransaction.common = { ...transaction.common };
-		if (transaction.common?.customChain !== undefined)
+		if (!isNullish(transaction.common?.customChain))
 			formattedTransaction.common.customChain = { ...transaction.common.customChain };
 	}
 
 	formattedTransaction = format(transactionSchema, formattedTransaction, returnFormat);
 
-	if (formattedTransaction.data !== undefined && formattedTransaction.input !== undefined)
+	if (!isNullish(formattedTransaction.data) && !isNullish(formattedTransaction.input))
 		throw new TransactionDataAndInputError({
 			data: bytesToBuffer(formattedTransaction.data).toString('hex'),
 			input: bytesToBuffer(formattedTransaction.input).toString('hex'),
 		});
-	else if (formattedTransaction.input !== undefined) {
+	else if (!isNullish(formattedTransaction.input)) {
 		formattedTransaction.data = formattedTransaction.input;
 		delete formattedTransaction.input;
 	}

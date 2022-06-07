@@ -35,8 +35,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public registryAddress: string;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
-	private _detectedAddress: string | null;
-	private _lastSyncCheck: number | null;
+	private _detectedAddress?: string;
+	private _lastSyncCheck?: number;
 
 	public constructor(
 		registryAddr?: string,
@@ -48,12 +48,12 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		this.registryAddress = registryAddr ?? registryAddresses.main; // will default to main registry address
 		this._registry = new Registry(registryAddr);
 		this._resolver = new Resolver(this._registry);
-		this._lastSyncCheck = null;
-		this._detectedAddress = null;
 	}
 
 	/**
 	 * Returns the Resolver by the given address
+	 *
+	 * @param name
 	 */
 	public async getResolver(name: string): Promise<Contract<typeof RESOLVER>> {
 		return this._registry.getResolver(name);
@@ -61,6 +61,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * set the resolver of the given name
+	 *
+	 * @param name
+	 * @param address
+	 * @param txConfig
 	 */
 	public async setResolver(
 		name: string,
@@ -72,6 +76,13 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Sets the owner, resolver and TTL for a subdomain, creating it if necessary.
+	 *
+	 * @param name
+	 * @param label
+	 * @param owner
+	 * @param resolver
+	 * @param ttl
+	 * @param txConfig
 	 */
 	public async setSubnodeRecord(
 		name: string,
@@ -86,6 +97,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Sets or clears an approval by the given operator.
+	 *
+	 * @param operator
+	 * @param approved
+	 * @param txConfig
 	 */
 	public async setApprovalForAll(
 		operator: Address,
@@ -97,6 +112,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns true if the operator is approved
+	 *
+	 * @param owner
+	 * @param operator
 	 */
 	public async isApprovedForAll(owner: Address, operator: Address): Promise<unknown> {
 		return this._registry.isApprovedForAll(owner, operator);
@@ -104,6 +122,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns true if the record exists
+	 *
+	 * @param name
 	 */
 	public async recordExists(name: string): Promise<unknown> {
 		return this._registry.recordExists(name);
@@ -111,6 +131,11 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 *
+	 * @param name
+	 * @param label
+	 * @param address
+	 * @param txConfig
 	 */
 	public async setSubnodeOwner(
 		name: string,
@@ -123,6 +148,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 *
+	 * @param name
 	 */
 	public async getTTL(name: string): Promise<unknown> {
 		return this._registry.getTTL(name);
@@ -130,6 +157,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 *
+	 * @param name
+	 * @param ttl
+	 * @param txConfig
 	 */
 	public async setTTL(
 		name: string,
@@ -141,6 +172,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the owner by the given name and current configured or detected Registry
+	 *
+	 * @param name
 	 */
 	public async getOwner(name: string): Promise<unknown> {
 		return this._registry.getOwner(name);
@@ -148,6 +181,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 *
+	 * @param name
+	 * @param address
+	 * @param txConfig
 	 */
 	public async setOwner(
 		name: string,
@@ -159,6 +196,12 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 
 	/**
 	 * Returns the address of the owner of an ENS name.
+	 *
+	 * @param name
+	 * @param owner
+	 * @param resolver
+	 * @param ttl
+	 * @param txConfig
 	 */
 	public async setRecord(
 		name: string,

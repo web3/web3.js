@@ -25,7 +25,7 @@ import {
 	numberToHex,
 	toBigInt,
 } from 'web3-utils';
-import { isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
 
 const { parseBaseType } = utils;
 
@@ -159,7 +159,7 @@ export const convert = (
 		const schemaProp = findSchemaByDataPath(schema, dataPath);
 
 		// If value is a scaler value
-		if (schemaProp === undefined) {
+		if (isNullish(schemaProp)) {
 			delete object[key];
 			dataPath.pop();
 
@@ -175,7 +175,7 @@ export const convert = (
 
 		// If value is an array
 		if (Array.isArray(value)) {
-			if (schemaProp?.items === undefined) {
+			if (isNullish(schemaProp?.items)) {
 				// Can not find schema for array item, delete that item
 				delete object[key];
 				dataPath.pop();
@@ -184,7 +184,7 @@ export const convert = (
 			}
 
 			// If schema for array items is a single type
-			if (isObject(schemaProp.items) && schemaProp.items.eth !== undefined) {
+			if (isObject(schemaProp.items) && !isNullish(schemaProp.items.eth)) {
 				for (let i = 0; i < value.length; i += 1) {
 					(object[key] as unknown[])[i] = convertScalarValue(
 						value[i],

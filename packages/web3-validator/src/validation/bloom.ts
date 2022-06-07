@@ -24,6 +24,8 @@ import { isHexStrict } from './string';
 /**
  * Returns true if the bloom is a valid bloom
  * https://github.com/joshstevens19/ethereum-bloom-filters/blob/fbeb47b70b46243c3963fe1c2988d7461ef17236/src/index.ts#L7
+ *
+ * @param bloom
  */
 export const isBloom = (bloom: ValidInputTypes): boolean => {
 	if (typeof bloom !== 'string') {
@@ -44,6 +46,9 @@ export const isBloom = (bloom: ValidInputTypes): boolean => {
 /**
  * Returns true if the value is part of the given bloom
  * note: false positives are possible.
+ *
+ * @param bloom
+ * @param value
  */
 export const isInBloom = (bloom: string, value: string | Uint8Array): boolean => {
 	if (typeof value === 'string' && !isHexStrict(value)) {
@@ -84,6 +89,9 @@ export const isInBloom = (bloom: string, value: string | Uint8Array): boolean =>
 
 /**
  * Returns true if the ethereum users address is part of the given bloom note: false positives are possible.
+ *
+ * @param bloom
+ * @param ethereumAddress
  */
 export const isUserEthereumAddressInBloom = (bloom: string, ethereumAddress: string): boolean => {
 	if (!isBloom(bloom)) {
@@ -109,6 +117,9 @@ export const isUserEthereumAddressInBloom = (bloom: string, ethereumAddress: str
 /**
  * Returns true if the contract address is part of the given bloom.
  * note: false positives are possible.
+ *
+ * @param bloom
+ * @param contractAddress
  */
 export const isContractAddressInBloom = (bloom: string, contractAddress: string): boolean => {
 	if (!isBloom(bloom)) {

@@ -101,7 +101,7 @@ describe('contract', () => {
 				// Forcefully delete this property from the contract instance
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
-				contract.defaultBlock = null;
+				contract.defaultBlock = undefined;
 
 				await contract.methods.greet().call();
 
@@ -120,11 +120,7 @@ describe('contract', () => {
 					'request',
 				);
 				contract.defaultBlock = 'pending';
-
-				// Forcefully delete this property from the contract instance
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				Contract.defaultBlock = null;
+				Contract.defaultBlock = undefined;
 
 				await contract.methods.greet().call();
 
@@ -146,12 +142,8 @@ describe('contract', () => {
 				// Forcefully delete this property from the contract instance
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
-				contract.defaultBlock = null;
-
-				// Forcefully delete this property from the contract instance
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				Contract.defaultBlock = null;
+				contract.defaultBlock = undefined;
+				Contract.defaultBlock = undefined;
 
 				await contract.methods.greet().call(undefined, 'pending');
 

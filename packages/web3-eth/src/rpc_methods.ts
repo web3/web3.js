@@ -29,6 +29,10 @@ import {
 import { BlockNumberOrTag, validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_protocolVersion',
@@ -36,6 +40,10 @@ export async function getProtocolVersion(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getSyncing(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_syncing',
@@ -43,6 +51,10 @@ export async function getSyncing(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getCoinbase(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_coinbase',
@@ -50,6 +62,10 @@ export async function getCoinbase(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getMining(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_mining',
@@ -57,6 +73,10 @@ export async function getMining(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getHashRate(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_hashrate',
@@ -64,6 +84,10 @@ export async function getHashRate(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getGasPrice(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_gasPrice',
@@ -71,6 +95,10 @@ export async function getGasPrice(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getAccounts(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_accounts',
@@ -78,6 +106,10 @@ export async function getAccounts(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getBlockNumber(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_blockNumber',
@@ -85,6 +117,12 @@ export async function getBlockNumber(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param blockNumber
+ */
 export async function getBalance(
 	requestManager: Web3RequestManager,
 	address: Address,
@@ -98,6 +136,13 @@ export async function getBalance(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param storageSlot
+ * @param blockNumber
+ */
 export async function getStorageAt(
 	requestManager: Web3RequestManager,
 	address: Address,
@@ -112,6 +157,12 @@ export async function getStorageAt(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param blockNumber
+ */
 export async function getTransactionCount(
 	requestManager: Web3RequestManager,
 	address: Address,
@@ -125,6 +176,11 @@ export async function getTransactionCount(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockHash
+ */
 export async function getBlockTransactionCountByHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -137,6 +193,11 @@ export async function getBlockTransactionCountByHash(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockNumber
+ */
 export async function getBlockTransactionCountByNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
@@ -149,6 +210,11 @@ export async function getBlockTransactionCountByNumber(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockHash
+ */
 export async function getUncleCountByBlockHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -161,6 +227,11 @@ export async function getUncleCountByBlockHash(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockNumber
+ */
 export async function getUncleCountByBlockNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
@@ -173,6 +244,12 @@ export async function getUncleCountByBlockNumber(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param blockNumber
+ */
 export async function getCode(
 	requestManager: Web3RequestManager,
 	address: Address,
@@ -186,6 +263,12 @@ export async function getCode(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param message
+ */
 export async function sign(
 	requestManager: Web3RequestManager,
 	address: Address,
@@ -203,6 +286,11 @@ export async function sign(
 // isTransactionWithSender(transaction)
 // ? validateTransactionWithSender(transaction)
 // : validateTransactionWithSender(transaction, true) with true being a isPartial flag
+/**
+ *
+ * @param requestManager
+ * @param transaction
+ */
 export async function signTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender | Partial<TransactionWithSender>,
@@ -217,6 +305,11 @@ export async function signTransaction(
 // isTransactionWithSender(transaction)
 // ? validateTransactionWithSender(transaction)
 // : validateTransactionWithSender(transaction, true) with true being a isPartial flag
+/**
+ *
+ * @param requestManager
+ * @param transaction
+ */
 export async function sendTransaction(
 	requestManager: Web3RequestManager,
 	transaction: TransactionWithSender | Partial<TransactionWithSender>,
@@ -227,6 +320,11 @@ export async function sendTransaction(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param transaction
+ */
 export async function sendRawTransaction(
 	requestManager: Web3RequestManager,
 	transaction: HexStringBytes,
@@ -240,6 +338,12 @@ export async function sendRawTransaction(
 }
 
 // TODO - validate transaction
+/**
+ *
+ * @param requestManager
+ * @param transaction
+ * @param blockNumber
+ */
 export async function call(
 	requestManager: Web3RequestManager,
 	transaction: TransactionCall,
@@ -255,6 +359,12 @@ export async function call(
 }
 
 // TODO Not sure how to best validate Partial<TransactionWithSender>
+/**
+ *
+ * @param requestManager
+ * @param transaction
+ * @param blockNumber
+ */
 export async function estimateGas(
 	requestManager: Web3RequestManager,
 	transaction: Partial<TransactionWithSender>,
@@ -268,6 +378,12 @@ export async function estimateGas(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockHash
+ * @param hydrated
+ */
 export async function getBlockByHash(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -281,6 +397,12 @@ export async function getBlockByHash(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockNumber
+ * @param hydrated
+ */
 export async function getBlockByNumber(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
@@ -294,6 +416,11 @@ export async function getBlockByNumber(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param transactionHash
+ */
 export async function getTransactionByHash(
 	requestManager: Web3RequestManager,
 	transactionHash: HexString32Bytes,
@@ -306,6 +433,12 @@ export async function getTransactionByHash(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockHash
+ * @param transactionIndex
+ */
 export async function getTransactionByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -319,6 +452,12 @@ export async function getTransactionByBlockHashAndIndex(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockNumber
+ * @param transactionIndex
+ */
 export async function getTransactionByBlockNumberAndIndex(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
@@ -332,6 +471,11 @@ export async function getTransactionByBlockNumberAndIndex(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param transactionHash
+ */
 export async function getTransactionReceipt(
 	requestManager: Web3RequestManager,
 	transactionHash: HexString32Bytes,
@@ -344,6 +488,12 @@ export async function getTransactionReceipt(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockHash
+ * @param uncleIndex
+ */
 export async function getUncleByBlockHashAndIndex(
 	requestManager: Web3RequestManager,
 	blockHash: HexString32Bytes,
@@ -357,6 +507,12 @@ export async function getUncleByBlockHashAndIndex(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockNumber
+ * @param uncleIndex
+ */
 export async function getUncleByBlockNumberAndIndex(
 	requestManager: Web3RequestManager,
 	blockNumber: BlockNumberOrTag,
@@ -370,6 +526,10 @@ export async function getUncleByBlockNumberAndIndex(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getCompilers(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_getCompilers',
@@ -377,6 +537,11 @@ export async function getCompilers(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param code
+ */
 export async function compileSolidity(requestManager: Web3RequestManager, code: string) {
 	validator.validate(['string'], [code]);
 
@@ -386,6 +551,11 @@ export async function compileSolidity(requestManager: Web3RequestManager, code: 
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param code
+ */
 export async function compileLLL(requestManager: Web3RequestManager, code: string) {
 	validator.validate(['string'], [code]);
 
@@ -395,6 +565,11 @@ export async function compileLLL(requestManager: Web3RequestManager, code: strin
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param code
+ */
 export async function compileSerpent(requestManager: Web3RequestManager, code: string) {
 	validator.validate(['string'], [code]);
 
@@ -404,6 +579,11 @@ export async function compileSerpent(requestManager: Web3RequestManager, code: s
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param filter
+ */
 export async function newFilter(requestManager: Web3RequestManager, filter: Filter) {
 	validator.validate(['filter'], [filter]);
 
@@ -413,6 +593,10 @@ export async function newFilter(requestManager: Web3RequestManager, filter: Filt
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function newBlockFilter(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_newBlockFilter',
@@ -420,6 +604,10 @@ export async function newBlockFilter(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function newPendingTransactionFilter(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_newPendingTransactionFilter',
@@ -427,6 +615,11 @@ export async function newPendingTransactionFilter(requestManager: Web3RequestMan
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param filterIdentifier
+ */
 export async function uninstallFilter(requestManager: Web3RequestManager, filterIdentifier: Uint) {
 	validator.validate(['hex'], [filterIdentifier]);
 
@@ -436,6 +629,11 @@ export async function uninstallFilter(requestManager: Web3RequestManager, filter
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param filterIdentifier
+ */
 export async function getFilterChanges(requestManager: Web3RequestManager, filterIdentifier: Uint) {
 	validator.validate(['hex'], [filterIdentifier]);
 
@@ -445,6 +643,11 @@ export async function getFilterChanges(requestManager: Web3RequestManager, filte
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param filterIdentifier
+ */
 export async function getFilterLogs(requestManager: Web3RequestManager, filterIdentifier: Uint) {
 	validator.validate(['hex'], [filterIdentifier]);
 
@@ -454,6 +657,11 @@ export async function getFilterLogs(requestManager: Web3RequestManager, filterId
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param filter
+ */
 export async function getLogs(requestManager: Web3RequestManager, filter: Filter) {
 	validator.validate(['filter'], [filter]);
 
@@ -463,6 +671,10 @@ export async function getLogs(requestManager: Web3RequestManager, filter: Filter
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getWork(requestManager: Web3RequestManager) {
 	return requestManager.send({
 		method: 'eth_getWork',
@@ -470,6 +682,13 @@ export async function getWork(requestManager: Web3RequestManager) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param nonce
+ * @param hash
+ * @param digest
+ */
 export async function submitWork(
 	requestManager: Web3RequestManager,
 	nonce: HexString8Bytes,
@@ -484,6 +703,12 @@ export async function submitWork(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param hashRate
+ * @param id
+ */
 export async function submitHashrate(
 	requestManager: Web3RequestManager,
 	hashRate: HexString32Bytes,
@@ -497,6 +722,13 @@ export async function submitHashrate(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param blockCount
+ * @param newestBlock
+ * @param rewardPercentiles
+ */
 export async function getFeeHistory(
 	requestManager: Web3RequestManager,
 	blockCount: Uint,
@@ -515,6 +747,10 @@ export async function getFeeHistory(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getPendingTransactions(
 	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
 ) {
@@ -524,6 +760,10 @@ export async function getPendingTransactions(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function requestAccounts(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
 	return requestManager.send({
 		method: 'eth_requestAccounts',
@@ -531,6 +771,10 @@ export async function requestAccounts(requestManager: Web3RequestManager<Web3Eth
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getChainId(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
 	return requestManager.send({
 		method: 'eth_chainId',
@@ -538,6 +782,13 @@ export async function getChainId(requestManager: Web3RequestManager<Web3EthExecu
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ * @param address
+ * @param storageKeys
+ * @param blockNumber
+ */
 export async function getProof(
 	requestManager: Web3RequestManager<Web3EthExecutionAPI>,
 	address: Address,
@@ -555,6 +806,10 @@ export async function getProof(
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getNodeInfo(requestManager: Web3RequestManager<Web3EthExecutionAPI>) {
 	return requestManager.send({
 		method: 'web3_clientVersion',

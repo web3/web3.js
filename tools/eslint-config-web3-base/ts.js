@@ -42,6 +42,7 @@ module.exports = {
 		'deprecation',
 		'eslint-plugin-tsdoc',
 		'eslint-plugin-jsdoc',
+		'no-null',
 	],
 	extends: [
 		'airbnb-base',
@@ -97,7 +98,14 @@ module.exports = {
 		'@typescript-eslint/no-unused-expressions': ['error'],
 		'@typescript-eslint/no-useless-constructor': ['error'],
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
-		'@typescript-eslint/ban-types': 'warn',
+		'@typescript-eslint/ban-types': [
+			'error',
+			{
+				types: {
+					null: "Use 'undefined' instead of 'null'",
+				},
+			},
+		],
 		'@typescript-eslint/no-unused-vars': 'warn',
 		'import/extensions': [
 			'error',
@@ -128,6 +136,7 @@ module.exports = {
 					'`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
 			},
 		],
+		'no-null/no-null': ['error'],
 	},
 	globals: {
 		BigInt: true,

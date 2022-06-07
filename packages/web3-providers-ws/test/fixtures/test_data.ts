@@ -30,6 +30,8 @@ export const invalidConnectionStrings = [
 	'http//localhost:8545',
 	'ipc://localhost:8545',
 	'',
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	null,
 	undefined,
 	42,

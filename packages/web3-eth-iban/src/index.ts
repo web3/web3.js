@@ -32,6 +32,8 @@ export class Iban {
 
 	/**
 	 * Construct a direct or indirect IBAN
+	 *
+	 * @param iban
 	 */
 	public constructor(iban: string) {
 		if (Iban.isIndirect(iban) || Iban.isDirect(iban)) {
@@ -44,6 +46,8 @@ export class Iban {
 	/**
 	 * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
 	 * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
+	 *
+	 * @param iban
 	 */
 	private static readonly _iso13616Prepare = (iban: string): string => {
 		const A = 'A'.charCodeAt(0);
@@ -67,6 +71,9 @@ export class Iban {
 
 	/**
 	 * return the bigint of the given string with the specified base
+	 *
+	 * @param str
+	 * @param base
 	 */
 	private static readonly _parseInt = (str: string, base: number): bigint =>
 		[...str].reduce(
@@ -76,6 +83,8 @@ export class Iban {
 
 	/**
 	 * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
+	 *
+	 * @param iban
 	 */
 	private static readonly _mod9710 = (iban: string): number => {
 		let remainder = iban;
@@ -115,6 +124,8 @@ export class Iban {
 	};
 	/**
 	 * This method should be used to create an ethereum address from a direct iban address
+	 *
+	 * @param iban
 	 */
 	public static toAddress = (iban: string): HexString => {
 		const ibanObject = new Iban(iban);
@@ -125,6 +136,8 @@ export class Iban {
 	 * Convert the passed BBAN to an IBAN for this country specification.
 	 * Please note that <i>"generation of the IBAN shall be the exclusive responsibility of the bank/branch servicing the account"</i>.
 	 * This method implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
+	 *
+	 * @param bban
 	 */
 	public static fromBban(bban: string): Iban {
 		const countryCode = 'XE';
@@ -137,6 +150,8 @@ export class Iban {
 
 	/**
 	 * This method should be used to create iban object from an ethereum address
+	 *
+	 * @param address
 	 */
 	public static fromAddress(address: HexString): Iban {
 		if (!isAddress(address)) {
@@ -151,6 +166,8 @@ export class Iban {
 
 	/**
 	 * This method should be used to create iban address from an ethereum address
+	 *
+	 * @param address
 	 */
 	public static toIban(address: HexString): string {
 		return Iban.fromAddress(address).toString();
@@ -158,6 +175,8 @@ export class Iban {
 
 	/**
 	 * Should be used to create IBAN object for given institution and identifier
+	 *
+	 * @param options
 	 */
 	public static createIndirect(options: IbanOptions): Iban {
 		return Iban.fromBban(`ETH${options.institution}${options.identifier}`);
@@ -193,6 +212,8 @@ export class Iban {
 
 	/**
 	 * This method should be used to check if given string is valid iban object
+	 *
+	 * @param iban
 	 */
 	public static isValid(iban: string) {
 		return Iban._isValid(iban);

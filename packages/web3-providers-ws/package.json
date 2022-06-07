@@ -48,6 +48,7 @@
 		"isomorphic-ws": "^4.0.1",
 		"web3-common": "1.0.0-alpha.0",
 		"web3-errors": "1.0.0-alpha.0",
+		"web3-utils": "4.0.0-alpha.1",
 		"ws": "^8.2.3"
 	}
 }

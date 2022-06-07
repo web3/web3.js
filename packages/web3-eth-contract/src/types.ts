@@ -46,8 +46,8 @@ export interface ContractEventOptions {
 }
 
 export interface ContractOptions {
-	readonly gas: Uint | null;
-	readonly gasPrice: Uint | null;
+	readonly gas?: Uint;
+	readonly gasPrice?: Uint;
 	readonly gasLimit?: Uint;
 	readonly from?: Address;
 	readonly data?: Bytes;
@@ -56,8 +56,8 @@ export interface ContractOptions {
 }
 
 export interface ContractInitOptions {
-	readonly gas?: Uint | null;
-	readonly gasPrice?: Uint | null;
+	readonly gas?: Uint;
+	readonly gasPrice?: Uint;
 	readonly from?: Address;
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;

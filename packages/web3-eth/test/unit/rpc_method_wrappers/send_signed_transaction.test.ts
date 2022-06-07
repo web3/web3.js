@@ -61,7 +61,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sending', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -99,7 +99,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sent', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -120,7 +120,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('transactionHash', transactionHash => {
 					expect(transactionHash).toStrictEqual(expectedTransactionHash);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -152,7 +152,7 @@ describe('sendTransaction', () => {
 			(rpcMethods.sendRawTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
-			(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(null);
+			(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(undefined);
 
 			await sendSignedTransaction(web3Context, inputSignedTransaction, DEFAULT_RETURN_FORMAT);
 
@@ -189,7 +189,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('receipt', receiptInfo => {
 					expect(receiptInfo).toStrictEqual(formattedReceiptInfo);
-					done(null);
+					done(undefined);
 				});
 			});
 		},

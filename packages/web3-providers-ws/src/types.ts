@@ -37,4 +37,7 @@ export type OnCloseEvent = {
 	reason: string;
 };
 
-export type EventEmittedCallback = (error: Error | null, event?: OnCloseEvent | null) => void;
+export type EventEmittedCallback = (
+	error: Error | undefined,
+	event?: OnCloseEvent | undefined,
+) => void;
