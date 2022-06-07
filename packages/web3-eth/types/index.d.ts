@@ -410,7 +410,7 @@ export interface BlockHeader {
     nonce: string;
     sha3Uncles: string;
     logsBloom: string;
-    transactionRoot: string;
+    transactionsRoot: string;
     stateRoot: string;
     receiptsRoot: string;
     miner: string;
