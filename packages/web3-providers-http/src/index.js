@@ -161,14 +161,9 @@ HttpProvider.prototype.send = function (payload, callback) {
         callback(errors.InvalidConnection(this.host));
     }
 
-    try {
-        request(payload)
-            .then(success.bind(this))
-            .catch(failed.bind(this));
-    } catch(error) {
-        this.connected = false;
-        callback(errors.InvalidConnection(this.host));
-    }
+    request(payload)
+        .then(success.bind(this))
+        .catch(failed.bind(this));
 };
 
 HttpProvider.prototype.disconnect = function () {
