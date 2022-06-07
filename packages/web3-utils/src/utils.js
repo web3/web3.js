@@ -537,22 +537,13 @@ var toNumber = function(value) {
 // 1.x currently accepts 0x... strings, bn.js after update doesn't. it would be a breaking change
 var BNwrapped = function (value) {
     // check negative
-    if (typeof value == "string") {
-        let negative = "";
-        if (value.startsWith("-")) // check negative 
-        {
-            negative = "-";
-            value = value.replace("-", "");
-        }  
-
-        if (value.startsWith("0x"))
-            return  new BN(negative+ value.toLowerCase().replace("0x", ""), 16);
-        else 
-        
-        return new BN(negative + value);
-    } else {
-        return new BN(value);
+    if (typeof value == "string" && value.includes("0x")) {
+        const [negative, hexValue] = value.toLocaleLowerCase().startsWith('-') ? ["-", value.slice(3)] : ["", value.slice(2)];
+        return new BN(negative + hexValue, 16);
     }
+    else {
+        return new BN(value);
+    } 
 };
 
 module.exports = {
