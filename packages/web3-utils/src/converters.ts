@@ -86,7 +86,10 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	}
 
 	if (typeof data === 'string' && isHexStrict(data)) {
-		return Buffer.from(data.slice(2), 'hex');
+		const dataWithoutPrefix = data.toLowerCase().replace('0x', '');
+		const dataLength = dataWithoutPrefix.length + (dataWithoutPrefix.length % 2);
+		const finalData = dataWithoutPrefix.padStart(dataLength, '0');
+		return Buffer.from(finalData, 'hex');
 	}
 
 	if (typeof data === 'string' && !isHexStrict(data)) {
