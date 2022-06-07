@@ -32,7 +32,7 @@
 		]
 	},
 	"scripts": {
-		"build": "yarn clean && lerna run build --stream && yarn webpack --config webpackprod.config.js",
+		"build": "yarn clean && lerna run build --stream && webpack --config webpackprod.config.js",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
 		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
