@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const config = {
 	mode: 'production',
@@ -39,6 +40,9 @@ const config = {
 	},
 	devtool: 'source-map',
 	plugins: [
+		new CleanWebpackPlugin({
+			verbose: true,
+		}),
 		new webpack.ProvidePlugin({
 			Buffer: ['buffer', 'Buffer'],
 		}),
