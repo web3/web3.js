@@ -35,7 +35,7 @@ import {
 	toUtf8,
 	utf8ToHex,
 } from 'web3-utils';
-import { isBlockTag, isHex } from 'web3-validator';
+import { isBlockTag, isHex, isNullish } from 'web3-validator';
 import {
 	BlockInput,
 	BlockOutput,
@@ -55,11 +55,15 @@ import {
 
 /**
  * Will format the given storage key array values to hex strings.
+ *
+ * @param keys
  */
 export const inputStorageKeysFormatter = (keys: Array<string>) => keys.map(numberToHex);
 
 /**
  * Will format the given proof response from the node.
+ *
+ * @param proof
  */
 export const outputProofFormatter = (proof: Proof): Proof => ({
 	address: toChecksumAddress(proof.address),
@@ -69,14 +73,18 @@ export const outputProofFormatter = (proof: Proof): Proof => ({
 
 /**
  * Should the format output to a big number
+ *
+ * @param number
  */
 export const outputBigIntegerFormatter = (number: Numbers) => toNumber(number);
 
 /**
  * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
+ *
+ * @param blockNumber
  */
 export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
-	if (blockNumber === undefined) {
+	if (isNullish(blockNumber)) {
 		return undefined;
 	}
 
@@ -97,6 +105,9 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 
 /**
  * Returns the given block number as hex string or does return the defaultBlock property of the current module
+ *
+ * @param blockNumber
+ * @param defaultBlock
  */
 export const inputDefaultBlockNumberFormatter = (
 	blockNumber: Numbers | undefined,
@@ -127,6 +138,8 @@ export const inputAddressFormatter = (address: string): string | never => {
 
 /**
  * Formats the input of a transaction and converts all values to HEX
+ *
+ * @param options
  */
 export const txInputOptionsFormatter = (options: TransactionInput): Mutable<TransactionOutput> => {
 	const modifiedOptions = { ...options } as unknown as Mutable<TransactionOutput>;
@@ -165,7 +178,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	}
 
 	['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce', 'chainId']
-		.filter(key => modifiedOptions[key] !== undefined)
+		.filter(key => !isNullish(modifiedOptions[key]))
 		.forEach(key => {
 			modifiedOptions[key] = numberToHex(modifiedOptions[key] as Numbers);
 		});
@@ -175,6 +188,9 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 
 /**
  * Formats the input of a transaction and converts all values to HEX
+ *
+ * @param options
+ * @param defaultAccount
  */
 export const inputCallFormatter = (options: TransactionInput, defaultAccount?: string) => {
 	const opts = txInputOptionsFormatter(options);
@@ -190,6 +206,9 @@ export const inputCallFormatter = (options: TransactionInput, defaultAccount?: s
 
 /**
  * Formats the input of a transaction and converts all values to HEX
+ *
+ * @param options
+ * @param defaultAccount
  */
 export const inputTransactionFormatter = (options: TransactionInput, defaultAccount?: string) => {
 	const opts = txInputOptionsFormatter(options);
@@ -210,15 +229,17 @@ export const inputTransactionFormatter = (options: TransactionInput, defaultAcco
 
 /**
  * Hex encodes the data passed to eth_sign and personal_sign
+ *
+ * @param data
  */
 export const inputSignFormatter = (data: string) => (isHexStrict(data) ? data : utf8ToHex(data));
 
 /**
  * Formats the output of a transaction to its proper values
  *
- * @method outputTransactionFormatter
- * @param {Object} tx
- * @returns {Object}
+ * @function outputTransactionFormatter
+ * @param {object} tx
+ * @returns {object}
  */
 export const outputTransactionFormatter = (tx: TransactionInput): TransactionOutput => {
 	const modifiedTx = { ...tx } as unknown as Mutable<TransactionOutput>;
@@ -266,8 +287,12 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
 	return modifiedTx;
 };
 
+// To align with specification we use the type "null" here
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const inputTopicFormatter = (topic: Topic): Topic | null => {
-	if (topic === null || typeof topic === 'undefined') return null;
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	if (isNullish(topic)) return null;
 
 	const value = String(topic);
 
@@ -275,17 +300,18 @@ export const inputTopicFormatter = (topic: Topic): Topic | null => {
 };
 
 export const inputLogFormatter = (filter: Filter) => {
-	const val: Mutable<Filter> =
-		filter === undefined ? {} : mergeDeep({}, filter as Record<string, unknown>);
+	const val: Mutable<Filter> = isNullish(filter)
+		? {}
+		: mergeDeep({}, filter as Record<string, unknown>);
 
 	// If options !== undefined, don't blow out existing data
-	if (val.fromBlock === undefined) {
+	if (isNullish(val.fromBlock)) {
 		val.fromBlock = BlockTags.LATEST;
 	}
 
 	val.fromBlock = inputBlockNumberFormatter(val.fromBlock);
 
-	if (val.toBlock !== undefined) {
+	if (!isNullish(val.toBlock)) {
 		val.toBlock = inputBlockNumberFormatter(val.toBlock);
 	}
 
@@ -309,9 +335,9 @@ export const inputLogFormatter = (filter: Filter) => {
 /**
  * Formats the output of a log
  *
- * @method outputLogFormatter
- * @param {Object} log object
- * @returns {Object} log
+ * @function outputLogFormatter
+ * @param {object} log object
+ * @returns {object} log
  */
 export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	const modifiedLog = { ...log } as unknown as Mutable<LogsOutput>;
@@ -353,6 +379,8 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 
 /**
  * Formats the output of a transaction receipt to its proper values
+ *
+ * @param receipt
  */
 export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): ReceiptOutput => {
 	if (typeof receipt !== 'object') {
@@ -393,9 +421,9 @@ export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): Receip
 /**
  * Formats the output of a block to its proper values
  *
- * @method outputBlockFormatter
- * @param {Object} block
- * @returns {Object}
+ * @function outputBlockFormatter
+ * @param {object} block
+ * @returns {object}
  */
 export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 	const modifiedBlock = { ...block } as unknown as Mutable<BlockOutput>;
@@ -435,6 +463,8 @@ export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 
 /**
  * Formats the input of a whisper post and converts all values to HEX
+ *
+ * @param post
  */
 export const inputPostFormatter = (post: PostOutput): PostInput => {
 	const modifiedPost = { ...post } as unknown as Mutable<PostInput>;
@@ -467,9 +497,10 @@ export const inputPostFormatter = (post: PostOutput): PostInput => {
 /**
  * Formats the output of a received post message
  *
- * @method outputPostFormatter
- * @param {Object}
- * @returns {Object}
+ * @function outputPostFormatter
+ * @param post
+ * @param {object}
+ * @returns {object}
  */
 export const outputPostFormatter = (post: PostInput): PostOutput => {
 	const modifiedPost = { ...post } as unknown as Mutable<PostOutput>;

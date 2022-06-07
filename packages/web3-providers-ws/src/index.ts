@@ -43,6 +43,7 @@ import {
 	Web3WSProviderError,
 	RequestAlreadySentError,
 } from 'web3-errors';
+import { isNullish } from 'web3-utils';
 import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
 export default class WebSocketProvider<
@@ -107,7 +108,7 @@ export default class WebSocketProvider<
 	}
 
 	public getStatus(): Web3BaseProviderStatus {
-		if (this._webSocketConnection === undefined) return 'disconnected';
+		if (isNullish(this._webSocketConnection)) return 'disconnected';
 
 		switch (this._webSocketConnection.readyState) {
 			case this._webSocketConnection.CONNECTING: {
@@ -276,7 +277,7 @@ export default class WebSocketProvider<
 			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 			(response as JsonRpcNotification).method.endsWith('_subscription')
 		) {
-			this._wsEventEmitter.emit('message', null, response);
+			this._wsEventEmitter.emit('message', undefined, response);
 			return;
 		}
 
@@ -288,10 +289,10 @@ export default class WebSocketProvider<
 		}
 
 		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._wsEventEmitter.emit('message', null, response);
+			this._wsEventEmitter.emit('message', undefined, response);
 			requestItem.deferredPromise.resolve(response);
 		} else {
-			this._wsEventEmitter.emit('message', response, null);
+			this._wsEventEmitter.emit('message', response, undefined);
 			requestItem?.deferredPromise.reject(new ResponseError(response));
 		}
 
@@ -355,7 +356,7 @@ export default class WebSocketProvider<
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
-		this._wsEventEmitter.emit('close', null, {
+		this._wsEventEmitter.emit('close', undefined, {
 			code,
 			reason,
 		} as OnCloseEvent);

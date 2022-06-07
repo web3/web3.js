@@ -354,7 +354,7 @@ describe('Web3RequestManager', () => {
 					request: jest
 						.fn()
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
-							cb(null, errorResponse);
+							cb(undefined, errorResponse);
 						}),
 				} as any;
 
@@ -416,7 +416,7 @@ describe('Web3RequestManager', () => {
 					send: jest
 						.fn()
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
-							cb(null, errorResponse);
+							cb(undefined, errorResponse);
 						}),
 				} as any;
 
@@ -618,7 +618,7 @@ describe('Web3RequestManager', () => {
 					request: jest
 						.fn()
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
-							cb(null, errorResponse);
+							cb(undefined, errorResponse);
 						}),
 				} as any;
 
@@ -678,7 +678,7 @@ describe('Web3RequestManager', () => {
 					send: jest
 						.fn()
 						.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
-							cb(null, errorResponse);
+							cb(undefined, errorResponse);
 						}),
 				} as any;
 

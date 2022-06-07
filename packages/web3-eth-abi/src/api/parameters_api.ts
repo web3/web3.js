@@ -47,6 +47,9 @@ const formatDecodedObject = (
 
 /**
  * Should be used to encode list of params
+ *
+ * @param abi
+ * @param params
  */
 export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]): string => {
 	try {
@@ -85,12 +88,19 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 
 /**
  * Should be used to encode plain param
+ *
+ * @param abi
+ * @param param
  */
 export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 	encodeParameters([abi], [param]);
 
 /**
  * Should be used to decode list of params
+ *
+ * @param abis
+ * @param bytes
+ * @param loose
  */
 export const decodeParametersWith = (
 	abis: AbiInput[],
@@ -124,6 +134,8 @@ export const decodeParametersWith = (
 			// only convert `0x` to null if it's not string value
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			decodedValue =
+				// Using "null" value to match with legacy behavior
+				// eslint-disable-next-line no-null/no-null
 				decodedValue === '0x' && !isStringObject && !isStringType ? null : decodedValue;
 
 			if (!!abi && typeof abi === 'object' && !abi.name && !Array.isArray(abi)) {
@@ -149,11 +161,17 @@ export const decodeParametersWith = (
 
 /**
  * Should be used to decode list of params
+ *
+ * @param abi
+ * @param bytes
  */
 export const decodeParameters = (abi: AbiInput[], bytes: HexString) =>
 	decodeParametersWith(abi, bytes, false);
 
 /**
  * Should be used to decode bytes to plain param
+ *
+ * @param abi
+ * @param bytes
  */
 export const decodeParameter = (abi: AbiInput, bytes: HexString) => decodeParameters([abi], bytes);

@@ -114,5 +114,8 @@ export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
 	readonly toBlock?: BlockNumberOrTag;
 	readonly address?: Address | Address[];
-	readonly topics?: (Topic | Topic[] | null)[];
+
+	// Using "null" type intentionally to match specifications
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	readonly topics?: (null | Topic | Topic[])[];
 }

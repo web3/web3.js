@@ -36,6 +36,7 @@ import {
 	Web3BaseProviderStatus,
 } from 'web3-common';
 import { ConnectionNotOpenError, InvalidClientError, InvalidConnectionError } from 'web3-errors';
+import { isNullish } from 'web3-utils';
 
 export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
@@ -115,9 +116,9 @@ export default class IpcProvider<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponse<ResponseType>> {
-		if (this._socket === undefined) throw new Error('IPC connection is undefined');
+		if (isNullish(this._socket)) throw new Error('IPC connection is undefined');
 
-		if (request.id === undefined) throw new Error('Request Id not defined');
+		if (isNullish(request.id)) throw new Error('Request Id not defined');
 
 		if (this.getStatus() !== 'connected') {
 			throw new ConnectionNotOpenError();
@@ -148,18 +149,18 @@ export default class IpcProvider<
 			| JsonRpcNotification;
 
 		if ('method' in response && response.method.endsWith('_subscription')) {
-			this._emitter.emit('message', null, response);
+			this._emitter.emit('message', undefined, response);
 			return;
 		}
 
 		if (response.id && this._requestQueue.has(response.id)) {
 			const requestItem = this._requestQueue.get(response.id);
 
-			if ('result' in response && response.result !== undefined) {
-				this._emitter.emit('message', null, response);
+			if ('result' in response && !isNullish(response.result)) {
+				this._emitter.emit('message', undefined, response);
 				requestItem?.resolve(response);
-			} else if ('error' in response && response.error !== undefined) {
-				this._emitter.emit('message', response, null);
+			} else if ('error' in response && !isNullish(response.error)) {
+				this._emitter.emit('message', response, undefined);
 				requestItem?.reject(response);
 			}
 

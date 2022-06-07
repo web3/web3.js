@@ -21,6 +21,7 @@ import {
 	Web3AccountProvider,
 	Web3EncryptedWallet,
 } from 'web3-common';
+import { isNullish } from 'web3-validator';
 
 type BrowserError = { code: number; name: string };
 
@@ -57,7 +58,7 @@ export class Wallet<
 					// Firefox
 					(e as BrowserError).name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
 				// acknowledge QuotaExceededError only if there's something already stored
-				storage !== undefined &&
+				!isNullish(storage) &&
 				storage.length !== 0
 				? storage
 				: undefined;

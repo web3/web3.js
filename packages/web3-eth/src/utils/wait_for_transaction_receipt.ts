@@ -16,13 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { DataFormat, EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Bytes } from 'web3-utils';
+import { Bytes, isNullish } from 'web3-utils';
 
 import { ReceiptInfo } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionReceipt } from '../rpc_method_wrappers';
 import { TransactionPollingTimeoutError } from '../errors';
 
+/**
+ *
+ * @param web3Context
+ * @param transactionHash
+ * @param returnFormat
+ */
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
@@ -50,7 +56,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					returnFormat,
 				);
 
-				if (response !== null) {
+				if (!isNullish(response)) {
 					clearInterval(intervalId);
 					resolve(response);
 				}
