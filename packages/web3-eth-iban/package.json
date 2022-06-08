@@ -14,7 +14,7 @@
     },
     "main": "lib/index.js",
     "dependencies": {
-        "bn.js": "^4.11.9",
+        "bn.js": "^5.2.1",
         "web3-utils": "1.7.4-rc.0"
     },
     "devDependencies": {
