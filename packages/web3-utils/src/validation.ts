@@ -27,6 +27,7 @@ import {
 	isTopic as isTopicValidator,
 	isTopicInBloom as isTopicInBloomValidator,
 	isUserEthereumAddressInBloom as isUserEthereumAddressInBloomValidator,
+	isNullish as isNullishValidator,
 } from 'web3-validator';
 import { Numbers } from './types';
 
@@ -174,3 +175,5 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	}
 	return 1;
 };
+
+export const isNullish = isNullishValidator;

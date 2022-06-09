@@ -31,7 +31,7 @@ import {
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Address, BlockTag, BlockNumberOrTag, Bytes, Filter, HexString, Numbers } from 'web3-utils';
-import { isBlockTag, isBytes } from 'web3-validator';
+import { isBlockTag, isBytes, isNullish } from 'web3-validator';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -349,7 +349,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -408,7 +408,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -434,7 +434,7 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: (format(
 				receiptInfoSchema,
@@ -497,9 +497,9 @@ export function sendTransaction<
 				try {
 					if (
 						!options?.ignoreGasPricing &&
-						transaction.gasPrice === undefined &&
-						(transaction.maxPriorityFeePerGas === undefined ||
-							transaction.maxFeePerGas === undefined)
+						isNullish(transactionFormatted.gasPrice) &&
+						(isNullish(transaction.maxPriorityFeePerGas) ||
+							isNullish(transaction.maxFeePerGas))
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
@@ -562,7 +562,7 @@ export function sendTransaction<
 					);
 
 					// Transaction hasn't been included in a block yet
-					if (transactionReceipt === null)
+					if (isNullish(transactionReceipt))
 						transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
@@ -670,7 +670,7 @@ export function sendSignedTransaction<ReturnFormat extends DataFormat>(
 				);
 
 				// Transaction hasn't been included in a block yet
-				if (transactionReceipt === null)
+				if (isNullish(transactionReceipt))
 					transactionReceipt = await waitForTransactionReceipt(
 						web3Context,
 						transactionHash,

@@ -35,8 +35,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public registryAddress: string;
 	private readonly _registry: Registry;
 	private readonly _resolver: Resolver;
-	private _detectedAddress: string | null;
-	private _lastSyncCheck: number | null;
+	private _detectedAddress?: string;
+	private _lastSyncCheck?: number;
 
 	public constructor(
 		registryAddr?: string,
@@ -48,8 +48,6 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		this.registryAddress = registryAddr ?? registryAddresses.main; // will default to main registry address
 		this._registry = new Registry(registryAddr);
 		this._resolver = new Resolver(this._registry);
-		this._lastSyncCheck = null;
-		this._detectedAddress = null;
 	}
 
 	/**

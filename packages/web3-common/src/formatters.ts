@@ -35,7 +35,7 @@ import {
 	toUtf8,
 	utf8ToHex,
 } from 'web3-utils';
-import { isBlockTag, isHex } from 'web3-validator';
+import { isBlockTag, isHex, isNullish } from 'web3-validator';
 import {
 	BlockInput,
 	BlockOutput,
@@ -84,7 +84,7 @@ export const outputBigIntegerFormatter = (number: Numbers) => toNumber(number);
  * @param blockNumber
  */
 export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
-	if (blockNumber === undefined) {
+	if (isNullish(blockNumber)) {
 		return undefined;
 	}
 
@@ -178,7 +178,7 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 	}
 
 	['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce', 'chainId']
-		.filter(key => modifiedOptions[key] !== undefined)
+		.filter(key => !isNullish(modifiedOptions[key]))
 		.forEach(key => {
 			modifiedOptions[key] = numberToHex(modifiedOptions[key] as Numbers);
 		});
@@ -287,8 +287,12 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
 	return modifiedTx;
 };
 
+// To align with specification we use the type "null" here
+// eslint-disable-next-line @typescript-eslint/ban-types
 export const inputTopicFormatter = (topic: Topic): Topic | null => {
-	if (topic === null || typeof topic === 'undefined') return null;
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	if (isNullish(topic)) return null;
 
 	const value = String(topic);
 
@@ -296,17 +300,18 @@ export const inputTopicFormatter = (topic: Topic): Topic | null => {
 };
 
 export const inputLogFormatter = (filter: Filter) => {
-	const val: Mutable<Filter> =
-		filter === undefined ? {} : mergeDeep({}, filter as Record<string, unknown>);
+	const val: Mutable<Filter> = isNullish(filter)
+		? {}
+		: mergeDeep({}, filter as Record<string, unknown>);
 
 	// If options !== undefined, don't blow out existing data
-	if (val.fromBlock === undefined) {
+	if (isNullish(val.fromBlock)) {
 		val.fromBlock = BlockTags.LATEST;
 	}
 
 	val.fromBlock = inputBlockNumberFormatter(val.fromBlock);
 
-	if (val.toBlock !== undefined) {
+	if (!isNullish(val.toBlock)) {
 		val.toBlock = inputBlockNumberFormatter(val.toBlock);
 	}
 

@@ -252,7 +252,10 @@ export class Web3Context<
 	}
 
 	public get BatchRequest(): new () => Web3BatchRequest {
-		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
+		return Web3BatchRequest.bind(
+			undefined,
+			this._requestManager as unknown as Web3RequestManager,
+		);
 	}
 }
 

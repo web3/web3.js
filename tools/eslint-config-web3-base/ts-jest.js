@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 module.exports = {
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint', 'jest'],
+	plugins: ['@typescript-eslint', 'jest', 'header', 'no-null'],
 	extends: ['./ts', 'plugin:jest/recommended', 'plugin:jest/style'],
 	env: {
 		'jest/globals': true,
@@ -37,12 +37,20 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-call': ['error'],
 		'@typescript-eslint/no-unsafe-return': ['error'],
 		'@typescript-eslint/no-empty-function': ['error'],
-		'@typescript-eslint/ban-types': 'warn',
+		'@typescript-eslint/ban-types': [
+			'error',
+			{
+				types: {
+					null: "Use 'undefined' instead of 'null'",
+				},
+			},
+		],
 		'@typescript-eslint/require-await': ['warn'],
 		'@typescript-eslint/restrict-template-expressions': ['warn'],
 		'dot-notation': 'off',
 		'lines-between-class-members': 'off',
 		'arrow-body-style': 'off',
 		'no-underscore-dangle': 'off',
+		'no-null/no-null': ['error'],
 	},
 };

@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiError } from 'web3-errors';
 import { AbiCoder, ParamType } from '@ethersproject/abi';
-import { leftPad, rightPad, toHex } from 'web3-utils';
+import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
 	AbiInput,
@@ -31,31 +31,27 @@ import {
 } from './types';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	['function', 'event', 'constructor'].includes((item as { type: string }).type);
 
 export const isAbiEventFragment = (item: unknown): item is AbiEventFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'event';
 
 export const isAbiFunctionFragment = (item: unknown): item is AbiFunctionFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'function';
 
 export const isAbiConstructorFragment = (item: unknown): item is AbiConstructorFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'constructor';
 
 /**

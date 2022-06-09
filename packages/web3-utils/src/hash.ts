@@ -26,7 +26,7 @@ import {
 	InvalidBytesError,
 } from 'web3-errors';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import { isAddress, isHexStrict } from 'web3-validator';
+import { isAddress, isHexStrict, isNullish } from 'web3-validator';
 import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
@@ -39,13 +39,13 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
  *
  * @param data
  */
-export const sha3 = (data: Bytes): string | null => {
+export const sha3 = (data: Bytes): string | undefined => {
 	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
 
 	const hash = bytesToHex(keccak256(Buffer.from(updatedData as Buffer)));
 
 	// EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data
-	return hash === SHA3_EMPTY_BYTES ? null : hash;
+	return hash === SHA3_EMPTY_BYTES ? undefined : hash;
 };
 
 /**
@@ -55,7 +55,7 @@ export const sha3 = (data: Bytes): string | null => {
  */
 export const sha3Raw = (data: Bytes): string => {
 	const hash = sha3(data);
-	if (hash === null) {
+	if (isNullish(hash)) {
 		return SHA3_EMPTY_BYTES;
 	}
 
@@ -245,8 +245,9 @@ export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]
  *
  * @param {...any} values
  */
-export const soliditySha3 = (...values: TypedObject[] | TypedObjectAbbreviated[]): string | null =>
-	sha3(encodePacked(...values));
+export const soliditySha3 = (
+	...values: TypedObject[] | TypedObjectAbbreviated[]
+): string | undefined => sha3(encodePacked(...values));
 
 /**
  * Will tightly pack values given in the same way solidity would then hash.

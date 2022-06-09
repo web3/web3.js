@@ -15,7 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { validator, isAddress, isHexStrict, utils as validatorUtils } from 'web3-validator';
+import {
+	validator,
+	isAddress,
+	isHexStrict,
+	utils as validatorUtils,
+	isNullish,
+} from 'web3-validator';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 
 import {
@@ -86,7 +92,10 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 	}
 
 	if (typeof data === 'string' && isHexStrict(data)) {
-		return Buffer.from(data.slice(2), 'hex');
+		const dataWithoutPrefix = data.toLowerCase().replace('0x', '');
+		const dataLength = dataWithoutPrefix.length + (dataWithoutPrefix.length % 2);
+		const finalData = dataWithoutPrefix.padStart(dataLength, '0');
+		return Buffer.from(finalData, 'hex');
 	}
 
 	if (typeof data === 'string' && !isHexStrict(data)) {
@@ -426,7 +435,7 @@ export const toChecksumAddress = (address: Address): string => {
 	const hash = bytesToHex(keccak256(Buffer.from(lowerCaseAddress)));
 
 	if (
-		hash === null ||
+		isNullish(hash) ||
 		hash === 'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
 	)
 		return ''; // // EIP-1052 if hash is equal to c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470, keccak was given empty data

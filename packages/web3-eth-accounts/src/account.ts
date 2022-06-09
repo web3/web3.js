@@ -51,7 +51,7 @@ import {
 	isHexStrict,
 	utf8ToHex,
 } from 'web3-utils';
-import { validator, isBuffer, isHexString32Bytes, isString } from 'web3-validator';
+import { validator, isBuffer, isHexString32Bytes, isString, isNullish } from 'web3-validator';
 import {
 	signatureObject,
 	signResult,
@@ -129,7 +129,7 @@ export const signTransaction = (
 
 	const tx = TransactionFactory.fromTxData(transaction);
 	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
-	if (signedTx.v === undefined || signedTx.r === undefined || signedTx.s === undefined)
+	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
 
 	const validationErrors = signedTx.validate(true);
@@ -162,7 +162,7 @@ export const signTransaction = (
  * @param rawTransaction
  */
 export const recoverTransaction = (rawTransaction: HexString): Address => {
-	if (rawTransaction === undefined) throw new UndefinedRawTransactionError();
+	if (isNullish(rawTransaction)) throw new UndefinedRawTransactionError();
 
 	const tx = TransactionFactory.fromSerializedData(Buffer.from(rawTransaction.slice(2), 'hex'));
 
@@ -186,7 +186,7 @@ export const recover = (
 		return recover(data.messageHash, signatureStr, true);
 	}
 
-	if (signature === undefined) throw new InvalidSignatureError('signature string undefined');
+	if (isNullish(signature)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = hashed ? data : hashMessage(data);

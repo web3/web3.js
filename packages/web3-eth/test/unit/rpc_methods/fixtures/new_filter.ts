@@ -66,6 +66,8 @@ export const testData: TestData[] = [
 			{
 				topics: [
 					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					// Using "null" value intentionally for validation
+					// eslint-disable-next-line no-null/no-null
 					null,
 					[
 						'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
@@ -87,6 +89,8 @@ export const testData: TestData[] = [
 				],
 				topics: [
 					'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+					// Using "null" value intentionally for validation
+					// eslint-disable-next-line no-null/no-null
 					null,
 					[
 						'0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b',

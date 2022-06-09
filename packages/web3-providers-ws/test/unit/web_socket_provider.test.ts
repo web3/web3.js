@@ -104,7 +104,7 @@ describe('WebSocketProvider', () => {
 
 				await wsProvider.request(jsonRpcPayload);
 
-				expect(messageSpy).toHaveBeenCalledWith(null, jsonRpcResponse);
+				expect(messageSpy).toHaveBeenCalledWith(undefined, jsonRpcResponse);
 			});
 		});
 
@@ -127,7 +127,7 @@ describe('WebSocketProvider', () => {
 
 				await expect(wsProvider.request(payload)).rejects.toThrow();
 
-				expect(messageSpy).toHaveBeenCalledWith(payload, null);
+				expect(messageSpy).toHaveBeenCalledWith(payload, undefined);
 			});
 		});
 	});

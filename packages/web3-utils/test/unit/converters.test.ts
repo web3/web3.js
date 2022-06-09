@@ -38,6 +38,7 @@ import {
 	toWei,
 	utf8ToHex,
 	toChecksumAddress,
+	bytesToBuffer,
 } from '../../src/converters';
 
 import {
@@ -61,6 +62,8 @@ import {
 	utf8ToHexInvalidData,
 	utf8ToHexValidData,
 	toCheckSumValidData,
+	bytesToBufferInvalidData,
+	bytesToBufferValidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -349,6 +352,21 @@ describe('converters', () => {
 		});
 		describe('invalid cases', () => {
 			it.todo('should throw error for invalid cases');
+		});
+	});
+	describe('bytesToBuffer', () => {
+		describe('bytesToBuffer', () => {
+			describe('valid cases', () => {
+				it.each(bytesToBufferValidData)('%s', (input, output) => {
+					expect(bytesToBuffer(input)).toEqual(output);
+				});
+			});
+
+			describe('invalid cases', () => {
+				it.each(bytesToBufferInvalidData)('%s', (input, output) => {
+					expect(() => bytesToBuffer(input)).toThrow(output);
+				});
+			});
 		});
 	});
 });

@@ -20,6 +20,7 @@ import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
 import { EthExecutionAPI, FMT_BYTES, FMT_NUMBER, FormatType } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { HexString, toNumber } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
@@ -72,8 +73,8 @@ const getEthereumjsTransactionOptions = (
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const hasTransactionSigningOptions =
-		(transaction.chain !== undefined && transaction.hardfork !== undefined) ||
-		transaction.common !== undefined;
+		(!isNullish(transaction.chain) && !isNullish(transaction.hardfork)) ||
+		!isNullish(transaction.common);
 
 	let common;
 	if (!hasTransactionSigningOptions) {
@@ -81,10 +82,9 @@ const getEthereumjsTransactionOptions = (
 			{
 				name: 'custom-network',
 				chainId: toNumber(transaction.chainId) as number,
-				networkId:
-					transaction.networkId !== undefined
-						? (toNumber(transaction.networkId) as number)
-						: undefined,
+				networkId: !isNullish(transaction.networkId)
+					? (toNumber(transaction.networkId) as number)
+					: undefined,
 				defaultHardfork: transaction.hardfork ?? web3Context.defaultHardfork,
 			},
 			{

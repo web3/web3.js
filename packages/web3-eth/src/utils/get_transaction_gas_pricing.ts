@@ -24,6 +24,7 @@ import {
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Numbers } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlock, getGasPrice } from '../rpc_method_wrappers';
@@ -44,9 +45,9 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
 	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
 
-	if (block.baseFeePerGas === undefined) throw new Eip1559NotSupportedError();
+	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
-	if (transaction.gasPrice !== undefined) {
+	if (!isNullish(transaction.gasPrice)) {
 		const convertedTransactionGasPrice = format(
 			{ eth: 'uint' },
 			transaction.gasPrice as Numbers,
@@ -94,7 +95,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 	| undefined
 > {
 	const transactionType = getTransactionType(transaction, web3Context);
-	if (transactionType !== undefined) {
+	if (!isNullish(transactionType)) {
 		if (transactionType.startsWith('-'))
 			throw new UnsupportedTransactionTypeError(transactionType);
 
@@ -103,7 +104,7 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 			throw new UnsupportedTransactionTypeError(transactionType);
 
 		if (
-			transaction.gasPrice === undefined &&
+			isNullish(transaction.gasPrice) &&
 			(transactionType === '0x0' || transactionType === '0x1')
 		)
 			return {
