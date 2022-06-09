@@ -56,8 +56,6 @@ describe('defaults', () => {
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
 		if (clientUrl.startsWith('ws')) {
-			web3Eth = new Web3Eth(clientUrl);
-		} else {
 			web3Eth = new Web3Eth(
 				new WebSocketProvider(
 					clientUrl,
@@ -65,6 +63,8 @@ describe('defaults', () => {
 					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 				),
 			);
+		} else {
+			web3Eth = new Web3Eth(clientUrl);
 		}
 
 		contract = new Contract(BasicAbi, undefined, undefined, web3Eth.getContextObject() as any);

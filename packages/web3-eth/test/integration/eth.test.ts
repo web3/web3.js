@@ -31,7 +31,6 @@ import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
 
 describe('eth', () => {
 	let web3Eth: Web3Eth;
-	let newProvider: HttpProvider | WebSocketProvider;
 	let accounts: string[] = [];
 	let clientUrl: string;
 
@@ -45,8 +44,6 @@ describe('eth', () => {
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
 		if (clientUrl.startsWith('ws')) {
-			web3Eth = new Web3Eth(clientUrl);
-		} else {
 			web3Eth = new Web3Eth(
 				new WebSocketProvider(
 					clientUrl,
@@ -54,11 +51,19 @@ describe('eth', () => {
 					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 				),
 			);
+			contract = new Contract(BasicAbi, undefined, {
+				provider: new WebSocketProvider(
+					clientUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				),
+			});
+		} else {
+			web3Eth = new Web3Eth(clientUrl);
+			contract = new Contract(BasicAbi, undefined, {
+				provider: clientUrl,
+			});
 		}
-
-		contract = new Contract(BasicAbi, undefined, {
-			provider: clientUrl,
-		});
 
 		deployOptions = {
 			data: BasicBytecode,
@@ -68,28 +73,18 @@ describe('eth', () => {
 		sendOptions = { from: accounts[0], gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
-
-		if (clientUrl.startsWith('http')) {
-			newProvider = new HttpProvider(clientUrl);
-		} else {
-			newProvider = new WebSocketProvider(
-				clientUrl,
-				{},
-				{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-			);
-		}
 	});
 	afterAll(() => {
 		if (clientUrl.startsWith('ws') && web3Eth?.provider) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
-			newProvider.disconnect();
+			(contract.provider as WebSocketProvider).disconnect();
 		}
 	});
 
 	describe('methods', () => {
 		it('setProvider', () => {
-			web3Eth.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
-			expect(web3Eth.provider).toBe(newProvider);
+			web3Eth.setProvider(contract.provider as SupportedProviders<Web3EthExecutionAPI>);
+			expect(web3Eth.provider).toBe(contract.provider);
 		});
 		it('providers', () => {
 			const res = web3Eth.providers;
