@@ -55,7 +55,17 @@ describe('defaults', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		web3Eth = new Web3Eth(clientUrl);
+		if (clientUrl.startsWith('ws')) {
+			web3Eth = new Web3Eth(clientUrl);
+		} else {
+			web3Eth = new Web3Eth(
+				new WebSocketProvider(
+					clientUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				),
+			);
+		}
 
 		contract = new Contract(BasicAbi, undefined, undefined, web3Eth.getContextObject() as any);
 		deployOptions = {
@@ -79,12 +89,7 @@ describe('defaults', () => {
 	});
 	afterAll(() => {
 		if (clientUrl.startsWith('ws')) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
-	});
-	afterEach(() => {
-		if (clientUrl.startsWith('ws')) {
-			(eth2.provider as WebSocketProvider).disconnect();
+			(web3Eth?.provider as WebSocketProvider)?.disconnect();
 		}
 	});
 
@@ -101,7 +106,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultAccount: accounts[1],
 				},
@@ -168,7 +173,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					handleRevert: true,
 				},
@@ -187,7 +192,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultBlock: 'earliest',
 				},
@@ -208,7 +213,7 @@ describe('defaults', () => {
 			const code = await eth2.getCode(contract?.options?.address as string);
 			const storage = await eth2.getStorageAt(contract?.options?.address as string, 0);
 			const transactionCount = await eth2.getTransactionCount(acc.address);
-			expect(Number(hexToNumber(storage))).toBe(0);
+			expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
 			expect(code).toBe('0x');
 			expect(balance).toBe('0x0');
 			expect(transactionCount).toBe('0x0');
@@ -258,14 +263,14 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionBlockTimeout: 120,
 				},
 			});
 			expect(eth2.transactionBlockTimeout).toBe(120);
 		});
-		it('transactionConfirmationBlocks', async () => {
+		it('transactionConfirmationBlocks', () => {
 			// default
 			expect(web3Eth.transactionConfirmationBlocks).toBe(24);
 
@@ -277,41 +282,45 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionConfirmationBlocks: 4,
 				},
 			});
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
-			// implementation test
+		});
+		it('transactionConfirmationBlocks implementation', async () => {
+			const waitConfirmations = 3;
+			const eth = new Web3Eth(web3Eth.provider);
+			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
-
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
+			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = eth.sendTransaction({
 				to,
 				value,
 				from,
 			});
-			let confirmation = 1;
-			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
-					confirmation += 1;
-					expect(parseInt(String(confirmationNumber), 16)).toBe(confirmation);
-					if (confirmation >= 5) {
-						resolve();
-					}
-				});
-			});
-			await new Promise((resolve: Resolve) => {
+
+			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe('0x1');
 					resolve();
 				});
 			});
-
-			await sendFewTxes({ web3Eth: eth2, from, to, value, times: 4 });
+			let shouldBe = 2;
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				sentTx.on('confirmation', ({ confirmationNumber }) => {
+					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+					shouldBe += 1;
+					if (shouldBe > waitConfirmations) {
+						resolve();
+					}
+				});
+			});
+			await receiptPromise;
+			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});
 		it('transactionPollingInterval and transactionPollingTimeout', () => {
@@ -329,7 +338,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionPollingInterval: 400,
 					transactionPollingTimeout: 10,
@@ -341,7 +350,7 @@ describe('defaults', () => {
 		// todo will work with not instance mining
 		// itIf(getSystemTestProvider().startsWith('http'))('transactionReceiptPollingInterval and transactionConfirmationPollingInterval implementation', async () => {
 		//     eth2 = new Web3Eth({
-		//         provider: clientUrl,
+		//         provider: web3Eth.provider,
 		//         config: {
 		//             transactionPollingInterval: 400,
 		//             transactionPollingTimeout: 10,
@@ -398,7 +407,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionReceiptPollingInterval: 400,
 					transactionConfirmationPollingInterval: 10,
@@ -419,7 +428,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					blockHeaderTimeout: 4,
 				},
@@ -438,7 +447,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					maxListenersWarningThreshold: 4,
 				},
@@ -457,7 +466,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultNetworkId: 4,
 				},
@@ -500,7 +509,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultChain: 'rinkeby',
 				},
@@ -529,7 +538,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultHardfork: 'istanbul',
 				},
@@ -572,7 +581,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultCommon: common,
 				},
@@ -590,7 +599,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultTransactionType: '0x4444',
 				},
@@ -751,7 +760,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					defaultMaxPriorityFeePerGas: numberToHex(1200000000),
 				},
@@ -810,7 +819,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionBuilder: newBuilderMock,
 				},
@@ -846,7 +855,7 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: clientUrl,
+				provider: web3Eth.provider,
 				config: {
 					transactionTypeParser: newParserMock,
 				},
