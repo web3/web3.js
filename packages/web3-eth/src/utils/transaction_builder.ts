@@ -15,27 +15,63 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, FormatType, format } from 'web3-common';
+import {
+	EthExecutionAPI,
+	DEFAULT_RETURN_FORMAT,
+	FormatType,
+	format,
+	FMT_NUMBER,
+	FMT_BYTES,
+} from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, HexString } from 'web3-utils';
-import { isNullish } from 'web3-validator';
-import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
+import { Address, HexString, isAddress } from 'web3-utils';
+import { isNullish, isNumber } from 'web3-validator';
+import {
+	InvalidTransactionWithSender,
+	LocalWalletNotAvailableError,
+	TransactionDataAndInputError,
+	UnableToPopulateNonceError,
+} from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
-import { ValidChains, Hardfork, Transaction, InternalTransaction } from '../types';
+import {
+	ValidChains,
+	Hardfork,
+	Transaction,
+	InternalTransaction,
+	TransactionWithLocalWalletIndex,
+} from '../types';
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
+	transaction?: Transaction | TransactionWithLocalWalletIndex,
 	privateKey?: HexString | Buffer,
 ) => {
+	if (transaction?.from !== undefined) {
+		if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
+			return transaction.from;
+		}
+		if (isNumber(transaction.from)) {
+			if (web3Context.wallet) {
+				return web3Context.wallet.get(
+					format({ eth: 'uint' }, transaction.from, {
+						number: FMT_NUMBER.NUMBER,
+						bytes: FMT_BYTES.HEX,
+					}),
+				).address;
+			}
+			throw new LocalWalletNotAvailableError();
+		} else {
+			throw new InvalidTransactionWithSender(transaction.from);
+		}
+	}
 	if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
 	if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
-	// TODO if (web3.eth.accounts.wallet) Try to fill using local wallet
 
 	return undefined;
 };
@@ -87,7 +123,11 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 
 	if (isNullish(populatedTransaction.from)) {
-		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
+		populatedTransaction.from = getTransactionFromAttr(
+			options.web3Context,
+			undefined,
+			options.privateKey,
+		);
 	}
 
 	// TODO: Debug why need to typecase getTransactionNonce
