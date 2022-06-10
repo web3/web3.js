@@ -47,20 +47,6 @@ export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_M
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
 
-const accounts: {
-	address: string;
-	privateKey: string;
-}[] = [
-	{
-		address: '0xdc6bad79dab7ea733098f66f6c6f9dd008da3258',
-		privateKey: '0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e',
-	},
-	{
-		address: '0x962f9a9c2a6c092474d24def35eccb3d9363265e',
-		privateKey: '0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3',
-	},
-];
-
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
@@ -90,6 +76,57 @@ export const createNewAccount = async (config?: {
 	return { address: acc.address, privateKey: acc.privateKey };
 };
 
+export const getSystemTestAccountsWithKeys = (): {
+	address: string;
+	privateKey: string;
+}[] => {
+	switch (getSystemTestBackend()) {
+		case 'geth':
+			return [
+				{
+					address: '0xdc6bad79dab7ea733098f66f6c6f9dd008da3258',
+					privateKey:
+						'0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e',
+				},
+				{
+					address: '0x962f9a9c2a6c092474d24def35eccb3d9363265e',
+					privateKey:
+						'0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3',
+				},
+			];
+		case 'ganache':
+			return [
+				{
+					address: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
+					privateKey:
+						'0xcb89ec4b01771c6c8272f4c0aafba2f8ee0b101afb22273b786939a8af7c1912',
+				},
+				{
+					address: '0x6f1DF96865D09d21e8f3f9a7fbA3b17A11c7C53C',
+					privateKey:
+						'0x0c0e4cd57a4d850e5f5a0f8fdf6351a054691918b08a84979de46487467da693',
+				},
+				{
+					address: '0xccFE90C862D2501ce233107D1A1F40afd50d09d0',
+					privateKey:
+						'0x923fab912cb013c2b4a967cc49d82773216fc748addd70b4ee3f2ae2355d00c2',
+				},
+				{
+					address: '0xFe10D1f19baa4e3Ba57ff9c13C978571E092628A',
+					privateKey:
+						'0x9d9ccbbe72514bb428293b1c6df604ba919c7e9fe418893bd0e1d51fbff108d9',
+				},
+				{
+					address: '0xEe8cb9B4A71d2cd134884834313a7e808D5fC1e4',
+					privateKey:
+						'0xcfd75a483f588bcdad14486812b055c21dbc2a3aaa0c7fb2deba16685d7a2318',
+				},
+			];
+		default:
+			throw new Error('Unknown system test backend, unable to get private keys');
+	}
+};
+
 export const getSystemTestAccounts = async (): Promise<string[]> => {
 	if (_accounts.length > 0) {
 		return _accounts;
@@ -104,7 +141,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 
 		await web3Eth.sendTransaction({
 			from: await web3Eth.getCoinbase(),
-			to: accounts[0].address,
+			to: getSystemTestAccountsWithKeys()[0].address,
 			value: '100000000000000000000',
 		});
 
@@ -114,13 +151,24 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 		if (
 			!(
 				existsAccounts?.length > 0 &&
-				existsAccounts.includes(accounts[0].address.toUpperCase())
+				existsAccounts.includes(getSystemTestAccountsWithKeys()[0].address.toUpperCase())
 			)
 		) {
-			await web3Personal.importRawKey(accounts[0].privateKey.substring(2), '123456');
-			await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+			await web3Personal.importRawKey(
+				getSystemTestAccountsWithKeys()[0].privateKey.substring(2),
+				'123456',
+			);
+			await web3Personal.unlockAccount(
+				getSystemTestAccountsWithKeys()[0].address,
+				'123456',
+				500,
+			);
 		} else {
-			await web3Personal.unlockAccount(accounts[0].address, '123456', 500);
+			await web3Personal.unlockAccount(
+				getSystemTestAccountsWithKeys()[0].address,
+				'123456',
+				500,
+			);
 		}
 	}
 
