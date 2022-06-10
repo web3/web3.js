@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, format } from 'web3-common';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
+import { toHex } from 'web3-utils';
 import { InternalTransaction, Transaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
@@ -45,3 +46,6 @@ export const detectTransactionType = (
 	(web3Context?.transactionTypeParser ?? defaultTransactionTypeParser)(
 		transaction as unknown as Record<string, unknown>,
 	);
+
+export const detectRawTransactionType = (transaction: Buffer) =>
+	transaction[0] > 0x7f ? '0x0' : toHex(transaction[0]);
