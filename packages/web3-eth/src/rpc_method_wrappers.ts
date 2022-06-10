@@ -40,8 +40,13 @@ import {
 	HexString,
 	Numbers,
 	HexStringBytes,
+	hexToBytes,
+	keccak256,
+	bytesToHex,
 } from 'web3-utils';
 import { isBlockTag, isBytes, isString } from 'web3-validator';
+import { TransactionFactory } from '@ethereumjs/tx';
+
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -75,6 +80,8 @@ import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+// eslint-disable-next-line import/no-cycle
+import { detectRawTransactionType } from './utils';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
@@ -800,7 +807,16 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
 	);
 	const unformattedResponse = isString(response as HexStringBytes)
-		? { raw: response as HexStringBytes, tx: transaction }
+		? {
+				raw: response as HexStringBytes,
+				tx: {
+					...TransactionFactory.fromSerializedData(
+						hexToBytes(response as HexStringBytes),
+					).toJSON(),
+					hash: bytesToHex(keccak256(hexToBytes(response as HexStringBytes))),
+					type: detectRawTransactionType(hexToBytes(response as HexStringBytes)),
+				},
+		  }
 		: (response as SignedTransactionInfo);
 	return {
 		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),
