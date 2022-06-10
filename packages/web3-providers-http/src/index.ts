@@ -30,6 +30,10 @@ import {
 import { InvalidClientError, MethodNotImplementedError } from 'web3-errors';
 import { HttpProviderOptions } from './types';
 
+// todo had to ignore, introduce error in doc generation,see why/better solution
+/** @ignore */
+export { HttpProviderOptions } from './types';
+
 export default class HttpProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
