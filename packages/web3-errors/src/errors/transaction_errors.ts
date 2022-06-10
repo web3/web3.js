@@ -58,7 +58,9 @@ export class TransactionRevertError extends Web3Error {
 	public code = ERR_TX_REVERT_TRANSACTION;
 
 	public constructor(public reason: string, public signature: string, public receipt: Receipt) {
-		super(`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, null, 2)}`);
+		super(
+			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
+		);
 	}
 
 	public toJSON() {
@@ -92,7 +94,7 @@ export class ContractCodeNotStoredError extends TransactionError {
 export class TransactionRevertedWithoutReasonError extends TransactionError {
 	public constructor(receipt: Receipt) {
 		super(
-			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, null, 2)}`,
+			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
 			receipt,
 		);
 		this.code = ERR_TX_REVERT_WITHOUT_REASON;
@@ -104,7 +106,7 @@ export class TransactionOutOfGasError extends TransactionError {
 		super(
 			`Transaction ran out of gas. Please provide more gas:\n ${JSON.stringify(
 				receipt,
-				null,
+				undefined,
 				2,
 			)}`,
 			receipt,

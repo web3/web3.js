@@ -21,6 +21,8 @@ import { isHexStrict } from './string';
 
 /**
  * Checks the checksum of a given address. Will also return false on non-checksum addresses.
+ *
+ * @param data
  */
 export const checkAddressCheckSum = (data: string): boolean => {
 	if (!/^(0x)?[0-9a-f]{40}$/i.test(data)) return false;
@@ -45,6 +47,9 @@ export const checkAddressCheckSum = (data: string): boolean => {
 
 /**
  * Checks if a given string is a valid Ethereum address. It will also check the checksum, if the address has upper and lowercase letters.
+ *
+ * @param value
+ * @param checkChecksum
  */
 export const isAddress = (value: ValidInputTypes, checkChecksum = true) => {
 	if (typeof value !== 'string' && !Buffer.isBuffer(value)) {

@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Filter } from '../types';
 import { isAddress } from './address';
 import { isBlockNumberOrTag } from './block';
+import { isNullish } from './object';
 import { isTopic } from './topic';
 
 /**
@@ -25,6 +26,8 @@ import { isTopic } from './topic';
  * then because all Filter properties are optional, we check if the expected properties
  * are defined. If defined and they're not the expected type, we immediately return false,
  * otherwise we return true after all checks pass.
+ *
+ * @param value
  */
 export const isFilterObject = (value: Filter) => {
 	const expectedFilterProperties: (keyof Filter)[] = [
@@ -33,7 +36,7 @@ export const isFilterObject = (value: Filter) => {
 		'address',
 		'topics',
 	];
-	if (value === null || typeof value !== 'object') return false;
+	if (isNullish(value) || typeof value !== 'object') return false;
 
 	if (
 		!Object.keys(value).every(property =>
@@ -43,21 +46,21 @@ export const isFilterObject = (value: Filter) => {
 		return false;
 
 	if (
-		(value.fromBlock !== undefined && !isBlockNumberOrTag(value.fromBlock)) ||
-		(value.toBlock !== undefined && !isBlockNumberOrTag(value.toBlock))
+		(!isNullish(value.fromBlock) && !isBlockNumberOrTag(value.fromBlock)) ||
+		(!isNullish(value.toBlock) && !isBlockNumberOrTag(value.toBlock))
 	)
 		return false;
 
-	if (value.address !== undefined) {
+	if (!isNullish(value.address)) {
 		if (Array.isArray(value.address)) {
 			if (!value.address.every(address => isAddress(address))) return false;
 		} else if (!isAddress(value.address)) return false;
 	}
 
-	if (value.topics !== undefined) {
+	if (!isNullish(value.topics)) {
 		if (
 			!value.topics.every(topic => {
-				if (topic === null) return true;
+				if (isNullish(topic)) return true;
 
 				if (Array.isArray(topic)) {
 					return topic.every(nestedTopic => isTopic(nestedTopic));

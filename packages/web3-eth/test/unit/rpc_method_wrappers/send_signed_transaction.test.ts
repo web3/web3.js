@@ -65,7 +65,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sending', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -111,7 +111,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sent', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -136,7 +136,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('transactionHash', transactionHash => {
 					expect(transactionHash).toStrictEqual(expectedTransactionHash);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -171,6 +171,7 @@ describe('sendTransaction', () => {
 				expectedTransactionHash,
 			);
 			(rpcMethods.getTransactionReceipt as jest.Mock)
+				// eslint-disable-next-line no-null/no-null
 				.mockResolvedValueOnce(null)
 				.mockResolvedValue(expectedReceiptInfo);
 
@@ -209,7 +210,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('receipt', receiptInfo => {
 					expect(receiptInfo).toStrictEqual(formattedReceiptInfo);
-					done(null);
+					done(undefined);
 				});
 			});
 		},

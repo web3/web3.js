@@ -47,8 +47,8 @@ export interface Log {
 	readonly removed?: boolean;
 	readonly logIndex?: Numbers;
 	readonly transactionIndex?: Numbers;
-	readonly transactionHash?: Bytes | null;
-	readonly blockHash?: Bytes | null;
+	readonly transactionHash?: Bytes;
+	readonly blockHash?: Bytes;
 	readonly blockNumber?: Numbers;
 	readonly address?: Address;
 	readonly data?: Bytes;
@@ -65,7 +65,7 @@ export interface ReceiptInfo {
 	readonly cumulativeGasUsed: Numbers;
 	readonly gasUsed: Numbers;
 	readonly effectiveGasPrice?: Numbers;
-	readonly contractAddress: Address | null;
+	readonly contractAddress?: Address;
 	readonly logs: Log[];
 	readonly logsBloom: Bytes;
 	readonly root: Bytes;
@@ -89,6 +89,7 @@ interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;
 	common?: Common;
+	// eslint-disable-next-line @typescript-eslint/ban-types
 	to?: Address | null;
 	gas?: Numbers;
 	gasPrice?: Numbers;
@@ -118,11 +119,11 @@ export interface TransactionWithLocalWalletIndex extends TransactionBase {
 }
 
 export interface TransactionInfo extends Transaction {
-	readonly blockHash: Bytes | null;
-	readonly blockNumber: Numbers | null;
+	readonly blockHash?: Bytes;
+	readonly blockNumber?: Numbers;
 	readonly from: Address;
 	readonly hash: Bytes;
-	readonly transactionIndex: Numbers | null;
+	readonly transactionIndex?: Numbers;
 }
 
 export type InternalTransaction = FormatType<
@@ -172,7 +173,7 @@ export interface Block {
 	readonly stateRoot: Bytes;
 	readonly transactionsRoot: Bytes;
 	readonly receiptsRoot: Bytes;
-	readonly logsBloom: Bytes | null;
+	readonly logsBloom?: Bytes;
 	readonly difficulty?: Numbers;
 	readonly number: Numbers;
 	readonly gasLimit: Numbers;
@@ -186,7 +187,7 @@ export interface Block {
 	readonly size: Numbers;
 	readonly transactions: TransactionHash[] | TransactionInfo[];
 	readonly uncles: Uncles;
-	readonly hash: Bytes | null;
+	readonly hash?: Bytes;
 }
 
 export type SendTransactionEvents = {

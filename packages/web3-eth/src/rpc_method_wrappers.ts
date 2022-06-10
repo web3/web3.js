@@ -44,7 +44,7 @@ import {
 	keccak256,
 	bytesToHex,
 } from 'web3-utils';
-import { isBlockTag, isBytes, isString } from 'web3-validator';
+import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionFactory } from '@ethereumjs/tx';
 
 import { SignatureError } from './errors';
@@ -368,7 +368,7 @@ export async function getTransaction<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -427,7 +427,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 		);
 	}
 
-	return response === null
+	return isNullish(response)
 		? response
 		: format(transactionInfoSchema, response as unknown as TransactionInfo, returnFormat);
 }
@@ -453,7 +453,7 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		transactionHashFormatted,
 	);
 
-	return response === null
+	return isNullish(response)
 		? response
 		: (format(
 				receiptInfoSchema,
@@ -517,9 +517,9 @@ export function sendTransaction<
 
 					if (
 						!options?.ignoreGasPricing &&
-						transaction.gasPrice === undefined &&
-						(transaction.maxPriorityFeePerGas === undefined ||
-							transaction.maxFeePerGas === undefined)
+						isNullish(transactionFormatted.gasPrice) &&
+						(isNullish(transaction.maxPriorityFeePerGas) ||
+							isNullish(transaction.maxFeePerGas))
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
@@ -584,7 +584,7 @@ export function sendTransaction<
 					);
 
 					// Transaction hasn't been included in a block yet
-					if (transactionReceipt === null)
+					if (isNullish(transactionReceipt))
 						transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
@@ -701,13 +701,12 @@ export function sendSignedTransaction<
 						);
 
 						// Transaction hasn't been included in a block yet
-						if (transactionReceipt === null) {
+						if (isNullish(transactionReceipt))
 							transactionReceipt = await waitForTransactionReceipt(
 								web3Context,
 								transactionHash,
 								returnFormat,
 							);
-						}
 
 						const transactionReceiptFormatted = format(
 							receiptInfoSchema,

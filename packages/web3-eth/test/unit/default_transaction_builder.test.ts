@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
+import { isNullish } from 'web3-validator';
 import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
@@ -344,7 +345,7 @@ describe('defaultTransactionBuilder', () => {
 			delete input.type;
 
 			input.hardfork = 'istanbul';
-			if (input.common !== undefined) input.common.hardfork = 'istanbul';
+			if (!isNullish(input.common)) input.common.hardfork = 'istanbul';
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
