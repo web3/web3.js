@@ -37,6 +37,7 @@ import {
 import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';
+import { isNullish } from 'web3-utils';
 import { SupportedProviders, Web3BaseProviderConstructor } from './types';
 import {
 	isLegacyRequestProvider,
@@ -110,7 +111,7 @@ export class Web3RequestManager<
 		}
 
 		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this._provider);
-		this._provider = newProvider ?? provider ?? null;
+		this._provider = newProvider ?? provider;
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 	}
 
@@ -179,6 +180,13 @@ export class Web3RequestManager<
 				provider.send<ResponseType>(payload, (err, response) => {
 					if (err) {
 						throw err;
+					}
+
+					if (isNullish(response)) {
+						throw new ResponseError(
+							'' as never,
+							'Got a "nullish" response from provider.',
+						);
 					}
 
 					return resolve(this._processJsonRpcResponse(payload, response));

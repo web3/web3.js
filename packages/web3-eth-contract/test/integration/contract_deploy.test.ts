@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
-import { sleep, processAsync } from '../shared_fixtures/utils';
+import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
@@ -95,35 +95,51 @@ describe('contract', () => {
 		});
 
 		it('should emit the "transactionHash" event', async () => {
-			await expect(
-				processAsync(resolve => {
-					contract.deploy(deployOptions).send(sendOptions).on('transactionHash', resolve);
-				}),
-			).resolves.toBeDefined();
+			const handler = jest.fn();
+
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+
+			promiEvent.on('transactionHash', handler);
+			// Deploy the contract
+			await promiEvent;
+
+			expect(handler).toHaveBeenCalled();
 		});
 
 		it('should emit the "sending" event', async () => {
-			await expect(
-				processAsync(resolve => {
-					contract.deploy(deployOptions).send(sendOptions).on('sending', resolve);
-				}),
-			).resolves.toBeDefined();
+			const handler = jest.fn();
+
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+
+			promiEvent.on('sending', handler);
+			// Deploy the contract
+			await promiEvent;
+
+			expect(handler).toHaveBeenCalled();
 		});
 
 		it('should emit the "sent" event', async () => {
-			await expect(
-				processAsync(resolve => {
-					contract.deploy(deployOptions).send(sendOptions).on('sent', resolve);
-				}),
-			).resolves.toBeDefined();
+			const handler = jest.fn();
+
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+
+			promiEvent.on('sent', handler);
+			// Deploy the contract
+			await promiEvent;
+
+			expect(handler).toHaveBeenCalled();
 		});
 
 		it('should emit the "receipt" event', async () => {
-			await expect(
-				processAsync(resolve => {
-					contract.deploy(deployOptions).send(sendOptions).on('receipt', resolve);
-				}),
-			).resolves.toBeDefined();
+			const handler = jest.fn();
+
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+
+			promiEvent.on('receipt', handler);
+			// Deploy the contract
+			await promiEvent;
+
+			expect(handler).toHaveBeenCalled();
 		});
 
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {

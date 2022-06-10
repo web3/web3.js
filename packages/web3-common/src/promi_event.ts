@@ -37,19 +37,19 @@ export class PromiEvent<ResolveType, EventMap extends Web3EventMap>
 	public [Symbol.toStringTag]: 'Promise';
 
 	public async then<TResult1 = ResolveType, TResult2 = never>(
-		onfulfilled?: ((value: ResolveType) => TResult1 | PromiseLike<TResult1>) | null,
-		onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null,
+		onfulfilled?: ((value: ResolveType) => TResult1 | PromiseLike<TResult1>) | undefined,
+		onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | undefined,
 	): Promise<TResult1 | TResult2> {
 		return this._promise.then(onfulfilled, onrejected);
 	}
 
 	public async catch<TResult = never>(
-		onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
+		onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | undefined,
 	): Promise<ResolveType | TResult> {
 		return this._promise.catch(onrejected);
 	}
 
-	public async finally(onfinally?: (() => void) | null): Promise<ResolveType> {
+	public async finally(onfinally?: (() => void) | undefined): Promise<ResolveType> {
 		return this._promise.finally(onfinally);
 	}
 }

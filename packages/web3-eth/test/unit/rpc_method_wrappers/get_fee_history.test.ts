@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { isNullish } from 'web3-validator';
 
 import { getFeeHistory as rpcMethodsGetFeeHistory } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
@@ -57,7 +58,7 @@ describe('getFeeHistory', () => {
 
 			let inputNewestBlockFormatted;
 
-			if (inputNewestBlock === undefined) {
+			if (isNullish(inputNewestBlock)) {
 				inputNewestBlockFormatted = web3Context.defaultBlock;
 			} else {
 				inputNewestBlockFormatted = format(

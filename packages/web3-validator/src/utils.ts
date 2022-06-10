@@ -205,6 +205,8 @@ export const codePointToInt = (codePoint: number): number => {
 
 /**
  * Converts value to it's number representation
+ *
+ * @param value
  */
 export const hexToNumber = (value: string): bigint | number => {
 	if (!isHexStrict(value)) {
@@ -223,6 +225,8 @@ export const hexToNumber = (value: string): bigint | number => {
 
 /**
  * Converts value to it's hex representation
+ *
+ * @param value
  */
 export const numberToHex = (value: ValidInputTypes): string => {
 	if ((typeof value === 'number' || typeof value === 'bigint') && value < 0) {
@@ -246,6 +250,10 @@ export const numberToHex = (value: ValidInputTypes): string => {
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
+ *
+ * @param value
+ * @param characterAmount
+ * @param sign
  */
 export const padLeft = (value: ValidInputTypes, characterAmount: number, sign = '0'): string => {
 	if (typeof value === 'string' && !isHexStrict(value)) {

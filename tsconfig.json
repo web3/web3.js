@@ -15,6 +15,7 @@
 		"removeComments": true,
 		"sourceMap": true,
 		"declarationMap": true,
-		"strict": true
+		"strict": true,
+		"strictNullChecks": true
 	}
 }

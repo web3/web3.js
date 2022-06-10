@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiError } from 'web3-errors';
 import { AbiCoder, ParamType } from '@ethersproject/abi';
-import { leftPad, rightPad, toHex } from 'web3-utils';
+import { isNullish, leftPad, rightPad, toHex } from 'web3-utils';
 import ethersAbiCoder from './ethers_abi_coder';
 import {
 	AbiInput,
@@ -31,35 +31,33 @@ import {
 } from './types';
 
 export const isAbiFragment = (item: unknown): item is AbiFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	['function', 'event', 'constructor'].includes((item as { type: string }).type);
 
 export const isAbiEventFragment = (item: unknown): item is AbiEventFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'event';
 
 export const isAbiFunctionFragment = (item: unknown): item is AbiFunctionFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'function';
 
 export const isAbiConstructorFragment = (item: unknown): item is AbiConstructorFragment =>
-	item !== undefined &&
-	item !== null &&
+	!isNullish(item) &&
 	typeof item === 'object' &&
-	(item as { type: string }).type !== undefined &&
+	!isNullish((item as { type: string }).type) &&
 	(item as { type: string }).type === 'constructor';
 
 /**
  * Check if type is simplified struct format
+ *
+ * @param type
  */
 export const isSimplifiedStructFormat = (
 	type: string | Partial<AbiParameter>,
@@ -70,6 +68,8 @@ export const isSimplifiedStructFormat = (
 
 /**
  * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
+ *
+ * @param structName
  */
 export const mapStructNameAndType = (structName: string): AbiStruct =>
 	structName.includes('[]')
@@ -78,6 +78,8 @@ export const mapStructNameAndType = (structName: string): AbiStruct =>
 
 /**
  * Maps the simplified format in to the expected format of the ABICoder
+ *
+ * @param struct
  */
 export const mapStructToCoderFormat = (struct: AbiStruct): Array<AbiCoderStruct> => {
 	const components: Array<AbiCoderStruct> = [];
@@ -102,6 +104,8 @@ export const mapStructToCoderFormat = (struct: AbiStruct): Array<AbiCoderStruct>
 
 /**
  * Map types if simplified format is used
+ *
+ * @param types
  */
 export const mapTypes = (
 	types: AbiInput[],
@@ -142,18 +146,25 @@ export const mapTypes = (
 
 /**
  * returns true if input is a hexstring and is odd-lengthed
+ *
+ * @param param
  */
 export const isOddHexstring = (param: unknown): boolean =>
 	typeof param === 'string' && /^(-)?0x[0-9a-f]*$/i.test(param) && param.length % 2 === 1;
 
 /**
  * format odd-length bytes to even-length
+ *
+ * @param param
  */
 export const formatOddHexstrings = (param: string): string =>
 	isOddHexstring(param) ? `0x0${param.substring(2)}` : param;
 
 /**
  * Handle some formatting of params for backwards compatibility with Ethers V4
+ *
+ * @param type
+ * @param _param
  */
 export const formatParam = (type: string, _param: unknown): unknown => {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -280,6 +291,8 @@ export const flattenTypes = (
 /**
  * Should be used to create full function/event name from json abi
  * returns a string
+ *
+ * @param json
  */
 export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
 	if (isAbiEventFragment(json) || isAbiFunctionFragment(json)) {

@@ -186,6 +186,9 @@ export class Web3Context<
 	 * Use to create new object of any type extended by `Web3Context`
 	 * and link it to current context. This can be used to initiate a global context object
 	 * and then use it to create new objects of any type extended by `Web3Context`.
+	 *
+	 * @param ContextRef
+	 * @param {...any} args
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public use<T extends Web3Context<any>, T2 extends unknown[]>(
@@ -206,6 +209,8 @@ export class Web3Context<
 
 	/**
 	 * Link current context to another context.
+	 *
+	 * @param parentContext
 	 */
 	public link<T extends Web3Context<API, RegisteredSubs>>(parentContext: T) {
 		this.setConfig(parentContext.getConfig());
@@ -247,7 +252,10 @@ export class Web3Context<
 	}
 
 	public get BatchRequest(): new () => Web3BatchRequest {
-		return Web3BatchRequest.bind(null, this._requestManager as unknown as Web3RequestManager);
+		return Web3BatchRequest.bind(
+			undefined,
+			this._requestManager as unknown as Web3RequestManager,
+		);
 	}
 }
 

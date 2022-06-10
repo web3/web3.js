@@ -78,7 +78,9 @@ export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
 	readonly toBlock?: BlockNumberOrTag;
 	readonly address?: string | string[];
-	readonly topics?: (string | string[] | null)[];
+	// Using "null" type intentionally to match specifications
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	readonly topics?: (null | string | string[])[];
 }
 
 // To avoid circular dependency to avoid breaking changes in "web3-utils" package.
