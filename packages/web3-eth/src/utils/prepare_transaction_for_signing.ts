@@ -28,6 +28,7 @@ import {
 } from '../types';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
+// eslint-disable-next-line import/no-cycle
 import { transactionBuilder } from './transaction_builder';
 
 const getEthereumjsTxDataFromTransaction = (
