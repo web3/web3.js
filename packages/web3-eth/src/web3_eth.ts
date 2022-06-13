@@ -54,7 +54,9 @@ type RegisteredSubscription = {
 };
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
-	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
+	public constructor(
+		providerOrContext: SupportedProviders<any> | Web3ContextInitOptions | string,
+	) {
 		super(
 			typeof providerOrContext === 'object' &&
 				(providerOrContext as Web3ContextInitOptions).provider

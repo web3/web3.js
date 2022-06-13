@@ -77,7 +77,6 @@ export const numberToHexValidData: [Numbers, HexString][] = [
 	[256, '0x100'],
 	[54, '0x36'],
 	[BigInt(12), '0xc'],
-	[12n, '0xc'],
 	['768', '0x300'],
 	['-768', '-0x300'],
 	[-255, '-0xff'],
@@ -136,7 +135,6 @@ export const utf8ToHexValidData: [string, HexString][] = [
 export const utf8ToHexInvalidData: [any, string][] = [
 	[12, 'value "12" at "/0" must pass "string" validation'],
 	[BigInt(12), 'value "12" at "/0" must pass "string" validation'],
-	[12n, 'value "12" at "/0" must pass "string" validation'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
 	[null, 'value at "/0" must pass "string" validation'],
@@ -197,7 +195,6 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 	[255, ['0xff', 'uint256']],
 	[256, ['0x100', 'uint256']],
 	[BigInt(12), ['0xc', 'bigint']],
-	[12n, ['0xc', 'bigint']],
 	['768', ['0x373638', 'string']],
 	['-768', ['0x2d373638', 'string']],
 	[-255, ['-0xff', 'int256']],
@@ -216,7 +213,6 @@ const conversionBaseData: [[Numbers, EtherUnits], string][] = [
 	[[123, 'wei'], '123'],
 	[['123', 'wei'], '123'],
 	[[BigInt(123), 'wei'], '123'],
-	[[123n, 'wei'], '123'],
 	[['1000', 'wei'], '1000'],
 	[['1', 'kwei'], '0.001'],
 	[['1', 'mwei'], '0.000001'],

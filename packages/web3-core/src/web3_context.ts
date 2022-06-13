@@ -233,7 +233,7 @@ export class Web3Context<
 		return this.requestManager.provider;
 	}
 
-	public set provider(provider: SupportedProviders<API>) {
+	public set provider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 
@@ -241,7 +241,7 @@ export class Web3Context<
 		return this.requestManager.provider;
 	}
 
-	public set currentProvider(provider: SupportedProviders<API>) {
+	public set currentProvider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 

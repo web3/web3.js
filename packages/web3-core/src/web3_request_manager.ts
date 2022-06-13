@@ -64,7 +64,7 @@ export class Web3RequestManager<
 }> {
 	private _provider!: SupportedProviders<API>;
 
-	public constructor(provider?: SupportedProviders<API>, net?: Socket) {
+	public constructor(provider?: SupportedProviders<API> | string, net?: Socket) {
 		super();
 
 		if (provider) {
