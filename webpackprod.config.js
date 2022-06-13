@@ -7,7 +7,7 @@ const config = {
 	entry: path.resolve(__dirname, 'packages/web3/src/index.ts'),
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'web3.js',
+		filename: 'web3.min.js',
 		library: 'Web3',
 		libraryExport: 'default',
 		libraryTarget: 'umd',
