@@ -21,6 +21,7 @@ import {
 	ERR_TX_INVALID_CALL,
 	ERR_TX_INVALID_CHAIN_INFO,
 	ERR_TX_INVALID_SENDER,
+	ERR_TX_LOCAL_WALLET_NOT_AVAILABLE,
 	ERR_TX_MISSING_CHAIN_INFO,
 	ERR_TX_MISSING_CUSTOM_CHAIN,
 	ERR_TX_MISSING_CUSTOM_CHAIN_ID,
@@ -300,4 +301,15 @@ export class TransactionReceiptMissingBlockNumberError extends InvalidValueError
 
 export class SignatureError extends InvalidValueError {
 	public code = ERR_SIGNATURE_FAILED;
+}
+
+export class LocalWalletNotAvailableError extends InvalidValueError {
+	public code = ERR_TX_LOCAL_WALLET_NOT_AVAILABLE;
+
+	public constructor() {
+		super(
+			'LocalWalletNotAvailableError',
+			`Attempted to index account in local wallet, but no wallet is available`,
+		);
+	}
 }
