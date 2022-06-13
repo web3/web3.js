@@ -20,7 +20,7 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	EthExecutionAPI,
 	FormatType,
-	PromiEvent,
+	Web3PromiEvent,
 } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
@@ -91,7 +91,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(
 		tx?: NonPayableTxOptions,
-	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
+	): Web3PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: NonPayableCallOptions,
 		returnFormat?: ReturnFormat,
@@ -104,7 +104,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 	send(
 		tx?: PayableTxOptions,
-	): PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
+	): Web3PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
 	estimateGas<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		options?: PayableCallOptions,
 		returnFormat?: ReturnFormat,

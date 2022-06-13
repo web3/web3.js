@@ -89,7 +89,7 @@ export class Web3RequestManager<
 		return availableProviders;
 	}
 
-	public setProvider(provider: SupportedProviders<API>, net?: Socket) {
+	public setProvider(provider: SupportedProviders<API> | string, net?: Socket) {
 		let newProvider!: Web3BaseProvider<API>;
 
 		// autodetect provider

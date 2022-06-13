@@ -27,7 +27,7 @@ export abstract class Web3Error extends Error {
 		this.name = this.constructor.name;
 
 		if (typeof Error.captureStackTrace === 'function') {
-			Error.captureStackTrace(this, new.target.constructor);
+			Error.captureStackTrace(new.target.constructor);
 		} else {
 			this.stack = new Error().stack;
 		}
@@ -36,7 +36,7 @@ export abstract class Web3Error extends Error {
 	public static convertToString(value: unknown, unquotValue = false) {
 		// Using "null" value intentionally for validation
 		// eslint-disable-next-line no-null/no-null
-		if (value === null || value === undefined ) return 'undefined';
+		if (value === null || value === undefined) return 'undefined';
 
 		const result = JSON.stringify(
 			value,

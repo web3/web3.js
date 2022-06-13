@@ -17,9 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line max-classes-per-file
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
-import Eth from 'web3-eth';
-import { Iban } from 'web3-eth-iban';
+import Web3Eth from 'web3-eth';
+import Web3Iban from 'web3-eth-iban';
+import Web3Net from 'web3-net';
 import { ENS, registryAddresses } from 'web3-eth-ens';
+import Web3Personal from 'web3-eth-personal';
 import {
 	ContractAbi,
 	encodeFunctionCall,
@@ -44,12 +46,25 @@ import {
 	decrypt,
 	Wallet,
 } from 'web3-eth-accounts';
+import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
-	public eth: Eth & {
-		Iban: typeof Iban;
+	public static utils = utils;
+	public static modules = {
+		Web3Eth,
+		Web3Iban,
+		Web3Net,
+		Web3Ens: ENS,
+		Web3Personal,
+	};
+
+	public eth: Web3Eth & {
+		Iban: typeof Web3Iban;
 		ens: ENS;
+		utils: typeof utils;
+		net: Web3Net;
+		personal: Web3Personal;
 		Contract: typeof Contract & {
 			setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
 		};
@@ -76,7 +91,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 	};
 
-	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
+	public constructor(provider: SupportedProviders<EthExecutionAPI> | string) {
 		const accountProvider = {
 			create,
 			privateKeyToAccount,
@@ -116,7 +131,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			}
 		}
 
-		const eth = self.use(Eth);
+		const eth = self.use(Web3Eth);
 
 		// Eth Module
 		this.eth = Object.assign(eth, {
@@ -124,7 +139,12 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 
 			// Iban helpers
-			Iban,
+			Iban: Web3Iban,
+
+			net: self.use(Web3Net),
+			personal: self.use(Web3Personal),
+
+			utils,
 
 			// Contract helper and module
 			Contract: ContractBuilder,

@@ -97,11 +97,11 @@ describe('contract', () => {
 		it('should emit the "transactionHash" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const Web3PromiEvent = contract.deploy(deployOptions).send(sendOptions);
 
-			promiEvent.on('transactionHash', handler);
+			Web3PromiEvent.on('transactionHash', handler);
 			// Deploy the contract
-			await promiEvent;
+			await Web3PromiEvent;
 
 			expect(handler).toHaveBeenCalled();
 		});
@@ -109,11 +109,11 @@ describe('contract', () => {
 		it('should emit the "sending" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const Web3PromiEvent = contract.deploy(deployOptions).send(sendOptions);
 
-			promiEvent.on('sending', handler);
+			Web3PromiEvent.on('sending', handler);
 			// Deploy the contract
-			await promiEvent;
+			await Web3PromiEvent;
 
 			expect(handler).toHaveBeenCalled();
 		});
@@ -121,11 +121,11 @@ describe('contract', () => {
 		it('should emit the "sent" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const Web3PromiEvent = contract.deploy(deployOptions).send(sendOptions);
 
-			promiEvent.on('sent', handler);
+			Web3PromiEvent.on('sent', handler);
 			// Deploy the contract
-			await promiEvent;
+			await Web3PromiEvent;
 
 			expect(handler).toHaveBeenCalled();
 		});
@@ -133,11 +133,11 @@ describe('contract', () => {
 		it('should emit the "receipt" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const Web3PromiEvent = contract.deploy(deployOptions).send(sendOptions);
 
-			promiEvent.on('receipt', handler);
+			Web3PromiEvent.on('receipt', handler);
 			// Deploy the contract
-			await promiEvent;
+			await Web3PromiEvent;
 
 			expect(handler).toHaveBeenCalled();
 		});

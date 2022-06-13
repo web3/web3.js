@@ -54,12 +54,12 @@ describe('sendTransaction', () => {
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				const promiEvent = sendSignedTransaction(
+				const Web3PromiEvent = sendSignedTransaction(
 					web3Context,
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				promiEvent.on('sending', signedTransaction => {
+				Web3PromiEvent.on('sending', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
 					done(undefined);
 				});
@@ -92,12 +92,12 @@ describe('sendTransaction', () => {
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				const promiEvent = sendSignedTransaction(
+				const Web3PromiEvent = sendSignedTransaction(
 					web3Context,
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				promiEvent.on('sent', signedTransaction => {
+				Web3PromiEvent.on('sent', signedTransaction => {
 					expect(signedTransaction).toStrictEqual(inputSignedTransactionFormatted);
 					done(undefined);
 				});
@@ -113,12 +113,12 @@ describe('sendTransaction', () => {
 					expectedTransactionHash,
 				);
 
-				const promiEvent = sendSignedTransaction(
+				const Web3PromiEvent = sendSignedTransaction(
 					web3Context,
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				promiEvent.on('transactionHash', transactionHash => {
+				Web3PromiEvent.on('transactionHash', transactionHash => {
 					expect(transactionHash).toStrictEqual(expectedTransactionHash);
 					done(undefined);
 				});
@@ -182,12 +182,12 @@ describe('sendTransaction', () => {
 					expectedReceiptInfo,
 				);
 
-				const promiEvent = sendSignedTransaction(
+				const Web3PromiEvent = sendSignedTransaction(
 					web3Context,
 					inputSignedTransaction,
 					DEFAULT_RETURN_FORMAT,
 				);
-				promiEvent.on('receipt', receiptInfo => {
+				Web3PromiEvent.on('receipt', receiptInfo => {
 					expect(receiptInfo).toStrictEqual(formattedReceiptInfo);
 					done(undefined);
 				});
@@ -196,7 +196,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should resolve promiEvent with expectedReceiptInfo\n ${testMessage}`,
+		`should resolve Web3PromiEvent with expectedReceiptInfo\n ${testMessage}`,
 		async (_, inputSignedTransaction) => {
 			const formattedReceiptInfo = format(
 				receiptInfoSchema,
@@ -237,13 +237,13 @@ describe('sendTransaction', () => {
 				expectedReceiptInfo,
 			);
 
-			const promiEvent = sendSignedTransaction(
+			const Web3PromiEvent = sendSignedTransaction(
 				web3Context,
 				inputTransaction,
 				DEFAULT_RETURN_FORMAT,
 			);
-			promiEvent.on('confirmation', () => undefined);
-			await promiEvent;
+			Web3PromiEvent.on('confirmation', () => undefined);
+			await Web3PromiEvent;
 
 			expect(rpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
 				web3Context.requestManager,
@@ -251,7 +251,7 @@ describe('sendTransaction', () => {
 			);
 			expect(watchTransactionForConfirmationsSpy).toHaveBeenCalledWith(
 				web3Context,
-				promiEvent,
+				Web3PromiEvent,
 				formattedReceiptInfo,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,

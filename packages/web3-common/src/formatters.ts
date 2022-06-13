@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { FormatterError } from 'web3-errors';
-import { Iban } from 'web3-eth-iban';
+import { Web3Iban } from 'web3-eth-iban';
 import {
 	BlockTags,
 	Filter,
@@ -121,8 +121,8 @@ export const inputDefaultBlockNumberFormatter = (
 };
 
 export const inputAddressFormatter = (address: string): string | never => {
-	if (Iban.isValid(address) && Iban.isDirect(address)) {
-		const iban = new Iban(address);
+	if (Web3Iban.isValid(address) && Web3Iban.isDirect(address)) {
+		const iban = new Web3Iban(address);
 
 		return iban.toAddress().toLowerCase();
 	}

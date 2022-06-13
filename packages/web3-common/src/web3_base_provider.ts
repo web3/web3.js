@@ -51,6 +51,27 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	public abstract getStatus(): Web3BaseProviderStatus;
 	public abstract supportsSubscriptions(): boolean;
 
+	/**
+	 * @deprecated Please use `.request` instead.
+	 *
+	 * @param payload - Request Payload
+	 * @param cb - Callback
+	 */
+	public send<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
+		payload: Web3APIPayload<API, Method>,
+		// Used "null" value to match the legacy version
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		cb: (err?: Error | null, response?: JsonRpcResponse<ResponseType>) => void,
+	) {
+		this.request(payload)
+			.then(response => {
+				cb(undefined, response);
+			})
+			.catch((err: Error) => {
+				cb(err);
+			});
+	}
+
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 	public abstract request<
 		Method extends Web3APIMethod<API>,
