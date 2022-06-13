@@ -23,6 +23,10 @@ const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufix
 
 /**
  * Decodes ABI-encoded log data and indexed topic data
+ *
+ * @param inputs
+ * @param data
+ * @param topics
  */
 export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	inputs: Array<AbiParameter>,
@@ -62,7 +66,7 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	let nonIndexedCounter = 0;
 
 	for (const [i, res] of inputs.entries()) {
-		returnValue[i] = res.type === 'string' ? '' : null;
+		returnValue[i] = res.type === 'string' ? '' : undefined;
 
 		if (indexedInputs[i]) {
 			returnValue[i] = decodedIndexedInputs[indexedCounter];

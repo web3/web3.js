@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { HexString, HexString32Bytes } from 'web3-utils';
 
-export type JsonRpcId = string | number | null;
+export type JsonRpcId = string | number | undefined;
 export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
 export type JsonRpcIdentifier = string & ('2.0' | '1.0');
 
@@ -146,11 +146,11 @@ export interface LogsInput {
 export interface LogsOutput {
 	readonly id?: string;
 	readonly removed: boolean;
-	readonly logIndex: bigint | number | null;
+	readonly logIndex?: bigint | number;
 	readonly transactionIndex?: bigint | number;
-	readonly transactionHash: HexString32Bytes | null;
-	readonly blockHash: HexString32Bytes | null;
-	readonly blockNumber: bigint | number | null;
+	readonly transactionHash?: HexString32Bytes;
+	readonly blockHash?: HexString32Bytes;
+	readonly blockNumber?: bigint | number;
 	readonly address: string;
 	readonly topics: HexString[];
 	readonly data: HexString;
@@ -276,6 +276,6 @@ export type Receipt = Record<string, unknown>;
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
 export type Web3BaseProviderCallback<T = JsonRpcResult> = (
-	error: Error | null,
+	error: Error | undefined,
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;

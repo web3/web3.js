@@ -41,7 +41,7 @@ export abstract class Web3Subscription<
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
 	private _id?: HexString;
-	private _messageListener?: (e: Error | null, data?: JsonRpcNotification<Log>) => void;
+	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
@@ -66,7 +66,7 @@ export abstract class Web3Subscription<
 		});
 
 		const messageListener = (
-			err: Error | null,
+			err: Error | undefined,
 			data?: JsonRpcSubscriptionResult | JsonRpcNotification<Log>,
 		) => {
 			if (data && jsonRpc.isResponseWithNotification(data)) {

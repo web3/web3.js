@@ -142,7 +142,7 @@ export class Contract<Abi extends ContractAbi>
 	public static handleRevert?: boolean;
 
 	private _jsonInterface!: Abi;
-	private _address?: Address | null;
+	private _address?: Address;
 	private _functions: Record<
 		string,
 		{
@@ -189,8 +189,8 @@ export class Contract<Abi extends ContractAbi>
 		this.options = {
 			address: undefined,
 			jsonInterface: [],
-			gas: options?.gas ?? options?.gasLimit ?? null,
-			gasPrice: options?.gasPrice ?? null,
+			gas: options?.gas ?? options?.gasLimit,
+			gasPrice: options?.gasPrice,
 			gasLimit: options?.gasLimit,
 			from: options?.from,
 			data: options?.data,
@@ -436,7 +436,7 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	private _parseAndSetAddress(value?: Address) {
-		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : null;
+		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : value;
 	}
 
 	private _parseAndSetJsonInterface(abis: ContractAbi) {
@@ -626,7 +626,7 @@ export class Contract<Abi extends ContractAbi>
 				const newContract = this.clone();
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-				newContract.options.address = receipt.contractAddress as HexString;
+				newContract.options.address = receipt.contractAddress;
 
 				return newContract;
 			},

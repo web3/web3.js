@@ -207,6 +207,8 @@ export const inValidFunctionsSignatures: { input: any; output: string }[] = [
 	{ input: 345, output: 'Invalid parameter value in encodeFunctionSignature' },
 	{ input: {}, output: 'Invalid parameter value in encodeFunctionSignature' },
 	{ input: ['mystring'], output: 'Invalid parameter value in encodeFunctionSignature' },
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	{ input: null, output: 'Invalid parameter value in encodeFunctionSignature' },
 	{ input: undefined, output: 'Invalid parameter value in encodeFunctionSignature' },
 ];
@@ -238,6 +240,8 @@ export const inValidFunctionsCalls: { input: any; output: string }[] = [
 	{ input: 345, output: 'Invalid parameter value in encodeFunctionCall' },
 	{ input: {}, output: 'Invalid parameter value in encodeFunctionCall' },
 	{ input: ['mystring'], output: 'Invalid parameter value in encodeFunctionCall' },
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	{ input: null, output: 'Invalid parameter value in encodeFunctionCall' },
 	{ input: undefined, output: 'Invalid parameter value in encodeFunctionCall' },
 ];
@@ -270,6 +274,8 @@ export const invalidEventsSignatures: { input: any; output: string }[] = [
 	{ input: 345, output: 'Invalid parameter value in encodeEventSignature' },
 	{ input: {}, output: 'Invalid parameter value in encodeEventSignature' },
 	{ input: ['mystring'], output: 'Invalid parameter value in encodeEventSignature' },
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
 	{ input: null, output: 'Invalid parameter value in encodeEventSignature' },
 	{ input: undefined, output: 'Invalid parameter value in encodeEventSignature' },
 ];
@@ -556,6 +562,8 @@ export const inValidEncodeParametersData: {
 		output: 'Parameter encoding error',
 	},
 	{
+		// Using "null" value intentionally for validation
+		// eslint-disable-next-line no-null/no-null
 		input: [null, ['2345675643', 'Hello!%']],
 		output: 'Parameter encoding error',
 	},
@@ -634,6 +642,8 @@ export const inValidDecodeParametersData: {
 		output: 'Parameter decoding error',
 	},
 	{
+		// Using "null" value intentionally for validation
+		// eslint-disable-next-line no-null/no-null
 		input: [null, '0x000000000010'],
 		output: 'Parameter decoding error',
 	},

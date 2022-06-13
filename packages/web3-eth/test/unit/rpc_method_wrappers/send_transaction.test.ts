@@ -15,8 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-
 import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { isNullish } from 'web3-validator';
+
 import * as rpcMethods from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sendTransaction } from '../../../src/rpc_method_wrappers';
@@ -64,9 +65,9 @@ describe('sendTransaction', () => {
 
 			if (
 				sendTransactionOptions?.ignoreGasPricing ||
-				inputTransaction.gasPrice !== undefined ||
-				(inputTransaction.maxPriorityFeePerGas !== undefined &&
-					inputTransaction.maxFeePerGas !== undefined)
+				!isNullish(inputTransaction.gasPrice) ||
+				(!isNullish(inputTransaction.maxPriorityFeePerGas) &&
+					!isNullish(inputTransaction.maxFeePerGas))
 			)
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(getTransactionGasPricingSpy).not.toHaveBeenCalled();
@@ -94,7 +95,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sending', transaction => {
 					expect(transaction).toStrictEqual(formattedTransaction);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -137,7 +138,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('sent', transaction => {
 					expect(transaction).toStrictEqual(formattedTransaction);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -162,7 +163,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('transactionHash', transactionHash => {
 					expect(transactionHash).toStrictEqual(expectedTransactionHash);
-					done(null);
+					done(undefined);
 				});
 			});
 		},
@@ -200,7 +201,7 @@ describe('sendTransaction', () => {
 				expectedTransactionHash,
 			);
 			(rpcMethods.getTransactionReceipt as jest.Mock)
-				.mockResolvedValueOnce(null)
+				.mockResolvedValueOnce(undefined)
 				.mockResolvedValue(expectedReceiptInfo);
 
 			await sendTransaction(
@@ -242,7 +243,7 @@ describe('sendTransaction', () => {
 				);
 				promiEvent.on('receipt', receiptInfo => {
 					expect(receiptInfo).toStrictEqual(formattedReceiptInfo);
-					done(null);
+					done(undefined);
 				});
 			});
 		},

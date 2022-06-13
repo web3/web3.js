@@ -21,6 +21,8 @@ import { isHexStrict } from './string';
 
 /**
  * checks input if typeof data is valid buffer input
+ *
+ * @param data
  */
 export const isBuffer = (data: ValidInputTypes) => Buffer.isBuffer(data);
 
