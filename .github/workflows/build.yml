@@ -11,13 +11,13 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  build: 
+  build:
     name: Build Packages
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3    
+    steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: 14
           cache: yarn
       - run: yarn
@@ -26,10 +26,10 @@ jobs:
     name: lint
     needs: build
     runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3    
+    steps:
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: 14
           cache: yarn
       - run: yarn
@@ -43,7 +43,7 @@ jobs:
       matrix:
         node: [ 14, 16 ]
     steps:
-      - uses: actions/checkout@v3    
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
@@ -62,7 +62,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 14, 16 ]
-        backend: ['geth', 'ganache']
+        backend: ['geth', 'ganache', 'ipc']
         mode: ['http', 'ws']
     steps:
       - uses: actions/checkout@v3

@@ -13,9 +13,9 @@ BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 ENGINE=${ORIGARGS[2]}
 
-SUPPORTED_BACKENDS=("geth" "ganache")
-SUPPORTED_MODE=("http" "ws")
-SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
+SUPPORTED_BACKENDS=("geth" "ganache" "ipc")
+SUPPORTED_MODE=("http" "ws" "ipc")
+SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "ipc" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
 	helpFunction
@@ -39,8 +39,11 @@ TEST_COMMAND=""
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	TEST_COMMAND="test:integration"
+else if [[ $ENGINE == "ipc" ]]; then
+    export WEB3_SYSTEM_TEST_PROVIDER=$(pwd)/scripts/ipc
+    TEST_COMMAND="test:integration:ipc"
 else
 	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
-fi
+fi fi
 
 yarn "$BACKEND:start:background" && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
