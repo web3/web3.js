@@ -27,7 +27,7 @@ import {
 	Web3EventEmitter,
 	ReceiptInfo,
 } from 'web3-common';
-import { Web3Context, Web3ContextObject } from 'web3-core';
+import { Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	call,
 	estimateGas,
@@ -162,7 +162,7 @@ export class Contract<Abi extends ContractAbi>
 		address?: Address,
 		options?: ContractInitOptions,
 		context?: Partial<
-			Web3ContextObject<
+			Web3ContextInitOptions<
 				EthExecutionAPI,
 				{
 					logs: typeof LogsSubscription;
