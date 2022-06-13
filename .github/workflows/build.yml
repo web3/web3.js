@@ -62,7 +62,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 14, 16 ]
-        backend: ['geth', 'ganache', 'ipc']
+        backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
       - uses: actions/checkout@v3
@@ -82,7 +82,7 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 14, 16 ]
-        browser: ['electron', 'chrome', 'firefox']
+        browser: ['electron', 'chrome', 'firefox','ipc']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

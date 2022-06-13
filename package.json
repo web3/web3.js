@@ -56,7 +56,7 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
-		"test:e2e:ipc": "./scripts/test-runner.sh ipc ipc ipc",
+		"test:e2e:ganache:ws:ipc": "./scripts/test-runner.sh ipc ipc ipc",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
