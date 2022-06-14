@@ -25,15 +25,16 @@ jobs:
           cache: yarn
       - run: yarn
       - run: ./scripts/download_geth.sh
-      - run: tar -czvf /tmp/web3.js.tar.gz --exclude="./.git" ./
-      - run: tar -czvf /tmp/cache.js.tar.gz /home/runner/.cache
+      - run: tar -czvf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czvf /tmp/cache-${{ matrix.node }}.tar.gz /home/runner/.cache/Cypress
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
-          path: |
-              /tmp/web3.js.tar.gz
-              /tmp/cache.js.tar.gz
-
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.cache.tar.gz
+          path: /tmp/cache-${{ matrix.node }}.tar.gz
   lint:
     name: lint
     needs: build
@@ -41,10 +42,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
+          name: web3-14.js.tar.gz
           path: /tmp
-      - run: tar -xf /tmp/web3.js.tar.gz -C ./
-      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
+      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
       - run: yarn lint
 
   unit:
@@ -59,8 +59,7 @@ jobs:
         with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      - run: tar -xf /tmp/web3.js.tar.gz -C ./
-      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:unit
 
   integration:
@@ -81,8 +80,7 @@ jobs:
         with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      - run: tar -xf /tmp/web3.js.tar.gz -C ./
-      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
@@ -100,7 +98,11 @@ jobs:
         with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      - run: tar -xf /tmp/web3.js.tar.gz -C ./
-      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - uses: actions/download-artifact@v3
+        with:
+            name: cache-${{ matrix.node }}.tar.gz
+            path: /tmp
+      - run: tar -xf /tmp/cache-${{ matrix.node }}.tar.gz -C /home/runner/.cache/Cypress
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
