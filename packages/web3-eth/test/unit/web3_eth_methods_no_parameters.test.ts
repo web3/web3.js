@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+/* eslint-disable import/no-named-as-default */
 import Web3Eth from '../../src/index';
 import * as rpcMethods from '../../src/rpc_methods';
 
