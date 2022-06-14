@@ -79,6 +79,23 @@ jobs:
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
+  e2e-ipc:
+      name: End-to-End-Ipc
+      needs: build
+      runs-on: ubuntu-latest
+      strategy:
+          fail-fast: false
+          matrix:
+              node: [ 14, 16 ]
+      steps:
+          - uses: actions/download-artifact@v3
+            with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+          - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          - run: yarn test:e2e:ipc
+            shell: bash
+
   e2e:
     name: End-to-End
     needs: build
@@ -87,22 +104,13 @@ jobs:
       fail-fast: false
       matrix:
         node: [ 14, 16 ]
-        browser: ['electron', 'chrome', 'firefox','ipc']
+        browser: ['electron', 'chrome', 'firefox']
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
             node-version: ${{ matrix.node }}
             cache: yarn
-#      - uses: actions/download-artifact@v3
-#        with:
-#            name: web3-${{ matrix.node }}.js.tar.gz
-#            path: /tmp
-#      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#      - run: ls ./node_modules/.bin
-#      - run: rm ./node_modules/.bin/cypress
-#      - run: ln -s ./node_modules/cypress/bin/cypress ./node_modules/.bin/cypress
-#      - run: ls ./node_modules/.bin
       - run: yarn
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
