@@ -74,10 +74,15 @@ function findImports(path) {
 		settings: { outputSelection: { '*': { '*': ['abi', 'evm.bytecode.object'] } } },
 	};
 
-	// Compile all contracts
-	const output = JSON.parse(
+	const compileResult = JSON.parse(
 		compile(JSON.stringify(compileInput), { import: findImports }),
-	).contracts;
+	);
+	if (compileResult.errors) {
+		console.error(compileResult.errors);
+		console.log('Error while compiling');
+	}
+	// Compile all contracts
+	const output = compileResult.contracts;
 
 	// Re-Create build folder for output files from each contract
 	mkdirSync(buildPath);
