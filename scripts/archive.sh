@@ -8,7 +8,7 @@ pack() {
 }
 
 unpack() {
-    tar -xf ./web3.js.tar.gz -C ./
+    tar -xf /tmp/web3.js.tar.gz -C ./
 }
 
 case $1 in

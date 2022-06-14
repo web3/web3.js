@@ -41,6 +41,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: web3.js-artifact
+          path: /tmp/web3.js.tar.gz
       - run: ./scripts/archive.sh unpack
       - run: yarn lint
 
@@ -60,6 +61,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: web3.js-artifact
+          path: /tmp/web3.js.tar.gz
       - run: ./scripts/archive.sh unpack
       - run: yarn test:unit
 
@@ -85,6 +87,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
             name: web3.js-artifact
+            path: /tmp/web3.js.tar.gz
       - run: ./scripts/archive.sh unpack
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
@@ -107,6 +110,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
             name: web3.js-artifact
+            path: /tmp/web3.js.tar.gz
       - run: ./scripts/archive.sh unpack
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
