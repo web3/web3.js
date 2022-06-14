@@ -545,6 +545,15 @@ var BNwrapped = function (value) {
         return new BN(value);
     } 
 };
+BNwrapped.BN = BNwrapped;
+BNwrapped.wordSize = 26;
+BNwrapped.isBN = BN.isBN;
+BNwrapped.max = BN.max;
+BNwrapped.min = BN.min;
+BNwrapped.mont = BN.mont;
+BNwrapped.red = BN.red;
+BNwrapped._prime = BN._prime;
+Object.setPrototypeOf(BNwrapped.prototype, BN.prototype);
 
 module.exports = {
     BN: BNwrapped,
