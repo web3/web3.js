@@ -48,8 +48,10 @@ import {
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
+import packageJson from '../package.json';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
+	public static version = packageJson.version;
 	public static utils = utils;
 	public static modules = {
 		Web3Eth,
