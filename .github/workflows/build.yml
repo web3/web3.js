@@ -12,6 +12,9 @@ on:
 
 jobs:
   build:
+    strategy:
+       matrix:
+          node: [ 14, 16 ]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
@@ -22,27 +25,26 @@ jobs:
           cache: yarn
       - run: yarn
       - run: ./scripts/download_geth.sh
-      - run: ./scripts/archive.sh pack
+      - run: tar -czvf /tmp/web3.js.tar.gz --exclude="./.git" ./
+      - run: tar -czvf /tmp/cache.js.tar.gz /home/runner/.cache
       - uses: actions/upload-artifact@v3
         with:
-          name: web3.js.tar.gz
-          path: /tmp/web3.js.tar.gz
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: |
+              /tmp/web3.js.tar.gz
+              /tmp/cache.js.tar.gz
 
   lint:
     name: lint
     needs: build
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: 14
-#          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-          name: web3.js.tar.gz
+          name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
+      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
       - run: yarn lint
 
   unit:
@@ -53,16 +55,12 @@ jobs:
       matrix:
         node: [ 14, 16 ]
     steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: ${{ matrix.node }}
-#          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-          name: web3.js.tar.gz
-          path: /tmp
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
+      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
       - run: yarn test:unit
 
   integration:
@@ -79,16 +77,12 @@ jobs:
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: ${{ matrix.node }}
-#          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-            name: web3.js.tar.gz
+            name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
+      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
@@ -102,16 +96,11 @@ jobs:
         node: [ 14, 16 ]
         browser: ['electron', 'chrome', 'firefox','ipc']
     steps:
-#      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-            name: web3.js.tar.gz
+            name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
-#      - run: yarn
+      - run: tar -xf /tmp/cache.js.tar.gz -C /home/runner/.cache
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
