@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as utils from 'web3-utils';
-import { Web3Iban } from 'web3-eth-iban';
+import { Iban } from 'web3-eth-iban';
 import {
 	inputAddressFormatter,
 	inputBlockNumberFormatter,
@@ -54,8 +54,8 @@ describe('formatters', () => {
 		jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
 		jest.spyOn(utils, 'isAddress').mockReturnValue(true);
 		jest.spyOn(utils, 'sha3Raw').mockReturnValue(sha3Result);
-		jest.spyOn(Web3Iban, 'isValid').mockImplementation(() => false);
-		jest.spyOn(Web3Iban, 'isDirect').mockImplementation(() => false);
+		jest.spyOn(Iban, 'isValid').mockImplementation(() => false);
+		jest.spyOn(Iban, 'isDirect').mockImplementation(() => false);
 	});
 
 	describe('outputProofFormatter', () => {
@@ -139,13 +139,13 @@ describe('formatters', () => {
 	describe('inputAddressFormatter', () => {
 		it('should return lowercase address if given value is iban', () => {
 			const address = '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8';
-			Web3Iban.prototype.toAddress = jest.fn(() => address);
+			Iban.prototype.toAddress = jest.fn(() => address);
 
-			jest.spyOn(Web3Iban, 'isValid').mockImplementation(() => true);
-			jest.spyOn(Web3Iban, 'isDirect').mockImplementation(() => true);
+			jest.spyOn(Iban, 'isValid').mockImplementation(() => true);
+			jest.spyOn(Iban, 'isDirect').mockImplementation(() => true);
 
 			expect(inputAddressFormatter('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS')).toBe(address);
-			expect(Web3Iban.prototype.toAddress).toHaveBeenCalled();
+			expect(Iban.prototype.toAddress).toHaveBeenCalled();
 		});
 
 		it('should return lower case value if valid address', () => {

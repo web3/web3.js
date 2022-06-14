@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Iban } from './web3_iban';
+import { Iban } from './iban';
 
-export * from './web3_iban';
+export * from './iban';
 export * from './types';
 
-export default Web3Iban;
+export default Iban;

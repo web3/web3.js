@@ -19,7 +19,7 @@ import { toChecksumAddress, isAddress, leftPad, hexToNumber, HexString } from 'w
 import { InvalidAddressError } from 'web3-errors';
 import { IbanOptions } from './types';
 
-export class Web3Iban {
+export class Iban {
 	private readonly _iban: string;
 
 	public static isDirect(iban: string): boolean {
@@ -36,7 +36,7 @@ export class Web3Iban {
 	 * @param iban
 	 */
 	public constructor(iban: string) {
-		if (Web3Iban.isIndirect(iban) || Web3Iban.isDirect(iban)) {
+		if (Iban.isIndirect(iban) || Iban.isDirect(iban)) {
 			this._iban = iban;
 		} else {
 			throw new Error('Invalid IBAN was provided');
@@ -100,13 +100,13 @@ export class Web3Iban {
 
 	private static readonly _isValid = (iban: string): boolean =>
 		/^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(iban) &&
-		Web3Iban._mod9710(Web3Iban._iso13616Prepare(iban)) === 1;
+		Iban._mod9710(Iban._iso13616Prepare(iban)) === 1;
 
 	/**
 	 * check if iban number is direct
 	 */
 	public isDirect(): boolean {
-		return Web3Iban.isDirect(this._iban);
+		return Iban.isDirect(this._iban);
 	}
 
 	/**
@@ -116,7 +116,7 @@ export class Web3Iban {
 		if (this.isDirect()) {
 			// check if Iban can be converted to an address
 			const base36 = this._iban.slice(4);
-			const parsedBigInt = Web3Iban._parseInt(base36, 36); // convert the base36 string to a bigint
+			const parsedBigInt = Iban._parseInt(base36, 36); // convert the base36 string to a bigint
 			const paddedBigInt = leftPad(parsedBigInt, 40);
 			return toChecksumAddress(paddedBigInt);
 		}
@@ -128,7 +128,7 @@ export class Web3Iban {
 	 * @param iban
 	 */
 	public static toAddress = (iban: string): HexString => {
-		const ibanObject = new Web3Iban(iban);
+		const ibanObject = new Iban(iban);
 		return ibanObject.toAddress();
 	};
 
@@ -139,13 +139,13 @@ export class Web3Iban {
 	 *
 	 * @param bban
 	 */
-	public static fromBban(bban: string): Web3Iban {
+	public static fromBban(bban: string): Iban {
 		const countryCode = 'XE';
 
 		const remainder = this._mod9710(this._iso13616Prepare(`${countryCode}00${bban}`));
 		const checkDigit = `0${(98 - remainder).toString()}`.slice(-2);
 
-		return new Web3Iban(`${countryCode}${checkDigit}${bban}`);
+		return new Iban(`${countryCode}${checkDigit}${bban}`);
 	}
 
 	/**
@@ -153,7 +153,7 @@ export class Web3Iban {
 	 *
 	 * @param address
 	 */
-	public static fromAddress(address: HexString): Web3Iban {
+	public static fromAddress(address: HexString): Iban {
 		if (!isAddress(address)) {
 			throw new InvalidAddressError(address);
 		}
@@ -161,7 +161,7 @@ export class Web3Iban {
 		const num = BigInt(hexToNumber(address));
 		const base36 = num.toString(36);
 		const padded = leftPad(base36, 15);
-		return Web3Iban.fromBban(padded.toUpperCase());
+		return Iban.fromBban(padded.toUpperCase());
 	}
 
 	/**
@@ -170,7 +170,7 @@ export class Web3Iban {
 	 * @param address
 	 */
 	public static toIban(address: HexString): string {
-		return Web3Iban.fromAddress(address).toString();
+		return Iban.fromAddress(address).toString();
 	}
 
 	/**
@@ -178,8 +178,8 @@ export class Web3Iban {
 	 *
 	 * @param options
 	 */
-	public static createIndirect(options: IbanOptions): Web3Iban {
-		return Web3Iban.fromBban(`ETH${options.institution}${options.identifier}`);
+	public static createIndirect(options: IbanOptions): Iban {
+		return Iban.fromBban(`ETH${options.institution}${options.identifier}`);
 	}
 
 	/**
@@ -207,7 +207,7 @@ export class Web3Iban {
 	 * Should be called to check if iban is correct
 	 */
 	public isValid(): boolean {
-		return Web3Iban._isValid(this._iban);
+		return Iban._isValid(this._iban);
 	}
 
 	/**
@@ -216,7 +216,7 @@ export class Web3Iban {
 	 * @param iban
 	 */
 	public static isValid(iban: string) {
-		return Web3Iban._isValid(iban);
+		return Iban._isValid(iban);
 	}
 
 	public toString(): string {
@@ -227,6 +227,6 @@ export class Web3Iban {
 	 * check if iban number if indirect
 	 */
 	public isIndirect(): boolean {
-		return Web3Iban.isIndirect(this._iban);
+		return Iban.isIndirect(this._iban);
 	}
 }

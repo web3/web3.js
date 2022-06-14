@@ -21,7 +21,7 @@ import { Address, HexString } from 'web3-utils';
 import { EthPersonalAPI } from './eth_personal_api';
 import * as rpcWrappers from './rpc_method_wrappers';
 
-export class EthPersonal extends Web3Context<EthPersonalAPI> {
+export class Personal extends Web3Context<EthPersonalAPI> {
 	public async getAccounts() {
 		return rpcWrappers.getAccounts(this.requestManager);
 	}

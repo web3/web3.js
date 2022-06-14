@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Iban } from '../../src/web3_iban';
+import { Iban } from '../../src/iban';
 import {
 	validIbanToAddressData,
 	validFromBbanData,
@@ -33,7 +33,7 @@ describe('iban', () => {
 	describe('create', () => {
 		describe('valid cases', () => {
 			it.each(validIbanToAddressData)('%s', () => {
-				const iban = new Web3Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+				const iban = new Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
 				expect(typeof iban).toBe('object');
 			});
 		});
@@ -42,13 +42,13 @@ describe('iban', () => {
 	describe('toAddress', () => {
 		describe('valid cases', () => {
 			it.each(validIbanToAddressData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(iban.toAddress()).toBe(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(invalidIbanToAddressData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(() => iban.toAddress()).toThrow(output);
 			});
 		});
@@ -57,12 +57,12 @@ describe('iban', () => {
 	describe('toAddress static method', () => {
 		describe('valid cases', () => {
 			it.each(validIbanToAddressData)('%s', (input, output) => {
-				expect(Web3Iban.toAddress(input)).toBe(output);
+				expect(Iban.toAddress(input)).toBe(output);
 			});
 		});
 		describe('invalid cases', () => {
 			it.each(invalidIbanToAddressData)('%s', (input, output) => {
-				expect(() => Web3Iban.toAddress(input)).toThrow(output);
+				expect(() => Iban.toAddress(input)).toThrow(output);
 			});
 		});
 	});
@@ -70,7 +70,7 @@ describe('iban', () => {
 	describe('toIban', () => {
 		describe('valid cases', () => {
 			it.each(validIbanToAddressData)('%s', (output, input) => {
-				expect(Web3Iban.toIban(input)).toBe(output);
+				expect(Iban.toIban(input)).toBe(output);
 			});
 		});
 	});
@@ -78,7 +78,7 @@ describe('iban', () => {
 	describe('fromAddress', () => {
 		describe('valid cases', () => {
 			it.each(validIbanToAddressData)('%s', (output, input) => {
-				expect(Web3Iban.fromAddress(input).toString()).toBe(output);
+				expect(Iban.fromAddress(input).toString()).toBe(output);
 			});
 		});
 	});
@@ -86,7 +86,7 @@ describe('iban', () => {
 	describe('fromBban', () => {
 		describe('valid cases', () => {
 			it.each(validFromBbanData)('%s', (input, output) => {
-				expect(Web3Iban.fromBban(input).toString()).toBe(output);
+				expect(Iban.fromBban(input).toString()).toBe(output);
 			});
 		});
 	});
@@ -94,7 +94,7 @@ describe('iban', () => {
 	describe('createIndirect', () => {
 		describe('valid cases', () => {
 			it.each(validCreateIndirectData)('%s', (input, output) => {
-				expect(Web3Iban.createIndirect(input).toString()).toBe(output);
+				expect(Iban.createIndirect(input).toString()).toBe(output);
 			});
 		});
 	});
@@ -102,7 +102,7 @@ describe('iban', () => {
 	describe('isValid', () => {
 		describe('valid cases', () => {
 			it.each(isValidData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(iban.isValid()).toBe(output);
 			});
 		});
@@ -111,7 +111,7 @@ describe('iban', () => {
 	describe('isValid static', () => {
 		describe('valid cases', () => {
 			it.each(isValidData)('%s', (input, output) => {
-				expect(Web3Iban.isValid(input)).toBe(output);
+				expect(Iban.isValid(input)).toBe(output);
 			});
 		});
 	});
@@ -119,7 +119,7 @@ describe('iban', () => {
 	describe('isDirect', () => {
 		describe('valid cases', () => {
 			it.each(validIsDirectData)('%s', (input, output) => {
-				expect(Web3Iban.isValid(input)).toBe(output);
+				expect(Iban.isValid(input)).toBe(output);
 			});
 		});
 	});
@@ -127,7 +127,7 @@ describe('iban', () => {
 	describe('isIndirect', () => {
 		describe('valid cases', () => {
 			it.each(validIsIndirectData)('%s', (input, output) => {
-				expect(Web3Iban.isIndirect(input)).toBe(output);
+				expect(Iban.isIndirect(input)).toBe(output);
 			});
 		});
 	});
@@ -135,7 +135,7 @@ describe('iban', () => {
 	describe('client', () => {
 		describe('valid cases', () => {
 			it.each(validClientData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(iban.client()).toBe(output);
 			});
 		});
@@ -144,7 +144,7 @@ describe('iban', () => {
 	describe('institution', () => {
 		describe('valid cases', () => {
 			it.each(validInstitutionData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(iban.institution()).toBe(output);
 			});
 		});
@@ -153,7 +153,7 @@ describe('iban', () => {
 	describe('checksum', () => {
 		describe('valid cases', () => {
 			it.each(validChecksumData)('%s', (input, output) => {
-				const iban = new Web3Iban(input);
+				const iban = new Iban(input);
 				expect(iban.checksum()).toBe(output);
 			});
 		});

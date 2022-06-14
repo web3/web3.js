@@ -18,10 +18,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Web3Eth from 'web3-eth';
-import Web3Iban from 'web3-eth-iban';
-import Web3Net from 'web3-net';
+import Iban from 'web3-eth-iban';
+import Net from 'web3-net';
 import { ENS, registryAddresses } from 'web3-eth-ens';
-import Web3Personal from 'web3-eth-personal';
+import Personal from 'web3-eth-personal';
 import {
 	ContractAbi,
 	encodeFunctionCall,
@@ -55,18 +55,18 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static utils = utils;
 	public static modules = {
 		Web3Eth,
-		Web3Iban,
-		Web3Net,
-		Web3Ens: ENS,
-		Web3Personal,
+		Iban,
+		Net,
+		ENS,
+		Personal,
 	};
 
 	public eth: Web3Eth & {
-		Iban: typeof Web3Iban;
+		Iban: typeof Iban;
 		ens: ENS;
 		utils: typeof utils;
-		net: Web3Net;
-		personal: Web3Personal;
+		net: Net;
+		personal: Personal;
 		Contract: typeof Contract & {
 			setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
 		};
@@ -141,10 +141,10 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			ens: self.use(ENS, registryAddresses.main), // registry address defaults to main network
 
 			// Iban helpers
-			Iban: Web3Iban,
+			Iban,
 
-			net: self.use(Web3Net),
-			personal: self.use(Web3Personal),
+			net: self.use(Net),
+			personal: self.use(Personal),
 
 			utils,
 
