@@ -46,7 +46,13 @@ import {
 } from 'web3-eth-accounts';
 import { Address } from 'web3-utils';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-var-requires
+const { version }: { version: string } = require('../package.json');
+
 export class Web3 extends Web3Context<EthExecutionAPI> {
+	public static readonly version: string = version;
+	public readonly version: string;
+
 	public eth: Eth & {
 		Iban: typeof Iban;
 		ens: ENS;
@@ -155,6 +161,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				wallet,
 			},
 		});
+
+		this.version = Web3.version;
 	}
 }
 
