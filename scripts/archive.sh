@@ -4,7 +4,7 @@ ORIGARGS=("$@")
 
 
 pack() {
-	tar -czvf web3.js.tar.gz ./
+	tar -czvf web3.js.tar.gz --exclude="./.git" ./
 }
 
 unpack() {
