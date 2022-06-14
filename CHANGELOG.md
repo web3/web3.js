@@ -563,4 +563,8 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Changed
+
+-  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
+
 ## [1.7.5]
