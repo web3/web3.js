@@ -19,7 +19,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, PromiEvent } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, Web3PromiEvent } from 'web3-common';
 import {
 	prepareTransactionForSigning,
 	ReceiptInfo,
@@ -297,7 +297,7 @@ describe('defaults', () => {
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = eth.sendTransaction({
+			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth.sendTransaction({
 				to,
 				value,
 				from,
@@ -357,7 +357,7 @@ describe('defaults', () => {
 		//         },
 		//     });
 		//
-		//     const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
+		//     const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
 		//         to: accounts[1],
 		//         value: '0x1',
 		//         from: accounts[0],
@@ -374,7 +374,7 @@ describe('defaults', () => {
 		//     ]);
 		//     expect((res as ReceiptInfo).status).toBe('0x1');
 		//
-		//     const sentTx2: PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
+		//     const sentTx2: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
 		//         to: accounts[1],
 		//         value: '0x1',
 		//         from: accounts[0],
