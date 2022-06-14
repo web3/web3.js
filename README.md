@@ -282,6 +282,7 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 -   Python: [Web3.py](https://github.com/ethereum/web3.py)
 -   Ruby: [ethereum.rb](https://github.com/EthWorks/ethereum.rb)
 -   Scala: [web3j-scala](https://github.com/mslinn/web3j-scala)
+-   Swift: [web3swift](https://github.com/skywinder/web3swift)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/
