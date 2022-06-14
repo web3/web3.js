@@ -26,7 +26,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: web3.js-artifact
-          path: ./web3.js.tar.gz
+          path: /tmp/web3.js.tar.gz
 
   lint:
     name: lint
