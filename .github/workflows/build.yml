@@ -25,7 +25,7 @@ jobs:
       - run: ./scripts/archive.sh pack
       - uses: actions/upload-artifact@v3
         with:
-          name: web3.js-artifact
+          name: web3.js.tar.gz
           path: /tmp/web3.js.tar.gz
 
   lint:
@@ -40,8 +40,8 @@ jobs:
 #          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-          name: web3.js-artifact
-          path: /tmp/web3.js.tar.gz
+          name: web3.js.tar.gz
+          path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn lint
 
@@ -60,8 +60,8 @@ jobs:
 #          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-          name: web3.js-artifact
-          path: /tmp/web3.js.tar.gz
+          name: web3.js.tar.gz
+          path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:unit
 
@@ -86,8 +86,8 @@ jobs:
 #          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-            name: web3.js-artifact
-            path: /tmp/web3.js.tar.gz
+            name: web3.js.tar.gz
+            path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
@@ -109,8 +109,8 @@ jobs:
 #          cache: yarn
       - uses: actions/download-artifact@v3
         with:
-            name: web3.js-artifact
-            path: /tmp/web3.js.tar.gz
+            name: web3.js.tar.gz
+            path: /tmp
       - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
