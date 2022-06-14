@@ -21,6 +21,11 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
+      - run: ./scripts/download_geth.sh
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3.js-artifact
+          path: ./
 
   lint:
     name: lint
@@ -32,7 +37,9 @@ jobs:
         with:
           node-version: 14
           cache: yarn
-      - run: yarn
+      - uses: actions/download-artifact@v3
+        with:
+          name: web3.js-artifact
       - run: yarn lint
 
   unit:
@@ -48,7 +55,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: yarn
+      - uses: actions/download-artifact@v3
+        with:
+          name: web3.js-artifact
       - run: yarn test:unit
 
   integration:
@@ -70,9 +79,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      -   run: yarn
-      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-          shell: bash
+      - uses: actions/download-artifact@v3
+        with:
+            name: web3.js-artifact
+      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+        shell: bash
 
   e2e:
     name: End-to-End
@@ -89,6 +100,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      -   run: yarn
-      -   run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-          shell: bash
+      - uses: actions/download-artifact@v3
+        with:
+            name: web3.js-artifact
+      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+        shell: bash

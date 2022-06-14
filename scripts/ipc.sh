@@ -8,9 +8,6 @@ helpFunction() {
 }
 
 start() {
-    wget https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.10.18-de23cf91.tar.gz
-    tar -xf ./geth-linux-386-1.10.18-de23cf91.tar.gz -C ./scripts
-    mv ./scripts/geth-linux-386-1.10.18-de23cf91/geth ./scripts/geth
     export WEB3_SYSTEM_TEST_PROVIDER=$(pwd)/scripts/ipc
     echo "Starting ipc on ${WEB3_SYSTEM_TEST_PROVIDER}"
     ./scripts/geth --ipcpath ${WEB3_SYSTEM_TEST_PROVIDER} --nodiscover --http --http.port 8545 --dev &>/dev/null &
