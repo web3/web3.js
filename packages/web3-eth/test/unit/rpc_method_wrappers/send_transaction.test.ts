@@ -306,7 +306,7 @@ describe('sendTransaction', () => {
 			);
 			expect(watchTransactionForConfirmationsSpy).toHaveBeenCalledWith(
 				web3Context,
-				Web3PromiEvent,
+				promiEvent,
 				formattedReceiptInfo,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,
