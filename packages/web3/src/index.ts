@@ -74,7 +74,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Will change the provider for its module.
  *
- * **_NOTE:_** `When called on the umbrella package web3 it will also set the provider for all sub modules web3.eth  etc.`
+ * **_NOTE:_** When called on the umbrella package web3 it will also set the provider for all sub modules web3.eth  etc.
  *
  * See details: {@link Web3.setProvider}
  *
