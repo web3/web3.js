@@ -55,6 +55,7 @@ export interface TransactionCall {
 }
 
 export interface BaseTransaction {
+	// eslint-disable-next-line @typescript-eslint/ban-types
 	readonly to?: Address | null;
 	readonly type: HexStringSingleByte;
 	readonly nonce: Uint;
@@ -113,12 +114,17 @@ export type TransactionSigned =
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L269
 export type TransactionInfo = TransactionSigned & {
-	readonly blockHash: HexString32Bytes | null;
-	readonly blockNumber: Uint | null;
+	readonly blockHash?: HexString32Bytes;
+	readonly blockNumber?: Uint;
 	readonly from: Address;
 	readonly hash: HexString32Bytes;
-	readonly transactionIndex: Uint | null;
+	readonly transactionIndex?: Uint;
 };
+
+export interface SignedTransactionInfo {
+	raw: HexStringBytes;
+	tx: TransactionSigned;
+}
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L24
 export type TransactionWithSender = TransactionUnsigned & { from: Address };
@@ -131,34 +137,34 @@ export interface Block {
 	readonly stateRoot: HexString32Bytes;
 	readonly transactionsRoot: HexString32Bytes;
 	readonly receiptsRoot: HexString32Bytes;
-	readonly logsBloom: HexString256Bytes | null;
+	readonly logsBloom?: HexString256Bytes;
 	readonly difficulty?: Uint;
-	readonly number: Uint | null;
+	readonly number?: Uint;
 	readonly gasLimit: Uint;
 	readonly gasUsed: Uint;
 	readonly timestamp: Uint;
 	readonly extraData: HexStringBytes;
 	readonly mixHash: HexString32Bytes;
-	readonly nonce: Uint | null;
+	readonly nonce?: Uint;
 	readonly totalDifficulty: Uint;
 	readonly baseFeePerGas?: Uint;
 	readonly size: Uint;
 	readonly transactions: TransactionHash[] | TransactionInfo[];
 	readonly uncles: Uncles;
-	readonly hash: HexString32Bytes | null;
+	readonly hash?: HexString32Bytes;
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L2
 export interface Log {
 	readonly removed?: boolean;
-	readonly logIndex?: Uint | null;
-	readonly transactionIndex?: Uint | null;
-	readonly transactionHash?: HexString32Bytes | null;
-	readonly blockHash?: HexString32Bytes | null;
-	readonly blockNumber?: Uint | null;
+	readonly logIndex?: Uint;
+	readonly transactionIndex?: Uint;
+	readonly transactionHash?: HexString32Bytes;
+	readonly blockHash?: HexString32Bytes;
+	readonly blockNumber?: Uint;
 	readonly address?: Address;
 	readonly data?: HexStringBytes;
-	readonly topics?: null | Topic | Topic[];
+	readonly topics?: Topic | Topic[];
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
@@ -171,7 +177,7 @@ export interface ReceiptInfo {
 	readonly to: Address;
 	readonly cumulativeGasUsed: Uint;
 	readonly gasUsed: Uint;
-	readonly contractAddress: Address | null;
+	readonly contractAddress?: Address;
 	readonly logs: Log[];
 	readonly logsBloom: HexString256Bytes;
 	readonly root: HexString32Bytes;
@@ -224,16 +230,16 @@ export type EthExecutionAPI = {
 	eth_getUncleByBlockNumberAndIndex: (blockNumber: BlockNumberOrTag, uncleIndex: Uint) => Block;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
-	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo | null;
+	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfo | undefined;
 	eth_getTransactionByBlockHashAndIndex: (
 		blockHash: HexString32Bytes,
 		transactionIndex: Uint,
-	) => TransactionInfo | null;
+	) => TransactionInfo | undefined;
 	eth_getTransactionByBlockNumberAndIndex: (
 		blockNumber: BlockNumberOrTag,
 		transactionIndex: Uint,
-	) => TransactionInfo | null;
-	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo | null;
+	) => TransactionInfo | undefined;
+	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo | undefined;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.json
 	eth_protocolVersion: () => string;
@@ -281,7 +287,7 @@ export type EthExecutionAPI = {
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
 	eth_signTransaction: (
 		transaction: TransactionWithSender | Partial<TransactionWithSender>,
-	) => HexStringBytes;
+	) => HexStringBytes | SignedTransactionInfo;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
 	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;

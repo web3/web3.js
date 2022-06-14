@@ -18,6 +18,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3RequestManager } from 'web3-core';
 import { Web3NetAPI } from './web3_net_api';
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getId(requestManager: Web3RequestManager<Web3NetAPI>) {
 	return requestManager.send({
 		method: 'net_version',
@@ -25,6 +29,10 @@ export async function getId(requestManager: Web3RequestManager<Web3NetAPI>) {
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function getPeerCount(requestManager: Web3RequestManager<Web3NetAPI>) {
 	return requestManager.send({
 		method: 'net_peerCount',
@@ -32,6 +40,10 @@ export async function getPeerCount(requestManager: Web3RequestManager<Web3NetAPI
 	});
 }
 
+/**
+ *
+ * @param requestManager
+ */
 export async function isListening(requestManager: Web3RequestManager<Web3NetAPI>) {
 	return requestManager.send({
 		method: 'net_listening',

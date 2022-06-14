@@ -1,0 +1,1 @@
+../../../../fixtures/build/Greeter.ts

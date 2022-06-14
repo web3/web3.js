@@ -25,6 +25,7 @@ import {
 import { SubscriptionError } from 'web3-errors';
 import { Web3Context } from 'web3-core';
 import { Bytes, HexString32Bytes, numberToHex } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
@@ -128,6 +129,14 @@ const watchBySubscription = <ResolveType = ReceiptInfo>({
 	});
 };
 
+/**
+ *
+ * @param web3Context
+ * @param transactionPromiEvent
+ * @param transactionReceipt
+ * @param transactionHash
+ * @param returnFormat
+ */
 export function watchTransactionForConfirmations<
 	PromiEventEventType extends PromiEventEventTypeBase,
 	ReturnFormat extends DataFormat,
@@ -139,12 +148,7 @@ export function watchTransactionForConfirmations<
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ) {
-	if (
-		transactionReceipt === undefined ||
-		transactionReceipt === null ||
-		transactionReceipt.blockHash === undefined ||
-		transactionReceipt.blockHash === null
-	)
+	if (isNullish(transactionReceipt) || isNullish(transactionReceipt.blockHash))
 		throw new TransactionMissingReceiptOrBlockHashError({
 			receipt: transactionReceipt,
 			blockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),

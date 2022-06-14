@@ -16,9 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3ValidationErrorObject } from './types';
+import { isNullish } from './validation';
 
 const errorFormatter = (error: Web3ValidationErrorObject): string => {
-	if (error.message && error.instancePath && error.params && error.params.value != null) {
+	if (error.message && error.instancePath && error.params && !isNullish(error.params.value)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		return `value "${(error.params as { value: unknown }).value}" at "${error.instancePath}" ${
 			error.message
