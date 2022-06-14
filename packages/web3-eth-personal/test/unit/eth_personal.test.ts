@@ -187,7 +187,7 @@ describe('Personal', () => {
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
 			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
 				bytes: 'BYTES_HEX',
-				number: 'NUMBER_HEX',
+				number: 'NUMBER_BIGINT',
 			});
 		});
 	});
@@ -220,7 +220,7 @@ describe('Personal', () => {
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
 			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
 				bytes: 'BYTES_HEX',
-				number: 'NUMBER_HEX',
+				number: 'NUMBER_BIGINT',
 			});
 		});
 	});

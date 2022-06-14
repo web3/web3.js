@@ -15,15 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { EthExecutionAPI, format } from 'web3-common';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
 import { isNullish } from 'web3-validator';
+import { ETH_DATA_FORMAT } from '../constants';
 import { InternalTransaction, Transaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;
 
-	if (!isNullish(tx.type)) return format({ eth: 'uint' }, tx.type, DEFAULT_RETURN_FORMAT);
+	if (!isNullish(tx.type)) return format({ eth: 'uint' }, tx.type, ETH_DATA_FORMAT);
 
 	if (
 		!isNullish(tx.maxFeePerGas) ||

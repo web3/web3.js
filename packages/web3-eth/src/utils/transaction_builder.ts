@@ -28,6 +28,7 @@ import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address, HexString, isAddress } from 'web3-utils';
 import { isNullish, isNumber } from 'web3-validator';
+import { ETH_DATA_FORMAT } from '../constants';
 import {
 	InvalidTransactionWithSender,
 	LocalWalletNotAvailableError,
@@ -94,14 +95,14 @@ export const getTransactionNonce = async (
 };
 
 export const getTransactionType = (
-	transaction: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>,
+	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const inferredType = detectTransactionType(transaction, web3Context);
 
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
-		return format({ eth: 'uint' }, web3Context.defaultTransactionType, DEFAULT_RETURN_FORMAT);
+		return format({ eth: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
 
 	return undefined;
 };
@@ -171,13 +172,13 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		isNullish(populatedTransaction.chainId) &&
 		isNullish(populatedTransaction.common?.customChain.chainId)
 	) {
-		populatedTransaction.chainId = await getChainId(options.web3Context, DEFAULT_RETURN_FORMAT);
+		populatedTransaction.chainId = await getChainId(options.web3Context, ETH_DATA_FORMAT);
 	}
 
 	if (isNullish(populatedTransaction.networkId)) {
 		populatedTransaction.networkId =
 			(options.web3Context.defaultNetworkId as string) ??
-			(await getId(options.web3Context, DEFAULT_RETURN_FORMAT));
+			(await getId(options.web3Context, ETH_DATA_FORMAT));
 	}
 
 	if (isNullish(populatedTransaction.gasLimit) && !isNullish(populatedTransaction.gas)) {
@@ -198,7 +199,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		...(await getTransactionGasPricing(
 			populatedTransaction,
 			options.web3Context,
-			DEFAULT_RETURN_FORMAT,
+			ETH_DATA_FORMAT,
 		)),
 	};
 

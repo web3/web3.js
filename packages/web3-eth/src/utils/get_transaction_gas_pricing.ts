@@ -15,16 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	EthExecutionAPI,
-	FormatType,
-	DataFormat,
-	format,
-	DEFAULT_RETURN_FORMAT,
-} from 'web3-common';
+import { EthExecutionAPI, FormatType, DataFormat, format } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Numbers } from 'web3-utils';
 import { isNullish } from 'web3-validator';
+import { ETH_DATA_FORMAT } from '../constants';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlock, getGasPrice } from '../rpc_method_wrappers';
@@ -39,7 +34,7 @@ import { getTransactionType } from './transaction_builder';
  * @param returnFormat
  */
 async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
-	transaction: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>,
+	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
 	returnFormat: ReturnFormat,
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
