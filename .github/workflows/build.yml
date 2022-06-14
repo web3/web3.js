@@ -33,7 +33,7 @@ jobs:
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
       - uses: actions/upload-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.cache.tar.gz
+          name: cache-${{ matrix.node }}.tar.gz
           path: /tmp/cache-${{ matrix.node }}.tar.gz
   lint:
     name: lint
