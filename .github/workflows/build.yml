@@ -24,9 +24,9 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-      - run: ./scripts/download_geth.sh
-      - run: tar -czvf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-      - run: tar -czvf /tmp/cache-${{ matrix.node }}.tar.gz /home/runner/.cache/Cypress
+      - run: wget https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.10.18-de23cf91.tar.gz && tar -xf ./geth-linux-386-1.10.18-de23cf91.tar.gz -C ./scripts && mv ./scripts/geth-linux-386-1.10.18-de23cf91/geth ./scripts/geth && rm ./geth-linux-386-1.10.18-de23cf91.tar.gz && rm -rf ./scripts/geth-linux-386-1.10.18-de23cf91
+      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/cache-${{ matrix.node }}.tar.gz /home/runner/.cache/Cypress
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -94,6 +94,11 @@ jobs:
         node: [ 14, 16 ]
         browser: ['electron', 'chrome', 'firefox','ipc']
     steps:
+      -   uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+            node-version: ${{ matrix.node }}
+            cache: yarn
       - uses: actions/download-artifact@v3
         with:
             name: web3-${{ matrix.node }}.js.tar.gz
@@ -103,6 +108,7 @@ jobs:
         with:
             name: cache-${{ matrix.node }}.tar.gz
             path: /tmp
+      - run: mkdir -p /home/runner/.cache/Cypress
       - run: tar -xf /tmp/cache-${{ matrix.node }}.tar.gz -C /home/runner/.cache/Cypress
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
