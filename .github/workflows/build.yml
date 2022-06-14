@@ -89,16 +89,16 @@ jobs:
         node: [ 14, 16 ]
         browser: ['electron', 'chrome', 'firefox','ipc']
     steps:
-      -   uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
             node-version: ${{ matrix.node }}
             cache: yarn
-      - uses: actions/download-artifact@v3
-        with:
-            name: web3-${{ matrix.node }}.js.tar.gz
-            path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+#      - uses: actions/download-artifact@v3
+#        with:
+#            name: web3-${{ matrix.node }}.js.tar.gz
+#            path: /tmp
+#      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
 #      - run: ls ./node_modules/.bin
 #      - run: rm ./node_modules/.bin/cypress
 #      - run: ln -s ./node_modules/cypress/bin/cypress ./node_modules/.bin/cypress
