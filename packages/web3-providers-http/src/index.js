@@ -56,7 +56,14 @@ var HttpProvider = function HttpProvider(host, options) {
     }
 };
 
-HttpProvider.prototype._prepareRequest = function(payload = {}){
+/**
+ * Should be used to make async request
+ *
+ * @method send
+ * @param {Object} payload
+ * @param {Function} callback triggered on end with (err, result)
+ */
+HttpProvider.prototype.send = function (payload, callback) {
     var options = {
       method: 'POST',
       body: JSON.stringify(payload)
@@ -112,20 +119,8 @@ HttpProvider.prototype._prepareRequest = function(payload = {}){
         }, this.timeout);
     }
 
-    return fetch(this.host, options);
-};
-
-/**
- * Should be used to make async request
- *
- * @method send
- * @param {Object} payload
- * @param {Function} callback triggered on end with (err, result)
- */
-HttpProvider.prototype.send = function (payload, callback) {
     // Prevent global leak of connected
     var _this = this;
-    var request = this._prepareRequest.bind(this);
 
     var success = function(response) {
         if (this.timeoutId !== undefined) {
@@ -161,7 +156,7 @@ HttpProvider.prototype.send = function (payload, callback) {
         callback(errors.InvalidConnection(this.host));
     }
 
-    request(payload)
+    fetch(this.host, options)
         .then(success.bind(this))
         .catch(failed.bind(this));
 };

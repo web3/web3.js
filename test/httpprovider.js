@@ -40,21 +40,17 @@ describe('web3-providers-http', function () {
     describe('prepareRequest', function () {
         it('should set request header', async function () {
             var options = {headers: [{name: 'Access-Control-Allow-Origin',  value: '*'}]}
-            var provider = new HttpProvider('http://localhost:8545', options.headers);
-            var result = await provider._prepareRequest();
+            var provider = new HttpProvider('http://localhost:8545', options);
 
             var origin = 'Access-Control-Allow-Origin';
-            assert.equal(typeof result, 'object');
-            assert.equal(result.headers.get(`${origin.toLowerCase()}`, '*'));
+            assert.equal(provider.headers, options.headers);
         });
 
         it('should use the passed custom http agent', async function () {
             var agent = new http.Agent();
             var options = {agent: {http: agent}};
             var provider = new HttpProvider('http://localhost:8545', options);
-            var result = await provider._prepareRequest();
 
-            assert.equal(typeof result, 'object');
             assert.equal(provider.agent.http, agent);
             assert.equal(provider.httpAgent, undefined);
             assert.equal(provider.httpsAgent, undefined);
@@ -65,9 +61,7 @@ describe('web3-providers-http', function () {
             var agent = new https.Agent();
             var options = {agent: {https: agent}};
             var provider = new HttpProvider('http://localhost:8545', options);
-            var result = await provider._prepareRequest();
 
-            assert.equal(typeof result, 'object');
             assert.equal(provider.agent.https, agent);
             assert.equal(provider.httpAgent, undefined);
             assert.equal(provider.httpsAgent, undefined);
