@@ -42,7 +42,7 @@ jobs:
         with:
           name: web3.js-artifact
           path: /tmp/web3.js.tar.gz
-      - run: ./scripts/archive.sh unpack
+      - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn lint
 
   unit:
@@ -62,7 +62,7 @@ jobs:
         with:
           name: web3.js-artifact
           path: /tmp/web3.js.tar.gz
-      - run: ./scripts/archive.sh unpack
+      - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:unit
 
   integration:
@@ -88,7 +88,7 @@ jobs:
         with:
             name: web3.js-artifact
             path: /tmp/web3.js.tar.gz
-      - run: ./scripts/archive.sh unpack
+      - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
@@ -111,6 +111,6 @@ jobs:
         with:
             name: web3.js-artifact
             path: /tmp/web3.js.tar.gz
-      - run: ./scripts/archive.sh unpack
+      - run: tar -xf /tmp/web3.js.tar.gz -C ./
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
