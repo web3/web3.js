@@ -55,6 +55,7 @@ type RegisteredSubscription = {
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
 		providerOrContext: SupportedProviders<any> | Web3ContextInitOptions | string,
 	) {
 		super(
@@ -62,6 +63,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				(providerOrContext as Web3ContextInitOptions).provider
 				? providerOrContext
 				: {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						provider: providerOrContext as SupportedProviders<any>,
 						registeredSubscriptions: {
 							logs: LogsSubscription,

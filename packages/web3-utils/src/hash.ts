@@ -257,3 +257,17 @@ export const soliditySha3 = (
  */
 export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));
+
+/**
+ * Get slot number for storage long string in contract. Basically for getStorage method
+ * returns slotNumber where will data placed
+ *
+ * @param mainSlotNumber
+ */
+export const getStorageSlotNumForLongString = (mainSlotNumber: number | string) =>
+	sha3(
+		`0x${(typeof mainSlotNumber === 'number'
+			? mainSlotNumber.toString()
+			: mainSlotNumber
+		).padStart(64, '0')}`,
+	);
