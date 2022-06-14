@@ -16,6 +16,54 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
+ * This is the main (or 'umbrella') class of the web3.js library.
+ *
+ * ```ts
+ * import { Web3 } from 'web3';
+ *
+ * > Web3.utils //Not exported atm
+ * > Web3.version //Not exported atm
+ * > Web3.givenProvider
+ * > Web3.providers
+ * > Web3.modules //Not exported atm
+ * ```
+ *
+ * ### Web3.modules
+ * //Not implemented
+ *
+ * ### Web3 Instance
+ *
+ * The Web3 class is an umbrella package to house all Ethereum related modules.
+ *
+ * ```ts
+ * import { Web3 } from 'web3';
+ *
+ * // "Web3.givenProvider" will be set if in an Ethereum supported browser.
+ * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+ *
+ * > web3.eth
+ * > web3.shh //not present
+ * > web3.bzz //not present
+ * > web3.utils //not exported atm
+ * > web3.version //not implemented
+ * ```
+ *
+ * ### version
+ *
+ * //Not implemented
+ * Contains the current package version of the web3.js library.
+ *
+ * ### utils
+ *
+ * Static accessible property of the Web3 class and property of the instance as well.
+ * //Not implemented
+ * ```ts
+ * Web3.utils
+ * web3.utils
+ * ```
+ *
+ * Utility functions are also exposed on the `Web3` class object diretly.
+ *
  * ## setProvider
  *
  * ```ts
@@ -26,7 +74,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Will change the provider for its module.
  *
- * **_NOTE:_** When called on the umbrella package web3 it will also set the provider for all sub modules web3.eth  etc.
+ * **_NOTE:_** `When called on the umbrella package web3 it will also set the provider for all sub modules web3.eth  etc.`
  *
  * See details: {@link Web3.setProvider}
  *
@@ -76,6 +124,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *  + `Object` - `IpcProvider`: The IPC provider is used in node.js dapps when running a local node. Gives the most secure connection.
  *
  *
+ * #### Example
+ * ```ts
+ * import Web3 from 'web3';
+ * // use the given Provider or instantiate a new websocket provider
+ * let web3 = new Web3(Web3.givenProvider || 'ws://remotenode.com:8546');
+ * // or
+ * let web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://remotenode.com:8546'));
+ *
+ * // Using the IPC provider in node.js
+ * var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc')); // mac os path
+ * // on windows the path is: "\\\\.\\pipe\\geth.ipc"
+ * // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+ * ```
  * #### Configuration
  *
  * ```ts
@@ -135,22 +196,73 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * web3.setProvider(ws);
  *
  * ```
+ * More information for the Http and Websocket provider modules can be found here:
+ *
+ *
+ * - {@link HttpProvider}
+ *
+ *
+ * - {@link WebSocketProvider}
  *
  * See details: {@link Web3.providers}
  *
+ *
+ * ## givenProvider
+ *
+ * ```ts
+ * web3.givenProvider
+ * web3.eth.givenProvider
+ * ...
+ * ```
+ * When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
+ * Will return the given provider by the (browser) environment, otherwise `null`.
+ *
+ * See details: {@link Web3.givenProvider}
+ *
+ * ## currentProvider
+ *
+ * ```ts
+ * web3.currentProvider
+ * web3.eth.currentProvider
+ * ...
+ * ```
+ * Will return the current provider, otherwise `null`.
+ *
+ * See details: {@link Web3.currentProvider}
+ *
+ * ## BatchRequest
+ *
+ * ```ts
+ * new web3.BatchRequest()
+ * new web3.BatchRequest()
+ * ...
+ * ```
+ * Class to create and execute batch requests.
+ *
+ *
  * #### Example
  * ```ts
- * import Web3 from 'web3';
- * // use the given Provider or instantiate a new websocket provider
- * let web3 = new Web3(Web3.givenProvider || 'ws://remotenode.com:8546');
- * // or
- * let web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://remotenode.com:8546'));
+ * let request1: JsonRpcOptionalRequest = {
+ * 	id: 10,
+ * 	method: 'eth_getBalance',
+ * 	params: ["0xdc6bad79dab7ea733098f66f6c6f9dd008da3258", 'latest'],
+ * };
+ * let request2: JsonRpcOptionalRequest = {
+ * 	id: 11,
+ * 	method: 'eth_getBalance',
+ * 	params: ["0x962f9a9c2a6c092474d24def35eccb3d9363265e", 'latest'],
+ * };
  *
- * // Using the IPC provider in node.js
- * var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc')); // mac os path
- * // on windows the path is: "\\\\.\\pipe\\geth.ipc"
- * // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+ * const batch = new web3.BatchRequest();
+ *
+ *  batch.add(request1);
+ *  batch.add(request2);
+ * // add returns a deferred promise which can be used to run specific code after completion of each respective request.
+ * //const request2Promise = batch.add(request2);
+ *
+ * const response = await batch.execute();
  * ```
+ * See details: {@link Web3.BatchRequest}
  */
 /**
  * This comment _supports3_ [Markdown](https://marked.js.org/)
