@@ -31,6 +31,7 @@ import {
 	testData,
 } from './fixtures/send_transaction';
 import { receiptInfoSchema } from '../../../src/schemas';
+import { ETH_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');
@@ -80,10 +81,7 @@ describe('sendTransaction', () => {
 		`sending event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
-				const formattedTransaction = formatTransaction(
-					inputTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
+				const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 				(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 					expectedReceiptInfo,
 				);
@@ -104,7 +102,7 @@ describe('sendTransaction', () => {
 	it.each(testData)(
 		`should call rpcMethods.sendTransaction with expected parameters\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
-			const formattedTransaction = formatTransaction(inputTransaction, DEFAULT_RETURN_FORMAT);
+			const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 			(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(expectedReceiptInfo);
 			await sendTransaction(
 				web3Context,
@@ -123,10 +121,7 @@ describe('sendTransaction', () => {
 		`sent event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
-				const formattedTransaction = formatTransaction(
-					inputTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
+				const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 				(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 					expectedReceiptInfo,
 				);
