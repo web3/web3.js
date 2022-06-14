@@ -26,15 +26,10 @@ jobs:
       - run: yarn
       - run: wget https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.10.18-de23cf91.tar.gz && tar -xf ./geth-linux-386-1.10.18-de23cf91.tar.gz -C ./scripts && mv ./scripts/geth-linux-386-1.10.18-de23cf91/geth ./scripts/geth && rm ./geth-linux-386-1.10.18-de23cf91.tar.gz && rm -rf ./scripts/geth-linux-386-1.10.18-de23cf91
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
-#      - run: tar -czf /tmp/cache-${{ matrix.node }}.tar.gz /home/runner/.cache/Cypress
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
-#      - uses: actions/upload-artifact@v3
-#        with:
-#          name: cache-${{ matrix.node }}.tar.gz
-#          path: /tmp/cache-${{ matrix.node }}.tar.gz
   lint:
     name: lint
     needs: build
@@ -104,18 +99,10 @@ jobs:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: ls ./node_modules/.bin
-      - run: rm ./node_modules/.bin/cypress
-      - run: ln -s ./node_modules/cypress/bin/cypress ./node_modules/.bin/cypress
-      - run: ls ./node_modules/.bin
-#      - uses: actions/download-artifact@v3
-#        with:
-#            name: cache-${{ matrix.node }}.tar.gz
-#            path: /tmp
-#      - run: mkdir -p /home/runner/.cache/Cypress
-#      - run: tar -xvf /tmp/cache-${{ matrix.node }}.tar.gz -C /home/runner/.cache/Cypress
-#      - run: ls /home/runner/.cache/Cypress
-#      - run: ls /home/runner/.cache/Cypress/Cyprus
 #      - run: ls ./node_modules/.bin
+#      - run: rm ./node_modules/.bin/cypress
+#      - run: ln -s ./node_modules/cypress/bin/cypress ./node_modules/.bin/cypress
+#      - run: ls ./node_modules/.bin
+      - run: yarn
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
