@@ -86,7 +86,7 @@ jobs:
 
   e2e:
     name: End-to-End
-    needs: unit
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -109,6 +109,9 @@ jobs:
             name: cache-${{ matrix.node }}.tar.gz
             path: /tmp
       - run: mkdir -p /home/runner/.cache/Cypress
-      - run: tar -xf /tmp/cache-${{ matrix.node }}.tar.gz -C /home/runner/.cache/Cypress
+      - run: tar -xvf /tmp/cache-${{ matrix.node }}.tar.gz -C /home/runner/.cache/Cypress
+      - run: ls /home/runner/.cache/Cypress
+      - run: ls /home/runner/.cache/Cypress/Cyprus
+      - run: ls ./node_modules/.bin
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
