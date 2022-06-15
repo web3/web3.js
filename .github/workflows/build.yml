@@ -87,13 +87,14 @@ jobs:
           fail-fast: false
           matrix:
               node: [ 14, 16 ]
+              engine: ['node']
       steps:
           - uses: actions/download-artifact@v3
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
           - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-          - run: yarn test:e2e:ipc
+          - run: yarn test:e2e:ipc:${{ matrix.engine }}
             shell: bash
 
   e2e:
