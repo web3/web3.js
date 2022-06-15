@@ -101,21 +101,6 @@ describe('Web3 instance', () => {
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
 			});
-
-			// todo fix ipc test
-			// https://ethereum.stackexchange.com/questions/52574/how-to-connect-to-ethereum-node-geth-via-ipc-from-outside-of-docker-container
-			// https://github.com/ethereum/go-ethereum/issues/17907
-			// itIf(clientUrl.includes('ipc'))(
-			// 	'should create instance with string of IPC provider',
-			// 	() => {
-			// 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			// 		// eslint-disable-next-line no-new
-			// 		const fullIpcPath = path.join(__dirname, ipcStringProvider);
-			// 		const ipcProvider = new Web3.providers.IpcProvider(fullIpcPath);
-			// 		web3 = new Web3(ipcProvider);
-			// 		expect(web3).toBeInstanceOf(Web3);
-			// 	},
-			// );
 		},
 	);
 
