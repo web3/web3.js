@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, format } from 'web3-common';
 import { isNullish } from 'web3-validator';
 
 import * as rpcMethods from '../../../src/rpc_methods';
@@ -31,7 +31,6 @@ import {
 	testData,
 } from './fixtures/send_transaction';
 import { receiptInfoSchema } from '../../../src/schemas';
-import { ETH_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 jest.mock('../../../src/utils/wait_for_transaction_receipt');

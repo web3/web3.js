@@ -18,17 +18,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	DEFAULT_RETURN_FORMAT,
+	ETH_DATA_FORMAT,
 	FormatType,
 	format,
-	FMT_NUMBER,
-	FMT_BYTES,
+	DataFormat,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address, HexString, isAddress } from 'web3-utils';
 import { isNullish, isNumber } from 'web3-validator';
-import { ETH_DATA_FORMAT } from '../constants';
+import { NUMBER_DATA_FORMAT } from '../constants';
 import {
 	InvalidTransactionWithSender,
 	LocalWalletNotAvailableError,
@@ -60,10 +60,7 @@ export const getTransactionFromAttr = (
 		if (isNumber(transaction.from)) {
 			if (web3Context.wallet) {
 				return web3Context.wallet.get(
-					format({ eth: 'uint' }, transaction.from, {
-						number: FMT_NUMBER.NUMBER,
-						bytes: FMT_BYTES.HEX,
-					}),
+					format({ eth: 'uint' }, transaction.from, NUMBER_DATA_FORMAT),
 				).address;
 			}
 			throw new LocalWalletNotAvailableError();
@@ -77,21 +74,17 @@ export const getTransactionFromAttr = (
 	return undefined;
 };
 
-export const getTransactionNonce = async (
+export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address?: Address,
+	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ) => {
 	if (isNullish(address)) {
 		// TODO if (web3.eth.accounts.wallet) use address from local wallet
 		throw new UnableToPopulateNonceError();
 	}
 
-	return getTransactionCount(
-		web3Context,
-		address,
-		web3Context.defaultBlock,
-		DEFAULT_RETURN_FORMAT,
-	);
+	return getTransactionCount(web3Context, address, web3Context.defaultBlock, returnFormat);
 };
 
 export const getTransactionType = (
@@ -133,10 +126,11 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 
 	// TODO: Debug why need to typecase getTransactionNonce
 	if (isNullish(populatedTransaction.nonce)) {
-		populatedTransaction.nonce = (await getTransactionNonce(
+		populatedTransaction.nonce = await getTransactionNonce(
 			options.web3Context,
 			populatedTransaction.from,
-		)) as unknown as string;
+			ETH_DATA_FORMAT,
+		);
 	}
 
 	if (isNullish(populatedTransaction.value)) {

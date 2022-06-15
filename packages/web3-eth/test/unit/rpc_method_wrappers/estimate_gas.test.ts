@@ -16,13 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { isNullish } from 'web3-validator';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 
 import { estimateGas as rpcMethodsEstimateGas } from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { estimateGas } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/estimate_gas';
 import { formatTransaction } from '../../../src';
+import { STR_NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -37,10 +38,7 @@ describe('call', () => {
 		`should call rpcMethods.estimateGas with expected parameters\nTitle: %s\nInput parameters: %s\n`,
 		async (_, inputParameters) => {
 			const [inputTransaction, inputBlockNumber] = inputParameters;
-			const inputTransactionFormatted = formatTransaction(
-				inputTransaction,
-				DEFAULT_RETURN_FORMAT,
-			);
+			const inputTransactionFormatted = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 
 			let inputBlockNumberFormatted;
 
@@ -50,7 +48,7 @@ describe('call', () => {
 				inputBlockNumberFormatted = format(
 					{ eth: 'uint' },
 					inputBlockNumber,
-					DEFAULT_RETURN_FORMAT,
+					STR_NUMBER_DATA_FORMAT,
 				);
 			}
 

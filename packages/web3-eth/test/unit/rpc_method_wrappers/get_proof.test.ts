@@ -23,6 +23,7 @@ import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getProof } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_proof';
 import { accountSchema } from '../../../src/schemas';
+import { STR_NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -38,7 +39,7 @@ describe('getProof', () => {
 		async (_, inputParameters) => {
 			const [inputAddress, inputStorageKey, inputBlockNumber] = inputParameters;
 			const inputStorageKeyFormatted = inputStorageKey.map(s =>
-				format({ eth: 'bytes' }, s, DEFAULT_RETURN_FORMAT),
+				format({ eth: 'bytes' }, s, STR_NUMBER_DATA_FORMAT),
 			);
 
 			let inputBlockNumberFormatted;
@@ -49,7 +50,7 @@ describe('getProof', () => {
 				inputBlockNumberFormatted = format(
 					{ eth: 'uint' },
 					inputBlockNumber,
-					DEFAULT_RETURN_FORMAT,
+					STR_NUMBER_DATA_FORMAT,
 				);
 			}
 

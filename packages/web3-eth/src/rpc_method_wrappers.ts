@@ -22,13 +22,12 @@ import {
 	EthExecutionAPI,
 	format,
 	Web3PromiEvent,
-	FMT_BYTES,
-	FMT_NUMBER,
 	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
 	TransactionWithSender,
 	FormatType,
 	SignedTransactionInfo,
+	ETH_DATA_FORMAT,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -75,7 +74,7 @@ import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
-import { ETH_DATA_FORMAT, STRING_NUMBER_FORMAT } from './constants';
+import { NUMBER_DATA_FORMAT, STR_NUMBER_DATA_FORMAT } from './constants';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
@@ -597,7 +596,7 @@ export function sendTransaction<
 								transactionReceiptFormatted,
 							) as unknown as ResolveType,
 						);
-					} else if (transactionReceipt.status === '0x0') {
+					} else if (transactionReceipt.status === BigInt(0)) {
 						reject(transactionReceiptFormatted as unknown as ResolveType);
 					} else {
 						resolve(transactionReceiptFormatted as unknown as ResolveType);
@@ -714,7 +713,7 @@ export function sendSignedTransaction<
 									transactionReceiptFormatted,
 								) as unknown as ResolveType,
 							);
-						} else if (transactionReceipt.status === '0x0') {
+						} else if (transactionReceipt.status === BigInt(0)) {
 							reject(transactionReceiptFormatted as unknown as ResolveType);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
@@ -823,7 +822,7 @@ export async function call<ReturnFormat extends DataFormat>(
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, STRING_NUMBER_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 
 	const response = await rpcMethods.call(
 		web3Context.requestManager,
@@ -852,7 +851,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, STRING_NUMBER_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, STR_NUMBER_DATA_FORMAT);
 
 	const response = await rpcMethods.estimateGas(
 		web3Context.requestManager,
@@ -923,12 +922,12 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const storageKeysFormatted = storageKeys.map(storageKey =>
-		format({ eth: 'bytes' }, storageKey, STRING_NUMBER_FORMAT),
+		format({ eth: 'bytes' }, storageKey, STR_NUMBER_DATA_FORMAT),
 	);
 
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, STRING_NUMBER_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, STR_NUMBER_DATA_FORMAT);
 
 	const response = await rpcMethods.getProof(
 		web3Context.requestManager,
@@ -955,11 +954,11 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	rewardPercentiles: Numbers[],
 	returnFormat: ReturnFormat,
 ) {
-	const blockCountFormatted = format({ eth: 'uint' }, blockCount, STRING_NUMBER_FORMAT);
+	const blockCountFormatted = format({ eth: 'uint' }, blockCount, STR_NUMBER_DATA_FORMAT);
 
 	const newestBlockFormatted = isBlockTag(newestBlock as string)
 		? (newestBlock as BlockTag)
-		: format({ eth: 'uint' }, newestBlock as Numbers, STRING_NUMBER_FORMAT);
+		: format({ eth: 'uint' }, newestBlock as Numbers, STR_NUMBER_DATA_FORMAT);
 
 	const rewardPercentilesFormatted = format(
 		{
@@ -969,11 +968,9 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 			},
 		},
 		rewardPercentiles,
-		{
-			number: FMT_NUMBER.NUMBER,
-			bytes: FMT_BYTES.HEX,
-		},
+		NUMBER_DATA_FORMAT,
 	);
+
 	const response = await rpcMethods.getFeeHistory(
 		web3Context.requestManager,
 		blockCountFormatted,
