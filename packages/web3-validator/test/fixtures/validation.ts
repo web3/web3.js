@@ -28,7 +28,7 @@ export const validUintData: any[] = [
 
 // Using "null" value intentionally for validation
 // eslint-disable-next-line no-null/no-null
-export const invalidUintData: any[] = ['-0x48', '-12', -1, true, undefined, null];
+export const invalidUintData: any[] = ['-0x48', '-12', -1, true, undefined, null, ''];
 
 export const validUintDataWithSize: [any, number][] = [
 	['0x48', 8],
@@ -36,10 +36,16 @@ export const validUintDataWithSize: [any, number][] = [
 	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 256],
 	['1', 16],
 	[1, 8],
+	[0, 8],
+	['0x0', 8],
+	['0x1', 8],
 	[BigInt(12), 64],
 ];
 
 export const invalidUintDataWithSize: [any, number][] = [
+	['', 8],
+	[-1, 8],
+	['-0x1233', 8],
 	['0x4812', 8],
 	['0x123ccdef', 16],
 	['0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 8],
@@ -310,10 +316,20 @@ export const validBlockNumberData: any[] = [
 	'0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc',
 	'0x1',
 	'0xcd',
+	'1',
+	0,
+	12,
+	'0',
+	'0x0',
+	'0x12',
 ];
 
 export const invalidBlockNumberData: any[] = [
-	...invalidHexStrictData,
+	'45a',
+	'',
+	BigInt(-255),
+	-42,
+	4.2,
 	'-0xcd',
 	'-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
 ];
@@ -321,7 +337,8 @@ export const invalidBlockNumberData: any[] = [
 export const validBlockTagData: string[] = ['latest', 'pending', 'earliest'];
 
 export const invalidBlockTagData: any[] = [
-	...invalidHexStrictData,
+	'User',
+	'0xal',
 	'EARLIEST',
 	'LATEST',
 	'PENDING',
@@ -402,7 +419,7 @@ export const validFilterObjectData: Filter[] = [
 
 export const invalidFilterObjectData: any[] = [
 	{
-		fromBlock: 42,
+		fromBlock: '42a',
 	},
 	{
 		toBlock: -42,
