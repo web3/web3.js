@@ -43,11 +43,27 @@ describe('eth', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		web3Eth = new Web3Eth(clientUrl);
-
-		contract = new Contract(BasicAbi, undefined, {
-			provider: clientUrl,
-		});
+		if (clientUrl.startsWith('ws')) {
+			web3Eth = new Web3Eth(
+				new WebSocketProvider(
+					clientUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				),
+			);
+			contract = new Contract(BasicAbi, undefined, {
+				provider: new WebSocketProvider(
+					clientUrl,
+					{},
+					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
+				),
+			});
+		} else {
+			web3Eth = new Web3Eth(clientUrl);
+			contract = new Contract(BasicAbi, undefined, {
+				provider: clientUrl,
+			});
+		}
 
 		deployOptions = {
 			data: BasicBytecode,
@@ -59,32 +75,25 @@ describe('eth', () => {
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	afterAll(() => {
-		if (clientUrl.startsWith('ws')) {
+		if (clientUrl.startsWith('ws') && web3Eth?.provider) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
+			(contract.provider as WebSocketProvider).disconnect();
 		}
 	});
 
 	describe('methods', () => {
-		it('setProvider', async () => {
-			const url = getSystemTestProvider();
-			let newProvider;
-			if (url.startsWith('http')) {
-				newProvider = new HttpProvider(url);
-			} else {
-				newProvider = new WebSocketProvider(url);
-			}
-			web3Eth.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
-
-			expect(web3Eth.provider).toBe(newProvider);
+		it('setProvider', () => {
+			web3Eth.setProvider(contract.provider as SupportedProviders<Web3EthExecutionAPI>);
+			expect(web3Eth.provider).toBe(contract.provider);
 		});
-		it('providers', async () => {
+		it('providers', () => {
 			const res = web3Eth.providers;
 
 			expect(res.HttpProvider).toBeDefined();
 			expect(res.WebsocketProvider).toBeDefined();
 			expect(res.IpcProvider).toBeDefined();
 		});
-		it('currentProvider', async () => {
+		it('currentProvider', () => {
 			const { currentProvider } = web3Eth;
 			const url = getSystemTestProvider();
 			let checkWithClass;
@@ -97,7 +106,7 @@ describe('eth', () => {
 			}
 			expect(currentProvider).toBeInstanceOf(checkWithClass);
 		});
-		it('givenProvider', async () => {
+		it('givenProvider', () => {
 			const { givenProvider } = web3Eth;
 			expect(givenProvider).toBeUndefined();
 		});
@@ -121,29 +130,6 @@ describe('eth', () => {
 			// TODO: in future release add test for validation of returned results , ( match balance )
 			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
-		});
-
-		it('defaults', () => {
-			// TODO: in future release add tests for setting default and matching with new values
-			const config = web3Eth.getConfig();
-			expect(config.defaultAccount).toBeUndefined();
-			expect(config.handleRevert).toBe(false);
-			expect(config.defaultBlock).toBe('latest');
-			expect(config.transactionBlockTimeout).toBe(50);
-			expect(config.transactionConfirmationBlocks).toBe(24);
-			expect(config.transactionPollingInterval).toBe(1000);
-			expect(config.transactionPollingTimeout).toBe(750);
-			expect(config.transactionReceiptPollingInterval).toBeUndefined();
-			expect(config.transactionConfirmationPollingInterval).toBeUndefined();
-			expect(config.blockHeaderTimeout).toBe(10);
-			expect(config.maxListenersWarningThreshold).toBe(100);
-			expect(config.defaultNetworkId).toBeUndefined();
-			expect(config.defaultChain).toBe('mainnet');
-			expect(config.defaultCommon).toBeUndefined();
-			expect(config.defaultTransactionType).toBe('0x0');
-			expect(hexToNumber(config.defaultMaxPriorityFeePerGas as string)).toBeGreaterThan(0);
-			expect(config.transactionBuilder).toBeUndefined();
-			expect(config.transactionTypeParser).toBeUndefined();
 		});
 	});
 });

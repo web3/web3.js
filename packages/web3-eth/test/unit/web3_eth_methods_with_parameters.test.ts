@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable import/namespace */
 
+// eslint-disable-next-line import/no-named-as-default
 import Web3Eth from '../../src/index';
 import * as rpcMethods from '../../src/rpc_methods';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
