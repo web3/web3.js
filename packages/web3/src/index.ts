@@ -28,9 +28,41 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * > Web3.modules
  * ```
  *
- * ### Web3.modules
+ * # Web3.modules
  *
- * ### Web3 Instance
+ * ```ts
+ * Web3.modules
+ * ```
+ *
+ * Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
+ *
+ * #### Returns
+ *
+ *  `Object` A list of module constructors:
+ *
+ *
+ *  + `Eth` - `Constructor`: The Eth module for interacting with the Ethereum network
+ *
+ *
+ *  + `Net` - `Constructor`: The Net module for interacting with network properties.
+ *
+ *
+ *  + `Personal` - `constructor`: The Personal module for interacting with the Ethereum accounts (web3.eth.personal).
+ *
+ * #### Example
+ *
+ * ```ts
+ * Web3.modules
+ * > {
+ *   	Eth: Eth(provider),
+ *   	Net: Net(provider),
+ *   	Personal: Personal(provider),
+ *   }
+ * ```
+ *
+ * See details: {@link Web3.modules}
+ *
+ * # Web3 Instance
  *
  * The Web3 class is an umbrella package to house all Ethereum related modules.
  *
@@ -49,6 +81,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Contains the current package version of the web3.js library.
  *
+ * #### Returns
+ * //todo enable when functionality added
+ * //{@see Web3.version}
+ *
  * ### utils
  *
  * Static accessible property of the Web3 class and property of the instance as well.
@@ -60,7 +96,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Utility functions are also exposed on the `Web3` class object diretly.
  *
- * ## setProvider
+ * //todo enable when implemented
+ * //See details: {@link Web3.utils}
+ *
+ * ### setProvider
  *
  * ```ts
  * web3.setProvider(myProvider)
@@ -72,10 +111,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * **_NOTE:_** When called on the umbrella package web3 it will also set the provider for all sub modules web3.eth  etc.
  *
+ * #### Parameters
+ *  `Object`  - `myProvider`: a valid provider.
+ *
+ * #### Returns
+ * `Boolean`
+ *
  * See details: {@link Web3.setProvider}
  *
- *
- * @param provider A valid provider
  * #### Example: Local Geth Node
  * ```ts
  * import { Web3 } from "web3";
@@ -99,7 +142,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * let web3: Web3 = new Web3("https://eth-mainnet.alchemyapi.io/v2/your-api-key");
  * ```
  *
- * ## providers
+ * ### providers
  *
  * ```ts
  * web3.providers
@@ -107,7 +150,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  * Contains the current available providers.
  *
- * #### Value
+ * #### Returns
  *  `Object` with the following providers:
  *
  *
@@ -203,7 +246,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * See details: {@link Web3.providers}
  *
  *
- * ## givenProvider
+ * ### givenProvider
  *
  * ```ts
  * web3.givenProvider
@@ -213,9 +256,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
  * Will return the given provider by the (browser) environment, otherwise `null`.
  *
+ * #### Returns
+ * `Object` -  The given provider set or `null`.
+ *
  * See details: {@link Web3.givenProvider}
  *
- * ## currentProvider
+ * ### currentProvider
  *
  * ```ts
  * web3.currentProvider
@@ -224,9 +270,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  * Will return the current provider, otherwise `null`.
  *
+ * #### Returns
+ * `Object`: The current provider, otherwise `null`.
+ *
  * See details: {@link Web3.currentProvider}
  *
- * ## BatchRequest
+ * ### BatchRequest
  *
  * ```ts
  * new web3.BatchRequest()
@@ -235,6 +284,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  * Class to create and execute batch requests.
  *
+ *  #### Parameters
+ *  none
+ *
+ * #### Returns
+ * `Object`: With the following methods:
+ *
+ * + `add(request)`: To add a request object to the batch call.
+ *
+ * + `execute()` : To execute the batch request.
  *
  * #### Example
  * ```ts
