@@ -78,6 +78,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * See details: {@link Web3.setProvider}
  *
+ *
+ * @param provider A valid provider
  * #### Example: Local Geth Node
  * ```ts
  * import { Web3 } from "web3";
@@ -92,8 +94,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * //todo add IPC provider
  * ```
- *
- * @param provider A valid provider
  *
  * #### Example: Remote Geth Node
  *
