@@ -21,15 +21,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```ts
  * import { Web3 } from 'web3';
  *
- * > Web3.utils //Not exported atm
- * > Web3.version //Not exported atm
+ * > Web3.utils
+ * > Web3.version
  * > Web3.givenProvider
  * > Web3.providers
- * > Web3.modules //Not exported atm
+ * > Web3.modules
  * ```
  *
  * ### Web3.modules
- * //Not implemented
  *
  * ### Web3 Instance
  *
@@ -42,21 +41,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
  *
  * > web3.eth
- * > web3.shh //not present
- * > web3.bzz //not present
- * > web3.utils //not exported atm
- * > web3.version //not implemented
+ * > web3.utils
+ * > web3.version
  * ```
  *
  * ### version
  *
- * //Not implemented
  * Contains the current package version of the web3.js library.
  *
  * ### utils
  *
  * Static accessible property of the Web3 class and property of the instance as well.
- * //Not implemented
+ *
  * ```ts
  * Web3.utils
  * web3.utils
