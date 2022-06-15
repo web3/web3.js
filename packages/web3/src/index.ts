@@ -107,7 +107,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  * Contains the current available providers.
  *
- * #### Value
+ * #### Returns
  *  `Object` with the following providers:
  *
  *
