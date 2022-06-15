@@ -65,7 +65,10 @@ describe('contract', () => {
 					.send(sendOptions);
 
 				expect(receipt).toEqual(
-					expect.objectContaining({ status: '0x1', transactionHash: expect.any(String) }),
+					expect.objectContaining({
+						status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
 				);
 			});
 
@@ -78,14 +81,20 @@ describe('contract', () => {
 				});
 
 				expect(receipt).toEqual(
-					expect.objectContaining({ status: '0x1', transactionHash: expect.any(String) }),
+					expect.objectContaining({
+						status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
 				);
 			});
 
 			// TODO: Get and match the revert error message
 			it('should returns errors on reverts', async () => {
 				return expect(contract.methods.reverts().send(sendOptions)).rejects.toEqual(
-					expect.objectContaining({ status: '0x0', transactionHash: expect.any(String) }),
+					expect.objectContaining({
+						status: BigInt(0),
+						transactionHash: expect.any(String),
+					}),
 				);
 			});
 		});
