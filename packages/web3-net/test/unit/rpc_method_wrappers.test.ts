@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Net } from '../../src';
+import { Net } from '../../src';
 import { getIdValidData, getPeerCountValidData } from '../fixtures/rpc_method_wrappers';
 import * as rpcMethods from '../../src/rpc_methods';
 import { getId, getPeerCount, isListening } from '../../src/rpc_method_wrappers';
@@ -23,10 +23,10 @@ import { getId, getPeerCount, isListening } from '../../src/rpc_method_wrappers'
 jest.mock('../../src/rpc_methods');
 
 describe('rpc_method_wrappers', () => {
-	let web3Net: Web3Net;
+	let web3Net: Net;
 
 	beforeAll(() => {
-		web3Net = new Web3Net('http://127.0.0.1:8545');
+		web3Net = new Net('http://127.0.0.1:8545');
 	});
 
 	describe('should call RPC method', () => {

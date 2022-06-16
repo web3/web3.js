@@ -22,7 +22,7 @@ export type PromiseExecutor<T> = (
 	reject: (reason: unknown) => void,
 ) => void;
 
-export class PromiEvent<ResolveType, EventMap extends Web3EventMap>
+export class Web3PromiEvent<ResolveType, EventMap extends Web3EventMap>
 	extends Web3EventEmitter<EventMap>
 	implements Promise<ResolveType>
 {
