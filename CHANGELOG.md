@@ -546,6 +546,7 @@ Released with 1.0.0-beta.37 code base.
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix resolve type of getBlock function (#4911)
+-  Web3-utils BN fix (#5132)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
