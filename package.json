@@ -40,8 +40,6 @@
 		"geth:start": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth.sh start",
 		"geth:start:background": "WEB3_SYSTEM_TEST_BACKEND=geth && ./scripts/geth.sh start 1",
 		"geth:stop": "./scripts/geth.sh stop",
-		"ipc:start:background": "WEB3_SYSTEM_TEST_BACKEND=ipc && ./scripts/ipc.sh start 1",
-		"ipc:stop": "./scripts/ipc.sh stop",
 		"lint": "lerna run lint --stream --parallel",
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel",

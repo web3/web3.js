@@ -39,8 +39,8 @@ TEST_COMMAND=""
 
 if [[ $MODE == "ipc" ]];
     then
-        export WEB3_SYSTEM_TEST_PROVIDER=$(pwd)/scripts/ipc
-        BACKEND=ipc
+        export WEB3_SYSTEM_TEST_PROVIDER=$(pwd)/scripts/local/ipc
+        BACKEND=geth
         TEST_COMMAND="lerna run test:e2e:geth:ipc:$ENGINE --stream --scope web3"
     else
         if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
