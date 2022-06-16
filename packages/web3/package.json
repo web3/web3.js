@@ -30,8 +30,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
-		"test:e2e:geth:ipc:node": "yarn test:integration test/integration/ipc.test.ts"
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit"
 	},
 	"devDependencies": {
 		"@truffle/hdwallet-provider": "^2.0.4",
