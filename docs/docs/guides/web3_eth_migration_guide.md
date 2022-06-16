@@ -4,10 +4,10 @@
 
 ### Not Implemented or Exported
 
--   `extend` functionality not implemented
--   `web3.eth.createAccessList` not implemented
--   `web3.eth.personal` namespace is not exported
--   `web3.eth.net` namespace is not exported
+-   [extend](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#extend) functionality not implemented
+-   [web3.eth.createAccessList](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#createaccesslist) not implemented
+-   [web3.eth.personal](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#personal) namespace is not exported
+-   [web3.eth.net](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#net) namespace is not exported
 
 ### Defaults and Configs
 
@@ -507,4 +507,210 @@ await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe')
 
 // in 4.x
 await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // '0x0'
+```
+
+### `web3.eth.sendTransaction`
+
+- `userTransactionObject.chain` no longer defaults to `mainnet`, will be `undefined` if not provided
+- `userTransactionObject.hardfork` no longer defaults to `london`, will be `undefined` if not provided
+
+#### PromiEvents
+
+##### `sending`
+
+- In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+
+```typescript
+// in 1.x
+web3.eth.sendTransaction({ ... }).on('sending', (payload) => { ... });
+// payload would be:
+// {
+//   method: 'eth_sendTransaction',
+//   params: [
+//     {
+//       from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//       to: '0x0000000000000000000000000000000000000000',
+//       value: '0x1',
+//       maxPriorityFeePerGas: '0x9502F900',
+//       maxFeePerGas: '0xc3e17d20'
+//     }
+//   ],
+//   callback: undefined
+// }
+
+// in 4.x
+web3.eth.sendTransaction({ ... }).on('sending', (sendTransactionObject) => { ... });
+// sendTransactionObject would be:
+// {
+//     from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//     to: '0x0000000000000000000000000000000000000000',
+//     value: '0x1',
+//     gasPrice: '0x77359400',
+//     maxPriorityFeePerGas: undefined,
+//     maxFeePerGas: undefined
+// }
+```
+
+###### `sent`
+
+- In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+
+```typescript
+// in 1.x
+web3.eth.sendTransaction({ ... }).on('sent', (payload) => { ... });
+// payload would be:
+// {
+//   method: 'eth_sendTransaction',
+//   params: [
+//     {
+//       from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//       to: '0x0000000000000000000000000000000000000000',
+//       value: '0x1'
+//     }
+//   ],
+//   callback: undefined
+// }
+
+// in 4.x
+web3.eth.sendTransaction({ ... }).on('sent', (sentTransactionObject) => { ... });
+// sentTransactionObject would be:
+// {
+//     from: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
+//     to: '0x0000000000000000000000000000000000000000',
+//     value: '0x1',
+//     gasPrice: '0x77359400',
+//     maxPriorityFeePerGas: undefined,
+//     maxFeePerGas: undefined
+// }
+```
+
+##### `receipt`
+
+- The `receipt` object the event listener receives:
+    - Returns a hex string instead of a number for the following properties:
+        - `transactionIndex`
+        - `blockNumber`
+        - `cumulativeGasUsed`
+        - `gasUsed`
+        - `effectiveGasPrice`
+    - Returns a hex string instead of a boolean for the following properties:
+        - `status`
+
+```typescript
+// in 1.x
+web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
+// receipt would be:
+// {
+//   transactionHash: '0x4f0f428ae3c2f0ec5e054491ecf01a0c38b92ef128350d4831c07ef52f5d4a15',
+//   transactionIndex: 0,
+//   blockNumber: 14,
+//   blockHash: '0x5bb7c47a0fcb8d53fc2d1524873631340c1855c7b98d657de614d4d0554596f8',
+//   from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//   to: '0x0000000000000000000000000000000000000000',
+//   cumulativeGasUsed: 21000,
+//   gasUsed: 21000,
+//   contractAddress: null,
+//   logs: [],
+//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//   status: true,
+//   effectiveGasPrice: 2654611504,
+//   type: '0x2'
+// }
+
+// in 4.x
+web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
+// receipt would be:
+// {
+//     transactionHash: '0xef37e818889e7b40df24f8546ae15b16cda7e8fdc99ad76356611401cb4c4f93',
+//     transactionIndex: '0x0',
+//     blockNumber: '0xf',
+//     blockHash: '0x8a700d6665a5b91789f7525490c453d55208f7560662aa3ff2eaab8d297bfd07',
+//     from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//     to: '0x0000000000000000000000000000000000000000',
+//     cumulativeGasUsed: '0x5208',
+//     gasUsed: '0x5208',
+//     logs: [],
+//     logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//     status: '0x1',
+//     effectiveGasPrice: '0x77359400',
+//     type: '0x0'
+// }
+```
+
+##### `confirmation`
+
+- In `1.x`, this event listener would receive `confirmationNumber` and `receipt` as arguments, in `4.x` an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
+- `confirmationNumber` is returned as a hex string instead of a number
+- For the returned `receipt` object:
+    - Returns a hex string instead of a number for the following properties:
+        - `transactionIndex`
+        - `blockNumber`
+        - `cumulativeGasUsed`
+        - `gasUsed`
+        - `effectiveGasPrice`
+    - Returns a hex string instead of a boolean for the following properties:
+        - `status`
+
+```typescript
+// in 1.x
+web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationNumber, receipt) => { ... });
+// confirmationNumber would be: 1
+// receipt would be:
+// {
+//   transactionHash: '0x1e657e53a0e5a75fe36af8a05c89b8a8ea155c951ce43a7c42a77a48c4c89e2f',
+//   transactionIndex: 0,
+//   blockNumber: 2,
+//   blockHash: '0x940bfb359be8064d7c65408efaba3068bdd6995b810aae5fb355bd3d95d3079b',
+//   from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//   to: '0x0000000000000000000000000000000000000000',
+//   cumulativeGasUsed: 21000,
+//   gasUsed: 21000,
+//   contractAddress: null,
+//   logs: [],
+//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//   status: true,
+//   effectiveGasPrice: 3265778125,
+//   type: '0x2'
+// }
+
+// in 4.x
+web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => { ... });
+// confirmationObject would have the following structure:
+// {
+//     confirmationNumber: '0x2',
+//     receipt: {
+//         transactionHash: '0xd93fe25c2066cd8f15565bcff693507a3c70f5fb9387db57f939ae91f4080c6c',
+//         transactionIndex: '0x0',
+//         blockNumber: '0x5',
+//         blockHash: '0xe1775977a8041cb2709136804e4be609135f8367b49d38960f92a95b4c02189a',
+//         from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
+//         to: '0x0000000000000000000000000000000000000000',
+//         cumulativeGasUsed: '0x5208',
+//         gasUsed: '0x5208',
+//         logs: [],
+//         logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//         status: '0x1',
+//         effectiveGasPrice: '0x77359400',
+//         type: '0x0'
+//     },
+//     latestBlockHash: '0xb2ef3763190da82d8efa938f73efa5bb21e3d95c2ce25dd38ca21eea1a942260'
+// }
+```
+
+- In `1.x`, an event was emitted for each confirmation starting from `0` (the first block the transaction was included in), in `4.x` confirmations start from `1` and the first event to be emitted will have a `confirmationNumber` of `2`
+
+```typescript
+// in 1.x
+web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationNumber, receipt) => {
+    // confirmationNumber would eqaul 1 the first time the event was emitted
+    // confirmationNumber would then eqaul 2 the next time
+    // and so on until 12 (or whatever transactionConfirmationBlocks is set to) confirmations are found
+});
+
+// in 4.x
+web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
+    // confirmationNumber would eqaul 2 the first time the event was emitted
+    // confirmationNumber would then eqaul 3 the next time
+    // and so on until 12 (or whatever transactionConfirmationBlocks is set to) confirmations are found
+});
 ```
