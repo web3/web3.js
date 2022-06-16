@@ -54,13 +54,13 @@ describe('validation', () => {
 		});
 		describe('isBlockNumberOrTag', () => {
 			describe('valid cases', () => {
-				it.each([...validBlockTagData, ...validBlockNumberData])('%s', input => {
+				it.each([...validBlockTagData, ...validBlockNumberData])('%j', input => {
 					expect(isBlockNumberOrTag(input)).toBeTruthy();
 				});
 			});
 
 			describe('invalid cases', () => {
-				it.each([...invalidBlockTagData, ...invalidBlockNumberData])('%s', input => {
+				it.each([...invalidBlockTagData, ...invalidBlockNumberData])('%o', input => {
 					expect(isBlockNumberOrTag(input)).toBeFalsy();
 				});
 			});

@@ -36,6 +36,10 @@ export const isUInt = (
 		return false;
 	}
 
+	if (typeof value === 'string' && value.length === 0) {
+		return false;
+	}
+
 	let size!: number;
 
 	if (options?.abiType) {
