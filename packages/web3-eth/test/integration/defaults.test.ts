@@ -495,7 +495,7 @@ describe('defaults', () => {
 				web3Context: eth2 as Web3Context<any>,
 			});
 
-			expect(resWithPassNetworkId.networkId).toBe(5);
+			expect(resWithPassNetworkId.networkId).toBe('0x5');
 		});
 		it('defaultChain', async () => {
 			// default
