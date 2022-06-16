@@ -42,6 +42,6 @@
 	"dependencies": {
 		"web3-errors": "1.0.0-alpha.0",
 		"web3-validator": "^0.1.0-alpha.0",
-		"ethereum-cryptography": "^0.2.0"
+		"ethereum-cryptography": "^1.0.3"
 	}
 }

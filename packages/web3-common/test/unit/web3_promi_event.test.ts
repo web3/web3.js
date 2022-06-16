@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { PromiEvent } from '../../src/promi_event';
+import { Web3PromiEvent } from '../../src/web3_promi_event';
 
-describe('PromiEvent', () => {
+describe('Web3PromiEvent', () => {
 	it('should initialize and resolve promise', async () => {
-		const p = new PromiEvent(resolve => {
+		const p = new Web3PromiEvent(resolve => {
 			resolve('Resolved Value');
 		});
 
@@ -27,7 +27,7 @@ describe('PromiEvent', () => {
 	});
 
 	it('should initialize and reject promise', async () => {
-		const p = new PromiEvent((_, reject) => {
+		const p = new Web3PromiEvent((_, reject) => {
 			reject(new Error('My Error'));
 		});
 
@@ -36,7 +36,7 @@ describe('PromiEvent', () => {
 
 	it('should initialize and emit event', async () => {
 		return new Promise(done => {
-			const p = new PromiEvent<string, { data: string }>(resolve => {
+			const p = new Web3PromiEvent<string, { data: string }>(resolve => {
 				resolve('resolved value');
 			});
 
@@ -56,7 +56,7 @@ describe('PromiEvent', () => {
 	it('should initialize and emit later', async () => {
 		return new Promise(done => {
 			const func = () => {
-				const p = new PromiEvent<string, { data: string }>(resolve => {
+				const p = new Web3PromiEvent<string, { data: string }>(resolve => {
 					resolve('resolved value');
 				});
 
