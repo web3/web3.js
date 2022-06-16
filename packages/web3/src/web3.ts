@@ -93,7 +93,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 	};
 
-	public constructor(provider: SupportedProviders<EthExecutionAPI> | string) {
+	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
 		const accountProvider = {
 			create,
 			privateKeyToAccount,

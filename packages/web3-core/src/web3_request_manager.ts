@@ -31,7 +31,6 @@ import {
 	Web3APIRequest,
 	Web3APIReturnType,
 	Web3APISpec,
-	Web3BaseProvider,
 	Web3EventEmitter,
 } from 'web3-common';
 import HttpProvider from 'web3-providers-http';
@@ -60,14 +59,14 @@ const availableProviders = {
 export class Web3RequestManager<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<{
-	[key in Web3RequestManagerEvent]: SupportedProviders<API>;
+	[key in Web3RequestManagerEvent]: SupportedProviders<API> | undefined;
 }> {
-	private _provider!: SupportedProviders<API>;
+	private _provider?: SupportedProviders<API>;
 
 	public constructor(provider?: SupportedProviders<API> | string, net?: Socket) {
 		super();
 
-		if (provider) {
+		if (!isNullish(provider)) {
 			this.setProvider(provider, net);
 		}
 	}
@@ -77,10 +76,6 @@ export class Web3RequestManager<
 	}
 
 	public get provider() {
-		if (!this._provider) {
-			throw new ProviderError('Provider not available');
-		}
-
 		return this._provider;
 	}
 
@@ -89,8 +84,8 @@ export class Web3RequestManager<
 		return availableProviders;
 	}
 
-	public setProvider(provider: SupportedProviders<API> | string, net?: Socket) {
-		let newProvider!: Web3BaseProvider<API>;
+	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket) {
+		let newProvider: SupportedProviders<API> | undefined;
 
 		// autodetect provider
 		if (provider && typeof provider === 'string' && this.providers) {
@@ -106,12 +101,17 @@ export class Web3RequestManager<
 			} else if (typeof net === 'object' && typeof net.connect === 'function') {
 				newProvider = new this.providers.IpcProvider<API>(provider, net);
 			} else {
-				throw new ProviderError(`Can't autodetect provider for "${provider}'"`);
+				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
 			}
+		} else if (isNullish(provider)) {
+			// In case want to unset the provider
+			newProvider = undefined;
+		} else {
+			newProvider = provider as SupportedProviders<API>;
 		}
 
 		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this._provider);
-		this._provider = newProvider ?? provider;
+		this._provider = newProvider;
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
 	}
 
@@ -141,6 +141,12 @@ export class Web3RequestManager<
 		request: Web3APIRequest<API, Method> | JsonRpcBatchRequest,
 	): Promise<JsonRpcResponse<ResponseType>> {
 		const { provider } = this;
+
+		if (isNullish(provider)) {
+			throw new ProviderError(
+				'Provider not available. Use `.setProvider` or `.provider=` to initialize the provider.',
+			);
+		}
 
 		const payload = jsonRpc.isBatchRequest(request)
 			? jsonRpc.toBatchPayload(request)
