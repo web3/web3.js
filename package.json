@@ -32,7 +32,7 @@
 		]
 	},
 	"scripts": {
-		"build": "yarn clean && lerna run build --stream",
+		"build": "yarn clean && lerna run build --stream && webpack --config webpackprod.config.js",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
 		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
@@ -59,14 +59,18 @@
 	},
 	"devDependencies": {
 		"@cypress/webpack-preprocessor": "^5.11.1",
+		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
 		"@openzeppelin/contracts": "^4.6.0",
-		"@types/node": "*",
+		"@types/node": "^17.0.40",
+		"@types/webpack": "^5.28.0",
 		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
 		"bufferutil": "^4.0.6",
+		"clean-webpack-plugin": "^4.0.0",
 		"crypto-browserify": "^3.12.0",
 		"cypress": "^9.6.0",
 		"cypress-jest-adapter": "^0.1.1",
+		"declaration-bundler-webpack-plugin": "^1.0.3",
 		"eslint": "^8.3.0",
 		"http-browserify": "^1.7.0",
 		"https-browserify": "^1.0.0",
@@ -79,17 +83,17 @@
 		"process": "^0.11.10",
 		"solc": "^0.8.13",
 		"ts-jest": "^27.0.7",
-		"ts-loader": "^9.2.8",
+		"ts-loader": "^9.3.0",
 		"ts-node": "^10.4.0",
-		"typescript": "^4.5.2",
 		"typedoc": "^0.22.15",
-		"typedoc-plugin-markdown": "^3.12.1",
 		"typedoc-monorepo-link-types": "^0.0.2",
 		"typedoc-plugin-extras": "^2.2.3",
-		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
+		"typedoc-plugin-markdown": "^3.12.1",
 		"typedoc-plugin-mdn-links": "^1.0.6",
+		"typescript": "^4.5.2",
 		"utf-8-validate": "^5.0.9",
-		"webpack": "^5.72.0"
+		"webpack": "^5.73.0",
+		"webpack-cli": "^4.9.2"
 	},
 	"packageManager": "yarn@1.22.15"
 }
