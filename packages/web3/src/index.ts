@@ -254,10 +254,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ...
  * ```
  * When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
- * Will return the given provider by the (browser) environment, otherwise `null`.
+ * Will return the given provider by the (browser) environment, otherwise `undefined`.
  *
  * #### Returns
- * `Object` -  The given provider set or `null`.
+ * `Object` -  The given provider set or `undefined`.
  *
  * See details: {@link Web3.givenProvider}
  *
@@ -268,10 +268,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * web3.eth.currentProvider
  * ...
  * ```
- * Will return the current provider, otherwise `null`.
+ * Will return the current provider, otherwise `undefined`.
  *
  * #### Returns
- * `Object`: The current provider, otherwise `null`.
+ * `Object`: The current provider, otherwise `undefined`.
  *
  * See details: {@link Web3.currentProvider}
  *
