@@ -71,6 +71,8 @@ export const ERR_TX_POLLING_TIMEOUT = 426;
 export const ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL = 427;
 export const ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER = 428;
 
+export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
+
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;

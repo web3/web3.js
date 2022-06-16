@@ -30,7 +30,12 @@ import {
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions, Transaction, TransactionCall } from './types';
+import {
+	SendTransactionOptions,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
+} from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
@@ -49,12 +54,14 @@ type RegisteredSubscription = {
 };
 
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
 		super(
 			typeof providerOrContext === 'object' &&
 				(providerOrContext as Web3ContextInitOptions).provider
 				? providerOrContext
 				: {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						provider: providerOrContext as SupportedProviders<any>,
 						registeredSubscriptions: {
 							logs: LogsSubscription,
@@ -213,7 +220,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		transaction: Transaction,
+		transaction: Transaction | TransactionWithLocalWalletIndex,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {

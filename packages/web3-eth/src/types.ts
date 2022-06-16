@@ -23,7 +23,7 @@ import {
 	FMT_NUMBER,
 	FormatType,
 } from 'web3-common';
-import { Address, Bytes, Numbers } from 'web3-utils';
+import { Address, Bytes, Numbers, Uint } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =
@@ -70,6 +70,7 @@ export interface ReceiptInfo {
 	readonly logsBloom: Bytes;
 	readonly root: Bytes;
 	readonly status: Numbers;
+	readonly type?: Numbers;
 }
 
 export interface CustomChain {
@@ -84,12 +85,12 @@ export interface Common {
 	hardfork?: Hardfork;
 }
 
-export interface Transaction {
+interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;
 	common?: Common;
-	from?: Address;
-	to?: Address;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | null;
 	gas?: Numbers;
 	gasPrice?: Numbers;
 	type?: Numbers;
@@ -103,9 +104,18 @@ export interface Transaction {
 	chainId?: Numbers;
 	networkId?: Numbers;
 	gasLimit?: Numbers;
+	yParity?: Uint;
 	v?: Numbers;
 	r?: Bytes;
 	s?: Bytes;
+}
+
+export interface Transaction extends TransactionBase {
+	from?: Address;
+}
+
+export interface TransactionWithLocalWalletIndex extends TransactionBase {
+	from?: Numbers;
 }
 
 export interface TransactionInfo extends Transaction {
@@ -194,6 +204,10 @@ export type SendTransactionEvents = {
 
 export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
 	ignoreGasPricing?: boolean;
+	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
+}
+
+export interface SendSignedTransactionOptions<ResolveType = ReceiptInfo> {
 	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
 }
 

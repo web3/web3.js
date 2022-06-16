@@ -384,6 +384,9 @@ export const receiptInfoSchema = {
 		status: {
 			eth: 'uint',
 		},
+		type: {
+			eth: 'uint',
+		},
 	},
 };
 

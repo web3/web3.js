@@ -41,6 +41,8 @@ describe('signTransaction', () => {
 				DEFAULT_RETURN_FORMAT,
 			);
 
+			(rpcMethodsSignTransaction as jest.Mock).mockResolvedValueOnce(mockRpcResponse.raw);
+
 			await signTransaction(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(rpcMethodsSignTransaction).toHaveBeenCalledWith(
 				web3Context.requestManager,
