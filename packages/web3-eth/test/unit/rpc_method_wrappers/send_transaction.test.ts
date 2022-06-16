@@ -250,7 +250,7 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should resolve promiEvent with expectedReceiptInfo\n ${testMessage}`,
+		`should resolve Web3PromiEvent with expectedReceiptInfo\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedReceiptInfo = format(
 				receiptInfoSchema,
