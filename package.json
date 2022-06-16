@@ -32,7 +32,9 @@
 		]
 	},
 	"scripts": {
-		"build": "yarn clean && lerna run build --stream && webpack --config webpackprod.config.js",
+		"prebuild": "yarn clean",
+		"build": "lerna run build --stream",
+		"build:web": "lerna run build:web --stream",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
 		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
@@ -66,7 +68,6 @@
 		"assert": "^2.0.0",
 		"buffer": "^6.0.3",
 		"bufferutil": "^4.0.6",
-		"clean-webpack-plugin": "^4.0.0",
 		"crypto-browserify": "^3.12.0",
 		"cypress": "^9.6.0",
 		"cypress-jest-adapter": "^0.1.1",
