@@ -459,6 +459,7 @@ export interface AccessTuple {
 
 export interface CreateAccessList {
     accessList: AccessTuple[];
+    error?: string;
     gasUsed: string;
 }
 
