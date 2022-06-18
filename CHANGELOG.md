@@ -561,3 +561,8 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
+
+## [1.7.5]
+
+### Added
+- add `createAccessList` types in web3.eth (#5146)
