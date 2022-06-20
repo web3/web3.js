@@ -12,7 +12,7 @@
 ### Defaults and Configs
 
 -   `givenProvider` default value is `undefined` instead of `null`
--   `currentProvider` will never return `null`, provider required upon instantiation as opposed to being optional in 1.x
+-   `currentProvider` will never return `null`, provider required upon instantiation as opposed to being optional in 1.x //todo maybe this is not true after after the recent discussion/change
 -   `web3.eth.defaultAccount` default value is `undefined` instead of `null`
     -   1.x has `undefined` documented as default, but in implementation it's `null`
 -   `web3.eth.defaultHardfork` default is `london` instead of `undefined`
@@ -100,16 +100,16 @@ await web3.eth.getBalance('0xAB089B30f46883C3598B720d85837080b9929D0B'); // '0xf
 
 ### `web3.eth.getBlock`
 
-- Returns a hex string instead of a number for the following properties:
-    - `baseFeePerGas`
-    - `gasLimit`
-    - `gasUsed`
-    - `number`
-    - `size`
-    - `timestamp`
-- Returns a hex string instead of a number string for the following properties:
-    - `difficulty`
-    - `totalDifficulty`
+-   Returns a hex string instead of a number for the following properties:
+    -   `baseFeePerGas`
+    -   `gasLimit`
+    -   `gasUsed`
+    -   `number`
+    -   `size`
+    -   `timestamp`
+-   Returns a hex string instead of a number string for the following properties:
+    -   `difficulty`
+    -   `totalDifficulty`
 
 ```typescript
 // in 1.x
@@ -191,15 +191,15 @@ await web3.eth.getBlockUncleCount('latest'); // '0x0'
 
 ### `web3.eth.getUncle`
 
-- Returns a hex string instead of a number for the following properties:
-    - `baseFeePerGas`
-    - `gasLimit`
-    - `gasUsed`
-    - `number`
-    - `size`
-    - `timestamp`
-- Returns a hex string instead of a number string for the following properties:
-    - `difficulty`
+-   Returns a hex string instead of a number for the following properties:
+    -   `baseFeePerGas`
+    -   `gasLimit`
+    -   `gasUsed`
+    -   `number`
+    -   `size`
+    -   `timestamp`
+-   Returns a hex string instead of a number string for the following properties:
+    -   `difficulty`
 
 ```typescript
 // in 1.x
@@ -253,17 +253,17 @@ await web3.eth.getUncle(14965991, 0);
 
 ### `web3.eth.getTransaction`
 
-- Returns a hex string instead of a number for the following properties:
-    - `blockNumber`
-    - `gas`
-    - `nonce`
-    - `transactionIndex`
-    - `type`
-- Returns a hex string instead of a number string for the following properties:
-    - `gasPrice`
-    - `maxFeePerGas`
-    - `maxPriorityFeePerGas`
-    - `value`
+-   Returns a hex string instead of a number for the following properties:
+    -   `blockNumber`
+    -   `gas`
+    -   `nonce`
+    -   `transactionIndex`
+    -   `type`
+-   Returns a hex string instead of a number string for the following properties:
+    -   `gasPrice`
+    -   `maxFeePerGas`
+    -   `maxPriorityFeePerGas`
+    -   `value`
 
 ```typescript
 // in 1.x
@@ -317,17 +317,17 @@ await web3.eth.getTransaction('0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73
 
 ### `web3.eth.getPendingTransactions`
 
-- Returns a hex string instead of a number for the following properties:
-    - `blockNumber`
-    - `gas`
-    - `nonce`
-    - `transactionIndex`
-    - `type`
-- Returns a hex string instead of a number string for the following properties:
-    - `gasPrice`
-    - `maxFeePerGas`
-    - `maxPriorityFeePerGas`
-    - `value`
+-   Returns a hex string instead of a number for the following properties:
+    -   `blockNumber`
+    -   `gas`
+    -   `nonce`
+    -   `transactionIndex`
+    -   `type`
+-   Returns a hex string instead of a number string for the following properties:
+    -   `gasPrice`
+    -   `maxFeePerGas`
+    -   `maxPriorityFeePerGas`
+    -   `value`
 
 ```typescript
 // in 1.x
@@ -385,17 +385,17 @@ await web3.eth.getPendingTransactions();
 
 ### `web3.eth.getTransactionFromBlock`
 
-- Returns a hex string instead of a number for the following properties:
-    - `blockNumber`
-    - `gas`
-    - `nonce`
-    - `transactionIndex`
-    - `type`
-- Returns a hex string instead of a number string for the following properties:
-    - `gasPrice`
-    - `maxFeePerGas`
-    - `maxPriorityFeePerGas`
-    - `value`
+-   Returns a hex string instead of a number for the following properties:
+    -   `blockNumber`
+    -   `gas`
+    -   `nonce`
+    -   `transactionIndex`
+    -   `type`
+-   Returns a hex string instead of a number string for the following properties:
+    -   `gasPrice`
+    -   `maxFeePerGas`
+    -   `maxPriorityFeePerGas`
+    -   `value`
 
 ```typescript
 // in 1.x
@@ -449,18 +449,20 @@ await web3.eth.getTransactionFromBlock('latest', 1);
 
 ### `web3.eth.getTransactionReceipt`
 
-- Returns a hex string instead of a number for the following properties:
-    - `blockNumber`
-    - `cumulativeGasUsed`
-    - `effectiveGasPrice`
-    - `gasUsed`
-    - `transactionIndex`
-- Returns a hex string instead of a boolean for the following properties:
-    - `status`
+-   Returns a hex string instead of a number for the following properties:
+    -   `blockNumber`
+    -   `cumulativeGasUsed`
+    -   `effectiveGasPrice`
+    -   `gasUsed`
+    -   `transactionIndex`
+-   Returns a hex string instead of a boolean for the following properties:
+    -   `status`
 
 ```typescript
 // in 1.x
-await web3.eth.getTransactionReceipt('0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593');
+await web3.eth.getTransactionReceipt(
+	'0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
+);
 // {
 //     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
 //     blockNumber: 14966017,
@@ -479,7 +481,9 @@ await web3.eth.getTransactionReceipt('0x219f94fa188e6a0927c3c659537b5c76f4a750b9
 // }
 
 // in 4.x
-await web3.eth.getTransactionReceipt('0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593');
+await web3.eth.getTransactionReceipt(
+	'0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
+);
 // {
 //     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
 //     blockNumber: '0xe45d01',
@@ -511,14 +515,14 @@ await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe')
 
 ### `web3.eth.sendTransaction`
 
-- `userTransactionObject.chain` no longer defaults to `mainnet`, will be `undefined` if not provided
-- `userTransactionObject.hardfork` no longer defaults to `london`, will be `undefined` if not provided
+-   `userTransactionObject.chain` no longer defaults to `mainnet`, will be `undefined` if not provided
+-   `userTransactionObject.hardfork` no longer defaults to `london`, will be `undefined` if not provided
 
 #### PromiEvents
 
 ##### `sending`
 
-- In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+-   In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -553,7 +557,7 @@ web3.eth.sendTransaction({ ... }).on('sending', (sendTransactionObject) => { ...
 
 ###### `sent`
 
-- In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+-   In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -586,15 +590,15 @@ web3.eth.sendTransaction({ ... }).on('sent', (sentTransactionObject) => { ... })
 
 ##### `receipt`
 
-- The `receipt` object the event listener receives:
-    - Returns a hex string instead of a number for the following properties:
-        - `transactionIndex`
-        - `blockNumber`
-        - `cumulativeGasUsed`
-        - `gasUsed`
-        - `effectiveGasPrice`
-    - Returns a hex string instead of a boolean for the following properties:
-        - `status`
+-   The `receipt` object the event listener receives:
+    -   Returns a hex string instead of a number for the following properties:
+        -   `transactionIndex`
+        -   `blockNumber`
+        -   `cumulativeGasUsed`
+        -   `gasUsed`
+        -   `effectiveGasPrice`
+    -   Returns a hex string instead of a boolean for the following properties:
+        -   `status`
 
 ```typescript
 // in 1.x
@@ -639,17 +643,17 @@ web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
 
 ##### `confirmation`
 
-- In `1.x`, this event listener would receive `confirmationNumber` and `receipt` as arguments, in `4.x` an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
-- `confirmationNumber` is returned as a hex string instead of a number
-- For the returned `receipt` object:
-    - Returns a hex string instead of a number for the following properties:
-        - `transactionIndex`
-        - `blockNumber`
-        - `cumulativeGasUsed`
-        - `gasUsed`
-        - `effectiveGasPrice`
-    - Returns a hex string instead of a boolean for the following properties:
-        - `status`
+-   In `1.x`, this event listener would receive `confirmationNumber` and `receipt` as arguments, in `4.x` an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
+-   `confirmationNumber` is returned as a hex string instead of a number
+-   For the returned `receipt` object:
+    -   Returns a hex string instead of a number for the following properties:
+        -   `transactionIndex`
+        -   `blockNumber`
+        -   `cumulativeGasUsed`
+        -   `gasUsed`
+        -   `effectiveGasPrice`
+    -   Returns a hex string instead of a boolean for the following properties:
+        -   `status`
 
 ```typescript
 // in 1.x
@@ -697,7 +701,7 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => { .
 // }
 ```
 
-- In `1.x`, an event was emitted for each confirmation starting from `0` (the first block the transaction was included in), in `4.x` confirmations start from `1` and the first event to be emitted will have a `confirmationNumber` of `2`
+-   In `1.x`, an event was emitted for each confirmation starting from `0` (the first block the transaction was included in), in `4.x` confirmations start from `1` and the first event to be emitted will have a `confirmationNumber` of `2`
 
 ```typescript
 // in 1.x
@@ -714,3 +718,188 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
     // and so on until 12 (or whatever transactionConfirmationBlocks is set to) confirmations are found
 });
 ```
+
+### `web3.eth.sendSignedTransaction`
+
+-   Returns a hex string instead of a number for the following properties:
+    -   `blockNumber`
+    -   `cumulativeGasUsed`
+    -   `effectiveGasPrice`
+    -   `gasUsed`
+    -   `transactionIndex`
+-   Returns a hex string instead of a boolean for the following properties:
+    -   `status`
+
+```ts
+//in 1.x
+web3.eth.sendSignedTransaction({...}).then(console.log);
+// {
+//   blockHash: '0xd2964dacbc71217cb8d58b1f3f7ac03d4abbbbd500e13bd505bbdac8361f6fae',
+//   blockNumber: 9,
+//   contractAddress: null,
+//   cumulativeGasUsed: 21000,
+//   effectiveGasPrice: 20000000000,
+//   from: '0xd8c375f286c258521564da00ddee3945d1d057c4',
+//   gasUsed: 21000,
+//   logs: [],
+//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//   status: true,
+//   to: '0x3535353535353535353535353535353535353535',
+//   transactionHash: '0x2bd1f369a1f9fba4b12a597761f771c34031f67584ed3c5e28a4c915ef0a1f83',
+//   transactionIndex: 0,
+//   type: '0x0'
+// }
+
+//in 4.x
+web34.eth.sendSignedTransaction({...}).then(console.log);
+// {
+//   blockHash: '0xf433c7285366ae50334048ea2a290acc46db49abe75c5166bf71fe410834f338',
+//   blockNumber: '0xa',
+//   cumulativeGasUsed: '0x5208',
+//   effectiveGasPrice: '0x4a817c800',
+//   from: '0xd8c375f286c258521564da00ddee3945d1d057c4',
+//   gasUsed: '0x5208',
+//   logs: [],
+//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//   status: '0x1',
+//   to: '0x3535353535353535353535353535353535353535',
+//   transactionHash: '0x739c5a6593e20bd545c264482a6bb9e7aebc504559e6406a4ed2fde4bf9dad72',
+//   transactionIndex: '0x0',
+//   type: '0x0'
+// }
+```
+
+### `web3.eth.sign`
+
+The message must be converted to hex first.
+
+```ts
+//in 1.x both work
+web3.eth.sign('Hello world', '0xd8c375f286c258521564da00ddee3945d1d057c4').then(console.log);
+//0x7907ca312eb55a54673255dfa4e947d7533dcf746460c82b50e281fe88a6f0d17d602d2205b2d7c137cf7cb9b86a7ea976fd062e39bc08373dffa72f020776e11c
+web3.eth
+	.sign(web3.utils.utf8ToHex('Hello world'), '0xd8c375f286c258521564da00ddee3945d1d057c4')
+	.then(console.log);
+//0x7907ca312eb55a54673255dfa4e947d7533dcf746460c82b50e281fe88a6f0d17d602d2205b2d7c137cf7cb9b86a7ea976fd062e39bc08373dffa72f020776e11c
+
+//in 4.x message must converted beforehand
+web3.eth
+	.sign(web3.utils.utf8ToHex('Hello world'), '0xd8c375f286c258521564da00ddee3945d1d057c4')
+	.then(console.log);
+//0x7907ca312eb55a54673255dfa4e947d7533dcf746460c82b50e281fe88a6f0d17d602d2205b2d7c137cf7cb9b86a7ea976fd062e39bc08373dffa72f020776e11c
+```
+
+### `web3.eth.signTransaction`
+
+-   In 1.x documentation examples, the nonce seems to be optional since it isn't present in the payload, but, it is required. It is required in 4.x, too. In 1.x nonce should be a number, in 4.x it can be number or string or hex string.
+
+-   1.x sets gasPrice (or maxPriorityFeePerGas & maxFeePerGas) to null in EIP-1559 transactions (in not EIP-1559 transactions) in the tx object. In 4.x instead of null, they are not present.
+
+-   In 1.x the hash of the tx is present, in 4.x not.
+
+```ts
+//in 1.x
+let payload = {
+	from: '0xd8c375f286c258521564da00ddee3945d1d057c4',
+	nonce: web3.utils.hexToNumber(
+		await web3.eth.getTransactionCount('0xd8c375f286c258521564da00ddee3945d1d057c4'),
+	),
+	gasPrice: '20000000000',
+	gas: '21000',
+	to: '0x3535353535353535353535353535353535353535',
+	value: '1000000000000000000',
+	data: '',
+};
+
+web3.eth.signTransaction(payload).then(console.log);
+// {
+//   raw: '0xf86e808504a817c800825208943535353535353535353535353535353535353535880de0b6b3a764000080820a96a0a6dec055b314bd54c4ac294d6f298dbf8e0e4b1581d1bb916ad728ae26b55d80a01eb7b15974101a58acc6d6a976a32f058b6bdbdb2c3c4b9062865264613ef92f',
+//   tx: {
+//     type: '0x0',
+//     nonce: '0x0',
+//     gasPrice: '0x4a817c800',
+//     maxPriorityFeePerGas: null,
+//     maxFeePerGas: null,
+//     gas: '0x5208',
+//     value: '0xde0b6b3a7640000',
+//     input: '0x',
+//     v: '0xa96',
+//     r: '0xa6dec055b314bd54c4ac294d6f298dbf8e0e4b1581d1bb916ad728ae26b55d80',
+//     s: '0x1eb7b15974101a58acc6d6a976a32f058b6bdbdb2c3c4b9062865264613ef92f',
+//     to: '0x3535353535353535353535353535353535353535',
+//     hash: '0xfa45fc0923d6290ea1d0e597d81ed90d4594d82ef746eafcc36d2e4474e38fd0'
+//   }
+// }
+
+//in 4.x
+let payload = {
+	from: '0xd8c375f286c258521564da00ddee3945d1d057c4',
+	nonce: await web3.eth.getTransactionCount('0xd8c375f286c258521564da00ddee3945d1d057c4'),
+	gasPrice: '20000000000',
+	gas: '21000',
+	to: '0x3535353535353535353535353535353535353535',
+	value: '1000000000000000000',
+	data: '',
+};
+
+web3.eth.signTransaction(payload).then(console.log);
+// raw: '0xf86e808504a817c800825208943535353535353535353535353535353535353535880de0b6b3a764000080820a96a0a6dec055b314bd54c4ac294d6f298dbf8e0e4b1581d1bb916ad728ae26b55d80a01eb7b15974101a58acc6d6a976a32f058b6bdbdb2c3c4b9062865264613ef92f',
+//   tx: {
+//     type: '0x0',
+//     nonce: '0x0',
+//     gasPrice: '0x4a817c800',
+//     gas: '0x5208',
+//     value: '0xde0b6b3a7640000',
+//     v: '0xa96',
+//     r: '0xa6dec055b314bd54c4ac294d6f298dbf8e0e4b1581d1bb916ad728ae26b55d80',
+//     s: '0x1eb7b15974101a58acc6d6a976a32f058b6bdbdb2c3c4b9062865264613ef92f',
+//     to: '0x3535353535353535353535353535353535353535',
+//     data: '0x'
+//   }
+// }
+```
+
+### `web3.eth.call`
+
+same as in 1.x, returns the returned data of the call
+
+```ts
+const transaction = {
+	to: '0x99277D0A90F4A214c42B5B5b2c85B5ba2B46c809',
+	data: '0xcfae3217',
+};
+
+//in 1.x
+web3.eth.call(transaction).then(console.log);
+// 0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000017736f6c79656e7420677265656e2069732070656f706c65000000000000000000
+
+//in 4.x
+web3.eth.call(transaction).then(console.log);
+// 0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000017736f6c79656e7420677265656e2069732070656f706c65000000000000000000
+```
+
+### `web3.eth.estimateGas`
+
+returns a hex string instead of a number
+
+```ts
+//in 1.x
+web3.eth
+	.estimateGas({
+		to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+		data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003',
+	})
+	.then(console.log);
+//21204
+
+//in 4.x
+web3.eth
+	.estimateGas({
+		to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+		data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003',
+	})
+	.then(console.log);
+// 0x52d4;
+```
+
+### `web3.eth.getPastLogs`
