@@ -110,6 +110,23 @@ export default class IpcProvider<
 		this._removeSocketListeners();
 		this._addSocketListeners();
 	}
+	public async waitForConnection(): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			const maxNumberOfAttempts = 10;
+			const timeOutTime = 5000; // ms
+			let currentAttempt = 0;
+			const interval = setInterval(() => {
+				if (currentAttempt > maxNumberOfAttempts - 1) {
+					clearInterval(interval);
+					reject(new ConnectionNotOpenError());
+				} else if (this.getStatus() === 'connected') {
+					clearInterval(interval);
+					resolve();
+				}
+				currentAttempt += 1;
+			}, timeOutTime / maxNumberOfAttempts);
+		});
+	}
 
 	// eslint-disable-next-line @typescript-eslint/require-await
 	public async request<
@@ -121,7 +138,7 @@ export default class IpcProvider<
 		if (isNullish(request.id)) throw new Error('Request Id not defined');
 
 		if (this.getStatus() !== 'connected') {
-			throw new ConnectionNotOpenError();
+			await this.waitForConnection();
 		}
 
 		try {
@@ -142,7 +159,6 @@ export default class IpcProvider<
 
 	private _onMessage(e: Buffer | string): void {
 		const result = typeof e === 'string' ? e : e.toString('utf8');
-
 		const response = JSON.parse(result) as
 			| JsonRpcResponseWithError
 			| JsonRpcResponseWithResult

@@ -32,6 +32,9 @@ import {
 	itIf,
 	getSystemTestAccounts,
 	createNewAccount,
+	isHttp,
+	isWs,
+	isIpc,
 } from '../shared_fixtures/system_tests_utils';
 import { Web3 } from '../../src/index';
 
@@ -72,7 +75,7 @@ describe('Web3 instance', () => {
 		currentAttempt = 0;
 	});
 	afterEach(async () => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			// make sure we try to close the connection after it is established
 			if (
 				web3.provider &&
@@ -84,45 +87,39 @@ describe('Web3 instance', () => {
 		}
 	});
 
-	describeIf(getSystemTestProvider().startsWith('http'))(
-		'Create Web3 class instance with http string providers',
-		() => {
-			it('should create instance with string provider', async () => {
-				web3 = new Web3(clientUrl);
-				expect(web3).toBeInstanceOf(Web3);
-			});
+	describeIf(isHttp)('Create Web3 class instance with http string providers', () => {
+		it('should create instance with string provider', async () => {
+			web3 = new Web3(clientUrl);
+			expect(web3).toBeInstanceOf(Web3);
+		});
 
-			itIf(
-				process.env.INFURA_GOERLI_HTTP
-					? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
-					: false,
-			)('should create instance with string of external http provider', async () => {
-				web3 = new Web3(process.env.INFURA_GOERLI_HTTP!);
-				// eslint-disable-next-line jest/no-standalone-expect
-				expect(web3).toBeInstanceOf(Web3);
-			});
-		},
-	);
+		itIf(
+			process.env.INFURA_GOERLI_HTTP
+				? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
+				: false,
+		)('should create instance with string of external http provider', async () => {
+			web3 = new Web3(process.env.INFURA_GOERLI_HTTP!);
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(web3).toBeInstanceOf(Web3);
+		});
+	});
 
-	describeIf(getSystemTestProvider().startsWith('ws'))(
-		'Create Web3 class instance with ws string providers',
-		() => {
-			it('should create instance with string of ws provider', async () => {
-				web3 = new Web3(clientUrl);
-				expect(web3).toBeInstanceOf(Web3);
-			});
+	describeIf(isWs)('Create Web3 class instance with ws string providers', () => {
+		it('should create instance with string of ws provider', async () => {
+			web3 = new Web3(clientUrl);
+			expect(web3).toBeInstanceOf(Web3);
+		});
 
-			itIf(
-				process.env.INFURA_GOERLI_WS
-					? process.env.INFURA_GOERLI_WS.toString().includes('ws')
-					: false,
-			)('should create instance with string of external ws provider', async () => {
-				web3 = new Web3(process.env.INFURA_GOERLI_WS!);
-				// eslint-disable-next-line jest/no-standalone-expect
-				expect(web3).toBeInstanceOf(Web3);
-			});
-		},
-	);
+		itIf(
+			process.env.INFURA_GOERLI_WS
+				? process.env.INFURA_GOERLI_WS.toString().includes('ws')
+				: false,
+		)('should create instance with string of external ws provider', async () => {
+			web3 = new Web3(process.env.INFURA_GOERLI_WS!);
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(web3).toBeInstanceOf(Web3);
+		});
+	});
 	describe('Web3 providers', () => {
 		it('should set the provider', async () => {
 			web3 = new Web3('http://dummy.com');
@@ -130,7 +127,7 @@ describe('Web3 instance', () => {
 			web3.provider = clientUrl;
 
 			expect(web3).toBeInstanceOf(Web3);
-
+			await waitForOpenConnection(web3, 0);
 			const response = await web3.eth.getBalance(accounts[0]);
 
 			expect(response).toMatch(/0[xX][0-9a-fA-F]+/);
@@ -139,10 +136,12 @@ describe('Web3 instance', () => {
 		it('setProvider', async () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
-			if (clientUrl.startsWith('http')) {
+			if (isHttp) {
 				newProvider = new Web3.providers.HttpProvider(clientUrl);
-			} else {
+			} else if (isWs) {
 				newProvider = new Web3.providers.WebsocketProvider(clientUrl);
+			} else {
+				newProvider = new Web3.providers.IpcProvider(clientUrl);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
@@ -162,9 +161,9 @@ describe('Web3 instance', () => {
 			web3 = new Web3(clientUrl);
 
 			let checkWithClass;
-			if (clientUrl.startsWith('ws')) {
+			if (isWs) {
 				checkWithClass = Web3.providers.WebsocketProvider;
-			} else if (clientUrl.startsWith('http')) {
+			} else if (isHttp) {
 				checkWithClass = Web3.providers.HttpProvider;
 			} else {
 				checkWithClass = Web3.providers.IpcProvider;
@@ -185,7 +184,8 @@ describe('Web3 instance', () => {
 		});
 	});
 
-	describe('Batch Request', () => {
+	// TODO: remove describeIf when finish #5144
+	describeIf(!isIpc)('Batch Request', () => {
 		let request1: JsonRpcOptionalRequest;
 		let request2: JsonRpcOptionalRequest;
 		beforeEach(() => {
@@ -203,7 +203,7 @@ describe('Web3 instance', () => {
 
 		it('should execute batch requests', async () => {
 			web3 = new Web3(clientUrl);
-
+			await waitForOpenConnection(web3, 0);
 			const batch = new web3.BatchRequest();
 
 			const request1Promise = batch.add(request1);
@@ -211,7 +211,6 @@ describe('Web3 instance', () => {
 
 			const executePromise = batch.execute();
 			const response = await Promise.all([request1Promise, request2Promise, executePromise]);
-
 			expect(response[0]).toEqual(expect.stringMatching(/0[xX][0-9a-fA-F]+/));
 			expect(response[1]).toEqual(expect.stringMatching(/0[xX][0-9a-fA-F]+/));
 
@@ -265,7 +264,7 @@ describe('Web3 instance', () => {
 	});
 });
 
-describe('Create Web3 class instance with external providers', () => {
+describeIf(isHttp || isWs)('Create Web3 class instance with external providers', () => {
 	let provider: HDWalletProvider;
 	let clientUrl: string;
 	let web3: Web3;
@@ -281,9 +280,9 @@ describe('Create Web3 class instance with external providers', () => {
 	});
 	afterAll(async () => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider.engine.stop();
+		provider?.engine?.stop();
 	});
-	it('should create instance with external wallet provider', async () => {
+	test('should create instance with external wallet provider', async () => {
 		web3 = new Web3(provider);
 		expect(web3).toBeInstanceOf(Web3);
 	});

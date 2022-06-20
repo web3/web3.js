@@ -102,7 +102,7 @@ jobs:
               shell: bash
 
   e2e:
-    name: End-to-End
+    name: End-to-End ganache:ws
     needs: build
     runs-on: ubuntu-latest
     strategy:

@@ -26,9 +26,10 @@ import {
 	getSystemTestAccounts,
 	getSystemTestProvider,
 	describeIf,
+	isHttp,
 } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implemented methods', () => {
+describeIf(isHttp)('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 

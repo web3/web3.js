@@ -39,7 +39,6 @@ TEST_COMMAND=""
 
 if [[ $MODE == "ipc" ]]; then
         export WEB3_SYSTEM_TEST_PROVIDER=$IPC_PATH
-        echo "WEB3_SYSTEM_TEST_PROVIDER = $WEB3_SYSTEM_TEST_PROVIDER"
 fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then

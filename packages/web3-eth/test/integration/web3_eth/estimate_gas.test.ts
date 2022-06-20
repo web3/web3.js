@@ -19,7 +19,11 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
 
 import Web3Eth, { Transaction } from '../../../src';
-import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	isWs,
+} from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.estimateGas', () => {
 	let web3Eth: Web3Eth;
@@ -31,7 +35,7 @@ describe('Web3Eth.estimateGas', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});

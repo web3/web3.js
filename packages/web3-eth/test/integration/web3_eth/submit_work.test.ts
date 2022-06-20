@@ -21,6 +21,7 @@ import Web3Eth from '../../../src';
 import {
 	getSystemTestBackend,
 	getSystemTestProvider,
+	isWs,
 	itIf,
 } from '../../fixtures/system_test_utils';
 
@@ -32,7 +33,7 @@ describe('Web3Eth.submitWork', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});

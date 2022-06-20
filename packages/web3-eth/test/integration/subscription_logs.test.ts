@@ -28,6 +28,7 @@ import {
 	describeIf,
 	getSystemTestAccounts,
 	getSystemTestProvider,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 3;
@@ -51,7 +52,7 @@ const makeFewTxToContract = async ({
 		prs.push(await contract.methods?.firesStringEvent(testDataString).send(sendOptions));
 	}
 };
-describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
+describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
 	let accounts: string[] = [];
 	let web3Eth: Web3Eth;

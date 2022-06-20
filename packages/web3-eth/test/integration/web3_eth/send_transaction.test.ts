@@ -25,6 +25,7 @@ import {
 	getSystemTestAccounts,
 	getSystemTestAccountsWithKeys,
 	getSystemTestProvider,
+	isWs,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sendTransaction', () => {
@@ -37,7 +38,7 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});
