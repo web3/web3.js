@@ -27,7 +27,7 @@ export abstract class Web3Error extends Error {
 		this.name = this.constructor.name;
 
 		if (typeof Error.captureStackTrace === 'function') {
-			Error.captureStackTrace(this, new.target.constructor);
+			Error.captureStackTrace(new.target.constructor);
 		} else {
 			this.stack = new Error().stack;
 		}

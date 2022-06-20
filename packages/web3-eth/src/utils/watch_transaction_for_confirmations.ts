@@ -19,7 +19,7 @@ import {
 	DataFormat,
 	EthExecutionAPI,
 	format,
-	PromiEvent,
+	Web3PromiEvent,
 	Web3BaseProvider,
 } from 'web3-common';
 import { SubscriptionError } from 'web3-errors';
@@ -35,19 +35,19 @@ import { ReceiptInfo, SendSignedTransactionEvents, SendTransactionEvents } from 
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 
-type PromiEventEventTypeBase = SendTransactionEvents | SendSignedTransactionEvents;
+type Web3PromiEventEventTypeBase = SendTransactionEvents | SendSignedTransactionEvents;
 type ReturnFormatBase = DataFormat;
 type WaitProps<ResolveType = ReceiptInfo> = {
 	web3Context: Web3Context<EthExecutionAPI>;
 	transactionReceipt: ReceiptInfo;
-	transactionPromiEvent: PromiEvent<ResolveType, PromiEventEventTypeBase>;
+	transactionWeb3PromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventTypeBase>;
 	returnFormat: ReturnFormatBase;
 };
 
 const watchByPolling = <ResolveType = ReceiptInfo>({
 	web3Context,
 	transactionReceipt,
-	transactionPromiEvent,
+	transactionWeb3PromiEvent,
 	returnFormat,
 }: WaitProps<ResolveType>) => {
 	// Having a transactionReceipt means that the transaction has already been included
@@ -66,7 +66,7 @@ const watchByPolling = <ResolveType = ReceiptInfo>({
 
 			if (nextBlock?.hash) {
 				confirmationNumber += 1;
-				transactionPromiEvent.emit('confirmation', {
+				transactionWeb3PromiEvent.emit('confirmation', {
 					confirmationNumber: format({ eth: 'uint' }, confirmationNumber, returnFormat),
 					receipt: transactionReceipt,
 					latestBlockHash: format({ eth: 'bytes32' }, nextBlock.hash, returnFormat),
@@ -79,7 +79,7 @@ const watchByPolling = <ResolveType = ReceiptInfo>({
 const watchBySubscription = <ResolveType = ReceiptInfo>({
 	web3Context,
 	transactionReceipt,
-	transactionPromiEvent,
+	transactionWeb3PromiEvent,
 	returnFormat,
 }: WaitProps<ResolveType>) => {
 	setImmediate(() => {
@@ -92,7 +92,7 @@ const watchBySubscription = <ResolveType = ReceiptInfo>({
 					}
 					const confirmationNumber =
 						BigInt(data.number) - BigInt(transactionReceipt.blockNumber) + BigInt(1);
-					transactionPromiEvent.emit('confirmation', {
+					transactionWeb3PromiEvent.emit('confirmation', {
 						confirmationNumber: format(
 							{ eth: 'uint' },
 							confirmationNumber,
@@ -114,7 +114,7 @@ const watchBySubscription = <ResolveType = ReceiptInfo>({
 					watchByPolling({
 						web3Context,
 						transactionReceipt,
-						transactionPromiEvent,
+						transactionWeb3PromiEvent,
 						returnFormat,
 					});
 				});
@@ -132,18 +132,18 @@ const watchBySubscription = <ResolveType = ReceiptInfo>({
 /**
  *
  * @param web3Context
- * @param transactionPromiEvent
+ * @param transactionWeb3PromiEvent
  * @param transactionReceipt
  * @param transactionHash
  * @param returnFormat
  */
 export function watchTransactionForConfirmations<
-	PromiEventEventType extends PromiEventEventTypeBase,
+	Web3PromiEventEventType extends Web3PromiEventEventTypeBase,
 	ReturnFormat extends DataFormat,
 	ResolveType = ReceiptInfo,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionPromiEvent: PromiEvent<ResolveType, PromiEventEventType>,
+	transactionWeb3PromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventType>,
 	transactionReceipt: ReceiptInfo,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
@@ -164,10 +164,15 @@ export function watchTransactionForConfirmations<
 		watchBySubscription({
 			web3Context,
 			transactionReceipt,
-			transactionPromiEvent,
+			transactionWeb3PromiEvent,
 			returnFormat,
 		});
 	} else {
-		watchByPolling({ web3Context, transactionReceipt, transactionPromiEvent, returnFormat });
+		watchByPolling({
+			web3Context,
+			transactionReceipt,
+			transactionWeb3PromiEvent,
+			returnFormat,
+		});
 	}
 }

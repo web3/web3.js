@@ -69,9 +69,9 @@ export class Registry {
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
 	) {
 		try {
-			const promievent = this.contract.methods.setTTL(namehash(name), ttl).send(txConfig);
+			const promiEvent = this.contract.methods.setTTL(namehash(name), ttl).send(txConfig);
 
-			return promievent;
+			return promiEvent;
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}

@@ -2,10 +2,10 @@ module.exports = {
 	root: true,
 	env: {
 		browser: true,
-		es2021: true,
 		node: true,
 	},
 	parserOptions: {
+		ecmaVersion: 2016,
 		project: './tsconfig.json',
 		tsconfigRootDir: __dirname,
 		sourceType: 'module',

@@ -137,8 +137,7 @@ export const invalidHexStrictData: any[] = [
 	'0',
 	1,
 	BigInt(12),
-	12n,
-	-255n,
+	BigInt(-255),
 	-42,
 	4.2,
 ];
@@ -150,8 +149,7 @@ export const validHexData: any[] = [
 	'0',
 	1,
 	BigInt(12),
-	12n,
-	-255n,
+	BigInt(-255),
 ];
 
 export const validCheckAddressCheckSumData: any[] = [
@@ -195,7 +193,7 @@ export const compareBlockNumbersValidData: [[any, any], number][] = [
 	[[2, 1], 1],
 	[[BigInt(1), BigInt(1)], 0],
 	[[BigInt(1), BigInt(2)], -1],
-	[[BigInt(2), 1n], 1],
+	[[BigInt(2), BigInt(1)], 1],
 	[[1, BigInt(1)], 0],
 	[[1, BigInt(2)], -1],
 	[[2, BigInt(1)], 1],
@@ -205,7 +203,7 @@ export const compareBlockNumbersValidData: [[any, any], number][] = [
 	[['pending', 'pending'], 0],
 	[['latest', 'latest'], 0],
 	[['earliest', 2], -1],
-	[['earliest', 2n], -1],
+	[['earliest', BigInt(2)], -1],
 	[['earliest', 'pending'], -1],
 	[['genesis', 2], -1],
 	[['genesis', 'latest'], -1],
@@ -214,7 +212,7 @@ export const compareBlockNumbersValidData: [[any, any], number][] = [
 	[[13532346, 13532300], 1],
 	[['pending', 'latest'], 1],
 	[['latest', 0], 1],
-	[['latest', 1n], 1],
+	[['latest', BigInt(1)], 1],
 	[['pending', 0], 1],
 	[['pending', BigInt(1)], 1],
 ];
@@ -299,7 +297,7 @@ export const invalidTopicInBloomData: any[] = [
 	],
 ];
 
-export const validBigIntData: any[] = [90071992547409911n, BigInt(42), BigInt('1337')];
+export const validBigIntData: any[] = [BigInt('90071992547409911'), BigInt(42), BigInt('1337')];
 
 export const invalidBigIntData: any[] = [3, '3', '3n'];
 
