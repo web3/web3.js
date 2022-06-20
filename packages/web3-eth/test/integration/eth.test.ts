@@ -118,7 +118,6 @@ describe('eth', () => {
 		});
 		// TODO: remove itIf when finish #5144
 		itIf(!isIpc)('BatchRequest', async () => {
-			await (web3Eth.provider as IpcProvider).waitForConnection();
 			const batch = new web3Eth.BatchRequest();
 			const request1 = {
 				id: 10,
