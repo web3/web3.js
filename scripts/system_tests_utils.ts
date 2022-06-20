@@ -19,7 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { EthPersonal } from 'web3-eth-personal';
+import { Personal } from 'web3-eth-personal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { create as createAccount } from 'web3-eth-accounts';
@@ -54,7 +54,7 @@ export const createNewAccount = async (config?: {
 	const acc = createAccount();
 	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
 	if (config?.unlock) {
-		const web3Personal = new EthPersonal(clientUrl);
+		const web3Personal = new Personal(clientUrl);
 		await web3Personal.importRawKey(
 			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
 			'123456',
@@ -63,7 +63,7 @@ export const createNewAccount = async (config?: {
 	}
 
 	if (config?.refill) {
-		const web3Personal = new EthPersonal(clientUrl);
+		const web3Personal = new Personal(clientUrl);
 		const web3Eth = new Web3Eth(clientUrl);
 		const accList = await web3Personal.getAccounts();
 		await web3Eth.sendTransaction({
@@ -137,7 +137,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 
 	if (getSystemTestBackend() === 'geth') {
 		const web3Eth = new Web3Eth(clientUrl);
-		const web3Personal = new EthPersonal(clientUrl);
+		const web3Personal = new Personal(clientUrl);
 
 		await web3Eth.sendTransaction({
 			from: await web3Eth.getCoinbase(),

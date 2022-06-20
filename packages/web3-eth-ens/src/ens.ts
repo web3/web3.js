@@ -42,7 +42,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		registryAddr?: string,
 		provider?:
 			| SupportedProviders<EthExecutionAPI & Web3NetAPI>
-			| Web3ContextObject<EthExecutionAPI & Web3NetAPI>,
+			| Web3ContextObject<EthExecutionAPI & Web3NetAPI>
+			| string,
 	) {
 		super(provider ?? '');
 		this.registryAddress = registryAddr ?? registryAddresses.main; // will default to main registry address

@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3Error } from 'web3-errors';
 import { EthExecutionAPI } from './eth_execution_api';
 import {
 	Web3APIPayload,
@@ -50,6 +51,51 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	public abstract getStatus(): Web3BaseProviderStatus;
 	public abstract supportsSubscriptions(): boolean;
+
+	/**
+	 * @deprecated Please use `.request` instead.
+	 *
+	 * @param payload - Request Payload
+	 * @param cb - Callback
+	 */
+	public send<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
+		payload: Web3APIPayload<API, Method>,
+		// Used "null" value to match the legacy version
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		cb: (err?: Error | Web3Error | null, response?: JsonRpcResponse<ResponseType>) => void,
+	) {
+		this.request(payload)
+			.then(response => {
+				cb(undefined, response);
+			})
+			.catch((err: Error | Web3Error) => {
+				cb(err);
+			});
+	}
+
+	/**
+	 * @deprecated Please use `.request` instead.
+	 *
+	 * @param payload - Request Payload
+	 * @param cb - Callback
+	 */
+	public sendAsync<
+		Method extends Web3APIMethod<API>,
+		ResponseType = Web3APIReturnType<API, Method>,
+	>(
+		payload: Web3APIPayload<API, Method>,
+		// Used "null" value to match the legacy version
+		// eslint-disable-next-line @typescript-eslint/ban-types
+		cb: (err?: Error | Web3Error | null, response?: JsonRpcResponse<ResponseType>) => void,
+	) {
+		this.request(payload)
+			.then(response => {
+				cb(undefined, response);
+			})
+			.catch((err: Error | Web3Error) => {
+				cb(err);
+			});
+	}
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 	public abstract request<
