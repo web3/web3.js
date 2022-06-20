@@ -74,7 +74,7 @@ import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
-import { NUMBER_DATA_FORMAT, STR_NUMBER_DATA_FORMAT } from './constants';
+import { NUMBER_DATA_FORMAT } from './constants';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
@@ -851,7 +851,7 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, STR_NUMBER_DATA_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 
 	const response = await rpcMethods.estimateGas(
 		web3Context.requestManager,
@@ -922,12 +922,12 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const storageKeysFormatted = storageKeys.map(storageKey =>
-		format({ eth: 'bytes' }, storageKey, STR_NUMBER_DATA_FORMAT),
+		format({ eth: 'bytes' }, storageKey, ETH_DATA_FORMAT),
 	);
 
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, STR_NUMBER_DATA_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 
 	const response = await rpcMethods.getProof(
 		web3Context.requestManager,
@@ -954,11 +954,11 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	rewardPercentiles: Numbers[],
 	returnFormat: ReturnFormat,
 ) {
-	const blockCountFormatted = format({ eth: 'uint' }, blockCount, STR_NUMBER_DATA_FORMAT);
+	const blockCountFormatted = format({ eth: 'uint' }, blockCount, ETH_DATA_FORMAT);
 
 	const newestBlockFormatted = isBlockTag(newestBlock as string)
 		? (newestBlock as BlockTag)
-		: format({ eth: 'uint' }, newestBlock as Numbers, STR_NUMBER_DATA_FORMAT);
+		: format({ eth: 'uint' }, newestBlock as Numbers, ETH_DATA_FORMAT);
 
 	const rewardPercentilesFormatted = format(
 		{

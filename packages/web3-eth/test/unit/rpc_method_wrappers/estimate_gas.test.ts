@@ -23,7 +23,6 @@ import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { estimateGas } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/estimate_gas';
 import { formatTransaction } from '../../../src';
-import { STR_NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -48,7 +47,7 @@ describe('call', () => {
 				inputBlockNumberFormatted = format(
 					{ eth: 'uint' },
 					inputBlockNumber,
-					STR_NUMBER_DATA_FORMAT,
+					ETH_DATA_FORMAT,
 				);
 			}
 
