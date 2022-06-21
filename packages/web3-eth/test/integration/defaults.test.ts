@@ -299,7 +299,9 @@ describe('defaults', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
 		});
-		it('transactionConfirmationBlocks implementation', async () => {
+
+		// TODO: remove itIf when finish #5144
+		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
 			const waitConfirmations = 3;
 			const eth = new Web3Eth(web3Eth.provider);
 			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
@@ -322,6 +324,7 @@ describe('defaults', () => {
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('confirmation', ({ confirmationNumber }) => {
+					// eslint-disable-next-line jest/no-standalone-expect
 					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe > waitConfirmations) {

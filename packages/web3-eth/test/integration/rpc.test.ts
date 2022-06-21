@@ -521,7 +521,7 @@ describe('rpc with block', () => {
 	describe('methods', () => {
 		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 				hydrated: boolean;
 				format: string;
 			}>({
@@ -547,11 +547,11 @@ describe('rpc with block', () => {
 		// TODO: remove itif(!isIpc) when finish #5147
 		itIf(!isIpc).each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 				format: string;
 			}>({
-				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
-				format: Object.values(FMT_NUMBER).slice(0, 1),
+				block: ['earliest', 'latest', 'pending', 'blockNumber'],
+				format: Object.values(FMT_NUMBER),
 			}),
 		)('getTransactionCount', async ({ block, format }) => {
 			const acc = await createNewAccount({ unlock: true, refill: true });
@@ -571,20 +571,18 @@ describe('rpc with block', () => {
 				transactionHash: String(receipt.transactionHash),
 				transactionIndex: hexToNumber(String(receipt.transactionIndex)),
 			};
-			const countBefore = await web3Eth.getTransactionCount(accounts[0], data[block], {
+			const countBefore = await web3Eth.getTransactionCount(acc.address, data[block], {
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
-
-			const count = 3;
+			const count = 2;
 			const res = await sendFewTxes({
 				web3Eth,
-				from: accounts[0],
+				from: acc.address,
 				to: accounts[1],
 				value: '0x1',
 				times: count,
 			});
-
 			const receiptAfter = res[res.length - 1];
 			const dataAfter = {
 				pending: 'pending',
@@ -595,12 +593,10 @@ describe('rpc with block', () => {
 				transactionHash: String(receiptAfter.transactionHash),
 				transactionIndex: hexToNumber(String(receiptAfter.transactionIndex)),
 			};
-
-			const countAfter = await web3Eth.getTransactionCount(accounts[0], dataAfter[block], {
+			const countAfter = await web3Eth.getTransactionCount(acc.address, dataAfter[block], {
 				number: format as FMT_NUMBER,
 				bytes: FMT_BYTES.HEX,
 			});
-
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(Number(countAfter) - Number(countBefore)).toBe(
 				blockData[block] === 'earliest' ? 0 : count,
@@ -609,7 +605,7 @@ describe('rpc with block', () => {
 
 		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 			}>({
 				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
 			}),
@@ -628,7 +624,7 @@ describe('rpc with block', () => {
 
 		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 			}>({
 				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
 			}),
@@ -639,7 +635,7 @@ describe('rpc with block', () => {
 
 		itIf(!isIpc).each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 			}>({
 				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
 			}),
