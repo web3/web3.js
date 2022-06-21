@@ -23,11 +23,11 @@ import {
 	inputAddressFormatter,
 	inputLogFormatter,
 	LogsInput,
-	PromiEvent,
+	Web3PromiEvent,
 	Web3EventEmitter,
 	ReceiptInfo,
 } from 'web3-common';
-import { Web3Context, Web3ContextObject } from 'web3-core';
+import { Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	call,
 	estimateGas,
@@ -162,7 +162,7 @@ export class Contract<Abi extends ContractAbi>
 		address?: Address,
 		options?: ContractInitOptions,
 		context?: Partial<
-			Web3ContextObject<
+			Web3ContextInitOptions<
 				EthExecutionAPI,
 				{
 					logs: typeof LogsSubscription;
@@ -368,7 +368,7 @@ export class Contract<Abi extends ContractAbi>
 			arguments: args,
 			send: (
 				options?: PayableTxOptions,
-			): PromiEvent<Contract<Abi>, SendTransactionEvents> => {
+			): Web3PromiEvent<Contract<Abi>, SendTransactionEvents> => {
 				const modifiedOptions = { ...options };
 
 				// Remove to address

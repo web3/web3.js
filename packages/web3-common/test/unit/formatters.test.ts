@@ -82,9 +82,9 @@ describe('formatters', () => {
 
 	describe('outputBigIntegerFormatter', () => {
 		it('should convert input to number', () => {
-			const result = outputBigIntegerFormatter(12n);
+			const result = outputBigIntegerFormatter(BigInt(12));
 
-			expect(utils.toNumber).toHaveBeenCalledWith(12n);
+			expect(utils.toNumber).toHaveBeenCalledWith(BigInt(12));
 			expect(result).toEqual(toNumberResult);
 		});
 	});
@@ -243,13 +243,13 @@ describe('formatters', () => {
 		it.each(['gasPrice', 'gas', 'value', 'maxPriorityFeePerGas', 'maxFeePerGas', 'nonce'])(
 			'should convert "%s" number value to hex',
 			attr => {
-				jest.spyOn(utils, 'toNumber').mockReturnValue(5678n);
+				jest.spyOn(utils, 'toNumber').mockReturnValue(BigInt(5678));
 
 				expect(
-					txInputOptionsFormatter({ ...txInput, data: '0xff0011', [attr]: 5678n }),
+					txInputOptionsFormatter({ ...txInput, data: '0xff0011', [attr]: BigInt(5678) }),
 				).toEqual(expect.objectContaining({ [attr]: numberToHexResult }));
 
-				expect(utils.numberToHex).toHaveBeenCalledWith(5678n);
+				expect(utils.numberToHex).toHaveBeenCalledWith(BigInt(5678));
 			},
 		);
 	});

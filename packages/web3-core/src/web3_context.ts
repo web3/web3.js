@@ -59,7 +59,7 @@ export type Web3ContextInitOptions<
 	} = any,
 > = {
 	config?: Partial<Web3ConfigOptions>;
-	provider: SupportedProviders<API>;
+	provider: SupportedProviders<API> | string;
 	requestManager?: Web3RequestManager<API>;
 	subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs> | undefined;
 	registeredSubscriptions?: RegisteredSubs;
@@ -98,7 +98,10 @@ export class Web3Context<
 	private _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 
 	public constructor(
-		providerOrContext: SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>,
+		providerOrContext?:
+			| SupportedProviders<API>
+			| Web3ContextInitOptions<API, RegisteredSubs>
+			| string,
 	) {
 		super();
 		if (
@@ -230,7 +233,7 @@ export class Web3Context<
 		return this.requestManager.provider;
 	}
 
-	public set provider(provider: SupportedProviders<API>) {
+	public set provider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 
@@ -238,7 +241,7 @@ export class Web3Context<
 		return this.requestManager.provider;
 	}
 
-	public set currentProvider(provider: SupportedProviders<API>) {
+	public set currentProvider(provider: SupportedProviders<API> | string) {
 		this.requestManager.setProvider(provider);
 	}
 

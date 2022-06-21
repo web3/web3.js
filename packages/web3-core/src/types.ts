@@ -51,8 +51,7 @@ export type SupportedProviders<API extends Web3APISpec> =
 	| Web3BaseProvider<API>
 	| LegacyRequestProvider
 	| LegacySendProvider
-	| LegacySendAsyncProvider
-	| string;
+	| LegacySendAsyncProvider;
 
 export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
 	url: string,
