@@ -24,22 +24,50 @@ Object {
     "transactionReceiptPollingInterval": undefined,
     "transactionTypeParser": undefined,
   },
-  "provider": undefined,
+  "provider": HttpProvider {
+    "clientUrl": "http://test/abc",
+    "httpProviderOptions": undefined,
+  },
   "providers": Object {
     "HttpProvider": [Function],
     "IpcProvider": [Function],
     "WebsocketProvider": [Function],
   },
-  "registeredSubscriptions": undefined,
+  "registeredSubscriptions": Object {},
   "requestManager": Web3RequestManager {
     "_emitter": EventEmitter {
-      "_events": Object {},
-      "_eventsCount": 0,
+      "_events": Object {
+        "BEFORE_PROVIDER_CHANGE": [Function],
+        "PROVIDER_CHANGED": [Function],
+      },
+      "_eventsCount": 2,
       "_maxListeners": undefined,
       Symbol(kCapture): false,
     },
+    "_provider": HttpProvider {
+      "clientUrl": "http://test/abc",
+      "httpProviderOptions": undefined,
+    },
   },
-  "subscriptionManager": undefined,
+  "subscriptionManager": Web3SubscriptionManager {
+    "_subscriptions": Map {},
+    "registeredSubscriptions": Object {},
+    "requestManager": Web3RequestManager {
+      "_emitter": EventEmitter {
+        "_events": Object {
+          "BEFORE_PROVIDER_CHANGE": [Function],
+          "PROVIDER_CHANGED": [Function],
+        },
+        "_eventsCount": 2,
+        "_maxListeners": undefined,
+        Symbol(kCapture): false,
+      },
+      "_provider": HttpProvider {
+        "clientUrl": "http://test/abc",
+        "httpProviderOptions": undefined,
+      },
+    },
+  },
   "wallet": undefined,
 }
 `;
