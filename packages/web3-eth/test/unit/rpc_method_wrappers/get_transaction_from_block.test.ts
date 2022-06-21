@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 import { isBytes, isNullish } from 'web3-validator';
 import { Bytes } from 'web3-utils';
 
@@ -45,17 +45,17 @@ describe('getTransactionFromBlock', () => {
 			const inputTransactionIndexFormatted = format(
 				{ eth: 'uint' },
 				inputTransactionIndex,
-				DEFAULT_RETURN_FORMAT,
+				ETH_DATA_FORMAT,
 			);
 
 			let inputBlockFormatted;
 
 			if (inputBlockIsBytes) {
-				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, DEFAULT_RETURN_FORMAT);
+				inputBlockFormatted = format({ eth: 'bytes32' }, inputBlock, ETH_DATA_FORMAT);
 			} else if (isNullish(inputBlock)) {
 				inputBlockFormatted = web3Context.defaultBlock;
 			} else {
-				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, DEFAULT_RETURN_FORMAT);
+				inputBlockFormatted = format({ eth: 'uint' }, inputBlock, ETH_DATA_FORMAT);
 			}
 
 			await getTransactionFromBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);

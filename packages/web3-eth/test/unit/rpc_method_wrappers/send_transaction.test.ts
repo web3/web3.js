@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, format } from 'web3-common';
 import { isNullish } from 'web3-validator';
 
 import * as rpcMethods from '../../../src/rpc_methods';
@@ -80,10 +80,7 @@ describe('sendTransaction', () => {
 		`sending event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
-				const formattedTransaction = formatTransaction(
-					inputTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
+				const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 				(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 					expectedReceiptInfo,
 				);
@@ -104,7 +101,7 @@ describe('sendTransaction', () => {
 	it.each(testData)(
 		`should call rpcMethods.sendTransaction with expected parameters\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
-			const formattedTransaction = formatTransaction(inputTransaction, DEFAULT_RETURN_FORMAT);
+			const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 			(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(expectedReceiptInfo);
 			await sendTransaction(
 				web3Context,
@@ -123,10 +120,7 @@ describe('sendTransaction', () => {
 		`sent event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			return new Promise(done => {
-				const formattedTransaction = formatTransaction(
-					inputTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
+				const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 				(rpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 					expectedReceiptInfo,
 				);

@@ -69,7 +69,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
@@ -127,7 +127,7 @@ describeIf(getSystemTestProvider().startsWith('http'))('watch polling transactio
 			});
 			await new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});

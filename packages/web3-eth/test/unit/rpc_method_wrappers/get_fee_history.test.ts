@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 import { isNullish } from 'web3-validator';
 
 import { getFeeHistory as rpcMethodsGetFeeHistory } from '../../../src/rpc_methods';
@@ -23,6 +23,7 @@ import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getFeeHistory } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_fee_history';
 import { feeHistorySchema } from '../../../src/schemas';
+import { NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -40,7 +41,7 @@ describe('getFeeHistory', () => {
 			const inputBlockCountFormatted = format(
 				{ eth: 'uint' },
 				inputBlockCount,
-				DEFAULT_RETURN_FORMAT,
+				ETH_DATA_FORMAT,
 			);
 			const inputRewardPercentilesFormatted = format(
 				{
@@ -50,10 +51,7 @@ describe('getFeeHistory', () => {
 					},
 				},
 				inputRewardPercentiles,
-				{
-					number: FMT_NUMBER.NUMBER,
-					bytes: FMT_BYTES.HEX,
-				},
+				NUMBER_DATA_FORMAT,
 			);
 
 			let inputNewestBlockFormatted;
@@ -64,7 +62,7 @@ describe('getFeeHistory', () => {
 				inputNewestBlockFormatted = format(
 					{ eth: 'uint' },
 					inputNewestBlock,
-					DEFAULT_RETURN_FORMAT,
+					ETH_DATA_FORMAT,
 				);
 			}
 
