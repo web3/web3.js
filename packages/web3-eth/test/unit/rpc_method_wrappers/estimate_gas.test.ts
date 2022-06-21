@@ -48,7 +48,7 @@ describe('call', () => {
 				inputBlockNumberFormatted = format(
 					{ eth: 'uint' },
 					inputBlockNumber,
-					STR_NUMBER_DATA_FORMAT,
+					ETH_DATA_FORMAT,
 				);
 			}
 

@@ -235,7 +235,7 @@ describe('defaults', () => {
 			);
 			expect(Number(hexToNumber(storageWithBlockNumber))).toBe(10);
 			expect(transactionCountWithBlockNumber).toBe(BigInt(1));
-			expect(balanceWithBlockNumber).toBeGreaterThan(0);
+			expect(Number(balanceWithBlockNumber)).toBeGreaterThan(0);
 			expect(codeWithBlockNumber.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 
 			// set new default block to config
@@ -249,7 +249,7 @@ describe('defaults', () => {
 			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 			expect(Number(hexToNumber(storageLatest))).toBe(10);
 			expect(transactionCountLatest).toBe(BigInt(1));
-			expect(balanceLatest).toBeGreaterThan(0);
+			expect(Number(balanceLatest)).toBeGreaterThan(0);
 		});
 		it('transactionBlockTimeout', () => {
 			// default
@@ -495,7 +495,7 @@ describe('defaults', () => {
 				web3Context: eth2 as Web3Context<any>,
 			});
 
-			expect(resWithPassNetworkId.networkId).toBe(5);
+			expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
 		});
 		it('defaultChain', async () => {
 			// default

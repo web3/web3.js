@@ -238,23 +238,26 @@ describe('Web3Eth.sendTransaction', () => {
 		it('should listen to the receipt event', async () => {
 			const expectedTransactionReceipt = {
 				blockHash: expect.any(String),
-				blockNumber: expect.any(BigInt),
-				cumulativeGasUsed: expect.any(BigInt),
-				effectiveGasPrice: expect.any(BigInt),
-				gasUsed: expect.any(BigInt),
 				logs: [],
 				logsBloom:
 					'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-				status: BigInt(1),
 				from: transaction.from,
 				to: transaction.to,
 				transactionHash: expect.any(String),
-				transactionIndex: BigInt(0),
-				type: BigInt(0),
 			};
 			const promiEvent = web3Eth.sendTransaction(transaction);
 			promiEvent.on('receipt', data => {
 				expect(data).toEqual(expect.objectContaining(expectedTransactionReceipt));
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(typeof data.blockNumber).toBe('bigint');
+				expect(typeof data.cumulativeGasUsed).toBe('bigint');
+				expect(typeof data.effectiveGasPrice).toBe('bigint');
+				expect(typeof data.gasUsed).toBe('bigint');
+				expect(typeof data.transactionIndex).toBe('bigint');
+				expect(data.status).toBe(BigInt(1));
+				expect(data.type).toBe(BigInt(0));
 			});
 			await promiEvent;
 		});

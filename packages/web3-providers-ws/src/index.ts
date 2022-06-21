@@ -46,6 +46,11 @@ import {
 import { isNullish } from 'web3-utils';
 import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
+export { ClientRequestArgs } from 'http';
+// todo had to ignore, introduce error in doc generation,see why/better solution
+/** @ignore */
+export { ClientOptions } from 'isomorphic-ws';
+export { ReconnectOptions } from './types';
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
