@@ -23,7 +23,6 @@ import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getProof } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_proof';
 import { accountSchema } from '../../../src/schemas';
-import { STR_NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('../../../src/rpc_methods');
 
