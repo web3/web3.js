@@ -108,7 +108,7 @@ export class Web3Context<
 		// If "providerOrContext" is provided as "string" or an objects matching "SupportedProviders" interface
 		if (
 			isNullish(providerOrContext) ||
-			(typeof providerOrContext === 'string' && providerOrContext.trim() === '') ||
+			(typeof providerOrContext === 'string' && providerOrContext.trim() !== '') ||
 			isSupportedProvider(providerOrContext as SupportedProviders<API>)
 		) {
 			this._requestManager = new Web3RequestManager<API>(
