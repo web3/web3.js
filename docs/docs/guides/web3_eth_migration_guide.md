@@ -963,7 +963,7 @@ await web3.eth
 
 ### `web3.eth.getWork`
 
-same as in 1.x // todo run example
+same as in 1.x
 
 ```ts
 web3.eth.getWork().then(console.log);
@@ -976,7 +976,7 @@ web3.eth.getWork().then(console.log);
 
 ### `web3.eth.submitWork`
 
-same as in 1.x //todo run example
+same as in 1.x
 
 ```ts
 web3.eth
@@ -991,7 +991,12 @@ web3.eth
 
 ### `web3.eth.requestAccouts`
 
-//todo add
+same as 1.x, returns array of addressed (must be used with injected provider)
+
+```ts
+await web3.eth.requestAccounts();
+//['0xb839Aa3ECdd24c0Fa2fa382Ca179b88a0b33804f']
+```
 
 ### `web3.eth.getChainId`
 
