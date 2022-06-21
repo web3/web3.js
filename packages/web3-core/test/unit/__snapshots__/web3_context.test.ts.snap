@@ -24,10 +24,7 @@ Object {
     "transactionReceiptPollingInterval": undefined,
     "transactionTypeParser": undefined,
   },
-  "provider": HttpProvider {
-    "clientUrl": "http://test/abc",
-    "httpProviderOptions": undefined,
-  },
+  "provider": undefined,
   "providers": Object {
     "HttpProvider": [Function],
     "IpcProvider": [Function],
@@ -40,10 +37,6 @@ Object {
       "_eventsCount": 0,
       "_maxListeners": undefined,
       Symbol(kCapture): false,
-    },
-    "_provider": HttpProvider {
-      "clientUrl": "http://test/abc",
-      "httpProviderOptions": undefined,
     },
   },
   "subscriptionManager": undefined,
