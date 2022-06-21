@@ -27,8 +27,6 @@ export const padLeftData: [[Numbers, number, string], HexString][] = [
 	[['-abcd', 8, '0'], '000-abcd'],
 	[[BigInt('9007199254740992'), 32, '0'], '0x00000000000000000020000000000000'],
 	[[BigInt('-9007199254740992'), 32, '0'], '-0x00000000000000000020000000000000'],
-	[[9007199254740992n, 32, '0'], '0x00000000000000000020000000000000'],
-	[[-9007199254740992n, 32, '0'], '-0x00000000000000000020000000000000'],
 	[[-13, 10, '0'], '-0x000000000d'],
 	[['9.5', 8, '0'], '000009.5'],
 ];
@@ -52,10 +50,8 @@ export const padRightData: [[Numbers, number, string], HexString][] = [
 	[['-0x01', 64, 'f'], '-0x01ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'],
 	[['zxy', 11, '0'], 'zxy00000000'],
 	[['-abcd', 32, '1'], '-abcd111111111111111111111111111'],
-	[[10000n, 8, '0'], '0x27100000'],
 	[[BigInt(10000), 8, '0'], '0x27100000'],
 	[[BigInt(-14), 8, '0'], '-0xe0000000'],
-	[[-14n, 8, '0'], '-0xe0000000'],
 	[['15.5', 8, '0'], '15.50000'],
 ];
 
@@ -67,8 +63,6 @@ export const toTwosComplementData: [[Numbers, number], HexString][] = [
 	[['-0x1', 32], '0xffffffffffffffffffffffffffffffff'],
 	[[BigInt('9007199254740992'), 32], '0x00000000000000000020000000000000'],
 	[[BigInt('-9007199254740992'), 32], '0xffffffffffffffffffe0000000000000'],
-	[[9007199254740992n, 32], '0x00000000000000000020000000000000'],
-	[[-9007199254740992n, 32], '0xffffffffffffffffffe0000000000000'],
 	[['13', 32], '0x0000000000000000000000000000000d'],
 	[['-13', 32], '0xfffffffffffffffffffffffffffffff3'],
 	[[-16, 2], '0xf0'],
@@ -81,7 +75,6 @@ export const fromTwosComplementData: [[Numbers, number], number | bigint][] = [
 	[['0xfffffffffffffffffffffffffffffff3', 32], -13],
 	[['0xf0', 2], -16],
 	[['0xffffffffffffffffffffffffffffff00', 32], -256],
-	[['0xffffffffffffffffffe0000000000000', 32], -9007199254740992n],
 	[[1000, 64], 1000],
 	[[-1000, 64], -1000],
 	[[BigInt(9), 1], -7],
@@ -107,7 +100,7 @@ export const toTwosComplementInvalidData: [[Numbers, number], string][] = [
 		'Invalid value given "value: -0x1000, nibbleWidth: 3". Error: value greater than the nibble width.',
 	],
 	[
-		[-160000n, 1],
+		[BigInt(-160000), 1],
 		'Invalid value given "value: -160000, nibbleWidth: 1". Error: value greater than the nibble width.',
 	],
 ];

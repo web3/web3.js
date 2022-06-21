@@ -17,9 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line max-classes-per-file
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
-import Eth from 'web3-eth';
-import { Iban } from 'web3-eth-iban';
+import Web3Eth from 'web3-eth';
+import Iban from 'web3-eth-iban';
+import Net from 'web3-net';
 import { ENS, registryAddresses } from 'web3-eth-ens';
+import Personal from 'web3-eth-personal';
 import {
 	ContractAbi,
 	encodeFunctionCall,
@@ -44,12 +46,27 @@ import {
 	decrypt,
 	Wallet,
 } from 'web3-eth-accounts';
+import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
+import packageJson from '../package.json';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
-	public eth: Eth & {
+	public static version = packageJson.version;
+	public static utils = utils;
+	public static modules = {
+		Web3Eth,
+		Iban,
+		Net,
+		ENS,
+		Personal,
+	};
+
+	public eth: Web3Eth & {
 		Iban: typeof Iban;
 		ens: ENS;
+		utils: typeof utils;
+		net: Net;
+		personal: Personal;
 		Contract: typeof Contract & {
 			setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
 		};
@@ -76,7 +93,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 	};
 
-	public constructor(provider: SupportedProviders<EthExecutionAPI>) {
+	public constructor(provider: SupportedProviders<EthExecutionAPI> | string) {
 		const accountProvider = {
 			create,
 			privateKeyToAccount,
@@ -116,7 +133,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			}
 		}
 
-		const eth = self.use(Eth);
+		const eth = self.use(Web3Eth);
 
 		// Eth Module
 		this.eth = Object.assign(eth, {
@@ -125,6 +142,11 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 			// Iban helpers
 			Iban,
+
+			net: self.use(Net),
+			personal: self.use(Personal),
+
+			utils,
 
 			// Contract helper and module
 			Contract: ContractBuilder,

@@ -21,7 +21,7 @@ import {
 	DataFormat,
 	EthExecutionAPI,
 	format,
-	PromiEvent,
+	Web3PromiEvent,
 	FMT_BYTES,
 	FMT_NUMBER,
 	DEFAULT_RETURN_FORMAT,
@@ -495,8 +495,8 @@ export function sendTransaction<
 	transaction: Transaction | TransactionWithLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions<ResolveType>,
-): PromiEvent<ResolveType, SendTransactionEvents> {
-	const promiEvent = new PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
+): Web3PromiEvent<ResolveType, SendTransactionEvents> {
+	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
 		setImmediate(() => {
 			(async () => {
 				try {
@@ -644,10 +644,10 @@ export function sendSignedTransaction<
 	signedTransaction: Bytes,
 	returnFormat: ReturnFormat,
 	options?: SendSignedTransactionOptions<ResolveType>,
-): PromiEvent<ResolveType, SendSignedTransactionEvents> {
+): Web3PromiEvent<ResolveType, SendSignedTransactionEvents> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ResolveType, SendSignedTransactionEvents>(
+	const promiEvent = new Web3PromiEvent<ResolveType, SendSignedTransactionEvents>(
 		(resolve, reject) => {
 			setImmediate(() => {
 				(async () => {

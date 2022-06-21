@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { PromiEvent } from 'web3-common';
+import { Web3PromiEvent } from 'web3-common';
 import { ReceiptInfo, SendTransactionEvents, Web3Eth } from '../../src';
 
 type SendFewTxParams = {
@@ -34,7 +34,7 @@ export const sendFewTxes = async ({
 }: SendFewTxParams): Promise<ReceiptInfo[]> => {
 	const res = [];
 	for (let i = 0; i < times; i += 1) {
-		const tx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+		const tx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
 			to,
 			value,
 			from,
