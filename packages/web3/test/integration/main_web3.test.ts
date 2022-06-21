@@ -75,17 +75,26 @@ describe('Web3 instance', () => {
 		if (getSystemTestProvider().startsWith('ws')) {
 			// make sure we try to close the connection after it is established
 			if (
-				web3.provider &&
+				web3?.provider &&
 				(web3.provider as unknown as Web3BaseProvider).getStatus() === 'connecting'
 			) {
 				await waitForOpenConnection(web3, currentAttempt);
 			}
-			(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+
+			if (web3?.provider) {
+				(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+			}
 		}
 	});
 
 	it('should be able to create web3 object without provider', () => {
 		expect(() => new Web3()).not.toThrow();
+	});
+
+	it('should be able use functionality with web3 object not dependant on provider', () => {
+		web3 = new Web3();
+
+		expect(web3.utils.hexToNumber('0x5')).toBe(5);
 	});
 
 	it('should throw error when we make a request when provider not available', async () => {

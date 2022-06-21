@@ -61,10 +61,11 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		Personal,
 	};
 
+	public utils: typeof utils;
+
 	public eth: Web3Eth & {
 		Iban: typeof Iban;
 		ens: ENS;
-		utils: typeof utils;
 		net: Net;
 		personal: Personal;
 		Contract: typeof Contract & {
@@ -108,6 +109,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 		super({ provider, wallet, accountProvider });
 
+		this.utils = utils;
+
 		// Have to use local alias to initiate contract context
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const self = this;
@@ -145,8 +148,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 			net: self.use(Net),
 			personal: self.use(Personal),
-
-			utils,
 
 			// Contract helper and module
 			Contract: ContractBuilder,
