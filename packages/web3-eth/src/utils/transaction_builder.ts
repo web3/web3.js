@@ -47,6 +47,7 @@ import {
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
+import { transactionSchema } from '../schemas';
 
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -114,7 +115,12 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
-	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	let populatedTransaction = format(
+		transactionSchema,
+		options.transaction,
+		DEFAULT_RETURN_FORMAT,
+	) as InternalTransaction;
 
 	if (isNullish(populatedTransaction.from)) {
 		populatedTransaction.from = getTransactionFromAttr(

@@ -18,13 +18,20 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 import { Address, Bytes, hexToNumber } from 'web3-utils';
 
-import { DEFAULT_RETURN_FORMAT, format, SignedTransactionInfo } from 'web3-common';
+import {
+	DEFAULT_RETURN_FORMAT,
+	FMT_BYTES,
+	FMT_NUMBER,
+	format,
+	SignedTransactionInfo,
+} from 'web3-common';
 import { isHexStrict } from 'web3-validator';
 import Web3Eth, { InternalTransaction, Transaction } from '../../../src';
 import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
-import { HEX_NUMBER_DATA_FORMAT } from '../../../src/constants';
 import { transactionSchema } from '../../../src/schemas';
+
+const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 
 describe('Web3Eth.sendSignedTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -239,23 +246,27 @@ describe('Web3Eth.sendSignedTransaction', () => {
 		it('should listen to the receipt event', async () => {
 			const expectedTransactionReceipt = {
 				blockHash: expect.any(String),
-				blockNumber: expect.any(BigInt),
-				cumulativeGasUsed: expect.any(BigInt),
-				effectiveGasPrice: expect.any(BigInt),
-				gasUsed: expect.any(BigInt),
 				logs: [],
 				logsBloom:
 					'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-				status: BigInt(1),
 				from: transaction.from,
 				to: transaction.to,
 				transactionHash: expect.any(String),
-				transactionIndex: BigInt(0),
-				type: BigInt(0),
 			};
 			const promiEvent = web3Eth.sendSignedTransaction(signedTransaction.raw);
+
 			promiEvent.on('receipt', data => {
 				expect(data).toEqual(expect.objectContaining(expectedTransactionReceipt));
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(typeof data.blockNumber).toBe('bigint');
+				expect(typeof data.cumulativeGasUsed).toBe('bigint');
+				expect(typeof data.effectiveGasPrice).toBe('bigint');
+				expect(typeof data.gasUsed).toBe('bigint');
+				expect(typeof data.transactionIndex).toBe('bigint');
+				expect(data.status).toBe(BigInt(1));
+				expect(data.type).toBe(BigInt(0));
 			});
 			await promiEvent;
 		});

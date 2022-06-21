@@ -65,7 +65,7 @@ describe('rpc', () => {
 		expect(tx.type).toBe(BigInt(0));
 		expect(tx.blockHash).toBeDefined();
 		expect(String(tx.blockHash)?.length).toBe(66);
-		expect(tx.blockNumber).toBeGreaterThan(0);
+		expect(Number(tx.blockNumber)).toBeGreaterThan(0);
 		expect(tx.transactionIndex).toBeDefined();
 		expect(tx.from?.length).toBe(42);
 		expect(tx.to?.length).toBe(42);
@@ -73,7 +73,7 @@ describe('rpc', () => {
 		expect(tx.input).toBe('0x');
 		expect(tx.r).toBeDefined();
 		expect(tx.s).toBeDefined();
-		expect(tx.gas).toBeGreaterThan(0);
+		expect(Number(tx.gas)).toBeGreaterThan(0);
 	};
 	const validateBlock = (b: Block) => {
 		expect(b.nonce).toBeDefined();
@@ -113,7 +113,7 @@ describe('rpc', () => {
 		expect(r.logsBloom).toBeDefined();
 		expect(r.status).toBeDefined();
 		expect(String(r.transactionHash)).toHaveLength(66);
-		expect(r.gasUsed).toBeGreaterThan(0);
+		expect(Number(r.gasUsed)).toBeGreaterThan(0);
 	};
 
 	beforeAll(async () => {
@@ -474,7 +474,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			// TODO: in next release validate chain ID , it should match with chain id of connected client
-			expect(res).toBeGreaterThan(0);
+			expect(Number(res)).toBeGreaterThan(0);
 		});
 
 		it('getNodeInfo', async () => {

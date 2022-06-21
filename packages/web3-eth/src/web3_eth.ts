@@ -88,7 +88,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
 			},
 		});
-	}
+  }
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
