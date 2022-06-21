@@ -32,10 +32,12 @@ export const isUInt = (
 		abiType: 'uint',
 	},
 ) => {
-	if (!['number', 'string', 'bigint'].includes(typeof value)) {
+	if (
+		!['number', 'string', 'bigint'].includes(typeof value) ||
+		(typeof value === 'string' && value.length === 0)
+	) {
 		return false;
 	}
-
 	let size!: number;
 
 	if (options?.abiType) {

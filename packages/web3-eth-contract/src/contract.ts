@@ -616,7 +616,7 @@ export class Contract<Abi extends ContractAbi>
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
-				if (receipt.status === '0x0') {
+				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError(
 						'contract deployment error',
 						receipt as ReceiptInfo,

@@ -148,7 +148,7 @@ describe('Web3 instance', () => {
 
 			const response = await web3.eth.getBalance(accounts[0]);
 
-			expect(response).toMatch(/0[xX][0-9a-fA-F]+/);
+			expect(response).toEqual(expect.any(BigInt));
 		});
 
 		it('setProvider', async () => {
