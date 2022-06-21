@@ -127,7 +127,9 @@ describe('Web3 instance', () => {
 			web3.provider = clientUrl;
 
 			expect(web3).toBeInstanceOf(Web3);
-			await waitForOpenConnection(web3, 0);
+			if (isWs) {
+				await waitForOpenConnection(web3, 0);
+			}
 			const response = await web3.eth.getBalance(accounts[0]);
 
 			expect(response).toMatch(/0[xX][0-9a-fA-F]+/);
@@ -203,7 +205,9 @@ describe('Web3 instance', () => {
 
 		it('should execute batch requests', async () => {
 			web3 = new Web3(clientUrl);
-			await waitForOpenConnection(web3, 0);
+			if (isWs) {
+				await waitForOpenConnection(web3, 0);
+			}
 			const batch = new web3.BatchRequest();
 
 			const request1Promise = batch.add(request1);

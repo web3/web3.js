@@ -24,8 +24,7 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-      - run: wget https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.10.18-de23cf91.tar.gz && tar -xf ./geth-linux-386-1.10.18-de23cf91.tar.gz -C ./scripts && mv ./scripts/geth-linux-386-1.10.18-de23cf91/geth ./scripts/geth && rm ./geth-linux-386-1.10.18-de23cf91.tar.gz && rm -rf ./scripts/geth-linux-386-1.10.18-de23cf91
-      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: ./scripts/geth.sh download
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -81,7 +80,7 @@ jobs:
 
   e2e-ipc:
       name: Integration IPC
-      needs: unit
+      needs: build
       runs-on: ubuntu-latest
       env:
           INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}

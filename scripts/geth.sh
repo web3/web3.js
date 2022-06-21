@@ -83,5 +83,6 @@ stop() {
 case $1 in
 start) start ;;
 stop) stop ;;
+download) download ;;
 *) helpFunction ;; # Print helpFunction in case parameter is non-existent
 esac
