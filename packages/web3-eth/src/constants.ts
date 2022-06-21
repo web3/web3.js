@@ -16,5 +16,4 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FMT_BYTES, FMT_NUMBER } from 'web3-common';
 
-export const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 export const NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.NUMBER } as const;
