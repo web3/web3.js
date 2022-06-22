@@ -566,4 +566,4 @@ Released with 1.0.0-beta.37 code base.
 ## [1.7.5]
 
 ### Added
-- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas`
+- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
