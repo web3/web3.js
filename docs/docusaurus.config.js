@@ -17,6 +17,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const { join } = require('path');
+
+const packages = [
+	'web3',
+	'web3-eth',
+	'web3-eth-contract',
+	'web3-utils',
+	'web3-validator',
+	'web3-common',
+	'web3-core',
+	'web3-errors',
+	'web3-net',
+	'web3-eth-abi',
+	'web3-eth-accounts',
+	'web3-eth-ens',
+	'web3-eth-iban',
+	'web3-eth-personal',
+	'web3-providers-http',
+	'web3-providers-ws',
+	'web3-providers-ipc',
+];
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -44,46 +65,23 @@ const config = {
 	plugins: [
 		'@docusaurus/theme-live-codeblock',
 		[
-			'docusaurus-plugin-typedoc',
-
-			// Plugin / TypeDoc options
+			'docusaurus-plugin-typedoc-api',
 			{
-				entryPoints: [
-					'../packages/web3',
-					'../packages/web3-common',
-					'../packages/web3-core',
-					'../packages/web3-errors',
-					'../packages/web3-eth',
-					'../packages/web3-eth-abi',
-					'../packages/web3-eth-accounts',
-					'../packages/web3-eth-contract',
-					'../packages/web3-eth-ens',
-					'../packages/web3-eth-iban',
-					'../packages/web3-eth-personal',
-					'../packages/web3-net',
-					'../packages/web3-providers-http',
-					'../packages/web3-providers-ws',
-					'../packages/web3-providers-ipc',
-					'../packages/web3-utils',
-					'../packages/web3-validator',
-				],
-				entryPointStrategy: 'packages',
-				cleanOutputDir: true,
-				sidebar: {
-					fullNames: true,
+				projectRoot: join(__dirname, '..'),
+				// Monorepo
+				packages: packages.map(p => `packages/${p}`),
+				minimal: false,
+				debug: true,
+				changelogs: true,
+				readmes: false,
+				tsconfigName: 'docs/tsconfig.docs.json',
+				typedocOptions: {
+					plugin: [
+						'typedoc-monorepo-link-types',
+						'typedoc-plugin-extras',
+						'typedoc-plugin-mdn-links',
+					],
 				},
-				plugin: [
-					// Link the cross package types
-					'typedoc-monorepo-link-types',
-					// Provide some extra formatting features for the generated docs
-					'typedoc-plugin-extras',
-					// Provide support to allow relative includes in the JSDoc comments.
-					'@droppedcode/typedoc-plugin-relative-includes',
-					// Adds support for linking references to global types like `HTMLElement`, `Date`
-					'typedoc-plugin-mdn-links',
-				],
-				// Don't cross reference the non-exported members
-				noMissingExports: true,
 			},
 		],
 	],
@@ -123,8 +121,7 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: 'docs/api/', // 'api' is the 'out' directory
-						activeBasePath: 'docs',
+						to: 'api', // 'api' is the 'out' directory
 						label: 'API',
 						position: 'left',
 					},
