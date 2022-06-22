@@ -38,6 +38,7 @@ export const isUInt = (
 	) {
 		return false;
 	}
+
 	let size!: number;
 
 	if (options?.abiType) {
