@@ -16,6 +16,7 @@
 		"sourceMap": true,
 		"declarationMap": true,
 		"strict": true,
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"esModuleInterop": true
 	}
 }
