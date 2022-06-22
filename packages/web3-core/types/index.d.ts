@@ -442,7 +442,7 @@ export interface RequestArguments {
 }
 
 export interface AbstractProvider {
-    sendAsync(payload: JsonRpcPayload, callback?: (error: Error | null, result?: JsonRpcResponse) => Promise<any> | void): void;
+    sendAsync(payload: JsonRpcPayload, callback?: (error: Error | null, result?: JsonRpcResponse) => Promise<unknown> | void): void;
     send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => unknown): void;
     request?(args: RequestArguments): Promise<any>;
     connected?: boolean;
