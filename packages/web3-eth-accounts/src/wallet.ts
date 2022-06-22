@@ -25,6 +25,12 @@ import { isNullish } from 'web3-validator';
 
 type BrowserError = { code: number; name: string };
 
+/**
+ * Wallet is an in memory `wallet` that can hold multiple accounts.
+ * These accounts can be used when using web3.eth.sendTransaction().
+ *
+ * @param {Web3AccountProvider}
+ */
 export class Wallet<
 	T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
 > extends Web3BaseWallet<T> {
@@ -69,6 +75,10 @@ export class Wallet<
 		return Object.keys(this._accounts).length;
 	}
 
+	/**
+	 * @param numberOfAccounts Number of accounts to create. Leave empty to create an empty wallet.
+	 * @returns {Wallet} The wallet Object
+	 */
 	public create(numberOfAccounts: number) {
 		for (let i = 0; i < numberOfAccounts; i += 1) {
 			this.add(this._accountProvider.create());
@@ -77,6 +87,12 @@ export class Wallet<
 		return this;
 	}
 
+	/**
+	 * Adds an account using a private key or account object to the wallet.
+	 *
+	 * @param account A private key or account object {T}
+	 * @returns {T} or a string of account added
+	 */
 	public add(account: T | string): boolean {
 		if (typeof account === 'string') {
 			return this.add(this._accountProvider.privateKeyToAccount(account));
@@ -86,7 +102,12 @@ export class Wallet<
 
 		return true;
 	}
-
+	/**
+	 * Get the account of the wallet with either the index or public address.
+	 *
+	 * @param addressOrIndex A string of the address or number index within the wallet.
+	 * @returns The account object {T}
+	 */
 	public get(addressOrIndex: string | number): T {
 		if (typeof addressOrIndex === 'string') {
 			return this._accounts[addressOrIndex];
@@ -95,6 +116,11 @@ export class Wallet<
 		return Object.values(this._accounts)[addressOrIndex];
 	}
 
+	/**
+	 *
+	 * @param addressOrIndex - {String|Number}: The account address, or index in the wallet.
+	 * @returns true if the wallet was removed. false if it couldn’t be found.
+	 */
 	public remove(addressOrIndex: string | number): boolean {
 		const result =
 			typeof addressOrIndex === 'string'
@@ -109,6 +135,11 @@ export class Wallet<
 		return false;
 	}
 
+	/**
+	 * Securely empties the wallet and removes all its accounts.
+	 *
+	 * @returns The wallet object
+	 */
 	public clear() {
 		for (const key of Object.keys(this._accounts)) {
 			delete this._accounts[key];
@@ -117,12 +148,26 @@ export class Wallet<
 		return this;
 	}
 
+	/**
+	 * Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
+	 *
+	 * @param password `string` - The password which will be used for encryption
+	 * @param options - encryption options
+	 * @returns An array of the encrypted keystore v3.
+	 */
 	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
 		return Promise.all(
 			Object.values(this._accounts).map(async account => account.encrypt(password, options)),
 		);
 	}
 
+	/**
+	 *
+	 * @param encryptedWallets `string[]` An array of encrypted keystore v3 objects to decrypt
+	 * @param password `String` The password to encrypt with
+	 * @param options decrypt options for the wallets
+	 * @returns The decrypted wallet object
+	 */
 	public async decrypt(
 		encryptedWallets: string[],
 		password: string,
@@ -141,6 +186,12 @@ export class Wallet<
 		return this;
 	}
 
+	/**
+	 *
+	 * @param password `String` The password to encrypt the wallet
+	 * @param keyName `String` (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
+	 * @returns Will return boolean value true if saved properly
+	 */
 	public async save(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
 
@@ -156,6 +207,13 @@ export class Wallet<
 		return true;
 	}
 
+	/**
+	 * Loads a wallet from local storage and decrypts it.
+	 *
+	 * @param password `String` The password to decrypt the wallet.
+	 * @param keyName `String` (optional)The key used for local storage position, defaults to `web3js_wallet"`
+	 * @returns Returns the wallet object
+	 */
 	public async load(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
 

@@ -65,7 +65,8 @@ import {
 } from './types';
 
 /**
- * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ * @param message - `string` A message to hash, if its HEX it will be UTF8 decoded.
+ * @returns The hashed message
  */
 
 export const hashMessage = (message: string): string => {
@@ -81,10 +82,9 @@ export const hashMessage = (message: string): string => {
 };
 
 /**
- * Signs arbitrary data. The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
- *
- * @param data
- * @param privateKey
+ * @param data - The data to sign
+ * @param privateKey - The private key to sign with
+ * @returns Oject containing the message, messageHash, r, s, v
  */
 export const sign = (data: string, privateKey: HexString): signResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
@@ -115,10 +115,10 @@ export const sign = (data: string, privateKey: HexString): signResult => {
 };
 
 /**
- *  Signs an Ethereum transaction with a given private key.
  *
- * @param transaction
- * @param privateKey
+ * @param transaction - The transaction, must be a legacy, EIP2930 or EIP 1559 transaction type {@link TxData} {@link AccessListEIP2930TxData} {@link FeeMarketEIP1559TxData}
+ * @param privateKey -  The private key to import. This is 32 bytes of random data.
+ * @returns Returns an object that contains message hash, r, s, v, transaction hash and raw transaction.
  */
 export const signTransaction = (
 	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
@@ -157,9 +157,9 @@ export const signTransaction = (
 };
 
 /**
- * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
  *
- * @param rawTransaction
+ * @param rawTransaction - The RLP encoded transaction
+ * @returns The Ethereum address used to sign this transaction
  */
 export const recoverTransaction = (rawTransaction: HexString): Address => {
 	if (isNullish(rawTransaction)) throw new UndefinedRawTransactionError();
@@ -170,11 +170,14 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 };
 
 /**
- * Recovers the Ethereum address which was used to sign the given data
- *
- * @param data
- * @param signature
- * @param hashed
+ * @param data - Either signed message or hash, or the signature object as following values:
+messageHash - String: The hash of the given message already prefixed with "\x19Ethereum Signed Message:\n" + message.length + message.
+r - String: First 32 bytes of the signature
+s - String: Next 32 bytes of the signature
+v - String: Recovery value + 27
+ * @param signature - The raw RLP encoded signature
+ * @param hashed - (optional) if the message is hashed or not
+ * @returns The Ethereum address used to sign this data.
  */
 export const recover = (
 	data: string | signatureObject,
@@ -209,12 +212,15 @@ export const recover = (
 	return address;
 };
 
-// Generate a version 4 uuid
-// https://github.com/uuidjs/uuid/blob/main/src/v4.js#L5
-// https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/json-wallets/src.ts/utils.ts#L54
-const uuidV4 = () => {
+/**
+ * Generate a version 4 (random) uuid
+ * https://github.com/uuidjs/uuid/blob/main/src/v4.js#L5
+ * */
+
+const uuidV4 = (): string => {
 	const bytes = randomBytes(16);
 
+	// https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/json-wallets/src.ts/utils.ts#L54
 	// Section: 4.1.3:
 	// - time_hi_and_version[12:16] = 0b0100
 	/* eslint-disable-next-line */
@@ -237,6 +243,16 @@ const uuidV4 = () => {
 	].join('-');
 };
 
+/**
+ * return an ethereum address using a private key
+ * @param privateKey `string` | `Buffer` - 32 bytes of random data
+ * @returns The Ethereum address.
+ * @example
+ * ```ts
+ * privateKeyToAddress("0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728")
+ * > "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0"
+ * ```
+ */
 export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 	if (!(isString(privateKey) || isBuffer(privateKey))) {
 		throw new InvalidPrivateKeyError();
@@ -263,12 +279,14 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 };
 
 /**
- * encrypt a private key given a password, returns a V3 JSON Keystore
- * https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+ * encrypt a private key with a password, returns a V3 JSON Keystore
  *
- * @param privateKey
- * @param password
- * @param options
+ * Read more: https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
+ *
+ * @param privateKey - The private key to encrypt, 32 bytes.
+ * @param password - The password used for encryption.
+ * @param options - set options for salt, iv and kdf
+ * @returns returns a V3 JSON Keystore
  */
 export const encrypt = async (
 	privateKey: HexString,
@@ -388,9 +406,9 @@ export const encrypt = async (
 };
 
 /**
- * Get account from private key
  *
- * @param privateKey
+ * @param privateKey string or buffer of 32 bytes
+ * @returns Return an account object
  */
 export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
 	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
@@ -410,7 +428,8 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 };
 
 /**
- * Returns an acoount
+ *
+ * @returns Returns a Web3Account object that includes the private and public key
  */
 export const create = (): Web3Account => {
 	const privateKey = utils.randomPrivateKey();
@@ -419,11 +438,11 @@ export const create = (): Web3Account => {
 };
 
 /**
- *  Decrypts a v3 keystore JSON, and creates the account.
  *
- * @param keystore
- * @param password
- * @param nonStrict
+ * @param keystore - Keystore object or string to decrypt
+ * @param password - The password that was used for encryption
+ * @param nonStrict - Optional param, if true, json string keystore will be lowercase.
+ * @returns Returns the decrypted Web3Account object
  */
 export const decrypt = async (
 	keystore: KeyStore | string,
