@@ -21,19 +21,8 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-
-  build-web: 
-    name: Build Packages For Web
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v3    
-      - uses: actions/setup-node@v3
-        with: 
-          node-version: 14
-          cache: yarn
-      - run: yarn
       - run: yarn build:web
-
+      
   lint:
     name: lint
     needs: build
