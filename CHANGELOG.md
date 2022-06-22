@@ -538,8 +538,6 @@ Released with 1.0.0-beta.37 code base.
 
 -  Fixed build issues of 1.7.2
 
-## [Unreleased]
-
 ## [1.7.4]
 
 ### Fixed
@@ -548,7 +546,7 @@ Released with 1.0.0-beta.37 code base.
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix resolve type of getBlock function (#4911)
--  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
+-  Web3-utils BN fix (#5132)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
@@ -562,3 +560,10 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
+
+## [Unreleased]
+
+## [1.7.5]
+
+### Fixed
+-  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
