@@ -75,13 +75,43 @@ describe('Web3 instance', () => {
 		if (getSystemTestProvider().startsWith('ws')) {
 			// make sure we try to close the connection after it is established
 			if (
-				web3.provider &&
+				web3?.provider &&
 				(web3.provider as unknown as Web3BaseProvider).getStatus() === 'connecting'
 			) {
 				await waitForOpenConnection(web3, currentAttempt);
 			}
-			(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+
+			if (web3?.provider) {
+				(web3.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+			}
 		}
+	});
+
+	it('should be able to create web3 object without provider', () => {
+		expect(() => new Web3()).not.toThrow();
+	});
+
+	it('should be able use "utils" without provider', () => {
+		web3 = new Web3();
+
+		expect(web3.utils.hexToNumber('0x5')).toBe(5);
+	});
+
+	it('should be able use "abi" without provider', () => {
+		web3 = new Web3();
+		const validData = validEncodeParametersData[0];
+
+		const encodedParameters = web3.eth.abi.encodeParameters(
+			validData.input[0],
+			validData.input[1],
+		);
+		expect(encodedParameters).toEqual(validData.output);
+	});
+
+	it('should throw error when we make a request when provider not available', async () => {
+		web3 = new Web3();
+
+		await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 	});
 
 	describeIf(getSystemTestProvider().startsWith('http'))(
@@ -97,7 +127,7 @@ describe('Web3 instance', () => {
 					? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
 					: false,
 			)('should create instance with string of external http provider', async () => {
-				web3 = new Web3(process.env.INFURA_GOERLI_HTTP!);
+				web3 = new Web3(process.env.INFURA_GOERLI_HTTP);
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
 			});
@@ -132,14 +162,14 @@ describe('Web3 instance', () => {
 					? process.env.INFURA_GOERLI_WS.toString().includes('ws')
 					: false,
 			)('should create instance with string of external ws provider', async () => {
-				web3 = new Web3(process.env.INFURA_GOERLI_WS!);
+				web3 = new Web3(process.env.INFURA_GOERLI_WS);
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
 			});
 		},
 	);
 	describe('Web3 providers', () => {
-		it('should set the provider', async () => {
+		it('should set the provider with `.provider=`', async () => {
 			web3 = new Web3('http://dummy.com');
 
 			web3.provider = clientUrl;
@@ -151,7 +181,7 @@ describe('Web3 instance', () => {
 			expect(response).toEqual(expect.any(BigInt));
 		});
 
-		it('setProvider', async () => {
+		it('should set the provider with `.setProvider`', async () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
 			if (clientUrl.startsWith('http')) {
@@ -163,6 +193,38 @@ describe('Web3 instance', () => {
 			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
 
 			expect(web3.provider).toBe(newProvider);
+		});
+
+		it('should set the provider with `.setProvider` of empty initialized object', async () => {
+			web3 = new Web3();
+
+			web3.setProvider(getSystemTestProvider());
+
+			await expect(web3.eth.getChainId()).resolves.toBeDefined();
+		});
+
+		it('should set the provider with `.provider=` of empty initialized object', async () => {
+			web3 = new Web3();
+
+			web3.provider = getSystemTestProvider();
+
+			await expect(web3.eth.getChainId()).resolves.toBeDefined();
+		});
+
+		it('should unset the provider with `.setProvider`', async () => {
+			web3 = new Web3(getSystemTestProvider());
+			await expect(web3.eth.getChainId()).resolves.toBeDefined();
+
+			web3.setProvider(undefined);
+			await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
+		});
+
+		it('should unset the provider with `.provider=`', async () => {
+			web3 = new Web3(getSystemTestProvider());
+			await expect(web3.eth.getChainId()).resolves.toBeDefined();
+
+			web3.provider = undefined;
+			await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 		});
 
 		it('providers', async () => {
