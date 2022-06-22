@@ -324,5 +324,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3 } from './web3';
 
 export * from './web3';
+export * from './types';
 
 export default Web3;
