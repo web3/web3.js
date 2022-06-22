@@ -545,6 +545,8 @@ var BNwrapped = function (value) {
         return new BN(value);
     } 
 };
+Object.setPrototypeOf(BNwrapped, BN);
+Object.setPrototypeOf(BNwrapped.prototype, BN.prototype);
 
 module.exports = {
     BN: BNwrapped,
