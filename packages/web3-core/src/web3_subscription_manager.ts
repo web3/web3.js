@@ -126,6 +126,8 @@ export class Web3SubscriptionManager<
 	}
 
 	public supportsSubscriptions(): boolean {
-		return isSupportSubscriptions(this.requestManager.provider);
+		return isNullish(this.requestManager.provider)
+			? false
+			: isSupportSubscriptions(this.requestManager.provider);
 	}
 }

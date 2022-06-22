@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { PromiEvent, Web3BaseProvider } from 'web3-common';
+import { Web3PromiEvent, Web3BaseProvider } from 'web3-common';
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
 import { sendFewTxes } from './helper';
 
@@ -60,15 +60,16 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
+			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> =
+				web3Eth.sendTransaction({
+					to,
+					value,
+					from,
+				});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
@@ -108,11 +109,12 @@ describeIf(getSystemTestProvider().startsWith('http'))('watch polling transactio
 			const to = accounts[1];
 			const value = `0x1`;
 
-			const sentTx: PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			});
+			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> =
+				web3Eth.sendTransaction({
+					to,
+					value,
+					from,
+				});
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('confirmation', ({ confirmationNumber }) => {
@@ -125,7 +127,7 @@ describeIf(getSystemTestProvider().startsWith('http'))('watch polling transactio
 			});
 			await new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});

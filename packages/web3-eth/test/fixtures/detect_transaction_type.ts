@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RETURN_FORMAT, FormatType } from 'web3-common';
+import { ETH_DATA_FORMAT, FormatType } from 'web3-common';
 import { Transaction } from '../../src/types';
 
-export const transactionType0x0: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
+export const transactionType0x0: FormatType<Transaction, typeof ETH_DATA_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -33,7 +33,7 @@ export const transactionType0x0: FormatType<Transaction, typeof DEFAULT_RETURN_F
 	},
 ];
 
-export const transactionType0x1: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
+export const transactionType0x1: FormatType<Transaction, typeof ETH_DATA_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -90,7 +90,7 @@ export const transactionType0x1: FormatType<Transaction, typeof DEFAULT_RETURN_F
 	},
 ];
 
-export const transactionType0x2: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
+export const transactionType0x2: FormatType<Transaction, typeof ETH_DATA_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',
@@ -156,7 +156,7 @@ export const transactionType0x2: FormatType<Transaction, typeof DEFAULT_RETURN_F
 	},
 ];
 
-export const transactionTypeUndefined: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>[] = [
+export const transactionTypeUndefined: FormatType<Transaction, typeof ETH_DATA_FORMAT>[] = [
 	{
 		from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 		to: '0x3535353535353535353535353535353535353535',

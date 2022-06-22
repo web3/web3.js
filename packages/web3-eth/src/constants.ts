@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,12 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { FMT_BYTES, FMT_NUMBER } from 'web3-common';
 
-import { Net } from './net';
-
-export * from './net';
-export * as rpcMethods from './rpc_methods';
-export * from './rpc_method_wrappers';
-export * from './web3_net_api';
-
-export default Net;
+export const NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.NUMBER } as const;

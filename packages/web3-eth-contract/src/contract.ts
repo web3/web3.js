@@ -23,11 +23,11 @@ import {
 	inputAddressFormatter,
 	inputLogFormatter,
 	LogsInput,
-	PromiEvent,
+	Web3PromiEvent,
 	Web3EventEmitter,
 	ReceiptInfo,
 } from 'web3-common';
-import { Web3Context, Web3ContextObject } from 'web3-core';
+import { Web3Context, Web3ContextInitOptions } from 'web3-core';
 import {
 	call,
 	estimateGas,
@@ -162,7 +162,7 @@ export class Contract<Abi extends ContractAbi>
 		address?: Address,
 		options?: ContractInitOptions,
 		context?: Partial<
-			Web3ContextObject<
+			Web3ContextInitOptions<
 				EthExecutionAPI,
 				{
 					logs: typeof LogsSubscription;
@@ -175,7 +175,7 @@ export class Contract<Abi extends ContractAbi>
 		super({
 			...context,
 			// Pass an empty string to avoid type issue. Error will be thrown from underlying validation
-			provider: options?.provider ?? context?.provider ?? Contract.givenProvider ?? '',
+			provider: options?.provider ?? context?.provider ?? Contract.givenProvider,
 			registeredSubscriptions: {
 				logs: LogsSubscription,
 				newHeads: NewHeadsSubscription,
@@ -368,7 +368,7 @@ export class Contract<Abi extends ContractAbi>
 			arguments: args,
 			send: (
 				options?: PayableTxOptions,
-			): PromiEvent<Contract<Abi>, SendTransactionEvents> => {
+			): Web3PromiEvent<Contract<Abi>, SendTransactionEvents> => {
 				const modifiedOptions = { ...options };
 
 				// Remove to address
@@ -616,7 +616,7 @@ export class Contract<Abi extends ContractAbi>
 
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
-				if (receipt.status === '0x0') {
+				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError(
 						'contract deployment error',
 						receipt as ReceiptInfo,
