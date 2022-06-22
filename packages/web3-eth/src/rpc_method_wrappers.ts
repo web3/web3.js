@@ -21,17 +21,26 @@ import {
 	DataFormat,
 	EthExecutionAPI,
 	format,
-	PromiEvent,
-	FMT_BYTES,
-	FMT_NUMBER,
+	Web3PromiEvent,
 	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
 	TransactionWithSender,
 	FormatType,
+	SignedTransactionInfo,
+	ETH_DATA_FORMAT,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
-import { Address, BlockTag, BlockNumberOrTag, Bytes, Filter, HexString, Numbers } from 'web3-utils';
-import { isBlockTag, isBytes, isNullish } from 'web3-validator';
+import {
+	Address,
+	BlockTag,
+	BlockNumberOrTag,
+	Bytes,
+	Filter,
+	HexString,
+	Numbers,
+	HexStringBytes,
+} from 'web3-utils';
+import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -49,10 +58,12 @@ import {
 	Log,
 	ReceiptInfo,
 	SendSignedTransactionEvents,
+	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
 	Transaction,
 	TransactionCall,
+	TransactionWithLocalWalletIndex,
 } from './types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionFromAttr } from './utils/transaction_builder';
@@ -63,6 +74,7 @@ import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
+import { NUMBER_DATA_FORMAT } from './constants';
 
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	rpcMethods.getProtocolVersion(web3Context.requestManager);
@@ -133,7 +145,7 @@ export async function getBalance<ReturnFormat extends DataFormat>(
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 	const response = await rpcMethods.getBalance(
 		web3Context.requestManager,
 		address,
@@ -157,10 +169,10 @@ export async function getStorageAt<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const storageSlotFormatted = format({ eth: 'uint' }, storageSlot, DEFAULT_RETURN_FORMAT);
+	const storageSlotFormatted = format({ eth: 'uint' }, storageSlot, ETH_DATA_FORMAT);
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 	const response = await rpcMethods.getStorageAt(
 		web3Context.requestManager,
 		address,
@@ -185,7 +197,7 @@ export async function getCode<ReturnFormat extends DataFormat>(
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 	const response = await rpcMethods.getCode(
 		web3Context.requestManager,
 		address,
@@ -209,7 +221,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 ) {
 	let response;
 	if (isBytes(block)) {
-		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
+		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getBlockByHash(
 			web3Context.requestManager,
 			blockHashFormatted as HexString,
@@ -218,7 +230,7 @@ export async function getBlock<ReturnFormat extends DataFormat>(
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
 			? (block as BlockTag)
-			: format({ eth: 'uint' }, block as Numbers, DEFAULT_RETURN_FORMAT);
+			: format({ eth: 'uint' }, block as Numbers, ETH_DATA_FORMAT);
 		response = await rpcMethods.getBlockByNumber(
 			web3Context.requestManager,
 			blockNumberFormatted,
@@ -242,7 +254,7 @@ export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 ) {
 	let response;
 	if (isBytes(block)) {
-		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
+		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getBlockTransactionCountByHash(
 			web3Context.requestManager,
 			blockHashFormatted as HexString,
@@ -250,7 +262,7 @@ export async function getBlockTransactionCount<ReturnFormat extends DataFormat>(
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
 			? (block as BlockTag)
-			: format({ eth: 'uint' }, block as Numbers, DEFAULT_RETURN_FORMAT);
+			: format({ eth: 'uint' }, block as Numbers, ETH_DATA_FORMAT);
 		response = await rpcMethods.getBlockTransactionCountByNumber(
 			web3Context.requestManager,
 			blockNumberFormatted,
@@ -273,7 +285,7 @@ export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 ) {
 	let response;
 	if (isBytes(block)) {
-		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
+		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getUncleCountByBlockHash(
 			web3Context.requestManager,
 			blockHashFormatted as HexString,
@@ -281,7 +293,7 @@ export async function getBlockUncleCount<ReturnFormat extends DataFormat>(
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
 			? (block as BlockTag)
-			: format({ eth: 'uint' }, block as Numbers, DEFAULT_RETURN_FORMAT);
+			: format({ eth: 'uint' }, block as Numbers, ETH_DATA_FORMAT);
 		response = await rpcMethods.getUncleCountByBlockNumber(
 			web3Context.requestManager,
 			blockNumberFormatted,
@@ -304,11 +316,11 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 	uncleIndex: Numbers,
 	returnFormat: ReturnFormat,
 ) {
-	const uncleIndexFormatted = format({ eth: 'uint' }, uncleIndex, DEFAULT_RETURN_FORMAT);
+	const uncleIndexFormatted = format({ eth: 'uint' }, uncleIndex, ETH_DATA_FORMAT);
 
 	let response;
 	if (isBytes(block)) {
-		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
+		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getUncleByBlockHashAndIndex(
 			web3Context.requestManager,
 			blockHashFormatted as HexString,
@@ -317,7 +329,7 @@ export async function getUncle<ReturnFormat extends DataFormat>(
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
 			? (block as BlockTag)
-			: format({ eth: 'uint' }, block as Numbers, DEFAULT_RETURN_FORMAT);
+			: format({ eth: 'uint' }, block as Numbers, ETH_DATA_FORMAT);
 		response = await rpcMethods.getUncleByBlockNumberAndIndex(
 			web3Context.requestManager,
 			blockNumberFormatted,
@@ -383,15 +395,11 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	transactionIndex: Numbers,
 	returnFormat: ReturnFormat,
 ) {
-	const transactionIndexFormatted = format(
-		{ eth: 'uint' },
-		transactionIndex,
-		DEFAULT_RETURN_FORMAT,
-	);
+	const transactionIndexFormatted = format({ eth: 'uint' }, transactionIndex, ETH_DATA_FORMAT);
 
 	let response;
 	if (isBytes(block)) {
-		const blockHashFormatted = format({ eth: 'bytes32' }, block, DEFAULT_RETURN_FORMAT);
+		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getTransactionByBlockHashAndIndex(
 			web3Context.requestManager,
 			blockHashFormatted as HexString,
@@ -400,7 +408,7 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	} else {
 		const blockNumberFormatted = isBlockTag(block as string)
 			? (block as BlockTag)
-			: format({ eth: 'uint' }, block as Numbers, DEFAULT_RETURN_FORMAT);
+			: format({ eth: 'uint' }, block as Numbers, ETH_DATA_FORMAT);
 		response = await rpcMethods.getTransactionByBlockNumberAndIndex(
 			web3Context.requestManager,
 			blockNumberFormatted,
@@ -458,7 +466,7 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
 	const response = await rpcMethods.getTransactionCount(
 		web3Context.requestManager,
 		address,
@@ -480,21 +488,22 @@ export function sendTransaction<
 	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: Transaction,
+	transaction: Transaction | TransactionWithLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions<ResolveType>,
-): PromiEvent<ResolveType, SendTransactionEvents> {
-	const fromAddress = transaction.from ?? getTransactionFromAttr(web3Context);
-
-	let transactionFormatted = formatTransaction(
-		{ ...transaction, from: fromAddress },
-		DEFAULT_RETURN_FORMAT,
-	);
-
-	const promiEvent = new PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
+): Web3PromiEvent<ResolveType, SendTransactionEvents> {
+	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents>((resolve, reject) => {
 		setImmediate(() => {
 			(async () => {
 				try {
+					let transactionFormatted = formatTransaction(
+						{
+							...transaction,
+							from: getTransactionFromAttr(web3Context, transaction),
+						},
+						ETH_DATA_FORMAT,
+					);
+
 					if (
 						!options?.ignoreGasPricing &&
 						isNullish(transactionFormatted.gasPrice) &&
@@ -503,10 +512,12 @@ export function sendTransaction<
 					) {
 						transactionFormatted = {
 							...transactionFormatted,
+							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+							// should not be included if undefined, but currently are
 							...(await getTransactionGasPricing(
 								transactionFormatted,
 								web3Context,
-								DEFAULT_RETURN_FORMAT,
+								ETH_DATA_FORMAT,
 							)),
 						};
 					}
@@ -585,7 +596,7 @@ export function sendTransaction<
 								transactionReceiptFormatted,
 							) as unknown as ResolveType,
 						);
-					} else if (transactionReceipt.status === '0x0') {
+					} else if (transactionReceipt.status === BigInt(0)) {
 						reject(transactionReceiptFormatted as unknown as ResolveType);
 					} else {
 						resolve(transactionReceiptFormatted as unknown as ResolveType);
@@ -619,86 +630,115 @@ export function sendTransaction<
  * @param web3Context
  * @param signedTransaction
  * @param returnFormat
+ * @param options
  */
-export function sendSignedTransaction<ReturnFormat extends DataFormat>(
+export function sendSignedTransaction<
+	ReturnFormat extends DataFormat,
+	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
+>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	signedTransaction: Bytes,
 	returnFormat: ReturnFormat,
-): PromiEvent<ReceiptInfo, SendSignedTransactionEvents> {
+	options?: SendSignedTransactionOptions<ResolveType>,
+): Web3PromiEvent<ResolveType, SendSignedTransactionEvents> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	const promiEvent = new PromiEvent<ReceiptInfo, SendSignedTransactionEvents>(resolve => {
-		setImmediate(() => {
-			(async () => {
-				// Formatting signedTransaction as per returnFormat to be returned to user
-				const signedTransactionFormatted = format(
-					{ eth: 'bytes' },
-					signedTransaction,
-					returnFormat,
-				);
+	const promiEvent = new Web3PromiEvent<ResolveType, SendSignedTransactionEvents>(
+		(resolve, reject) => {
+			setImmediate(() => {
+				(async () => {
+					try {
+						// Formatting signedTransaction as per returnFormat to be returned to user
+						const signedTransactionFormatted = format(
+							{ eth: 'bytes' },
+							signedTransaction,
+							returnFormat,
+						);
 
-				promiEvent.emit('sending', signedTransactionFormatted);
+						if (promiEvent.listenerCount('sending') > 0) {
+							promiEvent.emit('sending', signedTransactionFormatted);
+						}
 
-				// Formatting signedTransaction to be send to RPC endpoint
-				const signedTransactionFormattedHex = format(
-					{ eth: 'bytes' },
-					signedTransaction,
-					DEFAULT_RETURN_FORMAT,
-				);
-				const transactionHash = await rpcMethods.sendRawTransaction(
-					web3Context.requestManager,
-					signedTransactionFormattedHex,
-				);
-				const transactionHashFormatted = format(
-					{ eth: 'bytes32' },
-					transactionHash,
-					returnFormat,
-				);
+						// Formatting signedTransaction to be send to RPC endpoint
+						const signedTransactionFormattedHex = format(
+							{ eth: 'bytes' },
+							signedTransaction,
+							DEFAULT_RETURN_FORMAT,
+						);
+						const transactionHash = await rpcMethods.sendRawTransaction(
+							web3Context.requestManager,
+							signedTransactionFormattedHex,
+						);
+						const transactionHashFormatted = format(
+							{ eth: 'bytes32' },
+							transactionHash,
+							returnFormat,
+						);
 
-				if (promiEvent.listenerCount('sent') > 0) {
-					promiEvent.emit('sent', signedTransactionFormatted);
-				}
+						if (promiEvent.listenerCount('sent') > 0) {
+							promiEvent.emit('sent', signedTransactionFormatted);
+						}
 
-				if (promiEvent.listenerCount('transactionHash') > 0) {
-					promiEvent.emit('transactionHash', transactionHashFormatted);
-				}
+						if (promiEvent.listenerCount('transactionHash') > 0) {
+							promiEvent.emit('transactionHash', transactionHashFormatted);
+						}
 
-				let transactionReceipt = await getTransactionReceipt(
-					web3Context,
-					transactionHash,
-					returnFormat,
-				);
+						let transactionReceipt = await getTransactionReceipt(
+							web3Context,
+							transactionHash,
+							returnFormat,
+						);
 
-				// Transaction hasn't been included in a block yet
-				if (isNullish(transactionReceipt))
-					transactionReceipt = await waitForTransactionReceipt(
-						web3Context,
-						transactionHash,
-						returnFormat,
-					);
+						// Transaction hasn't been included in a block yet
+						if (isNullish(transactionReceipt))
+							transactionReceipt = await waitForTransactionReceipt(
+								web3Context,
+								transactionHash,
+								returnFormat,
+							);
 
-				const transactionReceiptFormatted = format(
-					receiptInfoSchema,
-					transactionReceipt,
-					returnFormat,
-				);
+						const transactionReceiptFormatted = format(
+							receiptInfoSchema,
+							transactionReceipt,
+							returnFormat,
+						);
 
-				if (promiEvent.listenerCount('receipt') > 0) {
-					promiEvent.emit('receipt', transactionReceiptFormatted);
-				}
+						if (promiEvent.listenerCount('receipt') > 0) {
+							promiEvent.emit('receipt', transactionReceiptFormatted);
+						}
 
-				resolve(transactionReceiptFormatted);
+						if (options?.transactionResolver) {
+							resolve(
+								options?.transactionResolver(
+									transactionReceiptFormatted,
+								) as unknown as ResolveType,
+							);
+						} else if (transactionReceipt.status === BigInt(0)) {
+							reject(transactionReceiptFormatted as unknown as ResolveType);
+						} else {
+							resolve(transactionReceiptFormatted as unknown as ResolveType);
+						}
 
-				watchTransactionForConfirmations<SendSignedTransactionEvents, ReturnFormat>(
-					web3Context,
-					promiEvent,
-					transactionReceiptFormatted,
-					transactionHash,
-					returnFormat,
-				);
-			})() as unknown;
-		});
-	});
+						if (promiEvent.listenerCount('confirmation') > 0) {
+							watchTransactionForConfirmations<
+								SendSignedTransactionEvents,
+								ReturnFormat,
+								ResolveType
+							>(
+								web3Context,
+								promiEvent,
+								transactionReceiptFormatted as ReceiptInfo,
+								transactionHash,
+								returnFormat,
+							);
+						}
+					} catch (error) {
+						reject(error);
+					}
+				})() as unknown;
+			});
+		},
+	);
 
 	return promiEvent;
 }
@@ -752,11 +792,16 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 ) {
 	const response = await rpcMethods.signTransaction(
 		web3Context.requestManager,
-		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT),
 	);
+
+	const unformattedResponse = isString(response as HexStringBytes)
+		? { raw: response, tx: transaction }
+		: (response as SignedTransactionInfo);
+
 	return {
-		raw: format({ eth: 'bytes' }, response, returnFormat),
-		tx: formatTransaction(transaction, returnFormat),
+		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),
+		tx: formatTransaction(unformattedResponse.tx, returnFormat),
 	};
 }
 
@@ -777,12 +822,14 @@ export async function call<ReturnFormat extends DataFormat>(
 ) {
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
 	const response = await rpcMethods.call(
 		web3Context.requestManager,
-		formatTransaction(transaction, DEFAULT_RETURN_FORMAT),
+		formatTransaction(transaction, ETH_DATA_FORMAT),
 		blockNumberFormatted,
 	);
+
 	return format({ eth: 'bytes' }, response, returnFormat);
 }
 
@@ -800,10 +847,12 @@ export async function estimateGas<ReturnFormat extends DataFormat>(
 	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
 	returnFormat: ReturnFormat,
 ) {
-	const transactionFormatted = formatTransaction(transaction, DEFAULT_RETURN_FORMAT);
+	const transactionFormatted = formatTransaction(transaction, ETH_DATA_FORMAT);
+
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
 	const response = await rpcMethods.estimateGas(
 		web3Context.requestManager,
 		transactionFormatted,
@@ -873,12 +922,13 @@ export async function getProof<ReturnFormat extends DataFormat>(
 	returnFormat: ReturnFormat,
 ) {
 	const storageKeysFormatted = storageKeys.map(storageKey =>
-		format({ eth: 'bytes' }, storageKey, DEFAULT_RETURN_FORMAT),
+		format({ eth: 'bytes' }, storageKey, ETH_DATA_FORMAT),
 	);
 
 	const blockNumberFormatted = isBlockTag(blockNumber as string)
 		? (blockNumber as BlockTag)
-		: format({ eth: 'uint' }, blockNumber as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
 	const response = await rpcMethods.getProof(
 		web3Context.requestManager,
 		address,
@@ -904,10 +954,12 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	rewardPercentiles: Numbers[],
 	returnFormat: ReturnFormat,
 ) {
-	const blockCountFormatted = format({ eth: 'uint' }, blockCount, DEFAULT_RETURN_FORMAT);
+	const blockCountFormatted = format({ eth: 'uint' }, blockCount, ETH_DATA_FORMAT);
+
 	const newestBlockFormatted = isBlockTag(newestBlock as string)
 		? (newestBlock as BlockTag)
-		: format({ eth: 'uint' }, newestBlock as Numbers, DEFAULT_RETURN_FORMAT);
+		: format({ eth: 'uint' }, newestBlock as Numbers, ETH_DATA_FORMAT);
+
 	const rewardPercentilesFormatted = format(
 		{
 			type: 'array',
@@ -916,11 +968,9 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 			},
 		},
 		rewardPercentiles,
-		{
-			number: FMT_NUMBER.NUMBER,
-			bytes: FMT_BYTES.HEX,
-		},
+		NUMBER_DATA_FORMAT,
 	);
+
 	const response = await rpcMethods.getFeeHistory(
 		web3Context.requestManager,
 		blockCountFormatted,

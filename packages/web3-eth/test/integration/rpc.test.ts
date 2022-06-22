@@ -21,6 +21,7 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { hexToNumber, hexToString, numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
+import { getStorageSlotNumForLongString } from 'web3-utils/src';
 import { ReceiptInfo, Web3Eth, TransactionInfo } from '../../src';
 
 import {
@@ -39,6 +40,7 @@ const mapFormatToType: { [key: string]: string } = {
 	[FMT_NUMBER.STR]: 'string',
 	[FMT_NUMBER.BIGINT]: 'bigint',
 };
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
@@ -47,10 +49,10 @@ describe('rpc', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;
-	let blockNumber: number | bigint;
+	let blockNumber: bigint;
 	let blockHash: string;
 	let transactionHash: string;
-	let transactionIndex: number | bigint;
+	let transactionIndex: bigint;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -60,30 +62,30 @@ describe('rpc', () => {
 		expect(tx.nonce).toBeDefined();
 		expect(tx.hash).toBeDefined();
 		expect(String(tx.hash)?.length).toBe(66);
-		expect(tx.type).toBe('0x0');
+		expect(tx.type).toBe(BigInt(0));
 		expect(tx.blockHash).toBeDefined();
 		expect(String(tx.blockHash)?.length).toBe(66);
-		expect(hexToNumber(String(tx.blockNumber))).toBeGreaterThan(0);
+		expect(Number(tx.blockNumber)).toBeGreaterThan(0);
 		expect(tx.transactionIndex).toBeDefined();
 		expect(tx.from?.length).toBe(42);
 		expect(tx.to?.length).toBe(42);
-		expect(tx.value).toBe('0x1');
+		expect(tx.value).toBe(BigInt(1));
 		expect(tx.input).toBe('0x');
 		expect(tx.r).toBeDefined();
 		expect(tx.s).toBeDefined();
-		expect(hexToNumber(String(tx.gas))).toBeGreaterThan(0);
+		expect(Number(tx.gas)).toBeGreaterThan(0);
 	};
 	const validateBlock = (b: Block) => {
-		// expect(b.nonce).toBeDefined();
+		expect(b.nonce).toBeDefined();
 		expect(Number(b.baseFeePerGas)).toBeGreaterThan(0);
 		expect(b.number).toBeDefined();
-		// expect(b.hash).toBeDefined();
+		expect(b.hash).toBeDefined();
 		expect(b.parentHash?.length).toBe(66);
 		expect(b.sha3Uncles?.length).toBe(66);
 		expect(b.transactionsRoot).toHaveLength(66);
 		expect(b.receiptsRoot).toHaveLength(66);
 		expect(b.logsBloom).toBeDefined();
-		// expect(b.miner.length).toBe(42);
+		expect(b.miner).toHaveLength(42);
 		expect(b.difficulty).toBeDefined();
 		expect(b.stateRoot).toHaveLength(66);
 		expect(b.gasLimit).toBeDefined();
@@ -91,7 +93,7 @@ describe('rpc', () => {
 		expect(b.timestamp).toBeDefined();
 		expect(b.extraData).toBeDefined();
 		expect(b.mixHash).toBeDefined();
-		// expect(b.totalDifficulty).toBeDefined();
+		expect(b.totalDifficulty).toBeDefined();
 		expect(b.baseFeePerGas).toBeDefined();
 		expect(b.size).toBeDefined();
 		expect(Array.isArray(b.transactions)).toBe(true);
@@ -111,7 +113,7 @@ describe('rpc', () => {
 		expect(r.logsBloom).toBeDefined();
 		expect(r.status).toBeDefined();
 		expect(String(r.transactionHash)).toHaveLength(66);
-		expect(hexToNumber(String(r.gasUsed))).toBeGreaterThan(0);
+		expect(Number(r.gasUsed)).toBeGreaterThan(0);
 	};
 
 	beforeAll(async () => {
@@ -140,7 +142,7 @@ describe('rpc', () => {
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	beforeEach(async () => {
-		const [receipt]: ReceiptInfo[] = await sendFewTxes({
+		const [receipt] = await sendFewTxes({
 			web3Eth,
 			from: accounts[0],
 			to: accounts[1],
@@ -148,10 +150,10 @@ describe('rpc', () => {
 			times: 1,
 		});
 
-		blockNumber = hexToNumber(String(receipt.blockNumber));
+		blockNumber = receipt.blockNumber as bigint;
 		blockHash = String(receipt.blockHash);
 		transactionHash = String(receipt.transactionHash);
-		transactionIndex = hexToNumber(String(receipt.transactionIndex));
+		transactionIndex = receipt.transactionIndex as bigint;
 	});
 	afterAll(() => {
 		if (clientUrl.startsWith('ws')) {
@@ -237,35 +239,22 @@ describe('rpc', () => {
 		it('getStorageAt', async () => {
 			const numberData = 10;
 			const stringData = 'str';
-			// const stringDataLong = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in interdum nibh, in viverra diam. Morbi eleifend diam sed erat malesuada molestie. Donec ultricies, mi et porta viverra, est magna tempus lorem, sit amet tempus mauris sapien vitae lacus. Duis at est quis nisl dictum accumsan eget et libero. Phasellus semper nibh et varius accumsan. Cras fringilla egestas dui, vitae bibendum enim tincidunt id. Donec condimentum lacinia nulla, eget elementum tortor tristique vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ac risus tellus. Etiam nec neque et erat efficitur laoreet. Maecenas fermentum feugiat diam, ut ultricies ipsum mollis at. In in velit turpis. Vestibulum urna ipsum, vestibulum ut cursus ut, ullamcorper quis est.';
 			const boolData = true;
 			await contract.methods?.setValues(numberData, stringData, boolData).send(sendOptions);
 			const resNumber = await web3Eth.getStorageAt(
 				contract.options.address as string,
-				0,
+				'0x0',
 				undefined,
-				{
-					number: FMT_NUMBER.BIGINT,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resString = await web3Eth.getStorageAt(
 				contract.options.address as string,
-				1,
+				'0x1',
 				undefined,
-				{
-					number: FMT_NUMBER.STR,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resBool = await web3Eth.getStorageAt(
 				contract.options.address as string,
-				2,
+				'0x2',
 				undefined,
-				{
-					number: FMT_NUMBER.NUMBER,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 
 			expect(hexToNumber(resNumber)).toBe(numberData);
@@ -274,33 +263,47 @@ describe('rpc', () => {
 				.split('')
 				.filter(d => d !== '\x00')
 				.join('');
+
 			expect(rString).toHaveLength(stringData.length);
 			expect(rString).toEqual(stringData);
 			expect(Boolean(hexToNumber(resBool))).toBe(boolData);
 
-			// TODO: finish test long string
-			// await contract.methods?.setValues(numberData, stringDataLong, boolData).send(sendOptions);
-			// const resStringLong = await web3Eth.getStorageAt(
-			//     contract.options.address as string,
-			//     1,
-			//     undefined,
-			//     {
-			//         number: FMT_NUMBER.STR,
-			//         bytes: FMT_BYTES.HEX,
-			//     },
-			// );
-			//
-			// expect((Number(hexToNumber(resStringLong)) - 1) / 2).toBe(stringDataLong.length);
-			// const slotNum = keccak256(Buffer.from(resStringLong.toLowerCase().replace(/^0x/i, '')));
-			// const resStringLongData = await web3Eth.getStorageAt(
-			//     contract.options.address as string,
-			//     bytesToHex(slotNum),
-			//     undefined,
-			//     {
-			//         number: FMT_NUMBER.STR,
-			//         bytes: FMT_BYTES.HEX,
-			//     },
-			// );
+			// long string data test
+			const stringDataLong =
+				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in interdum nibh, in viverra diam. Morbi eleifend diam sed erat malesuada molestie. Donec ultricies, mi et porta viverra, est magna tempus lorem, sit amet tempus mauris sapien vitae lacus. Duis at est quis nisl dictum accumsan eget et libero. Phasellus semper nibh et varius accumsan. Cras fringilla egestas dui, vitae bibendum enim tincidunt id. Donec condimentum lacinia nulla, eget elementum tortor tristique vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ac risus tellus. Etiam nec neque et erat efficitur laoreet. Maecenas fermentum feugiat diam, ut ultricies ipsum mollis at. In in velit turpis. Vestibulum urna ipsum, vestibulum ut cursus ut, ullamcorper quis est.';
+			await contract.methods
+				?.setValues(numberData, stringDataLong, boolData)
+				.send(sendOptions);
+
+			const resStringLong = await web3Eth.getStorageAt(
+				contract.options.address as string,
+				1,
+				undefined,
+				{
+					number: FMT_NUMBER.STR,
+					bytes: FMT_BYTES.HEX,
+				},
+			);
+
+			const slotCount = Math.ceil((Number(hexToNumber(resStringLong)) - 1) / 64);
+			const slotDataNum = getStorageSlotNumForLongString(1);
+
+			const prs = [];
+			for (let i = 0; i < slotCount; i += 1) {
+				prs.push(
+					web3Eth.getStorageAt(
+						contract.options.address as string,
+						`0x${(BigInt(hexToNumber(String(slotDataNum))) + BigInt(i)).toString(16)}`,
+					),
+				);
+			}
+			const str = (await Promise.all(prs))
+				.map(t => hexToString(t))
+				.join('')
+				.split('')
+				.filter(d => d !== '\x00')
+				.join('');
+			expect(stringDataLong).toBe(str);
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getCode', async format => {
@@ -312,21 +315,29 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
+		// eslint-disable-next-line jest/expect-expect
 		it.each(
 			toAllVariants<{
 				block: number | bigint | string;
 				hydrated: boolean;
 				format: string;
 			}>({
-				block: ['earliest', 'latest', 'pending', blockHash, blockNumber],
+				block: ['earliest', 'latest', blockHash, blockNumber],
 				hydrated: [true, false],
 				format: Object.values(FMT_NUMBER),
 			}),
 		)('getBlock', async ({ hydrated, block, format }) => {
-			const b = await web3Eth.getBlock(block, hydrated, {
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
-			});
+			const b = {
+				...(await web3Eth.getBlock(block, hydrated, {
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
+				})),
+			};
+			if (block === 'pending') {
+				b.nonce = '0x0';
+				b.miner = '0x0000000000000000000000000000000000000000';
+				b.totalDifficulty = '0x0';
+			}
 			validateBlock(b as Block);
 		});
 
@@ -368,11 +379,11 @@ describe('rpc', () => {
 			}),
 		)('getBlockTransactionCount', async ({ block }) => {
 			const res = await web3Eth.getBlockTransactionCount(block);
-			let shouldBe: string;
+			let shouldBe: bigint;
 			if (getSystemTestBackend() === 'ganache') {
-				shouldBe = block === 'earliest' ? '0x0' : '0x1';
+				shouldBe = block === 'earliest' ? BigInt(0) : BigInt(1);
 			} else {
-				shouldBe = ['earliest', 'pending'].includes(String(block)) ? '0x0' : '0x1';
+				shouldBe = ['earliest', 'pending'].includes(String(block)) ? BigInt(0) : BigInt(1);
 			}
 			expect(res).toBe(shouldBe);
 		});
@@ -385,7 +396,7 @@ describe('rpc', () => {
 			}),
 		)('getBlockUncleCount', async ({ block }) => {
 			const res = await web3Eth.getBlockUncleCount(block);
-			expect(res).toBe('0x0');
+			expect(res).toBe(BigInt(0));
 		});
 
 		it.each(
@@ -434,6 +445,7 @@ describe('rpc', () => {
 		});
 
 		it.each([blockHash, blockNumber])('getTransactionFromBlock', async block => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const tx = (await web3Eth.getTransactionFromBlock(block, transactionIndex))!;
 			validateTransaction(tx as TransactionInfo);
 			expect(tx?.hash).toBe(transactionHash);
@@ -447,9 +459,9 @@ describe('rpc', () => {
 				value: '0x1',
 				times: 1,
 			});
-
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const res: ReceiptInfo = (await web3Eth.getTransactionReceipt(
-				// TODO: add more scenarios in future release with block number and validate tx receipt fields
+				// TODO: add more scenarios in future release with block number
 				receipt.transactionHash as string,
 			))!;
 			validateReceipt(res);
@@ -462,7 +474,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			// TODO: in next release validate chain ID , it should match with chain id of connected client
-			expect(res).toBeGreaterThan(0);
+			expect(Number(res)).toBeGreaterThan(0);
 		});
 
 		it('getNodeInfo', async () => {
@@ -477,7 +489,7 @@ describe('rpc', () => {
 			expect(res[0]).toBeDefined();
 		});
 
-		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', async () => {
+		itIf(!['geth', 'ganache'].includes(getSystemTestBackend()))('requestAccounts', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(true).toBe(true);
@@ -485,16 +497,13 @@ describe('rpc', () => {
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
-			const numberData = 10;
+			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
 			const sendRes = await contract.methods
-				?.setValues(numberData, stringData, boolData)
+				.setValues(numberData, stringData, boolData)
 				.send(sendOptions);
-			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined, {
-				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.HEX,
-			});
+			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined);
 			const res = await web3Eth.getProof(
 				contract.options.address as string,
 				['0x0000000000000000000000000000000000000000000000000000000000000000'],
@@ -503,7 +512,7 @@ describe('rpc', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res.storageProof).toBeDefined();
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(hexToNumber(res.storageProof[0].value)).toBe(numberData);
+			expect(res.storageProof[0].value).toBe(numberData);
 		});
 
 		it('getPastLogs', async () => {
@@ -515,9 +524,7 @@ describe('rpc', () => {
 			}
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contract.options.address as string,
-				fromBlock: numberToHex(
-					Math.min(...resTx.map(d => Number(hexToNumber(d.blockNumber)))),
-				),
+				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
 			});
 			const results = res.map(
 				r =>

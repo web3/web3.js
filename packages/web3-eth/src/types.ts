@@ -15,15 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	AccessList,
-	TransactionHash,
-	Uncles,
-	FMT_BYTES,
-	FMT_NUMBER,
-	FormatType,
-} from 'web3-common';
-import { Address, Bytes, Numbers } from 'web3-utils';
+import { AccessList, TransactionHash, Uncles, FormatType, ETH_DATA_FORMAT } from 'web3-common';
+import { Address, Bytes, Numbers, Uint } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =
@@ -70,6 +63,7 @@ export interface ReceiptInfo {
 	readonly logsBloom: Bytes;
 	readonly root: Bytes;
 	readonly status: Numbers;
+	readonly type?: Numbers;
 }
 
 export interface CustomChain {
@@ -84,12 +78,12 @@ export interface Common {
 	hardfork?: Hardfork;
 }
 
-export interface Transaction {
+interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;
 	common?: Common;
-	from?: Address;
-	to?: Address;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | null;
 	gas?: Numbers;
 	gasPrice?: Numbers;
 	type?: Numbers;
@@ -103,9 +97,18 @@ export interface Transaction {
 	chainId?: Numbers;
 	networkId?: Numbers;
 	gasLimit?: Numbers;
+	yParity?: Uint;
 	v?: Numbers;
 	r?: Bytes;
 	s?: Bytes;
+}
+
+export interface Transaction extends TransactionBase {
+	from?: Address;
+}
+
+export interface TransactionWithLocalWalletIndex extends TransactionBase {
+	from?: Numbers;
 }
 
 export interface TransactionInfo extends Transaction {
@@ -116,10 +119,7 @@ export interface TransactionInfo extends Transaction {
 	readonly transactionIndex?: Numbers;
 }
 
-export type InternalTransaction = FormatType<
-	Transaction,
-	{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
->;
+export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 
 export interface TransactionCall extends Transaction {
 	to: Address;
@@ -194,6 +194,10 @@ export type SendTransactionEvents = {
 
 export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
 	ignoreGasPricing?: boolean;
+	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
+}
+
+export interface SendSignedTransactionOptions<ResolveType = ReceiptInfo> {
 	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
 }
 

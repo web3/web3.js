@@ -20,6 +20,7 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-common';
+import { numberToHex } from 'web3-utils';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Resolve } from './helper';
@@ -31,7 +32,7 @@ import {
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 3;
-
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
@@ -123,7 +124,7 @@ describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
 			await makeFewTxToContract({ contract, sendOptions, testDataString });
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
-				fromBlock,
+				fromBlock: numberToHex(fromBlock),
 				address: contract.options.address,
 			});
 

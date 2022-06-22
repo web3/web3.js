@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
@@ -42,7 +41,7 @@ jest.mock('web3-net', () => ({
 describe('defaultTransactionBuilder', () => {
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
 	const expectedNonce = '0x42';
-	const expectedGas = '0x5208';
+	const expectedGas = BigInt(21000);
 	const expectedGasLimit = expectedGas;
 	const expectedGasPrice = '0x4a817c800';
 	const expectedBaseFeePerGas = '0x13afe8b904';
@@ -123,16 +122,16 @@ describe('defaultTransactionBuilder', () => {
 	});
 
 	it.skip('should call override method', async () => {
-		// const overrideFunction = jest.fn();
-		// const input = { ...transaction };
-		// await defaultTransactionBuilder(
-		// 	input,
-		// 	web3Context,
-		// 	ValidTypes.HexString,
-		// 	'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-		// 	overrideFunction,
-		// );
-		// expect(overrideFunction).toHaveBeenCalledWith(input);
+		const overrideFunction = jest.fn();
+		const input = { ...transaction };
+		await defaultTransactionBuilder({
+			transaction: input,
+			web3Context,
+			// VALID_ETH_BASE_TYPES.HexString,
+			// '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			// overrideFunction,
+		});
+		expect(overrideFunction).toHaveBeenCalledWith(input);
 	});
 
 	describe('should populate from', () => {

@@ -65,8 +65,15 @@ describe('contract', () => {
 					.send(sendOptions);
 
 				expect(receipt).toEqual(
-					expect.objectContaining({ status: '0x1', transactionHash: expect.any(String) }),
+					expect.objectContaining({
+						// status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
 				);
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(receipt.status).toEqual(BigInt(1));
 			});
 
 			it('should returns a receipt (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', async () => {
@@ -78,15 +85,36 @@ describe('contract', () => {
 				});
 
 				expect(receipt).toEqual(
-					expect.objectContaining({ status: '0x1', transactionHash: expect.any(String) }),
+					expect.objectContaining({
+						// status: BigInt(1),
+						transactionHash: expect.any(String),
+					}),
 				);
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(receipt.status).toEqual(BigInt(1));
 			});
 
 			// TODO: Get and match the revert error message
 			it('should returns errors on reverts', async () => {
-				return expect(contract.methods.reverts().send(sendOptions)).rejects.toEqual(
-					expect.objectContaining({ status: '0x0', transactionHash: expect.any(String) }),
-				);
+				try {
+					await contract.methods.reverts().send(sendOptions);
+				} catch (receipt: any) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(receipt).toEqual(
+						expect.objectContaining({
+							transactionHash: expect.any(String),
+						}),
+					);
+
+					// To avoid issue with the `objectContaining` and `cypress` had to add
+					// these expectations explicitly on each attribute
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(receipt.status).toEqual(BigInt(0));
+				}
+
+				expect.assertions(2);
 			});
 		});
 	});

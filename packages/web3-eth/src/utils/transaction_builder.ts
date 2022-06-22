@@ -15,57 +15,88 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, FormatType, format } from 'web3-common';
+import {
+	EthExecutionAPI,
+	DEFAULT_RETURN_FORMAT,
+	ETH_DATA_FORMAT,
+	FormatType,
+	format,
+	DataFormat,
+} from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, HexString } from 'web3-utils';
-import { isNullish } from 'web3-validator';
-import { TransactionDataAndInputError, UnableToPopulateNonceError } from '../errors';
+import { Address, HexString, isAddress } from 'web3-utils';
+import { isNullish, isNumber } from 'web3-validator';
+import { NUMBER_DATA_FORMAT } from '../constants';
+import {
+	InvalidTransactionWithSender,
+	LocalWalletNotAvailableError,
+	TransactionDataAndInputError,
+	UnableToPopulateNonceError,
+} from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
-import { ValidChains, Hardfork, Transaction, InternalTransaction } from '../types';
+import {
+	ValidChains,
+	Hardfork,
+	Transaction,
+	InternalTransaction,
+	TransactionWithLocalWalletIndex,
+} from '../types';
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
+import { transactionSchema } from '../schemas';
 
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
+	transaction?: Transaction | TransactionWithLocalWalletIndex,
 	privateKey?: HexString | Buffer,
 ) => {
+	if (transaction?.from !== undefined) {
+		if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
+			return transaction.from;
+		}
+		if (isNumber(transaction.from)) {
+			if (web3Context.wallet) {
+				return web3Context.wallet.get(
+					format({ eth: 'uint' }, transaction.from, NUMBER_DATA_FORMAT),
+				).address;
+			}
+			throw new LocalWalletNotAvailableError();
+		} else {
+			throw new InvalidTransactionWithSender(transaction.from);
+		}
+	}
 	if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
 	if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
-	// TODO if (web3.eth.accounts.wallet) Try to fill using local wallet
 
 	return undefined;
 };
 
-export const getTransactionNonce = async (
+export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	address?: Address,
+	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 ) => {
 	if (isNullish(address)) {
 		// TODO if (web3.eth.accounts.wallet) use address from local wallet
 		throw new UnableToPopulateNonceError();
 	}
 
-	return getTransactionCount(
-		web3Context,
-		address,
-		web3Context.defaultBlock,
-		DEFAULT_RETURN_FORMAT,
-	);
+	return getTransactionCount(web3Context, address, web3Context.defaultBlock, returnFormat);
 };
 
 export const getTransactionType = (
-	transaction: FormatType<Transaction, typeof DEFAULT_RETURN_FORMAT>,
+	transaction: FormatType<Transaction, typeof ETH_DATA_FORMAT>,
 	web3Context: Web3Context<EthExecutionAPI>,
 ) => {
 	const inferredType = detectTransactionType(transaction, web3Context);
 
 	if (!isNullish(inferredType)) return inferredType;
 	if (!isNullish(web3Context.defaultTransactionType))
-		return format({ eth: 'uint' }, web3Context.defaultTransactionType, DEFAULT_RETURN_FORMAT);
+		return format({ eth: 'uint' }, web3Context.defaultTransactionType, ETH_DATA_FORMAT);
 
 	return undefined;
 };
@@ -84,18 +115,28 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
 	privateKey?: HexString | Buffer;
 }): Promise<ReturnType> {
-	let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
+	let populatedTransaction = format(
+		transactionSchema,
+		options.transaction,
+		DEFAULT_RETURN_FORMAT,
+	) as InternalTransaction;
 
 	if (isNullish(populatedTransaction.from)) {
-		populatedTransaction.from = getTransactionFromAttr(options.web3Context, options.privateKey);
+		populatedTransaction.from = getTransactionFromAttr(
+			options.web3Context,
+			undefined,
+			options.privateKey,
+		);
 	}
 
 	// TODO: Debug why need to typecase getTransactionNonce
 	if (isNullish(populatedTransaction.nonce)) {
-		populatedTransaction.nonce = (await getTransactionNonce(
+		populatedTransaction.nonce = await getTransactionNonce(
 			options.web3Context,
 			populatedTransaction.from,
-		)) as unknown as string;
+			ETH_DATA_FORMAT,
+		);
 	}
 
 	if (isNullish(populatedTransaction.value)) {
@@ -131,13 +172,13 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		isNullish(populatedTransaction.chainId) &&
 		isNullish(populatedTransaction.common?.customChain.chainId)
 	) {
-		populatedTransaction.chainId = await getChainId(options.web3Context, DEFAULT_RETURN_FORMAT);
+		populatedTransaction.chainId = await getChainId(options.web3Context, ETH_DATA_FORMAT);
 	}
 
 	if (isNullish(populatedTransaction.networkId)) {
 		populatedTransaction.networkId =
 			(options.web3Context.defaultNetworkId as string) ??
-			(await getId(options.web3Context, DEFAULT_RETURN_FORMAT));
+			(await getId(options.web3Context, ETH_DATA_FORMAT));
 	}
 
 	if (isNullish(populatedTransaction.gasLimit) && !isNullish(populatedTransaction.gas)) {
@@ -158,7 +199,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		...(await getTransactionGasPricing(
 			populatedTransaction,
 			options.web3Context,
-			DEFAULT_RETURN_FORMAT,
+			ETH_DATA_FORMAT,
 		)),
 	};
 

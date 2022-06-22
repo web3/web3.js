@@ -43,7 +43,7 @@ const getNameValue = <R extends object>(
 	if (keys.length === 0) {
 		result.push(data as R);
 	}
-
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const key: keyof InObj = keys.pop()!;
 	if (obj[key]) {
 		(obj[key] as []).map(v => getNameValue({ ...data, [key]: v }, obj, [...keys], result));

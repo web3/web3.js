@@ -18,7 +18,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { SupportedProviders, Web3Context, Web3ContextInitOptions } from 'web3-core';
+import {
+	isSupportedProvider,
+	SupportedProviders,
+	Web3Context,
+	Web3ContextInitOptions,
+} from 'web3-core';
 import {
 	Address,
 	Bytes,
@@ -30,7 +35,12 @@ import {
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions, Transaction, TransactionCall } from './types';
+import {
+	SendTransactionOptions,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
+} from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
@@ -48,24 +58,40 @@ type RegisteredSubscription = {
 	syncing: typeof SyncingSubscription;
 };
 
+const registeredSubscriptions = {
+	logs: LogsSubscription,
+	newPendingTransactions: NewPendingTransactionsSubscription,
+	newHeads: NewHeadsSubscription,
+	syncing: SyncingSubscription,
+	pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+	newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+};
+
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
-	public constructor(providerOrContext: SupportedProviders<any> | Web3ContextInitOptions) {
-		super(
-			typeof providerOrContext === 'object' &&
-				(providerOrContext as Web3ContextInitOptions).provider
-				? providerOrContext
-				: {
-						provider: providerOrContext as SupportedProviders<any>,
-						registeredSubscriptions: {
-							logs: LogsSubscription,
-							newPendingTransactions: NewPendingTransactionsSubscription,
-							newHeads: NewHeadsSubscription,
-							syncing: SyncingSubscription,
-							pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
-							newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
-						},
-				  },
-		);
+	public constructor(
+		providerOrContext?: SupportedProviders<any> | Web3ContextInitOptions | string,
+	) {
+		if (
+			typeof providerOrContext === 'string' ||
+			isSupportedProvider(providerOrContext as SupportedProviders<any>)
+		) {
+			super({
+				provider: providerOrContext as SupportedProviders<any>,
+				registeredSubscriptions,
+			});
+
+			return;
+		}
+
+		if ((providerOrContext as Web3ContextInitOptions).registeredSubscriptions) {
+			super(providerOrContext as Web3ContextInitOptions);
+			return;
+		}
+
+		super({
+			...(providerOrContext as Web3ContextInitOptions),
+			registeredSubscriptions,
+		});
 	}
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
@@ -213,7 +239,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	public sendTransaction<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		transaction: Transaction,
+		transaction: Transaction | TransactionWithLocalWalletIndex,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
