@@ -58,6 +58,15 @@ type RegisteredSubscription = {
 	syncing: typeof SyncingSubscription;
 };
 
+const registeredSubscriptions = {
+	logs: LogsSubscription,
+	newPendingTransactions: NewPendingTransactionsSubscription,
+	newHeads: NewHeadsSubscription,
+	syncing: SyncingSubscription,
+	pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
+	newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
+};
+
 export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscription> {
 	public constructor(
 		providerOrContext?: SupportedProviders<any> | Web3ContextInitOptions | string,
@@ -66,29 +75,24 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			typeof providerOrContext === 'string' ||
 			isSupportedProvider(providerOrContext as SupportedProviders<any>)
 		) {
-			super(providerOrContext);
+			super({
+				provider: providerOrContext as SupportedProviders<any>,
+				registeredSubscriptions,
+			});
+
 			return;
 		}
 
-		if (typeof providerOrContext === 'object') {
-			super(providerOrContext);
-
+		if ((providerOrContext as Web3ContextInitOptions).registeredSubscriptions) {
+			super(providerOrContext as Web3ContextInitOptions);
 			return;
 		}
 
 		super({
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			provider: providerOrContext as unknown as SupportedProviders<any>,
-			registeredSubscriptions: {
-				logs: LogsSubscription,
-				newPendingTransactions: NewPendingTransactionsSubscription,
-				newHeads: NewHeadsSubscription,
-				syncing: SyncingSubscription,
-				pendingTransactions: NewPendingTransactionsSubscription, // the same as newPendingTransactions. just for support API like in version 1.x
-				newBlockHeaders: NewHeadsSubscription, // the same as newHeads. just for support API like in version 1.x
-			},
+			...(providerOrContext as Web3ContextInitOptions),
+			registeredSubscriptions,
 		});
-  }
+	}
 	public async getProtocolVersion() {
 		return rpcMethods.getProtocolVersion(this.requestManager);
 	}
