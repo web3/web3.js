@@ -564,3 +564,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.5]
+
+### Added
+- Improve README.md & Fix typos (#4848)
