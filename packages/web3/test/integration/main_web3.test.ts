@@ -91,10 +91,21 @@ describe('Web3 instance', () => {
 		expect(() => new Web3()).not.toThrow();
 	});
 
-	it('should be able use functionality with web3 object not dependant on provider', () => {
+	it('should be able use "utils" without provider', () => {
 		web3 = new Web3();
 
 		expect(web3.utils.hexToNumber('0x5')).toBe(5);
+	});
+
+	it('should be able use "abi" without provider', () => {
+		web3 = new Web3();
+		const validData = validEncodeParametersData[0];
+
+		const encodedParameters = web3.eth.abi.encodeParameters(
+			validData.input[0],
+			validData.input[1],
+		);
+		expect(encodedParameters).toEqual(validData.output);
 	});
 
 	it('should throw error when we make a request when provider not available', async () => {
