@@ -49,6 +49,3 @@ fi
 
 
 yarn "$BACKEND:start:background" && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
-
-
-
