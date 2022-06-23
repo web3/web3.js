@@ -23,27 +23,23 @@ import {
 } from 'web3-common';
 import HttpProvider from '../../src/index';
 import {
+	getSystemTestAccounts,
 	getSystemTestProvider,
 	describeIf,
 	isHttp,
-	createNewAccount,
 } from '../fixtures/system_test_utils';
 
 describeIf(isHttp)('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
-	let account: string;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	beforeAll(async () => {
 		httpProvider = new HttpProvider(getSystemTestProvider());
-		const { address } = await createNewAccount({ unlock: true, refill: true });
-
-		account = address;
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [account, 'latest'],
+			params: [(await getSystemTestAccounts())[0], 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 
