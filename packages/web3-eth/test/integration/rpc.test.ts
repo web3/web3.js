@@ -53,18 +53,18 @@ const validateTransaction = (tx: TransactionInfo) => {
 	expect(tx.nonce).toBeDefined();
 	expect(tx.hash).toBeDefined();
 	expect(String(tx.hash)?.length).toBe(66);
-	expect(tx.type).toBe('0x0');
+	expect(Number(tx.type)).toBe(0);
 	expect(tx.blockHash).toBeDefined();
 	expect(String(tx.blockHash)?.length).toBe(66);
-	expect(hexToNumber(String(tx.blockNumber))).toBeGreaterThan(0);
+	expect(Number(tx.blockNumber)).toBeGreaterThan(0);
 	expect(tx.transactionIndex).toBeDefined();
 	expect(tx.from?.length).toBe(42);
 	expect(tx.to?.length).toBe(42);
-	expect(tx.value).toBe('0x1');
+	expect(Number(tx.value)).toBe(1);
 	expect(tx.input).toBe('0x');
 	expect(tx.r).toBeDefined();
 	expect(tx.s).toBeDefined();
-	expect(hexToNumber(String(tx.gas))).toBeGreaterThan(0);
+	expect(Number(tx.gas)).toBeGreaterThan(0);
 };
 const validateBlock = (b: Block) => {
 	expect(b.nonce).toBeDefined();
@@ -104,7 +104,7 @@ const validateReceipt = (r: ReceiptInfo) => {
 	expect(r.logsBloom).toBeDefined();
 	expect(r.status).toBeDefined();
 	expect(String(r.transactionHash)).toHaveLength(66);
-	expect(hexToNumber(String(r.gasUsed))).toBeGreaterThan(0);
+	expect(Number(r.gasUsed)).toBeGreaterThan(0);
 };
 
 describe('rpc', () => {
@@ -246,7 +246,7 @@ describe('rpc', () => {
 				undefined,
 			);
 
-			expect(hexToNumber(resNumber)).toBe(numberData);
+			expect(Number(resNumber)).toBe(numberData);
 
 			const rString = hexToString(resString.slice(0, resString.length / 2 + 1))
 				.split('')
@@ -276,15 +276,15 @@ describe('rpc', () => {
 
 			const slotCount = Math.ceil((Number(hexToNumber(resStringLong)) - 1) / 64);
 			const slotDataNum = getStorageSlotNumForLongString(1);
-
 			const prs = [];
 			for (let i = 0; i < slotCount; i += 1) {
 				prs.push(
-					// TODO: remove await here when finish #5147
 					// eslint-disable-next-line no-await-in-loop
-					await web3Eth.getStorageAt(
+					web3Eth.getStorageAt(
 						contract.options.address as string,
-						`0x${(BigInt(hexToNumber(String(slotDataNum))) + BigInt(i)).toString(16)}`,
+						`0x${(
+							BigInt(String(hexToNumber(slotDataNum as string))) + BigInt(i)
+						).toString(16)}`,
 					),
 				);
 			}
@@ -485,10 +485,10 @@ describe('rpc with block', () => {
 			pending: 'pending',
 			latest: 'latest',
 			earliest: 'earliest',
-			blockNumber: hexToNumber(String(receipt.blockNumber)),
+			blockNumber: Number(receipt.blockNumber),
 			blockHash: String(receipt.blockHash),
 			transactionHash: String(receipt.transactionHash),
-			transactionIndex: hexToNumber(String(receipt.transactionIndex)),
+			transactionIndex: Number(receipt.transactionIndex),
 		};
 	});
 
@@ -524,8 +524,7 @@ describe('rpc with block', () => {
 			validateBlock(b as Block);
 		});
 
-		// TODO: remove itif(!isIpc) when finish #5147
-		itIf(!isIpc).each(
+		it.each(
 			toAllVariants<{
 				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
 				format: string;
@@ -546,10 +545,10 @@ describe('rpc with block', () => {
 				pending: 'pending',
 				latest: 'latest',
 				earliest: 'earliest',
-				blockNumber: hexToNumber(String(receipt.blockNumber)),
+				blockNumber: Number(receipt.blockNumber),
 				blockHash: String(receipt.blockHash),
 				transactionHash: String(receipt.transactionHash),
-				transactionIndex: hexToNumber(String(receipt.transactionIndex)),
+				transactionIndex: Number(receipt.transactionIndex),
 			};
 			const countBefore = await web3Eth.getTransactionCount(acc.address, data[block], {
 				number: format as FMT_NUMBER,
@@ -568,10 +567,10 @@ describe('rpc with block', () => {
 				pending: 'pending',
 				latest: 'latest',
 				earliest: 'earliest',
-				blockNumber: hexToNumber(String(receiptAfter.blockNumber)),
+				blockNumber: Number(receiptAfter.blockNumber),
 				blockHash: String(receiptAfter.blockHash),
 				transactionHash: String(receiptAfter.transactionHash),
-				transactionIndex: hexToNumber(String(receiptAfter.transactionIndex)),
+				transactionIndex: Number(receiptAfter.transactionIndex),
 			};
 			const countAfter = await web3Eth.getTransactionCount(acc.address, dataAfter[block], {
 				number: format as FMT_NUMBER,
@@ -591,15 +590,13 @@ describe('rpc with block', () => {
 			}),
 		)('getBlockTransactionCount', async ({ block }) => {
 			const res = await web3Eth.getBlockTransactionCount(blockData[block]);
-			let shouldBe: string;
+			let shouldBe: number;
 			if (getSystemTestBackend() === 'ganache') {
-				shouldBe = blockData[block] === 'earliest' ? '0x0' : '0x1';
+				shouldBe = blockData[block] === 'earliest' ? 0 : 1;
 			} else {
-				shouldBe = ['earliest', 'pending'].includes(String(blockData[block]))
-					? '0x0'
-					: '0x1';
+				shouldBe = ['earliest', 'pending'].includes(String(blockData[block])) ? 0 : 1;
 			}
-			expect(res).toBe(shouldBe);
+			expect(Number(res)).toBe(shouldBe);
 		});
 
 		it.each(
@@ -610,14 +607,14 @@ describe('rpc with block', () => {
 			}),
 		)('getBlockUncleCount', async ({ block }) => {
 			const res = await web3Eth.getBlockUncleCount(blockData[block]);
-			expect(res).toBe('0x0');
+			expect(Number(res)).toBe(0);
 		});
 
-		itIf(!isIpc).each(
+		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+				block: 'earliest' | 'latest' | 'pending' | 'blockNumber';
 			}>({
-				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
+				block: ['earliest', 'latest', 'pending', 'blockNumber'],
 			}),
 		)('getUncle', async ({ block }) => {
 			const res = await web3Eth.getUncle(blockData[block], 0);

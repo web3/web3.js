@@ -276,8 +276,7 @@ describe('defaults', () => {
 			});
 			expect(eth2.transactionBlockTimeout).toBe(120);
 		});
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('transactionConfirmationBlocks', () => {
+		it('transactionConfirmationBlocks', () => {
 			// default
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(web3Eth.transactionConfirmationBlocks).toBe(24);
@@ -302,7 +301,7 @@ describe('defaults', () => {
 
 		// TODO: remove itIf when finish #5144
 		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
-			const waitConfirmations = 3;
+			const waitConfirmations = 1;
 			const eth = new Web3Eth(web3Eth.provider);
 			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 

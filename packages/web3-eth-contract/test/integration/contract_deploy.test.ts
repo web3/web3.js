@@ -18,13 +18,7 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import {
-	getSystemTestProvider,
-	getSystemTestAccounts,
-	isWs,
-	itIf,
-	isIpc,
-} from '../fixtures/system_test_utils';
+import { getSystemTestProvider, getSystemTestAccounts, isWs } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -78,8 +72,7 @@ describe('contract', () => {
 			expect(deployedContract.options.address).toBeDefined();
 		});
 
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('should emit the "confirmation" event', async () => {
+		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
 			contract
@@ -167,8 +160,7 @@ describe('contract', () => {
 			).toThrow('No data provided.');
 		});
 
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('should fail with errors on revert', async () => {
+		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
 			// eslint-disable-next-line jest/no-standalone-expect

@@ -27,7 +27,7 @@ describe('Web3 instance', () => {
 		clientUrl = getSystemTestProvider();
 	});
 
-	describeIf(isIpc)('Create Web3 class instance with http string providers', () => {
+	describeIf(isIpc)('Create Web3 class instance with ipc string providers', () => {
 		// https://ethereum.stackexchange.com/questions/52574/how-to-connect-to-ethereum-node-geth-via-ipc-from-outside-of-docker-container
 		// https://github.com/ethereum/go-ethereum/issues/17907
 		it('should create instance with string of IPC provider', async () => {
