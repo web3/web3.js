@@ -136,6 +136,7 @@ module.exports = {
 			},
 		],
 		'no-null/no-null': ['error'],
+		'tsdoc/syntax': 'warn',
 	},
 	globals: {
 		BigInt: true,

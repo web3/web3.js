@@ -44,9 +44,6 @@ import { ENS } from 'web3-eth-ens';
 import { Iban } from 'web3-eth-iban';
 import { Address } from 'web3-utils';
 
-/**
- * Extended **Contract** constructor for main `web3` object.
- */
 export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contract, 'new'> & {
 	new (jsonInterface: Abi, address?: Address, options?: ContractInitOptions): Contract<Abi>;
 	setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
@@ -58,6 +55,16 @@ export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contr
  * {@link web3_eth.Web3Eth} for details about the `Eth` interface.
  */
 export interface Web3EthInterface extends Eth {
+	/**
+	 * Extended [Contract](/api/web3-eth-contract/class/Contract) constructor for main `web3` object. See [Contract](/api/web3-eth-contract/class/Contract) for further details.
+	 *
+	 * You can use `.setProvider` on this constructor to set provider for **all the instances** of the contracts which were created by `web3.eth.Contract`.
+	 * Please check the {@doclink guides/setting_provider | following guide} to understand more about setting provider.
+	 *
+	 * ```ts
+	 * web3.eth.Contract.setProvider(myProvider)
+	 * ```
+	 */
 	Contract: Web3ContractConstructor<any>;
 	Iban: typeof Iban;
 	ens: ENS;
