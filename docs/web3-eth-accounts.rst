@@ -49,7 +49,7 @@ Returns
 ``Object`` - The account object with the following structure:
 
     - ``address`` - ``string``: The account address.
-    - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to ``null`` the memory after usage.
+    - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in local storage! Also make sure to ``null`` the memory after usage.
     - ``signTransaction(tx [, callback])`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.signTransaction() <eth-accounts-signtransaction>` for more.
     - ``sign(data)`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.sign() <eth-accounts-sign>` for more.
 
@@ -946,7 +946,7 @@ Parameters
 ----------
 
 1. ``password`` - ``String``: The password to decrypt the wallet.
-2. ``keyName`` - ``String``: (optional) The key used for the localstorage position, defaults to ``"web3js_wallet"``.
+2. ``keyName`` - ``String``: (optional) The key used for the local storage position, defaults to ``"web3js_wallet"``.
 
 
 -------
