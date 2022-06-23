@@ -32,7 +32,7 @@ import {
 	isWs,
 } from '../fixtures/system_test_utils';
 
-const checkEventCount = 3;
+const checkEventCount = 2;
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
