@@ -71,7 +71,7 @@ describeIf(isWs)('watch subscription transaction', () => {
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
@@ -130,7 +130,7 @@ describeIf(isHttp)('watch polling transaction', () => {
 			});
 			await new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});

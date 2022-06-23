@@ -221,8 +221,8 @@ describe('defaults', () => {
 			const transactionCount = await eth2.getTransactionCount(acc.address);
 			expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
 			expect(code).toBe('0x');
-			expect(balance).toBe('0x0');
-			expect(transactionCount).toBe('0x0');
+			expect(balance).toBe(BigInt(0));
+			expect(transactionCount).toBe(BigInt(0));
 
 			// pass blockNumber to rewrite defaultBlockNumber
 			const balanceWithBlockNumber = await eth2.getBalance(acc.address, 'latest');
@@ -240,8 +240,8 @@ describe('defaults', () => {
 				'latest',
 			);
 			expect(Number(hexToNumber(storageWithBlockNumber))).toBe(10);
-			expect(transactionCountWithBlockNumber).toBe('0x1');
-			expect(Number(hexToNumber(balanceWithBlockNumber))).toBeGreaterThan(0);
+			expect(transactionCountWithBlockNumber).toBe(BigInt(1));
+			expect(Number(balanceWithBlockNumber)).toBeGreaterThan(0);
 			expect(codeWithBlockNumber.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 
 			// set new default block to config
@@ -254,8 +254,8 @@ describe('defaults', () => {
 			const transactionCountLatest = await eth2.getTransactionCount(acc.address);
 			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 			expect(Number(hexToNumber(storageLatest))).toBe(10);
-			expect(transactionCountLatest).toBe('0x1');
-			expect(Number(hexToNumber(balanceLatest))).toBeGreaterThan(0);
+			expect(transactionCountLatest).toBe(BigInt(1));
+			expect(Number(balanceLatest)).toBeGreaterThan(0);
 		});
 		it('transactionBlockTimeout', () => {
 			// default
@@ -317,7 +317,7 @@ describe('defaults', () => {
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe('0x1');
+					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
@@ -380,12 +380,12 @@ describe('defaults', () => {
 		//         new Promise((resolve) => setTimeout(resolve, 410)),
 		//         new Promise((resolve: Resolve) => {
 		//             sentTx.on('receipt', (params: ReceiptInfo) => {
-		//                 expect(params.status).toBe('0x1');
+		//                 expect(params.status).toBe(BigInt(1));
 		//                 resolve(params);
 		//             });
 		//         }),
 		//     ]);
-		//     expect((res as ReceiptInfo).status).toBe('0x1');
+		//     expect((res as ReceiptInfo).status).toBe(BigInt(1));
 		//
 		//     const sentTx2: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
 		//         to: accounts[1],
@@ -396,7 +396,7 @@ describe('defaults', () => {
 		//         new Promise((resolve) => setTimeout(()=>resolve(false), 300)),
 		//         new Promise((resolve: Resolve) => {
 		//             sentTx2.on('receipt', (params: ReceiptInfo) => {
-		//                 expect(params.status).toBe('0x1');
+		//                 expect(params.status).toBe(BigInt(1));
 		//                 resolve(params);
 		//             });
 		//         }),
@@ -508,7 +508,7 @@ describe('defaults', () => {
 				web3Context: eth2 as Web3Context<any>,
 			});
 
-			expect(resWithPassNetworkId.networkId).toBe('0x5');
+			expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
 		});
 		it('defaultChain', async () => {
 			// default
@@ -795,7 +795,7 @@ describe('defaults', () => {
 				eth2,
 				DEFAULT_RETURN_FORMAT,
 			);
-			expect(res?.maxPriorityFeePerGas).toBe(numberToHex(1200000000));
+			expect(res?.maxPriorityFeePerGas).toBe(BigInt(1200000000));
 
 			// override test
 			const resOverride = await getTransactionGasPricing(
@@ -814,7 +814,7 @@ describe('defaults', () => {
 				eth2,
 				DEFAULT_RETURN_FORMAT,
 			);
-			expect(resOverride?.maxPriorityFeePerGas).toBe('0x123123123');
+			expect(resOverride?.maxPriorityFeePerGas).toBe(BigInt('4883362083'));
 		});
 		it('transactionBuilder', async () => {
 			// default

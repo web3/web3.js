@@ -359,14 +359,14 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 		modifiedLog.id = undefined;
 	}
 
-	if (log.blockNumber) {
+	if (log.blockNumber && isHexStrict(log.blockNumber)) {
 		modifiedLog.blockNumber = hexToNumber(log.blockNumber);
 	}
-	if (log.transactionIndex) {
+	if (log.transactionIndex && isHexStrict(log.transactionIndex)) {
 		modifiedLog.transactionIndex = hexToNumber(log.transactionIndex);
 	}
 
-	if (log.logIndex) {
+	if (log.logIndex && isHexStrict(log.logIndex)) {
 		modifiedLog.logIndex = hexToNumber(log.logIndex);
 	}
 

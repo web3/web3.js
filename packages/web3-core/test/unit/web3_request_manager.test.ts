@@ -233,7 +233,7 @@ describe('Web3RequestManager', () => {
 			const manager = new Web3RequestManager();
 
 			expect(() => manager.setProvider(providerString)).toThrow(
-				`Can't autodetect provider for "pc://mydomain.com'"`,
+				`Can't autodetect provider for "pc://mydomain.com"`,
 			);
 		});
 	});

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-common';
 import { isNullish } from 'web3-validator';
 
 import { getProof as rpcMethodsGetProof } from '../../../src/rpc_methods';
@@ -38,7 +38,7 @@ describe('getProof', () => {
 		async (_, inputParameters) => {
 			const [inputAddress, inputStorageKey, inputBlockNumber] = inputParameters;
 			const inputStorageKeyFormatted = inputStorageKey.map(s =>
-				format({ eth: 'bytes' }, s, DEFAULT_RETURN_FORMAT),
+				format({ eth: 'bytes' }, s, ETH_DATA_FORMAT),
 			);
 
 			let inputBlockNumberFormatted;
@@ -49,7 +49,7 @@ describe('getProof', () => {
 				inputBlockNumberFormatted = format(
 					{ eth: 'uint' },
 					inputBlockNumber,
-					DEFAULT_RETURN_FORMAT,
+					ETH_DATA_FORMAT,
 				);
 			}
 

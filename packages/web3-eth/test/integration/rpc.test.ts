@@ -111,7 +111,6 @@ describe('rpc', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;
-
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
@@ -235,28 +234,16 @@ describe('rpc', () => {
 				contract.options.address as string,
 				'0x0',
 				undefined,
-				{
-					number: FMT_NUMBER.BIGINT,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resString = await web3Eth.getStorageAt(
 				contract.options.address as string,
 				'0x1',
 				undefined,
-				{
-					number: FMT_NUMBER.STR,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resBool = await web3Eth.getStorageAt(
 				contract.options.address as string,
 				'0x2',
 				undefined,
-				{
-					number: FMT_NUMBER.NUMBER,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 
 			expect(hexToNumber(resNumber)).toBe(numberData);
@@ -319,8 +306,6 @@ describe('rpc', () => {
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
 
-		// eslint-disable-next-line jest/expect-expect
-
 		it('getTransaction', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
@@ -378,7 +363,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			// TODO: in next release validate chain ID , it should match with chain id of connected client
-			expect(res).toBeGreaterThan(0);
+			expect(Number(res)).toBeGreaterThan(0);
 		});
 
 		it('getNodeInfo', async () => {
@@ -401,16 +386,13 @@ describe('rpc', () => {
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
-			const numberData = 10;
+			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
 			const sendRes = await contract.methods
-				?.setValues(numberData, stringData, boolData)
+				.setValues(numberData, stringData, boolData)
 				.send(sendOptions);
-			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined, {
-				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.HEX,
-			});
+			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined);
 			const res = await web3Eth.getProof(
 				contract.options.address as string,
 				['0x0000000000000000000000000000000000000000000000000000000000000000'],
@@ -419,7 +401,7 @@ describe('rpc', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res.storageProof).toBeDefined();
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(hexToNumber(res.storageProof[0].value)).toBe(numberData);
+			expect(res.storageProof[0].value).toBe(numberData);
 		});
 
 		it('getPastLogs', async () => {
@@ -431,9 +413,7 @@ describe('rpc', () => {
 			}
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contract.options.address as string,
-				fromBlock: numberToHex(
-					Math.min(...resTx.map(d => Number(hexToNumber(d.blockNumber)))),
-				),
+				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
 			});
 			const results = res.map(
 				r =>
@@ -644,10 +624,10 @@ describe('rpc with block', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res).toBeNull();
 		});
-		it.each(['blockHash', 'blockNumber'])('getTransactionFromBlock', async block => {
+		it('getTransactionFromBlock', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const tx = (await web3Eth.getTransactionFromBlock(
-				blockData[block as 'blockHash' | 'blockNumber'],
+				blockData.blockNumber,
 				blockData.transactionIndex,
 			))!;
 			validateTransaction(tx as TransactionInfo);

@@ -60,9 +60,9 @@ export type DataFormat = {
 	readonly bytes: FMT_BYTES;
 };
 
-export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } as const;
+export const DEFAULT_RETURN_FORMAT = { number: FMT_NUMBER.BIGINT, bytes: FMT_BYTES.HEX } as const;
+export const ETH_DATA_FORMAT = { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX } as const;
 
-// Added `undefined` to cover optional type
 export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numbers>
 	? NumberTypes[F['number']] | Exclude<T, Numbers>
 	: Buffer extends Extract<T, Bytes>
