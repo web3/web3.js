@@ -564,3 +564,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.5]
+
+### Fixed
+- Fix `hexToNumber` supporting more than 53 bits numbers (#5153)
