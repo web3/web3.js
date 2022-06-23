@@ -564,5 +564,7 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.5]
+
 ### Fixed
 -  Improving ``AbstractProvider`` interface (#5150)
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
