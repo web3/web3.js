@@ -565,5 +565,7 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.5]
 
+
 ### Fixed
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
 -  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
