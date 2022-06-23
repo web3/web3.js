@@ -88,7 +88,6 @@
 		"typedoc": "^0.22.15",
 		"typedoc-monorepo-link-types": "^0.0.2",
 		"typedoc-plugin-extras": "^2.2.3",
-		"typedoc-plugin-markdown": "^3.12.1",
 		"typedoc-plugin-mdn-links": "^1.0.6",
 		"typescript": "^4.5.2",
 		"utf-8-validate": "^5.0.9",
