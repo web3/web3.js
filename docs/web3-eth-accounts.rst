@@ -344,7 +344,7 @@ Returns
 -------
 
 ``Object``: The signature object
-    - ``message`` - ``String``: The the given message.
+    - ``message`` - ``String``: The given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature
     - ``s`` - ``String``: Next 32 bytes of the signature
