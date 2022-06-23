@@ -41,7 +41,7 @@ export const isLegacySendAsyncProvider = <API extends Web3APISpec>(
 
 export const isSupportedProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
-): boolean =>
+): provider is SupportedProviders<API> =>
 	Web3BaseProvider.isWeb3Provider(provider) ||
 	isLegacyRequestProvider(provider) ||
 	isLegacySendAsyncProvider(provider) ||

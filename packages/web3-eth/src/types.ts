@@ -15,14 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	AccessList,
-	TransactionHash,
-	Uncles,
-	FMT_BYTES,
-	FMT_NUMBER,
-	FormatType,
-} from 'web3-common';
+import { AccessList, TransactionHash, Uncles, FormatType, ETH_DATA_FORMAT } from 'web3-common';
 import { Address, Bytes, Numbers, Uint } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
@@ -126,10 +119,7 @@ export interface TransactionInfo extends Transaction {
 	readonly transactionIndex?: Numbers;
 }
 
-export type InternalTransaction = FormatType<
-	Transaction,
-	{ number: FMT_NUMBER.HEX; bytes: FMT_BYTES.HEX }
->;
+export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 
 export interface TransactionCall extends Transaction {
 	to: Address;
