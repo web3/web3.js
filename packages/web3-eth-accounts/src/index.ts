@@ -366,7 +366,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * Contains an in memory wallet with multiple accounts. These accounts can be used when using web3.eth.sendTransaction().
  * ### Example
  * ```ts
- * web3.eth.accounts.wallet;
+ * import Web3 from 'web3';
+ * const web3 = new Web3("https://localhost:8454")
+ * web3.eth.accounts.wallet
  * > Wallet {
  *  0: {...}, // account by index
  *  "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...},  // same account by address
@@ -382,59 +384,147 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * clear: function(){},
  * length: 2,
  * }
+ * Wallet {
+  _accountProvider: {
+    create: [Function: create],
+    privateKeyToAccount: [Function: privateKeyToAccount],
+    decrypt: [Function: decrypt]
+  },
+  _defaultKeyName: 'web3js_wallet',
+  _accounts: {}
+}
  * ```
  *
  *
  * ## wallet.create
  * Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
  * ### Parameters
- * numberOfAccounts
+ * numberOfAccounts - `number` 
  * entropy
  * ### Returns
- *
+ * Returns the wallet object
  * ### Example
+ * ```ts
+ * import Web3 from 'web3';
  *
+ * const web3 = new Web3("https://localhost:8454")
+ * web3.eth.accounts.wallet.create(3)
+ * > Wallet {
+  _accountProvider: {
+    create: [Function: create],
+    privateKeyToAccount: [Function: privateKeyToAccount],
+    decrypt: [Function: decrypt]
+  },
+  _defaultKeyName: 'web3js_wallet',
+  _accounts: {
+    '0x5d01efd47a37ca79bb63834fc105835c3d1cdcb5': {
+      address: '0x5D01eFd47A37CA79bB63834fc105835c3d1CDcb5',
+      privateKey: '0x02684a681146848fd0ff9c69e63e955bd9cc26020737e3762f0bf6280464aa20',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    },
+    '0x85d70633b90e03e0276b98880286d0d055685ed7': {
+      address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
+      privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    },
+    '0x2c3dd207645e2c0a10956124d21920f104f0b06d': {
+      address: '0x2C3dd207645e2c0a10956124d21920F104f0b06D',
+      privateKey: '0x9d66bece56a14b4017900b2113334db14ebf240fb4e5abc93f1d9e701ddd3108',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    }
+  }
+}
+ * 
+ * ```
  * ## wallet.add
  * Adds an account using a private key or account object to the wallet.
  * ### Parameters
- * account
+ * account - `string` | {@link Wallet<T extends Web3BaseWalletAccount>}
  *
  * ### Returns
- * Object
+ * Object - Returns the added account
  * ### Example
+ * ```ts
+ * import Web3 from 'web3';
  *
+ *   const web3 = new Web3("https://localhost:8454")
  *
+ * console.log(web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387'));
+ * console.log(web3.eth.accounts)
+ * 
  * ## wallet.remove
- *
+ * Removes an account from the wallet.
  * ### Parameters
- *
+ * account - `String`| `Number`: The account address, or index in the wallet.
  * ### Returns
- *
+ * `Boolean`: true if the wallet was removed. false if it couldn’t be found.
  * ### Example
  *
+ * import Web3 from 'web3';
  *
+ * const web3 = new Web3("https://localhost:8454")
+ *
+ * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
+ * 
+ * web3.eth.accounts.wallet.remove('0x85D70633b90e03e0276B98880286D0D055685ed7'); // FIX THIS
+ * ```
  * ## wallet.clear
- *
+ * Securely empties the wallet and removes all its accounts.
+ * 
  * ### Parameters
- *
+ * none
  * ### Returns
- *
+ * The wallet object
  * ### Example
+ * 
+ * ```ts 
+ * import Web3 from 'web3';
  *
+ * const web3 = new Web3("https://localhost:8454")
  *
- * ## wallet.clear
- *
- * ### Parameters
- *
- * ### Returns
- *
- * ### Example
+ * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
+ * Wallet {
+  _accountProvider: {
+    create: [Function: create],
+    privateKeyToAccount: [Function: privateKeyToAccount],
+    decrypt: [Function: decrypt]
+  },
+  _defaultKeyName: 'web3js_wallet',
+  _accounts: {
+    '0x85d70633b90e03e0276b98880286d0d055685ed7': {
+      address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
+      privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    }
+  }
+}
+ * web3.eth.accounts.wallet.clear(); 
+Wallet {
+  _accountProvider: {
+    create: [Function: create],
+    privateKeyToAccount: [Function: privateKeyToAccount],
+    decrypt: [Function: decrypt]
+  },
+  _defaultKeyName: 'web3js_wallet',
+  _accounts: {}
+}
+ * ```
  *
  *
  * ## wallet.encrypt
  *
+ * Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
+ * 
  * ### Parameters
- *
+ * password - String: The password which will be used for encryption.
  * ### Returns
  *
  * ### Example

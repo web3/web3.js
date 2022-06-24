@@ -91,7 +91,7 @@ export class Wallet<
 	 * Adds an account using a private key or account object to the wallet.
 	 *
 	 * @param account A private key or account object {T}
-	 * @returns {T} or a string of account added
+	 * @returns The added account
 	 */
 	public add(account: T | string): boolean {
 		if (typeof account === 'string') {

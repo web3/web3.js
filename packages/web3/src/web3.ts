@@ -48,7 +48,8 @@ import {
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
-import packageJson from '../package.json';
+import { readFileSync } from 'fs';
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = packageJson.version;
@@ -91,6 +92,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			recover: typeof recover;
 			encrypt: typeof encrypt;
 			decrypt: typeof decrypt;
+			wallet: any;
 		};
 	};
 
@@ -106,7 +108,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		};
 
 		const wallet = new Wallet(accountProvider);
-
 		super({ provider, wallet, accountProvider });
 
 		this.utils = utils;
@@ -180,5 +181,4 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
-
 export default Web3;
