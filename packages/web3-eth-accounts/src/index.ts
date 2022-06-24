@@ -526,17 +526,52 @@ Wallet {
  * ### Parameters
  * password - String: The password which will be used for encryption.
  * ### Returns
- *
+ * Promise <Array>: The encrypted keystore v3.
  * ### Example
- *
+ * import Web3 from 'web3';
+
+const web3 = new Web3("https://localhost:8454")
+
+
+web3.eth.accounts.wallet.create(1)
+> Wallet {
+  _accountProvider: {
+    create: [Function: create],
+    privateKeyToAccount: [Function: privateKeyToAccount],
+    decrypt: [Function: decrypt]
+  },
+  _defaultKeyName: 'web3js_wallet',
+  _accounts: {
+    '0xfa3e41a401609103c241431cbdee8623ae2a321a': {
+      address: '0xFA3e41A401609103C241431cbDEE8623ae2a321a',
+      privateKey: '0x7f468e0b7be2fd31bd6d4a6646e76dbfa304b2cd618d6577a5534cc9db34e4cb',
+      signTransaction: [Function: signTransaction],
+      sign: [Function: sign],
+      encrypt: [Function: encrypt]
+    }
+  }
+}
+web3.eth.accounts.wallet.encrypt("abc").then(console.log);
+[
+  '{"version":3,"id":"fa46e213-a7c3-4844-b903-dd14d39cc7db","address":"fa3e41a401609103c241431cbdee8623ae2a321a","crypto":{"ciphertext":"8d179a911d6146ad2924e86bf493ed89b8ff3596ffec0816e761c542016ab13c","cipherparams":{"iv":"acc888c6cf4a19b86846cef0185a7164"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"n":8192,"r":8,"p":1,"dklen":32,"salt":"6a743c9b367d15f4758e4f3f3378ff0fd443708d1c64854e07588ea5331823ae"},"mac":"410544c8307e3691fda305eb3722d82c3431f212a87daa119a21587d96698b57"}}'
+]
  * ## wallet.decrypt
- *
+ * Decrypts keystore v3 objects.
  * ### Parameters
- *
+ * 
+    keystoreArray - Array: The encrypted keystore v3 objects to decrypt.
+    password - String: The password which will be used for encryption.
+
  * ### Returns
- *
+ * The wallet object.
  * ### Example
  *
+ * * import Web3 from 'web3';
+
+const web3 = new Web3("https://localhost:8454")
+
+
+web3.eth.accounts.wallet.create(1)
  *
  * ## wallet.save
  *
