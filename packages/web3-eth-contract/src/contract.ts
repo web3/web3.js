@@ -458,7 +458,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * This allows calling functions with same name but different parameters from the JavaScript contract object.
 	 *
-	 * > The method signature does not provide a type safe interface. So we recommend to use method `name` instead.
+	 * > The method signature does not provide a type safe interface, so we recommend to use method `name` instead.
 	 *
 	 * ```ts
 	 * // calling a method
@@ -490,7 +490,7 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	/**
-	 * Clones the current contract instance.
+	 * Clones the current contract instance. This doesn't deploy contract on blockchain and only creates a local clone.
 	 *
 	 * @returns - The new contract instance.
 	 *
