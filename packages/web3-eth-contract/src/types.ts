@@ -229,7 +229,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
 
 	/**
-	 * Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
+	 * This will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
 	 *
 	 * ```ts
 	 * await myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
