@@ -109,7 +109,7 @@ describe('formatters', () => {
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(true);
 			const result = inputBlockNumberFormatter('0xAF0AF');
 
-			expect(utils?.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
+			expect(utils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
 			expect(utils.numberToHex).not.toHaveBeenCalled();
 			expect(result).toBe('0xaf0af');
 		});
@@ -118,7 +118,7 @@ describe('formatters', () => {
 			jest.spyOn(utils, 'isHexStrict').mockReturnValue(false);
 			const result = inputBlockNumberFormatter('0xAF0AF');
 
-			expect(utils?.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
+			expect(utils.isHexStrict).toHaveBeenCalledWith('0xAF0AF');
 			expect(utils.numberToHex).toHaveBeenCalledWith('0xAF0AF');
 			expect(result).toEqual(numberToHexResult);
 		});
@@ -206,7 +206,7 @@ describe('formatters', () => {
 			expect(() => txInputOptionsFormatter({ ...txInput, data: 'ff0011' })).toThrow(
 				'The data field must be HEX encoded data.',
 			);
-			expect(utils?.isHexStrict).toHaveBeenCalledWith('0xff0011');
+			expect(utils.isHexStrict).toHaveBeenCalledWith('0xff0011');
 		});
 		it('should set "gas" equal to "gas" if provided', () => {
 			expect(txInputOptionsFormatter({ ...txInput, data: '0xff0011', gas: '123' })).toEqual(

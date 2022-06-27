@@ -118,7 +118,7 @@ describeIf(isWs)('subscription', () => {
 			await pr;
 			await web3Eth.clearSubscriptions();
 		});
-		it.skip(`wait for ${checkEventCount} logs with from block`, async () => {
+		it(`wait for ${checkEventCount} logs with from block`, async () => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
 

@@ -398,7 +398,6 @@ export async function getTransactionFromBlock<ReturnFormat extends DataFormat>(
 	const transactionIndexFormatted = format({ eth: 'uint' }, transactionIndex, ETH_DATA_FORMAT);
 
 	let response;
-
 	if (isBytes(block)) {
 		const blockHashFormatted = format({ eth: 'bytes32' }, block, ETH_DATA_FORMAT);
 		response = await rpcMethods.getTransactionByBlockHashAndIndex(
