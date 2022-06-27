@@ -62,20 +62,6 @@ await web3.eth.getFeeHistory('0x1', 'latest', []);
 // }
 ```
 
-### `web3.eth.getAccounts`
-
-addresses are not returned as checksum
-
-```typescript
-// in 1.x
-await web3.eth.getAccounts();
-// ['0xAB089B30f46883C3598B720d85837080b9929D0B']
-
-// in 4.x
-await web3.eth.getAccounts();
-// ['0xab089b30f46883c3598b720d85837080b9929d0b']
-```
-
 ### `web3.eth.getBlockNumber`
 
 returns a bigint instead of a number
