@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: uraimo/run-on-arch-action@v2
         with:
-          arch: armv7
+          arch: aarch64
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: uraimo/run-on-arch-action@v2
         with:
-          arch: armv7
+          arch: aarch64
       - uses: actions/download-artifact@v3
         with:
           name: web3-14.js.tar.gz
@@ -62,7 +62,7 @@ jobs:
     steps:
       - uses: uraimo/run-on-arch-action@v2
         with:
-            arch: armv7
+            arch: aarch64
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -86,7 +86,7 @@ jobs:
     steps:
       - uses: uraimo/run-on-arch-action@v2
         with:
-          arch: armv7
+          arch: aarch64
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -129,7 +129,7 @@ jobs:
     steps:
       - uses: uraimo/run-on-arch-action@v2
         with:
-          arch: armv7
+          arch: aarch64
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
