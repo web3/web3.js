@@ -101,9 +101,8 @@ export class Web3RequestManager<
 			} else if (typeof net === 'object' && typeof net.connect === 'function') {
 				newProvider = new this.providers.IpcProvider<API>(provider, net);
 			} else {
-				// throw new ProviderError(`Can't autodetect provider for "${provider}"`);
-				newProvider = new this.providers.IpcProvider<API>(provider);
-				// throw new ProviderError(`Can't autodetect provider for "${provider}'"`);
+				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
+				// newProvider = new this.providers.IpcProvider<API>(provider);
 			}
 		} else if (isNullish(provider)) {
 			// In case want to unset the provider

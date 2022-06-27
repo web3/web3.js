@@ -228,7 +228,7 @@ describe('Web3RequestManager', () => {
 			});
 		});
 
-		it.skip('should throw error if can not detect the provider', () => {
+		it('should throw error if can not detect the provider', () => {
 			const providerString = 'pc://mydomain.com';
 			const manager = new Web3RequestManager();
 
