@@ -50,16 +50,17 @@ export interface Web3AccountProvider<T> {
 	decrypt: (keystore: string, password: string, options?: Record<string, unknown>) => Promise<T>;
 }
 
-export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> {
+export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> extends Array<T> {
 	protected readonly _accountProvider: Web3AccountProvider<T>;
 
 	public constructor(accountProvider: Web3AccountProvider<T>) {
+		super();
 		this._accountProvider = accountProvider;
 	}
 
 	public abstract create(numberOfAccounts: number): this;
 	public abstract add(account: T | string): boolean;
-	public abstract get(addressOrIndex: string | number): T;
+	public abstract get(addressOrIndex: string | number): T | undefined;
 	public abstract remove(addressOrIndex: string | number): boolean;
 	public abstract clear(): this;
 	public abstract encrypt(
