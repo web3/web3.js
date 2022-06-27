@@ -181,7 +181,7 @@ export type PayableTxOptions = PayableCallOptions;
 export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	arguments: Inputs;
 	/**
-	 * Will call a method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
+	 * This will call a method and execute its smart contract method in the EVM without sending any transaction. Note calling cannot alter the smart contract state.
 	 *
 	 * ```ts
 	 * // using the promise
