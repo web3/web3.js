@@ -128,7 +128,7 @@ export type ContractEventEmitterInterface<
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
 /**
- * The class designed to interact with smart contracts on the ethereum blockchain.
+ * The class designed to interact with smart contracts on the Ethereum blockchain.
  */
 export class Contract<Abi extends ContractAbi>
 	extends Web3Context<
@@ -244,7 +244,7 @@ export class Contract<Abi extends ContractAbi>
 	 * new web3.eth.Contract(jsonInterface[, address][, options])
 	 * ```
 	 *
-	 * @param jsonInterface - The json interface for the contract to instantiate.
+	 * @param jsonInterface - The JSON interface for the contract to instantiate.
 	 * @param address - The address of the smart contract to call.
 	 * @param options - The options of the contract. Some are used as fallbacks for calls and transactions.
 	 * @param context - The context of the contract used for customizing the behavior of the contract.
@@ -257,7 +257,7 @@ export class Contract<Abi extends ContractAbi>
 	 * });
 	 * ```
 	 *
-	 * To use the typesafe interface for these contracts you have to include the ABI definitions in your Typescript project and then declare these as `const`.
+	 * To use the type safe interface for these contracts you have to include the ABI definitions in your Typescript project and then declare these as `const`.
 	 *
 	 * ```ts title="Example"
 	 * const myContractAbi = [....] as const; // ABI definitions
@@ -458,7 +458,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * This allows calling functions with same name but different parameters from the JavaScript contract object.
 	 *
-	 * > The method signature does not provide a typesafe interface. So we recommend to use method `name` instead.
+	 * > The method signature does not provide a type safe interface. So we recommend to use method `name` instead.
 	 *
 	 * ```ts
 	 * // calling a method

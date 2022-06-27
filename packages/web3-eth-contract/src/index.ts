@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * The `web3.eth.Contract` object makes it easy to interact with smart contracts on the ethereum blockchain.
- * When you create a new contract object you give it the json interface of the respective smart contract and
+ * The `web3.eth.Contract` object makes it easy to interact with smart contracts on the Ethereum blockchain.
+ * When you create a new contract object you give it the JSON interface of the respective smart contract and
  * web3 will auto convert all calls into low level ABI calls over RPC for you.
  * This allows you to interact with smart contracts as if they were JavaScript objects.
  *

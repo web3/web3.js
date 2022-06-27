@@ -50,7 +50,7 @@ export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contr
 };
 
 /**
- * The ethereum interface for main web3 object. It provides extra methods in addition to `web3-eth` interface.
+ * The Ethereum interface for main web3 object. It provides extra methods in addition to `web3-eth` interface.
  *
  * {@link web3_eth.Web3Eth} for details about the `Eth` interface.
  */
