@@ -61,7 +61,7 @@ jobs:
 
   integration:
     name: Integration
-    needs: unit
+    needs: build
     runs-on: ubuntu-latest
     env:
       INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
