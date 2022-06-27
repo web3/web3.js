@@ -1,8 +1,8 @@
 ---
-title: Json Interface
+title: JSON Interface
 ---
 
-The json interface is a json object describing the [Application Binary Interface (ABI)](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) for an Ethereum smart contract.
+The JSON interface is a JSON object describing the [Application Binary Interface (ABI)](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI) for an Ethereum smart contract.
 
 Using this json interface web3.js is able to create JavaScript object representing the smart contract and its methods and events using the web3.eth.Contract object.
 
@@ -14,11 +14,11 @@ Using this json interface web3.js is able to create JavaScript object representi
 -   `name`: the name of the function (only present for function types);
 -   `constant`: true if function is specified to not modify the blockchain state;
 -   `payable`: true if function accepts ether, defaults to false;
--   `stateMutability`: a string with one of the following values: pure (specified to not read blockchain state), view (same as constant above), nonpayable and payable (same as payable above);
+-   `stateMutability`: a string with one of the following values: pure (specified to not read blockchain state), view (same as constant above), non-payable and payable (same as payable above);
 -   `inputs`: an array of objects, each of which contains:
     -- `name`: the name of the parameter;
     -- `type`: the canonical type of the parameter.
--   `outputs`: an array of objects same as inputs, can be omitted if no outputs exist.
+-   `outputs`: an array of objects, same as inputs, can be omitted if no outputs exist.
 
 #### Events
 
@@ -27,7 +27,7 @@ Using this json interface web3.js is able to create JavaScript object representi
 -   `inputs`: an array of objects, each of which contains:
     -- `name`: the name of the parameter;
     -- `type`: the canonical type of the parameter.
-    -- `indexed`: true if the field is part of the log’s topics, false if it one of the log’s data segment.
+    -- `indexed`: true if the field is part of the log’s topics, false if it is one of the log’s data segment.
     -- `anonymous`: true if the event was declared as anonymous.
 
 #### Example
