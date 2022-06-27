@@ -4,19 +4,21 @@
 
 Any function which returned `number` value, now returns `bigint`
 
+All the API level interfaces returning or accepting `null` in 1.x, use `undefined` now
+
 ### Not Implemented or Exported
 
 -   [extend](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#extend) functionality not implemented
--   [web3.eth.createAccessList](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#createaccesslist) not implemented
--   [web3.eth.personal](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#personal) namespace is not exported
--   [web3.eth.net](https://web3js.readthedocs.io/en/v1.7.3/web3-eth.html#net) namespace is not exported
 
 ### Defaults and Configs
 
--   `givenProvider` default value is `undefined` instead of `null`
--   `currentProvider` will never return `null`, provider required upon instantiation as opposed to being optional in 1.x //todo maybe this is not true after after the recent discussion/change
--   `web3.eth.defaultAccount` default value is `undefined` instead of `null`
-    -   1.x has `undefined` documented as default, but in implementation it's `null`
+-   All default values that returned `null` in 1.x, in 4.x return `undefined`. There are:
+
+    -   `givenProvider`
+    -   `currentProvider`
+    -   `web3.eth.defaultAccount`
+        -   1.x has `undefined` documented as default, but in implementation it's `null`
+
 -   `web3.eth.defaultHardfork` default is `london` instead of `undefined`
     -   1.x has `london` documented as default, but in implementation it's `undefined`
 -   `web3.eth.defaultChain` default is `mainnet` instead of `undefined`
@@ -26,7 +28,7 @@ Any function which returned `number` value, now returns `bigint`
 
 ### `web3.eth.getHashrate`
 
-renamed to `getHashRate`
+`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`
 
 ### `web3.eth.getGasPrice`
 
@@ -42,7 +44,7 @@ await web3.eth.getGasPrice(); // 2000000000n
 
 ### `web3.eth.getFeeHistory`
 
-returns hex strings for `gasUsedRation` array items instead of a numbers
+returns hex strings for `gasUsedRatio` array items instead of a numbers
 
 ```typescript
 // in 1.x
@@ -76,7 +78,7 @@ await web3.eth.getBlockNumber(); // '0n'
 
 ### `web3.eth.getBalance`
 
-returns a hex string instead of a number string
+returns a bigint instead of a number string
 
 ```typescript
 // in 1.x
@@ -171,26 +173,26 @@ await web3.eth.getBlockTransactionCount('latest'); // 0n
 
 ### `web3.eth.getBlockUncleCount`
 
-returns a hex string instead of a number
+returns a bigint instead of a number
 
 ```typescript
 // in 1.x
 await web3.eth.getBlockUncleCount('latest'); // 0
 
 // in 4.x
-await web3.eth.getBlockUncleCount('latest'); // '0x0'
+await web3.eth.getBlockUncleCount('latest'); // '0'
 ```
 
 ### `web3.eth.getUncle`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `baseFeePerGas`
     -   `gasLimit`
     -   `gasUsed`
     -   `number`
     -   `size`
     -   `timestamp`
--   Returns a hex string instead of a number string for the following properties:
+-   Returns a bigint instead of a number string for the following properties:
     -   `difficulty`
 
 ```typescript
@@ -245,17 +247,18 @@ await web3.eth.getUncle(14965991, 0);
 
 ### `web3.eth.getTransaction`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `blockNumber`
     -   `gas`
     -   `nonce`
     -   `transactionIndex`
     -   `type`
--   Returns a hex string instead of a number string for the following properties:
+-   Returns a bigint instead of a number string for the following properties:
     -   `gasPrice`
     -   `maxFeePerGas`
     -   `maxPriorityFeePerGas`
     -   `value`
+    -   `chainId`
 
 ```typescript
 // in 1.x
@@ -285,37 +288,37 @@ await web3.eth.getTransaction('0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73
 // in 4.x
 await web3.eth.getTransaction('0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593');
 // {
-//     accessList: [],
-//     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
-//     blockNumber: '0xe45d01',
-//     chainId: '0x1',
-//     from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
-//     gas: '0x5208',
-//     gasPrice: '0x743b079cd',
-//     hash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
-//     input: '0x',
-//     maxFeePerGas: '0xd13321d0d',
-//     maxPriorityFeePerGas: '0x59682f00',
-//     nonce: '0x110',
-//     r: '0xca990b477b7043937d2ead588981464399101c02c0b0c6323acee28427a12f39',
-//     s: '0x7c1d2571f7c2fe8bdf74cdecdb719a29e0b76b379c1bae8baf0164ddf7d6b3b8',
-//     to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
-//     transactionIndex: '0x50',
-//     type: '0x2',
-//     v: '0x1',
-//     value: '0x2e6c563ada1ff8'
+//   accessList: [],
+//   blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
+//   blockNumber: 14966017n,
+//   chainId: 1n,
+//   from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
+//   gas: 21000n,
+//   gasPrice: 31200410061n,
+//   hash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
+//   input: '0x',
+//   maxFeePerGas: 56156626189n,
+//   maxPriorityFeePerGas: 1500000000n,
+//   nonce: 272n,
+//   r: '0xca990b477b7043937d2ead588981464399101c02c0b0c6323acee28427a12f39',
+//   s: '0x7c1d2571f7c2fe8bdf74cdecdb719a29e0b76b379c1bae8baf0164ddf7d6b3b8',
+//   to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
+//   transactionIndex: 80n,
+//   type: 2n,
+//   v: 1n,
+//   value: 13066966539051000n
 // }
 ```
 
 ### `web3.eth.getPendingTransactions`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `blockNumber`
     -   `gas`
     -   `nonce`
     -   `transactionIndex`
     -   `type`
--   Returns a hex string instead of a number string for the following properties:
+-   Returns a bigint instead of a number string for the following properties:
     -   `gasPrice`
     -   `maxFeePerGas`
     -   `maxPriorityFeePerGas`
@@ -328,23 +331,23 @@ await web3.eth.getPendingTransactions();
 // {
 //     accessList: [],
 //     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
-//     blockNumber: 14966017,
-//     chainId: '0x1',
+//     blockNumber: 14966017n,
+//     chainId: 1n,
 //     from: '0x3b7414bE92e87837D6f95D01B8E3c93aC9D20804',
-//     gas: 21000,
-//     gasPrice: '31200410061',
+//     gas: 21000n,
+//     gasPrice: '31200410061n',
 //     hash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
 //     input: '0x',
-//     maxFeePerGas: '56156626189',
-//     maxPriorityFeePerGas: '1500000000',
-//     nonce: 272,
+//     maxFeePerGas: 56156626189n,
+//     maxPriorityFeePerGas: 1500000000n,
+//     nonce: 272n,
 //     r: '0xca990b477b7043937d2ead588981464399101c02c0b0c6323acee28427a12f39',
 //     s: '0x7c1d2571f7c2fe8bdf74cdecdb719a29e0b76b379c1bae8baf0164ddf7d6b3b8',
 //     to: '0x8b664E252B7c5C87c17e73C69F16E56454C9661F',
-//     transactionIndex: 80,
-//     type: 2,
+//     transactionIndex: 80n,
+//     type: 2n,
 //     v: '0x1',
-//     value: '13066966539051000'
+//     value: 13066966539051000n
 // },
 // ...]
 
@@ -377,13 +380,13 @@ await web3.eth.getPendingTransactions();
 
 ### `web3.eth.getTransactionFromBlock`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `blockNumber`
     -   `gas`
     -   `nonce`
     -   `transactionIndex`
     -   `type`
--   Returns a hex string instead of a number string for the following properties:
+-   Returns a bigint instead of a number string for the following properties:
     -   `gasPrice`
     -   `maxFeePerGas`
     -   `maxPriorityFeePerGas`
@@ -419,35 +422,35 @@ await web3.eth.getTransactionFromBlock('latest', 1);
 // {
 //     accessList: [],
 //     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
-//     blockNumber: '0xe45d01',
-//     chainId: '0x1',
+//     blockNumber: 0xe45d01n,
+//     chainId: 1n,
 //     from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
-//     gas: '0x5208',
-//     gasPrice: '0x743b079cd',
+//     gas: 5208n,
+//     gasPrice: 0x743b079cdn,
 //     hash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
 //     input: '0x',
-//     maxFeePerGas: '0xd13321d0d',
-//     maxPriorityFeePerGas: '0x59682f00',
-//     nonce: '0x110',
+//     maxFeePerGas: d13321d0dn,
+//     maxPriorityFeePerGas: 59682f00n,
+//     nonce: 110n,
 //     r: '0xca990b477b7043937d2ead588981464399101c02c0b0c6323acee28427a12f39',
 //     s: '0x7c1d2571f7c2fe8bdf74cdecdb719a29e0b76b379c1bae8baf0164ddf7d6b3b8',
 //     to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
-//     transactionIndex: '0x50',
-//     type: '0x2',
+//     transactionIndex: 50n,
+//     type: 2n,
 //     v: '0x1',
-//     value: '0x2e6c563ada1ff8'
+//     value: 2e6c563ada1ff8n
 // }
 ```
 
 ### `web3.eth.getTransactionReceipt`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `blockNumber`
     -   `cumulativeGasUsed`
     -   `effectiveGasPrice`
     -   `gasUsed`
     -   `transactionIndex`
--   Returns a hex string instead of a boolean for the following properties:
+-   Returns a bigint instead of a boolean for the following properties:
     -   `status`
 
 ```typescript
@@ -477,32 +480,32 @@ await web3.eth.getTransactionReceipt(
 	'0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
 );
 // {
-//     blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
-//     blockNumber: '0xe45d01',
-//     cumulativeGasUsed: '0x6ab1fe',
-//     effectiveGasPrice: '0x743b079cd',
-//     from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
-//     gasUsed: '0x5208',
-//     logs: [],
-//     logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-//     status: '0x1',
-//     to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
-//     transactionHash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
-//     transactionIndex: '0x50',
-//     type: '0x2'
+//   blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
+//   blockNumber: 14966017n,
+//   cumulativeGasUsed: 6992382n,
+//   effectiveGasPrice: 31200410061n,
+//   from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
+//   gasUsed: 21000n,
+//   logs: [],
+//   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+//   status: 1n,
+//   to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
+//   transactionHash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
+//   transactionIndex: 80n,
+//   type: 2n
 // }
 ```
 
 ### `web3.eth.getTransactionCount`
 
-returns a hex string instead of a number
+returns a bigint instead of a number
 
 ```typescript
 // in 1.x
 await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // 0
 
 // in 4.x
-await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // '0x0'
+await web3.eth.getTransactionCount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'); // 0n
 ```
 
 ### `web3.eth.sendTransaction`
@@ -583,13 +586,13 @@ web3.eth.sendTransaction({ ... }).on('sent', (sentTransactionObject) => { ... })
 ##### `receipt`
 
 -   The `receipt` object the event listener receives:
-    -   Returns a hex string instead of a number for the following properties:
+    -   Returns a bigint instead of a number for the following properties:
         -   `transactionIndex`
         -   `blockNumber`
         -   `cumulativeGasUsed`
         -   `gasUsed`
         -   `effectiveGasPrice`
-    -   Returns a hex string instead of a boolean for the following properties:
+    -   Returns a bigint instead of a boolean for the following properties:
         -   `status`
 
 ```typescript
@@ -597,20 +600,19 @@ web3.eth.sendTransaction({ ... }).on('sent', (sentTransactionObject) => { ... })
 web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
 // receipt would be:
 // {
-//   transactionHash: '0x4f0f428ae3c2f0ec5e054491ecf01a0c38b92ef128350d4831c07ef52f5d4a15',
-//   transactionIndex: 0,
-//   blockNumber: 14,
-//   blockHash: '0x5bb7c47a0fcb8d53fc2d1524873631340c1855c7b98d657de614d4d0554596f8',
-//   from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
-//   to: '0x0000000000000000000000000000000000000000',
-//   cumulativeGasUsed: 21000,
-//   gasUsed: 21000,
-//   contractAddress: null,
+//   blockHash: '0x55ff0699736027fd0eddf90e890294ba6765ecf699cefd2f6c255a2fdae06a5a',
+//   blockNumber: 14966017n,
+//   cumulativeGasUsed: 6992382n,
+//   effectiveGasPrice: 31200410061n,
+//   from: '0x3b7414be92e87837d6f95d01b8e3c93ac9d20804',
+//   gasUsed: 21000n,
 //   logs: [],
 //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-//   status: true,
-//   effectiveGasPrice: 2654611504,
-//   type: '0x2'
+//   status: 1n,
+//   to: '0x8b664e252b7c5c87c17e73c69f16e56454c9661f',
+//   transactionHash: '0x219f94fa188e6a0927c3c659537b5c76f4a750b948e7a73c80b28786227aa593',
+//   transactionIndex: 80n,
+//   type: 2n
 // }
 
 // in 4.x
@@ -636,15 +638,15 @@ web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
 ##### `confirmation`
 
 -   In `1.x`, this event listener would receive `confirmationNumber` and `receipt` as arguments, in `4.x` an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
--   `confirmationNumber` is returned as a hex string instead of a number
+-   `confirmationNumber` is returned as a bigint instead of a number
 -   For the returned `receipt` object:
-    -   Returns a hex string instead of a number for the following properties:
+    -   Returns a bigint instead of a number for the following properties:
         -   `transactionIndex`
         -   `blockNumber`
         -   `cumulativeGasUsed`
         -   `gasUsed`
         -   `effectiveGasPrice`
-    -   Returns a hex string instead of a boolean for the following properties:
+    -   Returns a bigint instead of a boolean for the following properties:
         -   `status`
 
 ```typescript
@@ -673,20 +675,20 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationNumber, receip
 web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => { ... });
 // confirmationObject would have the following structure:
 // {
-//     confirmationNumber: '0x2',
+//     confirmationNumber: 2n,
 //     receipt: {
 //         transactionHash: '0xd93fe25c2066cd8f15565bcff693507a3c70f5fb9387db57f939ae91f4080c6c',
-//         transactionIndex: '0x0',
-//         blockNumber: '0x5',
+//         transactionIndex: 0n,
+//         blockNumber: 5n,
 //         blockHash: '0xe1775977a8041cb2709136804e4be609135f8367b49d38960f92a95b4c02189a',
 //         from: '0x6e599da0bff7a6598ac1224e4985430bf16458a4',
 //         to: '0x0000000000000000000000000000000000000000',
-//         cumulativeGasUsed: '0x5208',
-//         gasUsed: '0x5208',
+//         cumulativeGasUsed: 5208n,
+//         gasUsed: 5208n,
 //         logs: [],
 //         logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-//         status: '0x1',
-//         effectiveGasPrice: '0x77359400',
+//         status: 1n,
+//         effectiveGasPrice: 77359400n,
 //         type: '0x0'
 //     },
 //     latestBlockHash: '0xb2ef3763190da82d8efa938f73efa5bb21e3d95c2ce25dd38ca21eea1a942260'
@@ -713,13 +715,13 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
 
 ### `web3.eth.sendSignedTransaction`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `blockNumber`
     -   `cumulativeGasUsed`
     -   `effectiveGasPrice`
     -   `gasUsed`
     -   `transactionIndex`
--   Returns a hex string instead of a boolean for the following properties:
+-   Returns a bigint instead of a boolean for the following properties:
     -   `status`
 
 ```ts
@@ -746,17 +748,17 @@ web3.eth.sendSignedTransaction({...}).then(console.log);
 web34.eth.sendSignedTransaction({...}).then(console.log);
 // {
 //   blockHash: '0xf433c7285366ae50334048ea2a290acc46db49abe75c5166bf71fe410834f338',
-//   blockNumber: '0xa',
-//   cumulativeGasUsed: '0x5208',
-//   effectiveGasPrice: '0x4a817c800',
+//   blockNumber: 10n,
+//   cumulativeGasUsed: 21000n,
+//   effectiveGasPrice: 20000000000n,
 //   from: '0xd8c375f286c258521564da00ddee3945d1d057c4',
-//   gasUsed: '0x5208',
+//   gasUsed: 21000n,
 //   logs: [],
 //   logsBloom: '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-//   status: '0x1',
+//   status: 1n,
 //   to: '0x3535353535353535353535353535353535353535',
 //   transactionHash: '0x739c5a6593e20bd545c264482a6bb9e7aebc504559e6406a4ed2fde4bf9dad72',
-//   transactionIndex: '0x0',
+//   transactionIndex: 0n,
 //   type: '0x0'
 // }
 ```
@@ -872,7 +874,7 @@ web3.eth.call(transaction).then(console.log);
 
 ### `web3.eth.estimateGas`
 
-returns a hex string instead of a number
+returns a bigint instead of a number
 
 ```ts
 //in 1.x
@@ -891,12 +893,12 @@ web3.eth
 		data: '0xc6888fa10000000000000000000000000000000000000000000000000000000000000003',
 	})
 	.then(console.log);
-// 0x52d4;
+//21204n
 ```
 
 ### `web3.eth.getPastLogs`
 
--   Returns a hex string instead of a number for the following properties:
+-   Returns a bigint instead of a number for the following properties:
     -   `logIndex`
     -   `transactionIndex`
     -   `blockNumber`
@@ -941,13 +943,13 @@ await web3.eth
 //         "0x617cf8a4400dd7963ed519ebe655a16e8da1282bb8fea36a21f634af912f54ab",
 //       ],
 //       data: "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000027431000000000000000000000000000000000000000000000000000000000000",
-//       blockNumber: "0xbb",
+//       blockNumber: 221n,
 //       transactionHash:
 //         "0xc96bbd8308f70940aa465ecdf95c7ce8c687dede5c53e5ce5ce55434c6e406bd",
-//       transactionIndex: "0x0",
+//       transactionIndex: 0n,
 //       blockHash:
 //         "0xfd1657fc5d2b18153aa569956718cd2d3a05285712208a9544dfc093966b9c5f",
-//       logIndex: "0x0",
+//       logIndex: 0n,
 //       removed: false,
 //     },
 //   ];
@@ -992,7 +994,7 @@ await web3.eth.requestAccounts();
 
 ### `web3.eth.getChainId`
 
-Returns a hex string instead of a number string
+Returns a bigint instead of a number string
 
 ```ts
 //in 1.x
@@ -1001,7 +1003,7 @@ web3.eth.getChainId().then(console.log);
 
 //in 4.x
 web3.eth.getChainId().then(console.log);
-//0x539
+//1337n
 ```
 
 ### `web3.eth.getNodeInfo`
@@ -1015,7 +1017,7 @@ web3.eth.getNodeInfo().then(console.log);
 
 ### `web3.eth.getProof`
 
--   Returns a hex string instead of a number string for the following properties:
+-   Returns a bigint instead of a number string for the following properties:
     -   `balance`
     -   `nonce`
 
@@ -1070,9 +1072,9 @@ web3.eth
 //     '0xf8b1808080a01fcc2ac732952007a813f5d53b517a2f0c3b5faf38cd0654e564302e39e2fec68080a040cb340b7815612dc0705235c46f04565d5e7005b26b1544bd72d2a0cde1f7fb80a05902a1a7c70a64efedd39ed9ae25078e9054ab531c8fe4bdd7ff245ecd2bca0780a06117e0dc18ac6d32f46418eabf875a8cd21bf05b62013f87242824ca939cb776808080a0261eb1dc702fff2a022d7a2f0386224a760971187e3d6447958293f455aafbc78080',
 //     '0xf869a02032c2889a72d251d4f0bbf5eb448f4af962917185a86532af762ff82865ca68b846f8440180a0291bd0e0825fa92cfeb0d3b28529bae6709aa1db89a25f7e62ba5422bbb1e10ea09bbff76f89bb6a6e787eea245acb599900f2d58faab236e165e2b32df0198c84'
 //   ],
-//   balance: '0x0',
+//   balance: 0n,
 //   codeHash: '0x9bbff76f89bb6a6e787eea245acb599900f2d58faab236e165e2b32df0198c84',
-//   nonce: '0x1',
+//   nonce: 1n,
 //   storageHash: '0x291bd0e0825fa92cfeb0d3b28529bae6709aa1db89a25f7e62ba5422bbb1e10e',
 //   storageProof: [
 //     {
