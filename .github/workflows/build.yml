@@ -1,4 +1,5 @@
 name: 'Build'
+
 on:
   push:
     branches:
@@ -17,7 +18,11 @@ jobs:
         node: [14, 16]
     name: Build Packages
     runs-on: ubuntu-latest
+
     steps:
+      - uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: armv7
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -37,6 +42,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: armv7
       - uses: actions/download-artifact@v3
         with:
           name: web3-14.js.tar.gz
@@ -52,6 +60,9 @@ jobs:
       matrix:
         node: [14, 16]
     steps:
+      - uses: uraimo/run-on-arch-action@v2
+        with:
+            arch: armv7
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -73,6 +84,9 @@ jobs:
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
+      - uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: armv7
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -113,6 +127,9 @@ jobs:
         node: [14, 16]
         browser: ['electron', 'chrome', 'firefox']
     steps:
+      - uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: armv7
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
