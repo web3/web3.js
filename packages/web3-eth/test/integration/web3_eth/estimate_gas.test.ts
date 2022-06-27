@@ -43,7 +43,7 @@ describe('Web3Eth.estimateGas', () => {
 			value: '0x1',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-		expect(response).toBe('0x5208');
+		expect(response).toBe(BigInt(21000));
 	});
 
 	it('should estimate a contract deployment', async () => {
@@ -55,6 +55,6 @@ describe('Web3Eth.estimateGas', () => {
 			gas: '0x740b8',
 		};
 		const response = await web3Eth.estimateGas(transaction);
-		expect(response).toBe('0x740b8');
+		expect(response).toBe(BigInt(475320));
 	});
 });

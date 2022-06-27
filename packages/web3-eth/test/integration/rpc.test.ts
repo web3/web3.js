@@ -49,10 +49,10 @@ describe('rpc', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;
-	let blockNumber: number | bigint;
+	let blockNumber: bigint;
 	let blockHash: string;
 	let transactionHash: string;
-	let transactionIndex: number | bigint;
+	let transactionIndex: bigint;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -62,18 +62,18 @@ describe('rpc', () => {
 		expect(tx.nonce).toBeDefined();
 		expect(tx.hash).toBeDefined();
 		expect(String(tx.hash)?.length).toBe(66);
-		expect(tx.type).toBe('0x0');
+		expect(tx.type).toBe(BigInt(0));
 		expect(tx.blockHash).toBeDefined();
 		expect(String(tx.blockHash)?.length).toBe(66);
-		expect(hexToNumber(String(tx.blockNumber))).toBeGreaterThan(0);
+		expect(Number(tx.blockNumber)).toBeGreaterThan(0);
 		expect(tx.transactionIndex).toBeDefined();
 		expect(tx.from?.length).toBe(42);
 		expect(tx.to?.length).toBe(42);
-		expect(tx.value).toBe('0x1');
+		expect(tx.value).toBe(BigInt(1));
 		expect(tx.input).toBe('0x');
 		expect(tx.r).toBeDefined();
 		expect(tx.s).toBeDefined();
-		expect(hexToNumber(String(tx.gas))).toBeGreaterThan(0);
+		expect(Number(tx.gas)).toBeGreaterThan(0);
 	};
 	const validateBlock = (b: Block) => {
 		expect(b.nonce).toBeDefined();
@@ -113,7 +113,7 @@ describe('rpc', () => {
 		expect(r.logsBloom).toBeDefined();
 		expect(r.status).toBeDefined();
 		expect(String(r.transactionHash)).toHaveLength(66);
-		expect(hexToNumber(String(r.gasUsed))).toBeGreaterThan(0);
+		expect(Number(r.gasUsed)).toBeGreaterThan(0);
 	};
 
 	beforeAll(async () => {
@@ -142,7 +142,7 @@ describe('rpc', () => {
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	beforeEach(async () => {
-		const [receipt]: ReceiptInfo[] = await sendFewTxes({
+		const [receipt] = await sendFewTxes({
 			web3Eth,
 			from: accounts[0],
 			to: accounts[1],
@@ -150,10 +150,10 @@ describe('rpc', () => {
 			times: 1,
 		});
 
-		blockNumber = hexToNumber(String(receipt.blockNumber));
+		blockNumber = receipt.blockNumber as bigint;
 		blockHash = String(receipt.blockHash);
 		transactionHash = String(receipt.transactionHash);
-		transactionIndex = hexToNumber(String(receipt.transactionIndex));
+		transactionIndex = receipt.transactionIndex as bigint;
 	});
 	afterAll(() => {
 		if (clientUrl.startsWith('ws')) {
@@ -245,28 +245,16 @@ describe('rpc', () => {
 				contract.options.address as string,
 				'0x0',
 				undefined,
-				{
-					number: FMT_NUMBER.BIGINT,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resString = await web3Eth.getStorageAt(
 				contract.options.address as string,
 				'0x1',
 				undefined,
-				{
-					number: FMT_NUMBER.STR,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 			const resBool = await web3Eth.getStorageAt(
 				contract.options.address as string,
 				'0x2',
 				undefined,
-				{
-					number: FMT_NUMBER.NUMBER,
-					bytes: FMT_BYTES.HEX,
-				},
 			);
 
 			expect(hexToNumber(resNumber)).toBe(numberData);
@@ -391,11 +379,11 @@ describe('rpc', () => {
 			}),
 		)('getBlockTransactionCount', async ({ block }) => {
 			const res = await web3Eth.getBlockTransactionCount(block);
-			let shouldBe: string;
+			let shouldBe: bigint;
 			if (getSystemTestBackend() === 'ganache') {
-				shouldBe = block === 'earliest' ? '0x0' : '0x1';
+				shouldBe = block === 'earliest' ? BigInt(0) : BigInt(1);
 			} else {
-				shouldBe = ['earliest', 'pending'].includes(String(block)) ? '0x0' : '0x1';
+				shouldBe = ['earliest', 'pending'].includes(String(block)) ? BigInt(0) : BigInt(1);
 			}
 			expect(res).toBe(shouldBe);
 		});
@@ -408,7 +396,7 @@ describe('rpc', () => {
 			}),
 		)('getBlockUncleCount', async ({ block }) => {
 			const res = await web3Eth.getBlockUncleCount(block);
-			expect(res).toBe('0x0');
+			expect(res).toBe(BigInt(0));
 		});
 
 		it.each(
@@ -486,7 +474,7 @@ describe('rpc', () => {
 				bytes: FMT_BYTES.HEX,
 			});
 			// TODO: in next release validate chain ID , it should match with chain id of connected client
-			expect(res).toBeGreaterThan(0);
+			expect(Number(res)).toBeGreaterThan(0);
 		});
 
 		it('getNodeInfo', async () => {
@@ -509,16 +497,13 @@ describe('rpc', () => {
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
-			const numberData = 10;
+			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
 			const sendRes = await contract.methods
-				?.setValues(numberData, stringData, boolData)
+				.setValues(numberData, stringData, boolData)
 				.send(sendOptions);
-			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined, {
-				number: FMT_NUMBER.BIGINT,
-				bytes: FMT_BYTES.HEX,
-			});
+			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined);
 			const res = await web3Eth.getProof(
 				contract.options.address as string,
 				['0x0000000000000000000000000000000000000000000000000000000000000000'],
@@ -527,7 +512,7 @@ describe('rpc', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res.storageProof).toBeDefined();
 			// eslint-disable-next-line jest/no-standalone-expect
-			expect(hexToNumber(res.storageProof[0].value)).toBe(numberData);
+			expect(res.storageProof[0].value).toBe(numberData);
 		});
 
 		it('getPastLogs', async () => {
@@ -539,9 +524,7 @@ describe('rpc', () => {
 			}
 			const res: Array<any> = await web3Eth.getPastLogs({
 				address: contract.options.address as string,
-				fromBlock: numberToHex(
-					Math.min(...resTx.map(d => Number(hexToNumber(d.blockNumber)))),
-				),
+				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
 			});
 			const results = res.map(
 				r =>

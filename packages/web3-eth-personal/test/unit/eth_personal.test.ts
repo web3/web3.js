@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ETH_DATA_FORMAT } from 'web3-common';
 import * as utils from 'web3-utils';
 import * as eth from 'web3-eth';
 import { validator } from 'web3-validator';
@@ -185,10 +186,7 @@ describe('Personal', () => {
 			await personal.sendTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
-				bytes: 'BYTES_HEX',
-				number: 'NUMBER_HEX',
-			});
+			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
 		});
 	});
 
@@ -218,10 +216,7 @@ describe('Personal', () => {
 			await personal.signTransaction(tx, 'password');
 
 			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, {
-				bytes: 'BYTES_HEX',
-				number: 'NUMBER_HEX',
-			});
+			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
 		});
 	});
 

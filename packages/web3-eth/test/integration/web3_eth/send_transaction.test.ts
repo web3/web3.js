@@ -46,10 +46,10 @@ describe('Web3Eth.sendTransaction', () => {
 		const transaction: Transaction = {
 			from: accounts[0],
 			to: '0x0000000000000000000000000000000000000000',
-			value: '0x1',
+			value: BigInt(1),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
-		expect(response.status).toBe('0x1');
+		expect(response.status).toBe(BigInt(1));
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
@@ -76,10 +76,10 @@ describe('Web3Eth.sendTransaction', () => {
 		const transaction: TransactionWithLocalWalletIndex = {
 			from: 0,
 			to: '0x0000000000000000000000000000000000000000',
-			value: '0x1',
+			value: BigInt(1),
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
-		expect(response.status).toBe('0x1');
+		expect(response.status).toBe(BigInt(1));
 
 		const minedTransactionData = await web3EthWithWallet.getTransaction(
 			response.transactionHash,
@@ -87,7 +87,7 @@ describe('Web3Eth.sendTransaction', () => {
 		expect(minedTransactionData).toMatchObject({
 			from: accountsWithKeys[0].address.toLowerCase(),
 			to: '0x0000000000000000000000000000000000000000',
-			value: '0x1',
+			value: BigInt(1),
 		});
 	});
 
@@ -95,10 +95,10 @@ describe('Web3Eth.sendTransaction', () => {
 		const transaction: Transaction = {
 			from: accounts[0],
 			to: '0x0000000000000000000000000000000000000000',
-			value: '0x0',
+			value: BigInt(0),
 		};
 		const response = await web3Eth.sendTransaction(transaction);
-		expect(response.status).toBe('0x1');
+		expect(response.status).toBe(BigInt(1));
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 		expect(minedTransactionData).toMatchObject(transaction);
@@ -113,17 +113,17 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: accounts[0],
 				data: greeterContractDeploymentData,
-				gas: '0x740b8',
+				gas: BigInt('475320'),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
-			expect(response.status).toBe('0x1');
+			expect(response.status).toBe(BigInt(1));
 			expect(response.contractAddress).toBeDefined();
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject({
 				from: accounts[0],
 				input: greeterContractDeploymentData,
-				gas: '0x740b8',
+				gas: BigInt('475320'),
 			});
 
 			greeterContractAddress = response.contractAddress as string;
@@ -138,7 +138,7 @@ describe('Web3Eth.sendTransaction', () => {
 				data: contractFunctionCall,
 			};
 			const response = await web3Eth.sendTransaction(transaction);
-			expect(response.status).toBe('0x1');
+			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject({
@@ -154,12 +154,12 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: accounts[0],
 				to: '0x0000000000000000000000000000000000000000',
-				value: '0x1',
-				type: '0x0',
+				value: BigInt(1),
+				type: BigInt(0),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
-			expect(response.type).toBe('0x0');
-			expect(response.status).toBe('0x1');
+			expect(response.type).toBe(BigInt(0));
+			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
@@ -169,16 +169,16 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: accounts[0],
 				to: '0x0000000000000000000000000000000000000000',
-				value: '0x1',
-				type: '0x1',
+				value: BigInt(1),
+				type: BigInt(1),
 				// TODO If this property is not included, tx gets default to type: 0x0
 				// from what I can tell our library isn't doing this, but it happens
 				// with both Geth and Ganache, so I'm not sure
 				accessList: [],
 			};
 			const response = await web3Eth.sendTransaction(transaction);
-			expect(response.type).toBe('0x1');
-			expect(response.status).toBe('0x1');
+			expect(response.type).toBe(BigInt(1));
+			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
@@ -188,12 +188,12 @@ describe('Web3Eth.sendTransaction', () => {
 			const transaction: Transaction = {
 				from: accounts[0],
 				to: '0x0000000000000000000000000000000000000000',
-				value: '0x1',
-				type: '0x2',
+				value: BigInt(1),
+				type: BigInt(2),
 			};
 			const response = await web3Eth.sendTransaction(transaction);
-			expect(response.type).toBe('0x2');
-			expect(response.status).toBe('0x1');
+			expect(response.type).toBe(BigInt(2));
+			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
 			expect(minedTransactionData).toMatchObject(transaction);
@@ -238,45 +238,48 @@ describe('Web3Eth.sendTransaction', () => {
 		it('should listen to the receipt event', async () => {
 			const expectedTransactionReceipt = {
 				blockHash: expect.any(String),
-				blockNumber: expect.any(String),
-				cumulativeGasUsed: expect.any(String),
-				effectiveGasPrice: expect.any(String),
-				gasUsed: expect.any(String),
 				logs: [],
 				logsBloom:
 					'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-				status: '0x1',
 				from: transaction.from,
 				to: transaction.to,
 				transactionHash: expect.any(String),
-				transactionIndex: '0x0',
-				type: '0x0',
 			};
 			const promiEvent = web3Eth.sendTransaction(transaction);
 			promiEvent.on('receipt', data => {
 				expect(data).toEqual(expect.objectContaining(expectedTransactionReceipt));
+
+				// To avoid issue with the `objectContaining` and `cypress` had to add
+				// these expectations explicitly on each attribute
+				expect(typeof data.blockNumber).toBe('bigint');
+				expect(typeof data.cumulativeGasUsed).toBe('bigint');
+				expect(typeof data.effectiveGasPrice).toBe('bigint');
+				expect(typeof data.gasUsed).toBe('bigint');
+				expect(typeof data.transactionIndex).toBe('bigint');
+				expect(data.status).toBe(BigInt(1));
+				expect(data.type).toBe(BigInt(0));
 			});
 			await promiEvent;
 		});
 
 		it('should listen to the confirmation event', async () => {
 			const expectedTransactionConfirmation = {
-				confirmationNumber: expect.any(String),
+				confirmationNumber: expect.any(BigInt),
 				receipt: {
 					blockHash: expect.any(String),
-					blockNumber: expect.any(String),
-					cumulativeGasUsed: expect.any(String),
-					effectiveGasPrice: expect.any(String),
-					gasUsed: expect.any(String),
+					blockNumber: expect.any(BigInt),
+					cumulativeGasUsed: expect.any(BigInt),
+					effectiveGasPrice: expect.any(BigInt),
+					gasUsed: expect.any(BigInt),
 					logs: [],
 					logsBloom:
 						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: '0x1',
+					status: BigInt(1),
 					from: transaction.from,
 					to: transaction.to,
 					transactionHash: expect.any(String),
-					transactionIndex: '0x0',
-					type: '0x0',
+					transactionIndex: BigInt(0),
+					type: BigInt(0),
 				},
 				latestBlockHash: expect.any(String),
 			};

@@ -24,7 +24,7 @@ import {
 import { Web3Context, SupportedProviders, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address } from 'web3-utils';
-import { EthExecutionAPI, DEFAULT_RETURN_FORMAT } from 'web3-common';
+import { EthExecutionAPI, DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER } from 'web3-common';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
@@ -71,7 +71,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
-	): Promise<ReceiptInfo | RevertInstructionError> {
+	): Promise<
+		| FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>
+		| FormatType<RevertInstructionError, typeof DEFAULT_RETURN_FORMAT>
+	> {
 		return this._registry.setResolver(name, address, txConfig);
 	}
 
@@ -289,7 +292,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		if (this._detectedAddress) {
 			return this._detectedAddress;
 		}
-		const networkType = await getId(this, DEFAULT_RETURN_FORMAT); // get the network from provider
+		const networkType = await getId(this, {
+			...DEFAULT_RETURN_FORMAT,
+			number: FMT_NUMBER.HEX,
+		}); // get the network from provider
 		const addr = registryAddresses[networkType];
 
 		if (typeof addr === 'undefined') {

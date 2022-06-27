@@ -54,7 +54,6 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	/**
 	 * @deprecated Please use `.request` instead.
-	 *
 	 * @param payload - Request Payload
 	 * @param cb - Callback
 	 */
@@ -75,7 +74,6 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	/**
 	 * @deprecated Please use `.request` instead.
-	 *
 	 * @param payload - Request Payload
 	 * @param cb - Callback
 	 */

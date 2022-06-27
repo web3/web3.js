@@ -3,6 +3,7 @@
 	"version": "4.0.0-alpha.1",
 	"description": "Ethereum JavaScript API",
 	"main": "dist/index.js",
+	"browser": "dist/web3.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
 		"node": ">=12.0.0"
@@ -21,6 +22,7 @@
 		"clean": "rimraf dist",
 		"prebuild": "rimraf dist",
 		"build": "tsc --build",
+		"build:web": "npx webpack",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
