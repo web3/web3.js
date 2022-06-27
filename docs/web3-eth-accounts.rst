@@ -49,7 +49,7 @@ Returns
 ``Object`` - The account object with the following structure:
 
     - ``address`` - ``string``: The account address.
-    - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to ``null`` the memory after usage.
+    - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in local storage! Also make sure to ``null`` the memory after usage.
     - ``signTransaction(tx [, callback])`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.signTransaction() <eth-accounts-signtransaction>` for more.
     - ``sign(data)`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.sign() <eth-accounts-sign>` for more.
 
@@ -98,7 +98,7 @@ privateKeyToAccount
 
 Creates an account object from a private key.
 
-For more advanced hierarchial address derivation, see 
+For more advanced hierarchial address derivation, see
 [truffle-hd-wallet-provider](https://github.com/trufflesuite/truffle/tree/develop/packages/hdwallet-provider)
 package.
 
@@ -107,7 +107,7 @@ Parameters
 ----------
 
 1. ``privateKey`` - ``String``: The private key to import. This is 32 bytes of random data.
-If you are supplying a hexadecimal number, it must have `0x` prefix in order to be in line 
+If you are supplying a hexadecimal number, it must have `0x` prefix in order to be in line
 with other Ethereum libraries.
 2. ``ignoreLength`` - ``Boolean``: If set to true does the ``privateKey`` length not get validated.
 
@@ -346,7 +346,7 @@ Returns
 -------
 
 ``Object``: The signature object
-    - ``message`` - ``String``: The the given message.
+    - ``message`` - ``String``: The given message.
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature
     - ``s`` - ``String``: Next 32 bytes of the signature
@@ -948,7 +948,7 @@ Parameters
 ----------
 
 1. ``password`` - ``String``: The password to decrypt the wallet.
-2. ``keyName`` - ``String``: (optional) The key used for the localstorage position, defaults to ``"web3js_wallet"``.
+2. ``keyName`` - ``String``: (optional) The key used for the local storage position, defaults to ``"web3js_wallet"``.
 
 
 -------
