@@ -24,8 +24,8 @@ getDownloadLink(){
     case "$OS" in
       SOLARIS*) LINK="-" ;;
       OSX*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.10.19-23bee162.tar.gz" ;;
-      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.10.19-23bee162.tar.gz" ;;
-      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-arm64-1.10.19-23bee162.tar.gz" ;;
+      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.19-23bee162.tar.gz" ;;
+      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.19-23bee162.tar.gz" ;;
       WINDOWS*)    LINK="-" ;;
       "ALSO WINDOWS"*)  LINK="-" ;;
       *)        LINK="-" ;;
