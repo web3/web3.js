@@ -425,6 +425,16 @@ export class Wallet<
 	 * @param password `String` The password to decrypt the wallet.
 	 * @param keyName `String` (optional)The key used for local storage position, defaults to `web3js_wallet"`
 	 * @returns Returns the wallet object
+	 *
+	 * ```ts
+	 * web3.eth.accounts.wallet.save('test#!$');
+	 * > true
+	 * web3.eth.accounts.wallet.load('test#!$');
+	 * { defaultKeyName: "web3js_wallet",
+	 *   length: 0,
+	 *   _accounts: Accounts {_requestManager: RequestManager, givenProvider: Proxy, providers: {…}, _provider: WebsocketProvider, …},
+	 *   [[Prototype]]: Object
+	 * }
 	 */
 	public async load(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
