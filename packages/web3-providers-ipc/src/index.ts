@@ -38,6 +38,10 @@ import {
 import { ConnectionNotOpenError, InvalidClientError, InvalidConnectionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 
+type WaitOptions = {
+	timeOutTime: number;
+	maxNumberOfAttempts: number;
+};
 export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
@@ -45,6 +49,7 @@ export default class IpcProvider<
 
 	private readonly _socketPath: string;
 	private readonly _socket: Socket;
+	private waitOptions: WaitOptions;
 	private _connectionStatus: Web3BaseProviderStatus;
 
 	private readonly _requestQueue: Map<JsonRpcId, DeferredPromise<unknown>>;
@@ -59,6 +64,10 @@ export default class IpcProvider<
 		this._requestQueue = new Map<JsonRpcId, DeferredPromise<unknown>>();
 
 		this.connect();
+		this.waitOptions = {
+			timeOutTime: 5000,
+			maxNumberOfAttempts: 10,
+		};
 	}
 
 	public getStatus(): Web3BaseProviderStatus {
@@ -110,13 +119,28 @@ export default class IpcProvider<
 		this._removeSocketListeners();
 		this._addSocketListeners();
 	}
+
+	public get waitTimeOut(): number {
+		return this.waitOptions.timeOutTime;
+	}
+
+	public set waitTimeOut(timeOut: number) {
+		this.waitOptions.timeOutTime = timeOut;
+	}
+
+	public get waitMaxNumberOfAttempts(): number {
+		return this.waitOptions.maxNumberOfAttempts;
+	}
+
+	public set waitMaxNumberOfAttempts(maxNumberOfAttempts: number) {
+		this.waitOptions.maxNumberOfAttempts = maxNumberOfAttempts;
+	}
+
 	public async waitForConnection(): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			const maxNumberOfAttempts = 10;
-			const timeOutTime = 5000; // ms
 			let currentAttempt = 0;
 			const interval = setInterval(() => {
-				if (currentAttempt > maxNumberOfAttempts - 1) {
+				if (currentAttempt > this.waitMaxNumberOfAttempts - 1) {
 					clearInterval(interval);
 					reject(new ConnectionNotOpenError());
 				} else if (this.getStatus() === 'connected') {
@@ -124,7 +148,7 @@ export default class IpcProvider<
 					resolve();
 				}
 				currentAttempt += 1;
-			}, timeOutTime / maxNumberOfAttempts);
+			}, this.waitTimeOut / this.waitMaxNumberOfAttempts);
 		});
 	}
 
