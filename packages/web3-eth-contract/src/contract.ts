@@ -93,7 +93,19 @@ export type ContractMethodsInterface<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & { [key: string]: ContractBoundMethod<any> };
 
-type ContractBoundEvent = (options?: ContractEventOptions) => Promise<LogsSubscription>;
+/**
+ * The event object can be accessed from `myContract.events.myEvent`.
+ *
+ * > Remember: To subscribe to an event, your provider must have support for subscriptions.
+ *
+ * ```ts
+ * const subscription = await myContract.events.MyEvent([options])
+ * ```
+ *
+ * @param options - The options used to subscribe for the event
+ * @returns - A Promise resolved with {@link LogsSubscription} object
+ */
+export type ContractBoundEvent = (options?: ContractEventOptions) => Promise<LogsSubscription>;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
@@ -115,6 +127,9 @@ export type ContractEventEmitterInterface<
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
+/**
+ * The class designed to interact with smart contracts on the Ethereum blockchain.
+ */
 export class Contract<Abi extends ContractAbi>
 	extends Web3Context<
 		EthExecutionAPI,
@@ -126,19 +141,84 @@ export class Contract<Abi extends ContractAbi>
 	>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
+	/**
+	 * The options `object` for the contract instance. `from`, `gas` and `gasPrice` are used as fallback values when sending transactions.
+	 *
+	 * ```ts
+	 * myContract.options;
+	 * > {
+	 *     address: '0x1234567890123456789012345678901234567891',
+	 *     jsonInterface: [...],
+	 *     from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+	 *     gasPrice: '10000000000000',
+	 *     gas: 1000000
+	 * }
+	 *
+	 * myContract.options.from = '0x1234567890123456789012345678901234567891'; // default from address
+	 * myContract.options.gasPrice = '20000000000000'; // default gas price in wei
+	 * myContract.options.gas = 5000000; // provide as fallback always 5M gas
+	 * ```
+	 */
 	public readonly options: ContractOptions;
 
+	/**
+	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
+	 */
 	public static defaultAccount?: HexString;
+
+	/**
+	 * Can be used to set {@link Contract.defaultBlock} for all contracts.
+	 */
 	public static defaultBlock?: BlockNumberOrTag;
+
+	/**
+	 * Can be used to set {@link Contract.defaultHardfork} for all contracts.
+	 */
 	public static defaultHardfork?: string;
+
+	/**
+	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
+	 */
 	public static defaultCommon?: Record<string, unknown>;
+
+	/**
+	 * Can be used to set {@link Contract.transactionBlockTimeout} for all contracts.
+	 */
 	public static transactionBlockTimeout?: number;
+
+	/**
+	 * Can be used to set {@link Contract.transactionConfirmationBlocks} for all contracts.
+	 */
 	public static transactionConfirmationBlocks?: number;
+
+	/**
+	 * Can be used to set {@link Contract.transactionPollingInterval} for all contracts.
+	 */
 	public static transactionPollingInterval?: number;
+
+	/**
+	 * Can be used to set {@link Contract.transactionPollingTimeout} for all contracts.
+	 */
 	public static transactionPollingTimeout?: number;
+
+	/**
+	 * Can be used to set {@link Contract.transactionReceiptPollingInterval} for all contracts.
+	 */
 	public static transactionReceiptPollingInterval?: number;
+
+	/**
+	 * Can be used to set {@link Contract.transactionConfirmationPollingInterval} for all contracts.
+	 */
 	public static transactionConfirmationPollingInterval?: number;
+
+	/**
+	 * Can be used to set {@link Contract.blockHeaderTimeout} for all contracts.
+	 */
 	public static blockHeaderTimeout?: number;
+
+	/**
+	 * Can be used to set {@link Contract.handleRevert} for all contracts.
+	 */
 	public static handleRevert?: boolean;
 
 	private _jsonInterface!: Abi;
@@ -157,6 +237,33 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
+	/**
+	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
+	 *
+	 * ```ts
+	 * new web3.eth.Contract(jsonInterface[, address][, options])
+	 * ```
+	 *
+	 * @param jsonInterface - The JSON interface for the contract to instantiate.
+	 * @param address - The address of the smart contract to call.
+	 * @param options - The options of the contract. Some are used as fallbacks for calls and transactions.
+	 * @param context - The context of the contract used for customizing the behavior of the contract.
+	 * @returns - The contract instance with all its methods and events.
+	 *
+	 * ```ts title="Example"
+	 * var myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
+	 *   from: '0x1234567890123456789012345678901234567891', // default from address
+	 *   gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
+	 * });
+	 * ```
+	 *
+	 * To use the type safe interface for these contracts you have to include the ABI definitions in your Typescript project and then declare these as `const`.
+	 *
+	 * ```ts title="Example"
+	 * const myContractAbi = [....] as const; // ABI definitions
+	 * const myContract = new web3.eth.Contract(myContractAbi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
+	 * ```
+	 */
 	public constructor(
 		jsonInterface: Abi,
 		address?: Address,
@@ -321,14 +428,82 @@ export class Contract<Abi extends ContractAbi>
 		super.handleRevert = value;
 	}
 
+	/**
+	 * Subscribe to an event.
+	 *
+	 * ```ts
+	 * await myContract.events.MyEvent([options])
+	 * ```
+	 *
+	 * There is a special event `allEvents` that can be used to subscribe all events.
+	 *
+	 * ```ts
+	 * await myContract.events.allEvents([options])
+	 * ```
+	 *
+	 * @returns - When individual event is accessed will returns {@link ContractBoundEvent} object
+	 */
 	public get events() {
 		return this._events;
 	}
 
+	/**
+	 * Creates a transaction object for that method, which then can be `called`, `send`, `estimated`, `createAccessList` , or `ABI encoded`.
+	 *
+	 * The methods of this smart contract are available through:
+	 *
+	 * * The name: `myContract.methods.myMethod(123)`
+	 * * The name with parameters: `myContract.methods['myMethod(uint256)'](123)`
+	 * * The signature `myContract.methods['0x58cf5f10'](123)`
+	 *
+	 * This allows calling functions with same name but different parameters from the JavaScript contract object.
+	 *
+	 * > The method signature does not provide a type safe interface, so we recommend to use method `name` instead.
+	 *
+	 * ```ts
+	 * // calling a method
+	 * const result = await myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+	 *
+	 * // or sending and using a promise
+	 * const receipt = await myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+	 *
+	 * // or sending and using the events
+	 * const sendObject = myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'});
+	 * sendObject.on('transactionHash', function(hash){
+	 *   ...
+	 * });
+	 * sendObject.on('receipt', function(receipt){
+	 *   ...
+	 * });
+	 * sendObject.on('confirmation', function(confirmationNumber, receipt){
+	 *   ...
+	 * });
+	 * sendObject.on('error', function(error, receipt) {
+	 *   ...
+	 * });
+	 * ```
+	 *
+	 * @returns - Either returns {@link PayableMethodObject} or {@link NonPayableMethodObject} based on the definitions of the {@doclink glossary/json_interface | json interface} of that contract.
+	 */
 	public get methods() {
 		return this._methods;
 	}
 
+	/**
+	 * Clones the current contract instance. This doesn't deploy contract on blockchain and only creates a local clone.
+	 *
+	 * @returns - The new contract instance.
+	 *
+	 * ```ts
+	 * const contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', from: fromAddress});
+	 *
+	 * const contract2 = contract1.clone();
+	 * contract2.options.address = address2;
+	 *
+	 * (contract1.options.address !== contract2.options.address);
+	 * > true
+	 * ```
+	 */
 	public clone() {
 		return new Contract<Abi>(this._jsonInterface, this._address ?? undefined, {
 			gas: this.options.gas,
@@ -340,8 +515,75 @@ export class Contract<Abi extends ContractAbi>
 		});
 	}
 
+	/**
+	 * Call this function to deploy the contract to the blockchain. After successful deployment the promise will resolve with a new contract instance.
+	 *
+	 * ```ts
+	 * myContract.deploy({
+	 *   data: '0x12345...',
+	 *   arguments: [123, 'My String']
+	 * })
+	 * .send({
+	 *   from: '0x1234567890123456789012345678901234567891',
+	 *   gas: 1500000,
+	 *   gasPrice: '30000000000000'
+	 * }, function(error, transactionHash){ ... })
+	 * .on('error', function(error){ ... })
+	 * .on('transactionHash', function(transactionHash){ ... })
+	 * .on('receipt', function(receipt){
+	 *  console.log(receipt.contractAddress) // contains the new contract address
+	 * })
+	 * .on('confirmation', function(confirmationNumber, receipt){ ... })
+	 * .then(function(newContractInstance){
+	 *   console.log(newContractInstance.options.address) // instance with the new contract address
+	 * });
+	 *
+	 *
+	 * // When the data is already set as an option to the contract itself
+	 * myContract.options.data = '0x12345...';
+	 *
+	 * myContract.deploy({
+	 *   arguments: [123, 'My String']
+	 * })
+	 * .send({
+	 *   from: '0x1234567890123456789012345678901234567891',
+	 *   gas: 1500000,
+	 *   gasPrice: '30000000000000'
+	 * })
+	 * .then(function(newContractInstance){
+	 *   console.log(newContractInstance.options.address) // instance with the new contract address
+	 * });
+	 *
+	 *
+	 * // Simply encoding
+	 * myContract.deploy({
+	 *   data: '0x12345...',
+	 *   arguments: [123, 'My String']
+	 * })
+	 * .encodeABI();
+	 * > '0x12345...0000012345678765432'
+	 *
+	 *
+	 * // Gas estimation
+	 * myContract.deploy({
+	 *   data: '0x12345...',
+	 *   arguments: [123, 'My String']
+	 * })
+	 * .estimateGas(function(err, gas){
+	 *   console.log(gas);
+	 * });
+	 * ```
+	 *
+	 * @returns - The transaction object
+	 */
 	public deploy(deployOptions?: {
+		/**
+		 * The byte code of the contract.
+		 */
 		data?: HexString;
+		/**
+		 * The arguments which get passed to the constructor on deployment.
+		 */
 		arguments?: ContractConstructor<Abi>['Inputs'];
 	}) {
 		const abi = this._jsonInterface.find(j => j.type === 'constructor');
@@ -408,6 +650,43 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
+	/**
+	 * Gets past events for this contract.
+	 *
+	 * ```ts
+	 * const events = await myContract.getPastEvents('MyEvent', {
+	 *   filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+	 *   fromBlock: 0,
+	 *   toBlock: 'latest'
+	 * });
+	 *
+	 * > [{
+	 *   returnValues: {
+	 *       myIndexedParam: 20,
+	 *       myOtherIndexedParam: '0x123456789...',
+	 *       myNonIndexParam: 'My String'
+	 *   },
+	 *   raw: {
+	 *       data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+	 *       topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
+	 *   },
+	 *   event: 'MyEvent',
+	 *   signature: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+	 *   logIndex: 0,
+	 *   transactionIndex: 0,
+	 *   transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+	 *   blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+	 *   blockNumber: 1234,
+	 *   address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+	 * },{
+	 *   ...
+	 * }]
+	 * ```
+	 *
+	 * @param eventName - The name of the event in the contract, or `allEvents` to get all events.
+	 * @param filter - The filter options used to get events.
+	 * @returns - An array with the past event `Objects`, matching the given event name and filter.
+	 */
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		eventName: keyof ContractEvents<Abi> | 'allEvents',
 		filter?: Omit<Filter, 'address'>,

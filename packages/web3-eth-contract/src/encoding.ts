@@ -31,7 +31,7 @@ import {
 } from 'web3-eth-abi';
 import { BlockNumberOrTag, Filter, HexString, Topic } from 'web3-utils';
 import { Web3ContractError } from './errors';
-import { ContractOptions } from './types';
+import { ContractOptions, EventLog } from './types';
 
 export const encodeEventABI = (
 	{ address }: ContractOptions,
@@ -111,7 +111,7 @@ export const encodeEventABI = (
 export const decodeEventABI = (
 	event: AbiEventFragment & { signature: string },
 	data: LogsInput,
-) => {
+): EventLog => {
 	let modifiedEvent = { ...event };
 	const result = outputLogFormatter(data);
 
