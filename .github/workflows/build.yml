@@ -24,7 +24,6 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-      - run: yarn build:web
       - run: ./scripts/geth.sh download
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
@@ -43,6 +42,21 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
       - run: yarn lint
+
+  build-web:
+    name: Build Web
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            node: [ 14, 16 ]
+    steps:
+        -   uses: actions/download-artifact@v3
+            with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: yarn build:web
 
   unit:
     name: Unit Tests
@@ -113,7 +127,6 @@ jobs:
         node: [14, 16]
         browser: ['electron', 'chrome', 'firefox']
     steps:
-      - uses: actions/setup-node@v3
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
