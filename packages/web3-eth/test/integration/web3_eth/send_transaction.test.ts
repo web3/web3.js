@@ -212,27 +212,24 @@ describe('Web3Eth.sendTransaction', () => {
 		});
 
 		it('should listen to the sending event', async () => {
-			const promiEvent = web3Eth.sendTransaction(transaction);
-			promiEvent.on('sending', data => {
+			await web3Eth.sendTransaction(transaction).on('sending', data => {
 				expect(data).toMatchObject(transaction);
 			});
-			await promiEvent;
+			expect.assertions(1);
 		});
 
 		it('should listen to the sent event', async () => {
-			const promiEvent = web3Eth.sendTransaction(transaction);
-			promiEvent.on('sent', data => {
+			await web3Eth.sendTransaction(transaction).on('sent', data => {
 				expect(data).toMatchObject(transaction);
 			});
-			await promiEvent;
+			expect.assertions(1);
 		});
 
 		it('should listen to the transactionHash event', async () => {
-			const promiEvent = web3Eth.sendTransaction(transaction);
-			promiEvent.on('transactionHash', data => {
+			await web3Eth.sendTransaction(transaction).on('transactionHash', data => {
 				expect(isHexStrict(data)).toBe(true);
 			});
-			await promiEvent;
+			expect.assertions(1);
 		});
 
 		it('should listen to the receipt event', async () => {
@@ -245,8 +242,7 @@ describe('Web3Eth.sendTransaction', () => {
 				to: transaction.to,
 				transactionHash: expect.any(String),
 			};
-			const promiEvent = web3Eth.sendTransaction(transaction);
-			promiEvent.on('receipt', data => {
+			await web3Eth.sendTransaction(transaction).on('receipt', data => {
 				expect(data).toEqual(expect.objectContaining(expectedTransactionReceipt));
 
 				// To avoid issue with the `objectContaining` and `cypress` had to add
@@ -259,7 +255,7 @@ describe('Web3Eth.sendTransaction', () => {
 				expect(data.status).toBe(BigInt(1));
 				expect(data.type).toBe(BigInt(0));
 			});
-			await promiEvent;
+			expect.assertions(8);
 		});
 
 		it('should listen to the confirmation event', async () => {
@@ -283,9 +279,8 @@ describe('Web3Eth.sendTransaction', () => {
 				},
 				latestBlockHash: expect.any(String),
 			};
-			const promiEvent = web3Eth.sendTransaction(transaction);
 
-			promiEvent.on('confirmation', data => {
+			await web3Eth.sendTransaction(transaction).on('confirmation', data => {
 				expect(data).toEqual(expect.objectContaining(expectedTransactionConfirmation));
 			});
 
@@ -293,8 +288,10 @@ describe('Web3Eth.sendTransaction', () => {
 			// this is manually triggering the next block to be created since both
 			// Geth and Ganache wait for transaction before mining a block.
 			// This should be revisted to implement a better solution
-			await promiEvent;
 			await web3Eth.sendTransaction(transaction);
+
+			// TODO: Debug why the assertions are not being called
+			// expect.assertions(1);
 		});
 	});
 });
