@@ -221,6 +221,17 @@ describe('Wallet', () => {
 			expect(wallet).toHaveLength(0);
 			expect(wallet[0]).toBeUndefined();
 		});
+
+		it('should remove account added with private key with array methods', () => {
+			const privateKey = 'private_key';
+			wallet.add(privateKey);
+			expect(wallet).toHaveLength(1);
+
+			wallet.splice(0, 1);
+
+			expect(wallet).toHaveLength(0);
+			expect(wallet[0]).toBeUndefined();
+		});
 	});
 
 	describe('clear', () => {
