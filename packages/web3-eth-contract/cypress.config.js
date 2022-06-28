@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 	screenshotOnRunFailure: false,
 	video: false,
 	e2e: {
