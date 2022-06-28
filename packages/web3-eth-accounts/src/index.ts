@@ -33,48 +33,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
  * // now you have access to the accounts class
  * web3.eth.accounts.create();
- *
- *
- * ## wallet.encrypt
- *
- * Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
- * 
- * ### Parameters
- * password - String: The password which will be used for encryption.
- * ### Returns
- * Promise <Array>: The encrypted keystore v3.
- * ### Example
-
-
- * ## wallet.decrypt
- * Decrypts keystore v3 objects.
- * ### Parameters
- * 
-    keystoreArray - Array: The encrypted keystore v3 objects to decrypt.
-    password - String: The password which will be used for encryption.
-
- * ### Returns
- * The wallet object.
- * ### Example
- *
- * web3.eth.accounts.wallet.create(1)
- *
- * ## wallet.save
- *
- * ### Parameters
- *
- * ### Returns
- *
- * ### Example
- *
- *
- * ## wallet.load
- *
- * ### Parameters
- *
- * ### Returns
- *
- * ### Example
  */
 /**
  *

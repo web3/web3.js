@@ -49,6 +49,7 @@ import {
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
 import { readFileSync } from 'fs';
+
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
@@ -92,7 +93,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			recover: typeof recover;
 			encrypt: typeof encrypt;
 			decrypt: typeof decrypt;
-			wallet: any;
+			wallet: Wallet;
 		};
 	};
 
@@ -106,7 +107,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				options?: Record<string, unknown>,
 			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
 		};
-
 		const wallet = new Wallet(accountProvider);
 		super({ provider, wallet, accountProvider });
 
