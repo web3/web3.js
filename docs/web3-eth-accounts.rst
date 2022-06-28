@@ -156,6 +156,8 @@ Parameters
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.getGasPrice() <eth-gasprice>`
+    - ``maxFeePerGas`` - ``Number|String|BN``: (optional, defaulted to ``(2 * block.baseFeePerGas) + maxPriorityFeePerGas``) The maximum fee per gas that the transaction is willing to pay in total. If ``gasPrice`` is also set, ``maxFeePerGas`` will be set equal to it, regardless of this value.
+    - ``maxPriorityFeePerGas`` - ``Number|String|BN`` (optional, defaulted to ``2.5 Gwei``) The maximum fee per gas to give miners to incentivize them to include the transaction (Priority fee). If ``gasPrice`` is also set, ``maxPriorityFeePerGas`` will be set equal to it, regardless of this value.
     - ``gas`` - ``String``: The gas provided by the transaction.
     - ``chain`` - ``String``: (optional) Defaults to ``mainnet``.
     - ``hardfork`` - ``String``: (optional) Defaults to ``berlin``.
