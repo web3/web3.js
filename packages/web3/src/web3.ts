@@ -48,8 +48,8 @@ import {
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
-import { Web3EthInterface } from './types';
 import { readFileSync } from 'fs';
+import { Web3EthInterface } from './types';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
