@@ -20,7 +20,11 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Address, BlockTags } from 'web3-utils';
 
 import Web3Eth, { Transaction } from '../../../src';
-import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	isWs,
+} from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.call', () => {
 	const expectedEncodedGreet =
@@ -60,7 +64,7 @@ describe('Web3Eth.call', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});

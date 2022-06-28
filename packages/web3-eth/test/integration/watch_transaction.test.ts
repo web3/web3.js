@@ -23,6 +23,8 @@ import {
 	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
+	isWs,
+	isHttp,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
@@ -30,7 +32,7 @@ const waitConfirmations = 5;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transaction', () => {
+describeIf(isWs)('watch subscription transaction', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let accounts: string[] = [];
@@ -90,7 +92,8 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 	});
 });
 
-describeIf(getSystemTestProvider().startsWith('http'))('watch polling transaction', () => {
+// TODO: add isIpc when finish #5144
+describeIf(isHttp)('watch polling transaction', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;

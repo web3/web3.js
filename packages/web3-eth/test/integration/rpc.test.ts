@@ -22,6 +22,8 @@ import { hexToNumber, hexToString, numberToHex } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { getStorageSlotNumForLongString } from 'web3-utils/src';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import { ReceiptInfo, Web3Eth, TransactionInfo } from '../../src';
 
 import {
@@ -29,6 +31,8 @@ import {
 	getSystemTestProvider,
 	createNewAccount,
 	itIf,
+	isIpc,
+	isWs,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
@@ -45,76 +49,71 @@ const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
 })! as AbiEventFragment;
 
+const validateTransaction = (tx: TransactionInfo) => {
+	expect(tx.nonce).toBeDefined();
+	expect(tx.hash).toBeDefined();
+	expect(String(tx.hash)?.length).toBe(66);
+	expect(Number(tx.type)).toBe(0);
+	expect(tx.blockHash).toBeDefined();
+	expect(String(tx.blockHash)?.length).toBe(66);
+	expect(Number(tx.blockNumber)).toBeGreaterThan(0);
+	expect(tx.transactionIndex).toBeDefined();
+	expect(tx.from?.length).toBe(42);
+	expect(tx.to?.length).toBe(42);
+	expect(Number(tx.value)).toBe(1);
+	expect(tx.input).toBe('0x');
+	expect(tx.r).toBeDefined();
+	expect(tx.s).toBeDefined();
+	expect(Number(tx.gas)).toBeGreaterThan(0);
+};
+const validateBlock = (b: Block) => {
+	expect(b.nonce).toBeDefined();
+	expect(Number(b.baseFeePerGas)).toBeGreaterThan(0);
+	expect(b.number).toBeDefined();
+	expect(b.hash).toBeDefined();
+	expect(b.parentHash?.length).toBe(66);
+	expect(b.sha3Uncles?.length).toBe(66);
+	expect(b.transactionsRoot).toHaveLength(66);
+	expect(b.receiptsRoot).toHaveLength(66);
+	expect(b.logsBloom).toBeDefined();
+	expect(b.miner).toHaveLength(42);
+	expect(b.difficulty).toBeDefined();
+	expect(b.stateRoot).toHaveLength(66);
+	expect(b.gasLimit).toBeDefined();
+	expect(b.gasUsed).toBeDefined();
+	expect(b.timestamp).toBeDefined();
+	expect(b.extraData).toBeDefined();
+	expect(b.mixHash).toBeDefined();
+	expect(b.totalDifficulty).toBeDefined();
+	expect(b.baseFeePerGas).toBeDefined();
+	expect(b.size).toBeDefined();
+	expect(Array.isArray(b.transactions)).toBe(true);
+	expect(Array.isArray(b.uncles)).toBe(true);
+};
+const validateReceipt = (r: ReceiptInfo) => {
+	expect(r.transactionHash).toBeDefined();
+	expect(r.transactionIndex).toBeDefined();
+	expect(r.blockHash).toBeDefined();
+	expect(r.blockNumber).toBeDefined();
+	expect(r.from).toBeDefined();
+	expect(r.to).toBeDefined();
+	expect(r.cumulativeGasUsed).toBeDefined();
+	expect(r.gasUsed).toBeDefined();
+	expect(r.effectiveGasPrice).toBeDefined();
+	expect(r.logs).toBeDefined();
+	expect(r.logsBloom).toBeDefined();
+	expect(r.status).toBeDefined();
+	expect(String(r.transactionHash)).toHaveLength(66);
+	expect(Number(r.gasUsed)).toBeGreaterThan(0);
+};
+
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
 	let accounts: string[] = [];
 	let clientUrl: string;
-	let blockNumber: bigint;
-	let blockHash: string;
-	let transactionHash: string;
-	let transactionIndex: bigint;
-
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-
-	const validateTransaction = (tx: TransactionInfo) => {
-		expect(tx.nonce).toBeDefined();
-		expect(tx.hash).toBeDefined();
-		expect(String(tx.hash)?.length).toBe(66);
-		expect(tx.type).toBe(BigInt(0));
-		expect(tx.blockHash).toBeDefined();
-		expect(String(tx.blockHash)?.length).toBe(66);
-		expect(Number(tx.blockNumber)).toBeGreaterThan(0);
-		expect(tx.transactionIndex).toBeDefined();
-		expect(tx.from?.length).toBe(42);
-		expect(tx.to?.length).toBe(42);
-		expect(tx.value).toBe(BigInt(1));
-		expect(tx.input).toBe('0x');
-		expect(tx.r).toBeDefined();
-		expect(tx.s).toBeDefined();
-		expect(Number(tx.gas)).toBeGreaterThan(0);
-	};
-	const validateBlock = (b: Block) => {
-		expect(b.nonce).toBeDefined();
-		expect(Number(b.baseFeePerGas)).toBeGreaterThan(0);
-		expect(b.number).toBeDefined();
-		expect(b.hash).toBeDefined();
-		expect(b.parentHash?.length).toBe(66);
-		expect(b.sha3Uncles?.length).toBe(66);
-		expect(b.transactionsRoot).toHaveLength(66);
-		expect(b.receiptsRoot).toHaveLength(66);
-		expect(b.logsBloom).toBeDefined();
-		expect(b.miner).toHaveLength(42);
-		expect(b.difficulty).toBeDefined();
-		expect(b.stateRoot).toHaveLength(66);
-		expect(b.gasLimit).toBeDefined();
-		expect(b.gasUsed).toBeDefined();
-		expect(b.timestamp).toBeDefined();
-		expect(b.extraData).toBeDefined();
-		expect(b.mixHash).toBeDefined();
-		expect(b.totalDifficulty).toBeDefined();
-		expect(b.baseFeePerGas).toBeDefined();
-		expect(b.size).toBeDefined();
-		expect(Array.isArray(b.transactions)).toBe(true);
-		expect(Array.isArray(b.uncles)).toBe(true);
-	};
-	const validateReceipt = (r: ReceiptInfo) => {
-		expect(r.transactionHash).toBeDefined();
-		expect(r.transactionIndex).toBeDefined();
-		expect(r.blockHash).toBeDefined();
-		expect(r.blockNumber).toBeDefined();
-		expect(r.from).toBeDefined();
-		expect(r.to).toBeDefined();
-		expect(r.cumulativeGasUsed).toBeDefined();
-		expect(r.gasUsed).toBeDefined();
-		expect(r.effectiveGasPrice).toBeDefined();
-		expect(r.logs).toBeDefined();
-		expect(r.logsBloom).toBeDefined();
-		expect(r.status).toBeDefined();
-		expect(String(r.transactionHash)).toHaveLength(66);
-		expect(Number(r.gasUsed)).toBeGreaterThan(0);
-	};
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
@@ -136,27 +135,17 @@ describe('rpc', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-
+		if (isIpc) {
+			await (contract.provider as IpcProvider).waitForConnection();
+			await (web3Eth.provider as IpcProvider).waitForConnection();
+		}
 		sendOptions = { from: accounts[0], gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
-	beforeEach(async () => {
-		const [receipt] = await sendFewTxes({
-			web3Eth,
-			from: accounts[0],
-			to: accounts[1],
-			value: '0x1',
-			times: 1,
-		});
 
-		blockNumber = receipt.blockNumber as bigint;
-		blockHash = String(receipt.blockHash);
-		transactionHash = String(receipt.transactionHash);
-		transactionIndex = receipt.transactionIndex as bigint;
-	});
 	afterAll(() => {
-		if (clientUrl.startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});
@@ -257,7 +246,7 @@ describe('rpc', () => {
 				undefined,
 			);
 
-			expect(hexToNumber(resNumber)).toBe(numberData);
+			expect(Number(resNumber)).toBe(numberData);
 
 			const rString = hexToString(resString.slice(0, resString.length / 2 + 1))
 				.split('')
@@ -287,13 +276,15 @@ describe('rpc', () => {
 
 			const slotCount = Math.ceil((Number(hexToNumber(resStringLong)) - 1) / 64);
 			const slotDataNum = getStorageSlotNumForLongString(1);
-
 			const prs = [];
 			for (let i = 0; i < slotCount; i += 1) {
 				prs.push(
+					// eslint-disable-next-line no-await-in-loop
 					web3Eth.getStorageAt(
 						contract.options.address as string,
-						`0x${(BigInt(hexToNumber(String(slotDataNum))) + BigInt(i)).toString(16)}`,
+						`0x${(
+							BigInt(String(hexToNumber(slotDataNum as string))) + BigInt(i)
+						).toString(16)}`,
 					),
 				);
 			}
@@ -313,101 +304,6 @@ describe('rpc', () => {
 			});
 			expect(code).toBeDefined();
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
-		});
-
-		// eslint-disable-next-line jest/expect-expect
-		it.each(
-			toAllVariants<{
-				block: number | bigint | string;
-				hydrated: boolean;
-				format: string;
-			}>({
-				block: ['earliest', 'latest', blockHash, blockNumber],
-				hydrated: [true, false],
-				format: Object.values(FMT_NUMBER),
-			}),
-		)('getBlock', async ({ hydrated, block, format }) => {
-			const b = {
-				...(await web3Eth.getBlock(block, hydrated, {
-					number: format as FMT_NUMBER,
-					bytes: FMT_BYTES.HEX,
-				})),
-			};
-			if (block === 'pending') {
-				b.nonce = '0x0';
-				b.miner = '0x0000000000000000000000000000000000000000';
-				b.totalDifficulty = '0x0';
-			}
-			validateBlock(b as Block);
-		});
-
-		it.each(
-			toAllVariants<{
-				block: number | bigint | string;
-				format: string;
-			}>({
-				block: ['earliest', 'latest', 'pending', blockHash, blockNumber],
-				format: Object.values(FMT_NUMBER),
-			}),
-		)('getTransactionCount', async ({ block, format }) => {
-			const countBefore = await web3Eth.getTransactionCount(accounts[0], block, {
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
-			});
-
-			const count = 2;
-			await sendFewTxes({
-				web3Eth,
-				from: accounts[0],
-				to: accounts[1],
-				value: '0x1',
-				times: count,
-			});
-
-			const countAfter = await web3Eth.getTransactionCount(accounts[0], block, {
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
-			});
-			expect(Number(countAfter) - Number(countBefore)).toBe(block === 'earliest' ? 0 : count);
-		});
-
-		it.each(
-			toAllVariants<{
-				block: number | bigint | string;
-			}>({
-				block: ['earliest', 'latest', 'pending', blockHash, blockNumber],
-			}),
-		)('getBlockTransactionCount', async ({ block }) => {
-			const res = await web3Eth.getBlockTransactionCount(block);
-			let shouldBe: bigint;
-			if (getSystemTestBackend() === 'ganache') {
-				shouldBe = block === 'earliest' ? BigInt(0) : BigInt(1);
-			} else {
-				shouldBe = ['earliest', 'pending'].includes(String(block)) ? BigInt(0) : BigInt(1);
-			}
-			expect(res).toBe(shouldBe);
-		});
-
-		it.each(
-			toAllVariants<{
-				block: number | bigint | string;
-			}>({
-				block: ['earliest', 'latest', 'pending', blockHash, blockNumber],
-			}),
-		)('getBlockUncleCount', async ({ block }) => {
-			const res = await web3Eth.getBlockUncleCount(block);
-			expect(res).toBe(BigInt(0));
-		});
-
-		it.each(
-			toAllVariants<{
-				block: number | bigint | string;
-			}>({
-				block: ['earliest', 'latest', 'pending', blockHash, blockNumber],
-			}),
-		)('getUncle', async ({ block }) => {
-			const res = await web3Eth.getUncle(block, 0);
-			expect(res).toBeNull();
 		});
 
 		it('getTransaction', async () => {
@@ -442,13 +338,6 @@ describe('rpc', () => {
 			// TODO: investigate why res always is empty array
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(res).toBeDefined();
-		});
-
-		it.each([blockHash, blockNumber])('getTransactionFromBlock', async block => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const tx = (await web3Eth.getTransactionFromBlock(block, transactionIndex))!;
-			validateTransaction(tx as TransactionInfo);
-			expect(tx?.hash).toBe(transactionHash);
 		});
 
 		it('getTransactionReceipt', async () => {
@@ -534,6 +423,212 @@ describe('rpc', () => {
 			for (const l of listOfStrings) {
 				expect(results).toContain(l);
 			}
+		});
+	});
+});
+
+describe('rpc with block', () => {
+	let web3Eth: Web3Eth;
+	let accounts: string[] = [];
+	let clientUrl: string;
+
+	let contract: Contract<typeof BasicAbi>;
+	let deployOptions: Record<string, unknown>;
+	let sendOptions: Record<string, unknown>;
+
+	let blockData: {
+		earliest: 'earliest';
+		latest: 'latest';
+		pending: 'pending';
+		blockNumber: number | bigint;
+		blockHash: string;
+		transactionHash: string;
+		transactionIndex: number | bigint;
+	};
+
+	beforeAll(async () => {
+		clientUrl = getSystemTestProvider();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
+		web3Eth = new Web3Eth({
+			provider: clientUrl,
+			config: {
+				transactionPollingTimeout: 2000,
+			},
+		});
+
+		contract = new Contract(BasicAbi, undefined, {
+			provider: clientUrl,
+		});
+
+		deployOptions = {
+			data: BasicBytecode,
+			arguments: [10, 'string init value'],
+		};
+		if (isIpc) {
+			await (contract.provider as IpcProvider).waitForConnection();
+			await (web3Eth.provider as IpcProvider).waitForConnection();
+		}
+		sendOptions = { from: accounts[0], gas: '1000000' };
+
+		contract = await contract.deploy(deployOptions).send(sendOptions);
+		const [receipt]: ReceiptInfo[] = await sendFewTxes({
+			web3Eth,
+			from: accounts[0],
+			to: accounts[1],
+			value: '0x1',
+			times: 1,
+		});
+
+		blockData = {
+			pending: 'pending',
+			latest: 'latest',
+			earliest: 'earliest',
+			blockNumber: Number(receipt.blockNumber),
+			blockHash: String(receipt.blockHash),
+			transactionHash: String(receipt.transactionHash),
+			transactionIndex: Number(receipt.transactionIndex),
+		};
+	});
+
+	afterAll(() => {
+		if (isWs) {
+			(web3Eth.provider as WebSocketProvider).disconnect();
+		}
+	});
+
+	describe('methods', () => {
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+				hydrated: boolean;
+				format: string;
+			}>({
+				block: ['earliest', 'latest', 'blockHash', 'blockNumber'],
+				hydrated: [true, false],
+				format: Object.values(FMT_NUMBER),
+			}),
+		)('getBlock', async ({ hydrated, block, format }) => {
+			const b = {
+				...(await web3Eth.getBlock(blockData[block], hydrated, {
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
+				})),
+			};
+			if (blockData[block] === 'pending') {
+				b.nonce = '0x0';
+				b.miner = '0x0000000000000000000000000000000000000000';
+				b.totalDifficulty = '0x0';
+			}
+			validateBlock(b as Block);
+		});
+
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+				format: string;
+			}>({
+				block: ['earliest', 'latest', 'pending', 'blockNumber'],
+				format: Object.values(FMT_NUMBER),
+			}),
+		)('getTransactionCount', async ({ block, format }) => {
+			const acc = await createNewAccount({ unlock: true, refill: true });
+			const [receipt] = await sendFewTxes({
+				web3Eth,
+				from: acc.address,
+				to: accounts[1],
+				value: '0x1',
+				times: 1,
+			});
+			const data = {
+				pending: 'pending',
+				latest: 'latest',
+				earliest: 'earliest',
+				blockNumber: Number(receipt.blockNumber),
+				blockHash: String(receipt.blockHash),
+				transactionHash: String(receipt.transactionHash),
+				transactionIndex: Number(receipt.transactionIndex),
+			};
+			const countBefore = await web3Eth.getTransactionCount(acc.address, data[block], {
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			const count = 2;
+			const res = await sendFewTxes({
+				web3Eth,
+				from: acc.address,
+				to: accounts[1],
+				value: '0x1',
+				times: count,
+			});
+			const receiptAfter = res[res.length - 1];
+			const dataAfter = {
+				pending: 'pending',
+				latest: 'latest',
+				earliest: 'earliest',
+				blockNumber: Number(receiptAfter.blockNumber),
+				blockHash: String(receiptAfter.blockHash),
+				transactionHash: String(receiptAfter.transactionHash),
+				transactionIndex: Number(receiptAfter.transactionIndex),
+			};
+			const countAfter = await web3Eth.getTransactionCount(acc.address, dataAfter[block], {
+				number: format as FMT_NUMBER,
+				bytes: FMT_BYTES.HEX,
+			});
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(Number(countAfter) - Number(countBefore)).toBe(
+				blockData[block] === 'earliest' ? 0 : count,
+			);
+		});
+
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+			}>({
+				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
+			}),
+		)('getBlockTransactionCount', async ({ block }) => {
+			const res = await web3Eth.getBlockTransactionCount(blockData[block]);
+			let shouldBe: number;
+			if (getSystemTestBackend() === 'ganache') {
+				shouldBe = blockData[block] === 'earliest' ? 0 : 1;
+			} else {
+				shouldBe = ['earliest', 'pending'].includes(String(blockData[block])) ? 0 : 1;
+			}
+			expect(Number(res)).toBe(shouldBe);
+		});
+
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+			}>({
+				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
+			}),
+		)('getBlockUncleCount', async ({ block }) => {
+			const res = await web3Eth.getBlockUncleCount(blockData[block]);
+			expect(Number(res)).toBe(0);
+		});
+
+		it.each(
+			toAllVariants<{
+				block: 'earliest' | 'latest' | 'pending' | 'blockNumber';
+			}>({
+				block: ['earliest', 'latest', 'pending', 'blockNumber'],
+			}),
+		)('getUncle', async ({ block }) => {
+			const res = await web3Eth.getUncle(blockData[block], 0);
+			// eslint-disable-next-line jest/no-standalone-expect
+			expect(res).toBeNull();
+		});
+		it('getTransactionFromBlock', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const tx = (await web3Eth.getTransactionFromBlock(
+				blockData.blockNumber,
+				blockData.transactionIndex,
+			))!;
+			validateTransaction(tx as TransactionInfo);
+			expect(tx?.hash).toBe(blockData.transactionHash);
 		});
 	});
 });

@@ -27,7 +27,11 @@ import {
 } from 'web3-common';
 import { isHexStrict } from 'web3-validator';
 import Web3Eth, { InternalTransaction, Transaction } from '../../../src';
-import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	isWs,
+} from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 import { transactionSchema } from '../../../src/schemas';
 
@@ -43,7 +47,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});
@@ -181,9 +185,11 @@ describe('Web3Eth.sendSignedTransaction', () => {
 		);
 		const signedTransaction = await web3Eth.signTransaction({ ...transaction, ...gasPricing });
 		const response = await web3Eth.sendSignedTransaction(signedTransaction.raw as Bytes);
+		// eslint-disable-next-line jest/no-standalone-expect
 		expect(response.status).toBe(BigInt(1));
 
 		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		// eslint-disable-next-line jest/no-standalone-expect
 		expect(minedTransactionData).toMatchObject({
 			nonce: BigInt(hexToNumber(accountNonce)),
 			from: accounts[0],

@@ -102,6 +102,7 @@ export class Web3RequestManager<
 				newProvider = new this.providers.IpcProvider<API>(provider, net);
 			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
+				// newProvider = new this.providers.IpcProvider<API>(provider);
 			}
 		} else if (isNullish(provider)) {
 			// In case want to unset the provider

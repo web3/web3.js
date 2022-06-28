@@ -52,6 +52,7 @@
 		"test:e2e:ganache:ws": "./scripts/test-runner.sh ganache ws",
 		"test:e2e:geth:http": "./scripts/test-runner.sh geth http",
 		"test:e2e:geth:ws": "./scripts/test-runner.sh geth ws",
+		"test:e2e:geth:ipc": "./scripts/test-runner.sh geth ipc",
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
