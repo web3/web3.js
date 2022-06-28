@@ -115,10 +115,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: actions/download-artifact@v3
         with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+          node-version: ${{ matrix.node }}
+          cache: yarn
+#      - uses: actions/download-artifact@v3
+#        with:
+#          name: web3-${{ matrix.node }}.js.tar.gz
+#          path: /tmp
+#      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
         shell: bash
