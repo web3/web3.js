@@ -563,8 +563,16 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-### Changed
+## [1.7.5]
 
+### Changed
 -  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
 
-## [1.7.5]
+### Added
+- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+
+### Fixed
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-  Improve README.md & Fix typos (#4848)
+
+
