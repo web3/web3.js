@@ -29,9 +29,7 @@ import {
 	createNewAccount,
 	getSystemTestProvider,
 	isHttp,
-	isIpc,
 	isWs,
-	itIf,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
@@ -116,8 +114,7 @@ describe('eth', () => {
 			const { givenProvider } = web3Eth;
 			expect(givenProvider).toBeUndefined();
 		});
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('BatchRequest', async () => {
+		it('BatchRequest', async () => {
 			const batch = new web3Eth.BatchRequest();
 			const request1 = {
 				id: 10,
