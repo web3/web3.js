@@ -309,6 +309,72 @@ export class Wallet<
 	 * @param password `String` The password to encrypt with
 	 * @param options decrypt options for the wallets
 	 * @returns The decrypted wallet object
+	 *
+	 * ```ts
+	 * web3.eth.accounts.wallet.decrypt([
+	 * { version: 3,
+	 * id: '83191a81-aaca-451f-b63d-0c5f3b849289',
+	 * address: '06f702337909c06c82b09b7a22f0a2f0855d1f68',
+	 * crypto:
+	 * { ciphertext: '7d34deae112841fba86e3e6cf08f5398dda323a8e4d29332621534e2c4069e8d',
+	 *   cipherparams: { iv: '497f4d26997a84d570778eae874b2333' },
+	 *   cipher: 'aes-128-ctr',
+	 *   kdf: 'scrypt',
+	 *   kdfparams:
+	 *    { dklen: 32,
+	 *      salt: '208dd732a27aa4803bb760228dff18515d5313fd085bbce60594a3919ae2d88d',
+	 *      n: 262144,
+	 *      r: 8,
+	 *      p: 1 },
+	 *   mac: '0062a853de302513c57bfe3108ab493733034bf3cb313326f42cf26ea2619cf9' } },
+	 * { version: 3,
+	 * id: '7d6b91fa-3611-407b-b16b-396efb28f97e',
+	 * address: 'b5d89661b59a9af0b34f58d19138baa2de48baaf',
+	 * crypto:
+	 * { ciphertext: 'cb9712d1982ff89f571fa5dbef447f14b7e5f142232bd2a913aac833730eeb43',
+	 *   cipherparams: { iv: '8cccb91cb84e435437f7282ec2ffd2db' },
+	 *   cipher: 'aes-128-ctr',
+	 *   kdf: 'scrypt',
+	 *   kdfparams:
+	 *    { dklen: 32,
+	 *      salt: '08ba6736363c5586434cd5b895e6fe41ea7db4785bd9b901dedce77a1514e8b8',
+	 *      n: 262144,
+	 *      r: 8,
+	 *      p: 1 },
+	 *   mac: 'd2eb068b37e2df55f56fa97a2bf4f55e072bef0dd703bfd917717d9dc54510f0' } }
+	 * ], 'test').then(console.log)
+	 * > Wallet {
+	 *   _accountProvider: {
+	 *     create: [Function: create],
+	 *     privateKeyToAccount: [Function: privateKeyToAccount],
+	 *     decrypt: [Function: decrypt]
+	 *   },
+	 *   _defaultKeyName: 'web3js_wallet',
+	 *   _accounts: {
+	 *     '0x85d70633b90e03e0276b98880286d0d055685ed7': {
+	 *       address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
+	 *       privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
+	 *       signTransaction: [Function: signTransaction],
+	 *       sign: [Function: sign],
+	 *       encrypt: [Function: encrypt]
+	 *     },
+	 *     '0x06f702337909c06c82b09b7a22f0a2f0855d1f68': {
+	 *       address: '0x06F702337909C06C82B09B7A22F0a2f0855d1F68',
+	 *       privateKey: '87a51da18900da7398b3bab03996833138f269f8f66dd1237b98df6b9ce14573',
+	 *       signTransaction: [Function: signTransaction],
+	 *       sign: [Function: sign],
+	 *       encrypt: [Function: encrypt]
+	 *     },
+	 *     '0xb5d89661b59a9af0b34f58d19138baa2de48baaf': {
+	 *       address: '0xB5d89661B59a9aF0b34f58D19138bAa2de48BAaf',
+	 *       privateKey: '7ee61c5282979aae9dd795bb6a54e8bdc2bfe009acb64eb9a67322eec3b3da6e',
+	 *       signTransaction: [Function: signTransaction],
+	 *       sign: [Function: sign],
+	 *       encrypt: [Function: encrypt]
+	 *     }
+	 *   }
+	 * }
+	 * ```
 	 */
 	public async decrypt(
 		encryptedWallets: string[],
@@ -324,7 +390,6 @@ export class Wallet<
 		for (const res of results) {
 			this.add(res);
 		}
-
 		return this;
 	}
 
@@ -334,6 +399,10 @@ export class Wallet<
 	 * @param password `String` The password to encrypt the wallet
 	 * @param keyName `String` (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
 	 * @returns Will return boolean value true if saved properly
+	 * ```ts
+	 * web3.eth.accounts.wallet.save('test#!$');
+	 * >true
+	 * ```
 	 */
 	public async save(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();
