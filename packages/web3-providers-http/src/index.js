@@ -45,7 +45,7 @@ var HttpProvider = function HttpProvider(host, options) {
     this.connected = false;
 
     // keepAlive is true unless explicitly set to false
-    var keepAlive = options.keepAlive !== false;
+    const keepAlive = options.keepAlive !== false;
     this.host = host || 'http://localhost:8545';
     if (!this.agent) {
         if (this.host.substring(0,5) === "https") {
