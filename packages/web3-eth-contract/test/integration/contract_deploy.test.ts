@@ -75,7 +75,7 @@ describe('contract', () => {
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
-			contract
+			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
@@ -98,9 +98,11 @@ describe('contract', () => {
 		it('should emit the "transactionHash" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('transactionHash', handler);
 
-			promiEvent.on('transactionHash', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -110,9 +112,11 @@ describe('contract', () => {
 		it('should emit the "sending" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('sending', handler);
 
-			promiEvent.on('sending', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -122,9 +126,8 @@ describe('contract', () => {
 		it('should emit the "sent" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions).on('sent', handler);
 
-			promiEvent.on('sent', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -134,9 +137,11 @@ describe('contract', () => {
 		it('should emit the "receipt" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('receipt', handler);
 
-			promiEvent.on('receipt', handler);
 			// Deploy the contract
 			await promiEvent;
 

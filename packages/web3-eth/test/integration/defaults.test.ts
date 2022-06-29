@@ -315,15 +315,18 @@ describe('defaults', () => {
 			});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
-					// eslint-disable-next-line jest/no-standalone-expect
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('confirmation', ({ confirmationNumber }) => {
 					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe > waitConfirmations) {
@@ -331,6 +334,7 @@ describe('defaults', () => {
 					}
 				});
 			});
+			await sentTx;
 			await receiptPromise;
 			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;

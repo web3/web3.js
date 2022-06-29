@@ -42,7 +42,9 @@ export const sendFewTxes = async ({
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
 			(await new Promise((resolve: Resolve) => {
-				tx.on('receipt', (params: ReceiptInfo) => {
+				// tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void tx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve(params);
 				});
