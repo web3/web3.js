@@ -15,7 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
+import {
+	Web3EventCallback,
+	Web3EventEmitter,
+	Web3EventKey,
+	Web3EventMap,
+} from './web3_event_emitter';
 
 export type PromiseExecutor<T> = (
 	resolve: (data: T) => void,
@@ -51,5 +56,23 @@ export class Web3PromiEvent<ResolveType, EventMap extends Web3EventMap>
 
 	public async finally(onfinally?: (() => void) | undefined): Promise<ResolveType> {
 		return this._promise.finally(onfinally);
+	}
+
+	public on<K extends Web3EventKey<EventMap>>(
+		eventName: K,
+		fn: Web3EventCallback<EventMap[K]>,
+	): this {
+		super.on(eventName, fn);
+
+		return this;
+	}
+
+	public once<K extends Web3EventKey<EventMap>>(
+		eventName: K,
+		fn: Web3EventCallback<EventMap[K]>,
+	): this {
+		super.once(eventName, fn);
+
+		return this;
 	}
 }

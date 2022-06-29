@@ -15,12 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	Web3BaseWallet,
-	Web3BaseWalletAccount,
-	Web3AccountProvider,
-	Web3EncryptedWallet,
-} from 'web3-common';
+import { Web3BaseWallet, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-common';
 import { isNullish } from 'web3-validator';
 
 type BrowserError = { code: number; name: string };
@@ -50,13 +45,8 @@ type BrowserError = { code: number; name: string };
 export class Wallet<
 	T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
 > extends Web3BaseWallet<T> {
-	private readonly _accounts: { [key: string]: T };
+	private readonly _addressMap = new Map<string, number>();
 	private readonly _defaultKeyName = 'web3js_wallet';
-
-	public constructor(accountProvider: Web3AccountProvider<T>) {
-		super(accountProvider);
-		this._accounts = {};
-	}
 
 	/**
 	 * Get the storage object of the browser
@@ -90,13 +80,6 @@ export class Wallet<
 				: undefined;
 		}
 	}
-	/**
-	 * @returns the number of accounts stored in the wallets
-	 */
-	public get length() {
-		return Object.keys(this._accounts).length;
-	}
-
 	/**
 	 * Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
 	 * @param numberOfAccounts Number of accounts to create. Leave empty to create an empty wallet.
@@ -140,6 +123,7 @@ export class Wallet<
 	 *
 	 * ```
 	 */
+
 	public create(numberOfAccounts: number) {
 		for (let i = 0; i < numberOfAccounts; i += 1) {
 			this.add(this._accountProvider.create());
@@ -181,7 +165,10 @@ export class Wallet<
 			return this.add(this._accountProvider.privateKeyToAccount(account));
 		}
 
-		this._accounts[account.address.toLowerCase()] = account;
+		const index = this.length;
+		this._addressMap.set(account.address.toLowerCase(), index);
+
+		this[index] = account;
 
 		return this;
 	}
@@ -191,12 +178,19 @@ export class Wallet<
 	 * @param addressOrIndex A string of the address or number index within the wallet.
 	 * @returns The account object {T}
 	 */
-	public get(addressOrIndex: string | number): T {
+
+	public get(addressOrIndex: string | number): T | undefined {
 		if (typeof addressOrIndex === 'string') {
-			return this._accounts[addressOrIndex];
+			const index = this._addressMap.get(addressOrIndex);
+
+			if (!isNullish(index)) {
+				return this[index];
+			}
+
+			return undefined;
 		}
 
-		return Object.values(this._accounts)[addressOrIndex];
+		return this[addressOrIndex];
 	}
 
 	/**
@@ -210,13 +204,19 @@ export class Wallet<
 	 * ```
 	 */
 	public remove(addressOrIndex: string | number): boolean {
-		const result =
-			typeof addressOrIndex === 'string'
-				? { address: addressOrIndex }
-				: Object.values(this._accounts)[addressOrIndex];
+		if (typeof addressOrIndex === 'string') {
+			const index = this._addressMap.get(addressOrIndex.toLowerCase());
+			if (isNullish(index)) {
+				return false;
+			}
+			this._addressMap.delete(addressOrIndex.toLowerCase());
+			this.splice(index, 1);
 
-		if (result && this._accounts[result.address]) {
-			delete this._accounts[result.address];
+			return true;
+		}
+
+		if (this[addressOrIndex]) {
+			this.splice(addressOrIndex, 1);
 			return true;
 		}
 
@@ -260,9 +260,10 @@ export class Wallet<
 	 * ```
 	 */
 	public clear() {
-		for (const key of Object.keys(this._accounts)) {
-			delete this._accounts[key];
-		}
+		this._addressMap.clear();
+
+		// Setting length clears the Array in JS.
+		this.length = 0;
 
 		return this;
 	}
@@ -298,9 +299,7 @@ export class Wallet<
 	 * ]
 	 */
 	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
-		return Promise.all(
-			Object.values(this._accounts).map(async account => account.encrypt(password, options)),
-		);
+		return Promise.all(this.map(async account => account.encrypt(password, options)));
 	}
 
 	/**

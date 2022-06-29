@@ -28,6 +28,7 @@ import {
 	FormatType,
 	SignedTransactionInfo,
 	ETH_DATA_FORMAT,
+	Web3BaseWalletAccount,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -527,14 +528,13 @@ export function sendTransaction<
 					}
 
 					let transactionHash: HexString;
+					let wallet: Web3BaseWalletAccount | undefined;
 
-					if (
-						web3Context.wallet &&
-						transactionFormatted.from &&
-						web3Context.wallet.get(transactionFormatted.from)
-					) {
-						const wallet = web3Context.wallet.get(transactionFormatted.from);
+					if (web3Context.wallet && transactionFormatted.from) {
+						wallet = web3Context.wallet.get(transactionFormatted.from);
+					}
 
+					if (wallet) {
 						const signedTransaction = wallet.signTransaction(
 							transactionFormatted as Record<string, unknown>,
 						);
@@ -759,7 +759,7 @@ export async function sign<ReturnFormat extends DataFormat>(
 	const messageFormatted = format({ eth: 'bytes' }, message, DEFAULT_RETURN_FORMAT);
 
 	if (web3Context.wallet?.get(addressOrIndex)) {
-		const wallet = web3Context.wallet.get(addressOrIndex);
+		const wallet = web3Context.wallet.get(addressOrIndex) as Web3BaseWalletAccount;
 
 		return wallet.sign(messageFormatted);
 	}

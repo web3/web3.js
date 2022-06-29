@@ -41,15 +41,16 @@ describe('Web3PromiEvent', () => {
 			});
 
 			p.on('data', data => {
+				// eslint-disable-next-line jest/no-conditional-expect
 				expect(data).toBe('resolved value');
 				done(undefined);
-			});
+			})
+				.then(data => {
+					p.emit('data', data);
+				})
+				.catch(e => done(e));
 
-			p.then(data => {
-				p.emit('data', data);
-			}).catch(e => {
-				throw e;
-			});
+			expect.assertions(1);
 		});
 	});
 
@@ -69,10 +70,47 @@ describe('Web3PromiEvent', () => {
 
 			const p = func();
 
-			p.on('data', data => {
+			// eslint-disable-next-line no-void
+			void p.on('data', data => {
 				expect(data).toBe('emitted data');
 				done(undefined);
 			});
 		});
+	});
+
+	it('should return the promi-event object from "on" handler', async () => {
+		const p = new Web3PromiEvent<string, { event1: string; event2: number }>(resolve => {
+			resolve('resolved value');
+		})
+			.on('event1', data => {
+				expect(data).toBe('string value');
+			})
+			.on('event2', data => {
+				expect(data).toBe(3);
+			});
+
+		p.emit('event1', 'string value');
+		p.emit('event2', 3);
+
+		await expect(p).resolves.toBe('resolved value');
+		expect.assertions(3);
+	});
+
+	it('should return the promi-event object from "once" handler', async () => {
+		const p = new Web3PromiEvent<string, { event1: string; event2: number }>(resolve => {
+			resolve('resolved value');
+		})
+			.once('event1', data => {
+				expect(data).toBe('string value');
+			})
+			.once('event2', data => {
+				expect(data).toBe(3);
+			});
+
+		p.emit('event1', 'string value');
+		p.emit('event2', 3);
+
+		await expect(p).resolves.toBe('resolved value');
+		expect.assertions(3);
 	});
 });
