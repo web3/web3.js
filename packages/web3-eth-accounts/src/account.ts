@@ -93,7 +93,7 @@ export const hashMessage = (message: string): string => {
  * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
  * @param data - The data to sign
  * @param privateKey - The 32 byte private key to sign with
- * @returns The signature Object containing the message, messageHash, r, s, v
+ * @returns The signature Object containing the message, messageHash, signature r, s, v
  * ```ts
  * web3.eth.accounts.sign('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
  * > {
@@ -250,7 +250,7 @@ export const signTransaction = (
 
 /**
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
- * @param rawTransaction - The RLP encoded transaction
+ * @param rawTransaction - The hex string having RLP encoded transaction
  * @returns The Ethereum address used to sign this transaction
  * ```ts
  * recoverTransaction('0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68');
@@ -269,7 +269,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  * Recovers the Ethereum address which was used to sign the given data
  * @param data - Either a signed message, hash, or the {@link signatureObject}
  * @param signature - The raw RLP encoded signature
- * @param hashed - If the message is hashed or not
+ * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\x19Ethereum Signed Message:\n" + message.length + message, and assumed to be already prefixed.
  * @returns The Ethereum address used to sign this data
  * ```ts
  * sign('Some data', '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
@@ -288,7 +288,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 export const recover = (
 	data: string | signatureObject,
 	signature?: string,
-	hashed?: boolean,
+	prefixed?: boolean,
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
@@ -298,7 +298,7 @@ export const recover = (
 	if (isNullish(signature)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
-	const hashedMessage = hashed ? data : hashMessage(data);
+	const hashedMessage = prefixed ? data : hashMessage(data);
 
 	const v = signature.substring(V_INDEX); // 0x + r + s + v
 
@@ -612,6 +612,9 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 /**
  *
  * Generates and returns a Web3Account object that includes the private and public key
+ * For creation of private key, it uses an audited package ethereum-cryptography/secp256k1 
+ * that is cryptographically secure random number with certain characteristics.
+ * Read more: https://www.npmjs.com/package/ethereum-cryptography#secp256k1-curve 
  * @returns A Web3Account object
  * ```ts
  * web3.eth.accounts.create();
