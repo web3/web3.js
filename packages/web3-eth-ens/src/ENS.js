@@ -28,6 +28,7 @@ var config = require('./config');
 var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 var contenthash = require('./lib/contentHash');
+var ccipRead = require('./lib/CCIPRead');
 
 
 /**
@@ -536,5 +537,13 @@ ENS.prototype.checkNetwork = async function () {
 
     return this._detectedAddress;
 };
+
+ENS.isOffChainLookup = ccipRead.isOffChainLookup
+ENS.ccipReadCall = ccipRead.ccipReadCall
+ENS.callGateways = ccipRead.callGateways
+ENS.test = function () {
+    console.log('ENS test');
+    return true;
+}
 
 module.exports = ENS;

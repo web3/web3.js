@@ -401,4 +401,6 @@ export class Registry {
         txConfig?: TransactionConfig,
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
+
+    test(): boolean
 }
