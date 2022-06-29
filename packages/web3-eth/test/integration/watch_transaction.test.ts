@@ -23,7 +23,6 @@ import {
 	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
-	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 5;
@@ -68,14 +67,18 @@ describeIf(getSystemTestProvider().startsWith('ws'))('watch subscription transac
 				});
 
 			const receiptPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('confirmation', ({ confirmationNumber }) => {
 					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
@@ -117,7 +120,9 @@ describeIf(getSystemTestProvider().startsWith('http'))('watch polling transactio
 				});
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
-				sentTx.on('confirmation', ({ confirmationNumber }) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('confirmation', ({ confirmationNumber }) => {
 					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
@@ -126,12 +131,15 @@ describeIf(getSystemTestProvider().startsWith('http'))('watch polling transactio
 				});
 			});
 			await new Promise((resolve: Resolve) => {
-				sentTx.on('receipt', (params: ReceiptInfo) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: ReceiptInfo) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
 
+			await sentTx;
 			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});

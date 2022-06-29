@@ -60,9 +60,15 @@ export const getTransactionFromAttr = (
 		}
 		if (isNumber(transaction.from)) {
 			if (web3Context.wallet) {
-				return web3Context.wallet.get(
+				const account = web3Context.wallet.get(
 					format({ eth: 'uint' }, transaction.from, NUMBER_DATA_FORMAT),
-				).address;
+				);
+
+				if (!isNullish(account)) {
+					return account.address;
+				}
+
+				throw new LocalWalletNotAvailableError();
 			}
 			throw new LocalWalletNotAvailableError();
 		} else {
