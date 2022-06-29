@@ -19,7 +19,7 @@
         "web3-core-promievent": "1.7.3",
         "web3-core-subscriptions": "1.7.3",
         "web3-utils": "1.7.3",
-        "web3-eth-ens": "1.7.3"
+        "web3-providers-http": "1.7.3"
     },
     "devDependencies": {
         "dtslint": "^3.4.1",

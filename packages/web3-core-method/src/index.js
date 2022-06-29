@@ -28,9 +28,9 @@ var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var ENS = require('web3-eth-ens');
-
 var EthersTransactionUtils = require('@ethersproject/transactions');
+
+var { isOffChainLookup, ccipReadCall } = require('./CCIPRead');
 
 var Method = function Method(options) {
 
@@ -642,14 +642,14 @@ Method.prototype.buildCall = function () {
         var sendTxCallback = function (err, result) {
 
             //hook into CCIP-read
-            if (ENS.isOffChainLookup(err, result) && isCall) {
+            if (isOffChainLookup(err, result) && isCall) {
                 const options = {
                     ccipReadGatewayCallback: method.ccipReadGatewayCallback,
                     ccipReadGatewayUrls: method.ccipReadGatewayUrls,
                     ccipReadGatewayAllowList: method.ccipReadGatewayAllowList,
                     ccipReadMaxRedirectCount: method.ccipReadMaxRedirectCount,
                 };
-                const ccipReadResult = ENS.ccipReadCall(err, result, payload, send, options);
+                const ccipReadResult = ccipReadCall(err, result, payload, send, options);
                 defer.resolve(ccipReadResult);
                 return;
             }
