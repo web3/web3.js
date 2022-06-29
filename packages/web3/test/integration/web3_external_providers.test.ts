@@ -33,11 +33,11 @@ describe('Create Web3 class instance with external providers', () => {
 			providerOrUrl: clientUrl,
 		});
 	});
-	afterAll(async () => {
+	afterAll(() => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		provider.engine.stop();
 	});
-	it('should create instance with external wallet provider', async () => {
+	it('should create instance with external wallet provider', () => {
 		web3 = new Web3(provider);
 		expect(web3).toBeInstanceOf(Web3);
 	});

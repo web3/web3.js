@@ -43,9 +43,11 @@ describe('Web3 instance', () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
 	});
-	beforeEach(async () => {
+
+	beforeEach(() => {
 		currentAttempt = 0;
 	});
+
 	afterEach(async () => {
 		if (getSystemTestProvider().startsWith('ws')) {
 			// make sure we try to close the connection after it is established
@@ -92,7 +94,7 @@ describe('Web3 instance', () => {
 	describeIf(getSystemTestProvider().startsWith('http'))(
 		'Create Web3 class instance with http string providers',
 		() => {
-			it('should create instance with string provider', async () => {
+			it('should create instance with string provider', () => {
 				web3 = new Web3(clientUrl);
 				expect(web3).toBeInstanceOf(Web3);
 			});
@@ -101,7 +103,7 @@ describe('Web3 instance', () => {
 				process.env.INFURA_GOERLI_HTTP
 					? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
 					: false,
-			)('should create instance with string of external http provider', async () => {
+			)('should create instance with string of external http provider', () => {
 				web3 = new Web3(process.env.INFURA_GOERLI_HTTP);
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
@@ -127,7 +129,7 @@ describe('Web3 instance', () => {
 	describeIf(getSystemTestProvider().startsWith('ws'))(
 		'Create Web3 class instance with ws string providers',
 		() => {
-			it('should create instance with string of ws provider', async () => {
+			it('should create instance with string of ws provider', () => {
 				web3 = new Web3(clientUrl);
 				expect(web3).toBeInstanceOf(Web3);
 			});
@@ -136,7 +138,7 @@ describe('Web3 instance', () => {
 				process.env.INFURA_GOERLI_WS
 					? process.env.INFURA_GOERLI_WS.toString().includes('ws')
 					: false,
-			)('should create instance with string of external ws provider', async () => {
+			)('should create instance with string of external ws provider', () => {
 				web3 = new Web3(process.env.INFURA_GOERLI_WS);
 				// eslint-disable-next-line jest/no-standalone-expect
 				expect(web3).toBeInstanceOf(Web3);
@@ -156,7 +158,7 @@ describe('Web3 instance', () => {
 			expect(response).toEqual(expect.any(BigInt));
 		});
 
-		it('should set the provider with `.setProvider`', async () => {
+		it('should set the provider with `.setProvider`', () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
 			if (clientUrl.startsWith('http')) {
@@ -202,7 +204,7 @@ describe('Web3 instance', () => {
 			await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 		});
 
-		it('providers', async () => {
+		it('providers', () => {
 			const res = Web3.providers;
 
 			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
@@ -210,7 +212,7 @@ describe('Web3 instance', () => {
 			expect(res.IpcProvider).toBe(IpcProvider);
 		});
 
-		it('currentProvider', async () => {
+		it('currentProvider', () => {
 			web3 = new Web3(clientUrl);
 
 			let checkWithClass;
@@ -224,7 +226,7 @@ describe('Web3 instance', () => {
 			expect(web3.currentProvider).toBeInstanceOf(checkWithClass);
 		});
 
-		it('givenProvider', async () => {
+		it('givenProvider', () => {
 			const { givenProvider } = web3;
 			expect(givenProvider).toBeUndefined();
 		});
