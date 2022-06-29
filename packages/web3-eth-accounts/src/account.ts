@@ -48,16 +48,16 @@ import {
 } from 'web3-utils';
 import { validator, isBuffer, isHexString32Bytes, isString, isNullish } from 'web3-validator';
 import {
-	signatureObject,
-	signResult,
-	signTransactionResult,
+	SignatureObject,
+	SignResult,
+	SignTransactionResult,
 	KeyStore,
 	ScryptParams,
 	PBKDF2SHA256Params,
 	CipherOptions,
-	keyStoreSchema,
 	Web3Account,
 } from './types';
+import { keyStoreSchema } from './schemas';
 
 /**
  * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
@@ -81,7 +81,7 @@ export const hashMessage = (message: string): string => {
  * @param data
  * @param privateKey
  */
-export const sign = (data: string, privateKey: HexString): signResult => {
+export const sign = (data: string, privateKey: HexString): SignResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
 
 	if (!isHexString32Bytes(privateKeyParam, false)) {
@@ -120,7 +120,7 @@ export const signTransaction = async (
 	privateKey: HexString,
 	// To make it compatible with rest of the API, have to keep it async
 	// eslint-disable-next-line @typescript-eslint/require-await
-): Promise<signTransactionResult> => {
+): Promise<SignTransactionResult> => {
 	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
@@ -169,7 +169,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  * @param hashed
  */
 export const recover = (
-	data: string | signatureObject,
+	data: string | SignatureObject,
 	signature?: string,
 	hashed?: boolean,
 ): Address => {
