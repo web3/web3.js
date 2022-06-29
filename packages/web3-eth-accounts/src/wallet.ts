@@ -152,7 +152,7 @@ export class Wallet<
 	 * Adds an account using a private key or account object to the wallet.
 	 *
 	 * @param account A private key or account object
-	 * @returns The added account
+	 * @returns The wallet
 	 *
 	 * ```ts
 	 * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
@@ -176,14 +176,14 @@ export class Wallet<
 	 * }
 	 *
 	 */
-	public add(account: T | string): boolean {
+	public add(account: T | string): this {
 		if (typeof account === 'string') {
 			return this.add(this._accountProvider.privateKeyToAccount(account));
 		}
 
 		this._accounts[account.address.toLowerCase()] = account;
 
-		return true;
+		return this;
 	}
 	/**
 	 * Get the account of the wallet with either the index or public address.

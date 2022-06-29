@@ -58,7 +58,7 @@ export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> {
 	}
 
 	public abstract create(numberOfAccounts: number): this;
-	public abstract add(account: T | string): boolean;
+	public abstract add(account: T | string): this;
 	public abstract get(addressOrIndex: string | number): T;
 	public abstract remove(addressOrIndex: string | number): boolean;
 	public abstract clear(): this;
