@@ -23,7 +23,7 @@ describe('Web3 instance', () => {
 	let clientUrl: string;
 	let web3: Web3;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 	});
 
