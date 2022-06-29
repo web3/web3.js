@@ -24,7 +24,7 @@ jobs:
           node-version: 14
           cache: yarn
       - run: yarn
-      - run: ./scripts/geth.sh download
+#      - run: ./scripts/geth.sh download
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
