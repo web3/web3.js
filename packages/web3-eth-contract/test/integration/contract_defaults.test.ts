@@ -50,11 +50,10 @@ describe('contract', () => {
 				const receiptHandler = jest.fn();
 
 				// We didn't specify "from" in this call
-				const tx = contract.deploy(deployOptions).send({ gas: '1000000' });
-
-				tx.on('receipt', receiptHandler);
-
-				await tx;
+				await contract
+					.deploy(deployOptions)
+					.send({ gas: '1000000' })
+					.on('receipt', receiptHandler);
 
 				// We didn't specify "from" in this call
 				expect(receiptHandler).toHaveBeenCalledWith(
