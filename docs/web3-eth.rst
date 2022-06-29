@@ -2016,7 +2016,7 @@ requestAccounts
 
     web3.eth.requestAccounts([callback])
 
-This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvidder and IpcProvider).
+This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvider and IpcProvider).
 
 For more information about the behavior of this method please read `EIP-1102: Opt-in account exposure <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_.
 

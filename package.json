@@ -101,11 +101,12 @@
         "@ensdomains/ens": "^0.6.0",
         "@ensdomains/resolver": "^0.2.4",
         "@types/bignumber.js": "^4.0.2",
-        "@types/bn.js": "^4.11.6",
+        "@types/bn.js": "^5.1.0",
         "@types/node": "^12.12.68",
+        "@types/prettier": "2.6.0",
         "babel-loader": "^8.1.0",
         "bignumber.js": "^9.0.1",
-        "bn.js": "^4.11.9",
+        "bn.js": "^5.2.1",
         "browserify": "^16.5.2",
         "buffer": "^4.9.2",
         "bundlesize": "^0.18.0",
@@ -133,10 +134,9 @@
         "rimraf": "^3.0.2",
         "sandboxed-module": "^2.0.4",
         "ts-node": "^9.0.0",
-        "typescript": "^3.9.5",
+        "typescript": "^3.9.7",
         "wait-port": "^0.2.9",
         "webpack": "^4.44.2",
-        "webpack-cli": "^4.9.1",
-        "@types/prettier": "2.6.0"
+        "webpack-cli": "^4.9.1"
     }
 }

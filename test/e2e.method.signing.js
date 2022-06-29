@@ -27,7 +27,7 @@ describe('transaction and message signing [ @E2E ]', function() {
         await web3.eth.sendTransaction({
             from: accounts[0],
             to: wallet[0].address,
-            value: web3.utils.toWei('50', 'ether'),
+            value: web3.utils.toWei('40', 'ether'),
         });
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);

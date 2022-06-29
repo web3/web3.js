@@ -3,7 +3,7 @@ var assert = chai.assert;
 var SandboxedModule = require('sandboxed-module');
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var { isOffChainLookup, ccipReadCall, callGateways } = SandboxedModule.require('../packages/web3-ccip-read', {
+var { isOffChainLookup, ccipReadCall, callGateways } = SandboxedModule.require('../packages/web3-core-method/src/CCIPRead.js', {
     requires: {
         'web3-providers-http': require('./helpers/FakeHttp'),
     },
