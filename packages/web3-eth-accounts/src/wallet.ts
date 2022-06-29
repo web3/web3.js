@@ -24,23 +24,23 @@ type BrowserError = { code: number; name: string };
  * Wallet is an in memory `wallet` that can hold multiple accounts.
  * These accounts can be used when using web3.eth.sendTransaction().
  *
- * @param Web3AccountProvider - AccountProvider for wallet
+ * ### Parameters
+ *  Web3AccountProvider - AccountProvider for the wallet
  *
  * ```ts
  * import Web3 from 'web3';
  * const web3 = new Web3("https://localhost:8454")
  * web3.eth.accounts.wallet
- * > Wallet {
- * _accountProvider: {
- *   create: [Function: create],
- *   privateKeyToAccount: [Function: privateKeyToAccount],
- *   decrypt: [Function: decrypt]
- * },
- * _defaultKeyName: 'web3js_wallet',
- * _accounts: {}
- * }
+ * > Wallet(0) [
+ *   _accountProvider: {
+ *     create: [Function: create],
+ *     privateKeyToAccount: [Function: privateKeyToAccount],
+ *     decrypt: [Function: decrypt]
+ *   },
+ *   _addressMap: Map(0) {},
+ *   _defaultKeyName: 'web3js_wallet'
+ * ]
  * ```
- *
  */
 export class Wallet<
 	T extends Web3BaseWalletAccount = Web3BaseWalletAccount,
@@ -85,41 +85,33 @@ export class Wallet<
 	 * @param numberOfAccounts Number of accounts to create. Leave empty to create an empty wallet.
 	 * @returns The wallet
 	 * ```ts
-	 * import Web3 from 'web3';
-	 *
-	 * const web3 = new Web3("https://localhost:8454")
-	 * web3.eth.accounts.wallet.create(3)
-	 * > Wallet {
+	 * web3.eth.accounts.wallet.create(2)
+	 * > Wallet(2) [
+	 *   {
+	 *     address: '0xde38310a42B751AE57d30cFFF4a0A3c52A442fCE',
+	 *     privateKey: '0x6422c9d28efdcbee93c1d32a5fc6fd6fa081b985487885296cf8c9bbb5872600',
+	 *     signTransaction: [Function: signTransaction],
+	 *     sign: [Function: sign],
+	 *     encrypt: [Function: encrypt]
+	 *   },
+	 *   {
+	 *     address: '0x766BF755246d924B1d017Fdb5390f38a60166691',
+	 *     privateKey: '0x756530f13c0eb636ebdda655335f5dea9921e3362e2e588b0ad59e556f7751f0',
+	 *     signTransaction: [Function: signTransaction],
+	 *     sign: [Function: sign],
+	 *     encrypt: [Function: encrypt]
+	 *   },
 	 *   _accountProvider: {
-	 *	create: [Function: create],
-	 *	privateKeyToAccount: [Function: privateKeyToAccount],
-	 *	decrypt: [Function: decrypt]
-	 *       },
-	 *    _defaultKeyName: 'web3js_wallet',
-	 *   _accounts: {
-	 *	    '0x5d01efd47a37ca79bb63834fc105835c3d1cdcb5': {
-	 *	    address: '0x5D01eFd47A37CA79bB63834fc105835c3d1CDcb5',
-	 *	    privateKey: '0x02684a681146848fd0ff9c69e63e955bd9cc26020737e3762f0bf6280464aa20',
-	 *		signTransaction: [Function: signTransaction],
-	 *		sign: [Function: sign],
-	 *		encrypt: [Function: encrypt]
-	 *		},
-	 *	'0x85d70633b90e03e0276b98880286d0d055685ed7': {
-	 *		address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
-	 *		privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
-	 *		signTransaction: [Function: signTransaction],
-	 *		sign: [Function: sign],
-	 *		encrypt: [Function: encrypt]
-	 *	},
-	 *	'0x2c3dd207645e2c0a10956124d21920f104f0b06d': {
-	 *	address: '0x2C3dd207645e2c0a10956124d21920F104f0b06D',
-	 *	privateKey: '0x9d66bece56a14b4017900b2113334db14ebf240fb4e5abc93f1d9e701ddd3108',
-	 *	signTransaction: [Function: signTransaction],
-	 *	sign: [Function: sign],
-	 *	encrypt: [Function: encrypt]
-	 *		}
-	 *	}
-	 * }
+	 *     create: [Function: create],
+	 *     privateKeyToAccount: [Function: privateKeyToAccount],
+	 *     decrypt: [Function: decrypt]
+	 *   },
+	 *   _addressMap: Map(2) {
+	 *     '0xde38310a42b751ae57d30cfff4a0a3c52a442fce' => 0,
+	 *     '0x766bf755246d924b1d017fdb5390f38a60166691' => 1
+	 *   },
+	 *   _defaultKeyName: 'web3js_wallet'
+	 * ]
 	 *
 	 * ```
 	 */
@@ -140,25 +132,23 @@ export class Wallet<
 	 *
 	 * ```ts
 	 * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
-	 * web3.eth.accounts
-	 * Wallet {
-	 * _accountProvider: {
-	 *	create: [Function: create],
-	 *	privateKeyToAccount: [Function: privateKeyToAccount],
-	 *	decrypt: [Function: decrypt]
-	 * },
-	 * _defaultKeyName: 'web3js_wallet',
-	 * _accounts: {
-	 *	'0x85d70633b90e03e0276b98880286d0d055685ed7': {
-	 *	address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
-	 * 	privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
-	 *  signTransaction: [Function: signTransaction],
-	 *	sign: [Function: sign],
-	 *	encrypt: [Function: encrypt]
-	 *	}
-	 * }
-	 * }
-	 *
+	 * > Wallet(1) [
+	 *   {
+	 *     address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
+	 *     privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
+	 *     signTransaction: [Function: signTransaction],
+	 *     sign: [Function: sign],
+	 *     encrypt: [Function: encrypt]
+	 *   },
+	 *   _accountProvider: {
+	 *     create: [Function: create],
+	 *     privateKeyToAccount: [Function: privateKeyToAccount],
+	 *     decrypt: [Function: decrypt]
+	 *   },
+	 *   _addressMap: Map(1) { '0x85d70633b90e03e0276b98880286d0d055685ed7' => 0 },
+	 *   _defaultKeyName: 'web3js_wallet'
+	 * ]
+	 * ```
 	 */
 	public add(account: T | string): this {
 		if (typeof account === 'string') {
@@ -176,7 +166,7 @@ export class Wallet<
 	 * Get the account of the wallet with either the index or public address.
 	 *
 	 * @param addressOrIndex A string of the address or number index within the wallet.
-	 * @returns The account object {T}
+	 * @returns The account object or undefined if the account doesnt exist
 	 */
 
 	public get(addressOrIndex: string | number): T | undefined {
@@ -200,7 +190,18 @@ export class Wallet<
 	 * ```ts
 	 * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
 	 *
-	 * web3.eth.accounts.wallet.remove('0x85D70633b90e03e0276B98880286D0D055685ed7'); // FIX THIS
+	 * web3.eth.accounts.wallet.remove('0x85D70633b90e03e0276B98880286D0D055685ed7');
+	 * > true
+	 * web3.eth.accounts.wallet
+	 * > Wallet(0) [
+	 * _accountProvider: {
+	 *   create: [Function: create],
+	 *   privateKeyToAccount: [Function: privateKeyToAccount],
+	 *   decrypt: [Function: decrypt]
+	 * },
+	 * _addressMap: Map(0) {},
+	 * _defaultKeyName: 'web3js_wallet'
+	 * ]
 	 * ```
 	 */
 	public remove(addressOrIndex: string | number): boolean {
@@ -225,38 +226,21 @@ export class Wallet<
 
 	/**
 	 * Securely empties the wallet and removes all its accounts.
+	 * Use this with *caution as it will remove all accounts stored in local wallet.
 	 *
 	 * @returns The wallet object
 	 * ```ts
 	 *
-	 * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
-	 * Wallet {
-	 * _accountProvider: {
-	 *	create: [Function: create],
-	 *	privateKeyToAccount: [Function: privateKeyToAccount],
-	 *	decrypt: [Function: decrypt]
-	 * },
-	 * _defaultKeyName: 'web3js_wallet',
-	 * _accounts: {
-	 *	'0x85d70633b90e03e0276b98880286d0d055685ed7': {
-	 *	address: '0x85D70633b90e03e0276B98880286D0D055685ed7',
-	 *	privateKey: '0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387',
-	 *	signTransaction: [Function: signTransaction],
-	 *	sign: [Function: sign],
-	 *	encrypt: [Function: encrypt]
-	 *	   }
-	 *   }
-	 * }
 	 * web3.eth.accounts.wallet.clear();
-	 * Wallet {
+	 * > Wallet(0) [
 	 * _accountProvider: {
-	 *	create: [Function: create],
-	 *	privateKeyToAccount: [Function: privateKeyToAccount],
-	 *	decrypt: [Function: decrypt]
+	 *   create: [Function: create],
+	 *   privateKeyToAccount: [Function: privateKeyToAccount],
+	 *   decrypt: [Function: decrypt]
 	 * },
-	 * _defaultKeyName: 'web3js_wallet',
-	 * _accounts: {}
-	 * }
+	 * _addressMap: Map(0) {},
+	 * _defaultKeyName: 'web3js_wallet'
+	 * ]
 	 * ```
 	 */
 	public clear() {
@@ -276,26 +260,14 @@ export class Wallet<
 	 * @returns An array of the encrypted keystore v3.
 	 * ```ts
 	 * web3.eth.accounts.wallet.create(1)
-	 * > Wallet {
-	 * _accountProvider: {
-	 *	create: [Function: create],
-	 *	privateKeyToAccount: [Function: privateKeyToAccount],
-	 *	decrypt: [Function: decrypt]
-	 * },
-	 * _defaultKeyName: 'web3js_wallet',
-	 * _accounts: {
-	 *	'0xfa3e41a401609103c241431cbdee8623ae2a321a': {
-	 *	address: '0xFA3e41A401609103C241431cbDEE8623ae2a321a',
-	 *	privateKey: '0x7f468e0b7be2fd31bd6d4a6646e76dbfa304b2cd618d6577a5534cc9db34e4cb',
-	 *	signTransaction: [Function: signTransaction],
-	 *	sign: [Function: sign],
-	 *	encrypt: [Function: encrypt]
-	 *	   }
-	 *   }
-	 * }
 	 * web3.eth.accounts.wallet.encrypt("abc").then(console.log);
-	 * [
-	 * '{"version":3,"id":"fa46e213-a7c3-4844-b903-dd14d39cc7db","address":"fa3e41a401609103c241431cbdee8623ae2a321a","crypto":{"ciphertext":"8d179a911d6146ad2924e86bf493ed89b8ff3596ffec0816e761c542016ab13c","cipherparams":{"iv":"acc888c6cf4a19b86846cef0185a7164"},"cipher":"aes-128-ctr","kdf":"scrypt","kdfparams":{"n":8192,"r":8,"p":1,"dklen":32,"salt":"6a743c9b367d15f4758e4f3f3378ff0fd443708d1c64854e07588ea5331823ae"},"mac":"410544c8307e3691fda305eb3722d82c3431f212a87daa119a21587d96698b57"}}'
+	 * > [
+	 * '{"version":3,"id":"fa46e213-a7c3-4844-b903-dd14d39cc7db",
+	 * "address":"fa3e41a401609103c241431cbdee8623ae2a321a","crypto":
+	 * {"ciphertext":"8d179a911d6146ad2924e86bf493ed89b8ff3596ffec0816e761c542016ab13c",
+	 * "cipherparams":{"iv":"acc888c6cf4a19b86846cef0185a7164"},"cipher":"aes-128-ctr",
+	 * "kdf":"scrypt","kdfparams":{"n":8192,"r":8,"p":1,"dklen":32,"salt":"6a743c9b367d15f4758e4f3f3378ff0fd443708d1c64854e07588ea5331823ae"},
+	 * "mac":"410544c8307e3691fda305eb3722d82c3431f212a87daa119a21587d96698b57"}}'
 	 * ]
 	 */
 	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
