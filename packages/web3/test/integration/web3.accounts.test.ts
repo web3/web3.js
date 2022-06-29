@@ -111,6 +111,20 @@ describe('web3.accounts', () => {
 
 				await expect(account.signTransaction(tx)).rejects.toThrow('gasLimit is too low.');
 			});
+
+			it.skip('should throw error if signed by private key not associated with "from" field', async () => {
+				const account: Web3Account = web3.eth.accounts.create();
+
+				const tx = {
+					from: nodeAccounts[0],
+					to: account.address,
+					value: web3.utils.toWei('0.1', 'ether'),
+					gas: '0x1',
+					data: '0x1',
+				};
+
+				await expect(account.signTransaction(tx)).rejects.toThrow('Error');
+			});
 		});
 	});
 
