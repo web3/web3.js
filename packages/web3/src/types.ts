@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
-import Eth from 'web3-eth';
+import Eth, { Transaction } from 'web3-eth';
 import {
 	encodeFunctionSignature,
 	encodeFunctionCall,
@@ -29,20 +29,18 @@ import {
 	ContractAbi,
 } from 'web3-eth-abi';
 import {
-	create,
-	privateKeyToAccount,
 	recoverTransaction,
 	hashMessage,
 	recover,
 	encrypt,
-	decrypt,
 	sign,
 	signTransaction,
+	Web3Account,
 } from 'web3-eth-accounts';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
 import { ENS } from 'web3-eth-ens';
 import { Iban } from 'web3-eth-iban';
-import { Address } from 'web3-utils';
+import { Address, Bytes } from 'web3-utils';
 
 export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contract, 'new'> & {
 	new (jsonInterface: Abi, address?: Address, options?: ContractInitOptions): Contract<Abi>;
@@ -79,14 +77,21 @@ export interface Web3EthInterface extends Eth {
 		decodeLog: typeof decodeLog;
 	};
 	accounts: {
-		create: typeof create;
-		privateKeyToAccount: typeof privateKeyToAccount;
-		signTransaction: typeof signTransaction;
+		create: () => Web3Account;
+		privateKeyToAccount: (privateKey: Buffer | string) => Web3Account;
+		signTransaction: (
+			transaction: Transaction,
+			privateKey: Bytes,
+		) => ReturnType<typeof signTransaction>;
 		recoverTransaction: typeof recoverTransaction;
 		hashMessage: typeof hashMessage;
 		sign: typeof sign;
 		recover: typeof recover;
 		encrypt: typeof encrypt;
-		decrypt: typeof decrypt;
+		decrypt: (
+			keystore: string,
+			password: string,
+			options?: Record<string, unknown>,
+		) => Promise<Web3Account>;
 	};
 }

@@ -30,12 +30,7 @@ import {
 } from 'web3-errors';
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import {
-	TransactionFactory,
-	FeeMarketEIP1559TxData,
-	AccessListEIP2930TxData,
-	TxData,
-} from '@ethereumjs/tx';
+import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
 import { ecdsaSign, ecdsaRecover } from 'secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
@@ -120,15 +115,13 @@ export const sign = (data: string, privateKey: HexString): signResult => {
  * @param transaction
  * @param privateKey
  */
-export const signTransaction = (
-	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+export const signTransaction = async (
+	transaction: TypedTransaction,
 	privateKey: HexString,
-): signTransactionResult => {
-	//	TODO : Send calls to web3.transaction package for :
-	//		Transaction Validation checks
-
-	const tx = TransactionFactory.fromTxData(transaction);
-	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
+	// To make it compatible with rest of the API, have to keep it async
+	// eslint-disable-next-line @typescript-eslint/require-await
+): Promise<signTransactionResult> => {
+	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
 
@@ -142,17 +135,16 @@ export const signTransaction = (
 		throw new SignerError(errorString);
 	}
 
-	const rlpEncoded = signedTx.serialize().toString('hex');
-	const rawTx = `0x${rlpEncoded}`;
-	const txHash = keccak256(Buffer.from(rawTx, 'hex'));
+	const rawTx = bytesToHex(signedTx.serialize());
+	const txHash = keccak256(hexToBytes(rawTx));
 
 	return {
-		messageHash: `0x${Buffer.from(signedTx.getMessageToSign(true)).toString('hex')}`,
+		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
 		v: `0x${signedTx.v.toString('hex')}`,
 		r: `0x${signedTx.r.toString('hex')}`,
 		s: `0x${signedTx.s.toString('hex')}`,
 		rawTransaction: rawTx,
-		transactionHash: `0x${Buffer.from(txHash).toString('hex')}`,
+		transactionHash: bytesToHex(txHash),
 	};
 };
 
@@ -398,7 +390,9 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 	return {
 		address: privateKeyToAddress(pKey),
 		privateKey: pKey,
-		signTransaction: (tx: Record<string, unknown>) => signTransaction(tx, pKey),
+		signTransaction: (_tx: Record<string, unknown>) => {
+			throw new SignerError('Don not have network access to sign the transaction');
+		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), pKey),
 		encrypt: async (password: string, options?: Record<string, unknown>) => {

@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
-import { EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI, ETH_DATA_FORMAT, format } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
-import Web3Eth from 'web3-eth';
+import Web3Eth, { prepareTransactionForSigning, Transaction } from 'web3-eth';
 import Iban from 'web3-eth-iban';
 import Net from 'web3-net';
 import { ENS, registryAddresses } from 'web3-eth-ens';
@@ -47,7 +47,7 @@ import {
 	Wallet,
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
-import { Address } from 'web3-utils';
+import { Address, Bytes } from 'web3-utils';
 import { Web3EthInterface } from './types';
 import packageJson from '../package.json';
 
@@ -67,14 +67,56 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
+		const signTransactionWithState = async (transaction: Transaction, privateKey: Bytes) => {
+			const tx = await prepareTransactionForSigning(transaction, this);
+
+			const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
+
+			return signTransaction(tx, privateKeyBytes);
+		};
+
+		const privateKeyToAccountWithState = (privateKey: Buffer | string) => {
+			const account = privateKeyToAccount(privateKey);
+
+			return {
+				...account,
+				signTransaction: async (transaction: Transaction) =>
+					signTransactionWithState(transaction, account.privateKey),
+			};
+		};
+
+		const decryptWithState = async (
+			keystore: string,
+			password: string,
+			options?: Record<string, unknown>,
+		) => {
+			const account = await decrypt(
+				keystore,
+				password,
+				(options?.nonStrict as boolean) ?? true,
+			);
+
+			return {
+				...account,
+				signTransaction: async (transaction: Transaction) =>
+					signTransactionWithState(transaction, account.privateKey),
+			};
+		};
+
+		const createWithState = () => {
+			const account = create();
+
+			return {
+				...account,
+				signTransaction: async (transaction: Transaction) =>
+					signTransactionWithState(transaction, account.privateKey),
+			};
+		};
+
 		const accountProvider = {
-			create,
-			privateKeyToAccount,
-			decrypt: async (
-				keystore: string,
-				password: string,
-				options?: Record<string, unknown>,
-			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
+			create: createWithState,
+			privateKeyToAccount: privateKeyToAccountWithState,
+			decrypt: decryptWithState,
 		};
 
 		const wallet = new Wallet(accountProvider);
@@ -138,15 +180,15 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 			// Accounts helper
 			accounts: {
-				create,
-				privateKeyToAccount,
-				signTransaction,
+				create: createWithState,
+				privateKeyToAccount: privateKeyToAccountWithState,
+				signTransaction: signTransactionWithState,
 				recoverTransaction,
 				hashMessage,
 				sign,
 				recover,
 				encrypt,
-				decrypt,
+				decrypt: decryptWithState,
 				wallet,
 			},
 		});

@@ -20,10 +20,8 @@ import WebsocketProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';
 import Contract from 'web3-eth-contract';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
-import HDWalletProvider from '@truffle/hdwallet-provider';
 import { SupportedProviders } from 'web3-core';
 import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';
-import { Web3Account } from 'web3-eth-accounts';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
@@ -31,32 +29,9 @@ import {
 	describeIf,
 	itIf,
 	getSystemTestAccounts,
-	createNewAccount,
+	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
 import { Web3 } from '../../src/index';
-
-const waitForOpenConnection = async (
-	web3Inst: Web3,
-	currentAttempt: number,
-	status = 'connected',
-) => {
-	return new Promise<void>((resolve, reject) => {
-		const maxNumberOfAttempts = 10;
-		const intervalTime = 5000; // ms
-
-		const interval = setInterval(() => {
-			if (currentAttempt > maxNumberOfAttempts - 1) {
-				clearInterval(interval);
-				reject(new Error('Maximum number of attempts exceeded'));
-			} else if ((web3Inst.provider as unknown as Web3BaseProvider).getStatus() === status) {
-				clearInterval(interval);
-				resolve();
-			}
-			// eslint-disable-next-line no-plusplus, no-param-reassign
-			currentAttempt++;
-		}, intervalTime);
-	});
-};
 
 describe('Web3 instance', () => {
 	let clientUrl: string;
@@ -305,63 +280,5 @@ describe('Web3 instance', () => {
 				]),
 			);
 		});
-	});
-
-	describe('Abi requests', () => {
-		const validData = validEncodeParametersData[0];
-
-		it('hash correctly', async () => {
-			web3 = new Web3(clientUrl);
-
-			const encodedParameters = web3.eth.abi.encodeParameters(
-				validData.input[0],
-				validData.input[1],
-			);
-			expect(encodedParameters).toEqual(validData.output);
-		});
-	});
-	describe('Account module', () => {
-		it('should create account', async () => {
-			web3 = new Web3(clientUrl);
-			const account: Web3Account = web3.eth.accounts.create();
-			expect(account).toEqual(
-				expect.objectContaining({
-					address: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
-					privateKey: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
-				}),
-			);
-		});
-		it('should create account from private key', async () => {
-			web3 = new Web3(clientUrl);
-			const acc = await createNewAccount();
-			const createdAccount: Web3Account = web3.eth.accounts.privateKeyToAccount(
-				acc.privateKey,
-			);
-			expect(acc.address.toLowerCase()).toBe(createdAccount.address.toLowerCase());
-		});
-	});
-});
-
-describe('Create Web3 class instance with external providers', () => {
-	let provider: HDWalletProvider;
-	let clientUrl: string;
-	let web3: Web3;
-
-	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
-		const account = await createNewAccount();
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider = new HDWalletProvider({
-			privateKeys: [account.privateKey],
-			providerOrUrl: clientUrl,
-		});
-	});
-	afterAll(async () => {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider.engine.stop();
-	});
-	it('should create instance with external wallet provider', async () => {
-		web3 = new Web3(provider);
-		expect(web3).toBeInstanceOf(Web3);
 	});
 });
