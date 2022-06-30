@@ -21,9 +21,10 @@ import {
 	getSystemTestProvider,
 	getSystemTestAccounts,
 	describeIf,
+	isWs,
 } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().startsWith('ws'))('contract', () => {
+describeIf(isWs)('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
