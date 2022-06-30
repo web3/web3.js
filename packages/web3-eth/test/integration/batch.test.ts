@@ -62,9 +62,10 @@ describe('eth', () => {
 				method: 'eth_getBalance',
 				params: [accounts[1], 'latest'],
 			};
-			batch.add(request1).catch(console.error);
-			batch.add(request2).catch(console.error);
+			const r1 = batch.add(request1).catch(console.error);
+			const r2 = batch.add(request2).catch(console.error);
 			const [response1, response2] = await batch.execute();
+
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(response1.result).toBeDefined();
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -74,6 +75,9 @@ describe('eth', () => {
 			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
+			const [res1, res2] = await Promise.all([r1, r2]);
+			expect(res1).toBe(response1.result);
+			expect(res2).toBe(response2.result);
 		});
 	});
 });
