@@ -112,10 +112,6 @@ export const getEstimateGasParams = ({
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
 }): Partial<TransactionWithSender> => {
-	if (!options?.to && !contractOptions.address) {
-		throw new Web3ContractError('Contract address not specified');
-	}
-
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,

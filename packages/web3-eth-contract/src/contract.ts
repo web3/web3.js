@@ -38,6 +38,7 @@ import {
 } from 'web3-eth';
 import {
 	AbiEventFragment,
+	AbiConstructorFragment,
 	AbiFunctionFragment,
 	ContractAbi,
 	ContractConstructor,
@@ -127,18 +128,17 @@ export type ContractEventEmitterInterface<
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
+const contractSubscriptions = {
+	logs: LogsSubscription,
+	newHeads: NewHeadsSubscription,
+	newBlockHeaders: NewHeadsSubscription,
+};
+
 /**
  * The class designed to interact with smart contracts on the Ethereum blockchain.
  */
 export class Contract<Abi extends ContractAbi>
-	extends Web3Context<
-		EthExecutionAPI,
-		{
-			logs: typeof LogsSubscription;
-			newHeads: typeof NewHeadsSubscription;
-			newBlockHeaders: typeof NewHeadsSubscription;
-		}
-	>
+	extends Web3Context<EthExecutionAPI, typeof contractSubscriptions>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
 	/**
@@ -266,7 +266,63 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public constructor(
 		jsonInterface: Abi,
-		address?: Address,
+		context?: Partial<
+			Web3ContextInitOptions<
+				EthExecutionAPI,
+				{
+					logs: typeof LogsSubscription;
+					newHeads: typeof NewHeadsSubscription;
+					newBlockHeaders: typeof NewHeadsSubscription;
+				}
+			>
+		>,
+	);
+	public constructor(
+		jsonInterface: Abi,
+		address: Address,
+		context?: Partial<
+			Web3ContextInitOptions<
+				EthExecutionAPI,
+				{
+					logs: typeof LogsSubscription;
+					newHeads: typeof NewHeadsSubscription;
+					newBlockHeaders: typeof NewHeadsSubscription;
+				}
+			>
+		>,
+	);
+	public constructor(
+		jsonInterface: Abi,
+		options?: ContractInitOptions,
+		context?: Partial<
+			Web3ContextInitOptions<
+				EthExecutionAPI,
+				{
+					logs: typeof LogsSubscription;
+					newHeads: typeof NewHeadsSubscription;
+					newBlockHeaders: typeof NewHeadsSubscription;
+				}
+			>
+		>,
+	);
+	public constructor(
+		jsonInterface: Abi,
+		address: Address,
+		options: ContractInitOptions,
+		context?: Partial<
+			Web3ContextInitOptions<
+				EthExecutionAPI,
+				{
+					logs: typeof LogsSubscription;
+					newHeads: typeof NewHeadsSubscription;
+					newBlockHeaders: typeof NewHeadsSubscription;
+				}
+			>
+		>,
+	);
+	public constructor(
+		jsonInterface: Abi,
+		address?: Address | ContractInitOptions,
 		options?: ContractInitOptions,
 		context?: Partial<
 			Web3ContextInitOptions<
@@ -281,26 +337,26 @@ export class Contract<Abi extends ContractAbi>
 	) {
 		super({
 			...context,
-			// Pass an empty string to avoid type issue. Error will be thrown from underlying validation
 			provider: options?.provider ?? context?.provider ?? Contract.givenProvider,
-			registeredSubscriptions: {
-				logs: LogsSubscription,
-				newHeads: NewHeadsSubscription,
-				newBlockHeaders: NewHeadsSubscription,
-			},
+			registeredSubscriptions: contractSubscriptions,
 		});
 
-		this._parseAndSetAddress(address);
 		this._parseAndSetJsonInterface(jsonInterface);
+
+		if (typeof address === 'string') {
+			this._parseAndSetAddress(address);
+		}
+
+		const initOptions = typeof address === 'object' ? address : options;
 
 		this.options = {
 			address: undefined,
 			jsonInterface: [],
-			gas: options?.gas ?? options?.gasLimit,
-			gasPrice: options?.gasPrice,
-			gasLimit: options?.gasLimit,
-			from: options?.from,
-			data: options?.data,
+			gas: initOptions?.gas ?? initOptions?.gasLimit,
+			gasPrice: initOptions?.gasPrice,
+			gasLimit: initOptions?.gasLimit,
+			from: initOptions?.from,
+			data: initOptions?.data,
 		};
 
 		Object.defineProperty(this.options, 'address', {
@@ -505,7 +561,7 @@ export class Contract<Abi extends ContractAbi>
 	 * ```
 	 */
 	public clone() {
-		return new Contract<Abi>(this._jsonInterface, this._address ?? undefined, {
+		return new Contract<Abi>(this._jsonInterface, {
 			gas: this.options.gas,
 			gasPrice: this.options.gasPrice,
 			gasLimit: this.options.gasLimit,
@@ -589,10 +645,15 @@ export class Contract<Abi extends ContractAbi>
 		 */
 		arguments?: ContractConstructor<Abi>['Inputs'];
 	}) {
-		const abi = this._jsonInterface.find(j => j.type === 'constructor');
+		let abi = this._jsonInterface.find(j => j.type === 'constructor');
 
 		if (!abi) {
-			throw new Web3ContractError('No constructor interface found.');
+			// throw new Web3ContractError('No constructor interface found.');
+			abi = {
+				type: 'constructor',
+				inputs: [],
+				stateMutability: '',
+			} as AbiConstructorFragment;
 		}
 
 		const data = format(
@@ -602,7 +663,7 @@ export class Contract<Abi extends ContractAbi>
 		);
 
 		if (!data || data.trim() === '0x') {
-			throw new Web3ContractError('No data provided.');
+			throw new Web3ContractError('contract creation without any data provided.');
 		}
 
 		const args = deployOptions?.arguments ?? [];
@@ -900,10 +961,7 @@ export class Contract<Abi extends ContractAbi>
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {
-					throw new Web3ContractError(
-						'contract deployment error',
-						receipt as ReceiptInfo,
-					);
+					throw new Web3ContractError("code couldn't be stored", receipt as ReceiptInfo);
 				}
 
 				const newContract = this.clone();

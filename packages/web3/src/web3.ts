@@ -47,12 +47,11 @@ import {
 	Wallet,
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
-import { Address, Bytes } from 'web3-utils';
+import { Address, Bytes, isNullish } from 'web3-utils';
 import { Web3EthInterface } from './types';
-import packageJson from '../package.json';
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
-	public static version = packageJson.version;
+	public static version = '123';
 	public static utils = utils;
 	public static modules = {
 		Web3Eth,
@@ -137,8 +136,27 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				jsonInterface: Abi,
 				address?: Address,
 				options?: ContractInitOptions,
+			);
+			// eslint-disable-next-line @typescript-eslint/unified-signatures
+			public constructor(jsonInterface: Abi, options?: ContractInitOptions);
+			public constructor(jsonInterface: Abi, address: Address, options?: ContractInitOptions);
+			public constructor(
+				jsonInterface: Abi,
+				addressOrOptions?: Address | ContractInitOptions,
+				options?: ContractInitOptions,
 			) {
-				super(jsonInterface, address, options, self.getContextObject());
+				if (typeof addressOrOptions === 'string') {
+					super(
+						jsonInterface,
+						addressOrOptions,
+						options as ContractInitOptions,
+						self.getContextObject(),
+					);
+				} else if (addressOrOptions && isNullish(options)) {
+					super(jsonInterface, addressOrOptions ?? {}, self.getContextObject());
+				} else {
+					super(jsonInterface, options ?? {}, self.getContextObject());
+				}
 
 				ContractBuilder._contracts.push(this);
 			}
