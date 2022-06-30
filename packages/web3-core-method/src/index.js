@@ -164,9 +164,11 @@ Method.prototype.formatOutput = function (result) {
 
     if (Array.isArray(result)) {
         return result.map(function (res) {
+            console.log("************",_this.hexFormat);
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
     } else {
+            console.log("************",this.hexFormat);
         return this.outputFormatter && result ? this.outputFormatter(result) : result;
     }
 };
@@ -630,9 +632,17 @@ Method.prototype.buildCall = function () {
 
     // actual send function
     var send = function () {
-        var defer = promiEvent(!isSendTx),
-            payload = method.toPayload(Array.prototype.slice.call(arguments));
 
+        let args = Array.prototype.slice.call(arguments);
+
+        console.log('args1',args)
+        var defer = promiEvent(!isSendTx),
+            payload = method.toPayload(args);
+
+        method.hexFormat = false;
+        if(method.call === 'eth_getTransactionReceipt'){
+            method.hexFormat = (payload.params.length  < args.length && args[args.length - 1] === 'hex')
+        }
         // CALLBACK function
         var sendTxCallback = function (err, result) {
             if (method.handleRevert && isCall && method.abiCoder) {
