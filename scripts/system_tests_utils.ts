@@ -40,8 +40,14 @@ export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
+export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
+
 export const getSystemTestProvider = (): string =>
-	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? 'http://localhost:8545';
+	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
+
+export const isHttp = getSystemTestProvider().startsWith('http');
+export const isWs = getSystemTestProvider().startsWith('ws');
+export const isIpc = getSystemTestProvider().includes('ipc');
 
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
@@ -52,7 +58,12 @@ export const createNewAccount = async (config?: {
 	refill?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = createAccount();
-	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
+
+	let clientUrl = getSystemTestProvider();
+	if (isWs) {
+		clientUrl = clientUrl.replace('ws://', 'http://');
+	}
+
 	if (config?.unlock) {
 		const web3Personal = new Personal(clientUrl);
 		await web3Personal.importRawKey(
@@ -133,7 +144,7 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 	}
 
 	// For this script we need to connect over http
-	const clientUrl = getSystemTestProvider().replace('ws://', 'http://');
+	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
 
 	if (getSystemTestBackend() === 'geth') {
 		const web3Eth = new Web3Eth(clientUrl);

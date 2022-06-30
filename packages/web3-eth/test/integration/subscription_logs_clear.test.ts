@@ -16,13 +16,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Contract, decodeEventABI } from 'web3-eth-contract';
+import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
 	describeIf,
@@ -31,24 +29,6 @@ import {
 	isWs,
 } from '../fixtures/system_test_utils';
 
-const checkEventCount = 2;
-
-type MakeFewTxToContract = {
-	sendOptions: Record<string, unknown>;
-	contract: Contract<typeof BasicAbi>;
-	testDataString: string;
-};
-const makeFewTxToContract = async ({
-	contract,
-	sendOptions,
-	testDataString,
-}: MakeFewTxToContract): Promise<void> => {
-	const prs = [];
-	for (let i = 0; i < checkEventCount; i += 1) {
-		// eslint-disable-next-line no-await-in-loop
-		prs.push(await contract.methods?.firesStringEvent(testDataString).send(sendOptions));
-	}
-};
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
 	let accounts: string[] = [];
@@ -58,7 +38,6 @@ describeIf(isWs)('subscription', () => {
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let from: string;
-	const testDataString = 'someTestString';
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
@@ -86,33 +65,12 @@ describeIf(isWs)('subscription', () => {
 	});
 
 	describe('logs', () => {
-		it(`wait for ${checkEventCount} logs`, async () => {
+		it(`clear`, async () => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
-
-			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
-				address: contract.options.address,
-			});
-
-			let count = 0;
-
-			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', (data: any) => {
-					count += 1;
-					const decodedData = decodeEventABI(
-						eventAbi as AbiEventFragment & { signature: string },
-						data,
-					);
-					expect(decodedData.returnValue['0']).toBe(testDataString);
-					if (count >= checkEventCount) {
-						resolve();
-					}
-				});
-			});
-
-			await makeFewTxToContract({ contract, sendOptions, testDataString });
-
-			await pr;
+			const sub: LogsSubscription = await web3Eth.subscribe('logs');
+			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();
+			expect(sub.id).toBeUndefined();
 		});
 	});
 });
