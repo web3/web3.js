@@ -23,6 +23,7 @@ import {
 	describeIf,
 	getSystemTestAccounts,
 	getSystemTestProvider,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 5;
@@ -30,7 +31,7 @@ const checkTxCount = 5;
 type SubName = 'pendingTransactions' | 'newPendingTransactions';
 const subNames: SubName[] = ['pendingTransactions', 'newPendingTransactions'];
 
-describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
+describeIf(isWs)('subscription', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let clientUrl: string;

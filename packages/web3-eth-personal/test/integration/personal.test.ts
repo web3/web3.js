@@ -24,6 +24,7 @@ import {
 	getSystemTestAccounts,
 	getSystemTestProvider,
 	itIf,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {
@@ -38,7 +39,7 @@ describe('personal integration tests', () => {
 		accounts = await getSystemTestAccounts();
 	});
 	afterAll(async () => {
-		if (clientUrl.startsWith('ws')) {
+		if (isWs) {
 			(ethPersonal.provider as WebSocketProvider).disconnect();
 		}
 	});

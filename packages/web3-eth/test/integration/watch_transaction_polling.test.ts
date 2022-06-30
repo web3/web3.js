@@ -14,68 +14,48 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
-import { Web3PromiEvent, Web3BaseProvider } from 'web3-common';
+import { Web3PromiEvent } from 'web3-common';
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {
-	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
-	isWs,
-	// eslint-disable-next-line import/no-relative-packages
+	getSystemTestProvider,
+	isHttp,
+	isIpc,
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 5;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(isWs)('watch subscription transaction', () => {
+// TODO: add isIpc when finish #5144
+describeIf(isHttp || isIpc)('watch polling transaction', () => {
 	let web3Eth: Web3Eth;
-	let providerWs: WebSocketProvider;
 	let accounts: string[] = [];
 	let clientUrl: string;
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
-
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
-	});
-	afterAll(() => {
-		providerWs.disconnect();
 	});
 
-	describe('wait for confirmation subscription', () => {
-		it('subscription to heads', async () => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
-
-			// setupWeb3(web3Eth, waitConfirmations);
+	describe('wait for confirmation polling', () => {
+		it('polling', async () => {
+			web3Eth = new Web3Eth(clientUrl);
 			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
+
 			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> =
 				web3Eth.sendTransaction({
 					to,
 					value,
 					from,
 				});
-
-			const receiptPromise = new Promise((resolve: Resolve) => {
-				// Tx promise is handled separately
-				// eslint-disable-next-line no-void
-				void sentTx.on('receipt', (params: ReceiptInfo) => {
-					expect(params.status).toBe(BigInt(1));
-					resolve();
-				});
-			});
 			let shouldBe = 2;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -88,7 +68,16 @@ describeIf(isWs)('watch subscription transaction', () => {
 					}
 				});
 			});
-			await receiptPromise;
+			await new Promise((resolve: Resolve) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: ReceiptInfo) => {
+					expect(params.status).toBe(BigInt(1));
+					resolve();
+				});
+			});
+
+			await sentTx;
 			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});

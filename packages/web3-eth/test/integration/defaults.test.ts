@@ -28,7 +28,13 @@ import {
 	Web3Eth,
 } from '../../src';
 
-import { createNewAccount, getSystemTestProvider } from '../fixtures/system_test_utils';
+import {
+	createNewAccount,
+	getSystemTestProvider,
+	isIpc,
+	isWs,
+	itIf,
+} from '../fixtures/system_test_utils';
 import {
 	defaultTransactionBuilder,
 	getTransactionFromAttr,
@@ -55,7 +61,7 @@ describe('defaults', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		if (clientUrl.startsWith('ws')) {
+		if (isWs) {
 			web3Eth = new Web3Eth(
 				new WebSocketProvider(
 					clientUrl,
@@ -88,7 +94,7 @@ describe('defaults', () => {
 			.send({ from: accounts[1], gas: '2700000' });
 	});
 	afterAll(() => {
-		if (clientUrl.startsWith('ws')) {
+		if (isWs) {
 			(web3Eth?.provider as WebSocketProvider)?.disconnect();
 		}
 	});
@@ -272,12 +278,14 @@ describe('defaults', () => {
 		});
 		it('transactionConfirmationBlocks', () => {
 			// default
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(web3Eth.transactionConfirmationBlocks).toBe(24);
 
 			// after set
 			web3Eth.setConfig({
 				transactionConfirmationBlocks: 3,
 			});
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(web3Eth.transactionConfirmationBlocks).toBe(3);
 
 			// set by create new instance
@@ -287,10 +295,13 @@ describe('defaults', () => {
 					transactionConfirmationBlocks: 4,
 				},
 			});
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
 		});
-		it('transactionConfirmationBlocks implementation', async () => {
-			const waitConfirmations = 3;
+
+		// TODO: remove itIf when finish #5144
+		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
+			const waitConfirmations = 1;
 			const eth = new Web3Eth(web3Eth.provider);
 			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
@@ -353,7 +364,7 @@ describe('defaults', () => {
 			expect(eth2.transactionPollingTimeout).toBe(10);
 		});
 		// todo will work with not instance mining
-		// itIf(getSystemTestProvider().startsWith('http'))('transactionReceiptPollingInterval and transactionConfirmationPollingInterval implementation', async () => {
+		// itIf(isHttp)('transactionReceiptPollingInterval and transactionConfirmationPollingInterval implementation', async () => {
 		//     eth2 = new Web3Eth({
 		//         provider: web3Eth.provider,
 		//         config: {

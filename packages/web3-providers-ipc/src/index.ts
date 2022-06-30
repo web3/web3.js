@@ -38,6 +38,10 @@ import {
 import { ConnectionNotOpenError, InvalidClientError, InvalidConnectionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 
+type WaitOptions = {
+	timeOutTime: number;
+	maxNumberOfAttempts: number;
+};
 export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
@@ -45,6 +49,7 @@ export default class IpcProvider<
 
 	private readonly _socketPath: string;
 	private readonly _socket: Socket;
+	private waitOptions: WaitOptions;
 	private _connectionStatus: Web3BaseProviderStatus;
 
 	private readonly _requestQueue: Map<JsonRpcId, DeferredPromise<unknown>>;
@@ -59,6 +64,10 @@ export default class IpcProvider<
 		this._requestQueue = new Map<JsonRpcId, DeferredPromise<unknown>>();
 
 		this.connect();
+		this.waitOptions = {
+			timeOutTime: 5000,
+			maxNumberOfAttempts: 10,
+		};
 	}
 
 	public getStatus(): Web3BaseProviderStatus {
@@ -111,6 +120,38 @@ export default class IpcProvider<
 		this._addSocketListeners();
 	}
 
+	public get waitTimeOut(): number {
+		return this.waitOptions.timeOutTime;
+	}
+
+	public set waitTimeOut(timeOut: number) {
+		this.waitOptions.timeOutTime = timeOut;
+	}
+
+	public get waitMaxNumberOfAttempts(): number {
+		return this.waitOptions.maxNumberOfAttempts;
+	}
+
+	public set waitMaxNumberOfAttempts(maxNumberOfAttempts: number) {
+		this.waitOptions.maxNumberOfAttempts = maxNumberOfAttempts;
+	}
+
+	public async waitForConnection(): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			let currentAttempt = 0;
+			const interval = setInterval(() => {
+				if (currentAttempt > this.waitMaxNumberOfAttempts - 1) {
+					clearInterval(interval);
+					reject(new ConnectionNotOpenError());
+				} else if (this.getStatus() === 'connected') {
+					clearInterval(interval);
+					resolve();
+				}
+				currentAttempt += 1;
+			}, this.waitTimeOut / this.waitMaxNumberOfAttempts);
+		});
+	}
+
 	// eslint-disable-next-line @typescript-eslint/require-await
 	public async request<
 		Method extends Web3APIMethod<API>,
@@ -121,7 +162,7 @@ export default class IpcProvider<
 		if (isNullish(request.id)) throw new Error('Request Id not defined');
 
 		if (this.getStatus() !== 'connected') {
-			throw new ConnectionNotOpenError();
+			await this.waitForConnection();
 		}
 
 		try {
@@ -142,7 +183,6 @@ export default class IpcProvider<
 
 	private _onMessage(e: Buffer | string): void {
 		const result = typeof e === 'string' ? e : e.toString('utf8');
-
 		const response = JSON.parse(result) as
 			| JsonRpcResponseWithError
 			| JsonRpcResponseWithResult

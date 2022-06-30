@@ -20,9 +20,9 @@ import { Server } from 'http';
 
 import { waitForOpenConnection } from '../fixtures/helpers';
 import WebSocketProvider from '../../src/index';
-import { getSystemTestProvider, describeIf } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().includes('ws'))('Support of Basic Auth', () => {
+describeIf(isWs)('Support of Basic Auth', () => {
 	let server: Server;
 	let clientWsUrl: string;
 	let webSocketProvider: WebSocketProvider;

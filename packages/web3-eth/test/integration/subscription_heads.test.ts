@@ -23,13 +23,14 @@ import {
 	describeIf,
 	getSystemTestAccounts,
 	getSystemTestProvider,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 5;
 type SubName = 'newHeads' | 'newBlockHeaders';
 const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
 
-describeIf(getSystemTestProvider().startsWith('ws'))('subscription', () => {
+describeIf(isWs)('subscription', () => {
 	let web3Eth: Web3Eth;
 	let clientUrl: string;
 	let accounts: string[] = [];
