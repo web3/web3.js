@@ -28,6 +28,7 @@ import {
 	decodeLog,
 	ContractAbi,
 } from 'web3-eth-abi';
+import { Wallet } from 'web3-eth-accounts';
 import {
 	create,
 	privateKeyToAccount,
@@ -88,5 +89,6 @@ export interface Web3EthInterface extends Eth {
 		recover: typeof recover;
 		encrypt: typeof encrypt;
 		decrypt: typeof decrypt;
+		wallet: Wallet;
 	};
 }
