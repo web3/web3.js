@@ -48,8 +48,10 @@ import {
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
+import { readFileSync } from 'fs';
 import { Web3EthInterface } from './types';
-import packageJson from '../package.json';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = packageJson.version;
@@ -76,9 +78,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				options?: Record<string, unknown>,
 			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
 		};
-
 		const wallet = new Wallet(accountProvider);
-
 		super({ provider, wallet, accountProvider });
 
 		this.utils = utils;
@@ -152,5 +152,4 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
-
 export default Web3;
