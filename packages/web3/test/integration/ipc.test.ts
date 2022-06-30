@@ -32,8 +32,6 @@ describe('Web3 instance', () => {
 		// https://github.com/ethereum/go-ethereum/issues/17907
 		it('should create instance with string of IPC provider', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			// eslint-disable-next-line no-new
-			// const ipcProvider = new Web3.providers.IpcProvider(clientUrl);
 			web3 = new Web3(clientUrl);
 
 			expect(web3).toBeInstanceOf(Web3);

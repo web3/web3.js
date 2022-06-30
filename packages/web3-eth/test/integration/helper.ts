@@ -56,17 +56,27 @@ export const sendFewTxes = async ({
 	return res;
 };
 
-export const validateTransaction = (tx: TransactionInfo) => {
+const checkHex = (hash: string, length = 64) => {
+	expect(String(hash)).toBeDefined();
+	expect(String(hash)).toHaveLength(length + 2);
+	expect(new RegExp(`0x[abcdef0-9]{${length}}`, 'i').test(hash)).toBe(true);
+};
+
+type ExpectOptions = {
+	type?: number;
+};
+export const validateTransaction = (
+	tx: TransactionInfo,
+	expectOptions: ExpectOptions = { type: 0 },
+) => {
 	expect(tx.nonce).toBeDefined();
-	expect(tx.hash).toBeDefined();
-	expect(String(tx.hash)?.length).toBe(66);
-	expect(Number(tx.type)).toBe(0);
-	expect(tx.blockHash).toBeDefined();
-	expect(String(tx.blockHash)?.length).toBe(66);
+	checkHex(String(tx.hash));
+	expect(Number(tx.type)).toBe(expectOptions.type);
+	checkHex(String(tx.blockHash));
 	expect(Number(tx.blockNumber)).toBeGreaterThan(0);
 	expect(tx.transactionIndex).toBeDefined();
-	expect(tx.from?.length).toBe(42);
-	expect(tx.to?.length).toBe(42);
+	checkHex(tx.from, 40);
+	checkHex(String(tx.to), 40);
 	expect(Number(tx.value)).toBe(1);
 	expect(tx.input).toBe('0x');
 	expect(tx.r).toBeDefined();
@@ -77,20 +87,20 @@ export const validateBlock = (b: Block) => {
 	expect(b.nonce).toBeDefined();
 	expect(Number(b.baseFeePerGas)).toBeGreaterThan(0);
 	expect(b.number).toBeDefined();
-	expect(b.hash).toBeDefined();
-	expect(b.parentHash?.length).toBe(66);
-	expect(b.sha3Uncles?.length).toBe(66);
-	expect(b.transactionsRoot).toHaveLength(66);
-	expect(b.receiptsRoot).toHaveLength(66);
+	checkHex(String(b.hash));
+	checkHex(b.parentHash);
+	checkHex(b.sha3Uncles);
+	checkHex(b.transactionsRoot);
+	checkHex(b.receiptsRoot);
 	expect(b.logsBloom).toBeDefined();
-	expect(b.miner).toHaveLength(42);
+	checkHex(b.miner, 40);
 	expect(b.difficulty).toBeDefined();
-	expect(b.stateRoot).toHaveLength(66);
+	checkHex(b.stateRoot);
 	expect(b.gasLimit).toBeDefined();
 	expect(b.gasUsed).toBeDefined();
 	expect(b.timestamp).toBeDefined();
 	expect(b.extraData).toBeDefined();
-	expect(b.mixHash).toBeDefined();
+	checkHex(String(b.mixHash));
 	expect(b.totalDifficulty).toBeDefined();
 	expect(b.baseFeePerGas).toBeDefined();
 	expect(b.size).toBeDefined();
@@ -98,19 +108,19 @@ export const validateBlock = (b: Block) => {
 	expect(Array.isArray(b.uncles)).toBe(true);
 };
 export const validateReceipt = (r: ReceiptInfo) => {
-	expect(r.transactionHash).toBeDefined();
+	checkHex(String(r.transactionHash));
 	expect(r.transactionIndex).toBeDefined();
-	expect(r.blockHash).toBeDefined();
+	checkHex(String(r.blockHash));
 	expect(r.blockNumber).toBeDefined();
-	expect(r.from).toBeDefined();
-	expect(r.to).toBeDefined();
+	checkHex(String(r.from), 40);
+	checkHex(String(r.to), 40);
 	expect(r.cumulativeGasUsed).toBeDefined();
 	expect(r.gasUsed).toBeDefined();
 	expect(r.effectiveGasPrice).toBeDefined();
 	expect(r.logs).toBeDefined();
 	expect(r.logsBloom).toBeDefined();
 	expect(r.status).toBeDefined();
-	expect(String(r.transactionHash)).toHaveLength(66);
+	checkHex(String(r.transactionHash));
 	expect(Number(r.gasUsed)).toBeGreaterThan(0);
 };
 

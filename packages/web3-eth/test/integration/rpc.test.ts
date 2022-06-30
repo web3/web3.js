@@ -35,14 +35,8 @@ import {
 	isWs,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { sendFewTxes, validateReceipt, validateTransaction } from './helper';
+import { mapFormatToType, sendFewTxes, validateReceipt, validateTransaction } from './helper';
 
-const mapFormatToType: { [key: string]: string } = {
-	[FMT_NUMBER.NUMBER]: 'number',
-	[FMT_NUMBER.HEX]: 'string',
-	[FMT_NUMBER.STR]: 'string',
-	[FMT_NUMBER.BIGINT]: 'bigint',
-};
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
 	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
