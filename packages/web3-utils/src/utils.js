@@ -222,7 +222,7 @@ var hexToUtf8 = function(hex) {
  *
  * @method hexToNumber
  * @param {String|Number|BN} value
- * @return {Number|BN}
+ * @return {String}
  */
 var hexToNumber = function (value) {
     if (!value) {
@@ -232,19 +232,9 @@ var hexToNumber = function (value) {
     if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
-    
 
-    const [negative, hexValue] = String(value).startsWith("-")
-        ? [true, value.slice(1)]
-        : [false, value];
-    const num = toBN(hexValue);
-
-    if (num > Number.MAX_SAFE_INTEGER) {
-        return negative ? -num : num;
-    }
-
-    return negative ? -1 * num.toNumber() : num.toNumber();
-}
+    return toBN(value).toNumber();
+};
 
 /**
  * Converts value to it's decimal representation in string
