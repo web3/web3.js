@@ -23,7 +23,7 @@ import { Web3BaseProvider } from 'web3-common';
 import { numberToHex } from 'web3-utils';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { Resolve } from './helper';
+import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
 	describeIf,
@@ -33,10 +33,7 @@ import {
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 2;
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
-	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
-})! as AbiEventFragment;
+
 type MakeFewTxToContract = {
 	sendOptions: Record<string, unknown>;
 	contract: Contract<typeof BasicAbi>;

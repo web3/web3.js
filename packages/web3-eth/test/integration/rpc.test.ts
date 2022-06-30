@@ -35,12 +35,13 @@ import {
 	isWs,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { mapFormatToType, sendFewTxes, validateReceipt, validateTransaction } from './helper';
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const eventAbi: AbiEventFragment = BasicAbi.find((e: any) => {
-	return e.name === 'StringEvent' && (e as AbiEventFragment).type === 'event';
-})! as AbiEventFragment;
+import {
+	eventAbi,
+	mapFormatToType,
+	sendFewTxes,
+	validateReceipt,
+	validateTransaction,
+} from './helper';
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
