@@ -391,7 +391,7 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 		address: privateKeyToAddress(pKey),
 		privateKey: pKey,
 		signTransaction: (_tx: Record<string, unknown>) => {
-			throw new SignerError('Don not have network access to sign the transaction');
+			throw new SignerError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), pKey),
