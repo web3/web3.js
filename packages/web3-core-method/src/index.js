@@ -164,11 +164,9 @@ Method.prototype.formatOutput = function (result) {
 
     if (Array.isArray(result)) {
         return result.map(function (res) {
-            console.log("************",_this.hexFormat);
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });
     } else {
-            console.log("************",this.hexFormat);
         return this.outputFormatter && result ? this.outputFormatter(result) : result;
     }
 };
@@ -635,7 +633,6 @@ Method.prototype.buildCall = function () {
 
         let args = Array.prototype.slice.call(arguments);
 
-        console.log('args1',args)
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(args);
 
