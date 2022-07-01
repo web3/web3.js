@@ -30,12 +30,7 @@ import {
 } from 'web3-errors';
 import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
 import { keccak256 } from 'ethereum-cryptography/keccak';
-import {
-	TransactionFactory,
-	FeeMarketEIP1559TxData,
-	AccessListEIP2930TxData,
-	TxData,
-} from '@ethereumjs/tx';
+import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
 import { ecdsaSign, ecdsaRecover } from 'secp256k1';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
@@ -53,16 +48,16 @@ import {
 } from 'web3-utils';
 import { validator, isBuffer, isHexString32Bytes, isString, isNullish } from 'web3-validator';
 import {
-	signatureObject,
-	signResult,
-	signTransactionResult,
+	SignatureObject,
+	SignResult,
+	SignTransactionResult,
 	KeyStore,
 	ScryptParams,
 	PBKDF2SHA256Params,
 	CipherOptions,
-	keyStoreSchema,
 	Web3Account,
 } from './types';
+import { keyStoreSchema } from './schemas';
 
 /**
  *
@@ -106,7 +101,7 @@ export const hashMessage = (message: string): string => {
  * }
  * ```
  */
-export const sign = (data: string, privateKey: HexString): signResult => {
+export const sign = (data: string, privateKey: HexString): SignResult => {
 	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
 
 	if (!isHexString32Bytes(privateKeyParam, false)) {
@@ -135,11 +130,15 @@ export const sign = (data: string, privateKey: HexString): signResult => {
 };
 
 /**
- *
  * Signs an Ethereum transaction with a given private key.
+ *
  * @param transaction - The transaction, must be a legacy, EIP2930 or EIP 1559 transaction type
  * @param privateKey -  The private key to import. This is 32 bytes of random data.
  * @returns A signTransactionResult object that contains message hash, r, s, v, transaction hash and raw transaction.
+ *
+ * This function is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
+ * This function will rely on user to provide the full transaction to be signed. If you want to sign a partial transaction object
+ * Use {@link Web3.eth.accounts.signTransaction} instead.
  *
  * Signing a legacy transaction
  * ```ts
@@ -212,15 +211,13 @@ export const sign = (data: string, privateKey: HexString): signResult => {
  * }
  * ```
  */
-export const signTransaction = (
-	transaction: TxData | AccessListEIP2930TxData | FeeMarketEIP1559TxData,
+export const signTransaction = async (
+	transaction: TypedTransaction,
 	privateKey: HexString,
-): signTransactionResult => {
-	//	TODO : Send calls to web3.transaction package for :
-	//		Transaction Validation checks
-
-	const tx = TransactionFactory.fromTxData(transaction);
-	const signedTx = tx.sign(Buffer.from(privateKey.substring(2), 'hex'));
+	// To make it compatible with rest of the API, have to keep it async
+	// eslint-disable-next-line @typescript-eslint/require-await
+): Promise<SignTransactionResult> => {
+	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
 
@@ -234,17 +231,16 @@ export const signTransaction = (
 		throw new SignerError(errorString);
 	}
 
-	const rlpEncoded = signedTx.serialize().toString('hex');
-	const rawTx = `0x${rlpEncoded}`;
-	const txHash = keccak256(Buffer.from(rawTx, 'hex'));
+	const rawTx = bytesToHex(signedTx.serialize());
+	const txHash = keccak256(hexToBytes(rawTx));
 
 	return {
-		messageHash: `0x${Buffer.from(signedTx.getMessageToSign(true)).toString('hex')}`,
+		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
 		v: `0x${signedTx.v.toString('hex')}`,
 		r: `0x${signedTx.r.toString('hex')}`,
 		s: `0x${signedTx.s.toString('hex')}`,
 		rawTransaction: rawTx,
-		transactionHash: `0x${Buffer.from(txHash).toString('hex')}`,
+		transactionHash: bytesToHex(txHash),
 	};
 };
 
@@ -286,7 +282,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  * ```
  */
 export const recover = (
-	data: string | signatureObject,
+	data: string | SignatureObject,
 	signature?: string,
 	prefixed?: boolean,
 ): Address => {
@@ -578,8 +574,13 @@ export const encrypt = async (
 
 /**
  * Get an Account object from the privateKey
+ *
  * @param privateKey String or buffer of 32 bytes
  * @returns A Web3Account object
+ *
+ * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
+ * Use {@link Web3.eth.accounts.signTransaction} instead.
+ *
  * ```ts
  * privateKeyToAccount("0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709");
  * >    {
@@ -589,7 +590,6 @@ export const encrypt = async (
  * 			signTransaction,
  * 			encrypt,
  * 	}
- *
  * ```
  */
 export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
@@ -598,7 +598,9 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 	return {
 		address: privateKeyToAddress(pKey),
 		privateKey: pKey,
-		signTransaction: (tx: Record<string, unknown>) => signTransaction(tx, pKey),
+		signTransaction: (_tx: Record<string, unknown>) => {
+			throw new SignerError('Do not have network access to sign the transaction');
+		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), pKey),
 		encrypt: async (password: string, options?: Record<string, unknown>) => {

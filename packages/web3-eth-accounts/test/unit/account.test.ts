@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { TransactionFactory } from '@ethereumjs/tx';
 import { Web3ValidatorError } from 'web3-validator';
 import { isHexStrict, Address, utf8ToHex } from 'web3-utils';
 import {
@@ -70,10 +71,13 @@ describe('accounts', () => {
 	});
 
 	describe('Signing and Recovery of Transaction', () => {
-		it.each(transactionsTestData)('sign transaction', txData => {
+		it.each(transactionsTestData)('sign transaction', async txData => {
 			const account = create();
 
-			const signedResult = signTransaction(txData, account.privateKey);
+			const signedResult = await signTransaction(
+				TransactionFactory.fromTxData(txData),
+				account.privateKey,
+			);
 			expect(signedResult).toBeDefined();
 			expect(signedResult.messageHash).toBeDefined();
 			expect(signedResult.rawTransaction).toBeDefined();
@@ -83,10 +87,13 @@ describe('accounts', () => {
 			expect(signedResult.v).toBeDefined();
 		});
 
-		it.each(transactionsTestData)('Recover transaction', txData => {
+		it.each(transactionsTestData)('Recover transaction', async txData => {
 			const account = create();
 			const txObj = { ...txData, from: account.address };
-			const signedResult = signTransaction(txObj, account.privateKey);
+			const signedResult = await signTransaction(
+				TransactionFactory.fromTxData(txObj),
+				account.privateKey,
+			);
 			expect(signedResult).toBeDefined();
 
 			const address: Address = recoverTransaction(signedResult.rawTransaction);

@@ -19,55 +19,32 @@ import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from '@ethere
 import { Web3BaseWalletAccount } from 'web3-common';
 import { HexString } from 'web3-utils';
 
-export type signatureObject = {
+export type SignatureObject = {
 	messageHash: string;
 	r: string;
 	s: string;
 	v: string;
 };
 
-export const keyStoreSchema = {
-	type: 'object',
-	required: ['crypto', 'id', 'version', 'address'],
-	properties: {
-		crypto: {
-			type: 'object',
-			required: ['cipher', 'ciphertext', 'cipherparams', 'kdf', 'kdfparams', 'mac'],
-			properties: {
-				cipher: { type: 'string' },
-				ciphertext: { type: 'string' },
-				cipherparams: { type: 'object' },
-				kdf: { type: 'string' },
-				kdfparams: { type: 'object' },
-				salt: { type: 'string' },
-				mac: { type: 'string' },
-			},
-		},
-		id: { type: 'string' },
-		version: { type: 'number' },
-		address: { type: 'string' },
-	},
-};
-
-export type signTransactionResult = signatureObject & {
+export type SignTransactionResult = SignatureObject & {
 	rawTransaction: string;
 	transactionHash: string;
 };
 
-export type signTransactionFunction = (
+export type SignTransactionFunction = (
 	transaction:
 		| TxData
 		| AccessListEIP2930TxData
 		| FeeMarketEIP1559TxData
 		| Record<string, unknown>,
-) => signTransactionResult;
+) => SignTransactionResult;
 
-export type signResult = signatureObject & {
+export type SignResult = SignatureObject & {
 	message?: string;
 	signature: string;
 };
 
-export type signFunction = (data: string, privateKey: string) => signResult;
+export type SignFunction = (data: string, privateKey: string) => SignResult;
 
 // https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition
 
