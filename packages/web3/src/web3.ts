@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
+import { readFileSync } from 'fs';
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Web3Eth from 'web3-eth';
@@ -26,10 +27,11 @@ import Personal from 'web3-eth-personal';
 import Net from 'web3-net';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
-import packageJson from '../package.json';
 import abi from './abi';
 import { initAccountsForContext } from './accounts';
 import { Web3EthInterface } from './types';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = packageJson.version;
@@ -106,5 +108,4 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
-
 export default Web3;
