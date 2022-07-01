@@ -29,9 +29,7 @@ function Mock(url, options) {
 
 var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
     requires: {
-        'cross-fetch': Mock
-        // 'xhr2-cookies': require('./helpers/FakeXHR2'),
-        // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
+        'cross-fetch': Mock,
     },
     singleOnly: true
 });
