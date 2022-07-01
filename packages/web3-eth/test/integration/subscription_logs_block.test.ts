@@ -20,6 +20,7 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-common';
+import { numberToHex } from 'web3-utils';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
@@ -86,10 +87,14 @@ describeIf(isWs)('subscription', () => {
 	});
 
 	describe('logs', () => {
-		it(`wait for ${checkEventCount} logs`, async () => {
+		it(`wait for ${checkEventCount} logs with from block`, async () => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
+			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
+
+			await makeFewTxToContract({ contract, sendOptions, testDataString });
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
+				fromBlock: numberToHex(fromBlock),
 				address: contract.options.address,
 			});
 
@@ -108,8 +113,6 @@ describeIf(isWs)('subscription', () => {
 					}
 				});
 			});
-
-			await makeFewTxToContract({ contract, sendOptions, testDataString });
 
 			await pr;
 			await web3Eth.clearSubscriptions();

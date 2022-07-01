@@ -15,40 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
-import { EthExecutionAPI, ETH_DATA_FORMAT, format } from 'web3-common';
+import { readFileSync } from 'fs';
+import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
-import Web3Eth, { prepareTransactionForSigning, Transaction } from 'web3-eth';
-import Iban from 'web3-eth-iban';
-import Net from 'web3-net';
-import { ENS, registryAddresses } from 'web3-eth-ens';
-import Personal from 'web3-eth-personal';
-import {
-	ContractAbi,
-	encodeFunctionCall,
-	encodeParameter,
-	encodeParameters,
-	decodeParameter,
-	decodeParameters,
-	encodeFunctionSignature,
-	encodeEventSignature,
-	decodeLog,
-} from 'web3-eth-abi';
+import Web3Eth from 'web3-eth';
+import { ContractAbi } from 'web3-eth-abi';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
-import {
-	create,
-	privateKeyToAccount,
-	signTransaction,
-	recoverTransaction,
-	hashMessage,
-	sign,
-	recover,
-	encrypt,
-	decrypt,
-	Wallet,
-} from 'web3-eth-accounts';
+import { ENS, registryAddresses } from 'web3-eth-ens';
+import Iban from 'web3-eth-iban';
+import Personal from 'web3-eth-personal';
+import Net from 'web3-net';
 import * as utils from 'web3-utils';
 import { Address, Bytes, isNullish } from 'web3-utils';
 import { Web3EthInterface } from './types';
+import { Address } from 'web3-utils';
+import abi from './abi';
+import { initAccountsForContext } from './accounts';
+import { Web3EthInterface } from './types';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = '123';
@@ -66,61 +51,13 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
-		const signTransactionWithState = async (transaction: Transaction, privateKey: Bytes) => {
-			const tx = await prepareTransactionForSigning(transaction, this);
+		super({ provider });
 
-			const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
+		const accounts = initAccountsForContext(this);
 
-			return signTransaction(tx, privateKeyBytes);
-		};
-
-		const privateKeyToAccountWithState = (privateKey: Buffer | string) => {
-			const account = privateKeyToAccount(privateKey);
-
-			return {
-				...account,
-				signTransaction: async (transaction: Transaction) =>
-					signTransactionWithState(transaction, account.privateKey),
-			};
-		};
-
-		const decryptWithState = async (
-			keystore: string,
-			password: string,
-			options?: Record<string, unknown>,
-		) => {
-			const account = await decrypt(
-				keystore,
-				password,
-				(options?.nonStrict as boolean) ?? true,
-			);
-
-			return {
-				...account,
-				signTransaction: async (transaction: Transaction) =>
-					signTransactionWithState(transaction, account.privateKey),
-			};
-		};
-
-		const createWithState = () => {
-			const account = create();
-
-			return {
-				...account,
-				signTransaction: async (transaction: Transaction) =>
-					signTransactionWithState(transaction, account.privateKey),
-			};
-		};
-
-		const accountProvider = {
-			create: createWithState,
-			privateKeyToAccount: privateKeyToAccountWithState,
-			decrypt: decryptWithState,
-		};
-
-		const wallet = new Wallet(accountProvider);
-
-		super({ provider, wallet, accountProvider });
+		// Init protected properties
+		this._wallet = accounts.wallet;
+		this._accountProvider = accounts;
 
 		this.utils = utils;
 
@@ -185,32 +122,11 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			Contract: ContractBuilder,
 
 			// ABI Helpers
-			abi: {
-				encodeEventSignature,
-				encodeFunctionCall,
-				encodeFunctionSignature,
-				encodeParameter,
-				encodeParameters,
-				decodeParameter,
-				decodeParameters,
-				decodeLog,
-			},
+			abi,
 
 			// Accounts helper
-			accounts: {
-				create: createWithState,
-				privateKeyToAccount: privateKeyToAccountWithState,
-				signTransaction: signTransactionWithState,
-				recoverTransaction,
-				hashMessage,
-				sign,
-				recover,
-				encrypt,
-				decrypt: decryptWithState,
-				wallet,
-			},
+			accounts,
 		});
 	}
 }
-
 export default Web3;

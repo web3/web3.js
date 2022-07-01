@@ -18,7 +18,7 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, getSystemTestAccounts, isWs } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -89,8 +89,9 @@ describe('contract', () => {
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
-			await sleep(getSystemTestProvider().startsWith('ws') ? 500 : 2000);
+			await sleep(isWs ? 500 : 2000);
 
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(confirmationHandler).toHaveBeenCalled();
 		});
 
@@ -167,7 +168,7 @@ describe('contract', () => {
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
-
+			// eslint-disable-next-line jest/no-standalone-expect
 			await expect(
 				revert
 					.deploy({

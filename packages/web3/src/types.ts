@@ -19,22 +19,23 @@ import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders } from 'web3-core';
 import Eth, { Transaction } from 'web3-eth';
 import {
-	encodeFunctionSignature,
-	encodeFunctionCall,
-	encodeParameter,
-	encodeParameters,
+	ContractAbi,
+	decodeLog,
 	decodeParameter,
 	decodeParameters,
-	decodeLog,
-	ContractAbi,
+	encodeFunctionCall,
+	encodeFunctionSignature,
+	encodeParameter,
+	encodeParameters,
 } from 'web3-eth-abi';
 import {
-	recoverTransaction,
+	encrypt,
 	hashMessage,
 	recover,
-	encrypt,
+	recoverTransaction,
 	sign,
 	signTransaction,
+	Wallet,
 	Web3Account,
 } from 'web3-eth-accounts';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
@@ -93,5 +94,6 @@ export interface Web3EthInterface extends Eth {
 			password: string,
 			options?: Record<string, unknown>,
 		) => Promise<Web3Account>;
+		wallet: Wallet;
 	};
 }

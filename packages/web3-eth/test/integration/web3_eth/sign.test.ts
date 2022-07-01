@@ -20,7 +20,11 @@ import { Address } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 
 import Web3Eth from '../../../src';
-import { getSystemTestAccounts, getSystemTestProvider } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestAccounts,
+	getSystemTestProvider,
+	isWs,
+} from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sign', () => {
 	let web3Eth: Web3Eth;
@@ -32,7 +36,7 @@ describe('Web3Eth.sign', () => {
 	});
 
 	afterAll(() => {
-		if (getSystemTestProvider().startsWith('ws')) {
+		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
 	});

@@ -19,9 +19,9 @@ import { Web3BaseProvider } from 'web3-common';
 /* eslint-disable import/no-named-as-default */
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
-import { getSystemTestProvider, describeIf } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().startsWith('ws'))('unsubscribe', () => {
+describeIf(isWs)('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {

@@ -84,6 +84,13 @@ export class Web3RequestManager<
 		return availableProviders;
 	}
 
+	/**
+	 * Use to set provider. Provider can be a provider instance or a string.
+	 * To set IPC provider as a string please use the IPC socket file which name ends with .ipc
+	 *
+	 * @param provider
+	 * @param net
+	 */
 	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket) {
 		let newProvider: SupportedProviders<API> | undefined;
 
@@ -100,6 +107,8 @@ export class Web3RequestManager<
 				// IPC
 			} else if (typeof net === 'object' && typeof net.connect === 'function') {
 				newProvider = new this.providers.IpcProvider<API>(provider, net);
+			} else if (provider.toLowerCase().endsWith('.ipc')) {
+				newProvider = new this.providers.IpcProvider<API>(provider);
 			} else {
 				throw new ProviderError(`Can't autodetect provider for "${provider}"`);
 			}

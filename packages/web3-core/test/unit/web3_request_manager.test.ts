@@ -209,6 +209,17 @@ describe('Web3RequestManager', () => {
 				expect(manager.provider).toEqual(myProvider);
 			});
 
+			it('should detect and set ipc provider as a string', () => {
+				const providerString = './some/file.ipc';
+
+				const manager = new Web3RequestManager();
+				manager.setProvider(providerString);
+
+				expect(manager.providers.IpcProvider).toHaveBeenCalledTimes(1);
+				expect(manager.providers.IpcProvider).toHaveBeenCalledWith(providerString);
+				expect(manager.provider).toEqual(myProvider);
+			});
+
 			it('should emit events before changing the provider', () => {
 				const providerString = 'ipc://mydomain.com';
 				const socket = { connect: () => jest.fn() } as any;
