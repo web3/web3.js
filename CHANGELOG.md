@@ -565,6 +565,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.5]
 
+### Changed
+-  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
+
 ### Added
 - Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
 
@@ -574,5 +577,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  Updated `got` lib version and fixed other libs using npm audit fix
-
 
