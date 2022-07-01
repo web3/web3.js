@@ -110,7 +110,15 @@ HttpProvider.prototype.send = function (payload, callback) {
         headers['Content-Type'] = 'application/json';
     }
 
-    options.credentials = this.withCredentials;
+    // As the Fetch API supports the credentials as following options 'include', 'omit', 'same-origin'
+    // https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
+    // To avoid breaking change in 1.x we override this value based on boolean option. 
+    if(this.withCredentials) {
+        options.credentials = 'include';
+    } else {
+        options.credentials = 'omit';
+    }
+    
     options.headers = headers;
 
     if (this.timeout > 0) {

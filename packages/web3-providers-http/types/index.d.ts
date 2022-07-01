@@ -45,7 +45,7 @@ export interface HttpProviderOptions {
 export class HttpProvider extends HttpProviderBase {
     host: string;
 
-    withCredentials?: string;
+    withCredentials?: boolean;
     timeout: number;
     headers?: HttpHeader[];
     agent?: HttpProviderAgent;
