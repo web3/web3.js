@@ -112,8 +112,9 @@ export const sign = (data: string, privateKey: HexString): SignResult => {
 /**
  *  Signs an Ethereum transaction with a given private key.
  *
- * @param transaction
- * @param privateKey
+ * This function is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
+ * This function will rely on user to provide the full transaction to be signed. If you want to sign a partial transaction object
+ * Use {@link Web3.eth.accounts.signTransaction} instead.
  */
 export const signTransaction = async (
 	transaction: TypedTransaction,
@@ -382,7 +383,8 @@ export const encrypt = async (
 /**
  * Get account from private key
  *
- * @param privateKey
+ * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
+ * Use {@link Web3.eth.accounts.signTransaction} instead.
  */
 export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
 	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
