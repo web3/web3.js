@@ -30,6 +30,7 @@ import {
 	getSystemTestAccounts,
 	getSystemTestProvider,
 	isHttp,
+	isIpc,
 	isWs,
 	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
