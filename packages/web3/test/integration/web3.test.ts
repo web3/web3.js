@@ -15,51 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import HttpProvider from 'web3-providers-http';
-import WebsocketProvider from 'web3-providers-ws';
-import IpcProvider from 'web3-providers-ipc';
-import Contract from 'web3-eth-contract';
 import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
-import HDWalletProvider from '@truffle/hdwallet-provider';
 import { SupportedProviders } from 'web3-core';
+import Contract from 'web3-eth-contract';
 import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';
-import { Web3Account } from 'web3-eth-accounts';
+import HttpProvider from 'web3-providers-http';
+import IpcProvider from 'web3-providers-ipc';
+import WebsocketProvider from 'web3-providers-ws';
+import { Web3 } from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
-	getSystemTestProvider,
 	describeIf,
-	itIf,
 	getSystemTestAccounts,
-	createNewAccount,
+	getSystemTestProvider,
 	isHttp,
-	isWs,
 	isIpc,
+	isWs,
+	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
-import { Web3 } from '../../src/index';
-
-const waitForOpenConnection = async (
-	web3Inst: Web3,
-	currentAttempt: number,
-	status = 'connected',
-) => {
-	return new Promise<void>((resolve, reject) => {
-		const maxNumberOfAttempts = 10;
-		const intervalTime = 5000; // ms
-
-		const interval = setInterval(() => {
-			if (currentAttempt > maxNumberOfAttempts - 1) {
-				clearInterval(interval);
-				reject(new Error('Maximum number of attempts exceeded'));
-			} else if ((web3Inst.provider as unknown as Web3BaseProvider).getStatus() === status) {
-				clearInterval(interval);
-				resolve();
-			}
-			// eslint-disable-next-line no-plusplus, no-param-reassign
-			currentAttempt++;
-		}, intervalTime);
-	});
-};
 
 describe('Web3 instance', () => {
 	let clientUrl: string;
@@ -71,9 +45,11 @@ describe('Web3 instance', () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
 	});
-	beforeEach(async () => {
+
+	beforeEach(() => {
 		currentAttempt = 0;
 	});
+
 	afterEach(async () => {
 		if (isWs) {
 			// make sure we try to close the connection after it is established
@@ -118,18 +94,8 @@ describe('Web3 instance', () => {
 	});
 
 	describeIf(isHttp)('Create Web3 class instance with http string providers', () => {
-		it('should create instance with string provider', async () => {
+		it('should create instance with string provider', () => {
 			web3 = new Web3(clientUrl);
-			expect(web3).toBeInstanceOf(Web3);
-		});
-
-		itIf(
-			process.env.INFURA_GOERLI_HTTP
-				? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
-				: false,
-		)('should create instance with string of external http provider', async () => {
-			web3 = new Web3(process.env.INFURA_GOERLI_HTTP);
-			// eslint-disable-next-line jest/no-standalone-expect
 			expect(web3).toBeInstanceOf(Web3);
 		});
 	});
@@ -137,16 +103,6 @@ describe('Web3 instance', () => {
 	describeIf(isWs)('Create Web3 class instance with ws string providers', () => {
 		it('should create instance with string of ws provider', async () => {
 			web3 = new Web3(clientUrl);
-			expect(web3).toBeInstanceOf(Web3);
-		});
-
-		itIf(
-			process.env.INFURA_GOERLI_WS
-				? process.env.INFURA_GOERLI_WS.toString().includes('ws')
-				: false,
-		)('should create instance with string of external ws provider', async () => {
-			web3 = new Web3(process.env.INFURA_GOERLI_WS);
-			// eslint-disable-next-line jest/no-standalone-expect
 			expect(web3).toBeInstanceOf(Web3);
 		});
 	});
@@ -166,7 +122,7 @@ describe('Web3 instance', () => {
 			expect(response).toEqual(expect.any(BigInt));
 		});
 
-		it('should set the provider with `.setProvider`', async () => {
+		it('should set the provider with `.setProvider`', () => {
 			let newProvider: Web3BaseProvider;
 			web3 = new Web3('http://dummy.com');
 			if (isHttp) {
@@ -214,7 +170,7 @@ describe('Web3 instance', () => {
 			await expect(web3.eth.getChainId()).rejects.toThrow('Provider not available');
 		});
 
-		it('providers', async () => {
+		it('providers', () => {
 			const res = Web3.providers;
 
 			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
@@ -222,7 +178,7 @@ describe('Web3 instance', () => {
 			expect(res.IpcProvider).toBe(IpcProvider);
 		});
 
-		it('currentProvider', async () => {
+		it('currentProvider', () => {
 			web3 = new Web3(clientUrl);
 
 			let checkWithClass;
@@ -236,7 +192,7 @@ describe('Web3 instance', () => {
 			expect(web3.currentProvider).toBeInstanceOf(checkWithClass);
 		});
 
-		it('givenProvider', async () => {
+		it('givenProvider', () => {
 			const { givenProvider } = web3;
 			expect(givenProvider).toBeUndefined();
 		});
@@ -294,63 +250,5 @@ describe('Web3 instance', () => {
 				]),
 			);
 		});
-	});
-
-	describe('Abi requests', () => {
-		const validData = validEncodeParametersData[0];
-
-		it('hash correctly', async () => {
-			web3 = new Web3(clientUrl);
-
-			const encodedParameters = web3.eth.abi.encodeParameters(
-				validData.input[0],
-				validData.input[1],
-			);
-			expect(encodedParameters).toEqual(validData.output);
-		});
-	});
-	describe('Account module', () => {
-		it('should create account', async () => {
-			web3 = new Web3(clientUrl);
-			const account: Web3Account = web3.eth.accounts.create();
-			expect(account).toEqual(
-				expect.objectContaining({
-					address: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
-					privateKey: expect.stringMatching(/0[xX][0-9a-fA-F]+/),
-				}),
-			);
-		});
-		it('should create account from private key', async () => {
-			web3 = new Web3(clientUrl);
-			const acc = await createNewAccount();
-			const createdAccount: Web3Account = web3.eth.accounts.privateKeyToAccount(
-				acc.privateKey,
-			);
-			expect(acc.address.toLowerCase()).toBe(createdAccount.address.toLowerCase());
-		});
-	});
-});
-
-describeIf(isHttp || isWs)('Create Web3 class instance with external providers', () => {
-	let provider: HDWalletProvider;
-	let clientUrl: string;
-	let web3: Web3;
-
-	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
-		const account = await createNewAccount();
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider = new HDWalletProvider({
-			privateKeys: [account.privateKey],
-			providerOrUrl: clientUrl,
-		});
-	});
-	afterAll(async () => {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		provider?.engine?.stop();
-	});
-	test('should create instance with external wallet provider', async () => {
-		web3 = new Web3(provider);
-		expect(web3).toBeInstanceOf(Web3);
 	});
 });

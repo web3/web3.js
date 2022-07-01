@@ -535,7 +535,7 @@ export function sendTransaction<
 					}
 
 					if (wallet) {
-						const signedTransaction = wallet.signTransaction(
+						const signedTransaction = await wallet.signTransaction(
 							transactionFormatted as Record<string, unknown>,
 						);
 
