@@ -126,6 +126,12 @@ const config = {
 						position: 'left',
 					},
 					{
+						to: 'docs/glossary/json_interface',
+						activeBasePath: 'docs',
+						label: 'Glossary',
+						position: 'left',
+					},
+					{
 						href: 'https://github.com/ChainSafe/web3.js/tree/4.x/',
 						label: 'GitHub',
 						position: 'right',

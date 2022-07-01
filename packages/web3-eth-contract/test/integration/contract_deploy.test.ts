@@ -18,7 +18,7 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, getSystemTestAccounts, isWs } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -75,7 +75,7 @@ describe('contract', () => {
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
-			contract
+			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
@@ -89,17 +89,20 @@ describe('contract', () => {
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
-			await sleep(getSystemTestProvider().startsWith('ws') ? 500 : 2000);
+			await sleep(isWs ? 500 : 2000);
 
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(confirmationHandler).toHaveBeenCalled();
 		});
 
 		it('should emit the "transactionHash" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('transactionHash', handler);
 
-			promiEvent.on('transactionHash', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -109,9 +112,11 @@ describe('contract', () => {
 		it('should emit the "sending" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('sending', handler);
 
-			promiEvent.on('sending', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -121,9 +126,8 @@ describe('contract', () => {
 		it('should emit the "sent" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract.deploy(deployOptions).send(sendOptions).on('sent', handler);
 
-			promiEvent.on('sent', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -133,9 +137,11 @@ describe('contract', () => {
 		it('should emit the "receipt" event', async () => {
 			const handler = jest.fn();
 
-			const promiEvent = contract.deploy(deployOptions).send(sendOptions);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send(sendOptions)
+				.on('receipt', handler);
 
-			promiEvent.on('receipt', handler);
 			// Deploy the contract
 			await promiEvent;
 
@@ -162,7 +168,7 @@ describe('contract', () => {
 		it('should fail with errors on revert', async () => {
 			const revert = new Contract(DeployRevertAbi);
 			revert.provider = getSystemTestProvider();
-
+			// eslint-disable-next-line jest/no-standalone-expect
 			await expect(
 				revert
 					.deploy({

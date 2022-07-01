@@ -28,9 +28,10 @@ import {
 	getSystemTestProvider,
 	describeIf,
 	getSystemTestAccounts,
+	isWs,
 } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().startsWith('ws'))('subscribe', () => {
+describeIf(isWs)('subscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	let accounts: string[];

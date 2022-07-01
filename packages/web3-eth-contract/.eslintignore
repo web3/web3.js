@@ -1,4 +1,1 @@
-dist
-jest.config.js
-.eslintrc.js
-cypress
+../../templates/.eslintignore.tmpl

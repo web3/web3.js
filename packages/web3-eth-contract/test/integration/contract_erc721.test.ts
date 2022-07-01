@@ -21,6 +21,7 @@ import {
 	getSystemTestProvider,
 	getSystemTestAccounts,
 	describeIf,
+	isWs,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -86,7 +87,7 @@ describe('contract', () => {
 				});
 			});
 
-			describeIf(getSystemTestProvider().startsWith('ws'))('events', () => {
+			describeIf(isWs)('events', () => {
 				it('should emit transfer event', async () => {
 					await expect(
 						processAsync(async resolve => {

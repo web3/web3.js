@@ -48,7 +48,10 @@ import {
 } from 'web3-eth-accounts';
 import * as utils from 'web3-utils';
 import { Address } from 'web3-utils';
-import packageJson from '../package.json';
+import { readFileSync } from 'fs';
+import { Web3EthInterface } from './types';
+
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = packageJson.version;
@@ -63,36 +66,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 
 	public utils: typeof utils;
 
-	public eth: Web3Eth & {
-		Iban: typeof Iban;
-		ens: ENS;
-		net: Net;
-		personal: Personal;
-		Contract: typeof Contract & {
-			setProvider: (provider: SupportedProviders<EthExecutionAPI>) => void;
-		};
-		abi: {
-			encodeEventSignature: typeof encodeFunctionSignature;
-			encodeFunctionCall: typeof encodeFunctionCall;
-			encodeFunctionSignature: typeof encodeFunctionSignature;
-			encodeParameter: typeof encodeParameter;
-			encodeParameters: typeof encodeParameters;
-			decodeParameter: typeof decodeParameter;
-			decodeParameters: typeof decodeParameters;
-			decodeLog: typeof decodeLog;
-		};
-		accounts: {
-			create: typeof create;
-			privateKeyToAccount: typeof privateKeyToAccount;
-			signTransaction: typeof signTransaction;
-			recoverTransaction: typeof recoverTransaction;
-			hashMessage: typeof hashMessage;
-			sign: typeof sign;
-			recover: typeof recover;
-			encrypt: typeof encrypt;
-			decrypt: typeof decrypt;
-		};
-	};
+	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
 		const accountProvider = {
@@ -104,9 +78,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				options?: Record<string, unknown>,
 			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
 		};
-
 		const wallet = new Wallet(accountProvider);
-
 		super({ provider, wallet, accountProvider });
 
 		this.utils = utils;
@@ -180,5 +152,4 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
-
 export default Web3;

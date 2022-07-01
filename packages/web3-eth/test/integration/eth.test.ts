@@ -22,10 +22,14 @@ import { Contract } from 'web3-eth-contract';
 import { SupportedProviders } from 'web3-core';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
-import { hexToNumber } from 'web3-utils';
 import { Web3Eth } from '../../src';
 
-import { createNewAccount, getSystemTestProvider } from '../fixtures/system_test_utils';
+import {
+	createNewAccount,
+	getSystemTestProvider,
+	isHttp,
+	isWs,
+} from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
 
@@ -43,7 +47,7 @@ describe('eth', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		if (clientUrl.startsWith('ws')) {
+		if (isWs) {
 			web3Eth = new Web3Eth(
 				new WebSocketProvider(
 					clientUrl,
@@ -75,7 +79,7 @@ describe('eth', () => {
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	afterAll(() => {
-		if (clientUrl.startsWith('ws') && web3Eth?.provider) {
+		if (isWs && web3Eth?.provider) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 			(contract.provider as WebSocketProvider).disconnect();
 		}
@@ -95,11 +99,10 @@ describe('eth', () => {
 		});
 		it('currentProvider', () => {
 			const { currentProvider } = web3Eth;
-			const url = getSystemTestProvider();
 			let checkWithClass;
-			if (url.startsWith('ws')) {
+			if (isWs) {
 				checkWithClass = WebSocketProvider;
-			} else if (url.startsWith('http')) {
+			} else if (isHttp) {
 				checkWithClass = HttpProvider;
 			} else {
 				checkWithClass = IpcProvider;
@@ -109,27 +112,6 @@ describe('eth', () => {
 		it('givenProvider', () => {
 			const { givenProvider } = web3Eth;
 			expect(givenProvider).toBeUndefined();
-		});
-		it('BatchRequest', async () => {
-			const batch = new web3Eth.BatchRequest();
-			const request1 = {
-				id: 10,
-				method: 'eth_getBalance',
-				params: [accounts[0], 'latest'],
-			};
-			const request2 = {
-				id: 11,
-				method: 'eth_getBalance',
-				params: [accounts[1], 'latest'],
-			};
-			batch.add(request1).catch(console.error);
-			batch.add(request2).catch(console.error);
-			const [response1, response2] = await batch.execute();
-			expect(response1.result).toBeDefined();
-			expect(response2.result).toBeDefined();
-			// TODO: in future release add test for validation of returned results , ( match balance )
-			expect(Number(hexToNumber(String(response1.result)))).toBeGreaterThan(0);
-			expect(Number(hexToNumber(String(response2.result)))).toBeGreaterThan(0);
 		});
 	});
 });
