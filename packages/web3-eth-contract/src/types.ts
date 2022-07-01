@@ -22,9 +22,9 @@ import {
 	FormatType,
 	Web3PromiEvent,
 } from 'web3-common';
-import { SupportedProviders } from 'web3-core';
+import { SupportedProviders, Web3ContextInitOptions } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
-import { SendTransactionEvents, ReceiptInfo } from 'web3-eth';
+import { SendTransactionEvents, ReceiptInfo, NewHeadsSubscription } from 'web3-eth';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -34,6 +34,8 @@ import {
 	Numbers,
 	Uint,
 } from 'web3-utils';
+// eslint-disable-next-line import/no-cycle
+import { LogsSubscription } from './log_subscription';
 
 export interface EventLog {
 	readonly event: string;
@@ -296,7 +298,10 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 */
 	send(
 		tx?: NonPayableTxOptions,
-	): Web3PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
+	): Web3PromiEvent<
+		FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>,
+		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	>;
 
 	/**
 	 * Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain.
@@ -450,7 +455,10 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 */
 	send(
 		tx?: PayableTxOptions,
-	): Web3PromiEvent<FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>, SendTransactionEvents>;
+	): Web3PromiEvent<
+		FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>,
+		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	>;
 
 	/**
 	 * Returns the amount of gas consumed by executing the method locally without creating a new transaction on the blockchain.
@@ -485,3 +493,14 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 */
 	encodeABI(): HexString;
 }
+
+export type Web3ContractContext = Partial<
+	Web3ContextInitOptions<
+		EthExecutionAPI,
+		{
+			logs: typeof LogsSubscription;
+			newHeads: typeof NewHeadsSubscription;
+			newBlockHeaders: typeof NewHeadsSubscription;
+		}
+	>
+>;

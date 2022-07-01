@@ -27,7 +27,7 @@ import {
 	Web3EventEmitter,
 	ReceiptInfo,
 } from 'web3-common';
-import { Web3Context, Web3ContextInitOptions } from 'web3-core';
+import { Web3Context } from 'web3-core';
 import {
 	call,
 	estimateGas,
@@ -60,7 +60,7 @@ import {
 	HexString,
 	toChecksumAddress,
 } from 'web3-utils';
-import { validator } from 'web3-validator';
+import { isNullish, validator } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -75,8 +75,15 @@ import {
 	PayableCallOptions,
 	PayableMethodObject,
 	PayableTxOptions,
+	Web3ContractContext,
 } from './types';
-import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './utils';
+import {
+	getEstimateGasParams,
+	getEthTxCallParams,
+	getSendTxParams,
+	isContractInitOptions,
+	isWeb3ContractContext,
+} from './utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ContractBoundMethod<Method extends ContractMethod<any>> = (
@@ -264,99 +271,68 @@ export class Contract<Abi extends ContractAbi>
 	 * const myContract = new web3.eth.Contract(myContractAbi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
 	 * ```
 	 */
-	public constructor(
-		jsonInterface: Abi,
-		context?: Partial<
-			Web3ContextInitOptions<
-				EthExecutionAPI,
-				{
-					logs: typeof LogsSubscription;
-					newHeads: typeof NewHeadsSubscription;
-					newBlockHeaders: typeof NewHeadsSubscription;
-				}
-			>
-		>,
-	);
-	public constructor(
-		jsonInterface: Abi,
-		address: Address,
-		context?: Partial<
-			Web3ContextInitOptions<
-				EthExecutionAPI,
-				{
-					logs: typeof LogsSubscription;
-					newHeads: typeof NewHeadsSubscription;
-					newBlockHeaders: typeof NewHeadsSubscription;
-				}
-			>
-		>,
-	);
+	public constructor(jsonInterface: Abi, context?: Web3ContractContext);
+	public constructor(jsonInterface: Abi, address: Address, context?: Web3ContractContext);
 	public constructor(
 		jsonInterface: Abi,
 		options?: ContractInitOptions,
-		context?: Partial<
-			Web3ContextInitOptions<
-				EthExecutionAPI,
-				{
-					logs: typeof LogsSubscription;
-					newHeads: typeof NewHeadsSubscription;
-					newBlockHeaders: typeof NewHeadsSubscription;
-				}
-			>
-		>,
+		context?: Web3ContractContext,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address: Address,
 		options: ContractInitOptions,
-		context?: Partial<
-			Web3ContextInitOptions<
-				EthExecutionAPI,
-				{
-					logs: typeof LogsSubscription;
-					newHeads: typeof NewHeadsSubscription;
-					newBlockHeaders: typeof NewHeadsSubscription;
-				}
-			>
-		>,
+		context?: Web3ContractContext,
 	);
 	public constructor(
 		jsonInterface: Abi,
-		address?: Address | ContractInitOptions,
-		options?: ContractInitOptions,
-		context?: Partial<
-			Web3ContextInitOptions<
-				EthExecutionAPI,
-				{
-					logs: typeof LogsSubscription;
-					newHeads: typeof NewHeadsSubscription;
-					newBlockHeaders: typeof NewHeadsSubscription;
-				}
-			>
-		>,
+		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext,
+		optionsOrContext?: ContractInitOptions | Web3ContractContext,
+		context?: Web3ContractContext,
 	) {
 		super({
-			...context,
-			provider: options?.provider ?? context?.provider ?? Contract.givenProvider,
+			// Due to abide by the rule that super must be first call in constructor
+			// Have to do this complex ternary conditions
+			// eslint-disable-next-line no-nested-ternary
+			...(isWeb3ContractContext(addressOrOptionsOrContext)
+				? addressOrOptionsOrContext
+				: isWeb3ContractContext(optionsOrContext)
+				? optionsOrContext
+				: context),
+			provider:
+				typeof addressOrOptionsOrContext !== 'string'
+					? addressOrOptionsOrContext?.provider ??
+					  optionsOrContext?.provider ??
+					  context?.provider ??
+					  Contract.givenProvider
+					: undefined,
 			registeredSubscriptions: contractSubscriptions,
 		});
 
+		const address =
+			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
+
+		// eslint-disable-next-line no-nested-ternary
+		const options = isContractInitOptions(addressOrOptionsOrContext)
+			? addressOrOptionsOrContext
+			: isContractInitOptions(optionsOrContext)
+			? optionsOrContext
+			: undefined;
+
 		this._parseAndSetJsonInterface(jsonInterface);
 
-		if (typeof address === 'string') {
+		if (!isNullish(address)) {
 			this._parseAndSetAddress(address);
 		}
 
-		const initOptions = typeof address === 'object' ? address : options;
-
 		this.options = {
-			address: undefined,
-			jsonInterface: [],
-			gas: initOptions?.gas ?? initOptions?.gasLimit,
-			gasPrice: initOptions?.gasPrice,
-			gasLimit: initOptions?.gasLimit,
-			from: initOptions?.from,
-			data: initOptions?.data,
+			address,
+			jsonInterface,
+			gas: options?.gas ?? options?.gasLimit,
+			gasPrice: options?.gasPrice,
+			gasLimit: options?.gasLimit,
+			from: options?.from,
+			data: options?.data,
 		};
 
 		Object.defineProperty(this.options, 'address', {
@@ -674,7 +650,10 @@ export class Contract<Abi extends ContractAbi>
 			arguments: args,
 			send: (
 				options?: PayableTxOptions,
-			): Web3PromiEvent<Contract<Abi>, SendTransactionEvents> => {
+			): Web3PromiEvent<
+				Contract<Abi>,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> => {
 				const modifiedOptions = { ...options };
 
 				// Remove to address

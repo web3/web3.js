@@ -26,17 +26,15 @@ import Iban from 'web3-eth-iban';
 import Personal from 'web3-eth-personal';
 import Net from 'web3-net';
 import * as utils from 'web3-utils';
-import { Address, Bytes, isNullish } from 'web3-utils';
+import { Address, isNullish } from 'web3-utils';
 import { Web3EthInterface } from './types';
-import { Address } from 'web3-utils';
 import abi from './abi';
 import { initAccountsForContext } from './accounts';
-import { Web3EthInterface } from './types';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
 export class Web3 extends Web3Context<EthExecutionAPI> {
-	public static version = '123';
+	public static version = packageJson.version;
 	public static utils = utils;
 	public static modules = {
 		Web3Eth,
@@ -69,30 +67,29 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			private static readonly _contracts: Contract<any>[] = [];
 
-			public constructor(
-				jsonInterface: Abi,
-				address?: Address,
-				options?: ContractInitOptions,
-			);
+			public constructor(jsonInterface: Abi);
 			// eslint-disable-next-line @typescript-eslint/unified-signatures
-			public constructor(jsonInterface: Abi, options?: ContractInitOptions);
-			public constructor(jsonInterface: Abi, address: Address, options?: ContractInitOptions);
+			public constructor(jsonInterface: Abi, address: Address);
+			// eslint-disable-next-line @typescript-eslint/unified-signatures
+			public constructor(jsonInterface: Abi, options: ContractInitOptions);
+			// eslint-disable-next-line @typescript-eslint/unified-signatures
+			public constructor(jsonInterface: Abi, address: Address, options: ContractInitOptions);
 			public constructor(
 				jsonInterface: Abi,
 				addressOrOptions?: Address | ContractInitOptions,
 				options?: ContractInitOptions,
 			) {
 				if (typeof addressOrOptions === 'string') {
-					super(
-						jsonInterface,
-						addressOrOptions,
-						options as ContractInitOptions,
-						self.getContextObject(),
-					);
-				} else if (addressOrOptions && isNullish(options)) {
+					super(jsonInterface, addressOrOptions, options ?? {}, self.getContextObject());
+				}
+				if (typeof addressOrOptions === 'object') {
+					super(jsonInterface, addressOrOptions, self.getContextObject());
+				} else if (!isNullish(addressOrOptions) && isNullish(options)) {
 					super(jsonInterface, addressOrOptions ?? {}, self.getContextObject());
-				} else {
+				} else if (isNullish(addressOrOptions) && !isNullish(options)) {
 					super(jsonInterface, options ?? {}, self.getContextObject());
+				} else {
+					super(jsonInterface, self.getContextObject());
 				}
 
 				ContractBuilder._contracts.push(this);
