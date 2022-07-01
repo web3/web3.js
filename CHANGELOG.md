@@ -579,15 +579,15 @@ Released with 1.0.0-beta.37 code base.
 ## [1.7.5]
 
 ### Added
-- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+
+-   Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
 
 ### Fixed
 
--  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
--  Improve README.md & Fix typos (#4848)
--   Fix `hexToNumber` supporting more than 53 bits numbers (#5153)
+-   Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-   Improve README.md & Fix typos (#4848)
+-   Add optional hex formatting parameter for getTransactionrReceipt (#5153)
 
 ### Security
--  Updated `got` lib version and fixed other libs using npm audit fix
 
-
+-   Updated `got` lib version and fixed other libs using npm audit fix
