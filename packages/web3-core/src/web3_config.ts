@@ -129,10 +129,33 @@ export abstract class Web3Config
 		this._config.defaultAccount = val;
 	}
 
+	/**
+	 * The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter. The default value is `latest`.
+	 *
+	 * - web3.eth.getBalance()
+	 * - web3.eth.getCode()
+	 * - web3.eth.getTransactionCount()
+	 * - web3.eth.getStorageAt()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 *
+	 * Values:
+	 * - A block number
+	 * - `earliest` - String: The genesis block
+	 * - `latest` - String: The latest block (current head of the blockchain)
+	 * - `pending` - String: The currently mined block (including pending transactions)
+	 *
+	 * @returns {BlockNumberOrTag}
+	 */
 	public get defaultBlock() {
 		return this._config.defaultBlock;
 	}
 
+	/**
+	 * Will set the default block
+	 *
+	 * @param {BlockNumberOrTag} val
+	 */
 	public set defaultBlock(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultBlock',
@@ -142,6 +165,11 @@ export abstract class Web3Config
 		this._config.defaultBlock = val;
 	}
 
+	/**
+	 * The `transactionBlockTimeout is used over socket-based connections. This option defines the amount of new blocks it should wait until the first confirmation happens, otherwise the PromiEvent rejects with a timeout error.
+	 *
+	 * Default is `50`
+	 */
 	public get transactionBlockTimeout() {
 		return this._config.transactionBlockTimeout;
 	}
@@ -155,6 +183,11 @@ export abstract class Web3Config
 		this._config.transactionBlockTimeout = val;
 	}
 
+	/**
+	 * This defines the number of blocks it requires until a transaction is considered confirmed.
+	 *
+	 * Default is `24`
+	 */
 	public get transactionConfirmationBlocks() {
 		return this._config.transactionConfirmationBlocks;
 	}
@@ -264,20 +297,64 @@ export abstract class Web3Config
 		this._config.defaultChain = val;
 	}
 
+	/**
+	 * The default hardfork property is used for signing transactions locally.
+	 *
+	 * Will return the default hardfork
+	 *
+	 * @returns {string}
+	 *
+	 * The default hardfork property can be one of the following:
+	 * - `chainstart`
+	 * - `homestead`
+	 * - `dao`
+	 * - `tangerineWhistle`
+	 * - `spuriousDragon`
+	 * - `byzantium`
+	 * - `constantinople`
+	 * - `petersburg`
+	 * - `istanbul`
+	 * - `berlin`
+	 * - `london`
+	 *
+	 * Default is `london`
+	 */
 	public get defaultHardfork() {
 		return this._config.defaultHardfork;
 	}
 
+	/**
+	 *
+	 * @param {string} val
+	 */
 	public set defaultHardfork(val) {
 		this._triggerConfigChange('defaultHardfork', val);
 
 		this._config.defaultHardfork = val;
 	}
 
+	/**
+	 *
+	 * Will get the default common property
+	 *
+	 *The default common property does contain the following Common object:
+	 *
+	 * `customChain` - `Object`: The custom chain properties
+	 * - `name` - `string`: (optional) The name of the chain
+	 * - `networkId` - `number`: Network ID of the custom chain
+	 * - `chainId` - `number`: Chain ID of the custom chain
+	 * - `baseChain` - `string`: (optional) mainnet, goerli, kovan, rinkeby, or ropsten
+	 * - `hardfork` - `string`: (optional) chainstart, homestead, dao, tangerineWhistle, spuriousDragon, byzantium, constantinople, petersburg, istanbul, berlin, or london
+	 */
 	public get defaultCommon() {
 		return this._config.defaultCommon;
 	}
 
+	/**
+	 * Will set the default common property
+	 *
+	 * @returns {Record<string,unknown}
+	 */
 	public set defaultCommon(val) {
 		this._triggerConfigChange('defaultCommon', val);
 
