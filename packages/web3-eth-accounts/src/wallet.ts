@@ -158,7 +158,7 @@ export class Wallet<
 		}
 
 		const index = this.length;
-		this._addressMap.set(account.address, index);
+		this._addressMap.set(account.address.toLowerCase(), index);
 
 		this[index] = account;
 
@@ -173,7 +173,7 @@ export class Wallet<
 
 	public get(addressOrIndex: string | number): T | undefined {
 		if (typeof addressOrIndex === 'string') {
-			const index = this._addressMap.get(addressOrIndex);
+			const index = this._addressMap.get(addressOrIndex.toLowerCase());
 
 			if (!isNullish(index)) {
 				return this[index];

@@ -58,15 +58,16 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	it('should make a simple value transfer - with local wallet indexed sender', async () => {
+		const web3EthWithWallet = new Web3Eth(getSystemTestProvider());
 		const accountProvider = createAccountProvider(web3Eth);
 		const wallet = new Wallet(accountProvider);
 
-		web3Eth['_accountProvider'] = accountProvider;
-		web3Eth['_wallet'] = wallet;
+		web3EthWithWallet['_accountProvider'] = accountProvider;
+		web3EthWithWallet['_wallet'] = wallet;
 
 		const accountsWithKeys = getSystemTestAccountsWithKeys();
 
-		web3Eth.wallet?.add(accountsWithKeys[0].privateKey);
+		web3EthWithWallet.wallet?.add(accountsWithKeys[0].privateKey);
 
 		const transaction: TransactionWithLocalWalletIndex = {
 			from: 0,
@@ -74,10 +75,12 @@ describe('Web3Eth.sendTransaction', () => {
 			gas: 21000,
 			value: BigInt(1),
 		};
-		const response = await web3Eth.sendTransaction(transaction);
+		const response = await web3EthWithWallet.sendTransaction(transaction);
 		expect(response.status).toBe(BigInt(1));
 
-		const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
 
 		expect(minedTransactionData).toMatchObject({
 			from: accountsWithKeys[0].address.toLowerCase(),
