@@ -542,6 +542,17 @@ export class Contract<Abi extends ContractAbi>
 	 * ```
 	 */
 	public clone() {
+		if (this.options.address) {
+			return new Contract<Abi>(this._jsonInterface as unknown as Abi, this.options.address, {
+				gas: this.options.gas,
+				gasPrice: this.options.gasPrice,
+				gasLimit: this.options.gasLimit,
+				from: this.options.from,
+				data: this.options.data,
+				provider: this.currentProvider,
+			});
+		}
+
 		return new Contract<Abi>(this._jsonInterface as unknown as Abi, {
 			gas: this.options.gas,
 			gasPrice: this.options.gasPrice,
@@ -736,20 +747,20 @@ export class Contract<Abi extends ContractAbi>
 	 * @returns - An array with the past event `Objects`, matching the given event name and filter.
 	 */
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
-		returnFormat: ReturnFormat,
+		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		eventName: keyof ContractEvents<Abi> | 'allEvents',
-		returnFormat: ReturnFormat,
+		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		filter: Omit<Filter, 'address'>,
-		returnFormat: ReturnFormat,
+		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		eventName: keyof ContractEvents<Abi> | 'allEvents',
 		filter: Omit<Filter, 'address'>,
-		returnFormat: ReturnFormat,
+		returnFormat?: ReturnFormat,
 	): Promise<(string | EventLog)[]>;
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		param1?: keyof ContractEvents<Abi> | 'allEvents' | Omit<Filter, 'address'> | ReturnFormat,
