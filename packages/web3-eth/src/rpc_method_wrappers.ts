@@ -727,6 +727,15 @@ export function sendSignedTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							if (promiEvent.listenerCount('error') > 0) {
+								promiEvent.emit(
+									'error',
+									new TransactionError(
+										'Transaction failed',
+										transactionReceiptFormatted,
+									),
+								);
+							}
 							reject(transactionReceiptFormatted as unknown as ResolveType);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
@@ -746,6 +755,12 @@ export function sendSignedTransaction<
 							);
 						}
 					} catch (error) {
+						if (promiEvent.listenerCount('error') > 0) {
+							promiEvent.emit(
+								'error',
+								new TransactionError((error as Error).message),
+							);
+						}
 						reject(error);
 					}
 				})() as unknown;

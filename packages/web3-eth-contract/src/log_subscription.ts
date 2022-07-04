@@ -17,10 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { LogsInput } from 'web3-common';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
-import { AbiEventFragment, encodeEventSignature, jsonInterfaceMethodToString } from 'web3-eth-abi';
+import { AbiEventFragment } from 'web3-eth-abi';
 import { HexString, Topic } from 'web3-utils';
+// eslint-disable-next-line import/no-cycle
 import { decodeEventABI } from './encoding';
-import { EventLog } from './types';
+// eslint-disable-next-line import/no-cycle
+import { ContractAbiWithSignature, EventLog } from './types';
 
 /**
  * LogSubscription to be used to subscribe to events logs.
@@ -98,10 +100,17 @@ export class LogsSubscription extends Web3Subscription<
 	/**
 	 * The {@doclink glossary/json_interface | JSON Interface} of the event.
 	 */
-	public readonly abi: AbiEventFragment;
+	public readonly abi: AbiEventFragment & { signature: HexString };
+
+	public readonly jsonInterface: ContractAbiWithSignature;
 
 	public constructor(
-		args: { address?: HexString; topics?: (Topic | Topic[])[]; abi: AbiEventFragment },
+		args: {
+			address?: HexString;
+			topics?: (Topic | Topic[])[];
+			abi: AbiEventFragment & { signature: HexString };
+			jsonInterface: ContractAbiWithSignature;
+		},
 		options: { requestManager: Web3RequestManager },
 	) {
 		super(args, options);
@@ -109,6 +118,7 @@ export class LogsSubscription extends Web3Subscription<
 		this.address = args.address;
 		this.topics = args.topics;
 		this.abi = args.abi;
+		this.jsonInterface = args.jsonInterface;
 	}
 
 	protected _buildSubscriptionParams() {
@@ -119,10 +129,7 @@ export class LogsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: LogsInput): void {
-		const decoded = decodeEventABI(
-			{ ...this.abi, signature: encodeEventSignature(jsonInterfaceMethodToString(this.abi)) },
-			data,
-		);
+		const decoded = decodeEventABI(this.abi, data, this.jsonInterface);
 		this.emit('data', decoded);
 	}
 }

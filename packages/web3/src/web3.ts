@@ -27,9 +27,9 @@ import Personal from 'web3-eth-personal';
 import Net from 'web3-net';
 import * as utils from 'web3-utils';
 import { Address, isNullish } from 'web3-utils';
-import { Web3EthInterface } from './types';
 import abi from './abi';
 import { initAccountsForContext } from './accounts';
+import { Web3EthInterface } from './types';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
 
@@ -68,11 +68,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			private static readonly _contracts: Contract<any>[] = [];
 
 			public constructor(jsonInterface: Abi);
-			// eslint-disable-next-line @typescript-eslint/unified-signatures
 			public constructor(jsonInterface: Abi, address: Address);
-			// eslint-disable-next-line @typescript-eslint/unified-signatures
 			public constructor(jsonInterface: Abi, options: ContractInitOptions);
-			// eslint-disable-next-line @typescript-eslint/unified-signatures
 			public constructor(jsonInterface: Abi, address: Address, options: ContractInitOptions);
 			public constructor(
 				jsonInterface: Abi,
@@ -80,9 +77,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				options?: ContractInitOptions,
 			) {
 				if (typeof addressOrOptions === 'string') {
-					super(jsonInterface, addressOrOptions, options ?? {}, self.getContextObject());
-				}
-				if (typeof addressOrOptions === 'object') {
+					super(jsonInterface, addressOrOptions, self.getContextObject());
+				} else if (typeof addressOrOptions === 'object') {
 					super(jsonInterface, addressOrOptions, self.getContextObject());
 				} else if (!isNullish(addressOrOptions) && isNullish(options)) {
 					super(jsonInterface, addressOrOptions ?? {}, self.getContextObject());
@@ -126,4 +122,3 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
-export default Web3;
