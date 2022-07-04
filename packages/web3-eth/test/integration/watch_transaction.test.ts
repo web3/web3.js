@@ -78,12 +78,12 @@ describeIf(isWs)('watch subscription transaction', () => {
 					resolve();
 				});
 			});
-			let shouldBe = 2;
+			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(parseInt(String(confirmations), 16)).toBe(shouldBe);
+					expect(Number(confirmations)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
 						resolve();
