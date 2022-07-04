@@ -532,7 +532,7 @@ export function sendTransaction<
 						let transactionHash: HexString;
 						let wallet: Web3BaseWalletAccount | undefined;
 
-						if (web3Context.wallet && transactionFormatted.from) {
+						if (web3Context.wallet && !isNullish(transactionFormatted.from)) {
 							wallet = web3Context.wallet.get(transactionFormatted.from);
 						}
 

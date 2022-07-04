@@ -101,8 +101,9 @@ describeIf(isWs)('subscription', () => {
 					const decodedData = decodeEventABI(
 						eventAbi as AbiEventFragment & { signature: string },
 						data,
+						[],
 					);
-					expect(decodedData.returnValue['0']).toBe(testDataString);
+					expect(decodedData.returnValues['0']).toBe(testDataString);
 					if (count >= checkEventCount) {
 						resolve();
 					}
