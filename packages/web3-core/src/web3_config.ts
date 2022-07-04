@@ -107,6 +107,15 @@ export abstract class Web3Config
 		this._config.handleRevert = val;
 	}
 
+	/**
+	 *
+	 * This default address is used as the default `from` property, if no `from` property is specified in for the following methods:
+	 *
+	 * - web3.eth.sendTransaction()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 * - myContract.methods.myMethod().send()
+	 */
 	public get defaultAccount() {
 		return this._config.defaultAccount;
 	}
