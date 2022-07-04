@@ -123,7 +123,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	public async getAccounts() {
-		const hexAddresses = await rpcMethods.getAccounts(this.requestManager);
+		const hexAddresses = (await rpcMethods.getAccounts(this.requestManager)) ?? [];
 		return hexAddresses.map(address => toChecksumAddress(address));
 	}
 
