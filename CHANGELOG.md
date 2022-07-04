@@ -574,8 +574,8 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 -  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
 -  Improve README.md & Fix typos (#4848)
--  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 -  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
+-  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 
 ### Security
 -  Updated `got` lib version and fixed other libs using npm audit fix
