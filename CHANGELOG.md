@@ -577,6 +577,7 @@ Released with 1.0.0-beta.37 code base.
 -  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
 -  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 
+
 ### Security
--  Updated `got` lib version and fixed other libs using npm audit fix
+- Updated `got` lib version and fixed other libs using npm audit fix
 
