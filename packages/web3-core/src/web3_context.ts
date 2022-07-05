@@ -92,10 +92,10 @@ export class Web3Context<
 	public static readonly providers = Web3RequestManager.providers;
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
-	private _requestManager: Web3RequestManager<API>;
-	private _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
-	private _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
-	private _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
+	protected _requestManager: Web3RequestManager<API>;
+	protected _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
+	protected _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
+	protected _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 
 	public constructor(
 		providerOrContext?:

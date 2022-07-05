@@ -19,13 +19,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { Bytes } from 'web3-utils';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { create as createAccount } from 'web3-eth-accounts';
+import {
+	create,
+	create as createAccount,
+	decrypt,
+	privateKeyToAccount,
+	signTransaction,
+} from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3Eth } from 'web3-eth';
+import { prepareTransactionForSigning, Transaction, Web3Eth } from 'web3-eth';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3Context } from 'web3-core';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { EthExecutionAPI, ETH_DATA_FORMAT, format, Web3BaseProvider } from 'web3-common';
 
 let _accounts: string[] = [];
 
@@ -206,3 +220,103 @@ export const itIf = (condition: (() => boolean) | boolean) =>
 
 export const describeIf = (condition: (() => boolean) | boolean) =>
 	(typeof condition === 'function' ? condition() : condition) ? describe : describe.skip;
+
+const maxNumberOfAttempts = 10;
+const intervalTime = 5000; // ms
+
+export const waitForOpenConnection = async (
+	web3Context: Web3Context<any>,
+	currentAttempt = 1,
+	status = 'connected',
+) =>
+	new Promise<void>((resolve, reject) => {
+		if (!getSystemTestProvider().startsWith('ws')) {
+			resolve();
+			return;
+		}
+
+		const interval = setInterval(() => {
+			if (currentAttempt > maxNumberOfAttempts - 1) {
+				clearInterval(interval);
+				reject(new Error('Maximum number of attempts exceeded'));
+			} else if (
+				(web3Context.provider as unknown as Web3BaseProvider).getStatus() === status
+			) {
+				clearInterval(interval);
+				resolve();
+			}
+			// eslint-disable-next-line no-plusplus, no-param-reassign
+			currentAttempt++;
+		}, intervalTime);
+	});
+
+export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
+	if (!getSystemTestProvider().startsWith('ws')) {
+		return;
+	}
+
+	// make sure we try to close the connection after it is established
+	if (
+		web3Context?.provider &&
+		(web3Context.provider as unknown as Web3BaseProvider).getStatus() === 'connecting'
+	) {
+		await waitForOpenConnection(web3Context);
+	}
+
+	if (
+		web3Context?.provider &&
+		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
+	) {
+		(web3Context.provider as unknown as Web3BaseProvider).disconnect(1000, '');
+	}
+};
+
+export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => {
+	const signTransactionWithContext = async (transaction: Transaction, privateKey: Bytes) => {
+		const tx = await prepareTransactionForSigning(transaction, context);
+
+		const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
+
+		return signTransaction(tx, privateKeyBytes);
+	};
+
+	const privateKeyToAccountWithContext = (privateKey: Buffer | string) => {
+		const account = privateKeyToAccount(privateKey);
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	const decryptWithContext = async (
+		keystore: string,
+		password: string,
+		options?: Record<string, unknown>,
+	) => {
+		const account = await decrypt(keystore, password, (options?.nonStrict as boolean) ?? true);
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	const createWithContext = () => {
+		const account = create();
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	return {
+		create: createWithContext,
+		privateKeyToAccount: privateKeyToAccountWithContext,
+		decrypt: decryptWithContext,
+	};
+};

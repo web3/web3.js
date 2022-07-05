@@ -15,40 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
+import { readFileSync } from 'fs';
 import { EthExecutionAPI } from 'web3-common';
 import { SupportedProviders, Web3Context } from 'web3-core';
 import Web3Eth from 'web3-eth';
-import Iban from 'web3-eth-iban';
-import Net from 'web3-net';
-import { ENS, registryAddresses } from 'web3-eth-ens';
-import Personal from 'web3-eth-personal';
-import {
-	ContractAbi,
-	encodeFunctionCall,
-	encodeParameter,
-	encodeParameters,
-	decodeParameter,
-	decodeParameters,
-	encodeFunctionSignature,
-	encodeEventSignature,
-	decodeLog,
-} from 'web3-eth-abi';
+import { ContractAbi } from 'web3-eth-abi';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
-import {
-	create,
-	privateKeyToAccount,
-	signTransaction,
-	recoverTransaction,
-	hashMessage,
-	sign,
-	recover,
-	encrypt,
-	decrypt,
-	Wallet,
-} from 'web3-eth-accounts';
+import { ENS, registryAddresses } from 'web3-eth-ens';
+import Iban from 'web3-eth-iban';
+import Personal from 'web3-eth-personal';
+import Net from 'web3-net';
 import * as utils from 'web3-utils';
-import { Address } from 'web3-utils';
-import { readFileSync } from 'fs';
+import { Address, isNullish } from 'web3-utils';
+import abi from './abi';
+import { initAccountsForContext } from './accounts';
 import { Web3EthInterface } from './types';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8')) as { version: string };
@@ -69,17 +49,13 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
-		const accountProvider = {
-			create,
-			privateKeyToAccount,
-			decrypt: async (
-				keystore: string,
-				password: string,
-				options?: Record<string, unknown>,
-			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
-		};
-		const wallet = new Wallet(accountProvider);
-		super({ provider, wallet, accountProvider });
+		super({ provider });
+
+		const accounts = initAccountsForContext(this);
+
+		// Init protected properties
+		this._wallet = accounts.wallet;
+		this._accountProvider = accounts;
 
 		this.utils = utils;
 
@@ -91,12 +67,26 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			private static readonly _contracts: Contract<any>[] = [];
 
+			public constructor(jsonInterface: Abi);
+			public constructor(jsonInterface: Abi, address: Address);
+			public constructor(jsonInterface: Abi, options: ContractInitOptions);
+			public constructor(jsonInterface: Abi, address: Address, options: ContractInitOptions);
 			public constructor(
 				jsonInterface: Abi,
-				address?: Address,
+				addressOrOptions?: Address | ContractInitOptions,
 				options?: ContractInitOptions,
 			) {
-				super(jsonInterface, address, options, self.getContextObject());
+				if (typeof addressOrOptions === 'string') {
+					super(jsonInterface, addressOrOptions, self.getContextObject());
+				} else if (typeof addressOrOptions === 'object') {
+					super(jsonInterface, addressOrOptions, self.getContextObject());
+				} else if (!isNullish(addressOrOptions) && isNullish(options)) {
+					super(jsonInterface, addressOrOptions ?? {}, self.getContextObject());
+				} else if (isNullish(addressOrOptions) && !isNullish(options)) {
+					super(jsonInterface, options ?? {}, self.getContextObject());
+				} else {
+					super(jsonInterface, self.getContextObject());
+				}
 
 				ContractBuilder._contracts.push(this);
 			}
@@ -125,31 +115,10 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 			Contract: ContractBuilder,
 
 			// ABI Helpers
-			abi: {
-				encodeEventSignature,
-				encodeFunctionCall,
-				encodeFunctionSignature,
-				encodeParameter,
-				encodeParameters,
-				decodeParameter,
-				decodeParameters,
-				decodeLog,
-			},
+			abi,
 
 			// Accounts helper
-			accounts: {
-				create,
-				privateKeyToAccount,
-				signTransaction,
-				recoverTransaction,
-				hashMessage,
-				sign,
-				recover,
-				encrypt,
-				decrypt,
-				wallet,
-			},
+			accounts,
 		});
 	}
 }
-export default Web3;

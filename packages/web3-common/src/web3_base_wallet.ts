@@ -22,14 +22,14 @@ export interface Web3BaseWalletAccount {
 	[key: string]: unknown;
 	readonly address: string;
 	readonly privateKey: string;
-	readonly signTransaction: (tx: Record<string, unknown>) => {
+	readonly signTransaction: (tx: Record<string, unknown>) => Promise<{
 		readonly messageHash: HexString;
 		readonly r: HexString;
 		readonly s: HexString;
 		readonly v: HexString;
 		readonly rawTransaction: HexString;
 		readonly transactionHash: HexString;
-	};
+	}>;
 	readonly sign: (data: Record<string, unknown> | string) => {
 		readonly messageHash: HexString;
 		readonly r: HexString;

@@ -15,13 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Wallet, create, decrypt, privateKeyToAccount } from 'web3-eth-accounts';
+import { Wallet } from 'web3-eth-accounts';
 import WebSocketProvider from 'web3-providers-ws';
 import { Address } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 
 import Web3Eth, { Transaction, TransactionWithLocalWalletIndex } from '../../../src';
 import {
+	createAccountProvider,
 	getSystemTestAccounts,
 	getSystemTestAccountsWithKeys,
 	getSystemTestProvider,
@@ -57,26 +58,21 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	it('should make a simple value transfer - with local wallet indexed sender', async () => {
+		const web3EthWithWallet = new Web3Eth(getSystemTestProvider());
+		const accountProvider = createAccountProvider(web3Eth);
+		const wallet = new Wallet(accountProvider);
+
+		web3EthWithWallet['_accountProvider'] = accountProvider;
+		web3EthWithWallet['_wallet'] = wallet;
+
 		const accountsWithKeys = getSystemTestAccountsWithKeys();
-		const accountProvider = {
-			create,
-			privateKeyToAccount,
-			decrypt: async (
-				keystore: string,
-				password: string,
-				options?: Record<string, unknown>,
-			) => decrypt(keystore, password, (options?.nonStrict as boolean) ?? true),
-		};
-		const web3Wallet = new Wallet(accountProvider);
-		const web3EthWithWallet = new Web3Eth({
-			provider: getSystemTestProvider(),
-			wallet: web3Wallet,
-		});
-		web3Wallet.add(accountsWithKeys[0].privateKey);
+
+		web3EthWithWallet.wallet?.add(accountsWithKeys[0].privateKey);
 
 		const transaction: TransactionWithLocalWalletIndex = {
 			from: 0,
 			to: '0x0000000000000000000000000000000000000000',
+			gas: 21000,
 			value: BigInt(1),
 		};
 		const response = await web3EthWithWallet.sendTransaction(transaction);
@@ -85,6 +81,7 @@ describe('Web3Eth.sendTransaction', () => {
 		const minedTransactionData = await web3EthWithWallet.getTransaction(
 			response.transactionHash,
 		);
+
 		expect(minedTransactionData).toMatchObject({
 			from: accountsWithKeys[0].address.toLowerCase(),
 			to: '0x0000000000000000000000000000000000000000',

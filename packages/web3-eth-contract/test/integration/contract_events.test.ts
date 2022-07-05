@@ -87,7 +87,7 @@ describeIf(isWs)('contract', () => {
 			).resolves.toEqual(
 				expect.objectContaining({
 					event: 'MultiValueIndexedEvent',
-					returnValue: expect.objectContaining({ val: '100' }),
+					returnValues: expect.objectContaining({ val: '100' }),
 				}),
 			);
 		});

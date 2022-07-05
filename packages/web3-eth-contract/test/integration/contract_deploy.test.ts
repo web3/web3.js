@@ -49,7 +49,7 @@ describe('contract', () => {
 		});
 
 		it('should deploy the contract if data is provided at initiation', async () => {
-			contract = new Contract(GreeterAbi, undefined, {
+			contract = new Contract(GreeterAbi, {
 				provider: getSystemTestProvider(),
 				data: GreeterBytecode,
 				from: accounts[0],
@@ -162,7 +162,7 @@ describe('contract', () => {
 						data: '0x',
 					})
 					.send(sendOptions),
-			).toThrow('No data provided.');
+			).toThrow('contract creation without any data provided.');
 		});
 
 		it('should fail with errors on revert', async () => {
@@ -175,7 +175,7 @@ describe('contract', () => {
 						data: DeployRevertBytecode,
 					})
 					.send(sendOptions),
-			).rejects.toThrow('contract deployment error');
+			).rejects.toThrow("code couldn't be stored");
 		});
 	});
 });
