@@ -32,6 +32,7 @@ import {
 	HexString8Bytes,
 	Numbers,
 	BlockNumberOrTag,
+	toChecksumAddress,
 } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
@@ -122,7 +123,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	public async getAccounts() {
-		return rpcMethods.getAccounts(this.requestManager);
+		const hexAddresses = (await rpcMethods.getAccounts(this.requestManager)) ?? [];
+		return hexAddresses.map(address => toChecksumAddress(address));
 	}
 
 	public async getBlockNumber<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
