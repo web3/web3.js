@@ -569,7 +569,8 @@ Released with 1.0.0-beta.37 code base.
 -  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
 
 ### Added
-- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Added `createAccessList` types in web3.eth (#5146)
 
 ### Fixed
 -  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
@@ -578,7 +579,6 @@ Released with 1.0.0-beta.37 code base.
 -  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
 -  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 
-
 ### Security
-- Updated `got` lib version and fixed other libs using npm audit fix
+-  Updated `got` lib version and fixed other libs using npm audit fix
 
