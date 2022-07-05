@@ -200,7 +200,15 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		transactionHash: Bytes,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
+		const response = await rpcMethodsWrappers.getTransaction(
+			this,
+			transactionHash,
+			returnFormat,
+		);
+
+		if (!response) throw new Error('Transaction not found!');
+
+		return response;
 	}
 
 	public async getPendingTransactions<
