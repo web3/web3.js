@@ -561,6 +561,7 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
 
+
 ## [Unreleased]
 
 ## [1.7.5]
@@ -569,7 +570,8 @@ Released with 1.0.0-beta.37 code base.
 -  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
 
 ### Added
-- Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Added `createAccessList` types in web3.eth (#5146)
 
 ### Fixed
 -  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
@@ -580,5 +582,5 @@ Released with 1.0.0-beta.37 code base.
 
 
 ### Security
-- Updated `got` lib version and fixed other libs using npm audit fix
+-  Updated `got` lib version and fixed other libs using npm audit fix
 
