@@ -59,31 +59,31 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 			: clonedTopics[index + offset],
 	);
 
-	const returnValue: { [key: string]: unknown; __length__: number } = { __length__: 0 };
-	returnValue.__length__ = 0;
+	const returnValues: { [key: string]: unknown; __length__: number } = { __length__: 0 };
+	returnValues.__length__ = 0;
 
 	let indexedCounter = 0;
 	let nonIndexedCounter = 0;
 
 	for (const [i, res] of inputs.entries()) {
-		returnValue[i] = res.type === 'string' ? '' : undefined;
+		returnValues[i] = res.type === 'string' ? '' : undefined;
 
 		if (indexedInputs[i]) {
-			returnValue[i] = decodedIndexedInputs[indexedCounter];
+			returnValues[i] = decodedIndexedInputs[indexedCounter];
 			indexedCounter += 1;
 		}
 
 		if (nonIndexedInputs[i]) {
-			returnValue[i] = decodedNonIndexedInputs[nonIndexedCounter];
+			returnValues[i] = decodedNonIndexedInputs[nonIndexedCounter];
 			nonIndexedCounter += 1;
 		}
 
 		if (res.name) {
-			returnValue[res.name] = returnValue[i];
+			returnValues[res.name] = returnValues[i];
 		}
 
-		returnValue.__length__ += 1;
+		returnValues.__length__ += 1;
 	}
 
-	return returnValue as ReturnType & { __length__: number };
+	return returnValues as ReturnType & { __length__: number };
 };

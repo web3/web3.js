@@ -166,7 +166,7 @@ describe('errors', () => {
 			expect(
 				new transactionErrors.TransactionRevertError('message', 'signature', {
 					attr1: 'attr1',
-				}).toJSON(),
+				} as any).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -174,7 +174,9 @@ describe('errors', () => {
 	describe('NoContractAddressFoundError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new transactionErrors.NoContractAddressFoundError({ attr1: 'attr1' }).toJSON(),
+				new transactionErrors.NoContractAddressFoundError({
+					attr1: 'attr1',
+				} as any).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -182,7 +184,9 @@ describe('errors', () => {
 	describe('ContractCodeNotStoredError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new transactionErrors.ContractCodeNotStoredError({ attr1: 'attr1' }).toJSON(),
+				new transactionErrors.ContractCodeNotStoredError({
+					attr1: 'attr1',
+				} as any).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -192,7 +196,7 @@ describe('errors', () => {
 			expect(
 				new transactionErrors.TransactionRevertedWithoutReasonError({
 					attr1: 'attr1',
-				}).toJSON(),
+				} as any).toJSON(),
 			).toMatchSnapshot();
 		});
 	});
@@ -200,7 +204,7 @@ describe('errors', () => {
 	describe('TransactionOutOfGasError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new transactionErrors.TransactionOutOfGasError({ attr1: 'attr1' }).toJSON(),
+				new transactionErrors.TransactionOutOfGasError({ attr1: 'attr1' } as any).toJSON(),
 			).toMatchSnapshot();
 		});
 	});

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3PromiEvent } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, Web3PromiEvent } from 'web3-common';
 import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
 import { sendFewTxes } from './helper';
 
@@ -50,18 +50,20 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			const to = accounts[1];
 			const value = `0x1`;
 
-			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> =
-				web3Eth.sendTransaction({
-					to,
-					value,
-					from,
-				});
-			let shouldBe = 2;
+			const sentTx: Web3PromiEvent<
+				ReceiptInfo,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
+			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmationNumber }) => {
-					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+				void sentTx.on('confirmation', ({ confirmations }) => {
+					expect(Number(confirmations)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
 						resolve();

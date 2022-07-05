@@ -93,7 +93,8 @@ module.exports = {
 		'@typescript-eslint/require-array-sort-compare': ['error'],
 		'@typescript-eslint/switch-exhaustiveness-check': ['error'],
 		'@typescript-eslint/type-annotation-spacing': ['error'],
-		'@typescript-eslint/unified-signatures': ['error'],
+		// Multiple constructors are more readable
+		'@typescript-eslint/unified-signatures': 'off',
 		'@typescript-eslint/no-unused-expressions': ['error'],
 		'@typescript-eslint/no-useless-constructor': ['error'],
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
