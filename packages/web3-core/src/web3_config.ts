@@ -94,6 +94,16 @@ export abstract class Web3Config
 		Object.assign(this._config, options);
 	}
 
+	/**
+	 * The `handleRevert` options property returns the revert reason string if enabled for the following methods:
+	 *
+	 * - web3.eth.sendTransaction()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 * - myContract.methods.myMethod().send()
+	 *
+	 * Default is `false`.
+	 */
 	public get handleRevert() {
 		return this._config.handleRevert;
 	}
@@ -202,6 +212,11 @@ export abstract class Web3Config
 		this._config.transactionConfirmationBlocks = val;
 	}
 
+	/**
+	 * The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+	 *
+	 * Default is `1000` ms
+	 */
 	public get transactionPollingInterval() {
 		return this._config.transactionPollingInterval;
 	}
@@ -229,6 +244,11 @@ export abstract class Web3Config
 		this._config.transactionPollingTimeout = val;
 	}
 
+	/**
+	 * The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+	 *
+	 * Default is `undefined`
+	 */
 	public get transactionReceiptPollingInterval() {
 		return this._config.transactionReceiptPollingInterval;
 	}
@@ -257,6 +277,11 @@ export abstract class Web3Config
 		this._config.transactionConfirmationPollingInterval = val;
 	}
 
+	/**
+	 * The blockHeaderTimeout is used over socket-based connections. This option defines the amount seconds it should wait for “newBlockHeaders” event before falling back to polling to fetch transaction receipt.
+	 *
+	 * Default is `10` seconds.
+	 */
 	public get blockHeaderTimeout() {
 		return this._config.blockHeaderTimeout;
 	}
