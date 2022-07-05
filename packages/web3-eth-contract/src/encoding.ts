@@ -146,7 +146,7 @@ export const decodeEventABI = (
 	const argTopics = modifiedEvent.anonymous ? data.topics : (data.topics ?? []).slice(1);
 	return {
 		...result,
-		returnValue: decodeLog([...event.inputs], data.data, argTopics),
+		returnValue: decodeLog([...(event.inputs ?? [])], data.data, argTopics),
 		event: event.name,
 		signature: event.anonymous || !data.topics[0] ? undefined : data.topics[0],
 		raw: {
@@ -203,6 +203,10 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 
 	const value = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
+	if (!abi.outputs) {
+		// eslint-disable-next-line no-null/no-null
+		return null;
+	}
 	const result = decodeParameters([...abi.outputs], value);
 
 	if (result.length === 1) {

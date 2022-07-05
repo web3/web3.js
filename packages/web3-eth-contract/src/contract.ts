@@ -79,7 +79,7 @@ import { getEstimateGasParams, getEthTxCallParams, getSendTxParams } from './uti
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ContractBoundMethod<Method extends ContractMethod<any>> = (
-	...args: Method['Inputs']
+	...args: NonNullable<Method['Inputs']>
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
@@ -800,7 +800,7 @@ export class Contract<Abi extends ContractAbi>
 		abi: T,
 	): ContractBoundMethod<ContractMethod<T>> {
 		return (...params: unknown[]) => {
-			validator.validate(abi.inputs, params);
+			validator.validate(abi.inputs ?? [], params);
 
 			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
 				return {
