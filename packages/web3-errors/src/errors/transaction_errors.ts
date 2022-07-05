@@ -27,13 +27,13 @@ import {
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
 } from '../error_codes';
-import { Receipt } from '../types';
+import { ReceiptInfo } from '../types';
 import { Web3Error } from '../web3_error_base';
 
-export class TransactionError extends Web3Error {
+export class TransactionError<ReceiptType = ReceiptInfo> extends Web3Error {
 	public code = ERR_TX;
 
-	public constructor(message: string, public receipt?: Receipt) {
+	public constructor(message: string, public receipt?: ReceiptType) {
 		super(message);
 	}
 
@@ -57,7 +57,11 @@ export class RevertInstructionError extends Web3Error {
 export class TransactionRevertError extends Web3Error {
 	public code = ERR_TX_REVERT_TRANSACTION;
 
-	public constructor(public reason: string, public signature: string, public receipt: Receipt) {
+	public constructor(
+		public reason: string,
+		public signature: string,
+		public receipt: ReceiptInfo,
+	) {
 		super(
 			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
 		);
@@ -74,7 +78,7 @@ export class TransactionRevertError extends Web3Error {
 }
 
 export class NoContractAddressFoundError extends TransactionError {
-	public constructor(receipt: Receipt) {
+	public constructor(receipt: ReceiptInfo) {
 		super("The transaction receipt didn't contain a contract address.", receipt);
 		this.code = ERR_TX_NO_CONTRACT_ADDRESS;
 	}
@@ -85,14 +89,14 @@ export class NoContractAddressFoundError extends TransactionError {
 }
 
 export class ContractCodeNotStoredError extends TransactionError {
-	public constructor(receipt: Receipt) {
+	public constructor(receipt: ReceiptInfo) {
 		super("The contract code couldn't be stored, please check your gas limit.", receipt);
 		this.code = ERR_TX_CONTRACT_NOT_STORED;
 	}
 }
 
 export class TransactionRevertedWithoutReasonError extends TransactionError {
-	public constructor(receipt: Receipt) {
+	public constructor(receipt: ReceiptInfo) {
 		super(
 			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
 			receipt,
@@ -102,7 +106,7 @@ export class TransactionRevertedWithoutReasonError extends TransactionError {
 }
 
 export class TransactionOutOfGasError extends TransactionError {
-	public constructor(receipt: Receipt) {
+	public constructor(receipt: ReceiptInfo) {
 		super(
 			`Transaction ran out of gas. Please provide more gas:\n ${JSON.stringify(
 				receipt,
