@@ -49,28 +49,15 @@ import {
 	sendSignedTransactionValidData,
 	signValidData,
 	submitWorkValidData,
+	tx,
+	txReceipt,
 } from '../fixtures/web3_eth_methods_with_parameters';
 
 jest.mock('../../src/rpc_methods');
 jest.mock('../../src/rpc_method_wrappers');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue({
-	blockHash: '0xb3a667f84f58c90ab87476073e06c5d1186a0f0b0b69aa3033bfe0e4df264350',
-	blockNumber: '123',
-	from: '0x01ada9d3470eb9eb3875d9e7948c674804ca43ae',
-	gas: '21000',
-	gasPrice: '10000',
-	hash: '0x84f44dffc3cd90a1b66ad0219a97680308e5e7a77299fbf1e2ebb572cf02cc2d',
-	input: '0x',
-	nonce: '61',
-	to: '0x0000000000000000000000000000000000000000',
-	transactionIndex: '0',
-	value: '1',
-	type: '0x01',
-	v: '2710',
-	r: '0xbefb00433ef79b2609dc560c28963c2e954370792671f71ab99665b8807b7feb',
-	s: '0x6bebe5e2c9f839d3ce0264dc5c7cc521f902e86705c69f5fddffaa3de5aac6d3',
-});
+jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx);
+jest.spyOn(rpcMethodWrappers, 'getTransactionReceipt').mockResolvedValue(txReceipt);
 
 describe('web3_eth_methods_with_parameters', () => {
 	let web3Eth: Web3Eth;
