@@ -277,20 +277,21 @@ var outputTransactionReceiptFormatter = function (receipt) {
         throw new Error('Received receipt is invalid: ' + receipt);
     }
 
-    if (receipt.blockNumber !== null)
-        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
-    if (receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
-
+    if(!this.hexFormat){
+        if (receipt.blockNumber !== null)
+            receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
+        if (receipt.transactionIndex !== null)
+            receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
+        receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
+        receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+        if (receipt.effectiveGasPrice) {
+            receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
+        }
+    }
     if (Array.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
-    if (receipt.effectiveGasPrice) {
-        receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
-    }
     if (receipt.contractAddress) {
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
