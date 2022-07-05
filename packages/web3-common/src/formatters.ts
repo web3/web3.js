@@ -342,17 +342,18 @@ export const inputLogFormatter = (filter: Filter) => {
 export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	const modifiedLog = { ...log } as unknown as Mutable<LogsOutput>;
 
-	// generate a custom log id
-	if (
-		typeof log.blockHash === 'string' &&
-		typeof log.transactionHash === 'string' &&
+	const logIndex =
 		typeof log.logIndex === 'string'
-	) {
+			? log.logIndex
+			: numberToHex(log.logIndex as unknown as number);
+
+	// generate a custom log id
+	if (typeof log.blockHash === 'string' && typeof log.transactionHash === 'string') {
 		const shaId = sha3Raw(
 			`${log.blockHash.replace('0x', '')}${log.transactionHash.replace(
 				'0x',
 				'',
-			)}${log.logIndex.replace('0x', '')}`,
+			)}${logIndex.replace('0x', '')}`,
 		);
 		modifiedLog.id = `log_${shaId.replace('0x', '').slice(0, 8)}`;
 	} else if (!log.id) {

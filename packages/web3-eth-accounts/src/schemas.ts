@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,23 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// import Web3ProviderBase from '../../src/index'
-// import {ProviderOptions} from '../../types'
-
-describe('constructs a PLACEHOLDER instance with expected properties', () => {
-	// let providerOptions: ProviderOptions
-
-	beforeEach(() => {
-		// providerOptions = {
-		//     providerUrl: 'http://127.0.0.1:8545'
-		// }
-	});
-
-	it('should construct with expected properties', () => {
-		// const web3ProviderBase = new Web3ProviderBase(providerOptions)
-		// expect(web3ProviderBase).toMatchObject({
-		//     _providerUrl: providerOptions.providerUrl
-		// })
-		expect(true).toBeTruthy();
-	});
-});
+export const keyStoreSchema = {
+	type: 'object',
+	required: ['crypto', 'id', 'version', 'address'],
+	properties: {
+		crypto: {
+			type: 'object',
+			required: ['cipher', 'ciphertext', 'cipherparams', 'kdf', 'kdfparams', 'mac'],
+			properties: {
+				cipher: { type: 'string' },
+				ciphertext: { type: 'string' },
+				cipherparams: { type: 'object' },
+				kdf: { type: 'string' },
+				kdfparams: { type: 'object' },
+				salt: { type: 'string' },
+				mac: { type: 'string' },
+			},
+		},
+		id: { type: 'string' },
+		version: { type: 'number' },
+		address: { type: 'string' },
+	},
+};

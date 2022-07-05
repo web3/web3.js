@@ -89,9 +89,9 @@ describe('contract', () => {
 							const event = await contract.events.Transfer();
 							event.on('data', data => {
 								resolve({
-									from: toUpperCaseHex(data.returnValue.from as string),
-									to: toUpperCaseHex(data.returnValue.to as string),
-									value: data.returnValue.value,
+									from: toUpperCaseHex(data.returnValues.from as string),
+									to: toUpperCaseHex(data.returnValues.to as string),
+									value: data.returnValues.value,
 								});
 							});
 

@@ -14,20 +14,28 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { AbiEventFragment } from 'web3-eth-abi';
-import { LogsInput } from 'web3-common';
-import { decodeEventABI } from '../../src/encoding';
-import { decodeEventABIData } from '../fixtures/encoding';
 
-describe('encoding decoding functions', () => {
-	describe('decode', () => {
-		describe('decodeEventABI', () => {
-			it.each(decodeEventABIData)(
-				'%s',
-				(event: AbiEventFragment & { signature: string }, inputs: LogsInput, output) => {
-					expect(decodeEventABI(event, inputs, [])).toBe(output);
-				},
-			);
-		});
-	});
-});
+import {
+	decodeLog,
+	decodeParameter,
+	decodeParameters,
+	encodeEventSignature,
+	encodeFunctionCall,
+	encodeFunctionSignature,
+	encodeParameter,
+	encodeParameters,
+} from 'web3-eth-abi';
+
+/**
+ * The object for `web3.abi`
+ */
+export default {
+	encodeEventSignature,
+	encodeFunctionCall,
+	encodeFunctionSignature,
+	encodeParameter,
+	encodeParameters,
+	decodeParameter,
+	decodeParameters,
+	decodeLog,
+};
