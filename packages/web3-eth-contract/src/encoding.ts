@@ -219,7 +219,7 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 	const result = decodeParameters([...abi.outputs], value);
 
-	if (result.length === 1) {
+	if (result.__length__ === 1) {
 		return result[0];
 	}
 
