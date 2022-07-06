@@ -354,8 +354,8 @@ describe('rpc', () => {
 			});
 			const results = res.map(
 				r =>
-					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r)
-						.returnValue[0],
+					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
+						.returnValues[0],
 			);
 			for (const l of listOfStrings) {
 				expect(results).toContain(l);

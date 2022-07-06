@@ -22,4 +22,20 @@ export type ConnectionEvent = {
 	wasClean?: boolean; // if WS connection was closed properly
 };
 
-export type Receipt = Record<string, unknown>;
+// To avoid dependency of `web3-common` have to use fixed types
+export type Log = {
+	readonly removed?: boolean;
+	readonly logIndex?: bigint;
+	readonly transactionIndex?: bigint;
+	readonly transactionHash?: string;
+	readonly blockHash?: string;
+	readonly blockNumber?: bigint;
+	readonly address?: string;
+	readonly data?: string;
+	readonly topics?: string[];
+};
+
+export type ReceiptInfo = {
+	readonly logs: Record<string, unknown>[];
+	readonly [key: string]: unknown;
+};

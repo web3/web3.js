@@ -77,7 +77,7 @@ describe('contract', () => {
 					// TODO: Type of the getPastEvents are not valid.
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
-					const { tokenId } = logs[0].returnValue;
+					const { tokenId } = logs[0].returnValues;
 
 					expect(
 						toUpperCaseHex(
@@ -94,9 +94,9 @@ describe('contract', () => {
 							const event = await contract.events.Transfer();
 							event.on('data', data => {
 								resolve({
-									from: toUpperCaseHex(data.returnValue.from as string),
-									to: toUpperCaseHex(data.returnValue.to as string),
-									tokenId: data.returnValue.tokenId,
+									from: toUpperCaseHex(data.returnValues.from as string),
+									to: toUpperCaseHex(data.returnValues.to as string),
+									tokenId: data.returnValues.tokenId,
 								});
 							});
 
