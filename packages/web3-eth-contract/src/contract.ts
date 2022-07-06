@@ -92,7 +92,7 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ContractBoundMethod<Method extends ContractMethod<any>> = (
-	...args: NonNullable<Method['Inputs']>
+	...args: Method['Inputs']
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;

@@ -30,9 +30,9 @@ describe('contract typing', () => {
 			expectTypeOf<keyof typeof contract.methods>().toBe<keyof Erc20Interface['methods']>(),
 		);
 
-		// typecheck.skip('should have interface compliance methods', () =>
-		// 	expectTypeOf(contract.methods).toExtend<Erc20Interface['methods']>(),
-		// );
+		typecheck('should have interface compliance methods', () =>
+			expectTypeOf(contract.methods).toExtend<Erc20Interface['methods']>(),
+		);
 
 		typecheck('should have all events', () =>
 			expectTypeOf<keyof typeof contract.events>().toBe<keyof Erc20Interface['events']>(),

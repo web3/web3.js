@@ -177,38 +177,42 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
-export type ContractMethodOutputParameters<Params extends Array<unknown> | undefined> =
-	Params extends []
+export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+	Params extends readonly []
 		? []
-		: Params extends [infer H, ...infer R]
+		: Params extends readonly [infer H, ...infer R]
 		? H extends AbiParameter
 			? // TODO: Find a way to set name for tuple item
 			  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
 			: ContractMethodOutputParameters<R>
+		: Params extends undefined | unknown
+		? []
 		: Params;
 
-export type ContractMethodInputParameters<Params extends Array<unknown> | undefined> =
-	Params extends []
+export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+	Params extends readonly []
 		? []
-		: Params extends [infer H, ...infer R]
+		: Params extends readonly [infer H, ...infer R]
 		? H extends AbiParameter
 			? // TODO: Find a way to set name for tuple item
 			  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodInputParameters<R>]
 			: ContractMethodInputParameters<R>
+		: Params extends undefined | unknown
+		? []
 		: Params;
 
 export type ContractConstructor<Abis extends ContractAbi> = {
 	[Abi in FilterAbis<Abis, AbiConstructorFragment> as 'constructor']: {
 		readonly Abi: Abi;
-		readonly Inputs: ContractMethodInputParameters<[...NonNullable<Abi['inputs']>]>;
+		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
 	};
 }['constructor'];
 
 export type ContractMethod<Abi extends AbiFunctionFragment> = {
 	readonly Abi: Abi;
 
-	readonly Inputs?: ContractMethodInputParameters<[...NonNullable<Abi['inputs']>]>;
-	readonly Outputs?: ContractMethodOutputParameters<[...NonNullable<Abi['outputs']>]>;
+	readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
+	readonly Outputs: ContractMethodOutputParameters<Abi['outputs']>;
 };
 
 export type ContractMethods<Abis extends ContractAbi> = {
@@ -220,7 +224,7 @@ export type ContractMethods<Abis extends ContractAbi> = {
 
 export type ContractEvent<Abi extends AbiEventFragment> = {
 	readonly Abi: Abi;
-	readonly Inputs: ContractMethodInputParameters<[...NonNullable<Abi['inputs']>]>;
+	readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
 };
 
 export type ContractEvents<Abis extends ContractAbi> = {
