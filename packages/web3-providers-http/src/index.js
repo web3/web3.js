@@ -29,6 +29,7 @@ var http = require('http');
 var https = require('https');
 
 // Apply missing polyfill for IE
+require('whatwg-fetch');
 require('es6-promise').polyfill();
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 

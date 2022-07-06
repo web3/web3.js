@@ -563,6 +563,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+-  Added missing fetch api polyfill (#5214)
+
 ## [1.7.5]
 
 ### Changed
