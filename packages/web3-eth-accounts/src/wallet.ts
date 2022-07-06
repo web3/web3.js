@@ -50,6 +50,7 @@ export class Wallet<
 
 	/**
 	 * Get the storage object of the browser
+	 *
 	 * @returns the storage
 	 */
 	public static getStorage(): Storage | undefined {
@@ -82,6 +83,7 @@ export class Wallet<
 	}
 	/**
 	 * Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
+	 *
 	 * @param numberOfAccounts Number of accounts to create. Leave empty to create an empty wallet.
 	 * @returns The wallet
 	 * ```ts
@@ -171,7 +173,7 @@ export class Wallet<
 
 	public get(addressOrIndex: string | number): T | undefined {
 		if (typeof addressOrIndex === 'string') {
-			const index = this._addressMap.get(addressOrIndex);
+			const index = this._addressMap.get(addressOrIndex.toLowerCase());
 
 			if (!isNullish(index)) {
 				return this[index];
@@ -185,6 +187,7 @@ export class Wallet<
 
 	/**
 	 * Removes an account from the wallet.
+	 *
 	 * @param addressOrIndex - The account address, or index in the wallet.
 	 * @returns true if the wallet was removed. false if it couldn’t be found.
 	 * ```ts
@@ -276,6 +279,7 @@ export class Wallet<
 
 	/**
 	 * Decrypts keystore v3 objects.
+	 *
 	 * @param encryptedWallets `string[]` An array of encrypted keystore v3 objects to decrypt
 	 * @param password `String` The password to encrypt with
 	 * @param options decrypt options for the wallets
@@ -367,6 +371,7 @@ export class Wallet<
 	/**
 	 * Stores the wallet encrypted and as string in local storage.
 	 * **__NOTE:__** Browser only
+	 *
 	 * @param password `String` The password to encrypt the wallet
 	 * @param keyName `String` (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
 	 * @returns Will return boolean value true if saved properly
@@ -393,6 +398,7 @@ export class Wallet<
 	/**
 	 * Loads a wallet from local storage and decrypts it.
 	 * **__NOTE:__** Browser only
+	 *
 	 * @param password `String` The password to decrypt the wallet.
 	 * @param keyName `String` (optional)The key used for local storage position, defaults to `web3js_wallet"`
 	 * @returns Returns the wallet object

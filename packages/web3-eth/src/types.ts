@@ -15,7 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { AccessList, TransactionHash, Uncles, FormatType, ETH_DATA_FORMAT } from 'web3-common';
+import {
+	AccessList,
+	TransactionHash,
+	Uncles,
+	FormatType,
+	ETH_DATA_FORMAT,
+	DataFormat,
+} from 'web3-common';
+import { TransactionError } from 'web3-errors';
 import { Address, Bytes, Numbers, Uint } from 'web3-utils';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
@@ -180,16 +188,30 @@ export interface Block {
 	readonly hash?: Bytes;
 }
 
-export type SendTransactionEvents = {
-	sending: Transaction;
-	sent: Transaction;
-	transactionHash: Bytes;
-	receipt: ReceiptInfo;
+export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
+	sending: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
+	sent: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
+	transactionHash: FormatType<Bytes, ReturnFormat>;
+	receipt: FormatType<ReceiptInfo, ReturnFormat>;
 	confirmation: {
-		confirmationNumber: Numbers;
-		receipt: ReceiptInfo;
-		latestBlockHash: Bytes;
+		confirmations: FormatType<Numbers, ReturnFormat>;
+		receipt: FormatType<ReceiptInfo, ReturnFormat>;
+		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
+	error: TransactionError<FormatType<ReceiptInfo, ReturnFormat>>;
+};
+
+export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
+	sending: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
+	sent: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
+	transactionHash: FormatType<Bytes, ReturnFormat>;
+	receipt: FormatType<ReceiptInfo, ReturnFormat>;
+	confirmation: {
+		confirmations: FormatType<Numbers, ReturnFormat>;
+		receipt: FormatType<ReceiptInfo, ReturnFormat>;
+		latestBlockHash: FormatType<Bytes, ReturnFormat>;
+	};
+	error: TransactionError<FormatType<ReceiptInfo, ReturnFormat>>;
 };
 
 export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
@@ -200,18 +222,6 @@ export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
 export interface SendSignedTransactionOptions<ResolveType = ReceiptInfo> {
 	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
 }
-
-export type SendSignedTransactionEvents = SendTransactionEvents & {
-	sending: Bytes;
-	sent: Bytes;
-	transactionHash: Bytes;
-	receipt: ReceiptInfo;
-	confirmation: {
-		confirmationNumber: Numbers;
-		receipt: ReceiptInfo;
-		latestBlockHash: Bytes;
-	};
-};
 
 export interface FeeHistory {
 	readonly oldestBlock: Numbers;

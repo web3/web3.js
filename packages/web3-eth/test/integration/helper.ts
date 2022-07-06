@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Block, FMT_NUMBER, Web3PromiEvent } from 'web3-common';
+import { Block, DEFAULT_RETURN_FORMAT, FMT_NUMBER, Web3PromiEvent } from 'web3-common';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { ReceiptInfo, SendTransactionEvents, TransactionInfo, Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
@@ -36,7 +36,10 @@ export const sendFewTxes = async ({
 }: SendFewTxParams): Promise<ReceiptInfo[]> => {
 	const res = [];
 	for (let i = 0; i < times; i += 1) {
-		const tx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = web3Eth.sendTransaction({
+		const tx: Web3PromiEvent<
+			ReceiptInfo,
+			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+		> = web3Eth.sendTransaction({
 			to,
 			value,
 			from,

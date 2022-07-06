@@ -29,9 +29,10 @@ import {
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { BlockNumberOrTag, Filter, HexString, Topic } from 'web3-utils';
+import { BlockNumberOrTag, Filter, HexString, isNullish, Topic } from 'web3-utils';
 import { Web3ContractError } from './errors';
-import { ContractOptions, EventLog } from './types';
+// eslint-disable-next-line import/no-cycle
+import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
 
 export const encodeEventABI = (
 	{ address }: ContractOptions,
@@ -55,12 +56,12 @@ export const encodeEventABI = (
 		filter: options?.filter ?? {},
 	};
 
-	if (options?.fromBlock) {
-		opts.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+	if (!isNullish(options?.fromBlock)) {
+		opts.fromBlock = inputBlockNumberFormatter(options?.fromBlock);
 	}
 
-	if (options?.toBlock) {
-		opts.toBlock = inputBlockNumberFormatter(options.toBlock);
+	if (!isNullish(options?.toBlock)) {
+		opts.toBlock = inputBlockNumberFormatter(options?.toBlock);
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
@@ -111,23 +112,31 @@ export const encodeEventABI = (
 export const decodeEventABI = (
 	event: AbiEventFragment & { signature: string },
 	data: LogsInput,
+	jsonInterface: ContractAbiWithSignature,
 ): EventLog => {
 	let modifiedEvent = { ...event };
 	const result = outputLogFormatter(data);
 
 	// if allEvents get the right event
-	if (event.name === 'ALLEVENTS' && event.signature === (data.topics ?? [])[0]) {
-		modifiedEvent.anonymous = true;
+	if (modifiedEvent.name === 'ALLEVENTS') {
+		const matchedEvent = jsonInterface.find(j => j.signature === data.topics[0]);
+		if (matchedEvent) {
+			modifiedEvent = matchedEvent as AbiEventFragment & { signature: string };
+		} else {
+			modifiedEvent = { anonymous: true } as unknown as AbiEventFragment & {
+				signature: string;
+			};
+		}
 	}
 
 	// create empty inputs if none are present (e.g. anonymous events on allEvents)
-	modifiedEvent.inputs = event.inputs ?? [];
+	modifiedEvent.inputs = modifiedEvent.inputs ?? event.inputs ?? [];
 
 	// Handle case where an event signature shadows the current ABI with non-identical
 	// arg indexing. If # of topics doesn't match, event is anon.
-	if (!event.anonymous) {
+	if (!modifiedEvent.anonymous) {
 		let indexedInputs = 0;
-		(event.inputs ?? []).forEach(input => {
+		(modifiedEvent.inputs ?? []).forEach(input => {
 			if (input.indexed) {
 				indexedInputs += 1;
 			}
@@ -146,9 +155,9 @@ export const decodeEventABI = (
 	const argTopics = modifiedEvent.anonymous ? data.topics : (data.topics ?? []).slice(1);
 	return {
 		...result,
-		returnValue: decodeLog([...event.inputs], data.data, argTopics),
-		event: event.name,
-		signature: event.anonymous || !data.topics[0] ? undefined : data.topics[0],
+		returnValues: decodeLog([...modifiedEvent.inputs], data.data, argTopics),
+		event: modifiedEvent.name,
+		signature: modifiedEvent.anonymous || !data.topics[0] ? undefined : data.topics[0],
 		raw: {
 			data: data.data,
 			topics: data.topics,
