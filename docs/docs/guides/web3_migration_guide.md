@@ -63,3 +63,13 @@ batch.execute();
 // in 4.x
 const responses = await batch.execute();
 ```
+
+### Web3-eth-accounts
+
+#### create() and wallet.create()
+
+In 1.x `entropy` is an optional parameter for the create method, 4.x uses an audited package ethereum-cryptography/secp256k1 that is cryptographically secure random number with certain characteristics.
+
+#### privateKeyToAccount
+
+In 1.x `ignoreLength` is an optional parameter for privateKeyToAccount, in 4.x `ignoreLength` is removed
