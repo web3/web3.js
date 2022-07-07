@@ -87,6 +87,7 @@ export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) =>
 		privateKeyToAccount: privateKeyToAccountWithContext,
 		decrypt: decryptWithContext,
 	});
+
 	return {
 		signTransaction: signTransactionWithContext,
 		create: createWithContext,
