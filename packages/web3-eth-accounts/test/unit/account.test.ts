@@ -35,14 +35,14 @@ import {
 	invalidEncryptData,
 	invalidKeyStore,
 	invalidPrivateKeytoAccountData,
-	invalidPrivateKeytoAddressData,
+	invalidPrivateKeyToAddressData,
 	signatureRecoverData,
 	transactionsTestData,
 	validDecryptData,
 	validEncryptData,
 	validHashMessageData,
 	validPrivateKeytoAccountData,
-	validPrivateKeytoAddressData,
+	validPrivateKeyToAddressData,
 } from '../fixtures/account';
 
 describe('accounts', () => {
@@ -62,13 +62,13 @@ describe('accounts', () => {
 
 	describe('privateKeyToAddress', () => {
 		describe('valid cases', () => {
-			it.each(validPrivateKeytoAddressData)('%s', (input, output) => {
+			it.each(validPrivateKeyToAddressData)('%s', (input, output) => {
 				expect(privateKeyToAddress(input)).toEqual(output);
 			});
 		});
 
 		describe('invalid cases', () => {
-			it.each(invalidPrivateKeytoAddressData)('%s', (input, output) => {
+			it.each(invalidPrivateKeyToAddressData)('%s', (input, output) => {
 				expect(() => privateKeyToAddress(input)).toThrow(output);
 			});
 		});

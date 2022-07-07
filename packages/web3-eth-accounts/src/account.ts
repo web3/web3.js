@@ -112,7 +112,7 @@ export const hashMessage = (message: string): string => {
 
 	const ethMessage = Buffer.concat([preamble, messageBytes]);
 
-	return sha3Raw(ethMessage);  // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
+	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
 /**
@@ -140,8 +140,11 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const hash = hashMessage(data);
 
 	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
-		recovered: true, // makes signatures compatible with libsecp256k1
-		der: false, //returned signature should be in DER format ( non compact )
+		// Makes signatures compatible with libsecp256k1
+		recovered: true,
+
+		// Returned signature should be in DER format ( non compact )
+		der: false,
 	});
 
 	const r = Buffer.from(signature.slice(0, 32));
@@ -390,12 +393,13 @@ const uuidV4 = (): string => {
 export const privateKeyToAddress = (privateKey: Bytes): string => {
 	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
-	// Get public key from private key
+	// Get public key from private key in compressed format
 	const publicKey = getPublicKey(privateKeyBuffer);
 
-	// Hash the last 64 bytes of the public key
-	const publicKeyHash = sha3Raw(publicKey.slice(-64));
+	// Uncompressed ECDSA public key contains the prefix `0x04` which is not used in the Ethereum public key
+	const publicKeyHash = sha3Raw(publicKey.slice(1));
 
+	// The hash is returned as 256 bits (32 bytes) or 64 hex characters
 	// To get the address, take the last 20 bytes of the public hash
 	const address = publicKeyHash.slice(-40);
 
