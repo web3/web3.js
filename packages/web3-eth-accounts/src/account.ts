@@ -62,6 +62,7 @@ import { keyStoreSchema } from './schemas';
 /**
  *
  * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ *
  * @param message A message to hash, if its HEX it will be UTF8 decoded.
  * @returns The hashed message
  * ```ts
@@ -86,6 +87,7 @@ export const hashMessage = (message: string): string => {
 /**
  * Signs arbitrary data.
  * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ *
  * @param data - The data to sign
  * @param privateKey - The 32 byte private key to sign with
  * @returns The signature Object containing the message, messageHash, signature r, s, v
@@ -246,6 +248,7 @@ export const signTransaction = async (
 
 /**
  * Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
+ *
  * @param rawTransaction - The hex string having RLP encoded transaction
  * @returns The Ethereum address used to sign this transaction
  * ```ts
@@ -263,6 +266,7 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
 
 /**
  * Recovers the Ethereum address which was used to sign the given data
+ *
  * @param data - Either a signed message, hash, or the {@link signatureObject}
  * @param signature - The raw RLP encoded signature
  * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\x19Ethereum Signed Message:\n" + message.length + message, and assumed to be already prefixed.
@@ -317,7 +321,7 @@ export const recover = (
 /**
  * Generate a version 4 (random) uuid
  * https://github.com/uuidjs/uuid/blob/main/src/v4.js#L5
- * */
+ */
 
 const uuidV4 = (): string => {
 	const bytes = randomBytes(16);
@@ -347,6 +351,7 @@ const uuidV4 = (): string => {
 
 /**
  * Get the ethereum Address from a private key
+ *
  * @param privateKey String or buffer of 32 bytes
  * @returns The Ethereum address
  * @example
@@ -453,7 +458,6 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
  *   }
  * }
  *```
- *
  */
 export const encrypt = async (
 	privateKey: HexString,
@@ -614,9 +618,10 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
 /**
  *
  * Generates and returns a Web3Account object that includes the private and public key
- * For creation of private key, it uses an audited package ethereum-cryptography/secp256k1 
+ * For creation of private key, it uses an audited package ethereum-cryptography/secp256k1
  * that is cryptographically secure random number with certain characteristics.
- * Read more: https://www.npmjs.com/package/ethereum-cryptography#secp256k1-curve 
+ * Read more: https://www.npmjs.com/package/ethereum-cryptography#secp256k1-curve
+ *
  * @returns A Web3Account object
  * ```ts
  * web3.eth.accounts.create();
@@ -628,7 +633,6 @@ export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account =>
  * encrypt: [AsyncFunction: encrypt]
  * }
  * ```
- 
  */
 export const create = (): Web3Account => {
 	const privateKey = utils.randomPrivateKey();
@@ -638,11 +642,12 @@ export const create = (): Web3Account => {
 
 /**
  * Decrypts a v3 keystore JSON, and creates the account.
+ *
  * @param keystore - the encrypted Keystore object or string to decrypt
  * @param password - The password that was used for encryption
  * @param nonStrict - if true and given a json string, the keystore will be parsed as lowercase.
  * @returns Returns the decrypted Web3Account object
- * * Decrypting scrypt
+ * Decrypting scrypt
  *
  * ```ts
  * decrypt({
@@ -672,7 +677,6 @@ export const create = (): Web3Account => {
  * encrypt: [AsyncFunction: encrypt]
  * }
  * ```
- *
  */
 export const decrypt = async (
 	keystore: KeyStore | string,

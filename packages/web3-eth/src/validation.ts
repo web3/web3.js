@@ -19,8 +19,7 @@ import {
 	AccessList,
 	AccessListEntry,
 	BaseTransaction,
-	FMT_BYTES,
-	FMT_NUMBER,
+	ETH_DATA_FORMAT,
 	Transaction1559Unsigned,
 	Transaction2930Unsigned,
 	TransactionCall,
@@ -310,10 +309,7 @@ export const validateTransactionForSigning = (
 	validateCustomChainInfo(transaction);
 	validateChainInfo(transaction);
 
-	const formattedTransaction = formatTransaction(transaction as Transaction, {
-		number: FMT_NUMBER.HEX,
-		bytes: FMT_BYTES.HEX,
-	});
+	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
 	validateGas(formattedTransaction);
 
 	if (

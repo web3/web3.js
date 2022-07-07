@@ -73,7 +73,7 @@ describe('defaults', () => {
 			web3Eth = new Web3Eth(clientUrl);
 		}
 
-		contract = new Contract(BasicAbi, undefined, undefined, web3Eth.getContextObject() as any);
+		contract = new Contract(BasicAbi, web3Eth.getContextObject() as any);
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
@@ -81,12 +81,7 @@ describe('defaults', () => {
 		sendOptions = { from: accounts[0], gas: '1000000' };
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 
-		contractMsgFrom = await new Contract(
-			MsgSenderAbi,
-			undefined,
-			undefined,
-			web3Eth.getContextObject() as any,
-		)
+		contractMsgFrom = await new Contract(MsgSenderAbi, web3Eth.getContextObject() as any)
 			.deploy({
 				data: MsgSenderBytecode,
 				arguments: ['test'],
@@ -308,7 +303,10 @@ describe('defaults', () => {
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
-			const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth.sendTransaction({
+			const sentTx: Web3PromiEvent<
+				ReceiptInfo,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = eth.sendTransaction({
 				to,
 				value,
 				from,
@@ -322,12 +320,12 @@ describe('defaults', () => {
 					resolve();
 				});
 			});
-			let shouldBe = 2;
+			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmationNumber }) => {
-					expect(parseInt(String(confirmationNumber), 16)).toBe(shouldBe);
+				void sentTx.on('confirmation', ({ confirmations }) => {
+					expect(Number(confirmations)).toBe(shouldBe);
 					shouldBe += 1;
 					if (shouldBe > waitConfirmations) {
 						resolve();
@@ -339,6 +337,7 @@ describe('defaults', () => {
 			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});
+
 		it('transactionPollingInterval and transactionPollingTimeout', () => {
 			// default
 			expect(web3Eth.transactionPollingInterval).toBe(1000);
