@@ -327,3 +327,8 @@ export * from './web3';
 export * from './types';
 
 export default Web3;
+
+// The following JavaScript command is used instead of the equivalent TypeScript `export = Web3`, 
+//  to allow exporting the types along with Web3 constructor as the default function,
+//  in order to maintain backward compatibility.
+module.exports = Web3;
