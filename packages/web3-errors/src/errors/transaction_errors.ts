@@ -26,6 +26,7 @@ import {
 	ERR_TX_REVERT_INSTRUCTION,
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
+	ERR_TX_NOT_FOUND,
 } from '../error_codes';
 import { ReceiptInfo } from '../types';
 import { Web3Error } from '../web3_error_base';
@@ -123,5 +124,11 @@ export class UndefinedRawTransactionError extends TransactionError {
 	public constructor() {
 		super(`Raw transaction undefined`);
 		this.code = ERR_RAW_TX_UNDEFINED;
+	}
+}
+export class TransactionNotFound extends TransactionError {
+	public constructor() {
+		super('Transaction not found');
+		this.code = ERR_TX_NOT_FOUND;
 	}
 }
