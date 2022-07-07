@@ -46,21 +46,20 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 		}
 	}
 
-	const decodedNonIndexedInputs = data
+	const decodedNonIndexedInputs: { [key: string]: unknown; __length__: number } = data
 		? decodeParametersWith(Object.values(nonIndexedInputs), data, true)
-		: [];
+		: { __length__: 0 };
 
 	// If topics are more than indexed inputs, that means first topic is the event signature
 	const offset = clonedTopics.length - Object.keys(indexedInputs).length;
 
 	const decodedIndexedInputs = Object.values(indexedInputs).map((input, index) =>
 		STATIC_TYPES.some(s => input.type.startsWith(s))
-			? (decodeParameter(input.type, clonedTopics[index + offset])[0] as unknown[])
+			? decodeParameter(input.type, clonedTopics[index + offset])
 			: clonedTopics[index + offset],
 	);
 
 	const returnValues: { [key: string]: unknown; __length__: number } = { __length__: 0 };
-	returnValues.__length__ = 0;
 
 	let indexedCounter = 0;
 	let nonIndexedCounter = 0;
@@ -74,7 +73,7 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 		}
 
 		if (nonIndexedInputs[i]) {
-			returnValues[i] = decodedNonIndexedInputs[nonIndexedCounter];
+			returnValues[i] = decodedNonIndexedInputs[String(nonIndexedCounter)];
 			nonIndexedCounter += 1;
 		}
 
