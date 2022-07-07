@@ -121,10 +121,11 @@ describe('rpc', () => {
 
 		it('getAccounts', async () => {
 			const account = await createNewAccount({ unlock: true });
-			const accList = await web3Eth.getAccounts();
-			expect(accList).toContain(accounts[0].toLowerCase());
-			expect(accList).toContain(accounts[1].toLowerCase());
-			expect(accList).toContain(account.address.toLowerCase());
+			const accList = await web3Eth.getAccounts()
+			const accListLowerCase = accList.map((add: string)=>add.toLowerCase());
+			expect(accListLowerCase).toContain(accounts[0].toLowerCase());
+			expect(accListLowerCase).toContain(accounts[1].toLowerCase());
+			expect(accListLowerCase).toContain(account.address.toLowerCase());
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getBlockNumber', async format => {
@@ -353,8 +354,8 @@ describe('rpc', () => {
 			});
 			const results = res.map(
 				r =>
-					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r)
-						.returnValue[0],
+					decodeEventABI(eventAbi as AbiEventFragment & { signature: string }, r, [])
+						.returnValues[0],
 			);
 			for (const l of listOfStrings) {
 				expect(results).toContain(l);
