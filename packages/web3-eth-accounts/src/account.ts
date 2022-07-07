@@ -287,24 +287,30 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  */
 export const recover = (
 	data: string | SignatureObject,
-	signature?: string,
+	signatureOrV?: string,
+	prefixedOrR?: boolean | string,
+	s?: string,
 	prefixed?: boolean,
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
 		return recover(data.messageHash, signatureStr, true);
 	}
+	if (typeof signatureOrV === 'string' && prefixedOrR === 'string' && !isNullish(s)) {
+		const signatureStr = `${signatureOrV}${prefixedOrR}${s}`;
+		return recover(data, signatureStr, prefixed);
+	}
 
-	if (isNullish(signature)) throw new InvalidSignatureError('signature string undefined');
+	if (isNullish(signatureOrV)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
 	const hashedMessage = prefixed ? data : hashMessage(data);
 
-	const v = signature.substring(V_INDEX); // 0x + r + s + v
+	const signatureV = signatureOrV.substring(V_INDEX); // 0x + r + s + v
 
 	const ecPublicKey = ecdsaRecover(
-		Buffer.from(signature.substring(2, V_INDEX), 'hex'),
-		parseInt(v, 16) - 27,
+		Buffer.from(signatureV.substring(2, V_INDEX), 'hex'),
+		parseInt(signatureV, 16) - 27,
 		Buffer.from(hashedMessage.substring(2), 'hex'),
 		false,
 	);
@@ -353,6 +359,7 @@ const uuidV4 = (): string => {
  * Get the ethereum Address from a private key
  *
  * @param privateKey String or buffer of 32 bytes
+ * @param ignoreLength if true, will not error check length
  * @returns The Ethereum address
  * @example
  * ```ts
@@ -360,7 +367,10 @@ const uuidV4 = (): string => {
  * > "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0"
  * ```
  */
-export const privateKeyToAddress = (privateKey: string | Buffer): string => {
+export const privateKeyToAddress = (
+	privateKey: string | Buffer,
+	ignoreLength?: boolean,
+): string => {
 	if (!(isString(privateKey) || isBuffer(privateKey))) {
 		throw new InvalidPrivateKeyError();
 	}
@@ -373,7 +383,7 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
 		? stringPrivateKey.slice(2)
 		: stringPrivateKey;
 
-	if (!isHexString32Bytes(stringPrivateKeyNoPrefix, false)) {
+	if (!ignoreLength && !isHexString32Bytes(stringPrivateKeyNoPrefix, false)) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -580,6 +590,7 @@ export const encrypt = async (
  * Get an Account object from the privateKey
  *
  * @param privateKey String or buffer of 32 bytes
+ * @param ignoreLength if true, will not error check length
  * @returns A Web3Account object
  *
  * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
@@ -596,11 +607,14 @@ export const encrypt = async (
  * 	}
  * ```
  */
-export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
+export const privateKeyToAccount = (
+	privateKey: string | Buffer,
+	ignoreLength?: boolean,
+): Web3Account => {
 	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
 
 	return {
-		address: privateKeyToAddress(pKey),
+		address: privateKeyToAddress(pKey, ignoreLength),
 		privateKey: pKey,
 		signTransaction: (_tx: Record<string, unknown>) => {
 			throw new SignerError('Do not have network access to sign the transaction');

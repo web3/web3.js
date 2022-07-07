@@ -59,7 +59,9 @@ describe('accounts', () => {
 	describe('privateKeyToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validPrivateKeytoAccountData)('%s', (input, output) => {
-				expect(JSON.stringify(privateKeyToAccount(input))).toEqual(JSON.stringify(output));
+				expect(
+					JSON.stringify(privateKeyToAccount(input.address, input.ignoreLength)),
+				).toEqual(JSON.stringify(output));
 			});
 		});
 
