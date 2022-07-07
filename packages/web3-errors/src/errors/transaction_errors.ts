@@ -125,3 +125,9 @@ export class UndefinedRawTransactionError extends TransactionError {
 		this.code = ERR_RAW_TX_UNDEFINED;
 	}
 }
+export class TransactionNotFound extends TransactionError {
+	public constructor() {
+		super('Transaction not found');
+		this.code = ERR_TX;
+	}
+}

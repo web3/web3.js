@@ -24,6 +24,7 @@ import {
 	Web3Context,
 	Web3ContextInitOptions,
 } from 'web3-core';
+import { TransactionNotFound } from 'web3-errors';
 import {
 	Address,
 	Bytes,
@@ -206,7 +207,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			returnFormat,
 		);
 
-		if (!response) throw new Error('Transaction not found!');
+		if (!response) throw new TransactionNotFound();
 
 		return response;
 	}
@@ -241,7 +242,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			returnFormat,
 		);
 
-		if (!response) throw new Error('Transaction not found!');
+		if (!response) throw new TransactionNotFound();
 
 		return response;
 	}
