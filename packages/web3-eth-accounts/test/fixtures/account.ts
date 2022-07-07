@@ -442,4 +442,5 @@ export const validHashMessageData: [string, string][] = [
 		'0xff21294f27c6b1e416215feb0b0b904c552c874c4e11b2314dd3afc1714ed8a8',
 	],
 	['non utf8 string', '0x8862c6a425a83c082216090e4f0e03b64106189e93c29b11d0112e77b477cce2'],
+['','0x5f35dce98ba4fba25530a026ed80b2cecdaa31091ba4958b99b52ea1d068adad']
 ];

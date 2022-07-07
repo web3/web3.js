@@ -112,7 +112,7 @@ export const hashMessage = (message: string): string => {
 
 	const ethMessage = Buffer.concat([preamble, messageBytes]);
 
-	return sha3Raw(ethMessage);
+	return sha3Raw(ethMessage);  // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
 /**
@@ -140,8 +140,8 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const hash = hashMessage(data);
 
 	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
-		recovered: true,
-		der: false,
+		recovered: true, // makes signatures compatible with libsecp256k1
+		der: false, //returned signature should be in DER format ( non compact )
 	});
 
 	const r = Buffer.from(signature.slice(0, 32));
@@ -261,7 +261,7 @@ export const signTransaction = async (
 	}
 
 	const rawTx = bytesToHex(signedTx.serialize());
-	const txHash = sha3Raw(rawTx);
+	const txHash = sha3Raw(rawTx); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 
 	return {
 		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
