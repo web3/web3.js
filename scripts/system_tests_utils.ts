@@ -19,18 +19,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { Bytes } from 'web3-utils';
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { create as createAccount } from 'web3-eth-accounts';
+import {
+	create,
+	create as createAccount,
+	decrypt,
+	privateKeyToAccount,
+	signTransaction,
+} from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3Eth } from 'web3-eth';
+import { prepareTransactionForSigning, Transaction, Web3Eth } from 'web3-eth';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3BaseProvider } from 'web3-common';
+import { EthExecutionAPI, ETH_DATA_FORMAT, format, Web3BaseProvider } from 'web3-common';
 
 let _accounts: string[] = [];
 
@@ -260,4 +269,54 @@ export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
 	) {
 		(web3Context.provider as unknown as Web3BaseProvider).disconnect(1000, '');
 	}
+};
+
+export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => {
+	const signTransactionWithContext = async (transaction: Transaction, privateKey: Bytes) => {
+		const tx = await prepareTransactionForSigning(transaction, context);
+
+		const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
+
+		return signTransaction(tx, privateKeyBytes);
+	};
+
+	const privateKeyToAccountWithContext = (privateKey: Buffer | string) => {
+		const account = privateKeyToAccount(privateKey);
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	const decryptWithContext = async (
+		keystore: string,
+		password: string,
+		options?: Record<string, unknown>,
+	) => {
+		const account = await decrypt(keystore, password, (options?.nonStrict as boolean) ?? true);
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	const createWithContext = () => {
+		const account = create();
+
+		return {
+			...account,
+			signTransaction: async (transaction: Transaction) =>
+				signTransactionWithContext(transaction, account.privateKey),
+		};
+	};
+
+	return {
+		create: createWithContext,
+		privateKeyToAccount: privateKeyToAccountWithContext,
+		decrypt: decryptWithContext,
+	};
 };
