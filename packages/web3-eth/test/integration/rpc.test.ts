@@ -121,8 +121,8 @@ describe('rpc', () => {
 
 		it('getAccounts', async () => {
 			const account = await createNewAccount({ unlock: true });
-			const accList = await web3Eth.getAccounts()
-			const accListLowerCase = accList.map((add: string)=>add.toLowerCase());
+			const accList = await web3Eth.getAccounts();
+			const accListLowerCase = accList.map((add: string) => add.toLowerCase());
 			expect(accListLowerCase).toContain(accounts[0].toLowerCase());
 			expect(accListLowerCase).toContain(accounts[1].toLowerCase());
 			expect(accListLowerCase).toContain(account.address.toLowerCase());

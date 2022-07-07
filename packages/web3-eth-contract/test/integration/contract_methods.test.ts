@@ -46,7 +46,12 @@ describe('contract', () => {
 			it('should retrieve the values', async () => {
 				const result = await contract.methods.getValues().call();
 
-				expect(result).toEqual(['10', 'string init value', false]);
+				expect(result).toEqual({
+					'0': '10',
+					'1': 'string init value',
+					'2': false,
+					__length__: 3,
+				});
 			});
 
 			describe('revert handling', () => {
