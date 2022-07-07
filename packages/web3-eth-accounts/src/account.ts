@@ -138,7 +138,7 @@ export const sign = (data: string, privateKey: HexString): SignResult => {
  *
  * This function is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
  * This function will rely on user to provide the full transaction to be signed. If you want to sign a partial transaction object
- * Use {@link Web3.eth.accounts.signTransaction} instead.
+ * Use {@link Web3.eth.accounts.sign} instead.
  *
  * Signing a legacy transaction
  * ```ts
