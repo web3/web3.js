@@ -397,7 +397,10 @@ export const feeHistorySchema = {
 			eth: 'uint',
 		},
 		baseFeePerGas: {
-			eth: 'uint',
+			type: 'array',
+			items: {
+				eth: 'uint',
+			},
 		},
 		reward: {
 			type: 'array',
@@ -406,6 +409,12 @@ export const feeHistorySchema = {
 				items: {
 					eth: 'uint',
 				},
+			},
+		},
+		gasUsedRatio: {
+			type: 'array',
+			items: {
+				type: 'number',
 			},
 		},
 	},
