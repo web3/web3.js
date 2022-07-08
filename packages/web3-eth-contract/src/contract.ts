@@ -893,7 +893,7 @@ export class Contract<Abi extends ContractAbi>
 		abi: T,
 	): ContractBoundMethod<ContractMethod<T>> {
 		return (...params: unknown[]) => {
-			validator.validate(abi.inputs, params);
+			validator.validate(abi.inputs ?? [], params);
 
 			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
 				return {

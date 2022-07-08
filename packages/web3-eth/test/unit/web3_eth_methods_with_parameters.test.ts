@@ -49,10 +49,15 @@ import {
 	sendSignedTransactionValidData,
 	signValidData,
 	submitWorkValidData,
+	tx,
+	txReceipt,
 } from '../fixtures/web3_eth_methods_with_parameters';
 
 jest.mock('../../src/rpc_methods');
 jest.mock('../../src/rpc_method_wrappers');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx);
+jest.spyOn(rpcMethodWrappers, 'getTransactionReceipt').mockResolvedValue(txReceipt);
 
 describe('web3_eth_methods_with_parameters', () => {
 	let web3Eth: Web3Eth;

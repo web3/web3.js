@@ -16,29 +16,33 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TransactionFactory } from '@ethereumjs/tx';
+import { Address, isHexStrict } from 'web3-utils';
 import { Web3ValidatorError } from 'web3-validator';
-import { isHexStrict, Address, utf8ToHex } from 'web3-utils';
 import {
 	create,
-	privateKeyToAccount,
-	signTransaction,
-	recoverTransaction,
-	hashMessage,
-	sign,
-	recover,
-	encrypt,
 	decrypt,
+	encrypt,
+	hashMessage,
+	privateKeyToAccount,
+	privateKeyToAddress,
+	recover,
+	recoverTransaction,
+	sign,
+	signTransaction,
 } from '../../src/account';
 import {
+	invalidDecryptData,
+	invalidEncryptData,
+	invalidKeyStore,
+	invalidPrivateKeytoAccountData,
+	invalidPrivateKeyToAddressData,
 	signatureRecoverData,
 	transactionsTestData,
-	validPrivateKeytoAccountData,
-	invalidPrivateKeytoAccountData,
-	validEncryptData,
 	validDecryptData,
-	invalidDecryptData,
-	invalidKeyStore,
-	invalidEncryptData,
+	validEncryptData,
+	validHashMessageData,
+	validPrivateKeytoAccountData,
+	validPrivateKeyToAddressData,
 } from '../fixtures/account';
 
 describe('accounts', () => {
@@ -52,6 +56,20 @@ describe('accounts', () => {
 				expect(typeof account.encrypt).toBe('function');
 				expect(typeof account.sign).toBe('function');
 				expect(typeof account.signTransaction).toBe('function');
+			});
+		});
+	});
+
+	describe('privateKeyToAddress', () => {
+		describe('valid cases', () => {
+			it.each(validPrivateKeyToAddressData)('%s', (input, output) => {
+				expect(privateKeyToAddress(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(invalidPrivateKeyToAddressData)('%s', (input, output) => {
+				expect(() => privateKeyToAddress(input)).toThrow(output);
 			});
 		});
 	});
@@ -103,27 +121,24 @@ describe('accounts', () => {
 	});
 
 	describe('Hash Message', () => {
-		it('should hash data correctly using an emoji character', () => {
-			const message = '🤗';
-			const dataHash = '0x716ce69c5d2d629c168bc02e24a961456bdc5a362d366119305aea73978a0332';
-
-			const hashedMessage = hashMessage(message);
-			expect(hashedMessage).toEqual(dataHash);
-
-			const hashedMessageHex = hashMessage(utf8ToHex(message));
-			expect(hashedMessageHex).toEqual(dataHash);
+		it.each(validHashMessageData)('%s', (message, hash) => {
+			expect(hashMessage(message)).toEqual(hash);
 		});
 	});
 
 	describe('Sign Message', () => {
-		it.each(signatureRecoverData)('sign test %s', (data, testObj) => {
-			const result = sign(data, testObj.privateKey);
-			expect(result.signature).toEqual(testObj.signature);
+		describe('sign', () => {
+			it.each(signatureRecoverData)('%s', (data, testObj) => {
+				const result = sign(data, testObj.privateKey);
+				expect(result.signature).toEqual(testObj.signature);
+			});
 		});
 
-		it.each(signatureRecoverData)('recover test %s', (data, testObj) => {
-			const address = recover(data, testObj.signature);
-			expect(address).toEqual(testObj.address);
+		describe('recover', () => {
+			it.each(signatureRecoverData)('%s', (data, testObj) => {
+				const address = recover(data, testObj.signature);
+				expect(address).toEqual(testObj.address);
+			});
 		});
 	});
 
@@ -165,7 +180,7 @@ describe('accounts', () => {
 				const result = await decrypt(keystore, input[1]);
 
 				expect(JSON.stringify(result)).toEqual(
-					JSON.stringify(privateKeyToAccount(input[3].slice(2))),
+					JSON.stringify(privateKeyToAccount(input[3])),
 				);
 
 				const keystoreString = JSON.stringify(keystore);
@@ -173,7 +188,7 @@ describe('accounts', () => {
 				const stringResult = await decrypt(keystoreString, input[1], true);
 
 				expect(JSON.stringify(stringResult)).toEqual(
-					JSON.stringify(privateKeyToAccount(input[3].slice(2))),
+					JSON.stringify(privateKeyToAccount(input[3])),
 				);
 			});
 		});

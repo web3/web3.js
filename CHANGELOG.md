@@ -377,7 +377,7 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-eth-abi
 
-1. `decodeParameters` decoding result is now the same format as the input parameter for encoding
+1. `internalType` was renamed to `baseType` in all abi types
 
 #### web3-eth
 

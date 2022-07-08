@@ -66,7 +66,7 @@ describe('parameters_api', () => {
 		describe('valid data', () => {
 			it.each(validDecodeParametersData)(
 				'%#: should pass for valid values: %j',
-				({ input: [abi, bytes], output }) => {
+				({ input: [abi, bytes], outputResult }) => {
 					// Output returns mix of array and object which can't be matched in
 					// jest, so have to use stringify+parse to match
 					// {
@@ -82,7 +82,7 @@ describe('parameters_api', () => {
 					//   __length__: 2
 					// }
 					expect(JSON.parse(JSON.stringify(decodeParameters(abi, bytes)))).toEqual(
-						output,
+						outputResult,
 					);
 				},
 			);
@@ -102,12 +102,12 @@ describe('parameters_api', () => {
 		describe('input should be the same as returned value from encode and decode', () => {
 			it.each(validEncodeDecodeParametersData)(
 				'%#: should pass for valid values: %j',
-				({ input: [abi, params], output }) => {
+				({ input: [abi, params], output, outputResult }) => {
 					const rwAbi = abi as AbiInput[];
 					const encodedBytes = encodeParameters(abi, params);
 					expect(encodedBytes).toEqual(output);
 					const decodedBytes = decodeParameters(rwAbi, encodedBytes);
-					expect(decodedBytes).toEqual(params);
+					expect(decodedBytes).toEqual(outputResult);
 				},
 			);
 		});

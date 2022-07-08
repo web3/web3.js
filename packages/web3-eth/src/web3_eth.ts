@@ -24,6 +24,7 @@ import {
 	Web3Context,
 	Web3ContextInitOptions,
 } from 'web3-core';
+import { TransactionNotFound } from 'web3-errors';
 import {
 	Address,
 	Bytes,
@@ -200,7 +201,15 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		transactionHash: Bytes,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
-		return rpcMethodsWrappers.getTransaction(this, transactionHash, returnFormat);
+		const response = await rpcMethodsWrappers.getTransaction(
+			this,
+			transactionHash,
+			returnFormat,
+		);
+
+		if (!response) throw new TransactionNotFound();
+
+		return response;
 	}
 
 	public async getPendingTransactions<
@@ -227,7 +236,15 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	public async getTransactionReceipt<
 		ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 	>(transactionHash: Bytes, returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat) {
-		return rpcMethodsWrappers.getTransactionReceipt(this, transactionHash, returnFormat);
+		const response = await rpcMethodsWrappers.getTransactionReceipt(
+			this,
+			transactionHash,
+			returnFormat,
+		);
+
+		if (!response) throw new TransactionNotFound();
+
+		return response;
 	}
 
 	public async getTransactionCount<
