@@ -15,55 +15,83 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	InvalidPrivateKeyError,
-	PrivateKeyLengthError,
-	UndefinedRawTransactionError,
-	SignerError,
-	InvalidSignatureError,
-	InvalidKdfError,
-	KeyDerivationError,
-	KeyStoreVersionError,
-	InvalidPasswordError,
-	IVLengthError,
-	PBKDF2IterationsError,
-} from 'web3-errors';
-import { utils, getPublicKey } from 'ethereum-cryptography/secp256k1';
-import { keccak256 } from 'ethereum-cryptography/keccak';
 import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
-import { ecdsaSign, ecdsaRecover } from 'secp256k1';
+import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
-import { encrypt as createCipheriv, decrypt as createDecipheriv } from 'ethereum-cryptography/aes';
+import { getPublicKey, recoverPublicKey, signSync, utils } from 'ethereum-cryptography/secp256k1';
 import {
-	toChecksumAddress,
-	bytesToHex,
-	sha3Raw,
-	HexString,
-	randomBytes,
-	hexToBytes,
+	InvalidKdfError,
+	InvalidPasswordError,
+	InvalidPrivateKeyError,
+	InvalidSignatureError,
+	IVLengthError,
+	KeyDerivationError,
+	KeyStoreVersionError,
+	PBKDF2IterationsError,
+	PrivateKeyLengthError,
+	SignerError,
+	UndefinedRawTransactionError,
+} from 'web3-errors';
+import {
 	Address,
+	Bytes,
+	bytesToBuffer,
+	bytesToHex,
+	HexString,
+	hexToBytes,
 	isHexStrict,
+	numberToHex,
+	randomBytes,
+	sha3Raw,
+	toChecksumAddress,
 	utf8ToHex,
 } from 'web3-utils';
-import { validator, isBuffer, isHexString32Bytes, isString, isNullish } from 'web3-validator';
+import { isBuffer, isNullish, isString, validator } from 'web3-validator';
+import { keyStoreSchema } from './schemas';
 import {
+	CipherOptions,
+	KeyStore,
+	PBKDF2SHA256Params,
+	ScryptParams,
 	SignatureObject,
 	SignResult,
 	SignTransactionResult,
-	KeyStore,
-	ScryptParams,
-	PBKDF2SHA256Params,
-	CipherOptions,
 	Web3Account,
 } from './types';
-import { keyStoreSchema } from './schemas';
+
+/**
+ * Get the private key buffer after the validation
+ *
+ * @param data - The data in any bytes format
+ * @returns
+ */
+export const parseAndValidatePrivateKey = (data: Bytes): Buffer => {
+	let privateKeyBuffer: Buffer;
+
+	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToBuffer'
+	if (typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
+		throw new PrivateKeyLengthError();
+	}
+
+	try {
+		privateKeyBuffer = Buffer.isBuffer(data) ? data : bytesToBuffer(data);
+	} catch {
+		throw new InvalidPrivateKeyError();
+	}
+
+	if (privateKeyBuffer.byteLength !== 32) {
+		throw new PrivateKeyLengthError();
+	}
+
+	return privateKeyBuffer;
+};
 
 /**
  *
  * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
  *
- * @param message A message to hash, if its HEX it will be UTF8 decoded.
+ * @param message - A message to hash, if its HEX it will be UTF8 decoded.
  * @returns The hashed message
  * ```ts
  * hashMessage("Hello world")
@@ -77,11 +105,14 @@ export const hashMessage = (message: string): string => {
 
 	const messageBytes = hexToBytes(messageHex);
 
-	const preamble = `\x19Ethereum Signed Message:\n${messageBytes.length}`;
+	const preamble = Buffer.from(
+		`\x19Ethereum Signed Message:\n${messageBytes.byteLength}`,
+		'utf8',
+	);
 
-	const ethMessage = Buffer.concat([Buffer.from(preamble), Buffer.from(messageBytes)]);
+	const ethMessage = Buffer.concat([preamble, messageBytes]);
 
-	return `0x${Buffer.from(keccak256(ethMessage)).toString('hex')}`;
+	return sha3Raw(ethMessage); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 };
 
 /**
@@ -103,31 +134,30 @@ export const hashMessage = (message: string): string => {
  * }
  * ```
  */
-export const sign = (data: string, privateKey: HexString): SignResult => {
-	const privateKeyParam = privateKey.startsWith('0x') ? privateKey.substring(2) : privateKey;
-
-	if (!isHexString32Bytes(privateKeyParam, false)) {
-		throw new PrivateKeyLengthError();
-	}
+export const sign = (data: string, privateKey: Bytes): SignResult => {
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	const hash = hashMessage(data);
 
-	const signObj = ecdsaSign(
-		Buffer.from(hash.substring(2), 'hex'),
-		Buffer.from(privateKeyParam, 'hex'),
-	);
+	const [signature, recoverId] = signSync(hash.substring(2), privateKeyBuffer, {
+		// Makes signatures compatible with libsecp256k1
+		recovered: true,
 
-	const r = Buffer.from(signObj.signature.slice(0, 32));
-	const s = Buffer.from(signObj.signature.slice(32, 64));
-	const v = signObj.recid + 27;
+		// Returned signature should be in DER format ( non compact )
+		der: false,
+	});
+
+	const r = Buffer.from(signature.slice(0, 32));
+	const s = Buffer.from(signature.slice(32, 64));
+	const v = recoverId + 27;
 
 	return {
 		message: data,
 		messageHash: hash,
-		v: `0x${v.toString(16)}`,
-		r: `0x${r.toString('hex')}`,
-		s: `0x${s.toString('hex')}`,
-		signature: `0x${Buffer.from(signObj.signature).toString('hex')}${v.toString(16)}`,
+		v: numberToHex(v),
+		r: bytesToHex(r),
+		s: bytesToHex(s),
+		signature: `0x${Buffer.from(signature).toString('hex')}${v.toString(16)}`,
 	};
 };
 
@@ -234,7 +264,7 @@ export const signTransaction = async (
 	}
 
 	const rawTx = bytesToHex(signedTx.serialize());
-	const txHash = keccak256(hexToBytes(rawTx));
+	const txHash = sha3Raw(rawTx); // using keccak in web3-utils.sha3Raw instead of SHA3 (NIST Standard) as both are different
 
 	return {
 		messageHash: bytesToHex(Buffer.from(signedTx.getMessageToSign(true))),
@@ -302,10 +332,10 @@ export const recover = (
 
 	const v = signature.substring(V_INDEX); // 0x + r + s + v
 
-	const ecPublicKey = ecdsaRecover(
+	const ecPublicKey = recoverPublicKey(
+		Buffer.from(hashedMessage.substring(2), 'hex'),
 		Buffer.from(signature.substring(2, V_INDEX), 'hex'),
 		parseInt(v, 16) - 27,
-		Buffer.from(hashedMessage.substring(2), 'hex'),
 		false,
 	);
 
@@ -360,29 +390,20 @@ const uuidV4 = (): string => {
  * > "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0"
  * ```
  */
-export const privateKeyToAddress = (privateKey: string | Buffer): string => {
-	if (!(isString(privateKey) || isBuffer(privateKey))) {
-		throw new InvalidPrivateKeyError();
-	}
+export const privateKeyToAddress = (privateKey: Bytes): string => {
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
-	const stringPrivateKey = Buffer.isBuffer(privateKey)
-		? Buffer.from(privateKey).toString('hex')
-		: privateKey;
+	// Get public key from private key in compressed format
+	const publicKey = getPublicKey(privateKeyBuffer);
 
-	const stringPrivateKeyNoPrefix = stringPrivateKey.startsWith('0x')
-		? stringPrivateKey.slice(2)
-		: stringPrivateKey;
+	// Uncompressed ECDSA public key contains the prefix `0x04` which is not used in the Ethereum public key
+	const publicKeyHash = sha3Raw(publicKey.slice(1));
 
-	if (!isHexString32Bytes(stringPrivateKeyNoPrefix, false)) {
-		throw new PrivateKeyLengthError();
-	}
+	// The hash is returned as 256 bits (32 bytes) or 64 hex characters
+	// To get the address, take the last 20 bytes of the public hash
+	const address = publicKeyHash.slice(-40);
 
-	const publicKey = getPublicKey(stringPrivateKeyNoPrefix);
-
-	const publicKeyString = `0x${publicKey.slice(2)}`;
-	const publicHash = sha3Raw(publicKeyString);
-	const publicHashHex = bytesToHex(publicHash);
-	return toChecksumAddress(publicHashHex.slice(-40)); // To get the address, take the last 20 bytes of the public hash
+	return toChecksumAddress(`0x${address}`);
 };
 
 /**
@@ -460,21 +481,11 @@ export const privateKeyToAddress = (privateKey: string | Buffer): string => {
  *```
  */
 export const encrypt = async (
-	privateKey: HexString,
+	privateKey: Bytes,
 	password: string | Buffer,
 	options?: CipherOptions,
 ): Promise<KeyStore> => {
-	if (!(isString(privateKey) || isBuffer(privateKey))) {
-		throw new InvalidPrivateKeyError();
-	}
-
-	const stringPrivateKey = Buffer.isBuffer(privateKey)
-		? Buffer.from(privateKey).toString('hex')
-		: privateKey;
-
-	if (!isHexString32Bytes(stringPrivateKey)) {
-		throw new PrivateKeyLengthError();
-	}
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	// if given salt or iv is a string, convert it to a Uint8Array
 	let salt;
@@ -546,10 +557,8 @@ export const encrypt = async (
 		throw new InvalidKdfError();
 	}
 
-	const cipherKey = Buffer.from(stringPrivateKey.replace('0x', ''), 'hex');
-
 	const cipher = await createCipheriv(
-		cipherKey,
+		privateKeyBuffer,
 		Buffer.from(derivedKey.slice(0, 16)),
 		initializationVector,
 		'aes-128-ctr',
@@ -562,7 +571,7 @@ export const encrypt = async (
 	return {
 		version: 3,
 		id: uuidV4(),
-		address: privateKeyToAddress(stringPrivateKey).toLowerCase().replace('0x', ''),
+		address: privateKeyToAddress(privateKeyBuffer).toLowerCase().replace('0x', ''),
 		crypto: {
 			ciphertext,
 			cipherparams: {
@@ -596,19 +605,19 @@ export const encrypt = async (
  * 	}
  * ```
  */
-export const privateKeyToAccount = (privateKey: string | Buffer): Web3Account => {
-	const pKey = Buffer.isBuffer(privateKey) ? Buffer.from(privateKey).toString('hex') : privateKey;
+export const privateKeyToAccount = (privateKey: Bytes): Web3Account => {
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	return {
-		address: privateKeyToAddress(pKey),
-		privateKey: pKey,
+		address: privateKeyToAddress(privateKeyBuffer),
+		privateKey: bytesToHex(privateKeyBuffer),
 		signTransaction: (_tx: Record<string, unknown>) => {
 			throw new SignerError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
-			sign(typeof data === 'string' ? data : JSON.stringify(data), pKey),
+			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
 		encrypt: async (password: string, options?: Record<string, unknown>) => {
-			const data = await encrypt(pKey, password, options);
+			const data = await encrypt(privateKeyBuffer, password, options);
 
 			return JSON.stringify(data);
 		},
