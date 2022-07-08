@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Block, FeeHistoryResult, ReceiptInfo, TransactionInfo } from 'web3-common';
+import { Block, FeeHistoryResult, TransactionReceipt, TransactionInfo } from 'web3-common';
 
 export const convertibleBlockProperties: (keyof Block)[] = [
 	'difficulty',
@@ -46,7 +46,7 @@ export const convertibleTransactionInfoProperties: KeysOfUnion<TransactionInfo>[
 	'chainId',
 ];
 
-export const convertibleReceiptInfoProperties: (keyof ReceiptInfo)[] = [
+export const convertibleReceiptInfoProperties: (keyof TransactionReceipt)[] = [
 	'transactionIndex',
 	'blockNumber',
 	'cumulativeGasUsed',

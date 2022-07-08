@@ -31,7 +31,7 @@ import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '../errors';
-import { ReceiptInfo, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
+import { TransactionReceipt, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { receiptInfoSchema } from '../schemas';
@@ -40,14 +40,14 @@ type Web3PromiEventEventTypeBase<ReturnFormat extends DataFormat> =
 	| SendTransactionEvents<ReturnFormat>
 	| SendSignedTransactionEvents<ReturnFormat>;
 
-type WaitProps<ReturnFormat extends DataFormat, ResolveType = ReceiptInfo> = {
+type WaitProps<ReturnFormat extends DataFormat, ResolveType = TransactionReceipt> = {
 	web3Context: Web3Context<EthExecutionAPI>;
-	transactionReceipt: ReceiptInfo;
+	transactionReceipt: TransactionReceipt;
 	transactionPromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventTypeBase<ReturnFormat>>;
 	returnFormat: ReturnFormat;
 };
 
-const watchByPolling = <ReturnFormat extends DataFormat, ResolveType = ReceiptInfo>({
+const watchByPolling = <ReturnFormat extends DataFormat, ResolveType = TransactionReceipt>({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
@@ -84,7 +84,7 @@ const watchByPolling = <ReturnFormat extends DataFormat, ResolveType = ReceiptIn
 	}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
 };
 
-const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = ReceiptInfo>({
+const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = TransactionReceipt>({
 	web3Context,
 	transactionReceipt,
 	transactionPromiEvent,
@@ -151,11 +151,11 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Rece
 export function watchTransactionForConfirmations<
 	ReturnFormat extends DataFormat,
 	Web3PromiEventEventType extends Web3PromiEventEventTypeBase<ReturnFormat>,
-	ResolveType = ReceiptInfo,
+	ResolveType = TransactionReceipt,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionPromiEvent: Web3PromiEvent<ResolveType, Web3PromiEventEventType>,
-	transactionReceipt: ReceiptInfo,
+	transactionReceipt: TransactionReceipt,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ) {

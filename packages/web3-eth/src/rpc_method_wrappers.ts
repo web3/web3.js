@@ -58,7 +58,7 @@ import {
 	Block,
 	FeeHistory,
 	Log,
-	ReceiptInfo,
+	TransactionReceipt,
 	SendSignedTransactionEvents,
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
@@ -448,9 +448,9 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 		? response
 		: (format(
 				receiptInfoSchema,
-				response as unknown as ReceiptInfo,
+				response as unknown as TransactionReceipt,
 				returnFormat,
-		  ) as ReceiptInfo);
+		  ) as TransactionReceipt);
 }
 
 /**
@@ -487,7 +487,7 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
  */
 export function sendTransaction<
 	ReturnFormat extends DataFormat,
-	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
+	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: Transaction | TransactionWithLocalWalletIndex,
@@ -621,7 +621,7 @@ export function sendTransaction<
 							>(
 								web3Context,
 								promiEvent,
-								transactionReceiptFormatted as ReceiptInfo,
+								transactionReceiptFormatted as TransactionReceipt,
 								transactionHash,
 								returnFormat,
 							);
@@ -652,7 +652,7 @@ export function sendTransaction<
  */
 export function sendSignedTransaction<
 	ReturnFormat extends DataFormat,
-	ResolveType = FormatType<ReceiptInfo, ReturnFormat>,
+	ResolveType = FormatType<TransactionReceipt, ReturnFormat>,
 >(
 	web3Context: Web3Context<EthExecutionAPI>,
 	signedTransaction: Bytes,
@@ -749,7 +749,7 @@ export function sendSignedTransaction<
 							>(
 								web3Context,
 								promiEvent,
-								transactionReceiptFormatted as ReceiptInfo,
+								transactionReceiptFormatted as TransactionReceipt,
 								transactionHash,
 								returnFormat,
 							);

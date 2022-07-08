@@ -24,7 +24,7 @@ import {
 	inputLogFormatter,
 	LogsInput,
 	Mutable,
-	ReceiptInfo,
+	TransactionReceipt,
 	Web3EventEmitter,
 	Web3PromiEvent,
 	isDataFormat,
@@ -994,7 +994,10 @@ export class Contract<Abi extends ContractAbi>
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {
-					throw new Web3ContractError("code couldn't be stored", receipt as ReceiptInfo);
+					throw new Web3ContractError(
+						"code couldn't be stored",
+						receipt as TransactionReceipt,
+					);
 				}
 
 				const newContract = this.clone();
