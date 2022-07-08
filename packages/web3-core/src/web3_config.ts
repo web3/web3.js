@@ -215,7 +215,7 @@ export abstract class Web3Config
 	}
 
 	/**
-	 * The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+	 * Used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
 	 * Default is `1000` ms.
 	 */
 	public get transactionPollingInterval() {
@@ -238,7 +238,7 @@ export abstract class Web3Config
 		this.transactionConfirmationPollingInterval = val;
 	}
 	/**
-	 * The `transactionPollingTimeout` is used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
+	 * Used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
 	 * Default is `750` ms.
 	 */
 	public get transactionPollingTimeout() {
@@ -338,15 +338,6 @@ export abstract class Web3Config
 
 	/**
 	 * Will return the default hardfork. Default is `london`
-	 *
-	 * @returns {string}
-	 */
-	public get defaultHardfork() {
-		return this._config.defaultHardfork;
-	}
-
-	/**
-	 * Will set the default hardfork.
 	 * The default hardfork property can be one of the following:
 	 * - `chainstart`
 	 * - `homestead`
@@ -359,8 +350,18 @@ export abstract class Web3Config
 	 * - `istanbul`
 	 * - `berlin`
 	 * - `london`
+	 * - 'arrowGlacier',
+	 * - 'tangerineWhistle',
+	 * - 'muirGlacier'
 	 *
-	 * @param {string} val
+	 */
+	public get defaultHardfork() {
+		return this._config.defaultHardfork;
+	}
+
+	/**
+	 * Will set the default hardfork.
+	 *
 	 */
 	public set defaultHardfork(val) {
 		this._triggerConfigChange('defaultHardfork', val);
@@ -378,8 +379,8 @@ export abstract class Web3Config
 	 * 	- `chainId` - `number`: Chain ID of the custom chain
 	 * - `baseChain` - `string`: (optional) mainnet, goerli, kovan, rinkeby, or ropsten
 	 * - `hardfork` - `string`: (optional) chainstart, homestead, dao, tangerineWhistle, spuriousDragon, byzantium, constantinople, petersburg, istanbul, berlin, or london
+	 * Default is `undefined`.
 	 *
-	 * @returns {Record<string,unknown}
 	 */
 	public get defaultCommon() {
 		return this._config.defaultCommon;
@@ -388,7 +389,6 @@ export abstract class Web3Config
 	/**
 	 * Will set the default common property
 	 *
-	 * @param val - a `Common` object
 	 */
 	public set defaultCommon(val) {
 		this._triggerConfigChange('defaultCommon', val);
