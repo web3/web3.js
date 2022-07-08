@@ -25,7 +25,7 @@ describe('encoding decoding functions', () => {
 			it.each(decodeEventABIData)(
 				'%s',
 				(event: AbiEventFragment & { signature: string }, inputs: LogsInput, output) => {
-					expect(decodeEventABI(event, inputs)).toBe(output);
+					expect(decodeEventABI(event, inputs, [])).toBe(output);
 				},
 			);
 		});

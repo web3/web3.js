@@ -134,15 +134,6 @@ describe('Wallet', () => {
 			expect(wallet.get('my_address')).toEqual(account);
 		});
 
-		it('should get account for given address only in lower case', () => {
-			const account = { address: 'my_Address' } as never;
-
-			wallet.add(account);
-
-			expect(wallet.get('my_address')).toEqual(account);
-			expect(wallet.get('my_Address')).toBeUndefined();
-		});
-
 		it('should get account with index', () => {
 			const account = { address: 'my_Address' } as never;
 
