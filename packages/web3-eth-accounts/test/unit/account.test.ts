@@ -43,6 +43,7 @@ import {
 	validHashMessageData,
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
+	signatureObjectRecoverData,
 } from '../fixtures/account';
 
 describe('accounts', () => {
@@ -132,13 +133,13 @@ describe('accounts', () => {
 		describe('sign', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
 				const result = sign(data, testObj.privateKey);
-				expect(result.signature).toEqual(testObj.signature);
+				expect(result.signature).toEqual(testObj.signature || testObj.signatureOrV); // makes sure we get signature and not V value
 			});
 		});
 
 		describe('recover', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
-				const address = recover(data, testObj.signature);
+				const address = recover(data, testObj.signatureOrV, testObj.prefixedOrR, testObj.s);
 				expect(address).toEqual(testObj.address);
 			});
 		});

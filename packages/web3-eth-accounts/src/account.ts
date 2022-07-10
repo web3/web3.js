@@ -66,11 +66,11 @@ import {
  * @param data - The data in any bytes format
  * @returns
  */
-export const parseAndValidatePrivateKey = (data: Bytes): Buffer => {
+export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Buffer => {
 	let privateKeyBuffer: Buffer;
 
 	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToBuffer'
-	if (typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
+	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -80,7 +80,7 @@ export const parseAndValidatePrivateKey = (data: Bytes): Buffer => {
 		throw new InvalidPrivateKeyError();
 	}
 
-	if (privateKeyBuffer.byteLength !== 32) {
+	if (!ignoreLength && privateKeyBuffer.byteLength !== 32) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -324,17 +324,17 @@ export const recover = (
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
-		return recover(data.messageHash, signatureStr, true);
+		return recover(data.messageHash, signatureStr, prefixedOrR);
 	}
-	if (typeof signatureOrV === 'string' && prefixedOrR === 'string' && !isNullish(s)) {
-		const signatureStr = `${signatureOrV}${prefixedOrR}${s}`;
+	if (typeof signatureOrV === 'string' && typeof prefixedOrR === 'string' && !isNullish(s)) {
+		const signatureStr = `${prefixedOrR}${s.slice(2)}${signatureOrV.slice(2)}`;
 		return recover(data, signatureStr, prefixed);
 	}
 
 	if (isNullish(signatureOrV)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
-	const hashedMessage = prefixed ? data : hashMessage(data);
+	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
 	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
 
@@ -613,8 +613,8 @@ export const encrypt = async (
  * 	}
  * ```
  */
-export const privateKeyToAccount = (privateKey: Bytes): Web3Account => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): Web3Account => {
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey, ignoreLength);
 
 	return {
 		address: privateKeyToAddress(privateKeyBuffer),
