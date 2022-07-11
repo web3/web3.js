@@ -51,7 +51,7 @@ describeIf(isWs)('contract', () => {
 		it('should trigger the "contract.events.<eventName>"', async () => {
 			return expect(
 				processAsync(async resolve => {
-					const event = await contract.events.MultiValueEvent();
+					const event = contract.events.MultiValueEvent();
 
 					event.on('data', resolve);
 
@@ -70,7 +70,7 @@ describeIf(isWs)('contract', () => {
 		it('should trigger the "contract.events.<eventName>" for indexed parameters', async () => {
 			return expect(
 				processAsync(async resolve => {
-					const event = await contract.events.MultiValueIndexedEvent({
+					const event = contract.events.MultiValueIndexedEvent({
 						filter: { val: 100 },
 					});
 
@@ -95,7 +95,7 @@ describeIf(isWs)('contract', () => {
 		it('should trigger when "fromBlock" is passed to contract.events.<eventName>', async () => {
 			return expect(
 				processAsync(async resolve => {
-					const event = await contract.events.MultiValueEvent({ fromBlock: 'latest' });
+					const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
 
 					event.on('data', resolve);
 
