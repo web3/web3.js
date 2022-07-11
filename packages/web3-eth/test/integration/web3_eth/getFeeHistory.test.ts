@@ -20,9 +20,14 @@ import { BlockNumberOrTag, Numbers } from 'web3-utils';
 import { Web3RequestManager } from 'web3-core';
 
 import Web3Eth from '../../../src';
-import { getSystemTestProvider, isWs } from '../../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	isWs,
+	describeIf,
+	getSystemTestBackend,
+} from '../../fixtures/system_test_utils';
 
-describe('Web3Eth.getFeeHistory', () => {
+describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () => {
 	let web3Eth: Web3Eth;
 	let systemProvider: string;
 
@@ -37,7 +42,7 @@ describe('Web3Eth.getFeeHistory', () => {
 		}
 	});
 
-	it('should return fee history with right data', async () => {
+	test('should return fee history with right data', async () => {
 		const blockCount: Numbers = '0x1';
 		const newestBlock: BlockNumberOrTag = 'latest';
 		const rewardPercentiles: number[] = [];
