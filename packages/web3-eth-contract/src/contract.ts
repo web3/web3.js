@@ -64,6 +64,7 @@ import {
 	toChecksumAddress,
 } from 'web3-utils';
 import { isNullish, validator } from 'web3-validator';
+import { SubscriptionError } from 'web3-errors';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -1050,8 +1051,10 @@ export class Contract<Abi extends ContractAbi>
 				{ requestManager: this.requestManager },
 			);
 
-			this.subscriptionManager?.addSubscription(sub).catch((err: string) => {
-				throw new Error(err);
+			this.subscriptionManager?.addSubscription(sub).catch(() => {
+				throw new SubscriptionError(
+					'Failed to subscribe to new newBlockHeaders to confirmation.',
+				);
 			});
 
 			return sub;
