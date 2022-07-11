@@ -63,13 +63,3 @@ batch.execute();
 // in 4.x
 const responses = await batch.execute();
 ```
-
-### Web3-eth-accounts
-
-#### create and wallet.create
-
-In 1.x `entropy` is an optional parameter for the create method, 4.x does not have `entropy` as a parameter, create method uses an audited package ethereum-cryptography/secp256k1 that is cryptographically secure random number with certain characteristics.
-
-#### recover
-
-In 4.x, instead of passing in seperate parameters `messageHash`, `r`, `s`, `v`, a signature object is passed containing those parameters
