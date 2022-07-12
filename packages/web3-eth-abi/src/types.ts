@@ -202,7 +202,7 @@ export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> 
 		: Params;
 
 export type ContractConstructor<Abis extends ContractAbi> = {
-	[Abi in FilterAbis<Abis, AbiConstructorFragment> as 'constructor']: {
+	[Abi in FilterAbis<Abis, AbiConstructorFragment & { type: 'constructor' }> as 'constructor']: {
 		readonly Abi: Abi;
 		readonly Inputs: ContractMethodInputParameters<Abi['inputs']>;
 	};

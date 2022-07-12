@@ -22,12 +22,12 @@ import {
 	format,
 	inputAddressFormatter,
 	inputLogFormatter,
+	isDataFormat,
 	LogsInput,
 	Mutable,
 	TransactionReceipt,
 	Web3EventEmitter,
 	Web3PromiEvent,
-	isDataFormat,
 } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import {
@@ -44,12 +44,12 @@ import {
 	AbiFragment,
 	AbiFunctionFragment,
 	ContractAbi,
-	ContractConstructor,
+	ContractEvent,
 	ContractEvents,
 	ContractMethod,
-	ContractMethods,
 	encodeEventSignature,
 	encodeFunctionSignature,
+	FilterAbis,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
@@ -91,20 +91,29 @@ import {
 } from './utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ContractBoundMethod<Method extends ContractMethod<any>> = (
+type ContractBoundMethod<
+	Abi extends AbiFunctionFragment,
+	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
+> = (
 	...args: Method['Inputs']
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
 
 // To avoid circular dependency between types and encoding, declared these types here.
-export type ContractMethodsInterface<
-	Abi extends ContractAbi,
-	Methods extends ContractMethods<Abi> = ContractMethods<Abi>,
-> = {
-	[Name in keyof Methods]: ContractBoundMethod<Methods[Name]>;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-} & { [key: string]: ContractBoundMethod<any> };
+export type ContractMethodsInterface<Abi extends ContractAbi> = {
+	[MethodAbi in FilterAbis<
+		Abi,
+		AbiFunctionFragment & { type: 'function' }
+	> as MethodAbi['name']]: ContractBoundMethod<MethodAbi>;
+};
+
+export type ConstructorArgs<Abi extends ContractAbi> = {
+	[MethodAbi in FilterAbis<
+		Abi,
+		AbiFunctionFragment & { type: 'constructor' }
+	> as 'constructor']: ContractMethod<MethodAbi>['Inputs'];
+}['constructor'];
 
 /**
  * The event object can be accessed from `myContract.events.myEvent`.
@@ -131,11 +140,11 @@ export type ContractEventsInterface<
 };
 
 // To avoid circular dependency between types and encoding, declared these types here.
-export type ContractEventEmitterInterface<
-	Abi extends ContractAbi,
-	Events extends ContractEvents<Abi> = ContractEvents<Abi>,
-> = {
-	[Name in keyof Events]: Events[Name]['Inputs'];
+export type ContractEventEmitterInterface<Abi extends ContractAbi> = {
+	[EventAbi in FilterAbis<
+		Abi,
+		AbiFunctionFragment & { type: 'event' }
+	> as EventAbi['name']]: ContractEvent<EventAbi>['Inputs'];
 };
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
@@ -635,7 +644,7 @@ export class Contract<Abi extends ContractAbi>
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
-		arguments?: ContractConstructor<Abi>['Inputs'];
+		arguments?: ConstructorArgs<Abi>;
 	}) {
 		let abi = this._jsonInterface.find(j => j.type === 'constructor') as AbiConstructorFragment;
 
@@ -889,9 +898,7 @@ export class Contract<Abi extends ContractAbi>
 		this._jsonInterface = [...result] as unknown as ContractAbiWithSignature;
 	}
 
-	private _createContractMethod<T extends AbiFunctionFragment>(
-		abi: T,
-	): ContractBoundMethod<ContractMethod<T>> {
+	private _createContractMethod<T extends AbiFunctionFragment>(abi: T): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			validator.validate(abi.inputs ?? [], params);
 
