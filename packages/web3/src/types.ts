@@ -42,7 +42,6 @@ import Contract, { ContractInitOptions } from 'web3-eth-contract';
 import { ENS } from 'web3-eth-ens';
 import Net from 'web3-net';
 import { Iban } from 'web3-eth-iban';
-import Net from 'web3-net';
 import { Address, Bytes } from 'web3-utils';
 
 export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contract, 'new'> & {
@@ -70,7 +69,6 @@ export interface Web3EthInterface extends Eth {
 	Iban: typeof Iban;
 	net: Net;
 	ens: ENS;
-	net: Net;
 	abi: {
 		encodeEventSignature: typeof encodeFunctionSignature;
 		encodeFunctionCall: typeof encodeFunctionCall;
