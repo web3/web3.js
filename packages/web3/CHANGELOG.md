@@ -39,9 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Changes
 
-#### Connection close does not impact any more
+#### Connection close is not supported
 
-In `1.x user had access to raw connection object and can interact with it. e.g.
+In `1.x` user had access to raw connection object and can interact with it. e.g.
 
 ```ts
 web3.currentProvider.connection.close();
