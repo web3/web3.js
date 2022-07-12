@@ -43,7 +43,6 @@ import {
 	validHashMessageData,
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
-	signatureObjectRecoverData,
 } from '../fixtures/account';
 
 describe('accounts', () => {
