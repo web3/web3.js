@@ -50,7 +50,7 @@ import {
 	blockSchema,
 	feeHistorySchema,
 	logSchema,
-	receiptInfoSchema,
+	transactionReceiptSchema,
 	transactionInfoSchema,
 } from './schemas';
 import {
@@ -447,7 +447,7 @@ export async function getTransactionReceipt<ReturnFormat extends DataFormat>(
 	return isNullish(response)
 		? response
 		: (format(
-				receiptInfoSchema,
+				transactionReceiptSchema,
 				response as unknown as TransactionReceipt,
 				returnFormat,
 		  ) as TransactionReceipt);
@@ -583,7 +583,7 @@ export function sendTransaction<
 							);
 
 						const transactionReceiptFormatted = format(
-							receiptInfoSchema,
+							transactionReceiptSchema,
 							transactionReceipt,
 							returnFormat,
 						);
@@ -711,7 +711,7 @@ export function sendSignedTransaction<
 							);
 
 						const transactionReceiptFormatted = format(
-							receiptInfoSchema,
+							transactionReceiptSchema,
 							transactionReceipt,
 							returnFormat,
 						);

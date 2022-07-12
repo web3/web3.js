@@ -28,7 +28,7 @@ import {
 	Uint256,
 } from 'web3-utils';
 import { transactionWithSender } from './rpc_methods_wrappers';
-import { ReceiptInfo } from '../../src/types';
+import { TransactionReceipt } from '../../src/types';
 
 /**
  * Array consists of:
@@ -1855,7 +1855,7 @@ export const tx = {
 	s: '0x6bebe5e2c9f839d3ce0264dc5c7cc521f902e86705c69f5fddffaa3de5aac6d3',
 };
 
-export const txReceipt: ReceiptInfo = {
+export const txReceipt: TransactionReceipt = {
 	blockHash: '0xb3a667f84f58c90ab87476073e06c5d1186a0f0b0b69aa3033bfe0e4df264350',
 	blockNumber: BigInt(123),
 	cumulativeGasUsed: BigInt(21000),

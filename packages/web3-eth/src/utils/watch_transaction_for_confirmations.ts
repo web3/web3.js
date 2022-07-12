@@ -34,7 +34,7 @@ import {
 import { TransactionReceipt, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
-import { receiptInfoSchema } from '../schemas';
+import { transactionReceiptSchema } from '../schemas';
 
 type Web3PromiEventEventTypeBase<ReturnFormat extends DataFormat> =
 	| SendTransactionEvents<ReturnFormat>
@@ -72,7 +72,7 @@ const watchByPolling = <ReturnFormat extends DataFormat, ResolveType = Transacti
 
 				transactionPromiEvent.emit('confirmation', {
 					confirmations: format({ eth: 'uint' }, confirmations, returnFormat),
-					receipt: format(receiptInfoSchema, transactionReceipt, returnFormat),
+					receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 					latestBlockHash: format(
 						{ eth: 'bytes32' },
 						nextBlock.hash as Bytes,
@@ -109,7 +109,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 							confirmations as Numbers,
 							returnFormat,
 						),
-						receipt: format(receiptInfoSchema, transactionReceipt, returnFormat),
+						receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 						latestBlockHash: format(
 							{ eth: 'bytes32' },
 							newBlockHeader.parentHash as Bytes,
@@ -172,7 +172,7 @@ export function watchTransactionForConfirmations<
 	// As we have the receipt, it's the first confirmation that tx is accepted.
 	transactionPromiEvent.emit('confirmation', {
 		confirmations: format({ eth: 'uint' }, 1, returnFormat),
-		receipt: format(receiptInfoSchema, transactionReceipt, returnFormat),
+		receipt: format(transactionReceiptSchema, transactionReceipt, returnFormat),
 		latestBlockHash: format({ eth: 'bytes32' }, transactionReceipt.blockHash, returnFormat),
 	});
 
