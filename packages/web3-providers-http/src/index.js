@@ -132,14 +132,12 @@ HttpProvider.prototype.send = function (payload, callback) {
             clearTimeout(this.timeoutId);
         }
 
-        try {
-            // Response is a stream data so should be awaited for json response
-            response.json().then(function (data) {
-                callback(null, data);
-            });
-        } catch (e) {
+        // Response is a stream data so should be awaited for json response
+        response.json().then(function (data) {
+            callback(null, data);
+        }).catch(function (error) {
             callback(errors.InvalidResponse(response));
-        }
+        });
     };
 
     var failed = function (error) {

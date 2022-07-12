@@ -1,5 +1,8 @@
 var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 var assert = chai.assert;
+var expect = chai.expect;
 var http = require('http');
 var https = require('https');
 var Web3 = require('../packages/web3');
@@ -29,15 +32,21 @@ function deepEqual(object1, object2) {
 
 describe('web3-providers-http', function () {
     describe('prepareRequest', function () {
-        it('should set request header', async function () {
+        it('should set request header', function () {
             var options = {headers: [{name: 'Access-Control-Allow-Origin',  value: '*'}]}
             var provider = new HttpProvider('http://localhost:8545', options);
 
-            var origin = 'Access-Control-Allow-Origin';
             assert.equal(provider.headers, options.headers);
+            assert.equal(provider.httpAgent instanceof http.Agent, true);
         });
 
-        it('should use the passed custom http agent', async function () {
+        it('should have https agent', function () {
+            var provider = new HttpProvider('https://localhost');
+
+            assert.equal(provider.httpsAgent instanceof https.Agent, true);
+        });
+
+        it('should use the passed custom http agent', function () {
             var agent = new http.Agent();
             var options = {agent: {http: agent}};
             var provider = new HttpProvider('http://localhost:8545', options);
@@ -48,7 +57,7 @@ describe('web3-providers-http', function () {
             assert.equal(provider.agent, options.agent);
         });
 
-        it('should use the passed custom https agent', async function () {
+        it('should use the passed custom https agent', function () {
             var agent = new https.Agent();
             var options = {agent: {https: agent}};
             var provider = new HttpProvider('http://localhost:8545', options);
@@ -61,6 +70,23 @@ describe('web3-providers-http', function () {
     });
 
     describe('send', function () {
+        it('should fail with invalid remote node connection', async function () {
+            var provider = new HttpProvider('http://localhost:8545');
+            var web3 = new Web3(provider);
+
+            await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, "CONNECTION ERROR: Couldn't connect to node http://localhost:8545.");
+        });
+
+        it('should fail for non-json format response', async function () {
+            var provider = new HttpProvider('/fetchMock');
+            var web3 = new Web3(provider);
+
+            fetchMock.mock('/fetchMock', 'Testing non-json format response');
+
+            await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, /Invalid JSON RPC response/);
+            fetchMock.restore();
+        });
+
         it('should send basic async request', async function () {
             var provider = new HttpProvider('/fetchMock');
 

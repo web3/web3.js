@@ -109,6 +109,7 @@
         "buffer": "^4.9.2",
         "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
+        "chai-as-promised": "^7.1.1",
         "clean-webpack-plugin": "^3.0.0",
         "core-js": "^3.6.5",
         "crypto-js": "^3.3.0",
