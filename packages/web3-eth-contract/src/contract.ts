@@ -106,7 +106,9 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 		Abi,
 		AbiFunctionFragment & { type: 'function' }
 	> as MethodAbi['name']]: ContractBoundMethod<MethodAbi>;
-};
+	// To allow users to use method signatures
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+} & { [key: string]: ContractBoundMethod<any> };
 
 export type ConstructorArgs<Abi extends ContractAbi> = {
 	[MethodAbi in FilterAbis<
