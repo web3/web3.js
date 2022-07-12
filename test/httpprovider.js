@@ -2,37 +2,30 @@ var chai = require('chai');
 var assert = chai.assert;
 var http = require('http');
 var https = require('https');
-var SandboxedModule = require('sandboxed-module');
+var Web3 = require('../packages/web3');
+var HttpProvider = require('../packages/web3-providers-http');
+var fetchMock = require('fetch-mock');
 
-SandboxedModule.registerBuiltInSourceTransformer('istanbul');
+function isObject(object) {
+    return object != null && typeof object === 'object';
+}
 
-class Response {
-  constructor(url, headers) {
-    this.url = url;
-    var header = new Map();
-    headers.map(function(h) {
-        header.set(`${h[0].toLowerCase()}`, `${h[1]}`);
-    });
-    this.headers = header;
-    this.ok = true;
-    this.status = 200;
-    this.statusText = 'OK';
-  }
-};
-
-function Mock(url, options) {
-  const response = new Response(url, Object.entries(options.headers));
-  return new Promise(function(resolve, reject) {
-    resolve(response);
-  });
-};
-
-var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
-    requires: {
-        'cross-fetch': Mock,
-    },
-    singleOnly: true
-});
+function deepEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+    for (const key of keys1) {
+        const val1 = object1[key];
+        const val2 = object2[key];
+        const areObjects = isObject(val1) && isObject(val2);
+        if (areObjects && !deepEqual(val1, val2) || !areObjects && val1 !== val2) {
+            return false;
+        }
+    }
+    return true;
+}
 
 describe('web3-providers-http', function () {
     describe('prepareRequest', function () {
@@ -65,34 +58,58 @@ describe('web3-providers-http', function () {
             assert.equal(provider.httpsAgent, undefined);
             assert.equal(provider.agent, options.agent);
         });
-
-        /**
-            Deprecated with xhr2-cookies since this is non-standard
-
-        it('should use the passed baseUrl', function () {
-            agent = new https.Agent();
-            options = {agent: {https: agent, baseUrl: 'base'}};
-            provider = new HttpProvider('http://localhost:8545', options);
-            result = provider._prepareRequest();
-
-            assert.equal(typeof result, 'object');
-            assert.equal(result.agents.httpsAgent, agent);
-            assert.equal(result.agents.baseUrl, 'base');
-            assert.equal(provider.httpAgent, undefined);
-            assert.equal(provider.httpsAgent, undefined);
-            assert.equal(provider.agent, options.agent);
-        });
-        **/
     });
 
     describe('send', function () {
-        it('should send basic async request', function (done) {
-            var provider = new HttpProvider();
+        it('should send basic async request', async function () {
+            var provider = new HttpProvider('/fetchMock');
 
-            provider.send({}, function (err, result) {
-                assert.equal(typeof result, 'undefined');
-                done();
-            });
+            var reqObject = {
+                'jsonrpc': '2.0',
+                'id': 0,
+                'method': 'eth_chainId',
+                'params': []
+            };
+
+            var resObject = {
+                'jsonrpc': '2.0',
+                'id': 0,
+                'result': '0x1'
+            };
+
+            fetchMock.mock((url, opts) => {
+                const reqCount = JSON.parse(opts.body).id;
+                reqObject = JSON.stringify((() => {
+                    const obj = reqObject;
+                    obj.id = reqCount;
+                    return obj;
+                })());
+                resObject = (() => {
+                    const obj = resObject;
+                    obj.id = reqCount;
+                    return obj;
+                })();
+                const matcher = {
+                    url: '/fetchMock',
+                    method: 'POST',
+                    credentials: 'omit',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: reqObject
+                };
+                return url === matcher.url
+                    && opts.method === matcher.method
+                    && opts.credentials === matcher.credentials
+                    && deepEqual(opts.headers, matcher.headers)
+                    && opts.body === matcher.body;
+            }, resObject);
+
+            var web3 = new Web3(provider);
+
+            var chainId = await web3.eth.getChainId();
+            assert.equal(chainId, 1);
+            fetchMock.restore();
         });
     });
 });

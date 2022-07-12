@@ -24,11 +24,11 @@
  */
 
 var errors = require('web3-core-helpers').errors;
-var fetch = require('cross-fetch');
 var http = require('http');
 var https = require('https');
 
 // Apply missing polyfill for IE
+require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 
@@ -99,8 +99,8 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
     }
 
-    if(this.headers) {
-        this.headers.forEach(function(header) {
+    if (this.headers) {
+        this.headers.forEach(function (header) {
             headers[header.name] = header.value;
         });
     }
@@ -122,45 +122,35 @@ HttpProvider.prototype.send = function (payload, callback) {
     options.headers = headers;
 
     if (this.timeout > 0) {
-        this.timeoutId = setTimeout(function() {
+        this.timeoutId = setTimeout(function () {
             controller.abort();
         }, this.timeout);
     }
 
-    // Prevent global leak of connected
-    var _this = this;
-
-    var success = function(response) {
+    var success = function (response) {
         if (this.timeoutId !== undefined) {
             clearTimeout(this.timeoutId);
         }
-        var result = response;
-        var error = null;
 
         try {
             // Response is a stream data so should be awaited for json response
-            result.json().then(function(data) {
-                result = data;
-                _this.connected = true;
-                callback(error, result);
+            response.json().then(function (data) {
+                callback(null, data);
             });
         } catch (e) {
-            _this.connected = false;
-            callback(errors.InvalidResponse(result));
+            callback(errors.InvalidResponse(response));
         }
     };
 
-    var failed = function(error) {
+    var failed = function (error) {
         if (this.timeoutId !== undefined) {
             clearTimeout(this.timeoutId);
         }
 
         if (error.name === 'AbortError') {
-            _this.connected = false;
             callback(errors.ConnectionTimeout(this.timeout));
         }
 
-        _this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
 
