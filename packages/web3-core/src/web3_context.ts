@@ -254,8 +254,7 @@ export class Web3Context<
 
 	// eslint-disable-next-line class-methods-use-this
 	public get givenProvider() {
-		// eslint-disable-next-line
-		return Web3Context.givenProvider ?? null;
+		return Web3Context.givenProvider;
 	}
 
 	public setProvider(provider?: SupportedProviders<API> | string): boolean {
