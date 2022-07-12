@@ -91,7 +91,7 @@ export class Web3RequestManager<
 	 * @param provider
 	 * @param net
 	 */
-	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket) {
+	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket): boolean {
 		let newProvider: SupportedProviders<API> | undefined;
 
 		// autodetect provider
@@ -122,6 +122,7 @@ export class Web3RequestManager<
 		this.emit(Web3RequestManagerEvent.BEFORE_PROVIDER_CHANGE, this._provider);
 		this._provider = newProvider;
 		this.emit(Web3RequestManagerEvent.PROVIDER_CHANGED, this._provider);
+		return true;
 	}
 
 	public async send<

@@ -254,11 +254,13 @@ export class Web3Context<
 
 	// eslint-disable-next-line class-methods-use-this
 	public get givenProvider() {
-		return Web3Context.givenProvider;
+		// eslint-disable-next-line
+		return Web3Context.givenProvider ?? null;
 	}
 
-	public setProvider(provider?: SupportedProviders<API> | string) {
+	public setProvider(provider?: SupportedProviders<API> | string): boolean {
 		this.provider = provider;
+		return true;
 	}
 
 	public get BatchRequest(): new () => Web3BatchRequest {
