@@ -94,10 +94,21 @@ export abstract class Web3Config
 		Object.assign(this._config, options);
 	}
 
+	/**
+	 * The `handleRevert` options property returns the revert reason string if enabled for the following methods:
+	 * - web3.eth.sendTransaction()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 * - myContract.methods.myMethod().send()
+	 * Default is `false`.
+	 */
 	public get handleRevert() {
 		return this._config.handleRevert;
 	}
 
+	/**
+	 * Will set the handleRevert
+	 */
 	public set handleRevert(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'handleRevert',
@@ -107,10 +118,19 @@ export abstract class Web3Config
 		this._config.handleRevert = val;
 	}
 
+	/**
+	 * This default address is used as the default `from` property, if no `from` property is specified in for the following methods:
+	 * - web3.eth.sendTransaction()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 * - myContract.methods.myMethod().send()
+	 */
 	public get defaultAccount() {
 		return this._config.defaultAccount;
 	}
-
+	/**
+	 * Will set the default account.
+	 */
 	public set defaultAccount(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultAccount',
@@ -120,10 +140,30 @@ export abstract class Web3Config
 		this._config.defaultAccount = val;
 	}
 
+	/**
+	 * The default block is used for certain methods. You can override it by passing in the defaultBlock as last parameter. The default value is `"latest"`.
+	 * - web3.eth.getBalance()
+	 * - web3.eth.getCode()
+	 * - web3.eth.getTransactionCount()
+	 * - web3.eth.getStorageAt()
+	 * - web3.eth.call()
+	 * - myContract.methods.myMethod().call()
+	 *
+	 * @returns {BlockNumberOrTag}
+	 */
 	public get defaultBlock() {
 		return this._config.defaultBlock;
 	}
 
+	/**
+	 * Will set the default block.
+	 *
+	 * @param {BlockNumberOrTag} val
+	 * - A block number
+	 * - `"earliest"` - String: The genesis block
+	 * - `"latest"` - String: The latest block (current head of the blockchain)
+	 * - `"pending"` - String: The currently mined block (including pending transactions)
+	 */
 	public set defaultBlock(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'defaultBlock',
@@ -133,10 +173,17 @@ export abstract class Web3Config
 		this._config.defaultBlock = val;
 	}
 
+	/**
+	 * The `transactionBlockTimeout` is used over socket-based connections. This option defines the amount of new blocks it should wait until the first confirmation happens, otherwise the PromiEvent rejects with a timeout error.
+	 * Default is `50`.
+	 */
 	public get transactionBlockTimeout() {
 		return this._config.transactionBlockTimeout;
 	}
 
+	/**
+	 * Will set the transactionBlockTimeout.
+	 */
 	public set transactionBlockTimeout(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionBlockTimeout',
@@ -146,10 +193,17 @@ export abstract class Web3Config
 		this._config.transactionBlockTimeout = val;
 	}
 
+	/**
+	 * This defines the number of blocks it requires until a transaction is considered confirmed.
+	 * Default is `24`.
+	 */
 	public get transactionConfirmationBlocks() {
 		return this._config.transactionConfirmationBlocks;
 	}
 
+	/**
+	 * Will set the transactionConfirmationBlocks.
+	 */
 	public set transactionConfirmationBlocks(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionConfirmationBlocks',
@@ -160,10 +214,17 @@ export abstract class Web3Config
 		this._config.transactionConfirmationBlocks = val;
 	}
 
+	/**
+	 * Used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+	 * Default is `1000` ms.
+	 */
 	public get transactionPollingInterval() {
 		return this._config.transactionPollingInterval;
 	}
 
+	/**
+	 * Will set the transactionPollingInterval.
+	 */
 	public set transactionPollingInterval(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionPollingInterval',
@@ -176,21 +237,34 @@ export abstract class Web3Config
 		this.transactionReceiptPollingInterval = val;
 		this.transactionConfirmationPollingInterval = val;
 	}
-
+	/**
+	 * Used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
+	 * Default is `750` ms.
+	 */
 	public get transactionPollingTimeout() {
 		return this._config.transactionPollingTimeout;
 	}
 
+	/**
+	 * Will set the transactionPollingTimeout.
+	 */
 	public set transactionPollingTimeout(val) {
 		this._triggerConfigChange('transactionPollingTimeout', val);
 
 		this._config.transactionPollingTimeout = val;
 	}
 
+	/**
+	 * The `transactionPollingInterval` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+	 * Default is `undefined`
+	 */
 	public get transactionReceiptPollingInterval() {
 		return this._config.transactionReceiptPollingInterval;
 	}
 
+	/**
+	 * Will set the transactionReceiptPollingInterval
+	 */
 	public set transactionReceiptPollingInterval(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionReceiptPollingInterval',
@@ -215,10 +289,17 @@ export abstract class Web3Config
 		this._config.transactionConfirmationPollingInterval = val;
 	}
 
+	/**
+	 * The blockHeaderTimeout is used over socket-based connections. This option defines the amount seconds it should wait for “newBlockHeaders” event before falling back to polling to fetch transaction receipt.
+	 * Default is `10` seconds.
+	 */
 	public get blockHeaderTimeout() {
 		return this._config.blockHeaderTimeout;
 	}
 
+	/**
+	 * Will set the blockHeaderTimeout
+	 */
 	public set blockHeaderTimeout(val) {
 		this._triggerConfigChange('blockHeaderTimeout', val);
 
@@ -255,20 +336,60 @@ export abstract class Web3Config
 		this._config.defaultChain = val;
 	}
 
+	/**
+	 * Will return the default hardfork. Default is `london`
+	 * The default hardfork property can be one of the following:
+	 * - `chainstart`
+	 * - `homestead`
+	 * - `dao`
+	 * - `tangerineWhistle`
+	 * - `spuriousDragon`
+	 * - `byzantium`
+	 * - `constantinople`
+	 * - `petersburg`
+	 * - `istanbul`
+	 * - `berlin`
+	 * - `london`
+	 * - 'arrowGlacier',
+	 * - 'tangerineWhistle',
+	 * - 'muirGlacier'
+	 *
+	 */
 	public get defaultHardfork() {
 		return this._config.defaultHardfork;
 	}
 
+	/**
+	 * Will set the default hardfork.
+	 *
+	 */
 	public set defaultHardfork(val) {
 		this._triggerConfigChange('defaultHardfork', val);
 
 		this._config.defaultHardfork = val;
 	}
 
+	/**
+	 *
+	 * Will get the default common property
+	 * The default common property does contain the following Common object:
+	 * - `customChain` - `Object`: The custom chain properties
+	 * 	- `name` - `string`: (optional) The name of the chain
+	 * 	- `networkId` - `number`: Network ID of the custom chain
+	 * 	- `chainId` - `number`: Chain ID of the custom chain
+	 * - `baseChain` - `string`: (optional) mainnet, goerli, kovan, rinkeby, or ropsten
+	 * - `hardfork` - `string`: (optional) chainstart, homestead, dao, tangerineWhistle, spuriousDragon, byzantium, constantinople, petersburg, istanbul, berlin, or london
+	 * Default is `undefined`.
+	 *
+	 */
 	public get defaultCommon() {
 		return this._config.defaultCommon;
 	}
 
+	/**
+	 * Will set the default common property
+	 *
+	 */
 	public set defaultCommon(val) {
 		this._triggerConfigChange('defaultCommon', val);
 
