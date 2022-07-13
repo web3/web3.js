@@ -87,6 +87,16 @@ describe('web3-providers-http', function () {
             fetchMock.restore();
         });
 
+        it('should timeout by delayed response', async function () {
+            var provider = new HttpProvider('/fetchMock', { timeout: 500 });
+            var web3 = new Web3(provider);
+
+            fetchMock.mock('/fetchMock', 'Testing non-json format response', { delay: 1000 });
+
+            await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, 'CONNECTION TIMEOUT: timeout of 500 ms achived');
+            fetchMock.restore();
+        });
+
         it('should send basic async request', async function () {
             var provider = new HttpProvider('/fetchMock');
 

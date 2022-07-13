@@ -65,21 +65,22 @@ var HttpProvider = function HttpProvider(host, options) {
  */
 HttpProvider.prototype.send = function (payload, callback) {
     var options = {
-      method: 'POST',
-      body: JSON.stringify(payload)
+        method: 'POST',
+        body: JSON.stringify(payload)
     };
     var headers = {};
     var controller;
 
     if (typeof AbortController !== 'undefined') {
         controller = new AbortController();
-    } else if (typeof AbortController === 'undefined' && typeof window !== 'undefined' && typeof window.AbortController !== 'undefined') {
+    } else if (typeof window !== 'undefined' && typeof window.AbortController !== 'undefined') {
         // Some chrome version doesn't recognize new AbortController(); so we are using it from window instead
         // https://stackoverflow.com/questions/55718778/why-abortcontroller-is-not-defined
         controller = new window.AbortController();
-    } else {
-        // Disable user defined timeout
-        this.timeout = 0;
+    }
+
+    if (typeof controller !== 'undefined') {
+        options.signal = controller.signal;
     }
 
     // the current runtime is node
@@ -112,16 +113,16 @@ HttpProvider.prototype.send = function (payload, callback) {
 
     // As the Fetch API supports the credentials as following options 'include', 'omit', 'same-origin'
     // https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
-    // To avoid breaking change in 1.x we override this value based on boolean option. 
+    // To avoid breaking change in 1.x we override this value based on boolean option.
     if(this.withCredentials) {
         options.credentials = 'include';
     } else {
         options.credentials = 'omit';
     }
-    
+
     options.headers = headers;
 
-    if (this.timeout > 0) {
+    if (this.timeout > 0 && typeof controller !== 'undefined') {
         this.timeoutId = setTimeout(function () {
             controller.abort();
         }, this.timeout);
