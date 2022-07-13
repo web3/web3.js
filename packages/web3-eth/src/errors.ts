@@ -44,7 +44,7 @@ import {
 } from 'web3-errors';
 import { Bytes, HexString, Numbers } from 'web3-utils';
 
-import { ReceiptInfo } from './types';
+import { TransactionReceipt } from './types';
 
 export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;
@@ -281,7 +281,11 @@ export class TransactionPollingTimeoutError extends InvalidValueError {
 export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
-	public constructor(value: { receipt: ReceiptInfo; blockHash: Bytes; transactionHash: Bytes }) {
+	public constructor(value: {
+		receipt: TransactionReceipt;
+		blockHash: Bytes;
+		transactionHash: Bytes;
+	}) {
 		super(
 			`receipt: ${JSON.stringify(
 				value.receipt,
@@ -294,7 +298,7 @@ export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError
 export class TransactionReceiptMissingBlockNumberError extends InvalidValueError {
 	public code = ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER;
 
-	public constructor(value: { receipt: ReceiptInfo }) {
+	public constructor(value: { receipt: TransactionReceipt }) {
 		super(`receipt: ${JSON.stringify(value.receipt)}`, `Receipt missing block number`);
 	}
 }

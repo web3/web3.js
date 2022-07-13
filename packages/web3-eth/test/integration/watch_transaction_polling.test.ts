@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { DEFAULT_RETURN_FORMAT, Web3PromiEvent } from 'web3-common';
-import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
+import { Web3Eth, SendTransactionEvents, TransactionReceipt } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {
@@ -51,7 +51,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			const value = `0x1`;
 
 			const sentTx: Web3PromiEvent<
-				ReceiptInfo,
+				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = web3Eth.sendTransaction({
 				to,
@@ -73,7 +73,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			await new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('receipt', (params: ReceiptInfo) => {
+				void sentTx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
