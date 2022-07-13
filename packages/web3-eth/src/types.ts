@@ -56,7 +56,7 @@ export interface Log {
 	readonly topics?: Bytes[];
 }
 
-export interface ReceiptInfo {
+export interface TransactionReceipt {
 	readonly transactionHash: Bytes;
 	readonly transactionIndex: Numbers;
 	readonly blockHash: Bytes;
@@ -192,35 +192,35 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 	sending: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 	sent: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
 	transactionHash: FormatType<Bytes, ReturnFormat>;
-	receipt: FormatType<ReceiptInfo, ReturnFormat>;
+	receipt: FormatType<TransactionReceipt, ReturnFormat>;
 	confirmation: {
 		confirmations: FormatType<Numbers, ReturnFormat>;
-		receipt: FormatType<ReceiptInfo, ReturnFormat>;
+		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<ReceiptInfo, ReturnFormat>>;
+	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
 };
 
 export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
 	sending: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
 	sent: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
 	transactionHash: FormatType<Bytes, ReturnFormat>;
-	receipt: FormatType<ReceiptInfo, ReturnFormat>;
+	receipt: FormatType<TransactionReceipt, ReturnFormat>;
 	confirmation: {
 		confirmations: FormatType<Numbers, ReturnFormat>;
-		receipt: FormatType<ReceiptInfo, ReturnFormat>;
+		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<ReceiptInfo, ReturnFormat>>;
+	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
 };
 
-export interface SendTransactionOptions<ResolveType = ReceiptInfo> {
+export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;
-	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
+	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
 }
 
-export interface SendSignedTransactionOptions<ResolveType = ReceiptInfo> {
-	transactionResolver?: (receipt: ReceiptInfo) => ResolveType;
+export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
+	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
 }
 
 export interface FeeHistory {

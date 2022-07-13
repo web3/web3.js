@@ -21,7 +21,7 @@ import { getTransactionReceipt as rpcMethodsGetTransactionReceipt } from '../../
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getTransactionReceipt } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_receipt';
-import { receiptInfoSchema } from '../../../src/schemas';
+import { transactionReceiptSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
 
@@ -55,7 +55,7 @@ describe('getTransactionReceipt', () => {
 		async (_, inputParameters) => {
 			const expectedReturnFormat = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.BUFFER };
 			const expectedFormattedResult = format(
-				receiptInfoSchema,
+				transactionReceiptSchema,
 				mockRpcResponse,
 				expectedReturnFormat,
 			);

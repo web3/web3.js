@@ -22,7 +22,7 @@ import { TransactionBuilder, TransactionTypeParser, Web3Context } from 'web3-cor
 import { DEFAULT_RETURN_FORMAT, Web3PromiEvent } from 'web3-common';
 import {
 	prepareTransactionForSigning,
-	ReceiptInfo,
+	TransactionReceipt,
 	SendTransactionEvents,
 	transactionBuilder,
 	Web3Eth,
@@ -123,7 +123,7 @@ describe('defaults', () => {
 			});
 
 			const tx = await contractMsgFrom.methods
-				?.setTestString('test2')
+				.setTestString('test2')
 				.send({ gas: '1000000' });
 			const txSend = await web3Eth.sendTransaction({
 				to: accounts[1],
@@ -132,7 +132,7 @@ describe('defaults', () => {
 			expect(tx.from).toBe(accounts[0].toLowerCase());
 			expect(txSend.from).toBe(accounts[0].toLowerCase());
 
-			const tx2 = await contractMsgFrom.methods?.setTestString('test3').send({
+			const tx2 = await contractMsgFrom.methods.setTestString('test3').send({
 				from: accounts[1],
 			});
 			const tx2Send = await web3Eth.sendTransaction({
@@ -304,7 +304,7 @@ describe('defaults', () => {
 			const to = accounts[1];
 			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
-				ReceiptInfo,
+				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = eth.sendTransaction({
 				to,
@@ -315,7 +315,7 @@ describe('defaults', () => {
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('receipt', (params: ReceiptInfo) => {
+				void sentTx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
@@ -372,7 +372,7 @@ describe('defaults', () => {
 		//         },
 		//     });
 		//
-		//     const sentTx: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
+		//     const sentTx: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
 		//         to: accounts[1],
 		//         value: '0x1',
 		//         from: accounts[0],
@@ -381,15 +381,15 @@ describe('defaults', () => {
 		//     const res = await Promise.race([
 		//         new Promise((resolve) => setTimeout(resolve, 410)),
 		//         new Promise((resolve: Resolve) => {
-		//             sentTx.on('receipt', (params: ReceiptInfo) => {
+		//             sentTx.on('receipt', (params: TransactionReceipt) => {
 		//                 expect(params.status).toBe(BigInt(1));
 		//                 resolve(params);
 		//             });
 		//         }),
 		//     ]);
-		//     expect((res as ReceiptInfo).status).toBe(BigInt(1));
+		//     expect((res as TransactionReceipt).status).toBe(BigInt(1));
 		//
-		//     const sentTx2: Web3PromiEvent<ReceiptInfo, SendTransactionEvents> = eth2.sendTransaction({
+		//     const sentTx2: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
 		//         to: accounts[1],
 		//         value: '0x1',
 		//         from: accounts[0],
@@ -397,7 +397,7 @@ describe('defaults', () => {
 		//     const res2 = await Promise.race([
 		//         new Promise((resolve) => setTimeout(()=>resolve(false), 300)),
 		//         new Promise((resolve: Resolve) => {
-		//             sentTx2.on('receipt', (params: ReceiptInfo) => {
+		//             sentTx2.on('receipt', (params: TransactionReceipt) => {
 		//                 expect(params.status).toBe(BigInt(1));
 		//                 resolve(params);
 		//             });

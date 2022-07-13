@@ -168,7 +168,7 @@ export interface Log {
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
-export interface ReceiptInfo {
+export interface TransactionReceipt {
 	readonly transactionHash: HexString32Bytes;
 	readonly transactionIndex: Uint;
 	readonly blockHash: HexString32Bytes;
@@ -239,7 +239,9 @@ export type EthExecutionAPI = {
 		blockNumber: BlockNumberOrTag,
 		transactionIndex: Uint,
 	) => TransactionInfo | undefined;
-	eth_getTransactionReceipt: (transactionHash: HexString32Bytes) => ReceiptInfo | undefined;
+	eth_getTransactionReceipt: (
+		transactionHash: HexString32Bytes,
+	) => TransactionReceipt | undefined;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.json
 	eth_protocolVersion: () => string;
