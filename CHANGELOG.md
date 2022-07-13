@@ -324,8 +324,10 @@ Released with 1.0.0-beta.37 code base.
 
 ### Breaking Changes
 
+#### web3
+
 1. Passing callbacks to functions is no longer supported, except for event listeners.
-2. Method `extend` is deprecated in 4.x
+2. Method `extend` is deprecated
 
 #### web3-common
 
@@ -386,5 +388,10 @@ Released with 1.0.0-beta.37 code base.
 
 1. `givenProvider` default value is undefined
 2. `defaultHardfork` default value is 'london'
-3. `defaultAccount` default value is null
-4. `defaultNetworkId` default value is null
+3. `defaultAccount` default value is undefined
+4. `defaultNetworkId` default value is undefined
+
+#### web3-eth-personal
+
+1. `givenProvider` default value is undefined
+2. `currentProvider` default value is undefined
