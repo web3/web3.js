@@ -18,7 +18,7 @@ import { DataFormat, EthExecutionAPI } from 'web3-common';
 import { Web3Context } from 'web3-core';
 import { Bytes, isNullish } from 'web3-utils';
 
-import { ReceiptInfo } from '../types';
+import { TransactionReceipt } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionReceipt } from '../rpc_method_wrappers';
 import { TransactionPollingTimeoutError } from '../errors';
@@ -33,7 +33,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
-): Promise<ReceiptInfo> {
+): Promise<TransactionReceipt> {
 	return new Promise(resolve => {
 		let transactionPollingDuration = 0;
 		const intervalId = setInterval(() => {
