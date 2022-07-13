@@ -20,7 +20,7 @@ import { Block, FMT_BYTES, FMT_NUMBER } from 'web3-common';
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
-import { ReceiptInfo, Web3Eth, TransactionInfo } from '../../src';
+import { TransactionReceipt, Web3Eth, TransactionInfo } from '../../src';
 
 import {
 	getSystemTestBackend,
@@ -79,7 +79,7 @@ describe('rpc with block', () => {
 		sendOptions = { from: accounts[0], gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
-		const [receipt]: ReceiptInfo[] = await sendFewTxes({
+		const [receipt]: TransactionReceipt[] = await sendFewTxes({
 			web3Eth,
 			from: accounts[0],
 			to: accounts[1],
