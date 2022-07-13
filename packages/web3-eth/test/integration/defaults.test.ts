@@ -123,7 +123,7 @@ describe('defaults', () => {
 			});
 
 			const tx = await contractMsgFrom.methods
-				?.setTestString('test2')
+				.setTestString('test2')
 				.send({ gas: '1000000' });
 			const txSend = await web3Eth.sendTransaction({
 				to: accounts[1],
@@ -132,7 +132,7 @@ describe('defaults', () => {
 			expect(tx.from).toBe(accounts[0].toLowerCase());
 			expect(txSend.from).toBe(accounts[0].toLowerCase());
 
-			const tx2 = await contractMsgFrom.methods?.setTestString('test3').send({
+			const tx2 = await contractMsgFrom.methods.setTestString('test3').send({
 				from: accounts[1],
 			});
 			const tx2Send = await web3Eth.sendTransaction({

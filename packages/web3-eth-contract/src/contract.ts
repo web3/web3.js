@@ -44,6 +44,7 @@ import {
 	AbiFragment,
 	AbiFunctionFragment,
 	ContractAbi,
+	ContractConstructorArgs,
 	ContractEvent,
 	ContractEvents,
 	ContractMethod,
@@ -109,13 +110,6 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 	// To allow users to use method signatures
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } & { [key: string]: ContractBoundMethod<any> };
-
-export type ConstructorArgs<Abi extends ContractAbi> = {
-	[MethodAbi in FilterAbis<
-		Abi,
-		AbiFunctionFragment & { type: 'constructor' }
-	> as 'constructor']: ContractMethod<MethodAbi>['Inputs'];
-}['constructor'];
 
 /**
  * The event object can be accessed from `myContract.events.myEvent`.
@@ -646,7 +640,7 @@ export class Contract<Abi extends ContractAbi>
 		/**
 		 * The arguments which get passed to the constructor on deployment.
 		 */
-		arguments?: ConstructorArgs<Abi>;
+		arguments?: ContractConstructorArgs<Abi>;
 	}) {
 		let abi = this._jsonInterface.find(j => j.type === 'constructor') as AbiConstructorFragment;
 
