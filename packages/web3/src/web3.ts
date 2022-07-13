@@ -91,10 +91,11 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				ContractBuilder._contracts.push(this);
 			}
 
-			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>) {
+			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>): boolean {
 				for (const contract of ContractBuilder._contracts) {
 					contract.provider = _provider;
 				}
+				return true;
 			}
 		}
 
