@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { ReceiptInfo } from 'web3-common';
+import { TransactionReceipt } from 'web3-common';
 import { Bytes } from 'web3-utils';
 
-export const mockRpcResponse: ReceiptInfo = {
+export const mockRpcResponse: TransactionReceipt = {
 	transactionHash: '0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547',
 	transactionIndex: '0x41',
 	blockHash: '0x1d59ff54b1eb26b013ce3cb5fc9dab3705b415a67127a003c3e61eb445bb8df2',

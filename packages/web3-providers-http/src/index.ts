@@ -18,14 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 import {
 	EthExecutionAPI,
-	JsonRpcResponse,
+	JsonRpcResponseWithResult,
 	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3BaseProvider,
-	Web3BaseProviderStatus,
+	Web3ProviderStatus,
 } from 'web3-common';
 import { InvalidClientError, MethodNotImplementedError } from 'web3-errors';
 import { HttpProviderOptions } from './types';
@@ -50,7 +50,7 @@ export default class HttpProvider<
 	}
 
 	/* eslint-disable class-methods-use-this */
-	public getStatus(): Web3BaseProviderStatus {
+	public getStatus(): Web3ProviderStatus {
 		throw new MethodNotImplementedError();
 	}
 
@@ -61,11 +61,11 @@ export default class HttpProvider<
 
 	public async request<
 		Method extends Web3APIMethod<API>,
-		ResponseType = Web3APIReturnType<API, Method>,
+		ResultType = Web3APIReturnType<API, Method>,
 	>(
 		payload: Web3APIPayload<API, Method>,
 		requestOptions?: RequestInit,
-	): Promise<JsonRpcResponse<ResponseType>> {
+	): Promise<JsonRpcResponseWithResult<ResultType>> {
 		const providerOptionsCombined = {
 			...this.httpProviderOptions?.providerOptions,
 			...requestOptions,
@@ -83,7 +83,7 @@ export default class HttpProvider<
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		if (!response.ok) throw new ResponseError(await response.json());
 
-		return (await response.json()) as JsonRpcResponse<ResponseType>;
+		return (await response.json()) as JsonRpcResponseWithResult<ResultType>;
 	}
 
 	/* eslint-disable class-methods-use-this */

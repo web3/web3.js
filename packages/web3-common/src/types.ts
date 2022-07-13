@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3Error } from 'web3-errors';
 import { HexString, HexString32Bytes } from 'web3-utils';
 
 export type JsonRpcId = string | number | undefined;
@@ -274,8 +275,14 @@ export type ConnectionEvent = {
 export type Receipt = Record<string, unknown>;
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
-export type Web3BaseProviderStatus = 'connecting' | 'connected' | 'disconnected';
-export type Web3BaseProviderCallback<T = JsonRpcResult> = (
+export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';
+export type Web3ProviderEventCallback<T = JsonRpcResult> = (
 	error: Error | undefined,
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
+) => void;
+export type Web3ProviderRequestCallback<ResultType = unknown> = (
+	// Used "null" value to match the legacy version
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	err?: Error | Web3Error | null | JsonRpcResponseWithError<Error>,
+	response?: JsonRpcResponseWithResult<ResultType>,
 ) => void;

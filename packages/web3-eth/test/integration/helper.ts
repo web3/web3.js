@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Block, DEFAULT_RETURN_FORMAT, FMT_NUMBER, Web3PromiEvent } from 'web3-common';
 import { AbiEventFragment } from 'web3-eth-abi';
-import { ReceiptInfo, SendTransactionEvents, TransactionInfo, Web3Eth } from '../../src';
+import { TransactionReceipt, SendTransactionEvents, TransactionInfo, Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 
 type SendFewTxParams = {
@@ -26,18 +26,18 @@ type SendFewTxParams = {
 	value: string;
 	times?: number;
 };
-export type Resolve = (value?: ReceiptInfo) => void;
+export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
 	web3Eth,
 	to,
 	value,
 	from,
 	times = 3,
-}: SendFewTxParams): Promise<ReceiptInfo[]> => {
-	const res = [];
+}: SendFewTxParams): Promise<TransactionReceipt[]> => {
+	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
 		const tx: Web3PromiEvent<
-			ReceiptInfo,
+			TransactionReceipt,
 			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 		> = web3Eth.sendTransaction({
 			to,
@@ -49,13 +49,14 @@ export const sendFewTxes = async ({
 			(await new Promise((resolve: Resolve) => {
 				// tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void tx.on('receipt', (params: ReceiptInfo) => {
+				void tx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve(params);
 				});
-			})) as ReceiptInfo,
+			})) as TransactionReceipt,
 		);
 	}
+
 	return res;
 };
 
@@ -107,7 +108,7 @@ export const validateBlock = (b: Block) => {
 	expect(Array.isArray(b.transactions)).toBe(true);
 	expect(Array.isArray(b.uncles)).toBe(true);
 };
-export const validateReceipt = (r: ReceiptInfo) => {
+export const validateReceipt = (r: TransactionReceipt) => {
 	expect(r.transactionHash).toMatch(regexHex32);
 	expect(r.transactionIndex).toBeDefined();
 	expect(r.blockHash).toMatch(regexHex32);
