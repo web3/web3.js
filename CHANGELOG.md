@@ -563,6 +563,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Added
+-  Added Web3BatchProvider (#5227)
+
 ## [1.7.5]
 
 ### Changed
@@ -584,4 +587,3 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
-

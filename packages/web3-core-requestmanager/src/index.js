@@ -51,7 +51,8 @@ RequestManager.givenProvider = givenProvider;
 RequestManager.providers = {
     WebsocketProvider: require('web3-providers-ws'),
     HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    IpcProvider: require('web3-providers-ipc'),
+    BatchProvider: require('web3-providers-batch')
 };
 
 
