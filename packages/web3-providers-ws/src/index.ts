@@ -29,11 +29,12 @@ import {
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3BaseProvider,
-	Web3BaseProviderCallback,
-	Web3BaseProviderStatus,
+	Web3ProviderEventCallback,
+	Web3ProviderStatus,
 	DeferredPromise,
 	jsonRpc,
 	ResponseError,
+	JsonRpcResponseWithResult,
 } from 'web3-common';
 import {
 	InvalidClientError,
@@ -112,7 +113,7 @@ export default class WebSocketProvider<
 		return typeof providerUrl === 'string' ? /^ws(s)?:\/\//i.test(providerUrl) : false;
 	}
 
-	public getStatus(): Web3BaseProviderStatus {
+	public getStatus(): Web3ProviderStatus {
 		if (isNullish(this._webSocketConnection)) return 'disconnected';
 
 		switch (this._webSocketConnection.readyState) {
@@ -135,16 +136,16 @@ export default class WebSocketProvider<
 
 	public on<T = JsonRpcResult>(
 		type: 'message' | string,
-		callback: Web3BaseProviderCallback<T> | EventEmittedCallback,
+		callback: Web3ProviderEventCallback<T> | EventEmittedCallback,
 	): void {
 		this._wsEventEmitter.on(type, callback);
 	}
 
-	public once<T = JsonRpcResult>(type: string, callback: Web3BaseProviderCallback<T>): void {
+	public once<T = JsonRpcResult>(type: string, callback: Web3ProviderEventCallback<T>): void {
 		this._wsEventEmitter.once(type, callback);
 	}
 
-	public removeListener(type: string, callback: Web3BaseProviderCallback): void {
+	public removeListener(type: string, callback: Web3ProviderEventCallback): void {
 		this._wsEventEmitter.removeListener(type, callback);
 	}
 
@@ -191,8 +192,8 @@ export default class WebSocketProvider<
 
 	public async request<
 		Method extends Web3APIMethod<API>,
-		ResponseType = Web3APIReturnType<API, Method>,
-	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponse<ResponseType>> {
+		ResultType = Web3APIReturnType<API, Method>,
+	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
 		const requestId = jsonRpc.isBatchRequest(request) ? request[0].id : request.id;
 
 		if (!requestId) {
@@ -203,9 +204,9 @@ export default class WebSocketProvider<
 			throw new RequestAlreadySentError(requestId);
 		}
 
-		const deferredPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
+		const deferredPromise = new DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 
-		const reqItem: WSRequestItem<API, Method, JsonRpcResponse<ResponseType>> = {
+		const reqItem: WSRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,
 			deferredPromise,
 		};
