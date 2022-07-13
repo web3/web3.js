@@ -99,7 +99,7 @@ export const sign = async (
 	address: Address,
 	passphrase: string,
 ) => {
-	validator.validate(['bytes', 'address', 'string'], [data, address, passphrase]);
+	validator.validate(['string', 'address', 'string'], [data, address, passphrase]);
 
 	const dataToSign = isHexStrict(data) ? data : utf8ToHex(data);
 
@@ -111,7 +111,7 @@ export const ecRecover = async (
 	signedData: HexString,
 	signature: string,
 ) => {
-	validator.validate(['bytes', 'string'], [signedData, signature]);
+	validator.validate(['string', 'string'], [signedData, signature]);
 
 	const signedDataString = isHexStrict(signedData) ? signedData : utf8ToHex(signedData);
 
