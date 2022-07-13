@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3BaseWallet, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-common';
 import { isNullish } from 'web3-validator';
+import { WebStorage } from './types';
 
 type BrowserError = { code: number; name: string };
 
@@ -53,8 +54,8 @@ export class Wallet<
 	 *
 	 * @returns the storage
 	 */
-	public static getStorage(): Storage | undefined {
-		let storage: Storage | undefined;
+	public static getStorage(): WebStorage | undefined {
+		let storage: WebStorage | undefined;
 
 		try {
 			storage = window.localStorage;
