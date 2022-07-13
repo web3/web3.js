@@ -1052,9 +1052,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 
 			this.subscriptionManager?.addSubscription(sub).catch(() => {
-				throw new SubscriptionError(
-					'Failed to subscribe to new newBlockHeaders to confirmation.',
-				);
+				throw new SubscriptionError('Failed to subscribe.');
 			});
 
 			return sub;
