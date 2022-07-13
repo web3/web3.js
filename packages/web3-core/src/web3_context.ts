@@ -257,8 +257,9 @@ export class Web3Context<
 		return Web3Context.givenProvider;
 	}
 
-	public setProvider(provider?: SupportedProviders<API> | string) {
+	public setProvider(provider?: SupportedProviders<API> | string): boolean {
 		this.provider = provider;
+		return true;
 	}
 
 	public get BatchRequest(): new () => Web3BatchRequest {
