@@ -111,6 +111,13 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return rpcMethods.getMining(this.requestManager);
 	}
 
+	/**
+	 * @deprecated Will be removed in next release. Please use `getHashRate` package instead.
+	 */
+	public async getHashrate() {
+		return this.getHashRate();
+	}
+
 	public async getHashRate<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 	) {
