@@ -24,7 +24,7 @@ import {
 } from 'web3-common';
 import { SupportedProviders, Web3ContextInitOptions } from 'web3-core';
 import { AbiFragment } from 'web3-eth-abi';
-import { SendTransactionEvents, ReceiptInfo, NewHeadsSubscription } from 'web3-eth';
+import { SendTransactionEvents, TransactionReceipt, NewHeadsSubscription } from 'web3-eth';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -37,6 +37,7 @@ import {
 // eslint-disable-next-line import/no-cycle
 import { LogsSubscription } from './log_subscription';
 
+export type { TransactionReceipt } from 'web3-common';
 export type ContractAbiWithSignature = ReadonlyArray<AbiFragment & { signature: HexString }>;
 
 export interface EventLog {
@@ -146,8 +147,6 @@ export interface ContractInitOptions {
 	readonly gasLimit?: Uint;
 	readonly provider?: SupportedProviders<EthExecutionAPI> | string;
 }
-
-export type TransactionReceipt = ReceiptInfo;
 
 export interface NonPayableCallOptions {
 	nonce?: HexString;
@@ -301,7 +300,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	send(
 		tx?: NonPayableTxOptions,
 	): Web3PromiEvent<
-		FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>,
+		FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>;
 
@@ -458,7 +457,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	send(
 		tx?: PayableTxOptions,
 	): Web3PromiEvent<
-		FormatType<ReceiptInfo, typeof DEFAULT_RETURN_FORMAT>,
+		FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>,
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>;
 

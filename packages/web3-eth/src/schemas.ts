@@ -336,7 +336,7 @@ export const logSchema = {
 	},
 };
 
-export const receiptInfoSchema = {
+export const transactionReceiptSchema = {
 	type: 'object',
 	properties: {
 		transactionHash: {

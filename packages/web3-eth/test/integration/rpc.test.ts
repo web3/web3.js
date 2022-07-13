@@ -24,7 +24,7 @@ import { AbiEventFragment } from 'web3-eth-abi';
 import { getStorageSlotNumForLongString } from 'web3-utils/src';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
-import { ReceiptInfo, Web3Eth, TransactionInfo } from '../../src';
+import { TransactionReceipt, Web3Eth, TransactionInfo } from '../../src';
 
 import {
 	getSystemTestBackend,
@@ -286,7 +286,7 @@ describe('rpc', () => {
 				times: 1,
 			});
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const res: ReceiptInfo = (await web3Eth.getTransactionReceipt(
+			const res: TransactionReceipt = (await web3Eth.getTransactionReceipt(
 				// TODO: add more scenarios in future release with block number
 				receipt.transactionHash as string,
 			))!;

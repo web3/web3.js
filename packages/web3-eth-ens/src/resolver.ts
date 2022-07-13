@@ -51,11 +51,9 @@ export class Resolver {
 				methodName,
 			);
 
-		let supported = false;
-
-		supported = (await resolverContract.methods
+		const supported = await resolverContract.methods
 			.supportsInterface(interfaceIds[methodName])
-			.call()) as Awaited<Promise<boolean>>;
+			.call();
 
 		if (!supported)
 			throw new ResolverMethodMissingError(
