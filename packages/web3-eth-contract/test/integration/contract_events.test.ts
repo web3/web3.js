@@ -134,10 +134,6 @@ describe('contract', () => {
 				event.on('error', (err: Error) => {
 					reject(err);
 				});
-
-				await contract.methods
-					.firesMultiValueEvent('Event Value', 11, false)
-					.send(sendOptions);
 			});
 
 			// eslint-disable-next-line jest/no-standalone-expect
