@@ -77,7 +77,9 @@ describe('accounts', () => {
 	describe('privateKeyToAccount', () => {
 		describe('valid cases', () => {
 			it.each(validPrivateKeytoAccountData)('%s', (input, output) => {
-				expect(JSON.stringify(privateKeyToAccount(input))).toEqual(JSON.stringify(output));
+				expect(
+					JSON.stringify(privateKeyToAccount(input.address, input.ignoreLength)),
+				).toEqual(JSON.stringify(output));
 			});
 		});
 
@@ -130,13 +132,13 @@ describe('accounts', () => {
 		describe('sign', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
 				const result = sign(data, testObj.privateKey);
-				expect(result.signature).toEqual(testObj.signature);
+				expect(result.signature).toEqual(testObj.signature || testObj.signatureOrV); // makes sure we get signature and not V value
 			});
 		});
 
 		describe('recover', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
-				const address = recover(data, testObj.signature);
+				const address = recover(data, testObj.signatureOrV, testObj.prefixedOrR, testObj.s);
 				expect(address).toEqual(testObj.address);
 			});
 		});
