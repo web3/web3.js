@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 
 import { BlockNumberOrTag, Numbers } from 'web3-utils';
-import { Web3RequestManager } from 'web3-core';
 
 import Web3Eth from '../../../src';
 import {
@@ -26,6 +25,7 @@ import {
 	describeIf,
 	getSystemTestBackend,
 } from '../../fixtures/system_test_utils';
+import { feeHistorySchema } from '../../../src/schemas';
 
 describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () => {
 	let web3Eth: Web3Eth;
@@ -46,7 +46,6 @@ describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () 
 		const blockCount: Numbers = '0x1';
 		const newestBlock: BlockNumberOrTag = 'latest';
 		const rewardPercentiles: number[] = [];
-		const requestManager: Web3RequestManager = new Web3RequestManager(systemProvider);
 
 		const functionResponse = await web3Eth.getFeeHistory(
 			blockCount,
@@ -56,13 +55,8 @@ describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () 
 
 		const functionResponseKeys = Object.keys(functionResponse);
 
-		const requestResponse = await requestManager.send({
-			method: 'eth_feeHistory',
-			params: [blockCount, newestBlock, rewardPercentiles],
-		});
+		const schemaProperties = Object.keys(feeHistorySchema.properties);
 
-		const requestResponseKeys = Object.keys(requestResponse);
-
-		expect(requestResponseKeys).toEqual(functionResponseKeys);
+		functionResponseKeys.forEach(prop => expect(schemaProperties).toContain(prop));
 	});
 });
