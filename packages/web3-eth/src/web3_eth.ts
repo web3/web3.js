@@ -404,7 +404,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return !(sub instanceof SyncingSubscription);
 	}
 
-	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+	public clearSubscriptions(notClearSyncing = false): Promise<string[]> | undefined {
 		return this.subscriptionManager?.unsubscribe(
 			// eslint-disable-next-line
 			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
