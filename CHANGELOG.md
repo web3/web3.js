@@ -391,6 +391,12 @@ Released with 1.0.0-beta.37 code base.
 3. `defaultAccount` default value is undefined
 4. `defaultNetworkId` default value is undefined
 
+##### Subscription breaking Changes
+
+1. Event `data` from `newBlockHeaders` subscription doesn't return field `size`
+2. Event `data` from `logs` subscription doesn't have field `id`
+3. ClearSubscriptions 1.x returns true. clearSubscriptions 4.x returns array of subscription's ids
+
 #### web3-eth-personal
 
 1. `givenProvider` default value is undefined
