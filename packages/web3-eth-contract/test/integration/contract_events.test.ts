@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { processAsync } from '../shared_fixtures/utils';
@@ -23,11 +22,9 @@ import {
 	getSystemTestAccounts,
 	describeIf,
 	isWs,
-	itIf,
-	isHttp,
 } from '../fixtures/system_test_utils';
 
-describe('contract', () => {
+describeIf(isWs)('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
@@ -51,11 +48,10 @@ describe('contract', () => {
 	});
 
 	describe('events', () => {
-		itIf(isWs)('should trigger the "contract.events.<eventName>"', async () => {
-			// eslint-disable-next-line jest/no-standalone-expect
+		it('should trigger the "contract.events.<eventName>"', async () => {
 			return expect(
 				processAsync(async resolve => {
-					const event = contract.events.MultiValueEvent();
+					const event = await contract.events.MultiValueEvent();
 
 					event.on('data', resolve);
 
@@ -71,81 +67,52 @@ describe('contract', () => {
 			);
 		});
 
-		itIf(isWs)(
-			'should trigger the "contract.events.<eventName>" for indexed parameters',
-			async () => {
-				// eslint-disable-next-line jest/no-standalone-expect
-				return expect(
-					processAsync(async resolve => {
-						const event = contract.events.MultiValueIndexedEvent({
-							filter: { val: 100 },
-						});
+		it('should trigger the "contract.events.<eventName>" for indexed parameters', async () => {
+			return expect(
+				processAsync(async resolve => {
+					const event = await contract.events.MultiValueIndexedEvent({
+						filter: { val: 100 },
+					});
 
-						event.on('data', resolve);
+					event.on('data', resolve);
 
-						// trigger event
-						await contract.methods
-							.firesMultiValueIndexedEvent('value', 12, true)
-							.send(sendOptions);
-						await contract.methods
-							.firesMultiValueIndexedEvent('value', 100, true)
-							.send(sendOptions);
-					}),
-				).resolves.toEqual(
-					expect.objectContaining({
-						event: 'MultiValueIndexedEvent',
-						returnValues: expect.objectContaining({ val: '100' }),
-					}),
-				);
-			},
-		);
+					// trigger event
+					await contract.methods
+						.firesMultiValueIndexedEvent('value', 12, true)
+						.send(sendOptions);
+					await contract.methods
+						.firesMultiValueIndexedEvent('value', 100, true)
+						.send(sendOptions);
+				}),
+			).resolves.toEqual(
+				expect.objectContaining({
+					event: 'MultiValueIndexedEvent',
+					returnValues: expect.objectContaining({ val: '100' }),
+				}),
+			);
+		});
 
-		itIf(isWs)(
-			'should trigger when "fromBlock" is passed to contract.events.<eventName>',
-			async () => {
-				// eslint-disable-next-line jest/no-standalone-expect
-				return expect(
-					processAsync(async resolve => {
-						const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
+		it('should trigger when "fromBlock" is passed to contract.events.<eventName>', async () => {
+			return expect(
+				processAsync(async resolve => {
+					const event = await contract.events.MultiValueEvent({ fromBlock: 'latest' });
 
-						event.on('data', resolve);
+					event.on('data', resolve);
 
-						// trigger event
-						await contract.methods
-							.firesMultiValueEvent('Event Value', 11, false)
-							.send(sendOptions);
-					}),
-				).resolves.toEqual(
-					expect.objectContaining({
-						event: 'MultiValueEvent',
-					}),
-				);
-			},
-		);
-
-		itIf(isHttp)('should fail to subscribe', async () => {
-			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
-			const failedSubscriptionPromise = new Promise<void>(async (resolve, reject) => {
-				const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
-
-				event.on('data', () => {
-					resolve();
-				});
-				event.on('error', (err: Error) => {
-					reject(err);
-				});
-
-				await contract.methods
-					.firesMultiValueEvent('Event Value', 11, false)
-					.send(sendOptions);
-			});
-
-			// eslint-disable-next-line jest/no-standalone-expect
-			await expect(failedSubscriptionPromise).rejects.toThrow('Failed to subscribe.');
+					// trigger event
+					await contract.methods
+						.firesMultiValueEvent('Event Value', 11, false)
+						.send(sendOptions);
+				}),
+			).resolves.toEqual(
+				expect.objectContaining({
+					event: 'MultiValueEvent',
+				}),
+			);
 		});
 	});
 
-	describeIf(isWs)('getPastEvents', () => {
+	describe('getPastEvents', () => {
 		// TODO: Debug why this tests is hanging the websocket
 		it('should return all past events', async () => {
 			await contract.methods
