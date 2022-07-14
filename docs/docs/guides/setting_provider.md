@@ -1,5 +1,7 @@
 ---
-title: Setting Provider
+title: Web3 Providers
+sidebar_position: 2
+sidebar_label: Web3.providers
 ---
 
 There are multiple ways to set the provider.
