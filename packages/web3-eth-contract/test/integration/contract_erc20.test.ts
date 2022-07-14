@@ -86,7 +86,7 @@ describe('contract', () => {
 				it('should emit transfer event', async () => {
 					await expect(
 						processAsync(async resolve => {
-							const event = await contract.events.Transfer();
+							const event = contract.events.Transfer();
 							event.on('data', data => {
 								resolve({
 									from: toUpperCaseHex(data.returnValues.from as string),
