@@ -41,7 +41,7 @@ describe('Web3RequestManager', () => {
 
 		it('should create instance of request manager without given provider', () => {
 			const provider = 'http://mydomain.com';
-			jest.spyOn(Web3RequestManager.prototype, 'setProvider').mockReturnValue();
+			jest.spyOn(Web3RequestManager.prototype, 'setProvider').mockReturnValue(true);
 
 			const manager = new Web3RequestManager(provider);
 
