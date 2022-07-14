@@ -54,6 +54,12 @@ const Web3 = require('web3');
 const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 ```
 
+### Injected providers
+
+The Injected provider should be in compliance with [EIP1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md).
+
+Web3.js 4.x Provider specifications are defined in https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-common/src/web3_base_provider.ts for Injected Providers
+
 ### Provider Options
 
 There are differences in the objects that could be passed in providers' constructors.
