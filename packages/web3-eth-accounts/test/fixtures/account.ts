@@ -55,9 +55,12 @@ export const invalidPrivateKeyToAddressData: [
 	[Buffer.from([]), new PrivateKeyLengthError()],
 ];
 
-export const validPrivateKeytoAccountData: [string, any][] = [
+export const validPrivateKeytoAccountData: [any, any][] = [
 	[
-		'0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+		{
+			address: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+			ignoreLength: false,
+		},
 		{
 			address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
 			privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
@@ -67,10 +70,23 @@ export const validPrivateKeytoAccountData: [string, any][] = [
 		},
 	],
 	[
-		'0x9e93921f9bca358a96aa66efcccbde12850473be95f63c1453e29656feafeb35',
+		{ address: '0x9e93921f9bca358a96aa66efcccbde12850473be95f63c1453e29656feafeb35' },
 		{
 			address: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
 			privateKey: '0x9e93921f9bca358a96aa66efcccbde12850473be95f63c1453e29656feafeb35',
+			sign,
+			signTransaction,
+			encrypt,
+		},
+	],
+	[
+		{
+			address: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709', // ignoreLength parameter set true
+			ignoreLength: true,
+		},
+		{
+			address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+			privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
 			sign,
 			signTransaction,
 			encrypt,
@@ -86,7 +102,7 @@ export const signatureRecoverData: [string, any][] = [
 			privateKey: '0xcb89ec4b01771c6c8272f4c0aafba2f8ee0b101afb22273b786939a8af7c1912',
 			data: 'Some long text with integers 1233 and special characters and unicode \u1234 as well.',
 			// signature done with personal_sign
-			signature:
+			signatureOrV:
 				'0x2ac888726c80494b80b63996455d109aef5db27e673dd92f277ac6e48dc300db3dfc7549744c2a33a03a2eaa0f2837f54c5951b80d5e05257d605bc695c2ae7f1c',
 		},
 	],
@@ -97,7 +113,7 @@ export const signatureRecoverData: [string, any][] = [
 			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
 			data: 'Some data',
 			// signature done with personal_sign
-			signature:
+			signatureOrV:
 				'0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b',
 		},
 	],
@@ -108,8 +124,21 @@ export const signatureRecoverData: [string, any][] = [
 			privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
 			data: 'Some data!%$$%&@*',
 			// signature done with personal_sign
-			signature:
+			signatureOrV:
 				'0x05252412b097c5d080c994d1ea12abcee6f1cae23feb225517a0b691a66e12866b3f54292f9cfef98f390670b4d010fc4af7fcd46e41d72870602c117b14921c1c',
+		},
+	],
+	[
+		// testcase for recover(data, V, R, S)
+		'some data',
+		{
+			signatureOrV: '0x1c',
+			prefixedOrR: '0xb9be9700e1c7fd9c3e5e1b511de5c6f62680480a7f8c68962a74375cabe51c18',
+			s: '0x6fcbbcf5b1bc357d3e56bef2ef8a1b3ad7e48564dd886d7636eb1c18e1e41f1b',
+			address: '0x54BF9ed7F22b64a5D69Beea57cFCd378763bcdc5',
+			privateKey: '0x03a0021a87dc354855f900fd15c063bcc9c155c33b8f2321ec294e0933ef29d2',
+			signature:
+				'0xb9be9700e1c7fd9c3e5e1b511de5c6f62680480a7f8c68962a74375cabe51c186fcbbcf5b1bc357d3e56bef2ef8a1b3ad7e48564dd886d7636eb1c18e1e41f1b1c',
 		},
 	],
 ];
