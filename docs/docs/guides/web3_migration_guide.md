@@ -5,6 +5,8 @@ sidebar_label: Web3 Migration Guide
 
 # Web3 Migration Guide
 
+This migration guide is for migration from Web3.js 1.x to Web3.js 4.x.
+
 ## Breaking Changes
 
 Passing callbacks to functions is no longer supported, except for event listeners.
