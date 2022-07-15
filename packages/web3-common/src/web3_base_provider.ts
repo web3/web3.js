@@ -18,14 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Error } from 'web3-errors';
 import { EthExecutionAPI } from './eth_execution_api';
 import {
-	Web3APIPayload,
-	Web3APIReturnType,
-	JsonRpcResponse,
+	JsonRpcResponseWithResult,
 	JsonRpcResult,
 	Web3APIMethod,
+	Web3APIPayload,
+	Web3APIReturnType,
 	Web3APISpec,
-	Web3BaseProviderStatus,
-	Web3BaseProviderCallback,
+	Web3ProviderStatus,
+	Web3ProviderEventCallback,
+	Web3ProviderRequestCallback,
 } from './types';
 
 const symbol = Symbol.for('web3/base-provider');
@@ -49,85 +50,78 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		return true;
 	}
 
-	public abstract getStatus(): Web3BaseProviderStatus;
+	public abstract getStatus(): Web3ProviderStatus;
 	public abstract supportsSubscriptions(): boolean;
 
 	/**
 	 * @deprecated Please use `.request` instead.
 	 * @param payload - Request Payload
-	 * @param cb - Callback
+	 * @param callback - Callback
 	 */
 	public send<Method extends Web3APIMethod<API>, ResponseType = Web3APIReturnType<API, Method>>(
 		payload: Web3APIPayload<API, Method>,
-		// Used "null" value to match the legacy version
-		// eslint-disable-next-line @typescript-eslint/ban-types
-		cb: (err?: Error | Web3Error | null, response?: JsonRpcResponse<ResponseType>) => void,
+		callback: Web3ProviderRequestCallback<ResponseType>,
 	) {
 		this.request(payload)
 			.then(response => {
-				cb(undefined, response);
+				callback(undefined, response);
 			})
 			.catch((err: Error | Web3Error) => {
-				cb(err);
+				callback(err);
 			});
 	}
 
 	/**
 	 * @deprecated Please use `.request` instead.
 	 * @param payload - Request Payload
-	 * @param cb - Callback
+	 * @param callback - Callback
 	 */
 	public sendAsync<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
-	>(
-		payload: Web3APIPayload<API, Method>,
-		// Used "null" value to match the legacy version
-		// eslint-disable-next-line @typescript-eslint/ban-types
-		cb: (err?: Error | Web3Error | null, response?: JsonRpcResponse<ResponseType>) => void,
-	) {
+	>(payload: Web3APIPayload<API, Method>, callback: Web3ProviderRequestCallback<ResponseType>) {
 		this.request(payload)
 			.then(response => {
-				cb(undefined, response);
+				callback(undefined, response);
 			})
 			.catch((err: Error | Web3Error) => {
-				cb(err);
+				callback(err);
 			});
 	}
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#request
 	public abstract request<
 		Method extends Web3APIMethod<API>,
-		ResponseType = Web3APIReturnType<API, Method>,
+		ResultType = Web3APIReturnType<API, Method>,
 	>(
 		request: Web3APIPayload<API, Method>,
 		requestOptions?: unknown,
-	): Promise<JsonRpcResponse<ResponseType>>;
+	): Promise<JsonRpcResponseWithResult<ResultType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 	public abstract on<T = JsonRpcResult>(
 		type: 'message' | 'disconnect' | string,
-		callback: Web3BaseProviderCallback<T>,
+		callback: Web3ProviderEventCallback<T>,
 	): void;
 	public abstract on(
 		type: 'connect' | 'chainChanged',
-		callback: Web3BaseProviderCallback<{
+		callback: Web3ProviderEventCallback<{
 			readonly [key: string]: unknown;
 			readonly chainId: string;
 		}>,
 	): void;
 	public abstract on(
 		type: 'accountsChanged',
-		callback: Web3BaseProviderCallback<{
+		callback: Web3ProviderEventCallback<{
 			readonly [key: string]: unknown;
 			readonly accountsChanged: string[];
 		}>,
 	): void;
-	public abstract removeListener(type: string, callback: Web3BaseProviderCallback): void;
+	public abstract removeListener(type: string, callback: Web3ProviderEventCallback): void;
 
 	public abstract once?<T = JsonRpcResult>(
 		type: string,
-		callback: Web3BaseProviderCallback<T>,
+		callback: Web3ProviderEventCallback<T>,
 	): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;

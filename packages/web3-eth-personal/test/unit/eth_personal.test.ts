@@ -265,7 +265,7 @@ describe('Personal', () => {
 
 			expect(validateSpy).toHaveBeenCalledTimes(1);
 			expect(validateSpy).toHaveBeenCalledWith(
-				['bytes', 'address', 'string'],
+				['string', 'address', 'string'],
 				[data, '0x528ABBBa47c33600245066398072799A9b7e2d9E', 'password'],
 			);
 		});
@@ -315,7 +315,7 @@ describe('Personal', () => {
 			await personal.ecRecover(data, 'password');
 
 			expect(validateSpy).toHaveBeenCalledTimes(1);
-			expect(validateSpy).toHaveBeenCalledWith(['bytes', 'string'], [data, 'password']);
+			expect(validateSpy).toHaveBeenCalledWith(['string', 'string'], [data, 'password']);
 		});
 	});
 });

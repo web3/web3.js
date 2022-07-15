@@ -835,6 +835,6 @@ export const RESOLVER = [
 		stateMutability: 'view',
 		type: 'function',
 	},
-];
+] as const;
 
 module.exports = RESOLVER;

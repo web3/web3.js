@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { ReceiptInfo, Web3BaseProvider } from 'web3-common';
+import { Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewPendingTransactionsSubscription } from '../../src/web3_subscriptions';
@@ -69,15 +69,15 @@ describeIf(isWs)('subscription', () => {
 				});
 			});
 
-			const receipts = (await sendFewTxes({
+			const receipts = await sendFewTxes({
 				web3Eth,
 				from,
 				to,
 				value,
 				times: checkTxCount,
-			})) as ReceiptInfo[];
+			});
 			await pr;
-			expect(receipts.map((r: ReceiptInfo) => r?.transactionHash)).toEqual(txHashes);
+			expect(receipts.map(r => r?.transactionHash)).toEqual(txHashes);
 			await web3Eth.clearSubscriptions();
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
