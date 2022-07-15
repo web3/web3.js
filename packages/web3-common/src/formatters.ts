@@ -432,7 +432,7 @@ export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 	// transform to number
 	modifiedBlock.gasLimit = hexToNumber(block.gasLimit);
 	modifiedBlock.gasUsed = hexToNumber(block.gasUsed);
-	modifiedBlock.size = hexToNumber(block.size);
+	modifiedBlock.size = hexToNumber(block.size ?? '0x0');
 	modifiedBlock.timestamp = hexToNumber(block.timestamp);
 
 	if (block.number) {
