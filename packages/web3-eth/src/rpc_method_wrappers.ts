@@ -836,11 +836,13 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 /**
+ * Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the blockchain.
  *
- * @param web3Context
- * @param transaction
- * @param blockNumber
- * @param returnFormat
+ * @param web3Context ({@link Web3Context}) - A configuration object Web3.js uses to determine defaults, helper methods, and provider information.
+ * @param transaction - A transaction object where all properties are optional except `to`, however it's recommended to include the `from` property or it may default to `0x0000000000000000000000000000000000000000` depending on your node or provider.
+ * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while processing the transaction.
+ * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
+ * @returns The returned data of the call (formatted as per `returnFormat`), e.g. a smart contract function's return value.
  */
 export async function call<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
