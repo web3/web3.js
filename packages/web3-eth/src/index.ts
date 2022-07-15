@@ -15,6 +15,25 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * The `web3-eth` package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.
+ *
+ * To use this package standalone and use its methods use:
+ * ```ts
+ * import { getBalance, getBlockByNumber } from 'web3-eth';
+ * ```
+ *
+ * To use this package within the `web3` object use:
+ * ```ts
+ * import { Web3 } from 'web3';
+ *
+ * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+ * web3.eth.getBalance('0x0...');
+ */
+/**
+ *
+ */
+
 import { Web3Eth } from './web3_eth';
 
 export * from './web3_eth';
