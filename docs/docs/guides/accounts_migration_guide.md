@@ -1,4 +1,4 @@
-# Web3-eth-accounts Migration Guide
+# Web3 eth accounts Migration Guide
 
 ## Breaking changes
 
