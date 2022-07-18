@@ -1,4 +1,9 @@
-# Web3 Subscribe Migration Guide
+---
+sidebar_position: 8
+sidebar_label: Web3.eth.subscribe
+---
+
+# web3.eth.subscribe Migration Guide
 
 ## Breaking Changes
 
