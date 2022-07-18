@@ -65,6 +65,7 @@ import {
 	toChecksumAddress,
 } from 'web3-utils';
 import { isNullish, validator } from 'web3-validator';
+import { SubscriptionError } from 'web3-errors';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -123,7 +124,7 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
  * @param options - The options used to subscribe for the event
  * @returns - A Promise resolved with {@link LogsSubscription} object
  */
-export type ContractBoundEvent = (options?: ContractEventOptions) => Promise<LogsSubscription>;
+export type ContractBoundEvent = (options?: ContractEventOptions) => LogsSubscription;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractEventsInterface<
@@ -1043,7 +1044,7 @@ export class Contract<Abi extends ContractAbi>
 	private _createContractEvent(
 		abi: AbiEventFragment & { signature: HexString },
 	): ContractBoundEvent {
-		return async (...params: unknown[]) => {
+		return (...params: unknown[]) => {
 			const encodedParams = encodeEventABI(this.options, abi, params[0] as EventParameters);
 
 			const sub = new LogsSubscription(
@@ -1056,7 +1057,9 @@ export class Contract<Abi extends ContractAbi>
 				{ requestManager: this.requestManager },
 			);
 
-			await this.subscriptionManager?.addSubscription(sub);
+			this.subscriptionManager?.addSubscription(sub).catch(() => {
+				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
+			});
 
 			return sub;
 		};

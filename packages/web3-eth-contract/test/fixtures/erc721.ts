@@ -55,10 +55,10 @@ export interface Erc721Interface {
 	};
 
 	events: {
-		[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Transfer: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Approval: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		ApprovalForAll: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		[key: string]: (options?: ContractEventOptions) => LogsSubscription;
+		Transfer: (options?: ContractEventOptions) => LogsSubscription;
+		Approval: (options?: ContractEventOptions) => LogsSubscription;
+		ApprovalForAll: (options?: ContractEventOptions) => LogsSubscription;
 	};
 }
 
