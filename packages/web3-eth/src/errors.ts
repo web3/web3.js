@@ -42,7 +42,7 @@ import {
 	ERR_SIGNATURE_FAILED,
 	InvalidValueError,
 } from 'web3-errors';
-import { Bytes, HexString, Numbers } from 'web3-utils';
+import { Bytes, HexString, Numbers } from 'web3-types';
 
 import { TransactionReceipt } from './types';
 

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-common';
+import { JsonRpcOptionalRequest, Web3BaseProvider } from 'web3-types';
 import { SupportedProviders } from 'web3-core';
 import Contract from 'web3-eth-contract';
 import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';

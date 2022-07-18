@@ -14,17 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import {
-	BlockOutput,
-	DataFormat,
-	EthExecutionAPI,
-	format,
-	Web3PromiEvent,
-	Web3BaseProvider,
-} from 'web3-common';
+import { Bytes, Numbers, BlockOutput, EthExecutionAPI, Web3BaseProvider } from 'web3-types';
 import { SubscriptionError } from 'web3-errors';
-import { Web3Context } from 'web3-core';
-import { Bytes, Numbers, numberToHex } from 'web3-utils';
+import { Web3Context, Web3PromiEvent } from 'web3-core';
+import { DataFormat, format, numberToHex } from 'web3-utils';
 import { isNullish } from 'web3-validator';
 
 import {

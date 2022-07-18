@@ -15,18 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionWithSender, TransactionCall } from 'web3-common';
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
-	Uint256,
-	HexString32Bytes,
-	HexStringBytes,
-	Uint,
+	BlockNumberOrTag,
 	Filter,
+	HexString32Bytes,
 	HexString8Bytes,
-} from 'web3-utils';
-import { BlockNumberOrTag, validator } from 'web3-validator';
+	HexStringBytes,
+	TransactionCall,
+	TransactionWithSender,
+	Uint,
+	Uint256,
+} from 'web3-types';
+import { validator } from 'web3-validator';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 
 /**

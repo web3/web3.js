@@ -16,17 +16,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	EthExecutionAPI,
 	DEFAULT_RETURN_FORMAT,
 	ETH_DATA_FORMAT,
 	FormatType,
 	format,
 	DataFormat,
-} from 'web3-common';
+	isAddress,
+} from 'web3-utils';
+import { EthExecutionAPI, Address, HexString } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, HexString, isAddress } from 'web3-utils';
 import { isNullish, isNumber } from 'web3-validator';
 import { NUMBER_DATA_FORMAT } from '../constants';
 import {

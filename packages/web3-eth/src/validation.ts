@@ -19,13 +19,13 @@ import {
 	AccessList,
 	AccessListEntry,
 	BaseTransaction,
-	ETH_DATA_FORMAT,
 	Transaction1559Unsigned,
 	Transaction2930Unsigned,
 	TransactionCall,
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
-} from 'web3-common';
+} from 'web3-types';
+import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
 	ChainIdMismatchError,

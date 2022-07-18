@@ -16,8 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
 import { readFileSync } from 'fs';
-import { EthExecutionAPI } from 'web3-common';
-import { SupportedProviders, Web3Context } from 'web3-core';
+import { Web3Context } from 'web3-core';
 import Web3Eth from 'web3-eth';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
@@ -26,7 +25,8 @@ import Iban from 'web3-eth-iban';
 import Personal from 'web3-eth-personal';
 import Net from 'web3-net';
 import * as utils from 'web3-utils';
-import { Address, isNullish } from 'web3-utils';
+import { isNullish } from 'web3-utils';
+import { EthExecutionAPI, Address, SupportedProviders } from 'web3-types';
 import abi from './abi';
 import { initAccountsForContext } from './accounts';
 import { Web3EthInterface } from './types';

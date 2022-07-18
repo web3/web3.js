@@ -15,16 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	AccessList,
-	TransactionHash,
-	Uncles,
-	FormatType,
-	ETH_DATA_FORMAT,
-	DataFormat,
-} from 'web3-common';
+import { FormatType, ETH_DATA_FORMAT, DataFormat } from 'web3-utils';
 import { TransactionError } from 'web3-errors';
-import { Address, Bytes, Numbers, Uint } from 'web3-utils';
+import { Address, Bytes, Numbers, Uint, AccessList, TransactionHash, Uncles } from 'web3-types';
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 export type Hardfork =

@@ -15,8 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, FormatType } from 'web3-common';
-import { bytesToBuffer, mergeDeep } from 'web3-utils';
+import {
+	bytesToBuffer,
+	mergeDeep,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	FormatType,
+} from 'web3-utils';
 import { isNullish } from 'web3-validator';
 import { TransactionDataAndInputError } from '../errors';
 import { transactionSchema } from '../schemas';

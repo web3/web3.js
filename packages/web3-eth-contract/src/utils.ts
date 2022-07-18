@@ -15,9 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionWithSender } from 'web3-common';
+import { TransactionWithSender, HexString } from 'web3-types';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { HexString, isNullish, mergeDeep } from 'web3-utils';
+import { isNullish, mergeDeep } from 'web3-utils';
 import { TransactionCall } from 'web3-eth';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';

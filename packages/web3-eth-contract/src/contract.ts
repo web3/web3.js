@@ -18,18 +18,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	DataFormat,
 	DEFAULT_RETURN_FORMAT,
-	EthExecutionAPI,
 	format,
-	inputAddressFormatter,
-	inputLogFormatter,
 	isDataFormat,
-	LogsInput,
-	Mutable,
-	TransactionReceipt,
+	toChecksumAddress,
+} from 'web3-utils';
+import {
+	Web3Context,
 	Web3EventEmitter,
 	Web3PromiEvent,
-} from 'web3-common';
-import { Web3Context } from 'web3-core';
+	inputAddressFormatter,
+	inputLogFormatter,
+} from 'web3-core';
 import {
 	call,
 	estimateGas,
@@ -62,8 +61,11 @@ import {
 	Bytes,
 	Filter,
 	HexString,
-	toChecksumAddress,
-} from 'web3-utils';
+	EthExecutionAPI,
+	LogsInput,
+	Mutable,
+	TransactionReceipt,
+} from 'web3-types';
 import { isNullish, validator } from 'web3-validator';
 import { SubscriptionError } from 'web3-errors';
 import { ALL_EVENTS_ABI } from './constants';

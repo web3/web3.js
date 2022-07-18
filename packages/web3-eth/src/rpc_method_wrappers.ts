@@ -18,20 +18,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import {
-	DataFormat,
 	EthExecutionAPI,
-	format,
-	Web3PromiEvent,
-	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
 	TransactionWithSender,
-	FormatType,
 	SignedTransactionInfo,
-	ETH_DATA_FORMAT,
 	Web3BaseWalletAccount,
-} from 'web3-common';
-import { Web3Context } from 'web3-core';
-import {
 	Address,
 	BlockTag,
 	BlockNumberOrTag,
@@ -40,7 +31,9 @@ import {
 	HexString,
 	Numbers,
 	HexStringBytes,
-} from 'web3-utils';
+} from 'web3-types';
+import { Web3Context, Web3PromiEvent } from 'web3-core';
+import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
 import { SignatureError } from './errors';

@@ -53,7 +53,7 @@
 		"web3-providers-ipc": "4.0.0-alpha.0"
 	},
 	"dependencies": {
-		"web3-common": "1.0.0-alpha.0",
+		"web3-types": "1.0.0-alpha.0",
 		"web3-core": "4.0.0-alpha.0",
 		"web3-errors": "1.0.0-alpha.0",
 		"web3-eth": "4.0.0-alpha.1",

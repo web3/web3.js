@@ -33,12 +33,10 @@ import {
 	SignerError,
 	UndefinedRawTransactionError,
 } from 'web3-errors';
+import { Address, Bytes, HexString } from 'web3-types';
 import {
-	Address,
-	Bytes,
 	bytesToBuffer,
 	bytesToHex,
-	HexString,
 	hexToBytes,
 	isHexStrict,
 	numberToHex,
