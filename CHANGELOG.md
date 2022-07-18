@@ -391,7 +391,7 @@ Released with 1.0.0-beta.37 code base.
 
 ##### Subscription breaking Changes
 
-1. ClearSubscriptions 1.x returns true. clearSubscriptions 4.x returns array of subscription's ids
+1. `clearSubscriptions` Instead of returning `true` ,  `clearSubscriptions` now returns array of subscription's ids
 
 #### web3-eth-personal
 
