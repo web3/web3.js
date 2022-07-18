@@ -17,6 +17,12 @@ var tests = [
         data: 'Some data!%$$%&@*',
         // signature done with personal_sign
         signature: '0x05252412b097c5d080c994d1ea12abcee6f1cae23feb225517a0b691a66e12866b3f54292f9cfef98f390670b4d010fc4af7fcd46e41d72870602c117b14921c1c'
+    }, {
+        address: '0x92b7254537e2890f728187988b829b28a01333ce',
+        privateKey: '0xaa237230fc60e46175256cbc931852514364089a9f4e5b59b5217483b2df4df7',
+        data: 'Some data!%$$%&@*',
+        // signature done with personal_sign
+        signature: '0xb9772194346dbf4fabf34e47f6305edf25c3de0b26b2b85f4778b49c1990115149ba4bf730ae3f9cd303769bb5bdcdf564e3a467ae061031dc368aab798fec091b'
     }
 ];
 

@@ -1,5 +1,5 @@
-<p align="center">
-  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
+<p style="text-align: center;">
+  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js">
 </p>
 
 # web3.js - Ethereum JavaScript API
@@ -56,10 +56,10 @@ UNPKG:
 ```js
 // In Node.js
 const Web3 = require('web3');
-
-let web3 = new Web3('ws://localhost:8546');
+const web3 = new Web3('ws://localhost:8546');
 console.log(web3);
-> {
+// Output
+{
     eth: ... ,
     shh: ... ,
     utils: ...,
@@ -227,7 +227,7 @@ global.process = {
 
 If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
 
-a work around for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
+a workaround for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
 
 Another variation of this problem was an [issue opned on angular-cli](https://github.com/angular/angular-cli/issues/1548)
 

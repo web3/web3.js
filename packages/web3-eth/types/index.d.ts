@@ -364,6 +364,17 @@ export class Eth {
         callback?: (error: Error, gas: number) => void
     ): Promise<number>;
 
+    createAccessList(
+        transactionConfig: TransactionConfig,
+        callback?: (error: Error, result: CreateAccessList) => void
+    ): Promise<CreateAccessList>;
+
+    createAccessList(
+        transactionConfig: TransactionConfig,
+        defaultBlock: BlockNumber,
+        callback?: (error: Error, result: CreateAccessList) => void
+    ): Promise<CreateAccessList>;
+
     getPastLogs(
         options: PastLogsOptions,
         callback?: (error: Error, logs: Log[]) => void
@@ -410,7 +421,7 @@ export interface BlockHeader {
     nonce: string;
     sha3Uncles: string;
     logsBloom: string;
-    transactionRoot: string;
+    transactionsRoot: string;
     stateRoot: string;
     receiptsRoot: string;
     miner: string;
@@ -439,6 +450,17 @@ export interface BlockTransactionObject extends BlockTransactionBase {
 
 export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
+}
+
+export interface AccessTuple {
+    address: string;
+    storageKeys: string[];
+}
+
+export interface CreateAccessList {
+    accessList: AccessTuple[];
+    error?: string;
+    gasUsed: string;
 }
 
 export interface GetProof {
