@@ -1,4 +1,11 @@
+---
+sidebar_position: 1
+sidebar_label: Web3
+---
+
 # Web3 Migration Guide
+
+This migration guide is for migration from Web3.js 1.x to Web3.js 4.x.
 
 ## Breaking Changes
 
