@@ -389,7 +389,7 @@ Released with 1.0.0-beta.37 code base.
 3. `defaultAccount` default value is undefined
 4. `defaultNetworkId` default value is undefined
 
-##### Subscription breaking Changes
+##### web3-eth-subscribe
 
 1. `clearSubscriptions` Instead of returning `true` ,  `clearSubscriptions` now returns array of subscription's ids
 
