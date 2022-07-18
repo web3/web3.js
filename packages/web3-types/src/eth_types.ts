@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,83 +14,38 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { HexString, Numbers } from './primitives_types';
 
-import { Web3Error } from 'web3-errors';
-import { HexString, HexString32Bytes } from 'web3-utils';
+export type ValueTypes = 'address' | 'bool' | 'string' | 'int256' | 'uint256' | 'bytes' | 'bigint';
+// Hex encoded 32 bytes
+export type HexString32Bytes = HexString;
+// Hex encoded 16 bytes
+export type HexString16Bytes = HexString;
+// Hex encoded 8 bytes
+export type HexString8Bytes = HexString;
+// Hex encoded 1 byte
+export type HexStringSingleByte = HexString;
+// Hex encoded 1 byte
+export type HexStringBytes = HexString;
+// Hex encoded 256 byte
+export type HexString256Bytes = HexString;
+// Hex encoded unsigned integer
+export type Uint = HexString;
+// Hex encoded unsigned integer 32 bytes
+export type Uint256 = HexString;
+// Hex encoded address
+export type Address = HexString;
 
-export type JsonRpcId = string | number | undefined;
-export type JsonRpcResult = string | number | boolean | Record<string, unknown>;
-export type JsonRpcIdentifier = string & ('2.0' | '1.0');
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
+export type Topic = HexString32Bytes;
 
-// Make each attribute mutable by removing `readonly`
-export type Mutable<T> = {
-	-readonly [P in keyof T]: T[P];
-};
-
-export interface JsonRpcError<T = JsonRpcResult> {
-	readonly code: number;
-	readonly message: string;
-	readonly data?: T;
+export enum BlockTags {
+	EARLIEST = 'earliest',
+	LATEST = 'latest',
+	PENDING = 'pending',
 }
-
-export interface JsonRpcResponseWithError<Error = JsonRpcResult> {
-	readonly id: JsonRpcId;
-	readonly jsonrpc: JsonRpcIdentifier;
-	readonly error: JsonRpcError<Error>;
-	readonly result?: never;
-}
-
-export interface JsonRpcResponseWithResult<T = JsonRpcResult> {
-	readonly id: JsonRpcId;
-	readonly jsonrpc: JsonRpcIdentifier;
-	readonly error?: never;
-	readonly result: T;
-}
-
-export interface SubscriptionParams<T = JsonRpcResult> {
-	readonly subscription: string; // for subscription id
-	readonly result: T;
-}
-export interface JsonRpcNotification<T = JsonRpcResult> {
-	readonly id?: JsonRpcId;
-	readonly jsonrpc: JsonRpcIdentifier;
-	readonly method: string; // for subscription
-	readonly params: SubscriptionParams<T>; // for subscription results
-	readonly result: never;
-}
-
-export interface JsonRpcSubscriptionResult {
-	readonly id: number;
-	readonly jsonrpc: string;
-	readonly result: string;
-	readonly method: never;
-	readonly params: never;
-}
-
-export interface JsonRpcRequest<T = unknown[]> {
-	readonly id: JsonRpcId;
-	readonly jsonrpc: JsonRpcIdentifier;
-	readonly method: string;
-	readonly params?: T;
-}
-
-export interface JsonRpcOptionalRequest<ParamType = unknown[]>
-	extends Omit<JsonRpcRequest<ParamType>, 'id' | 'jsonrpc'> {
-	readonly id?: JsonRpcId;
-	readonly jsonrpc?: JsonRpcIdentifier;
-}
-
-export type JsonRpcBatchRequest = JsonRpcRequest[];
-
-export type JsonRpcPayload<Param = unknown[]> = JsonRpcRequest<Param> | JsonRpcBatchRequest;
-
-export type JsonRpcBatchResponse<Result = JsonRpcResult, Error = JsonRpcResult> =
-	| (JsonRpcResponseWithError<Error> | JsonRpcResponseWithResult<Result>)[];
-
-export type JsonRpcResponse<Result = JsonRpcResult, Error = JsonRpcResult> =
-	| JsonRpcResponseWithError<Error>
-	| JsonRpcResponseWithResult<Result>
-	| JsonRpcBatchResponse<Result, Error>;
+export type BlockTag = 'earliest' | 'latest' | 'pending';
+export type BlockNumberOrTag = Numbers | BlockTag;
 
 export interface Proof {
 	readonly address: HexString;
@@ -243,46 +198,54 @@ export interface SyncOutput {
 	readonly pulledStates?: bigint | number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Web3APISpec = Record<string, (...params: any) => any>;
-export type Web3APIMethod<T extends Web3APISpec> = string & keyof T;
-export type Web3APIParams<API extends Web3APISpec, Method extends Web3APIMethod<API>> = Parameters<
-	API[Method]
->;
-
-export interface Web3APIRequest<API extends Web3APISpec, Method extends Web3APIMethod<API>> {
-	method: Method;
-	params: Web3APIParams<API, Method>;
-}
-
-export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIMethod<API>>
-	extends Web3APIRequest<API, Method> {
-	readonly jsonrpc?: JsonRpcIdentifier;
-	readonly id?: JsonRpcId;
-}
-
-export type Web3APIReturnType<
-	API extends Web3APISpec,
-	Method extends Web3APIMethod<API>,
-> = ReturnType<API[Method]>;
-
-export type ConnectionEvent = {
-	code: number;
-	reason: string;
-	wasClean?: boolean; // if WS connection was closed properly
-};
-
 export type Receipt = Record<string, unknown>;
 
-// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
-export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';
-export type Web3ProviderEventCallback<T = JsonRpcResult> = (
-	error: Error | undefined,
-	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
-) => void;
-export type Web3ProviderRequestCallback<ResultType = unknown> = (
-	// Used "null" value to match the legacy version
+export type Components = {
+	name: string;
+	type: string;
+	indexed?: boolean;
+	components?: Components[];
+};
+
+export type AbiInput = {
+	name: string;
+	type: string;
+	components?: Components;
+	index?: boolean;
+	internalType?: string;
+};
+
+// https://docs.soliditylang.org/en/develop/abi-spec.html#json
+export type JsonFunctionInterface = {
+	type: 'function';
+	name: string;
+	inputs: Components[];
+	outputs?: AbiInput[];
+	stateMutability?: string;
+};
+
+export type JsonEventInterface = {
+	type: 'event';
+	name: string;
+	inputs: Components[];
+	indexed: boolean;
+	anonymous: boolean;
+};
+
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
+export interface Filter {
+	readonly fromBlock?: BlockNumberOrTag;
+	readonly toBlock?: BlockNumberOrTag;
+	readonly address?: Address | Address[];
+
+	// Using "null" type intentionally to match specifications
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	err?: Error | Web3Error | null | JsonRpcResponseWithError<Error>,
-	response?: JsonRpcResponseWithResult<ResultType>,
-) => void;
+	readonly topics?: (null | Topic | Topic[])[];
+}
+
+// https://docs.soliditylang.org/en/latest/abi-spec.html#json
+export type AbiParameter = {
+	readonly name: string;
+	readonly type: string;
+	readonly components?: ReadonlyArray<AbiParameter | string>;
+};

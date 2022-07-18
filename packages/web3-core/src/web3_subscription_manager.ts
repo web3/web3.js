@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3APISpec } from 'web3-common';
+import { Web3APISpec } from 'web3-types';
 import { ProviderError, SubscriptionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils';

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, Bytes, HexString, Numbers } from 'web3-utils';
+import { Address, Bytes, HexString, Numbers } from 'web3-types';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
 import {
 	DEFAULT_RETURN_FORMAT,

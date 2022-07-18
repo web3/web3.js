@@ -19,17 +19,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	BlockOutput,
 	Web3BaseProvider,
-	Web3EventEmitter,
-	Web3EventMap,
 	Web3APISpec,
 	Web3APIParams,
 	EthExecutionAPI,
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
-	jsonRpc,
-} from 'web3-common';
-import { HexString } from 'web3-utils';
+	HexString,
+} from 'web3-types';
+import { jsonRpc } from 'web3-utils';
+import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
 import { Web3RequestManager } from './web3_request_manager';
 
 export abstract class Web3Subscription<

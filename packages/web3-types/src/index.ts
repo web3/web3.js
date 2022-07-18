@@ -15,7 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString } from 'web3-types';
-
-// TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
+export * from './error_types';
+export * from './eth_execution_api';
+export * from './eth_types';
+export * from './json_rpc_types';
+export * from './primitives_types';
+export * from './utility_types';
+export * from './web3_api_types';
+export * from './web3_base_provider';
+export * from './web3_base_wallet';
+export * from './web3_deferred_promise_type';

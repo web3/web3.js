@@ -19,7 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Bytes } from 'web3-utils';
+import { ETH_DATA_FORMAT, format } from 'web3-utils';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -39,7 +39,7 @@ import { prepareTransactionForSigning, Transaction, Web3Eth } from 'web3-eth';
 import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { EthExecutionAPI, ETH_DATA_FORMAT, format, Web3BaseProvider } from 'web3-common';
+import { EthExecutionAPI, Web3BaseProvider, Bytes } from 'web3-types';
 
 let _accounts: string[] = [];
 

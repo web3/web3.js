@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString } from 'web3-types';
-
-// TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;
+export type HexString = string;
+export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
+export type Numbers = number | bigint | string | HexString;

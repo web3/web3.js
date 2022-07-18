@@ -17,18 +17,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
 	Address,
-	HexString,
-	HexString256Bytes,
-	HexString8Bytes,
 	HexString32Bytes,
+	Uint,
 	HexStringBytes,
 	HexStringSingleByte,
-	Uint,
-	Uint256,
+	HexString256Bytes,
 	Topic,
+	HexString8Bytes,
+	Uint256,
+	BlockNumberOrTag,
 	Filter,
-} from 'web3-utils';
-import { BlockNumberOrTag } from 'web3-validator';
+} from './eth_types';
+import { HexString } from './primitives_types';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis

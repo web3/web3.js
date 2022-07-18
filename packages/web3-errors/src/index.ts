@@ -27,3 +27,4 @@ export * from './errors/provider_errors';
 export * from './errors/signature_errors';
 export * from './errors/transaction_errors';
 export * from './errors/utils_errors';
+export * from './errors/response_errors';
