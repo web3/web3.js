@@ -1,4 +1,9 @@
-# Web3 Personal Migration Guide
+---
+sidebar_position: 7
+sidebar_label: Web3.eth.personal
+---
+
+# Web3.eth.personal Migration Guide
 
 ## Breaking Changes
 
