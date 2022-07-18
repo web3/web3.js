@@ -591,6 +591,6 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 ### Fixed
--  Fixed types for getPastEvents 
+-  Fixed types for getPastEvents (#4955) (#5260)
 
 
