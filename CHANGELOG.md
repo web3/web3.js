@@ -538,8 +538,6 @@ Released with 1.0.0-beta.37 code base.
 
 -  Fixed build issues of 1.7.2
 
-## [Unreleased]
-
 ## [1.7.4]
 
 ### Fixed
@@ -548,11 +546,13 @@ Released with 1.0.0-beta.37 code base.
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix resolve type of getBlock function (#4911)
+-  Web3-utils BN fix (#5132)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
 -  Exporting AbiCoder as coder (#4937)
 -  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
+-  Updated libraries using BN and the BN library (#5072)
 
 ### Added
 - Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
@@ -560,3 +560,27 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
+
+## [Unreleased]
+
+## [1.7.5]
+
+### Changed
+-  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
+
+### Added
+-  Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Added `createAccessList` types in web3.eth (#5146)
+
+### Fixed
+-  Improving `AbstractProvider` interface (#5150)
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-  Fix remove wallet using an index when an account address and address lowercase are equal (#5049)
+-  Improve README.md & Fix typos (#4848)
+-  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
+-  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
+-  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
+
+### Security
+-  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
+

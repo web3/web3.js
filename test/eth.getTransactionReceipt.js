@@ -113,6 +113,31 @@ var tests = [{
         "gasUsed": 520464,
     },
     call: 'eth_'+ method
+},
+{
+    args: ['0xdd960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265','hex'],
+    formattedArgs: ['0xdd960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265'],
+    result: {
+        "status": "0x0",
+        "blockHash": "0x6fd9e2a26ab",
+        "blockNumber": "0x15df",
+        "transactionHash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+        "transactionIndex":  "0x10",
+        "contractAddress":"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+        "cumulativeGasUsed":"0x7f110",
+        "gasUsed": "0x7f110",
+    },
+    formattedResult: {
+        "status": false,
+        "blockHash": "0x6fd9e2a26ab",
+        "blockNumber": "0x15df",
+        "transactionHash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+        "transactionIndex":  "0x10",
+        "contractAddress":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
+        "cumulativeGasUsed":"0x7f110",
+        "gasUsed": "0x7f110",
+    },
+    call: 'eth_'+ method
 }];
 
 
