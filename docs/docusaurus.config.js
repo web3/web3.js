@@ -115,7 +115,7 @@ const config = {
 				},
 				items: [
 					{
-						to: 'docs/guides/intro',
+						to: 'docs/guides/web3_migration_guide',
 						activeBasePath: 'docs',
 						label: 'Guides',
 						position: 'left',
