@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-import { BlockOutput, Web3BaseProvider } from 'web3-common';
+import { BlockHeaderOutput, Web3BaseProvider } from 'web3-common';
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewHeadsSubscription } from '../../src/web3_subscriptions';
@@ -58,7 +58,7 @@ describeIf(isWs)('subscription', () => {
 
 			let times = 0;
 			const pr = new Promise((resolve: Resolve) => {
-				sub.on('data', (data: BlockOutput) => {
+				sub.on('data', (data: BlockHeaderOutput) => {
 					if (data.parentHash) {
 						times += 1;
 					}
