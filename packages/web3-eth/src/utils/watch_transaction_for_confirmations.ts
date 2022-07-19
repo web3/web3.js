@@ -15,12 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import {
-	BlockOutput,
 	DataFormat,
 	EthExecutionAPI,
 	format,
 	Web3PromiEvent,
 	Web3BaseProvider,
+	BlockHeaderOutput,
 } from 'web3-common';
 import { SubscriptionError } from 'web3-errors';
 import { Web3Context } from 'web3-core';
@@ -94,7 +94,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
-				subscription.on('data', async (newBlockHeader: BlockOutput) => {
+				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
 					if (!newBlockHeader?.number) {
 						return;
 					}
