@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ETH_DATA_FORMAT, format } from 'web3-utils';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
-import { EthExecutionAPI } from 'web3-types';
+import { EthExecutionAPI, Transaction } from 'web3-types';
 import { isNullish } from 'web3-validator';
-import { InternalTransaction, Transaction } from '../types';
+import { InternalTransaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {
 	const tx = transaction as unknown as Transaction;

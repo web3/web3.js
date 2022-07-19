@@ -23,10 +23,10 @@ import {
 	format,
 	FormatType,
 } from 'web3-utils';
+import { Transaction } from 'web3-types';
 import { isNullish } from 'web3-validator';
 import { TransactionDataAndInputError } from '../errors';
 import { transactionSchema } from '../schemas';
-import { Transaction } from '../types';
 
 /**
  *

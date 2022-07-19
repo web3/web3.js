@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { HexString, Numbers } from './primitives_types';
+import { Bytes, HexString, Numbers } from './primitives_types';
 
 export type ValueTypes = 'address' | 'bool' | 'string' | 'int256' | 'uint256' | 'bytes' | 'bigint';
 // Hex encoded 32 bytes
@@ -39,6 +39,8 @@ export type Address = HexString;
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L59
 export type Topic = HexString32Bytes;
 
+export type TransactionHash = HexString;
+export type Uncles = HexString32Bytes[];
 export enum BlockTags {
 	EARLIEST = 'earliest',
 	LATEST = 'latest',
@@ -263,3 +265,192 @@ export type AbiParameter = {
 	readonly type: string;
 	readonly components?: ReadonlyArray<AbiParameter | string>;
 };
+
+export interface AccessListEntry {
+	readonly address?: Address;
+	readonly storageKeys?: HexString32Bytes[];
+}
+export type AccessList = AccessListEntry[];
+
+export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
+
+export type Hardfork =
+	| 'arrowGlacier'
+	| 'berlin'
+	| 'byzantium'
+	| 'chainstart'
+	| 'constantinople'
+	| 'dao'
+	| 'homestead'
+	| 'istanbul'
+	| 'london'
+	| 'merge'
+	| 'muirGlacier'
+	| 'petersburg'
+	| 'shanghai'
+	| 'spuriousDragon'
+	| 'tangerineWhistle';
+
+export interface Log {
+	readonly removed?: boolean;
+	readonly logIndex?: Numbers;
+	readonly transactionIndex?: Numbers;
+	readonly transactionHash?: Bytes;
+	readonly blockHash?: Bytes;
+	readonly blockNumber?: Numbers;
+	readonly address?: Address;
+	readonly data?: Bytes;
+	readonly topics?: Bytes[];
+	readonly id?: string;
+}
+
+export interface TransactionReceipt {
+	readonly transactionHash: Bytes;
+	readonly transactionIndex: Numbers;
+	readonly blockHash: Bytes;
+	readonly blockNumber: Numbers;
+	readonly from: Address;
+	readonly to: Address;
+	readonly cumulativeGasUsed: Numbers;
+	readonly gasUsed: Numbers;
+	readonly effectiveGasPrice?: Numbers;
+	readonly contractAddress?: Address;
+	readonly logs: Log[];
+	readonly logsBloom: Bytes;
+	readonly root: Bytes;
+	readonly status: Numbers;
+	readonly type?: Numbers;
+}
+
+export interface CustomChain {
+	name?: string;
+	networkId: Numbers;
+	chainId: Numbers;
+}
+
+export interface Common {
+	customChain: CustomChain;
+	baseChain?: ValidChains;
+	hardfork?: Hardfork;
+}
+
+interface TransactionBase {
+	value?: Numbers;
+	accessList?: AccessList;
+	common?: Common;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | null;
+	gas?: Numbers;
+	gasPrice?: Numbers;
+	type?: Numbers;
+	maxFeePerGas?: Numbers;
+	maxPriorityFeePerGas?: Numbers;
+	data?: Bytes;
+	input?: Bytes;
+	nonce?: Numbers;
+	chain?: ValidChains;
+	hardfork?: Hardfork;
+	chainId?: Numbers;
+	networkId?: Numbers;
+	gasLimit?: Numbers;
+	yParity?: Uint;
+	v?: Numbers;
+	r?: Bytes;
+	s?: Bytes;
+}
+
+export interface Transaction extends TransactionBase {
+	from?: Address;
+}
+
+export interface TransactionCall extends Transaction {
+	to: Address;
+}
+
+export interface TransactionWithLocalWalletIndex extends TransactionBase {
+	from?: Numbers;
+}
+
+export interface TransactionInfo extends Transaction {
+	readonly blockHash?: Bytes;
+	readonly blockNumber?: Numbers;
+	readonly from: Address;
+	readonly hash: Bytes;
+	readonly transactionIndex?: Numbers;
+}
+
+export interface PopulatedUnsignedBaseTransaction {
+	from: Address;
+	to?: Address;
+	value: Numbers;
+	gas?: Numbers;
+	gasPrice: Numbers;
+	type: Numbers;
+	data: Bytes;
+	nonce: Numbers;
+	networkId: Numbers;
+	chain: ValidChains;
+	hardfork: Hardfork;
+	chainId: Numbers;
+	common: Common;
+	gasLimit: Numbers;
+}
+
+export interface PopulatedUnsignedEip2930Transaction extends PopulatedUnsignedBaseTransaction {
+	accessList: AccessList;
+}
+
+export interface PopulatedUnsignedEip1559Transaction extends PopulatedUnsignedEip2930Transaction {
+	gasPrice: never;
+	maxFeePerGas: Numbers;
+	maxPriorityFeePerGas: Numbers;
+}
+export type PopulatedUnsignedTransaction =
+	| PopulatedUnsignedBaseTransaction
+	| PopulatedUnsignedEip2930Transaction
+	| PopulatedUnsignedEip1559Transaction;
+
+export interface Block {
+	readonly parentHash: Bytes;
+	readonly sha3Uncles: Bytes;
+	readonly miner: Bytes;
+	readonly stateRoot: Bytes;
+	readonly transactionsRoot: Bytes;
+	readonly receiptsRoot: Bytes;
+	readonly logsBloom?: Bytes;
+	readonly difficulty?: Numbers;
+	readonly number: Numbers;
+	readonly gasLimit: Numbers;
+	readonly gasUsed: Numbers;
+	readonly timestamp: Numbers;
+	readonly extraData: Bytes;
+	readonly mixHash: Bytes;
+	readonly nonce: Numbers;
+	readonly totalDifficulty: Numbers;
+	readonly baseFeePerGas?: Numbers;
+	readonly size: Numbers;
+	readonly transactions: TransactionHash[] | TransactionInfo[];
+	readonly uncles: Uncles;
+	readonly hash?: Bytes;
+}
+
+export interface FeeHistory {
+	readonly oldestBlock: Numbers;
+	readonly baseFeePerGas: Numbers;
+	readonly reward: Numbers[][];
+}
+
+export interface StorageProof {
+	readonly key: Bytes;
+	readonly value: Numbers;
+	readonly proof: Bytes[];
+}
+
+export interface AccountObject {
+	readonly balance: Numbers;
+	readonly codeHash: Bytes;
+	readonly nonce: Numbers;
+	readonly storageHash: Bytes;
+	readonly accountProof: Bytes[];
+	readonly storageProof: StorageProof[];
+}

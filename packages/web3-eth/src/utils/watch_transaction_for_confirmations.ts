@@ -14,7 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Bytes, Numbers, EthExecutionAPI, Web3BaseProvider, BlockHeaderOutput } from 'web3-types';
+import {
+	Bytes,
+	Numbers,
+	EthExecutionAPI,
+	Web3BaseProvider,
+	BlockHeaderOutput,
+	TransactionReceipt,
+} from 'web3-types';
 import { SubscriptionError } from 'web3-errors';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { DataFormat, format, numberToHex } from 'web3-utils';
@@ -24,7 +31,7 @@ import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '../errors';
-import { TransactionReceipt, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
+import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { transactionReceiptSchema } from '../schemas';

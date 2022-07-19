@@ -20,8 +20,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	TransactionInfo,
-	TransactionWithSender,
-	SignedTransactionInfo,
+	TransactionWithSenderAPI,
+	SignedTransactionInfoAPI,
 	Web3BaseWalletAccount,
 	Address,
 	BlockTag,
@@ -31,6 +31,14 @@ import {
 	HexString,
 	Numbers,
 	HexStringBytes,
+	AccountObject,
+	Block,
+	FeeHistory,
+	Log,
+	TransactionReceipt,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
@@ -47,18 +55,10 @@ import {
 	transactionInfoSchema,
 } from './schemas';
 import {
-	AccountObject,
-	Block,
-	FeeHistory,
-	Log,
-	TransactionReceipt,
 	SendSignedTransactionEvents,
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
-	Transaction,
-	TransactionCall,
-	TransactionWithLocalWalletIndex,
 } from './types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionFromAttr } from './utils/transaction_builder';
@@ -543,7 +543,7 @@ export function sendTransaction<
 						} else {
 							transactionHash = await rpcMethods.sendTransaction(
 								web3Context.requestManager,
-								transactionFormatted as Partial<TransactionWithSender>,
+								transactionFormatted as Partial<TransactionWithSenderAPI>,
 							);
 						}
 
@@ -818,7 +818,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 
 	const unformattedResponse = isString(response as HexStringBytes)
 		? { raw: response, tx: transaction }
-		: (response as SignedTransactionInfo);
+		: (response as SignedTransactionInfoAPI);
 
 	return {
 		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),

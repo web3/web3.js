@@ -28,18 +28,16 @@ import {
 	Numbers,
 	BlockNumberOrTag,
 	LogsInput,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
 import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import {
-	SendTransactionOptions,
-	Transaction,
-	TransactionCall,
-	TransactionWithLocalWalletIndex,
-} from './types';
+import { SendTransactionOptions } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,

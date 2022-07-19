@@ -16,12 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { Block } from 'web3-types';
+import { Block, TransactionInfo, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
-import { TransactionReceipt, Web3Eth, TransactionInfo } from '../../src';
+import { Web3Eth } from '../../src';
 
 import {
 	getSystemTestBackend,
