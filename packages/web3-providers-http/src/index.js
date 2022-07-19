@@ -24,11 +24,11 @@
  */
 
 var errors = require('web3-core-helpers').errors;
-var fetch = require('cross-fetch');
 var http = require('http');
 var https = require('https');
 
 // Apply missing polyfill for IE
+require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 
@@ -65,21 +65,22 @@ var HttpProvider = function HttpProvider(host, options) {
  */
 HttpProvider.prototype.send = function (payload, callback) {
     var options = {
-      method: 'POST',
-      body: JSON.stringify(payload)
+        method: 'POST',
+        body: JSON.stringify(payload)
     };
     var headers = {};
     var controller;
 
     if (typeof AbortController !== 'undefined') {
         controller = new AbortController();
-    } else if (typeof AbortController === 'undefined' && typeof window !== 'undefined' && typeof window.AbortController !== 'undefined') {
+    } else if (typeof window !== 'undefined' && typeof window.AbortController !== 'undefined') {
         // Some chrome version doesn't recognize new AbortController(); so we are using it from window instead
         // https://stackoverflow.com/questions/55718778/why-abortcontroller-is-not-defined
         controller = new window.AbortController();
-    } else {
-        // Disable user defined timeout
-        this.timeout = 0;
+    }
+
+    if (typeof controller !== 'undefined') {
+        options.signal = controller.signal;
     }
 
     // the current runtime is node
@@ -99,8 +100,8 @@ HttpProvider.prototype.send = function (payload, callback) {
         }
     }
 
-    if(this.headers) {
-        this.headers.forEach(function(header) {
+    if (this.headers) {
+        this.headers.forEach(function (header) {
             headers[header.name] = header.value;
         });
     }
@@ -112,55 +113,43 @@ HttpProvider.prototype.send = function (payload, callback) {
 
     // As the Fetch API supports the credentials as following options 'include', 'omit', 'same-origin'
     // https://developer.mozilla.org/en-US/docs/Web/API/fetch#credentials
-    // To avoid breaking change in 1.x we override this value based on boolean option. 
+    // To avoid breaking change in 1.x we override this value based on boolean option.
     if(this.withCredentials) {
         options.credentials = 'include';
     } else {
         options.credentials = 'omit';
     }
-    
+
     options.headers = headers;
 
-    if (this.timeout > 0) {
-        this.timeoutId = setTimeout(function() {
+    if (this.timeout > 0 && typeof controller !== 'undefined') {
+        this.timeoutId = setTimeout(function () {
             controller.abort();
         }, this.timeout);
     }
 
-    // Prevent global leak of connected
-    var _this = this;
-
-    var success = function(response) {
+    var success = function (response) {
         if (this.timeoutId !== undefined) {
             clearTimeout(this.timeoutId);
         }
-        var result = response;
-        var error = null;
 
-        try {
-            // Response is a stream data so should be awaited for json response
-            result.json().then(function(data) {
-                result = data;
-                _this.connected = true;
-                callback(error, result);
-            });
-        } catch (e) {
-            _this.connected = false;
-            callback(errors.InvalidResponse(result));
-        }
+        // Response is a stream data so should be awaited for json response
+        response.json().then(function (data) {
+            callback(null, data);
+        }).catch(function (error) {
+            callback(errors.InvalidResponse(response));
+        });
     };
 
-    var failed = function(error) {
+    var failed = function (error) {
         if (this.timeoutId !== undefined) {
             clearTimeout(this.timeoutId);
         }
 
         if (error.name === 'AbortError') {
-            _this.connected = false;
             callback(errors.ConnectionTimeout(this.timeout));
         }
 
-        _this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
 
