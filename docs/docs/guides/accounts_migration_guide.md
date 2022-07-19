@@ -3,7 +3,7 @@ sidebar_position: 5
 sidebar_label: Web3.eth.accounts
 ---
 
-# Web3.eth.accounts Migration Guide
+# Web3 eth accounts Migration Guide
 
 ## Breaking changes
 
