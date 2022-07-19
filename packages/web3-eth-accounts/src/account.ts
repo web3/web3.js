@@ -64,6 +64,7 @@ import {
  * Get the private key buffer after the validation
  *
  * @param data - The data in any bytes format
+ * @param ignoreLength
  * @returns
  */
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Buffer => {
@@ -299,6 +300,9 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  *
  * @param data - Either a signed message, hash, or the {@link signatureObject}
  * @param signature - The raw RLP encoded signature
+ * @param signatureOrV
+ * @param prefixedOrR
+ * @param s
  * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\x19Ethereum Signed Message:\n" + message.length + message, and assumed to be already prefixed.
  * @returns The Ethereum address used to sign this data
  * ```ts

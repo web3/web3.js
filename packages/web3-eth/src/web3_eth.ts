@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT, LogsInput } from 'web3-common';
 import {
 	isSupportedProvider,
 	SupportedProviders,
@@ -389,7 +389,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
-							subscription._processSubscriptionResult(log);
+							subscription._processSubscriptionResult(log as LogsInput);
 						}
 					})
 					.catch(e => {
@@ -404,7 +404,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return !(sub instanceof SyncingSubscription);
 	}
 
-	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+	public clearSubscriptions(notClearSyncing = false): Promise<string[]> | undefined {
 		return this.subscriptionManager?.unsubscribe(
 			// eslint-disable-next-line
 			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,
