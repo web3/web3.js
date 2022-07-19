@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ETH_DATA_FORMAT, isHexStrict, toChecksumAddress, utf8ToHex } from 'web3-utils';
-import { formatTransaction, Transaction } from 'web3-eth';
-import { Address, HexString } from 'web3-types';
+import { formatTransaction } from 'web3-eth';
+import { Address, HexString, Transaction } from 'web3-types';
 import { validator } from 'web3-validator';
 import {
 	getAccounts as rpcGetAccounts,

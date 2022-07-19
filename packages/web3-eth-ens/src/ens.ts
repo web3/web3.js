@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { getBlock, TransactionReceipt } from 'web3-eth';
+import { getBlock } from 'web3-eth';
 import {
 	RevertInstructionError,
 	ENSNetworkNotSyncedError,
@@ -23,7 +23,7 @@ import {
 } from 'web3-errors';
 import { Web3Context, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, SupportedProviders, EthExecutionAPI } from 'web3-types';
+import { Address, SupportedProviders, EthExecutionAPI, TransactionReceipt } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER } from 'web3-utils';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';

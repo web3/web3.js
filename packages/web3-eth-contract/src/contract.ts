@@ -1000,10 +1000,7 @@ export class Contract<Abi extends ContractAbi>
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
 				if (receipt.status === BigInt(0)) {
-					throw new Web3ContractError(
-						"code couldn't be stored",
-						receipt as TransactionReceipt,
-					);
+					throw new Web3ContractError("code couldn't be stored", receipt);
 				}
 
 				const newContract = this.clone();

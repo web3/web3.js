@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, SupportedProviders, Address, Bytes } from 'web3-types';
-import Eth, { Transaction } from 'web3-eth';
+import { EthExecutionAPI, SupportedProviders, Address, Bytes, Transaction } from 'web3-types';
+import Eth from 'web3-eth';
 import {
 	ContractAbi,
 	decodeLog,

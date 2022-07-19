@@ -15,21 +15,22 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-utils';
-import { Web3PromiEvent, Web3ContextInitOptions } from 'web3-core';
+import { Web3ContextInitOptions, Web3PromiEvent } from 'web3-core';
+import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
 import { AbiFragment } from 'web3-eth-abi';
-import { SendTransactionEvents, TransactionReceipt, NewHeadsSubscription } from 'web3-eth';
 import {
 	Address,
 	BlockNumberOrTag,
 	Bytes,
+	EthExecutionAPI,
 	HexString,
 	HexString32Bytes,
 	Numbers,
-	Uint,
-	EthExecutionAPI,
 	SupportedProviders,
+	TransactionReceipt,
+	Uint,
 } from 'web3-types';
+import { DataFormat, DEFAULT_RETURN_FORMAT, FormatType } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { LogsSubscription } from './log_subscription';
 
