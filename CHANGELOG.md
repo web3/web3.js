@@ -563,6 +563,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+-  Fixed unit tests & removed dead code for web3-providers-http (#5228)
+
 ## [1.7.5]
 
 ### Changed
