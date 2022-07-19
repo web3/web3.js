@@ -147,11 +147,11 @@ export interface LogsInput {
 export interface LogsOutput {
 	readonly id?: string;
 	readonly removed: boolean;
-	readonly logIndex?: bigint | number;
-	readonly transactionIndex?: bigint | number;
+	readonly logIndex?: bigint | number | string;
+	readonly transactionIndex?: bigint | number | string;
 	readonly transactionHash?: HexString32Bytes;
 	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: bigint | number;
+	readonly blockNumber?: bigint | number | string;
 	readonly address: string;
 	readonly topics: HexString[];
 	readonly data: HexString;
@@ -185,17 +185,20 @@ export interface BlockOutput {
 }
 
 export interface BlockHeaderOutput {
-	readonly gasLimit: bigint | number;
-	readonly gasUsed: bigint | number;
-	readonly timestamp: bigint | number;
-	readonly number?: bigint | number;
-	readonly difficulty?: bigint | number;
-	readonly totalDifficulty?: bigint | number;
-	readonly transactions?: TransactionOutput[];
+	readonly gasLimit: bigint | number | string;
+	readonly gasUsed: bigint | number | string;
+	readonly logsBloom: string;
+	readonly timestamp: bigint | number | string;
+	readonly nonce: bigint | number | string;
+	readonly receiptRoot: HexString32Bytes;
+	readonly number?: bigint | number | string;
+	readonly difficulty?: bigint | number | string;
+	readonly extraData?: string;
+	readonly transactionRoot?: HexString32Bytes;
 	readonly miner?: HexString;
-	readonly baseFeePerGas?: bigint | number;
 	readonly parentHash?: HexString32Bytes;
-	readonly sha3Uncles: HexString32Bytes[];
+	readonly sha3Uncles: HexString32Bytes;
+	readonly stateRoot: HexString32Bytes;
 }
 
 export interface ReceiptInput {
@@ -250,11 +253,11 @@ export interface SyncInput {
 }
 
 export interface SyncOutput {
-	readonly startingBlock: bigint | number;
-	readonly currentBlock: bigint | number;
-	readonly highestBlock: bigint | number;
-	readonly knownStates?: bigint | number;
-	readonly pulledStates?: bigint | number;
+	readonly startingBlock: number | bigint | string;
+	readonly currentBlock: bigint | number | string;
+	readonly highestBlock: bigint | number | string;
+	readonly knownStates?: bigint | number | string;
+	readonly pulledStates?: bigint | number | string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FMT_BYTES, FMT_NUMBER, LogsInput } from 'web3-common';
+import { LogsInput } from 'web3-common';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { HexString, Topic } from 'web3-utils';

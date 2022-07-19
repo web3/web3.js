@@ -306,6 +306,9 @@ export const blockHeaderSchema = {
 		parentHash: {
 			eth: 'bytes32',
 		},
+		receiptRoot: {
+			eth: 'bytes32',
+		},
 		miner: {
 			eth: 'bytes',
 		},
@@ -313,9 +316,6 @@ export const blockHeaderSchema = {
 			eth: 'bytes32',
 		},
 		transactionsRoot: {
-			eth: 'bytes32',
-		},
-		receiptsRoot: {
 			eth: 'bytes32',
 		},
 		logsBloom: {
@@ -339,25 +339,10 @@ export const blockHeaderSchema = {
 		extraData: {
 			eth: 'bytes',
 		},
-		mixHash: {
-			eth: 'bytes32',
-		},
 		nonce: {
 			eth: 'uint',
 		},
-		totalDifficulty: {
-			eth: 'uint',
-		},
-		baseFeePerGas: {
-			eth: 'uint',
-		},
 		sha3Uncles: {
-			type: 'array',
-			items: {
-				eth: 'bytes32',
-			},
-		},
-		hash: {
 			eth: 'bytes32',
 		},
 	},

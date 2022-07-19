@@ -42,8 +42,7 @@ export class LogsSubscription extends Web3Subscription<
 	}
 
 	public _processSubscriptionResult(data: LogsOutput) {
-		// @ts-expect-error
-		this.emit('data', format(logSchema, data , super.returnFormat));
+		this.emit('data', format(logSchema, data, super.returnFormat));
 	}
 
 	public _processSubscriptionError(error: Error) {
@@ -62,7 +61,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: string) {
-		this.emit('data', format({ eth: 'string' }, data , super.returnFormat));
+		this.emit('data', format({ eth: 'string' }, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -81,8 +80,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: BlockHeaderOutput) {
-		// @ts-expect-error
-		this.emit('data', format(blockHeaderSchema, data , super.returnFormat));
+		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -102,8 +100,7 @@ export class SyncingSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: SyncOutput) {
-		// @ts-expect-error
-		this.emit('data', format(syncSchema, data , super.returnFormat));
+		this.emit('data', format(syncSchema, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {

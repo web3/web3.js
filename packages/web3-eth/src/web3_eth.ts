@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, LogsOutput } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT, LogsOutput } from 'web3-common';
 import {
 	isSupportedProvider,
 	SupportedProviders,
@@ -372,14 +372,11 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 
 	public async subscribe<
 		T extends keyof RegisteredSubscription,
-		ReturnType extends DataFormat = {
-			readonly number: FMT_NUMBER;
-			readonly bytes: FMT_BYTES;
-		},
+		ReturnType extends DataFormat = DataFormat,
 	>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
-		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT,
+		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
 	): Promise<InstanceType<RegisteredSubscription[T]>> {
 		const subscription = (await this.subscriptionManager?.subscribe(
 			name,

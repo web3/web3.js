@@ -29,8 +29,7 @@ import {
 	JsonRpcSubscriptionResult,
 	jsonRpc,
 	DataFormat,
-	FMT_NUMBER,
-	FMT_BYTES,
+	DEFAULT_RETURN_FORMAT,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -40,10 +39,7 @@ export abstract class Web3Subscription<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
-	ReturnType extends DataFormat = {
-		readonly number: FMT_NUMBER;
-		readonly bytes: FMT_BYTES;
-	},
+	ReturnType extends DataFormat = DataFormat,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
@@ -54,11 +50,11 @@ export abstract class Web3Subscription<
 	public constructor(
 		public readonly args: ArgsType,
 
-		options: { requestManager: Web3RequestManager<API>; returnFormat: ReturnType },
+		options: { requestManager: Web3RequestManager<API>; returnFormat?: ReturnType },
 	) {
 		super();
 		this._requestManager = options.requestManager;
-		this._returnFormat = options.returnFormat;
+		this._returnFormat = options.returnFormat ?? (DEFAULT_RETURN_FORMAT as ReturnType);
 	}
 
 	public get id() {
@@ -136,16 +132,13 @@ export abstract class Web3Subscription<
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	SubscriptionType extends Web3Subscription<any, any, API, ReturnType> = Web3Subscription<
+	SubscriptionType extends Web3Subscription<any, any, API, any> = Web3Subscription<
 		any,
 		any,
 		API,
 		any
 	>,
-	ReturnType extends DataFormat = {
-		readonly number: FMT_NUMBER;
-		readonly bytes: FMT_BYTES;
-	},
+	ReturnType extends DataFormat = DataFormat,
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

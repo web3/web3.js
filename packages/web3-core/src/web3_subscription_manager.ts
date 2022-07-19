@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, Web3APISpec } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT, Web3APISpec } from 'web3-common';
 import { ProviderError, SubscriptionError } from 'web3-errors';
 import { isNullish } from 'web3-utils';
 import { isSupportSubscriptions } from './utils';
@@ -53,10 +53,7 @@ export class Web3SubscriptionManager<
 
 	public async subscribe<
 		T extends keyof RegisteredSubs,
-		ReturnType extends DataFormat = {
-			readonly number: FMT_NUMBER;
-			readonly bytes: FMT_BYTES;
-		},
+		ReturnType extends DataFormat = DataFormat,
 	>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubs[T]>[0],
@@ -73,7 +70,7 @@ export class Web3SubscriptionManager<
 
 		const subscription = new Klass(args ?? undefined, {
 			requestManager: this.requestManager,
-			returnFormat: returnFormat,
+			returnFormat,
 		}) as InstanceType<RegisteredSubs[T]>;
 
 		await this.addSubscription(subscription);
