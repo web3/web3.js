@@ -17,7 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
+
 import { DataFormat, DEFAULT_RETURN_FORMAT, LogsOutput } from 'web3-common';
+
 import {
 	isSupportedProvider,
 	SupportedProviders,
