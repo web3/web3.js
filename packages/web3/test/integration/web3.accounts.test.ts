@@ -23,7 +23,7 @@ import {
 	waitForOpenConnection,
 	closeOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 
 const hexRegx = /0[xX][0-9a-fA-F]+/;
 

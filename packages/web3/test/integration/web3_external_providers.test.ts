@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import HDWalletProvider from '@truffle/hdwallet-provider';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 import {
 	createNewAccount,
 	getSystemTestProvider,
