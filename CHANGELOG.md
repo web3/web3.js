@@ -324,6 +324,11 @@ Released with 1.0.0-beta.37 code base.
 
 ### Breaking Changes
 
+#### web3
+
+1. Passing callbacks to functions is no longer supported, except for event listeners.
+2. Method `extend` is deprecated
+
 #### web3-common
 
 1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
@@ -341,9 +346,7 @@ Released with 1.0.0-beta.37 code base.
 #### web3-eth-accounts
 
 1. `create` function does not take in the optional parameter `entropy`
-2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
-3. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
-4. `Wallet.create` function doesn't accepts `entropy` param
+2. `Wallet.create` function doesn't accepts `entropy` param
 
 #### web3-validator
 
@@ -361,7 +364,7 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-net
 
-1. package will not support web3.bzz.net and web3.shh.net
+1. Package will not support web3.bzz.net and web3.shh.net
 
 #### web3-eth-iban
 
@@ -383,5 +386,10 @@ Released with 1.0.0-beta.37 code base.
 
 1. `givenProvider` default value is undefined
 2. `defaultHardfork` default value is 'london'
-3. `defaultAccount` default value is null
-4. `defaultNetworkId` default value is null
+3. `defaultAccount` default value is undefined
+4. `defaultNetworkId` default value is undefined
+
+#### web3-eth-personal
+
+1. `givenProvider` default value is undefined
+2. `currentProvider` default value is undefined

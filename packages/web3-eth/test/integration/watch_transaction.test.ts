@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { Web3PromiEvent, Web3BaseProvider, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { Web3Eth, SendTransactionEvents, ReceiptInfo } from '../../src';
+import { Web3Eth, SendTransactionEvents, TransactionReceipt } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {
@@ -62,7 +62,7 @@ describeIf(isWs)('watch subscription transaction', () => {
 			const to = accounts[1];
 			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
-				ReceiptInfo,
+				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = web3Eth.sendTransaction({
 				to,
@@ -73,7 +73,7 @@ describeIf(isWs)('watch subscription transaction', () => {
 			const receiptPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('receipt', (params: ReceiptInfo) => {
+				void sentTx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});

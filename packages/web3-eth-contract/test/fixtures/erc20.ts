@@ -53,9 +53,9 @@ export interface Erc20Interface {
 	};
 
 	events: {
-		[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Approval: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Transfer: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		[key: string]: (options?: ContractEventOptions) => LogsSubscription;
+		Approval: (options?: ContractEventOptions) => LogsSubscription;
+		Transfer: (options?: ContractEventOptions) => LogsSubscription;
 	};
 }
 

@@ -35,7 +35,7 @@ export type Log = {
 	readonly topics?: string[];
 };
 
-export type ReceiptInfo = {
+export type TransactionReceipt = {
 	readonly logs: Record<string, unknown>[];
 	readonly [key: string]: unknown;
 };

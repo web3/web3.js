@@ -1,4 +1,9 @@
-# Web3 Abi Migration Guide
+---
+sidebar_position: 6
+sidebar_label: Web3.eth.abi
+---
+
+# Web3.eth.abi Migration Guide
 
 ## Breaking Changes
 

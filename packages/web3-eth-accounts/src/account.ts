@@ -66,11 +66,11 @@ import {
  * @param data - The data in any bytes format
  * @returns
  */
-export const parseAndValidatePrivateKey = (data: Bytes): Buffer => {
+export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Buffer => {
 	let privateKeyBuffer: Buffer;
 
 	// To avoid the case of 1 character less in a hex string which is prefixed with '0' by using 'bytesToBuffer'
-	if (typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
+	if (!ignoreLength && typeof data === 'string' && isHexStrict(data) && data.length !== 66) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -80,7 +80,7 @@ export const parseAndValidatePrivateKey = (data: Bytes): Buffer => {
 		throw new InvalidPrivateKeyError();
 	}
 
-	if (privateKeyBuffer.byteLength !== 32) {
+	if (!ignoreLength && privateKeyBuffer.byteLength !== 32) {
 		throw new PrivateKeyLengthError();
 	}
 
@@ -170,7 +170,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *
  * This function is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
  * This function will rely on user to provide the full transaction to be signed. If you want to sign a partial transaction object
- * Use {@link Web3.eth.accounts.signTransaction} instead.
+ * Use {@link Web3.eth.accounts.sign} instead.
  *
  * Signing a legacy transaction
  * ```ts
@@ -317,24 +317,30 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  */
 export const recover = (
 	data: string | SignatureObject,
-	signature?: string,
+	signatureOrV?: string,
+	prefixedOrR?: boolean | string,
+	s?: string,
 	prefixed?: boolean,
 ): Address => {
 	if (typeof data === 'object') {
 		const signatureStr = `${data.r}${data.s.slice(2)}${data.v.slice(2)}`;
-		return recover(data.messageHash, signatureStr, true);
+		return recover(data.messageHash, signatureStr, prefixedOrR);
+	}
+	if (typeof signatureOrV === 'string' && typeof prefixedOrR === 'string' && !isNullish(s)) {
+		const signatureStr = `${prefixedOrR}${s.slice(2)}${signatureOrV.slice(2)}`;
+		return recover(data, signatureStr, prefixed);
 	}
 
-	if (isNullish(signature)) throw new InvalidSignatureError('signature string undefined');
+	if (isNullish(signatureOrV)) throw new InvalidSignatureError('signature string undefined');
 
 	const V_INDEX = 130; // r = first 32 bytes, s = second 32 bytes, v = last byte of signature
-	const hashedMessage = prefixed ? data : hashMessage(data);
+	const hashedMessage = prefixedOrR ? data : hashMessage(data);
 
-	const v = signature.substring(V_INDEX); // 0x + r + s + v
+	const v = signatureOrV.substring(V_INDEX); // 0x + r + s + v
 
 	const ecPublicKey = recoverPublicKey(
 		Buffer.from(hashedMessage.substring(2), 'hex'),
-		Buffer.from(signature.substring(2, V_INDEX), 'hex'),
+		Buffer.from(signatureOrV.substring(2, V_INDEX), 'hex'),
 		parseInt(v, 16) - 27,
 		false,
 	);
@@ -383,6 +389,7 @@ const uuidV4 = (): string => {
  * Get the ethereum Address from a private key
  *
  * @param privateKey String or buffer of 32 bytes
+ * @param ignoreLength if true, will not error check length
  * @returns The Ethereum address
  * @example
  * ```ts
@@ -589,6 +596,7 @@ export const encrypt = async (
  * Get an Account object from the privateKey
  *
  * @param privateKey String or buffer of 32 bytes
+ * @param ignoreLength if true, will not error check length
  * @returns A Web3Account object
  *
  * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
@@ -605,8 +613,8 @@ export const encrypt = async (
  * 	}
  * ```
  */
-export const privateKeyToAccount = (privateKey: Bytes): Web3Account => {
-	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
+export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): Web3Account => {
+	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey, ignoreLength);
 
 	return {
 		address: privateKeyToAddress(privateKeyBuffer),
