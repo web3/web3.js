@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocket from 'isomorphic-ws';
-import { EthExecutionAPI, Web3APIPayload } from 'web3-types';
+import { EthExecutionAPI, JsonRpcResponse, Web3APIPayload } from 'web3-types';
 import { ResponseError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import {
@@ -115,7 +115,7 @@ describe('WebSocketProvider', () => {
 				const payload = { ...jsonRpcPayload, error: 'my-error' };
 
 				await expect(wsProvider.request(payload)).rejects.toThrow(
-					new ResponseError(payload),
+					new ResponseError(payload as unknown as JsonRpcResponse<any>),
 				);
 			});
 

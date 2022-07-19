@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as utils from 'web3-utils';
+import { BlockTags } from 'web3-types';
 import { Iban } from 'web3-eth-iban';
 import {
 	inputAddressFormatter,
@@ -94,7 +95,7 @@ describe('formatters', () => {
 			expect(inputBlockNumberFormatter(undefined)).toBeUndefined();
 		});
 
-		it.each([utils.BlockTags.EARLIEST, utils.BlockTags.LATEST, utils.BlockTags.PENDING])(
+		it.each([BlockTags.EARLIEST, BlockTags.LATEST, BlockTags.PENDING])(
 			'should return "%s" values for "%s" block numbers',
 			blockNumber => {
 				expect(inputBlockNumberFormatter(blockNumber)).toEqual(blockNumber);

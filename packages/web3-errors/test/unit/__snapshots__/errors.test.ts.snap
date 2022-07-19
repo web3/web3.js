@@ -140,6 +140,18 @@ Object {
 }
 `;
 
+exports[`errors InvalidResponseError should have valid json structure 1`] = `
+Object {
+  "code": 101,
+  "data": Object {
+    "a": "10",
+    "b": "20",
+  },
+  "message": "Returned error: error message",
+  "name": "InvalidResponseError",
+}
+`;
+
 exports[`errors MaxAttemptsReachedOnReconnectingError should have valid json structure 1`] = `
 Object {
   "code": 505,
@@ -177,6 +189,27 @@ Object {
   "code": 301,
   "message": "The resolver at address does not implement requested method: \\"name\\".",
   "name": "name",
+}
+`;
+
+exports[`errors ResponseError should have valid json structure with data 1`] = `
+Object {
+  "code": 100,
+  "data": Object {
+    "a": "10",
+    "b": "20",
+  },
+  "message": "Returned error: error message",
+  "name": "ResponseError",
+}
+`;
+
+exports[`errors ResponseError should have valid json structure without data 1`] = `
+Object {
+  "code": 100,
+  "data": undefined,
+  "message": "Returned error: error message",
+  "name": "ResponseError",
 }
 `;
 

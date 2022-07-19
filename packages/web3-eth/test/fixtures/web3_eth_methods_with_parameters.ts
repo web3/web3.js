@@ -26,10 +26,10 @@ import {
 	HexStringBytes,
 	Uint,
 	Uint256,
-	TransactionWithSender,
+	TransactionWithSenderAPI,
+	TransactionReceipt,
 } from 'web3-types';
 import { transactionWithSender } from './rpc_methods_wrappers';
-import { TransactionReceipt } from '../../src/types';
 
 /**
  * Array consists of:
@@ -1080,11 +1080,15 @@ export const getTransactionCountValidData: [
  */
 export const estimateGasValidData: [
 	[
-		Partial<TransactionWithSender>,
+		Partial<TransactionWithSenderAPI>,
 		HexString32Bytes | BlockNumberOrTag | undefined,
 		DataFormat | undefined,
 	],
-	[Partial<TransactionWithSender>, HexString32Bytes | BlockNumberOrTag, DataFormat | undefined],
+	[
+		Partial<TransactionWithSenderAPI>,
+		HexString32Bytes | BlockNumberOrTag,
+		DataFormat | undefined,
+	],
 ][] = [
 	// All possible undefined values
 	[
