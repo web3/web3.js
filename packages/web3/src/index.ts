@@ -19,7 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * This is the main (or 'umbrella') class of the web3.js library.
  *
  * ```ts
- * import { Web3 } from 'web3';
+ * import Web3 from 'web3';
  *
  * > Web3.utils
  * > Web3.version
@@ -67,7 +67,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * The Web3 class is an umbrella package to house all Ethereum related modules.
  *
  * ```ts
- * import { Web3 } from 'web3';
+ * import Web3 from 'web3';
  *
  * // "Web3.givenProvider" will be set if in an Ethereum supported browser.
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
@@ -121,7 +121,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * #### Example: Local Geth Node
  * ```ts
- * import { Web3 } from "web3";
+ * import Web3 from "web3";
  * let web3: Web3 = new Web3('http://localhost:8545');
  * // or
  * let web3: Web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
@@ -138,7 +138,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ```ts
  * // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
- * import { Web3 } from "web3";
+ * import Web3 from "web3";
  * let web3: Web3 = new Web3("https://eth-mainnet.alchemyapi.io/v2/your-api-key");
  * ```
  *
@@ -323,7 +323,4 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Web3 } from './web3';
 
-export * from './web3';
-export * from './types';
-
-export default Web3;
+export = Web3;
