@@ -24,7 +24,7 @@ import {
 	TransactionCall,
 	TransactionLegacyUnsigned,
 	TransactionWithSender,
-} from 'web3-common';
+} from 'web3-types';
 import { InvalidTransactionCall, InvalidTransactionWithSender } from '../../src/errors';
 
 export const isBaseTransactionValidData: [BaseTransaction, true][] = [

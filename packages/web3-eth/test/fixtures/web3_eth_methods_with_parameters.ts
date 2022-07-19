@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER, TransactionWithSender } from 'web3-common';
+import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
 import {
 	Address,
 	BlockNumberOrTag,
@@ -26,7 +26,8 @@ import {
 	HexStringBytes,
 	Uint,
 	Uint256,
-} from 'web3-utils';
+	TransactionWithSender,
+} from 'web3-types';
 import { transactionWithSender } from './rpc_methods_wrappers';
 import { TransactionReceipt } from '../../src/types';
 

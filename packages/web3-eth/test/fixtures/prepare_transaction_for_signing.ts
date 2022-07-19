@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { AccessList, Block } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { AccessList, Block, HexString } from 'web3-types';
 import { Common, Transaction } from '../../src/types';
 
 export const preEip1559Block: Block = {

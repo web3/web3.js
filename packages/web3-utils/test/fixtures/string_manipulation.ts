@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString, Numbers } from '../../src/types';
+import { HexString, Numbers } from 'web3-types';
 
 export const padLeftData: [[Numbers, number, string], HexString][] = [
 	[[0, 10, '0'], '0x0000000000'],

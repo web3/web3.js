@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER, TransactionWithSender } from 'web3-common';
-import { Numbers, Uint } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
+import { Numbers, Uint, TransactionWithSender } from 'web3-types';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
 export const getHashRateValidData: [DataFormat, Numbers, Numbers][] = [

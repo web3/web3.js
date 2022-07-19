@@ -17,9 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
-import { hexToNumber, numberToHex } from 'web3-utils';
-import { TransactionBuilder, TransactionTypeParser, Web3Context } from 'web3-core';
-import { DEFAULT_RETURN_FORMAT, Web3PromiEvent } from 'web3-common';
+import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import {
 	prepareTransactionForSigning,
 	TransactionReceipt,
