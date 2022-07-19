@@ -22,7 +22,7 @@ import { Web3EthExecutionAPI } from 'web3-eth/dist/web3_eth_execution_api';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
 import WebsocketProvider from 'web3-providers-ws';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {

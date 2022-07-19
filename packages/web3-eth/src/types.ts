@@ -47,6 +47,7 @@ export interface Log {
 	readonly address?: Address;
 	readonly data?: Bytes;
 	readonly topics?: Bytes[];
+	readonly id?: string;
 }
 
 export interface TransactionReceipt {

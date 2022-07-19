@@ -16,9 +16,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
-import { BlockOutput, SyncOutput, Address, BlockNumberOrTag, HexString, Topic } from 'web3-types';
-import {} from 'web3-utils';
-import { Web3Subscription } from 'web3-core';
+import {
+	SyncOutput,
+	Address,
+	BlockNumberOrTag,
+	HexString,
+	Topic,
+	BlockHeaderOutput,
+	LogsInput,
+	LogsOutput,
+	SyncInput,
+} from 'web3-types';
+import { Web3Subscription, outputLogFormatter, outputSyncingFormatter } from 'web3-core';
 
 type CommonSubscriptionEvents = {
 	error: Error;
@@ -27,7 +36,7 @@ type CommonSubscriptionEvents = {
 
 export class LogsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
-		data: unknown;
+		data: LogsOutput;
 	},
 	{
 		readonly fromBlock?: BlockNumberOrTag;
@@ -40,8 +49,8 @@ export class LogsSubscription extends Web3Subscription<
 		return ['logs', this.args] as ['logs', any];
 	}
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public _processSubscriptionResult(data: any) {
-		this.emit('data', data);
+	public _processSubscriptionResult(data: LogsInput) {
+		this.emit('data', outputLogFormatter(data));
 	}
 
 	public _processSubscriptionError(error: Error) {
@@ -70,7 +79,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 
 export class NewHeadsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
-		data: BlockOutput;
+		data: BlockHeaderOutput;
 	}
 > {
 	// eslint-disable-next-line
@@ -78,7 +87,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 		return ['newHeads'] as ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockOutput) {
+	protected _processSubscriptionResult(data: BlockHeaderOutput) {
 		this.emit('data', data);
 	}
 
@@ -98,8 +107,8 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(data: SyncOutput) {
-		this.emit('data', data);
+	protected _processSubscriptionResult(data: SyncInput) {
+		this.emit('data', outputSyncingFormatter(data));
 	}
 
 	protected _processSubscriptionError(error: Error) {

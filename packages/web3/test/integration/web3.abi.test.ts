@@ -21,7 +21,7 @@ import {
 	waitForOpenConnection,
 	closeOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 
 describe('web3.abi', () => {
 	let clientUrl: string;
