@@ -253,7 +253,7 @@ export interface SyncInput {
 }
 
 export interface SyncOutput {
-	readonly startingBlock: number | bigint | string;
+	readonly startingBlock: bigint | number | string;
 	readonly currentBlock: bigint | number | string;
 	readonly highestBlock: bigint | number | string;
 	readonly knownStates?: bigint | number | string;
