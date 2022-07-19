@@ -29,15 +29,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * // -> web3.eth.net
  *
  * // get the ID of the network
- * web3.eth.net.getId().then(console.log);
+ * await web3.eth.net.getId();
  * > 5777n
  *
  * // get the peer count
- * web3.eth.net.getPeerCount().then(console.log);
+ * await web3.eth.net.getPeerCount();
  * > 0n
  *
  * // Check if the node is listening for peers
- * web3.eth.net.isListening().then(console.log);
+ * await web3.eth.net.isListening();
  * > true
  * ```
  */

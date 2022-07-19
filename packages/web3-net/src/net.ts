@@ -27,7 +27,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	 * @example
 	 * ```ts
 	 * const net = new Net(Net.givenProvider || 'ws://some.local-or-remote.node:8546');
-	 * net.getId().then(console.log);
+	 * await net.getId();
 	 * > 1
 	 * ```
 	 */
@@ -43,7 +43,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	 * @example
 	 * ```ts
 	 * const net = new Net(Net.givenProvider || 'ws://some.local-or-remote.node:8546');
-	 * net.getPeerCount().then(console.log);
+	 * await net.getPeerCount();
 	 * > 0
 	 * ```
 	 */
@@ -59,7 +59,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	 * @example
 	 * ```ts
 	 * const net = new Net(Net.givenProvider || 'ws://some.local-or-remote.node:8546');
-	 * net.isListening().then(console.log);
+	 * await net.isListening();
 	 * > true
 	 * ```
 	 */
