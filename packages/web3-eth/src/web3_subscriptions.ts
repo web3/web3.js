@@ -17,11 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line max-classes-per-file
 import {
-	BlockInput,
-	BlockOutput,
+	BlockHeaderOutput,
 	LogsInput,
 	LogsOutput,
-	outputBlockFormatter,
 	outputLogFormatter,
 	outputSyncingFormatter,
 	SyncInput,
@@ -80,7 +78,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 
 export class NewHeadsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
-		data: BlockOutput;
+		data: BlockHeaderOutput;
 	}
 > {
 	// eslint-disable-next-line
@@ -88,8 +86,8 @@ export class NewHeadsSubscription extends Web3Subscription<
 		return ['newHeads'] as ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockInput) {
-		this.emit('data', outputBlockFormatter(data));
+	protected _processSubscriptionResult(data: BlockHeaderOutput) {
+		this.emit('data', data);
 	}
 
 	protected _processSubscriptionError(error: Error) {

@@ -184,6 +184,20 @@ export interface BlockOutput {
 	readonly parentHash?: HexString32Bytes;
 }
 
+export interface BlockHeaderOutput {
+	readonly gasLimit: bigint | number;
+	readonly gasUsed: bigint | number;
+	readonly timestamp: bigint | number;
+	readonly number?: bigint | number;
+	readonly difficulty?: bigint | number;
+	readonly totalDifficulty?: bigint | number;
+	readonly transactions?: TransactionOutput[];
+	readonly miner?: HexString;
+	readonly baseFeePerGas?: bigint | number;
+	readonly parentHash?: HexString32Bytes;
+	readonly sha3Uncles: HexString32Bytes[];
+}
+
 export interface ReceiptInput {
 	readonly [x: string]: unknown;
 	readonly blockNumber?: HexString;
