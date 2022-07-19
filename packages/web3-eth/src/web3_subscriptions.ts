@@ -16,19 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
-import {
-	BlockInput,
-	BlockOutput,
-	LogsInput,
-	LogsOutput,
-	outputBlockFormatter,
-	outputLogFormatter,
-	outputSyncingFormatter,
-	SyncInput,
-	SyncOutput,
-} from 'web3-common';
+import { LogsOutput, SyncOutput, format, BlockHeaderOutput } from 'web3-common';
 import { Address, BlockNumberOrTag, HexString, Topic } from 'web3-utils';
 import { Web3Subscription } from 'web3-core';
+import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
 
 type CommonSubscriptionEvents = {
 	error: Error;
@@ -49,9 +40,10 @@ export class LogsSubscription extends Web3Subscription<
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return ['logs', this.args] as ['logs', any];
 	}
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public _processSubscriptionResult(data: LogsInput) {
-		this.emit('data', outputLogFormatter(data));
+
+	public _processSubscriptionResult(data: LogsOutput) {
+		// @ts-expect-error
+		this.emit('data', format(logSchema, data , super.returnFormat));
 	}
 
 	public _processSubscriptionError(error: Error) {
@@ -70,7 +62,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: string) {
-		this.emit('data', data);
+		this.emit('data', format({ eth: 'string' }, data , super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -80,7 +72,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 
 export class NewHeadsSubscription extends Web3Subscription<
 	CommonSubscriptionEvents & {
-		data: BlockOutput;
+		data: BlockHeaderOutput;
 	}
 > {
 	// eslint-disable-next-line
@@ -88,8 +80,9 @@ export class NewHeadsSubscription extends Web3Subscription<
 		return ['newHeads'] as ['newHeads'];
 	}
 
-	protected _processSubscriptionResult(data: BlockInput) {
-		this.emit('data', outputBlockFormatter(data));
+	protected _processSubscriptionResult(data: BlockHeaderOutput) {
+		// @ts-expect-error
+		this.emit('data', format(blockHeaderSchema, data , super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -108,8 +101,9 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(data: SyncInput) {
-		this.emit('data', outputSyncingFormatter(data));
+	protected _processSubscriptionResult(data: SyncOutput) {
+		// @ts-expect-error
+		this.emit('data', format(syncSchema, data , super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {

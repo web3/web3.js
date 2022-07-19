@@ -20,7 +20,7 @@ import {
 	format,
 	Web3PromiEvent,
 	Web3BaseProvider,
-	BlockOutput,
+	BlockHeaderOutput,
 } from 'web3-common';
 import { SubscriptionError } from 'web3-errors';
 import { Web3Context } from 'web3-core';
@@ -94,7 +94,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
-				subscription.on('data', async (newBlockHeader: BlockOutput) => {
+				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
 					if (!newBlockHeader?.number) {
 						return;
 					}

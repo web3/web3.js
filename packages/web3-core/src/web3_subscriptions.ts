@@ -28,6 +28,9 @@ import {
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 	jsonRpc,
+	DataFormat,
+	FMT_NUMBER,
+	FMT_BYTES,
 } from 'web3-common';
 import { HexString } from 'web3-utils';
 import { Web3RequestManager } from './web3_request_manager';
@@ -37,18 +40,25 @@ export abstract class Web3Subscription<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
+	ReturnType extends DataFormat = {
+		readonly number: FMT_NUMBER;
+		readonly bytes: FMT_BYTES;
+	},
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
+	private readonly _returnFormat: ReturnType;
 	private _id?: HexString;
 	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
-		options: { requestManager: Web3RequestManager<API> },
+
+		options: { requestManager: Web3RequestManager<API>; returnFormat: ReturnType },
 	) {
 		super();
 		this._requestManager = options.requestManager;
+		this._returnFormat = options.returnFormat;
 	}
 
 	public get id() {
@@ -81,7 +91,9 @@ export abstract class Web3Subscription<
 
 		this._messageListener = messageListener;
 	}
-
+	protected get returnFormat() {
+		return this._returnFormat;
+	}
 	public async resubscribe() {
 		await this.unsubscribe();
 		await this.subscribe();
@@ -124,10 +136,19 @@ export abstract class Web3Subscription<
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
+	SubscriptionType extends Web3Subscription<any, any, API, ReturnType> = Web3Subscription<
+		any,
+		any,
+		API,
+		any
+	>,
+	ReturnType extends DataFormat = {
+		readonly number: FMT_NUMBER;
+		readonly bytes: FMT_BYTES;
+	},
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
-	options: { requestManager: Web3RequestManager<API> },
+	options: { requestManager: Web3RequestManager<API>; returnFormat?: ReturnType },
 ) => SubscriptionType;
