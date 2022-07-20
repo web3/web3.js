@@ -15,14 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// duplicate types from web3-common for avoiding cyclic dep between web3-errors and web3-common
 export type ConnectionEvent = {
 	code: number;
 	reason: string;
 	wasClean?: boolean; // if WS connection was closed properly
 };
 
-// To avoid dependency of `web3-common` have to use fixed types
 export type Log = {
 	readonly removed?: boolean;
 	readonly logIndex?: bigint;

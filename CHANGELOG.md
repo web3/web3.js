@@ -329,15 +329,15 @@ Released with 1.0.0-beta.37 code base.
 1. Passing callbacks to functions is no longer supported, except for event listeners.
 2. Method `extend` is deprecated
 
-#### web3-common
+#### web3-core
 
-1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
+1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-core`
 2. Removed `this.defaultBlock` context from `inputDefaultBlockNumberFormatter` in `web3-core-helper` and converted to additional parameter
 3. Removed `this.defaultBlock` context from `inputTransactionFormatter` in `web3-core-helper` and converted to additional parameter
 
 #### web3-utils
 
-1. The following functions `soliditySha3` `soliditySha3Raw` `encodePacked` now includes type validation and requires type specficiation, instead of guessing the value type
+1. The following functions `soliditySha3` `soliditySha3Raw` `encodePacked` now includes type validation and requires type specification, instead of guessing the value type
 2. The functions `soliditySha3` `soliditySha3Raw` `encodePacked` does not support BN and now supports `BigInt`
 3. The functions `flattenTypes` and `jsonInterfaceMethodToString` moved to the `web3-eth-abi` package
 4. The function `isAddress` now includes an optional parameter `checkChecksum` type boolean

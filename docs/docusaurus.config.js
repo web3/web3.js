@@ -25,7 +25,7 @@ const packages = [
 	'web3-eth-contract',
 	'web3-utils',
 	'web3-validator',
-	'web3-common',
+	'web3-types',
 	'web3-core',
 	'web3-errors',
 	'web3-net',
