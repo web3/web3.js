@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import IpcProvider from 'web3-providers-ipc';
 import { getSystemTestProvider, describeIf, isIpc } from '../shared_fixtures/system_tests_utils';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 
 describe('Web3 instance', () => {
 	let clientUrl: string;

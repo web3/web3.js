@@ -108,6 +108,7 @@ export class Web3SubscriptionManager<
 		const { id } = sub;
 		await sub.unsubscribe();
 		this._subscriptions.delete(id);
+		return id;
 	}
 
 	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
