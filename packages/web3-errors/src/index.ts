@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 export * from './error_codes';
 export * from './web3_error_base';
-export * from './types';
 export * from './errors/account_errors';
 export * from './errors/connection_errors';
 export * from './errors/contract_errors';
