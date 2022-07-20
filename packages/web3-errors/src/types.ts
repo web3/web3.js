@@ -21,18 +21,6 @@ export type ConnectionEvent = {
 	wasClean?: boolean; // if WS connection was closed properly
 };
 
-export type Log = {
-	readonly removed?: boolean;
-	readonly logIndex?: bigint;
-	readonly transactionIndex?: bigint;
-	readonly transactionHash?: string;
-	readonly blockHash?: string;
-	readonly blockNumber?: bigint;
-	readonly address?: string;
-	readonly data?: string;
-	readonly topics?: string[];
-};
-
 export type TransactionReceipt = {
 	readonly logs: Record<string, unknown>[];
 	readonly [key: string]: unknown;
