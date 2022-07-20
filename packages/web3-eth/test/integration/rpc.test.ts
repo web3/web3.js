@@ -14,6 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+import { TransactionReceipt, TransactionInfo } from 'web3-types';
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
@@ -23,7 +25,7 @@ import { AbiEventFragment } from 'web3-eth-abi';
 import { getStorageSlotNumForLongString } from 'web3-utils/src';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
-import { TransactionReceipt, Web3Eth, TransactionInfo } from '../../src';
+import { Web3Eth } from '../../src';
 
 import {
 	getSystemTestBackend,

@@ -19,9 +19,9 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
+import { TransactionReceipt } from 'web3-types';
 import {
 	prepareTransactionForSigning,
-	TransactionReceipt,
 	SendTransactionEvents,
 	transactionBuilder,
 	Web3Eth,
