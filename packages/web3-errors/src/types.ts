@@ -15,12 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export type ConnectionEvent = {
-	code: number;
-	reason: string;
-	wasClean?: boolean; // if WS connection was closed properly
-};
-
 export type TransactionReceipt = {
 	readonly logs: Record<string, unknown>[];
 	readonly [key: string]: unknown;
