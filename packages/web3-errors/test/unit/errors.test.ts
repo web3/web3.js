@@ -24,9 +24,10 @@ import * as providerErrors from '../../src/errors/provider_errors';
 import * as signatureErrors from '../../src/errors/signature_errors';
 import * as transactionErrors from '../../src/errors/transaction_errors';
 import * as utilsErrors from '../../src/errors/utils_errors';
+import * as responseErrors from '../../src/errors/response_errors';
 
 import { ConvertValueToString } from '../fixtures/errors';
-import { Web3Error } from '../../dist/web3_error_base';
+import { Web3Error } from '../../src/web3_error_base';
 
 describe('errors', () => {
 	describe('error convertToString', () => {
@@ -263,6 +264,40 @@ describe('errors', () => {
 		it('should have valid json structure', () => {
 			expect(
 				new contractErrors.ContractNoFromAddressDefinedError().toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
+	describe('ResponseError', () => {
+		it('should have valid json structure with data', () => {
+			expect(
+				new responseErrors.ResponseError({
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: { a: '10', b: '20' } },
+				}).toJSON(),
+			).toMatchSnapshot();
+		});
+
+		it('should have valid json structure without data', () => {
+			expect(
+				new responseErrors.ResponseError({
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: undefined },
+				}).toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
+	describe('InvalidResponseError', () => {
+		it('should have valid json structure', () => {
+			expect(
+				new responseErrors.InvalidResponseError({
+					id: 1,
+					jsonrpc: '2.0',
+					error: { code: 123, message: 'error message', data: { a: '10', b: '20' } },
+				}).toJSON(),
 			).toMatchSnapshot();
 		});
 	});

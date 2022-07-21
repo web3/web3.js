@@ -20,23 +20,8 @@ import { Iban } from 'web3-eth-iban';
 import {
 	BlockTags,
 	Filter,
-	fromUtf8,
-	hexToNumber,
-	hexToNumberString,
-	isAddress,
-	isHexStrict,
-	mergeDeep,
 	Numbers,
-	numberToHex,
-	sha3Raw,
-	toChecksumAddress,
-	toNumber,
 	Topic,
-	toUtf8,
-	utf8ToHex,
-} from 'web3-utils';
-import { isBlockTag, isHex, isNullish } from 'web3-validator';
-import {
 	BlockInput,
 	BlockOutput,
 	LogsInput,
@@ -51,7 +36,22 @@ import {
 	SyncOutput,
 	TransactionInput,
 	TransactionOutput,
-} from './types';
+} from 'web3-types';
+import {
+	fromUtf8,
+	hexToNumber,
+	hexToNumberString,
+	isAddress,
+	isHexStrict,
+	mergeDeep,
+	numberToHex,
+	sha3Raw,
+	toChecksumAddress,
+	toNumber,
+	toUtf8,
+	utf8ToHex,
+} from 'web3-utils';
+import { isBlockTag, isHex, isNullish } from 'web3-validator';
 
 /**
  * Will format the given storage key array values to hex strings.

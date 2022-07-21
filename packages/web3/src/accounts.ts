@@ -15,9 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, ETH_DATA_FORMAT, format } from 'web3-common';
+import { EthExecutionAPI, Bytes, Transaction } from 'web3-types';
+import { ETH_DATA_FORMAT, format } from 'web3-utils';
 import { Web3Context } from 'web3-core';
-import { prepareTransactionForSigning, Transaction } from 'web3-eth';
+import { prepareTransactionForSigning } from 'web3-eth';
 import {
 	create,
 	decrypt,
@@ -30,7 +31,6 @@ import {
 	sign,
 	Wallet,
 } from 'web3-eth-accounts';
-import { Bytes } from 'web3-utils';
 
 /**
  * Initialize the accounts module for the given context.

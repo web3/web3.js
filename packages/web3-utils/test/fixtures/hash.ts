@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { TypedObject, TypedObjectAbbreviated } from 'web3-types';
 import { hexToBytes } from '../../src/converters';
-import { TypedObject, TypedObjectAbbreviated } from '../../src/types';
 
 export const sha3Data: [string, string | undefined][] = [
 	['test123', '0xf81b517a242b218999ec8eec0ea6e2ddbef2a367a14e93f4a32a39e260f686ad'],

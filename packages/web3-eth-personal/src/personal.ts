@@ -16,8 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context } from 'web3-core';
-import { Transaction } from 'web3-eth';
-import { Address, HexString } from 'web3-utils';
+import { Address, HexString, Transaction } from 'web3-types';
 import { EthPersonalAPI } from './eth_personal_api';
 import * as rpcWrappers from './rpc_method_wrappers';
 

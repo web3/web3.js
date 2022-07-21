@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,11 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* eslint-disable max-classes-per-file */
+// eslint-disable-next-line max-classes-per-file
+import { JsonRpcResponse, JsonRpcResponseWithError } from 'web3-types';
+import { Web3Error } from '../web3_error_base';
+import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes';
 
-import { ERR_INVALID_RESPONSE, ERR_RESPONSE, Web3Error } from 'web3-errors';
-import { isResponseWithError } from './json_rpc';
-import { JsonRpcResponse } from './types';
+// To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
+const isResponseWithError = <Error = unknown, Result = unknown>(
+	response: JsonRpcResponse<Result, Error>,
+): response is JsonRpcResponseWithError<Error> =>
+	!Array.isArray(response) &&
+	response.jsonrpc === '2.0' &&
+	!!response &&
+	// eslint-disable-next-line no-null/no-null
+	(response.result === undefined || response.result === null) &&
+	// JSON RPC consider "null" as valid response
+	'error' in response &&
+	(typeof response.id === 'number' || typeof response.id === 'string');
 
 const buildErrorMessage = (response: JsonRpcResponse<unknown, unknown>): string =>
 	isResponseWithError(response) ? response.error.message : '';

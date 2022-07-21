@@ -46,7 +46,7 @@
 	"dependencies": {
 		"web3-errors": "1.0.0-alpha.0",
 		"cross-fetch": "^3.1.4",
-		"web3-common": "1.0.0-alpha.0",
+		"web3-types": "1.0.0-alpha.0",
 		"web3-utils": "4.0.0-alpha.1"
 	}
 }
