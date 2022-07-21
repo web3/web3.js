@@ -15,12 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Address, Transaction, TransactionWithLocalWalletIndex } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import WebSocketProvider from 'web3-providers-ws';
-import { Address } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 
-import Web3Eth, { Transaction, TransactionWithLocalWalletIndex } from '../../../src';
+import Web3Eth from '../../../src';
 import {
 	createAccountProvider,
 	getSystemTestAccounts,

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, HexString32Bytes, Uint } from 'web3-utils';
+import { Address, HexString32Bytes, Uint } from 'web3-types';
 
 const address = '0x407d73d8a49eeb85d32cf465507dd71d507100c1';
 

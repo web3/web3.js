@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
+import { ConnectionEvent } from 'web3-types';
 import {
 	ERR_CONN,
 	ERR_CONN_INVALID,
@@ -27,7 +28,6 @@ import {
 	ERR_CONN_PENDING_REQUESTS,
 	ERR_REQ_ALREADY_SENT,
 } from '../error_codes';
-import { ConnectionEvent } from '../types';
 import { Web3Error } from '../web3_error_base';
 
 export class ConnectionError extends Web3Error {

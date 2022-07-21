@@ -18,7 +18,7 @@ import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3BaseProvider } from 'web3-common';
+import { Web3BaseProvider } from 'web3-types';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { LogsSubscription } from '../../src/web3_subscriptions';

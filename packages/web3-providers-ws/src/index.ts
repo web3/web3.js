@@ -31,11 +31,9 @@ import {
 	Web3BaseProvider,
 	Web3ProviderEventCallback,
 	Web3ProviderStatus,
-	DeferredPromise,
-	jsonRpc,
-	ResponseError,
 	JsonRpcResponseWithResult,
-} from 'web3-common';
+} from 'web3-types';
+import { jsonRpc, isNullish, Web3DeferredPromise } from 'web3-utils';
 import {
 	InvalidClientError,
 	InvalidConnectionError,
@@ -43,8 +41,8 @@ import {
 	PendingRequestsOnReconnectingError,
 	Web3WSProviderError,
 	RequestAlreadySentError,
+	ResponseError,
 } from 'web3-errors';
-import { isNullish } from 'web3-utils';
 import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
 
 export { ClientRequestArgs } from 'http';
@@ -204,7 +202,7 @@ export default class WebSocketProvider<
 			throw new RequestAlreadySentError(requestId);
 		}
 
-		const deferredPromise = new DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
+		const deferredPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 
 		const reqItem: WSRequestItem<API, Method, JsonRpcResponseWithResult<ResultType>> = {
 			payload: request,

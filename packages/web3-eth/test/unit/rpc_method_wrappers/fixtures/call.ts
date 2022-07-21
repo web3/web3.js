@@ -14,9 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag, BlockTags } from 'web3-utils';
-
-import { TransactionCall } from '../../../../src/types';
+import { BlockNumberOrTag, BlockTags, TransactionCall } from 'web3-types';
 
 export const mockRpcResponse = '0x000000000000000000000000000000000000000000000000000000000000000a';
 

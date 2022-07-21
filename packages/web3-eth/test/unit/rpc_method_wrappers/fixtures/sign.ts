@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Address, Bytes } from 'web3-utils';
+import { Address, Bytes } from 'web3-types';
 
 export const mockRpcResponse = '0x736f796c656e7420677265656e2069732070656f706c65';
 

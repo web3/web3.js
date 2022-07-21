@@ -15,14 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, FormatType, DataFormat, format, ETH_DATA_FORMAT } from 'web3-common';
+import { FormatType, DataFormat, format, ETH_DATA_FORMAT } from 'web3-utils';
 import { Web3Context } from 'web3-core';
-import { Numbers } from 'web3-utils';
+import { EthExecutionAPI, Numbers, Transaction } from 'web3-types';
 import { isNullish } from 'web3-validator';
 import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlock, getGasPrice } from '../rpc_method_wrappers';
-import { InternalTransaction, Transaction } from '../types';
+import { InternalTransaction } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionType } from './transaction_builder';
 

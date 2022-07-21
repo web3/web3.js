@@ -17,16 +17,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import Common from '@ethereumjs/common';
 import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
-import { EthExecutionAPI, FormatType, ETH_DATA_FORMAT } from 'web3-common';
-import { Web3Context } from 'web3-core';
-import { HexString, toNumber } from 'web3-utils';
-import { isNullish } from 'web3-validator';
 import {
+	EthExecutionAPI,
+	HexString,
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
 	PopulatedUnsignedTransaction,
 	Transaction,
-} from '../types';
+} from 'web3-types';
+import { Web3Context } from 'web3-core';
+import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
+import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
 import { transactionBuilder } from './transaction_builder';

@@ -27,7 +27,7 @@ import {
 } from 'web3-errors';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { isAddress, isHexStrict, isNullish } from 'web3-validator';
-import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from './types';
+import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from 'web3-types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
 import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 

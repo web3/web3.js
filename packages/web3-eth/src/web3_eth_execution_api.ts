@@ -15,8 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI, TransactionInfo } from 'web3-common';
-import { Address, BlockNumberOrTag, HexString32Bytes, Uint } from 'web3-utils';
+import {
+	Address,
+	BlockNumberOrTag,
+	HexString32Bytes,
+	Uint,
+	EthExecutionAPI,
+	TransactionInfo,
+} from 'web3-types';
 
 export interface StorageProof {
 	readonly key: HexString32Bytes;
