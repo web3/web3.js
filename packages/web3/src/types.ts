@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EthExecutionAPI } from 'web3-common';
-import { SupportedProviders } from 'web3-core';
-import Eth, { Transaction } from 'web3-eth';
+import { EthExecutionAPI, SupportedProviders, Address, Bytes, Transaction } from 'web3-types';
+import Eth from 'web3-eth';
 import {
 	ContractAbi,
 	decodeLog,
@@ -42,7 +41,6 @@ import Contract, { ContractInitOptions } from 'web3-eth-contract';
 import { ENS } from 'web3-eth-ens';
 import Net from 'web3-net';
 import { Iban } from 'web3-eth-iban';
-import { Address, Bytes } from 'web3-utils';
 
 export type Web3ContractConstructor<Abi extends ContractAbi> = Omit<typeof Contract, 'new'> & {
 	new (jsonInterface: Abi, address?: Address, options?: ContractInitOptions): Contract<Abi>;

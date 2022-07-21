@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString } from 'web3-utils';
+import { HexString } from 'web3-types';
 
 export type Web3NetAPI = {
 	net_version: () => string; // https://eth.wiki/json-rpc/API#net_version

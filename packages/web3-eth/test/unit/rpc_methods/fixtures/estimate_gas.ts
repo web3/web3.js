@@ -14,13 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionWithSender } from 'web3-common';
-import { BlockTags } from 'web3-utils';
-import { BlockNumberOrTag } from 'web3-validator';
+import { TransactionWithSenderAPI, BlockTags, BlockNumberOrTag } from 'web3-types';
 
 export const mockRpcResponse = '0x5208';
 
-const transaction: Partial<TransactionWithSender> = {
+const transaction: Partial<TransactionWithSenderAPI> = {
 	from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
 	to: '0x3535353535353535353535353535353535353535',
 	value: '0x174876e800',
@@ -41,7 +39,7 @@ const transaction: Partial<TransactionWithSender> = {
  * 	   - transaction
  *     - blockNumber
  */
-type TestData = [string, [Partial<TransactionWithSender>, BlockNumberOrTag]];
+type TestData = [string, [Partial<TransactionWithSenderAPI>, BlockNumberOrTag]];
 export const testData: TestData[] = [
 	[
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.LATEST`,

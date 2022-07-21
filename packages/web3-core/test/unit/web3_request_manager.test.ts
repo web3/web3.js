@@ -16,15 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	InvalidResponseError,
 	Web3BaseProvider,
-	jsonRpc,
 	JsonRpcPayload,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
 	JsonRpcResponseWithError,
 	JsonRpcResponseWithResult,
-} from 'web3-common';
+} from 'web3-types';
+import { jsonRpc } from 'web3-utils';
+import { InvalidResponseError } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';

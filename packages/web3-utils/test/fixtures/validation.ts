@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Numbers } from 'web3-types';
 import { InvalidBlockError } from 'web3-errors';
-import { Numbers } from '../../src/types';
 
 export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[1, 1], 0],

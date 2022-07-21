@@ -14,7 +14,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { EthExecutionAPI } from 'web3-common';
+import {
+	EthExecutionAPI,
+	PopulatedUnsignedEip1559Transaction,
+	PopulatedUnsignedEip2930Transaction,
+	Transaction,
+} from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
@@ -25,11 +30,6 @@ import {
 } from '../../src/errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 import * as rpcMethods from '../../src/rpc_methods';
-import {
-	PopulatedUnsignedEip1559Transaction,
-	PopulatedUnsignedEip2930Transaction,
-	Transaction,
-} from '../../src/types';
 
 jest.mock('../../src/rpc_methods');
 

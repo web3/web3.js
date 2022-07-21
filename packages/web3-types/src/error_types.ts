@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,15 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './errors';
-export * from './types';
-export * from './web3_base_provider';
-export * from './web3_base_wallet';
-export * from './web3_event_emitter';
-export * from './eth_execution_api';
-export * from './deferred_promise';
-export * from './web3_promi_event';
-export * from './formatters';
-export * as formatters from './formatters';
-export * from './formatter';
-export * as jsonRpc from './json_rpc';
+export interface Web3Error extends Error {
+	readonly name: string;
+	readonly code: number;
+	readonly stack?: string;
+}

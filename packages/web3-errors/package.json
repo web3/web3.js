@@ -24,6 +24,9 @@
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
 	},
+	"dependencies": {
+		"web3-types": "1.0.0-alpha.0"
+	},
 	"devDependencies": {
 		"@types/jest": "^27.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",

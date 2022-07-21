@@ -15,10 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Numbers } from 'web3-types';
 import { NibbleWidthError } from 'web3-errors';
 import { isHexStrict, validator, utils as validatorUtils } from 'web3-validator';
 import { numberToHex, toHex, toNumber } from './converters';
-import { Numbers } from './types';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.

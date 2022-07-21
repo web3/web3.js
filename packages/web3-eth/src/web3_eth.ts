@@ -17,15 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { DataFormat, DEFAULT_RETURN_FORMAT, LogsInput } from 'web3-common';
+
 import {
-	isSupportedProvider,
 	SupportedProviders,
-	Web3Context,
-	Web3ContextInitOptions,
-} from 'web3-core';
-import { TransactionNotFound } from 'web3-errors';
-import {
 	Address,
 	Bytes,
 	Filter,
@@ -33,16 +27,17 @@ import {
 	HexString8Bytes,
 	Numbers,
 	BlockNumberOrTag,
-	toChecksumAddress,
-} from 'web3-utils';
-import * as rpcMethods from './rpc_methods';
-import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import {
-	SendTransactionOptions,
+	LogsInput,
 	Transaction,
 	TransactionCall,
 	TransactionWithLocalWalletIndex,
-} from './types';
+} from 'web3-types';
+import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
+import { TransactionNotFound } from 'web3-errors';
+import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import * as rpcMethods from './rpc_methods';
+import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { SendTransactionOptions } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,

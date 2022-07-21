@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { BlockNumberOrTag } from 'web3-validator';
+import { HexString32Bytes } from 'web3-types';
 
 export const mockRpcResponse = '0xb';
 
@@ -24,7 +24,7 @@ export const mockRpcResponse = '0xb';
  * - Input parameters:
  *     - blockHash
  */
-type TestData = [string, [BlockNumberOrTag]];
+type TestData = [string, [HexString32Bytes]];
 export const testData: TestData[] = [
 	[
 		'blockHash = "0x88df016429689c079f3b2f6ad39fa052532c56795b733da78a91ebe6a713944b"',

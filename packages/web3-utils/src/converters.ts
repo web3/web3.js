@@ -16,6 +16,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+	Address,
+	Bytes,
+	HexString,
+	Numbers,
+	ValueTypes,
+	JsonFunctionInterface,
+	JsonEventInterface,
+	Components,
+} from 'web3-types';
+import {
 	validator,
 	isAddress,
 	isHexStrict,
@@ -32,16 +42,6 @@ import {
 	InvalidTypeAbiInputError,
 	InvalidNumberError,
 } from 'web3-errors';
-import {
-	Address,
-	Bytes,
-	HexString,
-	Numbers,
-	ValueTypes,
-	JsonFunctionInterface,
-	JsonEventInterface,
-	Components,
-} from './types';
 
 const base = BigInt(10);
 const expo10 = (expo: number) => base ** BigInt(expo);

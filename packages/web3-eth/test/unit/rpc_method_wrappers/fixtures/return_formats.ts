@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { DataFormat, FMT_BYTES, FMT_NUMBER } from 'web3-common';
+import { DataFormat, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 
 export const returnFormats: DataFormat[] = [
 	{ number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX },

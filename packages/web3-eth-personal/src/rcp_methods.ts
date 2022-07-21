@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Transaction } from 'web3-eth';
-import { Address, HexString } from 'web3-utils';
+import { Address, HexString, Transaction } from 'web3-types';
 import { EthPersonalAPIManager } from './types';
 
 export const getAccounts = async (requestManager: EthPersonalAPIManager) =>

@@ -15,48 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Socket } from 'net';
-import {
-	JsonRpcPayload,
-	JsonRpcResponse,
-	JsonRpcResult,
-	Web3APISpec,
-	Web3BaseProvider,
-} from 'web3-common';
-import { HexString } from 'web3-utils';
-
-export type LegacyRequestProvider = {
-	request: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-		cb: (err: Error | undefined, response: JsonRpcResponse<R>) => void,
-	) => void;
-};
-
-export type LegacySendProvider = {
-	send: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-		// Used "null" value to match the legacy version
-		// eslint-disable-next-line @typescript-eslint/ban-types
-		cb: (err?: Error | null, response?: JsonRpcResponse<R>) => void,
-	) => void;
-};
-
-export type LegacySendAsyncProvider = {
-	sendAsync: <R = JsonRpcResult, P = unknown>(
-		payload: JsonRpcPayload<P>,
-	) => Promise<JsonRpcResponse<R>>;
-};
-
-export type SupportedProviders<API extends Web3APISpec> =
-	| Web3BaseProvider<API>
-	| LegacyRequestProvider
-	| LegacySendProvider
-	| LegacySendAsyncProvider;
-
-export type Web3BaseProviderConstructor = new <API extends Web3APISpec>(
-	url: string,
-	net?: Socket,
-) => Web3BaseProvider<API>;
+import { HexString } from 'web3-types';
 
 // TODO: When we have `web3-types` package we can share TransactionType
 export type TransactionTypeParser = (transaction: Record<string, unknown>) => HexString | undefined;

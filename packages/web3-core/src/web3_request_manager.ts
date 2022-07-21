@@ -16,34 +16,32 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import { ProviderError } from 'web3-errors';
+import { InvalidResponseError, ProviderError, ResponseError } from 'web3-errors';
+import HttpProvider from 'web3-providers-http';
+import IpcProvider from 'web3-providers-ipc';
+import WSProvider from 'web3-providers-ws';
 import {
 	EthExecutionAPI,
-	InvalidResponseError,
-	jsonRpc,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
 	JsonRpcResponse,
-	ResponseError,
+	SupportedProviders,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIRequest,
 	Web3APIReturnType,
 	Web3APISpec,
-	Web3EventEmitter,
-} from 'web3-common';
-import HttpProvider from 'web3-providers-http';
-import WSProvider from 'web3-providers-ws';
-import IpcProvider from 'web3-providers-ipc';
-import { isNullish } from 'web3-utils';
-import { SupportedProviders, Web3BaseProviderConstructor } from './types';
+	Web3BaseProviderConstructor,
+} from 'web3-types';
+import { isNullish, jsonRpc } from 'web3-utils';
 import {
 	isLegacyRequestProvider,
 	isLegacySendAsyncProvider,
 	isLegacySendProvider,
 	isWeb3Provider,
 } from './utils';
+import { Web3EventEmitter } from './web3_event_emitter';
 
 export enum Web3RequestManagerEvent {
 	PROVIDER_CHANGED = 'PROVIDER_CHANGED',
