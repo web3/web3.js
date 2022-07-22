@@ -6394,10 +6394,10 @@ iconv-lite@^0.6.2:
   dependencies:
     safer-buffer ">= 2.1.2 < 3.0.0"
 
-idna-uts46-hx@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/idna-uts46-hx/-/idna-uts46-hx-4.0.3.tgz#5c8a1209be61dafa4f38648762ba16e78876e2dc"
-  integrity sha512-Yy7tO7NvUnb8tHqtw9+XpIqDsc5+WIQtPuDwBL/COMNnM9uT0sMT5xsZnPP7EftYtUYXQmcloS6pdhoC0rHJDg==
+idna-uts46-hx@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/idna-uts46-hx/-/idna-uts46-hx-3.5.0.tgz#fad856b480bce4ff7477e7e0a42b5a39a8a4bcdc"
+  integrity sha512-0gMFl+zjvA8ZOohPQmLiWcd2Ad60AB9oKzqvLucEC5TyDzHl5mIB6ralW6h8BayVRm4ZmAVYnlI1pCYD2O7lBw==
   dependencies:
     punycode "^2.1.1"
 
