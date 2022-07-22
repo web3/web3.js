@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { inputBlockNumberFormatter, LogsInput, outputLogFormatter } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, format, LogsInput, outputLogFormatter } from 'web3-common';
 import {
 	AbiConstructorFragment,
 	AbiEventFragment,
@@ -29,7 +29,8 @@ import {
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { BlockNumberOrTag, Filter, HexString, isNullish, Topic } from 'web3-utils';
+import { BlockNumberOrTag, Filter, HexString, isNullish, Numbers, Topic } from 'web3-utils';
+import { blockSchema } from 'web3-eth/dist/schemas';
 import { Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
@@ -48,8 +49,8 @@ export const encodeEventABI = (
 ) => {
 	const opts: {
 		filter: Filter;
-		fromBlock?: string;
-		toBlock?: string;
+		fromBlock?: Numbers;
+		toBlock?: Numbers;
 		topics?: (Topic | Topic[])[];
 		address?: HexString;
 	} = {
@@ -57,11 +58,19 @@ export const encodeEventABI = (
 	};
 
 	if (!isNullish(options?.fromBlock)) {
-		opts.fromBlock = inputBlockNumberFormatter(options?.fromBlock);
+		opts.fromBlock = format(
+			blockSchema.properties.number,
+			options?.fromBlock,
+			DEFAULT_RETURN_FORMAT,
+		);
 	}
 
 	if (!isNullish(options?.toBlock)) {
-		opts.toBlock = inputBlockNumberFormatter(options?.toBlock);
+		opts.toBlock = format(
+			blockSchema.properties.number,
+			options?.toBlock,
+			DEFAULT_RETURN_FORMAT,
+		);
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {

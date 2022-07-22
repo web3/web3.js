@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { inputAddressFormatter } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, format, inputAddressFormatter } from 'web3-common';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { Address, isHexStrict, sha3Raw } from 'web3-utils';
 import REGISTRY from './abi/registry';
@@ -138,7 +138,10 @@ export class Registry {
 	public async isApprovedForAll(owner: Address, operator: Address) {
 		try {
 			const result = this.contract.methods
-				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
+				.isApprovedForAll(
+					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
+					inputAddressFormatter(operator),
+				)
 				.call();
 
 			return result;
