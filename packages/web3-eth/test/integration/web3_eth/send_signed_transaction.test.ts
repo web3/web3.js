@@ -16,17 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import WebSocketProvider from 'web3-providers-ws';
-import { Address, Bytes, hexToNumber } from 'web3-utils';
-
-import {
-	DEFAULT_RETURN_FORMAT,
-	FMT_BYTES,
-	FMT_NUMBER,
-	format,
-	SignedTransactionInfo,
-} from 'web3-common';
+import { Address, Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-types';
+import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
-import Web3Eth, { InternalTransaction, Transaction } from '../../../src';
+import Web3Eth, { InternalTransaction } from '../../../src';
 import {
 	getSystemTestAccounts,
 	getSystemTestProvider,
@@ -201,7 +194,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 
 	describe('Transaction PromiEvents', () => {
 		let transaction: Transaction;
-		let signedTransaction: SignedTransactionInfo;
+		let signedTransaction: SignedTransactionInfoAPI;
 
 		beforeEach(async () => {
 			const accountNonce = await web3Eth.getTransactionCount(accounts[0]);

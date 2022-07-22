@@ -15,7 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RETURN_FORMAT, format, LogsInput, outputLogFormatter } from 'web3-common';
+
+import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+
+import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic } from 'web3-types';
+
 import {
 	AbiConstructorFragment,
 	AbiEventFragment,
@@ -29,8 +33,10 @@ import {
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { BlockNumberOrTag, Filter, HexString, isNullish, Numbers, Topic } from 'web3-utils';
+
+import { isNullish, Numbers } from 'web3-utils';
 import { blockSchema } from 'web3-eth/dist/schemas';
+
 import { Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';

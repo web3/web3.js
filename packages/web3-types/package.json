@@ -1,5 +1,5 @@
 {
-	"name": "web3-common",
+	"name": "web3-types",
 	"version": "1.0.0-alpha.0",
 	"description": "Provide the common data structures and interfaces for web3 modules.",
 	"main": "dist/index.js",
@@ -21,15 +21,10 @@
 		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
-		"test:unit": "jest --config=./test/unit/jest.config.js",
+		"test:unit": "jest --config=./test/unit/jest.config.js --passWithNoTests",
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
 	},
-	"dependencies": {
-		"web3-utils": "4.0.0-alpha.1",
-		"web3-validator": "^0.1.0-alpha.0",
-		"web3-eth-iban": "4.0.0-alpha.0",
-		"web3-errors": "1.0.0-alpha.0"
-	},
+	"dependencies": {},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
 		"@types/jest": "^27.0.3",

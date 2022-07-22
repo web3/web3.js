@@ -15,15 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	JsonRpcBatchResponse,
-	JsonRpcOptionalRequest,
-	DeferredPromise,
-	jsonRpc,
-	JsonRpcRequest,
-	ResponseError,
-} from 'web3-common';
-import { OperationAbortError, OperationTimeoutError } from 'web3-errors';
+import { JsonRpcBatchResponse, JsonRpcOptionalRequest, JsonRpcRequest } from 'web3-types';
+import { jsonRpc, Web3DeferredPromise } from 'web3-utils';
+import { OperationAbortError, OperationTimeoutError, ResponseError } from 'web3-errors';
 import { Web3RequestManager } from './web3_request_manager';
 
 export const DEFAULT_BATCH_REQUEST_TIMEOUT = 1000;
@@ -32,7 +26,7 @@ export class Web3BatchRequest {
 	private readonly _requestManager: Web3RequestManager;
 	private readonly _requests: Map<
 		number,
-		{ payload: JsonRpcRequest; promise: DeferredPromise<unknown> }
+		{ payload: JsonRpcRequest; promise: Web3DeferredPromise<unknown> }
 	>;
 
 	public constructor(requestManager: Web3RequestManager) {
@@ -46,7 +40,7 @@ export class Web3BatchRequest {
 
 	public add<ResponseType = unknown>(request: JsonRpcOptionalRequest<unknown>) {
 		const payload = jsonRpc.toPayload(request) as JsonRpcRequest;
-		const promise = new DeferredPromise<ResponseType>();
+		const promise = new Web3DeferredPromise<ResponseType>();
 
 		this._requests.set(payload.id as number, { payload, promise });
 
@@ -59,7 +53,7 @@ export class Web3BatchRequest {
 			return Promise.resolve([]);
 		}
 
-		const request = new DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>({
+		const request = new Web3DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>({
 			timeout: DEFAULT_BATCH_REQUEST_TIMEOUT,
 			eagerStart: true,
 			timeoutMessage: 'Batch request timeout',
@@ -79,7 +73,7 @@ export class Web3BatchRequest {
 	}
 
 	private async _processBatchRequest(
-		promise: DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>,
+		promise: Web3DeferredPromise<JsonRpcBatchResponse<unknown, unknown>>,
 	) {
 		const response = await this._requestManager.sendBatch(
 			[...this._requests.values()].map(r => r.payload),

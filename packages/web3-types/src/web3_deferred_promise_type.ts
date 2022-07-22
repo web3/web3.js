@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,11 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// To avoid package dependency we have to copy these types
-
-// https://docs.soliditylang.org/en/latest/abi-spec.html#json
-export type AbiParameter = {
-	readonly name: string;
-	readonly type: string;
-	readonly components?: ReadonlyArray<AbiParameter | string>;
-};
+export interface Web3DeferredPromise<T> extends Promise<T> {
+	state: 'pending' | 'fulfilled' | 'rejected';
+	resolve(value: T | PromiseLike<T>): void;
+	reject(reason?: unknown): void;
+	startTimer(): void;
+}

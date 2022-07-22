@@ -29,7 +29,7 @@ import {
 	isUserEthereumAddressInBloom as isUserEthereumAddressInBloomValidator,
 	isNullish as isNullishValidator,
 } from 'web3-validator';
-import { Numbers } from './types';
+import { Numbers } from 'web3-types';
 
 /**
  * @deprecated Will be removed in next release. Please use `web3-validator` package instead.

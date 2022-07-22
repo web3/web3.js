@@ -15,13 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3APISpec, Web3BaseProvider } from 'web3-common';
 import {
+	Web3APISpec,
+	Web3BaseProvider,
 	LegacyRequestProvider,
 	LegacySendAsyncProvider,
 	LegacySendProvider,
 	SupportedProviders,
-} from './types';
+} from 'web3-types';
 
 export const isWeb3Provider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,

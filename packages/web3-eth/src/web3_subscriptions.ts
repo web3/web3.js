@@ -16,10 +16,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
-import { LogsOutput, SyncOutput, format, BlockHeaderOutput } from 'web3-common';
-import { Address, BlockNumberOrTag, HexString, Topic } from 'web3-utils';
-import { Web3Subscription } from 'web3-core';
+
+import { format } from 'web3-utils';
+
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
+
+import {
+	SyncOutput,
+	Address,
+	BlockNumberOrTag,
+	HexString,
+	Topic,
+	BlockHeaderOutput,
+	LogsOutput
+} from 'web3-types';
+import { Web3Subscription } from 'web3-core';
+
 
 type CommonSubscriptionEvents = {
 	error: Error;

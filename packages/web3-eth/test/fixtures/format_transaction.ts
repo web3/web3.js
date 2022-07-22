@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { FMT_BYTES, FMT_NUMBER, FormatType, DEFAULT_RETURN_FORMAT } from 'web3-common';
-import { Transaction } from '../../src/types';
+import { FMT_BYTES, FMT_NUMBER, FormatType, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { Transaction } from 'web3-types';
 
 export const bytesAsHexStringTransaction: FormatType<
 	Transaction,

@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3BaseProvider } from 'web3-common';
+import { Web3BaseProvider } from 'web3-types';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';

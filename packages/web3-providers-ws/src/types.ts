@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3APIMethod, Web3APIPayload, Web3APISpec, DeferredPromise } from 'web3-common';
+import { Web3APIMethod, Web3APIPayload, Web3APISpec, Web3DeferredPromise } from 'web3-types';
 
 export type ReconnectOptions = {
 	autoReconnect: boolean;
@@ -29,7 +29,7 @@ export interface WSRequestItem<
 	ResponseType,
 > {
 	payload: Web3APIPayload<API, Method>;
-	deferredPromise: DeferredPromise<ResponseType>;
+	deferredPromise: Web3DeferredPromise<ResponseType>;
 }
 
 export type OnCloseEvent = {

@@ -15,17 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FormatterError } from 'web3-errors';
-import {
-	Bytes,
-	bytesToBuffer,
-	bytesToHex,
-	HexString,
-	mergeDeep,
-	Numbers,
-	numberToHex,
-	toBigInt,
-} from 'web3-utils';
+import { Bytes, HexString, Numbers } from 'web3-types';
 import { isNullish, isObject, JsonSchema, utils, ValidationSchemaInput } from 'web3-validator';
+import { bytesToBuffer, bytesToHex, numberToHex, toBigInt } from './converters';
+import { mergeDeep } from './objects';
 
 const { parseBaseType } = utils;
 

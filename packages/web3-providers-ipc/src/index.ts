@@ -19,15 +19,12 @@ import { EventEmitter } from 'events';
 import { existsSync } from 'fs';
 import { Socket } from 'net';
 import {
-	DeferredPromise,
 	EthExecutionAPI,
-	jsonRpc,
 	JsonRpcId,
 	JsonRpcNotification,
 	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
-	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
@@ -35,9 +32,14 @@ import {
 	Web3BaseProvider,
 	Web3ProviderEventCallback,
 	Web3ProviderStatus,
-} from 'web3-common';
-import { ConnectionNotOpenError, InvalidClientError, InvalidConnectionError } from 'web3-errors';
-import { isNullish } from 'web3-utils';
+} from 'web3-types';
+import {
+	ConnectionNotOpenError,
+	InvalidClientError,
+	InvalidConnectionError,
+	ResponseError,
+} from 'web3-errors';
+import { isNullish, Web3DeferredPromise, jsonRpc } from 'web3-utils';
 
 type WaitOptions = {
 	timeOutTime: number;
@@ -53,7 +55,7 @@ export default class IpcProvider<
 	private waitOptions: WaitOptions;
 	private _connectionStatus: Web3ProviderStatus;
 
-	private readonly _requestQueue: Map<JsonRpcId, DeferredPromise<unknown>>;
+	private readonly _requestQueue: Map<JsonRpcId, Web3DeferredPromise<unknown>>;
 
 	public constructor(socketPath: string) {
 		super();
@@ -62,7 +64,7 @@ export default class IpcProvider<
 		this._socketPath = socketPath;
 		this._socket = new Socket();
 
-		this._requestQueue = new Map<JsonRpcId, DeferredPromise<unknown>>();
+		this._requestQueue = new Map<JsonRpcId, Web3DeferredPromise<unknown>>();
 
 		this.connect();
 		this.waitOptions = {
@@ -167,7 +169,7 @@ export default class IpcProvider<
 		}
 
 		try {
-			const defPromise = new DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
+			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 			this._requestQueue.set(request.id, defPromise);
 			this._socket.write(JSON.stringify(request));
 
@@ -215,7 +217,7 @@ export default class IpcProvider<
 
 	private _clearQueues(event?: CloseEvent) {
 		if (this._requestQueue.size > 0) {
-			this._requestQueue.forEach((request: DeferredPromise<unknown>, key: JsonRpcId) => {
+			this._requestQueue.forEach((request: Web3DeferredPromise<unknown>, key: JsonRpcId) => {
 				request.reject(new ConnectionNotOpenError(event));
 				this._requestQueue.delete(key);
 			});

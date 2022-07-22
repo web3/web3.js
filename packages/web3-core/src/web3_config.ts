@@ -15,11 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3EventEmitter } from 'web3-common';
-import { Numbers, HexString, toHex, BlockNumberOrTag } from 'web3-utils';
+import { Numbers, HexString, BlockNumberOrTag } from 'web3-types';
+import { toHex } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context';
+import { Web3EventEmitter } from './web3_event_emitter';
 
 // To avoid cycle dependency declare this
 export interface Web3ConfigOptions {
