@@ -119,7 +119,7 @@ const parseTypeN = (value: string, typeLength: number): number => {
  *
  * @param value
  */
-const bitLength = (value: BigInt | number): number => {
+const bitLength = (value: bigint | number): number => {
 	const updatedVal = value.toString(2);
 	return updatedVal.length;
 };
