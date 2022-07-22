@@ -23,6 +23,8 @@ import { Web3NetAPI } from './web3_net_api';
 export class Net extends Web3Context<Web3NetAPI> {
 	/**
 	 * Gets the current network ID
+	 *
+	 * @param returnFormat
 	 * @returns A Promise of the network ID.
 	 * @example
 	 * ```ts
@@ -39,6 +41,8 @@ export class Net extends Web3Context<Web3NetAPI> {
 
 	/**
 	 * Get the number of peers connected to.
+	 *
+	 * @param returnFormat
 	 * @returns A promise of the number of the peers connected to.
 	 * @example
 	 * ```ts
@@ -55,6 +59,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 
 	/**
 	 * Check if the node is listening for peers
+	 *
 	 * @returns A promise of a boolean if the node is listening to peers
 	 * @example
 	 * ```ts

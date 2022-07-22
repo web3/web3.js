@@ -684,7 +684,7 @@ export class Contract<Abi extends ContractAbi>
 
 				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
-					args,
+					args as unknown[],
 					modifiedOptions,
 					contractOptions,
 				);
@@ -700,7 +700,7 @@ export class Contract<Abi extends ContractAbi>
 
 				return this._contractMethodEstimateGas({
 					abi: abi as AbiFunctionFragment,
-					params: args,
+					params: args as unknown[],
 					returnFormat,
 					options: modifiedOptions,
 					contractOptions,
@@ -709,7 +709,7 @@ export class Contract<Abi extends ContractAbi>
 			encodeABI: () =>
 				encodeMethodABI(
 					abi as AbiFunctionFragment,
-					args,
+					args as unknown[],
 					format({ eth: 'bytes' }, data as Bytes, DEFAULT_RETURN_FORMAT),
 				),
 		};
