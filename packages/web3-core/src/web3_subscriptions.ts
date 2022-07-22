@@ -16,7 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import {
+	HexString,
 	BlockOutput,
 	Web3BaseProvider,
 	Web3APISpec,
@@ -25,11 +27,7 @@ import {
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-} from 'web3-common';
-
-import { HexString } from 'web3-types';
+} from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
 

@@ -14,12 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-// eslint-disable-next-line max-classes-per-file
-
+/* eslint-disable-next-line max-classes-per-file */
 import { format } from 'web3-utils';
-
-import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
 
 import {
 	SyncOutput,
@@ -28,10 +24,10 @@ import {
 	HexString,
 	Topic,
 	BlockHeaderOutput,
-	LogsOutput
+	LogsOutput,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
-
+import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
 
 type CommonSubscriptionEvents = {
 	error: Error;
