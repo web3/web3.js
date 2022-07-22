@@ -40,20 +40,20 @@
 		"prettier": "^2.4.1",
 		"ts-jest": "^27.0.7",
 		"typescript": "^4.5.2",
-		"web3-providers-http": "4.0.0-alpha.1",
-		"web3-eth-abi": "4.0.0-alpha.0",
-		"web3-eth-accounts": "4.0.0-alpha.0"
+		"web3-providers-http": "^4.0.0-alpha.1",
+		"web3-eth-abi": "^4.0.0-alpha.0",
+		"web3-eth-accounts": "^4.0.0-alpha.0"
 	},
 	"dependencies": {
 		"@ethereumjs/common": "^2.6.1",
 		"@ethereumjs/tx": "^3.4.0",
-		"web3-types": "1.0.0-alpha.0",
-		"web3-core": "4.0.0-alpha.0",
-		"web3-errors": "1.0.0-alpha.0",
-		"web3-eth-accounts": "4.0.0-alpha.0",
-		"web3-net": "4.0.0-alpha.0",
-		"web3-providers-ws": "4.0.0-alpha.0",
-		"web3-utils": "4.0.0-alpha.1",
+		"web3-types": "^0.1.0-alpha.0",
+		"web3-core": "^4.0.0-alpha.0",
+		"web3-errors": "^0.1.0-alpha.0",
+		"web3-eth-accounts": "^4.0.0-alpha.0",
+		"web3-net": "^4.0.0-alpha.0",
+		"web3-providers-ws": "^4.0.0-alpha.0",
+		"web3-utils": "^4.0.0-alpha.1",
 		"web3-validator": "^0.1.0-alpha.0"
 	}
 }
