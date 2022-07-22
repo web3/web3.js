@@ -88,7 +88,8 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 					super(jsonInterface, self.getContextObject());
 				}
 
-				ContractBuilder._contracts.push(this);
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				ContractBuilder._contracts.push(this as Contract<any>);
 			}
 
 			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>): boolean {
