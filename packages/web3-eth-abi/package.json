@@ -25,9 +25,9 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-errors": "1.0.0-alpha.0",
+		"web3-errors": "^0.1.0-alpha.0",
 		"@ethersproject/abi": "^5.0.7",
-		"web3-types": "^1.0.0-alpha.0",
+		"web3-types": "^0.1.0-alpha.0",
 		"web3-utils": "^4.0.0-alpha.1"
 	},
 	"devDependencies": {
