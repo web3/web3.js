@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RETURN_FORMAT, format , isNullish } from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
 
 import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic, Numbers } from 'web3-types';
 
@@ -33,9 +33,8 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 
-import { blockSchema } from 'web3-eth/dist/schemas';
+import { blockSchema, logSchema } from 'web3-eth/dist/schemas';
 
-import { outputLogFormatter } from 'web3-core';
 import { Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
@@ -129,7 +128,9 @@ export const decodeEventABI = (
 	jsonInterface: ContractAbiWithSignature,
 ): EventLog => {
 	let modifiedEvent = { ...event };
-	const result = outputLogFormatter(data);
+
+	// TODO: pass format as param
+	const result = format(logSchema, data, DEFAULT_RETURN_FORMAT);
 
 	// if allEvents get the right event
 	if (modifiedEvent.name === 'ALLEVENTS') {

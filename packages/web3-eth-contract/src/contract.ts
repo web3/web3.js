@@ -15,13 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	inputAddressFormatter,
-	inputLogFormatter,
-	Web3Context,
-	Web3EventEmitter,
-	Web3PromiEvent,
-} from 'web3-core';
+import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
 import { SubscriptionError } from 'web3-errors';
 import {
 	call,
@@ -67,6 +61,7 @@ import {
 	toChecksumAddress,
 } from 'web3-utils';
 import { isNullish, validator } from 'web3-validator';
+import { logSchema } from 'web3-eth/dist/schemas';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -802,8 +797,11 @@ export class Contract<Abi extends ContractAbi>
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
 
-		const { fromBlock, toBlock, topics, address } = inputLogFormatter(
+		// TODO: pass format as param
+		const { fromBlock, toBlock, topics, address } = format(
+			logSchema,
 			encodeEventABI(this.options, abi, filter ?? {}),
+			DEFAULT_RETURN_FORMAT,
 		);
 
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
@@ -816,7 +814,10 @@ export class Contract<Abi extends ContractAbi>
 	}
 
 	private _parseAndSetAddress(value?: Address) {
-		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : value;
+		// TODO: pass format as param
+		this._address = value
+			? toChecksumAddress(format({ eth: 'address' }, value, DEFAULT_RETURN_FORMAT))
+			: value;
 	}
 
 	private _parseAndSetJsonInterface(abis: ContractAbi) {

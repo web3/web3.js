@@ -35,6 +35,7 @@ import {
 
 import * as formatters from '../../src/formatters';
 
+/* eslint-disable deprecation/deprecation */
 jest.mock('web3-eth-iban');
 jest.mock('web3-utils');
 

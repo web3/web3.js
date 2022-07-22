@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { inputAddressFormatter } from 'web3-core';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
@@ -47,7 +46,11 @@ export class Registry {
 	) {
 		try {
 			const receipt = this.contract.methods
-				.setOwner(namehash(name), inputAddressFormatter(address))
+				// TODO: pass format as a param
+				.setOwner(
+					namehash(name),
+					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
+				)
 				.send(txConfig);
 
 			return receipt;
@@ -87,7 +90,12 @@ export class Registry {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
 			const receipt = this.contract.methods
-				.setSubnodeOwner(namehash(name), hexStrictLabel, inputAddressFormatter(address))
+				// TODO: pass format as a param
+				.setSubnodeOwner(
+					namehash(name),
+					hexStrictLabel,
+					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
+				)
 				.send(txConfig);
 			return receipt;
 		} catch (error) {
@@ -105,12 +113,13 @@ export class Registry {
 	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
+			// TODO: pass format as a param
 			const receipt = this.contract.methods
 				.setSubnodeRecord(
 					namehash(name),
 					hexStrictLabel,
-					inputAddressFormatter(owner),
-					inputAddressFormatter(resolver),
+					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, resolver, DEFAULT_RETURN_FORMAT),
 					ttl,
 				)
 				.send(txConfig);
@@ -138,10 +147,11 @@ export class Registry {
 
 	public async isApprovedForAll(owner: Address, operator: Address) {
 		try {
+			// TODO: pass format as a param
 			const result = this.contract.methods
 				.isApprovedForAll(
 					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
-					inputAddressFormatter(operator),
+					format({ eth: 'address' }, operator, DEFAULT_RETURN_FORMAT),
 				)
 				.call();
 
@@ -187,7 +197,11 @@ export class Registry {
 	) {
 		try {
 			return this.contract.methods
-				.setResolver(namehash(name), inputAddressFormatter(address))
+				.setResolver(
+					namehash(name),
+					// TODO: pass format as a param
+					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
+				)
 				.send(txConfig);
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
@@ -205,8 +219,9 @@ export class Registry {
 			return this.contract.methods
 				.setRecord(
 					namehash(name),
-					inputAddressFormatter(owner),
-					inputAddressFormatter(resolver),
+					// TODO: pass format as a param
+					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, resolver, DEFAULT_RETURN_FORMAT),
 					ttl,
 				)
 				.send(txConfig);
