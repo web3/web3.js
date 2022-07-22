@@ -51,7 +51,7 @@ describe('defaults', () => {
 	let accounts: string[] = [];
 	let clientUrl: string;
 	let contract: Contract<typeof BasicAbi>;
-	let contractMsgFrom: Contract<typeof BasicAbi>;
+	let contractMsgFrom: Contract<typeof MsgSenderAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
