@@ -20,7 +20,7 @@ import { Web3DeferredPromise as Web3DeferredPromiseInterface } from 'web3-types'
 
 export class Web3DeferredPromise<T> implements Promise<T>, Web3DeferredPromiseInterface<T> {
 	// public tag to treat object as promise by different libs
-	public [Symbol.toStringTag]: 'Promise';
+	public [Symbol.toStringTag]: 'Promise' = 'Promise';
 
 	private readonly _promise: Promise<T>;
 	private _resolve!: (value: T | PromiseLike<T>) => void;
