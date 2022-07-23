@@ -15,7 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { sha3, isHexStrict, isNullish, format, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import {
+	sha3,
+	isHexStrict,
+	isNullish,
+	format,
+	DEFAULT_RETURN_FORMAT,
+	DataFormat,
+} from 'web3-utils';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { ResolverMethodMissingError } from 'web3-errors';
 import { Address } from 'web3-types';
@@ -62,16 +69,17 @@ export class Resolver {
 			);
 	}
 
-	public async setAddress(ENSName: string, address: Address, txConfig: NonPayableCallOptions) {
+	public async setAddress(
+		ENSName: string,
+		address: Address,
+		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.setAddr);
 
 		return resolverContract.methods
-			.setAddr(
-				namehash(ENSName),
-				// TODO: pass format as a param
-				format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
-			)
+			.setAddr(namehash(ENSName), format({ eth: 'address' }, address, returnFormat))
 			.send(txConfig);
 	}
 

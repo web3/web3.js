@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
-import { DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
 import REGISTRY from './abi/registry';
 import { RESOLVER } from './abi/resolver';
@@ -43,14 +43,11 @@ export class Registry {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			const receipt = this.contract.methods
-				// TODO: pass format as a param
-				.setOwner(
-					namehash(name),
-					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
-				)
+				.setOwner(namehash(name), format({ eth: 'address' }, address, returnFormat))
 				.send(txConfig);
 
 			return receipt;
@@ -86,15 +83,15 @@ export class Registry {
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
 			const receipt = this.contract.methods
-				// TODO: pass format as a param
 				.setSubnodeOwner(
 					namehash(name),
 					hexStrictLabel,
-					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, address, returnFormat),
 				)
 				.send(txConfig);
 			return receipt;
@@ -110,16 +107,16 @@ export class Registry {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
-			// TODO: pass format as a param
 			const receipt = this.contract.methods
 				.setSubnodeRecord(
 					namehash(name),
 					hexStrictLabel,
-					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
-					format({ eth: 'address' }, resolver, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);
@@ -145,13 +142,16 @@ export class Registry {
 		}
 	}
 
-	public async isApprovedForAll(owner: Address, operator: Address) {
+	public async isApprovedForAll(
+		owner: Address,
+		operator: Address,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	) {
 		try {
-			// TODO: pass format as a param
 			const result = this.contract.methods
 				.isApprovedForAll(
-					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
-					format({ eth: 'address' }, operator, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, operator, returnFormat),
 				)
 				.call();
 
@@ -194,14 +194,11 @@ export class Registry {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			return this.contract.methods
-				.setResolver(
-					namehash(name),
-					// TODO: pass format as a param
-					format({ eth: 'address' }, address, DEFAULT_RETURN_FORMAT),
-				)
+				.setResolver(namehash(name), format({ eth: 'address' }, address, returnFormat))
 				.send(txConfig);
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
@@ -214,14 +211,14 @@ export class Registry {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			return this.contract.methods
 				.setRecord(
 					namehash(name),
-					// TODO: pass format as a param
-					format({ eth: 'address' }, owner, DEFAULT_RETURN_FORMAT),
-					format({ eth: 'address' }, resolver, DEFAULT_RETURN_FORMAT),
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);

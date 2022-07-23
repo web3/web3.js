@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
 
 import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic, Numbers } from 'web3-types';
 
@@ -50,6 +50,7 @@ export const encodeEventABI = (
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		topics?: (null | Topic | Topic[])[];
 	},
+	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 ) => {
 	const opts: {
 		filter: Filter;
@@ -62,19 +63,11 @@ export const encodeEventABI = (
 	};
 
 	if (!isNullish(options?.fromBlock)) {
-		opts.fromBlock = format(
-			blockSchema.properties.number,
-			options?.fromBlock,
-			DEFAULT_RETURN_FORMAT,
-		);
+		opts.fromBlock = format(blockSchema.properties.number, options?.fromBlock, returnFormat);
 	}
 
 	if (!isNullish(options?.toBlock)) {
-		opts.toBlock = format(
-			blockSchema.properties.number,
-			options?.toBlock,
-			DEFAULT_RETURN_FORMAT,
-		);
+		opts.toBlock = format(blockSchema.properties.number, options?.toBlock, returnFormat);
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
@@ -126,11 +119,11 @@ export const decodeEventABI = (
 	event: AbiEventFragment & { signature: string },
 	data: LogsInput,
 	jsonInterface: ContractAbiWithSignature,
+	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 ): EventLog => {
 	let modifiedEvent = { ...event };
 
-	// TODO: pass format as param
-	const result = format(logSchema, data, DEFAULT_RETURN_FORMAT);
+	const result = format(logSchema, data, returnFormat);
 
 	// if allEvents get the right event
 	if (modifiedEvent.name === 'ALLEVENTS') {

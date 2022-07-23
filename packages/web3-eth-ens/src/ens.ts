@@ -24,7 +24,7 @@ import {
 import { Web3Context, Web3ContextObject } from 'web3-core';
 import { getId, Web3NetAPI } from 'web3-net';
 import { Address, SupportedProviders, EthExecutionAPI, TransactionReceipt } from 'web3-types';
-import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER } from 'web3-utils';
+import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER, DataFormat } from 'web3-utils';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
 import { RESOLVER } from './abi/resolver';
 import { Registry } from './registry';
@@ -66,16 +66,18 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param name
 	 * @param address
 	 * @param txConfig
+	 * @param returnFormat
 	 */
 	public async setResolver(
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<
 		| FormatType<TransactionReceipt, typeof DEFAULT_RETURN_FORMAT>
 		| FormatType<RevertInstructionError, typeof DEFAULT_RETURN_FORMAT>
 	> {
-		return this._registry.setResolver(name, address, txConfig);
+		return this._registry.setResolver(name, address, txConfig, returnFormat);
 	}
 
 	/**
@@ -87,6 +89,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param resolver
 	 * @param ttl
 	 * @param txConfig
+	 * @param returnFormat
 	 */
 	public async setSubnodeRecord(
 		name: string,
@@ -95,8 +98,17 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setSubnodeRecord(name, label, owner, resolver, ttl, txConfig);
+		return this._registry.setSubnodeRecord(
+			name,
+			label,
+			owner,
+			resolver,
+			ttl,
+			txConfig,
+			returnFormat,
+		);
 	}
 
 	/**
@@ -119,9 +131,14 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 *
 	 * @param owner
 	 * @param operator
+	 * @param returnFormat
 	 */
-	public async isApprovedForAll(owner: Address, operator: Address): Promise<unknown> {
-		return this._registry.isApprovedForAll(owner, operator);
+	public async isApprovedForAll(
+		owner: Address,
+		operator: Address,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	): Promise<unknown> {
+		return this._registry.isApprovedForAll(owner, operator, returnFormat);
 	}
 
 	/**
@@ -140,14 +157,16 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param label
 	 * @param address
 	 * @param txConfig
+	 * @param returnFormat
 	 */
 	public async setSubnodeOwner(
 		name: string,
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setSubnodeOwner(name, label, address, txConfig);
+		return this._registry.setSubnodeOwner(name, label, address, txConfig, returnFormat);
 	}
 
 	/**
@@ -189,13 +208,15 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * @param name
 	 * @param address
 	 * @param txConfig
+	 * @param returnFormat
 	 */
 	public async setOwner(
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setOwner(name, address, txConfig);
+		return this._registry.setOwner(name, address, txConfig, returnFormat);
 	}
 
 	/**
@@ -224,8 +245,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._resolver.setAddress(name, address, txConfig);
+		return this._resolver.setAddress(name, address, txConfig, returnFormat);
 	}
 
 	/*
