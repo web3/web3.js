@@ -61,7 +61,6 @@ import {
 	toChecksumAddress,
 } from 'web3-utils';
 import { isNullish, validator } from 'web3-validator';
-import { logSchema } from 'web3-eth/dist/schemas';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -821,14 +820,14 @@ export class Contract<Abi extends ContractAbi>
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
 
-		const { fromBlock, toBlock, topics, address } = format(
-			logSchema,
-			encodeEventABI(this.options, abi, filter ?? {}),
+		const { fromBlock, toBlock, topics, address } = encodeEventABI(
+			this.options,
+			abi,
+			filter ?? {},
 			returnFormat,
 		);
 
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
-
 		return logs.map(log =>
 			typeof log === 'string'
 				? log
