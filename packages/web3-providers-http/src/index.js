@@ -148,6 +148,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 
         if (error.name === 'AbortError') {
             callback(errors.ConnectionTimeout(this.timeout));
+            return;
         }
 
         callback(errors.InvalidConnection(this.host));

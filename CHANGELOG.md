@@ -563,6 +563,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+-  Added missing return statement for web3-providers-http (#5277)
+
 ## [1.7.5]
 
 ### Changed
