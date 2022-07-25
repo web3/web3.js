@@ -135,7 +135,7 @@ export class TransactionNotFound extends TransactionError {
 }
 export class TransactionRevertedError extends TransactionError {
 	public constructor(revertMessage: string) {
-		super(`Transaction was reverted: ${revertMessage}`);
+		super(`Error: Your request got reverted with the following reason: ${revertMessage}`);
 		this.code = ERR_TX_REVERTED;
 	}
 }

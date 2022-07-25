@@ -50,7 +50,7 @@ import {
 	waitWithTimeout,
 } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import { TransactionError } from 'web3-errors';
+import { TransactionError, TransactionRevertError } from 'web3-errors';
 import { SignatureError, TransactionSendTimeoutError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {

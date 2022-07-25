@@ -101,7 +101,7 @@ describe('eth', () => {
 					gas: '0x3d0900',
 					gasPrice: '0x3B9ACBF4',
 					// hash: '0x7c3a42c614689e905f894042ad6f74b456bab4b984f40a3b1718fef43d39b7fe',
-					input: '0x6080604052..3480156100105..7600080fd.klkl',
+					input: '0x608060405234801561001057600080fdklkl',
 					nonce: '0x10',
 					to: undefined,
 					value: '0x0',
@@ -112,7 +112,7 @@ describe('eth', () => {
 				}),
 			).rejects.toThrow(
 				new TransactionRevertedError(
-					'cannot unmarshal hex string of odd length into Go struct field TransactionArgs.data of type hexutil.Bytes',
+					'Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes',
 				),
 			);
 		});
