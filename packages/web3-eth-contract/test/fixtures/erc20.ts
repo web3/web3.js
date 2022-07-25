@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address, Numbers } from 'web3-utils';
+import { Address, Numbers } from 'web3-types';
 import { LogsSubscription } from '../../src/log_subscription';
 import { ContractEventOptions, PayableMethodObject, NonPayableMethodObject } from '../../src/types';
 
@@ -53,9 +53,9 @@ export interface Erc20Interface {
 	};
 
 	events: {
-		[key: string]: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Approval: (options?: ContractEventOptions) => Promise<LogsSubscription>;
-		Transfer: (options?: ContractEventOptions) => Promise<LogsSubscription>;
+		[key: string]: (options?: ContractEventOptions) => LogsSubscription;
+		Approval: (options?: ContractEventOptions) => LogsSubscription;
+		Transfer: (options?: ContractEventOptions) => LogsSubscription;
 	};
 }
 

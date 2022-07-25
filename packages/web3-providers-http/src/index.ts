@@ -19,15 +19,14 @@ import fetch from 'cross-fetch';
 import {
 	EthExecutionAPI,
 	JsonRpcResponseWithResult,
-	ResponseError,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3BaseProvider,
 	Web3ProviderStatus,
-} from 'web3-common';
-import { InvalidClientError, MethodNotImplementedError } from 'web3-errors';
+} from 'web3-types';
+import { InvalidClientError, MethodNotImplementedError, ResponseError } from 'web3-errors';
 import { HttpProviderOptions } from './types';
 
 export { HttpProviderOptions } from './types';

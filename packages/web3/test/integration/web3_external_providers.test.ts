@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import HDWalletProvider from '@truffle/hdwallet-provider';
-import { Web3 } from '../../src/index';
+import Web3 from '../../src/index';
 import {
 	createNewAccount,
 	getSystemTestProvider,
@@ -50,7 +50,7 @@ describe('Create Web3 class instance with external providers', () => {
 		process.env.INFURA_GOERLI_WS
 			? process.env.INFURA_GOERLI_WS.toString().includes('ws')
 			: false,
-	)('should create instance with string of external ws provider', async () => {
+	)('should create instance with string of external ws provider', () => {
 		web3 = new Web3(process.env.INFURA_GOERLI_WS);
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(web3).toBeInstanceOf(Web3);
@@ -60,7 +60,7 @@ describe('Create Web3 class instance with external providers', () => {
 		process.env.INFURA_GOERLI_HTTP
 			? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
 			: false,
-	)('should create instance with string of external http provider', async () => {
+	)('should create instance with string of external http provider', () => {
 		web3 = new Web3(process.env.INFURA_GOERLI_HTTP);
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(web3).toBeInstanceOf(Web3);

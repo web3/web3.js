@@ -42,9 +42,7 @@ import {
 	ERR_SIGNATURE_FAILED,
 	InvalidValueError,
 } from 'web3-errors';
-import { Bytes, HexString, Numbers } from 'web3-utils';
-
-import { TransactionReceipt } from './types';
+import { Bytes, HexString, Numbers, TransactionReceipt } from 'web3-types';
 
 export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;

@@ -15,10 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { LogsInput } from 'web3-common';
+import { LogsInput, HexString, Topic } from 'web3-types';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
 import { AbiEventFragment } from 'web3-eth-abi';
-import { HexString, Topic } from 'web3-utils';
+// eslint-disable-next-line import/no-cycle
+import { DataFormat } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle
 import { decodeEventABI } from './encoding';
 // eslint-disable-next-line import/no-cycle
@@ -111,7 +112,10 @@ export class LogsSubscription extends Web3Subscription<
 			abi: AbiEventFragment & { signature: HexString };
 			jsonInterface: ContractAbiWithSignature;
 		},
-		options: { requestManager: Web3RequestManager },
+		options: {
+			requestManager: Web3RequestManager;
+			returnFormat?: DataFormat;
+		},
 	) {
 		super(args, options);
 
@@ -129,7 +133,7 @@ export class LogsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: LogsInput): void {
-		const decoded = decodeEventABI(this.abi, data, this.jsonInterface);
+		const decoded = decodeEventABI(this.abi, data, this.jsonInterface, super.returnFormat);
 		this.emit('data', decoded);
 	}
 }

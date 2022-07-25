@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
+import { TransactionReceipt } from 'web3-types';
 import {
 	ERR_RAW_TX_UNDEFINED,
 	ERR_TX,
@@ -28,7 +29,6 @@ import {
 	ERR_TX_REVERT_WITHOUT_REASON,
 	ERR_TX_NOT_FOUND,
 } from '../error_codes';
-import { TransactionReceipt } from '../types';
 import { Web3Error } from '../web3_error_base';
 
 export class TransactionError<ReceiptType = TransactionReceipt> extends Web3Error {

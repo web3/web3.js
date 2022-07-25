@@ -1,4 +1,11 @@
+---
+sidebar_position: 1
+sidebar_label: Web3
+---
+
 # Web3 Migration Guide
+
+This migration guide is for migration from Web3.js 1.x to Web3.js 4.x.
 
 ## Breaking Changes
 
@@ -9,6 +16,16 @@ Passing callbacks to functions is no longer supported, except for event listener
 -   [extend](https://web3js.readthedocs.io/en/v1.7.3/web3.html#extend) Extending web3 modules functionality is not implemented
 -   [web3.bzz](https://web3js.readthedocs.io/en/v1.7.3/web3-bzz.html) Package for interacting with Swarm is not implemented
 -   [web3.shh](https://web3js.readthedocs.io/en/v1.7.3/web3-shh.html) Package for interacting with Whisper is not implemented
+
+`const web3 = new Web3(Web3.givenProvider);`
+
+It will not have:
+
+```ts
+// -> web3.bzz.net
+// -> web3.shh.net
+// -> web3.extend
+```
 
 ### Defaults and Configs
 

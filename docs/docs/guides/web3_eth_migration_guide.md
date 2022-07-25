@@ -1,3 +1,8 @@
+---
+sidebar_position: 3
+sidebar_label: Web3.eth
+---
+
 # Web3.eth Migration Guide
 
 ## Breaking Changes

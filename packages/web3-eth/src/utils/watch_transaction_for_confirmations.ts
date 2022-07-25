@@ -15,23 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import {
-	BlockOutput,
-	DataFormat,
+	Bytes,
+	Numbers,
 	EthExecutionAPI,
-	format,
-	Web3PromiEvent,
 	Web3BaseProvider,
-} from 'web3-common';
+	BlockHeaderOutput,
+	TransactionReceipt,
+} from 'web3-types';
 import { SubscriptionError } from 'web3-errors';
-import { Web3Context } from 'web3-core';
-import { Bytes, Numbers, numberToHex } from 'web3-utils';
+import { Web3Context, Web3PromiEvent } from 'web3-core';
+import { DataFormat, format, numberToHex } from 'web3-utils';
 import { isNullish } from 'web3-validator';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from '../errors';
-import { TransactionReceipt, SendSignedTransactionEvents, SendTransactionEvents } from '../types';
+import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { transactionReceiptSchema } from '../schemas';
@@ -94,7 +94,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
-				subscription.on('data', async (newBlockHeader: BlockOutput) => {
+				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
 					if (!newBlockHeader?.number) {
 						return;
 					}
@@ -140,14 +140,6 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	});
 };
 
-/**
- *
- * @param web3Context
- * @param transactionPromiEvent
- * @param transactionReceipt
- * @param transactionHash
- * @param returnFormat
- */
 export function watchTransactionForConfirmations<
 	ReturnFormat extends DataFormat,
 	Web3PromiEventEventType extends Web3PromiEventEventTypeBase<ReturnFormat>,

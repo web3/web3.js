@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString } from 'web3-utils';
+import { HexString } from 'web3-types';
 import { AbiParameter } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 
@@ -23,10 +23,6 @@ const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufix
 
 /**
  * Decodes ABI-encoded log data and indexed topic data
- *
- * @param inputs
- * @param data
- * @param topics
  */
 export const decodeLog = <ReturnType extends Record<string, unknown>>(
 	inputs: Array<AbiParameter>,

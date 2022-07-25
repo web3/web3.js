@@ -19,7 +19,7 @@ import HttpProvider from 'web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SupportedProviders } from 'web3-core';
+import { SupportedProviders } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';

@@ -18,16 +18,16 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	AccessList,
 	AccessListEntry,
-	BaseTransaction,
-	Transaction1559Unsigned,
-	Transaction2930Unsigned,
+	BaseTransactionAPI,
+	Transaction1559UnsignedAPI,
+	Transaction2930UnsignedAPI,
+	TransactionLegacyUnsignedAPI,
 	TransactionCall,
-	TransactionLegacyUnsigned,
-	TransactionWithSender,
-} from 'web3-common';
+	TransactionWithSenderAPI,
+} from 'web3-types';
 import { InvalidTransactionCall, InvalidTransactionWithSender } from '../../src/errors';
 
-export const isBaseTransactionValidData: [BaseTransaction, true][] = [
+export const isBaseTransactionValidData: [BaseTransactionAPI, true][] = [
 	[
 		{
 			type: '0x0',
@@ -85,7 +85,7 @@ export const isAccessListValidData = (): [AccessList, true][] => [
 	[isAccessListEntryValidData.map(entry => entry[0]), true],
 ];
 
-export const isTransaction1559UnsignedValidData = (): [Transaction1559Unsigned, true][] =>
+export const isTransaction1559UnsignedValidData = (): [Transaction1559UnsignedAPI, true][] =>
 	isBaseTransactionValidData.map(transaction => {
 		return [
 			{
@@ -98,7 +98,7 @@ export const isTransaction1559UnsignedValidData = (): [Transaction1559Unsigned, 
 		];
 	});
 
-export const isTransactionLegacyUnsignedValidData = (): [TransactionLegacyUnsigned, true][] =>
+export const isTransactionLegacyUnsignedValidData = (): [TransactionLegacyUnsignedAPI, true][] =>
 	isBaseTransactionValidData.map(transaction => {
 		return [
 			{
@@ -109,7 +109,7 @@ export const isTransactionLegacyUnsignedValidData = (): [TransactionLegacyUnsign
 		];
 	});
 
-export const isTransaction2930UnsignedValidData = (): [Transaction2930Unsigned, true][] =>
+export const isTransaction2930UnsignedValidData = (): [Transaction2930UnsignedAPI, true][] =>
 	isTransactionLegacyUnsignedValidData().map(transaction => {
 		return [
 			{
@@ -120,7 +120,7 @@ export const isTransaction2930UnsignedValidData = (): [Transaction2930Unsigned, 
 		];
 	});
 
-export const isTransactionWithSenderValidData = (): [TransactionWithSender, true][] => {
+export const isTransactionWithSenderValidData = (): [TransactionWithSenderAPI, true][] => {
 	const transactions = [
 		...isTransaction1559UnsignedValidData(),
 		...isTransactionLegacyUnsignedValidData(),

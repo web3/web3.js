@@ -329,16 +329,16 @@ Released with 1.0.0-beta.37 code base.
 1. Passing callbacks to functions is no longer supported, except for event listeners.
 2. Method `extend` is deprecated
 
-#### web3-common
+#### web3-core
 
-1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-common`
+1. The function `outputBigNumberFormatter` in `web3-core-helper` renamed to `outputBigIntFormatter` under `web3-core`
 2. Removed `this.defaultBlock` context from `inputDefaultBlockNumberFormatter` in `web3-core-helper` and converted to additional parameter
 3. Removed `this.defaultBlock` context from `inputTransactionFormatter` in `web3-core-helper` and converted to additional parameter
 
 #### web3-utils
 
-1. The following functions `soliditySha3` `soliditySha3Raw` `encodePacked` now includes type validation and requires type specficiation, instead of guessing the value type
-2. The functions `soliditySha3` `soliditySha3Raw` `encodePacked` does not support BN and now supports `BigInt`
+1. The following functions `soliditySha3` `soliditySha3Raw` `encodePacked` now includes type validation and requires type specification, instead of guessing the value type
+2. The functions `soliditySha3`, `soliditySha3Raw` and `encodePacked` did not support BN; But, now supports `BigInt`
 3. The functions `flattenTypes` and `jsonInterfaceMethodToString` moved to the `web3-eth-abi` package
 4. The function `isAddress` now includes an optional parameter `checkChecksum` type boolean
 5. `isBoolean` now accept `1`, and `0` as valid values to test. Ref: `web3-validator`
@@ -346,9 +346,7 @@ Released with 1.0.0-beta.37 code base.
 #### web3-eth-accounts
 
 1. `create` function does not take in the optional parameter `entropy`
-2. `ignoreLength` will be removed as an optional parameter for `privateKeyToAccount`
-3. The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
-4. `Wallet.create` function doesn't accepts `entropy` param
+2. `Wallet.create` function doesn't accepts `entropy` param
 
 #### web3-validator
 
@@ -366,7 +364,7 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-net
 
-1. package will not support web3.bzz.net and web3.shh.net
+1. Package will not support web3.bzz.net and web3.shh.net
 
 #### web3-eth-iban
 
@@ -390,6 +388,10 @@ Released with 1.0.0-beta.37 code base.
 2. `defaultHardfork` default value is 'london'
 3. `defaultAccount` default value is undefined
 4. `defaultNetworkId` default value is undefined
+
+##### web3-eth-subscribe
+
+1. `clearSubscriptions` Instead of returning `true` , `clearSubscriptions` now returns array of subscription's ids
 
 #### web3-eth-personal
 

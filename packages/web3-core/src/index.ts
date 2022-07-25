@@ -23,3 +23,9 @@ export * from './web3_context';
 export * from './web3_batch_request';
 export * from './utils';
 export * from './types';
+export * from './formatters';
+export * from './web3_promi_event';
+export * from './web3_event_emitter';
+
+// For backward usability export as namespace
+export * as formatters from './formatters';

@@ -15,10 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionWithSender } from 'web3-common';
+import { TransactionWithSenderAPI, TransactionCall, HexString } from 'web3-types';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { HexString, isNullish, mergeDeep } from 'web3-utils';
-import { TransactionCall } from 'web3-eth';
+import { isNullish, mergeDeep } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
 import {
@@ -116,7 +115,7 @@ export const getEstimateGasParams = ({
 	params: unknown[];
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
-}): Partial<TransactionWithSender> => {
+}): Partial<TransactionWithSenderAPI> => {
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -135,7 +134,7 @@ export const getEstimateGasParams = ({
 		};
 	}
 
-	return txParams as TransactionWithSender;
+	return txParams as TransactionWithSenderAPI;
 };
 
 export const isContractInitOptions = (options: unknown): options is ContractOptions =>

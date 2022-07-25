@@ -15,23 +15,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { BlockTags } from '../types';
+import { BlockTags } from 'web3-types';
 import { isUInt } from './numbers';
 
 export const isBlockNumber = (value: string | number | bigint): boolean => isUInt(value);
 
 /**
  * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
- *
- * @param value
  */
 export const isBlockTag = (value: string) =>
 	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
 
 /**
  * Returns true if given value is valid hex string and not negative, or is a valid BlockTag
- *
- * @param value
  */
 export const isBlockNumberOrTag = (value: string | number | bigint) =>
 	isBlockTag(value as string) || isBlockNumber(value);

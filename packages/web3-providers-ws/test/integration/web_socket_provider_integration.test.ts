@@ -21,9 +21,9 @@ import {
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
 	JsonRpcId,
-	DeferredPromise,
 	JsonRpcResponse,
-} from 'web3-common';
+} from 'web3-types';
+import { Web3DeferredPromise } from 'web3-utils';
 
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
@@ -183,7 +183,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 			await waitForOpenConnection(testResetProvider, currentAttempt);
 
-			const defPromise = new DeferredPromise<JsonRpcResponse<ResponseType>>();
+			const defPromise = new Web3DeferredPromise<JsonRpcResponse<ResponseType>>();
 
 			const reqItem: WSRequestItem<any, any, any> = {
 				payload: jsonRpcPayload,

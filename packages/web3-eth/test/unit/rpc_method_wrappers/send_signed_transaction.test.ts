@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 
-import { DEFAULT_RETURN_FORMAT, format } from 'web3-common';
+import { DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import * as rpcMethods from '../../../src/rpc_methods';
 import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sendSignedTransaction } from '../../../src/rpc_method_wrappers';

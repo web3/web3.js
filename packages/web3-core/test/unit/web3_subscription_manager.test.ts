@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3RequestManagerEvent } from '../../src/web3_request_manager';
 import { Web3SubscriptionManager } from '../../src/web3_subscription_manager';
 import { ExampleSubscription } from './fixtures/example_subscription';
@@ -106,7 +107,7 @@ describe('Web3SubscriptionManager', () => {
 			expect(ExampleSubscription).toHaveBeenCalledTimes(1);
 			expect(ExampleSubscription).toHaveBeenCalledWith(
 				{ test1: 'test1' },
-				{ requestManager },
+				{ requestManager, returnFormat: DEFAULT_RETURN_FORMAT },
 			);
 		});
 	});

@@ -16,8 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { FeeMarketEIP1559TxData, AccessListEIP2930TxData, TxData } from '@ethereumjs/tx';
-import { Web3BaseWalletAccount } from 'web3-common';
-import { HexString } from 'web3-utils';
+import { Web3BaseWalletAccount, HexString } from 'web3-types';
 
 export type SignatureObject = {
 	messageHash: string;

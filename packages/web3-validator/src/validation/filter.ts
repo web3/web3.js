@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Filter } from '../types';
+import { Filter } from 'web3-types';
 import { isAddress } from './address';
 import { isBlockNumberOrTag } from './block';
 import { isNullish } from './object';
@@ -26,8 +26,6 @@ import { isTopic } from './topic';
  * then because all Filter properties are optional, we check if the expected properties
  * are defined. If defined and they're not the expected type, we immediately return false,
  * otherwise we return true after all checks pass.
- *
- * @param value
  */
 export const isFilterObject = (value: Filter) => {
 	const expectedFilterProperties: (keyof Filter)[] = [

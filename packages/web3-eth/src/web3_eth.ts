@@ -17,15 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
-import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-common';
+
 import {
-	isSupportedProvider,
 	SupportedProviders,
-	Web3Context,
-	Web3ContextInitOptions,
-} from 'web3-core';
-import { TransactionNotFound } from 'web3-errors';
-import {
 	Address,
 	Bytes,
 	Filter,
@@ -33,16 +27,17 @@ import {
 	HexString8Bytes,
 	Numbers,
 	BlockNumberOrTag,
-	toChecksumAddress,
-} from 'web3-utils';
-import * as rpcMethods from './rpc_methods';
-import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import {
-	SendTransactionOptions,
+	LogsOutput,
 	Transaction,
 	TransactionCall,
 	TransactionWithLocalWalletIndex,
-} from './types';
+} from 'web3-types';
+import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
+import { TransactionNotFound } from 'web3-errors';
+import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import * as rpcMethods from './rpc_methods';
+import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { SendTransactionOptions } from './types';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
@@ -370,13 +365,18 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		);
 	}
 
-	public async subscribe<T extends keyof RegisteredSubscription>(
+	public async subscribe<
+		T extends keyof RegisteredSubscription,
+		ReturnType extends DataFormat = DataFormat,
+	>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
+		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
 	): Promise<InstanceType<RegisteredSubscription[T]>> {
 		const subscription = (await this.subscriptionManager?.subscribe(
 			name,
 			args,
+			returnFormat,
 		)) as InstanceType<RegisteredSubscription[T]>;
 		if (
 			subscription instanceof LogsSubscription &&
@@ -389,7 +389,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
-							subscription._processSubscriptionResult(log);
+							subscription._processSubscriptionResult(log as LogsOutput);
 						}
 					})
 					.catch(e => {
@@ -404,7 +404,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return !(sub instanceof SyncingSubscription);
 	}
 
-	public clearSubscriptions(notClearSyncing = false): Promise<void[]> | undefined {
+	public clearSubscriptions(notClearSyncing = false): Promise<string[]> | undefined {
 		return this.subscriptionManager?.unsubscribe(
 			// eslint-disable-next-line
 			notClearSyncing ? Web3Eth.shouldClearSubscription : undefined,

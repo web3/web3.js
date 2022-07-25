@@ -15,13 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	jsonRpc,
-	JsonRpcBatchRequest,
-	JsonRpcBatchResponse,
-	JsonRpcOptionalRequest,
-	DeferredPromise,
-} from 'web3-common';
+import { JsonRpcBatchRequest, JsonRpcBatchResponse, JsonRpcOptionalRequest } from 'web3-types';
+import { jsonRpc, Web3DeferredPromise } from 'web3-utils';
 import { OperationAbortError, OperationTimeoutError } from 'web3-errors';
 import { Web3BatchRequest } from '../../src/web3_batch_request';
 
@@ -75,7 +70,7 @@ describe('Web3BatchRequest', () => {
 			]);
 
 			const result = batchRequest.add({ id: 1, method: 'my_method', params: [] });
-			expect(result).toBeInstanceOf(DeferredPromise);
+			expect(result).toBeInstanceOf(Web3DeferredPromise);
 
 			// Make sure request didn't timeout
 			await batchRequest.execute();
