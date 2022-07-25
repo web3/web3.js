@@ -15,8 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic } from 'web3-types';
-import { inputBlockNumberFormatter, outputLogFormatter } from 'web3-core';
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
+
+import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic, Numbers } from 'web3-types';
+
 import {
 	AbiConstructorFragment,
 	AbiEventFragment,
@@ -30,7 +32,9 @@ import {
 	isAbiConstructorFragment,
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
-import { isNullish } from 'web3-utils';
+
+import { blockSchema, logSchema } from 'web3-eth/dist/schemas';
+
 import { Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
@@ -46,11 +50,12 @@ export const encodeEventABI = (
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		topics?: (null | Topic | Topic[])[];
 	},
+	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 ) => {
 	const opts: {
 		filter: Filter;
-		fromBlock?: string;
-		toBlock?: string;
+		fromBlock?: Numbers;
+		toBlock?: Numbers;
 		topics?: (Topic | Topic[])[];
 		address?: HexString;
 	} = {
@@ -58,11 +63,11 @@ export const encodeEventABI = (
 	};
 
 	if (!isNullish(options?.fromBlock)) {
-		opts.fromBlock = inputBlockNumberFormatter(options?.fromBlock);
+		opts.fromBlock = format(blockSchema.properties.number, options?.fromBlock, returnFormat);
 	}
 
 	if (!isNullish(options?.toBlock)) {
-		opts.toBlock = inputBlockNumberFormatter(options?.toBlock);
+		opts.toBlock = format(blockSchema.properties.number, options?.toBlock, returnFormat);
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
@@ -114,9 +119,11 @@ export const decodeEventABI = (
 	event: AbiEventFragment & { signature: string },
 	data: LogsInput,
 	jsonInterface: ContractAbiWithSignature,
+	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 ): EventLog => {
 	let modifiedEvent = { ...event };
-	const result = outputLogFormatter(data);
+
+	const result = format(logSchema, data, returnFormat);
 
 	// if allEvents get the right event
 	if (modifiedEvent.name === 'ALLEVENTS') {

@@ -16,7 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import {
+	HexString,
 	BlockOutput,
 	Web3BaseProvider,
 	Web3APISpec,
@@ -25,10 +27,10 @@ import {
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
-	HexString,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
+
 import { Web3RequestManager } from './web3_request_manager';
 
 export abstract class Web3Subscription<
@@ -39,15 +41,18 @@ export abstract class Web3Subscription<
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
+	private readonly _returnFormat: DataFormat;
 	private _id?: HexString;
 	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
-		options: { requestManager: Web3RequestManager<API> },
+
+		options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
 	) {
 		super();
 		this._requestManager = options.requestManager;
+		this._returnFormat = options.returnFormat ?? (DEFAULT_RETURN_FORMAT as DataFormat);
 	}
 
 	public get id() {
@@ -80,7 +85,9 @@ export abstract class Web3Subscription<
 
 		this._messageListener = messageListener;
 	}
-
+	protected get returnFormat() {
+		return this._returnFormat;
+	}
 	public async resubscribe() {
 		await this.unsubscribe();
 		await this.subscribe();
@@ -128,5 +135,5 @@ export type Web3SubscriptionConstructor<
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
-	options: { requestManager: Web3RequestManager<API> },
+	options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
 ) => SubscriptionType;

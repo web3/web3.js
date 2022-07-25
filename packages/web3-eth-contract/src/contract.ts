@@ -15,13 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	inputAddressFormatter,
-	inputLogFormatter,
-	Web3Context,
-	Web3EventEmitter,
-	Web3PromiEvent,
-} from 'web3-core';
+import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
 import { SubscriptionError } from 'web3-errors';
 import {
 	call,
@@ -283,24 +277,36 @@ export class Contract<Abi extends ContractAbi>
 	 * const myContract = new web3.eth.Contract(myContractAbi, '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe');
 	 * ```
 	 */
-	public constructor(jsonInterface: Abi, context?: Web3ContractContext);
-	public constructor(jsonInterface: Abi, address: Address, context?: Web3ContractContext);
+	public constructor(
+		jsonInterface: Abi,
+		context?: Web3ContractContext,
+		returnFormat?: DataFormat,
+	);
+	public constructor(
+		jsonInterface: Abi,
+		address: Address,
+		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		returnFormat?: DataFormat,
+	);
 	public constructor(
 		jsonInterface: Abi,
 		options?: ContractInitOptions,
-		context?: Web3ContractContext,
+		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address: Address,
 		options: ContractInitOptions,
-		context?: Web3ContractContext,
+		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext,
-		optionsOrContext?: ContractInitOptions | Web3ContractContext,
-		context?: Web3ContractContext,
+		optionsOrContextOrReturnFormat?: ContractInitOptions | Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		returnFormat?: DataFormat,
 	) {
 		super({
 			// Due to abide by the rule that super must be first call in constructor
@@ -308,18 +314,30 @@ export class Contract<Abi extends ContractAbi>
 			// eslint-disable-next-line no-nested-ternary
 			...(isWeb3ContractContext(addressOrOptionsOrContext)
 				? addressOrOptionsOrContext
-				: isWeb3ContractContext(optionsOrContext)
-				? optionsOrContext
-				: context),
+				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
+				? optionsOrContextOrReturnFormat
+				: contextOrReturnFormat),
 			provider:
 				typeof addressOrOptionsOrContext !== 'string'
 					? addressOrOptionsOrContext?.provider ??
-					  optionsOrContext?.provider ??
-					  context?.provider ??
-					  Contract.givenProvider
+					  // eslint-disable-next-line no-nested-ternary
+					  (typeof optionsOrContextOrReturnFormat === 'object' &&
+					  'provider' in optionsOrContextOrReturnFormat
+							? optionsOrContextOrReturnFormat.provider
+							: typeof contextOrReturnFormat === 'object' &&
+							  'provider' in contextOrReturnFormat
+							? contextOrReturnFormat?.provider
+							: Contract.givenProvider)
 					: undefined,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		// eslint-disable-next-line no-nested-ternary
+		const returnDataFormat = isDataFormat(contextOrReturnFormat)
+			? contextOrReturnFormat
+			: isDataFormat(optionsOrContextOrReturnFormat)
+			? optionsOrContextOrReturnFormat
+			: returnFormat ?? DEFAULT_RETURN_FORMAT;
 
 		const address =
 			typeof addressOrOptionsOrContext === 'string' ? addressOrOptionsOrContext : undefined;
@@ -327,14 +345,14 @@ export class Contract<Abi extends ContractAbi>
 		// eslint-disable-next-line no-nested-ternary
 		const options = isContractInitOptions(addressOrOptionsOrContext)
 			? addressOrOptionsOrContext
-			: isContractInitOptions(optionsOrContext)
-			? optionsOrContext
+			: isContractInitOptions(optionsOrContextOrReturnFormat)
+			? optionsOrContextOrReturnFormat
 			: undefined;
 
-		this._parseAndSetJsonInterface(jsonInterface);
+		this._parseAndSetJsonInterface(jsonInterface, returnDataFormat);
 
 		if (!isNullish(address)) {
-			this._parseAndSetAddress(address);
+			this._parseAndSetAddress(address, returnDataFormat);
 		}
 
 		this.options = {
@@ -348,12 +366,12 @@ export class Contract<Abi extends ContractAbi>
 		};
 
 		Object.defineProperty(this.options, 'address', {
-			set: (value: Address) => this._parseAndSetAddress(value),
+			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
 			get: () => this._address,
 		});
 
 		Object.defineProperty(this.options, 'jsonInterface', {
-			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value),
+			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
 	}
@@ -802,24 +820,31 @@ export class Contract<Abi extends ContractAbi>
 			throw new Web3ContractError(`Event ${eventName} not found.`);
 		}
 
-		const { fromBlock, toBlock, topics, address } = inputLogFormatter(
-			encodeEventABI(this.options, abi, filter ?? {}),
+		const { fromBlock, toBlock, topics, address } = encodeEventABI(
+			this.options,
+			abi,
+			filter ?? {},
+			returnFormat,
 		);
 
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
-
 		return logs.map(log =>
 			typeof log === 'string'
 				? log
-				: decodeEventABI(abi, log as LogsInput, this._jsonInterface),
+				: decodeEventABI(abi, log as LogsInput, this._jsonInterface, returnFormat),
 		);
 	}
 
-	private _parseAndSetAddress(value?: Address) {
-		this._address = value ? toChecksumAddress(inputAddressFormatter(value)) : value;
+	private _parseAndSetAddress(value?: Address, returnFormat: DataFormat = DEFAULT_RETURN_FORMAT) {
+		this._address = value
+			? toChecksumAddress(format({ eth: 'address' }, value, returnFormat))
+			: value;
 	}
 
-	private _parseAndSetJsonInterface(abis: ContractAbi) {
+	private _parseAndSetJsonInterface(
+		abis: ContractAbi,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	) {
 		this._functions = {};
 
 		this._methods = {} as ContractMethodsInterface<Abi>;
@@ -875,7 +900,7 @@ export class Contract<Abi extends ContractAbi>
 			} else if (isAbiEventFragment(abi)) {
 				const eventName = jsonInterfaceMethodToString(abi);
 				const eventSignature = encodeEventSignature(eventName);
-				const event = this._createContractEvent(abi);
+				const event = this._createContractEvent(abi, returnFormat);
 				abi.signature = eventSignature;
 
 				if (!(eventName in this._events) || abi.name === 'bound') {
@@ -888,7 +913,7 @@ export class Contract<Abi extends ContractAbi>
 				this._events[eventSignature as keyof ContractEventsInterface<Abi>] = event as never;
 			}
 
-			this._events.allEvents = this._createContractEvent(ALL_EVENTS_ABI);
+			this._events.allEvents = this._createContractEvent(ALL_EVENTS_ABI, returnFormat);
 
 			result = [...result, abi];
 		}
@@ -1041,6 +1066,7 @@ export class Contract<Abi extends ContractAbi>
 	// eslint-disable-next-line class-methods-use-this
 	private _createContractEvent(
 		abi: AbiEventFragment & { signature: HexString },
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): ContractBoundEvent {
 		return (...params: unknown[]) => {
 			const encodedParams = encodeEventABI(this.options, abi, params[0] as EventParameters);
@@ -1052,7 +1078,7 @@ export class Contract<Abi extends ContractAbi>
 					abi,
 					jsonInterface: this._jsonInterface,
 				},
-				{ requestManager: this.requestManager },
+				{ requestManager: this.requestManager, returnFormat },
 			);
 
 			this.subscriptionManager?.addSubscription(sub).catch(() => {

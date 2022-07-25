@@ -79,15 +79,15 @@ export type TransactionOutput = {
 	readonly to?: HexString; // If its a contract creation tx then no address wil be specified.
 	readonly from?: HexString;
 	readonly data: string;
-	readonly gas?: bigint | number;
+	readonly gas?: Numbers;
 	readonly gasLimit?: string;
-	readonly nonce: bigint | number;
-	readonly value: bigint | number;
-	readonly blockNumber?: bigint | number;
-	readonly transactionIndex?: bigint | number;
+	readonly nonce: Numbers;
+	readonly value: Numbers;
+	readonly blockNumber?: Numbers;
+	readonly transactionIndex?: Numbers;
 } & (
-	| { maxPriorityFeePerGas: bigint | number; maxFeePerGas: bigint | number; gasPrice?: never }
-	| { maxPriorityFeePerGas?: never; maxFeePerGas?: never; gasPrice: bigint | number }
+	| { maxPriorityFeePerGas: Numbers; maxFeePerGas: Numbers; gasPrice?: never }
+	| { maxPriorityFeePerGas?: never; maxFeePerGas?: never; gasPrice: Numbers }
 );
 
 export interface LogsInput {
@@ -104,11 +104,11 @@ export interface LogsInput {
 export interface LogsOutput {
 	readonly id?: string;
 	readonly removed: boolean;
-	readonly logIndex?: bigint | number;
-	readonly transactionIndex?: bigint | number;
+	readonly logIndex?: Numbers;
+	readonly transactionIndex?: Numbers;
 	readonly transactionHash?: HexString32Bytes;
 	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: bigint | number;
+	readonly blockNumber?: Numbers;
 	readonly address: string;
 	readonly topics: HexString[];
 	readonly data: HexString;
@@ -142,15 +142,15 @@ export interface BlockOutput {
 }
 
 export interface BlockHeaderOutput {
-	readonly gasLimit: bigint | number;
-	readonly gasUsed: bigint | number;
-	readonly timestamp: bigint | number;
-	readonly number?: bigint | number;
-	readonly difficulty?: bigint | number;
-	readonly totalDifficulty?: bigint | number;
+	readonly gasLimit: Numbers;
+	readonly gasUsed: Numbers;
+	readonly timestamp: Numbers;
+	readonly number?: Numbers;
+	readonly difficulty?: Numbers;
+	readonly totalDifficulty?: Numbers;
 	readonly transactions?: TransactionOutput[];
 	readonly miner?: HexString;
-	readonly baseFeePerGas?: bigint | number;
+	readonly baseFeePerGas?: Numbers;
 	readonly parentHash?: HexString32Bytes;
 	readonly sha3Uncles: HexString32Bytes[];
 }
@@ -207,11 +207,11 @@ export interface SyncInput {
 }
 
 export interface SyncOutput {
-	readonly startingBlock: bigint | number;
-	readonly currentBlock: bigint | number;
-	readonly highestBlock: bigint | number;
-	readonly knownStates?: bigint | number;
-	readonly pulledStates?: bigint | number;
+	readonly startingBlock: Numbers;
+	readonly currentBlock: Numbers;
+	readonly highestBlock: Numbers;
+	readonly knownStates?: Numbers;
+	readonly pulledStates?: Numbers;
 }
 
 export type Receipt = Record<string, unknown>;

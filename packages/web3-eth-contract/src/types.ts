@@ -40,11 +40,11 @@ export type ContractAbiWithSignature = ReadonlyArray<AbiFragment & { signature: 
 export interface EventLog {
 	readonly event: string;
 	readonly id?: string;
-	readonly logIndex?: bigint | number;
-	readonly transactionIndex?: bigint | number;
+	readonly logIndex?: bigint | number | string;
+	readonly transactionIndex?: bigint | number | string;
 	readonly transactionHash?: HexString32Bytes;
 	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: bigint | number;
+	readonly blockNumber?: bigint | number | string;
 	readonly address: string;
 	readonly topics: HexString[];
 	readonly data: HexString;
