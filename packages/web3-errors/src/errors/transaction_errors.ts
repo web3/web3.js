@@ -132,3 +132,9 @@ export class TransactionNotFound extends TransactionError {
 		this.code = ERR_TX_NOT_FOUND;
 	}
 }
+export class TransactionRevertedError extends TransactionError {
+	public constructor(revertMessage: string) {
+		super(`Transaction was reverted: ${revertMessage}`);
+		this.code = ERR_TX_NOT_FOUND;
+	}
+}

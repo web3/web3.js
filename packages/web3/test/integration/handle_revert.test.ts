@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
+import { TransactionRevertedError } from 'web3-errors';
 import Web3 from '../../src/index';
 import {
 	createNewAccount,
@@ -86,15 +87,34 @@ describe('eth', () => {
 		}
 	});
 
-	// describe('handleRevert', () => {
-	// 	it('should get revert reason', async () => {
-	// 		// debugger;
-	// 		await contract.methods.reverts().call({ from: accounts[0] });
-	// 	});
-	// });
-	describe('handleRevert2', () => {
-		it('should get revert reason', async () => {
+	describe('handleRevert', () => {
+		// todo enable when figure out what happening in eth_call (doesn't throw error)
+		// eslint-disable-next-line jest/expect-expect
+		it.skip('should get revert reason', async () => {
 			await contract.methods.reverts().send({ from: accounts[0] });
+		});
+
+		it('should get revert reason for eth tx', async () => {
+			await expect(
+				web3.eth.sendTransaction({
+					from: accounts[0],
+					gas: '0x3d0900',
+					gasPrice: '0x3B9ACBF4',
+					// hash: '0x7c3a42c614689e905f894042ad6f74b456bab4b984f40a3b1718fef43d39b7fe',
+					input: '0x6080604052..3480156100105..7600080fd.klkl',
+					nonce: '0x10',
+					to: undefined,
+					value: '0x0',
+					type: '0x0',
+					v: '0xa96',
+					r: '0x1ba80b16306d1de8ff809c00f67c305e8636326096aba282828d331aa2ec30a1',
+					s: '0x39f77e0b68d5524826e4385ad4e1f01e748f32c177840184ae65d9592fdfe5c',
+				}),
+			).rejects.toThrow(
+				new TransactionRevertedError(
+					'cannot unmarshal hex string of odd length into Go struct field TransactionArgs.data of type hexutil.Bytes',
+				),
+			);
 		});
 	});
 });
