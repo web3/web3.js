@@ -38,8 +38,6 @@ import {
  * To avoid multiple package dependencies for `web3-eth-accounts` we are creating
  * this function in `web3` package. In future the actual `web3-eth-accounts` package
  * should be converted to context aware.
- *
- * @param context
  */
 export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) => {
 	const signTransactionWithContext = async (transaction: Transaction, privateKey: Bytes) => {

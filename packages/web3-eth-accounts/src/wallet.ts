@@ -85,7 +85,7 @@ export class Wallet<
 	/**
 	 * Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
 	 *
-	 * @param numberOfAccounts Number of accounts to create. Leave empty to create an empty wallet.
+	 * @param numberOfAccounts - Number of accounts to create. Leave empty to create an empty wallet.
 	 * @returns The wallet
 	 * ```ts
 	 * web3.eth.accounts.wallet.create(2)
@@ -130,7 +130,7 @@ export class Wallet<
 	/**
 	 * Adds an account using a private key or account object to the wallet.
 	 *
-	 * @param account A private key or account object
+	 * @param account - A private key or account object
 	 * @returns The wallet
 	 *
 	 * ```ts
@@ -168,7 +168,7 @@ export class Wallet<
 	/**
 	 * Get the account of the wallet with either the index or public address.
 	 *
-	 * @param addressOrIndex A string of the address or number index within the wallet.
+	 * @param addressOrIndex - A string of the address or number index within the wallet.
 	 * @returns The account object or undefined if the account doesnt exist
 	 */
 
@@ -259,9 +259,10 @@ export class Wallet<
 	/**
 	 * Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
 	 *
-	 * @param password `string` - The password which will be used for encryption
+	 * @param password - The password which will be used for encryption
 	 * @param options - encryption options
 	 * @returns An array of the encrypted keystore v3.
+	 *
 	 * ```ts
 	 * web3.eth.accounts.wallet.create(1)
 	 * web3.eth.accounts.wallet.encrypt("abc").then(console.log);
@@ -273,6 +274,7 @@ export class Wallet<
 	 * "kdf":"scrypt","kdfparams":{"n":8192,"r":8,"p":1,"dklen":32,"salt":"6a743c9b367d15f4758e4f3f3378ff0fd443708d1c64854e07588ea5331823ae"},
 	 * "mac":"410544c8307e3691fda305eb3722d82c3431f212a87daa119a21587d96698b57"}}'
 	 * ]
+	 * ```
 	 */
 	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
 		return Promise.all(this.map(async account => account.encrypt(password, options)));
@@ -281,9 +283,9 @@ export class Wallet<
 	/**
 	 * Decrypts keystore v3 objects.
 	 *
-	 * @param encryptedWallets `string[]` An array of encrypted keystore v3 objects to decrypt
-	 * @param password `String` The password to encrypt with
-	 * @param options decrypt options for the wallets
+	 * @param encryptedWallets - An array of encrypted keystore v3 objects to decrypt
+	 * @param password - The password to encrypt with
+	 * @param options - decrypt options for the wallets
 	 * @returns The decrypted wallet object
 	 *
 	 * ```ts
@@ -373,8 +375,8 @@ export class Wallet<
 	 * Stores the wallet encrypted and as string in local storage.
 	 * **__NOTE:__** Browser only
 	 *
-	 * @param password `String` The password to encrypt the wallet
-	 * @param keyName `String` (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
+	 * @param password - The password to encrypt the wallet
+	 * @param keyName - (optional) The key used for the local storage position, defaults to `"web3js_wallet"`.
 	 * @returns Will return boolean value true if saved properly
 	 * ```ts
 	 * web3.eth.accounts.wallet.save('test#!$');
@@ -400,8 +402,8 @@ export class Wallet<
 	 * Loads a wallet from local storage and decrypts it.
 	 * **__NOTE:__** Browser only
 	 *
-	 * @param password `String` The password to decrypt the wallet.
-	 * @param keyName `String` (optional)The key used for local storage position, defaults to `web3js_wallet"`
+	 * @param password - The password to decrypt the wallet.
+	 * @param keyName - (optional)The key used for local storage position, defaults to `web3js_wallet"`
 	 * @returns Returns the wallet object
 	 *
 	 * ```ts
@@ -413,6 +415,7 @@ export class Wallet<
 	 *   _accounts: Accounts {_requestManager: RequestManager, givenProvider: Proxy, providers: {…}, _provider: WebsocketProvider, …},
 	 *   [[Prototype]]: Object
 	 * }
+	 * ```
 	 */
 	public async load(password: string, keyName?: string) {
 		const storage = Wallet.getStorage();

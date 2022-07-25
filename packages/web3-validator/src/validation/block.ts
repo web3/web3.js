@@ -22,16 +22,12 @@ export const isBlockNumber = (value: string | number | bigint): boolean => isUIn
 
 /**
  * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
- *
- * @param value
  */
 export const isBlockTag = (value: string) =>
 	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
 
 /**
  * Returns true if given value is valid hex string and not negative, or is a valid BlockTag
- *
- * @param value
  */
 export const isBlockNumberOrTag = (value: string | number | bigint) =>
 	isBlockTag(value as string) || isBlockNumber(value);

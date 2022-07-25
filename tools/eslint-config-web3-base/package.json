@@ -41,7 +41,6 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-jest": "^26.6.0",
 		"eslint-plugin-tsdoc": "^0.2.16",
-		"eslint-plugin-jsdoc": "^39.3.2",
 		"eslint-plugin-no-null": "^1.0.2"
 	},
 	"devDependencies": {

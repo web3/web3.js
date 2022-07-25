@@ -19,10 +19,6 @@ import { randomBytes as cryptoRandomBytes } from 'crypto';
 
 /**
  * Returns a random byte array by the given bytes size
- *
- * @param {number} size
- * @param byteSize
- * @returns {Buffer}
  */
 export const randomBytes = (byteSize: number): Buffer => {
 	const randomValues =
@@ -34,9 +30,5 @@ export const randomBytes = (byteSize: number): Buffer => {
 
 /**
  * Returns a random hex string by the given bytes size
- *
- * @param {number} size
- * @param byteSize
- * @returns {string}
  */
 export const randomHex = (byteSize: number): string => `0x${randomBytes(byteSize).toString('hex')}`;

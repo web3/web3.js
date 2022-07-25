@@ -28,11 +28,6 @@ import { isNullish } from 'web3-validator';
 import { TransactionDataAndInputError } from '../errors';
 import { transactionSchema } from '../schemas';
 
-/**
- *
- * @param transaction
- * @param returnFormat
- */
 export function formatTransaction<
 	ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 	TransactionType extends Transaction = Transaction,

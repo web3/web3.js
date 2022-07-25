@@ -26,8 +26,6 @@ import { isTopic } from './topic';
  * then because all Filter properties are optional, we check if the expected properties
  * are defined. If defined and they're not the expected type, we immediately return false,
  * otherwise we return true after all checks pass.
- *
- * @param value
  */
 export const isFilterObject = (value: Filter) => {
 	const expectedFilterProperties: (keyof Filter)[] = [

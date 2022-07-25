@@ -24,7 +24,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	/**
 	 * Gets the current network ID
 	 *
-	 * @param returnFormat
+	 * @param returnFormat - Return format
 	 * @returns A Promise of the network ID.
 	 * @example
 	 * ```ts
@@ -42,7 +42,7 @@ export class Net extends Web3Context<Web3NetAPI> {
 	/**
 	 * Get the number of peers connected to.
 	 *
-	 * @param returnFormat
+	 * @param returnFormat - Return format
 	 * @returns A promise of the number of the peers connected to.
 	 * @example
 	 * ```ts

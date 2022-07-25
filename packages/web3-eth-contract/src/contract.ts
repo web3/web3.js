@@ -116,7 +116,7 @@ export type ContractMethodsInterface<Abi extends ContractAbi> = {
 /**
  * The event object can be accessed from `myContract.events.myEvent`.
  *
- * > Remember: To subscribe to an event, your provider must have support for subscriptions.
+ * \> Remember: To subscribe to an event, your provider must have support for subscriptions.
  *
  * ```ts
  * const subscription = await myContract.events.MyEvent([options])
@@ -502,7 +502,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * This allows calling functions with same name but different parameters from the JavaScript contract object.
 	 *
-	 * > The method signature does not provide a type safe interface, so we recommend to use method `name` instead.
+	 * \> The method signature does not provide a type safe interface, so we recommend to use method `name` instead.
 	 *
 	 * ```ts
 	 * // calling a method
@@ -629,9 +629,6 @@ export class Contract<Abi extends ContractAbi>
 	 * });
 	 * ```
 	 *
-	 * @param deployOptions
-	 * @param deployOptions.data
-	 * @param deployOptions.arguments
 	 * @returns - The transaction object
 	 */
 	public deploy(deployOptions?: {
@@ -750,7 +747,7 @@ export class Contract<Abi extends ContractAbi>
 	 *
 	 * @param eventName - The name of the event in the contract, or `allEvents` to get all events.
 	 * @param filter - The filter options used to get events.
-	 * @param returnFormat
+	 * @param returnFormat - Return format
 	 * @returns - An array with the past event `Objects`, matching the given event name and filter.
 	 */
 	public async getPastEvents<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(

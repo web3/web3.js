@@ -111,13 +111,6 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-/**
- *
- * @param options
- * @param options.transaction
- * @param options.web3Context
- * @param options.privateKey
- */
 export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
