@@ -1,0 +1,31 @@
+storage: ./storage
+auth:
+  htpasswd:
+    file: ./htpasswd
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+    timeout: 10m
+    fail_timeout: 10m
+    max_fails: 20
+    agent_options: { keepAlive: true, keepAliveMsecs: 1000000, timeout: 100000 }
+  yarn:
+    url: https://registry.yarnpkg.com/
+    timeout: 10m
+    fail_timeout: 10m
+    max_fails: 20
+    agent_options: { keepAlive: true, keepAliveMsecs: 1000000, timeout: 100000 }
+packages:
+  '@*/*':
+    # scoped packages
+    access: $all
+    publish: $all
+    proxy: npmjs yarn
+  '**':
+    access: $all
+    publish: $all
+    proxy: npmjs yarn
+logs:
+  - {type: stdout, format: pretty, level: warn}
+server:
+  keepAliveTimeout: 600 # specified in seconds
