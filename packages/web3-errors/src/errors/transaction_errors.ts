@@ -28,6 +28,7 @@ import {
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
 	ERR_TX_NOT_FOUND,
+	ERR_TX_REVERTED,
 } from '../error_codes';
 import { Web3Error } from '../web3_error_base';
 
@@ -135,6 +136,6 @@ export class TransactionNotFound extends TransactionError {
 export class TransactionRevertedError extends TransactionError {
 	public constructor(revertMessage: string) {
 		super(`Transaction was reverted: ${revertMessage}`);
-		this.code = ERR_TX_NOT_FOUND;
+		this.code = ERR_TX_REVERTED;
 	}
 }
