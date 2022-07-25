@@ -300,6 +300,54 @@ export const blockSchema = {
 	},
 };
 
+export const blockHeaderSchema = {
+	type: 'object',
+	properties: {
+		parentHash: {
+			eth: 'bytes32',
+		},
+		receiptRoot: {
+			eth: 'bytes32',
+		},
+		miner: {
+			eth: 'bytes',
+		},
+		stateRoot: {
+			eth: 'bytes32',
+		},
+		transactionsRoot: {
+			eth: 'bytes32',
+		},
+		logsBloom: {
+			eth: 'bytes256',
+		},
+		difficulty: {
+			eth: 'uint',
+		},
+		number: {
+			eth: 'uint',
+		},
+		gasLimit: {
+			eth: 'uint',
+		},
+		gasUsed: {
+			eth: 'uint',
+		},
+		timestamp: {
+			eth: 'uint',
+		},
+		extraData: {
+			eth: 'bytes',
+		},
+		nonce: {
+			eth: 'uint',
+		},
+		sha3Uncles: {
+			eth: 'bytes32',
+		},
+	},
+};
+
 export const logSchema = {
 	type: 'object',
 	properties: {
@@ -332,6 +380,26 @@ export const logSchema = {
 			items: {
 				eth: 'bytes32',
 			},
+		},
+	},
+};
+export const syncSchema = {
+	type: 'object',
+	properties: {
+		startingBlock: {
+			eth: 'string',
+		},
+		currentBlock: {
+			eth: 'string',
+		},
+		highestBlock: {
+			eth: 'string',
+		},
+		knownStates: {
+			eth: 'string',
+		},
+		pulledStates: {
+			eth: 'string',
 		},
 	},
 };

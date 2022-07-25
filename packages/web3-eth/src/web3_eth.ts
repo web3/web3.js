@@ -27,7 +27,7 @@ import {
 	HexString8Bytes,
 	Numbers,
 	BlockNumberOrTag,
-	LogsInput,
+	LogsOutput,
 	Transaction,
 	TransactionCall,
 	TransactionWithLocalWalletIndex,
@@ -365,13 +365,18 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		);
 	}
 
-	public async subscribe<T extends keyof RegisteredSubscription>(
+	public async subscribe<
+		T extends keyof RegisteredSubscription,
+		ReturnType extends DataFormat = DataFormat,
+	>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
+		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
 	): Promise<InstanceType<RegisteredSubscription[T]>> {
 		const subscription = (await this.subscriptionManager?.subscribe(
 			name,
 			args,
+			returnFormat,
 		)) as InstanceType<RegisteredSubscription[T]>;
 		if (
 			subscription instanceof LogsSubscription &&
@@ -384,7 +389,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 				this.getPastLogs(args)
 					.then(logs => {
 						for (const log of logs) {
-							subscription._processSubscriptionResult(log as LogsInput);
+							subscription._processSubscriptionResult(log as LogsOutput);
 						}
 					})
 					.catch(e => {
