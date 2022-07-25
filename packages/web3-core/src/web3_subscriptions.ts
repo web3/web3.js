@@ -38,22 +38,21 @@ export abstract class Web3Subscription<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
 	API extends Web3APISpec = EthExecutionAPI,
-	ReturnType extends DataFormat = DataFormat,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
-	private readonly _returnFormat: ReturnType;
+	private readonly _returnFormat: DataFormat;
 	private _id?: HexString;
 	private _messageListener?: (e: Error | undefined, data?: JsonRpcNotification<Log>) => void;
 
 	public constructor(
 		public readonly args: ArgsType,
 
-		options: { requestManager: Web3RequestManager<API>; returnFormat?: ReturnType },
+		options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
 	) {
 		super();
 		this._requestManager = options.requestManager;
-		this._returnFormat = options.returnFormat ?? (DEFAULT_RETURN_FORMAT as ReturnType);
+		this._returnFormat = options.returnFormat ?? (DEFAULT_RETURN_FORMAT as DataFormat);
 	}
 
 	public get id() {
@@ -131,16 +130,10 @@ export abstract class Web3Subscription<
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	SubscriptionType extends Web3Subscription<any, any, API, any> = Web3Subscription<
-		any,
-		any,
-		API,
-		any
-	>,
-	ReturnType extends DataFormat = DataFormat,
+	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	args: any,
-	options: { requestManager: Web3RequestManager<API>; returnFormat?: ReturnType },
+	options: { requestManager: Web3RequestManager<API>; returnFormat?: DataFormat },
 ) => SubscriptionType;
