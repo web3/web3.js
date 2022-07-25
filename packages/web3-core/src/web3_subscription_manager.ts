@@ -51,13 +51,10 @@ export class Web3SubscriptionManager<
 		});
 	}
 
-	public async subscribe<
-		T extends keyof RegisteredSubs,
-		ReturnType extends DataFormat = DataFormat,
-	>(
+	public async subscribe<T extends keyof RegisteredSubs>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubs[T]>[0],
-		returnFormat: ReturnType = DEFAULT_RETURN_FORMAT as ReturnType,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<InstanceType<RegisteredSubs[T]>> {
 		if (!this.requestManager.provider) {
 			throw new ProviderError('Provider not available');
