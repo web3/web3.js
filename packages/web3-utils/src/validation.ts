@@ -105,10 +105,7 @@ export const isTopicInBloom = isTopicInBloomValidator;
 
 /**
  * Compares between block A and block B
- * Returns -1 if a < b, returns 1 if a > b and returns 0 if a == b
- *
- * @param blockA
- * @param blockB
+ * Returns -1 if a \< b, returns 1 if a \> b and returns 0 if a == b
  */
 export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	// string validation

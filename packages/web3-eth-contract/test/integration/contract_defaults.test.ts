@@ -75,7 +75,7 @@ describe('contract', () => {
 				expect(receipt.from).toEqual(accounts[0]);
 			});
 
-			it('should throw error when "from" is not set on any level', async () => {
+			it('should throw error when "from" is not set on any level', () => {
 				Contract.defaultAccount = undefined;
 				contract.defaultAccount = undefined;
 

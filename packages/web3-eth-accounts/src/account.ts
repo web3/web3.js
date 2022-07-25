@@ -60,10 +60,6 @@ import {
 
 /**
  * Get the private key buffer after the validation
- *
- * @param data - The data in any bytes format
- * @param ignoreLength
- * @returns
  */
 export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean): Buffer => {
 	let privateKeyBuffer: Buffer;
@@ -88,10 +84,11 @@ export const parseAndValidatePrivateKey = (data: Bytes, ignoreLength?: boolean):
 
 /**
  *
- * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\x19Ethereum Signed Message:\n" + message.length + message and hashed using keccak256.
+ * Hashes the given message. The data will be UTF-8 HEX decoded and enveloped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message and hashed using keccak256.
  *
  * @param message - A message to hash, if its HEX it will be UTF8 decoded.
  * @returns The hashed message
+ *
  * ```ts
  * hashMessage("Hello world")
  * > "0x8144a6fa26be252b86456491fbcd43c1de7e022241845ffea1c3df066f7cfede"
@@ -116,11 +113,12 @@ export const hashMessage = (message: string): string => {
 
 /**
  * Signs arbitrary data.
- * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\x19Ethereum Signed Message:\n" + message.length + message
+ * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
  *
  * @param data - The data to sign
  * @param privateKey - The 32 byte private key to sign with
  * @returns The signature Object containing the message, messageHash, signature r, s, v
+ *
  * ```ts
  * web3.eth.accounts.sign('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
  * > {
@@ -298,10 +296,10 @@ export const recoverTransaction = (rawTransaction: HexString): Address => {
  *
  * @param data - Either a signed message, hash, or the {@link signatureObject}
  * @param signature - The raw RLP encoded signature
- * @param signatureOrV
- * @param prefixedOrR
- * @param s
- * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\x19Ethereum Signed Message:\n" + message.length + message, and assumed to be already prefixed.
+ * @param signatureOrV - signatureOrV
+ * @param prefixedOrR - prefixedOrR
+ * @param s - s
+ * @param prefixed - (default: false) If the last parameter is true, the given message will NOT automatically be prefixed with "\\x19Ethereum Signed Message:\\n" + message.length + message, and assumed to be already prefixed.
  * @returns The Ethereum address used to sign this data
  * ```ts
  * sign('Some data', '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728');
@@ -390,8 +388,8 @@ const uuidV4 = (): string => {
 /**
  * Get the ethereum Address from a private key
  *
- * @param privateKey String or buffer of 32 bytes
- * @param ignoreLength if true, will not error check length
+ * @param privateKey - String or buffer of 32 bytes
+ * @param ignoreLength - if true, will not error check length
  * @returns The Ethereum address
  * @example
  * ```ts
@@ -597,8 +595,8 @@ export const encrypt = async (
 /**
  * Get an Account object from the privateKey
  *
- * @param privateKey String or buffer of 32 bytes
- * @param ignoreLength if true, will not error check length
+ * @param privateKey - String or buffer of 32 bytes
+ * @param ignoreLength - if true, will not error check length
  * @returns A Web3Account object
  *
  * The `Web3Account.signTransaction` is not stateful here. We need network access to get the account `nonce` and `chainId` to sign the transaction.
@@ -621,6 +619,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 	return {
 		address: privateKeyToAddress(privateKeyBuffer),
 		privateKey: bytesToHex(privateKeyBuffer),
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Record<string, unknown>) => {
 			throw new SignerError('Do not have network access to sign the transaction');
 		},

@@ -21,8 +21,6 @@ import { isHexStrict } from './string';
 
 /**
  * Checks if a given value is a valid big int
- *
- * @param value
  */
 export const isBigInt = (value: ValidInputTypes): boolean => typeof value === 'bigint';
 

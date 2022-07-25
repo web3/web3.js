@@ -85,9 +85,6 @@ export class Web3RequestManager<
 	/**
 	 * Use to set provider. Provider can be a provider instance or a string.
 	 * To set IPC provider as a string please use the IPC socket file which name ends with .ipc
-	 *
-	 * @param provider
-	 * @param net
 	 */
 	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket): boolean {
 		let newProvider: SupportedProviders<API> | undefined;

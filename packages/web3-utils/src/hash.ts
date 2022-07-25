@@ -34,10 +34,7 @@ import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 /**
- *
  * computes the Keccak-256 hash of the input and returns a hexstring
- *
- * @param data
  */
 export const sha3 = (data: Bytes): string | undefined => {
 	const updatedData = typeof data === 'string' && isHexStrict(data) ? hexToBytes(data) : data;
@@ -50,8 +47,6 @@ export const sha3 = (data: Bytes): string | undefined => {
 
 /**
  *Will calculate the sha3 of the input but does return the hash value instead of null if for example a empty string is passed.
- *
- * @param data
  */
 export const sha3Raw = (data: Bytes): string => {
 	const hash = sha3(data);
@@ -66,8 +61,6 @@ export { keccak256 };
 
 /**
  * returns type and value
- *
- * @param arg
  */
 const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, EncodingTypes] => {
 	if (
@@ -84,8 +77,6 @@ const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, 
 
 /**
  * returns the type with size if uint or int
- *
- * @param name
  */
 const elementaryName = (name: string): string => {
 	if (name.startsWith('int[')) {
@@ -105,9 +96,6 @@ const elementaryName = (name: string): string => {
 
 /**
  * returns the size of the value of type 'byte'
- *
- * @param value
- * @param typeLength
  */
 const parseTypeN = (value: string, typeLength: number): number => {
 	const typesize = /^(\d+).*$/.exec(value.slice(typeLength));
@@ -116,8 +104,6 @@ const parseTypeN = (value: string, typeLength: number): number => {
 
 /**
  * returns the bit length of the value
- *
- * @param value
  */
 const bitLength = (value: bigint | number): number => {
 	const updatedVal = value.toString(2);
@@ -127,9 +113,6 @@ const bitLength = (value: bigint | number): number => {
 /**
  * Pads the value based on size and type
  * returns a string of the padded value
- *
- * @param type
- * @param val
  */
 const solidityPack = (type: string, val: EncodingTypes): string => {
 	const value = val.toString();
@@ -207,8 +190,6 @@ const solidityPack = (type: string, val: EncodingTypes): string => {
 
 /**
  * returns a string of the tightly packed value given based on the type
- *
- * @param arg
  */
 export const processSolidityEncodePackedArgs = (
 	arg: TypedObject | TypedObjectAbbreviated | Numbers,
@@ -228,8 +209,6 @@ export const processSolidityEncodePackedArgs = (
 
 /**
  * Encode packed arguments to a hexstring
- *
- * @param {...any} values
  */
 export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]): string => {
 	const args = Array.prototype.slice.call(values);
@@ -242,8 +221,6 @@ export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, or null if input is empty
- *
- * @param {...any} values
  */
 export const soliditySha3 = (
 	...values: TypedObject[] | TypedObjectAbbreviated[]
@@ -252,8 +229,6 @@ export const soliditySha3 = (
 /**
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
- *
- * @param {...any} values
  */
 export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));
@@ -261,8 +236,6 @@ export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviate
 /**
  * Get slot number for storage long string in contract. Basically for getStorage method
  * returns slotNumber where will data placed
- *
- * @param mainSlotNumber
  */
 export const getStorageSlotNumForLongString = (mainSlotNumber: number | string) =>
 	sha3(

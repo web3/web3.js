@@ -87,7 +87,7 @@
 		"ts-jest": "^28.0.7",
 		"ts-loader": "^9.3.1",
 		"ts-node": "^10.9.1",
-		"typedoc": "^0.23.8",
+		"typedoc": "^0.23.9",
 		"typedoc-monorepo-link-types": "^0.0.4",
 		"typedoc-plugin-extras": "^2.2.5",
 		"typedoc-plugin-mdn-links": "^2.0.0",
