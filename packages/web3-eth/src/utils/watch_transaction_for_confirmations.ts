@@ -140,14 +140,6 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	});
 };
 
-/**
- *
- * @param web3Context
- * @param transactionPromiEvent
- * @param transactionReceipt
- * @param transactionHash
- * @param returnFormat
- */
 export function watchTransactionForConfirmations<
 	ReturnFormat extends DataFormat,
 	Web3PromiEventEventType extends Web3PromiEventEventTypeBase<ReturnFormat>,

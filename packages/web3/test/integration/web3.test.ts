@@ -100,7 +100,7 @@ describe('Web3 instance', () => {
 	});
 
 	describeIf(isWs)('Create Web3 class instance with ws string providers', () => {
-		it('should create instance with string of ws provider', async () => {
+		it('should create instance with string of ws provider', () => {
 			web3 = new Web3(clientUrl);
 			expect(web3).toBeInstanceOf(Web3);
 		});

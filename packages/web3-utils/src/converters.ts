@@ -106,29 +106,22 @@ export const bytesToBuffer = (data: Bytes): Buffer | never => {
 };
 
 /**
- * @param data
  * @internal
  */
 const bufferToHexString = (data: Buffer) => `0x${data.toString('hex')}`;
 
 /**
  * Convert a byte array to a hex string
- *
- * @param bytes
  */
 export const bytesToHex = (bytes: Bytes): HexString => bufferToHexString(bytesToBuffer(bytes));
 
 /**
  * Convert a hex string to a byte array
- *
- * @param bytes
  */
 export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
 
 /**
  * Converts value to it's number representation
- *
- * @param value
  */
 export const hexToNumber = (value: HexString): bigint | number => {
 	validator.validate(['hex'], [value]);
@@ -145,8 +138,6 @@ export const toDecimal = hexToNumber;
 
 /**
  * Converts value to it's hex representation
- *
- * @param value
  */
 export const numberToHex = (value: Numbers): HexString => {
 	validator.validate(['int'], [value]);
@@ -162,15 +153,11 @@ export const fromDecimal = numberToHex;
 
 /**
  * Converts value to it's decimal representation in string
- *
- * @param data
  */
 export const hexToNumberString = (data: HexString): string => hexToNumber(data).toString();
 
 /**
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
- *
- * @param str
  */
 export const utf8ToHex = (str: string): HexString => {
 	validator.validate(['string'], [str]);
@@ -185,36 +172,32 @@ export const utf8ToHex = (str: string): HexString => {
 };
 
 /**
- * @alias `utf8ToHex`
+ * @alias utf8ToHex
  */
 
 export const fromUtf8 = utf8ToHex;
 /**
- * @alias `utf8ToHex`
+ * @alias utf8ToHex
  */
 export const stringToHex = utf8ToHex;
 
 /**
  * Should be called to get utf8 from it's hex representation
- *
- * @param str
  */
 export const hexToUtf8 = (str: HexString): string => bytesToBuffer(str).toString('utf8');
 
 /**
- * @alias `hexToUtf8`
+ * @alias hexToUtf8
  */
 export const toUtf8 = hexToUtf8;
 
 /**
- * @alias `hexToUtf8`
+ * @alias hexToUtf8
  */
 export const hexToString = hexToUtf8;
 
 /**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
- *
- * @param str
  */
 export const asciiToHex = (str: string): HexString => {
 	validator.validate(['string'], [str]);
@@ -223,27 +206,22 @@ export const asciiToHex = (str: string): HexString => {
 };
 
 /**
- * @alias `asciiToHex`
+ * @alias asciiToHex
  */
 export const fromAscii = asciiToHex;
 
 /**
  * Should be called to get ascii from it's hex representation
- *
- * @param str
  */
 export const hexToAscii = (str: HexString): string => bytesToBuffer(str).toString('ascii');
 
 /**
- * @alias `hexToAscii`
+ * @alias hexToAscii
  */
 export const toAscii = hexToAscii;
 
 /**
  * Auto converts any given value into it's hex representation.
- *
- * @param value
- * @param returnType
  */
 export const toHex = (
 	value: Numbers | Bytes | Address | boolean,
@@ -287,8 +265,6 @@ export const toHex = (
 /**
  * Auto converts any given value into it's hex representation,
  * then converts hex to number.
- *
- * @param value
  */
 export const toNumber = (value: Numbers): number | bigint => {
 	if (typeof value === 'number') {
@@ -306,8 +282,6 @@ export const toNumber = (value: Numbers): number | bigint => {
 
 /**
  * Auto converts any given value into it's bigint representation
- *
- * @param value
  */
 export const toBigInt = (value: unknown): bigint => {
 	if (typeof value === 'number') {
@@ -331,9 +305,6 @@ export const toBigInt = (value: unknown): bigint => {
 
 /**
  * Takes a number of wei and converts it to any other ether unit.
- *
- * @param number
- * @param unit
  */
 export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 	const denomination = ethUnitMap[unit];
@@ -381,9 +352,6 @@ export const fromWei = (number: Numbers, unit: EtherUnits): string => {
 
 /**
  * Takes a number of a unit and converts it to wei.
- *
- * @param number
- * @param unit
  */
 export const toWei = (number: Numbers, unit: EtherUnits): string => {
 	validator.validate(['number'], [number]);
@@ -457,9 +425,6 @@ export const toChecksumAddress = (address: Address): string => {
 
 /**
  *  used to flatten json abi inputs/outputs into an array of type-representing-strings
- *
- * @param includeTuple
- * @param puts
  */
 export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[] => {
 	const types: string[] = [];
@@ -491,8 +456,6 @@ export const flattenTypes = (includeTuple: boolean, puts: Components[]): string[
 /**
  * Should be used to create full function/event name from json abi
  * returns a string
- *
- * @param json
  */
 export const jsonInterfaceMethodToString = (
 	json: JsonFunctionInterface | JsonEventInterface,

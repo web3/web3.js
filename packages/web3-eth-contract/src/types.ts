@@ -106,6 +106,7 @@ export interface ContractOptions {
 	 *
 	 * // set a new interface
 	 * myContract.options.jsonInterface = [...];
+	 * ```
 	 */
 	jsonInterface: ContractAbiWithSignature;
 	/**

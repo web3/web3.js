@@ -149,8 +149,6 @@ export abstract class Web3Config
 	 * - web3.eth.getStorageAt()
 	 * - web3.eth.call()
 	 * - myContract.methods.myMethod().call()
-	 *
-	 * @returns {BlockNumberOrTag}
 	 */
 	public get defaultBlock() {
 		return this._config.defaultBlock;
@@ -159,7 +157,6 @@ export abstract class Web3Config
 	/**
 	 * Will set the default block.
 	 *
-	 * @param {BlockNumberOrTag} val
 	 * - A block number
 	 * - `"earliest"` - String: The genesis block
 	 * - `"latest"` - String: The latest block (current head of the blockchain)

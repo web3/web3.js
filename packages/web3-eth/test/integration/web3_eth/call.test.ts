@@ -18,7 +18,7 @@ import { TransactionCall, Address, BlockTags, Transaction } from 'web3-types';
 import { decodeParameters } from 'web3-eth-abi';
 import WebSocketProvider from 'web3-providers-ws';
 
-import Web3Eth from '../../../src';
+import { Web3Eth } from '../../../src';
 import {
 	getSystemTestAccounts,
 	getSystemTestProvider,

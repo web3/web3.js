@@ -31,18 +31,22 @@ describe('personal integration tests', () => {
 	let ethPersonal: Personal;
 	let accounts: string[];
 	let clientUrl: string;
+
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		ethPersonal = new Personal(clientUrl);
 	});
+
 	beforeEach(async () => {
 		accounts = await getSystemTestAccounts();
 	});
-	afterAll(async () => {
+
+	afterAll(() => {
 		if (isWs) {
 			(ethPersonal.provider as WebSocketProvider).disconnect();
 		}
 	});
+
 	it('new account', async () => {
 		const newAccount = await ethPersonal.newAccount('!@superpassword');
 		expect(isHexStrict(newAccount)).toBe(true);

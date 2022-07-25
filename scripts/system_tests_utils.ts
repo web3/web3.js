@@ -45,8 +45,6 @@ let _accounts: string[] = [];
 
 /**
  * Get the env variable from Cypress if it exists or node process
- *
- * @param name
  */
 export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment

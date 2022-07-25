@@ -83,7 +83,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *
  * #### Returns
  * //todo enable when functionality added
- * //{@see Web3.version}
+ * // @see Web3.version
  *
  * ### utils
  *
