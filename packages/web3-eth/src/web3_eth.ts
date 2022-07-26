@@ -1450,6 +1450,30 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		);
 	}
 
+    /**
+     * Lets you subscribe to specific events in the blockchain.
+     *
+     * @param name The subscription you want to subscribe to.
+     * @param args Optional additional parameters, depending on the subscription type.
+     * @returns One of {@link RegisteredSubscription}
+     *
+     * ```ts
+     * const subscription = web3.eth.subscribe('logs', {
+     *     address: '0x1234567890123456789012345678901234567890',
+     *     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
+     * }, function(error, result){
+     *     if (!error)
+     *         console.log(result);
+     * });
+     *
+     * const subscription = web3.eth.subscribe('logs', {
+     *     address: '0x1234567890123456789012345678901234567890',
+     *     topics: ['0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234']
+     * })
+     * .then(logs => console.log(logs))
+     * .catch(error => console.log(error));
+     * ```
+     */
 	public async subscribe<T extends keyof RegisteredSubscription>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubscription[T]>[0],
@@ -1484,6 +1508,17 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		return !(sub instanceof SyncingSubscription);
 	}
 
+    /**
+     * Resets subscriptions.
+     *
+     * @param notClearSyncing If `true` it keeps the `syncing` subscription.
+     * @returns `true` if successful, otherwise `false`.
+     *
+     * ```ts
+     * web3.eth.clearSubscriptions().then(console.log);
+     * > true
+     * ```
+     */
 	public clearSubscriptions(notClearSyncing = false): Promise<string[]> | undefined {
 		return this.subscriptionManager?.unsubscribe(
 			// eslint-disable-next-line
