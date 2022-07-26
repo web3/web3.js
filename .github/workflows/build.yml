@@ -136,7 +136,7 @@ jobs:
         shell: bash
 
   blackbox:
-      name: Blockbox
+      name: Blackbox
       needs: build
       runs-on: ubuntu-latest
       env:
