@@ -19,8 +19,6 @@ import { isBloom, isInBloom } from './bloom';
 
 /**
  * Checks if its a valid topic
- *
- * @param topic
  */
 export const isTopic = (topic: string): boolean => {
 	if (typeof topic !== 'string') {
@@ -41,9 +39,6 @@ export const isTopic = (topic: string): boolean => {
 /**
  * Returns true if the topic is part of the given bloom.
  * note: false positives are possible.
- *
- * @param bloom
- * @param topic
  */
 export const isTopicInBloom = (bloom: string, topic: string): boolean => {
 	if (!isBloom(bloom)) {

@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { inputAddressFormatter } from 'web3-core';
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
-import { isHexStrict, sha3Raw } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
 import REGISTRY from './abi/registry';
 import { RESOLVER } from './abi/resolver';
@@ -44,10 +43,11 @@ export class Registry {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			const receipt = this.contract.methods
-				.setOwner(namehash(name), inputAddressFormatter(address))
+				.setOwner(namehash(name), format({ eth: 'address' }, address, returnFormat))
 				.send(txConfig);
 
 			return receipt;
@@ -83,11 +83,16 @@ export class Registry {
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
 			const receipt = this.contract.methods
-				.setSubnodeOwner(namehash(name), hexStrictLabel, inputAddressFormatter(address))
+				.setSubnodeOwner(
+					namehash(name),
+					hexStrictLabel,
+					format({ eth: 'address' }, address, returnFormat),
+				)
 				.send(txConfig);
 			return receipt;
 		} catch (error) {
@@ -102,6 +107,7 @@ export class Registry {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		const hexStrictLabel = !isHexStrict(label) ? sha3Raw(label) : label;
 		try {
@@ -109,8 +115,8 @@ export class Registry {
 				.setSubnodeRecord(
 					namehash(name),
 					hexStrictLabel,
-					inputAddressFormatter(owner),
-					inputAddressFormatter(resolver),
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);
@@ -136,10 +142,17 @@ export class Registry {
 		}
 	}
 
-	public async isApprovedForAll(owner: Address, operator: Address) {
+	public async isApprovedForAll(
+		owner: Address,
+		operator: Address,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
+	) {
 		try {
 			const result = this.contract.methods
-				.isApprovedForAll(inputAddressFormatter(owner), inputAddressFormatter(operator))
+				.isApprovedForAll(
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, operator, returnFormat),
+				)
 				.call();
 
 			return result;
@@ -181,10 +194,11 @@ export class Registry {
 		name: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			return this.contract.methods
-				.setResolver(namehash(name), inputAddressFormatter(address))
+				.setResolver(namehash(name), format({ eth: 'address' }, address, returnFormat))
 				.send(txConfig);
 		} catch (error) {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
@@ -197,13 +211,14 @@ export class Registry {
 		resolver: Address,
 		ttl: number,
 		txConfig: NonPayableCallOptions,
+		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	) {
 		try {
 			return this.contract.methods
 				.setRecord(
 					namehash(name),
-					inputAddressFormatter(owner),
-					inputAddressFormatter(resolver),
+					format({ eth: 'address' }, owner, returnFormat),
+					format({ eth: 'address' }, resolver, returnFormat),
 					ttl,
 				)
 				.send(txConfig);

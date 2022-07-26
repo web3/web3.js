@@ -53,8 +53,10 @@ describeIf(isWs)('Support of Basic Auth', () => {
 				socket.emit('error');
 				socket.destroy();
 			}
-			const base64Credentials: string = req.headers.authorization!.split(' ')[1];
-			const credentials: string = Buffer.from(base64Credentials, 'base64').toString('ascii');
+			const base64Credentials = req.headers.authorization?.split(' ')[1];
+			const credentials: string = Buffer.from(base64Credentials as string, 'base64').toString(
+				'ascii',
+			);
 			const [username, password] = credentials.split(':');
 			if (username !== 'geth' || password !== 'authpass') {
 				socket.emit('error');

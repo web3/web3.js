@@ -125,7 +125,7 @@ describe('contract', () => {
 
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
-			const failedSubscriptionPromise = new Promise<void>(async (resolve, reject) => {
+			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
 				const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
 
 				event.on('data', () => {

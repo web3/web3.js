@@ -39,14 +39,12 @@ import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { EthExecutionAPI, Web3BaseProvider, Bytes, Transaction } from 'web3-types';
+import { EthExecutionAPI, Bytes, Web3BaseProvider, Transaction } from 'web3-types';
 
 let _accounts: string[] = [];
 
 /**
  * Get the env variable from Cypress if it exists or node process
- *
- * @param name
  */
 export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
