@@ -6,6 +6,8 @@
 # Exit immediately on error
 set -o errexit
 
+echo "Node version"
+node --version
 # Setup mock project to install web3 from virtual registry
 mkdir blackbox_test_app
 cp scripts/js/basic_usage.js blackbox_test_app/basic_usage.js
