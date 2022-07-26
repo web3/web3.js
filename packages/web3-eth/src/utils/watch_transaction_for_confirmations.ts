@@ -22,7 +22,6 @@ import {
 	BlockHeaderOutput,
 	TransactionReceipt,
 } from 'web3-types';
-import { SubscriptionError } from 'web3-errors';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { DataFormat, format, numberToHex } from 'web3-utils';
 import { isNullish } from 'web3-validator';
@@ -90,11 +89,13 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	transactionPromiEvent,
 	returnFormat,
 }: WaitProps<ReturnFormat, ResolveType>) => {
+	let blockHeaderArrived = false;
 	setImmediate(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
 				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
+					blockHeaderArrived = true;
 					if (!newBlockHeader?.number) {
 						return;
 					}
@@ -122,6 +123,8 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 				});
 				subscription.on('error', async () => {
 					await subscription.unsubscribe();
+
+					blockHeaderArrived = false;
 					watchByPolling({
 						web3Context,
 						transactionReceipt,
@@ -131,13 +134,27 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 				});
 			})
 			.catch(() => {
-				throw new SubscriptionError(
-					`Failed to subscribe to new newBlockHeaders to confirmation. ${SubscriptionError.convertToString(
-						transactionReceipt,
-					)}`,
-				);
+				blockHeaderArrived = false;
+				watchByPolling({
+					web3Context,
+					transactionReceipt,
+					transactionPromiEvent,
+					returnFormat,
+				});
 			});
 	});
+
+	// Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
+	setTimeout(() => {
+		if (!blockHeaderArrived) {
+			watchByPolling({
+				web3Context,
+				transactionReceipt,
+				transactionPromiEvent,
+				returnFormat,
+			});
+		}
+	}, web3Context.blockHeaderTimeout * 1000);
 };
 
 export function watchTransactionForConfirmations<
