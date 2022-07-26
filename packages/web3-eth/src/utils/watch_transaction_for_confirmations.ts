@@ -89,13 +89,15 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	transactionPromiEvent,
 	returnFormat,
 }: WaitProps<ReturnFormat, ResolveType>) => {
-	let blockHeaderArrived = false;
+	// The following variable will stay true except if the data arrived,
+	//	or if watching started after an error had occurred.
+	let needToWatchLater = true;
 	setImmediate(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
 				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
-					blockHeaderArrived = true;
+					needToWatchLater = false;
 					if (!newBlockHeader?.number) {
 						return;
 					}
@@ -124,7 +126,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 				subscription.on('error', async () => {
 					await subscription.unsubscribe();
 
-					blockHeaderArrived = false;
+					needToWatchLater = false;
 					watchByPolling({
 						web3Context,
 						transactionReceipt,
@@ -134,7 +136,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 				});
 			})
 			.catch(() => {
-				blockHeaderArrived = false;
+				needToWatchLater = false;
 				watchByPolling({
 					web3Context,
 					transactionReceipt,
@@ -146,7 +148,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 
 	// Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
 	setTimeout(() => {
-		if (!blockHeaderArrived) {
+		if (needToWatchLater) {
 			watchByPolling({
 				web3Context,
 				transactionReceipt,
