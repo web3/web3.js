@@ -107,7 +107,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * Checks if the node is currently syncing.
 	 *
-	 * @returns Either a {@link SyncingStatus}, or `false`.
+	 * @returns Either a {@link SyncingStatusAPI}, or `false`.
 	 *
 	 * ```ts
 	 * web3.eth.isSyncing().then(console.log);
@@ -154,6 +154,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * @deprecated Will be removed in the future, please use {@link Web3Eth.getHashRate} method instead.
 	 *
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @returns The number of hashes per second that the node is mining with.
 	 *
 	 * ```ts
@@ -1042,7 +1043,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	/**
 	 * @param transaction The transaction object to sign.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
-	 * @returns {@link SignedTransactionInfo}, an object containing the [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded signed transaction (accessed via the `raw` property) and the signed transaction object (accessed via the `tx` property).
+	 * @returns {@link SignedTransactionInfoAPI}, an object containing the [RLP](https://ethereum.org/en/developers/docs/data-structures-and-encoding/rlp/#top) encoded signed transaction (accessed via the `raw` property) and the signed transaction object (accessed via the `tx` property).
 	 *
 	 * ```ts
 	 * const transaction = {
@@ -1152,7 +1153,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *
 	 * @param filter A {@link Filter} object containing the properties for the desired logs.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
-	 * @returns {@link FilterResults}, an array of {@link Log} objects.
+	 * @returns {@link FilterResultsAPI}, an array of {@link Log} objects.
 	 *
 	 * ```ts
 	 * web3.eth.getPastLogs({
