@@ -464,6 +464,7 @@ describe('defaults', () => {
 			//	to ensure that polling of new blocks works in such cases.
 			// I will cause the providers that supports subscription (like WebSocket)
 			// 	to never return data through listening to new events
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			(eth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
 				// eslint-disable-next-line no-promise-executor-return
 				await new Promise(res => setTimeout(res, 1000000));
