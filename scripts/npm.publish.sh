@@ -54,6 +54,10 @@ lerna version minor \
   --no-push \
   --yes
 
+# Set identity prior to publishing (necessary for Windows)
+git config user.email "you@example.com"
+git config user.name "Your Name"
+
 # Commit changes because lerna checks git before
 git commit -a -m 'virtual-version-bump'
 
