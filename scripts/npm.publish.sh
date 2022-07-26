@@ -54,7 +54,10 @@ lerna version minor \
   --no-push \
   --yes
 
+ls
+
 git init
+git add .
 # Set identity prior to publishing (necessary for Windows)
 git config user.email "you@example.com"
 git config user.name "Your Name"
