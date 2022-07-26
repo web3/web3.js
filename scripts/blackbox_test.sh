@@ -15,7 +15,7 @@ cd blackbox_test_app
 
 # Install web3 as dep
 npm init --yes
-npm install web3@alpha --save --registry http://localhost:4873
+npm install web3 --save --registry http://localhost:4873
 node basic_usage.js
 
 # Shutdown verdaccio server
