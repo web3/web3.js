@@ -18,14 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	AccessList,
 	AccessListEntry,
-	BaseTransaction,
-	ETH_DATA_FORMAT,
-	Transaction1559Unsigned,
-	Transaction2930Unsigned,
+	BaseTransactionAPI,
+	Transaction1559UnsignedAPI,
+	Transaction2930UnsignedAPI,
 	TransactionCall,
-	TransactionLegacyUnsigned,
-	TransactionWithSender,
-} from 'web3-common';
+	TransactionLegacyUnsignedAPI,
+	Transaction,
+	TransactionWithSenderAPI,
+} from 'web3-types';
+import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
 	ChainIdMismatchError,
@@ -45,13 +46,13 @@ import {
 	UnsupportedFeeMarketError,
 } from './errors';
 import { formatTransaction } from './utils/format_transaction';
-import { InternalTransaction, Transaction } from './types';
+import { InternalTransaction } from './types';
 
 /**
  *
  * @param value
  */
-export function isBaseTransaction(value: BaseTransaction): boolean {
+export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	if (!isNullish(value.to) && !isAddress(value.to)) return false;
 	if (!isHexStrict(value.type) && !isNullish(value.type) && value.type.length !== 2) return false;
 	if (!isHexStrict(value.nonce)) return false;
@@ -96,7 +97,7 @@ export function isAccessList(value: AccessList): boolean {
  *
  * @param value
  */
-export function isTransaction1559Unsigned(value: Transaction1559Unsigned): boolean {
+export function isTransaction1559Unsigned(value: Transaction1559UnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.maxFeePerGas)) return false;
 	if (!isHexStrict(value.maxPriorityFeePerGas)) return false;
@@ -109,7 +110,7 @@ export function isTransaction1559Unsigned(value: Transaction1559Unsigned): boole
  *
  * @param value
  */
-export function isTransaction2930Unsigned(value: Transaction2930Unsigned): boolean {
+export function isTransaction2930Unsigned(value: Transaction2930UnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.gasPrice)) return false;
 	if (!isAccessList(value.accessList)) return false;
@@ -121,7 +122,7 @@ export function isTransaction2930Unsigned(value: Transaction2930Unsigned): boole
  *
  * @param value
  */
-export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsigned): boolean {
+export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.gasPrice)) return false;
 
@@ -132,13 +133,13 @@ export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsigned): b
  *
  * @param value
  */
-export function isTransactionWithSender(value: TransactionWithSender): boolean {
+export function isTransactionWithSender(value: TransactionWithSenderAPI): boolean {
 	if (!isAddress(value.from)) return false;
 	if (!isBaseTransaction(value)) return false;
 	if (
-		!isTransaction1559Unsigned(value as Transaction1559Unsigned) &&
-		!isTransaction2930Unsigned(value as Transaction2930Unsigned) &&
-		!isTransactionLegacyUnsigned(value as TransactionLegacyUnsigned)
+		!isTransaction1559Unsigned(value as Transaction1559UnsignedAPI) &&
+		!isTransaction2930Unsigned(value as Transaction2930UnsignedAPI) &&
+		!isTransactionLegacyUnsigned(value as TransactionLegacyUnsignedAPI)
 	)
 		return false;
 
@@ -149,7 +150,7 @@ export function isTransactionWithSender(value: TransactionWithSender): boolean {
  *
  * @param value
  */
-export function validateTransactionWithSender(value: TransactionWithSender) {
+export function validateTransactionWithSender(value: TransactionWithSenderAPI) {
 	if (!isTransactionWithSender(value)) throw new InvalidTransactionWithSender(value);
 }
 
@@ -165,8 +166,8 @@ export function isTransactionCall(value: TransactionCall): boolean {
 	if (!isNullish(value.value) && !isHexStrict(value.value)) return false;
 	if (!isNullish(value.data) && !isHexStrict(value.data)) return false;
 	if (!isNullish(value.type)) return false;
-	if (isTransaction1559Unsigned(value as Transaction1559Unsigned)) return false;
-	if (isTransaction2930Unsigned(value as Transaction2930Unsigned)) return false;
+	if (isTransaction1559Unsigned(value as Transaction1559UnsignedAPI)) return false;
+	if (isTransaction2930Unsigned(value as Transaction2930UnsignedAPI)) return false;
 
 	return true;
 }

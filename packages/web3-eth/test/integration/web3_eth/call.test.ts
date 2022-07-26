@@ -14,12 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionCall } from 'web3-common';
+import { TransactionCall, Address, BlockTags, Transaction } from 'web3-types';
 import { decodeParameters } from 'web3-eth-abi';
 import WebSocketProvider from 'web3-providers-ws';
-import { Address, BlockTags } from 'web3-utils';
 
-import Web3Eth, { Transaction } from '../../../src';
+import Web3Eth from '../../../src';
 import {
 	getSystemTestAccounts,
 	getSystemTestProvider,

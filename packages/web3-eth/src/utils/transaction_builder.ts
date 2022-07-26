@@ -16,17 +16,25 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	EthExecutionAPI,
 	DEFAULT_RETURN_FORMAT,
 	ETH_DATA_FORMAT,
 	FormatType,
 	format,
 	DataFormat,
-} from 'web3-common';
+	isAddress,
+} from 'web3-utils';
+import {
+	EthExecutionAPI,
+	Address,
+	HexString,
+	ValidChains,
+	Hardfork,
+	Transaction,
+	TransactionWithLocalWalletIndex,
+} from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
 import { getId, Web3NetAPI } from 'web3-net';
-import { Address, HexString, isAddress } from 'web3-utils';
 import { isNullish, isNumber } from 'web3-validator';
 import { NUMBER_DATA_FORMAT } from '../constants';
 import {
@@ -37,17 +45,11 @@ import {
 } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
-import {
-	ValidChains,
-	Hardfork,
-	Transaction,
-	InternalTransaction,
-	TransactionWithLocalWalletIndex,
-} from '../types';
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 import { transactionSchema } from '../schemas';
+import { InternalTransaction } from '../types';
 
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,

@@ -14,11 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { DataFormat, EthExecutionAPI } from 'web3-common';
+import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import { Web3Context } from 'web3-core';
-import { Bytes, isNullish } from 'web3-utils';
+import { DataFormat, isNullish } from 'web3-utils';
 
-import { TransactionReceipt } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionReceipt } from '../rpc_method_wrappers';
 import { TransactionPollingTimeoutError } from '../errors';

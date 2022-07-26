@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Address, Bytes, HexString, Numbers, ValueTypes } from 'web3-types';
 import { EtherUnits } from '../../src/converters';
-import { Address, Bytes, HexString, Numbers, ValueTypes } from '../../src/types';
 
 export const bytesToHexValidData: [Bytes, HexString][] = [
 	[new Uint8Array([72]), '0x48'],

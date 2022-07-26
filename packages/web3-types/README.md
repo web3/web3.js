@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# web3-common
+# web3-types
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -12,12 +12,12 @@
 
 This is a sub-package of [web3.js][repo].
 
-`web3-common` contains the common data structures and interfaces used in [web3.js][repo].
+`web3-types` contains the common data structures and interfaces used in [web3.js][repo].
 
 ###### Get it from the NPM Registry
 
 ```bash
-yarn add web3-common
+yarn add web3-types
 ```
 
 ## Getting Started
@@ -45,9 +45,9 @@ yarn add web3-common
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
 [repo]: https://github.com/ethereum/web3.js
-[npm-image]: https://img.shields.io/npm/v/web3-common.svg
-[npm-url]: https://npmjs.org/packages/web3-common
-[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=packages/web3-common
-[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=packages/web3-common
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=packages/web3-common
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=packages/web3-common
+[npm-image]: https://img.shields.io/npm/v/web3-types.svg
+[npm-url]: https://npmjs.org/packages/web3-types
+[deps-image]: https://david-dm.org/ethereum/web3.js/4.x/status.svg?path=packages/web3-types
+[deps-url]: https://david-dm.org/ethereum/web3.js/4.x?path=packages/web3-types
+[deps-dev-image]: https://david-dm.org/ethereum/web3.js/4.x/dev-status.svg?path=packages/web3-types
+[deps-dev-url]: https://david-dm.org/ethereum/web3.js/4.x?type=dev&path=packages/web3-types

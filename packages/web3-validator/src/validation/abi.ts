@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiParameter } from 'web3-types';
 import { ShortValidationSchema } from '../types';
-import { AbiParameter } from '../private_types';
 
 export const isAbiParameterSchema = (
 	schema: string | ShortValidationSchema | AbiParameter,

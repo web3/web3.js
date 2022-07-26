@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiParameter, Optional } from 'web3-types';
 import { ErrorObject, JSONSchemaType } from 'ajv';
-import { AbiParameter } from './private_types';
 
 export { JSONSchemaType } from 'ajv';
 export { DataValidateFunction, DataValidationCxt } from 'ajv/dist/types';
@@ -61,30 +61,6 @@ export type ValidationSchemaInput = FullValidationSchema | ShortValidationSchema
 export type Web3ValidationOptions = {
 	readonly silent: boolean;
 };
-
-// Some duplicate types introduced to avoid circular dependency to avoid
-// breaking changes in "web3-utils" package.
-export enum BlockTags {
-	EARLIEST = 'earliest',
-	LATEST = 'latest',
-	PENDING = 'pending',
-}
-
-export type BlockTag = 'earliest' | 'latest' | 'pending';
-
-export type BlockNumberOrTag = string | BlockTag;
-
-export interface Filter {
-	readonly fromBlock?: BlockNumberOrTag;
-	readonly toBlock?: BlockNumberOrTag;
-	readonly address?: string | string[];
-	// Using "null" type intentionally to match specifications
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	readonly topics?: (null | string | string[])[];
-}
-
-// To avoid circular dependency to avoid breaking changes in "web3-utils" package.
-export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 // In `JSONSchemaType` from `ajv` the `type` is required
 // We need to make it optional

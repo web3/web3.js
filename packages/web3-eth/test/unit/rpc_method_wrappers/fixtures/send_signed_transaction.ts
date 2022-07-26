@@ -14,9 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Bytes } from 'web3-utils';
-
-import { TransactionReceipt } from '../../../../src/types';
+import { Bytes, TransactionReceipt } from 'web3-types';
 
 export const expectedTransactionHash =
 	'0xe21194c9509beb01be7e90c2bcefff2804cd85836ae12134f22ad4acda0fc547';

@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER, TransactionWithSender } from 'web3-common';
-import { Numbers, Uint } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
+import { Numbers, Uint, TransactionWithSenderAPI } from 'web3-types';
 
 // Array consists of: returnType parameter, mock RPC result, expected output
 export const getHashRateValidData: [DataFormat, Numbers, Numbers][] = [
@@ -42,7 +42,7 @@ export const getBlockNumberValidData: [DataFormat, any, any][] = [
 	[{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }, '0x4b7', BigInt('0x4b7')],
 ];
 
-export const transactionWithSender: TransactionWithSender = {
+export const transactionWithSender: TransactionWithSenderAPI = {
 	to: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 	type: '0x0',
 	nonce: '0x1',

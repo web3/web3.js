@@ -20,9 +20,10 @@ import {
 	Web3BaseWallet,
 	Web3BaseWalletAccount,
 	Web3AccountProvider,
-} from 'web3-common';
-import { HexString, isNullish } from 'web3-utils';
-import { SupportedProviders } from './types';
+	SupportedProviders,
+	HexString,
+} from 'web3-types';
+import { isNullish } from 'web3-utils';
 import { isSupportedProvider } from './utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';

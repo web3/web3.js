@@ -18,20 +18,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // Disabling because returnTypes must be last param to match 1.x params
 /* eslint-disable default-param-last */
 import {
-	DataFormat,
 	EthExecutionAPI,
-	format,
-	Web3PromiEvent,
-	DEFAULT_RETURN_FORMAT,
 	TransactionInfo,
-	TransactionWithSender,
-	FormatType,
-	SignedTransactionInfo,
-	ETH_DATA_FORMAT,
+	TransactionWithSenderAPI,
+	SignedTransactionInfoAPI,
 	Web3BaseWalletAccount,
-} from 'web3-common';
-import { Web3Context } from 'web3-core';
-import {
 	Address,
 	BlockTag,
 	BlockNumberOrTag,
@@ -40,7 +31,17 @@ import {
 	HexString,
 	Numbers,
 	HexStringBytes,
-} from 'web3-utils';
+	AccountObject,
+	Block,
+	FeeHistory,
+	Log,
+	TransactionReceipt,
+	Transaction,
+	TransactionCall,
+	TransactionWithLocalWalletIndex,
+} from 'web3-types';
+import { Web3Context, Web3PromiEvent } from 'web3-core';
+import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
 import { SignatureError } from './errors';
@@ -54,18 +55,10 @@ import {
 	transactionInfoSchema,
 } from './schemas';
 import {
-	AccountObject,
-	Block,
-	FeeHistory,
-	Log,
-	TransactionReceipt,
 	SendSignedTransactionEvents,
 	SendSignedTransactionOptions,
 	SendTransactionEvents,
 	SendTransactionOptions,
-	Transaction,
-	TransactionCall,
-	TransactionWithLocalWalletIndex,
 } from './types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionFromAttr } from './utils/transaction_builder';
@@ -550,7 +543,7 @@ export function sendTransaction<
 						} else {
 							transactionHash = await rpcMethods.sendTransaction(
 								web3Context.requestManager,
-								transactionFormatted as Partial<TransactionWithSender>,
+								transactionFormatted as Partial<TransactionWithSenderAPI>,
 							);
 						}
 
@@ -825,7 +818,7 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 
 	const unformattedResponse = isString(response as HexStringBytes)
 		? { raw: response, tx: transaction }
-		: (response as SignedTransactionInfo);
+		: (response as SignedTransactionInfoAPI);
 
 	return {
 		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),

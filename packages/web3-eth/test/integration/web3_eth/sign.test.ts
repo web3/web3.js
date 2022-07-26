@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import WebSocketProvider from 'web3-providers-ws';
-import { Address } from 'web3-utils';
+import { Address } from 'web3-types';
 import { isHexStrict } from 'web3-validator';
 
 import Web3Eth from '../../../src';

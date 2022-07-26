@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3BaseWallet, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-common';
+import { Web3BaseWallet, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-types';
 import { isNullish } from 'web3-validator';
 import { WebStorage } from './types';
 

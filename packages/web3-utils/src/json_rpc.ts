@@ -27,7 +27,7 @@ import {
 	JsonRpcRequest,
 	JsonRpcBatchResponse,
 	JsonRpcSubscriptionResult,
-} from './types';
+} from 'web3-types';
 
 let messageId = 0;
 
@@ -42,6 +42,7 @@ export const isResponseWithResult = <Result = unknown, Error = unknown>(
 	isNullish(response.error) &&
 	(typeof response.id === 'number' || typeof response.id === 'string');
 
+// To avoid circular package dependency, copied to code here. If you update this please update same function in `response_errors.ts`
 export const isResponseWithError = <Error = unknown, Result = unknown>(
 	response: JsonRpcResponse<Result, Error>,
 ): response is JsonRpcResponseWithError<Error> =>
