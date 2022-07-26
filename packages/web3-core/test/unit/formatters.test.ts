@@ -35,6 +35,7 @@ import {
 
 import * as formatters from '../../src/formatters';
 
+/* eslint-disable deprecation/deprecation */
 jest.mock('web3-eth-iban');
 jest.mock('web3-utils');
 
@@ -265,7 +266,7 @@ describe('formatters', () => {
 
 			expect(utils.sha3Raw).toHaveBeenCalledWith('blockHashtransactionHashlogIndex');
 
-			expect(result.id).toEqual(`log_${sha3Result.slice(0, 8)}`);
+			expect(result.id).toBe(`log_${sha3Result.slice(0, 8)}`);
 		});
 
 		it('should convert "blockNumber" from hex to number', () => {

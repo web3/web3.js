@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import WebSocketProvider from 'web3-providers-ws';
 
-import Web3Eth from '../../../src';
+import { Web3Eth } from '../../../src';
 import {
 	getSystemTestBackend,
 	getSystemTestProvider,
@@ -28,7 +28,7 @@ import {
 describe('Web3Eth.submitWork', () => {
 	let web3Eth: Web3Eth;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
 	});
 

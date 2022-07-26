@@ -53,17 +53,16 @@ import {
 } from 'web3-utils';
 import { isBlockTag, isHex, isNullish } from 'web3-validator';
 
+/* eslint-disable deprecation/deprecation */
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Will format the given storage key array values to hex strings.
- *
- * @param keys
  */
 export const inputStorageKeysFormatter = (keys: Array<string>) => keys.map(numberToHex);
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Will format the given proof response from the node.
- *
- * @param proof
  */
 export const outputProofFormatter = (proof: Proof): Proof => ({
 	address: toChecksumAddress(proof.address),
@@ -72,16 +71,14 @@ export const outputProofFormatter = (proof: Proof): Proof => ({
 });
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Should the format output to a big number
- *
- * @param number
  */
 export const outputBigIntegerFormatter = (number: Numbers) => toNumber(number);
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
- *
- * @param blockNumber
  */
 export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 	if (isNullish(blockNumber)) {
@@ -104,10 +101,8 @@ export const inputBlockNumberFormatter = (blockNumber: Numbers | undefined) => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Returns the given block number as hex string or does return the defaultBlock property of the current module
- *
- * @param blockNumber
- * @param defaultBlock
  */
 export const inputDefaultBlockNumberFormatter = (
 	blockNumber: Numbers | undefined,
@@ -120,6 +115,10 @@ export const inputDefaultBlockNumberFormatter = (
 	return inputBlockNumberFormatter(blockNumber);
 };
 
+/**
+ * @deprecated Use format function from web3-utils package instead
+ * @param address
+ */
 export const inputAddressFormatter = (address: string): string | never => {
 	if (Iban.isValid(address) && Iban.isDirect(address)) {
 		const iban = new Iban(address);
@@ -137,9 +136,8 @@ export const inputAddressFormatter = (address: string): string | never => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the input of a transaction and converts all values to HEX
- *
- * @param options
  */
 export const txInputOptionsFormatter = (options: TransactionInput): Mutable<TransactionOutput> => {
 	const modifiedOptions = { ...options } as unknown as Mutable<TransactionOutput>;
@@ -187,10 +185,8 @@ export const txInputOptionsFormatter = (options: TransactionInput): Mutable<Tran
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the input of a transaction and converts all values to HEX
- *
- * @param options
- * @param defaultAccount
  */
 export const inputCallFormatter = (options: TransactionInput, defaultAccount?: string) => {
 	const opts = txInputOptionsFormatter(options);
@@ -205,10 +201,8 @@ export const inputCallFormatter = (options: TransactionInput, defaultAccount?: s
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the input of a transaction and converts all values to HEX
- *
- * @param options
- * @param defaultAccount
  */
 export const inputTransactionFormatter = (options: TransactionInput, defaultAccount?: string) => {
 	const opts = txInputOptionsFormatter(options);
@@ -228,18 +222,15 @@ export const inputTransactionFormatter = (options: TransactionInput, defaultAcco
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Hex encodes the data passed to eth_sign and personal_sign
- *
- * @param data
  */
 export const inputSignFormatter = (data: string) => (isHexStrict(data) ? data : utf8ToHex(data));
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the output of a transaction to its proper values
- *
  * @function outputTransactionFormatter
- * @param {object} tx
- * @returns {object}
  */
 export const outputTransactionFormatter = (tx: TransactionInput): TransactionOutput => {
 	const modifiedTx = { ...tx } as unknown as Mutable<TransactionOutput>;
@@ -287,6 +278,10 @@ export const outputTransactionFormatter = (tx: TransactionInput): TransactionOut
 	return modifiedTx;
 };
 
+/**
+ * @deprecated Use format function from web3-utils package instead
+ * @param topic
+ */
 // To align with specification we use the type "null" here
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const inputTopicFormatter = (topic: Topic): Topic | null => {
@@ -299,6 +294,10 @@ export const inputTopicFormatter = (topic: Topic): Topic | null => {
 	return isHex(value) ? value : fromUtf8(value);
 };
 
+/**
+ * @deprecated Use format function from web3-utils package instead
+ * @param filter
+ */
 export const inputLogFormatter = (filter: Filter) => {
 	const val: Mutable<Filter> = isNullish(filter)
 		? {}
@@ -333,11 +332,9 @@ export const inputLogFormatter = (filter: Filter) => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the output of a log
- *
  * @function outputLogFormatter
- * @param {object} log object
- * @returns {object} log
  */
 export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 	const modifiedLog = { ...log } as unknown as Mutable<LogsOutput>;
@@ -379,9 +376,8 @@ export const outputLogFormatter = (log: Partial<LogsInput>): LogsOutput => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the output of a transaction receipt to its proper values
- *
- * @param receipt
  */
 export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): ReceiptOutput => {
 	if (typeof receipt !== 'object') {
@@ -420,11 +416,9 @@ export const outputTransactionReceiptFormatter = (receipt: ReceiptInput): Receip
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the output of a block to its proper values
- *
  * @function outputBlockFormatter
- * @param {object} block
- * @returns {object}
  */
 export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 	const modifiedBlock = { ...block } as unknown as Mutable<BlockOutput>;
@@ -463,9 +457,8 @@ export const outputBlockFormatter = (block: BlockInput): BlockOutput => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the input of a whisper post and converts all values to HEX
- *
- * @param post
  */
 export const inputPostFormatter = (post: PostOutput): PostInput => {
 	const modifiedPost = { ...post } as unknown as Mutable<PostInput>;
@@ -496,12 +489,9 @@ export const inputPostFormatter = (post: PostOutput): PostInput => {
 };
 
 /**
+ * @deprecated Use format function from web3-utils package instead
  * Formats the output of a received post message
- *
  * @function outputPostFormatter
- * @param post
- * @param {object}
- * @returns {object}
  */
 export const outputPostFormatter = (post: PostInput): PostOutput => {
 	const modifiedPost = { ...post } as unknown as Mutable<PostOutput>;
@@ -539,6 +529,9 @@ export const outputPostFormatter = (post: PostInput): PostOutput => {
 	return modifiedPost;
 };
 
+/**
+ * @deprecated Use format function from web3-utils package instead
+ */
 export const outputSyncingFormatter = (result: SyncInput): SyncOutput => {
 	const modifiedResult = { ...result } as unknown as Mutable<SyncOutput>;
 

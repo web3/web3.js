@@ -49,7 +49,7 @@ describe('Web3Config', () => {
 
 	it.each(Object.keys(defaultConfig))('should expose a public getter for "%s"', key => {
 		const obj = new MyConfigObject();
-		const getterSpy = jest.spyOn(obj, key as never, 'get');
+		const getterSpy = jest.spyOn(obj, key as keyof MyConfigObject, 'get');
 
 		const result = obj[key as never];
 
@@ -59,7 +59,7 @@ describe('Web3Config', () => {
 
 	it.each(Object.keys(defaultConfig))('should expose a public setter for "%s"', key => {
 		const obj = new MyConfigObject();
-		const setterSpy = jest.spyOn(obj, key as never, 'set');
+		const setterSpy = jest.spyOn(obj, key as keyof MyConfigObject, 'set');
 
 		obj[key as never] = undefined as never;
 		expect(setterSpy).toHaveBeenCalledTimes(1);

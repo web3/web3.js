@@ -39,7 +39,7 @@ export class Web3PromiEvent<ResolveType, EventMap extends Web3EventMap>
 	}
 
 	// public tag to treat object as promise by different libs
-	public [Symbol.toStringTag]: 'Promise';
+	public [Symbol.toStringTag]: 'Promise' = 'Promise';
 
 	public async then<TResult1 = ResolveType, TResult2 = never>(
 		onfulfilled?: ((value: ResolveType) => TResult1 | PromiseLike<TResult1>) | undefined,

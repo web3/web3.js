@@ -14,8 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/* eslint-disable-next-line max-classes-per-file */
+import { format } from 'web3-utils';
 
-// eslint-disable-next-line max-classes-per-file
 import {
 	SyncOutput,
 	Address,
@@ -23,11 +24,10 @@ import {
 	HexString,
 	Topic,
 	BlockHeaderOutput,
-	LogsInput,
 	LogsOutput,
-	SyncInput,
 } from 'web3-types';
-import { Web3Subscription, outputLogFormatter, outputSyncingFormatter } from 'web3-core';
+import { Web3Subscription } from 'web3-core';
+import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
 
 type CommonSubscriptionEvents = {
 	error: Error;
@@ -48,9 +48,9 @@ export class LogsSubscription extends Web3Subscription<
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return ['logs', this.args] as ['logs', any];
 	}
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public _processSubscriptionResult(data: LogsInput) {
-		this.emit('data', outputLogFormatter(data));
+
+	public _processSubscriptionResult(data: LogsOutput) {
+		this.emit('data', format(logSchema, data, super.returnFormat));
 	}
 
 	public _processSubscriptionError(error: Error) {
@@ -69,7 +69,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: string) {
-		this.emit('data', data);
+		this.emit('data', format({ eth: 'string' }, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -88,7 +88,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 	}
 
 	protected _processSubscriptionResult(data: BlockHeaderOutput) {
-		this.emit('data', data);
+		this.emit('data', format(blockHeaderSchema, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {
@@ -107,8 +107,8 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(data: SyncInput) {
-		this.emit('data', outputSyncingFormatter(data));
+	protected _processSubscriptionResult(data: SyncOutput) {
+		this.emit('data', format(syncSchema, data, super.returnFormat));
 	}
 
 	protected _processSubscriptionError(error: Error) {

@@ -22,8 +22,6 @@ import { jsonInterfaceMethodToString, isAbiEventFragment } from '../utils';
 
 /**
  * Encodes the event name to its ABI signature, which are the sha3 hash of the event name including input types..
- *
- * @param functionName
  */
 export const encodeEventSignature = (functionName: string | AbiEventFragment): string => {
 	if (typeof functionName !== 'string' && !isAbiEventFragment(functionName)) {

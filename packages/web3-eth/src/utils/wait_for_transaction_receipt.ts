@@ -22,12 +22,6 @@ import { DataFormat, isNullish } from 'web3-utils';
 import { getTransactionReceipt } from '../rpc_method_wrappers';
 import { TransactionPollingTimeoutError } from '../errors';
 
-/**
- *
- * @param web3Context
- * @param transactionHash
- * @param returnFormat
- */
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,

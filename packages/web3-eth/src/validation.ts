@@ -48,10 +48,6 @@ import {
 import { formatTransaction } from './utils/format_transaction';
 import { InternalTransaction } from './types';
 
-/**
- *
- * @param value
- */
 export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	if (!isNullish(value.to) && !isAddress(value.to)) return false;
 	if (!isHexStrict(value.type) && !isNullish(value.type) && value.type.length !== 2) return false;
@@ -64,10 +60,6 @@ export function isBaseTransaction(value: BaseTransactionAPI): boolean {
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isAccessListEntry(value: AccessListEntry): boolean {
 	if (!isNullish(value.address) && !isAddress(value.address)) return false;
 	if (
@@ -79,10 +71,6 @@ export function isAccessListEntry(value: AccessListEntry): boolean {
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isAccessList(value: AccessList): boolean {
 	if (
 		!Array.isArray(value) ||
@@ -93,10 +81,6 @@ export function isAccessList(value: AccessList): boolean {
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isTransaction1559Unsigned(value: Transaction1559UnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.maxFeePerGas)) return false;
@@ -106,10 +90,6 @@ export function isTransaction1559Unsigned(value: Transaction1559UnsignedAPI): bo
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isTransaction2930Unsigned(value: Transaction2930UnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.gasPrice)) return false;
@@ -118,10 +98,6 @@ export function isTransaction2930Unsigned(value: Transaction2930UnsignedAPI): bo
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsignedAPI): boolean {
 	if (!isBaseTransaction(value)) return false;
 	if (!isHexStrict(value.gasPrice)) return false;
@@ -129,10 +105,6 @@ export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsignedAPI)
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function isTransactionWithSender(value: TransactionWithSenderAPI): boolean {
 	if (!isAddress(value.from)) return false;
 	if (!isBaseTransaction(value)) return false;
@@ -146,18 +118,10 @@ export function isTransactionWithSender(value: TransactionWithSenderAPI): boolea
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function validateTransactionWithSender(value: TransactionWithSenderAPI) {
 	if (!isTransactionWithSender(value)) throw new InvalidTransactionWithSender(value);
 }
 
-/**
- *
- * @param value
- */
 export function isTransactionCall(value: TransactionCall): boolean {
 	if (!isNullish(value.from) && !isAddress(value.from)) return false;
 	if (!isAddress(value.to)) return false;
@@ -172,10 +136,6 @@ export function isTransactionCall(value: TransactionCall): boolean {
 	return true;
 }
 
-/**
- *
- * @param value
- */
 export function validateTransactionCall(value: TransactionCall) {
 	if (!isTransactionCall(value)) throw new InvalidTransactionCall(value);
 }
@@ -260,8 +220,6 @@ export const validateFeeMarketGas = (transaction: InternalTransaction) => {
 /**
  * This method checks if all required gas properties are present for either
  * legacy gas (type 0x0 and 0x1) OR fee market transactions (0x2)
- *
- * @param transaction
  */
 export const validateGas = (transaction: InternalTransaction) => {
 	const gasPresent = !isNullish(transaction.gas) || !isNullish(transaction.gasLimit);

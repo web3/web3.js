@@ -27,15 +27,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * ```
  *
  * To use this package within the web3 object use:
+ *
  * ```ts
  * import Web3 from 'web3';
  *
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
  * // now you have access to the accounts class
  * web3.eth.accounts.create();
- */
-/**
- *
+ * ```
  */
 
 export * from './wallet';
