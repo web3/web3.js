@@ -15,6 +15,7 @@ cd blackbox_test_app
 
 # Install web3 as dep
 npm init --yes
+npm cache clean --force
 npm install cross-fetch
 npm install web3@alpha web3-core@alpha web3-types@alpha --save --registry http://localhost:4873
 npm list --depth=0
