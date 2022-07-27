@@ -211,7 +211,7 @@ export async function getBlockNumber<ReturnFormat extends DataFormat>(
  * web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1").then(console.log);
  * > 1000000000000n
  *
- * web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1").then(console.log);
+ * web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1", { number: FMT_NUMBER.HEX , bytes: FMT_BYTES.HEX }).then(console.log);
  * > "0xe8d4a51000"
  * ```
  */
