@@ -18,9 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import util from 'util';
 import Web3 from 'web3';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3Context } from 'web3-core';
-import types from 'web3-types';
+import WebSocketProvider from 'web3-providers-ws';
 
 const isWs = (backendMode: string) => backendMode === 'ws';
 
@@ -28,7 +26,7 @@ const maxNumberOfAttempts = 10;
 const intervalTime = 5000; // ms
 
 const waitForOpenConnection = async (
-	web3Context: Web3Context<any>,
+	web3: Web3,
 	backenMode: string,
 	currentAttempt = 1,
 	status = 'connected',
@@ -43,9 +41,7 @@ const waitForOpenConnection = async (
 			if (currentAttempt > maxNumberOfAttempts - 1) {
 				clearInterval(interval);
 				reject(new Error('Maximum number of attempts exceeded'));
-			} else if (
-				(web3Context.provider as unknown as types.Web3BaseProvider).getStatus() === status
-			) {
+			} else if ((web3.provider as unknown as WebSocketProvider).getStatus() === status) {
 				clearInterval(interval);
 				resolve();
 			}

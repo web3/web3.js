@@ -17,7 +17,7 @@ cd blackbox_test_app
 npm init --yes
 npm cache clean --force
 npm install cross-fetch
-npm install web3@alpha web3-core@alpha web3-types@alpha --save --registry http://localhost:4873
+npm install web3@alpha web3-providers-ws@alpha --save --registry http://localhost:4873
 npm list --depth=0
 ts-node basic_usage.ts
 
