@@ -17,8 +17,7 @@ npm config set loglevel verbose
 # Install web3 as dep
 npm init --yes
 npm cache clean --force
-npm install cross-fetch
-npm install web3 --save --registry http://localhost:4873
+npm install web3@4.0.0 --save --registry http://localhost:4873
 npm list --depth=0
 ts-node basic_usage.ts
 
