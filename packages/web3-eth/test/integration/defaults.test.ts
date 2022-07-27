@@ -509,14 +509,14 @@ describe('defaults', () => {
 
 			// To cause the development node (like Ganache) to generate new block for the new transaction
 			// When another block is generated, the pervious transaction would be able to have 2 confirmations
-			setTimeout(() => {
-				// eslint-disable-next-line @typescript-eslint/no-floating-promises
-				eth.sendTransaction({
-					to,
-					value,
-					from,
-				});
-			}, 1000);
+			await new Promise<void>(resolve => {
+				setTimeout(resolve, 1000);
+			});
+			await eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
 
 			// Ensure the promise the get the confirmations resolves with no error
 			await expect(confirmationPromise).resolves.toBeUndefined();
