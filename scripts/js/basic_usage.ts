@@ -18,37 +18,37 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import util from 'util';
 import Web3 from 'web3';
-import WebSocketProvider from 'web3-providers-ws';
+// import WebSocketProvider from 'web3-providers-ws';
 
 const isWs = (backendMode: string) => backendMode === 'ws';
 
-const maxNumberOfAttempts = 10;
-const intervalTime = 5000; // ms
+// const maxNumberOfAttempts = 10;
+// const intervalTime = 5000; // ms
 
-const waitForOpenConnection = async (
-	web3: Web3,
-	backenMode: string,
-	currentAttempt = 1,
-	status = 'connected',
-) =>
-	new Promise<void>((resolve, reject) => {
-		if (!isWs(backenMode)) {
-			resolve();
-			return;
-		}
+// const waitForOpenConnection = async (
+// 	web3: Web3,
+// 	backenMode: string,
+// 	currentAttempt = 1,
+// 	status = 'connected',
+// ) =>
+// 	new Promise<void>((resolve, reject) => {
+// 		if (!isWs(backenMode)) {
+// 			resolve();
+// 			return;
+// 		}
 
-		const interval = setInterval(() => {
-			if (currentAttempt > maxNumberOfAttempts - 1) {
-				clearInterval(interval);
-				reject(new Error('Maximum number of attempts exceeded'));
-			} else if ((web3.provider as unknown as WebSocketProvider).getStatus() === status) {
-				clearInterval(interval);
-				resolve();
-			}
-			// eslint-disable-next-line no-plusplus, no-param-reassign
-			currentAttempt++;
-		}, intervalTime);
-	});
+// 		const interval = setInterval(() => {
+// 			if (currentAttempt > maxNumberOfAttempts - 1) {
+// 				clearInterval(interval);
+// 				reject(new Error('Maximum number of attempts exceeded'));
+// 			} else if ((web3.provider as unknown as WebSocketProvider).getStatus() === status) {
+// 				clearInterval(interval);
+// 				resolve();
+// 			}
+// 			// eslint-disable-next-line no-plusplus, no-param-reassign
+// 			currentAttempt++;
+// 		}, intervalTime);
+// 	});
 const { log } = console;
 
 async function main() {
@@ -71,7 +71,7 @@ async function main() {
 
 	web3 = new Web3(providerUrl as string);
 
-	console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
+	// console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
 	// Accounts
 	web3 = new Web3();
 
