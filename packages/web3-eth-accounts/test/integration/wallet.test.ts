@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { Web3AccountProvider } from 'web3-types';
-import { isBrowser, itIf } from '../fixtures/system_test_utils';
+import { isBrowser, isElectron, itIf } from '../fixtures/system_test_utils';
 import { Wallet } from '../../src';
 import * as accountProvider from '../../src/account';
 import { Web3Account } from '../../dist';
@@ -253,34 +253,52 @@ describe('Wallet', () => {
 	});
 
 	describe('save', () => {
-		itIf(!isBrowser)('should throw error if local storage not present', async () => {
-			// eslint-disable-next-line jest/no-standalone-expect
-			return expect(wallet.save('password')).rejects.toThrow('Local storage not available.');
-		});
+		itIf(!(isBrowser || isElectron))(
+			'should throw error if local storage not present',
+			async () => {
+				// eslint-disable-next-line jest/no-standalone-expect
+				return expect(wallet.save('password')).rejects.toThrow(
+					'Local storage not available.',
+				);
+			},
+		);
 
-		itIf(isBrowser)('should encrypt wallet and load it with given key', async () => {
-			const account = accountProvider.create();
-			wallet.add(account);
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(await wallet.save('password', 'myKey')).toBe(true);
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect((await wallet.load('password', 'myKey')).get(0)?.address).toBe(account.address);
-		});
+		itIf(isBrowser || isElectron)(
+			'should encrypt wallet and load it with given key',
+			async () => {
+				const account = accountProvider.create();
+				wallet.add(account);
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(await wallet.save('password', 'myKey')).toBe(true);
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect((await wallet.load('password', 'myKey')).get(0)?.address).toBe(
+					account.address,
+				);
+			},
+		);
 
-		itIf(isBrowser)('should encrypt wallet and load it with default key', async () => {
-			const account = accountProvider.create();
-			wallet.add(account);
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect(await wallet.save('password')).toBe(true);
-			// eslint-disable-next-line jest/no-standalone-expect
-			expect((await wallet.load('password')).get(0)?.address).toBe(account.address);
-		});
+		itIf(isBrowser || isElectron)(
+			'should encrypt wallet and load it with default key',
+			async () => {
+				const account = accountProvider.create();
+				wallet.add(account);
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(await wallet.save('password')).toBe(true);
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect((await wallet.load('password')).get(0)?.address).toBe(account.address);
+			},
+		);
 	});
 
 	describe('load', () => {
-		itIf(!isBrowser)('should throw error if local storage not present', async () => {
-			// eslint-disable-next-line jest/no-standalone-expect
-			return expect(wallet.load('password')).rejects.toThrow('Local storage not available.');
-		});
+		itIf(!(isBrowser || isElectron))(
+			'should throw error if local storage not present',
+			async () => {
+				// eslint-disable-next-line jest/no-standalone-expect
+				return expect(wallet.load('password')).rejects.toThrow(
+					'Local storage not available.',
+				);
+			},
+		);
 	});
 });

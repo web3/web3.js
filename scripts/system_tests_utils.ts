@@ -65,6 +65,7 @@ export const isHttp: boolean = getSystemTestProvider().startsWith('http');
 export const isWs: boolean = getSystemTestProvider().startsWith('ws');
 export const isIpc: boolean = getSystemTestProvider().includes('ipc');
 export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
+export const isElectron: boolean = getSystemTestEngine() === 'electron';
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
