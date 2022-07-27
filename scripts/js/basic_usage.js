@@ -16,6 +16,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { isWs } from '../system_tests_utils';
+
 const Web3 = require('web3');
 const util = require('util');
 
@@ -51,6 +53,11 @@ async function main() {
 	let web3;
 	let block;
 
+	const providerUrl = isWs ? process.env.INFURA_WS : process.env.INFURA_HTTP;
+	log('-----', process.env.INFURA_HTTP);
+	log('-----', process.env.INFURA_WS);
+	log('-----', process.env.INFURA_WSS);
+	log('-----', process.env.INFURA_GOERLI_WS);
 	// Providers
 	log();
 	log('>>>>>>');
@@ -58,20 +65,8 @@ async function main() {
 	log('>>>>>>');
 
 	// Http
-	log('-----', process.env.INFURA_HTTP);
-	web3 = new Web3(process.env.INFURA_HTTP);
+	web3 = new Web3(providerUrl);
 	block = await getBlockWithRetry(web3);
-	log(util.inspect(block));
-
-	log();
-	log('>>>>>>');
-	log('WS:MAINNET getBlock');
-	log('>>>>>>');
-
-	// WebSockets
-	web3 = new Web3(process.env.INFURA_WSS);
-	block = await getBlockWithRetry(web3);
-	web3.currentProvider.disconnect();
 	log(util.inspect(block));
 
 	// Accounts
