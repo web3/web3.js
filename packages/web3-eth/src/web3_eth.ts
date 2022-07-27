@@ -1248,7 +1248,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 
 	// TODO - Format addresses
 	/**
-	 * This method will request/enable the accounts from the current environment.
+	 * This method will request/enable the accounts from the current environment and for supporting [EIP 1102](https://eips.ethereum.org/EIPS/eip-1102)
 	 * This method will only work if you’re using the injected provider from a application like Metamask, Status or TrustWallet.
 	 * It doesn’t work if you’re connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvider and IpcProvider).
 	 * For more information about the behavior of this method please read [EIP-1102](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md): Opt-in account exposure.
