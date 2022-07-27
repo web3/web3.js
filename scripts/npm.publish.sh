@@ -48,13 +48,11 @@ npm-auth-to-token \
   -r http://localhost:4873
 
 # Lerna version
-lerna version minor \
-  --force-publish=* \
-  --no-git-tag-version \
-  --no-push \
-  --yes
-
-ls
+# lerna version minor \
+#   --force-publish=* \
+#   --no-git-tag-version \
+#   --no-push \
+#   --yes
 
 git init
 git add .
