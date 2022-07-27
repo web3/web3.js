@@ -141,7 +141,7 @@ jobs:
       runs-on: ubuntu-latest
       env:
         INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
-        INFURA_WS: ${{ secrets.INFURA_WS }}
+        INFURA_WS: ${{ secrets.INFURA_WSS }}
       strategy:
         fail-fast: false
         matrix:
