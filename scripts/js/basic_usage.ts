@@ -18,31 +18,64 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import util from 'util';
 import Web3 from 'web3';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Web3Context } from 'web3-core';
+import types from 'web3-types';
 
+const isWs = (backendMode: string) => backendMode === 'ws';
+
+const maxNumberOfAttempts = 10;
+const intervalTime = 5000; // ms
+
+const waitForOpenConnection = async (
+	web3Context: Web3Context<any>,
+	backenMode: string,
+	currentAttempt = 1,
+	status = 'connected',
+) =>
+	new Promise<void>((resolve, reject) => {
+		if (!isWs(backenMode)) {
+			resolve();
+			return;
+		}
+
+		const interval = setInterval(() => {
+			if (currentAttempt > maxNumberOfAttempts - 1) {
+				clearInterval(interval);
+				reject(new Error('Maximum number of attempts exceeded'));
+			} else if (
+				(web3Context.provider as unknown as types.Web3BaseProvider).getStatus() === status
+			) {
+				clearInterval(interval);
+				resolve();
+			}
+			// eslint-disable-next-line no-plusplus, no-param-reassign
+			currentAttempt++;
+		}, intervalTime);
+	});
 const { log } = console;
-
-export const getEnvVar = (name: string): string | undefined => process.env[name];
-
-export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
-export const getSystemTestProvider = (): string =>
-	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
-export const isHttp = getSystemTestProvider().startsWith('http');
 
 async function main() {
 	let web3: Web3;
+	if (!typeof process.env.MODE) throw new Error('No mode env variable!');
+	const backendMode = process.env.MODE as string;
 
-	console.log('inside main');
+	let providerUrl = isWs(backendMode) ? process.env.INFURA_WSS : process.env.INFURA_HTTP;
 
-	const providerUrl = isHttp ? process.env.INFURA_HTTP : process.env.INFURA_WSS;
-	console.log('Provider url', providerUrl);
-	log('-----matrix.mode', process.env.MODE);
+	if (typeof providerUrl === undefined) throw new Error('Provider url is undefined!');
+	else providerUrl = providerUrl as string;
+
+	log('Running on backend mode: ', backendMode);
 
 	// Providers
 	log();
 	log('>>>>>>');
-	log('HTTP:MAINNET getBlock');
+	log(`${backendMode?.toUpperCase()}:MAINNET getBlock`);
 	log('>>>>>>');
 
+	web3 = new Web3(providerUrl as string);
+
+	console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
 	// Accounts
 	web3 = new Web3();
 
