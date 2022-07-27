@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+/* eslint-disable */
 /*
 This file is part of web3.js.
 
@@ -16,47 +16,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { isWs } from '../system_tests_utils';
-
-const Web3 = require('web3');
-const util = require('util');
+import util from 'util';
+import Web3 from 'web3';
 
 const { log } = console;
 
-async function delay(secs = 0) {
-	return new Promise(resolve => setTimeout(() => resolve(), secs * 1000));
-}
-
-// A workaround for how flaky the infura connection can be...
-// Tries to fetch data 10x w/ 1 sec delays. Exits on first success.
-async function getBlockWithRetry(web3) {
-	let i = 0;
-	let block;
-
-	while (true) {
-		await delay(1);
-
-		try {
-			block = await web3.eth.getBlock('latest');
-			break;
-		} catch (err) {
-			i++;
-			if (i === 10) {
-				throw new Error('Failed to connect to Infura over websockets after 10 tries');
-			}
-		}
-	}
-	return block;
-}
-
 async function main() {
-	let web3;
-	let block;
+	let web3: Web3;
 
 	console.log('inside main');
 
-	const providerUrl = isWs ? process.env.INFURA_WS : process.env.INFURA_HTTP;
-	console.log('isWs', isWs);
+	const providerUrl = process.env.INFURA_WS ?? process.env.INFURA_HTTP;
+	console.log('Provider url', providerUrl);
 	log('-----', process.env.INFURA_HTTP);
 	log('-----', process.env.INFURA_WS);
 	log('-----', process.env.INFURA_WSS);
@@ -66,11 +37,6 @@ async function main() {
 	log('>>>>>>');
 	log('HTTP:MAINNET getBlock');
 	log('>>>>>>');
-
-	// Http
-	web3 = new Web3(providerUrl);
-	block = await getBlockWithRetry(web3);
-	log(util.inspect(block));
 
 	// Accounts
 	web3 = new Web3();

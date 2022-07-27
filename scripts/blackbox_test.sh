@@ -10,15 +10,13 @@ echo "Node version"
 node --version
 # Setup mock project to install web3 from virtual registry
 mkdir blackbox_test_app
-cp scripts/js/basic_usage.js blackbox_test_app/basic_usage.js
+cp scripts/js/basic_usage.ts blackbox_test_app/basic_usage.ts
 cd blackbox_test_app
 
 # Install web3 as dep
-npm install -g create-esnext
-
-npm init --yes esnext
+npm init --yes
 npm install web3 --save --registry http://localhost:4873
-node basic_usage.js
+ts-node basic_usage.ts
 
 # Shutdown verdaccio server
 cd ..
