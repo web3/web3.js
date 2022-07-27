@@ -45,6 +45,7 @@ import {
 	validPrivateKeytoAccountData,
 	validPrivateKeyToAddressData,
 } from '../fixtures/account';
+import { describeIf, isFirefox } from '../fixtures/system_test_utils';
 
 describe('accounts', () => {
 	describe('create', () => {
@@ -144,7 +145,7 @@ describe('accounts', () => {
 		});
 	});
 
-	describe('encrypt', () => {
+	describeIf(!isFirefox)('encrypt', () => {
 		describe('valid cases', () => {
 			it.each(validEncryptData)('%s', async (input, output) => {
 				const result = await encrypt(input[0], input[1], input[2]).catch(err => {
@@ -172,7 +173,7 @@ describe('accounts', () => {
 	});
 
 	describe('decrypt', () => {
-		describe('valid cases', () => {
+		describeIf(!isFirefox)('valid cases', () => {
 			it.each(validDecryptData)('%s', async input => {
 				const keystore = await encrypt(input[0], input[1], input[2]).catch(err => {
 					throw err;
@@ -203,7 +204,7 @@ describe('accounts', () => {
 			});
 		});
 
-		describe('invalid keystore, fails validation', () => {
+		describeIf(!isFirefox)('invalid keystore, fails validation', () => {
 			it.each(invalidKeyStore)('%s', async input => {
 				const result = decrypt(input[0], input[1]);
 
