@@ -53,14 +53,18 @@ export const getEnvVar = (name: string): string | undefined =>
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
 export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
+export const DEFAULT_SYSTEM_ENGINE = 'node';
 
 export const getSystemTestProvider = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
-export const isHttp = getSystemTestProvider().startsWith('http');
-export const isWs = getSystemTestProvider().startsWith('ws');
-export const isIpc = getSystemTestProvider().includes('ipc');
+export const getSystemTestEngine = (): string =>
+	getEnvVar('WEB3_SYSTEM_TEST_ENGINE') ?? DEFAULT_SYSTEM_ENGINE;
 
+export const isHttp: boolean = getSystemTestProvider().startsWith('http');
+export const isWs: boolean = getSystemTestProvider().startsWith('ws');
+export const isIpc: boolean = getSystemTestProvider().includes('ipc');
+export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
