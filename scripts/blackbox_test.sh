@@ -21,5 +21,7 @@ node basic_usage.js
 # Shutdown verdaccio server
 cd ..
 source verdaccio_pid
-#todo enable to github_actions
-#kill -9 $VERDACCIO_PID
+kill -9 $VERDACCIO_PID
+
+# delete temp project
+rm -rf blackbox_test_app
