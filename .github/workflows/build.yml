@@ -144,6 +144,7 @@ jobs:
         INFURA_WS: ${{ secrets.INFURA_WS }}
         INFURA_WSS: ${{ secrets.INFURA_WSS }}
         INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        MODE: ${{ matrix.mode }}
       strategy:
         fail-fast: false
         matrix:

@@ -35,10 +35,7 @@ async function main() {
 
 	const providerUrl = isHttp ? process.env.INFURA_HTTP : process.env.INFURA_WSS;
 	console.log('Provider url', providerUrl);
-	log('-----node', process.env.node);
-	log('-----matrix.node', process.env.matrix.node);
-	log('-----mode', process.env.mode);
-	log('-----matrix.mode', process.env.matrix.mode);
+	log('-----matrix.mode', process.env.MODE);
 
 	// Providers
 	log();
