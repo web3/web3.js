@@ -21,17 +21,25 @@ import Web3 from 'web3';
 
 const { log } = console;
 
+export const getEnvVar = (name: string): string | undefined => process.env[name];
+
+export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
+export const getSystemTestProvider = (): string =>
+	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
+export const isHttp = getSystemTestProvider().startsWith('http');
+
 async function main() {
 	let web3: Web3;
 
 	console.log('inside main');
 
-	const providerUrl = process.env.INFURA_WS ?? process.env.INFURA_HTTP;
+	const providerUrl = isHttp ? process.env.INFURA_HTTP : process.env.INFURA_WSS;
 	console.log('Provider url', providerUrl);
-	log('-----', process.env.INFURA_HTTP);
-	log('-----', process.env.INFURA_WS);
-	log('-----', process.env.INFURA_WSS);
-	log('-----', process.env.INFURA_GOERLI_WS);
+	log('-----node', process.env.node);
+	log('-----matrix.node', process.env.matrix.node);
+	log('-----mode', process.env.mode);
+	log('-----matrix.mode', process.env.matrix.mode);
+
 	// Providers
 	log();
 	log('>>>>>>');
