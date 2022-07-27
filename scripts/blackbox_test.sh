@@ -13,6 +13,7 @@ mkdir blackbox_test_app
 cp scripts/js/basic_usage.ts blackbox_test_app/basic_usage.ts
 cd blackbox_test_app
 
+npm config set loglevel verbose
 # Install web3 as dep
 npm init --yes
 npm cache clean --force
