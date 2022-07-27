@@ -14,9 +14,9 @@ cp scripts/js/basic_usage.js blackbox_test_app/basic_usage.js
 cd blackbox_test_app
 
 # Install web3 as dep
-npm config set init.type module
+npm install -g create-esnext
 
-npm init --yes
+npm init --yes esnext
 npm install web3 --save --registry http://localhost:4873
 node basic_usage.js
 
