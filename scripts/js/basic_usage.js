@@ -53,7 +53,10 @@ async function main() {
 	let web3;
 	let block;
 
+	console.log('inside main');
+
 	const providerUrl = isWs ? process.env.INFURA_WS : process.env.INFURA_HTTP;
+	console.log('isWs', isWs);
 	log('-----', process.env.INFURA_HTTP);
 	log('-----', process.env.INFURA_WS);
 	log('-----', process.env.INFURA_WSS);
