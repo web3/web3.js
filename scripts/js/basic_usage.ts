@@ -148,7 +148,7 @@ async function main() {
 	log('>>>>>>');
 	const randomUSDTTransferTx =
 		'0x133048bfcf6c0f7f8d1f5681df9607802894667acb46f4a3ba8ba187421dfc2b';
-	let tx = web3.eth.getTransaction(randomUSDTTransferTx);
+	let tx = await web3.eth.getTransaction(randomUSDTTransferTx);
 
 	log(util.inspect(tx));
 }
