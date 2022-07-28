@@ -314,6 +314,8 @@ export async function getCode<ReturnFormat extends DataFormat>(
 }
 
 /**
+ * Retrieves a {@link Block} matching the provided block number, block hash or block tag.
+ *
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  * @param block The {@link BlockNumberOrTag} (defaults to {@link Web3Eth.defaultBlock}) or block hash of the desired block.
  * @param hydrated If specified `true`, the returned block will contain all transactions as objects. If `false` it will only contain transaction hashes.
