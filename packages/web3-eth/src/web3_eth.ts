@@ -839,6 +839,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 *
 	 * web3.eth.sendTransaction(transaction).catch(console.log);
 	 * > <Some TransactionError>
+	 *
+	 * // Example using options.ignoreGasPricing = true
+	 * web3.eth.sendTransaction(transaction, undefined, { ignoreGasPricing: true }).then(console.log);
+	 * > 0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f
 	 * ```
 	 *
 	 *
