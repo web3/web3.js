@@ -1128,7 +1128,9 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
-	 * Executes a message call or transaction and returns the amount of the gas used.
+	 * Simulates the transaction within the EVM to estimate the amount of gas to be used by the transaction.
+	 * The transaction will not be added to the blockchain, and actual gas usage can vary when interacting
+	 * with a contract as a result of updating the contract's state.
 	 *
 	 * @param transaction The {@link Transaction} object to estimate the gas for.
 	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while processing the gas estimation.
