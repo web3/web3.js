@@ -19,14 +19,16 @@ import { Web3Context } from 'web3-core';
 import { DataFormat, isNullish } from 'web3-utils';
 
 // eslint-disable-next-line import/no-cycle
-import { getTransactionReceipt } from '../rpc_method_wrappers';
-import { TransactionPollingTimeoutError } from '../errors';
+import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
+import { TransactionBlockTimeoutError, TransactionPollingTimeoutError } from '../errors';
+import { NUMBER_DATA_FORMAT } from '../constants';
 
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ): Promise<TransactionReceipt> {
+	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 	return new Promise(resolve => {
 		let transactionPollingDuration = 0;
 		const intervalId = setInterval(() => {
@@ -39,6 +41,17 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					clearInterval(intervalId);
 					throw new TransactionPollingTimeoutError({
 						numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+						transactionHash,
+					});
+				}
+
+				const lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
+				const numberOfBlocks = lastBlockNumber - starterBlockNumber;
+				if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
+					clearInterval(intervalId);
+					throw new TransactionBlockTimeoutError({
+						starterBlockNumber,
+						numberOfBlocks,
 						transactionHash,
 					});
 				}

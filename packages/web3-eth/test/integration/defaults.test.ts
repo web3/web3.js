@@ -522,6 +522,33 @@ describe('defaults', () => {
 			await expect(confirmationPromise).resolves.toBeUndefined();
 		});
 
+		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+			const eth = new Web3Eth(clientUrl);
+
+			// Make the test run faster by casing the polling to start after 1 second
+			eth.transactionBlockTimeout = 2;
+
+			const from = accounts[0];
+			const to = accounts[1];
+			const value = `0x1`;
+
+			const sentTx: Web3PromiEvent<
+				TransactionReceipt,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = eth.sendTransaction({
+				to,
+				value: '0x99999',
+				from,
+				nonce: Number.MAX_SAFE_INTEGER,
+			});
+
+			await sendFewTxes({ web3Eth: eth, from, to, value, times: 3 });
+
+			await sentTx;
+			// Ensure the promise the get the confirmations resolves with no error
+			expect(sentTx).toThrow(`was not mined within ${eth.transactionBlockTimeout}`);
+		});
+
 		it('maxListenersWarningThreshold', () => {
 			// default
 			expect(web3Eth.maxListenersWarningThreshold).toBe(100);

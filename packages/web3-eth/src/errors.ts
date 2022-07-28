@@ -276,6 +276,21 @@ export class TransactionPollingTimeoutError extends InvalidValueError {
 	}
 }
 
+export class TransactionBlockTimeoutError extends InvalidValueError {
+	public code = ERR_TX_POLLING_TIMEOUT;
+
+	public constructor(value: {
+		starterBlockNumber: number;
+		numberOfBlocks: number;
+		transactionHash: Bytes;
+	}) {
+		super(
+			`transactionHash: ${value.transactionHash.toString()}`,
+			`Transaction started at ${value.starterBlockNumber} but was not mined within ${value.numberOfBlocks} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!`,
+		);
+	}
+}
+
 export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError {
 	public code = ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL;
 
