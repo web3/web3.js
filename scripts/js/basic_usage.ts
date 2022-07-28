@@ -19,6 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import util from 'util';
 import Web3 from 'web3';
 // import WebSocketProvider from 'web3-providers-ws';
+import { ERC20TokenAbi } from './fixtures/build/ERC20Token';
 
 const isWs = (backendMode: string) => backendMode === 'ws';
 
@@ -122,6 +123,23 @@ async function main() {
 	const response = await Promise.all([request1Promise, request2Promise, executePromise]);
 
 	log(util.inspect(response));
+
+	//ERC20 contract
+	log();
+	log('>>>>>>');
+	log('ERC20');
+	log('>>>>>>');
+
+	const USDTAddress = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
+	const contract = new web3.eth.Contract(ERC20TokenAbi, USDTAddress);
+
+	const contractName = await contract.methods.name().call();
+	const contractSymbol = await contract.methods.symbol().call();
+	const initialSupply = await contract.methods.totalSupply().call();
+
+	log('ERC20 Name', contractName);
+	log('ERC20 Symbol', contractSymbol);
+	log('ERC20 initial supply', initialSupply);
 }
 
 main()

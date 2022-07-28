@@ -11,6 +11,7 @@ node --version
 # Setup mock project to install web3 from virtual registry
 mkdir blackbox_test_app
 cp scripts/js/basic_usage.ts blackbox_test_app/basic_usage.ts
+cp -r fixtures blackbox_test_app/.
 cd blackbox_test_app
 
 npm config set loglevel verbose
