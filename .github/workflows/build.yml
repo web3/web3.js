@@ -149,7 +149,6 @@ jobs:
         fail-fast: false
         matrix:
           node: [14, 16]
-          backend: ['geth']
           mode: ['http', 'ws']
       steps:
         - uses: actions/download-artifact@v3
@@ -157,6 +156,22 @@ jobs:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
         - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: |
+            yarn test:blackbox
+          shell: bash
+
+  blackbox-web:
+      name: Blackbox web
+      needs: build-web
+      runs-on: ubuntu-latest
+      env:
+        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+        INFURA_WS: ${{ secrets.INFURA_WS }}
+        INFURA_WSS: ${{ secrets.INFURA_WSS }}
+        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+      strategy:
+        fail-fast: false
+      steps:
         - run: |
             yarn test:blackbox
           shell: bash

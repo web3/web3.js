@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-# This script installs Web3 from virtual registry in a
-# Windows env and runs some simple Web3 calls.
+# This script installs Web3 from virtual registry
+# env and runs some simple Web3 calls.
 
 # Exit immediately on error
 set -o errexit
 
 echo "Node version"
 node --version
+
 # Setup mock project to install web3 from virtual registry
 mkdir blackbox_test_app
 cp scripts/js/basic_usage.ts blackbox_test_app/basic_usage.ts
