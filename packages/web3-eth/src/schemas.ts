@@ -470,12 +470,6 @@ export const feeHistorySchema = {
 				eth: 'uint',
 			},
 		},
-		gasUsedRatio: {
-			type: 'array',
-			items: {
-				eth: 'uint',
-			},
-		},
 		reward: {
 			type: 'array',
 			items: {
