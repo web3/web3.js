@@ -22,33 +22,35 @@ import Web3 from 'web3';
 
 const isWs = (backendMode: string) => backendMode === 'ws';
 
-// const maxNumberOfAttempts = 10;
-// const intervalTime = 5000; // ms
+const maxNumberOfAttempts = 10;
+const intervalTime = 5000; // ms
 
-// const waitForOpenConnection = async (
-// 	web3: Web3,
-// 	backenMode: string,
-// 	currentAttempt = 1,
-// 	status = 'connected',
-// ) =>
-// 	new Promise<void>((resolve, reject) => {
-// 		if (!isWs(backenMode)) {
-// 			resolve();
-// 			return;
-// 		}
+const waitForOpenConnection = async (
+	web3: Web3,
+	backenMode: string,
+	currentAttempt = 1,
+	status = 'connected',
+) =>
+	new Promise<void>((resolve, reject) => {
+		if (!isWs(backenMode)) {
+			resolve();
+			return;
+		}
 
-// 		const interval = setInterval(() => {
-// 			if (currentAttempt > maxNumberOfAttempts - 1) {
-// 				clearInterval(interval);
-// 				reject(new Error('Maximum number of attempts exceeded'));
-// 			} else if ((web3.provider as unknown as WebSocketProvider).getStatus() === status) {
-// 				clearInterval(interval);
-// 				resolve();
-// 			}
-// 			// eslint-disable-next-line no-plusplus, no-param-reassign
-// 			currentAttempt++;
-// 		}, intervalTime);
-// 	});
+		const interval = setInterval(() => {
+			if (currentAttempt > maxNumberOfAttempts - 1) {
+				clearInterval(interval);
+				reject(new Error('Maximum number of attempts exceeded'));
+				//not type safe, but, npm installing other packages creates an error
+				//see here: https://github.com/ChainSafe/web3.js/runs/7545108665?check_suite_focus=true
+			} else if ((web3.provider as any).getStatus() === status) {
+				clearInterval(interval);
+				resolve();
+			}
+			// eslint-disable-next-line no-plusplus, no-param-reassign
+			currentAttempt++;
+		}, intervalTime);
+	});
 const { log } = console;
 
 async function main() {
@@ -63,15 +65,18 @@ async function main() {
 
 	log('Running on backend mode: ', backendMode);
 
-	// Providers
+	web3 = new Web3(providerUrl);
+
+	if (isWs(backendMode)) console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
+
 	log();
 	log('>>>>>>');
 	log(`${backendMode?.toUpperCase()}:MAINNET getBlock`);
 	log('>>>>>>');
 
-	web3 = new Web3(providerUrl as string);
+	const block = await web3.eth.getBlock('latest');
+	log(util.inspect(block));
 
-	// console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
 	// Accounts
 	web3 = new Web3();
 
@@ -90,6 +95,35 @@ async function main() {
 
 	const hash = web3.eth.accounts.hashMessage('Hello World');
 	log(util.inspect(hash));
+
+	//BatchRequest
+	log();
+	log('>>>>>>');
+	log('BatchRequest');
+	log('>>>>>>');
+
+	const account2 = web3.eth.accounts.create();
+	//todo add types to request/import
+	const request1 = {
+			id: 10,
+			method: 'eth_getBalance',
+			params: [account.address, 'latest'],
+		},
+		request2 = {
+			id: 11,
+			method: 'eth_getBalance',
+			params: [account2.address, 'latest'],
+		};
+
+	const batch = new web3.BatchRequest();
+
+	const request1Promise = batch.add(request1);
+	const request2Promise = batch.add(request2);
+
+	const executePromise = batch.execute();
+	const response = await Promise.all([request1Promise, request2Promise, executePromise]);
+
+	log(util.inspect(response));
 }
 
 main()
