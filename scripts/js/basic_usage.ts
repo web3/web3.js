@@ -78,8 +78,6 @@ async function main() {
 	log(util.inspect(block));
 
 	// Accounts
-	web3 = new Web3();
-
 	log();
 	log('>>>>>>');
 	log('eth.accounts.createAccount');
