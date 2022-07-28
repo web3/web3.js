@@ -30,7 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  *      '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
  *      BlockTags.LATEST,
  *      DEFAULT_RETURN_FORMAT
- * );
+ * ).then(console.log);
+ * > 1000000000000n
  * ```
  *
  * To use this package within the `web3` object use:
@@ -38,7 +39,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  * import { Web3 } from 'web3';
  *
  * const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
- * web3.eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1');
+ * web3.eth.getBalance('0x407d73d8a49eeb85d32cf465507dd71d507100c1').then(console.log);
+ * > 1000000000000n
  */
 /**
  *
