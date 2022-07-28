@@ -485,6 +485,12 @@ export const feeHistorySchema = {
 				},
 			},
 		},
+		gasUsedRatio: {
+			type: 'array',
+			items: {
+				type: 'number',
+			},
+		},
 	},
 };
 

@@ -19,7 +19,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
-import { TransactionReceipt } from 'web3-types';
+import { TransactionReceipt, Web3BaseProvider } from 'web3-types';
 import {
 	prepareTransactionForSigning,
 	SendTransactionEvents,
@@ -449,6 +449,79 @@ describe('defaults', () => {
 			});
 			expect(eth2.blockHeaderTimeout).toBe(4);
 		});
+
+		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
+			const eth = new Web3Eth(clientUrl);
+
+			// Ensure the provider supports subscriptions to simulate the test scenario
+			// It will cause providers that does not support subscriptions (like http) to throw exception when subscribing.
+			// This case is tested to ensure that even if an error happen at subscription,
+			//	polling will still get the data from next blocks.
+			(eth.provider as Web3BaseProvider<Record<string, never>>).supportsSubscriptions = () =>
+				true;
+
+			// Cause the events to take a long time (more than blockHeaderTimeout),
+			//	to ensure that polling of new blocks works in such cases.
+			// I will cause the providers that supports subscription (like WebSocket)
+			// 	to never return data through listening to new events
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
+			(eth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
+				// eslint-disable-next-line no-promise-executor-return
+				await new Promise(res => setTimeout(res, 1000000));
+			};
+
+			// Make the test run faster by casing the polling to start after 1 second
+			eth.blockHeaderTimeout = 1;
+
+			const from = accounts[0];
+			const to = accounts[1];
+			const value = `0x1`;
+
+			const sentTx: Web3PromiEvent<
+				TransactionReceipt,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
+
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on(
+					'confirmation',
+					({
+						confirmations,
+						receipt: { status },
+					}: {
+						confirmations: bigint;
+						receipt: { status: bigint };
+					}) => {
+						expect(status).toBe(BigInt(1));
+						// Being able to get 2 confirmations means the pooling for new blocks works
+						if (confirmations >= 2) {
+							resolve();
+						}
+					},
+				);
+			});
+
+			// To cause the development node (like Ganache) to generate new block for the new transaction
+			// When another block is generated, the pervious transaction would be able to have 2 confirmations
+			await new Promise<void>(resolve => {
+				setTimeout(resolve, 1000);
+			});
+			await eth.sendTransaction({
+				to,
+				value,
+				from,
+			});
+
+			// Ensure the promise the get the confirmations resolves with no error
+			await expect(confirmationPromise).resolves.toBeUndefined();
+		});
+
 		it('maxListenersWarningThreshold', () => {
 			// default
 			expect(web3Eth.maxListenersWarningThreshold).toBe(100);

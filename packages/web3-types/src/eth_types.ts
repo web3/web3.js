@@ -438,6 +438,7 @@ export interface FeeHistory {
 	readonly oldestBlock: Numbers;
 	readonly baseFeePerGas: Numbers;
 	readonly reward: Numbers[][];
+	readonly gasUsedRatio: Numbers;
 }
 
 export interface StorageProof {
