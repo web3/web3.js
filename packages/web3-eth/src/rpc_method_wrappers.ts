@@ -957,6 +957,10 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
  *
  * web3.eth.sendTransaction(transaction).catch(console.log);
  * > <Some TransactionError>
+ *
+ * // Example using options.ignoreGasPricing = true
+ * web3.eth.sendTransaction(transaction, undefined, { ignoreGasPricing: true }).then(console.log);
+ * > 0xdf7756865c2056ce34c4eabe4eff42ad251a9f920a1c620c00b4ea0988731d3f
  * ```
  *
  *
@@ -1409,12 +1413,18 @@ export function sendSignedTransaction<
  * @returns The signed `message`.
  *
  * ```ts
+ * // Using an unlocked account managed by connected RPC client
  * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe").then(console.log);
  * > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
  *
+ * // Using an unlocked account managed by connected RPC client
  * web3.eth.sign("0x48656c6c6f20776f726c64", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", { number: FMT_NUMBER.NUMBER , bytes: FMT_BYTES.BUFFER }).then(console.log);
  * > <Buffer 30 78 33 30 37 35 35 65 64 36 35 33 39 36 66 61 63 66 38 36 63 35 33 65 36 32 31 37 63 35 32 62 34 64 61 65 62 65 37 32 61 61 34 39 34 31 64 38 39 36 ... >
  * ```
+ *
+ * // Using an indexed account managed by local Web3 wallet
+ * web3.eth.sign("0x48656c6c6f20776f726c64", 0).then(console.log);
+ * > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
  */
 export async function sign<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -1520,7 +1530,8 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 // TODO Decide what to do with transaction.to
 // https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 /**
- * Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the blockchain.
+ * Executes a message call within the EVM without creating a transaction.
+ * It does not publish anything to the blockchain and does not consume any gas.
  *
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  * @param transaction - A transaction object where all properties are optional except `to`, however it's recommended to include the `from` property or it may default to `0x0000000000000000000000000000000000000000` depending on your node or provider.
@@ -1549,7 +1560,9 @@ export async function call<ReturnFormat extends DataFormat>(
 
 // TODO - Investigate whether response is padded as 1.x docs suggest
 /**
- * Executes a message call or transaction and returns the amount of the gas used.
+ * Simulates the transaction within the EVM to estimate the amount of gas to be used by the transaction.
+ * The transaction will not be added to the blockchain, and actual gas usage can vary when interacting
+ * with a contract as a result of updating the contract's state.
  *
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
  * @param transaction The {@link Transaction} object to estimate the gas for.
