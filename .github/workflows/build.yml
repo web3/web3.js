@@ -171,7 +171,14 @@ jobs:
         INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
       strategy:
         fail-fast: false
+        matrix:
+          node: [14, 16]
       steps:
+        - uses: actions/download-artifact@v3
+          with:
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
+        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         - run: |
-            yarn test:blackbox
+            yarn test:blackbox:web
           shell: bash

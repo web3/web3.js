@@ -56,12 +56,12 @@ const { log } = console;
 
 async function main() {
 	let web3: Web3;
-	if (!typeof process.env.MODE) throw new Error('No mode env variable!');
+	if (!process.env.MODE) throw new Error('No mode env variable!');
 	const backendMode = process.env.MODE as string;
 
 	let providerUrl = isWs(backendMode) ? process.env.INFURA_WSS : process.env.INFURA_HTTP;
 
-	if (typeof providerUrl === undefined) throw new Error('Provider url is undefined!');
+	if (providerUrl === undefined) throw new Error('Provider url is undefined!');
 	else providerUrl = providerUrl as string;
 
 	log('Running on backend mode: ', backendMode);
