@@ -1111,7 +1111,8 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	// TODO Decide what to do with transaction.to
 	// https://github.com/ChainSafe/web3.js/pull/4525#issuecomment-982330076
 	/**
-	 * Executes a message call transaction, which is directly executed in the VM of the node, but never mined into the blockchain.
+	 * Executes a message call within the EVM without creating a transaction.
+	 * It does not publish anything to the blockchain and does not consume any gas.
 	 *
 	 * @param transaction - A transaction object where all properties are optional except `to`, however it's recommended to include the `from` property or it may default to `0x0000000000000000000000000000000000000000` depending on your node or provider.
 	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while processing the transaction.
