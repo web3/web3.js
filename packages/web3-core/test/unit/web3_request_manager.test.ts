@@ -323,6 +323,7 @@ describe('Web3RequestManager', () => {
 				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(true);
 				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
 				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(false);
 			});
 
 			it('should pass request to provider and resolve if provider resolves it', async () => {
@@ -354,7 +355,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
-				await expect(manager.send(request)).rejects.toEqual(errorResponse);
+				await expect(manager.send(request)).rejects.toThrow(errorResponse.error.message);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
@@ -376,6 +377,63 @@ describe('Web3RequestManager', () => {
 				);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+		});
+
+		describe('eip15593-provider', () => {
+			beforeEach(() => {
+				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(true);
+			});
+
+			it('should pass request to provider and resolve if provider resolves it', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.resolve(successResponse);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).resolves.toEqual(successResponse.result);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and reject if provider throws error', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.reject(errorResponse);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow(errorResponse.error.message);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and reject if provider returns error', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.resolve(errorResponse);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow(
+					new InvalidResponseError(errorResponse),
+				);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
 		});
 
@@ -416,7 +474,7 @@ describe('Web3RequestManager', () => {
 
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
-				await expect(manager.send(request)).rejects.toEqual(errorResponse);
+				await expect(manager.send(request)).rejects.toThrow(errorResponse.error.message);
 				expect(myProvider.send).toHaveBeenCalledTimes(1);
 				expect(myProvider.send).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
@@ -647,6 +705,7 @@ describe('Web3RequestManager', () => {
 				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
 				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(true);
 				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(false);
 			});
 
 			it('should pass request to provider and resolve if provider resolves it', async () => {

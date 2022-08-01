@@ -168,6 +168,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 export type SupportedProviders<API extends Web3APISpec> =
 	| Web3BaseProvider<API>
+	| EIP1193Provider<API>
 	| LegacyRequestProvider
 	| LegacySendProvider
 	| LegacySendAsyncProvider;

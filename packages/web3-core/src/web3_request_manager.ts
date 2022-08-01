@@ -32,10 +32,12 @@ import {
 	Web3APIRequest,
 	Web3APIReturnType,
 	Web3APISpec,
+	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
 import { isNullish, jsonRpc } from 'web3-utils';
 import {
+	isEIP1193Provider,
 	isLegacyRequestProvider,
 	isLegacySendAsyncProvider,
 	isLegacySendProvider,
@@ -169,28 +171,66 @@ export class Web3RequestManager<
 				response = error as JsonRpcResponse<ResponseType>;
 			}
 
-			return this._processJsonRpcResponse(payload, response);
+			return this._processJsonRpcResponse(payload, response, { legacy: false, error: false });
+		}
+
+		if (isEIP1193Provider(provider)) {
+			return (provider as Web3BaseProvider<API>)
+				.request<Method, ResponseType>(payload as Web3APIPayload<API, Method>)
+				.then(res =>
+					this._processJsonRpcResponse(payload, res, { legacy: true, error: false }),
+				)
+				.catch(error =>
+					this._processJsonRpcResponse(
+						payload,
+						error as JsonRpcResponse<ResponseType, unknown>,
+						{ legacy: true, error: true },
+					),
+				);
 		}
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacyRequestProvider(provider)) {
-			return new Promise<JsonRpcResponse<ResponseType>>((resolve): void => {
+			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {
 				provider.request<ResponseType>(payload, (err, response) => {
 					if (err) {
-						throw err;
+						return reject(
+							this._processJsonRpcResponse(
+								payload,
+								err as unknown as JsonRpcResponse<ResponseType>,
+								{
+									legacy: true,
+									error: true,
+								},
+							),
+						);
 					}
 
-					return resolve(this._processJsonRpcResponse(payload, response));
+					return resolve(
+						this._processJsonRpcResponse(payload, response, {
+							legacy: true,
+							error: false,
+						}),
+					);
 				});
 			});
 		}
 
 		// TODO: This should be deprecated and removed.
 		if (isLegacySendProvider(provider)) {
-			return new Promise<JsonRpcResponse<ResponseType>>((resolve): void => {
+			return new Promise<JsonRpcResponse<ResponseType>>((resolve, reject): void => {
 				provider.send<ResponseType>(payload, (err, response) => {
 					if (err) {
-						throw err;
+						return reject(
+							this._processJsonRpcResponse(
+								payload,
+								err as unknown as JsonRpcResponse<ResponseType>,
+								{
+									legacy: true,
+									error: true,
+								},
+							),
+						);
 					}
 
 					if (isNullish(response)) {
@@ -200,7 +240,12 @@ export class Web3RequestManager<
 						);
 					}
 
-					return resolve(this._processJsonRpcResponse(payload, response));
+					return resolve(
+						this._processJsonRpcResponse(payload, response, {
+							legacy: true,
+							error: false,
+						}),
+					);
 				});
 			});
 		}
@@ -209,7 +254,15 @@ export class Web3RequestManager<
 		if (isLegacySendAsyncProvider(provider)) {
 			return provider
 				.sendAsync<ResponseType>(payload)
-				.then(response => this._processJsonRpcResponse(payload, response));
+				.then(response =>
+					this._processJsonRpcResponse(payload, response, { legacy: true, error: false }),
+				)
+				.catch(error =>
+					this._processJsonRpcResponse(payload, error as JsonRpcResponse<ResponseType>, {
+						legacy: true,
+						error: true,
+					}),
+				);
 		}
 
 		throw new ProviderError('Provider does not have a request or send method to use.');
@@ -219,6 +272,7 @@ export class Web3RequestManager<
 	private _processJsonRpcResponse<ResultType, ErrorType, RequestType>(
 		payload: JsonRpcPayload<RequestType>,
 		response: JsonRpcResponse<ResultType, ErrorType>,
+		{ legacy, error }: { legacy: boolean; error: boolean },
 	): JsonRpcResponse<ResultType> | never {
 		if (
 			jsonRpc.isBatchRequest(payload) &&
@@ -255,6 +309,23 @@ export class Web3RequestManager<
 
 		if ((response as unknown) instanceof Error) {
 			throw response;
+		}
+
+		if (legacy && error) {
+			throw new InvalidResponseError<ErrorType>(response);
+		}
+
+		if (legacy && !error) {
+			return {
+				result: response,
+				jsonrpc: '2.0',
+				// eslint-disable-next-line no-nested-ternary
+				id: jsonRpc.isBatchRequest(payload)
+					? payload[0].id
+					: 'id' in payload
+					? payload.id
+					: 'NON_EXISTING_ID',
+			} as JsonRpcResponse<ResultType>;
 		}
 
 		throw new ResponseError(response, 'Invalid response');
