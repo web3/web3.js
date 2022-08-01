@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { Web3AccountProvider } from 'web3-types';
-import { describeIf, isBrowser, isElectron, isFirefox, itIf } from '../fixtures/system_test_utils';
+import { isBrowser, isElectron, itIf } from '../fixtures/system_test_utils';
 import { Wallet } from '../../src';
 import * as accountProvider from '../../src/account';
 import { Web3Account } from '../../dist';
@@ -215,7 +215,7 @@ describe('Wallet', () => {
 		});
 	});
 
-	describeIf(!isFirefox)('encrypt', () => {
+	describe('encrypt', () => {
 		it('should encrypt all accounts and return array', async () => {
 			const account1 = accountProvider.create();
 			const account2 = accountProvider.create();
@@ -234,7 +234,7 @@ describe('Wallet', () => {
 		});
 	});
 
-	describeIf(!isFirefox)('decrypt', () => {
+	describe('decrypt', () => {
 		it('should decrypt all accounts and add to wallet', async () => {
 			const account1 = accountProvider.create();
 			const account2 = accountProvider.create();
@@ -263,7 +263,7 @@ describe('Wallet', () => {
 			},
 		);
 
-		itIf((isBrowser || isElectron) && !isFirefox)(
+		itIf(isBrowser || isElectron)(
 			'should encrypt wallet and load it with given key',
 			async () => {
 				const account = accountProvider.create();
@@ -277,7 +277,7 @@ describe('Wallet', () => {
 			},
 		);
 
-		itIf((isBrowser || isElectron) && !isFirefox)(
+		itIf(isBrowser || isElectron)(
 			'should encrypt wallet and load it with default key',
 			async () => {
 				const account = accountProvider.create();
