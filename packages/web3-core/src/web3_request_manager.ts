@@ -274,20 +274,69 @@ export class Web3RequestManager<
 		response: JsonRpcResponse<ResultType, ErrorType>,
 		{ legacy, error }: { legacy: boolean; error: boolean },
 	): JsonRpcResponse<ResultType> | never {
+		// This is the majority of the cases so check these first
+		// A valid JSON-RPC response with error object
+		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
+			throw new InvalidResponseError<ErrorType>(response);
+		}
+
+		// This is the majority of the cases so check these first
+		// A valid JSON-RPC response with result object
+		if (jsonRpc.isResponseWithResult<ResultType>(response)) {
+			return response;
+		}
+
+		if ((response as unknown) instanceof Error) {
+			throw response;
+		}
+
+		if (!legacy && jsonRpc.isBatchRequest(payload) && jsonRpc.isBatchResponse(response)) {
+			return response as JsonRpcBatchResponse<ResultType>;
+		}
+
+		if (legacy && !error && jsonRpc.isBatchRequest(payload)) {
+			return response as JsonRpcBatchResponse<ResultType>;
+		}
+
+		if (legacy && error && jsonRpc.isBatchRequest(payload)) {
+			// In case of error batch response we don't want to throw Invalid response
+			throw response;
+		}
+
 		if (
-			jsonRpc.isBatchRequest(payload) &&
-			!Array.isArray(response) &&
-			!(response instanceof Error)
+			legacy &&
+			!jsonRpc.isResponseWithError(response) &&
+			!jsonRpc.isResponseWithResult(response)
 		) {
+			const res = {
+				jsonrpc: '2.0',
+				// eslint-disable-next-line no-nested-ternary
+				id: jsonRpc.isBatchRequest(payload)
+					? payload[0].id
+					: 'id' in payload
+					? payload.id
+					: 'NON_EXISTING_ID',
+			};
+
+			if (error) {
+				return {
+					...res,
+					error: response as unknown,
+				} as JsonRpcResponse<ResultType>;
+			}
+
+			return {
+				...res,
+				result: response as unknown,
+			} as JsonRpcResponse<ResultType>;
+		}
+
+		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
 			throw new ResponseError(response, 'Got normal response for a batch request.');
 		}
 
 		if (!jsonRpc.isBatchRequest(payload) && Array.isArray(response)) {
 			throw new ResponseError(response, 'Got batch response for a normal request.');
-		}
-
-		if (jsonRpc.isBatchResponse(response)) {
-			return response as JsonRpcBatchResponse<ResultType>;
 		}
 
 		if (
@@ -297,35 +346,6 @@ export class Web3RequestManager<
 			if (response.id && payload.id !== response.id) {
 				throw new InvalidResponseError<ErrorType>(response);
 			}
-		}
-
-		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
-			throw new InvalidResponseError<ErrorType>(response);
-		}
-
-		if (jsonRpc.isResponseWithResult<ResultType>(response)) {
-			return response;
-		}
-
-		if ((response as unknown) instanceof Error) {
-			throw response;
-		}
-
-		if (legacy && error) {
-			throw new InvalidResponseError<ErrorType>(response);
-		}
-
-		if (legacy && !error) {
-			return {
-				result: response,
-				jsonrpc: '2.0',
-				// eslint-disable-next-line no-nested-ternary
-				id: jsonRpc.isBatchRequest(payload)
-					? payload[0].id
-					: 'id' in payload
-					? payload.id
-					: 'NON_EXISTING_ID',
-			} as JsonRpcResponse<ResultType>;
 		}
 
 		throw new ResponseError(response, 'Invalid response');

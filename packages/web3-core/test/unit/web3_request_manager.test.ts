@@ -437,6 +437,46 @@ describe('Web3RequestManager', () => {
 			});
 		});
 
+		describe('eip15593-provider - return non json-rpc compliance response', () => {
+			beforeEach(() => {
+				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(true);
+			});
+
+			it('should pass request to provider and resolve if provider resolves it', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.resolve(successResponse.result);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).resolves.toEqual(successResponse.result);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and reject if provider throws error', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.reject(errorResponse.error);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).rejects.toThrow(errorResponse.error.message);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+		});
+
 		describe('legacy-send-provider', () => {
 			beforeEach(() => {
 				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
@@ -696,6 +736,61 @@ describe('Web3RequestManager', () => {
 				await expect(manager.sendBatch(request)).resolves.toEqual(errorResponse);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+			});
+		});
+
+		describe('eip15593-provider', () => {
+			beforeEach(() => {
+				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(true);
+			});
+
+			it('should pass request to provider and resolve if provider resolves it', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.resolve(successResponse);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).resolves.toEqual(successResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and reject if provider throws error', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						throw errorResponse;
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).rejects.toEqual(errorResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and reject if provider returns error', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return Promise.resolve(errorResponse);
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.sendBatch(request)).resolves.toEqual(errorResponse);
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
 		});
 
