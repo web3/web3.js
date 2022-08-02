@@ -1,3 +1,4 @@
+const port = parseInt(Math.random() * 40000 + 10000);
 module.exports = {
 	screenshotOnRunFailure: false,
 	video: false,
@@ -13,8 +14,8 @@ module.exports = {
 		},
 	],
 	e2e: {
-		port: 8888,
-		baseUrl: 'https://localhost:8888',
+		port,
+		baseUrl: `https://localhost:${port}`,
 		// We've imported your old cypress plugins here.
 		// You may want to clean this up later by importing these.
 		setupNodeEvents(on, config) {
