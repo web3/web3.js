@@ -71,6 +71,7 @@
 		"bufferutil": "^4.0.6",
 		"clean-webpack-plugin": "^4.0.0",
 		"crypto-browserify": "^3.12.0",
+		"cypress": "^10.4.0",
 		"cypress-jest-adapter": "^0.1.1",
 		"declaration-bundler-webpack-plugin": "^1.0.3",
 		"eslint": "^8.20.0",
@@ -96,5 +97,6 @@
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"
 	},
-	"packageManager": "yarn@1.22.15"
+	"packageManager": "yarn@1.22.15",
+	"dependencies": {}
 }

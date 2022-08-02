@@ -1,8 +1,19 @@
-const port = parseInt(Math.random() * 40000 + 10000);
-module.exports = {
+const config = {
 	screenshotOnRunFailure: false,
 	video: false,
-	clientCertificates: [
+	e2e: {
+		// We've imported your old cypress plugins here.
+		// You may want to clean this up later by importing these.
+		setupNodeEvents(on, config) {
+			return require('./cypress/plugins/index.js')(on, config);
+		},
+		specPattern: 'test/integration/**/**/*.test.ts',
+	},
+};
+
+if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
+	const port = parseInt(String(Math.random() * 40000 + 10000));
+	config.clientCertificates = [
 		{
 			url: 'https://web3.js',
 			certs: [
@@ -12,15 +23,9 @@ module.exports = {
 				},
 			],
 		},
-	],
-	e2e: {
-		port,
-		baseUrl: `https://localhost:${port}`,
-		// We've imported your old cypress plugins here.
-		// You may want to clean this up later by importing these.
-		setupNodeEvents(on, config) {
-			return require('./cypress/plugins/index.js')(on, config);
-		},
-		specPattern: 'test/integration/**/**/*.test.ts',
-	},
-};
+	];
+	config.e2e.port = port;
+	config.e2e.baseUrl = `https://localhost:${port}`;
+}
+
+module.exports = config;
