@@ -121,7 +121,7 @@ const config = {
 						position: 'left',
 					},
 					{
-						to: 'api', // 'api' is the 'out' directory
+						to: 'docs/api', // 'api' is the 'out' directory
 						label: 'API',
 						position: 'left',
 					},
