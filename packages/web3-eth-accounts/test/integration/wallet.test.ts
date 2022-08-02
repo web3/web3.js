@@ -25,7 +25,6 @@ import { Web3Account } from '../../dist';
 
 describe('Wallet', () => {
 	let wallet: Wallet;
-	// let clientUrl: string;
 	beforeEach(() => {
 		wallet = new Wallet(accountProvider as Web3AccountProvider<any>);
 	});
