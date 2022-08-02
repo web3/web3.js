@@ -315,7 +315,9 @@ export class Web3RequestManager<
 					? payload[0].id
 					: 'id' in payload
 					? payload.id
-					: 'NON_EXISTING_ID',
+					: // Have to use the null here explicitly
+					  // eslint-disable-next-line no-null/no-null
+					  null,
 			};
 
 			if (error) {
