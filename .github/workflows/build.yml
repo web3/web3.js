@@ -136,12 +136,12 @@ jobs:
         shell: bash
 
   build-docs:
-    name: Build dOCS
+    name: Build Docs
     needs: build
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            node: [ 14, 16 ]
+            node: [ 16 ]
     steps:
         -   uses: actions/download-artifact@v3
             with:
