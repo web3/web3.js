@@ -380,7 +380,7 @@ describe('Web3RequestManager', () => {
 			});
 		});
 
-		describe('eip15593-provider', () => {
+		describe('eip1193-provider', () => {
 			beforeEach(() => {
 				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
 				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
@@ -437,7 +437,7 @@ describe('Web3RequestManager', () => {
 			});
 		});
 
-		describe('eip15593-provider - return non json-rpc compliance response', () => {
+		describe('eip1193-provider - return non json-rpc compliance response', () => {
 			beforeEach(() => {
 				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
 				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
@@ -739,7 +739,7 @@ describe('Web3RequestManager', () => {
 			});
 		});
 
-		describe('eip15593-provider', () => {
+		describe('eip1193-provider', () => {
 			beforeEach(() => {
 				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
 				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
