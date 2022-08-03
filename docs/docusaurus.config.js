@@ -45,7 +45,7 @@ const config = {
 	tagline: 'The ultimate JavaScript library for Ethereum',
 	url: 'https://docs.web3js.org',
 	baseUrl: '/',
-	onBrokenLinks: 'throw',
+	onBrokenLinks: 'warn',
 	onBrokenMarkdownLinks: 'warn',
 	favicon: 'img/favicon.ico',
 
@@ -116,18 +116,18 @@ const config = {
 				items: [
 					{
 						to: 'docs/guides/web3_migration_guide',
-						activeBasePath: 'docs',
+						activeBasePath: 'docs/guides',
 						label: 'Guides',
 						position: 'left',
 					},
 					{
-						to: 'docs/api', // 'api' is the 'out' directory
+						to: 'api', // 'api' is the 'out' directory
 						label: 'API',
 						position: 'left',
 					},
 					{
 						to: 'docs/glossary/json_interface',
-						activeBasePath: 'docs',
+						activeBasePath: 'docs/glossary/',
 						label: 'Glossary',
 						position: 'left',
 					},
