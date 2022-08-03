@@ -44,6 +44,6 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 12. Wait for all tests to pass in github CI/CD actions
 13. When sufficient approvals have been met, merge the pull request
 14. Publish documentation changes
-15. Publish draft release created in `Step 11`
+15. Publish draft release created in `Step 9`
 16. For each package, go in package and run `yarn publish --tag alpha` to publish to NPM
     - It will prompt new bump version, don't give new version for that as its done in `Step 4`
