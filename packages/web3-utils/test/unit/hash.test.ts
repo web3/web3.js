@@ -16,7 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { keccak256 } from 'js-sha3';
-import { sha3, sha3Raw, soliditySha3, soliditySha3Raw, encodePacked } from '../../src/hash';
+import {
+	sha3,
+	sha3Raw,
+	soliditySha3,
+	soliditySha3Raw,
+	encodePacked,
+	keccak256 as web3keccak256,
+} from '../../src/hash';
 import {
 	sha3Data,
 	sha3ValidData,
@@ -28,6 +35,7 @@ import {
 	compareSha3JSRawValidData,
 	encodePackData,
 	encodePackedInvalidData,
+	keccak256ValidData,
 } from '../fixtures/hash';
 
 describe('hash', () => {
@@ -99,6 +107,13 @@ describe('hash', () => {
 		describe('invalid cases', () => {
 			it.each(encodePackedInvalidData)('%s', (input, output) => {
 				expect(() => encodePacked(input)).toThrow(output);
+			});
+		});
+	});
+	describe('keccak256', () => {
+		describe('valid cases', () => {
+			it.each(keccak256ValidData)('%s', (input, output) => {
+				expect(web3keccak256(input)).toEqual(output);
 			});
 		});
 	});

@@ -269,3 +269,16 @@ export const encodePackedInvalidData: [any, string][] = [
 		'Invalid value given "0x1". Error: can not parse as byte data.',
 	],
 ];
+
+export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
+	['my data', '0x8e0c48154711500d6fa119cc31df4dec339091e8b426cf4109a769fe89baad31'],
+	[
+		new Uint8Array(Buffer.from('my data')),
+		'0x8e0c48154711500d6fa119cc31df4dec339091e8b426cf4109a769fe89baad31',
+	],
+	[
+		'0x8e0c48154711500d6fa119cc31df4dec339091e8b426cf4109a769fe89baad31',
+		'0x2d19cd91fbcc44e6412f92c11da7907cdedb1ace04c47447b42a61f1cd63b85a',
+	],
+	[BigInt(3), '0x2a80e1ef1d7842f27f2e6be0972bb708b9a135c38860dbe73c27c3486c34f4de'],
+];
