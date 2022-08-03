@@ -27,10 +27,12 @@ export async function waitWithTimeout<T>(
 	timeout: number,
 	error?: Error,
 ): Promise<T | undefined> {
-	const x = new Promise<undefined | Error>((resolve, reject) => {
-		setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
-	});
-	const result = await Promise.race([awaitable, x]);
+	const result = await Promise.race([
+		awaitable,
+		new Promise<undefined | Error>((resolve, reject) => {
+			setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
+		}),
+	]);
 	if (result instanceof Error) {
 		throw result;
 	}
