@@ -27,6 +27,7 @@ export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount?: HexString;
 	defaultBlock: BlockNumberOrTag;
+	transactionRpcTimeout: number;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingInterval: number;
@@ -61,6 +62,7 @@ export abstract class Web3Config
 		handleRevert: false,
 		defaultAccount: undefined,
 		defaultBlock: 'latest',
+		transactionRpcTimeout: 5000,
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
 		transactionPollingInterval: 1000,
@@ -169,6 +171,26 @@ export abstract class Web3Config
 			newValue: val,
 		});
 		this._config.defaultBlock = val;
+	}
+
+	/**
+	 * The time used to wait for Ethereum Node to return the sent transaction result. Note: If this method times out, the transaction may still be pending.
+	 * Default is `5000` ms.
+	 */
+	public get transactionRpcTimeout() {
+		return this._config.transactionRpcTimeout;
+	}
+
+	/**
+	 * Will set the transactionRpcTimeout.
+	 */
+	public set transactionRpcTimeout(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionRpcTimeout',
+			oldValue: this._config.transactionBlockTimeout,
+			newValue: val,
+		});
+		this._config.transactionRpcTimeout = val;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,14 +15,24 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './converters';
-export * from './validation';
-export * from './formatter';
-export * from './hash';
-export * from './random';
-export * from './string_manipulation';
-export * from './objects';
-export * from './promise_helpers';
-export * from './json_rpc';
-export * as jsonRpc from './json_rpc';
-export * from './web3_deferred_promise';
+export function waitWithTimeout<T>(
+	awaitable: Promise<T>,
+	timeout: number,
+	error: Error,
+): Promise<T>;
+export function waitWithTimeout<T>(awaitable: Promise<T>, timeout: number): Promise<T | undefined>;
+
+export async function waitWithTimeout<T>(
+	awaitable: Promise<T>,
+	timeout: number,
+	error?: Error,
+): Promise<T | undefined> {
+	const x = new Promise<undefined | Error>((resolve, reject) => {
+		setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
+	});
+	const result = await Promise.race([awaitable, x]);
+	if (result instanceof Error) {
+		throw result;
+	}
+	return result;
+}

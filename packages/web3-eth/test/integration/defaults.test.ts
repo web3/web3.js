@@ -251,6 +251,26 @@ describe('defaults', () => {
 			expect(transactionCountLatest).toBe(BigInt(1));
 			expect(Number(balanceLatest)).toBeGreaterThan(0);
 		});
+		it('transactionRpcTimeout', () => {
+			// default
+			expect(web3Eth.transactionRpcTimeout).toBe(5000);
+
+			// after set
+			web3Eth.setConfig({
+				transactionRpcTimeout: 1,
+			});
+			expect(web3Eth.transactionRpcTimeout).toBe(1);
+
+			// set by create new instance
+			eth2 = new Web3Eth({
+				provider: web3Eth.provider,
+				config: {
+					transactionRpcTimeout: 120,
+				},
+			});
+			expect(eth2.transactionRpcTimeout).toBe(120);
+		});
+
 		it('transactionBlockTimeout', () => {
 			// default
 			expect(web3Eth.transactionBlockTimeout).toBe(50);
@@ -520,6 +540,34 @@ describe('defaults', () => {
 
 			// Ensure the promise the get the confirmations resolves with no error
 			await expect(confirmationPromise).resolves.toBeUndefined();
+		});
+
+		it('should fail if Ethereum Node did not respond within `transactionRpcTimeout`', async () => {
+			const eth = new Web3Eth(clientUrl);
+
+			// Make the test run faster by casing the polling to start after 1 second
+			eth.transactionPollingTimeout = 500;
+
+			const from = accounts[0];
+			const to = accounts[1];
+			const value = `0x1`;
+
+			const sentTx: Web3PromiEvent<
+				TransactionReceipt,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = eth.sendTransaction({
+				to,
+				value,
+				from,
+				nonce: Number.MAX_SAFE_INTEGER,
+			});
+
+			// Ensure the promise rejects with the desired error
+			await expect(sentTx).rejects.toThrow(
+				`connected Ethereum Node did not respond within ${
+					eth.transactionPollingTimeout / 1000
+				} seconds`,
+			);
 		});
 
 		it('maxListenersWarningThreshold', () => {

@@ -36,6 +36,7 @@ import {
 	ERR_TX_INVALID_FEE_MARKET_GAS_PRICE,
 	ERR_TX_INVALID_LEGACY_GAS,
 	ERR_TX_DATA_AND_INPUT,
+	ERR_TX_RPC_TIMEOUT,
 	ERR_TX_POLLING_TIMEOUT,
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
@@ -261,6 +262,19 @@ export class TransactionDataAndInputError extends InvalidValueError {
 		super(
 			`data: ${value.data ?? 'undefined'}, input: ${value.input ?? 'undefined'}`,
 			'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.',
+		);
+	}
+}
+
+export class TransactionRpcTimeoutError extends InvalidValueError {
+	public code = ERR_TX_RPC_TIMEOUT;
+
+	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
+		super(
+			`transactionHash: ${
+				value.transactionHash ? value.transactionHash.toString() : 'not available'
+			}`,
+			`The connected Ethereum Node did not respond within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that it might still be mined!`,
 		);
 	}
 }

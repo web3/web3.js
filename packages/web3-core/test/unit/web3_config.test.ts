@@ -30,6 +30,7 @@ const defaultConfig = {
 	defaultHardfork: 'london',
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
+	transactionRpcTimeout: 5000,
 	transactionBlockTimeout: 50,
 	transactionConfirmationBlocks: 24,
 	transactionPollingInterval: 1000,
