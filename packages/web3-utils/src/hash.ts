@@ -61,17 +61,18 @@ export const sha3Raw = (data: Bytes): string => {
  * A wrapper for ethereum-cryptography/keccak256 to allow hashing a `string` and a `bigint` in addition to `UInt8Array`
  */
 export const keccak256Wrapper = (
-	data: Uint8Array | ReadonlyArray<number> | string | bigint,
+	data: Bytes | Numbers | string | ReadonlyArray<number>,
 ): string => {
 	let processedData;
-	if (typeof data === 'bigint') {
+	if (typeof data === 'bigint' || typeof data === 'number') {
 		processedData = data.toString();
 	} else if (typeof data === 'string' && isHexStrict(data)) {
 		processedData = bytesToBuffer(data);
 	} else {
-		processedData = data;
+		processedData = data as Uint8Array | readonly number[];
 	}
 
+	// Use `any` because `Buffer.from()` is having hard time detecting the types
 	return bytesToHex(keccak256(Buffer.from(processedData)));
 };
 
