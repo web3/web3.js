@@ -72,7 +72,6 @@ export const keccak256Wrapper = (
 		processedData = data as Uint8Array | readonly number[];
 	}
 
-	// Use `any` because `Buffer.from()` is having hard time detecting the types
 	return bytesToHex(keccak256(Buffer.from(processedData)));
 };
 
