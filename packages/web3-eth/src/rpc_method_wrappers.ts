@@ -51,7 +51,7 @@ import {
 } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
-import { SignatureError, TransactionRpcTimeoutError } from './errors';
+import { SignatureError, TransactionSendTimeoutError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -1110,9 +1110,9 @@ export function sendTransaction<
 									web3Context.requestManager,
 									signedTransaction.rawTransaction,
 								),
-								web3Context.transactionRpcTimeout,
-								new TransactionRpcTimeoutError({
-									numberOfSeconds: web3Context.transactionRpcTimeout / 1000,
+								web3Context.transactionSendTimeout,
+								new TransactionSendTimeoutError({
+									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
 									transactionHash: signedTransaction.transactionHash,
 								}),
 							);
@@ -1122,9 +1122,9 @@ export function sendTransaction<
 									web3Context.requestManager,
 									transactionFormatted as Partial<TransactionWithSenderAPI>,
 								),
-								web3Context.transactionRpcTimeout,
-								new TransactionRpcTimeoutError({
-									numberOfSeconds: web3Context.transactionRpcTimeout / 1000,
+								web3Context.transactionSendTimeout,
+								new TransactionSendTimeoutError({
+									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
 								}),
 							);
 						}

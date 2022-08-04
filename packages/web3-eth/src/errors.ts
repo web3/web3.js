@@ -36,7 +36,7 @@ import {
 	ERR_TX_INVALID_FEE_MARKET_GAS_PRICE,
 	ERR_TX_INVALID_LEGACY_GAS,
 	ERR_TX_DATA_AND_INPUT,
-	ERR_TX_RPC_TIMEOUT,
+	ERR_TX_SEND_TIMEOUT,
 	ERR_TX_POLLING_TIMEOUT,
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
@@ -266,8 +266,8 @@ export class TransactionDataAndInputError extends InvalidValueError {
 	}
 }
 
-export class TransactionRpcTimeoutError extends InvalidValueError {
-	public code = ERR_TX_RPC_TIMEOUT;
+export class TransactionSendTimeoutError extends InvalidValueError {
+	public code = ERR_TX_SEND_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
 		super(

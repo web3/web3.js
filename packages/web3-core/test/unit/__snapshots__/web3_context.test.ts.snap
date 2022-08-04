@@ -22,7 +22,7 @@ Object {
     "transactionPollingInterval": 1000,
     "transactionPollingTimeout": 750,
     "transactionReceiptPollingInterval": undefined,
-    "transactionRpcTimeout": 5000,
+    "transactionSendTimeout": 5000,
     "transactionTypeParser": undefined,
   },
   "provider": HttpProvider {

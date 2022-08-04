@@ -44,7 +44,7 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
-import { TransactionPollingTimeoutError, TransactionRpcTimeoutError } from '../../src/errors';
+import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from '../../src/errors';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -252,24 +252,24 @@ describe('defaults', () => {
 			expect(transactionCountLatest).toBe(BigInt(1));
 			expect(Number(balanceLatest)).toBeGreaterThan(0);
 		});
-		it('transactionRpcTimeout', () => {
+		it('transactionSendTimeout', () => {
 			// default
-			expect(web3Eth.transactionRpcTimeout).toBe(5000);
+			expect(web3Eth.transactionSendTimeout).toBe(5000);
 
 			// after set
 			web3Eth.setConfig({
-				transactionRpcTimeout: 1,
+				transactionSendTimeout: 1,
 			});
-			expect(web3Eth.transactionRpcTimeout).toBe(1);
+			expect(web3Eth.transactionSendTimeout).toBe(1);
 
 			// set by create new instance
 			eth2 = new Web3Eth({
 				provider: web3Eth.provider,
 				config: {
-					transactionRpcTimeout: 120,
+					transactionSendTimeout: 120,
 				},
 			});
-			expect(eth2.transactionRpcTimeout).toBe(120);
+			expect(eth2.transactionSendTimeout).toBe(120);
 		});
 
 		it('transactionBlockTimeout', () => {
@@ -548,7 +548,7 @@ describe('defaults', () => {
 			const eth = new Web3Eth(clientUrl);
 
 			// Make the test run faster by causing the timeout to happen after 0.2 second
-			eth.transactionRpcTimeout = 200;
+			eth.transactionSendTimeout = 200;
 
 			const from = accounts[0];
 			const to = accounts[1];
@@ -564,11 +564,11 @@ describe('defaults', () => {
 				});
 			} catch (error) {
 				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
-				if (error instanceof TransactionRpcTimeoutError) {
+				if (error instanceof TransactionSendTimeoutError) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
 						`connected Ethereum Node did not respond within ${
-							eth.transactionRpcTimeout / 1000
+							eth.transactionSendTimeout / 1000
 						} seconds`,
 					);
 				}
@@ -580,7 +580,9 @@ describe('defaults', () => {
 							eth.transactionPollingTimeout / 1000
 						} seconds`,
 					);
-				} else throw error;
+				} else {
+					throw error;
+				}
 			}
 		});
 

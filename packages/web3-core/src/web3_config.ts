@@ -27,7 +27,7 @@ export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount?: HexString;
 	defaultBlock: BlockNumberOrTag;
-	transactionRpcTimeout: number;
+	transactionSendTimeout: number;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingInterval: number;
@@ -67,7 +67,7 @@ export abstract class Web3Config
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750,
 		transactionReceiptPollingInterval: undefined,
-		transactionRpcTimeout: 5000,
+		transactionSendTimeout: 5000,
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
@@ -178,20 +178,20 @@ export abstract class Web3Config
 	 * Note: If the RPC call stuck at the Node and therefor timed-out, the transaction may still be pending or even mined by the Network. We recommend checking the pending transactions in such a case.
 	 * Default is `5000` ms.
 	 */
-	public get transactionRpcTimeout() {
-		return this._config.transactionRpcTimeout;
+	public get transactionSendTimeout() {
+		return this._config.transactionSendTimeout;
 	}
 
 	/**
-	 * Will set the transactionRpcTimeout.
+	 * Will set the transactionSendTimeout.
 	 */
-	public set transactionRpcTimeout(val) {
+	public set transactionSendTimeout(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
-			name: 'transactionRpcTimeout',
-			oldValue: this._config.transactionRpcTimeout,
+			name: 'transactionSendTimeout',
+			oldValue: this._config.transactionSendTimeout,
 			newValue: val,
 		});
-		this._config.transactionRpcTimeout = val;
+		this._config.transactionSendTimeout = val;
 	}
 
 	/**
