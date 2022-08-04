@@ -12,7 +12,7 @@ const config = {
 };
 
 if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
-	const port = parseInt(String(Math.random() * 40000 + 10000));
+	const port = parseInt(String(Math.random() * 30000 + 10000));
 	config.clientCertificates = [
 		{
 			url: 'https://web3.js',
@@ -25,7 +25,10 @@ if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
 		},
 	];
 	config.e2e.port = port;
-	config.e2e.baseUrl = `https://localhost:${port}`;
+	config.e2e.hosts = {
+		'web3.js': '127.0.0.1',
+	};
+	config.e2e.baseUrl = `https://web3.js:${port}`;
 }
 console.log('cypress config', config);
 module.exports = config;
