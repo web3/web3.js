@@ -62,12 +62,12 @@ export abstract class Web3Config
 		handleRevert: false,
 		defaultAccount: undefined,
 		defaultBlock: 'latest',
-		transactionRpcTimeout: 5000,
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750,
 		transactionReceiptPollingInterval: undefined,
+		transactionRpcTimeout: 5000,
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
@@ -187,7 +187,7 @@ export abstract class Web3Config
 	public set transactionRpcTimeout(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
 			name: 'transactionRpcTimeout',
-			oldValue: this._config.transactionBlockTimeout,
+			oldValue: this._config.transactionRpcTimeout,
 			newValue: val,
 		});
 		this._config.transactionRpcTimeout = val;

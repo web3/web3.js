@@ -546,7 +546,7 @@ describe('defaults', () => {
 			const eth = new Web3Eth(clientUrl);
 
 			// Make the test run faster by casing the polling to start after 1 second
-			eth.transactionPollingTimeout = 500;
+			eth.transactionRpcTimeout = 500;
 
 			const from = accounts[0];
 			const to = accounts[1];
@@ -565,7 +565,7 @@ describe('defaults', () => {
 			// Ensure the promise rejects with the desired error
 			await expect(sentTx).rejects.toThrow(
 				`connected Ethereum Node did not respond within ${
-					eth.transactionPollingTimeout / 1000
+					eth.transactionRpcTimeout / 1000
 				} seconds`,
 			);
 		});
