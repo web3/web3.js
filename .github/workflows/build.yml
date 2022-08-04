@@ -182,3 +182,18 @@ jobs:
         - run: |
             yarn test:blackbox:web
           shell: bash
+          
+  build-docs:
+    name: Build Docs
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+        matrix:
+            node: [ 16 ]
+    steps:
+        -   uses: actions/download-artifact@v3
+            with:
+                name: web3-${{ matrix.node }}.js.tar.gz
+                path: /tmp
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: yarn build:docs
