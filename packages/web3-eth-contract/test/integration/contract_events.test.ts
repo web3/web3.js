@@ -36,6 +36,7 @@ describe('contract', () => {
 	beforeEach(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
+			transactionPollingTimeout: 3000,
 		});
 
 		accounts = await getSystemTestAccounts();
