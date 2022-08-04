@@ -11,21 +11,21 @@ const config = {
 	},
 };
 
-// if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
-// 	const port = parseInt(String(Math.random() * 40000 + 10000));
-// 	config.clientCertificates = [
-// 		{
-// 			url: 'https://web3.js',
-// 			certs: [
-// 				{
-// 					cert: './cypress/.cert/cert.pem',
-// 					key: './cypress/.cert/key.pem',
-// 				},
-// 			],
-// 		},
-// 	];
-// 	config.e2e.port = port;
-// 	config.e2e.baseUrl = `https://localhost:${port}`;
-// }
-
+if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
+	const port = parseInt(String(Math.random() * 40000 + 10000));
+	config.clientCertificates = [
+		{
+			url: 'https://web3.js',
+			certs: [
+				{
+					cert: './cypress/.cert/cert.pem',
+					key: './cypress/.cert/key.pem',
+				},
+			],
+		},
+	];
+	config.e2e.port = port;
+	config.e2e.baseUrl = `https://localhost:${port}`;
+}
+console.log('cypress config', config);
 module.exports = config;
