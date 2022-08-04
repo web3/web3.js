@@ -22,6 +22,10 @@ export function waitWithTimeout<T>(
 ): Promise<T>;
 export function waitWithTimeout<T>(awaitable: Promise<T>, timeout: number): Promise<T | undefined>;
 
+/**
+ * Wait for a promise but interrupt it if it did not resolve within a given timeout.
+ * If the timeout reached, before the promise code resolve, either throw an error if an error object was provided, or return `undefined`.
+ */
 export async function waitWithTimeout<T>(
 	awaitable: Promise<T>,
 	timeout: number,

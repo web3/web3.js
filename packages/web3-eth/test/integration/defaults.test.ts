@@ -490,7 +490,7 @@ describe('defaults', () => {
 				await new Promise(res => setTimeout(res, 1000000));
 			};
 
-			// Make the test run faster by casing the polling to start after 1 second
+			// Make the test run faster by causing the polling to start after 1 second
 			eth.blockHeaderTimeout = 1;
 
 			const from = accounts[0];
@@ -545,13 +545,14 @@ describe('defaults', () => {
 		it('should fail if Ethereum Node did not respond within `transactionRpcTimeout`', async () => {
 			const eth = new Web3Eth(clientUrl);
 
-			// Make the test run faster by casing the polling to start after 1 second
-			eth.transactionRpcTimeout = 500;
+			// Make the test run faster by causing the timeout to happen after 0.2 second
+			eth.transactionRpcTimeout = 200;
 
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
 
+			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>

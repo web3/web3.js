@@ -274,7 +274,7 @@ export class TransactionRpcTimeoutError extends InvalidValueError {
 			`transactionHash: ${
 				value.transactionHash ? value.transactionHash.toString() : 'not available'
 			}`,
-			`The connected Ethereum Node did not respond within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that it might still be mined!`,
+			`The connected Ethereum Node did not respond within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that it might still be mined! We recommend checking the pending transactions for such a case.`,
 		);
 	}
 }
@@ -285,7 +285,7 @@ export class TransactionPollingTimeoutError extends InvalidValueError {
 	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
 		super(
 			`transactionHash: ${value.transactionHash.toString()}`,
-			`Transaction was not mined within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`,
+			`Transaction was not mined within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!  We recommend checking the pending transactions for such a case.`,
 		);
 	}
 }

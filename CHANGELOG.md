@@ -388,7 +388,7 @@ Released with 1.0.0-beta.37 code base.
 2. `defaultHardfork` default value is 'london'
 3. `defaultAccount` default value is undefined
 4. `defaultNetworkId` default value is undefined
-5. When sending a transaction, if Ethereum Node does not respond within `transactionRpcTimeout` throw an Error.
+5. When sending a transaction, if Ethereum Node does not respond within `transactionRpcTimeout`, throw an Error.
 
 ##### web3-eth-subscribe
 
