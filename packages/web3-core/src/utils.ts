@@ -16,12 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	Web3APISpec,
-	Web3BaseProvider,
+	EIP1193Provider,
 	LegacyRequestProvider,
 	LegacySendAsyncProvider,
 	LegacySendProvider,
 	SupportedProviders,
+	Web3APISpec,
+	Web3BaseProvider,
 } from 'web3-types';
 
 export const isWeb3Provider = <API extends Web3APISpec>(
@@ -30,7 +31,18 @@ export const isWeb3Provider = <API extends Web3APISpec>(
 
 export const isLegacyRequestProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
-): provider is LegacyRequestProvider => typeof provider !== 'string' && 'request' in provider;
+): provider is LegacyRequestProvider =>
+	typeof provider !== 'string' &&
+	'request' in provider &&
+	provider.request.constructor.name === 'Function';
+
+export const isEIP1193Provider = <API extends Web3APISpec>(
+	provider: SupportedProviders<API>,
+): provider is EIP1193Provider<API> =>
+	typeof provider !== 'string' &&
+	'request' in provider &&
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+	(provider.request as any)[Symbol.toStringTag] === 'AsyncFunction';
 
 export const isLegacySendProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,
