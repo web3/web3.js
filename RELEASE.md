@@ -45,5 +45,5 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 13. When sufficient approvals have been met, merge the pull request
 14. Publish documentation changes
 15. Publish draft release created in `Step 9`
-16. For each package, go in package and run `yarn publish --tag alpha` to publish to NPM
-    - It will prompt new bump version, don't give new version for that as its done in `Step 4`
+16. Run `npx lerna publish from-package --ignore-scripts --dist-tag alpha` in the package directory to publish to NPM
+    - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry
