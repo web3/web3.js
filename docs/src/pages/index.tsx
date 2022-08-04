@@ -18,9 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import styles from './index.module.css';
 
 function HomepageHeader() {
@@ -28,15 +26,10 @@ function HomepageHeader() {
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
+        <h1 className="hero__title">{siteConfig.title} 4.x</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/guides/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
-        </div>
+        <p> web3.js is a collection of libraries that allow you to interact with a local or remote ethereum node using HTTP, IPC or WebSocket.
+The following documentation will guide you through the breaking changes between 1.x and the 4.x version of web3.js as well as providing an API reference documentation with examples.</p>
       </div>
     </header>
   );
@@ -49,9 +42,6 @@ export default function Home(): JSX.Element {
       title={`Hello from ${siteConfig.title}`}
       description="Description will go into a meta tag in <head />">
       <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
     </Layout>
   );
 }

@@ -29,7 +29,7 @@ import { keccak256 } from 'ethereum-cryptography/keccak';
 import { isAddress, isHexStrict, isNullish } from 'web3-validator';
 import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from 'web3-types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
-import { utf8ToHex, hexToBytes, toNumber, bytesToHex } from './converters';
+import { utf8ToHex, hexToBytes, toNumber, bytesToHex, bytesToBuffer } from './converters';
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -57,7 +57,25 @@ export const sha3Raw = (data: Bytes): string => {
 	return hash;
 };
 
-export { keccak256 };
+/**
+ * A wrapper for ethereum-cryptography/keccak256 to allow hashing a `string` and a `bigint` in addition to `UInt8Array`
+ */
+export const keccak256Wrapper = (
+	data: Bytes | Numbers | string | ReadonlyArray<number>,
+): string => {
+	let processedData;
+	if (typeof data === 'bigint' || typeof data === 'number') {
+		processedData = data.toString();
+	} else if (typeof data === 'string' && isHexStrict(data)) {
+		processedData = bytesToBuffer(data);
+	} else {
+		processedData = data as Uint8Array | readonly number[];
+	}
+
+	return bytesToHex(keccak256(Buffer.from(processedData)));
+};
+
+export { keccak256Wrapper as keccak256 };
 
 /**
  * returns type and value
