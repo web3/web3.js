@@ -27,7 +27,7 @@ import {
 import {
 	getSystemTestProvider,
 	describeIf,
-	getSystemTestAccounts,
+	createNewAccount,
 	isWs,
 } from '../fixtures/system_test_utils';
 
@@ -37,7 +37,8 @@ describeIf(isWs)('subscribe', () => {
 	let accounts: string[];
 
 	beforeAll(async () => {
-		accounts = await getSystemTestAccounts();
+		const acc = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc.address];
 		provider = new WebSocketProvider(
 			getSystemTestProvider(),
 			{},

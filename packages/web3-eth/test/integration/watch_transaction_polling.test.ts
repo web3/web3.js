@@ -21,8 +21,8 @@ import { Web3Eth, SendTransactionEvents } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {
+	createNewAccount,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isHttp,
 	isIpc,
@@ -40,7 +40,9 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
 	});
 
 	describe('wait for confirmation polling', () => {

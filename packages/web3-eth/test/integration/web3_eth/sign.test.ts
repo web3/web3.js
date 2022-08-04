@@ -20,11 +20,7 @@ import { Address } from 'web3-types';
 import { isHexStrict } from 'web3-validator';
 
 import { Web3Eth } from '../../../src';
-import {
-	getSystemTestAccounts,
-	getSystemTestProvider,
-	isWs,
-} from '../../fixtures/system_test_utils';
+import { createNewAccount, getSystemTestProvider, isWs } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sign', () => {
 	let web3Eth: Web3Eth;
@@ -32,7 +28,8 @@ describe('Web3Eth.sign', () => {
 
 	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address];
 	});
 
 	afterAll(() => {

@@ -24,8 +24,8 @@ import { sendFewTxes } from './helper';
 import {
 	getSystemTestProvider,
 	describeIf,
-	getSystemTestAccounts,
 	isWs,
+	createNewAccount,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
@@ -41,7 +41,9 @@ describeIf(isWs)('watch subscription transaction', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
 
 		providerWs = new WebSocketProvider(
 			clientUrl,

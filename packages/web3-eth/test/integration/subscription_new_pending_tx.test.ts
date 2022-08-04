@@ -20,8 +20,8 @@ import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewPendingTransactionsSubscription } from '../../src/web3_subscriptions';
 import {
+	createNewAccount,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
 } from '../fixtures/system_test_utils';
@@ -38,7 +38,9 @@ describeIf(isWs)('subscription', () => {
 	let accounts: string[] = [];
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address];
 		providerWs = new WebSocketProvider(
 			clientUrl,
 			{},

@@ -19,11 +19,7 @@ import WebSocketProvider from 'web3-providers-ws';
 import { Address, Transaction } from 'web3-types';
 
 import { Web3Eth } from '../../../src';
-import {
-	getSystemTestAccounts,
-	getSystemTestProvider,
-	isWs,
-} from '../../fixtures/system_test_utils';
+import { createNewAccount, getSystemTestProvider, isWs } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.signTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -31,7 +27,8 @@ describe('Web3Eth.signTransaction', () => {
 
 	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address];
 	});
 
 	afterAll(() => {

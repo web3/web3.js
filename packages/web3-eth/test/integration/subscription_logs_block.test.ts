@@ -26,8 +26,8 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
+	createNewAccount,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
 } from '../fixtures/system_test_utils';
@@ -52,7 +52,6 @@ const makeFewTxToContract = async ({
 };
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
-	let accounts: string[] = [];
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let contract: Contract<typeof BasicAbi>;
@@ -62,8 +61,8 @@ describeIf(isWs)('subscription', () => {
 	const testDataString = 'someTestString';
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
-		[, from] = accounts;
+		const acc = await createNewAccount({ unlock: true, refill: true });
+		from = acc.address;
 		providerWs = new WebSocketProvider(
 			clientUrl,
 			{},

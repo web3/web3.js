@@ -26,7 +26,7 @@ import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
 	describeIf,
-	getSystemTestAccounts,
+	createNewAccount,
 	getSystemTestProvider,
 	isWs,
 } from '../fixtures/system_test_utils';
@@ -51,7 +51,6 @@ const makeFewTxToContract = async ({
 };
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
-	let accounts: string[] = [];
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let contract: Contract<typeof BasicAbi>;
@@ -60,9 +59,9 @@ describeIf(isWs)('subscription', () => {
 	let from: string;
 	const testDataString = 'someTestString';
 	beforeAll(async () => {
+		const acc = await createNewAccount({ unlock: true, refill: true });
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
-		[, from] = accounts;
+		from = acc.address;
 		providerWs = new WebSocketProvider(
 			clientUrl,
 			{},
