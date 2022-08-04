@@ -44,6 +44,7 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
+import { TransactionPollingTimeoutError, TransactionRpcTimeoutError } from '../../src/errors';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -486,8 +487,9 @@ describe('defaults', () => {
 			// 	to never return data through listening to new events
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			(eth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
-				// eslint-disable-next-line no-promise-executor-return
-				await new Promise(res => setTimeout(res, 1000000));
+				await new Promise(res => {
+					setTimeout(res, 1000000);
+				});
 			};
 
 			// Make the test run faster by causing the polling to start after 1 second
@@ -542,7 +544,7 @@ describe('defaults', () => {
 			await expect(confirmationPromise).resolves.toBeUndefined();
 		});
 
-		it('should fail if Ethereum Node did not respond within `transactionRpcTimeout`', async () => {
+		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
 			const eth = new Web3Eth(clientUrl);
 
 			// Make the test run faster by causing the timeout to happen after 0.2 second
@@ -552,23 +554,34 @@ describe('defaults', () => {
 			const to = accounts[1];
 			const value = `0x1`;
 
-			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-			const sentTx: Web3PromiEvent<
-				TransactionReceipt,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = eth.sendTransaction({
-				to,
-				value,
-				from,
-				nonce: Number.MAX_SAFE_INTEGER,
-			});
-
-			// Ensure the promise rejects with the desired error
-			await expect(sentTx).rejects.toThrow(
-				`connected Ethereum Node did not respond within ${
-					eth.transactionRpcTimeout / 1000
-				} seconds`,
-			);
+			try {
+				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
+				await eth.sendTransaction({
+					to,
+					value,
+					from,
+					nonce: Number.MAX_SAFE_INTEGER,
+				});
+			} catch (error) {
+				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
+				if (error instanceof TransactionRpcTimeoutError) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(error.message).toContain(
+						`connected Ethereum Node did not respond within ${
+							eth.transactionRpcTimeout / 1000
+						} seconds`,
+					);
+				}
+				// Some other providers would not respond when trying to get the transaction receipt (like Geth v7.4.0)
+				else if (error instanceof TransactionPollingTimeoutError) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(error.message).toContain(
+						`Transaction was not mined within ${
+							eth.transactionPollingTimeout / 1000
+						} seconds`,
+					);
+				} else throw error;
+			}
 		});
 
 		it('maxListenersWarningThreshold', () => {
