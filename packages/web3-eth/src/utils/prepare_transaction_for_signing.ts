@@ -30,6 +30,7 @@ import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
 import { isNullish } from 'web3-validator';
 import { validateTransactionForSigning } from '../validation';
 import { formatTransaction } from './format_transaction';
+// eslint-disable-next-line import/no-cycle
 import { transactionBuilder } from './transaction_builder';
 
 const getEthereumjsTxDataFromTransaction = (

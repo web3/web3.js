@@ -40,17 +40,49 @@ describe('Web3Eth.signTransaction', () => {
 		}
 	});
 
-	it('should sign a simple value transfer', async () => {
-		const transaction: Transaction = {
-			from: accounts[0],
-			nonce: await web3Eth.getTransactionCount(accounts[0]),
-			to: '0x0000000000000000000000000000000000000000',
-			value: '0x1',
-			gas: '0x5208',
-			gasPrice: '0x3b9aca01',
-		};
-		const response = await web3Eth.signTransaction(transaction);
-		expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+	describe('Transaction Types', () => {
+		it('should sign a simple value transfer - Legacy tx type', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				nonce: await web3Eth.getTransactionCount(accounts[0]),
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				gas: '0x5208',
+				gasPrice: '0x3b9aca01',
+			};
+			const response = await web3Eth.signTransaction(transaction);
+			expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+		});
+
+		it('should sign a simple value transfer - tx type 1', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				nonce: await web3Eth.getTransactionCount(accounts[0]),
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				gas: '0x5208',
+				gasPrice: '0x3b9aca01',
+				type: '0x1',
+				accessList: [],
+			};
+			const response = await web3Eth.signTransaction(transaction);
+			expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+		});
+
+		it('should sign a simple value transfer - tx type 2', async () => {
+			const transaction: Transaction = {
+				from: accounts[0],
+				nonce: await web3Eth.getTransactionCount(accounts[0]),
+				to: '0x0000000000000000000000000000000000000000',
+				value: '0x1',
+				gas: '0x5208',
+				maxPriorityFeePerGas: '0x9502f900',
+				maxFeePerGas: '0x10c388d00',
+				type: '0x2',
+			};
+			const response = await web3Eth.signTransaction(transaction);
+			expect(response).toMatchObject({ raw: expect.any(String), tx: expect.any(Object) });
+		});
 	});
 
 	it('should sign a contract deployment', async () => {

@@ -41,9 +41,19 @@ import {
 	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	hexToBytes,
+	keccak256,
+	bytesToHex,
+} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
+import { TransactionFactory } from '@ethereumjs/tx';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -70,6 +80,8 @@ import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt'
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { detectRawTransactionType } from './utils';
 
 /**
  *
@@ -1518,9 +1530,17 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 	);
 
 	const unformattedResponse = isString(response as HexStringBytes)
-		? { raw: response, tx: transaction }
+		? {
+				raw: response as HexStringBytes,
+				tx: {
+					...TransactionFactory.fromSerializedData(
+						hexToBytes(response as HexStringBytes),
+					).toJSON(),
+					hash: bytesToHex(keccak256(hexToBytes(response as HexStringBytes))),
+					type: detectRawTransactionType(hexToBytes(response as HexStringBytes)),
+				},
+		  }
 		: (response as SignedTransactionInfoAPI);
-
 	return {
 		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),
 		tx: formatTransaction(unformattedResponse.tx, returnFormat),
