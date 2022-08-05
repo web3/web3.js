@@ -310,6 +310,11 @@ Released with 1.0.0-beta.37 code base.
 -   Grammar changes to inputAddressFormatter error message
 -   Fixed vulnerable dependencies
 
+## [1.3.2]
+
+### Fixed
+
+- Fix EIP-1193 provider subscriptions (#3864)
 
 ## [1.3.3]
 
