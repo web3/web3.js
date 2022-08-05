@@ -24,3 +24,5 @@ ts-node basic_usage.ts
 cd ..
 source verdaccio_pid
 kill -9 $VERDACCIO_PID
+
+rm -rf blackbox_test/fixtures
