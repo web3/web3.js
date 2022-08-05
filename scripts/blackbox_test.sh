@@ -16,7 +16,7 @@ cd blackbox_test
 
 npm config set loglevel verbose
 # Install web3 as dep
-npm install
+npm install --registry http://localhost:4873
 npm list --depth=0
 ts-node basic_usage.ts
 
@@ -24,6 +24,3 @@ ts-node basic_usage.ts
 cd ..
 source verdaccio_pid
 kill -9 $VERDACCIO_PID
-
-# delete temp project
-rm -rf blackbox_test_app
