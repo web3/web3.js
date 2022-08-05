@@ -603,8 +603,6 @@ Released with 1.0.0-beta.37 code base.
 
 -   `web3-validator` new package is created, it has JSON-Schema compatible validator functionality for Web3
 
-
-
 ### Removed
 
 #### web3-bzz
@@ -634,8 +632,6 @@ Released with 1.0.0-beta.37 code base.
 #### web3-core-subscription
 
 -   This Package is removed, and core subscription functionality is moved to `web3-core` package
-
-
 
 ### Changed
 
