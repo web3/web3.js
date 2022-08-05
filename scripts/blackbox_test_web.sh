@@ -4,7 +4,7 @@
 # A blackbox test that uses packages/web3/dist/min
 # --------------------------------------------------------------------
 
-yarn build:web3
+yarn build:web
 cp packages/web3/dist/web3.min.js ./blackbox_test/.
 
 cd blackbox_test
