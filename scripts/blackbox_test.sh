@@ -10,16 +10,13 @@ echo "Node version"
 node --version
 
 # Setup mock project to install web3 from virtual registry
-mkdir blackbox_test_app
-cp scripts/js/basic_usage.ts blackbox_test_app/basic_usage.ts
-cp -r fixtures blackbox_test_app/.
-cd blackbox_test_app
+
+cp -r fixtures blackbox_test
+cd blackbox_test
 
 npm config set loglevel verbose
 # Install web3 as dep
-npm init --yes
-npm cache clean --force
-npm install web3@alpha --save --registry http://localhost:4873
+npm install
 npm list --depth=0
 ts-node basic_usage.ts
 

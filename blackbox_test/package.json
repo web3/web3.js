@@ -1,0 +1,16 @@
+{
+	"name": "blackbox_test_app",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"test:publish": "bash ./scripts/publish_verdaccio.sh"
+	},
+	"dependencies": {
+		"web3": "alpha"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC"
+}

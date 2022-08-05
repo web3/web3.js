@@ -57,9 +57,9 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
-		"test:publish": "bash ./scripts/publish_verdaccio.sh",
-		"test:blackbox": "yarn test:publish && bash ./scripts/blackbox_test.sh",
+		"test:blackbox": "yarn publish:verdaccio && bash ./scripts/blackbox_test.sh",
 		"test:blackbox:web": "bash ./scripts/blackbox_test_web.sh",
+		"publish:verdaccio": "bash ./scripts/publish_verdaccio.sh",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
