@@ -1,11 +1,10 @@
 {
 	"name": "blackbox_test_app",
 	"version": "1.0.0",
-	"description": "",
+	"description": "tests the web3 node module and minified build",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"test:publish": "bash ./scripts/publish_verdaccio.sh"
+		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"dependencies": {
 		"web3": "alpha"

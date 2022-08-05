@@ -4,9 +4,9 @@
 # A blackbox test that uses packages/web3/dist/min
 # --------------------------------------------------------------------
 
-cp packages/web3/dist/web3.min.js ./scripts/html/. 
+cp packages/web3/dist/web3.min.js ./blackbox_test
 
-cd scripts/html
+cd blackbox_test
 
 BUNDLE_SIZE=$(wc -c web3.min.js | awk '{print $1}')
 
@@ -14,3 +14,5 @@ BUNDLE_SIZE=$(wc -c web3.min.js | awk '{print $1}')
 sed -i "s|__COMMIT_HASH__|$COMMIT_REF|g" index.html
 sed -i "s|__BRANCH__|$BRANCH|g" index.html
 sed -i "s|__BUNDLE_SIZE__|$BUNDLE_SIZE|g" index.html
+
+rm web3.min.js
