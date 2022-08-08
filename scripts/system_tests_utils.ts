@@ -76,6 +76,7 @@ export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
 	privateKey?: string;
+	password?: string;
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
@@ -88,9 +89,9 @@ export const createNewAccount = async (config?: {
 		const web3Personal = new Personal(clientUrl);
 		await web3Personal.importRawKey(
 			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
-			'123456',
+			config.password ?? '123456',
 		);
-		await web3Personal.unlockAccount(acc.address, '123456', 1000);
+		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 1000);
 	}
 
 	if (config?.refill) {
@@ -106,10 +107,19 @@ export const createNewAccount = async (config?: {
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
-export const createTempAccount = async (): Promise<{ address: string; privateKey: string }> =>
+export const createTempAccount = async (
+	config: {
+		unlock?: boolean;
+		refill?: boolean;
+		privateKey?: string;
+		password?: string;
+	} = {},
+): Promise<{ address: string; privateKey: string }> =>
 	createNewAccount({
-		refill: true,
-		unlock: true,
+		refill: config.refill ?? true,
+		unlock: config.unlock ?? true,
+		privateKey: config.privateKey,
+		password: config.password,
 	});
 export const getSystemTestAccountsWithKeys = async (): Promise<
 	{

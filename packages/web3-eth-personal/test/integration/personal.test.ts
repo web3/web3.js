@@ -49,9 +49,10 @@ describe('personal integration tests', () => {
 	});
 
 	itIf(getSystemTestBackend() === 'geth')('ecRecover', async () => {
-		const acc = (await createTempAccount()).address;
+		const password = '123456';
+		const acc = (await createTempAccount({ password })).address;
 		// ganache does not support ecRecover
-		const signature = await ethPersonal.sign('0x2313', acc, '');
+		const signature = await ethPersonal.sign('0x2313', acc, password);
 		const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(acc));
@@ -95,9 +96,10 @@ describe('personal integration tests', () => {
 
 	// ganache does not support sign
 	itIf(getSystemTestBackend() === 'geth')('sign', async () => {
-		const key = (await createTempAccount()).address;
-		await ethPersonal.unlockAccount(key, '123456', 100000);
-		const signature = await ethPersonal.sign('0xdeadbeaf', key, '');
+		const password = '123456';
+		const key = (await createTempAccount({ password })).address;
+		await ethPersonal.unlockAccount(key, password, 100000);
+		const signature = await ethPersonal.sign('0xdeadbeaf', key, password);
 		const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(key).toBe(address);

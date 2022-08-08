@@ -30,6 +30,4 @@ if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
 	};
 	config.e2e.baseUrl = `https://web3.js:${port}`;
 }
-console.log('WEB3_SYSTEM_TEST_PROVIDER', process.env.WEB3_SYSTEM_TEST_PROVIDER);
-console.log('cypress config', config);
 module.exports = config;
