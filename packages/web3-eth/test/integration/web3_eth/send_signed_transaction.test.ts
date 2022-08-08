@@ -20,11 +20,7 @@ import { Address, Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-type
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 import { Web3Eth, InternalTransaction } from '../../../src';
-import {
-	getSystemTestAccounts,
-	getSystemTestProvider,
-	isWs,
-} from '../../fixtures/system_test_utils';
+import { createNewAccount, getSystemTestProvider, isWs } from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 import { transactionSchema } from '../../../src/schemas';
 
@@ -36,7 +32,8 @@ describe('Web3Eth.sendSignedTransaction', () => {
 
 	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address.toLowerCase()];
 	});
 
 	afterAll(() => {

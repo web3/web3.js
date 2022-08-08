@@ -193,13 +193,13 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 			await web3Personal.unlockAccount(
 				getSystemTestAccountsWithKeys()[0].address,
 				'123456',
-				500,
+				5000,
 			);
 		} else {
 			await web3Personal.unlockAccount(
 				getSystemTestAccountsWithKeys()[0].address,
 				'123456',
-				500,
+				5000,
 			);
 		}
 	}
