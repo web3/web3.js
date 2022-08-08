@@ -25,6 +25,7 @@ import {
 	getSystemTestProvider,
 	itIf,
 	isWs,
+	createNewAccount,
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {
@@ -79,10 +80,7 @@ describe('personal integration tests', () => {
 
 	it('unlock account', async () => {
 		const from = accounts[0];
-		const unlockedAccount =
-			getSystemTestBackend() === 'ganache'
-				? await ethPersonal.unlockAccount(from, '123', 1000)
-				: await ethPersonal.unlockAccount(from, '', 1000);
+		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
 		expect(unlockedAccount).toBe(true);
 
 		const tx = {
@@ -93,10 +91,7 @@ describe('personal integration tests', () => {
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
-		const receipt =
-			getSystemTestBackend() === 'ganache'
-				? await ethPersonal.sendTransaction(tx, '123')
-				: await ethPersonal.sendTransaction(tx, '');
+		const receipt = await ethPersonal.sendTransaction(tx, '123456');
 
 		expect(isHexStrict(receipt)).toBe(true);
 	});
@@ -104,7 +99,7 @@ describe('personal integration tests', () => {
 	// ganache does not support sign
 	itIf(getSystemTestBackend() === 'geth')('sign', async () => {
 		const key = accounts[0];
-		await ethPersonal.unlockAccount(key, '', 100000);
+		await ethPersonal.unlockAccount(key, '123456', 100000);
 		const signature = await ethPersonal.sign('0xdeadbeaf', accounts[0], '');
 		const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 		// eslint-disable-next-line jest/no-standalone-expect
@@ -131,10 +126,12 @@ describe('personal integration tests', () => {
 
 	// geth doesn't have signTransaction method
 	itIf(getSystemTestBackend() === 'ganache')('signTransaction', async () => {
-		const from = accounts[0];
-		await ethPersonal.unlockAccount(from, '123', 100000);
+		const acc = await createNewAccount({
+			privateKey: '0x9d43a04d801b997355a3ec4460d60563a383e271715138b66899f92c5bc414c2',
+		});
+		await ethPersonal.unlockAccount(acc.address, '123456', 100000);
 		const tx = {
-			from,
+			from: acc.address,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
 			value: '10000',
 			gas: '21000',
@@ -142,9 +139,9 @@ describe('personal integration tests', () => {
 			maxPriorityFeePerGas: '0x1DCD6500',
 			nonce: 0,
 		};
-		const signedTx = await ethPersonal.signTransaction(tx, '123');
+		const signedTx = await ethPersonal.signTransaction(tx, '123456');
 		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c080a0d75090f88d6e3e9525fc6d4b1230726b97b4cb07b7aebd683aa9e5c62bb71220a05b7169e0670f70f62fd25f95fbf90f34decd81bf06b3da6fd5500df9cec83cda';
+			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c001a032d0977d9f8b75ca93c19281ab28ddbc4aca18431271a54bc6bd8ad2d6abc7eaa072eb89b36ec7e479fa98a3a613a394338a6e8b15c5015b1692449aa026613f4b';
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(signedTx).toEqual(expectedResult);
 	});
@@ -152,10 +149,7 @@ describe('personal integration tests', () => {
 	it('sendTransaction', async () => {
 		const from = accounts[0];
 
-		const unlockedAccount =
-			getSystemTestBackend() === 'ganache'
-				? await ethPersonal.unlockAccount(from, '123', 1000)
-				: await ethPersonal.unlockAccount(from, '', 1000);
+		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
 		expect(unlockedAccount).toBe(true);
 
 		const tx = {
@@ -166,10 +160,7 @@ describe('personal integration tests', () => {
 			maxFeePerGas: '0x59682F00',
 			maxPriorityFeePerGas: '0x1DCD6500',
 		};
-		const receipt =
-			getSystemTestBackend() === 'ganache'
-				? await ethPersonal.sendTransaction(tx, '123')
-				: await ethPersonal.sendTransaction(tx, '');
+		const receipt = await ethPersonal.sendTransaction(tx, '123456');
 
 		expect(isHexStrict(receipt)).toBe(true);
 	});

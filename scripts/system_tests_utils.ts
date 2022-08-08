@@ -16,9 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import fetch from 'cross-fetch';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { ETH_DATA_FORMAT, format } from 'web3-utils';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -77,8 +74,9 @@ export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BA
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
+	privateKey?: string;
 }): Promise<{ address: string; privateKey: string }> => {
-	const acc = createAccount();
+	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : createAccount();
 
 	let clientUrl = getSystemTestProvider();
 	if (isWs) {
@@ -105,7 +103,7 @@ export const createNewAccount = async (config?: {
 		});
 	}
 
-	return { address: acc.address, privateKey: acc.privateKey };
+	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
 
 export const getSystemTestAccountsWithKeys = (): {
@@ -163,63 +161,70 @@ export const getSystemTestAccounts = async (): Promise<string[]> => {
 	if (_accounts.length > 0) {
 		return _accounts;
 	}
-
-	// For this script we need to connect over http
-	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
-
-	if (getSystemTestBackend() === 'geth') {
-		const web3Eth = new Web3Eth(clientUrl);
-		const web3Personal = new Personal(clientUrl);
-
-		await web3Eth.sendTransaction({
-			from: await web3Eth.getCoinbase(),
-			to: getSystemTestAccountsWithKeys()[0].address,
-			value: '100000000000000000000',
-		});
-
-		const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
-			a.toUpperCase(),
-		);
-		if (
-			!(
-				existsAccounts?.length > 0 &&
-				existsAccounts.includes(getSystemTestAccountsWithKeys()[0].address.toUpperCase())
-			)
-		) {
-			await web3Personal.importRawKey(
-				getSystemTestAccountsWithKeys()[0].privateKey.substring(2),
-				'123456',
-			);
-			await web3Personal.unlockAccount(
-				getSystemTestAccountsWithKeys()[0].address,
-				'123456',
-				5000,
-			);
-		} else {
-			await web3Personal.unlockAccount(
-				getSystemTestAccountsWithKeys()[0].address,
-				'123456',
-				5000,
-			);
-		}
-	}
-
-	const res = await fetch(clientUrl, {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'POST',
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			id: 'id',
-			method: 'eth_accounts',
-			params: [],
-		}),
-	});
-
-	_accounts = ((await res.json()) as { result: string[] }).result;
-
+	const accs = await Promise.all([
+		createNewAccount({ unlock: true, refill: true }),
+		createNewAccount({ unlock: true, refill: true }),
+		createNewAccount({ unlock: true, refill: true }),
+	]);
+	_accounts = accs.map(a => a.address);
 	return _accounts;
+	//
+	// // For this script we need to connect over http
+	// const clientUrl = DEFAULT_SYSTEM_PROVIDER;
+	//
+	// if (getSystemTestBackend() === 'geth') {
+	// 	const web3Eth = new Web3Eth(clientUrl);
+	// 	const web3Personal = new Personal(clientUrl);
+	//
+	// 	await web3Eth.sendTransaction({
+	// 		from: await web3Eth.getCoinbase(),
+	// 		to: getSystemTestAccountsWithKeys()[0].address,
+	// 		value: '100000000000000000000',
+	// 	});
+	//
+	// 	const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
+	// 		a.toUpperCase(),
+	// 	);
+	// 	if (
+	// 		!(
+	// 			existsAccounts?.length > 0 &&
+	// 			existsAccounts.includes(getSystemTestAccountsWithKeys()[0].address.toUpperCase())
+	// 		)
+	// 	) {
+	// 		await web3Personal.importRawKey(
+	// 			getSystemTestAccountsWithKeys()[0].privateKey.substring(2),
+	// 			'123456',
+	// 		);
+	// 		await web3Personal.unlockAccount(
+	// 			getSystemTestAccountsWithKeys()[0].address,
+	// 			'123456',
+	// 			5000,
+	// 		);
+	// 	} else {
+	// 		await web3Personal.unlockAccount(
+	// 			getSystemTestAccountsWithKeys()[0].address,
+	// 			'123456',
+	// 			5000,
+	// 		);
+	// 	}
+	// }
+	//
+	// const res = await fetch(clientUrl, {
+	// 	headers: {
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// 	method: 'POST',
+	// 	body: JSON.stringify({
+	// 		jsonrpc: '2.0',
+	// 		id: 'id',
+	// 		method: 'eth_accounts',
+	// 		params: [],
+	// 	}),
+	// });
+	//
+	// _accounts = ((await res.json()) as { result: string[] }).result;
+	//
+	// return _accounts;
 };
 
 export const itIf = (condition: (() => boolean) | boolean) =>

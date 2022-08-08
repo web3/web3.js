@@ -23,9 +23,9 @@
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests",
-		"test:e2e:electron": "npx cypress run --headless --browser electron",
-		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
-		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
+		"test:e2e:electron": "npx cypress@10.0.0 run --headless --browser electron",
+		"test:e2e:chrome": "npx cypress@10.0.0 run --headless --browser chrome",
+		"test:e2e:firefox": "npx cypress@10.0.0 run --headless --browser firefox"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
