@@ -31,9 +31,9 @@ if [[ ! " ${SUPPORTED_ENGINES[*]} " =~ " ${ENGINE} " ]]; then
 fi
 
 echo "Node software used for tests: " $BACKEND
-echo "Node running on: " "$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
+echo "Node running on: " "$MODE://127.0.0.1:$WEB3_SYSTEM_TEST_PORT"
 
-export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
+export WEB3_SYSTEM_TEST_PROVIDER="$MODE://127.0.0.1:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 export WEB3_SYSTEM_TEST_CLIENT=$ENGINE
 
