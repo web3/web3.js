@@ -32,7 +32,7 @@ describe('personal integration tests', () => {
 	let ethPersonal: Personal;
 	let clientUrl: string;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		ethPersonal = new Personal(clientUrl);
 	});
