@@ -25,6 +25,7 @@ import {
 } from './types';
 import { isAbiParameterSchema } from './validation/abi';
 import { isHexStrict } from './validation/string';
+// import { abiToJsonSchemaCases } from '../test/fixtures/abi_to_json_schema';
 
 export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 	type: string,
@@ -73,7 +74,7 @@ export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
 
 export const abiSchemaToJsonSchema = (
 	abis: ShortValidationSchema | FullValidationSchema,
-	level?: number,
+	level = '/0',
 ) => {
 	const schema: JsonSchema = {
 		type: 'array',
@@ -97,18 +98,18 @@ export const abiSchemaToJsonSchema = (
 			// If its short form string value e.g. ['uint']
 		} else if (typeof abi === 'string') {
 			abiType = abi;
-			abiName = `${level ?? ''}/${index}`;
+			abiName = `${level}/${index}`;
 
 			// If its provided in short form of tuple e.g. [['uint', 'string']]
 		} else if (Array.isArray(abi)) {
 			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
 			if (abi[1] && Array.isArray(abi[1])) {
 				abiType = abi[0] as string;
-				abiName = `${level ?? ''}/${index}`;
+				abiName = `${level}/${index}`;
 				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
 			} else {
 				abiType = 'tuple';
-				abiName = `${level ?? ''}/${index}`;
+				abiName = `${level}/${index}`;
 				abiComponents = abi;
 			}
 		}
@@ -135,13 +136,15 @@ export const abiSchemaToJsonSchema = (
 		}
 
 		if (baseType === 'tuple' && !isArray) {
-			(lastSchema.items as JsonSchema[]).push(abiSchemaToJsonSchema(abiComponents, index));
+			const nestedTuple = abiSchemaToJsonSchema(abiComponents, abiName);
+			nestedTuple.$id = abiName;
+			(lastSchema.items as JsonSchema[]).push(nestedTuple);
 		} else if (baseType === 'tuple' && isArray) {
 			const arraySize = arraySizes[0];
 			const item: JsonSchema = {
 				$id: abiName,
 				type: 'array',
-				items: abiSchemaToJsonSchema(abiComponents, index),
+				items: abiSchemaToJsonSchema(abiComponents, abiName),
 				maxItems: arraySize,
 				minItems: arraySize,
 			};
@@ -170,8 +173,15 @@ export const abiSchemaToJsonSchema = (
 			}
 
 			(lastSchema.items as JsonSchema[]).push(item);
-		} else {
+		} else if (Array.isArray(lastSchema.items)) {
+			// Array of non-tuple items
 			(lastSchema.items as JsonSchema[]).push({ $id: abiName, eth: abiType });
+		} else {
+			// Nested object
+			((lastSchema.items as JsonSchema).items as JsonSchema[]).push({
+				$id: abiName,
+				eth: abiType,
+			});
 		}
 	}
 
@@ -179,6 +189,114 @@ export const abiSchemaToJsonSchema = (
 };
 
 export const ethAbiToJsonSchema = (abis: ValidationSchemaInput) => abiSchemaToJsonSchema(abis);
+
+export const fetchArrayElement = (data: Array<unknown>, level: number): unknown => {
+	if (level === 1) {
+		return data;
+	}
+
+	return fetchArrayElement(data[0] as Array<unknown>, level - 1);
+};
+
+export const transformJsonDataToAbiFormat = (
+	abis: FullValidationSchema,
+	data: ReadonlyArray<unknown> | Record<string, unknown>,
+	transformedData?: Array<unknown>,
+): Array<unknown> => {
+	const newData: Array<unknown> = [];
+
+	for (const [index, abi] of abis.entries()) {
+		// eslint-disable-next-line no-nested-ternary
+		let abiType!: string;
+		let abiName!: string;
+		let abiComponents: ShortValidationSchema | FullValidationSchema | undefined = [];
+
+		// If its a complete Abi Parameter
+		// e.g. {name: 'a', type: 'uint'}
+		if (isAbiParameterSchema(abi)) {
+			abiType = abi.type;
+			abiName = abi.name;
+			abiComponents = abi.components as FullValidationSchema;
+			// If its short form string value e.g. ['uint']
+		} else if (typeof abi === 'string') {
+			abiType = abi;
+
+			// If its provided in short form of tuple e.g. [['uint', 'string']]
+		} else if (Array.isArray(abi)) {
+			// If its custom tuple e.g. ['tuple[2]', ['uint', 'string']]
+			if (abi[1] && Array.isArray(abi[1])) {
+				abiType = abi[0] as string;
+				abiComponents = abi[1] as ReadonlyArray<ShortValidationSchema>;
+			} else {
+				abiType = 'tuple';
+				abiComponents = abi;
+			}
+		}
+
+		const { baseType, isArray, arraySizes } = parseBaseType(abiType);
+		const dataItem = Array.isArray(data)
+			? (data as Array<unknown>)[index]
+			: (data as Record<string, unknown>)[abiName];
+
+		if (baseType === 'tuple' && !isArray) {
+			newData.push(
+				transformJsonDataToAbiFormat(
+					abiComponents as FullValidationSchema,
+					dataItem as Array<unknown>,
+					transformedData,
+				),
+			);
+		} else if (baseType === 'tuple' && isArray) {
+			const tupleData = [];
+			for (const tupleItem of dataItem as Array<unknown>) {
+				// Nested array
+				if (arraySizes.length > 1) {
+					const nestedItems = fetchArrayElement(
+						tupleItem as Array<unknown>,
+						arraySizes.length - 1,
+					);
+					const nestedData = [];
+
+					for (const nestedItem of nestedItems as Array<unknown>) {
+						nestedData.push(
+							transformJsonDataToAbiFormat(
+								abiComponents as FullValidationSchema,
+								nestedItem as Array<unknown>,
+								transformedData,
+							),
+						);
+					}
+					tupleData.push(nestedData);
+				} else {
+					tupleData.push(
+						transformJsonDataToAbiFormat(
+							abiComponents as FullValidationSchema,
+							tupleItem as Array<unknown>,
+							transformedData,
+						),
+					);
+				}
+			}
+			newData.push(tupleData);
+		} else {
+			newData.push(dataItem);
+		}
+	}
+
+	// Have to reassign before pushing to transformedData
+	// eslint-disable-next-line no-param-reassign
+	transformedData = transformedData ?? [];
+	transformedData.push(...newData);
+
+	return transformedData;
+};
+
+// const data = abiToJsonSchemaCases[14];
+// console.log(data.title);
+// console.log(data.json.data);
+// console.log(data.abi.data);
+// const output = transformJsonDataToAbiFormat(data.abi.fullSchema, data.json.data);
+// console.log(output);
 
 /**
  * Code points to int

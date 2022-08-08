@@ -280,10 +280,9 @@ describe('Web3RequestManager', () => {
 
 		describe('web3-provider', () => {
 			beforeEach(() => {
+				// isWeb3Provider uses instanceof to check if the provider is a Web3Provider
+				// So we have to mock the response
 				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(true);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
 			});
 
 			it('should pass request to provider and resolve if provider resolves it', async () => {
@@ -318,14 +317,6 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('legacy-request-provider', () => {
-			beforeEach(() => {
-				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(true);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(false);
-			});
-
 			it('should pass request to provider and resolve if provider resolves it', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
@@ -382,10 +373,8 @@ describe('Web3RequestManager', () => {
 
 		describe('eip1193-provider', () => {
 			beforeEach(() => {
-				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				// isEIP1193Provider uses typeof to check if the provider is a EIP1193Provider
+				// So we have to mock the response
 				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(true);
 			});
 
@@ -439,10 +428,8 @@ describe('Web3RequestManager', () => {
 
 		describe('eip1193-provider - return non json-rpc compliance response', () => {
 			beforeEach(() => {
-				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
+				// isEIP1193Provider uses typeof to check if the provider is a EIP1193Provider
+				// So we have to mock the response
 				jest.spyOn(utils, 'isEIP1193Provider').mockReturnValue(true);
 			});
 
@@ -475,16 +462,41 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload);
 			});
+
+			it('should pass request to provider and pass if provider returns "null', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						// Explicitly used for test case
+						// eslint-disable-next-line no-null/no-null
+						return null;
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).resolves.toBeNull();
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
+
+			it('should pass request to provider and pass if provider returns "undefined', async () => {
+				const manager = new Web3RequestManager();
+				const myProvider = {
+					request: jest.fn().mockImplementation(async _ => {
+						return undefined;
+					}),
+				} as any;
+
+				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+				await expect(manager.send(request)).resolves.toBeNull();
+				expect(myProvider.request).toHaveBeenCalledTimes(1);
+				expect(myProvider.request).toHaveBeenCalledWith(payload);
+			});
 		});
 
 		describe('legacy-send-provider', () => {
-			beforeEach(() => {
-				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(true);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(false);
-			});
-
 			it('should pass request to provider and resolve if provider resolves it', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
@@ -540,13 +552,6 @@ describe('Web3RequestManager', () => {
 		});
 
 		describe('legacy-send-async-provider', () => {
-			beforeEach(() => {
-				jest.spyOn(utils, 'isWeb3Provider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacyRequestProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendProvider').mockReturnValue(false);
-				jest.spyOn(utils, 'isLegacySendAsyncProvider').mockReturnValue(true);
-			});
-
 			it('should pass request to provider and resolve if provider resolves it', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
