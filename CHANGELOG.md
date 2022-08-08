@@ -665,11 +665,11 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-eth-contract
 
--   Event logs do not support types for indexed properties, but named properties supported.
+-   Event logs do not support types for indexed properties, but named properties are supported.
 -   Types for overloaded ABI functions are not yet supported.
 -   `signTransaction` will not fill any default values, and it will only sign and return result. For filling default values, use `web3-eth` package
 -   `recover` function's last param is boolean `hashed`, it is used to indicate if data provided is already hashed or not. By default, this function will assume data is not hashed.
--   The `Wallet` no more supports address/number indexing. Have to use `wallet.get` instead.
+-   The `Wallet` no longer supports address/number indexing. Have to use `wallet.get` instead.
 -   `Wallet.create` function doesn't accept `entropy` param
 -   `contract.method.send()` will resolve to transaction receipt instead of `transactionHash`. User can use `receipt.transactionHash` instead.
 
@@ -679,7 +679,7 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-eth-iban
 
--   IBAN constructor now has validation check for indirect/direct iban.
+-   IBAN constructor now has validation checks for indirect/direct iban.
 -   `isDirect`, `isValid`, `isIndirect` are now also included as static methods.
 
 #### web3-eth-ens
