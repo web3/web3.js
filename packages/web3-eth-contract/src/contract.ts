@@ -60,7 +60,7 @@ import {
 	isDataFormat,
 	toChecksumAddress,
 } from 'web3-utils';
-import { isNullish, validator } from 'web3-validator';
+import { isNullish, validator, utils as validatorUtils } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { Web3ContractError } from './errors';
@@ -920,7 +920,17 @@ export class Contract<Abi extends ContractAbi>
 
 	private _createContractMethod<T extends AbiFunctionFragment>(abi: T): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
-			validator.validate(abi.inputs ?? [], params);
+			let abiParams!: Array<unknown>;
+
+			try {
+				abiParams = validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
+			} catch (error) {
+				throw new Web3ContractError(
+					`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
+				);
+			}
+
+			validator.validate(abi.inputs ?? [], abiParams);
 
 			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
 				return {
@@ -943,7 +953,7 @@ export class Contract<Abi extends ContractAbi>
 			}
 
 			return {
-				arguments: params,
+				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(abi, params, options, block),
 				send: (options?: NonPayableTxOptions) =>
