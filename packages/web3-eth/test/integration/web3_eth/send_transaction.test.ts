@@ -66,7 +66,7 @@ describe('Web3Eth.sendTransaction', () => {
 		web3EthWithWallet['_accountProvider'] = accountProvider;
 		web3EthWithWallet['_wallet'] = wallet;
 
-		const accountsWithKeys = getSystemTestAccountsWithKeys();
+		const accountsWithKeys = await getSystemTestAccountsWithKeys();
 
 		web3EthWithWallet.wallet?.add(accountsWithKeys[0].privateKey);
 

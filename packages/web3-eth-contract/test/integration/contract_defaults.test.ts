@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3BaseProvider } from 'web3-types';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createNewAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('defaults', () => {
@@ -32,7 +32,8 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 
-			accounts = await getSystemTestAccounts();
+			const acc = await createNewAccount({ refill: true, unlock: true });
+			accounts = [acc.address];
 
 			deployOptions = {
 				data: GreeterBytecode,
@@ -63,15 +64,13 @@ describe('contract', () => {
 
 			it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
 				const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-
+				Contract.defaultAccount = undefined;
 				// eslint-disable-next-line prefer-destructuring
 				deployedContract.defaultAccount = accounts[0];
-
 				// We didn't specify "from" in this call
 				const receipt = await deployedContract.methods
 					.setGreeting('New Greeting')
 					.send({ gas: '1000000' });
-
 				expect(receipt.from).toEqual(accounts[0]);
 			});
 

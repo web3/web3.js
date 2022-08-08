@@ -25,8 +25,8 @@ import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
+	createTempAccount,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isHttp,
 	isIpc,
@@ -42,7 +42,9 @@ describe('Web3 instance', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		const acc1 = await createTempAccount();
+		const acc2 = await createTempAccount();
+		accounts = [acc1.address, acc2.address];
 	});
 
 	beforeEach(() => {

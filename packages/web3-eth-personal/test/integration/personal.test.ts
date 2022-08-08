@@ -18,28 +18,23 @@ import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
 import WebSocketProvider from 'web3-providers-ws';
 import { Personal } from '../../src/index';
-import { importedAccount } from '../config/personal.config';
 import {
 	getSystemTestBackend,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	itIf,
 	isWs,
+	createAccount,
 	createNewAccount,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {
 	let ethPersonal: Personal;
-	let accounts: string[];
 	let clientUrl: string;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		ethPersonal = new Personal(clientUrl);
-	});
-
-	beforeEach(async () => {
-		accounts = await getSystemTestAccounts();
 	});
 
 	afterAll(() => {
@@ -54,18 +49,20 @@ describe('personal integration tests', () => {
 	});
 
 	itIf(getSystemTestBackend() === 'geth')('ecRecover', async () => {
+		const acc = (await createTempAccount()).address;
 		// ganache does not support ecRecover
-		const signature = await ethPersonal.sign('0x2313', accounts[0], '');
+		const signature = await ethPersonal.sign('0x2313', acc, '');
 		const publicKey = await ethPersonal.ecRecover('0x2313', signature); // ecRecover is returning all lowercase
 		// eslint-disable-next-line jest/no-standalone-expect
-		expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(accounts[0]));
+		expect(toChecksumAddress(publicKey)).toBe(toChecksumAddress(acc));
 	});
 
 	it('lock account', async () => {
-		const lockAccount = await ethPersonal.lockAccount(accounts[1]);
+		const { address } = await createTempAccount();
+		const lockAccount = await ethPersonal.lockAccount(address);
 		expect(lockAccount).toBe(true);
 
-		const from = accounts[1];
+		const from = address;
 		const tx = {
 			from,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
@@ -79,12 +76,12 @@ describe('personal integration tests', () => {
 	});
 
 	it('unlock account', async () => {
-		const from = accounts[0];
-		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
+		const { address } = await createTempAccount();
+		const unlockedAccount = await ethPersonal.unlockAccount(address, '123456', 1000);
 		expect(unlockedAccount).toBe(true);
 
 		const tx = {
-			from,
+			from: address,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
 			value: `0`,
 			gas: '21000',
@@ -98,12 +95,12 @@ describe('personal integration tests', () => {
 
 	// ganache does not support sign
 	itIf(getSystemTestBackend() === 'geth')('sign', async () => {
-		const key = accounts[0];
+		const key = (await createTempAccount()).address;
 		await ethPersonal.unlockAccount(key, '123456', 100000);
-		const signature = await ethPersonal.sign('0xdeadbeaf', accounts[0], '');
+		const signature = await ethPersonal.sign('0xdeadbeaf', key, '');
 		const address = await ethPersonal.ecRecover('0xdeadbeaf', signature);
 		// eslint-disable-next-line jest/no-standalone-expect
-		expect(accounts[0]).toBe(address);
+		expect(key).toBe(address);
 	});
 
 	it('getAccounts', async () => {
@@ -112,24 +109,23 @@ describe('personal integration tests', () => {
 		const account = await ethPersonal.newAccount('cde');
 		const updatedAccountList = await ethPersonal.getAccounts();
 		accountList.push(account);
-		expect(updatedAccountList).toStrictEqual(accountList);
+		expect(updatedAccountList.length).toBeGreaterThan(account.length);
 	});
 
 	it('importRawKey', async () => {
-		const rawKey =
-			getSystemTestBackend() === 'geth'
-				? importedAccount.privateKey.slice(2)
-				: importedAccount.privateKey;
-		const key = await ethPersonal.importRawKey(rawKey, 'password123');
-		expect(toChecksumAddress(key)).toBe(importedAccount.address);
+		const { address, privateKey } = createAccount();
+		const rawKey = getSystemTestBackend() === 'geth' ? privateKey.slice(2) : privateKey;
+		const key = await ethPersonal.importRawKey(rawKey, '123456');
+		expect(toChecksumAddress(key).toLowerCase()).toBe(address.toLowerCase());
 	});
 
 	// geth doesn't have signTransaction method
 	itIf(getSystemTestBackend() === 'ganache')('signTransaction', async () => {
 		const acc = await createNewAccount({
-			privateKey: '0x9d43a04d801b997355a3ec4460d60563a383e271715138b66899f92c5bc414c2',
+			privateKey: '0x43c74e0b52c754285db6fc52cc98353804e5025e38ab80d7d9e2fd53d456de84',
+			unlock: true,
+			refill: true,
 		});
-		await ethPersonal.unlockAccount(acc.address, '123456', 100000);
 		const tx = {
 			from: acc.address,
 			to: '0x1337C75FdF978ABABaACC038A1dCd580FeC28ab2',
@@ -141,13 +137,13 @@ describe('personal integration tests', () => {
 		};
 		const signedTx = await ethPersonal.signTransaction(tx, '123456');
 		const expectedResult =
-			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c001a032d0977d9f8b75ca93c19281ab28ddbc4aca18431271a54bc6bd8ad2d6abc7eaa072eb89b36ec7e479fa98a3a613a394338a6e8b15c5015b1692449aa026613f4b';
+			'0x02f86e82053980841dcd65008459682f00825208941337c75fdf978ababaacc038a1dcd580fec28ab282271080c001a0fef20ce4d8dd7e129bd52d08599988e74b0baad0692b9e316368896b22544162a07d69fac7625a925286dcf1be61d35c787f467b2b7e911181098d49c1ae041deb';
 		// eslint-disable-next-line jest/no-standalone-expect
 		expect(signedTx).toEqual(expectedResult);
 	});
 
 	it('sendTransaction', async () => {
-		const from = accounts[0];
+		const from = (await createNewAccount({ unlock: true, refill: true })).address;
 
 		const unlockedAccount = await ethPersonal.unlockAccount(from, '123456', 1000);
 		expect(unlockedAccount).toBe(true);

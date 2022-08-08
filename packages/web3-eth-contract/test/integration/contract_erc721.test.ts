@@ -19,9 +19,9 @@ import { Contract } from '../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import {
 	getSystemTestProvider,
-	getSystemTestAccounts,
 	describeIf,
 	isWs,
+	createNewAccount,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -37,7 +37,9 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 
-			accounts = await getSystemTestAccounts();
+			const acc1 = await createNewAccount({ refill: true, unlock: true });
+			const acc2 = await createNewAccount({ refill: true, unlock: true });
+			accounts = [acc1.address, acc2.address];
 
 			deployOptions = {
 				data: ERC721TokenBytecode,

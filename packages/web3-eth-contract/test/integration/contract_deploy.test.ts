@@ -18,7 +18,7 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, getSystemTestAccounts, isWs } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, isWs, createNewAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -32,7 +32,8 @@ describe('contract', () => {
 				provider: getSystemTestProvider(),
 			});
 
-			accounts = await getSystemTestAccounts();
+			const acc = await createNewAccount({ refill: true, unlock: true });
+			accounts = [acc.address];
 
 			deployOptions = {
 				data: GreeterBytecode,

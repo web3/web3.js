@@ -33,15 +33,15 @@ import { waitForOpenConnection } from '../fixtures/helpers';
 import {
 	getSystemTestProvider,
 	describeIf,
-	getSystemTestAccounts,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 type Resolve = (value?: unknown) => void;
 
 describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 	let clientWsUrl: string;
-	let accounts: string[];
+	let tempAccount: string;
 	let webSocketProvider: WebSocketProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	// helper function
@@ -49,14 +49,14 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 	beforeAll(async () => {
 		clientWsUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
+		tempAccount = (await createTempAccount()).address;
 	});
 	beforeEach(() => {
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [accounts[0], 'latest'],
+			params: [tempAccount, 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 		webSocketProvider = new WebSocketProvider(
 			clientWsUrl,
