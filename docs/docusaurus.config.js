@@ -110,8 +110,9 @@ const config = {
 			navbar: {
 				title: 'Web3.js',
 				logo: {
-					alt: 'Web3.js Logo',
+					alt: 'Web3.js',
 					src: 'img/web3js.svg',
+					href: 'https://web3js.org/',
 				},
 				items: [
 					{
