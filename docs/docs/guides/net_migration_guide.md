@@ -3,7 +3,7 @@ sidebar_position: 8
 sidebar_label: Web3.*.net
 ---
 
-# Web3 Net Migration guide
+# Web3 Net Migration Guide
 
 ## Breaking Changes
 
