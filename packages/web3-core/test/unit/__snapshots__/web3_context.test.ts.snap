@@ -20,7 +20,7 @@ Object {
     "transactionConfirmationBlocks": 24,
     "transactionConfirmationPollingInterval": undefined,
     "transactionPollingInterval": 1000,
-    "transactionPollingTimeout": 750,
+    "transactionPollingTimeout": 750000,
     "transactionReceiptPollingInterval": undefined,
     "transactionTypeParser": undefined,
   },
