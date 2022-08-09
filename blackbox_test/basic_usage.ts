@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import util from 'util';
 import Web3 from 'web3';
-// import WebSocketProvider from 'web3-providers-ws';
 import ERC20Token from './fixtures/build/ERC20Token.json';
 
 const isWs = (backendMode: string) => backendMode === 'ws';
@@ -68,7 +67,7 @@ async function main() {
 
 	web3 = new Web3(providerUrl);
 
-	if (isWs(backendMode)) console.log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
+	if (isWs(backendMode)) log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
 
 	log();
 	log('>>>>>>');
