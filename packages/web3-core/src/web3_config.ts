@@ -260,7 +260,7 @@ export abstract class Web3Config
 	}
 	/**
 	 * Used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
-	 * Default is `2000` ms.
+	 * Default is `750` seconds (12.5 minutes).
 	 */
 	public get transactionPollingTimeout() {
 		return this._config.transactionPollingTimeout;
