@@ -549,6 +549,7 @@ describe('defaults', () => {
 
 			// Make the test run faster by causing the timeout to happen after 0.2 second
 			eth.transactionSendTimeout = 200;
+			eth.transactionPollingTimeout = 200;
 
 			const from = accounts[0];
 			const to = accounts[1];
