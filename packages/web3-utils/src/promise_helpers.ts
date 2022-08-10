@@ -31,12 +31,16 @@ export async function waitWithTimeout<T>(
 	timeout: number,
 	error?: Error,
 ): Promise<T | undefined> {
+	let timeoutId: NodeJS.Timeout | undefined;
 	const result = await Promise.race([
 		awaitable,
 		new Promise<undefined | Error>((resolve, reject) => {
-			setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
+			timeoutId = setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
 		}),
 	]);
+	if (timeoutId) {
+		clearTimeout(timeoutId);
+	}
 	if (result instanceof Error) {
 		throw result;
 	}

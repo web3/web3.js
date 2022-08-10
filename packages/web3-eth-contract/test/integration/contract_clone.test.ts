@@ -41,10 +41,8 @@ describe('contract', () => {
 		});
 
 		it('should clone the contract but with same address', async () => {
-			contract.transactionPollingTimeout = 3000;
 			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
 
-			deployedContract.transactionPollingTimeout = 3000;
 			const newContract = deployedContract.clone();
 
 			expect(newContract).toBeInstanceOf(Contract);

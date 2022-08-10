@@ -37,7 +37,6 @@ describe('contract', () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
-		contract.transactionPollingTimeout = 3000;
 
 		accounts = await getSystemTestAccounts();
 
