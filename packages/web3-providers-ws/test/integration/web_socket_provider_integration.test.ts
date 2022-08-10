@@ -143,6 +143,22 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			webSocketProvider.disconnect(code);
 			await closePromise;
 		});
+
+		it('should be able to listen to `error` events that happen at the underlying websocket connection', async () => {
+			const wsProvider2 = new WebSocketProvider('ws://localhost:8545');
+			const validateEmittingErrors = new Promise((_, reject) => {
+				wsProvider2.on('error', (err: { message: string } | undefined) => {
+					reject(err?.message);
+				});
+			});
+
+			// This is a too early close of the connection that will cause the underlying connection to raise an error
+			wsProvider2.disconnect();
+
+			await expect(validateEmittingErrors).rejects.toMatch(
+				'WebSocket was closed before the connection was established',
+			);
+		});
 	});
 	describe('disconnect and reset test', () => {
 		it('should disconnect', async () => {
