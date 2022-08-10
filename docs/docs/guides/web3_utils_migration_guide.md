@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 10
 sidebar_label: Web3.utils
 ---
 
@@ -7,7 +7,7 @@ sidebar_label: Web3.utils
 
 ## Import
 
-To make use you only import the utility functions which are needed by your app we encourage the named import for `web3-utils` package. If you still want to import the full utils you can do it via. This change has no impact on the using the namespace `Web3.utils` or `web3.utils`.
+To make use you only import the utility functions which are needed by your app we encourage the named import for `web3-utils` package. This change has no impact on the using the namespace `Web3.utils` or `web3.utils`. If you still want to import the full utils it can be done as following : 
 
 ```ts
 //1.x
