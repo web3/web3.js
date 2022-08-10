@@ -35,7 +35,7 @@ const defaultConfig = {
 	transactionPollingInterval: 1000,
 	transactionPollingTimeout: 750 * 1000,
 	transactionReceiptPollingInterval: undefined,
-	transactionSendTimeout: 60 * 1000,
+	transactionSendTimeout: 750 * 1000,
 	transactionConfirmationPollingInterval: undefined,
 	defaultTransactionType: '0x0',
 	defaultMaxPriorityFeePerGas: toHex(2500000000),

@@ -67,7 +67,7 @@ export abstract class Web3Config
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750 * 1000,
 		transactionReceiptPollingInterval: undefined,
-		transactionSendTimeout: 60 * 1000,
+		transactionSendTimeout: 750 * 1000,
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
@@ -176,7 +176,7 @@ export abstract class Web3Config
 	/**
 	 * The time used to wait for Ethereum Node to return the sent transaction result.
 	 * Note: If the RPC call stuck at the Node and therefor timed-out, the transaction may still be pending or even mined by the Network. We recommend checking the pending transactions in such a case.
-	 * Default is `5000` ms.
+	 * Default is `750` seconds (12.5 minutes).
 	 */
 	public get transactionSendTimeout() {
 		return this._config.transactionSendTimeout;

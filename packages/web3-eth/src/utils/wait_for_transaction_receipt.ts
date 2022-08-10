@@ -50,6 +50,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 							transactionHash,
 						}),
 					);
+					return;
 				}
 
 				const transactionReceipt: TransactionReceipt | undefined = await waitWithTimeout(
