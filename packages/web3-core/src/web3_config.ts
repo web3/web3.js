@@ -67,7 +67,7 @@ export abstract class Web3Config
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750 * 1000,
 		transactionReceiptPollingInterval: undefined,
-		transactionSendTimeout: 5000,
+		transactionSendTimeout: 60 * 1000,
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,

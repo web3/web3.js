@@ -710,11 +710,11 @@ Released with 1.0.0-beta.37 code base.
 
 #### web3-eth
 
-1. `givenProvider` default value is undefined
-2. `defaultHardfork` default value is 'london'
-3. `defaultAccount` default value is undefined
-4. `defaultNetworkId` default value is undefined
-5. When sending a transaction, if Ethereum Node does not respond within `transactionSendTimeout`, throw an Error.
+-   `givenProvider` default value is undefined
+-   `defaultHardfork` default value is 'london'
+-   `defaultAccount` default value is undefined
+-   `defaultNetworkId` default value is undefined
+-   When sending a transaction, if Ethereum Node does not respond within `transactionSendTimeout`, throw an Error.
 
 #### web3-eth-subscribe
 
