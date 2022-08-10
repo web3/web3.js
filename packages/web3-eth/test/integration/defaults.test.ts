@@ -254,7 +254,7 @@ describe('defaults', () => {
 		});
 		it('transactionSendTimeout', () => {
 			// default
-			expect(web3Eth.transactionSendTimeout).toBe(60 * 1000);
+			expect(web3Eth.transactionSendTimeout).toBe(750 * 1000);
 
 			// after set
 			web3Eth.setConfig({
