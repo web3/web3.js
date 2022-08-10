@@ -27,13 +27,20 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ): Promise<TransactionReceipt> {
-	return new Promise((resolve, reject) => {
+	const pollingInterval =
+		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
+
+	const awaitableTransactionReceipt: Promise<TransactionReceipt | undefined> = waitWithTimeout(
+		getTransactionReceipt(web3Context, transactionHash, returnFormat),
+		pollingInterval,
+	);
+
+	let intervalId: NodeJS.Timer | undefined;
+	const polledTransactionReceipt = new Promise<TransactionReceipt>((resolve, reject) => {
 		let transactionPollingDuration = 0;
-		const intervalId = setInterval(() => {
+		intervalId = setInterval(() => {
 			(async () => {
-				transactionPollingDuration +=
-					web3Context.transactionReceiptPollingInterval ??
-					web3Context.transactionPollingInterval;
+				transactionPollingDuration += pollingInterval;
 
 				if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
 					clearInterval(intervalId);
@@ -47,7 +54,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 
 				const transactionReceipt: TransactionReceipt | undefined = await waitWithTimeout(
 					getTransactionReceipt(web3Context, transactionHash, returnFormat),
-					web3Context.transactionPollingTimeout,
+					pollingInterval,
 				);
 
 				if (!isNullish(transactionReceipt)) {
@@ -55,6 +62,18 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					resolve(transactionReceipt);
 				}
 			})() as unknown;
-		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
+		}, pollingInterval);
 	});
+
+	// If the first call to ´getTransactionReceipt´ got the Transaction Receipt, return it
+	const transactionReceipt = await awaitableTransactionReceipt;
+	if (!isNullish(transactionReceipt)) {
+		if (intervalId) {
+			clearInterval(intervalId);
+		}
+		return transactionReceipt;
+	}
+
+	// Otherwise, try getting the Transaction Receipt by polling
+	return polledTransactionReceipt;
 }

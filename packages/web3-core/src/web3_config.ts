@@ -65,7 +65,7 @@ export abstract class Web3Config
 		transactionBlockTimeout: 50,
 		transactionConfirmationBlocks: 24,
 		transactionPollingInterval: 1000,
-		transactionPollingTimeout: 750,
+		transactionPollingTimeout: 2000,
 		transactionReceiptPollingInterval: undefined,
 		transactionSendTimeout: 5000,
 		transactionConfirmationPollingInterval: undefined,
@@ -260,7 +260,7 @@ export abstract class Web3Config
 	}
 	/**
 	 * Used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
-	 * Default is `750` ms.
+	 * Default is `2000` ms.
 	 */
 	public get transactionPollingTimeout() {
 		return this._config.transactionPollingTimeout;

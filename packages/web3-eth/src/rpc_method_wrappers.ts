@@ -1143,19 +1143,11 @@ export function sendTransaction<
 							promiEvent.emit('transactionHash', transactionHashFormatted);
 						}
 
-						let transactionReceipt: TransactionReceipt | undefined =
-							await waitWithTimeout(
-								getTransactionReceipt(web3Context, transactionHash, returnFormat),
-								web3Context.transactionPollingTimeout,
-							);
-
-						// Transaction hasn't been included in a block yet
-						if (isNullish(transactionReceipt))
-							transactionReceipt = await waitForTransactionReceipt(
-								web3Context,
-								transactionHash,
-								returnFormat,
-							);
+						const transactionReceipt = await waitForTransactionReceipt(
+							web3Context,
+							transactionHash,
+							returnFormat,
+						);
 
 						const transactionReceiptFormatted = format(
 							transactionReceiptSchema,
@@ -1348,19 +1340,11 @@ export function sendSignedTransaction<
 							promiEvent.emit('transactionHash', transactionHashFormatted);
 						}
 
-						let transactionReceipt = await getTransactionReceipt(
+						const transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
 							returnFormat,
 						);
-
-						// Transaction hasn't been included in a block yet
-						if (isNullish(transactionReceipt))
-							transactionReceipt = await waitForTransactionReceipt(
-								web3Context,
-								transactionHash,
-								returnFormat,
-							);
 
 						const transactionReceiptFormatted = format(
 							transactionReceiptSchema,
