@@ -1,6 +1,6 @@
 const { Personal } = require('web3-eth-personal');
 const { Web3Eth } = require('web3-eth');
-const fs = require('fs');
+const tempAccountList = require('./accounts.json');
 
 const getEnvVar = name => (global.Cypress ? Cypress.env(name) : process.env[name]);
 
@@ -42,12 +42,6 @@ const addAccount = async (address, privateKey) => {
 
 const createWallets = () =>
 	new Promise(async resolve => {
-		const tempAccountList = JSON.parse(
-			fs.readFileSync(`${__dirname}/accounts.json`, {
-				encoding: 'utf8',
-				flag: 'r',
-			}),
-		);
 		for (const acc of tempAccountList) {
 			try {
 				await addAccount(acc.address, acc.privateKey);
