@@ -27,20 +27,23 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	transactionHash: Bytes,
 	returnFormat: ReturnFormat,
 ): Promise<TransactionReceipt> {
-	return new Promise(resolve => {
+	const pollingInterval =
+		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
+	return new Promise<TransactionReceipt>((resolve, reject) => {
 		let transactionPollingDuration = 0;
 		const intervalId = setInterval(() => {
 			(async () => {
-				transactionPollingDuration +=
-					web3Context.transactionReceiptPollingInterval ??
-					web3Context.transactionPollingInterval;
+				transactionPollingDuration += pollingInterval;
 
 				if (transactionPollingDuration >= web3Context.transactionPollingTimeout) {
 					clearInterval(intervalId);
-					throw new TransactionPollingTimeoutError({
-						numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
-						transactionHash,
-					});
+					reject(
+						new TransactionPollingTimeoutError({
+							numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+							transactionHash,
+						}),
+					);
+					return;
 				}
 
 				const response = await getTransactionReceipt(
@@ -54,6 +57,6 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					resolve(response);
 				}
 			})() as unknown;
-		}, web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval);
+		}, pollingInterval);
 	});
 }
