@@ -1,5 +1,5 @@
 ---
-title: Web3 Providers
+title: Web3 Providers Migration Guide
 sidebar_position: 2
 sidebar_label: Web3.providers
 ---
