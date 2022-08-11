@@ -54,7 +54,11 @@ export class Web3ValidatorError extends Error {
 			this.errors.length
 		} error[s]:\n${this._compileErrors().join('\n')}`;
 
-		Error.captureStackTrace(this, Web3ValidatorError);
+		if (typeof Error.captureStackTrace === 'function') {
+			Error.captureStackTrace(this, Web3ValidatorError);
+		} else {
+			this.stack = new Error().stack;
+		}
 	}
 
 	public toJSON() {
