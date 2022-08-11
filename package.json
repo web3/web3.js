@@ -85,6 +85,7 @@
 		"jest": "^28.1.3",
 		"lerna": "^5.1.8",
 		"lint-staged": "^13.0.3",
+		"npm-auth-to-token": "^1.0.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-solidity": "^1.0.0-beta.20",
 		"process": "^0.11.10",
@@ -101,5 +102,6 @@
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"
 	},
-	"packageManager": "yarn@1.22.15"
+	"packageManager": "yarn@1.22.15",
+	"dependencies": {}
 }
