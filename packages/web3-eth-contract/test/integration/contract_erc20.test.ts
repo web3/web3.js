@@ -21,7 +21,7 @@ import {
 	getSystemTestProvider,
 	describeIf,
 	isWs,
-	createNewAccount,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -29,37 +29,36 @@ const initialSupply = '5000000000';
 
 describe('contract', () => {
 	describe('erc20', () => {
-		let contract: Contract<typeof ERC20TokenAbi>;
+		let contractInstance: Contract<typeof ERC20TokenAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		let accounts: string[];
 
-		beforeAll(async () => {
-			contract = new Contract(ERC20TokenAbi, undefined, {
+		beforeEach(async () => {
+			contractInstance = new Contract(ERC20TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
-
-			const acc1 = await createNewAccount({ refill: true, unlock: true });
-			const acc2 = await createNewAccount({ refill: true, unlock: true });
-			accounts = [acc1.address, acc2.address];
 
 			deployOptions = {
 				data: ERC20TokenBytecode,
 				arguments: [initialSupply],
 			};
-
-			sendOptions = { from: accounts[0], gas: '10000000' };
 		});
 
 		it('should deploy the contract', async () => {
-			await expect(contract.deploy(deployOptions).send(sendOptions)).resolves.toBeDefined();
+			const acc = await createTempAccount();
+			const sendOptionsLocal = { from: acc.address, gas: '10000000' };
+			await expect(
+				contractInstance.deploy(deployOptions).send(sendOptionsLocal),
+			).resolves.toBeDefined();
 		});
 
 		describe('contract instance', () => {
-			beforeAll(async () => {
-				contract = await contract.deploy(deployOptions).send(sendOptions);
+			let contract: Contract<typeof ERC20TokenAbi>;
+			beforeEach(async () => {
+				const acc = await createTempAccount();
+				sendOptions = { from: acc.address, gas: '10000000' };
+				contract = await contractInstance.deploy(deployOptions).send(sendOptions);
 			});
-
 			describe('methods', () => {
 				it('should return the name', async () => {
 					expect(await contract.methods.name().call()).toBe('Gold');
@@ -78,14 +77,16 @@ describe('contract', () => {
 				});
 
 				it('should transfer tokens', async () => {
-					await contract.methods.transfer(accounts[1], '100000').send(sendOptions);
+					const acc2 = await createTempAccount();
+					await contract.methods.transfer(acc2.address, '10').send(sendOptions);
 
-					expect(await contract.methods.balanceOf(accounts[1]).call()).toBe('100000');
+					expect(await contract.methods.balanceOf(acc2.address).call()).toBe('10');
 				});
 			});
 
 			describeIf(isWs)('events', () => {
 				it('should emit transfer event', async () => {
+					const acc2 = await createTempAccount();
 					await expect(
 						processAsync(async resolve => {
 							const event = contract.events.Transfer();
@@ -97,14 +98,12 @@ describe('contract', () => {
 								});
 							});
 
-							await contract.methods
-								.transfer(accounts[1], '100000')
-								.send(sendOptions);
+							await contract.methods.transfer(acc2.address, '100').send(sendOptions);
 						}),
 					).resolves.toEqual({
-						from: toUpperCaseHex(sendOptions['from'] as string),
-						to: toUpperCaseHex(accounts[1]),
-						value: '100000',
+						from: toUpperCaseHex(sendOptions.from as string),
+						to: toUpperCaseHex(acc2.address),
+						value: '100',
 					});
 				});
 			});

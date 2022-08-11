@@ -23,27 +23,20 @@ import {
 	SyncingSubscription,
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
-} from '../../src/web3_subscriptions';
+} from '../../src';
 import {
 	getSystemTestProvider,
 	describeIf,
-	createNewAccount,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 describeIf(isWs)('subscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
-	let accounts: string[];
 
 	beforeAll(async () => {
-		const acc = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc.address];
-		provider = new WebSocketProvider(
-			getSystemTestProvider(),
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+		provider = new WebSocketProvider(getSystemTestProvider());
 	});
 
 	afterAll(() => {
@@ -77,9 +70,10 @@ describeIf(isWs)('subscribe', () => {
 			expect(inst).toBeInstanceOf(NewPendingTransactionsSubscription);
 		});
 		it('logs', async () => {
+			const tempAcc = await createTempAccount();
 			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			await web3Eth.subscribe('logs', {
-				address: accounts[0],
+				address: tempAcc.address,
 			});
 			const subs = web3Eth?.subscriptionManager?.subscriptions;
 			const inst = subs?.get(Array.from(subs.keys())[0]);

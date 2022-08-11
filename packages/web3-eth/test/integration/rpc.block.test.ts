@@ -29,6 +29,7 @@ import {
 	createNewAccount,
 	isIpc,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
@@ -36,10 +37,9 @@ import { sendFewTxes, validateBlock, validateTransaction } from './helper';
 
 describe('rpc with block', () => {
 	let web3Eth: Web3Eth;
-	let accounts: string[] = [];
 	let clientUrl: string;
 
-	let contract: Contract<typeof BasicAbi>;
+	let contractInstance: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
@@ -52,12 +52,11 @@ describe('rpc with block', () => {
 		transactionHash: string;
 		transactionIndex: number | bigint;
 	};
+	let tempAcc: { address: string; privateKey: string };
+	let tempAcc2: { address: string; privateKey: string };
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
 		web3Eth = new Web3Eth({
 			provider: clientUrl,
 			config: {
@@ -65,7 +64,7 @@ describe('rpc with block', () => {
 			},
 		});
 
-		contract = new Contract(BasicAbi, undefined, {
+		contractInstance = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 
@@ -74,20 +73,23 @@ describe('rpc with block', () => {
 			arguments: [10, 'string init value'],
 		};
 		if (isIpc) {
-			await (contract.provider as IpcProvider).waitForConnection();
+			await (contractInstance.provider as IpcProvider).waitForConnection();
 			await (web3Eth.provider as IpcProvider).waitForConnection();
 		}
-		sendOptions = { from: accounts[0], gas: '1000000' };
+	});
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
+		tempAcc2 = await createTempAccount();
+		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		await contractInstance.deploy(deployOptions).send(sendOptions);
 		const [receipt]: TransactionReceipt[] = await sendFewTxes({
 			web3Eth,
-			from: accounts[0],
-			to: accounts[1],
+			from: tempAcc.address,
+			to: tempAcc2.address,
 			value: '0x1',
 			times: 1,
 		});
-
 		blockData = {
 			pending: 'pending',
 			latest: 'latest',
@@ -98,14 +100,38 @@ describe('rpc with block', () => {
 			transactionIndex: Number(receipt.transactionIndex),
 		};
 	});
-
 	afterAll(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
+			(contractInstance.provider as WebSocketProvider).disconnect();
 		}
 	});
 
 	describe('methods', () => {
+		beforeEach(async () => {
+			tempAcc = await createTempAccount();
+			tempAcc2 = await createTempAccount();
+			sendOptions = { from: tempAcc.address, gas: '1000000' };
+
+			await contractInstance.deploy(deployOptions).send(sendOptions);
+			const [receipt]: TransactionReceipt[] = await sendFewTxes({
+				web3Eth,
+				from: tempAcc.address,
+				to: tempAcc2.address,
+				value: '0x1',
+				times: 1,
+			});
+			blockData = {
+				pending: 'pending',
+				latest: 'latest',
+				earliest: 'earliest',
+				blockNumber: Number(receipt.blockNumber),
+				blockHash: String(receipt.blockHash),
+				transactionHash: String(receipt.transactionHash),
+				transactionIndex: Number(receipt.transactionIndex),
+			};
+		});
+
 		it.each(
 			toAllVariants<{
 				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
@@ -144,7 +170,7 @@ describe('rpc with block', () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
 				from: acc.address,
-				to: accounts[1],
+				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -165,7 +191,7 @@ describe('rpc with block', () => {
 			const res = await sendFewTxes({
 				web3Eth,
 				from: acc.address,
-				to: accounts[1],
+				to: tempAcc2.address,
 				value: '0x1',
 				times: count,
 			});

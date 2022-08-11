@@ -9,7 +9,7 @@ helpFunction() {
 
 start() {
 	. scripts/env.sh
-	
+
 	if [ -z "${ORIGARGS[1]}" ]
 	then
 		npx ganache ethereum -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123"
@@ -21,12 +21,13 @@ start() {
 		echo "Waiting for ganache..."
 		npx wait-port "$WEB3_SYSTEM_TEST_PORT"
 		echo "Ganache started..."
-	fi 
+	fi
 }
 
 stop() {
 	echo "Stopping ganache ..."
-	# pkill -15 ganache 2>/dev/null
+	processID=`lsof -Fp -i:${WEB3_SYSTEM_TEST_PORT}| grep '^p'`
+    kill -9 ${processID##p}
 }
 
 case $1 in

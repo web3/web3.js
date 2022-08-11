@@ -26,7 +26,7 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
-	createNewAccount,
+	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
 	isWs,
@@ -52,42 +52,34 @@ const makeFewTxToContract = async ({
 };
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
-	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let contract: Contract<typeof BasicAbi>;
-	let deployOptions: Record<string, unknown>;
-	let sendOptions: Record<string, unknown>;
-	let from: string;
+	let contractInstance: Contract<typeof BasicAbi>;
 	const testDataString = 'someTestString';
-	beforeAll(async () => {
+
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		const acc = await createNewAccount({ unlock: true, refill: true });
-		from = acc.address;
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
-		contract = new Contract(BasicAbi, undefined, {
+		providerWs = new WebSocketProvider(clientUrl);
+		contractInstance = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
-
-		deployOptions = {
-			data: BasicBytecode,
-			arguments: [10, 'string init value'],
-		};
-
-		sendOptions = { from, gas: '1000000' };
-
-		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	afterAll(() => {
 		providerWs.disconnect();
+		(contractInstance.provider as WebSocketProvider).disconnect();
 	});
 
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs with from block`, async () => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
+			const tempAcc = await createTempAccount();
+			const from = tempAcc.address;
+			const deployOptions: Record<string, unknown> = {
+				data: BasicBytecode,
+				arguments: [10, 'string init value'],
+			};
+
+			const sendOptions = { from, gas: '1000000' };
+			const contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+			const web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
 
 			await makeFewTxToContract({ contract, sendOptions, testDataString });

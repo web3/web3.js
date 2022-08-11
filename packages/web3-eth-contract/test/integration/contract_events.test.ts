@@ -24,29 +24,27 @@ import {
 	isWs,
 	itIf,
 	isHttp,
-	createNewAccount,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-	let accounts: string[];
 
 	beforeEach(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
-		const acc = await createNewAccount({ refill: true, unlock: true });
-		accounts = [acc.address];
+		const acc = await createTempAccount();
 
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
-		sendOptions = { from: accounts[0], gas: '1000000' };
+		sendOptions = { from: acc.address, gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});

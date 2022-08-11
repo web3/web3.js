@@ -21,41 +21,45 @@ import {
 	getSystemTestProvider,
 	describeIf,
 	isWs,
-	createNewAccount,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
 describe('contract', () => {
 	describe('erc721', () => {
+		let contractInstance: Contract<typeof ERC721TokenAbi>;
 		let contract: Contract<typeof ERC721TokenAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		let accounts: string[];
 
 		beforeEach(async () => {
-			contract = new Contract(ERC721TokenAbi, undefined, {
+			contractInstance = new Contract(ERC721TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
-			const acc1 = await createNewAccount({ refill: true, unlock: true });
-			const acc2 = await createNewAccount({ refill: true, unlock: true });
-			accounts = [acc1.address, acc2.address];
+			const acc = await createTempAccount();
 
 			deployOptions = {
 				data: ERC721TokenBytecode,
 				arguments: [],
 			};
-
-			sendOptions = { from: accounts[0], gas: '10000000' };
+			sendOptions = { from: acc.address, gas: '10000000' };
 		});
 
 		it('should deploy the contract', async () => {
-			await expect(contract.deploy(deployOptions).send(sendOptions)).resolves.toBeDefined();
+			await expect(
+				contractInstance.deploy(deployOptions).send(sendOptions),
+			).resolves.toBeDefined();
 		});
 
 		describe('contract instance', () => {
+			let acc: { address: string; privateKey: string };
+			let acc2: { address: string; privateKey: string };
 			beforeEach(async () => {
-				contract = await contract.deploy(deployOptions).send(sendOptions);
+				acc = await createTempAccount();
+				acc2 = await createTempAccount();
+				sendOptions = { from: acc.address, gas: '10000000' };
+				contract = await contractInstance.deploy(deployOptions).send(sendOptions);
 			});
 
 			describe('methods', () => {
@@ -68,24 +72,22 @@ describe('contract', () => {
 				});
 
 				it('should award item', async () => {
-					expect(
-						await contract.methods
-							.awardItem(accounts[1], 'http://my-nft-uri')
-							.send(sendOptions),
-					).toBeDefined();
+					const acc3 = await createTempAccount();
+					await contract.methods
+						.awardItem(acc3.address, 'http://my-nft-uri')
+						.send(sendOptions);
 
 					const logs = await contract.getPastEvents('Transfer');
-
 					// TODO: Type of the getPastEvents are not valid.
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
-					const { tokenId } = logs[0].returnValues;
+					const tokenId = logs[0]?.returnValues?.tokenId;
 
 					expect(
 						toUpperCaseHex(
 							(await contract.methods.ownerOf(tokenId).call()) as unknown as string,
 						),
-					).toBe(toUpperCaseHex(accounts[1]));
+					).toBe(toUpperCaseHex(acc3.address));
 				});
 			});
 
@@ -103,12 +105,12 @@ describe('contract', () => {
 							});
 
 							await contract.methods
-								.awardItem(accounts[1], 'http://my-nft-uri')
+								.awardItem(acc2.address, 'http://my-nft-uri')
 								.send(sendOptions);
 						}),
 					).resolves.toEqual({
 						from: '0x0000000000000000000000000000000000000000',
-						to: toUpperCaseHex(accounts[1]),
+						to: toUpperCaseHex(acc2.address),
 						tokenId: '0',
 					});
 				});

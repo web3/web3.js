@@ -16,29 +16,28 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { getSystemTestProvider, createNewAccount } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
+	let contractInstance: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-	let accounts: string[];
 
 	beforeEach(async () => {
-		contract = new Contract(BasicAbi, undefined, {
+		contractInstance = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
-		const acc = await createNewAccount({ refill: true, unlock: true });
-		accounts = [acc.address];
+		const acc = await createTempAccount();
 
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
-		sendOptions = { from: accounts[0], gas: '1000000' };
+		sendOptions = { from: acc.address, gas: '1000000' };
 
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contract = await contractInstance.deploy(deployOptions).send(sendOptions);
 	});
 
 	describe('methods', () => {
@@ -82,12 +81,21 @@ describe('contract', () => {
 			});
 
 			it('should returns a receipt (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', async () => {
-				const receipt = await contract.methods.setValues(1, 'string value', true).send({
-					...sendOptions,
-					maxFeePerGas: '0x59682F00', // 1.5 Gwei
-					maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
-					type: '0x2',
-				});
+				const acc = await createTempAccount();
+
+				const sendOptionsLocal = { from: acc.address, gas: '1000000' };
+
+				const contractLocal = await contractInstance
+					.deploy(deployOptions)
+					.send(sendOptionsLocal);
+				const receipt = await contractLocal.methods
+					.setValues(1, 'string value', true)
+					.send({
+						...sendOptionsLocal,
+						maxFeePerGas: '0x59682F00', // 1.5 Gwei
+						maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
+						type: '0x2',
+					});
 
 				expect(receipt).toEqual(
 					expect.objectContaining({

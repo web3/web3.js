@@ -34,6 +34,7 @@ import {
 	itIf,
 	isIpc,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
@@ -46,17 +47,15 @@ import {
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
-	let accounts: string[] = [];
 	let clientUrl: string;
 	let contract: Contract<typeof BasicAbi>;
+	let contractInstance: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-
+	let tempAcc: { address: string; privateKey: string };
+	let tempAcc2: { address: string; privateKey: string };
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
 		web3Eth = new Web3Eth({
 			provider: clientUrl,
 			config: {
@@ -64,7 +63,7 @@ describe('rpc', () => {
 			},
 		});
 
-		contract = new Contract(BasicAbi, undefined, {
+		contractInstance = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 
@@ -73,17 +72,22 @@ describe('rpc', () => {
 			arguments: [10, 'string init value'],
 		};
 		if (isIpc) {
-			await (contract.provider as IpcProvider).waitForConnection();
+			await (contractInstance.provider as IpcProvider).waitForConnection();
 			await (web3Eth.provider as IpcProvider).waitForConnection();
 		}
-		sendOptions = { from: accounts[0], gas: '1000000' };
+	});
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
+		tempAcc2 = await createTempAccount();
+		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contract = await contractInstance.deploy(deployOptions).send(sendOptions);
 	});
 
 	afterAll(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
+			(contractInstance.provider as WebSocketProvider).disconnect();
 		}
 	});
 
@@ -111,7 +115,6 @@ describe('rpc', () => {
 			const isMining = await web3Eth.isMining();
 			expect(isMining).toBe(true);
 		});
-
 		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 			const hashRate = await web3Eth.getHashRate({
 				number: format as FMT_NUMBER,
@@ -124,8 +127,6 @@ describe('rpc', () => {
 			const account = await createNewAccount({ unlock: true });
 			const accList = await web3Eth.getAccounts();
 			const accListLowerCase = accList.map((add: string) => add.toLowerCase());
-			expect(accListLowerCase).toContain(accounts[0].toLowerCase());
-			expect(accListLowerCase).toContain(accounts[1].toLowerCase());
 			expect(accListLowerCase).toContain(account.address.toLowerCase());
 		});
 
@@ -152,7 +153,7 @@ describe('rpc', () => {
 			await web3Eth.sendTransaction({
 				to: newAccount.address,
 				value,
-				from: accounts[0],
+				from: tempAcc.address,
 			});
 			const res = await web3Eth.getBalance(newAccount.address, undefined, {
 				number: format as FMT_NUMBER,
@@ -247,8 +248,8 @@ describe('rpc', () => {
 		it('getTransaction', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
-				from: accounts[0],
-				to: accounts[1],
+				from: tempAcc.address,
+				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -265,9 +266,9 @@ describe('rpc', () => {
 
 		itIf(getSystemTestBackend() !== 'ganache')('getPendingTransactions', async () => {
 			const tx = web3Eth.sendTransaction({
-				to: accounts[1],
+				to: tempAcc2.address,
 				value: '0x1',
-				from: accounts[0],
+				from: tempAcc.address,
 			});
 
 			const res = await web3Eth.getPendingTransactions();
@@ -281,8 +282,8 @@ describe('rpc', () => {
 		it('getTransactionReceipt', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
-				from: accounts[0],
-				to: accounts[1],
+				from: tempAcc.address,
+				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -320,7 +321,7 @@ describe('rpc', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(true).toBe(true);
-			// expect(res[0]).toEqual(accounts[0]);
+			// expect(res[0]).toEqual(tempAcc.address);
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {

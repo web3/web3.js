@@ -28,11 +28,11 @@ import {
 describe('Web3Eth.submitWork', () => {
 	let web3Eth: Web3Eth;
 
-	beforeAll(() => {
+	beforeEach(() => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
 	});
 
-	afterAll(() => {
+	afterEach(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
