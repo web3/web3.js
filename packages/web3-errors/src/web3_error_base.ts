@@ -61,6 +61,10 @@ export abstract class InvalidValueError extends Web3Error {
 	public constructor(value: unknown, msg: string) {
 		super(`Invalid value given "${Web3Error.convertToString(value, true)}". Error: ${msg}.`);
 		this.name = this.constructor.name;
-		Error.captureStackTrace(this, Web3Error);
+		if (typeof Error.captureStackTrace === 'function') {
+			Error.captureStackTrace(this, Web3Error);
+		} else {
+			this.stack = new Error().stack;
+		}
 	}
 }
