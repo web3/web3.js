@@ -455,13 +455,11 @@ describe('defaults', () => {
 			//	to ensure that polling of new blocks works in such cases.
 			// I will cause the providers that supports subscription (like WebSocket)
 			// 	to never return data through listening to new events
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			// let pr = new Promise(res => setTimeout(res, 5000));
-			const prs: Promise<unknown>[] = [];
-			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = () => {
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
+			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
 				// eslint-disable-next-line no-promise-executor-return
-				const pr = new Promise(res => setTimeout(res, 5000));
-				prs.push(pr);
+				await new Promise(res => setTimeout(res, 5000));
 			};
 
 			// Make the test run faster by casing the polling to start after 1 second
@@ -511,14 +509,12 @@ describe('defaults', () => {
 				from,
 			});
 			await tx;
-			tx.removeAllListeners();
-			await tempEth.clearSubscriptions();
+
 			// Ensure the promise the get the confirmations resolves with no error
-			await Promise.all(prs);
+
 			const status = await confirmationPromise;
 
 			expect(status).toBe(BigInt(1));
-			// (tempEth?.provider as WebSocketProvider)?.disconnect();
 		});
 
 		it('maxListenersWarningThreshold', () => {
