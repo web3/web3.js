@@ -15,19 +15,29 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ethAbiToJsonSchema } from '../../src/utils';
+import { ethAbiToJsonSchema, transformJsonDataToAbiFormat } from '../../src/utils';
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 
-describe('ethAbiToJsonSchema', () => {
-	describe('full schema', () => {
-		it.each(abiToJsonSchemaCases)('$title', ({ input, output }) => {
-			expect(ethAbiToJsonSchema(input.full)).toEqual(output);
+describe('utils', () => {
+	describe('ethAbiToJsonSchema', () => {
+		describe('full schema', () => {
+			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+				expect(ethAbiToJsonSchema(abi.fullSchema)).toEqual(json.fullSchema);
+			});
+		});
+
+		describe('short schema', () => {
+			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+				expect(ethAbiToJsonSchema(abi.shortSchema)).toEqual(json.shortSchema);
+			});
 		});
 	});
 
-	describe('short schema', () => {
-		it.each(abiToJsonSchemaCases)('$title', ({ input, output }) => {
-			expect(ethAbiToJsonSchema(input.short)).toEqual(output);
+	describe('transformJsonDataToAbiFormat', () => {
+		describe('full schema', () => {
+			it.each(abiToJsonSchemaCases)('$title', ({ abi, json }) => {
+				expect(transformJsonDataToAbiFormat(abi.fullSchema, json.data)).toEqual(abi.data);
+			});
 		});
 	});
 });

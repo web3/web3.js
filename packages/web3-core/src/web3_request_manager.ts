@@ -274,6 +274,16 @@ export class Web3RequestManager<
 		response: JsonRpcResponse<ResultType, ErrorType>,
 		{ legacy, error }: { legacy: boolean; error: boolean },
 	): JsonRpcResponse<ResultType> | never {
+		if (isNullish(response)) {
+			return this._buildResponse(
+				payload,
+				// Some providers uses "null" as valid empty response
+				// eslint-disable-next-line no-null/no-null
+				null as unknown as JsonRpcResponse<ResultType, ErrorType>,
+				error,
+			);
+		}
+
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
@@ -308,29 +318,7 @@ export class Web3RequestManager<
 			!jsonRpc.isResponseWithError(response) &&
 			!jsonRpc.isResponseWithResult(response)
 		) {
-			const res = {
-				jsonrpc: '2.0',
-				// eslint-disable-next-line no-nested-ternary
-				id: jsonRpc.isBatchRequest(payload)
-					? payload[0].id
-					: 'id' in payload
-					? payload.id
-					: // Have to use the null here explicitly
-					  // eslint-disable-next-line no-null/no-null
-					  null,
-			};
-
-			if (error) {
-				return {
-					...res,
-					error: response as unknown,
-				} as JsonRpcResponse<ResultType>;
-			}
-
-			return {
-				...res,
-				result: response as unknown,
-			} as JsonRpcResponse<ResultType>;
+			return this._buildResponse(payload, response, error);
 		}
 
 		if (jsonRpc.isBatchRequest(payload) && !Array.isArray(response)) {
@@ -351,5 +339,37 @@ export class Web3RequestManager<
 		}
 
 		throw new ResponseError(response, 'Invalid response');
+	}
+
+	// Need to use same types as _processJsonRpcResponse so have to declare as instance method
+	// eslint-disable-next-line class-methods-use-this
+	private _buildResponse<ResultType, ErrorType, RequestType>(
+		payload: JsonRpcPayload<RequestType>,
+		response: JsonRpcResponse<ResultType, ErrorType>,
+		error: boolean,
+	): JsonRpcResponse<ResultType> {
+		const res = {
+			jsonrpc: '2.0',
+			// eslint-disable-next-line no-nested-ternary
+			id: jsonRpc.isBatchRequest(payload)
+				? payload[0].id
+				: 'id' in payload
+				? payload.id
+				: // Have to use the null here explicitly
+				  // eslint-disable-next-line no-null/no-null
+				  null,
+		};
+
+		if (error) {
+			return {
+				...res,
+				error: response as unknown,
+			} as JsonRpcResponse<ResultType>;
+		}
+
+		return {
+			...res,
+			result: response as unknown,
+		} as JsonRpcResponse<ResultType>;
 	}
 }
