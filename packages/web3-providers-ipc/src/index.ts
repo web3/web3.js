@@ -37,6 +37,7 @@ import {
 	ConnectionNotOpenError,
 	InvalidClientError,
 	InvalidConnectionError,
+	InvalidResponseError,
 	ResponseError,
 } from 'web3-errors';
 import { isNullish, Web3DeferredPromise, jsonRpc } from 'web3-utils';
@@ -49,6 +50,9 @@ export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
 	private readonly _emitter: EventEmitter = new EventEmitter();
+
+	private lastChunk: string | undefined;
+	private lastChunkTimeout: NodeJS.Timeout | undefined;
 
 	private readonly _socketPath: string;
 	private readonly _socket: Socket;
@@ -162,7 +166,9 @@ export default class IpcProvider<
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
 		if (isNullish(this._socket)) throw new Error('IPC connection is undefined');
 
-		if (isNullish(request.id)) throw new Error('Request Id not defined');
+		const requestId = jsonRpc.isBatchRequest(request) ? request[0].id : request.id;
+
+		if (isNullish(requestId)) throw new Error('Request Id not defined');
 
 		if (this.getStatus() !== 'connected') {
 			await this.waitForConnection();
@@ -170,12 +176,12 @@ export default class IpcProvider<
 
 		try {
 			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-			this._requestQueue.set(request.id, defPromise);
+			this._requestQueue.set(requestId, defPromise);
 			this._socket.write(JSON.stringify(request));
 
 			return defPromise;
 		} catch (error) {
-			this._requestQueue.delete(request.id);
+			this._requestQueue.delete(requestId);
 			throw error;
 		}
 	}
@@ -184,35 +190,89 @@ export default class IpcProvider<
 		this._emitter.removeAllListeners(type);
 	}
 
+	private _parseResponse(data: string): JsonRpcResponse[] {
+		const returnValues: JsonRpcResponse[] = [];
+
+		// DE-CHUNKER
+		const dechunkedData = data
+			.replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+			.replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+			.replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+			.replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+			.split('|--|');
+
+		dechunkedData.forEach(_chunkData => {
+			// prepend the last chunk
+			let chunkData = _chunkData;
+			if (this.lastChunk) {
+				chunkData = this.lastChunk + chunkData;
+			}
+
+			let result;
+
+			try {
+				result = JSON.parse(chunkData) as unknown as JsonRpcResponse;
+			} catch (e) {
+				this.lastChunk = chunkData;
+
+				// start timeout to cancel all requests
+				if (this.lastChunkTimeout) {
+					clearTimeout(this.lastChunkTimeout);
+				}
+
+				this.lastChunkTimeout = setTimeout(() => {
+					this._clearQueues();
+					throw new InvalidResponseError({
+						id: 1,
+						jsonrpc: '2.0',
+						error: { code: 2, message: 'Chunk timeout' },
+					});
+				}, 1000 * 15);
+
+				return;
+			}
+
+			// cancel timeout and set chunk to null
+			clearTimeout(this.lastChunkTimeout);
+			this.lastChunk = undefined;
+
+			if (result) returnValues.push(result);
+		});
+
+		return returnValues;
+	}
+
 	private _onMessage(e: Buffer | string): void {
-		const response = JSON.parse(
-			typeof e === 'string' ? e : e.toString('utf8'),
-		) as unknown as JsonRpcResponse;
-
-		if (
-			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
-			(response as JsonRpcNotification).method.endsWith('_subscription')
-		) {
-			this._emitter.emit('message', undefined, response);
+		const responses = this._parseResponse(typeof e === 'string' ? e : e.toString('utf8'));
+		if (!responses) {
 			return;
 		}
+		for (const response of responses) {
+			if (
+				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
+				(response as JsonRpcNotification).method.endsWith('_subscription')
+			) {
+				this._emitter.emit('message', undefined, response);
+				return;
+			}
 
-		const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
-		const requestItem = this._requestQueue.get(requestId);
+			const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
+			const requestItem = this._requestQueue.get(requestId);
 
-		if (!requestItem) {
-			return;
+			if (!requestItem) {
+				return;
+			}
+
+			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+				this._emitter.emit('message', undefined, response);
+				requestItem.resolve(response);
+			} else {
+				this._emitter.emit('message', response, undefined);
+				requestItem?.reject(new ResponseError(response));
+			}
+
+			this._requestQueue.delete(requestId);
 		}
-
-		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._emitter.emit('message', undefined, response);
-			requestItem.resolve(response);
-		} else {
-			this._emitter.emit('message', response, undefined);
-			requestItem?.reject(new ResponseError(response));
-		}
-
-		this._requestQueue.delete(requestId);
 	}
 
 	private _clearQueues(event?: CloseEvent) {
