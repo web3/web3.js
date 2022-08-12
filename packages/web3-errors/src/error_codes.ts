@@ -135,3 +135,6 @@ export const ERR_INVALID_LARGE_VALUE = 1011;
 export const ERR_INVALID_BLOCK = 1012;
 export const ERR_INVALID_TYPE_ABI = 1013;
 export const ERR_INVALID_NIBBLE_WIDTH = 1014;
+
+// Validation error codes
+export const ERR_VALIDATION = 1100;
