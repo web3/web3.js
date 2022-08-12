@@ -573,7 +573,7 @@ describe('defaults', () => {
 						} seconds`,
 					);
 				}
-				// Some other providers would not respond when trying to get the transaction receipt (like Geth v7.4.0)
+				// Some other providers would not respond when trying to get the transaction receipt (like Geth v1.10.22-unstable)
 				else if (error instanceof TransactionPollingTimeoutError) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(error.message).toContain(
