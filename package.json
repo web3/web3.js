@@ -1,7 +1,6 @@
 {
 	"name": "web3.js",
 	"private": true,
-	"version": "4.0.0",
 	"description": "Ethereum API wrappers and utilities",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
@@ -32,9 +31,12 @@
 		]
 	},
 	"scripts": {
+		"version": "yarn run bootstrap && yarn build",
+		"bootstrap": "lerna bootstrap",
 		"prebuild": "yarn clean",
 		"build": "lerna run build --stream",
 		"build:web": "lerna run build:web --stream",
+		"build:docs": "cd docs && yarn install && yarn build",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
 		"ganache:start:background": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start 1",
