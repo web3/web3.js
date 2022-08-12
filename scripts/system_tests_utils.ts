@@ -27,7 +27,7 @@ import { Personal } from 'web3-eth-personal';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create,
-	create as createAccount,
+	create as _createAccount,
 	decrypt,
 	privateKeyToAccount,
 	signTransaction,
@@ -64,7 +64,7 @@ export const isIpc = getSystemTestProvider().includes('ipc');
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
-
+export const createAccount = _createAccount;
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
@@ -249,7 +249,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
-	if (!getSystemTestProvider().startsWith('ws')) {
+	if (!isWs && !isIpc) {
 		return;
 	}
 

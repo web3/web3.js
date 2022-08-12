@@ -56,7 +56,6 @@ download(){
 }
 
 start() {
-
     download
 	if [ -z "${ORIGARGS[1]}" ]; then
 		echo "Starting geth..."
