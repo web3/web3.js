@@ -81,6 +81,7 @@ describe('defaults', () => {
 	describe('defaults', () => {
 		it('defaultAccount', async () => {
 			const tempAcc2 = await createTempAccount();
+			const tempAcc3 = await createTempAccount();
 			const contractMsgFrom = await new Contract(
 				MsgSenderAbi,
 				web3Eth.getContextObject() as any,
@@ -102,13 +103,13 @@ describe('defaults', () => {
 			// set by create new instance
 			eth2 = new Web3Eth({
 				config: {
-					defaultAccount: tempAcc2.address,
+					defaultAccount: tempAcc3.address,
 				},
 			});
-			expect(eth2.defaultAccount).toBe(tempAcc2.address);
+			expect(eth2.defaultAccount).toBe(tempAcc3.address);
 
 			// check utils
-			expect(getTransactionFromAttr(eth2)).toBe(tempAcc2.address);
+			expect(getTransactionFromAttr(eth2)).toBe(tempAcc3.address);
 			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
 			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 			contractMsgFrom.setConfig({
