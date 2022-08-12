@@ -807,7 +807,7 @@ Method.prototype.buildCall = function () {
                 )
             )
         ) {
-            _handleTxPricing(method, payload.params[0]).then(txPricing => {
+            _handleTxPricing(method, payload.params[0],{ baseFeeMultiplier: this.maxFeePerGasMultiplier, priorityFee: this.defaultMaxPriorityFeePerGas }).then(txPricing => {
                 if (txPricing.gasPrice !== undefined) {
                     payload.params[0].gasPrice = txPricing.gasPrice;
                 } else if (
@@ -852,7 +852,8 @@ Method.prototype.buildCall = function () {
     return send;
 };
 
-function _handleTxPricing(method, tx) {
+function _handleTxPricing(method, tx, ) {
+function _handleTxPricing(method, tx, { baseFeeMultiplier, priorityFee }) {
     return new Promise((resolve, reject) => {
         try {
             var getBlockByNumber = (new Method({
@@ -892,11 +893,11 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.gasPrice;
                         delete tx.gasPrice;
                     } else {
-                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || this.defaultMaxPriorityFeePerGas
+                        maxPriorityFeePerGas = tx.maxPriorityFeePerGas || priorityFee
                         maxFeePerGas = tx.maxFeePerGas ||
                             utils.toHex(
-                                utils.toBN(Math.ceil(Number(block.baseFeePerGas) * this.maxFeePerGasMultiplier))
-                                    .add(utils.toBN(maxPriorityFeePerGas))
+                                utils.toBN(Math.ceil(Number(block.baseFeePerGas) * baseFeeMultiplier))
+                                    .add(utils.toBN(priorityFee))
                             );
                     }
                     resolve({ maxFeePerGas, maxPriorityFeePerGas });
