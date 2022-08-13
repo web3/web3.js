@@ -22,7 +22,6 @@ import {
 	EthExecutionAPI,
 	JsonRpcId,
 	JsonRpcNotification,
-	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
 	Web3APIMethod,
@@ -37,10 +36,9 @@ import {
 	ConnectionNotOpenError,
 	InvalidClientError,
 	InvalidConnectionError,
-	InvalidResponseError,
 	ResponseError,
 } from 'web3-errors';
-import { isNullish, Web3DeferredPromise, jsonRpc } from 'web3-utils';
+import { isNullish, Web3DeferredPromise, jsonRpc, ChunkResponseParser } from 'web3-utils';
 
 type WaitOptions = {
 	timeOutTime: number;
@@ -50,12 +48,9 @@ export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
 	private readonly _emitter: EventEmitter = new EventEmitter();
-
-	private lastChunk: string | undefined;
-	private lastChunkTimeout: NodeJS.Timeout | undefined;
-
 	private readonly _socketPath: string;
 	private readonly _socket: Socket;
+	private readonly chunkResponseParser: ChunkResponseParser;
 	private waitOptions: WaitOptions;
 	private _connectionStatus: Web3ProviderStatus;
 
@@ -75,6 +70,10 @@ export default class IpcProvider<
 			timeOutTime: 5000,
 			maxNumberOfAttempts: 10,
 		};
+		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser.onError(() => {
+			this._clearQueues();
+		});
 	}
 
 	public getStatus(): Web3ProviderStatus {
@@ -190,60 +189,10 @@ export default class IpcProvider<
 		this._emitter.removeAllListeners(type);
 	}
 
-	private _parseResponse(data: string): JsonRpcResponse[] {
-		const returnValues: JsonRpcResponse[] = [];
-
-		// DE-CHUNKER
-		const dechunkedData = data
-			.replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-			.replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-			.replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-			.replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-			.split('|--|');
-
-		dechunkedData.forEach(_chunkData => {
-			// prepend the last chunk
-			let chunkData = _chunkData;
-			if (this.lastChunk) {
-				chunkData = this.lastChunk + chunkData;
-			}
-
-			let result;
-
-			try {
-				result = JSON.parse(chunkData) as unknown as JsonRpcResponse;
-			} catch (e) {
-				this.lastChunk = chunkData;
-
-				// start timeout to cancel all requests
-				if (this.lastChunkTimeout) {
-					clearTimeout(this.lastChunkTimeout);
-				}
-
-				this.lastChunkTimeout = setTimeout(() => {
-					this._clearQueues();
-					throw new InvalidResponseError({
-						id: 1,
-						jsonrpc: '2.0',
-						error: { code: 2, message: 'Chunk timeout' },
-					});
-				}, 1000 * 15);
-
-				return;
-			}
-
-			// cancel timeout and set chunk to null
-			clearTimeout(this.lastChunkTimeout);
-			this.lastChunk = undefined;
-
-			if (result) returnValues.push(result);
-		});
-
-		return returnValues;
-	}
-
 	private _onMessage(e: Buffer | string): void {
-		const responses = this._parseResponse(typeof e === 'string' ? e : e.toString('utf8'));
+		const responses = this.chunkResponseParser.parseResponse(
+			typeof e === 'string' ? e : e.toString('utf8'),
+		);
 		if (!responses) {
 			return;
 		}
