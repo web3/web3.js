@@ -852,7 +852,6 @@ Method.prototype.buildCall = function () {
     return send;
 };
 
-function _handleTxPricing(method, tx, ) {
 function _handleTxPricing(method, tx, { baseFeeMultiplier, priorityFee }) {
     return new Promise((resolve, reject) => {
         try {
