@@ -258,12 +258,12 @@ export default class WebSocketProvider<
 
 		// the error event listener may be already there because we do not remove it like the others
 		const errorListeners = this._webSocketConnection?.listeners('error');
-		if (!errorListeners || errorListeners.length === 0) {
-			try {
+		try {
+			if (!errorListeners || errorListeners.length === 0) {
 				this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
-			} catch (error) {
-				console.error(error);
 			}
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
