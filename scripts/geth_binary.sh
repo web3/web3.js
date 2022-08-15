@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # TODO: use this code in #5185
 ORIGARGS=("$@")
-TMP_FOLDER=$(pwd)/tmp
-IPC_PATH="$TMP_FOLDER/ipc"
+. scripts/env.sh
 
 helpFunction() {
 	echo "Usage: $0 [start|stop] [background]"
@@ -57,7 +56,6 @@ download(){
 }
 
 start() {
-	. scripts/env.sh
     download
 	if [ -z "${ORIGARGS[1]}" ]; then
 		echo "Starting geth..."

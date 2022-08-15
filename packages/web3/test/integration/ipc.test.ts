@@ -16,7 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import IpcProvider from 'web3-providers-ipc';
-import { getSystemTestProvider, describeIf, isIpc } from '../shared_fixtures/system_tests_utils';
+import {
+	getSystemTestProvider,
+	describeIf,
+	isIpc,
+	closeOpenConnection,
+} from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
 
 describe('Web3 instance', () => {
@@ -25,6 +30,10 @@ describe('Web3 instance', () => {
 
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
+		web3 = new Web3(clientUrl);
+	});
+	afterAll(async () => {
+		await closeOpenConnection(web3);
 	});
 
 	describeIf(isIpc)('Create Web3 class instance with ipc string providers', () => {
@@ -32,7 +41,6 @@ describe('Web3 instance', () => {
 		// https://github.com/ethereum/go-ethereum/issues/17907
 		it('should create instance with string of IPC provider', async () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			web3 = new Web3(clientUrl);
 
 			expect(web3).toBeInstanceOf(Web3);
 			await (web3.provider as IpcProvider).waitForConnection();
