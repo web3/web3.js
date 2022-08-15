@@ -104,16 +104,18 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 		});
 
 		it('should subscribe to `error` event that could happen at the underlying WebSocket connection', async () => {
-			const errorMsg = 'Custom WebSocket error occured';
+			const errorMsg = 'Custom WebSocket error occurred';
+
+			const tempWebSocketProvider = new WebSocketProvider(clientWsUrl);
 
 			const errorPromise = new Promise((resolve: Resolve) => {
-				webSocketProvider.on('error', (err: any) => {
+				tempWebSocketProvider.on('error', (err: any) => {
 					expect(err?.message).toBe(errorMsg);
 					resolve();
 				});
 			});
 
-			webSocketProvider['_webSocketConnection']?.emit(
+			tempWebSocketProvider['_webSocketConnection']?.emit(
 				'error',
 				new Web3WSProviderError(errorMsg),
 			);
