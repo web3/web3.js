@@ -22,7 +22,6 @@ import {
 	EthExecutionAPI,
 	JsonRpcId,
 	JsonRpcNotification,
-	JsonRpcResponse,
 	JsonRpcResult,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -33,7 +32,7 @@ import {
 	Web3ProviderStatus,
 	JsonRpcResponseWithResult,
 } from 'web3-types';
-import { jsonRpc, isNullish, Web3DeferredPromise } from 'web3-utils';
+import { jsonRpc, isNullish, Web3DeferredPromise, ChunkResponseParser } from 'web3-utils';
 import {
 	InvalidClientError,
 	InvalidConnectionError,
@@ -59,6 +58,7 @@ export default class WebSocketProvider<
 	private readonly _wsProviderOptions?: ClientOptions | ClientRequestArgs;
 
 	private _webSocketConnection?: WebSocket;
+	private readonly chunkResponseParser: ChunkResponseParser;
 
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
@@ -105,6 +105,10 @@ export default class WebSocketProvider<
 
 		this._init();
 		this.connect();
+		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser.onError(() => {
+			this._clearQueues();
+		});
 	}
 
 	private static _validateProviderUrl(providerUrl: string): boolean {
@@ -275,32 +279,36 @@ export default class WebSocketProvider<
 	}
 
 	private _onMessage(event: MessageEvent): void {
-		const response = JSON.parse(event.data as string) as unknown as JsonRpcResponse;
-
-		if (
-			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
-			(response as JsonRpcNotification).method.endsWith('_subscription')
-		) {
-			this._wsEventEmitter.emit('message', undefined, response);
+		const responses = this.chunkResponseParser.parseResponse(event.data as string);
+		if (!responses) {
 			return;
 		}
+		for (const response of responses) {
+			if (
+				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
+				(response as JsonRpcNotification).method.endsWith('_subscription')
+			) {
+				this._wsEventEmitter.emit('message', undefined, response);
+				return;
+			}
 
-		const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
-		const requestItem = this._sentRequestsQueue.get(requestId);
+			const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
+			const requestItem = this._sentRequestsQueue.get(requestId);
 
-		if (!requestItem) {
-			return;
+			if (!requestItem) {
+				return;
+			}
+
+			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+				this._wsEventEmitter.emit('message', undefined, response);
+				requestItem.deferredPromise.resolve(response);
+			} else {
+				this._wsEventEmitter.emit('message', response, undefined);
+				requestItem?.deferredPromise.reject(new ResponseError(response));
+			}
+
+			this._sentRequestsQueue.delete(requestId);
 		}
-
-		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._wsEventEmitter.emit('message', undefined, response);
-			requestItem.deferredPromise.resolve(response);
-		} else {
-			this._wsEventEmitter.emit('message', response, undefined);
-			requestItem?.deferredPromise.reject(new ResponseError(response));
-		}
-
-		this._sentRequestsQueue.delete(requestId);
 	}
 
 	private _onConnect() {
