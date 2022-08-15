@@ -256,14 +256,18 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.addEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.addEventListener('close', this._onCloseHandler);
 
-		// the error event listener may be already there because we do not remove it like the others
-		const errorListeners = this._webSocketConnection?.listeners('error');
+		let errorListeners: unknown[] | undefined;
 		try {
-			if (!errorListeners || errorListeners.length === 0) {
-				this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
-			}
+			errorListeners = this._webSocketConnection?.listeners('error');
 		} catch (error) {
+			// At some cases (at GitHub pipeline) there is an error raised when trying to access the listeners
+			//	However, no need to do take any action in this case
 			console.error(error);
+		}
+		// The error event listener may be already there because we do not remove it like the others
+		// 	So we add it only if it was not already added
+		if (!errorListeners || errorListeners.length === 0) {
+			this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
 		}
 	}
 
