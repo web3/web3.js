@@ -256,13 +256,10 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.addEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.addEventListener('close', this._onCloseHandler);
 
-		try {
-			// the error event listener may be already there because we do not remove it like the others
-			if (!this._webSocketConnection?.listeners('error')[0]) {
-				this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
-			}
-		} catch (error) {
-			console.error(error);
+		// the error event listener may be already there because we do not remove it like the others
+		const errorListeners = this._webSocketConnection?.listeners('error');
+		if (!errorListeners || errorListeners.length === 0) {
+			this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
 		}
 	}
 
