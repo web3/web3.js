@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 TMP_FOLDER=$(pwd)/tmp
-IPC_PATH=$TMP_FOLDER/ipc
+IPC_PATH=$TMP_FOLDER/ipc.ipc
 
 export WEB3_SYSTEM_TEST_ENV=true
 export WEB3_SYSTEM_TEST_BACKEND=""

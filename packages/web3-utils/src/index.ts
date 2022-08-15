@@ -25,3 +25,4 @@ export * from './objects';
 export * from './json_rpc';
 export * as jsonRpc from './json_rpc';
 export * from './web3_deferred_promise';
+export * from './chunk_response_parser';
