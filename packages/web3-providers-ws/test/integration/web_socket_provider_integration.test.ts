@@ -25,7 +25,7 @@ import {
 } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
 
-import { Web3WSProviderError } from 'web3-errors';
+// import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
 import { OnCloseEvent, WSRequestItem } from '../../src/types';
 import { waitForOpenConnection } from '../fixtures/helpers';
