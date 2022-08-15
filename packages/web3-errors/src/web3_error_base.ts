@@ -24,7 +24,7 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	public abstract readonly code: number;
 	public stack: string | undefined;
 
-	public constructor(msg: string) {
+	public constructor(msg?: string) {
 		super(msg);
 		this.name = this.constructor.name;
 
@@ -61,6 +61,5 @@ export abstract class InvalidValueError extends Web3Error {
 	public constructor(value: unknown, msg: string) {
 		super(`Invalid value given "${Web3Error.convertToString(value, true)}". Error: ${msg}.`);
 		this.name = this.constructor.name;
-		Error.captureStackTrace(this, Web3Error);
 	}
 }

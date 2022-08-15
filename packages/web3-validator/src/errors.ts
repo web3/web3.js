@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3Error, ERR_VALIDATION } from 'web3-errors';
 import { Web3ValidationErrorObject } from './types';
 import { isNullish } from './validation';
 
@@ -41,24 +42,22 @@ const errorFormatter = (error: Web3ValidationErrorObject): string => {
 	return 'unspecified error';
 };
 
-export class Web3ValidatorError extends Error {
-	public readonly name: string;
+export class Web3ValidatorError extends Web3Error {
+	public code = ERR_VALIDATION;
 	public readonly errors: Web3ValidationErrorObject[];
 
 	public constructor(errors: Web3ValidationErrorObject[]) {
 		super();
-		this.name = this.constructor.name;
+
 		this.errors = errors;
 
-		this.message = `Web3 validator found ${
-			this.errors.length
+		super.message = `Web3 validator found ${
+			errors.length
 		} error[s]:\n${this._compileErrors().join('\n')}`;
-
-		Error.captureStackTrace(this, Web3ValidatorError);
 	}
 
 	public toJSON() {
-		return { name: this.name, message: this.message };
+		return { name: this.name, message: this.message, code: this.code };
 	}
 
 	private _compileErrors(): string[] {
