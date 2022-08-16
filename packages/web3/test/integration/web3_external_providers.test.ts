@@ -19,11 +19,13 @@ import HDWalletProvider from '@truffle/hdwallet-provider';
 import Web3 from '../../src/index';
 import {
 	createNewAccount,
+	describeIf,
 	getSystemTestProvider,
+	isIpc,
 	itIf,
 } from '../shared_fixtures/system_tests_utils';
 
-describe('Create Web3 class instance with external providers', () => {
+describeIf(!isIpc)('Create Web3 class instance with external providers', () => {
 	let provider: HDWalletProvider;
 	let clientUrl: string;
 	let web3: Web3;
@@ -41,7 +43,7 @@ describe('Create Web3 class instance with external providers', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		provider.engine.stop();
 	});
-	it('should create instance with external wallet provider', () => {
+	test('should create instance with external wallet provider', () => {
 		web3 = new Web3(provider);
 		expect(web3).toBeInstanceOf(Web3);
 	});
