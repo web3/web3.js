@@ -722,6 +722,30 @@ var tests = [
         transactionHash: "0x82c19b39a6b7eaa0492863a8b236fad5018f267b4977c270ddd5228c4cbda60e",
         messageHash: "0xe3beea0918f445c21eb2f42e3cbc3c5d54321ec642f47d12c473b2765df97f2b"
     },
+    {
+        // test #31
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonBerlin
+        },
+        error: true,
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        oldSignature: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        transactionHash: "0x488a813f2286f7c015947aa13133bdae49ec75ae1c8f5eba80034d71a038dca8",
+        messageHash: "0xcd6d6dee80ecc38f1b22f2d128bf6043dc41079fc913183a8995b5b3e187df61"
+    }
 ];
 
 describe("eth", function () {
@@ -900,7 +924,7 @@ describe("eth", function () {
                         done(e);
                     });
                 });
-                
+
 
                 it("signTransaction should not call for chainId if common.customChain.chainId provided", function(done) {
                     var provider = new FakeHttpProvider();
