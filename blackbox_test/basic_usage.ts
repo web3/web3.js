@@ -69,6 +69,8 @@ async function main() {
 
 	if (isWs(backendMode)) log('^^^^^^^^^', await waitForOpenConnection(web3, backendMode));
 
+	log('Web3.version:', Web3.version);
+
 	log();
 	log('>>>>>>');
 	log(`${backendMode?.toUpperCase()}:MAINNET getBlock`);
