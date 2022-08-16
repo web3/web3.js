@@ -81,7 +81,6 @@ jobs:
                         'e2e_mosaic',
                         #'e2e_gnosis_dex',
                     ]
-                node: [14, 16]
         env:
             TEST: ${{ matrix.testCmd }}
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
