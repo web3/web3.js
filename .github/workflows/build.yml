@@ -46,7 +46,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: [14, 16, 18]
+                node: [14, 16]
         env:
             TEST: "unit"
         steps:
@@ -81,7 +81,7 @@ jobs:
                         'e2e_mosaic',
                         #'e2e_gnosis_dex',
                     ]
-                node: [14, 16, 18]
+                node: [14, 16]
         env:
             TEST: ${{ matrix.testCmd }}
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
@@ -126,7 +126,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: [14, 16, 18]
+                node: [14, 16]
         env:
             TEST: "eth2"
         steps:
