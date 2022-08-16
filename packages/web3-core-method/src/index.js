@@ -896,7 +896,7 @@ function _handleTxPricing(method, tx) {
                         maxFeePerGas = tx.maxFeePerGas ||
                             utils.toHex(
                                 utils.toBN(Math.ceil(Number(block.baseFeePerGas) * method.maxFeePerGasMultiplier))
-                                    .add(utils.toBN(priorityFee))
+                                    .add(utils.toBN(maxPriorityFeePerGas))
                             );
                     }
                     resolve({ maxFeePerGas, maxPriorityFeePerGas });
