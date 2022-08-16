@@ -22,7 +22,6 @@ import {
 	EthExecutionAPI,
 	JsonRpcId,
 	JsonRpcNotification,
-	JsonRpcResponse,
 	JsonRpcResponseWithResult,
 	JsonRpcResult,
 	Web3APIMethod,
@@ -39,7 +38,7 @@ import {
 	InvalidConnectionError,
 	ResponseError,
 } from 'web3-errors';
-import { isNullish, Web3DeferredPromise, jsonRpc } from 'web3-utils';
+import { isNullish, Web3DeferredPromise, jsonRpc, ChunkResponseParser } from 'web3-utils';
 
 type WaitOptions = {
 	timeOutTime: number;
@@ -49,9 +48,9 @@ export default class IpcProvider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
 	private readonly _emitter: EventEmitter = new EventEmitter();
-
 	private readonly _socketPath: string;
 	private readonly _socket: Socket;
+	private readonly chunkResponseParser: ChunkResponseParser;
 	private waitOptions: WaitOptions;
 	private _connectionStatus: Web3ProviderStatus;
 
@@ -71,6 +70,10 @@ export default class IpcProvider<
 			timeOutTime: 5000,
 			maxNumberOfAttempts: 10,
 		};
+		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser.onError(() => {
+			this._clearQueues();
+		});
 	}
 
 	public getStatus(): Web3ProviderStatus {
@@ -162,7 +165,9 @@ export default class IpcProvider<
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
 		if (isNullish(this._socket)) throw new Error('IPC connection is undefined');
 
-		if (isNullish(request.id)) throw new Error('Request Id not defined');
+		const requestId = jsonRpc.isBatchRequest(request) ? request[0].id : request.id;
+
+		if (isNullish(requestId)) throw new Error('Request Id not defined');
 
 		if (this.getStatus() !== 'connected') {
 			await this.waitForConnection();
@@ -170,12 +175,12 @@ export default class IpcProvider<
 
 		try {
 			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-			this._requestQueue.set(request.id, defPromise);
+			this._requestQueue.set(requestId, defPromise);
 			this._socket.write(JSON.stringify(request));
 
 			return defPromise;
 		} catch (error) {
-			this._requestQueue.delete(request.id);
+			this._requestQueue.delete(requestId);
 			throw error;
 		}
 	}
@@ -185,34 +190,38 @@ export default class IpcProvider<
 	}
 
 	private _onMessage(e: Buffer | string): void {
-		const response = JSON.parse(
+		const responses = this.chunkResponseParser.parseResponse(
 			typeof e === 'string' ? e : e.toString('utf8'),
-		) as unknown as JsonRpcResponse;
-
-		if (
-			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
-			(response as JsonRpcNotification).method.endsWith('_subscription')
-		) {
-			this._emitter.emit('message', undefined, response);
+		);
+		if (!responses) {
 			return;
 		}
+		for (const response of responses) {
+			if (
+				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
+				(response as JsonRpcNotification).method.endsWith('_subscription')
+			) {
+				this._emitter.emit('message', undefined, response);
+				return;
+			}
 
-		const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
-		const requestItem = this._requestQueue.get(requestId);
+			const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
+			const requestItem = this._requestQueue.get(requestId);
 
-		if (!requestItem) {
-			return;
+			if (!requestItem) {
+				return;
+			}
+
+			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+				this._emitter.emit('message', undefined, response);
+				requestItem.resolve(response);
+			} else {
+				this._emitter.emit('message', response, undefined);
+				requestItem?.reject(new ResponseError(response));
+			}
+
+			this._requestQueue.delete(requestId);
 		}
-
-		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._emitter.emit('message', undefined, response);
-			requestItem.resolve(response);
-		} else {
-			this._emitter.emit('message', response, undefined);
-			requestItem?.reject(new ResponseError(response));
-		}
-
-		this._requestQueue.delete(requestId);
 	}
 
 	private _clearQueues(event?: CloseEvent) {
