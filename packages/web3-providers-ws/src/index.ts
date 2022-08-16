@@ -265,8 +265,9 @@ export default class WebSocketProvider<
 			errorListeners = this._webSocketConnection?.listeners('error');
 		} catch (error) {
 			// At some cases (at GitHub pipeline) there is an error raised when trying to access the listeners
-			//	However, no need to do take any action in this case
-			console.error(error);
+			//	However, no need to do take any specific action in this case beside try adding the event listener for `error`
+			this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
+			return;
 		}
 		// The error event listener may be already there because we do not remove it like the others
 		// 	So we add it only if it was not already added
