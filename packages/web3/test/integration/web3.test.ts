@@ -25,6 +25,7 @@ import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
+	closeOpenConnection,
 	describeIf,
 	getSystemTestAccounts,
 	getSystemTestProvider,
@@ -43,6 +44,9 @@ describe('Web3 instance', () => {
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		accounts = await getSystemTestAccounts();
+	});
+	afterAll(async () => {
+		await closeOpenConnection(web3);
 	});
 
 	beforeEach(() => {
