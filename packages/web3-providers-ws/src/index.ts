@@ -17,12 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
-import WebSocket, { ClientOptions, CloseEvent, MessageEvent } from 'isomorphic-ws';
+import WebSocket, { ClientOptions, CloseEvent, ErrorEvent, MessageEvent } from 'isomorphic-ws';
 import {
 	EthExecutionAPI,
 	JsonRpcId,
 	JsonRpcNotification,
-	JsonRpcResponse,
 	JsonRpcResult,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -33,7 +32,7 @@ import {
 	Web3ProviderStatus,
 	JsonRpcResponseWithResult,
 } from 'web3-types';
-import { jsonRpc, isNullish, Web3DeferredPromise } from 'web3-utils';
+import { jsonRpc, isNullish, Web3DeferredPromise, ChunkResponseParser } from 'web3-utils';
 import {
 	InvalidClientError,
 	InvalidConnectionError,
@@ -59,6 +58,7 @@ export default class WebSocketProvider<
 	private readonly _wsProviderOptions?: ClientOptions | ClientRequestArgs;
 
 	private _webSocketConnection?: WebSocket;
+	private readonly chunkResponseParser: ChunkResponseParser;
 
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	protected readonly _pendingRequestsQueue: Map<JsonRpcId, WSRequestItem<any, any, any>>;
@@ -72,6 +72,7 @@ export default class WebSocketProvider<
 	private readonly _onMessageHandler: (event: MessageEvent) => void;
 	private readonly _onOpenHandler: () => void;
 	private readonly _onCloseHandler: (event: CloseEvent) => void;
+	private readonly _onErrorHandler: (event: ErrorEvent) => void;
 
 	public constructor(
 		clientUrl: string,
@@ -102,9 +103,14 @@ export default class WebSocketProvider<
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onClose.bind(this);
+		this._onErrorHandler = this._onError.bind(this);
 
 		this._init();
 		this.connect();
+		this.chunkResponseParser = new ChunkResponseParser();
+		this.chunkResponseParser.onError(() => {
+			this._clearQueues();
+		});
 	}
 
 	private static _validateProviderUrl(providerUrl: string): boolean {
@@ -253,6 +259,21 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.addEventListener('message', this._onMessageHandler);
 		this._webSocketConnection?.addEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.addEventListener('close', this._onCloseHandler);
+
+		let errorListeners: unknown[] | undefined;
+		try {
+			errorListeners = this._webSocketConnection?.listeners('error');
+		} catch (error) {
+			// At some cases (at GitHub pipeline) there is an error raised when trying to access the listeners
+			//	However, no need to do take any specific action in this case beside try adding the event listener for `error`
+			this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
+			return;
+		}
+		// The error event listener may be already there because we do not remove it like the others
+		// 	So we add it only if it was not already added
+		if (!errorListeners || errorListeners.length === 0) {
+			this._webSocketConnection?.addEventListener('error', this._onErrorHandler);
+		}
 	}
 
 	private _reconnect(): void {
@@ -275,32 +296,36 @@ export default class WebSocketProvider<
 	}
 
 	private _onMessage(event: MessageEvent): void {
-		const response = JSON.parse(event.data as string) as unknown as JsonRpcResponse;
-
-		if (
-			jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
-			(response as JsonRpcNotification).method.endsWith('_subscription')
-		) {
-			this._wsEventEmitter.emit('message', undefined, response);
+		const responses = this.chunkResponseParser.parseResponse(event.data as string);
+		if (!responses) {
 			return;
 		}
+		for (const response of responses) {
+			if (
+				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
+				(response as JsonRpcNotification).method.endsWith('_subscription')
+			) {
+				this._wsEventEmitter.emit('message', undefined, response);
+				return;
+			}
 
-		const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
-		const requestItem = this._sentRequestsQueue.get(requestId);
+			const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
+			const requestItem = this._sentRequestsQueue.get(requestId);
 
-		if (!requestItem) {
-			return;
+			if (!requestItem) {
+				return;
+			}
+
+			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+				this._wsEventEmitter.emit('message', undefined, response);
+				requestItem.deferredPromise.resolve(response);
+			} else {
+				this._wsEventEmitter.emit('message', response, undefined);
+				requestItem?.deferredPromise.reject(new ResponseError(response));
+			}
+
+			this._sentRequestsQueue.delete(requestId);
 		}
-
-		if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-			this._wsEventEmitter.emit('message', undefined, response);
-			requestItem.deferredPromise.resolve(response);
-		} else {
-			this._wsEventEmitter.emit('message', response, undefined);
-			requestItem?.deferredPromise.reject(new ResponseError(response));
-		}
-
-		this._sentRequestsQueue.delete(requestId);
 	}
 
 	private _onConnect() {
@@ -331,6 +356,10 @@ export default class WebSocketProvider<
 		this._removeSocketListeners();
 	}
 
+	private _onError(event: ErrorEvent): void {
+		this._wsEventEmitter.emit('error', event);
+	}
+
 	private _clearQueues(event?: CloseEvent) {
 		if (this._pendingRequestsQueue.size > 0) {
 			this._pendingRequestsQueue.forEach(
@@ -357,6 +386,7 @@ export default class WebSocketProvider<
 		this._webSocketConnection?.removeEventListener('message', this._onMessageHandler);
 		this._webSocketConnection?.removeEventListener('open', this._onOpenHandler);
 		this._webSocketConnection?.removeEventListener('close', this._onCloseHandler);
+		// note: we intentionally keep the error event listener to be able to emit it in case an error happens when closing the connection
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
