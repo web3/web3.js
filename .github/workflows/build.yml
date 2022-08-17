@@ -26,8 +26,7 @@ jobs:
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: 12
-
+                  node-version: 14
             - uses: actions/checkout@v2
 
             - uses: actions/cache@v2
@@ -85,9 +84,9 @@ jobs:
             TEST: ${{ matrix.testCmd }}
             INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
         steps:
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 14
             - uses: actions/checkout@v2
 
             - uses: actions/cache@v2
@@ -97,7 +96,7 @@ jobs:
                   path: |
                       node_modules
                       */*/node_modules
-                  key: ${{ runner.os }}-node${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }}
+                  key: ${{ runner.os }}-node14-${{ hashFiles('**/package-lock.json') }}
 
             - run: npm ci
               if: (env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers') && steps.cache-deps.outputs.cache-hit != 'true'
@@ -118,7 +117,7 @@ jobs:
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: 12
+                  node-version: 14
             - uses: actions/checkout@v2
             - run: bash ./scripts/ci.sh
     eth2:
