@@ -12,6 +12,7 @@
 	"devDependencies": {
 		"jest": "^28.1.3",
 		"ts-jest": "^28.0.7",
-		"web3-eth": "5.0.0"
+		"web3-eth": "5.0.0",
+		"web3-validator": "5.0.0"
 	}
 }
