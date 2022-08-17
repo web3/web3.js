@@ -587,3 +587,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.6]
+
+### Changed
+-  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
