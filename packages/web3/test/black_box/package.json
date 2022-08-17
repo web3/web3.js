@@ -4,11 +4,12 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=http jest",
-		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=ws jest",
-		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=http jest",
-		"test:geth:ws": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=ws jest",
-		"test:infura:http": "WEB3_SYSTEM_TEST_BACKEND=infura WEB3_SYSTEM_TEST_PROTOCOL=http jest"
+		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
+		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest",
+		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
+		"test:geth:ws": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest",
+		"test:infura:http": "WEB3_SYSTEM_TEST_BACKEND=infura jest",
+		"test:infura:ws": "WEB3_SYSTEM_TEST_BACKEND=infura jest"
 	},
 	"dependencies": {
 		"web3": "5.0.0"
