@@ -58,7 +58,8 @@ publish() {
         --no-git-tag-version \
         --no-push \
         --registry http://localhost:4873 \
-        --ignore-scripts
+        --ignore-scripts \
+        --yes
 }
 
 case $1 in
