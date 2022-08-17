@@ -158,31 +158,8 @@ jobs:
             path: /tmp
         - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         - run: |
-            
+            yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
-
-#   blackbox-web:
-#       name: Blackbox web
-#       needs: build-web
-#       runs-on: ubuntu-latest
-#       env:
-#         INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
-#         INFURA_WS: ${{ secrets.INFURA_WS }}
-#         INFURA_WSS: ${{ secrets.INFURA_WSS }}
-#         INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-#       strategy:
-#         fail-fast: false
-#         matrix:
-#           node: [14, 16]
-#       steps:
-#         - uses: actions/download-artifact@v3
-#           with:
-#             name: web3-${{ matrix.node }}.js.tar.gz
-#             path: /tmp
-#         - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-#         - run: |
-#             yarn test:blackbox:web
-#           shell: bash
 
   build-docs:
     name: Build Docs
