@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import Web3 from 'web3';
 
-// import {  } from 'web3-eth';
+// import { blockSchema } from 'web3-eth';
 
 describe('Black Box Unit Tests', () => {
 	let web3: Web3;
