@@ -47,6 +47,7 @@ publish() {
         --registry http://localhost:4873 \
         --dist-tag blackbox \
         --ignore-scripts \
+        --force-publish \
         --yes
 }
 
