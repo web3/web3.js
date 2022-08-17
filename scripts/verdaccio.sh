@@ -9,11 +9,12 @@ helpFunction() {
 
 start() {
 	. scripts/env.sh
-	if [ -z "${ORIGARGS[1]}" ]; then
-		echo "Starting verdaccio..."
-        docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
+	if [[ ${ORIGARGS[1]} == "background" ]]; then
+		echo "Starting verdaccio in background..."
+        docker run -d --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 	else
 		echo "Starting verdaccio..."
+        docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 	fi
 }
 
