@@ -33,6 +33,5 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
-YARN_REGISTRY="http://localhost:4873" yarn config get registry
-yarn
+YARN_REGISTRY="http://localhost:4873" yarn
 yarn "test:$BACKEND:$MODE"
