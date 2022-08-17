@@ -117,7 +117,7 @@ jobs:
         steps:
             - uses: actions/setup-node@v1
               with:
-                  node-version: 14
+                  node-version: 12
             - uses: actions/checkout@v2
             - run: bash ./scripts/ci.sh
     eth2:
