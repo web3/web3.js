@@ -16,11 +16,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from 'web3';
 
+// eslint-disable-next-line import/no-relative-packages
+import { closeOpenConnection, isWs } from '../../../shared_fixtures/system_tests_utils';
+
 describe('Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
 	let web3: Web3;
 
 	beforeAll(() => {
 		web3 = new Web3(process.env.WEB3_SYSTEM_TEST_PROVIDER);
+	});
+
+	afterAll(async () => {
+		if (isWs) await closeOpenConnection(web3);
 	});
 
 	it('should hash provided message', () => {

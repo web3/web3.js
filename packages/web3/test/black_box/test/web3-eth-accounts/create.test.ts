@@ -17,6 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3 from 'web3';
 import { validator } from 'web3-validator';
 
+// eslint-disable-next-line import/no-relative-packages
+import { closeOpenConnection, isWs } from '../../../shared_fixtures/system_tests_utils';
+
 // TODO Consider adding this to web3.eth.accounts package
 const accountSchema = {
 	type: 'object',
@@ -34,6 +37,10 @@ describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
 
 	beforeAll(() => {
 		web3 = new Web3(process.env.WEB3_SYSTEM_TEST_PROVIDER);
+	});
+
+	afterAll(async () => {
+		if (isWs) await closeOpenConnection(web3);
 	});
 
 	it('should create an account', () => {

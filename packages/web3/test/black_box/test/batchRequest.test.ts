@@ -16,6 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import Web3 from 'web3';
 
+// eslint-disable-next-line import/no-relative-packages
+import { closeOpenConnection, isWs } from '../../shared_fixtures/system_tests_utils';
+
 describe('Black Box Unit Tests - web3.BatchRequest', () => {
 	let web3: Web3;
 
@@ -23,33 +26,37 @@ describe('Black Box Unit Tests - web3.BatchRequest', () => {
 		web3 = new Web3(process.env.WEB3_SYSTEM_TEST_PROVIDER);
 	});
 
+	afterAll(async () => {
+		if (isWs) await closeOpenConnection(web3);
+	});
+
 	it('should make a batch request', async () => {
 		const request1 = {
 			id: 42,
 			method: 'eth_getBalance',
 			params: ['0x1000000000000000000000000000000000000000', 'latest'],
-		},
-		request2 = {
+		};
+		const request2 = {
 			id: 24,
 			method: 'eth_getBalance',
 			params: ['0x2000000000000000000000000000000000000000', 'latest'],
 		};
 
-        const batch = new web3.BatchRequest();
-        const request1Promise = batch.add(request1);
-	    const request2Promise = batch.add(request2);
+		const batch = new web3.BatchRequest();
+		const request1Promise = batch.add(request1);
+		const request2Promise = batch.add(request2);
 
-        const executePromise = batch.execute();
-	    const response = await Promise.all([request1Promise, request2Promise, executePromise]);
+		const executePromise = batch.execute();
+		const response = await Promise.all([request1Promise, request2Promise, executePromise]);
 
-        const expectedResponse = [
-            '0x0',
-            '0x0',
-            [
-                { jsonrpc: '2.0', id: 42, result: '0x0' },
-                { jsonrpc: '2.0', id: 24, result: '0x0' }
-            ]
-        ];
-        expect(response).toStrictEqual(expectedResponse);
+		const expectedResponse = [
+			'0x0',
+			'0x0',
+			[
+				{ jsonrpc: '2.0', id: 42, result: '0x0' },
+				{ jsonrpc: '2.0', id: 24, result: '0x0' },
+			],
+		];
+		expect(response).toStrictEqual(expectedResponse);
 	});
 });

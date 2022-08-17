@@ -18,6 +18,9 @@ import Web3 from 'web3';
 import { validator } from 'web3-validator';
 import { blockSchema } from 'web3-eth';
 
+// eslint-disable-next-line import/no-relative-packages
+import { closeOpenConnection, isWs } from '../../../shared_fixtures/system_tests_utils';
+
 describe('Black Box Unit Tests - web3.eth.getBlock', () => {
 	let web3: Web3;
 
@@ -25,15 +28,19 @@ describe('Black Box Unit Tests - web3.eth.getBlock', () => {
 		web3 = new Web3(process.env.WEB3_SYSTEM_TEST_PROVIDER);
 	});
 
-    it('should get the latest block and validate it against blockSchema', async () => {
+	afterAll(async () => {
+		if (isWs) await closeOpenConnection(web3);
+	});
+
+	it('should get the latest block and validate it against blockSchema', async () => {
 		const response = await web3.eth.getBlock('latest');
 		expect(response).toBeDefined();
-		expect(validator.validateJSONSchema(blockSchema, response));
+		expect(validator.validateJSONSchema(blockSchema, response)).toBeUndefined();
 	});
 
 	it('should get the latest block and validate it against blockSchema - hydrated = true', async () => {
 		const response = await web3.eth.getBlock('latest', true);
 		expect(response).toBeDefined();
-		expect(validator.validateJSONSchema(blockSchema, response));
+		expect(validator.validateJSONSchema(blockSchema, response)).toBeUndefined();
 	});
 });
