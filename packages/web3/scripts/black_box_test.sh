@@ -8,7 +8,7 @@ ORIGARGS=("$@")
 set -o errexit
 
 helpFunction() {
-	echo "Usage: $0 <ganache | geth | infura> <http | ws> <provider-url>"
+	echo "Usage: $0 <ganache | geth | infura> <http | ws>"
 	exit 1 # Exit script after printing help
 }
 
@@ -39,12 +39,16 @@ yarn
 
 if [[ ${BACKEND} == "infura" ]]
 then
-    if [[ ! ${PROVIDER_URL} ]]
+    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WS ]
     then
         echo "No Infura provider URL specified"
         exit 1
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$WEB3_SYSTEM_TEST_PROVIDER yarn "test:$BACKEND:$MODE"
+        if [ $MODE == "http" ]
+        then
+            WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
+        else
+            WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WS yarn "test:$BACKEND:$MODE"
     fi
 else
     yarn "test:$BACKEND:$MODE"
