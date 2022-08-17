@@ -58,6 +58,14 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
+
+        "test:blackbox:ganache:http": "./scripts lerna run test:blackbox:ganache:http --stream",
+		"test:blackbox:ganache:ws": "",
+		"test:blackbox:geth:http": "",
+		"test:blackbox:geth:ws": "",
+		"test:blackbox:infura:http": "",
+        "test:blackbox:infura:ws": "",
+
 		"test:blackbox": "yarn publish:verdaccio && bash ./scripts/blackbox_test.sh",
 		"test:blackbox:web": "bash ./scripts/blackbox_test_web.sh",
 		"publish:verdaccio": "bash ./scripts/publish_verdaccio.sh",
