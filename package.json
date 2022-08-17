@@ -58,17 +58,12 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
-
-        "test:blackbox:ganache:http": "./scripts lerna run test:blackbox:ganache:http --stream",
-		"test:blackbox:ganache:ws": "",
-		"test:blackbox:geth:http": "",
-		"test:blackbox:geth:ws": "",
-		"test:blackbox:infura:http": "",
-        "test:blackbox:infura:ws": "",
-
-		"test:blackbox": "yarn publish:verdaccio && bash ./scripts/blackbox_test.sh",
-		"test:blackbox:web": "bash ./scripts/blackbox_test_web.sh",
-		"publish:verdaccio": "bash ./scripts/publish_verdaccio.sh",
+		"test:blackbox:ganache:http": "yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:http --stream",
+		"test:blackbox:ganache:ws": "yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:ws --stream",
+		"test:blackbox:geth:http": "yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:http --stream",
+		"test:blackbox:geth:ws": "yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:ws --stream",
+		"test:blackbox:infura:http": "./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:http --stream",
+		"test:blackbox:infura:ws": "./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"

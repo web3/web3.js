@@ -10,12 +10,16 @@ helpFunction() {
 start() {
 	. scripts/env.sh
 	if [[ ${ORIGARGS[1]} == "background" ]]; then
-		echo "Starting verdaccio in background..."
-        docker run -d --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
+        startBackground
 	else
 		echo "Starting verdaccio..."
         docker run -it --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 	fi
+}
+
+startBackground() {
+    echo "Starting verdaccio in background..."
+    docker run -d --rm --name verdaccio -p 4873:4873 verdaccio/verdaccio
 }
 
 stop() {
@@ -75,15 +79,15 @@ publish() {
     lernaPublish
 }
 
-startAndPublish() {
-    start && publish
+startBackgroundAndPublish() {
+    startBackground && publish
 }
 
 case $1 in
 start) start ;;
 stop) stop ;;
 publish) publish ;;
-startAndPublish) startAndPublish ;;
+startBackgroundAndPublish) startBackgroundAndPublish ;;
 createVerdaccioNPMUser) createVerdaccioNPMUser ;;
 loginNPMUser) loginNPMUser ;;
 lernaUpdatePackageVersions) lernaUpdatePackageVersions ;;

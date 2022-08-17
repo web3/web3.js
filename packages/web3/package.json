@@ -32,7 +32,13 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit"
+		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
+		"test:blackbox:ganache:http": "./scripts/black_box_test.sh ganache http",
+		"test:blackbox:ganache:ws": "./scripts/black_box_test.sh ganache ws",
+		"test:blackbox:geth:http": "./scripts/black_box_test.sh geth http",
+		"test:blackbox:geth:ws": "./scripts/black_box_test.sh geth ws",
+		"test:blackbox:infura:http": "./scripts/black_box_test.sh infura http",
+		"test:blackbox:infura:ws": "./scripts/black_box_test.sh infura ws"
 	},
 	"devDependencies": {
 		"@truffle/hdwallet-provider": "^2.0.12",
