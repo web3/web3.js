@@ -34,11 +34,11 @@ publish() {
         'http://localhost:4873/-/user/org.couchdb.user:test'
 
     # `npm login`
-    # npm-auth-to-token \
-    #     -u test \
-    #     -p test \
-    #     -e test@test.com \
-    #     -r http://localhost:4873
+    npm-auth-to-token \
+        -u test \
+        -p test \
+        -e test@test.com \
+        -r http://localhost:4873
 
     # Lerna publish to alpha tag
     lerna publish from-package \
