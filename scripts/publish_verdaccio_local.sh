@@ -61,9 +61,14 @@ publish() {
         --yes
 }
 
+startAndPublish() {
+    start && publish
+}
+
 case $1 in
 start) start ;;
 stop) stop ;;
 publish) publish ;;
+startAndPublish) startAndPublishpublish ;;
 *) helpFunction ;; # Print helpFunction in case parameter is non-existent
 esac
