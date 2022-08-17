@@ -14,16 +14,22 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// TODO For some reason when running this test with a WebSocket provider
+// the test takes a long time to run afterAll
 import Web3 from 'web3';
+import {
+	closeOpenConnection,
+	getSystemTestProvider,
+	isWs,
+} from 'web3/test/shared_fixtures/system_tests_utils';
 
-// eslint-disable-next-line import/no-relative-packages
-import { closeOpenConnection, isWs } from '../../../shared_fixtures/system_tests_utils';
+jest.setTimeout(15000);
 
 describe('Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
 	let web3: Web3;
 
 	beforeAll(() => {
-		web3 = new Web3(process.env.WEB3_SYSTEM_TEST_PROVIDER);
+		web3 = new Web3(getSystemTestProvider());
 	});
 
 	afterAll(async () => {
