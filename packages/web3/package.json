@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "5.0.0",
+	"version": "4.0.0-alpha.0",
 	"description": "Ethereum JavaScript API",
 	"main": "dist/index.js",
 	"browser": "dist/web3.min.js",
@@ -21,7 +21,8 @@
 	"scripts": {
 		"clean": "rimraf dist",
 		"prebuild": "rimraf dist",
-		"build": "tsc --build",
+		"build": "yarn version:output && tsc --build",
+		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo '/* eslint-disable header/header */ export const Web3PkgInfo = { version: \"'$npm_package_version'\" }' > ./src/version.ts",
 		"build:web": "npx webpack",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",
@@ -54,22 +55,22 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-providers-http": "^5.0.0",
-		"web3-providers-ipc": "^5.0.0",
-		"web3-providers-ws": "^5.0.0"
+		"web3-providers-http": "^4.0.0-alpha.1",
+		"web3-providers-ipc": "^4.0.0-alpha.0",
+		"web3-providers-ws": "^4.0.0-alpha.0"
 	},
 	"dependencies": {
-		"web3-core": "^5.0.0",
-		"web3-errors": "^5.0.0",
-		"web3-eth": "^5.0.0",
-		"web3-eth-abi": "^5.0.0",
-		"web3-eth-accounts": "^5.0.0",
-		"web3-eth-contract": "^5.0.0",
-		"web3-eth-ens": "^5.0.0",
-		"web3-eth-iban": "^5.0.0",
-		"web3-eth-personal": "^5.0.0",
-		"web3-net": "^5.0.0",
-		"web3-types": "^5.0.0",
-		"web3-utils": "^5.0.0"
+		"web3-core": "^4.0.0-alpha.0",
+		"web3-errors": "^4.0.0-alpha.0",
+		"web3-eth": "^4.0.0-alpha.1",
+		"web3-eth-abi": "^4.0.0-alpha.0",
+		"web3-eth-accounts": "^4.0.0-alpha.0",
+		"web3-eth-contract": "^4.0.0-alpha.0",
+		"web3-eth-ens": "^4.0.0-alpha.0",
+		"web3-eth-iban": "^4.0.0-alpha.0",
+		"web3-eth-personal": "^4.0.0-alpha.0",
+		"web3-net": "^4.0.0-alpha.0",
+		"web3-types": "^4.0.0-alpha.0",
+		"web3-utils": "^4.0.0-alpha.1"
 	}
 }
