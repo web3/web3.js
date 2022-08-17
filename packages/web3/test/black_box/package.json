@@ -4,9 +4,11 @@
 	"main": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 WEB3_SYSTEM_TEST_BACKEND=http jest",
-		"test:geth:ws": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 WEB3_SYSTEM_TEST_BACKEND=ws jest",
-		"test:infura:http": "WEB3_SYSTEM_TEST_BACKEND=infura WEB3_SYSTEM_TEST_BACKEND=http jest"
+		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=http jest",
+		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=ws jest",
+		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=http jest",
+		"test:geth:ws": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 WEB3_SYSTEM_TEST_PROTOCOL=ws jest",
+		"test:infura:http": "WEB3_SYSTEM_TEST_BACKEND=infura WEB3_SYSTEM_TEST_PROTOCOL=http jest"
 	},
 	"dependencies": {
 		"web3": "5.0.0"
@@ -15,6 +17,7 @@
 		"jest": "^28.1.3",
 		"ts-jest": "^28.0.7",
 		"web3-eth": "5.0.0",
+		"web3-eth-contract": "5.0.0",
 		"web3-validator": "5.0.0"
 	}
 }
