@@ -281,7 +281,6 @@ export const blockSchema = {
 		size: {
 			eth: 'uint',
 		},
-		// TODO: This attribute can be array of hashes or transaction info
 		transactions: {
 			oneOf: [
 				{
