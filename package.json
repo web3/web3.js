@@ -58,7 +58,7 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
-		"test:blackbox:ganache:http": "yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:http --stream",
+		"test:blackbox:ganache:http": "yarn config set registry http://localhost:4873 && yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:http --stream",
 		"test:blackbox:ganache:ws": "yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:ws --stream",
 		"test:blackbox:geth:http": "yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:http --stream",
 		"test:blackbox:geth:ws": "yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:ws --stream",
