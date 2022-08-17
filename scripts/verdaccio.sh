@@ -46,6 +46,13 @@ lernaUpdatePackageVersions() {
         --yes
 }
 
+lernaBuildAndCommit() {
+    yarn build
+
+    git add .
+    git commit -m "Comitting for black box publish"
+}
+
 lernaPublish() {
     lerna publish from-package \
         --no-git-tag-version \
@@ -63,12 +70,7 @@ publish() {
     createVerdaccioNPMUser
     loginNPMUser
     lernaUpdatePackageVersions
-
-    yarn build
-
-    git add .
-    git commit -m "Comitting for black box publish"
-
+    lernaBuildAndCommit
     lernaPublish
 }
 
@@ -84,6 +86,7 @@ startAndPublish) startAndPublish ;;
 createVerdaccioNPMUser) createVerdaccioNPMUser ;;
 loginNPMUser) loginNPMUser ;;
 lernaUpdatePackageVersions) lernaUpdatePackageVersions ;;
+lernaBuildAndCommit) lernaBuildAndCommit ;;
 lernaPublish) lernaPublish ;;
 *) helpFunction ;; # Print helpFunction in case parameter is non-existent
 esac
