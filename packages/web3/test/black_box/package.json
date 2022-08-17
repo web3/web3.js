@@ -1,0 +1,16 @@
+{
+	"name": "web3_black_box_tests",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"test:unit": "jest"
+	},
+	"dependencies": {
+		"web3": "blackbox"
+	},
+	"devDependencies": {
+		"jest": "^28.1.3",
+		"ts-jest": "^28.0.7"
+	}
+}
