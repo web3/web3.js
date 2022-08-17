@@ -40,15 +40,14 @@ publish() {
         -e test@test.com \
         -r http://localhost:4873
 
-    #
-    # lerna version 5.0.0 \
-    #     --ignore-scripts \
-    #     --no-push \
-    #     --no-private \
-    #     --no-git-tag-version \
-    #     --yes
+    lerna version 5.0.0 \
+        --ignore-scripts \
+        --no-push \
+        --no-private \
+        --no-git-tag-version \
+        --yes
 
-    # yarn build
+    yarn build
 
     git add .
     git commit -m "Comitting for black box publish"
