@@ -614,14 +614,12 @@ describe('defaults', () => {
 				to,
 				value,
 				from,
-				nonce: Number.MAX_SAFE_INTEGER,
+				// The previous test has the nonce set to Number.MAX_SAFE_INTEGER.
+				//	So, just decrease 1 from it here to not fall into another error.
+				nonce: Number.MAX_SAFE_INTEGER - 1,
 			});
 
 			await sendFewTxes({ web3Eth: eth, from, to, value, times: 3 });
-
-			await sentTx;
-			// Ensure the promise the get the confirmations resolves with no error
-			expect(sentTx).toThrow();
 
 			try {
 				await sentTx;
