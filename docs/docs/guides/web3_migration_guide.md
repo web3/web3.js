@@ -80,3 +80,58 @@ batch.execute();
 // in 4.x
 const responses = await batch.execute();
 ```
+
+### Types
+
+All the re-useable types which were earlier been exposed from `web3` package are now moved to independent package `web3-types` package.
+
+NOTE: We don't encourage to use `@types/web3` package any more.
+
+```ts
+// Provider types
+// in 1.x
+import type { Provider, Callback, JsonRPCResponse } from 'web3/providers';
+
+// in 4.x
+import type {
+	Web3BaseProvider as Provider,
+	Web3ProviderRequestCallback as Callback,
+	JsonRpcResponse,
+} from 'web3-types';
+```
+
+Similarly some useable types from old package `web3-core` are also moved to `web3-types`;
+
+```ts
+// in 1.x
+import type { Transaction, TransactionReceipt } from 'web3-core';
+
+// in 4.x
+import type { Transaction, TransactionReceipt } from 'web3-types';
+```
+
+### Formatters
+
+The package `web3-core-helpers` is not maintained any more starting 4.x releases. And the formatters are moved to the `web3-core` package.
+
+```ts
+// in 1.x
+import { formatters } from 'web3-core-helpers';
+
+// in 4.x
+import { formatters } from 'web3-core';
+```
+
+### PromiEvent
+
+The package `web3-core-promievent` is not maintained any more starting 4.x releases. And the class is moved to the `web3-core` package.
+
+```ts
+// in 1.x
+import Web3PromiEvent from 'web3-core-promievent';
+
+// in 4.x
+import { Web3PromiEvent } from 'web3-core';
+```
+
+The `PromiEvent` class does not support `removeEventListener` or `addEventListener`. Instead we recommend to use `on` and `off`.
