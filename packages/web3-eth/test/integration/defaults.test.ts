@@ -44,7 +44,11 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
-import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from '../../src/errors';
+import {
+	TransactionBlockTimeoutError,
+	TransactionPollingTimeoutError,
+	TransactionSendTimeoutError,
+} from '../../src/errors';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -592,20 +596,23 @@ describe('defaults', () => {
 
 			// Make the test run faster by casing the polling to start after 2 blocks
 			eth.transactionBlockTimeout = 2;
-			// increase other timeouts
-			eth.transactionSendTimeout = Number.MAX_SAFE_INTEGER;
+			// Prevent transaction from stucking forever if the provider (like Ganache v7.4.0)
+			//	does not respond at all, when raising the nonce
+			eth.transactionSendTimeout = 2000;
+			// Increase other timeouts
 			eth.transactionPollingTimeout = Number.MAX_SAFE_INTEGER;
 
 			const from = accounts[0];
 			const to = accounts[1];
 			const value = `0x1`;
 
+			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = eth.sendTransaction({
 				to,
-				value: '0x99999',
+				value,
 				from,
 				nonce: Number.MAX_SAFE_INTEGER,
 			});
@@ -614,7 +621,23 @@ describe('defaults', () => {
 
 			await sentTx;
 			// Ensure the promise the get the confirmations resolves with no error
-			expect(sentTx).toThrow(`was not mined within ${eth.transactionBlockTimeout}`);
+			expect(sentTx).toThrow();
+
+			try {
+				await sentTx;
+			} catch (error) {
+				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
+				//	In that case, nothing to be checked. So, just pass the test. And the actual exception will be tested with other providers (like Geth)
+				if (error instanceof TransactionSendTimeoutError) {
+					return;
+				}
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect((error as Error).message).toContain(
+					`was not mined within ${eth.transactionBlockTimeout} blocks`,
+				);
+			}
 		});
 
 		it('maxListenersWarningThreshold', () => {
