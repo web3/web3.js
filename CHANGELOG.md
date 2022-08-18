@@ -587,3 +587,6 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.7.6]
+
+### Fixed
+ - Update node version on actions to fix breaking mosaic test (#5354) 
