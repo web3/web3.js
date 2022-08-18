@@ -266,7 +266,7 @@ export class TransactionDataAndInputError extends InvalidValueError {
 	}
 }
 
-export class TransactionSendTimeoutError extends InvalidValueError {
+export class TransactionSendTimeoutError extends Web3Error {
 	public code = ERR_TX_SEND_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
