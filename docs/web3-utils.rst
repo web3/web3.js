@@ -218,8 +218,8 @@ sha3
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
-    web3.utils.keccak256(string) // ALIAS
+    web3.utils.sha3(string | BN | Buffer)
+    web3.utils.keccak256(string | BN | Buffer) // ALIAS
 
 Will calculate the sha3 of the input.
 
