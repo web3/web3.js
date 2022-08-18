@@ -22,6 +22,7 @@ export * from './hash';
 export * from './random';
 export * from './string_manipulation';
 export * from './objects';
+export * from './promise_helpers';
 export * from './json_rpc';
 export * as jsonRpc from './json_rpc';
 export * from './web3_deferred_promise';
