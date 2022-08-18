@@ -59,11 +59,14 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 				const numberOfBlocks = lastBlockNumber - starterBlockNumber;
 				if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
 					clearInterval(intervalId);
-					throw new TransactionBlockTimeoutError({
-						starterBlockNumber,
-						numberOfBlocks,
-						transactionHash,
-					});
+					reject(
+						new TransactionBlockTimeoutError({
+							starterBlockNumber,
+							numberOfBlocks,
+							transactionHash,
+						}),
+					);
+					return;
 				}
 
 				const transactionReceipt: TransactionReceipt | undefined = await waitWithTimeout(

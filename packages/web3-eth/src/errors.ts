@@ -37,6 +37,7 @@ import {
 	ERR_TX_INVALID_LEGACY_GAS,
 	ERR_TX_DATA_AND_INPUT,
 	ERR_TX_SEND_TIMEOUT,
+	ERR_TX_BLOCK_TIMEOUT,
 	ERR_TX_POLLING_TIMEOUT,
 	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
@@ -291,7 +292,7 @@ export class TransactionPollingTimeoutError extends InvalidValueError {
 }
 
 export class TransactionBlockTimeoutError extends InvalidValueError {
-	public code = ERR_TX_POLLING_TIMEOUT;
+	public code = ERR_TX_BLOCK_TIMEOUT;
 
 	public constructor(value: {
 		starterBlockNumber: number;
