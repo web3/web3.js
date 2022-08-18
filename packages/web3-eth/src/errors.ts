@@ -294,7 +294,7 @@ export class TransactionPollingTimeoutError extends Web3Error {
 	}
 }
 
-export class TransactionBlockTimeoutError extends InvalidValueError {
+export class TransactionBlockTimeoutError extends Web3Error {
 	public code = ERR_TX_BLOCK_TIMEOUT;
 
 	public constructor(value: {
@@ -303,8 +303,9 @@ export class TransactionBlockTimeoutError extends InvalidValueError {
 		transactionHash: Bytes;
 	}) {
 		super(
-			`transactionHash: ${value.transactionHash.toString()}`,
-			`Transaction started at ${value.starterBlockNumber} but was not mined within ${value.numberOfBlocks} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!`,
+			`Transaction started at ${value.starterBlockNumber} but was not mined within ${
+				value.numberOfBlocks
+			} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${value.transactionHash.toString()}`,
 		);
 	}
 }
