@@ -598,13 +598,13 @@ describe('defaults', () => {
 			eth.transactionBlockTimeout = 2;
 			// Prevent transaction from stucking forever if the provider (like Ganache v7.4.0)
 			//	does not respond at all, when raising the nonce
-			eth.transactionSendTimeout = 2000;
+			eth.transactionSendTimeout = 100;
 			// Increase other timeouts
 			eth.transactionPollingTimeout = Number.MAX_SAFE_INTEGER;
 
 			const from = accounts[0];
 			const to = accounts[1];
-			const value = `0x1`;
+			const value = `0x0`;
 
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 			const sentTx: Web3PromiEvent<
