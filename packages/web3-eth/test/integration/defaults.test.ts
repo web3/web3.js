@@ -634,9 +634,7 @@ describe('defaults', () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
 				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as Error).message).toContain(
-					`was not mined within ${eth.transactionBlockTimeout} blocks`,
-				);
+				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 			}
 		});
 
