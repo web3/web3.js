@@ -619,6 +619,10 @@ describe('defaults', () => {
 				nonce: Number.MAX_SAFE_INTEGER - 1,
 			});
 
+			// Some providers (mostly used for development) will make blocks only when there are new transactions
+			// So, send few transactions. And do nothing if an error happens.
+			await sendFewTxes({ web3Eth: eth, from, to, value, times: 3 }).catch();
+
 			try {
 				await sentTx;
 			} catch (error) {
