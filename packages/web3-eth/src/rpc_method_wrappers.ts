@@ -1918,6 +1918,6 @@ async function getRevertReason(
 	try {
 		await call(web3Context, transaction, web3Context.defaultBlock, DEFAULT_RETURN_FORMAT);
 	} catch (err) {
-		throw new TransactionRevertError((err as Error).message.split(': ').pop() as string);
+		throw new TransactionRevertError((err as Error).message);
 	}
 }

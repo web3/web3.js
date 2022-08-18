@@ -28,7 +28,6 @@ import {
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
 	ERR_TX_NOT_FOUND,
-	ERR_TX_REVERTED,
 } from '../error_codes';
 import { Web3Error } from '../web3_error_base';
 
@@ -61,8 +60,8 @@ export class TransactionRevertError extends Web3Error {
 
 	public constructor(
 		public reason: string,
-		public signature: string,
-		public receipt: TransactionReceipt,
+		public signature?: string,
+		public receipt?: TransactionReceipt,
 	) {
 		super(
 			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
@@ -131,11 +130,5 @@ export class TransactionNotFound extends TransactionError {
 	public constructor() {
 		super('Transaction not found');
 		this.code = ERR_TX_NOT_FOUND;
-	}
-}
-export class TransactionRevertedError extends TransactionError {
-	public constructor(revertMessage: string) {
-		super(`Error: Your request got reverted with the following reason: ${revertMessage}`);
-		this.code = ERR_TX_REVERTED;
 	}
 }
