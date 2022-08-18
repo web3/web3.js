@@ -596,9 +596,9 @@ describe('defaults', () => {
 
 			// Make the test run faster by casing the polling to start after 2 blocks
 			eth.transactionBlockTimeout = 2;
-			// Prevent transaction from stucking forever if the provider (like Ganache v7.4.0)
-			//	does not respond at all, when raising the nonce
-			eth.transactionSendTimeout = 100;
+			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
+			//	does not respond, when raising the nonce
+			eth.transactionSendTimeout = 200;
 			// Increase other timeouts
 			eth.transactionPollingTimeout = Number.MAX_SAFE_INTEGER;
 
@@ -618,8 +618,6 @@ describe('defaults', () => {
 				//	So, just decrease 1 from it here to not fall into another error.
 				nonce: Number.MAX_SAFE_INTEGER - 1,
 			});
-
-			await sendFewTxes({ web3Eth: eth, from, to, value, times: 3 });
 
 			try {
 				await sentTx;
