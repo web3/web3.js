@@ -43,6 +43,7 @@ import {
 	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
 	ERR_SIGNATURE_FAILED,
 	InvalidValueError,
+	Web3Error,
 } from 'web3-errors';
 import { Bytes, HexString, Numbers, TransactionReceipt } from 'web3-types';
 
@@ -267,26 +268,28 @@ export class TransactionDataAndInputError extends InvalidValueError {
 	}
 }
 
-export class TransactionSendTimeoutError extends InvalidValueError {
+export class TransactionSendTimeoutError extends Web3Error {
 	public code = ERR_TX_SEND_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
 		super(
-			`transactionHash: ${
+			`The connected Ethereum Node did not respond within ${
+				value.numberOfSeconds
+			} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that transaction might still be pending or mined!\n\tTransaction Hash: ${
 				value.transactionHash ? value.transactionHash.toString() : 'not available'
 			}`,
-			`The connected Ethereum Node did not respond within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent and you are connected to a healthy Node. Be aware that it might still be mined! We recommend checking the pending transactions for such a case.`,
 		);
 	}
 }
 
-export class TransactionPollingTimeoutError extends InvalidValueError {
+export class TransactionPollingTimeoutError extends Web3Error {
 	public code = ERR_TX_POLLING_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
 		super(
-			`transactionHash: ${value.transactionHash.toString()}`,
-			`Transaction was not mined within ${value.numberOfSeconds} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!  We recommend checking the pending transactions for such a case.`,
+			`Transaction was not mined within ${
+				value.numberOfSeconds
+			} seconds, please make sure your transaction was properly sent. Be aware that it might still be pending or mined!\n\tTransaction Hash: ${value.transactionHash.toString()}`,
 		);
 	}
 }
