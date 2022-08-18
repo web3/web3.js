@@ -33,7 +33,6 @@ import {
 import { transactionReceiptSchema } from '../../../src/schemas';
 
 jest.mock('../../../src/rpc_methods');
-jest.mock('../../../src/utils/wait_for_transaction_receipt');
 jest.mock('../../../src/utils/watch_transaction_for_confirmations');
 
 describe('sendTransaction', () => {
@@ -195,9 +194,6 @@ describe('sendTransaction', () => {
 			(rpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
-			(rpcMethods.getTransactionReceipt as jest.Mock)
-				.mockResolvedValueOnce(undefined)
-				.mockResolvedValue(expectedTransactionReceipt);
 
 			await sendTransaction(
 				web3Context,
@@ -206,10 +202,6 @@ describe('sendTransaction', () => {
 				sendTransactionOptions,
 			);
 
-			expect(rpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
-				web3Context.requestManager,
-				expectedTransactionHash,
-			);
 			expect(waitForTransactionReceiptSpy).toHaveBeenCalledWith(
 				web3Context,
 				expectedTransactionHash,

@@ -195,6 +195,11 @@ export class Contract<Abi extends ContractAbi>
 	public static defaultCommon?: Record<string, unknown>;
 
 	/**
+	 * Can be used to set {@link Contract.transactionSendTimeout} for all contracts.
+	 */
+	public static transactionSendTimeout?: number;
+
+	/**
 	 * Can be used to set {@link Contract.transactionBlockTimeout} for all contracts.
 	 */
 	public static transactionBlockTimeout?: number;
@@ -406,6 +411,17 @@ export class Contract<Abi extends ContractAbi>
 
 	public set defaultCommon(value: Record<string, unknown> | undefined) {
 		super.defaultCommon = value;
+	}
+
+	public get transactionSendTimeout() {
+		return (
+			(this.constructor as typeof Contract).transactionSendTimeout ??
+			super.transactionSendTimeout
+		);
+	}
+
+	public set transactionSendTimeout(value: number) {
+		super.transactionSendTimeout = value;
 	}
 
 	public get transactionBlockTimeout() {
