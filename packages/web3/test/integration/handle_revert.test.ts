@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
-import { TransactionRevertedError } from 'web3-errors';
+import { TransactionRevertError } from 'web3-errors';
 import Web3 from '../../src/index';
 import {
 	createNewAccount,
@@ -42,7 +41,7 @@ describe('eth', () => {
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
 		accounts = [acc1.address, acc2.address];
-		// web3 = new Web3(getSystemTestProvider());
+		web3 = new Web3(getSystemTestProvider());
 		if (isWs) {
 			web3 = new Web3(
 				new WebSocketProvider(
@@ -55,8 +54,6 @@ describe('eth', () => {
 			web3 = new Web3(clientUrl);
 		}
 
-		web3.eth.Contract.handleRevert = true;
-		web3.eth.handleRevert = true;
 		if (isWs) {
 			contract = new web3.eth.Contract(BasicAbi, undefined, {
 				provider: new WebSocketProvider(
@@ -90,17 +87,22 @@ describe('eth', () => {
 	describe('handleRevert', () => {
 		// todo enable when figure out what happening in eth_call (doesn't throw error)
 		// eslint-disable-next-line jest/expect-expect
-		it.skip('should get revert reason', async () => {
-			await contract.methods.reverts().send({ from: accounts[0] });
+		it('should get revert reason', async () => {
+			contract.handleRevert = true;
+			await expect(contract.methods.reverts().send({ from: accounts[0] })).rejects.toThrow(
+				new TransactionRevertError(
+					'Returned error: execution reverted: REVERTED WITH REVERT',
+				),
+			);
 		});
 
 		it('should get revert reason for eth tx', async () => {
+			web3.eth.handleRevert = true;
 			await expect(
 				web3.eth.sendTransaction({
 					from: accounts[0],
 					gas: '0x3d0900',
 					gasPrice: '0x3B9ACBF4',
-					// hash: '0x7c3a42c614689e905f894042ad6f74b456bab4b984f40a3b1718fef43d39b7fe',
 					input: '0x608060405234801561001057600080fdklkl',
 					nonce: '0x10',
 					to: undefined,
@@ -111,10 +113,24 @@ describe('eth', () => {
 					s: '0x39f77e0b68d5524826e4385ad4e1f01e748f32c177840184ae65d9592fdfe5c',
 				}),
 			).rejects.toThrow(
-				new TransactionRevertedError(
+				new TransactionRevertError(
 					'Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes',
 				),
 			);
+		});
+
+		it('should execute transaction', async () => {
+			web3.eth.handleRevert = true;
+			await expect(
+				web3.eth.sendTransaction({
+					from: accounts[0],
+					to: accounts[1],
+					gas: '0x76c0',
+					gasPrice: '0x9184e72a000',
+					value: '0x9184e72a',
+					data: '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675',
+				}),
+			).resolves.toBeDefined();
 		});
 	});
 });
