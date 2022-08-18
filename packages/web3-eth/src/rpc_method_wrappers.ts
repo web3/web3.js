@@ -41,10 +41,17 @@ import {
 	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	waitWithTimeout,
+} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
-import { SignatureError } from './errors';
+import { SignatureError, TransactionSendTimeoutError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -1098,16 +1105,27 @@ export function sendTransaction<
 								transactionFormatted as Record<string, unknown>,
 							);
 
-							await rpcMethods.sendRawTransaction(
-								web3Context.requestManager,
-								signedTransaction.rawTransaction,
+							transactionHash = await waitWithTimeout(
+								rpcMethods.sendRawTransaction(
+									web3Context.requestManager,
+									signedTransaction.rawTransaction,
+								),
+								web3Context.transactionSendTimeout,
+								new TransactionSendTimeoutError({
+									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
+									transactionHash: signedTransaction.transactionHash,
+								}),
 							);
-
-							transactionHash = signedTransaction.transactionHash;
 						} else {
-							transactionHash = await rpcMethods.sendTransaction(
-								web3Context.requestManager,
-								transactionFormatted as Partial<TransactionWithSenderAPI>,
+							transactionHash = await waitWithTimeout(
+								rpcMethods.sendTransaction(
+									web3Context.requestManager,
+									transactionFormatted as Partial<TransactionWithSenderAPI>,
+								),
+								web3Context.transactionSendTimeout,
+								new TransactionSendTimeoutError({
+									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
+								}),
 							);
 						}
 
@@ -1125,19 +1143,11 @@ export function sendTransaction<
 							promiEvent.emit('transactionHash', transactionHashFormatted);
 						}
 
-						let transactionReceipt = await getTransactionReceipt(
+						const transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
 							returnFormat,
 						);
-
-						// Transaction hasn't been included in a block yet
-						if (isNullish(transactionReceipt))
-							transactionReceipt = await waitForTransactionReceipt(
-								web3Context,
-								transactionHash,
-								returnFormat,
-							);
 
 						const transactionReceiptFormatted = format(
 							transactionReceiptSchema,
@@ -1330,19 +1340,11 @@ export function sendSignedTransaction<
 							promiEvent.emit('transactionHash', transactionHashFormatted);
 						}
 
-						let transactionReceipt = await getTransactionReceipt(
+						const transactionReceipt = await waitForTransactionReceipt(
 							web3Context,
 							transactionHash,
 							returnFormat,
 						);
-
-						// Transaction hasn't been included in a block yet
-						if (isNullish(transactionReceipt))
-							transactionReceipt = await waitForTransactionReceipt(
-								web3Context,
-								transactionHash,
-								returnFormat,
-							);
 
 						const transactionReceiptFormatted = format(
 							transactionReceiptSchema,

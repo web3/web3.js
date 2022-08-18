@@ -27,6 +27,7 @@ export interface Web3ConfigOptions {
 	handleRevert: boolean;
 	defaultAccount?: HexString;
 	defaultBlock: BlockNumberOrTag;
+	transactionSendTimeout: number;
 	transactionBlockTimeout: number;
 	transactionConfirmationBlocks: number;
 	transactionPollingInterval: number;
@@ -66,6 +67,7 @@ export abstract class Web3Config
 		transactionPollingInterval: 1000,
 		transactionPollingTimeout: 750 * 1000,
 		transactionReceiptPollingInterval: undefined,
+		transactionSendTimeout: 750 * 1000,
 		transactionConfirmationPollingInterval: undefined,
 		blockHeaderTimeout: 10,
 		maxListenersWarningThreshold: 100,
@@ -172,6 +174,27 @@ export abstract class Web3Config
 	}
 
 	/**
+	 * The time used to wait for Ethereum Node to return the sent transaction result.
+	 * Note: If the RPC call stuck at the Node and therefor timed-out, the transaction may still be pending or even mined by the Network. We recommend checking the pending transactions in such a case.
+	 * Default is `750` seconds (12.5 minutes).
+	 */
+	public get transactionSendTimeout() {
+		return this._config.transactionSendTimeout;
+	}
+
+	/**
+	 * Will set the transactionSendTimeout.
+	 */
+	public set transactionSendTimeout(val) {
+		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
+			name: 'transactionSendTimeout',
+			oldValue: this._config.transactionSendTimeout,
+			newValue: val,
+		});
+		this._config.transactionSendTimeout = val;
+	}
+
+	/**
 	 * The `transactionBlockTimeout` is used over socket-based connections. This option defines the amount of new blocks it should wait until the first confirmation happens, otherwise the PromiEvent rejects with a timeout error.
 	 * Default is `50`.
 	 */
@@ -237,7 +260,7 @@ export abstract class Web3Config
 	}
 	/**
 	 * Used over HTTP connections. This option defines the number of seconds Web3 will wait for a receipt which confirms that a transaction was mined by the network. Note: If this method times out, the transaction may still be pending.
-	 * Default is `750` seconds.
+	 * Default is `750` seconds (12.5 minutes).
 	 */
 	public get transactionPollingTimeout() {
 		return this._config.transactionPollingTimeout;

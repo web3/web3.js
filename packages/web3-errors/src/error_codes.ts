@@ -74,7 +74,9 @@ export const ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER = 428;
 export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
 
 export const ERR_TX_NOT_FOUND = 430;
-export const ERR_TX_BLOCK_TIMEOUT = 431;
+
+export const ERR_TX_SEND_TIMEOUT = 431;
+export const ERR_TX_BLOCK_TIMEOUT = 432;
 
 // Connection error codes
 export const ERR_CONN = 500;
