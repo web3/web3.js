@@ -27,9 +27,10 @@ function getWebPackConfig(packagePath, filename, library) {
 		entry: path.resolve(packagePath, 'src/index.ts'),
 		output: {
 			path: path.resolve(packagePath, 'dist'),
-			filename: filename,
-			library: library,
-			libraryExport: 'default',
+			filename,
+			library: { name: 'Web3', type: 'var', umdNamedDefine: true }, // todo derive name from packagePath
+			libraryTarget: 'umd',
+			globalObject: 'this',
 			libraryTarget: 'umd',
 			globalObject: 'this',
 		},
