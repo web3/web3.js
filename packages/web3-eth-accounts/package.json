@@ -42,9 +42,9 @@
 	"dependencies": {
 		"@ethereumjs/tx": "^3.5.2",
 		"ethereum-cryptography": "^1.1.2",
-		"web3-errors": "^4.0.0-alpha.0",
-		"web3-types": "^4.0.0-alpha.0",
+		"web3-errors": "^0.1.0-alpha.0",
+		"web3-types": "^0.1.0-alpha.0",
 		"web3-utils": "^4.0.0-alpha.1",
-		"web3-validator": "^4.0.0-alpha.0"
+		"web3-validator": "^0.1.0-alpha.0"
 	}
 }

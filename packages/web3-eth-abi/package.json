@@ -26,8 +26,8 @@
 	},
 	"dependencies": {
 		"@ethersproject/abi": "^5.6.4",
-		"web3-errors": "^4.0.0-alpha.0",
-		"web3-types": "^4.0.0-alpha.0",
+		"web3-errors": "^0.1.0-alpha.0",
+		"web3-types": "^0.1.0-alpha.0",
 		"web3-utils": "^4.0.0-alpha.1"
 	},
 	"devDependencies": {
