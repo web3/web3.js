@@ -561,8 +561,6 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
 
-## [Unreleased]
-
 ## [1.7.5]
 
 ### Changed
@@ -590,8 +588,8 @@ Released with 1.0.0-beta.37 code base.
 ## [1.7.6]
 
 ### Changed
+-  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
 
 ### Fixed
+-  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
 -  Fixed types for getPastEvents (#4955) (#5260)
-
-
