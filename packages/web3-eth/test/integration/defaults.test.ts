@@ -50,6 +50,8 @@ import {
 	TransactionSendTimeoutError,
 } from '../../src/errors';
 
+const MAX_32_SIGNED_INTEGER = 2147483647;
+
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
 	let eth2: Web3Eth;
@@ -598,9 +600,9 @@ describe('defaults', () => {
 			eth.transactionBlockTimeout = 2;
 			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
 			//	does not respond, when raising the nonce
-			eth.transactionSendTimeout = 200;
+			eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
 			// Increase other timeouts
-			eth.transactionPollingTimeout = Number.MAX_SAFE_INTEGER;
+			eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
 
 			const from = accounts[0];
 			const to = accounts[1];
@@ -620,17 +622,33 @@ describe('defaults', () => {
 			});
 
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
-			// So, send few transactions. And do nothing if an error happens.
-			sendFewTxes({ web3Eth: eth, from, to, value, times: 3 }).catch(console.warn);
+			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`. And do nothing if an error happens.
+			setTimeout(() => {
+				(async () => {
+					try {
+						await eth.sendTransaction({
+							from: accounts[1],
+							to: accounts[0],
+							value,
+						});
+					} catch (error) {
+						// Nothing needed to be done.
+					}
+					try {
+						await eth.sendTransaction({
+							from: accounts[1],
+							to: accounts[0],
+							value,
+						});
+					} catch (error) {
+						// Nothing needed to be done.
+					}
+				})() as unknown;
+			}, 100);
 
 			try {
 				await sentTx;
 			} catch (error) {
-				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
-				//	In that case, nothing to be checked. So, just pass the test. And the actual exception will be tested with other providers (like Geth)
-				if (error instanceof TransactionSendTimeoutError) {
-					return;
-				}
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
 				// eslint-disable-next-line jest/no-conditional-expect

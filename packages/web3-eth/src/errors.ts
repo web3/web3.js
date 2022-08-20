@@ -300,12 +300,14 @@ export class TransactionBlockTimeoutError extends Web3Error {
 	public constructor(value: {
 		starterBlockNumber: number;
 		numberOfBlocks: number;
-		transactionHash: Bytes;
+		transactionHash?: Bytes;
 	}) {
 		super(
 			`Transaction started at ${value.starterBlockNumber} but was not mined within ${
 				value.numberOfBlocks
-			} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${value.transactionHash.toString()}`,
+			} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${
+				value.transactionHash ? value.transactionHash.toString() : 'not available'
+			}`,
 		);
 	}
 }

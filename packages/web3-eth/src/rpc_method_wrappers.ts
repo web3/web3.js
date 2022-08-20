@@ -41,17 +41,10 @@ import {
 	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import {
-	ETH_DATA_FORMAT,
-	FormatType,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-	format,
-	waitWithTimeout,
-} from 'web3-utils';
+import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError } from 'web3-errors';
-import { SignatureError, TransactionSendTimeoutError } from './errors';
+import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -77,6 +70,8 @@ import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt'
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { trySendTransaction } from './utils/try_send_transaction';
 
 /**
  *
@@ -1105,27 +1100,21 @@ export function sendTransaction<
 								transactionFormatted as Record<string, unknown>,
 							);
 
-							transactionHash = await waitWithTimeout(
+							transactionHash = await trySendTransaction(
+								web3Context,
 								rpcMethods.sendRawTransaction(
 									web3Context.requestManager,
 									signedTransaction.rawTransaction,
 								),
-								web3Context.transactionSendTimeout,
-								new TransactionSendTimeoutError({
-									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
-									transactionHash: signedTransaction.transactionHash,
-								}),
+								signedTransaction.transactionHash,
 							);
 						} else {
-							transactionHash = await waitWithTimeout(
+							transactionHash = await trySendTransaction(
+								web3Context,
 								rpcMethods.sendTransaction(
 									web3Context.requestManager,
 									transactionFormatted as Partial<TransactionWithSenderAPI>,
 								),
-								web3Context.transactionSendTimeout,
-								new TransactionSendTimeoutError({
-									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
-								}),
 							);
 						}
 
@@ -1321,9 +1310,12 @@ export function sendSignedTransaction<
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
 
-						const transactionHash = await rpcMethods.sendRawTransaction(
-							web3Context.requestManager,
-							signedTransactionFormattedHex,
+						const transactionHash = await trySendTransaction(
+							web3Context,
+							rpcMethods.sendRawTransaction(
+								web3Context.requestManager,
+								signedTransactionFormattedHex,
+							),
 						);
 
 						if (promiEvent.listenerCount('sent') > 0) {
