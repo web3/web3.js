@@ -40,7 +40,7 @@ export async function waitWithTimeout<T>(
 ): Promise<T | undefined> {
 	let timeoutId: NodeJS.Timeout | undefined;
 	const result = await Promise.race([
-		awaitable instanceof Promise<T> ? awaitable : awaitable(),
+		awaitable instanceof Promise ? awaitable : awaitable(),
 		new Promise<undefined | Error>((resolve, reject) => {
 			timeoutId = setTimeout(() => (error ? reject(error) : resolve(undefined)), timeout);
 		}),
