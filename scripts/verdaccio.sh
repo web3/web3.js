@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Exit immediately on error
-set -o errexit
-
 ORIGARGS=("$@")
 
 helpFunction() {
