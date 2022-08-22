@@ -26,9 +26,8 @@
 
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
-    // This is the starting counter for the Jsonrpc.id
-    // Pick a random number between 0 and (the maximum safe integer minus the max unsigned 32 bit integer)
-    // Actually, to insure staying in the safe range while incrementing, we insure making the range less than the max unsigned 32 bit integer
+    // This is the starting counter for the Jsonrpc.id. And, to insure staying in the safe range while incrementing later,
+    //  pick a random number between 0 and (the maximum safe integer minus the max unsigned 32 bit integer)
     messageId: Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER - Math.pow( 2, 32 )))
 };
 
