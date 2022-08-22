@@ -27,14 +27,14 @@ if [[ ! " ${SUPPORTED_MODE[*]} " =~ " ${MODE} " ]]; then
 	helpFunction
 fi
 
-echo "RPC client software: " $BACKEND
-echo "RPC client URL: " $MODE
+echo "RPC client Provider: " $BACKEND
+echo "RPC client Protocol: " $MODE
 
 export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
-yarn config set registry http://localhost:4873
+# yarn config set registry http://localhost:4873
 yarn
 
 if [[ ${BACKEND} == "infura" ]]
