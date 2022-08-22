@@ -70,7 +70,7 @@ lernaPublish() {
 publish() {
     echo "Publishing to verdaccio ..."
 
-    npx wait-port -t 20000 4873
+    npx wait-port -t 60000 4873
 
     createVerdaccioNPMUser
     loginNPMUser
