@@ -145,7 +145,6 @@ export const convert = (
 	schema: JsonSchema,
 	dataPath: string[],
 	format: DataFormat,
-	knownSchemaProp?: JsonSchema,
 ) => {
 	// If it's a scalar value
 	if (!isObject(data) && !Array.isArray(data)) {
@@ -156,7 +155,7 @@ export const convert = (
 
 	for (const [key, value] of Object.entries(object)) {
 		dataPath.push(key);
-		const schemaProp = knownSchemaProp ?? findSchemaByDataPath(schema, dataPath);
+		const schemaProp = findSchemaByDataPath(schema, dataPath);
 
 		// If value is a scaler value
 		if (isNullish(schemaProp)) {
@@ -181,7 +180,12 @@ export const convert = (
 			// a schema using oneOf. This chunk of code was intended to handle
 			// BlockSchema.transactions
 			// TODO BlockSchema.transactions are not being formatted
-			if (schemaProp?.oneOf) {
+			if (schemaProp?.oneOf !== undefined) {
+				// The following code is basically saying:
+				// if the schema specifies oneOf, then we are to loop
+				// over each possible schema and check if they type of the schema
+				// matches the type of value[0], and if so we use the oneOfSchemaProp
+				// as the schema for formatting
 				for (const oneOfSchemaProp of schemaProp.oneOf) {
 					if (
 						!Array.isArray(schemaProp?.items) &&
@@ -231,7 +235,6 @@ export const convert = (
 						schema,
 						dataPath,
 						format,
-						_schemaProp,
 					);
 				}
 

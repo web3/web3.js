@@ -31,7 +31,7 @@ import { initAccountsForContext } from './accounts';
 import { Web3EthInterface } from './types';
 import { Web3PkgInfo } from './version';
 
-export class Web3 extends Web3Context<EthExecutionAPI> {
+export default class Web3 extends Web3Context<EthExecutionAPI> {
 	public static version = Web3PkgInfo.version;
 	public static utils = utils;
 	public static modules = {
