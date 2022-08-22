@@ -21,10 +21,10 @@ const path = require('path');
 /**
  * Shared webpack configuration for all packages
  */
-function getWebPackConfig(packagePath, filename, library) {
+function getWebPackConfig(packagePath, filename, library, entry) {
 	return {
 		mode: 'production',
-		entry: path.resolve(packagePath, 'src/index.ts'),
+		entry: path.resolve(packagePath, entry),
 		output: {
 			path: path.resolve(packagePath, 'dist'),
 			filename: filename,
