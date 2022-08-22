@@ -38,9 +38,12 @@ cd test/black_box
 yarn --update-checksums
 yarn
 
+echo $INFURA_HTTP
+echo $INFURA_WSS
+
 if [[ ${BACKEND} == "infura" ]]
 then
-    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WS ]
+    if [ ! $INFURA_HTTP ] || [ ! $INFURA_WSS ]
     then
         echo "No Infura provider URL specified"
         exit 1
@@ -48,7 +51,7 @@ then
     then
         WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
     else
-        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WS yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
     fi
 else
     yarn "test:$BACKEND:$MODE"
