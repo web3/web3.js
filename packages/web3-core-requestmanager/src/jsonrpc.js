@@ -26,7 +26,9 @@
 
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
-    messageId: 0
+    // This is the starting counter for the Jsonrpc.id
+    // Pick a random number between 0 and half of the max safe integer to stay below the max when incrementing
+    messageId: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER / 2)
 };
 
 /**
