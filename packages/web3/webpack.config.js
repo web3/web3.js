@@ -17,4 +17,4 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 const { getWebPackConfig } = require('../../webpack.base.config');
 
-module.exports = getWebPackConfig(__dirname, 'web3.min.js', 'Web3');
+module.exports = getWebPackConfig(__dirname, 'web3.min.js', 'Web3', 'src/web3.ts');
