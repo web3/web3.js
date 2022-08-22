@@ -181,6 +181,11 @@ export const convert = (
 			// BlockSchema.transactions
 			// TODO BlockSchema.transactions are not being formatted
 			if (schemaProp?.oneOf !== undefined) {
+				// The following code is basically saying:
+				// if the schema specifies oneOf, then we are to loop
+				// over each possible schema and check if they type of the schema
+				// matches the type of value[0], and if so we use the oneOfSchemaProp
+				// as the schema for formatting
 				for (const oneOfSchemaProp of schemaProp.oneOf) {
 					if (
 						!Array.isArray(schemaProp?.items) &&
