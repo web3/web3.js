@@ -1076,6 +1076,7 @@ export function sendTransaction<
 							await getRevertReason(
 								web3Context,
 								transactionFormatted as TransactionCall,
+								returnFormat,
 							);
 						}
 
@@ -1331,7 +1332,7 @@ export function sendSignedTransaction<
 						// todo enable handleRevert for sendSignedTransaction when we have a function to decode transactions
 						// importing a package for this would increase the size of the library
 						// if (web3Context.handleRevert) {
-						// 	await getRevertReason(web3Context, options, transaction);
+						// 	await getRevertReason(web3Context, transaction, returnFormat);
 						// }
 
 						const transactionHash = await rpcMethods.sendRawTransaction(
@@ -1911,12 +1912,13 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
  * @param web3Context
  * @param transaction
  */
-async function getRevertReason(
+async function getRevertReason<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
+	returnFormat: ReturnFormat,
 ) {
 	try {
-		await call(web3Context, transaction, web3Context.defaultBlock, DEFAULT_RETURN_FORMAT);
+		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
 	} catch (err) {
 		throw new TransactionRevertError((err as Error).message);
 	}
