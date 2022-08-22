@@ -1,6 +1,6 @@
 {
 	"name": "web3-core",
-	"version": "0.1.0-alpha.0",
+	"version": "4.0.0-alpha.0",
 	"description": "Web3 core tools for sub-packages. This is an internal package.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
