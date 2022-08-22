@@ -44,12 +44,11 @@ then
     then
         echo "No Infura provider URL specified"
         exit 1
+    elif [ $MODE == "http" ]
+    then
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
     else
-        if [ $MODE == "http" ]
-        then
-            WEB3_SYSTEM_TEST_PROVIDER=$INFURA_HTTP yarn "test:$BACKEND:$MODE"
-        else
-            WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WS yarn "test:$BACKEND:$MODE"
+        WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WS yarn "test:$BACKEND:$MODE"
     fi
 else
     yarn "test:$BACKEND:$MODE"
