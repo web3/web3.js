@@ -123,6 +123,7 @@ const config = {
 					},
 					{
 						to: 'docs/guides/web3_migration_guide',
+						activeBasePath: 'docs/guides',
 						label: 'Guides',
 						position: 'left',
 					},
