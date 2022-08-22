@@ -35,6 +35,7 @@ export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
 # yarn config set registry http://localhost:4873
+yarn --update-checksums
 yarn
 
 if [[ ${BACKEND} == "infura" ]]
