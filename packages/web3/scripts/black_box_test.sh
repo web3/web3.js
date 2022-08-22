@@ -4,9 +4,6 @@ ORIGARGS=("$@")
 
 . scripts/env.sh
 
-# Exit immediately on error
-set -o errexit
-
 helpFunction() {
 	echo "Usage: $0 <ganache | geth | infura> <http | ws>"
 	exit 1 # Exit script after printing help
@@ -36,9 +33,6 @@ export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 cd test/black_box
 yarn --update-checksums
 yarn
-
-echo $INFURA_HTTP
-echo $INFURA_WSS
 
 npx wait-port -t 60000 $WEB3_SYSTEM_TEST_PORT
 
