@@ -34,12 +34,13 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
-# yarn config set registry http://localhost:4873
 yarn --update-checksums
 yarn
 
 echo $INFURA_HTTP
 echo $INFURA_WSS
+
+npx wait-port -t 60000 $WEB3_SYSTEM_TEST_PORT
 
 if [[ ${BACKEND} == "infura" ]]
 then
