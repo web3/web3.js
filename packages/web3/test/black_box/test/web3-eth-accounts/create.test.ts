@@ -17,14 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // TODO For some reason when running this test with a WebSocket provider
 // the test takes a long time to run afterAll
 import Web3 from 'web3';
-import {
-	closeOpenConnection,
-	getSystemTestProvider,
-	isWs,
-} from 'web3/test/shared_fixtures/system_tests_utils';
+import { getSystemTestProvider } from 'web3/test/shared_fixtures/system_tests_utils';
 import { validator } from 'web3-validator';
-
-jest.setTimeout(60000);
 
 // TODO Consider adding this to web3.eth.accounts package
 const accountSchema = {
@@ -43,10 +37,6 @@ describe('Black Box Unit Tests - web3.eth.accounts.create', () => {
 
 	beforeAll(() => {
 		web3 = new Web3(getSystemTestProvider());
-	});
-
-	afterAll(async () => {
-		if (isWs) await closeOpenConnection(web3);
 	});
 
 	it('should create an account', () => {
