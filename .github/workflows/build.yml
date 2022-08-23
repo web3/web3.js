@@ -23,9 +23,9 @@ jobs:
         with:
           node-version: 14
           cache: yarn
-      # - run: yarn
+      - run: yarn
 #      - run: ./scripts/geth.sh download
-      # - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
@@ -40,8 +40,8 @@ jobs:
         with:
           name: web3-14.js.tar.gz
           path: /tmp
-      # - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
-      # - run: yarn lint
+      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
+      - run: yarn lint
 
   build-web:
     name: Build Web
@@ -55,8 +55,8 @@ jobs:
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
-        # -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        # -   run: yarn build:web
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: yarn build:web
 
   unit:
     name: Unit Tests
@@ -70,8 +70,8 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      # - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      # - run: yarn test:unit
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:unit
 
   integration:
     name: Integration
@@ -91,9 +91,9 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      # - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      # - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-      #   shell: bash
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+        shell: bash
 
   e2e-ipc:
     name: Integration IPC
@@ -113,9 +113,9 @@ jobs:
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      # -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      # -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-      #     shell: bash
+      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash
 
   e2e:
     name: End-to-End ganache:ws
@@ -131,9 +131,9 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      # - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      # - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-      #   shell: bash
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+        shell: bash
 
   black-box:
       name: Black Box
@@ -173,5 +173,5 @@ jobs:
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
-        # -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        # -   run: yarn build:docs
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        -   run: yarn build:docs
