@@ -34,11 +34,11 @@ cd test/black_box
 yarn --update-checksums
 yarn
 
-echo $WEB3_SYSTEM_TEST_PORT
+# echo $WEB3_SYSTEM_TEST_PORT
 
-npx wait-port -t 60000 $WEB3_SYSTEM_TEST_PORT
+# npx wait-port -t 60000 $WEB3_SYSTEM_TEST_PORT
 
-echo $WEB3_SYSTEM_TEST_PORT
+# echo $WEB3_SYSTEM_TEST_PORT
 
 if [[ ${BACKEND} == "infura" ]]
 then
