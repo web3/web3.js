@@ -32,7 +32,12 @@ export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
 yarn --update-checksums
+
+echo "BEFORE 2"
 yarn
+echo "AFTER 2"
+
+echo "BEFORE"
 
 # Without this tests will fail with:
 # FetchError: request to http://localhost:8545/ failed, reason: connect ECONNREFUSED 127.0.0.1:854
@@ -42,6 +47,8 @@ if [[ ${BACKEND} == "ganache" ]]
 then
     npx wait-port -t 10000 $WEB3_SYSTEM_TEST_PORT
 fi
+
+echo "AFTER"
 
 if [[ ${BACKEND} == "infura" ]]
 then
@@ -56,5 +63,6 @@ then
         WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
     fi
 else
+    echo "test:$BACKEND:$MODE"
     yarn "test:$BACKEND:$MODE"
 fi
