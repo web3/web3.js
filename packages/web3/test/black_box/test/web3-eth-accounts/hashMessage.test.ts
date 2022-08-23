@@ -23,7 +23,7 @@ import {
 	isWs,
 } from 'web3/test/shared_fixtures/system_tests_utils';
 
-jest.setTimeout(15000);
+jest.setTimeout(60000);
 
 describe('Black Box Unit Tests - web3.eth.accounts.hashMessage', () => {
 	let web3: Web3;
