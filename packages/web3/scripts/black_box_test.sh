@@ -31,7 +31,7 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
-yarn --update-checksums
+# yarn --update-checksums
 yarn
 
 # Without this tests will fail with:
@@ -42,8 +42,6 @@ yarn
 # then
 #     npx wait-port -t 10000 $WEB3_SYSTEM_TEST_PORT
 # fi
-
-npx wait-port $WEB3_SYSTEM_TEST_PORT
 
 if [[ ${BACKEND} == "infura" ]]
 then
@@ -58,6 +56,5 @@ then
         WEB3_SYSTEM_TEST_PROVIDER=$INFURA_WSS yarn "test:$BACKEND:$MODE"
     fi
 else
-    echo "test:$BACKEND:$MODE"
     yarn "test:$BACKEND:$MODE"
 fi
