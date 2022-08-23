@@ -31,17 +31,8 @@ export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
 
 cd test/black_box
-# yarn --update-checksums
+yarn --update-checksums
 yarn
-
-# Without this tests will fail with:
-# FetchError: request to http://localhost:8545/ failed, reason: connect ECONNREFUSED 127.0.0.1:854
-# However if ${BACKEND} == "geth" || ${BACKEND} == "infura"
-# This wait-port will cause the tests to hang and never finish
-# if [[ ${BACKEND} == "ganache" ]]
-# then
-#     npx wait-port -t 10000 $WEB3_SYSTEM_TEST_PORT
-# fi
 
 if [[ ${BACKEND} == "infura" ]]
 then
