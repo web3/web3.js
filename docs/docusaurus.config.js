@@ -116,6 +116,12 @@ const config = {
 				},
 				items: [
 					{
+						to: '/',
+						activeBasePath: '/home',
+						label: 'Home',
+						position: 'left',
+					},
+					{
 						to: 'docs/guides/web3_migration_guide',
 						activeBasePath: 'docs/guides',
 						label: 'Guides',
