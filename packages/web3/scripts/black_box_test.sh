@@ -40,7 +40,7 @@ yarn
 # This wait-port will cause the tests to hang and never finish
 if [[ ${BACKEND} == "ganache" ]]
 then
-    npx wait-port -t 60000 $WEB3_SYSTEM_TEST_PORT
+    npx wait-port -t 10000 $WEB3_SYSTEM_TEST_PORT
 fi
 
 if [[ ${BACKEND} == "infura" ]]
