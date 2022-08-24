@@ -478,8 +478,8 @@ describe('defaults', () => {
 			// I will cause the providers that supports subscription (like WebSocket)
 			// 	to never return data through listening to new events
 			// let pr = new Promise(res => setTimeout(res, 5000));
-			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
 				// eslint-disable-next-line no-promise-executor-return
 				await new Promise(res => setTimeout(res, 5000));
@@ -547,7 +547,7 @@ describe('defaults', () => {
 			eth.transactionPollingTimeout = 200;
 
 			const from = tempAcc.address;
-			const to = (await createTempAccount()).address
+			const to = (await createTempAccount()).address;
 			const value = `0x1`;
 
 			try {
