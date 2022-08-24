@@ -46,6 +46,7 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
+import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from '../../src/errors';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -247,6 +248,26 @@ describe('defaults', () => {
 			expect(transactionCountLatest).toBe(BigInt(1));
 			expect(Number(balanceLatest)).toBeGreaterThan(0);
 		});
+		it('transactionSendTimeout', () => {
+			// default
+			expect(web3Eth.transactionSendTimeout).toBe(750 * 1000);
+
+			// after set
+			web3Eth.setConfig({
+				transactionSendTimeout: 1,
+			});
+			expect(web3Eth.transactionSendTimeout).toBe(1);
+
+			// set by create new instance
+			eth2 = new Web3Eth({
+				provider: web3Eth.provider,
+				config: {
+					transactionSendTimeout: 120,
+				},
+			});
+			expect(eth2.transactionSendTimeout).toBe(120);
+		});
+
 		it('transactionBlockTimeout', () => {
 			// default
 			expect(web3Eth.transactionBlockTimeout).toBe(50);
@@ -458,6 +479,7 @@ describe('defaults', () => {
 			// 	to never return data through listening to new events
 			// let pr = new Promise(res => setTimeout(res, 5000));
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
+
 			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
 				// eslint-disable-next-line no-promise-executor-return
 				await new Promise(res => setTimeout(res, 5000));
@@ -465,7 +487,6 @@ describe('defaults', () => {
 
 			// Make the test run faster by casing the polling to start after 1 second
 			tempEth.blockHeaderTimeout = 1;
-
 			const from = tempAcc2.address;
 			const to = tempAcc.address;
 			const value = `0x1`;
@@ -516,6 +537,49 @@ describe('defaults', () => {
 			const status = await confirmationPromise;
 
 			expect(status).toBe(BigInt(1));
+		});
+
+		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
+			const eth = new Web3Eth(clientUrl);
+
+			// Make the test run faster by causing the timeout to happen after 0.2 second
+			eth.transactionSendTimeout = 200;
+			eth.transactionPollingTimeout = 200;
+
+			const from = tempAcc.address;
+			const to = (await createTempAccount()).address
+			const value = `0x1`;
+
+			try {
+				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
+				await eth.sendTransaction({
+					to,
+					value,
+					from,
+					nonce: Number.MAX_SAFE_INTEGER,
+				});
+			} catch (error) {
+				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
+				if (error instanceof TransactionSendTimeoutError) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(error.message).toContain(
+						`connected Ethereum Node did not respond within ${
+							eth.transactionSendTimeout / 1000
+						} seconds`,
+					);
+				}
+				// Some other providers would not respond when trying to get the transaction receipt (like Geth v1.10.22-unstable)
+				else if (error instanceof TransactionPollingTimeoutError) {
+					// eslint-disable-next-line jest/no-conditional-expect
+					expect(error.message).toContain(
+						`Transaction was not mined within ${
+							eth.transactionPollingTimeout / 1000
+						} seconds`,
+					);
+				} else {
+					throw error;
+				}
+			}
 		});
 
 		it('maxListenersWarningThreshold', () => {

@@ -95,27 +95,27 @@ jobs:
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
-  #  e2e-ipc:
-  #      name: Integration IPC
-  #      needs: build
-  #      runs-on: ubuntu-latest
-  #      env:
-  #          INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-  #          INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-  #      strategy:
-  #          fail-fast: false
-  #          matrix:
-  #              node: [ 14, 16 ]
-  #              backend: [ 'geth' ]
-  #              mode: [ 'ipc' ]
-  #      steps:
-  #          -   uses: actions/download-artifact@v3
-  #              with:
-  #                  name: web3-${{ matrix.node }}.js.tar.gz
-  #                  path: /tmp
-  #          -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-  #          -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-  #              shell: bash
+  e2e-ipc:
+    name: Integration IPC
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 14, 16 ]
+        backend: [ 'geth' ]
+        mode: [ 'ipc' ]
+    steps:
+      -   uses: actions/download-artifact@v3
+          with:
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
+      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash
 
   e2e:
     name: End-to-End ganache:ws

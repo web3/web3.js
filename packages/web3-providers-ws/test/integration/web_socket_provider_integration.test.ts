@@ -103,8 +103,8 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			await messagePromise;
 		});
 
-		it('should subscribe to `error` event', async () => {
-			const errorMsg = 'Custom WebSocket error occured';
+		it('should subscribe to `error` event that could happen at the underlying WebSocket connection', async () => {
+			const errorMsg = 'Custom WebSocket error occurred';
 
 			const errorPromise = new Promise((resolve: Resolve) => {
 				webSocketProvider.on('error', (err: any) => {
@@ -113,7 +113,10 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 				});
 			});
 
-			webSocketProvider['_wsEventEmitter'].emit('error', new Web3WSProviderError(errorMsg));
+			webSocketProvider['_webSocketConnection']?.emit(
+				'error',
+				new Web3WSProviderError(errorMsg),
+			);
 			await errorPromise;
 		});
 
@@ -144,6 +147,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			await closePromise;
 		});
 	});
+
 	describe('disconnect and reset test', () => {
 		it('should disconnect', async () => {
 			const provider = new WebSocketProvider(

@@ -26,6 +26,7 @@ import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
 import {
 	createTempAccount,
+	closeOpenConnection,
 	describeIf,
 	getSystemTestProvider,
 	isHttp,
@@ -45,6 +46,9 @@ describe('Web3 instance', () => {
 		const acc1 = await createTempAccount();
 		const acc2 = await createTempAccount();
 		accounts = [acc1.address, acc2.address];
+	});
+	afterAll(async () => {
+		await closeOpenConnection(web3);
 	});
 
 	beforeEach(() => {

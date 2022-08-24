@@ -74,6 +74,7 @@ export const ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER = 428;
 export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
 
 export const ERR_TX_NOT_FOUND = 430;
+export const ERR_TX_SEND_TIMEOUT = 431;
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;
@@ -135,3 +136,6 @@ export const ERR_INVALID_LARGE_VALUE = 1011;
 export const ERR_INVALID_BLOCK = 1012;
 export const ERR_INVALID_TYPE_ABI = 1013;
 export const ERR_INVALID_NIBBLE_WIDTH = 1014;
+
+// Validation error codes
+export const ERR_VALIDATION = 1100;

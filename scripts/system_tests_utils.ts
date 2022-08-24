@@ -107,7 +107,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
-	if (!getSystemTestProvider().startsWith('ws')) {
+	if (!isWs && !isIpc) {
 		return;
 	}
 

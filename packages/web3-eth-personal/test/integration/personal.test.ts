@@ -16,16 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { isHexStrict } from 'web3-validator';
 import { toChecksumAddress } from 'web3-utils';
-import WebSocketProvider from 'web3-providers-ws';
 import { Personal } from '../../src/index';
 import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	itIf,
-	isWs,
 	createAccount,
 	createNewAccount,
 	createTempAccount,
+	closeOpenConnection
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {
@@ -37,10 +36,8 @@ describe('personal integration tests', () => {
 		ethPersonal = new Personal(clientUrl);
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(ethPersonal.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(ethPersonal);
 	});
 
 	it('new account', async () => {
