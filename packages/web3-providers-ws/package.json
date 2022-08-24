@@ -45,8 +45,8 @@
 	},
 	"dependencies": {
 		"isomorphic-ws": "^5.0.0",
-		"web3-types": "^0.1.0-alpha.0",
 		"web3-errors": "^0.1.0-alpha.0",
+		"web3-types": "^0.1.0-alpha.0",
 		"web3-utils": "^4.0.0-alpha.1",
 		"ws": "^8.8.1"
 	}

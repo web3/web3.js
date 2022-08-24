@@ -108,7 +108,9 @@ describe('contract', () => {
 				} catch (receipt: any) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(receipt).toEqual(
+						// eslint-disable-next-line jest/no-conditional-expect
 						expect.objectContaining({
+							// eslint-disable-next-line jest/no-conditional-expect
 							transactionHash: expect.any(String),
 						}),
 					);

@@ -34,15 +34,15 @@
 		"eslint-plugin-import": "^2.26.0",
 		"jest": "^28.1.3",
 		"jest-extended": "^3.0.1",
+		"jest-when": "^3.5.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4",
-		"jest-when": "^3.5.1"
+		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-errors": "^0.1.0-alpha.0",
 		"@ethereumjs/tx": "^3.5.2",
 		"ethereum-cryptography": "^1.1.2",
+		"web3-errors": "^0.1.0-alpha.0",
 		"web3-types": "^0.1.0-alpha.0",
 		"web3-utils": "^4.0.0-alpha.1",
 		"web3-validator": "^0.1.0-alpha.0"
