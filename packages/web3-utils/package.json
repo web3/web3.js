@@ -25,6 +25,7 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --passWithNoTests"
 	},
 	"devDependencies": {
+		"@humeris/espresso-shot": "^4.0.0",
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
@@ -37,13 +38,12 @@
 		"js-sha3": "^0.8.0",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4",
-		"@humeris/espresso-shot": "^4.0.0"
+		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-types": "^0.1.0-alpha.0",
+		"ethereum-cryptography": "^1.1.2",
 		"web3-errors": "^0.1.0-alpha.0",
-		"web3-validator": "^0.1.0-alpha.0",
-		"ethereum-cryptography": "^1.1.2"
+		"web3-types": "^0.1.0-alpha.0",
+		"web3-validator": "^0.1.0-alpha.0"
 	}
 }
