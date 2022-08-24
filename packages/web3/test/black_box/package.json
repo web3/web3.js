@@ -1,0 +1,25 @@
+{
+	"name": "web3_black_box_tests",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "ChainSafe Systems",
+	"license": "LGPL-3.0",
+	"scripts": {
+		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
+		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest --forceExit",
+		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
+		"test:geth:ws": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest --forceExit",
+		"test:infura:http": "WEB3_SYSTEM_TEST_BACKEND=infura jest",
+		"test:infura:ws": "WEB3_SYSTEM_TEST_BACKEND=infura jest --forceExit"
+	},
+	"dependencies": {
+		"web3": "5.0.0"
+	},
+	"devDependencies": {
+		"jest": "^28.1.3",
+		"ts-jest": "^28.0.7",
+		"web3-eth": "5.0.0",
+		"web3-eth-contract": "5.0.0",
+		"web3-validator": "5.0.0"
+	}
+}

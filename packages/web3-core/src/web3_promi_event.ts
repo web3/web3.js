@@ -39,6 +39,7 @@ export class Web3PromiEvent<ResolveType, EventMap extends Web3EventMap>
 	}
 
 	// public tag to treat object as promise by different libs
+	// eslint-disable-next-line @typescript-eslint/prefer-as-const
 	public [Symbol.toStringTag]: 'Promise' = 'Promise';
 
 	public async then<TResult1 = ResolveType, TResult2 = never>(

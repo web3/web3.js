@@ -61,6 +61,16 @@
 		"test:e2e:ganache:ws:electron": "./scripts/test-runner.sh ganache ws electron",
 		"test:e2e:ganache:ws:chrome": "./scripts/test-runner.sh ganache ws chrome",
 		"test:e2e:ganache:ws:firefox": "./scripts/test-runner.sh ganache ws firefox",
+		"pre-blackbox": "yarn config set registry http://localhost:4873 && git init && git config --global user.email \"ci@github.com\" && git config --global user.name \"CI\"",
+		"post-blackbox": "./scripts/verdaccio.sh stop",
+		"post-blackbox:ganache": "yarn ganache:stop && yarn post-blackbox",
+		"post-blackbox:geth": "yarn geth:stop && yarn post-blackbox",
+		"test:blackbox:ganache:http": "yarn pre-blackbox && yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:http --stream && yarn post-blackbox:ganache",
+		"test:blackbox:ganache:ws": "yarn pre-blackbox && yarn ganache:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:ganache:ws --stream && yarn post-blackbox:ganache",
+		"test:blackbox:geth:http": "yarn pre-blackbox && yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:http --stream && yarn post-blackbox:geth",
+		"test:blackbox:geth:ws": "yarn pre-blackbox && yarn geth:start:background && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:geth:ws --stream && yarn post-blackbox:geth",
+		"test:blackbox:infura:http": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:http --stream && yarn post-blackbox",
+		"test:blackbox:infura:ws": "yarn pre-blackbox && ./scripts/verdaccio.sh startBackgroundAndPublish && lerna run test:blackbox:infura:ws --stream && yarn post-blackbox",
 		"prepare": "husky install",
 		"postinstall": "yarn build",
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
@@ -85,6 +95,7 @@
 		"jest": "^28.1.3",
 		"lerna": "^5.1.8",
 		"lint-staged": "^13.0.3",
+		"npm-auth-to-token": "^1.0.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-solidity": "^1.0.0-beta.20",
 		"process": "^0.11.10",
@@ -101,5 +112,6 @@
 		"webpack": "^5.73.0",
 		"webpack-cli": "^4.10.0"
 	},
-	"packageManager": "yarn@1.22.15"
+	"packageManager": "yarn@1.22.15",
+	"dependencies": {}
 }
