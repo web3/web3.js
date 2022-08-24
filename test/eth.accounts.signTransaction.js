@@ -806,6 +806,12 @@ describe("eth", function () {
                         assert.equal(tx.messageHash, test.messageHash, "message hash failed");
                         assert.equal(tx.transactionHash, test.transactionHash, "tx hash failed");
                         assert.equal(tx.rawTransaction, test.rawTransaction, "rawtx failed");
+
+                        if(test.r && test.s && test.v){
+                            assert.equal(tx.v, test.v, "v property of signature failed");
+                            assert.equal(tx.s, test.s, "s property of signature failed");
+                            assert.equal(tx.r, test.r, "r property of signature failed");
+                        }
                         done();
                     })
                     .catch(e => {
