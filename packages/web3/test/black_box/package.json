@@ -2,7 +2,8 @@
 	"name": "web3_black_box_tests",
 	"version": "1.0.0",
 	"main": "index.js",
-	"license": "MIT",
+	"author": "ChainSafe Systems",
+	"license": "LGPL-3.0",
 	"scripts": {
 		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
 		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest --forceExit",

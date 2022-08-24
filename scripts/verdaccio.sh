@@ -60,6 +60,7 @@ lernaBuildAndCommit() {
 
 lernaPublish() {
     lerna publish from-package \
+        --dist-tag blackbox \
         --no-git-tag-version \
         --no-push \
         --registry http://localhost:4873 \
