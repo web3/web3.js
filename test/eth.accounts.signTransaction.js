@@ -133,8 +133,9 @@ var tests = [
             common: common
         },
         // expected r and s values from signature
-        r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
-        s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
+        r: "0x74dcecc6b8ad09ca09882ac1088eac145e799f56ea3f5b5fe8fcb52bbd3ea4f7",
+        s: "0x3d49e02af9c239b1b8aea8a7ac9162862dec03207f9f59bc38a4f2b9e42077a9",
+        v: "0x26",
         // signature from eth_signTransaction
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         rawTransaction: "0xf85f8001827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808026a074dcecc6b8ad09ca09882ac1088eac145e799f56ea3f5b5fe8fcb52bbd3ea4f7a03d49e02af9c239b1b8aea8a7ac9162862dec03207f9f59bc38a4f2b9e42077a9",
@@ -159,6 +160,7 @@ var tests = [
         // expected r and s values from signature
         r: "0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c",
         s: "0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
+        v: "0x25",
         // signature from eth_signTransaction
         rawTransaction: "0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
         oldSignature: "0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
@@ -181,8 +183,9 @@ var tests = [
             common: common
         },
         // expected r and s values from signature
-        r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
-        s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
+        r: "0x3cbfff5b8ef4588b930ecbf9b85388795875edf814dfc6c71884f99b6d7555cc",
+        s: "0x57142e729c1c83bfccb2785e629fc32dffb2e613df565e78e119aa4694cb1df9",
+        v: "0x25",
         // signature from eth_signTransaction
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         rawTransaction: "0xf85f800a827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808025a03cbfff5b8ef4588b930ecbf9b85388795875edf814dfc6c71884f99b6d7555cca057142e729c1c83bfccb2785e629fc32dffb2e613df565e78e119aa4694cb1df9",
