@@ -600,8 +600,6 @@ Released with 1.0.0-beta.37 code base.
 
 -   Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
 
-## [Unreleased]
-
 ## [4.0.0-alpha.0]
 
 ### Added
@@ -724,3 +722,5 @@ Released with 1.0.0-beta.37 code base.
 
 -   `givenProvider` default value is undefined
 -   `currentProvider` default value is undefined
+
+## [Unreleased]
