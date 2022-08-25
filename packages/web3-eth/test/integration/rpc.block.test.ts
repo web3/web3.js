@@ -16,11 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { Block, TransactionInfo, TransactionReceipt } from 'web3-types';
+import { TransactionInfo, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
+import { validator } from 'web3-validator';
+
 import { Web3Eth } from '../../src';
 
 import {
@@ -32,7 +34,8 @@ import {
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
-import { sendFewTxes, validateBlock, validateTransaction } from './helper';
+import { sendFewTxes, validateTransaction } from './helper';
+import { blockSchema } from '../../src/schemas';
 
 describe('rpc with block', () => {
 	let web3Eth: Web3Eth;
@@ -128,7 +131,7 @@ describe('rpc with block', () => {
 				b.miner = '0x0000000000000000000000000000000000000000';
 				b.totalDifficulty = '0x0';
 			}
-			validateBlock(b as Block);
+			expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
 		});
 
 		it.each(
