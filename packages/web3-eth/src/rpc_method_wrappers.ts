@@ -1366,6 +1366,7 @@ export function sendSignedTransaction<
 								);
 							}
 							reject(transactionReceiptFormatted as unknown as ResolveType);
+							return;
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}

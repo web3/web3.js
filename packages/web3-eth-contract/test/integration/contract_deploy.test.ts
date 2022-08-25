@@ -72,7 +72,7 @@ describe('contract', () => {
 			expect(deployedContract.options.address).toBeDefined();
 		});
 
-		it.skip('should emit the "confirmation" event', async () => {
+		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
 
 			await contract
@@ -149,17 +149,9 @@ describe('contract', () => {
 		});
 
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
-			try {
-				await contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' });
-				throw new Error(
-					'Should not be able to send a transaction with low gas. But it could.',
-				);
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as { message: string }).message).toBe(
-					'Returned error: intrinsic gas too low',
-				);
-			}
+			await expect(
+				contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
+			).rejects.toThrow('Returned error: intrinsic gas too low');
 		});
 
 		it('should fail with errors deploying a zero length bytecode', () => {
