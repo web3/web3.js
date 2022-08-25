@@ -37,7 +37,7 @@ export const sendFewTxes = async ({
 	from,
 	times = 3,
 	waitForReceipt = true,
-}: SendFewTxParams): Promise<TransactionReceipt[] | undefined> => {
+}: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
 		// eslint-disable-next-line no-await-in-loop
@@ -67,7 +67,7 @@ export const sendFewTxes = async ({
 		}
 	}
 
-	return waitForReceipt ? res : undefined;
+	return waitForReceipt ? res : [];
 };
 
 const regexHex20 = /0[xX][0-9a-fA-F]{40}/i;
