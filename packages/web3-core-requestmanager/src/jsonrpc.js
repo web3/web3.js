@@ -26,7 +26,9 @@
 
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
-    messageId: 0
+    // This is the starting counter for the Jsonrpc.id.
+    // Pick a random number between 0 and the maximum safe integer
+    messageId: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
 };
 
 /**
@@ -42,8 +44,14 @@ Jsonrpc.toPayload = function (method, params) {
         throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
     }
 
-    // advance message ID
-    Jsonrpc.messageId++;
+    if(Jsonrpc.messageId === Number.MAX_SAFE_INTEGER) {
+        // if the maximum safe integer has been reached, restart from a random number
+        Jsonrpc.messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+    }
+    else {
+        // advance message ID
+        Jsonrpc.messageId++;
+    }
 
     return {
         jsonrpc: '2.0',
