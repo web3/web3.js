@@ -83,6 +83,15 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 
 			await sentTx;
 			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
 		});
 	});
