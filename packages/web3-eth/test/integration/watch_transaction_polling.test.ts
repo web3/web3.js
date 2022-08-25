@@ -83,6 +83,9 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 
 			await sentTx;
 
+			// Send few transactions to cause (dev providers like Ganache) creating new blocks,
+			//	to be able to check the confirmations.
+			// No need to wait for those transactions. So just send them to the connected provider.
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			sendFewTxes({
 				web3Eth,
@@ -90,7 +93,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations,
-				waitForReceipt: true,
+				waitForReceipt: false,
 			});
 
 			await confirmationPromise;
