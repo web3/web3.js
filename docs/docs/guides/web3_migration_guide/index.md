@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-sidebar_label: Web3
+sidebar_label: Web3 Migration Guide
 ---
 
 # Web3 Migration Guide
