@@ -1165,6 +1165,7 @@ export function sendTransaction<
 								);
 							}
 							reject(transactionReceiptFormatted as unknown as ResolveType);
+							return;
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
