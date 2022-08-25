@@ -82,15 +82,15 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await sentTx;
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 
-			await sendFewTxes({
+			// eslint-disable-next-line @typescript-eslint/no-floating-promises
+			sendFewTxes({
 				web3Eth,
 				from,
 				to,
 				value,
 				times: waitConfirmations,
-				waitForReceipt: true,
+				waitForReceipt: false,
 			});
 			await confirmationPromise;
 		});
