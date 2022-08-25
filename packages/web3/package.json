@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "4.0.0-alpha.1",
+	"version": "4.0.0-alpha.0",
 	"description": "Ethereum JavaScript API",
 	"main": "dist/index.js",
 	"browser": "dist/web3.min.js",
