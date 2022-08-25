@@ -30,12 +30,12 @@ describe('Web3Eth.sendSignedTransaction', () => {
 	let web3Eth: Web3Eth;
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
 		tempAcc = await createTempAccount();
 	});
 
-	afterEach(() => {
+	afterAll(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}

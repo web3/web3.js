@@ -31,12 +31,12 @@ describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () 
 	let web3Eth: Web3Eth;
 	let systemProvider: string;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		systemProvider = getSystemTestProvider();
 		web3Eth = new Web3Eth(systemProvider);
 	});
 
-	afterEach(() => {
+	afterAll(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
 		}
