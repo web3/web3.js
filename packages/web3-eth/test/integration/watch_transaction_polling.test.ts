@@ -90,8 +90,9 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations,
-				waitForReceipt: false,
+				waitForReceipt: true,
 			});
+
 			await confirmationPromise;
 		});
 	});
