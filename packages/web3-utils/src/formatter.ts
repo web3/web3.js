@@ -174,7 +174,34 @@ export const convert = (
 
 		// If value is an array
 		if (Array.isArray(value)) {
-			if (isNullish(schemaProp?.items)) {
+			let _schemaProp = schemaProp;
+
+			// TODO This is a naive approach to solving the issue of
+			// a schema using oneOf. This chunk of code was intended to handle
+			// BlockSchema.transactions
+			// TODO BlockSchema.transactions are not being formatted
+			if (schemaProp?.oneOf !== undefined) {
+				// The following code is basically saying:
+				// if the schema specifies oneOf, then we are to loop
+				// over each possible schema and check if they type of the schema
+				// matches the type of value[0], and if so we use the oneOfSchemaProp
+				// as the schema for formatting
+				for (const oneOfSchemaProp of schemaProp.oneOf) {
+					if (
+						!Array.isArray(schemaProp?.items) &&
+						((typeof value[0] === 'object' &&
+							((oneOfSchemaProp as JsonSchema)?.items as JsonSchema)?.type ===
+								'object') ||
+							(typeof value[0] === 'string' &&
+								((oneOfSchemaProp as JsonSchema)?.items as JsonSchema)?.type !==
+									'object'))
+					) {
+						_schemaProp = oneOfSchemaProp as JsonSchema;
+					}
+				}
+			}
+
+			if (isNullish(_schemaProp?.items)) {
 				// Can not find schema for array item, delete that item
 				delete object[key];
 				dataPath.pop();
@@ -183,12 +210,12 @@ export const convert = (
 			}
 
 			// If schema for array items is a single type
-			if (isObject(schemaProp.items) && !isNullish(schemaProp.items.eth)) {
+			if (isObject(_schemaProp.items) && !isNullish(_schemaProp.items.eth)) {
 				for (let i = 0; i < value.length; i += 1) {
 					(object[key] as unknown[])[i] = convertScalarValue(
 						value[i],
 						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-						schemaProp?.items?.eth as string,
+						_schemaProp?.items?.eth as string,
 						format,
 					);
 				}
@@ -199,8 +226,8 @@ export const convert = (
 
 			// If schema for array items is an object
 			if (
-				!Array.isArray(schemaProp?.items) &&
-				(schemaProp?.items as JsonSchema).type === 'object'
+				!Array.isArray(_schemaProp?.items) &&
+				(_schemaProp?.items as JsonSchema).type === 'object'
 			) {
 				for (const arrObject of value) {
 					convert(
@@ -216,11 +243,11 @@ export const convert = (
 			}
 
 			// If schema for array is a tuple
-			if (Array.isArray(schemaProp?.items)) {
+			if (Array.isArray(_schemaProp?.items)) {
 				for (let i = 0; i < value.length; i += 1) {
 					(object[key] as unknown[])[i] = convertScalarValue(
 						value[i],
-						(schemaProp.items as JsonSchema[])[i].eth as string,
+						(_schemaProp.items as JsonSchema[])[i].eth as string,
 						format,
 					);
 				}

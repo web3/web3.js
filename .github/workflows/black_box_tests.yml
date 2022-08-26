@@ -1,0 +1,50 @@
+name: 'Black Box Tests'
+on:
+    push:
+      branches:
+        - release/**
+      tags:
+        - v4.*
+jobs:
+  build:
+    strategy:
+      matrix:
+        node: [14, 16]
+    name: Build Packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - run: yarn
+      - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: /tmp/web3-${{ matrix.node }}.js.tar.gz
+  black-box:
+      name: Black Box
+      needs: build
+      runs-on: ubuntu-latest
+      env:
+        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+        INFURA_WSS: ${{ secrets.INFURA_WSS }}
+        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        MODE: ${{ matrix.mode }}
+      strategy:
+        fail-fast: false
+        matrix:
+          node: [14, 16]
+          mode: ['http', 'ws']
+          backend: ['geth', 'infura']
+      steps:
+        - uses: actions/download-artifact@v3
+          with:
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
+        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: |
+            yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash

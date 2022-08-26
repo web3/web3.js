@@ -321,6 +321,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * This comment _supports3_ [Markdown](https://marked.js.org/)
  */
-import { Web3 } from './web3';
+import Web3 from './web3';
 
 export = Web3;
