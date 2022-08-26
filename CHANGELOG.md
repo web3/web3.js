@@ -723,4 +723,10 @@ Released with 1.0.0-beta.37 code base.
 -   `givenProvider` default value is undefined
 -   `currentProvider` default value is undefined
 
+## [4.0.1-alpha.0]
+
+### Fixed
+
+-   Dependency tree cannot be resolved by Yarn due to old deprecated packages picked by yarn - fixed (#5382)
+
 ## [Unreleased]
