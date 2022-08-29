@@ -1111,17 +1111,18 @@ export function sendTransaction<
 						} else {
 							transactionHash = await trySendTransaction(
 								web3Context,
-								new Promise<string>((res, rej) => {
-									try {
-										const awaitable = rpcMethods.sendTransaction(
-											web3Context.requestManager,
-											transactionFormatted as Partial<TransactionWithSenderAPI>,
-										);
-										res(awaitable);
-									} catch (error) {
-										rej(error);
-									}
-								}),
+								async (): Promise<string> =>
+									new Promise<string>((res, rej) => {
+										try {
+											const awaitable = rpcMethods.sendTransaction(
+												web3Context.requestManager,
+												transactionFormatted as Partial<TransactionWithSenderAPI>,
+											);
+											res(awaitable);
+										} catch (error) {
+											rej(error);
+										}
+									}),
 							);
 						}
 
