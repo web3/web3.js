@@ -46,7 +46,7 @@ const config = {
 	url: 'https://docs.web3js.org',
 	baseUrl: '/',
 	onBrokenLinks: 'throw',
-	onBrokenMarkdownLinks: 'warn',
+	onBrokenMarkdownLinks: 'throw',
 	favicon: 'img/favicon.ico',
 
 	// GitHub pages deployment config.
