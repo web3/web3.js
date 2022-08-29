@@ -114,7 +114,5 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"packageManager": "yarn@1.22.15",
-	"dependencies": {
-		"cypress": "^10.6.0"
-	}
+	"dependencies": {}
 }

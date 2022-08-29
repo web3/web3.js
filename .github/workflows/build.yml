@@ -132,14 +132,14 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-#      - name: Cypress run
-#        uses: cypress-io/github-action@v4
-#        with:
-#            install: false
-#            command-prefix: 'npx'
-#            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-#            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+#      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+      - run:  npm install --no-package-lock --no-save cypress
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+            install: false
+            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
 #  build-docs:
 #    name: Build Docs
