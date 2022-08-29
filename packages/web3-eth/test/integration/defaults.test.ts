@@ -66,7 +66,8 @@ describe('defaults', () => {
 		clientUrl = getSystemTestProvider();
 		const acc1 = await createNewAccount({ unlock: true, refill: true });
 		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
+		const acc3 = await createNewAccount({ unlock: true, refill: true });
+		accounts = [acc1.address, acc2.address, acc3.address];
 		if (isWs) {
 			web3Eth = new Web3Eth(
 				new WebSocketProvider(
@@ -540,7 +541,7 @@ describe('defaults', () => {
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			sendFewTxes({
 				web3Eth: eth,
-				from: accounts[1],
+				from: accounts[2],
 				to: accounts[0],
 				value,
 				times: 2,
