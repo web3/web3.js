@@ -198,7 +198,7 @@ export const createNewAccount = async (config?: {
 			);
 		}
 
-		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 10000000);
+		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
 	}
 
 	if (config?.refill) {
