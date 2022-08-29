@@ -136,6 +136,7 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
             command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
 #  build-docs:
 #    name: Build Docs
