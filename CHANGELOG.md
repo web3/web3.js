@@ -591,7 +591,7 @@ Released with 1.0.0-beta.37 code base.
 -   Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
 -   Fix remove wallet using an index when an account address and address lowercase are equal (#5049)
 -   Improve README.md & Fix typos (#4848)
--   Add optional hex formatting parameter for getTransactionrReceipt (#5153)
+-   Add optional hex formatting parameter for getTransactionReceipt (#5153)
 -   Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
 -   Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
 -   Fixed unit tests & removed dead code for web3-providers-http (#5228)
@@ -600,9 +600,10 @@ Released with 1.0.0-beta.37 code base.
 
 -   Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
 
-## [Unreleased]
+## [4.0.0-alpha.0]
 
-## [4.0.0-alpha.1]
+Note: Yarn is resolving to some old deprecated package versions for 4.0.0-alpha.0 instead of latest alpha versions. A patch bump is posted so yarn users
+should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
@@ -724,3 +725,11 @@ Released with 1.0.0-beta.37 code base.
 
 -   `givenProvider` default value is undefined
 -   `currentProvider` default value is undefined
+
+## [4.0.1-alpha.0]
+
+### Fixed
+
+-   Dependency tree cannot be resolved by Yarn due to old deprecated packages picked by yarn - fixed (#5382)
+
+## [Unreleased]
