@@ -41,18 +41,12 @@ const createWallets = () =>
 	new Promise(async resolve => {
 		for (const acc of tempAccountList) {
 			try {
-				console.log('add', acc.address, acc.privateKey);
 				await addAccount(acc.address, acc.privateKey);
 			} catch (e) {
 				console.log('error', e);
 			}
 		}
-		console.log('DONE');
 		resolve();
 	});
 
-createWallets()
-	.catch(console.error)
-	.then(() => {
-		console.log('RESOLVED');
-	});
+createWallets().catch(console.error);
