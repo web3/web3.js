@@ -32,13 +32,11 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
-		beforeAll(() => {
+
+		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
-		});
-
-		beforeEach(async () => {
 			acc = await createTempAccount();
 
 			deployOptions = {
