@@ -19,13 +19,13 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
-	let contractInstance: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
 	beforeEach(async () => {
-		contractInstance = new Contract(BasicAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 		const acc = await createTempAccount();
@@ -37,13 +37,13 @@ describe('contract', () => {
 
 		sendOptions = { from: acc.address, gas: '1000000' };
 
-		contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
 	describe('methods', () => {
 		describe('call', () => {
 			it('should retrieve the values', async () => {
-				const result = await contract.methods.getValues().call();
+				const result = await contractDeployed.methods.getValues().call();
 
 				expect(result).toEqual({
 					'0': '10',
@@ -55,7 +55,7 @@ describe('contract', () => {
 
 			describe('revert handling', () => {
 				it('should returns the expected revert reason string', async () => {
-					return expect(contract.methods.reverts().call()).rejects.toThrow(
+					return expect(contractDeployed.methods.reverts().call()).rejects.toThrow(
 						'REVERTED WITH REVERT',
 					);
 				});
@@ -64,7 +64,7 @@ describe('contract', () => {
 
 		describe('send', () => {
 			it('should returns a receipt', async () => {
-				const receipt = await contract.methods
+				const receipt = await contractDeployed.methods
 					.setValues(1, 'string value', true)
 					.send(sendOptions);
 
@@ -85,9 +85,7 @@ describe('contract', () => {
 
 				const sendOptionsLocal = { from: acc.address, gas: '1000000' };
 
-				const contractLocal = await contractInstance
-					.deploy(deployOptions)
-					.send(sendOptionsLocal);
+				const contractLocal = await contract.deploy(deployOptions).send(sendOptionsLocal);
 				const receipt = await contractLocal.methods
 					.setValues(1, 'string value', true)
 					.send({
@@ -112,7 +110,7 @@ describe('contract', () => {
 			// TODO: Get and match the revert error message
 			it('should returns errors on reverts', async () => {
 				try {
-					await contract.methods.reverts().send(sendOptions);
+					await contractDeployed.methods.reverts().send(sendOptions);
 				} catch (receipt: any) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(receipt).toEqual(

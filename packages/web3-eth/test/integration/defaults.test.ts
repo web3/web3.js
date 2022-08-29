@@ -53,7 +53,7 @@ describe('defaults', () => {
 	let eth2: Web3Eth;
 	let tempEth: Web3Eth;
 	let clientUrl: string;
-	let contractInstance: Contract<typeof BasicAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let tempAcc: { address: string; privateKey: string };
@@ -71,7 +71,7 @@ describe('defaults', () => {
 	});
 	beforeEach(async () => {
 		tempAcc = await createTempAccount();
-		contractInstance = new Contract(BasicAbi, web3Eth.getContextObject() as any);
+		contract = new Contract(BasicAbi, web3Eth.getContextObject() as any);
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
@@ -177,7 +177,7 @@ describe('defaults', () => {
 		});
 		it('defaultBlock', async () => {
 			const tempAcc2 = await createTempAccount();
-			const contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			// default
 			expect(web3Eth.defaultBlock).toBe('latest');
 
@@ -207,8 +207,11 @@ describe('defaults', () => {
 				value: '0x1',
 			});
 			const balance = await eth2.getBalance(acc.address);
-			const code = await eth2.getCode(contract?.options?.address as string);
-			const storage = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const code = await eth2.getCode(contractDeployed?.options?.address as string);
+			const storage = await eth2.getStorageAt(
+				contractDeployed?.options?.address as string,
+				0,
+			);
 			const transactionCount = await eth2.getTransactionCount(acc.address);
 			expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
 			expect(code).toBe('0x');
@@ -222,11 +225,11 @@ describe('defaults', () => {
 				'latest',
 			);
 			const codeWithBlockNumber = await eth2.getCode(
-				contract?.options?.address as string,
+				contractDeployed?.options?.address as string,
 				'latest',
 			);
 			const storageWithBlockNumber = await eth2.getStorageAt(
-				contract?.options?.address as string,
+				contractDeployed?.options?.address as string,
 				0,
 				'latest',
 			);
@@ -240,8 +243,11 @@ describe('defaults', () => {
 				defaultBlock: 'latest',
 			});
 			const balanceLatest = await eth2.getBalance(acc.address);
-			const codeLatest = await eth2.getCode(contract?.options?.address as string);
-			const storageLatest = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const codeLatest = await eth2.getCode(contractDeployed?.options?.address as string);
+			const storageLatest = await eth2.getStorageAt(
+				contractDeployed?.options?.address as string,
+				0,
+			);
 			const transactionCountLatest = await eth2.getTransactionCount(acc.address);
 			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 			expect(Number(hexToNumber(storageLatest))).toBe(10);

@@ -53,8 +53,8 @@ describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let contractInstance: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let from: string;
@@ -67,13 +67,13 @@ describeIf(isWs)('subscription', () => {
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		providerWs = new WebSocketProvider(clientUrl);
-		contractInstance = new Contract(BasicAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 	});
 	afterAll(() => {
 		providerWs.disconnect();
-		(contractInstance.provider as WebSocketProvider).disconnect();
+		(contract.provider as WebSocketProvider).disconnect();
 	});
 
 	describe('logs', () => {
@@ -86,10 +86,10 @@ describeIf(isWs)('subscription', () => {
 			};
 
 			sendOptions = { from, gas: '1000000' };
-			contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+			contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
-				address: contract.options.address,
+				address: contractDeployed.options.address,
 			});
 
 			let count = 0;
@@ -109,7 +109,7 @@ describeIf(isWs)('subscription', () => {
 				});
 			});
 
-			await makeFewTxToContract({ contract, sendOptions, testDataString });
+			await makeFewTxToContract({ contract: contractDeployed, sendOptions, testDataString });
 
 			await pr;
 			await web3Eth.clearSubscriptions();

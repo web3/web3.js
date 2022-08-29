@@ -27,13 +27,13 @@ import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
 describe('contract', () => {
 	describe('erc721', () => {
-		let contractInstance: Contract<typeof ERC721TokenAbi>;
 		let contract: Contract<typeof ERC721TokenAbi>;
+		let contractDeployed: Contract<typeof ERC721TokenAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 
 		beforeEach(async () => {
-			contractInstance = new Contract(ERC721TokenAbi, undefined, {
+			contract = new Contract(ERC721TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
@@ -47,9 +47,7 @@ describe('contract', () => {
 		});
 
 		it('should deploy the contract', async () => {
-			await expect(
-				contractInstance.deploy(deployOptions).send(sendOptions),
-			).resolves.toBeDefined();
+			await expect(contract.deploy(deployOptions).send(sendOptions)).resolves.toBeDefined();
 		});
 
 		describe('contract instance', () => {
@@ -59,25 +57,25 @@ describe('contract', () => {
 				acc = await createTempAccount();
 				acc2 = await createTempAccount();
 				sendOptions = { from: acc.address, gas: '10000000' };
-				contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
 
 			describe('methods', () => {
 				it('should return the name', async () => {
-					expect(await contract.methods.name().call()).toBe('GameItem');
+					expect(await contractDeployed.methods.name().call()).toBe('GameItem');
 				});
 
 				it('should return the symbol', async () => {
-					expect(await contract.methods.symbol().call()).toBe('ITM');
+					expect(await contractDeployed.methods.symbol().call()).toBe('ITM');
 				});
 
 				it('should award item', async () => {
 					const acc3 = await createTempAccount();
-					await contract.methods
+					await contractDeployed.methods
 						.awardItem(acc3.address, 'http://my-nft-uri')
 						.send(sendOptions);
 
-					const logs = await contract.getPastEvents('Transfer');
+					const logs = await contractDeployed.getPastEvents('Transfer');
 					// TODO: Type of the getPastEvents are not valid.
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-expect-error
@@ -85,7 +83,9 @@ describe('contract', () => {
 
 					expect(
 						toUpperCaseHex(
-							(await contract.methods.ownerOf(tokenId).call()) as unknown as string,
+							(await contractDeployed.methods
+								.ownerOf(tokenId)
+								.call()) as unknown as string,
 						),
 					).toBe(toUpperCaseHex(acc3.address));
 				});
@@ -95,7 +95,7 @@ describe('contract', () => {
 				it('should emit transfer event', async () => {
 					await expect(
 						processAsync(async resolve => {
-							const event = contract.events.Transfer();
+							const event = contractDeployed.events.Transfer();
 							event.on('data', data => {
 								resolve({
 									from: toUpperCaseHex(data.returnValues.from as string),
@@ -104,7 +104,7 @@ describe('contract', () => {
 								});
 							});
 
-							await contract.methods
+							await contractDeployed.methods
 								.awardItem(acc2.address, 'http://my-nft-uri')
 								.send(sendOptions);
 						}),

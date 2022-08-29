@@ -53,19 +53,19 @@ const makeFewTxToContract = async ({
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
 	let providerWs: WebSocketProvider;
-	let contractInstance: Contract<typeof BasicAbi>;
+	let contract: Contract<typeof BasicAbi>;
 	const testDataString = 'someTestString';
 
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		providerWs = new WebSocketProvider(clientUrl);
-		contractInstance = new Contract(BasicAbi, undefined, {
+		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 	});
 	afterAll(() => {
 		providerWs.disconnect();
-		(contractInstance.provider as WebSocketProvider).disconnect();
+		(contract.provider as WebSocketProvider).disconnect();
 	});
 
 	describe('logs', () => {
@@ -78,15 +78,17 @@ describeIf(isWs)('subscription', () => {
 			};
 
 			const sendOptions = { from, gas: '1000000' };
-			const contract = await contractInstance.deploy(deployOptions).send(sendOptions);
+			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			const web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
-			const fromBlock = await web3Eth.getTransactionCount(String(contract.options.address));
+			const fromBlock = await web3Eth.getTransactionCount(
+				String(contractDeployed.options.address),
+			);
 
-			await makeFewTxToContract({ contract, sendOptions, testDataString });
+			await makeFewTxToContract({ contract: contractDeployed, sendOptions, testDataString });
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
 				fromBlock: numberToHex(fromBlock),
-				address: contract.options.address,
+				address: contractDeployed.options.address,
 			});
 
 			let count = 0;
