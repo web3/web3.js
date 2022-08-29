@@ -104,6 +104,8 @@ export abstract class Web3Config
 	 * - myContract.methods.myMethod().call()
 	 * - myContract.methods.myMethod().send()
 	 * Default is `false`.
+	 *
+	 * `Note`: At the moment `handleRevert` is only supported for `sendTransaction` and not for `sendSignedTransaction`
 	 */
 	public get handleRevert() {
 		return this._config.handleRevert;

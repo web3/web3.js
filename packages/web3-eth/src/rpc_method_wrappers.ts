@@ -50,7 +50,7 @@ import {
 	waitWithTimeout,
 } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import { TransactionError } from 'web3-errors';
+import { TransactionError, TransactionRevertError } from 'web3-errors';
 import { SignatureError, TransactionSendTimeoutError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -1071,6 +1071,15 @@ export function sendTransaction<
 							ETH_DATA_FORMAT,
 						);
 
+						if (web3Context.handleRevert) {
+							// eslint-disable-next-line no-use-before-define
+							await getRevertReason(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								returnFormat,
+							);
+						}
+
 						if (
 							!options?.ignoreGasPricing &&
 							isNullish(transactionFormatted.gasPrice) &&
@@ -1320,6 +1329,11 @@ export function sendSignedTransaction<
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
+						// todo enable handleRevert for sendSignedTransaction when we have a function to decode transactions
+						// importing a package for this would increase the size of the library
+						// if (web3Context.handleRevert) {
+						// 	await getRevertReason(web3Context, transaction, returnFormat);
+						// }
 
 						const transactionHash = await rpcMethods.sendRawTransaction(
 							web3Context.requestManager,
@@ -1892,4 +1906,20 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	);
 
 	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
+}
+/**
+ *
+ * @param web3Context
+ * @param transaction
+ */
+async function getRevertReason<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: TransactionCall,
+	returnFormat: ReturnFormat,
+) {
+	try {
+		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
+	} catch (err) {
+		throw new TransactionRevertError((err as Error).message);
+	}
 }
