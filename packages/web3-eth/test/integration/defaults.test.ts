@@ -509,9 +509,9 @@ describe('defaults', () => {
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = eth.sendTransaction({
+				from,
 				to,
 				value,
-				from,
 			});
 
 			const confirmationPromise = new Promise((resolve: Resolve) => {
@@ -540,9 +540,9 @@ describe('defaults', () => {
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			sendFewTxes({
 				web3Eth: eth,
-				to,
+				from: accounts[1],
+				to: accounts[0],
 				value,
-				from,
 				times: 1,
 				waitForReceipt: false,
 			});
