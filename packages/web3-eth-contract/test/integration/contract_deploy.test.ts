@@ -32,7 +32,7 @@ describe('contract', () => {
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 
-		beforeAll(async () => {
+		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
