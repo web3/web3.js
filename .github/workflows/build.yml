@@ -14,14 +14,14 @@ jobs:
   build:
     strategy:
       matrix:
-        node: [14, 16]
+        node: [16]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: ${{ matrix.node }}
           cache: yarn
       - run: yarn
 #      - run: ./scripts/geth.sh download
@@ -105,7 +105,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 14, 16 ]
+        node: [ 16 ]
         backend: [ 'geth' ]
         mode: [ 'ipc' ]
     steps:
@@ -124,7 +124,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [14, 16]
+        node: [16]
         browser: ['electron', 'chrome', 'firefox']
     steps:
       - uses: actions/download-artifact@v3
@@ -132,13 +132,14 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-            install: false
-            command-prefix: 'npx'
-            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+#      - name: Cypress run
+#        uses: cypress-io/github-action@v4
+#        with:
+#            install: false
+#            command-prefix: 'npx'
+#            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+#            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
 #  build-docs:
 #    name: Build Docs
