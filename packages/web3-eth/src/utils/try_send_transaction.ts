@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { EthExecutionAPI, Bytes } from 'web3-types';
-import { rejectIfTimeout } from 'web3-utils';
+import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 
 import { NUMBER_DATA_FORMAT } from '../constants';
 import { TransactionSendTimeoutError } from '../errors';
@@ -27,7 +27,7 @@ import { getBlockNumber } from '../rpc_method_wrappers';
 
 export async function trySendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
-	awaitableSendTransaction: Promise<string>,
+	awaitableSendTransaction: Promise<string> | AsyncFunction<string>,
 	transactionHash?: Bytes,
 ): Promise<string> {
 	const pollingInterval = web3Context.transactionPollingInterval;
@@ -50,7 +50,9 @@ export async function trySendTransaction(
 
 	try {
 		return await Promise.race([
-			awaitableSendTransaction,
+			awaitableSendTransaction instanceof Promise
+				? awaitableSendTransaction
+				: awaitableSendTransaction(),
 			rejectOnTimeout,
 			rejectOnBlockTimeout,
 		]);
