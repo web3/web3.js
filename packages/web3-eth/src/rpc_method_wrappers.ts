@@ -44,7 +44,7 @@ import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError, TransactionRevertError } from 'web3-errors';
-import { SignatureError, TransactionSendTimeoutError } from './errors';
+import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
