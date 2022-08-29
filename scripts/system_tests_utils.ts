@@ -150,6 +150,65 @@ export const getSystemTestAccountsWithKeys = (): {
 	}
 };
 
+export const addValueToAccounts = async (account: { address: string, privateKey: string}): Promise<string[]> => {
+	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
+
+	if (getSystemTestBackend() === 'geth') {
+		const web3Eth = new Web3Eth(clientUrl);
+		const web3Personal = new Personal(clientUrl);
+
+		await web3Eth.sendTransaction({
+			from: await web3Eth.getCoinbase(),
+			to: account.address,
+			value: '100000000000000000000',
+		});
+
+		const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
+			a.toUpperCase(),
+		);
+		if (
+			!(
+				existsAccounts?.length > 0 &&
+				existsAccounts.includes(account.address.toUpperCase())
+			)
+		) {
+			await web3Personal.importRawKey(
+				account.privateKey.substring(2),
+				'123456',
+			);
+			await web3Personal.unlockAccount(
+				account.address,
+				'123456',
+				500,
+			);
+		} else {
+			await web3Personal.unlockAccount(
+				account.address,
+				'123456',
+				500,
+			);
+		}
+	}
+
+		const res = await fetch(clientUrl, {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify({
+				jsonrpc: '2.0',
+				id: 'id',
+				method: 'eth_accounts',
+				params: [],
+			}),
+		});
+	
+		const result = ((await res.json()) as { result: string[] }).result;
+		return result;
+		 
+
+}
+
 export const getSystemTestAccounts = async (): Promise<string[]> => {
 	if (_accounts.length > 0) {
 		return _accounts;
