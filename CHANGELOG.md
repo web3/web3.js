@@ -602,6 +602,9 @@ Released with 1.0.0-beta.37 code base.
 
 ## [4.0.0-alpha.0]
 
+Note: Yarn is resolving to some old deprecated package versions for 4.0.0-alpha.0 instead of latest alpha versions. A patch bump is posted so yarn users
+should use 4.0.1-alpha.0 for testing.
+
 ### Added
 
 #### web3-errors
@@ -722,5 +725,11 @@ Released with 1.0.0-beta.37 code base.
 
 -   `givenProvider` default value is undefined
 -   `currentProvider` default value is undefined
+
+## [4.0.1-alpha.0]
+
+### Fixed
+
+-   Dependency tree cannot be resolved by Yarn due to old deprecated packages picked by yarn - fixed (#5382)
 
 ## [Unreleased]
