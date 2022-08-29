@@ -19,7 +19,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import fetch from 'cross-fetch';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ETH_DATA_FORMAT, format } from 'web3-utils';
+import { ETH_DATA_FORMAT, format, toChecksumAddress } from 'web3-utils';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -68,6 +68,7 @@ export const createAccount = _createAccount;
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
 	refill?: boolean;
+	toCheckSum?: boolean;
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = createAccount();
 
@@ -96,7 +97,9 @@ export const createNewAccount = async (config?: {
 		});
 	}
 
-	return { address: acc.address, privateKey: acc.privateKey };
+	const address = config?.toCheckSum ? toChecksumAddress(acc.address) : acc.address;
+
+	return { address, privateKey: acc.privateKey };
 };
 
 export const getSystemTestAccountsWithKeys = (): {

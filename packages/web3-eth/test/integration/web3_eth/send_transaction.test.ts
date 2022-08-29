@@ -22,7 +22,6 @@ import { isHexStrict } from 'web3-validator';
 
 import Web3Eth from '../../../src';
 import {
-	addValueToAccounts,
 	createAccountProvider,
 	createNewAccount,
 	getSystemTestAccountsWithKeys,
@@ -39,7 +38,6 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 	beforeEach(async () => {
 		account = await createNewAccount({ unlock: true, refill: true });
-		await addValueToAccounts(account);
 	});
 
 	afterAll(() => {
