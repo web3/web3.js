@@ -126,6 +126,7 @@ jobs:
       matrix:
         node: [16]
         browser: ['chrome','firefox']
+        containers: [1, 2, 3]
 #        browser: ['electron', 'chrome', 'firefox']
     steps:
       - uses: actions/download-artifact@v3
@@ -138,6 +139,8 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:
+            record: true
+            parallel: true
             install: false
             command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
             cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
