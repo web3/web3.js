@@ -1102,27 +1102,21 @@ export function sendTransaction<
 
 							transactionHash = await trySendTransaction(
 								web3Context,
-								rpcMethods.sendRawTransaction(
-									web3Context.requestManager,
-									signedTransaction.rawTransaction,
-								),
+								async (): Promise<string> =>
+									rpcMethods.sendRawTransaction(
+										web3Context.requestManager,
+										signedTransaction.rawTransaction,
+									),
 								signedTransaction.transactionHash,
 							);
 						} else {
 							transactionHash = await trySendTransaction(
 								web3Context,
 								async (): Promise<string> =>
-									new Promise<string>((res, rej) => {
-										try {
-											const awaitable = rpcMethods.sendTransaction(
-												web3Context.requestManager,
-												transactionFormatted as Partial<TransactionWithSenderAPI>,
-											);
-											res(awaitable);
-										} catch (error) {
-											rej(error);
-										}
-									}),
+									rpcMethods.sendTransaction(
+										web3Context.requestManager,
+										transactionFormatted as Partial<TransactionWithSenderAPI>,
+									),
 							);
 						}
 
@@ -1321,10 +1315,11 @@ export function sendSignedTransaction<
 
 						const transactionHash = await trySendTransaction(
 							web3Context,
-							rpcMethods.sendRawTransaction(
-								web3Context.requestManager,
-								signedTransactionFormattedHex,
-							),
+							async (): Promise<string> =>
+								rpcMethods.sendRawTransaction(
+									web3Context.requestManager,
+									signedTransactionFormattedHex,
+								),
 						);
 
 						if (promiEvent.listenerCount('sent') > 0) {

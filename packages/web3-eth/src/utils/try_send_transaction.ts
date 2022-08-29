@@ -27,7 +27,7 @@ import { getBlockNumber } from '../rpc_method_wrappers';
 
 export async function trySendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
-	awaitableSendTransaction: Promise<string> | AsyncFunction<string>,
+	sendTransactionFunc: AsyncFunction<string>,
 	transactionHash?: Bytes,
 ): Promise<string> {
 	const pollingInterval = web3Context.transactionPollingInterval;
@@ -49,13 +49,7 @@ export async function trySendTransaction(
 	);
 
 	try {
-		return await Promise.race([
-			awaitableSendTransaction instanceof Promise
-				? awaitableSendTransaction
-				: awaitableSendTransaction(),
-			rejectOnTimeout,
-			rejectOnBlockTimeout,
-		]);
+		return await Promise.race([sendTransactionFunc(), rejectOnTimeout, rejectOnBlockTimeout]);
 	} finally {
 		clearTimeout(timeoutId);
 		clearInterval(intervalId);
