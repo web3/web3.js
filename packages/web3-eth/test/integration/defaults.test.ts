@@ -543,7 +543,7 @@ describe('defaults', () => {
 				from: accounts[1],
 				to: accounts[0],
 				value,
-				times: 1,
+				times: 2,
 				waitForReceipt: false,
 			});
 
