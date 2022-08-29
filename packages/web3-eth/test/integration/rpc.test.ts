@@ -71,17 +71,15 @@ describe('rpc', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-		if (isIpc) {
-			await (contract.provider as IpcProvider).waitForConnection();
-			await (web3Eth.provider as IpcProvider).waitForConnection();
-		}
-	});
-	beforeEach(async () => {
 		tempAcc = await createTempAccount();
 		tempAcc2 = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+		if (isIpc) {
+			await (contract.provider as IpcProvider).waitForConnection();
+			await (web3Eth.provider as IpcProvider).waitForConnection();
+		}
 	});
 
 	afterAll(() => {

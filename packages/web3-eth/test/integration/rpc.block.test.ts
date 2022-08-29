@@ -79,7 +79,7 @@ describe('rpc with block', () => {
 			await (web3Eth.provider as IpcProvider).waitForConnection();
 		}
 	});
-	beforeEach(async () => {
+	beforeAll(async () => {
 		tempAcc = await createTempAccount();
 		tempAcc2 = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
@@ -108,7 +108,7 @@ describe('rpc with block', () => {
 	});
 
 	describe('methods', () => {
-		beforeEach(async () => {
+		beforeAll(async () => {
 			tempAcc = await createTempAccount();
 			tempAcc2 = await createTempAccount();
 			sendOptions = { from: tempAcc.address, gas: '1000000' };

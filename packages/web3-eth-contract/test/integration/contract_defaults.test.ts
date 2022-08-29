@@ -31,7 +31,7 @@ describe('contract', () => {
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 
-		beforeAll(async () => {
+		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -45,7 +45,7 @@ describe('contract', () => {
 
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
-		afterAll(async () => {
+		afterEach(async () => {
 			await closeOpenConnection(contract);
 		});
 
