@@ -16,14 +16,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('clone', () => {
 		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -35,6 +39,9 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+		afterAll(async () => {
+			await closeOpenConnection(contract);
 		});
 
 		it('should clone the contract but with same address', async () => {

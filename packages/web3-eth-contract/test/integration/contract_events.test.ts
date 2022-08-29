@@ -25,6 +25,7 @@ import {
 	itIf,
 	isHttp,
 	createTempAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -32,7 +33,7 @@ describe('contract', () => {
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
@@ -47,6 +48,9 @@ describe('contract', () => {
 		sendOptions = { from: acc.address, gas: '1000000' };
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
+	});
+	afterAll(async () => {
+		await closeOpenConnection(contract);
 	});
 
 	describe('events', () => {

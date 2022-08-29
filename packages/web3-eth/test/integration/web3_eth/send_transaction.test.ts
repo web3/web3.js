@@ -17,30 +17,27 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Transaction, TransactionWithLocalWalletIndex } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
-import WebSocketProvider from 'web3-providers-ws';
 import { isHexStrict } from 'web3-validator';
 
 import Web3Eth from '../../../src';
 import {
+	closeOpenConnection,
 	createAccountProvider,
 	createTempAccount,
 	getSystemTestProvider,
-	isWs,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
 		tempAcc = await createTempAccount();
 	});
 
-	afterEach(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	it('should make a simple value transfer', async () => {

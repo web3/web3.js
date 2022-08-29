@@ -18,7 +18,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3BaseProvider } from 'web3-types';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('defaults', () => {
@@ -27,7 +31,7 @@ describe('contract', () => {
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -40,6 +44,9 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+		afterAll(async () => {
+			await closeOpenConnection(contract);
 		});
 
 		describe('defaultAccount', () => {

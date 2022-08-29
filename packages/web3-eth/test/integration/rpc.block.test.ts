@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { TransactionInfo, TransactionReceipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -30,8 +29,8 @@ import {
 	getSystemTestProvider,
 	createNewAccount,
 	isIpc,
-	isWs,
 	createTempAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
@@ -103,11 +102,9 @@ describe('rpc with block', () => {
 			transactionIndex: Number(receipt.transactionIndex),
 		};
 	});
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-			(contract.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {

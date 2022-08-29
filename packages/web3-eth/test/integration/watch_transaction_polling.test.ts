@@ -21,6 +21,7 @@ import { Web3Eth, SendTransactionEvents } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {
+	closeOpenConnection,
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
@@ -32,7 +33,6 @@ const waitConfirmations = 5;
 
 type Resolve = (value?: unknown) => void;
 
-// TODO: add isIpc when finish #5144
 describeIf(isHttp || isIpc)('watch polling transaction', () => {
 	let web3Eth: Web3Eth;
 	let clientUrl: string;
@@ -45,6 +45,9 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 	});
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
+	});
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('wait for confirmation polling', () => {

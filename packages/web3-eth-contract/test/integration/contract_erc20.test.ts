@@ -22,6 +22,7 @@ import {
 	describeIf,
 	isWs,
 	createTempAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -33,7 +34,7 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(ERC20TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -42,6 +43,9 @@ describe('contract', () => {
 				data: ERC20TokenBytecode,
 				arguments: [initialSupply],
 			};
+		});
+		afterAll(async () => {
+			await closeOpenConnection(contract);
 		});
 
 		it('should deploy the contract', async () => {

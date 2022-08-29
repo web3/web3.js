@@ -25,6 +25,7 @@ import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 
 import {
+	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
 	isHttp,
@@ -52,13 +53,9 @@ describe('eth', () => {
 	beforeEach(async () => {
 		tempAcc = await createTempAccount();
 	});
-	afterAll(() => {
-		if (isWs && web3Eth?.provider) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
-		if (isWs && contract?.provider) {
-			(contract.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {

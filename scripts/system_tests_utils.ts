@@ -187,10 +187,7 @@ export const createNewAccount = async (config?: {
 }): Promise<{ address: string; privateKey: string }> => {
 	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
 
-	let clientUrl = getSystemTestProvider();
-	if (isWs) {
-		clientUrl = clientUrl.replace('ws://', 'http://');
-	}
+	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
 
 	if (config?.unlock) {
 		const web3Personal = new Personal(clientUrl);

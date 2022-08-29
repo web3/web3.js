@@ -19,7 +19,12 @@ import WebSocketProvider from 'web3-providers-ws';
 import { hexToNumber } from 'web3-utils';
 import { Web3Eth } from '../../src';
 
-import { createTempAccount, getSystemTestProvider, isWs } from '../fixtures/system_test_utils';
+import {
+	closeOpenConnection,
+	createTempAccount,
+	getSystemTestProvider,
+	isWs,
+} from '../fixtures/system_test_utils';
 
 describe('eth', () => {
 	let web3Eth: Web3Eth;
@@ -41,10 +46,8 @@ describe('eth', () => {
 			web3Eth = new Web3Eth(clientUrl);
 		}
 	});
-	afterAll(() => {
-		if (isWs && web3Eth?.provider) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('methods', () => {

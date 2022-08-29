@@ -18,7 +18,12 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, isWs, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	isWs,
+	createTempAccount,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -27,7 +32,7 @@ describe('contract', () => {
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
 
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -40,6 +45,9 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+		afterAll(async () => {
+			await closeOpenConnection(contract);
 		});
 
 		it('should deploy the contract', async () => {

@@ -15,14 +15,17 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import WebSocketProvider from 'web3-providers-ws';
 import { Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
 import { Web3Eth, InternalTransaction } from '../../../src';
-import { createTempAccount, getSystemTestProvider, isWs } from '../../fixtures/system_test_utils';
+import {
+	closeOpenConnection,
+	createTempAccount,
+	getSystemTestProvider,
+} from '../../fixtures/system_test_utils';
 import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
-import { transactionSchema } from '../../../src/schemas';
+import { transactionSchema } from '../../../src';
 
 const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 
@@ -35,10 +38,8 @@ describe('Web3Eth.sendSignedTransaction', () => {
 		tempAcc = await createTempAccount();
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('Transaction Types', () => {
