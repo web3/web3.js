@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address, Transaction, TransactionWithLocalWalletIndex } from 'web3-types';
+import { Transaction, TransactionWithLocalWalletIndex } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import WebSocketProvider from 'web3-providers-ws';
 import { isHexStrict } from 'web3-validator';
@@ -25,7 +25,6 @@ import {
 	addValueToAccounts,
 	createAccountProvider,
 	createNewAccount,
-	getSystemTestAccounts,
 	getSystemTestAccountsWithKeys,
 	getSystemTestProvider,
 	isWs,
@@ -33,17 +32,15 @@ import {
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
-	let accounts: Address[];
-	let account: {address: string, privateKey: string};
+	let account: { address: string; privateKey: string };
 
 	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
-		accounts = await getSystemTestAccounts();
 	});
 	beforeEach(async () => {
-		account = await createNewAccount({unlock: true, refill: true});	
+		account = await createNewAccount({ unlock: true, refill: true });
 		await addValueToAccounts(account);
-	})
+	});
 
 	afterAll(() => {
 		if (isWs) {
