@@ -24,6 +24,8 @@ import {
 	HexString,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
+import { ExistingPluginNamespaceError } from 'web3-errors';
+
 import { isSupportedProvider } from './utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
@@ -234,6 +236,10 @@ export class Web3Context<
 
 	// eslint-disable-next-line no-use-before-define
 	public registerPlugin(plugin: Web3PluginBase<any>) {
+		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+		if (this[plugin.pluginNamespace] !== undefined)
+			throw new ExistingPluginNamespaceError(plugin.pluginNamespace);
+
 		const _pluginObject = {
 			[plugin.pluginNamespace]: plugin,
 		};
