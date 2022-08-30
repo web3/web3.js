@@ -60,8 +60,8 @@ export class TransactionRevertError extends Web3Error {
 
 	public constructor(
 		public reason: string,
-		public signature: string,
-		public receipt: TransactionReceipt,
+		public signature?: string,
+		public receipt?: TransactionReceipt,
 	) {
 		super(
 			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
