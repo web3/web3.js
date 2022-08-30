@@ -22,7 +22,6 @@ import {
 	describeIf,
 	isWs,
 	createTempAccount,
-	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -43,9 +42,6 @@ describe('contract', () => {
 				data: ERC20TokenBytecode,
 				arguments: [initialSupply],
 			};
-		});
-		afterAll(async () => {
-			await closeOpenConnection(contract);
 		});
 
 		it('should deploy the contract', async () => {

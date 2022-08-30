@@ -21,7 +21,6 @@ import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
 	getSystemTestProvider,
 	createTempAccount,
-	closeOpenConnection,
 	itIf,
 	isIpc,
 } from '../fixtures/system_test_utils';
@@ -45,9 +44,6 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
-		});
-		afterAll(async () => {
-			await closeOpenConnection(contract);
 		});
 
 		describe('defaultAccount', () => {
