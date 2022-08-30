@@ -69,11 +69,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				...transaction,
 				...gasPricing,
 			});
-			const response = await web3Eth.sendSignedTransaction(
-				typeof signedTransaction.raw === 'string'
-					? signedTransaction.raw
-					: signedTransaction.raw.raw,
-			);
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
 			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -106,11 +102,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				...transaction,
 				...gasPricing,
 			});
-			const response = await web3Eth.sendSignedTransaction(
-				typeof signedTransaction.raw === 'string'
-					? signedTransaction.raw
-					: signedTransaction.raw.raw,
-			);
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
 			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -142,11 +134,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				...transaction,
 				...gasPricing,
 			});
-			const response = await web3Eth.sendSignedTransaction(
-				typeof signedTransaction.raw === 'string'
-					? signedTransaction.raw
-					: signedTransaction.raw.raw,
-			);
+			const response = await web3Eth.sendSignedTransaction(signedTransaction.raw);
 			expect(response.status).toBe(BigInt(1));
 
 			const minedTransactionData = await web3Eth.getTransaction(response.transactionHash);
@@ -211,10 +199,6 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				web3Eth,
 				DEFAULT_RETURN_FORMAT,
 			);
-			// TODO
-			// @ts-expect-error Need to handle decoding a signed transaction to be able to return
-			// SignedTransactionInfo
-			// https://github.com/ChainSafe/web3.js/pull/5056#discussion_r885098419
 			signedTransaction = await web3Eth.signTransaction({ ...transaction, ...gasPricing });
 		});
 
