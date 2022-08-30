@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# web3.js
+# Web3 Plugin Example
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,14 +10,12 @@
 [![Dependency Status][deps-image]][deps-url]
 [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
 
-This is the main package of [web3.js](https://github.com/ChainSafe/web3.js).
-
-`web3` contains the ideal setup for a Web3.js package.
+This is an example of a plugin implementation for [web3.js](https://github.com/ChainSafe/web3.js).
 
 ###### Get it from the NPM Registry
 
 ```bash
-yarn add web3
+yarn add web3-plugin-example
 ```
 
 ## Getting Started
