@@ -117,7 +117,6 @@ describe('accounts', () => {
 			expect(signedResult).toBeDefined();
 
 			const address: Address = recoverTransaction(signedResult.rawTransaction);
-			expect(address).toBeDefined();
 			expect(address).toEqual(account.address);
 		});
 	});
