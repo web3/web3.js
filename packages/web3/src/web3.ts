@@ -51,7 +51,7 @@ export default class Web3 extends Web3Context<EthExecutionAPI> {
 
 		if (isNullish(provider) || (typeof provider === 'string' && provider.trim() === '')) {
 			console.warn(
-				'NOTE: web3.js is running in dev mode, without provider. You need to pass a provider in order to interact with the network!',
+				'NOTE: web3.js is running without provider. You need to pass a provider in order to interact with the network!',
 			);
 		}
 
