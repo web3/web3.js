@@ -50,6 +50,7 @@ if [[ $ENGINE == "chrome" ]]; then
     export DISPLAY=:101
 fi
 echo DISPLAY = $DISPLAY
+Xvfb :$DISPLAY &
 
 if [[ $MODE == "ipc" ]]; then
         export WEB3_SYSTEM_TEST_PROVIDER=$IPC_PATH
