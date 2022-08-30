@@ -59,6 +59,7 @@ export interface BaseTransactionAPI {
 	readonly input: HexStringBytes;
 	readonly data?: HexStringBytes;
 	readonly chainId?: Uint;
+	readonly hash?: HexString32Bytes;
 }
 
 export interface Transaction1559UnsignedAPI extends BaseTransactionAPI {
