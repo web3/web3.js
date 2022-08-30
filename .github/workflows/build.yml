@@ -135,6 +135,7 @@ jobs:
 #      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
       - run: npm install --no-package-lock --no-save --force cypress
       - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+        shell: bash
 #      - name: Cypress run
 #        uses: cypress-io/github-action@v4
 #        with:
