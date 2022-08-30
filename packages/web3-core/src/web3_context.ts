@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+// eslint-disable-next-line max-classes-per-file
 import {
 	Web3APISpec,
 	Web3BaseWallet,
@@ -232,6 +232,15 @@ export class Web3Context<
 		});
 	}
 
+	// eslint-disable-next-line no-use-before-define
+	public registerPlugin(plugin: Web3PluginBase<any>) {
+		const _pluginObject = {
+			[plugin.pluginNamespace]: plugin,
+		};
+		_pluginObject[plugin.pluginNamespace].link(this);
+		Object.assign(this, _pluginObject);
+	}
+
 	public get provider(): SupportedProviders<API> | string | undefined {
 		return this.requestManager.provider;
 	}
@@ -276,3 +285,7 @@ export type TransactionBuilder<
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;
+
+export abstract class Web3PluginBase<API extends Web3APISpec> extends Web3Context<API> {
+	public abstract pluginNamespace: string;
+}
