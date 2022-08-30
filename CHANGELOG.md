@@ -583,7 +583,13 @@ Released with 1.0.0-beta.37 code base.
 ### Security
 -  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
 
-
 ## [Unreleased]
 
 ## [1.7.6]
+
+### Changed
+-  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
+
+### Fixed
+-  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
+-  Start incrementing jsonrpc.id from random number (#5327)
