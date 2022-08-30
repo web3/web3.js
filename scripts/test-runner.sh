@@ -39,14 +39,6 @@ export WEB3_SYSTEM_TEST_CLIENT=$ENGINE
 
 TEST_COMMAND=""
 
-if [[ $ENGINE == "firefox" ]]; then
-    export ELECTRON_RUN_AS_NODE=1
-fi
-if [[ $ENGINE == "chrome" ]]; then
-    export ELECTRON_RUN_AS_NODE=1
-fi
-
-
 if [[ $MODE == "ipc" ]]; then
         export WEB3_SYSTEM_TEST_PROVIDER=$IPC_PATH
         BACKEND=geth-binary
