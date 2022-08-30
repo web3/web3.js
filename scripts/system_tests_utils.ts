@@ -218,17 +218,10 @@ export const createNewAccount = async (config?: {
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
 };
 let tempAccountList: { address: string; privateKey: string }[] = [];
-// let currentIndex = 0;
-// const workersCount = 1;
 const walletsOnWorker = 20;
 
 if (tempAccountList.length === 0) {
-	// 	// const workerId = Number(process.env.JEST_WORKER_ID) || 1;
-	//
 	tempAccountList = accountsString;
-	// const res: { address: string; privateKey: string }[] = accountsString;
-	// 	walletsOnWorker = parseInt(String(res.length / workersCount), 10);
-	// 	tempAccountList = res.slice(0, walletsOnWorker);
 }
 let currentIndex = 0;
 export const createTempAccount = async (
