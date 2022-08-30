@@ -125,6 +125,7 @@ jobs:
       matrix:
         node: [14, 16]
         browser: ['electron', 'chrome', 'firefox']
+        containers: [1, 2, 3]
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -138,6 +139,8 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
             install: false
+            parallel: true
+            group: 'E2E node${{ matrix.node }} ${{ matrix.browser }}'
             command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
             cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
