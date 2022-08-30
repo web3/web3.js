@@ -589,6 +589,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 -  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
+-  Removing legacy field in lerna.json (#5403)
 
 ### Fixed
 -  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
