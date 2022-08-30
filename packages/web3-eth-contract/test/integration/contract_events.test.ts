@@ -25,7 +25,6 @@ import {
 	itIf,
 	isHttp,
 	createTempAccount,
-	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
@@ -50,9 +49,6 @@ describe('contract', () => {
 		sendOptions = { from: acc.address, gas: '1000000' };
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-	});
-	afterAll(async () => {
-		await closeOpenConnection(contract);
 	});
 
 	describe('events', () => {

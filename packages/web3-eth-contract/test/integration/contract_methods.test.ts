@@ -16,11 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import {
-	getSystemTestProvider,
-	createTempAccount,
-	closeOpenConnection,
-} from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
@@ -42,9 +38,6 @@ describe('contract', () => {
 		sendOptions = { from: acc.address, gas: '1000000' };
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-	});
-	afterAll(async () => {
-		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {
