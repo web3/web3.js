@@ -47,7 +47,7 @@ export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
-export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
+export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
 export const DEFAULT_SYSTEM_CLIENT = 'node';
 
 export const getSystemTestProvider = (): string =>
