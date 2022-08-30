@@ -32,7 +32,7 @@ describe('web3.accounts', () => {
 	let tempAccount: string;
 	let web3: Web3;
 
-	beforeAll(async () => {
+	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
 		tempAccount = (await createTempAccount()).address;
 		web3 = new Web3(clientUrl);
