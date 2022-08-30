@@ -3152,6 +3152,18 @@ var runTests = function(contractFactory) {
 describe('typical usage', function() {
     runTests(getEthContractInstance);
 
+    it('should not mutate options object', function () {
+        var provider = new FakeHttpProvider();
+
+        var eth = new Eth(provider);
+        var contract = new eth.Contract(abi, address);
+        var options = { from: address };
+        var expectedOptions = { from: address };
+
+        contract.methods.balance(address).call(options);
+        assert.deepEqual(options, expectedOptions);
+    });
+
     it('should update contract instance provider when assigned a provider to eth instance that contract instance came from', function () {
         var provider1 = new FakeIpcProvider();
         var provider2 = new FakeHttpProvider();
