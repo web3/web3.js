@@ -160,6 +160,7 @@ export class Wallet<
 		let index = this.length;
 		const existAccount = this.get(account.address);
 		if (existAccount) {
+			console.warn(`Account ${account.address.toLowerCase()} already exists.`);
 			index = this._addressMap.get(account.address.toLowerCase()) ?? index;
 		}
 		this._addressMap.set(account.address.toLowerCase(), index);

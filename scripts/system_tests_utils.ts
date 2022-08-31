@@ -53,17 +53,17 @@ export const DEFAULT_SYSTEM_CLIENT = 'node';
 export const getSystemTestProvider = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
-export const getSystemTestClient = (): string =>
-	getEnvVar('WEB3_SYSTEM_TEST_CLIENT') ?? DEFAULT_SYSTEM_CLIENT;
+export const getSystemTestEngine = (): string =>
+	getEnvVar('WEB3_SYSTEM_TEST_ENGINE') ?? DEFAULT_SYSTEM_CLIENT;
 
 export const isHttp: boolean = getSystemTestProvider().startsWith('http');
 export const isWs: boolean = getSystemTestProvider().startsWith('ws');
 export const isIpc: boolean = getSystemTestProvider().includes('ipc');
-export const isChrome: boolean = getSystemTestClient() === 'chrome';
-export const isFirefox: boolean = getSystemTestClient() === 'firefox';
-export const isElectron: boolean = getSystemTestClient() === 'electron';
-export const isNode: boolean = getSystemTestClient() === 'isNode';
-export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestClient());
+export const isChrome: boolean = getSystemTestEngine() === 'chrome';
+export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
+export const isElectron: boolean = getSystemTestEngine() === 'electron';
+export const isNode: boolean = getSystemTestEngine() === 'isNode';
+export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 

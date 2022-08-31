@@ -11,7 +11,7 @@ const config = {
 	},
 };
 
-// if (process.env.WEB3_SYSTEM_TEST_CLIENT === 'firefox') {
+// if (process.env.WEB3_SYSTEM_TEST_ENGINE === 'firefox') {
 // 	const port = parseInt(String(Math.random() * 10000 + 10000));
 // 	config.clientCertificates = [
 // 		{
