@@ -20,34 +20,35 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { processAsync } from '../shared_fixtures/utils';
 import {
 	getSystemTestProvider,
-	getSystemTestAccounts,
 	describeIf,
 	isWs,
 	itIf,
 	isHttp,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-	let accounts: string[];
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
-
-		accounts = await getSystemTestAccounts();
+	});
+	beforeEach(async () => {
+		const acc = await createTempAccount();
 
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
-		sendOptions = { from: accounts[0], gas: '1000000' };
+		sendOptions = { from: acc.address, gas: '1000000' };
 
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
 	describe('events', () => {
@@ -55,12 +56,12 @@ describe('contract', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			return expect(
 				processAsync(async resolve => {
-					const event = contract.events.MultiValueEvent();
+					const event = contractDeployed.events.MultiValueEvent();
 
 					event.on('data', resolve);
 
 					// trigger event
-					await contract.methods
+					await contractDeployed.methods
 						.firesMultiValueEvent('value', 12, true)
 						.send(sendOptions);
 				}),
@@ -77,17 +78,17 @@ describe('contract', () => {
 				// eslint-disable-next-line jest/no-standalone-expect
 				return expect(
 					processAsync(async resolve => {
-						const event = contract.events.MultiValueIndexedEvent({
+						const event = contractDeployed.events.MultiValueIndexedEvent({
 							filter: { val: 100 },
 						});
 
 						event.on('data', resolve);
 
 						// trigger event
-						await contract.methods
+						await contractDeployed.methods
 							.firesMultiValueIndexedEvent('value', 12, true)
 							.send(sendOptions);
-						await contract.methods
+						await contractDeployed.methods
 							.firesMultiValueIndexedEvent('value', 100, true)
 							.send(sendOptions);
 					}),
@@ -106,12 +107,14 @@ describe('contract', () => {
 				// eslint-disable-next-line jest/no-standalone-expect
 				return expect(
 					processAsync(async resolve => {
-						const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
+						const event = contractDeployed.events.MultiValueEvent({
+							fromBlock: 'latest',
+						});
 
 						event.on('data', resolve);
 
 						// trigger event
-						await contract.methods
+						await contractDeployed.methods
 							.firesMultiValueEvent('Event Value', 11, false)
 							.send(sendOptions);
 					}),
@@ -126,7 +129,7 @@ describe('contract', () => {
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
 			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
-				const event = contract.events.MultiValueEvent({ fromBlock: 'latest' });
+				const event = contractDeployed.events.MultiValueEvent({ fromBlock: 'latest' });
 
 				event.on('data', () => {
 					resolve();
@@ -144,15 +147,15 @@ describe('contract', () => {
 	describeIf(isWs)('getPastEvents', () => {
 		// TODO: Debug why this tests is hanging the websocket
 		it('should return all past events', async () => {
-			await contract.methods
+			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
-			await contract.methods
+			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 2', 12, true)
 				.send(sendOptions);
 
 			expect(
-				await contract.getPastEvents('MultiValueEvent', {
+				await contractDeployed.getPastEvents('MultiValueEvent', {
 					fromBlock: 'earliest',
 					toBlock: 'latest',
 				}),

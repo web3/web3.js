@@ -18,28 +18,28 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, getSystemTestAccounts, isWs } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, isWs, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
 		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		let accounts: string[];
+		let acc: { address: string; privateKey: string };
 
 		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
-			accounts = await getSystemTestAccounts();
+			acc = await createTempAccount();
 
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 
-			sendOptions = { from: accounts[0], gas: '1000000' };
+			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 
 		it('should deploy the contract', async () => {
@@ -52,7 +52,7 @@ describe('contract', () => {
 			contract = new Contract(GreeterAbi, {
 				provider: getSystemTestProvider(),
 				data: GreeterBytecode,
-				from: accounts[0],
+				from: acc.address,
 				gas: '1000000',
 			});
 			const deployedContract = await contract.deploy({ arguments: ['Hello World'] }).send();
