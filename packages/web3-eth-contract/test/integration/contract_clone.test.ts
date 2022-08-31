@@ -16,33 +16,29 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('clone', () => {
 		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		let accounts: string[];
-
-		beforeEach(async () => {
+		beforeAll(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
-
-			accounts = await getSystemTestAccounts();
+			const acc = await createTempAccount();
 
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
 
-			sendOptions = { from: accounts[0], gas: '1000000' };
+			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 
 		it('should clone the contract but with same address', async () => {
 			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-
 			const newContract = deployedContract.clone();
 
 			expect(newContract).toBeInstanceOf(Contract);
