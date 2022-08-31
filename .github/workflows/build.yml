@@ -45,7 +45,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node: [14, 16]
+                node: [14, 16, 18]
         env:
             TEST: "unit"
         steps:
