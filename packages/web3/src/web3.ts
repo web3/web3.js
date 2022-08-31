@@ -49,6 +49,12 @@ export default class Web3 extends Web3Context<EthExecutionAPI> {
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
 		super({ provider });
 
+		if (isNullish(provider) || (typeof provider === 'string' && provider.trim() === '')) {
+			console.warn(
+				'NOTE: web3.js is running without provider. You need to pass a provider in order to interact with the network!',
+			);
+		}
+
 		const accounts = initAccountsForContext(this);
 
 		// Init protected properties
