@@ -54,7 +54,7 @@ describe('contract', () => {
 
 		describe('contract instance', () => {
 			let contractDeployed: Contract<typeof ERC20TokenAbi>;
-			beforeEach(async () => {
+			beforeAll(async () => {
 				const acc = await createTempAccount();
 				sendOptions = { from: acc.address, gas: '10000000' };
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
