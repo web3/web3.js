@@ -25,7 +25,8 @@ import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 
 import {
-	createNewAccount,
+	closeOpenConnection,
+	createTempAccount,
 	getSystemTestProvider,
 	isHttp,
 	isWs,
@@ -35,60 +36,45 @@ import { Web3EthExecutionAPI } from '../../src/web3_eth_execution_api';
 
 describe('eth', () => {
 	let web3Eth: Web3Eth;
-	let accounts: string[] = [];
 	let clientUrl: string;
 
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
+	let tempAcc: { address: string; privateKey: string };
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
-		if (isWs) {
-			web3Eth = new Web3Eth(
-				new WebSocketProvider(
-					clientUrl,
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-				),
-			);
-			contract = new Contract(BasicAbi, undefined, {
-				provider: new WebSocketProvider(
-					clientUrl,
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-				),
-			});
-		} else {
-			web3Eth = new Web3Eth(clientUrl);
-			contract = new Contract(BasicAbi, undefined, {
-				provider: clientUrl,
-			});
-		}
-
-		deployOptions = {
-			data: BasicBytecode,
-			arguments: [10, 'string init value'],
-		};
-
-		sendOptions = { from: accounts[0], gas: '1000000' };
-
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		web3Eth = new Web3Eth(clientUrl);
+		contract = new Contract(BasicAbi, {
+			provider: clientUrl,
+		});
 	});
-	afterAll(() => {
-		if (isWs && web3Eth?.provider) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-			(contract.provider as WebSocketProvider).disconnect();
-		}
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
+	});
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {
-		it('setProvider', () => {
-			web3Eth.setProvider(contract.provider as SupportedProviders<Web3EthExecutionAPI>);
-			expect(web3Eth.provider).toBe(contract.provider);
+		it('setProvider', async () => {
+			deployOptions = {
+				data: BasicBytecode,
+				arguments: [10, 'string init value'],
+			};
+
+			sendOptions = { from: tempAcc.address, gas: '1000000' };
+
+			const deoloyedContract = await contract.deploy(deployOptions).send(sendOptions);
+			const { provider } = web3Eth;
+			web3Eth.setProvider(
+				deoloyedContract.provider as SupportedProviders<Web3EthExecutionAPI>,
+			);
+
+			expect(web3Eth.provider).toBe(deoloyedContract.provider);
+			web3Eth.setProvider(provider as SupportedProviders<Web3EthExecutionAPI>);
 		});
 		it('providers', () => {
 			const res = web3Eth.providers;

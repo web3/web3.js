@@ -19,9 +19,9 @@ import { Contract } from '../../src';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../shared_fixtures/build/ERC20Token';
 import {
 	getSystemTestProvider,
-	getSystemTestAccounts,
 	describeIf,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -32,61 +32,66 @@ describe('contract', () => {
 		let contract: Contract<typeof ERC20TokenAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
-		let accounts: string[];
 
 		beforeAll(async () => {
 			contract = new Contract(ERC20TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
-			accounts = await getSystemTestAccounts();
-
 			deployOptions = {
 				data: ERC20TokenBytecode,
 				arguments: [initialSupply],
 			};
-
-			sendOptions = { from: accounts[0], gas: '10000000' };
 		});
 
 		it('should deploy the contract', async () => {
-			await expect(contract.deploy(deployOptions).send(sendOptions)).resolves.toBeDefined();
+			const acc = await createTempAccount();
+			const sendOptionsLocal = { from: acc.address, gas: '10000000' };
+			await expect(
+				contract.deploy(deployOptions).send(sendOptionsLocal),
+			).resolves.toBeDefined();
 		});
 
 		describe('contract instance', () => {
-			beforeAll(async () => {
-				contract = await contract.deploy(deployOptions).send(sendOptions);
+			let contractDeployed: Contract<typeof ERC20TokenAbi>;
+			beforeEach(async () => {
+				const acc = await createTempAccount();
+				sendOptions = { from: acc.address, gas: '10000000' };
+				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
-
 			describe('methods', () => {
 				it('should return the name', async () => {
-					expect(await contract.methods.name().call()).toBe('Gold');
+					expect(await contractDeployed.methods.name().call()).toBe('Gold');
 				});
 
 				it('should return the symbol', async () => {
-					expect(await contract.methods.symbol().call()).toBe('GLD');
+					expect(await contractDeployed.methods.symbol().call()).toBe('GLD');
 				});
 
 				it('should return the decimals', async () => {
-					expect(await contract.methods.decimals().call()).toBe('18');
+					expect(await contractDeployed.methods.decimals().call()).toBe('18');
 				});
 
 				it('should return total supply', async () => {
-					expect(await contract.methods.totalSupply().call()).toBe(initialSupply);
+					expect(await contractDeployed.methods.totalSupply().call()).toBe(initialSupply);
 				});
 
 				it('should transfer tokens', async () => {
-					await contract.methods.transfer(accounts[1], '100000').send(sendOptions);
+					const acc2 = await createTempAccount();
+					await contractDeployed.methods.transfer(acc2.address, '10').send(sendOptions);
 
-					expect(await contract.methods.balanceOf(accounts[1]).call()).toBe('100000');
+					expect(await contractDeployed.methods.balanceOf(acc2.address).call()).toBe(
+						'10',
+					);
 				});
 			});
 
 			describeIf(isWs)('events', () => {
 				it('should emit transfer event', async () => {
+					const acc2 = await createTempAccount();
 					await expect(
 						processAsync(async resolve => {
-							const event = contract.events.Transfer();
+							const event = contractDeployed.events.Transfer();
 							event.on('data', data => {
 								resolve({
 									from: toUpperCaseHex(data.returnValues.from as string),
@@ -95,14 +100,14 @@ describe('contract', () => {
 								});
 							});
 
-							await contract.methods
-								.transfer(accounts[1], '100000')
+							await contractDeployed.methods
+								.transfer(acc2.address, '100')
 								.send(sendOptions);
 						}),
 					).resolves.toEqual({
-						from: toUpperCaseHex(sendOptions['from'] as string),
-						to: toUpperCaseHex(accounts[1]),
-						value: '100000',
+						from: toUpperCaseHex(sendOptions.from as string),
+						to: toUpperCaseHex(acc2.address),
+						value: '100',
 					});
 				});
 			});
