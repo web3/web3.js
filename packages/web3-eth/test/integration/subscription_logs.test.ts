@@ -26,9 +26,9 @@ import { eventAbi, Resolve } from './helper';
 import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 2;
@@ -51,46 +51,45 @@ const makeFewTxToContract = async ({
 };
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
-	let accounts: string[] = [];
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
 	let contract: Contract<typeof BasicAbi>;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 	let from: string;
 	const testDataString = 'someTestString';
-	beforeAll(async () => {
+	let tempAcc: { address: string; privateKey: string };
+
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
+	});
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
-		[, from] = accounts;
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+		providerWs = new WebSocketProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
-
-		deployOptions = {
-			data: BasicBytecode,
-			arguments: [10, 'string init value'],
-		};
-
-		sendOptions = { from, gas: '1000000' };
-
-		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 	afterAll(() => {
 		providerWs.disconnect();
+		(contract.provider as WebSocketProvider).disconnect();
 	});
 
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs`, async () => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
+			from = tempAcc.address;
+			deployOptions = {
+				data: BasicBytecode,
+				arguments: [10, 'string init value'],
+			};
+
+			sendOptions = { from, gas: '1000000' };
+			contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 			const sub: LogsSubscription = await web3Eth.subscribe('logs', {
-				address: contract.options.address,
+				address: contractDeployed.options.address,
 			});
 
 			let count = 0;
@@ -110,7 +109,7 @@ describeIf(isWs)('subscription', () => {
 				});
 			});
 
-			await makeFewTxToContract({ contract, sendOptions, testDataString });
+			await makeFewTxToContract({ contract: contractDeployed, sendOptions, testDataString });
 
 			await pr;
 			await web3Eth.clearSubscriptions();

@@ -18,22 +18,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { EthExecutionAPI, Web3APIPayload, JsonRpcResponseWithResult } from 'web3-types';
 import HttpProvider from '../../src/index';
 import {
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	describeIf,
+	createTempAccount,
+	isHttp,
 } from '../fixtures/system_test_utils';
 
-describeIf(getSystemTestProvider().startsWith('http'))('HttpProvider - implemented methods', () => {
+describeIf(isHttp)('HttpProvider - implemented methods', () => {
 	let httpProvider: HttpProvider;
 	let jsonRpcPayload: Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 
 	beforeAll(async () => {
 		httpProvider = new HttpProvider(getSystemTestProvider());
+		const tempAcc = await createTempAccount();
 		jsonRpcPayload = {
 			jsonrpc: '2.0',
 			id: 42,
 			method: 'eth_getBalance',
-			params: [(await getSystemTestAccounts())[0], 'latest'],
+			params: [tempAcc.address, 'latest'],
 		} as Web3APIPayload<EthExecutionAPI, 'eth_getBalance'>;
 	});
 

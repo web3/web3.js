@@ -14,16 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
-
 import { BlockNumberOrTag, Numbers } from 'web3-types';
 
 import Web3Eth from '../../../src';
 import {
 	getSystemTestProvider,
-	isWs,
 	describeIf,
 	getSystemTestBackend,
+	closeOpenConnection,
 } from '../../fixtures/system_test_utils';
 import { feeHistorySchema } from '../../../src/schemas';
 
@@ -36,10 +34,8 @@ describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () 
 		web3Eth = new Web3Eth(systemProvider);
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	test('should return fee history with right data', async () => {

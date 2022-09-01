@@ -18,10 +18,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Account } from 'web3-eth-accounts';
 import {
 	getSystemTestProvider,
-	getSystemTestAccounts,
 	createNewAccount,
 	waitForOpenConnection,
 	closeOpenConnection,
+	createTempAccount,
 } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
 
@@ -29,12 +29,12 @@ const hexRegx = /0[xX][0-9a-fA-F]+/;
 
 describe('web3.accounts', () => {
 	let clientUrl: string;
-	let nodeAccounts: string[];
+	let tempAccount: string;
 	let web3: Web3;
 
-	beforeAll(async () => {
+	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
-		nodeAccounts = await getSystemTestAccounts();
+		tempAccount = (await createTempAccount()).address;
 		web3 = new Web3(clientUrl);
 
 		await waitForOpenConnection(web3);
@@ -61,7 +61,7 @@ describe('web3.accounts', () => {
 				const account: Web3Account = web3.eth.accounts.create();
 				const tx = {
 					from: account.address,
-					to: nodeAccounts[0],
+					to: tempAccount,
 					value: web3.utils.toWei('0.1', 'ether'),
 					gas: '0x5218',
 					data: '0x1',
@@ -70,7 +70,7 @@ describe('web3.accounts', () => {
 				// Fund this account with some ether
 				await expect(
 					web3.eth.sendTransaction({
-						from: nodeAccounts[0],
+						from: tempAccount,
 						to: account.address,
 						value: web3.utils.toWei('0.5', 'ether'),
 					}),
@@ -103,7 +103,7 @@ describe('web3.accounts', () => {
 
 				const tx = {
 					from: account.address,
-					to: nodeAccounts[0],
+					to: tempAccount,
 					value: web3.utils.toWei('0.1', 'ether'),
 					gas: '0x1',
 					data: '0x1',
@@ -117,7 +117,7 @@ describe('web3.accounts', () => {
 				const account: Web3Account = web3.eth.accounts.create();
 
 				const tx = {
-					from: nodeAccounts[0],
+					from: tempAccount,
 					to: account.address,
 					value: web3.utils.toWei('0.1', 'ether'),
 					gas: '0x1',
@@ -135,7 +135,7 @@ describe('web3.accounts', () => {
 
 			const tx = {
 				from: account.address,
-				to: nodeAccounts[0],
+				to: tempAccount,
 				value: web3.utils.toWei('0.1', 'ether'),
 				gas: '0x5218',
 				data: '0x1',
@@ -144,7 +144,7 @@ describe('web3.accounts', () => {
 			// Fund this account with some ether
 			await expect(
 				web3.eth.sendTransaction({
-					from: nodeAccounts[0],
+					from: tempAccount,
 					to: account.address,
 					value: web3.utils.toWei('0.5', 'ether'),
 				}),
@@ -175,7 +175,7 @@ describe('web3.accounts', () => {
 
 			const tx = {
 				from: account.address,
-				to: nodeAccounts[0],
+				to: tempAccount,
 				value: web3.utils.toWei('0.1', 'ether'),
 				gas: '0x1',
 				data: '0x1',

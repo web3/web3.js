@@ -24,8 +24,8 @@ import { sendFewTxes } from './helper';
 import {
 	getSystemTestProvider,
 	describeIf,
-	getSystemTestAccounts,
 	isWs,
+	createTempAccount,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
@@ -36,18 +36,12 @@ type Resolve = (value?: unknown) => void;
 describeIf(isWs)('watch subscription transaction', () => {
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let accounts: string[] = [];
 	let clientUrl: string;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
 
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+		providerWs = new WebSocketProvider(clientUrl);
 	});
 	afterAll(() => {
 		providerWs.disconnect();
@@ -55,13 +49,14 @@ describeIf(isWs)('watch subscription transaction', () => {
 
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
+			const tempAccount = await createTempAccount();
+			const tempAccount2 = await createTempAccount();
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 
-			// setupWeb3(web3Eth, waitConfirmations);
 			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
-			const from = accounts[0];
-			const to = accounts[1];
+			const from = tempAccount.address;
+			const to = tempAccount2.address;
 			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
@@ -85,7 +80,7 @@ describeIf(isWs)('watch subscription transaction', () => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(Number(confirmations)).toBe(shouldBe);
+					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
 						resolve();
