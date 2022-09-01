@@ -379,19 +379,20 @@ Contract.prototype._checkListener = function(type, event){
  * @return {Object} the options with gaps filled by defaults
  */
 Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(options) {
-    var gasPrice = options.gasPrice ? String(options.gasPrice): null;
-    var from = options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
+    var _options = { ...options };
+    var gasPrice = _options.gasPrice ? String(_options.gasPrice): null;
+    var from = _options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(_options.from)) : null;
 
-    options.data = options.data || this.options.data;
+    _options.data = _options.data || this.options.data;
 
-    options.from = from || this.options.from;
-    options.gasPrice = gasPrice || this.options.gasPrice;
-    options.gas = options.gas || options.gasLimit || this.options.gas;
+    _options.from = from || this.options.from;
+    _options.gasPrice = gasPrice || this.options.gasPrice;
+    _options.gas = _options.gas || _options.gasLimit || this.options.gas;
 
     // TODO replace with only gasLimit?
-    delete options.gasLimit;
+    delete _options.gasLimit;
 
-    return options;
+    return _options;
 };
 
 
