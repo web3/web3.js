@@ -119,9 +119,12 @@ export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
 		await waitForOpenConnection(web3Context);
 	}
 
-	(web3Context.provider as unknown as Web3BaseProvider).on('error', (err: any) => {
-		console.warn('error while trying to close the connection', err);
-	});
+	// If an error happened during closing, that is acceptable at tests, just print a 'warn'.
+	if (web3Context?.provider) {
+		(web3Context.provider as unknown as Web3BaseProvider).on('error', (err: any) => {
+			console.warn('error while trying to close the connection', err);
+		});
+	}
 
 	if (
 		web3Context?.provider &&
