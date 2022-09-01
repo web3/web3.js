@@ -45,8 +45,8 @@ const config = {
 	tagline: 'The ultimate JavaScript library for Ethereum',
 	url: 'https://docs.web3js.org',
 	baseUrl: '/',
-	onBrokenLinks: 'warn',
-	onBrokenMarkdownLinks: 'warn',
+	onBrokenLinks: 'throw',
+	onBrokenMarkdownLinks: 'throw',
 	favicon: 'img/favicon.ico',
 
 	// GitHub pages deployment config.

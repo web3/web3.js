@@ -44,6 +44,8 @@ import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError, TransactionRevertError } from 'web3-errors';
+
+import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import { SignatureError } from './errors';
 import * as rpcMethods from './rpc_methods';
 import {
@@ -66,12 +68,12 @@ import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 // eslint-disable-next-line import/no-cycle
+import { trySendTransaction } from './utils/try_send_transaction';
+// eslint-disable-next-line import/no-cycle
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import { NUMBER_DATA_FORMAT } from './constants';
-// eslint-disable-next-line import/no-cycle
-import { trySendTransaction } from './utils/try_send_transaction';
 
 /**
  *
@@ -1529,15 +1531,18 @@ export async function signTransaction<ReturnFormat extends DataFormat>(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT),
 	);
-
-	const unformattedResponse = isString(response as HexStringBytes)
-		? { raw: response, tx: transaction }
-		: (response as SignedTransactionInfoAPI);
-
-	return {
-		raw: format({ eth: 'bytes' }, unformattedResponse.raw, returnFormat),
-		tx: formatTransaction(unformattedResponse.tx, returnFormat),
-	};
+	// Some clients only return the encoded signed transaction (e.g. Ganache)
+	// while clients such as Geth return the desired SignedTransactionInfoAPI object
+	return isString(response as HexStringBytes)
+		? decodeSignedTransaction(response as HexStringBytes, returnFormat)
+		: {
+				raw: format(
+					{ eth: 'bytes' },
+					(response as SignedTransactionInfoAPI).raw,
+					returnFormat,
+				),
+				tx: formatTransaction((response as SignedTransactionInfoAPI).tx, returnFormat),
+		  };
 }
 
 // TODO Decide what to do with transaction.to

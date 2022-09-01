@@ -21,10 +21,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: ${{ matrix.node }}
           cache: yarn
       - run: yarn
-#      - run: ./scripts/geth.sh download
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
@@ -132,8 +131,13 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-        shell: bash
+      - run: npm install --no-package-lock --no-save --force cypress
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+            install: false
+            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
 
   build-docs:
     name: Build Docs
