@@ -6,6 +6,8 @@
 
 [![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url] [![GitPOAP Badge][gitpoap-image]][gitpoap-url]
 
+#####  [Web3.js 4.x][4x-release] has been release. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
+
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
@@ -308,7 +310,8 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js
 [gitpoap-image]: https://public-api.gitpoap.io/v1/repo/ChainSafe/web3.js/badge
 [gitpoap-url]: https://www.gitpoap.io/gh/ChainSafe/web3.js
-
+[4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.0-alpha.0 
+[4xdoc]: https://docs.web3js.org/
 ## Semantic versioning
 
 This project follows [semver](https://semver.org/) as closely as possible **from version 1.3.0 onwards**. Earlier minor version bumps [might](https://github.com/ethereum/web3.js/issues/3758) have included breaking behavior changes.
