@@ -19,7 +19,7 @@ import Contract from 'web3-eth-contract';
 import { Web3PluginBase } from 'web3-core';
 import { Address, Web3APISpec } from 'web3-types';
 // @ts-expect-error 'Web3' is declared but its value is never read.
-import { Web3 } from 'web3/dist/web3';
+import { Web3 } from 'web3';
 
 import { AggregatorV3InterfaceABI } from './aggregator_v3_interface_abi';
 
@@ -35,7 +35,7 @@ interface ChainlinkPluginAPI extends Web3APISpec {
 	getPrice: () => Promise<Price>;
 }
 
-declare module 'web3/dist/web3' {
+declare module 'web3' {
 	interface Web3 {
 		chainlink: ChainlinkPluginAPI;
 	}

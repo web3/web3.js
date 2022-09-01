@@ -128,3 +128,4 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		});
 	}
 }
+export default Web3;
