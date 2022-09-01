@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
+import { Web3ContextObject } from 'web3-core';
 import REGISTRY from './abi/registry';
 import { RESOLVER } from './abi/resolver';
 import { registryAddresses } from './config';
@@ -26,8 +27,12 @@ import { namehash } from './utils';
 export class Registry {
 	private readonly contract: Contract<typeof REGISTRY>;
 
-	public constructor(customRegistryAddress?: Address) {
-		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryAddresses.main);
+	public constructor(context: Web3ContextObject, customRegistryAddress?: Address) {
+		this.contract = new Contract(
+			REGISTRY,
+			customRegistryAddress ?? registryAddresses.main,
+			context,
+		);
 	}
 	public async getOwner(name: string) {
 		try {
@@ -79,7 +84,7 @@ export class Registry {
 	}
 
 	public setSubnodeOwner(
-		name: string,
+		node: string,
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
@@ -89,7 +94,7 @@ export class Registry {
 		try {
 			const receipt = this.contract.methods
 				.setSubnodeOwner(
-					namehash(name),
+					namehash(node),
 					hexStrictLabel,
 					format({ eth: 'address' }, address, returnFormat),
 				)

@@ -47,7 +47,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	) {
 		super(provider ?? '');
 		this.registryAddress = registryAddr ?? registryAddresses.main; // will default to main registry address
-		this._registry = new Registry(registryAddr);
+		this._registry = new Registry(this.getContextObject(), registryAddr);
 		this._resolver = new Resolver(this._registry);
 	}
 
@@ -129,13 +129,13 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	 * Returns the address of the owner of an ENS name.
 	 */
 	public async setSubnodeOwner(
-		name: string,
+		node: string,
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions,
 		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): Promise<TransactionReceipt | RevertInstructionError> {
-		return this._registry.setSubnodeOwner(name, label, address, txConfig, returnFormat);
+		return this._registry.setSubnodeOwner(node, label, address, txConfig, returnFormat);
 	}
 
 	/**
