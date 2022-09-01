@@ -104,6 +104,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await confirmationPromise;
+			sentTx.removeAllListeners();
 		});
 	});
 });
