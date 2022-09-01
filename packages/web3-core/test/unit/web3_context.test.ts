@@ -123,6 +123,27 @@ describe('Web3Context', () => {
 
 			expect(child.provider).toBe(parent.provider);
 		});
+
+		it('context should be using the default common', () => {
+			const parent = new Context1({
+				provider: 'http://test/abc',
+				config: {
+					defaultCommon: {
+						customChain: {
+							name: 'foo',
+							networkId: 'my-network-id',
+							chainId: 1337,
+						},
+						baseChain: 'mainnet',
+						hardfork: 'berlin',
+					},
+				},
+			});
+			const child = parent.use(Context2);
+
+			expect(child.defaultNetworkId).toBe('my-network-id');
+			expect(child.defaultHardfork).toBe('my-fork');
+		});
 	});
 
 	describe('link', () => {

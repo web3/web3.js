@@ -274,6 +274,33 @@ describe('defaultTransactionBuilder', () => {
 			});
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
+
+		it('should use web3Context.defaultCommon to populate', async () => {
+			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+			const customCommon = {
+				defaultCommon: {
+					customChain: {
+						name: 'foo',
+						networkId: 'my-network-id',
+						chainId: 1337,
+					},
+					baseChain: 'mainnet',
+					hardfork: 'berlin',
+				},
+			};
+			web3Context.defaultCommon = customCommon;
+
+			const input = { ...transaction };
+			delete input.hardfork;
+			delete input.common;
+			delete input.chain;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.common).toBe(web3Context.defaultCommon);
+		});
 	});
 
 	describe('should populate chainId', () => {

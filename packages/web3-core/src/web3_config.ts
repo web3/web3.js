@@ -39,6 +39,7 @@ export interface Web3ConfigOptions {
 	defaultNetworkId?: Numbers;
 	defaultChain: string;
 	defaultHardfork: string;
+
 	defaultCommon?: Record<string, unknown>;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;

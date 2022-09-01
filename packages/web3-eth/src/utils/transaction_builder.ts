@@ -161,6 +161,9 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	}
 
 	if (isNullish(populatedTransaction.common)) {
+		// if (options.web3Context.defaultCommon)
+		// populatedTransaction.common = options.web3Context.defaultCommon as unknown as Common;
+
 		if (isNullish(populatedTransaction.chain)) {
 			populatedTransaction.chain = options.web3Context.defaultChain as ValidChains;
 		}

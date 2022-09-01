@@ -64,19 +64,24 @@ const getEthereumjsTransactionOptions = (
 
 	let common;
 	if (!hasTransactionSigningOptions) {
-		common = Common.custom(
-			{
-				name: 'custom-network',
-				chainId: toNumber(transaction.chainId) as number,
-				networkId: !isNullish(transaction.networkId)
-					? (toNumber(transaction.networkId) as number)
-					: undefined,
-				defaultHardfork: transaction.hardfork ?? web3Context.defaultHardfork,
-			},
-			{
-				baseChain: web3Context.defaultChain,
-			},
-		);
+		// if defaultcommon is specified, use that.
+		if (web3Context.defaultCommon) {
+			common = Common.custom(web3Context.defaultCommon);
+		} else {
+			common = Common.custom(
+				{
+					name: 'custom-network',
+					chainId: toNumber(transaction.chainId) as number,
+					networkId: !isNullish(transaction.networkId)
+						? (toNumber(transaction.networkId) as number)
+						: undefined,
+					defaultHardfork: transaction.hardfork ?? web3Context.defaultHardfork,
+				},
+				{
+					baseChain: web3Context.defaultChain,
+				},
+			);
+		}
 	} else if (transaction.common)
 		common = Common.custom(
 			{
