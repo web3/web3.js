@@ -7,6 +7,8 @@ const pending = "pending";
 const latest = "latest";
 const genesis = "genesis";
 const earliest = "earliest";
+const finalized = "finalized";
+const safe = "safe";
 
 const tests = [
     // Base cases for numbers
@@ -27,6 +29,8 @@ const tests = [
     { input: {a: earliest, b: 0}, result: 0 },
     { input: {a: latest, b: latest}, result: 0 },
     { input: {a: pending, b: pending}, result: 0 },
+    { input: {a: finalized, b: finalized}, result: 0 },
+    { input: {a: safe, b: safe}, result: 0 },
     // Complex Strings
     // Genesis
     { input: {a: earliest, b: 2}, result: -1 },    
@@ -37,6 +41,10 @@ const tests = [
     { input: {a: genesis, b: new BN(2)}, result: -1 },
     { input: {a: genesis, b: latest}, result: -1 },
     { input: {a: genesis, b: pending}, result: -1 },
+    { input: {a: earliest, b: finalized}, result: -1 },
+    { input: {a: genesis, b: finalized}, result: -1 },
+    { input: {a: earliest, b: safe}, result: -1 },
+    { input: {a: genesis, b: safe}, result: -1 },
     // latest
     { input: {a: latest, b: 0}, result: 1 },
     { input: {a: latest, b: new BN(1)}, result: 1 },
@@ -44,6 +52,21 @@ const tests = [
     // pending 
     { input: {a: pending, b: 0}, result: 1 },
     { input: {a: pending, b: new BN(1)}, result: 1 },
+    { input: {a: finalized, b: 0}, result: 1 },
+    { input: {a: finalized, b: new BN(1)}, result: 1 },
+    // finalized
+    { input: {a: finalized, b: 0}, result: 1 },
+    { input: {a: finalized, b: new BN(1)}, result: 1 },
+    { input: {a: finalized, b: pending}, result: -1 },
+    { input: {b: finalized, a: 0}, result: -1 },
+    { input: {b: finalized, a: new BN(1)}, result: -1 },
+    { input: {b: finalized, a: pending}, result: 1 },
+    // safe
+    { input: {a: safe, b: 0}, result: 1 },
+    { input: {a: safe, b: pending}, result: -1 },
+    { input: {b: safe, a: 0}, result: -1 },
+    { input: {b: safe, a: pending}, result: 1 },
+
 ];
 
 describe('formatters', function () {
