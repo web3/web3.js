@@ -274,4 +274,126 @@ describe('ens', () => {
 		const owner = await ens.getOwner(domain);
 		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
+
+	it('should return the subnode owner of "resolver"', async () => {
+		const owner = await ens.getOwner('resolver');
+
+		expect(owner).toEqual(toChecksumAddress(defaultAccount));
+	});
+
+	// eslint-disable-next-line jest/expect-expect
+	// it('should allow setting the TTL', async () => {
+	// 	// const result = await ens.setTTL('0x0', 3600, { from: defaultAccount });
+	// 	// const res = await ens.getTTL('0x0');
+	// 	// const x = await registry.methods
+	// 	// 	.setTTL(namehash(ZERO_ADDRESS), 3600)
+	// 	// 	.send({ from: defaultAccount });
+	// 	// assert.equal(result.logs.length, 1);
+	// 	// const { args } = result.logs[0];
+	// 	// assert.equal(
+	// 	// 	args.node,
+	// 	// 	'0x0000000000000000000000000000000000000000000000000000000000000000',
+	// 	// );
+	// 	// assert.equal(args.ttl.toNumber(), 3600);
+	// 	// console.log('hi');
+	// 	// ens.get
+	// 	console.log(accounts);
+	// 	const node = namehash('resolver');
+	// 	const label = sha3('resolver') as string;
+
+	// 	console.log(namehash(ZERO_ADDRESS).length);
+	// 	console.log(ZERO_NODE.length);
+	// 	console.log(namehash(ZERO_ADDRESS));
+	// 	console.log(ZERO_NODE);
+	// 	// await ens.setSubnodeOwner(ZERO_NODE, label, defaultAccount, {
+	// 	// 	from: defaultAccount,
+	// 	// });
+
+	// 	await registry.methods
+	// 		.setSubnodeOwner(ZERO_NODE, label, defaultAccount)
+	// 		.send({ from: defaultAccount });
+
+	// 	await registry.methods
+	// 		.setResolver(node, resolver.options.address as Address)
+	// 		.send({ from: defaultAccount });
+	// 	await resolver.methods.setAddr(node, addressOne).send({ from: defaultAccount });
+	// });
+	// eslint-disable-next-line jest/expect-expect
+	// it('should return the subnode owner of "resolver"', async () => {
+	// 	const node = namehash('resolver');
+	// 	const label = sha3('resolver') as string;
+
+	// 	console.log(node);
+	// 	console.log(label);
+
+	// 	const owner = await ens.getOwner('resolver');
+	// 	console.log(owner);
+	// 	console.log(defaultAccount);
+
+	// 	const addr = '0x0000000000000000000000000000000000001234';
+
+	// 	// const result = await ens.setOwner('0x0', addr, { from: defaultAccount });
+	// 	const o = await registry.methods.owner(namehash('0x0')).send({ from: defaultAccount });
+	// 	console.log(await ens.getOwner('0x0'));
+	// 	// console.log(o);
+	// 	// await deployContract(defaultAccount, RESOLVER.abi, RESOLVER.bytecode, [
+	// 	// 	registry.options.address as string,
+	// 	// 	ZERO_ADDRESS,
+	// 	// 	defaultAccount,
+	// 	// 	ZERO_ADDRESS,
+	// 	// ]);
+	// 	// const res = await registry.methods
+	// 	// 	.setSubnodeOwner(
+	// 	// 		// format({ eth: 'address' }, ZERO_ADDRESS, DEFAULT_RETURN_FORMAT),
+	// 	// 		namehash(ZERO_ADDRESS),
+	// 	// 		label,
+	// 	// 		defaultAccount,
+	// 	// 	)
+	// 	// 	.send({ from: defaultAccount });
+	// 	// await ens.setSubnodeOwner(ZERO_ADDRESS, label, defaultAccount, { from: defaultAccount });
+	// 	// console.log(res);
+	// });
+
+	// it('should fetch the registered resolver for the subnode "resolver"', async () => {
+	// 	const resolverInRegistry = await ens.getResolver('resolver');
+	// 	expect(resolverInRegistry.options.address).toEqual(resolver.options.address);
+	// });
+
+	// it('should return the subnode owner of "resolver"', async () => {
+	// 	const owner = await ens.getOwner('resolver');
+
+	// 	console.log(owner);
+	// 	// assert.equal(owner, account);
+	// });
+
+	// eslint-disable-next-line jest/expect-expect
+	// it('should set owner', async () => {
+	// 	// const owner = await registry.methods.setOwner(ZERO_ADDRESS, ZERO_ADDRESS).send();
+	// 	// eslint-disable-next-line no-console
+	// 	// console.log('Owner of registry:', owner);
+	// 	// ens.provider = new ens.providers.HttpProvider('http://localhost:8545');
+	// 	const owner = await ens.setOwner('resolver', defaultAccount, { from: defaultAccount });
+	// 	// const a = await ens.checkNetwork();
+	// 	console.log(owner);
+	// 	// console.log(ens.provider);
+	// 	// console.log(accounts);
+	// 	// ens.
+	// });
+
+	// it('should allow ownership transfers', async () => {
+	// 	const addr = '0x0000000000000000000000000000000000001234';
+
+	// 	// const result = await ens.setOwner('0x0', addr);
+
+	// 	// expect(await ens.getOwner('0x0')).resolves.toEqual(addr);
+
+	// 	// console.log(result);
+	// 	// assert.equal(result.logs.length, 1);
+	// 	// const { args } = result.logs[0];
+	// 	// assert.equal(
+	// 	// 	args.node,
+	// 	// 	'0x0000000000000000000000000000000000000000000000000000000000000000',
+	// 	// );
+	// 	// assert.equal(args.owner, addr);
+	// });
 });
