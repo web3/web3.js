@@ -598,4 +598,4 @@ Released with 1.0.0-beta.37 code base.
 -  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
 
 ### Added
--  Support of `safe` and `finalized` block tags support (#5410)
+-  Support of `safe` and `finalized` block tags added (#5410)
