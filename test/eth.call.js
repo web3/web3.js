@@ -34,6 +34,38 @@ var tests = [{
     result: '0x31981',
     formattedResult: '0x31981',
     call: 'eth_'+ method
+},{
+    args: [{
+        to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        data: '0x23455654',
+        gas: 11,
+        gasPrice: 11
+    }, 'safe'],
+    formattedArgs: [{
+        to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        data: '0x23455654',
+        gas: '0xb',
+        gasPrice: '0xb'
+    }, 'safe'],
+    result: '0x31981',
+    formattedResult: '0x31981',
+    call: 'eth_'+ method
+},{
+    args: [{
+        to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        data: '0x23455654',
+        gas: 11,
+        gasPrice: 11
+    }, 'finalized'],
+    formattedArgs: [{
+        to: '0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b',
+        data: '0x23455654',
+        gas: '0xb',
+        gasPrice: '0xb'
+    }, 'finalized'],
+    result: '0x31981',
+    formattedResult: '0x31981',
+    call: 'eth_'+ method
 }];
 
 testMethod.runTests('eth', method, tests);
