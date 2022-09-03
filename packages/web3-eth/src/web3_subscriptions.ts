@@ -25,6 +25,7 @@ import {
 	Topic,
 	BlockHeaderOutput,
 	LogsOutput,
+	Numbers,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
@@ -107,8 +108,43 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(data: SyncOutput) {
-		this.emit('data', format(syncSchema, data, super.returnFormat));
+	protected _processSubscriptionResult(
+		data:
+			| {
+					syncing: boolean;
+					status: { [key: string]: Numbers };
+			  }
+			| boolean,
+	) {
+		if (typeof data === 'boolean') {
+			this.emit('changed', data);
+		} else {
+			const mappedData: SyncOutput = {
+				startingBlock:
+					'StartingBlock' in data.status
+						? data.status.StartingBlock
+						: data.status.startingBlock,
+				currentBlock:
+					'CurrentBlock' in data.status
+						? data.status.CurrentBlock
+						: data.status.startingBlock,
+				highestBlock:
+					'HighestBlock' in data.status
+						? data.status.HighestBlock
+						: data.status.highestBlock,
+				knownStates:
+					'KnownStates' in data.status
+						? data.status.KnownStates
+						: data.status?.knownStates,
+				pulledStates:
+					'PulledStates' in data.status
+						? data.status.PulledStates
+						: data.status?.pulledStates,
+			};
+
+			this.emit('changed', data.syncing);
+			this.emit('data', format(syncSchema, mappedData, super.returnFormat));
+		}
 	}
 
 	protected _processSubscriptionError(error: Error) {
