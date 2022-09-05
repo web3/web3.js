@@ -34,6 +34,7 @@ import {
 	itIf,
 	isIpc,
 	isWs,
+	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import {
@@ -46,17 +47,15 @@ import {
 
 describe('rpc', () => {
 	let web3Eth: Web3Eth;
-	let accounts: string[] = [];
 	let clientUrl: string;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let contract: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-
+	let tempAcc: { address: string; privateKey: string };
+	let tempAcc2: { address: string; privateKey: string };
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
 		web3Eth = new Web3Eth({
 			provider: clientUrl,
 			config: {
@@ -72,18 +71,21 @@ describe('rpc', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
+		tempAcc = await createTempAccount();
+		tempAcc2 = await createTempAccount();
+		sendOptions = { from: tempAcc.address, gas: '1000000' };
+
+		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 		if (isIpc) {
 			await (contract.provider as IpcProvider).waitForConnection();
 			await (web3Eth.provider as IpcProvider).waitForConnection();
 		}
-		sendOptions = { from: accounts[0], gas: '1000000' };
-
-		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
 	afterAll(() => {
 		if (isWs) {
 			(web3Eth.provider as WebSocketProvider).disconnect();
+			(contract.provider as WebSocketProvider).disconnect();
 		}
 	});
 
@@ -111,7 +113,6 @@ describe('rpc', () => {
 			const isMining = await web3Eth.isMining();
 			expect(isMining).toBe(true);
 		});
-
 		it.each(Object.values(FMT_NUMBER))('getHashRate', async format => {
 			const hashRate = await web3Eth.getHashRate({
 				number: format as FMT_NUMBER,
@@ -124,8 +125,6 @@ describe('rpc', () => {
 			const account = await createNewAccount({ unlock: true });
 			const accList = await web3Eth.getAccounts();
 			const accListLowerCase = accList.map((add: string) => add.toLowerCase());
-			expect(accListLowerCase).toContain(accounts[0].toLowerCase());
-			expect(accListLowerCase).toContain(accounts[1].toLowerCase());
 			expect(accListLowerCase).toContain(account.address.toLowerCase());
 		});
 
@@ -152,7 +151,7 @@ describe('rpc', () => {
 			await web3Eth.sendTransaction({
 				to: newAccount.address,
 				value,
-				from: accounts[0],
+				from: tempAcc.address,
 			});
 			const res = await web3Eth.getBalance(newAccount.address, undefined, {
 				number: format as FMT_NUMBER,
@@ -167,19 +166,21 @@ describe('rpc', () => {
 			const numberData = 10;
 			const stringData = 'str';
 			const boolData = true;
-			await contract.methods?.setValues(numberData, stringData, boolData).send(sendOptions);
+			await contractDeployed.methods
+				?.setValues(numberData, stringData, boolData)
+				.send(sendOptions);
 			const resNumber = await web3Eth.getStorageAt(
-				contract.options.address as string,
+				contractDeployed.options.address as string,
 				'0x0',
 				undefined,
 			);
 			const resString = await web3Eth.getStorageAt(
-				contract.options.address as string,
+				contractDeployed.options.address as string,
 				'0x1',
 				undefined,
 			);
 			const resBool = await web3Eth.getStorageAt(
-				contract.options.address as string,
+				contractDeployed.options.address as string,
 				'0x2',
 				undefined,
 			);
@@ -198,12 +199,12 @@ describe('rpc', () => {
 			// long string data test
 			const stringDataLong =
 				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In in interdum nibh, in viverra diam. Morbi eleifend diam sed erat malesuada molestie. Donec ultricies, mi et porta viverra, est magna tempus lorem, sit amet tempus mauris sapien vitae lacus. Duis at est quis nisl dictum accumsan eget et libero. Phasellus semper nibh et varius accumsan. Cras fringilla egestas dui, vitae bibendum enim tincidunt id. Donec condimentum lacinia nulla, eget elementum tortor tristique vel. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut ac risus tellus. Etiam nec neque et erat efficitur laoreet. Maecenas fermentum feugiat diam, ut ultricies ipsum mollis at. In in velit turpis. Vestibulum urna ipsum, vestibulum ut cursus ut, ullamcorper quis est.';
-			await contract.methods
+			await contractDeployed.methods
 				?.setValues(numberData, stringDataLong, boolData)
 				.send(sendOptions);
 
 			const resStringLong = await web3Eth.getStorageAt(
-				contract.options.address as string,
+				contractDeployed.options.address as string,
 				1,
 				undefined,
 				{
@@ -219,7 +220,7 @@ describe('rpc', () => {
 				prs.push(
 					// eslint-disable-next-line no-await-in-loop
 					web3Eth.getStorageAt(
-						contract.options.address as string,
+						contractDeployed.options.address as string,
 						`0x${(
 							BigInt(String(hexToNumber(slotDataNum as string))) + BigInt(i)
 						).toString(16)}`,
@@ -236,10 +237,14 @@ describe('rpc', () => {
 		});
 
 		it.each(Object.values(FMT_NUMBER))('getCode', async format => {
-			const code = await web3Eth.getCode(contract?.options?.address as string, undefined, {
-				number: format as FMT_NUMBER,
-				bytes: FMT_BYTES.HEX,
-			});
+			const code = await web3Eth.getCode(
+				contractDeployed?.options?.address as string,
+				undefined,
+				{
+					number: format as FMT_NUMBER,
+					bytes: FMT_BYTES.HEX,
+				},
+			);
 			expect(code).toBeDefined();
 			expect(BasicBytecode.slice(-100)).toBe(code.slice(-100));
 		});
@@ -247,8 +252,8 @@ describe('rpc', () => {
 		it('getTransaction', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
-				from: accounts[0],
-				to: accounts[1],
+				from: tempAcc.address,
+				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -265,9 +270,9 @@ describe('rpc', () => {
 
 		itIf(getSystemTestBackend() !== 'ganache')('getPendingTransactions', async () => {
 			const tx = web3Eth.sendTransaction({
-				to: accounts[1],
+				to: tempAcc2.address,
 				value: '0x1',
-				from: accounts[0],
+				from: tempAcc.address,
 			});
 
 			const res = await web3Eth.getPendingTransactions();
@@ -281,8 +286,8 @@ describe('rpc', () => {
 		it('getTransactionReceipt', async () => {
 			const [receipt] = await sendFewTxes({
 				web3Eth,
-				from: accounts[0],
-				to: accounts[1],
+				from: tempAcc.address,
+				to: tempAcc2.address,
 				value: '0x1',
 				times: 1,
 			});
@@ -320,19 +325,19 @@ describe('rpc', () => {
 			// const res = await web3Eth.requestAccounts();
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(true).toBe(true);
-			// expect(res[0]).toEqual(accounts[0]);
+			// expect(res[0]).toEqual(tempAcc.address);
 		});
 
 		itIf(getSystemTestBackend() !== 'ganache')('getProof', async () => {
 			const numberData = BigInt(10);
 			const stringData = 'str';
 			const boolData = true;
-			const sendRes = await contract.methods
+			const sendRes = await contractDeployed.methods
 				.setValues(numberData, stringData, boolData)
 				.send(sendOptions);
-			await web3Eth.getStorageAt(contract.options.address as string, 0, undefined);
+			await web3Eth.getStorageAt(contractDeployed.options.address as string, 0, undefined);
 			const res = await web3Eth.getProof(
-				contract.options.address as string,
+				contractDeployed.options.address as string,
 				['0x0000000000000000000000000000000000000000000000000000000000000000'],
 				sendRes?.blockNumber,
 			);
@@ -347,10 +352,10 @@ describe('rpc', () => {
 			const resTx = [];
 			for (const l of listOfStrings) {
 				// eslint-disable-next-line  no-await-in-loop
-				resTx.push(await contract.methods?.firesStringEvent(l).send(sendOptions));
+				resTx.push(await contractDeployed.methods?.firesStringEvent(l).send(sendOptions));
 			}
 			const res: Array<any> = await web3Eth.getPastLogs({
-				address: contract.options.address as string,
+				address: contractDeployed.options.address as string,
 				fromBlock: numberToHex(Math.min(...resTx.map(d => Number(d.blockNumber)))),
 			});
 			const results = res.map(

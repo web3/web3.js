@@ -16,49 +16,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3BaseProvider } from 'web3-types';
 import { Web3Eth } from '../../src';
-import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { LogsSubscription } from '../../src/web3_subscriptions';
-import {
-	describeIf,
-	getSystemTestAccounts,
-	getSystemTestProvider,
-	isWs,
-} from '../fixtures/system_test_utils';
+import { describeIf, getSystemTestProvider, isWs } from '../fixtures/system_test_utils';
 
 describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
-	let accounts: string[] = [];
 	let web3Eth: Web3Eth;
 	let providerWs: WebSocketProvider;
-	let contract: Contract<typeof BasicAbi>;
-	let deployOptions: Record<string, unknown>;
-	let sendOptions: Record<string, unknown>;
-	let from: string;
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
-		[, from] = accounts;
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
-		contract = new Contract(BasicAbi, undefined, {
-			provider: clientUrl,
-		});
-
-		deployOptions = {
-			data: BasicBytecode,
-			arguments: [10, 'string init value'],
-		};
-
-		sendOptions = { from, gas: '1000000' };
-
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		providerWs = new WebSocketProvider(clientUrl);
 	});
 	afterAll(() => {
 		providerWs.disconnect();

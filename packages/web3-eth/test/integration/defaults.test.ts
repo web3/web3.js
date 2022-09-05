@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
@@ -28,12 +27,14 @@ import {
 } from '../../src';
 
 import {
+	closeOpenConnection,
 	createNewAccount,
+	createTempAccount,
 	getSystemTestProvider,
 	isIpc,
-	isWs,
 	itIf,
 } from '../fixtures/system_test_utils';
+
 import {
 	defaultTransactionBuilder,
 	getTransactionFromAttr,
@@ -49,107 +50,98 @@ import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from '../
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
 	let eth2: Web3Eth;
-	let accounts: string[] = [];
+	let tempEth: Web3Eth;
 	let clientUrl: string;
 	let contract: Contract<typeof BasicAbi>;
-	let contractMsgFrom: Contract<typeof MsgSenderAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
+	let tempAcc: { address: string; privateKey: string };
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
-		accounts = [acc1.address, acc2.address];
-		if (isWs) {
-			web3Eth = new Web3Eth(
-				new WebSocketProvider(
-					clientUrl,
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-				),
-			);
-		} else {
-			web3Eth = new Web3Eth(clientUrl);
-		}
+		web3Eth = new Web3Eth(clientUrl);
+	});
 
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(eth2);
+	});
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
 		contract = new Contract(BasicAbi, web3Eth.getContextObject() as any);
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-		sendOptions = { from: accounts[0], gas: '1000000' };
-		contract = await contract.deploy(deployOptions).send(sendOptions);
-
-		contractMsgFrom = await new Contract(MsgSenderAbi, web3Eth.getContextObject() as any)
-			.deploy({
-				data: MsgSenderBytecode,
-				arguments: ['test'],
-			})
-			.send({ from: accounts[1], gas: '2700000' });
-	});
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth?.provider as WebSocketProvider)?.disconnect();
-		}
+		sendOptions = { from: tempAcc.address, gas: '1000000' };
 	});
 
 	describe('defaults', () => {
 		it('defaultAccount', async () => {
+			const tempAcc2 = await createTempAccount();
+			const tempAcc3 = await createTempAccount();
+			const contractMsgFrom = await new Contract(
+				MsgSenderAbi,
+				web3Eth.getContextObject() as any,
+			)
+				.deploy({
+					data: MsgSenderBytecode,
+					arguments: ['test'],
+				})
+				.send({ from: tempAcc2.address, gas: '2700000' });
 			// default
 			expect(web3Eth.defaultAccount).toBeUndefined();
 
 			// after set
 			web3Eth.setConfig({
-				defaultAccount: accounts[0],
+				defaultAccount: tempAcc.address,
 			});
-			expect(web3Eth.defaultAccount).toBe(accounts[0]);
+			expect(web3Eth.defaultAccount).toBe(tempAcc.address);
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
-					defaultAccount: accounts[1],
+					defaultAccount: tempAcc3.address,
 				},
 			});
-			expect(eth2.defaultAccount).toBe(accounts[1]);
+			expect(eth2.defaultAccount).toBe(tempAcc3.address);
 
 			// check utils
-			expect(getTransactionFromAttr(eth2)).toBe(accounts[1]);
+			expect(getTransactionFromAttr(eth2)).toBe(tempAcc3.address);
 			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
 			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 			contractMsgFrom.setConfig({
-				defaultAccount: accounts[0],
+				defaultAccount: tempAcc.address,
 			});
 
 			const tx = await contractMsgFrom.methods
 				.setTestString('test2')
 				.send({ gas: '1000000' });
 			const txSend = await web3Eth.sendTransaction({
-				to: accounts[1],
+				to: tempAcc2.address,
 				value: '0x1',
 			});
-			expect(tx.from).toBe(accounts[0].toLowerCase());
-			expect(txSend.from).toBe(accounts[0].toLowerCase());
+			expect(tx.from).toBe(tempAcc.address.toLowerCase());
+			expect(txSend.from).toBe(tempAcc.address.toLowerCase());
 
 			const tx2 = await contractMsgFrom.methods.setTestString('test3').send({
-				from: accounts[1],
+				from: tempAcc2.address,
 			});
 			const tx2Send = await web3Eth.sendTransaction({
-				to: accounts[0],
+				to: tempAcc.address,
 				value: '0x1',
-				from: accounts[1],
+				from: tempAcc2.address,
 			});
-			expect(tx2.from).toBe(accounts[1].toLowerCase());
-			expect(tx2Send.from).toBe(accounts[1].toLowerCase());
+			expect(tx2.from).toBe(tempAcc2.address.toLowerCase());
+			expect(tx2Send.from).toBe(tempAcc2.address.toLowerCase());
 
 			// TODO: uncomment this test after finish #5117
 			// const fromDefault = await contractMsgFrom.methods?.from().call();
-			// const fromPass = await contractMsgFrom.methods?.from().call({from:accounts[0]});
-			// const fromPass2 = await contractMsgFrom.methods?.from().call({from:accounts[1]});
-			// expect(fromDefault).toBe(accounts[0].toLowerCase());
-			// expect(fromPass).toBe(accounts[0].toLowerCase());
-			// expect(fromPass2).toBe(accounts[1].toLowerCase());
+			// const fromPass = await contractMsgFrom.methods?.from().call({from:tempAcc.address});
+			// const fromPass2 = await contractMsgFrom.methods?.from().call({from:tempAcc2.address});
+			// expect(fromDefault).toBe(tempAcc.address.toLowerCase());
+			// expect(fromPass).toBe(tempAcc.address.toLowerCase());
+			// expect(fromPass2).toBe(tempAcc2.address.toLowerCase());
 		});
 
 		it('handleRevert', () => {
@@ -174,7 +166,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					handleRevert: true,
 				},
@@ -182,6 +173,8 @@ describe('defaults', () => {
 			expect(eth2.handleRevert).toBe(true);
 		});
 		it('defaultBlock', async () => {
+			const tempAcc2 = await createTempAccount();
+			const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			// default
 			expect(web3Eth.defaultBlock).toBe('latest');
 
@@ -206,13 +199,16 @@ describe('defaults', () => {
 			await sendFewTxes({
 				web3Eth: eth2,
 				from: acc.address,
-				to: accounts[1],
+				to: tempAcc2.address,
 				times: 1,
 				value: '0x1',
 			});
 			const balance = await eth2.getBalance(acc.address);
-			const code = await eth2.getCode(contract?.options?.address as string);
-			const storage = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const code = await eth2.getCode(contractDeployed?.options?.address as string);
+			const storage = await eth2.getStorageAt(
+				contractDeployed?.options?.address as string,
+				0,
+			);
 			const transactionCount = await eth2.getTransactionCount(acc.address);
 			expect(storage === '0x' ? 0 : Number(hexToNumber(storage))).toBe(0);
 			expect(code).toBe('0x');
@@ -226,11 +222,11 @@ describe('defaults', () => {
 				'latest',
 			);
 			const codeWithBlockNumber = await eth2.getCode(
-				contract?.options?.address as string,
+				contractDeployed?.options?.address as string,
 				'latest',
 			);
 			const storageWithBlockNumber = await eth2.getStorageAt(
-				contract?.options?.address as string,
+				contractDeployed?.options?.address as string,
 				0,
 				'latest',
 			);
@@ -244,8 +240,11 @@ describe('defaults', () => {
 				defaultBlock: 'latest',
 			});
 			const balanceLatest = await eth2.getBalance(acc.address);
-			const codeLatest = await eth2.getCode(contract?.options?.address as string);
-			const storageLatest = await eth2.getStorageAt(contract?.options?.address as string, 0);
+			const codeLatest = await eth2.getCode(contractDeployed?.options?.address as string);
+			const storageLatest = await eth2.getStorageAt(
+				contractDeployed?.options?.address as string,
+				0,
+			);
 			const transactionCountLatest = await eth2.getTransactionCount(acc.address);
 			expect(codeLatest.startsWith(BasicBytecode.slice(0, 10))).toBe(true);
 			expect(Number(hexToNumber(storageLatest))).toBe(10);
@@ -284,7 +283,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionBlockTimeout: 120,
 				},
@@ -305,7 +303,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionConfirmationBlocks: 4,
 				},
@@ -316,12 +313,13 @@ describe('defaults', () => {
 
 		// TODO: remove itIf when finish #5144
 		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
+			const tempAcc2 = await createTempAccount();
 			const waitConfirmations = 1;
 			const eth = new Web3Eth(web3Eth.provider);
 			eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
-			const from = accounts[0];
-			const to = accounts[1];
+			const from = tempAcc.address;
+			const to = tempAcc2.address;
 			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
@@ -336,7 +334,7 @@ describe('defaults', () => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('receipt', (params: TransactionReceipt) => {
-					expect(params.status).toBe(BigInt(1));
+					expect(Number(params.status)).toBe(1);
 					resolve();
 				});
 			});
@@ -345,7 +343,7 @@ describe('defaults', () => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(Number(confirmations)).toBe(shouldBe);
+					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
 					shouldBe += 1;
 					if (shouldBe > waitConfirmations) {
 						resolve();
@@ -373,7 +371,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionPollingInterval: 400,
 					transactionPollingTimeout: 10,
@@ -393,9 +390,9 @@ describe('defaults', () => {
 		//     });
 		//
 		//     const sentTx: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
-		//         to: accounts[1],
+		//         to: tempAcc2.address,
 		//         value: '0x1',
-		//         from: accounts[0],
+		//         from: tempAcc.address,
 		//     });
 		//
 		//     const res = await Promise.race([
@@ -410,9 +407,9 @@ describe('defaults', () => {
 		//     expect((res as TransactionReceipt).status).toBe(BigInt(1));
 		//
 		//     const sentTx2: Web3PromiEvent<TransactionReceipt, SendTransactionEvents> = eth2.sendTransaction({
-		//         to: accounts[1],
+		//         to: tempAcc2.address,
 		//         value: '0x1',
-		//         from: accounts[0],
+		//         from: tempAcc.address,
 		//     });
 		//     const res2 = await Promise.race([
 		//         new Promise((resolve) => setTimeout(()=>resolve(false), 300)),
@@ -442,7 +439,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionReceiptPollingInterval: 400,
 					transactionConfirmationPollingInterval: 10,
@@ -463,7 +459,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					blockHeaderTimeout: 4,
 				},
@@ -472,58 +467,58 @@ describe('defaults', () => {
 		});
 
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
-			const eth = new Web3Eth(clientUrl);
-
+			const tempAcc2 = await createTempAccount();
+			tempEth = new Web3Eth(clientUrl);
 			// Ensure the provider supports subscriptions to simulate the test scenario
 			// It will cause providers that does not support subscriptions (like http) to throw exception when subscribing.
 			// This case is tested to ensure that even if an error happen at subscription,
 			//	polling will still get the data from next blocks.
-			(eth.provider as Web3BaseProvider<Record<string, never>>).supportsSubscriptions = () =>
-				true;
+			(tempEth.provider as Web3BaseProvider<Record<string, never>>).supportsSubscriptions =
+				() => true;
 
 			// Cause the events to take a long time (more than blockHeaderTimeout),
 			//	to ensure that polling of new blocks works in such cases.
 			// I will cause the providers that supports subscription (like WebSocket)
 			// 	to never return data through listening to new events
+			// let pr = new Promise(res => setTimeout(res, 5000));
+
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			(eth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
-				await new Promise(res => {
-					setTimeout(res, 1000000);
-				});
+			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
+				// eslint-disable-next-line no-promise-executor-return
+				await new Promise(res => setTimeout(res, 5000));
 			};
 
-			// Make the test run faster by causing the polling to start after 1 second
-			eth.blockHeaderTimeout = 1;
-
-			const from = accounts[0];
-			const to = accounts[1];
+			// Make the test run faster by casing the polling to start after 1 second
+			tempEth.blockHeaderTimeout = 1;
+			const from = tempAcc2.address;
+			const to = tempAcc.address;
 			const value = `0x1`;
 
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = eth.sendTransaction({
+			> = tempEth.sendTransaction({
 				to,
 				value,
 				from,
 			});
 
-			const confirmationPromise = new Promise((resolve: Resolve) => {
+			const confirmationPromise = new Promise((resolve: (status: bigint) => void) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on(
 					'confirmation',
-					({
+					async ({
 						confirmations,
 						receipt: { status },
 					}: {
 						confirmations: bigint;
 						receipt: { status: bigint };
 					}) => {
-						expect(status).toBe(BigInt(1));
 						// Being able to get 2 confirmations means the pooling for new blocks works
 						if (confirmations >= 2) {
-							resolve();
+							sentTx.removeAllListeners();
+							resolve(status);
 						}
 					},
 				);
@@ -531,17 +526,20 @@ describe('defaults', () => {
 
 			// To cause the development node (like Ganache) to generate new block for the new transaction
 			// When another block is generated, the pervious transaction would be able to have 2 confirmations
-			await new Promise<void>(resolve => {
-				setTimeout(resolve, 1000);
-			});
-			await eth.sendTransaction({
+			// eslint-disable-next-line no-promise-executor-return
+			await new Promise<void>(resolve => setTimeout(resolve, 1000));
+			const tx = tempEth.sendTransaction({
 				to,
 				value,
 				from,
 			});
+			await tx;
 
 			// Ensure the promise the get the confirmations resolves with no error
-			await expect(confirmationPromise).resolves.toBeUndefined();
+
+			const status = await confirmationPromise;
+
+			expect(status).toBe(BigInt(1));
 		});
 
 		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
@@ -551,8 +549,8 @@ describe('defaults', () => {
 			eth.transactionSendTimeout = 200;
 			eth.transactionPollingTimeout = 200;
 
-			const from = accounts[0];
-			const to = accounts[1];
+			const from = tempAcc.address;
+			const to = (await createTempAccount()).address;
 			const value = `0x1`;
 
 			try {
@@ -599,7 +597,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					maxListenersWarningThreshold: 4,
 				},
@@ -733,7 +730,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					defaultCommon: common,
 				},
@@ -751,7 +747,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					defaultTransactionType: '0x4444',
 				},
@@ -971,7 +966,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionBuilder: newBuilderMock,
 				},
@@ -1007,7 +1001,6 @@ describe('defaults', () => {
 
 			// set by create new instance
 			eth2 = new Web3Eth({
-				provider: web3Eth.provider,
 				config: {
 					transactionTypeParser: newParserMock,
 				},

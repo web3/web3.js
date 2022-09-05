@@ -157,10 +157,13 @@ export class Wallet<
 		if (typeof account === 'string') {
 			return this.add(this._accountProvider.privateKeyToAccount(account));
 		}
-
-		const index = this.length;
+		let index = this.length;
+		const existAccount = this.get(account.address);
+		if (existAccount) {
+			console.warn(`Account ${account.address.toLowerCase()} already exists.`);
+			index = this._addressMap.get(account.address.toLowerCase()) ?? index;
+		}
 		this._addressMap.set(account.address.toLowerCase(), index);
-
 		this[index] = account;
 
 		return this;
