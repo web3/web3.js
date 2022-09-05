@@ -43,6 +43,7 @@ describe('ens', () => {
 	const label = sha3('resolver') as string;
 
 	const subdomain = 'subdomain';
+	const fullDomain = `${subdomain}.${domain}`;
 	const web3jsName = 'web3js.test';
 
 	const ttl = 3600;
@@ -50,6 +51,7 @@ describe('ens', () => {
 	let accounts: string[];
 	let ens: ENS;
 	let defaultAccount: string;
+	let accountOne: string;
 
 	const ZERO_NODE: Bytes = '0x0000000000000000000000000000000000000000000000000000000000000000';
 	const addressOne: Address = '0x0000000000000000000000000000000000000001';
@@ -57,7 +59,7 @@ describe('ens', () => {
 	beforeAll(async () => {
 		accounts = await getSystemTestAccounts();
 
-		[defaultAccount] = accounts;
+		[defaultAccount, accountOne] = accounts;
 
 		sendOptions = { from: defaultAccount, gas: '10000000' };
 
@@ -84,7 +86,7 @@ describe('ens', () => {
 			arguments: [
 				registry.options.address as string,
 				nameWrapper.options.address as string,
-				accounts[1],
+				accountOne,
 				defaultAccount,
 			],
 		}).send(sendOptions);
@@ -105,6 +107,28 @@ describe('ens', () => {
 		);
 	});
 
+	beforeEach(async () => {
+		// set up subnode
+		await registry.methods
+			.setSubnodeOwner(namehash(domain), sha3('web3js') as string, defaultAccount)
+			.send(sendOptions);
+	});
+
+	it('should set approval for all', async () => {
+		await expect(
+			ens.setApprovalForAll(accountOne, true, { from: defaultAccount }),
+		).resolves.toBeDefined();
+	});
+
+	it('should check approval for all', async () => {
+		await expect(
+			ens.setApprovalForAll(accountOne, true, { from: defaultAccount }),
+		).resolves.toBeDefined();
+
+		const isApproved = await ens.isApprovedForAll(defaultAccount, accountOne);
+
+		expect(isApproved).toBeTruthy();
+	});
 	it('should return the subnode owner of "resolver"', async () => {
 		const owner = await ens.getOwner('resolver');
 
@@ -123,7 +147,7 @@ describe('ens', () => {
 			arguments: [
 				registry.options.address as string,
 				nameWrapper.options.address as string,
-				accounts[1],
+				accountOne,
 				defaultAccount,
 			],
 		}).send(sendOptions);
@@ -138,16 +162,10 @@ describe('ens', () => {
 	});
 
 	it('should set the owner record for a name', async () => {
-		// set up subnode
-		await registry.methods
-			.setSubnodeOwner(namehash('test'), sha3('web3js') as string, defaultAccount)
-			.send(sendOptions);
-
-		const receipt = await ens.setOwner(web3jsName, accounts[1], { from: defaultAccount });
+		const receipt = await ens.setOwner(web3jsName, accountOne, { from: defaultAccount });
 
 		expect(receipt).toEqual(
 			expect.objectContaining({
-				// status: BigInt(1),
 				transactionHash: expect.any(String),
 			}),
 		);
@@ -158,7 +176,7 @@ describe('ens', () => {
 	it('should get the owner record for a name', async () => {
 		const web3jsOwner = await ens.getOwner(web3jsName);
 
-		expect(web3jsOwner).toEqual(toChecksumAddress(accounts[1]));
+		expect(web3jsOwner).toEqual(toChecksumAddress(defaultAccount));
 	});
 
 	it('should get TTL', async () => {
@@ -168,7 +186,7 @@ describe('ens', () => {
 	});
 
 	it('should set TTL', async () => {
-		await ens.setTTL(web3jsName, ttl, { from: accounts[1] });
+		await ens.setTTL(web3jsName, ttl, { from: defaultAccount });
 
 		const ttlResult = await ens.getTTL(web3jsName);
 
@@ -176,78 +194,52 @@ describe('ens', () => {
 	});
 
 	it('should set subnode owner', async () => {
-		// set up subnode
-		await registry.methods
-			.setSubnodeOwner(namehash('test'), sha3('subnode') as string, defaultAccount)
-			.send(sendOptions);
-
-		await ens.setSubnodeOwner('test', 'subnode', accounts[1], {
+		await ens.setSubnodeOwner(domain, subdomain, accountOne, {
 			from: defaultAccount,
 		});
 
-		const owner = await ens.getOwner(`subnode.test`);
+		const owner = await ens.getOwner(fullDomain);
 
-		expect(owner).toBe(toChecksumAddress(accounts[1]));
+		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 
 	it('should set subnode record', async () => {
-		// set up subnode
-		await registry.methods
-			.setSubnodeOwner(namehash('test'), sha3(subdomain) as string, defaultAccount)
-			.send(sendOptions);
-
 		await ens.setSubnodeRecord(
-			'test',
+			domain,
 			subdomain,
-			accounts[1],
+			accountOne,
 			resolver.options.address as string,
 			ttl,
 			{ from: defaultAccount },
 		);
 
-		const ttlResult = await ens.getTTL(`${subdomain}.test`);
+		const ttlResult = await ens.getTTL(fullDomain);
 
-		const owner = await ens.getOwner(`${subdomain}.test`);
+		const owner = await ens.getOwner(fullDomain);
 
 		expect(ttlResult).toBe(ttl.toString());
-		expect(owner).toBe(toChecksumAddress(accounts[1]));
+		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 
 	it('shoud record exists', async () => {
 		await registry.methods
-			.setSubnodeOwner(namehash('test'), sha3(subdomain) as string, defaultAccount)
+			.setSubnodeOwner(namehash(domain), sha3(subdomain) as string, defaultAccount)
 			.send(sendOptions);
 
-		const exists = await ens.recordExists('subdomain.test');
+		const exists = await ens.recordExists(fullDomain);
 
 		expect(exists).toBeTruthy();
 	});
 	it('shoud set record', async () => {
 		await registry.methods
-			.setSubnodeOwner(namehash('test'), sha3(subdomain) as string, defaultAccount)
+			.setSubnodeOwner(namehash(domain), sha3(subdomain) as string, defaultAccount)
 			.send(sendOptions);
 
-		await ens.setRecord('test', accounts[1], resolver.options.address as string, ttl, {
+		await ens.setRecord(domain, accountOne, resolver.options.address as string, ttl, {
 			from: defaultAccount,
 		});
 
-		const owner = await ens.getOwner('test');
-		expect(owner).toBe(toChecksumAddress(accounts[1]));
-	});
-
-	it('should set approval for all', async () => {
-		await expect(
-			ens.setApprovalForAll(accounts[1], true, { from: defaultAccount }),
-		).resolves.toBeDefined();
-	});
-
-	it('should check approval for all', async () => {
-		await expect(
-			ens.setApprovalForAll(accounts[1], true, { from: defaultAccount }),
-		).resolves.toBeDefined();
-
-		const isApproved = await ens.isApprovedForAll(defaultAccount, accounts[1]);
-
-		expect(isApproved).toBeTruthy();
+		const owner = await ens.getOwner(domain);
+		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 });
