@@ -533,10 +533,10 @@ describe('defaults', () => {
 			// The following is to cause the development node (like Ganache) to generate new block for the new transaction.
 			// Because, when another block is generated, the pervious transaction would be able to have 2 confirmations.
 			// Additionally, to ensure the next transaction is creating a new block. Wait for the pervious transaction first.
-			await sentTx;
 			await new Promise<void>(resolve => {
 				setTimeout(resolve, 100); // wait a bit
 			});
+			await sentTx;
 
 			await tempEth.sendTransaction({
 				to,
