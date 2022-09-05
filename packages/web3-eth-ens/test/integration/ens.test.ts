@@ -25,18 +25,14 @@ import { namehash } from '../../src/utils';
 
 import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_tests_utils';
 
-import { FIFSRegistrarAbi, FIFSRegistrarBytecode } from '../fixtures/ens/FIFSRegistrar';
 import { ENSRegistryAbi, ENSRegistryBytecode } from '../fixtures/ens/ENSRegistry';
 import { DummyNameWrapperApi, DummyNameWrapperBytecode } from '../fixtures/ens/DummyNameWrapper';
 import { PublicResolverAbi, PublicResolverBytecode } from '../fixtures/ens/PublicResolver';
-import { ReverseRegistrarAbi, ReverseRegistarBytecode } from '../fixtures/ens/ReverseRegistrar';
 
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
 	let nameWrapper: Contract<typeof DummyNameWrapperApi>;
-	let registrar: Contract<typeof FIFSRegistrarAbi>;
-	let reverseRegistrar: Contract<typeof ReverseRegistrarAbi>;
 
 	let Resolver: Contract<typeof PublicResolverAbi>;
 
@@ -77,14 +73,6 @@ describe('ens', () => {
 			provider: getSystemTestProvider(),
 		});
 
-		const FifsRegistrar = new Contract(FIFSRegistrarAbi, undefined, {
-			provider: getSystemTestProvider(),
-		});
-
-		const ReverseRegistar = new Contract(ReverseRegistrarAbi, undefined, {
-			provider: getSystemTestProvider(),
-		});
-
 		registry = await Registry.deploy({ data: ENSRegistryBytecode }).send(sendOptions);
 
 		nameWrapper = await DummyNameWrapper.deploy({ data: DummyNameWrapperBytecode }).send(
@@ -107,30 +95,8 @@ describe('ens', () => {
 			.send(sendOptions);
 		await resolver.methods.setAddr(node, addressOne).send(sendOptions);
 
-		registrar = await FifsRegistrar.deploy({
-			data: FIFSRegistrarBytecode,
-			arguments: [registry.options.address as string, namehash(domain)],
-		}).send(sendOptions);
-
 		await registry.methods
 			.setSubnodeOwner(ZERO_NODE, sha3(domain) as string, defaultAccount)
-			.send(sendOptions);
-
-		reverseRegistrar = await ReverseRegistar.deploy({
-			data: ReverseRegistarBytecode,
-			arguments: [registry.options.address as string],
-		}).send(sendOptions);
-
-		await registry.methods
-			.setSubnodeOwner(ZERO_NODE, sha3('reverse') as string, defaultAccount)
-			.send(sendOptions);
-
-		await registry.methods
-			.setSubnodeOwner(
-				namehash('reverse'),
-				sha3('adr') as string,
-				reverseRegistrar.options.address as string,
-			)
 			.send(sendOptions);
 
 		ens = new ENS(
