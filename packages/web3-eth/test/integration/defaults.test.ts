@@ -534,12 +534,15 @@ describe('defaults', () => {
 			// Because, when another block is generated, the pervious transaction would be able to have 2 confirmations.
 			// Additionally, to ensure the next transaction is creating a new block. Wait for the pervious transaction first.
 			await sentTx;
-			const tx = tempEth.sendTransaction({
+			await new Promise<void>(resolve => {
+				setTimeout(resolve, 100); // wait a bit
+			});
+
+			await tempEth.sendTransaction({
 				to,
 				value,
 				from,
 			});
-			await tx;
 
 			// Ensure the promise the get the confirmations resolves with no error
 
