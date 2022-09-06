@@ -367,9 +367,9 @@ var compareBlockNumbers = function(a, b) {
         }
     } else if(b === "safe") {
         if( a === "finalized" || a === "latest" ||  a === "pending" ){
-            return -1;
-        }else {
             return 1;
+        }else {
+            return -1;
         }
     }
     
