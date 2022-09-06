@@ -397,7 +397,12 @@ function _handleTxPricing(_this, tx) {
             ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
-            } else {
+            } 
+            else if (tx.type === '0x2' && tx.maxFeePerGas && tx.maxPriorityFeePerGas) {
+                // EIP-1559 transaction, return provided maxFeePerGas and maxPriorityFeePerGas
+                resolve({ maxFeePerGas: tx.maxFeePerGas, maxPriorityFeePerGas: tx.maxPriorityFeePerGas })
+            }
+            else {
                 Promise.all([
                     _this._ethereumCall.getBlockByNumber(),
                     _this._ethereumCall.getGasPrice()
