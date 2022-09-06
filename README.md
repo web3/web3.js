@@ -1,10 +1,10 @@
-<p align="center">
-  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js" />
+<p style="text-align: center;">
+  <img src="assets/logo/web3js.jpg" width="200" alt="web3.js">
 </p>
 
 # web3.js - Ethereum JavaScript API
 
-[![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url]
+[![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url] [![GitPOAP Badge][gitpoap-image]][gitpoap-url]
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
@@ -56,10 +56,10 @@ UNPKG:
 ```js
 // In Node.js
 const Web3 = require('web3');
-
-let web3 = new Web3('ws://localhost:8546');
+const web3 = new Web3('ws://localhost:8546');
 console.log(web3);
-> {
+// Output
+{
     eth: ... ,
     shh: ... ,
     utils: ...,
@@ -227,7 +227,7 @@ global.process = {
 
 If you are using Ionic/Angular at a version >5 you may run into a build error in which modules `crypto` and `stream` are `undefined`
 
-a work around for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
+a workaround for this is to go into your node-modules and at `/angular-cli-files/models/webpack-configs/browser.js` change  the `node: false` to `node: {crypto: true, stream: true}` as mentioned [here](https://github.com/ethereum/web3.js/issues/2260#issuecomment-458519127)
 
 Another variation of this problem was an [issue opned on angular-cli](https://github.com/angular/angular-cli/issues/1548)
 
@@ -306,6 +306,8 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [netlify-url]: https://app.netlify.com/sites/web3-staging/deploys
 [stackexchange-image]: https://img.shields.io/badge/web3js-stackexchange-brightgreen
 [stackexchange-url]: https://ethereum.stackexchange.com/questions/tagged/web3js
+[gitpoap-image]: https://public-api.gitpoap.io/v1/repo/ChainSafe/web3.js/badge
+[gitpoap-url]: https://www.gitpoap.io/gh/ChainSafe/web3.js
 
 ## Semantic versioning
 
