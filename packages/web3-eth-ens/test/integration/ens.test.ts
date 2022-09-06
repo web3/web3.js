@@ -102,8 +102,8 @@ describe('ens', () => {
 			.send(sendOptions);
 
 		const provider = isWs
-			? new ENS.providers.HttpProvider(getSystemTestProvider())
-			: new ENS.providers.WebsocketProvider(getSystemTestProvider());
+			? new ENS.providers.WebsocketProvider(getSystemTestProvider())
+			: new ENS.providers.HttpProvider(getSystemTestProvider());
 
 		ens = new ENS(registry.options.address, provider);
 	});
