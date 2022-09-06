@@ -57,7 +57,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
-			const value = `0x1`;
+			const value = `0x00001`;
 
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
@@ -97,7 +97,14 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			// No need to wait for those transactions. So just send them to the connected provider.
 
 			// eslint-disable-next-line no-void
-			void sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations * 2 });
+			void sendFewTxes({
+				web3Eth,
+				from,
+				to,
+				value,
+				times: waitConfirmations * 2,
+				waitForReceipt: false,
+			});
 			console.error('Before waiting for confirmation');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
