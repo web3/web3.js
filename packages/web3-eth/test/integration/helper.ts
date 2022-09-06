@@ -53,7 +53,6 @@ export const sendFewTxes = async ({
 			from,
 		});
 		if (waitForReceipt) {
-			console.error(' - waiting for receipt', i);
 			res.push(
 				// eslint-disable-next-line no-await-in-loop
 				(await new Promise((resolve: Resolve) => {
@@ -65,10 +64,6 @@ export const sendFewTxes = async ({
 					});
 				})) as TransactionReceipt,
 			);
-			console.error(' - received receipt', i);
-			// eslint-disable-next-line no-await-in-loop
-			await tx;
-			console.error(' - tx awaited', i);
 		}
 	}
 
