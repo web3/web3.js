@@ -598,4 +598,4 @@ Released with 1.0.0-beta.37 code base.
 -  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
 
 ### Added
--  Add missing function type "receive" in `AbiType`
+-  Add missing function type "receive" in `AbiType` (#5165)
