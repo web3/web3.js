@@ -97,7 +97,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			// No need to wait for those transactions. So just send them to the connected provider.
 
 			// eslint-disable-next-line no-void
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations * 2 });
+			void sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations * 2 });
 			console.error('Before waiting for confirmation');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
