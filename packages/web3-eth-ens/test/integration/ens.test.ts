@@ -17,7 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
-import { sha3, toChecksumAddress } from 'web3-utils';
+import { sha3, toChecksumAddress, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { getBlock } from 'web3-eth';
 
 import { Address, Bytes, TransactionReceipt } from 'web3-types';
 import { ENS } from '../../src';
@@ -106,6 +107,15 @@ describe('ens', () => {
 			: new ENS.providers.HttpProvider(getSystemTestProvider());
 
 		ens = new ENS(registry.options.address, provider);
+
+		const block = await getBlock(ens, 'latest', false, DEFAULT_RETURN_FORMAT);
+		const gas = block.gasLimit.toString();
+
+		// Increase gas for contract calls
+		sendOptions = {
+			...sendOptions,
+			gas,
+		};
 	});
 
 	beforeEach(async () => {
@@ -116,15 +126,11 @@ describe('ens', () => {
 	});
 
 	it('should set approval for all', async () => {
-		await expect(
-			ens.setApprovalForAll(accountOne, true, { from: defaultAccount }),
-		).resolves.toBeDefined();
+		await expect(ens.setApprovalForAll(accountOne, true, sendOptions)).resolves.toBeDefined();
 	});
 
 	it('should check approval for all', async () => {
-		await expect(
-			ens.setApprovalForAll(accountOne, true, { from: defaultAccount }),
-		).resolves.toBeDefined();
+		await expect(ens.setApprovalForAll(accountOne, true, sendOptions)).resolves.toBeDefined();
 
 		const isApproved = await ens.isApprovedForAll(defaultAccount, accountOne);
 
@@ -153,9 +159,7 @@ describe('ens', () => {
 			],
 		}).send(sendOptions);
 
-		await ens.setResolver('resolver', newResolver.options.address as string, {
-			from: defaultAccount,
-		});
+		await ens.setResolver('resolver', newResolver.options.address as string, sendOptions);
 
 		const ensResolver = await ens.getResolver('resolver');
 
@@ -163,7 +167,7 @@ describe('ens', () => {
 	});
 
 	it('should set the owner record for a name', async () => {
-		const receipt = await ens.setOwner(web3jsName, accountOne, { from: defaultAccount });
+		const receipt = await ens.setOwner(web3jsName, accountOne, sendOptions);
 
 		expect(receipt).toEqual(
 			expect.objectContaining({
@@ -187,7 +191,7 @@ describe('ens', () => {
 	});
 
 	it('should set TTL', async () => {
-		await ens.setTTL(web3jsName, ttl, { from: defaultAccount });
+		await ens.setTTL(web3jsName, ttl, sendOptions);
 
 		const ttlResult = await ens.getTTL(web3jsName);
 
@@ -195,9 +199,7 @@ describe('ens', () => {
 	});
 
 	it('should set subnode owner', async () => {
-		await ens.setSubnodeOwner(domain, subdomain, accountOne, {
-			from: defaultAccount,
-		});
+		await ens.setSubnodeOwner(domain, subdomain, accountOne, sendOptions);
 
 		const owner = await ens.getOwner(fullDomain);
 
@@ -211,7 +213,7 @@ describe('ens', () => {
 			accountOne,
 			resolver.options.address as string,
 			ttl,
-			{ from: defaultAccount },
+			sendOptions,
 		);
 
 		const ttlResult = await ens.getTTL(fullDomain);
@@ -236,9 +238,13 @@ describe('ens', () => {
 			.setSubnodeOwner(namehash(domain), sha3(subdomain) as string, defaultAccount)
 			.send(sendOptions);
 
-		await ens.setRecord(domain, accountOne, resolver.options.address as string, ttl, {
-			from: defaultAccount,
-		});
+		await ens.setRecord(
+			domain,
+			accountOne,
+			resolver.options.address as string,
+			ttl,
+			sendOptions,
+		);
 
 		const owner = await ens.getOwner(domain);
 		expect(owner).toBe(toChecksumAddress(accountOne));
