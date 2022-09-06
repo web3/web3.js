@@ -95,8 +95,8 @@ export function padLeft(value: string | number, characterAmount: number, sign?: 
 export function leftPad(string: string | number, characterAmount: number, sign?: string): string;
 export function rightPad(string: string | number, characterAmount: number, sign?: string): string;
 export function padRight(string: string | number, characterAmount: number, sign?: string): string;
-export function sha3(value: string | BN): string | null;
-export function sha3Raw(value: string | BN): string;
+export function sha3(value: string | BN | Buffer): string | null;
+export function sha3Raw(value: string | BN | Buffer): string;
 export function randomHex(bytesSize: number): string;
 export function utf8ToHex(string: string): string;
 export function stringToHex(string: string): string;
@@ -212,7 +212,7 @@ export interface Units {
     tether: string;
 }
 
-export type AbiType = 'function' | 'constructor' | 'event' | 'fallback';
+export type AbiType = 'function' | 'constructor' | 'event' | 'fallback' | 'receive';
 export type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable';
 
 export interface AbiItem {
