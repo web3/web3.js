@@ -23,7 +23,7 @@ import { Address, Bytes, TransactionReceipt } from 'web3-types';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 
-import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_tests_utils';
+import { getSystemTestAccounts, getSystemTestProvider, isWs } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi, ENSRegistryBytecode } from '../../src/abi/ens/ENSRegistry';
 import { DummyNameWrapperApi, DummyNameWrapperBytecode } from '../../src/abi/ens/DummyNameWrapper';
@@ -101,10 +101,11 @@ describe('ens', () => {
 			.setSubnodeOwner(ZERO_NODE, sha3(domain) as string, defaultAccount)
 			.send(sendOptions);
 
-		ens = new ENS(
-			registry.options.address,
-			new ENS.providers.HttpProvider(getSystemTestProvider()),
-		);
+		const provider = isWs
+			? new ENS.providers.HttpProvider(getSystemTestProvider())
+			: new ENS.providers.WebsocketProvider(getSystemTestProvider());
+
+		ens = new ENS(registry.options.address, provider);
 	});
 
 	beforeEach(async () => {
