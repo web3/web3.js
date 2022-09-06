@@ -96,8 +96,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			//	to be able to check the confirmations.
 			// No need to wait for those transactions. So just send them to the connected provider.
 
-			// eslint-disable-next-line no-void
-			void sendFewTxes({
+			await sendFewTxes({
 				web3Eth,
 				from,
 				to,
