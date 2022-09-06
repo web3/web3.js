@@ -596,6 +596,8 @@ Released with 1.0.0-beta.37 code base.
 -  Update node version on actions to fix breaking mosaic test (#5354) 
 -  Start incrementing jsonrpc.id from random number (#5327)
 -  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
+-  Improvement using provided gas options in web3-eth-accounts for eip-1559 transactions (#5012)
 
 ### Added
+-  Add missing function type "receive" in `AbiType` (#5165)
 -  Support of `safe` and `finalized` block tags added (#5410)
