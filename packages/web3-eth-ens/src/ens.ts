@@ -26,7 +26,7 @@ import { getId, Web3NetAPI } from 'web3-net';
 import { Address, SupportedProviders, EthExecutionAPI, TransactionReceipt } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER, DataFormat } from 'web3-utils';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
-import { RESOLVER } from './abi/resolver';
+import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { Registry } from './registry';
 import { registryAddresses } from './config';
 import { Resolver } from './resolver';
@@ -54,7 +54,7 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/**
 	 * Returns the Resolver by the given address
 	 */
-	public async getResolver(name: string): Promise<Contract<typeof RESOLVER>> {
+	public async getResolver(name: string): Promise<Contract<typeof PublicResolverAbi>> {
 		return this._registry.getResolver(name);
 	}
 

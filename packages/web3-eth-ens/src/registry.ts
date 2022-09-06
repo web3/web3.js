@@ -19,18 +19,18 @@ import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
 import { Web3ContextObject } from 'web3-core';
-import REGISTRY from './abi/registry';
-import { RESOLVER } from './abi/resolver';
+import { ENSRegistryAbi } from './abi/ens/ENSRegistry';
+import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { registryAddresses } from './config';
 import { namehash } from './utils';
 
 export class Registry {
-	private readonly contract: Contract<typeof REGISTRY>;
+	private readonly contract: Contract<typeof ENSRegistryAbi>;
 	private readonly context: Web3ContextObject;
 
 	public constructor(context: Web3ContextObject, customRegistryAddress?: Address) {
 		this.contract = new Contract(
-			REGISTRY,
+			ENSRegistryAbi,
 			customRegistryAddress ?? registryAddresses.main,
 			context,
 		);
@@ -187,7 +187,7 @@ export class Registry {
 				.then(address => {
 					// address type is unknown, not sure why
 					if (typeof address === 'string') {
-						const contract = new Contract(RESOLVER, address, this.context);
+						const contract = new Contract(PublicResolverAbi, address, this.context);
 						// TODO: set contract provider needs to be added when ens current provider
 						return contract;
 					}

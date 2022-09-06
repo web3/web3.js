@@ -25,9 +25,9 @@ import { namehash } from '../../src/utils';
 
 import { getSystemTestAccounts, getSystemTestProvider } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi, ENSRegistryBytecode } from '../fixtures/ens/ENSRegistry';
-import { DummyNameWrapperApi, DummyNameWrapperBytecode } from '../fixtures/ens/DummyNameWrapper';
-import { PublicResolverAbi, PublicResolverBytecode } from '../fixtures/ens/PublicResolver';
+import { ENSRegistryAbi, ENSRegistryBytecode } from '../../src/abi/ens/ENSRegistry';
+import { DummyNameWrapperApi, DummyNameWrapperBytecode } from '../../src/abi/ens/DummyNameWrapper';
+import { PublicResolverAbi, PublicResolverBytecode } from '../../src/abi/ens/PublicResolver';
 
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
