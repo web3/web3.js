@@ -115,12 +115,14 @@ ABICoder.prototype.encodeParameters = function (types, params) {
             const coder = ethersAbiCoder._getCoder(ParamType.from(type));
             const modifyParams = (coder, param) => {
                 if (coder.name === 'array') {
-                    return param.map(p =>
-                        modifyParams(
-                            ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))),
-                            p
-                        )
-                    );
+                    if (!coder.type.match(/\[(\d+)\]/)) {
+                        return param.map(p => modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace('[]', ''))), p));   
+                    }
+                    const arrayLength = parseInt(coder.type.match(/\[(\d+)\]/)[1]);
+                    if (param.length !== arrayLength) {
+                        throw new Error('Array length does not matches with the given input');
+                    }
+                    return param.map(p => modifyParams(ethersAbiCoder._getCoder(ParamType.from(coder.type.replace(/\[\d+\]/, ''))), p));
                 }
                 coder.coders.forEach((c, i) => {
                     if (c.name === 'tuple') {
@@ -362,7 +364,12 @@ ABICoder.prototype.decodeParametersWith = function (outputs, bytes, loose) {
 
     outputs.forEach(function (output, i) {
         var decodedValue = res[returnValue.__length__];
-        decodedValue = (decodedValue === '0x') ? null : decodedValue;
+
+        const isStringObject = typeof output === 'object' && output.type && output.type === 'string';
+        const isStringType = typeof output === 'string' && output === 'string';
+
+        // only convert `0x` to null if it's not string value
+        decodedValue = (decodedValue === '0x' && !isStringObject && !isStringType) ? null : decodedValue;
 
         returnValue[i] = decodedValue;
 

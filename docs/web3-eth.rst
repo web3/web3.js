@@ -477,6 +477,26 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-module-transactionpollinginterval:
+
+transactionPollingInterval
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.transactionPollingInterval
+
+The ``transactionPollingInterval`` is used over HTTP connections. This option defines the number of seconds between Web3 calls for a receipt which confirms that a transaction was mined by the network.
+
+
+-------
+Returns
+-------
+
+``number``: The current value of transactionPollingInterval (default: 1000ms)
+
+------------------------------------------------------------------------------
+
 .. _web3-module-handlerevert:
 
 handleRevert
@@ -874,7 +894,7 @@ Returns
 
 ``Promise`` returns ``String`` - The current balance for the given address in :ref:`wei <what-is-wei>`.
 
-See the :ref:`A note on dealing with big numbers in JavaScript <big-numbers-in-javascript>`.
+See the :ref:`A note on dealing with big numbers in JavaScript <utils-bn>`.
 
 -------
 Example
@@ -1381,7 +1401,8 @@ Parameters
 ----------
 
 1. ``String`` - The transaction hash.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+2. ``String`` - (optional) The ``hex`` keyword can be passed as second argument, in order to format in hex, values that would be ``Number`` otherwise. 
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 .. _eth-gettransactionreceipt-return:
@@ -1395,16 +1416,16 @@ Returns
 
   - ``status`` - ``Boolean``: ``TRUE`` if the transaction was successful, ``FALSE`` if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
-  - ``blockNumber`` - ``Number``: Block number where this transaction was in.
+  - ``blockNumber`` - ``Number`` (or ``hex String``): Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
-  - ``transactionIndex``- ``Number``: Integer of the transactions index position in the block.
+  - ``transactionIndex``- ``Number`` (or ``hex String``): Integer of the transactions index position in the block.
   - ``from`` - ``String``: Address of the sender.
   - ``to`` - ``String``: Address of the receiver. ``null`` when it's a contract creation transaction.
   - ``contractAddress`` - ``String``: The contract address created, if the transaction was a contract creation, otherwise ``null``.
-  - ``cumulativeGasUsed`` - ``Number``: The total amount of gas used when this transaction was executed in the block.
-  - ``gasUsed`` - ``Number``:  The amount of gas used by this specific transaction alone.
+  - ``cumulativeGasUsed`` - ``Number`` (or ``hex String``): The total amount of gas used when this transaction was executed in the block.
+  - ``gasUsed`` - ``Number`` (or ``hex String``):  The amount of gas used by this specific transaction alone.
   - ``logs`` - ``Array``: Array of log objects, which this transaction generated.
-  - ``effectiveGasPrice`` - ``Number``:  The actual value per gas deducted from the senders account. Before EIP-1559, this is equal to the transaction's gas price. After, it is equal to baseFeePerGas + min(maxFeePerGas - baseFeePerGas, maxPriorityFeePerGas).
+  - ``effectiveGasPrice`` - ``Number`` (or ``hex String``):  The actual value per gas deducted from the senders account. Before EIP-1559, this is equal to the transaction's gas price. After, it is equal to baseFeePerGas + min(maxFeePerGas - baseFeePerGas, maxPriorityFeePerGas).
 
 -------
 Example
@@ -1424,6 +1445,22 @@ Example
       "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
       "cumulativeGasUsed": 314159,
       "gasUsed": 30234,
+      "logs": [{
+             // logs as returned by getPastLogs, etc.
+         }, ...]
+    }
+
+    var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b','hex')
+    .then(console.log);
+    > {
+      "status": true,
+      "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+      "transactionIndex": '0x0',
+      "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+      "blockNumber": '0x3',
+      "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+      "cumulativeGasUsed": '0x4cb2f',
+      "gasUsed": '0x761a',
       "logs": [{
              // logs as returned by getPastLogs, etc.
          }, ...]
@@ -1996,7 +2033,7 @@ requestAccounts
 
     web3.eth.requestAccounts([callback])
 
-This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvidder and IpcProvider).
+This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvider and IpcProvider).
 
 For more information about the behavior of this method please read `EIP-1102: Opt-in account exposure <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_.
 

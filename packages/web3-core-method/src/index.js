@@ -56,6 +56,7 @@ var Method = function Method(options) {
     this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
     this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
     this.transactionPollingTimeout = options.transactionPollingTimeout || 750;
+    this.transactionPollingInterval = options.transactionPollingInterval || 1000;
     this.blockHeaderTimeout = options.blockHeaderTimeout || 10; // 10 seconds
     this.defaultCommon = options.defaultCommon;
     this.defaultChain = options.defaultChain;
@@ -75,7 +76,7 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
 
 Method.prototype.createFunction = function (requestManager, accounts) {
     var func = this.buildCall();
-    func.call = this.call;
+    Object.defineProperty(func, 'call', { configurable: true, writable: true, value: this.call });
 
     this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
 
@@ -84,7 +85,7 @@ Method.prototype.createFunction = function (requestManager, accounts) {
 
 Method.prototype.attachToObject = function (obj) {
     var func = this.buildCall();
-    func.call = this.call;
+    Object.defineProperty(func, 'call', { configurable: true, writable: true, value: this.call });
     var name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
@@ -180,7 +181,7 @@ Method.prototype.formatOutput = function (result) {
 Method.prototype.toPayload = function (args) {
     var call = this.getCall(args);
     var callback = this.extractCallback(args);
-    
+
     var params = this.formatInput(args);
     this.validateArgs(params);
 
@@ -454,7 +455,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 to: parsedTx.to,
                                                 from: parsedTx.from,
                                                 gas: parsedTx.gasLimit.toHexString(),
-                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                gasPrice: parsedTx.gasPrice ? parsedTx.gasPrice.toHexString() : undefined,
                                                 value: parsedTx.value.toHexString()
                                             });
                                         }
@@ -550,20 +551,20 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
     // start watching for confirmation depending on the support features of the provider
     var startWatching = function (existingReceipt) {
-        let blockHeaderArrived = false; 
+        let blockHeaderArrived = false;
 
         const startInterval = () => {
-            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), method.transactionPollingInterval);
         };
 
         // If provider do not support event subscription use polling
         if(!this.requestManager.provider.on) {
-            return startInterval();            
+            return startInterval();
         }
 
         // Subscribe to new block headers to look for tx receipt
         _ethereumCall.subscribe('newBlockHeaders', function (err, blockHeader, sub) {
-            blockHeaderArrived = true; 
+            blockHeaderArrived = true;
 
             if (err || !blockHeader) {
                 // fall back to polling
@@ -629,9 +630,16 @@ Method.prototype.buildCall = function () {
 
     // actual send function
     var send = function () {
-        var defer = promiEvent(!isSendTx),
-            payload = method.toPayload(Array.prototype.slice.call(arguments));
 
+        let args = Array.prototype.slice.call(arguments);
+
+        var defer = promiEvent(!isSendTx),
+            payload = method.toPayload(args);
+
+        method.hexFormat = false;
+        if(method.call === 'eth_getTransactionReceipt'){
+            method.hexFormat = (payload.params.length  < args.length && args[args.length - 1] === 'hex')
+        }
         // CALLBACK function
         var sendTxCallback = function (err, result) {
             if (method.handleRevert && isCall && method.abiCoder) {
@@ -705,7 +713,7 @@ Method.prototype.buildCall = function () {
         // SENDS the SIGNED SIGNATURE
         var sendSignedTx = function (sign) {
 
-            var signedPayload = { ... payload, 
+            var signedPayload = { ... payload,
                 method: 'eth_sendRawTransaction',
                 params: [sign.rawTransaction]
             };

@@ -398,7 +398,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Removes
 
-- Removing the underscore package 
+- Removing the underscore package
 
 ## [1.5.0]
 
@@ -463,7 +463,7 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 
 - Not considering `tx.chainId` if `tx.common.customChain.chainId` is provided for `web3.eth.accounts.signTransaction` function (#4293)
-- Added missing PromiEvent handler types (#4194) 
+- Added missing PromiEvent handler types (#4194)
 - Updated README to include Webpack 5 angular support instructions (#4174)
 - Updated the documentation for the `Web3.utils`, removed context for `_` (underscore lib) (#4403)
 - Emit subscription id with connect event when creating a subscription (#4300)
@@ -477,8 +477,6 @@ Released with 1.0.0-beta.37 code base.
 - Fix 1.6.1 build size issue with removing static asset files (#4506)
 - Correct `web3.rst` example in documentation (#4511)
 - Correct `BlockHeader` typing (`receiptRoot` -> `receiptsRoot`) (#4452)
-
-## [Unreleased]
 
 ## [1.7.0]
 
@@ -495,8 +493,110 @@ Released with 1.0.0-beta.37 code base.
 
 ## [1.7.1]
 
+### Added
+- `transactionPollingInterval` added to web3, contract and method constructor options. defaults to 1 second. (#4584)
+- Add example import for package level types (#4611)
+
 ### Fixed
 -  Fix a typo in the documentation for `methods.myMethod.send` (#4599)
+-  Use globalThis to locate global object if possible (#4613)
+-  Fix typos in web3-utils.rst (#4662)
 -  Added effectiveGasPrice to TransactionReceipt (#4692)
 -  Correction in documentation for `web3.eth.accounts.signTransaction` (#4576)
 -  Updated README to include Webpack 5 create-react-app support instructions (#4173)
+-  Update the documentation for `methods.myMethod.estimateGas` (#4702)
+-  Fix typos in REVIEW.md and TESTING.md (#4691)
+-  Fix encoding for "0x" string values (#4512)
+
+
+### Changed
+-  Muted E2E gnosis dex tests in CI until fix for issue #4436 is applied (#4701)
+
+
+### Removed
+- Removed deprecated Morden testnet code (#4339)
+
+
+### Security
+-  Ran `npm audit fix` to address vulnerabilities and update libraries (#4719) (#4728)
+
+## [1.7.2]
+
+### Changed
+-  Remove deprecated `close` event listener (#4825) (#4839)
+
+### Security
+-  `npm audit fix` to update libraries (#4860)
+
+### Fixed
+-  Fix jsonrpc payload and response types (#4743) (#4761)
+-  Allowed more flexibility in typing the overly constrained `provider.disconnect` function (#4833)
+
+## [1.7.3]
+
+### Fixed
+
+-  Fixed build issues of 1.7.2
+
+## [1.7.4]
+
+### Fixed
+-  Fix dead link in web3-eth.rst (#4916)
+-  Fix web3-core-method throws on `f.call = this.call` when intrinsic is frozen (#4918) (#4938)
+-  Fix static tuple encoding (#4673) (#4884)
+-  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
+-  Fix resolve type of getBlock function (#4911)
+-  Web3-utils BN fix (#5132)
+
+### Changed
+-  Replace deprecated String.prototype.substr() (#4855)
+-  Exporting AbiCoder as coder (#4937)
+-  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
+-  Updated libraries using BN and the BN library (#5072)
+
+### Added
+- Exposing `web3.eth.Contract.setProvider()` as per public documentation (#4822) (#5001)
+- Improve npm script commands for development purposes (#4848)
+
+### Security
+-  `npm audit fix` to address vulnerabilities and update libraries (#5014)
+
+## [1.7.5]
+
+### Changed
+-  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
+
+### Added
+-  Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Added `createAccessList` types in web3.eth (#5146)
+
+### Fixed
+-  Improving `AbstractProvider` interface (#5150)
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-  Fix remove wallet using an index when an account address and address lowercase are equal (#5049)
+-  Improve README.md & Fix typos (#4848)
+-  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
+-  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
+-  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
+-  Fixed unit tests & removed dead code for web3-providers-http (#5228)
+
+### Security
+-  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
+
+## [Unreleased]
+
+## [1.7.6]
+
+### Changed
+-  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
+-  Removing legacy field in lerna.json (#5403)
+
+### Fixed
+-  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
+-  Update node version on actions to fix breaking mosaic test (#5354) 
+-  Start incrementing jsonrpc.id from random number (#5327)
+-  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
+-  Improvement using provided gas options in web3-eth-accounts for eip-1559 transactions (#5012)
+
+### Added
+-  Add missing function type "receive" in `AbiType` (#5165)

@@ -16,8 +16,9 @@ body:
         please [Start A Discussion](https://github.com/ChainSafe/web3.js/discussions/new) instead of opening an issue
   - type: checkboxes
     attributes:
+      label: This is not a Bug Report, Feature Request, or related to Documentation
       options:
-        - label: This is not a Bug Report, Feature Request, or related to Documentation
+        - label: I have searched the existing issues
           required: true
   - type: checkboxes
     attributes:

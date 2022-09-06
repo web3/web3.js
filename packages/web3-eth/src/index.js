@@ -100,6 +100,7 @@ var Eth = function Eth() {
     var transactionBlockTimeout = 50;
     var transactionConfirmationBlocks = 24;
     var transactionPollingTimeout = 750;
+    var transactionPollingInterval = 1000;
     var blockHeaderTimeout = 10; // 10 seconds
     var maxListenersWarningThreshold = 100;
     var defaultChain, defaultHardfork, defaultCommon;
@@ -185,6 +186,23 @@ var Eth = function Eth() {
             // update defaultBlock
             methods.forEach(function(method) {
                 method.transactionPollingTimeout = transactionPollingTimeout;
+            });
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'transactionPollingInterval', {
+        get: function () {
+            return transactionPollingInterval;
+        },
+        set: function (val) {
+            transactionPollingInterval = val;
+
+            // also set on the Contract object
+            _this.Contract.transactionPollingInterval = transactionPollingInterval;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.transactionPollingInterval = transactionPollingInterval;
             });
         },
         enumerable: true
@@ -351,6 +369,7 @@ var Eth = function Eth() {
     this.Contract.transactionBlockTimeout = this.transactionBlockTimeout;
     this.Contract.transactionConfirmationBlocks = this.transactionConfirmationBlocks;
     this.Contract.transactionPollingTimeout = this.transactionPollingTimeout;
+    this.Contract.transactionPollingInterval = this.transactionPollingInterval;
     this.Contract.blockHeaderTimeout = this.blockHeaderTimeout;
     this.Contract.handleRevert = this.handleRevert;
     this.Contract._requestManager = this._requestManager;
@@ -680,6 +699,7 @@ var Eth = function Eth() {
         method.transactionBlockTimeout = _this.transactionBlockTimeout;
         method.transactionConfirmationBlocks = _this.transactionConfirmationBlocks;
         method.transactionPollingTimeout = _this.transactionPollingTimeout;
+        method.transactionPollingInterval = _this.transactionPollingInterval;
         method.handleRevert = _this.handleRevert;
     });
 

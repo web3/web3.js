@@ -3,7 +3,7 @@
 Web3 is used in Node.js and browser contexts to interact with a wide variety of clients. Its tests
 try to cover as much of this domain as possible.
 
-If you're looking for a fixture, test pattern or common execution context to validate a change, you should be able find it in the existing test suite. (Caveats include Parity / Quorum clients and MetaMask specific tests.)
+If you're looking for a fixture, test pattern or common execution context to validate a change, you should be able to find it in the existing test suite. (Caveats include Parity / Quorum clients and MetaMask specific tests.)
 
 ## Required Tests
 
@@ -23,7 +23,7 @@ These should pass for PRs to merge:
 
 ## Optional Tests
 
-CI also has tests that install Web3's state at an arbitrary commit in an external real-world project and run *their* unit tests with it. This strategy is borrowed from ethereum/solidity which checks latest Solidity against OpenZeppelin and others to keep abreast of how local changes might affect critical projects downstream from them.
+CI also has tests that install Web3's state at an arbitrary commit in an external real-world project and run *their* unit tests with it. This strategy is borrowed from ethereum/solidity which checks the latest Solidity against OpenZeppelin and others to keep abreast of how local changes might affect critical projects downstream from them.
 
 Examples include:
 + [e2e.mosaic.sh][8]: ~300 unit tests for [a Solidity project built with Buidler & @truffle/contract][9]
@@ -52,7 +52,7 @@ in their mocha test description and runs them against:
 These tests are grouped in files prefixed by "e2e", ex: `test/e2e.method.call.js`.
 
 Additionally, there are conventional unit tests postfixed `.ganache.js` which spin up a ganache
-server programatically within mocha. This pattern is useful if you want to
+server programmatically within mocha. This pattern is useful if you want to
 control client configuration for a specific case, test against multiple independent providers, etc.
 
 **"Real world" tests**
@@ -63,7 +63,7 @@ npm registry which is spun up in CI using [verdaccio][14]. (Implementation detai
 be seen in [scripts/e2e.npm.publish.sh][15])
 
 The real world target is then cloned and npm or yarn are used to replace its existing
-Web3 version with the version published to the the private registry. A simple example can be seen at
+Web3 version with the version published to the private registry. A simple example can be seen at
 [scripts/e2e.ganache.core.sh][10].
 
 In practice, complex projects can have many versions of Web3 nested in their dependency tree.

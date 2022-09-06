@@ -4,6 +4,7 @@ var Accounts = require("./../packages/web3-eth-accounts");
 var chai = require('chai');
 var assert = chai.assert;
 var bn = require('bn.js');
+var utils = require("../packages/web3-utils");
 
 var common = {
     baseChain: 'mainnet',
@@ -132,8 +133,9 @@ var tests = [
             common: common
         },
         // expected r and s values from signature
-        r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
-        s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
+        r: "0x74dcecc6b8ad09ca09882ac1088eac145e799f56ea3f5b5fe8fcb52bbd3ea4f7",
+        s: "0x3d49e02af9c239b1b8aea8a7ac9162862dec03207f9f59bc38a4f2b9e42077a9",
+        v: "0x26",
         // signature from eth_signTransaction
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         rawTransaction: "0xf85f8001827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808026a074dcecc6b8ad09ca09882ac1088eac145e799f56ea3f5b5fe8fcb52bbd3ea4f7a03d49e02af9c239b1b8aea8a7ac9162862dec03207f9f59bc38a4f2b9e42077a9",
@@ -158,6 +160,7 @@ var tests = [
         // expected r and s values from signature
         r: "0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c",
         s: "0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
+        v: "0x25",
         // signature from eth_signTransaction
         rawTransaction: "0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
         oldSignature: "0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428",
@@ -180,8 +183,9 @@ var tests = [
             common: common
         },
         // expected r and s values from signature
-        r: "0x22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd9",
-        s: "0x83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
+        r: "0x3cbfff5b8ef4588b930ecbf9b85388795875edf814dfc6c71884f99b6d7555cc",
+        s: "0x57142e729c1c83bfccb2785e629fc32dffb2e613df565e78e119aa4694cb1df9",
+        v: "0x25",
         // signature from eth_signTransaction
         oldSignature: "0xf85d8080827c6d94f0109fc8df283027b6285cc889f5aa624eac1f558080269f22f17b38af35286ffbb0c6376c86ec91c20ecbad93f84913a0cc15e7580cd99f83d6e12e82e3544cb4439964d5087da78f74cefeec9a450b16ae179fd8fe20",
         rawTransaction: "0xf85f800a827c6d94f0109fc8df283027b6285cc889f5aa624eac1f55808025a03cbfff5b8ef4588b930ecbf9b85388795875edf814dfc6c71884f99b6d7555cca057142e729c1c83bfccb2785e629fc32dffb2e613df565e78e119aa4694cb1df9",
@@ -660,8 +664,8 @@ var tests = [
         transaction: {
             chainId: 1,
             nonce: 0,
-            maxPriorityFeePerGas: new bn('0x3B9ACA00'),
-            maxFeePerGas: new bn('0xB2D05E00'),
+            maxPriorityFeePerGas: new bn('c7331248', 16),
+            maxFeePerGas: new bn('cb72ec20', 16),
             gasLimit: '0x6A40',
             to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
             toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
@@ -683,6 +687,77 @@ var tests = [
         transaction: {
             chainId: 1,
             nonce: 0,
+            maxPriorityFeePerGas: '1000000000',
+            maxFeePerGas: '3000000000',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        oldSignature: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        transactionHash: "0x82c19b39a6b7eaa0492863a8b236fad5018f267b4977c270ddd5228c4cbda60e",
+        messageHash: "0xe3beea0918f445c21eb2f42e3cbc3c5d54321ec642f47d12c473b2765df97f2b"
+    },
+    {
+        // test #30
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            maxPriorityFeePerGas: new utils.BN('0x3B9ACA00'),
+            maxFeePerGas: new utils.BN('0xB2D05E00'),
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonLondon
+        },
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca0084b2d05e00826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0d1290a118d51918c1ca17e3af0267c45efcd745cf42e78eabc444c424d6bcf37a003c81e1fda169575023a94200ee034128747f91020e704abaee30dbcfc785c36",
+        oldSignature: "0x02f86e018084c733124884cb72ec20826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c001a08896fb9a5c033e0163b073cf7a951a1db2dca41b26b4188f13a05158eb26fd32a005e8855691199cd0b6dcae88f3325c374e2f0697b9c528a5c10d5bd8dfb6a3e3",
+        transactionHash: "0x82c19b39a6b7eaa0492863a8b236fad5018f267b4977c270ddd5228c4cbda60e",
+        messageHash: "0xe3beea0918f445c21eb2f42e3cbc3c5d54321ec642f47d12c473b2765df97f2b"
+    },
+    {
+        // test #31
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            gas: 27200,
+            maxPriorityFeePerGas: '0x3B9ACA00',
+            gasLimit: '0x6A40',
+            to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+            toIban: 'XE04S1IRT2PR8A8422TPBL9SR6U0HODDCUT', // will be switched to "to" in the test
+            value: "1000000000",
+            data: "",
+            common: commonBerlin
+        },
+        error: true,
+        // signature from eth_signTransaction
+        rawTransaction: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        oldSignature: "0x02f86e0180843b9aca00843b9aca0e826a4094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca0080c080a0eb8ca6017e6926503ce11c404ba9b61f30d53ea934857e4f4489f43a6c189cf8a03655ba42b2fdcabdb3363cb39e7f672baa91455632e02bab27f92e1a275ca833",
+        transactionHash: "0x488a813f2286f7c015947aa13133bdae49ec75ae1c8f5eba80034d71a038dca8",
+        messageHash: "0xcd6d6dee80ecc38f1b22f2d128bf6043dc41079fc913183a8995b5b3e187df61"
+    },
+    {
+        // test #32
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        iban: 'XE0556YCRTEZ9JALZBSCXOK4UJ5F3HN03DV',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        transaction: {
+            chainId: 1,
+            nonce: 0,
+            type: '0x2',
             maxPriorityFeePerGas: '1000000000',
             maxFeePerGas: '3000000000',
             gasLimit: '0x6A40',
@@ -755,6 +830,12 @@ describe("eth", function () {
                         assert.equal(tx.messageHash, test.messageHash, "message hash failed");
                         assert.equal(tx.transactionHash, test.transactionHash, "tx hash failed");
                         assert.equal(tx.rawTransaction, test.rawTransaction, "rawtx failed");
+
+                        if(test.r && test.s && test.v){
+                            assert.equal(tx.v, test.v, "v property of signature failed");
+                            assert.equal(tx.s, test.s, "s property of signature failed");
+                            assert.equal(tx.r, test.r, "r property of signature failed");
+                        }
                         done();
                     })
                     .catch(e => {
@@ -876,7 +957,7 @@ describe("eth", function () {
                         done(e);
                     });
                 });
-                
+
 
                 it("signTransaction should not call for chainId if common.customChain.chainId provided", function(done) {
                     var provider = new FakeHttpProvider();

@@ -356,6 +356,21 @@ var runTests = function(contractFactory) {
 
             assert.equal(contract.options.transactionPollingTimeout, 0);
         });
+        it('should define the transactionPollingInterval object property if passed over the options', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingInterval: 0}, provider);
+
+            assert.equal(contract.transactionPollingInterval, 0);
+            assert.equal(contract.options.transactionPollingInterval, 0);
+        });
+        it('should update the transactionPollingInterval property in the options object', function() {
+            var provider = new FakeIpcProvider();
+            var contract = contractFactory(abi, address, {transactionPollingInterval: 1}, provider);
+
+            contract.transactionPollingInterval = 0;
+
+            assert.equal(contract.options.transactionPollingInterval, 0);
+        });
         it('should define the transactionConfirmationBlocks object property if passed over the options', function() {
             var provider = new FakeIpcProvider();
             var contract = contractFactory(abi, address, {transactionConfirmationBlocks: 0}, provider);
@@ -3136,6 +3151,77 @@ var runTests = function(contractFactory) {
 
 describe('typical usage', function() {
     runTests(getEthContractInstance);
+
+    it('should not mutate options object - call', function (done) {
+        var provider = new FakeHttpProvider();
+
+        provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+
+        var eth = new Eth(provider);
+        var contract = new eth.Contract(abi, address);
+        var options = { from: address };
+        var expectedOptions = { ...options };
+
+        contract.methods.balance(address).call(options)
+        .then(function () {
+            assert.deepEqual(options, expectedOptions);
+            done();
+        });
+    });
+
+    it('should not mutate options object - send', function (done) {
+        var provider = new FakeHttpProvider();
+
+        provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+        provider.injectResult({
+            contractAddress: null,
+            cumulativeGasUsed: '0xa',
+            transactionIndex: '0x3',
+            transactionHash: '0x1234',
+            blockNumber: '0xa',
+            blockHash: '0x1234',
+            gasUsed: '0x0',
+            logs: [{
+                address: address,
+                topics: [
+                    sha3('Unchanged(uint256,address,uint256)'),
+                    '0x0000000000000000000000000000000000000000000000000000000000000002',
+                    '0x000000000000000000000000'+ addressLowercase.replace('0x','')
+                ],
+                blockNumber: '0xa',
+                transactionHash: '0x1234',
+                transactionIndex: '0x0',
+                blockHash: '0x1345',
+                logIndex: '0x4',
+                data: '0x0000000000000000000000000000000000000000000000000000000000000005'
+            },{
+                address: address,
+                topics: [
+                    sha3('Changed(address,uint256,uint256,uint256)'),
+                    '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    '0x0000000000000000000000000000000000000000000000000000000000000001'
+                ],
+                blockNumber: '0xa',
+                transactionHash: '0x1234',
+                transactionIndex: '0x0',
+                blockHash: '0x1345',
+                logIndex: '0x4',
+                data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                '0000000000000000000000000000000000000000000000000000000000000008'
+            }]
+        });
+
+        var eth = new Eth(provider);
+        var contract = new eth.Contract(abi, address);
+        var options = { from: address, gasPrice: '21345678654321' };
+        var expectedOptions = { ...options };
+
+        contract.methods.mySend(address, 10).send(options)
+        .on('receipt', function () {
+            assert.deepEqual(options, expectedOptions);
+            done();
+        });
+    });
 
     it('should update contract instance provider when assigned a provider to eth instance that contract instance came from', function () {
         var provider1 = new FakeIpcProvider();
