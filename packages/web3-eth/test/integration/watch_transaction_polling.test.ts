@@ -72,7 +72,6 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('confirmation', ({ confirmations }) => {
-					console.error('confirmation has been received', confirmations);
 					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
 					shouldBe += 1;
 					if (shouldBe >= waitConfirmations) {
@@ -84,18 +83,16 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void sentTx.on('receipt', (params: TransactionReceipt) => {
-					console.error('receipt has been received', params);
 					expect(params.status).toBe(BigInt(1));
 					resolve();
 				});
 			});
 
 			await sentTx;
-			console.error('Before sending few transactions');
+
 			// Send few transactions to cause (dev providers like Ganache) creating new blocks,
 			//	to be able to check the confirmations.
 			// No need to wait for those transactions. So just send them to the connected provider.
-
 			await sendFewTxes({
 				web3Eth,
 				from,
