@@ -127,7 +127,7 @@ export class SyncingSubscription extends Web3Subscription<
 				currentBlock:
 					'CurrentBlock' in data.status
 						? data.status.CurrentBlock
-						: data.status.startingBlock,
+						: data.status.currentBlock,
 				highestBlock:
 					'HighestBlock' in data.status
 						? data.status.HighestBlock
