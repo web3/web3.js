@@ -79,6 +79,8 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 					}
 				});
 			});
+
+			await sentTx;
 			await new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
@@ -88,12 +90,10 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				});
 			});
 
-			await sentTx;
-
 			// Send few transactions to cause (dev providers like Ganache) creating new blocks,
 			//	to be able to check the confirmations.
 			// No need to wait for those transactions. So just send them to the connected provider.
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations + 1 });
 
 			await confirmationPromise;
 			sentTx.removeAllListeners();

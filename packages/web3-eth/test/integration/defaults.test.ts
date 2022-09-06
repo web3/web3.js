@@ -536,7 +536,7 @@ describe('defaults', () => {
 			await sentTx;
 			// wait a bit because some development providers would need some time before creating a new block.
 			await new Promise<void>(resolve => {
-				setTimeout(resolve, 1000);
+				setTimeout(resolve, 100);
 			});
 			await tempEth.sendTransaction({
 				to,
