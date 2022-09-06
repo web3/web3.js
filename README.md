@@ -4,7 +4,7 @@
 
 # web3.js - Ethereum JavaScript API
 
-[![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![NPM Package Downloads][npm-image-downloads]][npm-url] [![Build Status][actions-image]][actions-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url] [![GitPOAP Badge][gitpoap-image]][gitpoap-url]
+[![NPM Package Downloads][npm-image-downloads]][npm-url] [![cdnhits][cdnhits-image]][cdnhits-url] [![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![Build Status][actions-image]][actions-url]  [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url] [![GitPOAP Badge][gitpoap-image]][gitpoap-url]
 
 #####  [Web3.js 4.x][4x-release] has been release. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
 
@@ -292,10 +292,6 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [npm-url]: https://npmjs.org/package/web3
 [actions-image]: https://github.com/ethereum/web3.js/workflows/Build/badge.svg
 [actions-url]: https://github.com/ethereum/web3.js/actions
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev
-[dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
-[dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=1.x
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=1.x
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
@@ -312,6 +308,9 @@ This project adheres to the [Release Guidelines](./REVIEW.md).
 [gitpoap-url]: https://www.gitpoap.io/gh/ChainSafe/web3.js
 [4x-release]: https://github.com/ChainSafe/web3.js/releases/tag/v4.0.0-alpha.0 
 [4xdoc]: https://docs.web3js.org/
+[cdnhits-image]: https://data.jsdelivr.com/v1/package/npm/web3/badge
+[cdnhits-url]: https://www.jsdelivr.com/package/npm/web3
+
 ## Semantic versioning
 
 This project follows [semver](https://semver.org/) as closely as possible **from version 1.3.0 onwards**. Earlier minor version bumps [might](https://github.com/ethereum/web3.js/issues/3758) have included breaking behavior changes.
