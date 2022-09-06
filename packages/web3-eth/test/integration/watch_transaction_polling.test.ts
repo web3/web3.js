@@ -67,18 +67,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				value,
 				from,
 			});
-			let shouldBe = 1;
-			const confirmationPromise = new Promise((resolve: Resolve) => {
-				// Tx promise is handled separately
-				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
-						resolve();
-					}
-				});
-			});
+
 			await new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
@@ -94,7 +83,6 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			// No need to wait for those transactions. So just send them to the connected provider.
 			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 
-			await confirmationPromise;
 			sentTx.removeAllListeners();
 		});
 	});
