@@ -4,10 +4,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Changed
-
-- Correct `eth_sendSignedTransaction` code example (#5402)
-
 ## [1.2.0]
 
 Released with 1.0.0-beta.37 code base.
@@ -563,6 +559,7 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 -  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
+-  Correct `eth_sendSignedTransaction` code example (#5402)
 
 ### Fixed
 -  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
