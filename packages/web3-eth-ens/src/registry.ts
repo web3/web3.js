@@ -26,6 +26,7 @@ import { namehash } from './utils';
 
 export class Registry {
 	private readonly contract: Contract<typeof REGISTRY>;
+	private readonly context: Web3ContextObject;
 
 	public constructor(context: Web3ContextObject, customRegistryAddress?: Address) {
 		this.contract = new Contract(
@@ -33,6 +34,8 @@ export class Registry {
 			customRegistryAddress ?? registryAddresses.main,
 			context,
 		);
+
+		this.context = context;
 	}
 	public async getOwner(name: string) {
 		try {
@@ -184,7 +187,7 @@ export class Registry {
 				.then(address => {
 					// address type is unknown, not sure why
 					if (typeof address === 'string') {
-						const contract = new Contract(RESOLVER, address);
+						const contract = new Contract(RESOLVER, address, this.context);
 						// TODO: set contract provider needs to be added when ens current provider
 						return contract;
 					}
