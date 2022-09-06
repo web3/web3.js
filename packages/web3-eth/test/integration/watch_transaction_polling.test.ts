@@ -102,7 +102,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations,
-				waitForReceipt: false,
+				waitForReceipt: true,
 			});
 			console.error('Before waiting for confirmation');
 			await confirmationPromise;
