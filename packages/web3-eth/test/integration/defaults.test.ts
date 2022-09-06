@@ -628,7 +628,7 @@ describe('defaults', () => {
 					value: '0x174876e800',
 					gas: '0x5208',
 				},
-				web3Context: eth2 as Web3Context<any>,
+				web3Context: eth2 as Web3Context,
 			});
 			expect(res.networkId).toBe(4);
 
@@ -641,7 +641,7 @@ describe('defaults', () => {
 					gas: '0x5208',
 					networkId: 5,
 				},
-				web3Context: eth2 as Web3Context<any>,
+				web3Context: eth2 as Web3Context,
 			});
 
 			expect(resWithPassNetworkId.networkId).toBe(BigInt(5));
@@ -671,7 +671,7 @@ describe('defaults', () => {
 					value: '0x174876e800',
 					gas: '0x5208',
 				},
-				web3Context: eth2 as Web3Context<any>,
+				web3Context: eth2 as Web3Context,
 			});
 			expect(res.chain).toBe('rinkeby');
 		});

@@ -72,21 +72,21 @@ export type Web3ContextInitOptions<
 
 export type Web3ContextConstructor<
 	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-	T extends Web3Context<any>,
+	T extends Web3Context,
 	T2 extends unknown[],
 > = new (...args: [...extras: T2, context: Web3ContextObject]) => T;
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextFactory<
 	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-	T extends Web3Context<any>,
+	T extends Web3Context,
 	T2 extends unknown[],
 > = Web3ContextConstructor<T, T2> & {
 	fromContextObject(this: Web3ContextConstructor<T, T2>, contextObject: Web3ContextObject): T;
 };
 
 export class Web3Context<
-	API extends Web3APISpec,
+	API extends Web3APISpec = any,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,7 +95,7 @@ export class Web3Context<
 	public static readonly providers = Web3RequestManager.providers;
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
-	protected _requestManager: Web3RequestManager<API>;
+	protected _requestManager: Web3RequestManager<API | any>;
 	protected _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 	protected _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	protected _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
@@ -174,14 +174,14 @@ export class Web3Context<
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public static fromContextObject<T extends Web3Context<any>, T3 extends unknown[]>(
+	public static fromContextObject<T extends Web3Context, T3 extends unknown[]>(
 		this: Web3ContextConstructor<T, T3>,
 		...args: [Web3ContextObject, ...T3]
 	) {
 		return new this(...(args.reverse() as [...T3, Web3ContextObject]));
 	}
 
-	public getContextObject(): Web3ContextObject<API, RegisteredSubs> {
+	public getContextObject(): Web3ContextObject<API | any, RegisteredSubs> {
 		return {
 			config: this.getConfig(),
 			provider: this.provider,
@@ -201,7 +201,7 @@ export class Web3Context<
 	 * and then use it to create new objects of any type extended by `Web3Context`.
 	 */
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public use<T extends Web3Context<any>, T2 extends unknown[]>(
+	public use<T extends Web3Context, T2 extends unknown[]>(
 		ContextRef: Web3ContextConstructor<T, T2>,
 		...args: [...T2]
 	) {
@@ -220,7 +220,7 @@ export class Web3Context<
 	/**
 	 * Link current context to another context.
 	 */
-	public link<T extends Web3Context<API, RegisteredSubs>>(parentContext: T) {
+	public link<T extends Web3Context>(parentContext: T) {
 		this.setConfig(parentContext.getConfig());
 		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
