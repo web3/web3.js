@@ -19,7 +19,8 @@ import { Contract } from 'web3-eth-contract';
 import { TransactionRevertError } from 'web3-errors';
 import Web3 from '../../src/index';
 import {
-	createNewAccount,
+	closeOpenConnection,
+	createTempAccount,
 	getSystemTestProvider,
 	isWs,
 } from '../shared_fixtures/system_tests_utils';
@@ -36,10 +37,10 @@ describe('eth', () => {
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
-	beforeAll(async () => {
+	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
-		const acc1 = await createNewAccount({ unlock: true, refill: true });
-		const acc2 = await createNewAccount({ unlock: true, refill: true });
+		const acc1 = await createTempAccount();
+		const acc2 = await createTempAccount();
 		accounts = [acc1.address, acc2.address];
 		web3 = new Web3(getSystemTestProvider());
 		if (isWs) {
@@ -77,11 +78,9 @@ describe('eth', () => {
 
 		contract = await contract.deploy(deployOptions).send(sendOptions);
 	});
-	afterAll(() => {
-		if (isWs && web3?.provider) {
-			(web3.provider as WebSocketProvider).disconnect();
-			(contract.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3);
+		await closeOpenConnection(contract);
 	});
 
 	describe('handleRevert', () => {

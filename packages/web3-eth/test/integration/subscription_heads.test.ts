@@ -20,8 +20,8 @@ import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
 import { NewHeadsSubscription } from '../../src/web3_subscriptions';
 import {
+	createTempAccount,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
 } from '../fixtures/system_test_utils';
@@ -33,16 +33,17 @@ const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
 describeIf(isWs)('subscription', () => {
 	let web3Eth: Web3Eth;
 	let clientUrl: string;
-	let accounts: string[] = [];
 	let providerWs: WebSocketProvider;
-	beforeAll(async () => {
+	let tempAcc: { address: string; privateKey: string };
+	let tempAcc2: { address: string; privateKey: string };
+
+	beforeEach(async () => {
+		tempAcc = await createTempAccount();
+		tempAcc2 = await createTempAccount();
+	});
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		accounts = await getSystemTestAccounts();
-		providerWs = new WebSocketProvider(
-			clientUrl,
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+		providerWs = new WebSocketProvider(clientUrl);
 	});
 	afterAll(() => {
 		providerWs.disconnect();
@@ -52,8 +53,8 @@ describeIf(isWs)('subscription', () => {
 		it.each(subNames)(`wait for ${checkTxCount} newHeads`, async (subName: SubName) => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
-			const from = accounts[0];
-			const to = accounts[1];
+			const from = tempAcc.address;
+			const to = tempAcc2.address;
 			const value = `0x1`;
 
 			let times = 0;

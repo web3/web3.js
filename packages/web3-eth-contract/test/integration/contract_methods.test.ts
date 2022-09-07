@@ -16,35 +16,34 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import { getSystemTestProvider, getSystemTestAccounts } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
+	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-	let accounts: string[];
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
-
-		accounts = await getSystemTestAccounts();
+		const acc = await createTempAccount();
 
 		deployOptions = {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
 
-		sendOptions = { from: accounts[0], gas: '1000000' };
+		sendOptions = { from: acc.address, gas: '1000000' };
 
-		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
 	describe('methods', () => {
 		describe('call', () => {
 			it('should retrieve the values', async () => {
-				const result = await contract.methods.getValues().call();
+				const result = await contractDeployed.methods.getValues().call();
 
 				expect(result).toEqual({
 					'0': '10',
@@ -56,7 +55,7 @@ describe('contract', () => {
 
 			describe('revert handling', () => {
 				it('should returns the expected revert reason string', async () => {
-					return expect(contract.methods.reverts().call()).rejects.toThrow(
+					return expect(contractDeployed.methods.reverts().call()).rejects.toThrow(
 						'REVERTED WITH REVERT',
 					);
 				});
@@ -65,7 +64,7 @@ describe('contract', () => {
 
 		describe('send', () => {
 			it('should returns a receipt', async () => {
-				const receipt = await contract.methods
+				const receipt = await contractDeployed.methods
 					.setValues(1, 'string value', true)
 					.send(sendOptions);
 
@@ -82,12 +81,19 @@ describe('contract', () => {
 			});
 
 			it('should returns a receipt (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', async () => {
-				const receipt = await contract.methods.setValues(1, 'string value', true).send({
-					...sendOptions,
-					maxFeePerGas: '0x59682F00', // 1.5 Gwei
-					maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
-					type: '0x2',
-				});
+				const acc = await createTempAccount();
+
+				const sendOptionsLocal = { from: acc.address, gas: '1000000' };
+
+				const contractLocal = await contract.deploy(deployOptions).send(sendOptionsLocal);
+				const receipt = await contractLocal.methods
+					.setValues(1, 'string value', true)
+					.send({
+						...sendOptionsLocal,
+						maxFeePerGas: '0x59682F00', // 1.5 Gwei
+						maxPriorityFeePerGas: '0x1DCD6500', // .5 Gwei
+						type: '0x2',
+					});
 
 				expect(receipt).toEqual(
 					expect.objectContaining({
@@ -104,7 +110,7 @@ describe('contract', () => {
 			// TODO: Get and match the revert error message
 			it('should returns errors on reverts', async () => {
 				try {
-					await contract.methods.reverts().send(sendOptions);
+					await contractDeployed.methods.reverts().send(sendOptions);
 				} catch (receipt: any) {
 					// eslint-disable-next-line jest/no-conditional-expect
 					expect(receipt).toEqual(
