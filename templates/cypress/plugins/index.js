@@ -27,6 +27,7 @@ module.exports = (on, config) => {
 	config.env.WEB3_SYSTEM_TEST_MNEMONIC = process.env.WEB3_SYSTEM_TEST_MNEMONIC;
 	config.env.WEB3_SYSTEM_TEST_PORT = process.env.WEB3_SYSTEM_TEST_PORT;
 	config.env.WEB3_SYSTEM_TEST_PROVIDER = process.env.WEB3_SYSTEM_TEST_PROVIDER;
+	config.env.WEB3_SYSTEM_TEST_ENGINE = process.env.WEB3_SYSTEM_TEST_ENGINE;
 
 	return config;
 };
