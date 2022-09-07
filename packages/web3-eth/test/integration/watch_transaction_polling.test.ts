@@ -18,7 +18,7 @@ import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt } from 'web3-types';
 import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxes } from './helper';
+// import { sendFewTxes } from './helper';
 
 import {
 	closeOpenConnection,
@@ -70,11 +70,21 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmations }: { confirmations: bigint }) => {
-					if (confirmations >= waitConfirmations) {
-						resolve();
-					}
-				});
+				void sentTx.on(
+					'confirmation',
+					async ({ confirmations }: { confirmations: bigint }) => {
+						console.warn('received confirmation', confirmations);
+						if (confirmations >= waitConfirmations) {
+							resolve();
+						} else {
+							await web3Eth.sendTransaction({
+								to,
+								value,
+								from,
+							});
+						}
+					},
+				);
 			});
 			await new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -86,19 +96,19 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await sentTx;
-			console.warn('before sendFewTxes');
-			// Send few transactions to cause (dev providers like Ganache) creating new blocks,
-			//	to be able to check the confirmations.
-			// No need to wait for those transactions. So just send them to the connected provider.
-			await sendFewTxes({
-				web3Eth,
-				from: tempAcc2.address,
-				to: tempAcc.address,
-				value,
-				times: waitConfirmations - 1,
-				waitForReceipt: true,
-			});
-			console.warn('after sendFewTxes');
+			// console.warn('before sendFewTxes');
+			// // Send few transactions to cause (dev providers like Ganache) creating new blocks,
+			// //	to be able to check the confirmations.
+			// // No need to wait for those transactions. So just send them to the connected provider.
+			// await sendFewTxes({
+			// 	web3Eth,
+			// 	from: tempAcc2.address,
+			// 	to: tempAcc.address,
+			// 	value,
+			// 	times: waitConfirmations - 1,
+			// 	waitForReceipt: true,
+			// });
+			// console.warn('after sendFewTxes');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
 		});
