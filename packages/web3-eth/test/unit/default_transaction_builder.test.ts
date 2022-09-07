@@ -19,6 +19,8 @@ import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
 	Transaction,
+	ValidChains,
+	Hardfork,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
@@ -277,29 +279,29 @@ describe('defaultTransactionBuilder', () => {
 
 		it('should use web3Context.defaultCommon to populate', async () => {
 			web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+			const baseChain: ValidChains = 'mainnet';
+			const hardfork: Hardfork = 'berlin';
 			const customCommon = {
-				defaultCommon: {
-					customChain: {
-						name: 'foo',
-						networkId: 'my-network-id',
-						chainId: 1337,
-					},
-					baseChain: 'mainnet',
-					hardfork: 'berlin',
+				customChain: {
+					name: 'custom',
+					networkId: '0x3',
+					chainId: '0x2',
 				},
+				baseChain,
+				hardfork,
 			};
+
 			web3Context.defaultCommon = customCommon;
 
 			const input = { ...transaction };
-			delete input.hardfork;
 			delete input.common;
-			delete input.chain;
 
 			const result = await defaultTransactionBuilder({
 				transaction: input,
 				web3Context,
 			});
-			expect(result.common).toBe(web3Context.defaultCommon);
+			expect(result.networkId).toBe(customCommon.customChain.networkId);
+			expect(result.chainId).toBe(customCommon.customChain.chainId);
 		});
 	});
 
@@ -457,7 +459,6 @@ describe('defaultTransactionBuilder', () => {
 				transaction: input,
 				web3Context,
 			});
-			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.gasPrice).toBeUndefined();
 		});

@@ -52,6 +52,7 @@ import {
 	HexString,
 	LogsInput,
 	Mutable,
+	Common,
 } from 'web3-types';
 import {
 	DataFormat,
@@ -192,7 +193,7 @@ export class Contract<Abi extends ContractAbi>
 	/**
 	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
 	 */
-	public static defaultCommon?: Record<string, unknown>;
+	public static defaultCommon?: Common;
 
 	/**
 	 * Can be used to set {@link Contract.transactionSendTimeout} for all contracts.
@@ -405,11 +406,11 @@ export class Contract<Abi extends ContractAbi>
 		super.defaultHardfork = value;
 	}
 
-	public get defaultCommon() {
+	public get defaultCommon(): Common | undefined {
 		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
 	}
 
-	public set defaultCommon(value: Record<string, unknown> | undefined) {
+	public set defaultCommon(value: Common | undefined) {
 		super.defaultCommon = value;
 	}
 

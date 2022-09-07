@@ -713,7 +713,7 @@ describe('defaults', () => {
 			);
 			expect(res.common.hardfork()).toBe('istanbul');
 		});
-		it('defaultCommon', () => {
+		it('defaultCommon', async () => {
 			// default
 			expect(web3Eth.defaultCommon).toBeUndefined();
 			const common = {
@@ -739,6 +739,22 @@ describe('defaults', () => {
 				},
 			});
 			expect(eth2.defaultCommon).toBe(common);
+
+			const res = await prepareTransactionForSigning(
+				{
+					from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+					to: '0x3535353535353535353535353535353535353535',
+					value: '0x174876e800',
+					gas: '0x5208',
+					gasPrice: '0x4a817c800',
+					data: '0x0',
+					nonce: '0x4',
+					chainId: '0x1',
+					gasLimit: '0x5208',
+				},
+				eth2,
+			);
+			expect(res.common.hardfork()).toBe('dao');
 		});
 		it('defaultTransactionType', () => {
 			// default

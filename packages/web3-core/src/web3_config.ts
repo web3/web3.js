@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Numbers, HexString, BlockNumberOrTag } from 'web3-types';
+import { Numbers, HexString, BlockNumberOrTag, Common } from 'web3-types';
 import { toHex } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
@@ -40,7 +40,7 @@ export interface Web3ConfigOptions {
 	defaultChain: string;
 	defaultHardfork: string;
 
-	defaultCommon?: Record<string, unknown>;
+	defaultCommon?: Common;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
 	transactionBuilder?: TransactionBuilder;

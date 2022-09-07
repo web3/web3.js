@@ -66,7 +66,7 @@ const getEthereumjsTransactionOptions = (
 	if (!hasTransactionSigningOptions) {
 		// if defaultcommon is specified, use that.
 		if (web3Context.defaultCommon) {
-			common = Common.custom(web3Context.defaultCommon);
+			common = web3Context.defaultCommon;
 		} else {
 			common = Common.custom(
 				{
