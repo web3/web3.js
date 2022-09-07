@@ -1,6 +1,6 @@
 # web3
 
-#####  [Web3.js 4.x][4x-release] has been release. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
+#####  [Web3.js 4.x][4x-release] has been released. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
 
 [![NPM Package][npm-image]][npm-url] 
 
