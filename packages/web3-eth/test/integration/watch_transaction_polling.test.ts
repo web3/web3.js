@@ -67,14 +67,11 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				value,
 				from,
 			});
-			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
+				void sentTx.on('confirmation', ({ confirmations }: { confirmations: number }) => {
+					if (confirmations >= waitConfirmations) {
 						resolve();
 					}
 				});
@@ -89,7 +86,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await sentTx;
-
+			console.warn('before sendFewTxes');
 			// Send few transactions to cause (dev providers like Ganache) creating new blocks,
 			//	to be able to check the confirmations.
 			// No need to wait for those transactions. So just send them to the connected provider.
@@ -99,8 +96,8 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations - 1,
-				waitForReceipt: false,
 			});
+			console.warn('after sendFewTxes');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
 		});
