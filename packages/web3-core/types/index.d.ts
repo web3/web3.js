@@ -433,7 +433,7 @@ export interface LogsOptions {
     topics?: Array<string | string[] | null>;
 }
 
-export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
+export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis' | 'finalized' | 'safe';
 
 export interface RequestArguments {
     method: string;
