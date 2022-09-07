@@ -96,6 +96,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations - 1,
+				waitForReceipt: false,
 			});
 			console.warn('after sendFewTxes');
 			await confirmationPromise;
