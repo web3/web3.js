@@ -57,7 +57,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
-			const value = `0x00001`;
+			const value = `0x1`;
 
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
@@ -99,7 +99,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				to,
 				value,
 				times: waitConfirmations,
-				waitForReceipt: true,
+				waitForReceipt: false,
 			});
 			console.error('Before waiting for confirmation');
 			await confirmationPromise;
