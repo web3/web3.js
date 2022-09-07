@@ -22,7 +22,7 @@
     "scripts": {
         "compile": "tsc -b tsconfig.json",
         "dtslint": "dtslint --localTs ../../node_modules/typescript/lib types",
-        "postinstall": "echo \"WARNING: the web3-shh and web3-bzz api will be deprecated in the next version\""
+        "postinstall": "echo \"Web3.js 4.x alpha has been released for early testing and feedback. Checkout doc at https://docs.web3js.org/ \""
     },
     "authors": [
         {

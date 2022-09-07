@@ -1,6 +1,6 @@
 # web3-net
 
-[![NPM Package][npm-image]][npm-url] [![Dependency Status][deps-image]][deps-url] [![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![NPM Package][npm-image]][npm-url] 
 
 This is a sub-package of [web3.js][repo].
 
@@ -32,7 +32,3 @@ All the TypeScript typings are placed in the `types` folder.
 [repo]: https://github.com/ethereum/web3.js
 [npm-image]: https://img.shields.io/npm/v/web3-net.svg
 [npm-url]: https://npmjs.org/package/web3-net
-[deps-image]: https://david-dm.org/ethereum/web3.js/1.x/status.svg?path=packages/web3-net
-[deps-url]: https://david-dm.org/ethereum/web3.js/1.x?path=packages/web3-net
-[deps-dev-image]: https://david-dm.org/ethereum/web3.js/1.x/dev-status.svg?path=packages/web3-net
-[deps-dev-url]: https://david-dm.org/ethereum/web3.js/1.x?type=dev&path=packages/web3-net
