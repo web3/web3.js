@@ -534,7 +534,7 @@ describe('defaults', () => {
 			await sentTx;
 			// wait a bit because some development providers would need some time before creating a new block.
 			await new Promise<void>(resolve => {
-				setTimeout(resolve, 500);
+				setTimeout(resolve, 1000);
 			});
 			// The following is to cause the development node (like Ganache) to generate new block for the new transaction.
 			// Because, when another block is generated, the pervious transaction would be able to have 2 confirmations.

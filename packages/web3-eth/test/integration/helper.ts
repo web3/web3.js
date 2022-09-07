@@ -64,9 +64,6 @@ export const sendFewTxes = async ({
 					});
 				})) as TransactionReceipt,
 			);
-		} else {
-			// eslint-disable-next-line no-await-in-loop
-			await tx;
 		}
 	}
 
