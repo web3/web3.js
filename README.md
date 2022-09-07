@@ -6,7 +6,7 @@
 
 [![NPM Package Downloads][npm-image-downloads]][npm-url] [![cdnhits][cdnhits-image]][cdnhits-url] [![Discord][discord-image]][discord-url] [![StackExchange][stackexchange-image]][stackexchange-url] [![NPM Package Version][npm-image-version]][npm-url] [![Build Status][actions-image]][actions-url]  [![Coverage Status][coveralls-image]][coveralls-url] [![Lerna][lerna-image]][lerna-url] [![Netlify Status][netlify-image]][netlify-url] [![GitPOAP Badge][gitpoap-image]][gitpoap-url]
 
-#####  [Web3.js 4.x][4x-release] has been release. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
+#####  [Web3.js 4.x][4x-release] has been released. Checkout 4.x [API documentation and migration guide][4xdoc] for testing, early feedback and contributions. 
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON-RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
