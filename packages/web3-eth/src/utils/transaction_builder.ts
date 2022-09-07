@@ -181,10 +181,7 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		}
 	}
 
-	if (
-		isNullish(populatedTransaction.chainId) &&
-		isNullish(populatedTransaction.common?.customChain.chainId)
-	) {
+	if (isNullish(populatedTransaction.chainId)) {
 		populatedTransaction.chainId = await getChainId(options.web3Context, ETH_DATA_FORMAT);
 	}
 
