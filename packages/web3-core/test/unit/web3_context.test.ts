@@ -141,8 +141,8 @@ describe('Web3Context', () => {
 			});
 			const child = parent.use(Context2);
 
-			expect(child.defaultNetworkId).toBe('my-network-id');
-			expect(child.defaultHardfork).toBe('my-fork');
+			expect(child.defaultCommon?.customChain.networkId).toBe('my-network-id');
+			expect(child.defaultCommon?.customChain.chainId).toBe(1337);
 		});
 	});
 
