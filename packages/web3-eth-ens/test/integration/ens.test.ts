@@ -28,6 +28,7 @@ import {
 	getSystemTestAccounts,
 	getSystemTestProvider,
 	isWs,
+	isIpc,
 	closeOpenConnection,
 } from '../fixtures/system_tests_utils';
 
@@ -107,9 +108,11 @@ describe('ens', () => {
 			.setSubnodeOwner(ZERO_NODE, sha3(domain) as string, defaultAccount)
 			.send(sendOptions);
 
-		const provider = isWs
-			? new ENS.providers.WebsocketProvider(getSystemTestProvider())
-			: new ENS.providers.HttpProvider(getSystemTestProvider());
+		const clientUrl = getSystemTestProvider();
+		let provider;
+		if (isIpc) provider = new ENS.providers.IpcProvider(clientUrl);
+		else if (isWs) provider = new ENS.providers.WebsocketProvider(clientUrl);
+		else provider = new ENS.providers.HttpProvider(clientUrl);
 
 		ens = new ENS(registry.options.address, provider);
 
