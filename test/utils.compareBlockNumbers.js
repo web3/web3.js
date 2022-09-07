@@ -66,6 +66,10 @@ const tests = [
     { input: {a: safe, b: pending}, result: -1 },
     { input: {b: safe, a: 0}, result: -1 },
     { input: {b: safe, a: pending}, result: 1 },
+    { input: {a: safe, b: 23}, result: undefined },
+    { input: {a: 5000, b: safe}, result: undefined },
+    { input: {a: safe, b:  new BN(1322)}, result: undefined },
+    { input: {a:  new BN(123), b: safe}, result: undefined },
 
 ];
 
@@ -73,7 +77,7 @@ describe('formatters', function () {
     describe('compare blocknumbers', function () {
         tests.forEach(function(test){
             it('should return the correct value', function () {
-                assert.deepEqual(formatters.compareBlockNumbers(test.input.a, test.input.b), test.result);
+                assert.deepEqual(formatters.compareBlockNumbers(test.input.a, test.input.b), test.result);           
             });
         });
     });
