@@ -65,8 +65,10 @@ export const sendFewTxes = async ({
 				})) as TransactionReceipt,
 			);
 		} else {
+			console.warn('before await tx');
 			// eslint-disable-next-line no-await-in-loop
 			await tx;
+			console.warn('after await tx');
 		}
 	}
 
