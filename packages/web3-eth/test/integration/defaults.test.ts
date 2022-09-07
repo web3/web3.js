@@ -514,7 +514,7 @@ describe('defaults', () => {
 				// eslint-disable-next-line no-void
 				void sentTx.on(
 					'confirmation',
-					({
+					async ({
 						confirmations,
 						receipt: { status },
 					}: {
@@ -525,22 +525,18 @@ describe('defaults', () => {
 						if (confirmations >= 2) {
 							sentTx.removeAllListeners();
 							resolve(status);
+						} else {
+							// Send a transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
+							await tempEth.sendTransaction({
+								from,
+								to,
+								value,
+							});
 						}
 					},
 				);
 			});
-
-			// wait a bit because some development providers would need some time before creating a new block.
-			await new Promise<void>(resolve => {
-				setTimeout(resolve, 1000);
-			});
-			// The following is to cause the development node (like Ganache) to generate new block for the new transaction.
-			// Because, when another block is generated, the pervious transaction would be able to have 2 confirmations.
-			await tempEth.sendTransaction({
-				to,
-				value,
-				from,
-			});
+			await sentTx;
 
 			// Ensure the promise the get the confirmations resolves with no error
 			const status = await confirmationPromise;

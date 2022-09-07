@@ -73,10 +73,10 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				void sentTx.on(
 					'confirmation',
 					async ({ confirmations }: { confirmations: bigint }) => {
-						console.warn('received confirmation', confirmations);
 						if (confirmations >= waitConfirmations) {
 							resolve();
 						} else {
+							// Send a transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
 							await web3Eth.sendTransaction({
 								to,
 								value,
@@ -96,19 +96,6 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await sentTx;
-			// console.warn('before sendFewTxes');
-			// // Send few transactions to cause (dev providers like Ganache) creating new blocks,
-			// //	to be able to check the confirmations.
-			// // No need to wait for those transactions. So just send them to the connected provider.
-			// await sendFewTxes({
-			// 	web3Eth,
-			// 	from: tempAcc2.address,
-			// 	to: tempAcc.address,
-			// 	value,
-			// 	times: waitConfirmations - 1,
-			// 	waitForReceipt: true,
-			// });
-			// console.warn('after sendFewTxes');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
 		});

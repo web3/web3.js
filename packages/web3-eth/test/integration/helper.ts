@@ -27,7 +27,6 @@ type SendFewTxParams = {
 	from: string;
 	value: string;
 	times?: number;
-	waitForReceipt?: boolean;
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
@@ -36,7 +35,6 @@ export const sendFewTxes = async ({
 	value,
 	from,
 	times = 3,
-	waitForReceipt = true,
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
@@ -52,29 +50,20 @@ export const sendFewTxes = async ({
 			value,
 			from,
 		});
-		if (waitForReceipt) {
-			console.warn('before await for receipt');
-			res.push(
-				// eslint-disable-next-line no-await-in-loop
-				(await new Promise((resolve: Resolve) => {
-					// tx promise is handled separately
-					// eslint-disable-next-line no-void
-					void tx.on('receipt', (params: TransactionReceipt) => {
-						expect(params.status).toBe(BigInt(1));
-						resolve(params);
-					});
-				})) as TransactionReceipt,
-			);
-			console.warn('after await for receipt');
-		} else {
-			console.warn('before await tx');
+		res.push(
 			// eslint-disable-next-line no-await-in-loop
-			await tx;
-			console.warn('after await tx');
-		}
+			(await new Promise((resolve: Resolve) => {
+				// tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void tx.on('receipt', (params: TransactionReceipt) => {
+					expect(params.status).toBe(BigInt(1));
+					resolve(params);
+				});
+			})) as TransactionReceipt,
+		);
 	}
 
-	return waitForReceipt ? res : [];
+	return res;
 };
 
 const regexHex20 = /0[xX][0-9a-fA-F]{40}/i;
