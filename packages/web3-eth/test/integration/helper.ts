@@ -42,7 +42,7 @@ export const sendFewTxes = async ({
 	for (let i = 0; i < times; i += 1) {
 		// eslint-disable-next-line no-await-in-loop
 		await new Promise<void>(resolve => {
-			setTimeout(resolve, 200);
+			setTimeout(resolve, 500);
 		});
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
@@ -53,6 +53,7 @@ export const sendFewTxes = async ({
 			from,
 		});
 		if (waitForReceipt) {
+			console.warn('before await for receipt');
 			res.push(
 				// eslint-disable-next-line no-await-in-loop
 				(await new Promise((resolve: Resolve) => {
@@ -64,6 +65,7 @@ export const sendFewTxes = async ({
 					});
 				})) as TransactionReceipt,
 			);
+			console.warn('after await for receipt');
 		} else {
 			console.warn('before await tx');
 			// eslint-disable-next-line no-await-in-loop

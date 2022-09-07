@@ -92,11 +92,11 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			// No need to wait for those transactions. So just send them to the connected provider.
 			await sendFewTxes({
 				web3Eth,
-				from,
-				to,
+				from: tempAcc2.address,
+				to: tempAcc.address,
 				value,
 				times: waitConfirmations - 1,
-				waitForReceipt: false,
+				waitForReceipt: true,
 			});
 			console.warn('after sendFewTxes');
 			await confirmationPromise;
