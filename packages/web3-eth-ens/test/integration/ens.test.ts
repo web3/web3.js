@@ -32,9 +32,12 @@ import {
 	closeOpenConnection,
 } from '../fixtures/system_tests_utils';
 
-import { ENSRegistryAbi, ENSRegistryBytecode } from '../../src/abi/ens/ENSRegistry';
-import { DummyNameWrapperApi, DummyNameWrapperBytecode } from '../../src/abi/ens/DummyNameWrapper';
-import { PublicResolverAbi, PublicResolverBytecode } from '../../src/abi/ens/PublicResolver';
+import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
+import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
+import { DummyNameWrapperApi } from '../../src/abi/ens/DummyNameWrapper';
+import { DummyNameWrapperBytecode } from '../fixtures/ens/bytecode/DummyNameWrapperBytecode';
+import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
+import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
