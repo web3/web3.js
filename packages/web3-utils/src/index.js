@@ -330,7 +330,7 @@ var toChecksumAddress = function (address) {
 var compareBlockNumbers = function(a, b) {
     // Increasing order: (genesis = earliest), safe, (finalized ~ latest), pending
     // safe vs block-num cant be compared as block number provided can be on left or right side of safe tag, until safe tag block number is extracted and compared
-    if (a == b) {
+    if (a === b) {
         return 0;
     } else if (("genesis" === a || "earliest" === a || 0 === a) && ("genesis" === b || "earliest" ===  b || 0 === b)) {
         return 0;
@@ -362,17 +362,20 @@ var compareBlockNumbers = function(a, b) {
     } else if(a === "safe") {
         if( b === "finalized" || b === "latest" ||  b === "pending" ){
             return -1;
-        }else {
+        }else if(b === 0){
             return 1;
+        }else {
+            return undefined;
         }
     } else if(b === "safe") {
         if( a === "finalized" || a === "latest" ||  a === "pending" ){
             return 1;
-        }else {
+        }else if(a === 0){
             return -1;
+        }else {
+            return undefined;
         }
     }
-    
     else {
         let bnA = new BN(a);
         let bnB = new BN(b);
