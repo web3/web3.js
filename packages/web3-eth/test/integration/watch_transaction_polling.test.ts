@@ -98,10 +98,9 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				from,
 				to,
 				value,
-				times: waitConfirmations,
+				times: waitConfirmations - 1,
 				waitForReceipt: false,
 			});
-			console.error('Before waiting for confirmation');
 			await confirmationPromise;
 			sentTx.removeAllListeners();
 		});
