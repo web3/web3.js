@@ -42,7 +42,7 @@ export const sendFewTxes = async ({
 	for (let i = 0; i < times; i += 1) {
 		// eslint-disable-next-line no-await-in-loop
 		await new Promise<void>(resolve => {
-			setTimeout(resolve, 100);
+			setTimeout(resolve, 200);
 		});
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
