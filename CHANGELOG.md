@@ -600,3 +600,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 -  Add missing function type "receive" in `AbiType` (#5165)
+-  Support of `safe` and `finalized` block tags added (#5410)
