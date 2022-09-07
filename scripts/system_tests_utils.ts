@@ -126,6 +126,12 @@ export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
 		});
 	}
 
+	// Wait a bit to ensure the connection does not have a pending data that
+	//	could cause an error if written after closing the connection.
+	await new Promise<void>(resolve => {
+		setTimeout(resolve, 100);
+	});
+
 	if (
 		web3Context?.provider &&
 		'disconnect' in (web3Context.provider as unknown as Web3BaseProvider)
