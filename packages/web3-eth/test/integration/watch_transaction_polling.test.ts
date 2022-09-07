@@ -70,7 +70,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmations }: { confirmations: number }) => {
+				void sentTx.on('confirmation', ({ confirmations }: { confirmations: bigint }) => {
 					if (confirmations >= waitConfirmations) {
 						resolve();
 					}
