@@ -523,15 +523,13 @@ describe('defaults', () => {
 					}) => {
 						// Being able to get 2 confirmations means the pooling for new blocks works
 						if (confirmations >= 2) {
-							resolve(status);
 							sentTx.removeAllListeners();
+							resolve(status);
 						}
 					},
 				);
 			});
 
-			// To ensure the next transaction would create a new block. Wait for the pervious transaction first.
-			await sentTx;
 			// wait a bit because some development providers would need some time before creating a new block.
 			await new Promise<void>(resolve => {
 				setTimeout(resolve, 1000);
