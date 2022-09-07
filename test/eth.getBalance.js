@@ -87,7 +87,19 @@ var tests = [{
     defaultOptions: [
         ['defaultBlock', 1]
     ]
-}];
+}, {
+    args: ['0x000000000000000000000000000000000000012d', 'finalized'],
+    formattedArgs: ['0x000000000000000000000000000000000000012d', 'finalized'],
+    result: '0x31981',
+    formattedResult: '203137',
+    call: 'eth_' + method
+}, {
+    args: ['0x000000000000000000000000000000000000012d', 'safe'],
+    formattedArgs: ['0x000000000000000000000000000000000000012d', 'safe'],
+    result: '0x31981',
+    formattedResult: '203137',
+    call: 'eth_' + method
+} ];
 
 testMethod.runTests('eth', method, tests);
 
