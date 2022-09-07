@@ -359,22 +359,9 @@ var compareBlockNumbers = function(a, b) {
         return 1;
     } else if (b === "pending") {
         return -1;
-    } else if(a === "safe") {
-        if( b === "finalized" || b === "latest" ||  b === "pending" ){
-            return -1;
-        }else if(b === 0){
-            return 1;
-        }else {
-            return undefined;
-        }
-    } else if(b === "safe") {
-        if( a === "finalized" || a === "latest" ||  a === "pending" ){
-            return 1;
-        }else if(a === 0){
-            return -1;
-        }else {
-            return undefined;
-        }
+    } else if(a === "safe" || b === "safe") {
+        // either a or b is "safe" and the other one did not fall into any of the conditions above, so the other one is a number
+        return undefined;
     }
     else {
         let bnA = new BN(a);
