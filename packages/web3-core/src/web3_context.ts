@@ -36,8 +36,7 @@ import { Web3BatchRequest } from './web3_batch_request';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,8 +53,7 @@ export type Web3ContextObject<
 };
 
 export type Web3ContextInitOptions<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,7 +84,7 @@ export type Web3ContextFactory<
 };
 
 export class Web3Context<
-	API extends Web3APISpec = any,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -95,7 +93,7 @@ export class Web3Context<
 	public static readonly providers = Web3RequestManager.providers;
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
-	protected _requestManager: Web3RequestManager<API | any>;
+	protected _requestManager: Web3RequestManager<API | unknown>;
 	protected _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 	protected _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	protected _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
@@ -283,10 +281,9 @@ export class Web3Context<
 
 // To avoid cycle dependency declare this type in this file
 // TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionBuilder<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
-> = <ReturnType = Record<string, unknown>>(options: {
+export type TransactionBuilder<API extends Web3APISpec = unknown> = <
+	ReturnType = Record<string, unknown>,
+>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
