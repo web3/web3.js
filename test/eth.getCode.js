@@ -24,6 +24,18 @@ var tests = [{
     result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     call: 'eth_'+ method
+},{
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', 'safe'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', 'safe'],
+    result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    call: 'eth_'+ method
+},{
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', 'finalized'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', 'finalized'],
+    result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    call: 'eth_'+ method
 }];
 
 testMethod.runTests('eth', method, tests);

@@ -590,6 +590,8 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 -  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
 -  Removing legacy field in lerna.json (#5403)
+-  Correct `eth_sendSignedTransaction` code example (#5402)
+
 
 ### Fixed
 -  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
@@ -600,3 +602,4 @@ Released with 1.0.0-beta.37 code base.
 
 ### Added
 -  Add missing function type "receive" in `AbiType` (#5165)
+-  Support of `safe` and `finalized` block tags added (#5410)
