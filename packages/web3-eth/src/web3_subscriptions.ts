@@ -25,7 +25,6 @@ import {
 	Topic,
 	BlockHeaderOutput,
 	LogsOutput,
-	Numbers,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
@@ -112,35 +111,19 @@ export class SyncingSubscription extends Web3Subscription<
 		data:
 			| {
 					syncing: boolean;
-					status: { [key: string]: Numbers };
+					status: SyncOutput;
 			  }
 			| boolean,
 	) {
 		if (typeof data === 'boolean') {
 			this.emit('changed', data);
 		} else {
-			const mappedData: SyncOutput = {
-				startingBlock:
-					'StartingBlock' in data.status
-						? data.status.StartingBlock
-						: data.status.startingBlock,
-				currentBlock:
-					'CurrentBlock' in data.status
-						? data.status.CurrentBlock
-						: data.status.currentBlock,
-				highestBlock:
-					'HighestBlock' in data.status
-						? data.status.HighestBlock
-						: data.status.highestBlock,
-				knownStates:
-					'KnownStates' in data.status
-						? data.status.KnownStates
-						: data.status?.knownStates,
-				pulledStates:
-					'PulledStates' in data.status
-						? data.status.PulledStates
-						: data.status?.pulledStates,
-			};
+			const mappedData: SyncOutput = Object.fromEntries(
+				Object.entries(data.status).map(([key, value]) => [
+					key.charAt(0).toLowerCase() + key.substring(1),
+					value,
+				]),
+			) as SyncOutput;
 
 			this.emit('changed', data.syncing);
 			this.emit('data', format(syncSchema, mappedData, super.returnFormat));
