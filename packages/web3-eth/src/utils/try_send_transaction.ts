@@ -25,6 +25,13 @@ import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber } from '../rpc_method_wrappers';
 
+/**
+ * An internal function to send a transaction or throws if sending did not finish during the timeout during the blocks-timeout.
+ * @param web3Context the context to read the configurations from
+ * @param sendTransactionFunc the function that will send the transaction (could be sendTransaction or sendRawTransaction)
+ * @param transactionHash to be used inside the exception message if there will be any exceptions.
+ * @returns the Promise<string> returned by the `sendTransactionFunc`.
+ */
 export async function trySendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
 	sendTransactionFunc: AsyncFunction<string>,
