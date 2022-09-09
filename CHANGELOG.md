@@ -605,4 +605,4 @@ Released with 1.0.0-beta.37 code base.
 -  Support of `safe` and `finalized` block tags added (#5410)
 
 ### Security
--  Updated `swarm-js` lib version depending on `got` (#5422) (#5315)
+-  Updated `swarm-js` lib version depending on `got` (#5423) (#5315)
