@@ -336,7 +336,7 @@ export abstract class Web3Config
 
 	public set maxListenersWarningThreshold(val) {
 		this._triggerConfigChange('maxListenersWarningThreshold', val);
-		// this.setMaxListenerWarningThreshold(val);
+		this.setMaxListenerWarningThreshold(val);
 		this._config.maxListenersWarningThreshold = val;
 	}
 
