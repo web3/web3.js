@@ -593,15 +593,13 @@ describe('defaults', () => {
 			web3Eth.setConfig({
 				maxListenersWarningThreshold: 3,
 			});
-			expect(web3Eth.maxListenersWarningThreshold).toBe(3);
+			expect(web3Eth.maxListenersWarningThreshold).toBe(100);
+			web3Eth.maxListenersWarningThreshold = 5;
+			expect(web3Eth.maxListenersWarningThreshold).toBe(5);
 			expect(web3Eth.getMaxListeners()).toBe(3);
 			// set by create new instance
-			eth2 = new Web3Eth({
-				config: {
-					maxListenersWarningThreshold: 4,
-				},
-			});
-			expect(eth2.maxListenersWarningThreshold).toBe(4);
+			eth2 = new Web3Eth({});
+			expect(eth2.maxListenersWarningThreshold).toBe(3);
 		});
 		it('defaultNetworkId', async () => {
 			// default

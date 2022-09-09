@@ -113,4 +113,13 @@ describe('Web3PromiEvent', () => {
 		await expect(p).resolves.toBe('resolved value');
 		expect.assertions(3);
 	});
+
+	it('set and get maxListeners', () => {
+		const p = new Web3PromiEvent<string, { event1: string; event2: number }>(resolve => {
+			resolve('resolved value');
+		});
+		p.setMaxListenerWarningThreshold(3);
+
+		expect(p.getMaxListeners()).toBe(3);
+	});
 });
