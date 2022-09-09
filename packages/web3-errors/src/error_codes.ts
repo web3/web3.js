@@ -139,3 +139,8 @@ export const ERR_INVALID_NIBBLE_WIDTH = 1014;
 
 // Validation error codes
 export const ERR_VALIDATION = 1100;
+
+// Test utils error codes
+export const ERR_WAIT_FOR_OPEN_CONNECTION_TIMEOUT = 1200;
+export const ERR_PROVIDER_CONNECTION_NOT_WAITABLE = 1201;
+export const ERR_PROVIDER_CONNECTION_NOT_CLOSEABLE = 1202;

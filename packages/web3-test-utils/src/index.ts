@@ -14,17 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-export * from './error_codes';
-export * from './web3_error_base';
-export * from './errors/account_errors';
-export * from './errors/connection_errors';
-export * from './errors/contract_errors';
-export * from './errors/ens_errors';
-export * from './errors/generic_errors';
-export * from './errors/provider_errors';
-export * from './errors/signature_errors';
-export * from './errors/transaction_errors';
-export * from './errors/utils_errors';
-export * from './errors/response_errors';
-export * from './errors/test_utils_errors';
+export * from './get_env';
+export * from './is_engine';
+export * from './is_provider';
+export * from './websocket_utils';
+export * from './jest_utils';
+export * from './types';

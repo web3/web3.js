@@ -15,16 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './error_codes';
-export * from './web3_error_base';
-export * from './errors/account_errors';
-export * from './errors/connection_errors';
-export * from './errors/contract_errors';
-export * from './errors/ens_errors';
-export * from './errors/generic_errors';
-export * from './errors/provider_errors';
-export * from './errors/signature_errors';
-export * from './errors/transaction_errors';
-export * from './errors/utils_errors';
-export * from './errors/response_errors';
-export * from './errors/test_utils_errors';
+// import Web3ProviderBase from '../../src/index'
+// import {ProviderOptions} from '../../types'
+
+describe('constructs a PLACEHOLDER instance with expected properties', () => {
+	// let providerOptions: ProviderOptions
+
+	beforeEach(() => {
+		// providerOptions = {
+		//     providerUrl: 'http://127.0.0.1:8545'
+		// }
+	});
+
+	it('should construct with expected properties', () => {
+		// const web3ProviderBase = new Web3ProviderBase(providerOptions)
+		// expect(web3ProviderBase).toMatchObject({
+		//     _providerUrl: providerOptions.providerUrl
+		// })
+		expect(true).toBeTruthy();
+	});
+});
