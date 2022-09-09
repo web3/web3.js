@@ -603,3 +603,6 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 -  Add missing function type "receive" in `AbiType` (#5165)
 -  Support of `safe` and `finalized` block tags added (#5410)
+
+### Security
+-  Updated `swarm-js` lib version depending on `got` (#5422) (#5315)
