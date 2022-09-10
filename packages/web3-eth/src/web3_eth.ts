@@ -34,7 +34,7 @@ import {
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
-import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import * as rpcMethods from './rpc_methods';
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions } from './types';
@@ -216,8 +216,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getAccounts() {
-		const hexAddresses = (await rpcMethods.getAccounts(this.requestManager)) ?? [];
-		return hexAddresses.map(address => toChecksumAddress(address));
+		return rpcMethodsWrappers.getAccounts(this);
 	}
 
 	/**

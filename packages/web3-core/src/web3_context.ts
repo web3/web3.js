@@ -104,6 +104,7 @@ export class Web3Context<
 			| SupportedProviders<API>
 			| Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
+		console.log(providerOrContext)
 		super();
 
 		// If "providerOrContext" is provided as "string" or an objects matching "SupportedProviders" interface

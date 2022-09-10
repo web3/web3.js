@@ -42,7 +42,8 @@
 		"typescript": "^4.7.4",
 		"web3-eth-abi": "^4.0.1-alpha.0",
 		"web3-eth-accounts": "^4.0.1-alpha.0",
-		"web3-providers-http": "^4.0.1-alpha.0"
+		"web3-providers-http": "^4.0.1-alpha.0",
+		"web3-test-utils": "0.1.0-alpha.0"
 	},
 	"dependencies": {
 		"@ethereumjs/common": "^2.6.5",

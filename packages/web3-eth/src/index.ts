@@ -52,6 +52,7 @@ export * from './web3_eth';
 export * from './schemas';
 export * from './types';
 export * from './validation';
+// TODO Should export * from './rpc_methods';
 export * from './rpc_method_wrappers';
 export * from './utils/format_transaction';
 export * from './utils/prepare_transaction_for_signing';

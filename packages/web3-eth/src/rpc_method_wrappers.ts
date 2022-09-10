@@ -48,6 +48,7 @@ import {
 	DEFAULT_RETURN_FORMAT,
 	format,
 	waitWithTimeout,
+	toChecksumAddress,
 } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { TransactionError, TransactionRevertError } from 'web3-errors';
@@ -182,6 +183,21 @@ export async function getGasPrice<ReturnFormat extends DataFormat>(
 	const response = await rpcMethods.getGasPrice(web3Context.requestManager);
 
 	return format({ eth: 'uint' }, response as Numbers, returnFormat);
+}
+
+/**
+	 * @returns A list of accounts the node controls (addresses are checksummed).
+	 *
+	 * ```ts
+	 * web3.eth.getAccounts().then(console.log);
+	 * > ["0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf"]
+	 * ```
+	 */
+ export async function getAccounts(
+	web3Context: Web3Context<EthExecutionAPI>
+ ) {
+	const response = await rpcMethods.getAccounts(web3Context.requestManager);
+	return response.map(address => toChecksumAddress(address));
 }
 
 /**

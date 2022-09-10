@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 export * from './get_env';
 export * from './is_engine';
 export * from './is_provider';
+export * from './accounts_utils';
 export * from './websocket_utils';
 export * from './jest_utils';
 export * from './types';

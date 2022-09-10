@@ -14,19 +14,20 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { DEFAULT_TEST_PROVIDER } from './defaults';
 import { TestClient, TestEngine } from './types';
 
 /**
  * Get the env variable from Cypress if it exists or node process
  */
-export function getEnv<ExpectedValue extends string>(name: string): ExpectedValue | undefined {
+export function getEnv<ExpectedValue extends string>(name: string): ExpectedValue {
 	// @ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-	return global.Cypress ? Cypress.env(name) : process.env[name];
+	const env = global.Cypress ? Cypress.env(name) : process.env[name];
+	if (env === undefined) throw new Error(`Env ${name} is undefined`);
+	return env
 }
 
 export const getTestClient = () => getEnv<TestClient>('WEB3_TEST_CLIENT');
 export const getTestEngine = () => getEnv<TestEngine>('WEB3_TEST_ENGINE');
-export const getTestProvider = (): string => getEnv('WEB3_TEST_PROVIDER') ?? DEFAULT_TEST_PROVIDER;
+export const getTestProvider = () => getEnv('WEB3_TEST_PROVIDER');
 export const getTestMnemonic = () => getEnv('WEB3_TEST_MNEMONIC');
