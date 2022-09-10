@@ -19,7 +19,7 @@ import { Web3Context } from 'web3-core';
 import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
 
-import { TransactionPollingTimeoutError } from '../errors';
+import { TransactionPollingTimeoutError } from 'web3-errors';
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';

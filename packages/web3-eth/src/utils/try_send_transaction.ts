@@ -18,8 +18,8 @@ import { Web3Context } from 'web3-core';
 import { EthExecutionAPI, Bytes } from 'web3-types';
 import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 
+import { TransactionSendTimeoutError } from 'web3-errors';
 import { NUMBER_DATA_FORMAT } from '../constants';
-import { TransactionSendTimeoutError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle

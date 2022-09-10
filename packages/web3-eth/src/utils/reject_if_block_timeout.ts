@@ -18,8 +18,8 @@ import { EthExecutionAPI, Bytes } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { rejectIfConditionAtInterval } from 'web3-utils';
 
+import { TransactionBlockTimeoutError } from 'web3-errors';
 import { NUMBER_DATA_FORMAT } from '../constants';
-import { TransactionBlockTimeoutError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber } from '../rpc_method_wrappers';
 
