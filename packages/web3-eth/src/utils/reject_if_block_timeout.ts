@@ -23,6 +23,9 @@ import { TransactionBlockTimeoutError } from '../errors';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber } from '../rpc_method_wrappers';
 
+/* TODO: After merge, there will be constant block mining time (exactly 12 second each block, except slot missed that currently happens in <1% of slots. ) so we can optimize following function
+for POS NWs, we can skip checking getBlockNumber(); after interval and calculate only based on time  that certain num of blocked are mined after that for internal double check, can do one getBlockNumber() call and timeout. 
+*/
 export function rejectIfBlockTimeout(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
