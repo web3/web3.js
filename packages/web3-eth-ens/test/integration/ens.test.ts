@@ -134,7 +134,7 @@ describe('ens', () => {
 	});
 
 	afterAll(async () => {
-		if (isWs) {
+		if (isWs || isIpc) {
 			await closeOpenConnection(ens);
 			await closeOpenConnection(ens['_registry']['contract']);
 			await closeOpenConnection(getEnsResolver);
