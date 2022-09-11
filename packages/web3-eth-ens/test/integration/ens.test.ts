@@ -131,6 +131,7 @@ describe('ens', () => {
 
 	afterAll(async () => {
 		await closeOpenConnection(ens);
+		await closeOpenConnection(ens['_registry']['contract']);
 	});
 	beforeEach(async () => {
 		// set up subnode
