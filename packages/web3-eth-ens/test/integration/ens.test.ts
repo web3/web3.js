@@ -44,7 +44,11 @@ describe('ens', () => {
 	let resolver: Contract<typeof PublicResolverAbi>;
 	let nameWrapper: Contract<typeof DummyNameWrapperApi>;
 
-	let Resolver: Contract<typeof PublicResolverAbi>;
+	type ResolverContract = Contract<typeof PublicResolverAbi>;
+
+	let Resolver: ResolverContract;
+	let setEnsResolver: ResolverContract;
+	let getEnsResolver: ResolverContract;
 
 	let sendOptions: PayableTxOptions;
 
@@ -130,8 +134,17 @@ describe('ens', () => {
 	});
 
 	afterAll(async () => {
-		await closeOpenConnection(ens);
+		if (isWs) {
+			await closeOpenConnection(ens);
+			await closeOpenConnection(ens['_registry']['contract']);
+			await closeOpenConnection(getEnsResolver);
+			await closeOpenConnection(setEnsResolver);
+			await closeOpenConnection(registry);
+			await closeOpenConnection(resolver);
+			await closeOpenConnection(nameWrapper);
+		}
 	});
+
 	beforeEach(async () => {
 		// set up subnode
 		await registry.methods
@@ -157,9 +170,9 @@ describe('ens', () => {
 	});
 
 	it('should return the registered resolver for the subnode "resolver"', async () => {
-		const ensResolver = await ens.getResolver('resolver');
+		getEnsResolver = await ens.getResolver('resolver');
 
-		expect(ensResolver.options.address).toEqual(resolver.options.address);
+		expect(getEnsResolver.options.address).toEqual(resolver.options.address);
 	});
 
 	it('should set resolver', async () => {
@@ -175,9 +188,9 @@ describe('ens', () => {
 
 		await ens.setResolver('resolver', newResolver.options.address as string, sendOptions);
 
-		const ensResolver = await ens.getResolver('resolver');
+		setEnsResolver = await ens.getResolver('resolver');
 
-		expect(ensResolver.options.address).toEqual(newResolver.options.address);
+		expect(setEnsResolver.options.address).toEqual(newResolver.options.address);
 	});
 
 	it('should set the owner record for a name', async () => {
