@@ -3,7 +3,7 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true,
 		"target": "es2016",
-		"module": "commonjs",
+        "module": "ES2015",
 		"declaration": true,
 		"moduleResolution": "node",
 		"newLine": "lf",
