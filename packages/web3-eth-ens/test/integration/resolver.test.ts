@@ -71,6 +71,8 @@ describe('ens', () => {
 	// let registryAddress: string;
 	// let resolverAddress: string;
 
+	const contentHash = '0x0000000000000000000000000000000000000000000000000000000000000001';
+
 	beforeAll(async () => {
 		accounts = await getSystemTestAccounts();
 
@@ -191,14 +193,17 @@ describe('ens', () => {
 		expect(result[1]).toBe(namehash(y));
 	});
 
-	it('throws when called by non owner', async () => {
-		await expect(
-			ens.setPubkey(
-				domain,
-				'0x1000000000000000000000000000000000000000000000000000000000000000',
-				'0x2000000000000000000000000000000000000000000000000000000000000000',
-				{ from: accountOne },
-			),
-		).rejects.toThrow();
+	it('sets contenthash', async () => {
+		await ens.setContenthash(domain, contentHash, sendOptions);
+
+		const res = await resolver.methods.contenthash(domainNode).call(sendOptions);
+		expect(res).toBe(contentHash);
+	});
+
+	it('fetches contenthash', async () => {
+		await resolver.methods.setContenthash(domainNode, contentHash).call(sendOptions);
+
+		const res = await ens.getContenthash(domain);
+		expect(res).toBe(contentHash);
 	});
 });
