@@ -24,6 +24,7 @@ import {
 	PopulatedUnsignedEip2930Transaction,
 	PopulatedUnsignedTransaction,
 	Transaction,
+	ValidChains,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
@@ -67,6 +68,11 @@ const getEthereumjsTransactionOptions = (
 		// if defaultcommon is specified, use that.
 		if (web3Context.defaultCommon) {
 			common = web3Context.defaultCommon;
+
+			if (isNullish(common.hardfork))
+				common.hardfork = transaction.hardfork ?? web3Context.defaultHardfork;
+			if (isNullish(common.baseChain))
+				common.baseChain = web3Context.defaultChain as ValidChains;
 		} else {
 			common = Common.custom(
 				{

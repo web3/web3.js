@@ -163,12 +163,12 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 
 	if (isNullish(populatedTransaction.common)) {
 		if (options.web3Context.defaultCommon) {
-			const customCommon = options.web3Context.defaultCommon as unknown as Common;
-			const chainId = customCommon.customChain.chainId as string;
-			const networkId = customCommon.customChain.networkId as string;
-			const name = customCommon.customChain.name as string;
+			const common = options.web3Context.defaultCommon as unknown as Common;
+			const chainId = common.customChain.chainId as string;
+			const networkId = common.customChain.networkId as string;
+			const name = common.customChain.name as string;
 			populatedTransaction.common = {
-				...customCommon,
+				...common,
 				customChain: { chainId, networkId, name },
 			};
 		}
@@ -181,7 +181,10 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		}
 	}
 
-	if (isNullish(populatedTransaction.chainId)) {
+	if (
+		isNullish(populatedTransaction.chainId) &&
+		isNullish(populatedTransaction.common?.customChain.chainId)
+	) {
 		populatedTransaction.chainId = await getChainId(options.web3Context, ETH_DATA_FORMAT);
 	}
 

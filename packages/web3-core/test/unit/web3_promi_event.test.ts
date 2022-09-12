@@ -115,7 +115,7 @@ describe('Web3PromiEvent', () => {
 	});
 
 	it('set and get maxListeners', () => {
-		const p = new Web3PromiEvent<string, { event1: string; event2: number }>(resolve => {
+		const p = new Web3PromiEvent<string, Record<string, never>>(resolve => {
 			resolve('resolved value');
 		});
 		p.setMaxListenerWarningThreshold(3);
