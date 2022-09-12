@@ -2,25 +2,7 @@
 	"extends": "../../tsconfig",
 	"compilerOptions": {
 		"outDir": "dist",
-        "module": "ES2015",
-		"esModuleInterop": true,
-
-
-//        "resolveJsonModule": false,
-//        "forceConsistentCasingInFileNames": true,
-//        "declaration": true,
-//        "moduleResolution": "node",
-//        "newLine": "lf",
-//        "noFallthroughCasesInSwitch": true,
-//        "noImplicitReturns": true,
-//        "noUnusedLocals": true,
-//        "noUnusedParameters": true,
-//        "pretty": true,
-//        "removeComments": true,
-//        "sourceMap": true,
-//        "declarationMap": true,
-//        "strict": true,
-//        "strictNullChecks": true,
+		"module": "ES2015"
 	},
 	"include": ["src/**/*"]
 }

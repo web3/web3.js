@@ -17,15 +17,11 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 const path = require('path');
 const webpack = require('webpack');
-// const TerserPlugin = require('terser-webpack-plugin');
 function getWebPackConfig(packagePath, filename, library, entry) {
 	return {
 		mode: 'production',
 		optimization: {
 			minimize: true,
-			innerGraph: true,
-			// minimizer: [new TerserPlugin()],
-			usedExports: true,
 		},
 		stats: {
 			optimizationBailout: true,
