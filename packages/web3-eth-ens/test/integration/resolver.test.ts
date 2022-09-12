@@ -148,25 +148,57 @@ describe('ens', () => {
 			.send(sendOptions);
 	});
 
-	// it('supports known interfaces', async () => {
-	// 	await expect(ens.supportsInterface('resolver', '0x3b3b57de')).resolves.toBeTruthy(); // IAddrResolver
-	// 	await expect(ens.supportsInterface('resolver', '0xf1cb7e06')).resolves.toBeTruthy(); // IAddressResolver
-	// 	await expect(ens.supportsInterface('resolver', '0x691f3431')).resolves.toBeTruthy(); // INameResolver
-	// 	await expect(ens.supportsInterface('resolver', '0x2203ab56')).resolves.toBeTruthy(); // IABIResolver
-	// 	await expect(ens.supportsInterface('resolver', '0xc8690233')).resolves.toBeTruthy(); // IPubkeyResolver
-	// 	await expect(ens.supportsInterface('resolver', '0x59d1d43c')).resolves.toBeTruthy(); // ITextResolver
-	// 	await expect(ens.supportsInterface('resolver', '0xbc1c58d1')).resolves.toBeTruthy(); // IContentHashResolver
-	// 	await expect(ens.supportsInterface('resolver', '0xa8fa5682')).resolves.toBeTruthy(); // IDNSRecordResolver
-	// 	await expect(ens.supportsInterface('resolver', '0x5c98042b')).resolves.toBeTruthy(); // IDNSZoneResolver
-	// 	await expect(ens.supportsInterface('resolver', '0x01ffc9a7')).resolves.toBeTruthy(); // IInterfaceResolver
-	// });
+	it('supports known interfaces', async () => {
+		await expect(ens.supportsInterface('resolver', '0x3b3b57de')).resolves.toBeTruthy(); // IAddrResolver
+		await expect(ens.supportsInterface('resolver', '0xf1cb7e06')).resolves.toBeTruthy(); // IAddressResolver
+		await expect(ens.supportsInterface('resolver', '0x691f3431')).resolves.toBeTruthy(); // INameResolver
+		await expect(ens.supportsInterface('resolver', '0x2203ab56')).resolves.toBeTruthy(); // IABIResolver
+		await expect(ens.supportsInterface('resolver', '0xc8690233')).resolves.toBeTruthy(); // IPubkeyResolver
+		await expect(ens.supportsInterface('resolver', '0x59d1d43c')).resolves.toBeTruthy(); // ITextResolver
+		await expect(ens.supportsInterface('resolver', '0xbc1c58d1')).resolves.toBeTruthy(); // IContentHashResolver
+		await expect(ens.supportsInterface('resolver', '0xa8fa5682')).resolves.toBeTruthy(); // IDNSRecordResolver
+		await expect(ens.supportsInterface('resolver', '0x5c98042b')).resolves.toBeTruthy(); // IDNSZoneResolver
+		await expect(ens.supportsInterface('resolver', '0x01ffc9a7')).resolves.toBeTruthy(); // IInterfaceResolver
+	});
 
-	// it('does not support a random interface', async () => {
-	// 	await expect(await ens.supportsInterface('resolver', '0x3b3b57df')).resolves.toBeFalsy();
-	// });
+	it('does not support a random interface', async () => {
+		await expect(ens.supportsInterface('resolver', '0x3b3b57df')).resolves.toBeFalsy();
+	});
 
-	it('permits setting address by owner', async () => {
-		await ens.setAddress(domain, accountOne, { from: defaultAccount }, DEFAULT_RETURN_FORMAT);
-		// console.log((tx as TransactionReceipt).logs.length);
+	it('fetch pubkey', async () => {
+		await ens.setResolver(
+			domain,
+			resolver.options.address as string,
+			sendOptions,
+			DEFAULT_RETURN_FORMAT,
+		);
+
+		const res = await ens.getPubkey(domain);
+
+		expect(res[0]).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
+		expect(res[1]).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
+	});
+
+	it('permits setting public key by owner', async () => {
+		const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
+		const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
+
+		await ens.setPubkey(domain, x, y, sendOptions);
+
+		const result = await ens.getPubkey(domain);
+
+		expect(result[0]).toBe(namehash(x));
+		expect(result[1]).toBe(namehash(y));
+	});
+
+	it('throws when called by non owner', async () => {
+		await expect(
+			ens.setPubkey(
+				domain,
+				'0x1000000000000000000000000000000000000000000000000000000000000000',
+				'0x2000000000000000000000000000000000000000000000000000000000000000',
+				{ from: accountOne },
+			),
+		).rejects.toThrow();
 	});
 });
