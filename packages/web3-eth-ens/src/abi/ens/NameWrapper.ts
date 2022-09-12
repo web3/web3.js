@@ -14,5 +14,24 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const DummyNameWrapperBytecode =
-	'0x608060405234801561001057600080fd5b5060b48061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80636352211e14602d575b600080fd5b603d60383660046066565b503290565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600060208284031215607757600080fd5b503591905056fea2646970667358221220b67fcd4e2e3ba377840d17d946ec7bb7d98ab1f95fb8806d831190a194af0f7964736f6c634300080d0033';
+export const NameWrapperApi = [
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 'ownerOf',
+		outputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+] as const;
