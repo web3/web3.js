@@ -585,20 +585,21 @@ describe('defaults', () => {
 			}
 		});
 
-		it('maxListenersWarningThreshold set config', () => {
+		it('maxListenersWarningThreshold test default config', () => {
 			// default
 			expect(web3Eth.maxListenersWarningThreshold).toBe(100);
-
-			// after set
-			// web3Eth.setConfig({
-			// 	maxListenersWarningThreshold: 3,
-			// });
-			// expect(web3Eth.maxListenersWarningThreshold).toBe(3);
-			// expect(web3Eth.getMaxListeners()).toBe(3);
 		});
-		it('maxListenersWarningThreshold', () => {
+		it('maxListenersWarningThreshold set maxListeners through variable', () => {
 			eth2 = new Web3Eth({});
 			eth2.maxListenersWarningThreshold = 3;
+			expect(eth2.maxListenersWarningThreshold).toBe(3);
+			expect(eth2.getMaxListeners()).toBe(3);
+		});
+		it('maxListenersWarningThreshold set config', () => {
+			const eth = new Web3Eth({});
+			eth.setConfig({
+				maxListenersWarningThreshold: 3,
+			});
 			expect(eth2.maxListenersWarningThreshold).toBe(3);
 			expect(eth2.getMaxListeners()).toBe(3);
 		});
