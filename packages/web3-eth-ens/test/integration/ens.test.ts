@@ -34,7 +34,7 @@ import {
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
-import { NameWrapperApi } from '../../src/abi/ens/NameWrapper';
+import { NameWrapperAbi } from '../fixtures/ens/abi/NameWrapper';
 import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
@@ -42,7 +42,7 @@ import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverB
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
-	let nameWrapper: Contract<typeof NameWrapperApi>;
+	let nameWrapper: Contract<typeof NameWrapperAbi>;
 
 	type ResolverContract = Contract<typeof PublicResolverAbi>;
 
@@ -81,7 +81,7 @@ describe('ens', () => {
 			provider: getSystemTestProvider(),
 		});
 
-		const NameWrapper = new Contract(NameWrapperApi, undefined, {
+		const NameWrapper = new Contract(NameWrapperAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
