@@ -107,8 +107,27 @@ export class SyncingSubscription extends Web3Subscription<
 		return ['syncing'] as ['syncing'];
 	}
 
-	protected _processSubscriptionResult(data: SyncOutput) {
-		this.emit('data', format(syncSchema, data, super.returnFormat));
+	protected _processSubscriptionResult(
+		data:
+			| {
+					syncing: boolean;
+					status: SyncOutput;
+			  }
+			| boolean,
+	) {
+		if (typeof data === 'boolean') {
+			this.emit('changed', data);
+		} else {
+			const mappedData: SyncOutput = Object.fromEntries(
+				Object.entries(data.status).map(([key, value]) => [
+					key.charAt(0).toLowerCase() + key.substring(1),
+					value,
+				]),
+			) as SyncOutput;
+
+			this.emit('changed', data.syncing);
+			this.emit('data', format(syncSchema, mappedData, super.returnFormat));
+		}
 	}
 
 	protected _processSubscriptionError(error: Error) {
