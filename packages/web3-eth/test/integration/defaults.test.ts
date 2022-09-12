@@ -600,6 +600,7 @@ describe('defaults', () => {
 			eth2 = new Web3Eth({});
 			eth2.maxListenersWarningThreshold = 3;
 			expect(eth2.maxListenersWarningThreshold).toBe(3);
+			expect(eth2.getMaxListeners()).toBe(3);
 		});
 		it('defaultNetworkId', async () => {
 			// default
