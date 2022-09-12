@@ -2,7 +2,7 @@
   <img src="assets/logo/web3js.jpg" width="500" alt="web3.js" />
 </p>
 
-# Web3 Plugin Example
+# Web3 App Example
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -15,7 +15,7 @@ This is an example of a plugin implementation for [web3.js](https://github.com/C
 ###### Get it from the NPM Registry
 
 ```bash
-yarn add web3-plugin-example
+yarn add web3-app-example
 ```
 
 ## Getting Started
@@ -30,16 +30,17 @@ yarn add web3-plugin-example
 
 ## Package.json Scripts
 
-| Script           | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| clean            | Uses `rimraf` to remove `dist/`                    |
-| build            | Uses `tsc` to build package and dependent packages |
-| lint             | Uses `eslint` to lint package                      |
-| lint:fix         | Uses `eslint` to check and fix any warnings        |
-| format           | Uses `prettier` to format the code                 |
-| test             | Uses `jest` to run unit tests                      |
-| test:integration | Uses `jest` to run tests under `/test/integration` |
-| test:unit        | Uses `jest` to run tests under `/test/unit`        |
+| Script           | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| clean            | Uses `rimraf` to remove `dist/`                         |
+| build            | Uses `tsc` to build package and dependent packages      |
+| build:web        | Uses `webpack` to build minified package for production |
+| lint             | Uses `eslint` to lint package                           |
+| lint:fix         | Uses `eslint` to check and fix any warnings             |
+| format           | Uses `prettier` to format the code                      |
+| test             | Uses `jest` to run unit tests                           |
+| test:integration | Uses `jest` to run tests under `/test/integration`      |
+| test:unit        | Uses `jest` to run tests under `/test/unit`             |
 
 [docs]: http://web3js.readthedocs.io/en/4.0/
 [repo]: https://github.com/ethereum/web3.js
