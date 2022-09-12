@@ -37,10 +37,6 @@
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
-		"babel-core": "^6.26.3",
-		"babel-loader": "^8.2.5",
-		"babel-preset-babili": "^0.1.4",
-		"babili-webpack-plugin": "^0.1.2",
 		"eslint": "^8.20.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-config-web3-base": "0.1.0",
@@ -48,7 +44,6 @@
 		"jest": "^28.1.3",
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
-		"terser-webpack-plugin": "^5.3.6",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4"
 	},
