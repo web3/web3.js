@@ -15,12 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
+// TODO: possibly rewrite those method and then also delete this dependency from package.json
+import { arrayify, hexlify } from '@ethersproject/bytes';
+
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish, sha3Raw } from 'web3-utils';
 
 import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic, Numbers } from 'web3-types';
 
 import {
 	AbiConstructorFragment,
+	AbiErrorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
 	decodeLog,
@@ -35,7 +39,7 @@ import {
 
 import { blockSchema, logSchema } from 'web3-eth/dist/schemas';
 
-import { Web3ContractError } from './errors';
+import { Eip838Error, Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
 
@@ -225,11 +229,54 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 		// eslint-disable-next-line no-null/no-null
 		return null;
 	}
-	const result = decodeParameters([...abi.outputs], value);
+	const result = decodeParameters([...abi.outputs], value); // todo: decode abi.input for EIP-838
 
 	if (result.__length__ === 1) {
 		return result[0];
 	}
 
 	return result;
+};
+
+function getErrorSignature(abi: AbiErrorFragment) {
+	return `${abi.name}(${abi.inputs?.map(a => a.type).join(',') ?? ''})`;
+}
+
+export const throwDecodedError = (
+	abisOfErrors: AbiErrorFragment[],
+	error: { code: number; message: string; data: HexString } | Error,
+) => {
+	if (typeof error === 'object' && error !== undefined && 'data' in error) {
+		let errorArgs;
+		let errorName;
+		let errorSignature;
+		try {
+			const bytes = arrayify(error.data);
+			const errorData = bytes.slice(4);
+
+			const errorSha = error.data.slice(0, 10);
+			const errorAbi = abisOfErrors.find(abi =>
+				sha3Raw(getErrorSignature(abi)).startsWith(errorSha),
+			);
+
+			if (errorAbi?.inputs) {
+				errorName = errorAbi.name;
+				errorSignature = getErrorSignature(errorAbi);
+				errorArgs = decodeParameters([...errorAbi.inputs], hexlify(errorData)); // decode abi.input for EIP-838
+			}
+		} catch (err) {
+			console.error(err);
+		}
+
+		throw new Eip838Error(
+			error.code,
+			error.message,
+			error.data,
+			errorName,
+			errorSignature,
+			errorArgs,
+		);
+	} else {
+		throw error;
+	}
 };

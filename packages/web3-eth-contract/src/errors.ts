@@ -15,7 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionReceipt } from 'web3-types';
+/* eslint-disable max-classes-per-file */
+
+import { TransactionReceipt, HexString } from 'web3-types';
 import { ERR_CONTRACT, Web3Error } from 'web3-errors';
 
 export class Web3ContractError extends Web3Error {
@@ -26,5 +28,29 @@ export class Web3ContractError extends Web3Error {
 		super(message);
 
 		this.receipt = receipt;
+	}
+}
+
+export class Eip838Error extends Web3ContractError {
+	// public code: string; // TODO: check if there is a need of overriding the `code` into a string
+	public data: HexString;
+	public errorName?: string;
+	public errorSignature?: string;
+	public errorArgs?: { [K in string]: unknown };
+
+	public constructor(
+		code: number,
+		message: string,
+		data: HexString,
+		errorName?: string,
+		errorSignature?: string,
+		errorArgs?: { [K in string]: unknown },
+	) {
+		super(message);
+		this.code = code;
+		this.data = data;
+		this.errorName = errorName;
+		this.errorSignature = errorSignature;
+		this.errorArgs = errorArgs;
 	}
 }

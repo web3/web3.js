@@ -287,6 +287,7 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
+			// TODO: check if there is a need to call decodeParameters() somewhere around here to throw another type of error
 			throw new InvalidResponseError<ErrorType>(response);
 		}
 
