@@ -104,7 +104,6 @@ export class Web3Context<
 			| SupportedProviders<API>
 			| Web3ContextInitOptions<API, RegisteredSubs>,
 	) {
-		console.log(providerOrContext)
 		super();
 
 		// If "providerOrContext" is provided as "string" or an objects matching "SupportedProviders" interface
@@ -136,7 +135,17 @@ export class Web3Context<
 
 		this.setConfig(config ?? {});
 
-		this._requestManager = requestManager ?? new Web3RequestManager<API>(provider);
+		// TODO
+		if (requestManager !== undefined) {
+			this._requestManager = requestManager;
+			// @ts-expect-error Property '_requestManager' does not exist on type 'string | SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>'.
+		} else if (providerOrContext._requestManager !== undefined) {
+			// @ts-expect-error Property '_requestManager' does not exist on type 'string | SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>'.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			this._requestManager = providerOrContext._requestManager;
+		} else {
+			this._requestManager = new Web3RequestManager<API>(provider);
+		}
 
 		if (subscriptionManager) {
 			this._subscriptionManager = subscriptionManager;
@@ -151,8 +160,13 @@ export class Web3Context<
 			this._accountProvider = accountProvider;
 		}
 
-		if (wallet) {
+		if (wallet !== undefined) {
 			this._wallet = wallet;
+			// @ts-expect-error Property '_wallet' does not exist on type 'string | SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>'.
+		} else if (providerOrContext._wallet !== undefined) {
+			// @ts-expect-error Property '_wallet' does not exist on type 'string | SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>'.
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			this._wallet = providerOrContext._wallet
 		}
 	}
 
