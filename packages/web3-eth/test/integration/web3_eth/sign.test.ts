@@ -15,35 +15,31 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import WebSocketProvider from 'web3-providers-ws';
-import { Address } from 'web3-types';
 import { isHexStrict } from 'web3-validator';
 
 import { Web3Eth } from '../../../src';
 import {
-	getSystemTestAccounts,
+	closeOpenConnection,
+	createTempAccount,
 	getSystemTestProvider,
-	isWs,
 } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.sign', () => {
 	let web3Eth: Web3Eth;
-	let accounts: Address[];
+	let tempAcc: { address: string; privateKey: string };
 
 	beforeAll(async () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
-		accounts = await getSystemTestAccounts();
+		tempAcc = await createTempAccount();
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	it('should sign message', async () => {
 		const message = '0x736f796c656e7420677265656e2069732070656f706c65';
-		const response = await web3Eth.sign(message, accounts[0]);
+		const response = await web3Eth.sign(message, tempAcc.address);
 		expect(isHexStrict(response as string)).toBe(true);
 	});
 });

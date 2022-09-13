@@ -15,13 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import WebSocketProvider from 'web3-providers-ws';
-
 import { Web3Eth } from '../../../src';
 import {
+	closeOpenConnection,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	isWs,
 	itIf,
 } from '../../fixtures/system_test_utils';
 
@@ -32,10 +30,8 @@ describe('Web3Eth.submitWork', () => {
 		web3Eth = new Web3Eth(getSystemTestProvider());
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	// Geth doesn't support eth_submitWork

@@ -25,11 +25,7 @@ describeIf(isWs)('unsubscribe', () => {
 	let web3Eth: Web3Eth;
 	let provider: WebSocketProvider;
 	beforeAll(() => {
-		provider = new WebSocketProvider(
-			getSystemTestProvider(),
-			{},
-			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-		);
+		provider = new WebSocketProvider(getSystemTestProvider());
 	});
 	afterAll(() => {
 		provider.disconnect();

@@ -15,6 +15,7 @@ ENGINE=${ORIGARGS[2]}
 
 SUPPORTED_BACKENDS=("geth" "ganache")
 SUPPORTED_MODE=("http" "ws" "ipc")
+# if you will add a new browser please also add it in the system_test_utils.ts => isBrowser
 SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
@@ -30,10 +31,11 @@ if [[ ! " ${SUPPORTED_ENGINES[*]} " =~ " ${ENGINE} " ]]; then
 fi
 
 echo "Node software used for tests: " $BACKEND
-echo "Node running on: " "$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
+echo "Node running on: " "$MODE://127.0.0.1:$WEB3_SYSTEM_TEST_PORT"
 
-export WEB3_SYSTEM_TEST_PROVIDER="$MODE://localhost:$WEB3_SYSTEM_TEST_PORT"
+export WEB3_SYSTEM_TEST_PROVIDER="$MODE://127.0.0.1:$WEB3_SYSTEM_TEST_PORT"
 export WEB3_SYSTEM_TEST_BACKEND=$BACKEND
+export WEB3_SYSTEM_TEST_ENGINE=$ENGINE
 
 TEST_COMMAND=""
 
@@ -49,4 +51,4 @@ else
 fi
 
 
-yarn "$BACKEND:start:background" && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
+yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"

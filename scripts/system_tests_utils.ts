@@ -16,14 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import fetch from 'cross-fetch';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { ETH_DATA_FORMAT, format } from 'web3-utils';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Personal } from 'web3-eth-personal';
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create,
@@ -40,8 +33,10 @@ import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { EthExecutionAPI, Bytes, Web3BaseProvider, Transaction } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Personal } from 'web3-eth-personal';
 
-let _accounts: string[] = [];
+import accountsString from './accounts.json';
 
 /**
  * Get the env variable from Cypress if it exists or node process
@@ -52,166 +47,29 @@ export const getEnvVar = (name: string): string | undefined =>
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
 	global.Cypress ? Cypress.env(name) : process.env[name];
 
-export const DEFAULT_SYSTEM_PROVIDER = 'http://localhost:8545';
+export const DEFAULT_SYSTEM_PROVIDER = 'http://127.0.0.1:8545';
+export const DEFAULT_SYSTEM_ENGINE = 'node';
 
 export const getSystemTestProvider = (): string =>
 	getEnvVar('WEB3_SYSTEM_TEST_PROVIDER') ?? DEFAULT_SYSTEM_PROVIDER;
 
-export const isHttp = getSystemTestProvider().startsWith('http');
-export const isWs = getSystemTestProvider().startsWith('ws');
-export const isIpc = getSystemTestProvider().includes('ipc');
+export const getSystemTestEngine = (): string =>
+	getEnvVar('WEB3_SYSTEM_TEST_ENGINE') ?? DEFAULT_SYSTEM_ENGINE;
+
+export const isHttp: boolean = getSystemTestProvider().startsWith('http');
+export const isWs: boolean = getSystemTestProvider().startsWith('ws');
+export const isIpc: boolean = getSystemTestProvider().includes('ipc');
+export const isChrome: boolean = getSystemTestEngine() === 'chrome';
+export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
+export const isElectron: boolean = getSystemTestEngine() === 'electron';
+export const isNode: boolean = getSystemTestEngine() === 'isNode';
+export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
 
 export const getSystemTestBackend = (): string => getEnvVar('WEB3_SYSTEM_TEST_BACKEND') ?? '';
+
 export const createAccount = _createAccount;
-export const createNewAccount = async (config?: {
-	unlock?: boolean;
-	refill?: boolean;
-}): Promise<{ address: string; privateKey: string }> => {
-	const acc = createAccount();
-
-	let clientUrl = getSystemTestProvider();
-	if (isWs) {
-		clientUrl = clientUrl.replace('ws://', 'http://');
-	}
-
-	if (config?.unlock) {
-		const web3Personal = new Personal(clientUrl);
-		await web3Personal.importRawKey(
-			getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
-			'123456',
-		);
-		await web3Personal.unlockAccount(acc.address, '123456', 1000);
-	}
-
-	if (config?.refill) {
-		const web3Personal = new Personal(clientUrl);
-		const web3Eth = new Web3Eth(clientUrl);
-		const accList = await web3Personal.getAccounts();
-		await web3Eth.sendTransaction({
-			from: accList[0],
-			to: acc.address,
-			value: '1000000000000000000',
-		});
-	}
-
-	return { address: acc.address, privateKey: acc.privateKey };
-};
-
-export const getSystemTestAccountsWithKeys = (): {
-	address: string;
-	privateKey: string;
-}[] => {
-	switch (getSystemTestBackend()) {
-		case 'geth':
-			return [
-				{
-					address: '0xdc6bad79dab7ea733098f66f6c6f9dd008da3258',
-					privateKey:
-						'0x4c3758228f536f7a210f8936182fb5b728046970b8e3215d0b5cb4c4faae8a4e',
-				},
-				{
-					address: '0x962f9a9c2a6c092474d24def35eccb3d9363265e',
-					privateKey:
-						'0x34aeb1f338c17e6b440c189655c89fcef148893a24a7f15c0cb666d9cf5eacb3',
-				},
-			];
-		case 'ganache':
-			return [
-				{
-					address: '0x6E599DA0bfF7A6598AC1224E4985430Bf16458a4',
-					privateKey:
-						'0xcb89ec4b01771c6c8272f4c0aafba2f8ee0b101afb22273b786939a8af7c1912',
-				},
-				{
-					address: '0x6f1DF96865D09d21e8f3f9a7fbA3b17A11c7C53C',
-					privateKey:
-						'0x0c0e4cd57a4d850e5f5a0f8fdf6351a054691918b08a84979de46487467da693',
-				},
-				{
-					address: '0xccFE90C862D2501ce233107D1A1F40afd50d09d0',
-					privateKey:
-						'0x923fab912cb013c2b4a967cc49d82773216fc748addd70b4ee3f2ae2355d00c2',
-				},
-				{
-					address: '0xFe10D1f19baa4e3Ba57ff9c13C978571E092628A',
-					privateKey:
-						'0x9d9ccbbe72514bb428293b1c6df604ba919c7e9fe418893bd0e1d51fbff108d9',
-				},
-				{
-					address: '0xEe8cb9B4A71d2cd134884834313a7e808D5fC1e4',
-					privateKey:
-						'0xcfd75a483f588bcdad14486812b055c21dbc2a3aaa0c7fb2deba16685d7a2318',
-				},
-			];
-		default:
-			throw new Error('Unknown system test backend, unable to get private keys');
-	}
-};
-
-export const getSystemTestAccounts = async (): Promise<string[]> => {
-	if (_accounts.length > 0) {
-		return _accounts;
-	}
-
-	// For this script we need to connect over http
-	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
-
-	if (getSystemTestBackend() === 'geth') {
-		const web3Eth = new Web3Eth(clientUrl);
-		const web3Personal = new Personal(clientUrl);
-
-		await web3Eth.sendTransaction({
-			from: await web3Eth.getCoinbase(),
-			to: getSystemTestAccountsWithKeys()[0].address,
-			value: '100000000000000000000',
-		});
-
-		const existsAccounts = (await web3Personal.getAccounts()).map((a: string) =>
-			a.toUpperCase(),
-		);
-		if (
-			!(
-				existsAccounts?.length > 0 &&
-				existsAccounts.includes(getSystemTestAccountsWithKeys()[0].address.toUpperCase())
-			)
-		) {
-			await web3Personal.importRawKey(
-				getSystemTestAccountsWithKeys()[0].privateKey.substring(2),
-				'123456',
-			);
-			await web3Personal.unlockAccount(
-				getSystemTestAccountsWithKeys()[0].address,
-				'123456',
-				500,
-			);
-		} else {
-			await web3Personal.unlockAccount(
-				getSystemTestAccountsWithKeys()[0].address,
-				'123456',
-				500,
-			);
-		}
-	}
-
-	const res = await fetch(clientUrl, {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'POST',
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			id: 'id',
-			method: 'eth_accounts',
-			params: [],
-		}),
-	});
-
-	_accounts = ((await res.json()) as { result: string[] }).result;
-
-	return _accounts;
-};
 
 export const itIf = (condition: (() => boolean) | boolean) =>
 	(typeof condition === 'function' ? condition() : condition) ? test : test.skip;
@@ -318,3 +176,103 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 		decrypt: decryptWithContext,
 	};
 };
+
+let mainAcc: string;
+export const createNewAccount = async (config?: {
+	unlock?: boolean;
+	refill?: boolean;
+	privateKey?: string;
+	password?: string;
+	doNotImport?: boolean;
+}): Promise<{ address: string; privateKey: string }> => {
+	const acc = config?.privateKey ? privateKeyToAccount(config?.privateKey) : _createAccount();
+
+	const clientUrl = DEFAULT_SYSTEM_PROVIDER;
+
+	if (config?.unlock) {
+		const web3Personal = new Personal(clientUrl);
+		if (!config?.doNotImport) {
+			await web3Personal.importRawKey(
+				getSystemTestBackend() === 'geth' ? acc.privateKey.slice(2) : acc.privateKey,
+				config.password ?? '123456',
+			);
+		}
+
+		await web3Personal.unlockAccount(acc.address, config.password ?? '123456', 100000000);
+	}
+
+	if (config?.refill) {
+		const web3Personal = new Personal(clientUrl);
+		const web3Eth = new Web3Eth(clientUrl);
+		if (!mainAcc) {
+			[mainAcc] = await web3Personal.getAccounts();
+		}
+
+		await web3Eth.sendTransaction({
+			from: mainAcc,
+			to: acc.address,
+			value: '100000000000000000',
+		});
+	}
+
+	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
+};
+let tempAccountList: { address: string; privateKey: string }[] = [];
+const walletsOnWorker = 20;
+
+if (tempAccountList.length === 0) {
+	tempAccountList = accountsString;
+}
+let currentIndex = 0;
+export const createTempAccount = async (
+	config: {
+		unlock?: boolean;
+		refill?: boolean;
+		privateKey?: string;
+		password?: string;
+	} = {},
+): Promise<{ address: string; privateKey: string }> => {
+	if (
+		config.unlock === false ||
+		config.refill === false ||
+		config.privateKey ||
+		config.password
+	) {
+		return createNewAccount({
+			unlock: config.unlock ?? true,
+			refill: config.refill ?? true,
+			privateKey: config.privateKey,
+			password: config.password,
+		});
+	}
+
+	if (currentIndex >= walletsOnWorker || !tempAccountList[currentIndex]) {
+		currentIndex = 0;
+	}
+
+	const acc = tempAccountList[currentIndex];
+	await createNewAccount({
+		unlock: true,
+		refill: false,
+		privateKey: acc.privateKey,
+		doNotImport: true,
+	});
+	currentIndex += 1;
+
+	return acc;
+};
+
+export const getSystemTestAccountsWithKeys = async (): Promise<
+	{
+		address: string;
+		privateKey: string;
+	}[]
+> => {
+	const acc = await createTempAccount();
+	const acc2 = await createTempAccount();
+	const acc3 = await createTempAccount();
+	return [acc, acc2, acc3];
+};
+
+export const getSystemTestAccounts = async (): Promise<string[]> =>
+	(await getSystemTestAccountsWithKeys()).map(a => a.address);
