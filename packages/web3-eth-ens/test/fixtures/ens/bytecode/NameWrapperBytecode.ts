@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,21 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ENSRegistryAbi as Registry } from '../../src/abi/ens/ENSRegistry';
-import ReverseRegistrar from '../../src/abi/reverse_registrar';
-import * as ENSRegistry from '../fixtures/ens/ENSRegistry.json';
-import * as ENSReverseRegistrar from '../fixtures/ens/reverse_registrar.json';
-
-describe('ABI', () => {
-	describe('Registry', () => {
-		it('should have valid ABI', () => {
-			expect(ENSRegistry.abi).toEqual(Registry);
-		});
-	});
-
-	describe('ReverseRegistrar', () => {
-		it('should have valid ABI', () => {
-			expect(JSON.parse(ENSReverseRegistrar.result)).toEqual(ReverseRegistrar);
-		});
-	});
-});
+// https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/PublicResolver.sol
+export const NameWrapperBytecode =
+	'0x608060405234801561001057600080fd5b5060b48061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80636352211e14602d575b600080fd5b603d60383660046066565b503290565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600060208284031215607757600080fd5b503591905056fea2646970667358221220b67fcd4e2e3ba377840d17d946ec7bb7d98ab1f95fb8806d831190a194af0f7964736f6c634300080d0033';
