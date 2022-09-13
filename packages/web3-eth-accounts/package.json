@@ -37,7 +37,8 @@
 		"jest-when": "^3.5.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4"
+		"typescript": "^4.7.4",
+		"web3-test-utils": "0.1.0-alpha.0"
 	},
 	"dependencies": {
 		"@ethereumjs/tx": "^3.5.2",
