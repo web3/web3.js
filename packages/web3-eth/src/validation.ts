@@ -28,6 +28,8 @@ import {
 } from 'web3-types';
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
+import { formatTransaction } from 'web3-eth-transaction-utils';
+
 import {
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
@@ -45,7 +47,6 @@ import {
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
 } from './errors';
-import { formatTransaction } from './utils/format_transaction';
 import { InternalTransaction } from './types';
 
 export function isBaseTransaction(value: BaseTransactionAPI): boolean {
