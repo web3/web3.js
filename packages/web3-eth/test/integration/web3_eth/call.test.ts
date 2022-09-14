@@ -14,13 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionCall, /*BlockTags*/ } from 'web3-types';
+import { TransactionCall, BlockTags } from 'web3-types';
 import { decodeParameters } from 'web3-eth-abi';
-import { closeOpenConnection, createFundAndAddNewAccountToLocalWallet, getTestProvider, isIpc, isWs } from 'web3-test-utils';
+import { closeOpenConnection, addFundedAccountToWallet, isIpc, isWs, getTestProvider } from 'web3-test-utils';
+import { Wallet } from 'web3-eth-accounts';
 
 import { Web3Eth } from '../../../src';
-import { Wallet } from 'web3-eth-accounts';
-import { Web3Context } from 'web3-core';
+import { createAccountProvider } from '../../fixtures/system_test_utils';
 
 describe('Web3Eth.call', () => {
 	const greeterContractDeploymentData =
@@ -42,16 +42,22 @@ describe('Web3Eth.call', () => {
 		type: 'function',
 	};
 
-	let wallet: Wallet;
 	let web3Eth: Web3Eth;
+	let wallet: Wallet;
 	let greeterContractAddress: string;
 
 	beforeAll(async () => {
-		wallet = await createFundAndAddNewAccountToLocalWallet(BigInt(100));
-		web3Eth = new Web3Eth(new Web3Context({
-			provider: getTestProvider(),
-			wallet
-		}));
+		web3Eth = new Web3Eth(getTestProvider());
+		const accountProvider = createAccountProvider(web3Eth);
+		wallet = new Wallet(accountProvider);
+
+		// TODO Wallet should be able to be added to Web3Eth with context via
+		// constructor instead of using createAccountProvider
+		web3Eth['_accountProvider'] = accountProvider;
+		web3Eth['_wallet'] = wallet;
+
+		await addFundedAccountToWallet(wallet, BigInt(1000000000000000000));
+
 		const transaction = {
 			from: wallet[0].address,
 			data: greeterContractDeploymentData
@@ -69,7 +75,7 @@ describe('Web3Eth.call', () => {
 
 	it('should make a call to deployed Greeter contract', async () => {
 		const transaction: TransactionCall = {
-			from: wallet[0].address,
+			from: wallet.get(0)?.address,
 			to: greeterContractAddress,
 			data: greetCallData,
 		};
@@ -79,63 +85,63 @@ describe('Web3Eth.call', () => {
 		expect(decodedResult).toBe(expectedDecodedGreet);
 	});
 
-	// describe('blockNumber parameter', () => {
-	// 	it('should return no data (0x) for call to deployed Greeter contract with blockNumber = EARLIEST', async () => {
-	// 		const transaction: TransactionCall = {
-	// 			from: newAccount.address,
-	// 			to: greeterContractAddress,
-	// 			data: greetCallData,
-	// 		};
-	// 		const response = await web3Eth.call(transaction, BlockTags.EARLIEST);
-	// 		expect(response).toBe('0x');
-	// 	});
+	describe('blockNumber parameter', () => {
+		it('should return no data (0x) for call to deployed Greeter contract with blockNumber = EARLIEST', async () => {
+			const transaction: TransactionCall = {
+				from: wallet.get(0)?.address,
+				to: greeterContractAddress,
+				data: greetCallData,
+			};
+			const response = await web3Eth.call(transaction, BlockTags.EARLIEST);
+			expect(response).toBe('0x');
+		});
 
-	// 	it('should return expectedDecodedGreet for call to deployed Greeter contract with blockNumber = LATEST', async () => {
-	// 		const transaction: TransactionCall = {
-	// 			from: newAccount.address,
-	// 			to: greeterContractAddress,
-	// 			data: greetCallData,
-	// 		};
-	// 		const response = await web3Eth.call(transaction, BlockTags.LATEST);
-	// 		expect(response).toBe(expectedEncodedGreet);
-	// 		const decodedResult = decodeParameters([...greeterAbiFragment.outputs], response)[0];
-	// 		expect(decodedResult).toBe(expectedDecodedGreet);
-	// 	});
+		it('should return expectedDecodedGreet for call to deployed Greeter contract with blockNumber = LATEST', async () => {
+			const transaction: TransactionCall = {
+				from: wallet.get(0)?.address,
+				to: greeterContractAddress,
+				data: greetCallData,
+			};
+			const response = await web3Eth.call(transaction, BlockTags.LATEST);
+			expect(response).toBe(expectedEncodedGreet);
+			const decodedResult = decodeParameters([...greeterAbiFragment.outputs], response)[0];
+			expect(decodedResult).toBe(expectedDecodedGreet);
+		});
 
-	// 	// TODO - Not sure if there is a better way to test PENDING BlockTag,
-	// 	// but interacting with a contract that hasn't been mined yet doesn't make sense
-	// 	it('should return expectedDecodedGreet for call to deployed Greeter contract with blockNumber = PENDING', async () => {
-	// 		const transaction: TransactionCall = {
-	// 			from: newAccount.address,
-	// 			to: greeterContractAddress,
-	// 			data: greetCallData,
-	// 		};
-	// 		const response = await web3Eth.call(transaction, BlockTags.PENDING);
-	// 		expect(response).toBe(expectedEncodedGreet);
-	// 		const decodedResult = decodeParameters([...greeterAbiFragment.outputs], response)[0];
-	// 		expect(decodedResult).toBe(expectedDecodedGreet);
-	// 	});
+		// TODO - Not sure if there is a better way to test PENDING BlockTag,
+		// but interacting with a contract that hasn't been mined yet doesn't make sense
+		it('should return expectedDecodedGreet for call to deployed Greeter contract with blockNumber = PENDING', async () => {
+			const transaction: TransactionCall = {
+				from: wallet.get(0)?.address,
+				to: greeterContractAddress,
+				data: greetCallData,
+			};
+			const response = await web3Eth.call(transaction, BlockTags.PENDING);
+			expect(response).toBe(expectedEncodedGreet);
+			const decodedResult = decodeParameters([...greeterAbiFragment.outputs], response)[0];
+			expect(decodedResult).toBe(expectedDecodedGreet);
+		});
 
-	// 	it('should return no data (0x) for call to deployed Greeter contract with blockNumber = 0x0', async () => {
-	// 		const transaction: TransactionCall = {
-	// 			from: newAccount.address,
-	// 			to: greeterContractAddress,
-	// 			data: greetCallData,
-	// 		};
-	// 		const response = await web3Eth.call(transaction, '0x0');
-	// 		expect(response).toBe('0x');
-	// 	});
+		it('should return no data (0x) for call to deployed Greeter contract with blockNumber = 0x0', async () => {
+			const transaction: TransactionCall = {
+				from: wallet.get(0)?.address,
+				to: greeterContractAddress,
+				data: greetCallData,
+			};
+			const response = await web3Eth.call(transaction, '0x0');
+			expect(response).toBe('0x');
+		});
 
-	// 	it('should return no data (0x) for call to deployed Greeter contract with web3Context.defaultBlock = EARLIEST', async () => {
-	// 		web3Eth.defaultBlock = BlockTags.EARLIEST;
+		it('should return no data (0x) for call to deployed Greeter contract with web3Context.defaultBlock = EARLIEST', async () => {
+			web3Eth.defaultBlock = BlockTags.EARLIEST;
 
-	// 		const transaction: TransactionCall = {
-	// 			from: newAccount.address,
-	// 			to: greeterContractAddress,
-	// 			data: greetCallData,
-	// 		};
-	// 		const response = await web3Eth.call(transaction);
-	// 		expect(response).toBe('0x');
-	// 	});
-	// });
+			const transaction: TransactionCall = {
+				from: wallet.get(0)?.address,
+				to: greeterContractAddress,
+				data: greetCallData,
+			};
+			const response = await web3Eth.call(transaction);
+			expect(response).toBe('0x');
+		});
+	});
 });
