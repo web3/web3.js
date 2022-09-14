@@ -30,10 +30,12 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const awaitableTransactionReceipt: Promise<TransactionReceipt | undefined> = waitWithTimeout(
-		getTransactionReceipt(web3Context, transactionHash, returnFormat),
-		pollingInterval,
-	);
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	const awaitableTransactionReceipt: Promise<TransactionReceipt | null | undefined> =
+		waitWithTimeout(
+			getTransactionReceipt(web3Context, transactionHash, returnFormat),
+			pollingInterval,
+		);
 
 	let intervalId: NodeJS.Timer | undefined;
 	const polledTransactionReceipt = new Promise<TransactionReceipt>((resolve, reject) => {
@@ -53,10 +55,12 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					return;
 				}
 
-				const transactionReceipt: TransactionReceipt | undefined = await waitWithTimeout(
-					getTransactionReceipt(web3Context, transactionHash, returnFormat),
-					pollingInterval,
-				);
+				// eslint-disable-next-line @typescript-eslint/ban-types
+				const transactionReceipt: TransactionReceipt | undefined | null =
+					await waitWithTimeout(
+						getTransactionReceipt(web3Context, transactionHash, returnFormat),
+						pollingInterval,
+					);
 
 				if (!isNullish(transactionReceipt)) {
 					clearInterval(intervalId);
