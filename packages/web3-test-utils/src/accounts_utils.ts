@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3RequestManager } from 'web3-core';
 import {
 	Address,
+	BlockTags,
 	HexString32Bytes,
 	Transaction,
 	TransactionWithSenderAPI,
@@ -24,18 +25,11 @@ import {
 	Web3BaseWallet,
 	Web3BaseWalletAccount,
 } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getTestClient, getTestProvider } from './get_env';
 
-const getAccounts = async (): Promise<Address[]> => {
-	const web3RequestManager = new Web3RequestManager(getTestProvider());
-	return web3RequestManager.send({
-		method: 'eth_accounts',
-		params: [],
-	});
-};
-
-const sendTransaction = async (
+const _sendTransaction = async (
 	transaction: Transaction & { from: Address },
 ): Promise<HexString32Bytes> => {
 	const web3RequestManager = new Web3RequestManager(getTestProvider());
@@ -54,28 +48,32 @@ const sendTransaction = async (
 	}
 
 	if (transaction.nonce === undefined) {
-		_transaction.nonce = await web3RequestManager.send({
-			method: 'eth_getTransactionCount',
-			params: [transaction.from, 'latest'],
-		});
+		_transaction.nonce = await ethRpcMethods.getTransactionCount(
+			web3RequestManager,
+			transaction.from,
+			BlockTags.LATEST,
+		);
 	}
 
 	if (transaction.gas === undefined) {
-		_transaction.gas = await web3RequestManager.send({
-			method: 'eth_estimateGas',
-			params: [_transaction as TransactionWithSenderAPI, 'latest'],
-		});
+		_transaction.gas = await ethRpcMethods.estimateGas(
+			web3RequestManager,
+			_transaction as TransactionWithSenderAPI,
+			BlockTags.LATEST,
+		);
 	}
 
-	return web3RequestManager.send({
-		method: 'eth_sendTransaction',
-		params: [_transaction as TransactionWithSenderAPI],
-	});
+	return ethRpcMethods.sendTransaction(
+		web3RequestManager,
+		_transaction as TransactionWithSenderAPI,
+	);
 };
 
 const fundGethAccount = async (fundeeAddress: Address, fundAmount: bigint) => {
-	const [mainAccount] = await getAccounts();
-	await sendTransaction({
+	const [mainAccount] = await ethRpcMethods.getAccounts(
+		new Web3RequestManager(getTestProvider()),
+	);
+	await _sendTransaction({
 		from: mainAccount,
 		to: fundeeAddress,
 		value: `0x${fundAmount.toString(16)}`,
