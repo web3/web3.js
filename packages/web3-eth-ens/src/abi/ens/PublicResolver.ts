@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,8 +15,34 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// https://github.com/ensdomains/ens-contracts/tree/master/contracts/resolvers most updated registry contract on the ENS repo
-export const RESOLVER = [
+// https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/PublicResolver.sol
+export const PublicResolverAbi = [
+	{
+		inputs: [
+			{
+				internalType: 'contract ENS',
+				name: '_ens',
+				type: 'address',
+			},
+			{
+				internalType: 'contract INameWrapper',
+				name: 'wrapperAddress',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_trustedETHController',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: '_trustedReverseRegistrar',
+				type: 'address',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'constructor',
+	},
 	{
 		anonymous: false,
 		inputs: [
@@ -85,18 +111,24 @@ export const RESOLVER = [
 		inputs: [
 			{
 				indexed: true,
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
+				internalType: 'address',
+				name: 'owner',
+				type: 'address',
+			},
+			{
+				indexed: true,
+				internalType: 'address',
+				name: 'operator',
+				type: 'address',
 			},
 			{
 				indexed: false,
-				internalType: 'bytes32',
-				name: 'hash',
-				type: 'bytes32',
+				internalType: 'bool',
+				name: 'approved',
+				type: 'bool',
 			},
 		],
-		name: 'ContentChanged',
+		name: 'ApprovalForAll',
 		type: 'event',
 	},
 	{
@@ -386,15 +418,9 @@ export const RESOLVER = [
 				type: 'bytes32',
 			},
 		],
-		name: 'content',
-		outputs: [
-			{
-				internalType: 'bytes32',
-				name: '',
-				type: 'bytes32',
-			},
-		],
-		stateMutability: 'view',
+		name: 'clearDNSZone',
+		outputs: [],
+		stateMutability: 'nonpayable',
 		type: 'function',
 	},
 	{
@@ -453,6 +479,30 @@ export const RESOLVER = [
 				type: 'bytes32',
 			},
 			{
+				internalType: 'bytes32',
+				name: 'name',
+				type: 'bytes32',
+			},
+		],
+		name: 'hasDNSRecords',
+		outputs: [
+			{
+				internalType: 'bool',
+				name: '',
+				type: 'bool',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
 				internalType: 'bytes4',
 				name: 'interfaceID',
 				type: 'bytes4',
@@ -464,6 +514,30 @@ export const RESOLVER = [
 				internalType: 'address',
 				name: '',
 				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'account',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: 'operator',
+				type: 'address',
+			},
+		],
+		name: 'isApprovedForAll',
+		outputs: [
+			{
+				internalType: 'bool',
+				name: '',
+				type: 'bool',
 			},
 		],
 		stateMutability: 'view',
@@ -486,25 +560,6 @@ export const RESOLVER = [
 			},
 		],
 		stateMutability: 'nonpayable',
-		type: 'function',
-	},
-	{
-		inputs: [
-			{
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
-			},
-		],
-		name: 'multihash',
-		outputs: [
-			{
-				internalType: 'bytes',
-				name: '',
-				type: 'bytes',
-			},
-		],
-		stateMutability: 'view',
 		type: 'function',
 	},
 	{
@@ -605,7 +660,7 @@ export const RESOLVER = [
 			},
 			{
 				internalType: 'address',
-				name: 'addr',
+				name: 'a',
 				type: 'address',
 			},
 		],
@@ -617,17 +672,17 @@ export const RESOLVER = [
 	{
 		inputs: [
 			{
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
+				internalType: 'address',
+				name: 'operator',
+				type: 'address',
 			},
 			{
-				internalType: 'bytes32',
-				name: 'hash',
-				type: 'bytes32',
+				internalType: 'bool',
+				name: 'approved',
+				type: 'bool',
 			},
 		],
-		name: 'setContent',
+		name: 'setApprovalForAll',
 		outputs: [],
 		stateMutability: 'nonpayable',
 		type: 'function',
@@ -663,7 +718,7 @@ export const RESOLVER = [
 				type: 'bytes',
 			},
 		],
-		name: 'setDnsrr',
+		name: 'setDNSRecords',
 		outputs: [],
 		stateMutability: 'nonpayable',
 		type: 'function',
@@ -699,26 +754,8 @@ export const RESOLVER = [
 				type: 'bytes32',
 			},
 			{
-				internalType: 'bytes',
-				name: 'hash',
-				type: 'bytes',
-			},
-		],
-		name: 'setMultihash',
-		outputs: [],
-		stateMutability: 'nonpayable',
-		type: 'function',
-	},
-	{
-		inputs: [
-			{
-				internalType: 'bytes32',
-				name: 'node',
-				type: 'bytes32',
-			},
-			{
 				internalType: 'string',
-				name: '_name',
+				name: 'newName',
 				type: 'string',
 			},
 		],
@@ -776,6 +813,24 @@ export const RESOLVER = [
 	{
 		inputs: [
 			{
+				internalType: 'bytes32',
+				name: 'node',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'bytes',
+				name: 'hash',
+				type: 'bytes',
+			},
+		],
+		name: 'setZonehash',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
 				internalType: 'bytes4',
 				name: 'interfaceID',
 				type: 'bytes4',
@@ -789,7 +844,7 @@ export const RESOLVER = [
 				type: 'bool',
 			},
 		],
-		stateMutability: 'pure',
+		stateMutability: 'view',
 		type: 'function',
 	},
 	{
@@ -836,5 +891,3 @@ export const RESOLVER = [
 		type: 'function',
 	},
 ] as const;
-
-module.exports = RESOLVER;
