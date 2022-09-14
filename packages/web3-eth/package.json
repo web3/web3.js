@@ -51,8 +51,10 @@
 		"web3-core": "^4.0.1-alpha.0",
 		"web3-errors": "^0.1.1-alpha.0",
 		"web3-eth-accounts": "^4.0.1-alpha.0",
+		"web3-eth-transaction-utils": "0.1.0-alpha.0",
 		"web3-net": "^4.0.1-alpha.0",
 		"web3-providers-ws": "^4.0.1-alpha.0",
+		"web3-rpc-methods": "0.1.0-alpha.0",
 		"web3-types": "^0.1.1-alpha.0",
 		"web3-utils": "^4.0.1-alpha.0",
 		"web3-validator": "^0.1.1-alpha.0"
