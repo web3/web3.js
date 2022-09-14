@@ -19,7 +19,7 @@ sidebar_label: Web3.tree.shaking
 "sideEffects": false
 ```
 
-To more explanation regarding `sideEffects` here https://webpack.js.org/guides/tree-shaking/
+**_NOTE:_** For further information about `sideEffects` see: https://webpack.js.org/guides/tree-shaking/
 
 3. Set to your tsconfig module to `ES2015` or greater to support `imports`, because tree shaking do not work with `require`:
 
