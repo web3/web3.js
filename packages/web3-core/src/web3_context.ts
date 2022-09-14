@@ -22,6 +22,8 @@ import {
 	Web3AccountProvider,
 	SupportedProviders,
 	HexString,
+	privateKeyToAddress,
+	Transaction,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { isSupportedProvider } from './utils';
@@ -166,7 +168,7 @@ export class Web3Context<
 		} else if (providerOrContext._wallet !== undefined) {
 			// @ts-expect-error Property '_wallet' does not exist on type 'string | SupportedProviders<API> | Web3ContextInitOptions<API, RegisteredSubs>'.
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			this._wallet = providerOrContext._wallet
+			this._wallet = providerOrContext._wallet;
 		}
 	}
 
@@ -281,13 +283,11 @@ export class Web3Context<
 	}
 }
 
-// To avoid cycle dependency declare this type in this file
-// TODO: When we have `web3-types` package we can share TransactionType
 export type TransactionBuilder<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	API extends Web3APISpec = any,
-> = <ReturnType = Record<string, unknown>>(options: {
-	transaction: Record<string, unknown>;
+> = (options: {
+	transaction: Transaction;
 	web3Context: Web3Context<API>;
-	privateKey?: HexString | Buffer;
-}) => Promise<ReturnType>;
+	privateKey?: { privateKey: HexString | Buffer; privateKeyToAddress: privateKeyToAddress };
+}) => Promise<Transaction>;
