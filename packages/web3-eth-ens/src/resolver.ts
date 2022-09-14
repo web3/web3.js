@@ -116,12 +116,12 @@ export class Resolver {
 		return resolverContract.methods.supportsInterface(interfaceIdParam).call();
 	}
 
-	public async getAddress(ENSName: string) {
+	public async getAddress(ENSName: string, coinType = 60) {
 		const resolverContract = await this.getResolverContractAdapter(ENSName);
 
 		await this.checkInterfaceSupport(resolverContract, methodsInInterface.addr);
 
-		return resolverContract.methods.addr(namehash(ENSName)).call();
+		return resolverContract.methods.addr(namehash(ENSName), coinType).call();
 	}
 
 	public async getPubkey(ENSName: string) {

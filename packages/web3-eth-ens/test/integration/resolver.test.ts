@@ -17,11 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
-import { sha3, toChecksumAddress, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import Web3Eth from 'web3-eth';
 
-import { Address, Bytes, TransactionReceipt } from 'web3-types';
-import { SendTransactionOptions } from 'web3-eth/src/types';
+import { Address, Bytes } from 'web3-types';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 
@@ -54,11 +53,6 @@ describe('ens', () => {
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
-	const subdomain = 'subdomain';
-	const fullDomain = `${subdomain}.${domain}`;
-	const web3jsName = 'web3js.test';
-
-	const ttl = 3600;
 	let web3Eth: Web3Eth;
 
 	let accounts: string[];
@@ -68,10 +62,10 @@ describe('ens', () => {
 
 	const ZERO_NODE: Bytes = '0x0000000000000000000000000000000000000000000000000000000000000000';
 	const addressOne: Address = '0x0000000000000000000000000000000000000001';
-	// let registryAddress: string;
-	// let resolverAddress: string;
 
 	const contentHash = '0x0000000000000000000000000000000000000000000000000000000000000001';
+
+	const DEFAULT_COIN_TYPE = 60;
 
 	beforeAll(async () => {
 		accounts = await getSystemTestAccounts();
@@ -135,9 +129,6 @@ describe('ens', () => {
 			...sendOptions,
 			gas,
 		};
-
-		// resolverAddress = resolver.options.address as string;
-		// registryAddress = registry.options.address as string;
 	});
 
 	afterAll(async () => {
@@ -205,5 +196,27 @@ describe('ens', () => {
 
 		const res = await ens.getContenthash(domain);
 		expect(res).toBe(contentHash);
+	});
+
+	it('sets address', async () => {
+		await registry.methods
+			.setResolver(domainNode, resolver.options.address as string)
+			.send(sendOptions);
+
+		await ens.setAddress(domain, accounts[1], sendOptions, DEFAULT_RETURN_FORMAT);
+
+		const res = await resolver.methods.addr(domainNode, DEFAULT_COIN_TYPE).call(sendOptions);
+		expect(res).toBe(accounts[1]);
+	});
+
+	it('fetches address', async () => {
+		await registry.methods
+			.setResolver(domainNode, resolver.options.address as string)
+			.send(sendOptions);
+
+		await resolver.methods.setAddr(domainNode, accountOne).send(sendOptions);
+
+		const resultAddress = await ens.getAddress(domain);
+		expect(resultAddress).toBe(accountOne);
 	});
 });
