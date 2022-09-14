@@ -95,7 +95,7 @@ describe('contract', () => {
 				).resolves.toEqual(
 					expect.objectContaining({
 						event: 'MultiValueIndexedEvent',
-						returnValues: expect.objectContaining({ val: '100' }),
+						returnValues: expect.objectContaining({ val: BigInt(100) }),
 					}),
 				);
 			},

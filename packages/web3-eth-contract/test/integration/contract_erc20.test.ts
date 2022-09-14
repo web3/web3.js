@@ -108,7 +108,7 @@ describe('contract', () => {
 					).resolves.toEqual({
 						from: toUpperCaseHex(sendOptions.from as string),
 						to: toUpperCaseHex(acc2.address),
-						value: '100',
+						value: BigInt(100),
 					});
 				});
 			});
