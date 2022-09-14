@@ -245,7 +245,7 @@ describe('ens', () => {
 
 		const owner = await ens.getOwner(fullDomain);
 
-		expect(ttlResult).toBe(ttl.toString());
+		expect(ttlResult).toBe(BigInt(ttl));
 		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 
