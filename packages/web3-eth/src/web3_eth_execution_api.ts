@@ -15,14 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	Address,
-	BlockNumberOrTag,
-	HexString32Bytes,
-	Uint,
-	EthExecutionAPI,
-	TransactionInfo,
-} from 'web3-types';
+import { HexString32Bytes, Uint } from 'web3-types';
 
 export interface StorageProof {
 	readonly key: HexString32Bytes;
@@ -38,22 +31,3 @@ export interface AccountObject {
 	readonly accountProof: HexString32Bytes[];
 	readonly storageProof: StorageProof[];
 }
-
-export type Web3EthExecutionAPI = EthExecutionAPI & {
-	eth_pendingTransactions: () => TransactionInfo[];
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md
-	eth_requestAccounts: () => Address[];
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-695.md
-	eth_chainId: () => Uint;
-
-	web3_clientVersion: () => string;
-
-	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1186.md
-	eth_getProof: (
-		address: Address,
-		storageKeys: HexString32Bytes[],
-		blockNumber: BlockNumberOrTag,
-	) => AccountObject;
-};
