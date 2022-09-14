@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,19 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { decodeLog } from '../../../src/api/logs_api';
-import { validDecodeLogsData } from '../../fixtures/data';
-
-describe('logs_api', () => {
-	describe('decodeLog', () => {
-		describe('valid data', () => {
-			it.each(validDecodeLogsData)(
-				'should pass for valid values: %j',
-				({ input: { abi, data, topics }, output }) => {
-					const expected = decodeLog(abi, data, topics);
-					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
-				},
-			);
-		});
-	});
-});
+// https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/PublicResolver.sol
+export const NameWrapperBytecode =
+	'0x608060405234801561001057600080fd5b5060b48061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80636352211e14602d575b600080fd5b603d60383660046066565b503290565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b600060208284031215607757600080fd5b503591905056fea2646970667358221220b67fcd4e2e3ba377840d17d946ec7bb7d98ab1f95fb8806d831190a194af0f7964736f6c634300080d0033';

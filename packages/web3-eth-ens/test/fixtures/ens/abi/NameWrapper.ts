@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,20 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { decodeLog } from '../../../src/api/logs_api';
-import { validDecodeLogsData } from '../../fixtures/data';
-
-describe('logs_api', () => {
-	describe('decodeLog', () => {
-		describe('valid data', () => {
-			it.each(validDecodeLogsData)(
-				'should pass for valid values: %j',
-				({ input: { abi, data, topics }, output }) => {
-					const expected = decodeLog(abi, data, topics);
-					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
-				},
-			);
-		});
-	});
-});
+// https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/mocks/DummyNameWrapper.sol
+export const NameWrapperAbi = [
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 'ownerOf',
+		outputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+] as const;

@@ -22,11 +22,12 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests --runInBand",
+		"test:integration": "jest --config=./test/integration/jest.config.js ",
 		"ens:download:registry": "curl -L -o test/fixtures/ens/registry.json 'https://api.etherscan.io/api?module=contract&action=getabi&address=0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'",
 		"ens:download:reverse_registrar": "curl -L -o test/fixtures/ens/reverse_registrar.json 'https://api.etherscan.io/api?module=contract&action=getabi&address=0x084b1c3c81545d370f3634392de611caabff8148'"
 	},
 	"devDependencies": {
+		"web3-eth-contract": "^4.0.1-alpha.0",
 		"@types/jest": "^28.1.6",
 		"@typescript-eslint/eslint-plugin": "^5.30.7",
 		"@typescript-eslint/parser": "^5.30.7",
