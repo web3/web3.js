@@ -132,7 +132,13 @@ describe('ens', () => {
 	});
 
 	afterAll(async () => {
-		await closeOpenConnection(ens);
+		if (isWs || isIpc) {
+			await closeOpenConnection(ens);
+			await closeOpenConnection(ens['_registry']['contract']);
+			await closeOpenConnection(registry);
+			await closeOpenConnection(resolver);
+			await closeOpenConnection(nameWrapper);
+		}
 	});
 	beforeEach(async () => {
 		// set up subnode
