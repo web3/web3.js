@@ -336,6 +336,10 @@ export const hexToNumber = (value: string): bigint | number => {
 		return negative ? -num : num;
 	}
 
+	if (num < Number.MIN_SAFE_INTEGER) {
+		return num;
+	}
+
 	return negative ? -1 * Number(num) : Number(num);
 };
 
