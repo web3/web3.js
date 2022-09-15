@@ -31,14 +31,15 @@ import {
 	Transaction,
 	TransactionCall,
 	TransactionWithLocalWalletIndex,
+	Web3EthExecutionAPI,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
 import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import * as rpcMethods from './rpc_methods';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
 import * as rpcMethodsWrappers from './rpc_method_wrappers';
 import { SendTransactionOptions } from './types';
-import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import {
 	LogsSubscription,
 	NewPendingTransactionsSubscription,
@@ -100,7 +101,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getProtocolVersion() {
-		return rpcMethods.getProtocolVersion(this.requestManager);
+		return ethRpcMethods.getProtocolVersion(this.requestManager);
 	}
 
 	// TODO Add returnFormat parameter
@@ -121,7 +122,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async isSyncing() {
-		return rpcMethods.getSyncing(this.requestManager);
+		return ethRpcMethods.getSyncing(this.requestManager);
 	}
 
 	// TODO consider adding returnFormat parameter (to format address as bytes)
@@ -134,7 +135,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getCoinbase() {
-		return rpcMethods.getCoinbase(this.requestManager);
+		return ethRpcMethods.getCoinbase(this.requestManager);
 	}
 
 	/**
@@ -148,7 +149,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async isMining() {
-		return rpcMethods.getMining(this.requestManager);
+		return ethRpcMethods.getMining(this.requestManager);
 	}
 
 	/**
@@ -216,7 +217,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getAccounts() {
-		const hexAddresses = (await rpcMethods.getAccounts(this.requestManager)) ?? [];
+		const hexAddresses = (await ethRpcMethods.getAccounts(this.requestManager)) ?? [];
 		return hexAddresses.map(address => toChecksumAddress(address));
 	}
 
@@ -1233,7 +1234,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getWork() {
-		return rpcMethods.getWork(this.requestManager);
+		return ethRpcMethods.getWork(this.requestManager);
 	}
 
 	/**
@@ -1258,7 +1259,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 		hash: HexString32Bytes,
 		digest: HexString32Bytes,
 	) {
-		return rpcMethods.submitWork(this.requestManager, nonce, hash, digest);
+		return ethRpcMethods.submitWork(this.requestManager, nonce, hash, digest);
 	}
 
 	// TODO - Format addresses
@@ -1276,7 +1277,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async requestAccounts() {
-		return rpcMethods.requestAccounts(this.requestManager);
+		return ethRpcMethods.requestAccounts(this.requestManager);
 	}
 
 	/**
@@ -1306,7 +1307,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * ```
 	 */
 	public async getNodeInfo() {
-		return rpcMethods.getNodeInfo(this.requestManager);
+		return ethRpcMethods.getNodeInfo(this.requestManager);
 	}
 
 	/**

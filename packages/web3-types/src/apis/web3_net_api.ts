@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,8 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { HexString } from '../primitives_types';
 
-import { Web3RequestManager } from 'web3-core';
-import { EthPersonalAPI } from './eth_personal_api';
-
-export type EthPersonalAPIManager = Web3RequestManager<EthPersonalAPI>;
+export type Web3NetAPI = {
+	net_version: () => string; // https://eth.wiki/json-rpc/API#net_version
+	net_peerCount: () => HexString; // https://eth.wiki/json-rpc/API#net_peercount
+	net_listening: () => boolean; // https://eth.wiki/json-rpc/API#net_listening
+};
