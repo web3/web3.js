@@ -734,13 +734,17 @@ should use 4.0.1-alpha.0 for testing.
 
 ## [Unreleased]
 
-#### web3-eth-contract
-
--   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`.
+### Added
 
 #### web3-error
 
 -   Add optional `innerError` property to the abstract class `Web3Error`.
+
+### Fixed
+
+#### web3-eth-contract
+
+-   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`.
 
 #### web3-eth-abi
 
