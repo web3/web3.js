@@ -58,11 +58,17 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 		message: string;
 		innerError?: Error;
 	} {
+		if (this.innerError)
+			return {
+				name: this.name,
+				code: this.code,
+				message: this.message,
+				innerError: this.innerError,
+			};
 		return {
 			name: this.name,
 			code: this.code,
 			message: this.message,
-			innerError: this.innerError,
 		};
 	}
 }
