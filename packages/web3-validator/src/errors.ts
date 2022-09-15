@@ -56,10 +56,6 @@ export class Web3ValidatorError extends Web3Error {
 		} error[s]:\n${this._compileErrors().join('\n')}`;
 	}
 
-	public toJSON() {
-		return { name: this.name, message: this.message, code: this.code };
-	}
-
 	private _compileErrors(): string[] {
 		const errorMsgs = this.errors.map(errorFormatter);
 		return errorMsgs;
