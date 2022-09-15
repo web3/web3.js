@@ -52,8 +52,18 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 			: result;
 	}
 
-	public toJSON() {
-		return { name: this.name, code: this.code, message: this.message };
+	public toJSON(): {
+		name: string;
+		code: number;
+		message: string;
+		innerError?: Error;
+	} {
+		return {
+			name: this.name,
+			code: this.code,
+			message: this.message,
+			innerError: this.innerError,
+		};
 	}
 }
 
