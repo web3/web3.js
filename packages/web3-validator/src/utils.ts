@@ -291,13 +291,6 @@ export const transformJsonDataToAbiFormat = (
 	return transformedData;
 };
 
-// const data = abiToJsonSchemaCases[14];
-// console.log(data.title);
-// console.log(data.json.data);
-// console.log(data.abi.data);
-// const output = transformJsonDataToAbiFormat(data.abi.fullSchema, data.json.data);
-// console.log(output);
-
 /**
  * Code points to int
  */
