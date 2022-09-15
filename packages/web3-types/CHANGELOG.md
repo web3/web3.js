@@ -34,3 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [0.1.1-alpha.1]
+
+### Added
+
+-   `EthExecutionAPI` export (#5441)
+-   `Web3EthExecutionAPI` export (#5441)
+-   `Web3NetAPI` export (#5441)
+-   `EthPersonalAPI` export (#5441)

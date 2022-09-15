@@ -34,3 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [4.0.1-alpha.1]
+
+### Added
+
+-   `web3-rpc-methods` dependency (#5441)
+
+### Removed
+
+-   Exported type `EthPersonalAPIManager`, `EthPersonalAPI` is not exported via `web3-types` (#5441)

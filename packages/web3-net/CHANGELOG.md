@@ -34,3 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [4.0.1-alpha.1]
+
+### Added
+
+-   `web3-rpc-methods` dependency (#5441)
+
+### Removed
+
+-   `rpcMethods` export, these methods are now exported via `web3-rpc-methods` as `netRpcMethods` (#5441)
+-   `Web3NetAPI` export, now exported via `web3-types` as `Web3NetAPI` (#5441)
