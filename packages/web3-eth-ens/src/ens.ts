@@ -226,7 +226,9 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/*
 	 * Resolves an ENS name to an Ethereum address.
 	 */
-	public async getAddress(ENSName: string, coinType = 60) {
+
+	// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+	public async getAddress(ENSName: string, coinType: number = 60) {
 		return this._resolver.getAddress(ENSName, coinType);
 	}
 
