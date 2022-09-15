@@ -50,7 +50,7 @@ import {
 	txReceipt,
 } from '../fixtures/web3_eth_methods_with_parameters';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 jest.mock('../../src/rpc_method_wrappers');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx);

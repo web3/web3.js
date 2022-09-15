@@ -23,7 +23,7 @@ import { getTransaction } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction';
 import { formatTransaction } from '../../../src';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransaction', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

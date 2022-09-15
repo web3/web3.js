@@ -20,7 +20,7 @@ import { Net } from '../../src';
 import { getIdValidData, getPeerCountValidData } from '../fixtures/rpc_method_wrappers';
 import { getId, getPeerCount, isListening } from '../../src/rpc_method_wrappers';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('rpc_method_wrappers', () => {
 	let web3Net: Net;

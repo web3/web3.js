@@ -20,7 +20,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getCoinbase } from '../../../src/rpc_method_wrappers';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getCoinbase', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

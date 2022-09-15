@@ -21,7 +21,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getChainId } from '../../../src/rpc_method_wrappers';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getChainId', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

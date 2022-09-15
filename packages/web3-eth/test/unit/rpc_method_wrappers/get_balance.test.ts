@@ -23,7 +23,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 import { getBalance } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_balance';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getBalance', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

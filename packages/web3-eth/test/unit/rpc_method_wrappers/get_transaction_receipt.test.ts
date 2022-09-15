@@ -23,7 +23,7 @@ import { getTransactionReceipt } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_receipt';
 import { transactionReceiptSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransactionReceipt', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

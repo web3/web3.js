@@ -18,7 +18,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import Web3Eth from '../../src/index';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('web3_eth_methods_no_parameters', () => {
 	let web3Eth: Web3Eth;

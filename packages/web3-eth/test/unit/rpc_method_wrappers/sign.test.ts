@@ -22,7 +22,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 import { sign } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/sign';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('sign', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

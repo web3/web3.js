@@ -29,7 +29,7 @@ import {
 } from './fixtures/send_signed_transaction';
 import { transactionReceiptSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 jest.mock('../../../src/utils/watch_transaction_for_confirmations');
 
 describe('sendTransaction', () => {

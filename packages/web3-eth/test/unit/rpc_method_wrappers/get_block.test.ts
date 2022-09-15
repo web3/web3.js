@@ -24,7 +24,7 @@ import { getBlock } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, mockRpcResponseHydrated, testData } from './fixtures/get_block';
 import { blockSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getBlock', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

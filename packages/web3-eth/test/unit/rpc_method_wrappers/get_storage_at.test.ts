@@ -23,7 +23,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 import { getStorageAt } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_storage_at';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getStorageAt', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

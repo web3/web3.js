@@ -23,7 +23,7 @@ import { getLogs } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_logs';
 import { logSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getLogs', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;

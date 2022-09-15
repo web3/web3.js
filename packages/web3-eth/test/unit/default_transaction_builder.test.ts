@@ -32,7 +32,7 @@ import {
 } from '../../src/errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 const expectedNetworkId = '0x4';
 jest.mock('web3-net', () => ({

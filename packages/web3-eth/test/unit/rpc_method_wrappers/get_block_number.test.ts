@@ -21,7 +21,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { getBlockNumber } from '../../../src/rpc_method_wrappers';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getBlockNumber', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
