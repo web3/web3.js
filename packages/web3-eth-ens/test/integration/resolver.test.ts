@@ -34,15 +34,15 @@ import {
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
 import { ENSRegistryBytecode } from '../fixtures/ens/bytecode/ENSRegistryBytecode';
-import { DummyNameWrapperApi } from '../../src/abi/ens/DummyNameWrapper';
-import { DummyNameWrapperBytecode } from '../fixtures/ens/bytecode/DummyNameWrapperBytecode';
+import { NameWrapperApi } from '../fixtures/ens/abi/NameWrapper';
+import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecode';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
 describe('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
-	let nameWrapper: Contract<typeof DummyNameWrapperApi>;
+	let nameWrapper: Contract<typeof NameWrapperApi>;
 
 	let Resolver: Contract<typeof PublicResolverAbi>;
 
@@ -78,7 +78,7 @@ describe('ens', () => {
 			provider: getSystemTestProvider(),
 		});
 
-		const DummyNameWrapper = new Contract(DummyNameWrapperApi, undefined, {
+		const NameWrapper = new Contract(NameWrapperApi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
@@ -88,9 +88,7 @@ describe('ens', () => {
 
 		registry = await Registry.deploy({ data: ENSRegistryBytecode }).send(sendOptions);
 
-		nameWrapper = await DummyNameWrapper.deploy({ data: DummyNameWrapperBytecode }).send(
-			sendOptions,
-		);
+		nameWrapper = await NameWrapper.deploy({ data: NameWrapperBytecode }).send(sendOptions);
 
 		resolver = await Resolver.deploy({
 			data: PublicResolverBytecode,
