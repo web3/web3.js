@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { call } from '../../../src/rpc_methods';
 import { testData } from './fixtures/call';
 
 jest.mock('web3-validator');
@@ -49,7 +49,7 @@ describe('call', () => {
 	it.each(testData)(
 		'should call requestManager.send with call method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await call(requestManager, ...inputParameters);
+			await ethRpcMethods.call(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_call',
 				params: inputParameters,
@@ -62,7 +62,7 @@ describe('call', () => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await call(requestManager, ...inputParameters);
+			await ethRpcMethods.call(requestManager, ...inputParameters);
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const [__, expectedBlockNumber] = inputParameters;
 			expect(validatorSpy).toHaveBeenCalledWith(['blockNumberOrTag'], [expectedBlockNumber]);

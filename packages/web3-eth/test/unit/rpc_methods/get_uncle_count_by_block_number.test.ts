@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getUncleCountByBlockNumber } from '../../../src/rpc_methods';
 import { testData } from './fixtures/get_uncle_count_by_block_number';
 
 jest.mock('web3-validator');
@@ -49,7 +49,7 @@ describe('getUncleCountByBlockNumber', () => {
 	it.each(testData)(
 		'should call requestManager.send with getUncleCountByBlockNumber method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await getUncleCountByBlockNumber(requestManager, ...inputParameters);
+			await ethRpcMethods.getUncleCountByBlockNumber(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getUncleCountByBlockNumber',
 				params: inputParameters,
@@ -61,7 +61,7 @@ describe('getUncleCountByBlockNumber', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getUncleCountByBlockNumber(requestManager, ...inputParameters);
+			await ethRpcMethods.getUncleCountByBlockNumber(requestManager, ...inputParameters);
 			expect(validatorSpy).toHaveBeenCalledWith(['blockNumberOrTag'], inputParameters);
 		},
 	);

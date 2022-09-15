@@ -29,8 +29,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
-
-import { getPendingTransactions } from '../../../src/rpc_methods';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
 describe('getPendingTransactions', () => {
 	let requestManagerSendSpy: jest.Mock;
@@ -43,7 +42,7 @@ describe('getPendingTransactions', () => {
 	});
 
 	it('should call requestManager.send with getPendingTransactions method', async () => {
-		await getPendingTransactions(requestManager);
+		await ethRpcMethods.getPendingTransactions(requestManager);
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
 			method: 'eth_pendingTransactions',
 			params: [],

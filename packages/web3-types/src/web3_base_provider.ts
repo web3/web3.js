@@ -109,6 +109,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		callback: (err?: Error | null, response?: JsonRpcResponse<R>) => void,
 	) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		this.request(payload as Web3APIPayload<API, any>)
 			.then(response => {
 				callback(undefined, response);
@@ -123,6 +124,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	 * @param payload - Request Payload
 	 */
 	public async sendAsync<R = JsonRpcResult, P = unknown>(payload: JsonRpcPayload<P>) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return this.request(payload as Web3APIPayload<API, any>) as Promise<JsonRpcResponse<R>>;
 	}
 

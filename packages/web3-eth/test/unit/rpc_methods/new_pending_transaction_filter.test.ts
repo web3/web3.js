@@ -29,8 +29,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
-
-import { newPendingTransactionFilter } from '../../../src/rpc_methods';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
 describe('newPendingTransactionFilter', () => {
 	let requestManagerSendSpy: jest.Mock;
@@ -43,7 +42,7 @@ describe('newPendingTransactionFilter', () => {
 	});
 
 	it('should call requestManager.send with newPendingTransactionFilter method', async () => {
-		await newPendingTransactionFilter(requestManager);
+		await ethRpcMethods.newPendingTransactionFilter(requestManager);
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
 			method: 'eth_newPendingTransactionFilter',
 			params: [],

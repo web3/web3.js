@@ -31,8 +31,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { estimateGas } from '../../../src/rpc_methods';
 import { testData } from './fixtures/estimate_gas';
 
 jest.mock('web3-validator');
@@ -50,7 +50,7 @@ describe('estimateGas', () => {
 	it.each(testData)(
 		'should call requestManager.send with estimateGas method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await estimateGas(requestManager, ...inputParameters);
+			await ethRpcMethods.estimateGas(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_estimateGas',
 				params: inputParameters,
@@ -62,7 +62,7 @@ describe('estimateGas', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await estimateGas(requestManager, ...inputParameters);
+			await ethRpcMethods.estimateGas(requestManager, ...inputParameters);
 			const [__, expectedBlockNumber] = inputParameters;
 			expect(validatorSpy).toHaveBeenCalledWith(['blockNumberOrTag'], [expectedBlockNumber]);
 		},

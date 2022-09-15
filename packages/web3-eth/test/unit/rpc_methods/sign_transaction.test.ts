@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { signTransaction } from '../../../src/rpc_methods';
 import { testData } from './fixtures/sign_transaction';
 
 jest.mock('web3-validator');
@@ -49,7 +49,7 @@ describe('signTransaction', () => {
 	it.each(testData)(
 		'should call requestManager.send with signTransaction method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await signTransaction(requestManager, ...inputParameters);
+			await ethRpcMethods.signTransaction(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_signTransaction',
 				params: inputParameters,
@@ -62,7 +62,7 @@ describe('signTransaction', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await signTransaction(requestManager, ...inputParameters);
+			await ethRpcMethods.signTransaction(requestManager, ...inputParameters);
 			expect(validatorSpy).toHaveBeenCalledWith([''], inputParameters);
 		},
 	);

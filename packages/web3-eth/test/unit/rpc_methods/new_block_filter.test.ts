@@ -29,8 +29,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
-
-import { newBlockFilter } from '../../../src/rpc_methods';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
 describe('newBlockFilter', () => {
 	let requestManagerSendSpy: jest.Mock;
@@ -43,7 +42,7 @@ describe('newBlockFilter', () => {
 	});
 
 	it('should call requestManager.send with newBlockFilter method', async () => {
-		await newBlockFilter(requestManager);
+		await ethRpcMethods.newBlockFilter(requestManager);
 		expect(requestManagerSendSpy).toHaveBeenCalledWith({
 			method: 'eth_newBlockFilter',
 			params: [],

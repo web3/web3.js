@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getTransactionByBlockHashAndIndex } from '../../../src/rpc_methods';
 import { testData } from './fixtures/get_transaction_by_block_hash_and_index';
 
 jest.mock('web3-validator');
@@ -49,7 +49,10 @@ describe('getTransactionByBlockHashAndIndex', () => {
 	it.each(testData)(
 		'should call requestManager.send with getTransactionByBlockHashAndIndex method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await getTransactionByBlockHashAndIndex(requestManager, ...inputParameters);
+			await ethRpcMethods.getTransactionByBlockHashAndIndex(
+				requestManager,
+				...inputParameters,
+			);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getTransactionByBlockHashAndIndex',
 				params: inputParameters,
@@ -61,7 +64,10 @@ describe('getTransactionByBlockHashAndIndex', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getTransactionByBlockHashAndIndex(requestManager, ...inputParameters);
+			await ethRpcMethods.getTransactionByBlockHashAndIndex(
+				requestManager,
+				...inputParameters,
+			);
 			expect(validatorSpy).toHaveBeenCalledWith(['bytes32', 'hex'], inputParameters);
 		},
 	);

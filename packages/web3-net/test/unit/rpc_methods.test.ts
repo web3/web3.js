@@ -16,9 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3RequestManager } from 'web3-core';
-
-import { getId, getPeerCount, isListening } from '../../src/rpc_methods';
-import { Web3NetAPI } from '../../src/web3_net_api';
+import { Web3NetAPI } from 'web3-types';
+import { netRpcMethods } from 'web3-rpc-methods';
 
 describe('rpc_methods', () => {
 	const requestManagerSendSpy = jest.fn();
@@ -33,7 +32,7 @@ describe('rpc_methods', () => {
 
 	describe('should make call with expected parameters', () => {
 		it('getId', async () => {
-			await getId(requestManager);
+			await netRpcMethods.getId(requestManager);
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'net_version',
@@ -42,7 +41,7 @@ describe('rpc_methods', () => {
 		});
 
 		it('getPeerCount', async () => {
-			await getPeerCount(requestManager);
+			await netRpcMethods.getPeerCount(requestManager);
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'net_peerCount',
@@ -51,7 +50,7 @@ describe('rpc_methods', () => {
 		});
 
 		it('isListening', async () => {
-			await isListening(requestManager);
+			await netRpcMethods.isListening(requestManager);
 
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'net_listening',

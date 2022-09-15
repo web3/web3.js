@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getBlockByNumber } from '../../../src/rpc_methods';
 import { testData } from './fixtures/get_block_by_number';
 
 jest.mock('web3-validator');
@@ -49,7 +49,7 @@ describe('getBlockByNumber', () => {
 	it.each(testData)(
 		'should call requestManager.send with getBlockByNumber method and expect parameters\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
-			await getBlockByNumber(requestManager, ...inputParameters);
+			await ethRpcMethods.getBlockByNumber(requestManager, ...inputParameters);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
 				method: 'eth_getBlockByNumber',
 				params: inputParameters,
@@ -61,7 +61,7 @@ describe('getBlockByNumber', () => {
 		'should call validator.validate with expected params\n Title: %s\n Input parameters: %s',
 		async (_, inputParameters) => {
 			const validatorSpy = jest.spyOn(validator, 'validate');
-			await getBlockByNumber(requestManager, ...inputParameters);
+			await ethRpcMethods.getBlockByNumber(requestManager, ...inputParameters);
 			expect(validatorSpy).toHaveBeenCalledWith(
 				['blockNumberOrTag', 'bool'],
 				inputParameters,
