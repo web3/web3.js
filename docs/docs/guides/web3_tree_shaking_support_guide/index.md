@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 1
 sidebar_label: Web3.tree.shaking
 ---
 
@@ -40,4 +40,4 @@ If you need only few functions from `web3-utils`:
 import { numberToHex, hexToNumber } from 'web3-utils';
 ```
 
-Example app with tree shaking you can find here `packages/web3-app-example`
+Example app with tree shaking you can find here https://github.com/ChainSafe/web3js-example-react-app
