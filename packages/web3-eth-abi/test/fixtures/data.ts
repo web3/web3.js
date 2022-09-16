@@ -17,6 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { encodeParameters, decodeParameters } from '../../src/api/parameters_api';
 
+// Because Jest does not support BigInt (https://github.com/facebook/jest/issues/12827)
+// The BigInt values in this file is in a string format.
+// And the following override is to convert BigInt to a string inside the Unit Tests that uses this file,
+// 	i.e when serialization is needed there (because the values in this file is in a string format).
+(BigInt.prototype as any).toJSON = function () {
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+	return this.toString();
+};
+
 export const jsonInterfaceValidData: [any, string][] = [
 	[
 		{
