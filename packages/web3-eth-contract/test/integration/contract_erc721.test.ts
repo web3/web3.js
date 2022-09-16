@@ -111,7 +111,7 @@ describe('contract', () => {
 					).resolves.toEqual({
 						from: '0x0000000000000000000000000000000000000000',
 						to: toUpperCaseHex(acc2.address),
-						tokenId: '0',
+						tokenId: BigInt(0),
 					});
 				});
 			});

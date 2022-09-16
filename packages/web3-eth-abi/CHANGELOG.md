@@ -34,3 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [Unreleased]
+
+### Fixed
+
+#### web3-eth-abi
+
+-   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`.
+-   If an error happens when decoding a value, preserve that exception at `innerError` inside the `AbiError`.
