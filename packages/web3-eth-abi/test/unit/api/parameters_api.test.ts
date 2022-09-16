@@ -32,14 +32,15 @@ describe('parameters_api', () => {
 			it.each(validEncodeParametersData)(
 				'%#: should pass for valid values: %j',
 				({ input: [abi, params], output }) => {
-					expect(encodeParameters(abi, params)).toEqual(output);
+					const expected = encodeParameters(abi, params);
+					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
 				},
 			);
 		});
 
 		describe('invalid data', () => {
 			it.each(inValidEncodeParametersData)(
-				'%#: should pass for valid values: %j',
+				'%#: should not pass for invalid values: %j',
 				({ input: [abi, params], output }) => {
 					expect(() => encodeParameters(abi, params)).toThrow(output);
 				},
@@ -52,7 +53,8 @@ describe('parameters_api', () => {
 			it.each(validEncodeDoesNotMutateData)(
 				'%#: should pass for valid values: %j',
 				({ input: [abi, params], output, expectedInput }) => {
-					expect(encodeParameters(abi, params)).toEqual(output);
+					const expected = encodeParameters(abi, params);
+					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
 					// check that params has not been mutated
 					expect(JSON.parse(JSON.stringify(params))).toEqual(
 						JSON.parse(JSON.stringify(expectedInput)),
@@ -90,7 +92,7 @@ describe('parameters_api', () => {
 
 		describe('invalid data', () => {
 			it.each(inValidDecodeParametersData)(
-				'%#: should pass for valid values: %j',
+				'%#: should not pass for invalid values: %j',
 				({ input: [abi, bytes], output }) => {
 					expect(() => decodeParameters(abi, bytes)).toThrow(output);
 				},
@@ -105,9 +107,9 @@ describe('parameters_api', () => {
 				({ input: [abi, params], output, outputResult }) => {
 					const rwAbi = abi as AbiInput[];
 					const encodedBytes = encodeParameters(abi, params);
-					expect(encodedBytes).toEqual(output);
+					expect(JSON.parse(JSON.stringify(encodedBytes))).toEqual(output);
 					const decodedBytes = decodeParameters(rwAbi, encodedBytes);
-					expect(decodedBytes).toEqual(outputResult);
+					expect(JSON.parse(JSON.stringify(decodedBytes))).toEqual(outputResult);
 				},
 			);
 		});
