@@ -25,7 +25,7 @@ import {
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
-const initialSupply = '5000000000';
+const initialSupply = BigInt('5000000000');
 
 describe('contract', () => {
 	describe('erc20', () => {
@@ -33,7 +33,7 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 
-		beforeAll(async () => {
+		beforeAll(() => {
 			contract = new Contract(ERC20TokenAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -69,7 +69,7 @@ describe('contract', () => {
 				});
 
 				it('should return the decimals', async () => {
-					expect(await contractDeployed.methods.decimals().call()).toBe('18');
+					expect(await contractDeployed.methods.decimals().call()).toBe(BigInt(18));
 				});
 
 				it('should return total supply', async () => {
@@ -78,10 +78,11 @@ describe('contract', () => {
 
 				it('should transfer tokens', async () => {
 					const acc2 = await createTempAccount();
-					await contractDeployed.methods.transfer(acc2.address, '10').send(sendOptions);
+					const value = BigInt(10);
+					await contractDeployed.methods.transfer(acc2.address, value).send(sendOptions);
 
 					expect(await contractDeployed.methods.balanceOf(acc2.address).call()).toBe(
-						'10',
+						value,
 					);
 				});
 			});
@@ -107,7 +108,7 @@ describe('contract', () => {
 					).resolves.toEqual({
 						from: toUpperCaseHex(sendOptions.from as string),
 						to: toUpperCaseHex(acc2.address),
-						value: '100',
+						value: BigInt(100),
 					});
 				});
 			});
