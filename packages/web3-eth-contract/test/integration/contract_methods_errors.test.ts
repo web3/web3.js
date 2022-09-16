@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Contract } from '../../src';
-import { Eip838Error } from '../../src/errors';
+import { Web3ContractExecutionError } from '../../src/errors';
 import { createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract errors', () => {
@@ -54,7 +54,7 @@ describe('contract errors', () => {
 			const contract = new Contract(abi, addr);
 			contract.setProvider('https://ropsten.infura.io/v3/49a0efa3aaee4fd99797bfa94d8ce2f1');
 
-			let error: Eip838Error | undefined;
+			let error: Web3ContractExecutionError | undefined;
 			try {
 				await contract.methods.testError1(false, addr, 42).call(sendOptions);
 
@@ -64,10 +64,10 @@ describe('contract errors', () => {
 			}
 
 			expect(error).toBeDefined();
-			expect(error).toBeInstanceOf(Eip838Error);
+			expect(error).toBeInstanceOf(Web3ContractExecutionError);
 
 			// TODO: do we need something like the following?
-			// expect(error.code).toEqual('CALL_EXCEPTION');
+			// expect(error.code).toEqual(some number or ERR_CONTRACT_EXECUTION_REVERTED);
 			expect(error?.errorArgs && error?.errorArgs[0]).toEqual(addr);
 			expect(error?.errorArgs?.addr).toEqual(addr);
 			expect(error?.errorArgs && error?.errorArgs[1]).toEqual(BigInt(42));

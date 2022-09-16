@@ -16,9 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
-import { JsonRpcResponse, JsonRpcResponseWithError } from 'web3-types';
+import { JsonRpcError, JsonRpcResponse, JsonRpcResponseWithError } from 'web3-types';
 import { Web3Error } from '../web3_error_base';
-import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes';
+import {
+	ERR_CONTRACT_EXECUTION_REVERTED,
+	ERR_INVALID_RESPONSE,
+	ERR_RESPONSE,
+} from '../error_codes';
 
 // To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
 const isResponseWithError = <Error = unknown, Result = unknown>(
@@ -65,9 +69,22 @@ export class ResponseError<ErrorType = unknown> extends Web3Error {
 export class InvalidResponseError<ErrorType = unknown> extends ResponseError<ErrorType> {
 	public constructor(result: JsonRpcResponse<unknown, ErrorType>) {
 		super(result);
-		if (!this.message || this.message === '') {
-			this.message = `Invalid JSON RPC response: ${JSON.stringify(result)}`;
+
+		let errorOrErrors: JsonRpcError | JsonRpcError[] | undefined;
+		if (`error` in result) {
+			errorOrErrors = result.error as JsonRpcError;
+		} else if (result instanceof Array) {
+			errorOrErrors = result.map(r => r.error) as JsonRpcError[];
 		}
-		this.code = ERR_INVALID_RESPONSE;
+
+		if ((errorOrErrors as { message: string })?.message === 'execution reverted') {
+			// This message means that there was an error while executing the code of the smart contract
+			// However, more processing will happen at a higher level to decode the error data,
+			//	according to the Error ABI, if it was available as of EIP-838.
+			this.code = ERR_CONTRACT_EXECUTION_REVERTED;
+		} else {
+			this.code = ERR_INVALID_RESPONSE;
+		}
+		this.innerError = errorOrErrors as Error | Error[] | undefined;
 	}
 }

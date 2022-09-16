@@ -31,8 +31,11 @@ export class Web3ContractError extends Web3Error {
 	}
 }
 
-export class Eip838Error extends Web3ContractError {
-	// public code: string; // TODO: check if there is a need of overriding the `code` into a string
+/**
+ * Used when an error is raised while executing a function inside a smart contract.
+ * The data is expected to be encoded according to EIP-848.
+ */
+export class Web3ContractExecutionError extends Web3ContractError {
 	public data: HexString;
 	public errorName?: string;
 	public errorSignature?: string;
@@ -47,7 +50,7 @@ export class Eip838Error extends Web3ContractError {
 		errorArgs?: { [K in string]: unknown },
 	) {
 		super(message);
-		this.code = code;
+		this.code = code; // TODO: revisit to check if passing this code is better or using ERR_CONTRACT_EXECUTION_REVERTED
 		this.data = data;
 		this.errorName = errorName;
 		this.errorSignature = errorSignature;

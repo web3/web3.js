@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
-import { SubscriptionError } from 'web3-errors';
+import { SubscriptionError, Web3Error, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
 import {
 	call,
 	estimateGas,
@@ -39,6 +39,7 @@ import {
 	encodeEventSignature,
 	encodeFunctionSignature,
 	FilterAbis,
+	isAbiErrorFragment,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
@@ -68,7 +69,7 @@ import {
 	decodeMethodReturn,
 	encodeEventABI,
 	encodeMethodABI,
-	throwDecodedError,
+	decodeError,
 } from './encoding';
 import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
@@ -872,11 +873,11 @@ export class Contract<Abi extends ContractAbi>
 
 		let result: ContractAbi = [];
 
-		const abisOfFunctions = abis.filter(abi => abi.type !== 'error');
-		const abisOfErrors = abis.filter(
-			abi => abi.type === 'error',
+		const functionsAbi = abis.filter(abi => abi.type !== 'error');
+		const errorsAbi = abis.filter(abi =>
+			isAbiErrorFragment(abi),
 		) as unknown as AbiErrorFragment[];
-		for (const a of abisOfFunctions) {
+		for (const a of functionsAbi) {
 			const abi: Mutable<AbiFragment & { signature: HexString }> = {
 				...a,
 				signature: '',
@@ -898,13 +899,13 @@ export class Contract<Abi extends ContractAbi>
 				if (methodName in this._functions) {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi, abisOfErrors),
+						method: this._createContractMethod(abi, errorsAbi),
 						cascadeFunction: this._functions[methodName].method,
 					};
 				} else {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi, abisOfErrors),
+						method: this._createContractMethod(abi, errorsAbi),
 					};
 				}
 
@@ -1020,8 +1021,10 @@ export class Contract<Abi extends ContractAbi>
 			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
 			return decodeMethodReturn(abi, result);
 		} catch (error: unknown) {
-			// decode abi error inputs for EIP-838
-			return throwDecodedError(errorsAbi, error as Error);
+			if ((error as Web3Error).code === ERR_CONTRACT_EXECUTION_REVERTED) {
+				// this will re-throw the error after decoding the ABI error inputs according to EIP-838
+				throw decodeError(errorsAbi, error as Web3Error);
+			} else throw error;
 		}
 	}
 

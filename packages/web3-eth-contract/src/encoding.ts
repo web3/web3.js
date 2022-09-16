@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // TODO: possibly rewrite those method and then also delete this dependency from package.json
 import { arrayify, hexlify } from '@ethersproject/bytes';
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish, sha3Raw } from 'web3-utils';
+import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
 
 import { LogsInput, BlockNumberOrTag, Filter, HexString, Topic, Numbers } from 'web3-types';
 
@@ -29,6 +29,7 @@ import {
 	AbiFunctionFragment,
 	decodeLog,
 	decodeParameters,
+	encodeErrorSignature,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
@@ -39,7 +40,8 @@ import {
 
 import { blockSchema, logSchema } from 'web3-eth/dist/schemas';
 
-import { Eip838Error, Web3ContractError } from './errors';
+import { Web3Error } from 'web3-errors';
+import { Web3ContractExecutionError, Web3ContractError } from './errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
 
@@ -238,45 +240,40 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	return result;
 };
 
-function getErrorSignature(abi: AbiErrorFragment) {
-	return `${abi.name}(${abi.inputs?.map(a => a.type).join(',') ?? ''})`;
-}
-
-export const throwDecodedError = (
-	abisOfErrors: AbiErrorFragment[],
-	error: { code: number; message: string; data: HexString } | Error,
-) => {
-	if (typeof error === 'object' && error !== undefined && 'data' in error) {
+export const decodeError = (errorsAbi: AbiErrorFragment[], error: Web3Error): Web3Error => {
+	if (error.innerError !== undefined && 'data' in error.innerError) {
+		const executionError = error.innerError as {
+			code: number;
+			message: string;
+			data: HexString;
+		};
 		let errorArgs;
 		let errorName;
 		let errorSignature;
 		try {
-			const bytes = arrayify(error.data);
+			const bytes = arrayify(executionError.data);
 			const errorData = bytes.slice(4);
 
-			const errorSha = error.data.slice(0, 10);
-			const errorAbi = abisOfErrors.find(abi =>
-				sha3Raw(getErrorSignature(abi)).startsWith(errorSha),
-			);
+			const errorSha = executionError.data.slice(0, 10);
+			const errorAbi = errorsAbi.find(abi => encodeErrorSignature(abi).startsWith(errorSha));
 
 			if (errorAbi?.inputs) {
 				errorName = errorAbi.name;
-				errorSignature = getErrorSignature(errorAbi);
+				errorSignature = jsonInterfaceMethodToString(errorAbi);
 				errorArgs = decodeParameters([...errorAbi.inputs], hexlify(errorData)); // decode abi.input for EIP-838
 			}
 		} catch (err) {
 			console.error(err);
 		}
 
-		throw new Eip838Error(
-			error.code,
-			error.message,
-			error.data,
+		return new Web3ContractExecutionError(
+			executionError.code,
+			executionError.message,
+			executionError.data,
 			errorName,
 			errorSignature,
 			errorArgs,
 		);
-	} else {
-		throw error;
 	}
+	return error;
 };
