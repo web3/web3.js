@@ -28,7 +28,7 @@ import { ResolverMethodMissingError } from 'web3-errors';
 import { Address } from 'web3-types';
 import { interfaceIds, methodsInInterface } from './config';
 import { Registry } from './registry';
-import { RESOLVER } from './abi/resolver';
+import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { namehash } from './utils';
 
 //  Default public resolver
@@ -49,7 +49,7 @@ export class Resolver {
 	//  https://eips.ethereum.org/EIPS/eip-165
 	// eslint-disable-next-line class-methods-use-this
 	public async checkInterfaceSupport(
-		resolverContract: Contract<typeof RESOLVER>,
+		resolverContract: Contract<typeof PublicResolverAbi>,
 		methodName: string,
 	) {
 		if (isNullish(interfaceIds[methodName]))

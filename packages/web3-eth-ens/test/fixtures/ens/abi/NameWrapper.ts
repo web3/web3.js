@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,22 +14,25 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { ENSRegistryAbi as Registry } from '../../src/abi/ens/ENSRegistry';
-import ReverseRegistrar from '../../src/abi/reverse_registrar';
-import * as ENSRegistry from '../fixtures/ens/ENSRegistry.json';
-import * as ENSReverseRegistrar from '../fixtures/ens/reverse_registrar.json';
-
-describe('ABI', () => {
-	describe('Registry', () => {
-		it('should have valid ABI', () => {
-			expect(ENSRegistry.abi).toEqual(Registry);
-		});
-	});
-
-	describe('ReverseRegistrar', () => {
-		it('should have valid ABI', () => {
-			expect(JSON.parse(ENSReverseRegistrar.result)).toEqual(ReverseRegistrar);
-		});
-	});
-});
+// https://github.com/ensdomains/ens-contracts/blob/master/contracts/resolvers/mocks/DummyNameWrapper.sol
+export const NameWrapperAbi = [
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: '',
+				type: 'uint256',
+			},
+		],
+		name: 'ownerOf',
+		outputs: [
+			{
+				internalType: 'address',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+] as const;
