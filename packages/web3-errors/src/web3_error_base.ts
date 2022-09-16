@@ -53,7 +53,12 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	}
 
 	public toJSON() {
-		return { name: this.name, code: this.code, message: this.message };
+		return {
+			name: this.name,
+			code: this.code,
+			message: this.message,
+			innerError: this.innerError,
+		};
 	}
 }
 
