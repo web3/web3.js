@@ -29,7 +29,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
-import { ethRpcMethods } from 'web3-rpc-methods';
+
+import { ethRpcMethods } from '../../../src/index';
 
 describe('getChainId', () => {
 	let requestManagerSendSpy: jest.Mock;

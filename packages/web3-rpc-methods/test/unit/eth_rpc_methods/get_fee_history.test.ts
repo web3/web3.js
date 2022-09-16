@@ -30,8 +30,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // */
 import { Web3RequestManager } from 'web3-core';
 import { validator } from 'web3-validator';
-import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { ethRpcMethods } from '../../../src/index';
 import { testData } from './fixtures/get_fee_history';
 
 jest.mock('web3-validator');
