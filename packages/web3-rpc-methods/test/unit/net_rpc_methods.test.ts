@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -17,7 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3RequestManager } from 'web3-core';
 import { Web3NetAPI } from 'web3-types';
-import { netRpcMethods } from 'web3-rpc-methods';
+
+import { netRpcMethods } from '../../src/index';
 
 describe('rpc_methods', () => {
 	const requestManagerSendSpy = jest.fn();
