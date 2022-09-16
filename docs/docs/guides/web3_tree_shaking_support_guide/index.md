@@ -5,8 +5,6 @@ sidebar_label: Web3.tree.shaking
 
 # Web3 Tree shaking Support Guide
 
-## Setup tree shaking
-
 1. Use the `production` mode configuration option to enable various optimizations including minification and tree shaking. Set to your webpack.config:
 
 ```js
@@ -21,7 +19,7 @@ sidebar_label: Web3.tree.shaking
 
 **_NOTE:_** For further information about `sideEffects` see: https://webpack.js.org/guides/tree-shaking/
 
-3. Set your tsconfig module to `ES2015` or greater to support `imports`, because tree shaking does not work with `require`:
+3. Set your tsconfig module to `ES2015` or higher to support `imports`, because tree shaking does not work with `require`:
 
 ```json
 "module": "ES2015"
