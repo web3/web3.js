@@ -23,9 +23,11 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	public readonly name: string;
 	public abstract readonly code: number;
 	public stack: string | undefined;
+	public innerError: Error | undefined;
 
-	public constructor(msg?: string) {
+	public constructor(msg?: string, innerError?: Error) {
 		super(msg);
+		this.innerError = innerError;
 		this.name = this.constructor.name;
 
 		if (typeof Error.captureStackTrace === 'function') {
@@ -51,7 +53,12 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	}
 
 	public toJSON() {
-		return { name: this.name, code: this.code, message: this.message };
+		return {
+			name: this.name,
+			code: this.code,
+			message: this.message,
+			innerError: this.innerError,
+		};
 	}
 }
 

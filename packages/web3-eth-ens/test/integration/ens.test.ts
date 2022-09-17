@@ -212,7 +212,7 @@ describe('ens', () => {
 	it('should get TTL', async () => {
 		const TTL = await ens.getTTL(web3jsName);
 
-		expect(TTL).toBe('0');
+		expect(TTL).toBe(BigInt(0));
 	});
 
 	it('should set TTL', async () => {
@@ -220,7 +220,7 @@ describe('ens', () => {
 
 		const ttlResult = await ens.getTTL(web3jsName);
 
-		expect(ttlResult).toBe(ttl.toString());
+		expect(ttlResult).toBe(BigInt(ttl));
 	});
 
 	it('should set subnode owner', async () => {
@@ -245,7 +245,7 @@ describe('ens', () => {
 
 		const owner = await ens.getOwner(fullDomain);
 
-		expect(ttlResult).toBe(ttl.toString());
+		expect(ttlResult).toBe(BigInt(ttl));
 		expect(owner).toBe(toChecksumAddress(accountOne));
 	});
 
