@@ -173,6 +173,10 @@ const transactionHash = receipt.transactionHash;
 
 ## [Unreleased]
 
+### Added
+
+-   Decoding error data, using Error ABI if available, according to EIP-838.
+
 ### Fixed
 
 -   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`.

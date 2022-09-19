@@ -736,9 +736,22 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3-core
+
+-   If the response error was `execution reverted`, raise `ContractExecutionError` and pass the response error to it in order to be set as `innerError` (this innerError will be decoded at web3-eth-contract if its ABI was provided according to EIP-838).
+
 #### web3-error
 
--   Add optional `innerError` property to the abstract class `Web3Error`.
+-   Add optional `innerError` property to the abstract class `Web3Error`. This `innerError` could be `Error`, `Error[]` or `undefined`.
+
+#### web3-eth-abi
+
+-   If an error happens when decoding a value, preserve that exception at `innerError` inside the `AbiError`.
+-   Add basic functionality that is used, by `web3-eth-contract`, when decoding error data according to EIP-838.
+
+#### web3-eth-contract
+
+-   Decoding error data, using Error ABI if available, according to EIP-838
 
 ### Fixed
 
@@ -749,4 +762,3 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-abi
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`.
--   If an error happens when decoding a value, preserve that exception at `innerError` inside the `AbiError`.
