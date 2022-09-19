@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
-import { SubscriptionError, Web3Error, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
+import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
 	call,
 	estimateGas,
@@ -69,9 +69,8 @@ import {
 	decodeMethodReturn,
 	encodeEventABI,
 	encodeMethodABI,
-	decodeError,
+	decodeErrorData,
 } from './encoding';
-import { Web3ContractError } from './errors';
 import { LogsSubscription } from './log_subscription';
 import {
 	ContractAbiWithSignature,
@@ -1021,10 +1020,11 @@ export class Contract<Abi extends ContractAbi>
 			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
 			return decodeMethodReturn(abi, result);
 		} catch (error: unknown) {
-			if ((error as Web3Error).code === ERR_CONTRACT_EXECUTION_REVERTED) {
-				// this will re-throw the error after decoding the ABI error inputs according to EIP-838
-				throw decodeError(errorsAbi, error as Web3Error);
-			} else throw error;
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+			throw error;
 		}
 	}
 

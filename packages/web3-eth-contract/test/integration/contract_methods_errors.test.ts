@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ContractExecutionError, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
 import { Contract } from '../../src';
-import { Web3ContractExecutionError } from '../../src/errors';
 import { createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract errors', () => {
@@ -54,7 +54,7 @@ describe('contract errors', () => {
 			const contract = new Contract(abi, addr);
 			contract.setProvider('https://ropsten.infura.io/v3/49a0efa3aaee4fd99797bfa94d8ce2f1');
 
-			let error: Web3ContractExecutionError | undefined;
+			let error: ContractExecutionError | undefined;
 			try {
 				await contract.methods.testError1(false, addr, 42).call(sendOptions);
 
@@ -64,16 +64,17 @@ describe('contract errors', () => {
 			}
 
 			expect(error).toBeDefined();
-			expect(error).toBeInstanceOf(Web3ContractExecutionError);
 
-			// TODO: do we need something like the following?
-			// expect(error.code).toEqual(some number or ERR_CONTRACT_EXECUTION_REVERTED);
-			expect(error?.errorArgs && error?.errorArgs[0]).toEqual(addr);
-			expect(error?.errorArgs?.addr).toEqual(addr);
-			expect(error?.errorArgs && error?.errorArgs[1]).toEqual(BigInt(42));
-			expect(error?.errorArgs?.value).toEqual(BigInt(42));
-			expect(error?.errorName).toBe('TestError1');
-			expect(error?.errorSignature).toBe('TestError1(address,uint256)');
+			expect(error?.code).toEqual(ERR_CONTRACT_EXECUTION_REVERTED);
+			expect(error?.innerError?.code).toBe(3);
+			expect(error?.innerError?.errorArgs && error?.innerError?.errorArgs[0]).toEqual(addr);
+			expect(error?.innerError?.errorArgs?.addr).toEqual(addr);
+			expect(error?.innerError?.errorArgs && error?.innerError?.errorArgs[1]).toEqual(
+				BigInt(42),
+			);
+			expect(error?.innerError?.errorArgs?.value).toEqual(BigInt(42));
+			expect(error?.innerError?.errorName).toBe('TestError1');
+			expect(error?.innerError?.errorSignature).toBe('TestError1(address,uint256)');
 		});
 	});
 });
