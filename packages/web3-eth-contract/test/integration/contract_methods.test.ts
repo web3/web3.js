@@ -46,7 +46,7 @@ describe('contract', () => {
 				const result = await contractDeployed.methods.getValues().call();
 
 				expect(result).toEqual({
-					'0': '10',
+					'0': BigInt(10),
 					'1': 'string init value',
 					'2': false,
 					__length__: 3,
