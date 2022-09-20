@@ -173,6 +173,9 @@ export default class IpcProvider<
 			await this.waitForConnection();
 		}
 
+		console.warn('IpcProvider->connectionStatus', this.getStatus());
+		console.warn('IpcProvider->connectionStatus: stack', new Error().stack);
+
 		try {
 			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 			this._requestQueue.set(requestId, defPromise);
