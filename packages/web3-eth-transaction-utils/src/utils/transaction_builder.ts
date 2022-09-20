@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import {
 	DEFAULT_RETURN_FORMAT,
 	ETH_DATA_FORMAT,
@@ -27,25 +26,25 @@ import {
 	EthExecutionAPI,
 	Address,
 	HexString,
+	privateKeyToAddress,
 	ValidChains,
 	Hardfork,
 	Transaction,
 	TransactionWithLocalWalletIndex,
 	Web3NetAPI,
+	Web3EthExecutionAPI,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
-import { privateKeyToAddress } from 'web3-eth-accounts';
-import { getId } from 'web3-net';
 import { isNullish, isNumber } from 'web3-validator';
+import { ethRpcMethods, netRpcMethods } from 'web3-rpc-methods';
+
+import { NUMBER_DATA_FORMAT } from '../constants';
 import {
 	InvalidTransactionWithSender,
 	LocalWalletNotAvailableError,
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
-} from 'web3-errors';
-import { NUMBER_DATA_FORMAT } from '../constants';
-// eslint-disable-next-line import/no-cycle
-import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
+} from '../errors';
 import { detectTransactionType } from './detect_transaction_type';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './get_transaction_gas_pricing';
@@ -55,7 +54,7 @@ import { InternalTransaction } from '../types';
 export const getTransactionFromAttr = (
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction?: Transaction | TransactionWithLocalWalletIndex,
-	privateKey?: HexString | Buffer,
+	privateKey?: { privateKey: HexString | Buffer; privateKeyToAddress: privateKeyToAddress },
 ) => {
 	if (transaction?.from !== undefined) {
 		if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
@@ -78,7 +77,7 @@ export const getTransactionFromAttr = (
 			throw new InvalidTransactionWithSender(transaction.from);
 		}
 	}
-	if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
+	if (!isNullish(privateKey)) return privateKey.privateKeyToAddress(privateKey.privateKey);
 	if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
 
 	return undefined;
@@ -94,7 +93,15 @@ export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 		throw new UnableToPopulateNonceError();
 	}
 
-	return getTransactionCount(web3Context, address, web3Context.defaultBlock, returnFormat);
+	return format(
+		{ eth: 'uint' },
+		await ethRpcMethods.getTransactionCount(
+			web3Context.requestManager,
+			address,
+			web3Context.defaultBlock,
+		),
+		returnFormat,
+	);
 };
 
 export const getTransactionType = (
@@ -112,11 +119,11 @@ export const getTransactionType = (
 
 // Keep in mind that the order the properties of populateTransaction get populated matters
 // as some of the properties are dependent on others
-export async function defaultTransactionBuilder<ReturnType = Record<string, unknown>>(options: {
-	transaction: Record<string, unknown>;
-	web3Context: Web3Context<EthExecutionAPI & Web3NetAPI>;
-	privateKey?: HexString | Buffer;
-}): Promise<ReturnType> {
+export async function defaultTransactionBuilder(options: {
+	transaction: Transaction;
+	web3Context: Web3Context<Web3EthExecutionAPI & Web3NetAPI>;
+	privateKey?: { privateKey: HexString | Buffer; privateKeyToAddress: privateKeyToAddress };
+}): Promise<Transaction> {
 	// let populatedTransaction = { ...options.transaction } as unknown as InternalTransaction;
 	let populatedTransaction = format(
 		transactionSchema,
@@ -174,13 +181,21 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		isNullish(populatedTransaction.chainId) &&
 		isNullish(populatedTransaction.common?.customChain.chainId)
 	) {
-		populatedTransaction.chainId = await getChainId(options.web3Context, ETH_DATA_FORMAT);
+		populatedTransaction.chainId = format(
+			{ eth: 'uint' },
+			await ethRpcMethods.getChainId(options.web3Context.requestManager),
+			ETH_DATA_FORMAT,
+		);
 	}
 
 	if (isNullish(populatedTransaction.networkId)) {
 		populatedTransaction.networkId =
 			(options.web3Context.defaultNetworkId as string) ??
-			(await getId(options.web3Context, ETH_DATA_FORMAT));
+			format(
+				{ eth: 'uint' },
+				await netRpcMethods.getId(options.web3Context.requestManager),
+				ETH_DATA_FORMAT,
+			);
 	}
 
 	if (isNullish(populatedTransaction.gasLimit) && !isNullish(populatedTransaction.gas)) {
@@ -205,16 +220,16 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 		)),
 	};
 
-	return populatedTransaction as ReturnType;
+	return populatedTransaction;
 }
 
-export const transactionBuilder = async <ReturnType = Record<string, unknown>>(options: {
+export const transactionBuilder = async (options: {
 	transaction: Transaction;
 	web3Context: Web3Context<EthExecutionAPI>;
-	privateKey?: HexString | Buffer;
+	privateKey?: { privateKey: HexString | Buffer; privateKeyToAddress: privateKeyToAddress };
 	// eslint-disable-next-line @typescript-eslint/require-await
 }) =>
 	(options.web3Context.transactionBuilder ?? defaultTransactionBuilder)({
 		...options,
-		transaction: options.transaction as unknown as Record<string, unknown>,
-	}) as unknown as ReturnType;
+		transaction: options.transaction,
+	});

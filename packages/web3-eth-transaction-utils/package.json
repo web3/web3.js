@@ -1,7 +1,7 @@
 {
-	"name": "web3-eth",
-	"version": "4.0.1-alpha.0",
-	"description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
+	"name": "web3-eth-transaction-utils",
+	"version": "0.1.0-alpha.0",
+	"description": "Utility package for Ethereum transactions for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
@@ -22,10 +22,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
-		"test:e2e:electron": "npx cypress run --headless --browser electron",
-		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
-		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
+		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
@@ -39,22 +36,14 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4",
-		"web3-eth-abi": "^4.0.1-alpha.0",
-		"web3-eth-accounts": "^4.0.1-alpha.0",
-		"web3-providers-http": "^4.0.1-alpha.0"
+		"typescript": "^4.7.4"
 	},
 	"dependencies": {
 		"@ethereumjs/common": "^2.6.5",
 		"@ethereumjs/tx": "^3.5.2",
-		"setimmediate": "^1.0.5",
 		"web3-core": "^4.0.1-alpha.0",
 		"web3-errors": "^0.1.1-alpha.0",
-		"web3-eth-accounts": "^4.0.1-alpha.0",
-		"web3-eth-transaction-utils": "0.1.0-alpha.0",
-		"web3-net": "^4.0.1-alpha.0",
-		"web3-providers-ws": "^4.0.1-alpha.0",
-		"web3-rpc-methods": "^0.1.0-alpha.0",
+		"web3-rpc-methods": "0.1.0-alpha.0",
 		"web3-types": "^0.1.1-alpha.0",
 		"web3-utils": "^4.0.1-alpha.0",
 		"web3-validator": "^0.1.1-alpha.0"

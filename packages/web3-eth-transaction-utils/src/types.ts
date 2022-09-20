@@ -14,19 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Transaction } from 'web3-types';
+import { ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
-export * from './error_types';
-export * from './apis/eth_execution_api';
-export * from './apis/web3_eth_execution_api';
-export * from './apis/web3_net_api';
-export * from './apis/eth_personal_api';
-export * from './eth_types';
-export * from './json_rpc_types';
-export * from './primitives_types';
-export * from './utility_types';
-export * from './web3_api_types';
-export * from './web3_base_provider';
-export * from './web3_base_wallet';
-export * from './web3_deferred_promise_type';
-export * from './private_key_to_address';
-export * from './web3_eth_schemas';
+export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;

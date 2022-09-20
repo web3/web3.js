@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,22 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import {
-	AccessList,
-	AccessListEntry,
-	BaseTransactionAPI,
-	Transaction1559UnsignedAPI,
-	Transaction2930UnsignedAPI,
-	TransactionCall,
-	TransactionLegacyUnsignedAPI,
-	Transaction,
-	TransactionWithSenderAPI,
-} from 'web3-types';
+import { isNullish, isUInt } from 'web3-validator';
+import { Transaction } from 'web3-types';
 import { ETH_DATA_FORMAT } from 'web3-utils';
-import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
-import { formatTransaction } from 'web3-eth-transaction-utils';
 
+import { InternalTransaction } from '../types';
 import {
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
@@ -37,109 +26,15 @@ import {
 	InvalidGasOrGasPrice,
 	InvalidMaxPriorityFeePerGasOrMaxFeePerGas,
 	InvalidNonceOrChainIdError,
-	InvalidTransactionCall,
 	InvalidTransactionObjectError,
-	InvalidTransactionWithSender,
 	MissingChainOrHardforkError,
 	MissingCustomChainError,
 	MissingCustomChainIdError,
 	MissingGasError,
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
-} from 'web3-errors';
-import { InternalTransaction } from './types';
-
-export function isBaseTransaction(value: BaseTransactionAPI): boolean {
-	if (!isNullish(value.to) && !isAddress(value.to)) return false;
-	if (!isHexStrict(value.type) && !isNullish(value.type) && value.type.length !== 2) return false;
-	if (!isHexStrict(value.nonce)) return false;
-	if (!isHexStrict(value.gas)) return false;
-	if (!isHexStrict(value.value)) return false;
-	if (!isHexStrict(value.input)) return false;
-	if (value.chainId && !isHexStrict(value.chainId)) return false;
-
-	return true;
-}
-
-export function isAccessListEntry(value: AccessListEntry): boolean {
-	if (!isNullish(value.address) && !isAddress(value.address)) return false;
-	if (
-		!isNullish(value.storageKeys) &&
-		!value.storageKeys.every(storageKey => isHexString32Bytes(storageKey))
-	)
-		return false;
-
-	return true;
-}
-
-export function isAccessList(value: AccessList): boolean {
-	if (
-		!Array.isArray(value) ||
-		!value.every(accessListEntry => isAccessListEntry(accessListEntry))
-	)
-		return false;
-
-	return true;
-}
-
-export function isTransaction1559Unsigned(value: Transaction1559UnsignedAPI): boolean {
-	if (!isBaseTransaction(value)) return false;
-	if (!isHexStrict(value.maxFeePerGas)) return false;
-	if (!isHexStrict(value.maxPriorityFeePerGas)) return false;
-	if (!isAccessList(value.accessList)) return false;
-
-	return true;
-}
-
-export function isTransaction2930Unsigned(value: Transaction2930UnsignedAPI): boolean {
-	if (!isBaseTransaction(value)) return false;
-	if (!isHexStrict(value.gasPrice)) return false;
-	if (!isAccessList(value.accessList)) return false;
-
-	return true;
-}
-
-export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsignedAPI): boolean {
-	if (!isBaseTransaction(value)) return false;
-	if (!isHexStrict(value.gasPrice)) return false;
-
-	return true;
-}
-
-export function isTransactionWithSender(value: TransactionWithSenderAPI): boolean {
-	if (!isAddress(value.from)) return false;
-	if (!isBaseTransaction(value)) return false;
-	if (
-		!isTransaction1559Unsigned(value as Transaction1559UnsignedAPI) &&
-		!isTransaction2930Unsigned(value as Transaction2930UnsignedAPI) &&
-		!isTransactionLegacyUnsigned(value as TransactionLegacyUnsignedAPI)
-	)
-		return false;
-
-	return true;
-}
-
-export function validateTransactionWithSender(value: TransactionWithSenderAPI) {
-	if (!isTransactionWithSender(value)) throw new InvalidTransactionWithSender(value);
-}
-
-export function isTransactionCall(value: TransactionCall): boolean {
-	if (!isNullish(value.from) && !isAddress(value.from)) return false;
-	if (!isAddress(value.to)) return false;
-	if (!isNullish(value.gas) && !isHexStrict(value.gas)) return false;
-	if (!isNullish(value.gasPrice) && !isHexStrict(value.gasPrice)) return false;
-	if (!isNullish(value.value) && !isHexStrict(value.value)) return false;
-	if (!isNullish(value.data) && !isHexStrict(value.data)) return false;
-	if (!isNullish(value.type)) return false;
-	if (isTransaction1559Unsigned(value as Transaction1559UnsignedAPI)) return false;
-	if (isTransaction2930Unsigned(value as Transaction2930UnsignedAPI)) return false;
-
-	return true;
-}
-
-export function validateTransactionCall(value: TransactionCall) {
-	if (!isTransactionCall(value)) throw new InvalidTransactionCall(value);
-}
+} from '../errors';
+import { formatTransaction } from './format_transaction';
 
 export const validateCustomChainInfo = (transaction: InternalTransaction) => {
 	if (!isNullish(transaction.common)) {

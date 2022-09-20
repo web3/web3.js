@@ -19,6 +19,7 @@ import { ETH_DATA_FORMAT, format, toHex } from 'web3-utils';
 import { TransactionTypeParser, Web3Context } from 'web3-core';
 import { EthExecutionAPI, Transaction } from 'web3-types';
 import { isNullish } from 'web3-validator';
+
 import { InternalTransaction } from '../types';
 
 export const defaultTransactionTypeParser: TransactionTypeParser = transaction => {

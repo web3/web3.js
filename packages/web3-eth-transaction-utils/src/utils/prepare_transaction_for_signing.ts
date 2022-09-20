@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import Common from '@ethereumjs/common';
 import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
 import {
@@ -24,13 +23,15 @@ import {
 	PopulatedUnsignedEip2930Transaction,
 	PopulatedUnsignedTransaction,
 	Transaction,
+	privateKeyToAddress,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
-import { FormatType, ETH_DATA_FORMAT, toNumber } from 'web3-utils';
+import { ETH_DATA_FORMAT, FormatType, toNumber } from 'web3-utils';
 import { isNullish } from 'web3-validator';
-import { validateTransactionForSigning } from '../validation';
-import { formatTransaction } from './format_transaction';
+
 import { transactionBuilder } from './transaction_builder';
+import { formatTransaction } from './format_transaction';
+import { validateTransactionForSigning } from './validation';
 
 const getEthereumjsTxDataFromTransaction = (
 	transaction: FormatType<PopulatedUnsignedTransaction, typeof ETH_DATA_FORMAT>,
@@ -96,7 +97,7 @@ const getEthereumjsTransactionOptions = (
 export const prepareTransactionForSigning = async (
 	transaction: Transaction,
 	web3Context: Web3Context<EthExecutionAPI>,
-	privateKey?: HexString | Buffer,
+	privateKey?: { privateKey: HexString | Buffer; privateKeyToAddress: privateKeyToAddress },
 ) => {
 	const populatedTransaction = (await transactionBuilder({
 		transaction,
