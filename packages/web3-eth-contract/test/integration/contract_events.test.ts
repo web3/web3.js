@@ -33,7 +33,7 @@ describe('contract', () => {
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
@@ -75,29 +75,25 @@ describe('contract', () => {
 		itIf(isWs)(
 			'should trigger the "contract.events.<eventName>" for indexed parameters',
 			async () => {
+				const res = await processAsync(async resolve => {
+					const event = contractDeployed.events.MultiValueIndexedEvent({
+						filter: { val: 100 },
+					});
+
+					event.on('data', resolve);
+
+					// trigger event
+					await contractDeployed.methods
+						.firesMultiValueIndexedEvent('value', 12, true)
+						.send(sendOptions);
+					await contractDeployed.methods
+						.firesMultiValueIndexedEvent('value', 100, true)
+						.send(sendOptions);
+				});
 				// eslint-disable-next-line jest/no-standalone-expect
-				return expect(
-					processAsync(async resolve => {
-						const event = contractDeployed.events.MultiValueIndexedEvent({
-							filter: { val: 100 },
-						});
-
-						event.on('data', resolve);
-
-						// trigger event
-						await contractDeployed.methods
-							.firesMultiValueIndexedEvent('value', 12, true)
-							.send(sendOptions);
-						await contractDeployed.methods
-							.firesMultiValueIndexedEvent('value', 100, true)
-							.send(sendOptions);
-					}),
-				).resolves.toEqual(
-					expect.objectContaining({
-						event: 'MultiValueIndexedEvent',
-						returnValues: expect.objectContaining({ val: '100' }),
-					}),
-				);
+				expect((res as any)?.event).toBe('MultiValueIndexedEvent');
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect((res as any)?.returnValues.val).toBe(BigInt(100));
 			},
 		);
 
