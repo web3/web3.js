@@ -23,9 +23,9 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	public readonly name: string;
 	public abstract readonly code: number;
 	public stack: string | undefined;
-	public innerError: Error | undefined;
+	public innerError: Error | Error[] | undefined;
 
-	public constructor(msg?: string, innerError?: Error) {
+	public constructor(msg?: string, innerError?: Error | Error[]) {
 		super(msg);
 		this.innerError = innerError;
 		this.name = this.constructor.name;
