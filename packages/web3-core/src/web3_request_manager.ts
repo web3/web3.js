@@ -16,7 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import { InvalidResponseError, ProviderError, ResponseError } from 'web3-errors';
+import {
+	ContractExecutionError,
+	InvalidResponseError,
+	ProviderError,
+	ResponseError,
+} from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
 import WSProvider from 'web3-providers-ws';
@@ -26,6 +31,7 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
 	JsonRpcResponse,
+	JsonRpcResponseWithError,
 	SupportedProviders,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -287,7 +293,16 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
-			throw new InvalidResponseError<ErrorType>(response);
+			if (
+				(response.error as unknown as { message: string })?.message === 'execution reverted'
+			) {
+				// This message means that there was an error while executing the code of the smart contract
+				// However, more processing will happen at a higher level to decode the error data,
+				//	according to the Error ABI, if it was available as of EIP-838.
+				throw new ContractExecutionError((response as JsonRpcResponseWithError).error);
+			} else {
+				throw new InvalidResponseError<ErrorType>(response);
+			}
 		}
 
 		// This is the majority of the cases so check these first

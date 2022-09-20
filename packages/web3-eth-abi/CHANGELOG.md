@@ -39,7 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-#### web3-eth-abi
+### Added
 
--   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`.
--   If an error happens when decoding a value, preserve that exception at `innerError` inside the `AbiError`.
+-   If an error happens when decoding a value, preserve that exception at `innerError` inside the error class `AbiError`. (#5435)
+-   Add basic functionality that is used, by `web3-eth-contract`, when decoding error data according to EIP-838. (#5434)
+
+### Fixed
+
+-   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)

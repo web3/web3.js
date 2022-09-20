@@ -736,17 +736,31 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3-core
+
+-   If the response error was `execution reverted`, raise `ContractExecutionError` and pass the response error to it in order to be set as `innerError` (this innerError will be decoded at web3-eth-contract if its ABI was provided according to EIP-838). (#5434)
+
 #### web3-error
 
--   Add optional `innerError` property to the abstract class `Web3Error`.
+-   Add optional `innerError` property to the abstract class `Web3Error`. This `innerError` could be `Error`, `Error[]` or `undefined`. (#5435) (#5434)
+-   The class `Web3ContractError` is moved to this package from `web3-eth-contract`. (#5434)
+
+#### web3-eth-abi
+
+-   If an error happens when decoding a value, preserve that exception at `innerError` inside the error class `AbiError`. (#5435)
+-   Add basic functionality that is used, by `web3-eth-contract`, when decoding error data according to EIP-838. (#5434)
+
+#### web3-eth-contract
+
+-   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
+-   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
 
 ### Fixed
 
 #### web3-eth-contract
 
--   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`.
+-   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`. (#5435)
 
 #### web3-eth-abi
 
--   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`.
--   If an error happens when decoding a value, preserve that exception at `innerError` inside the `AbiError`.
+-   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)

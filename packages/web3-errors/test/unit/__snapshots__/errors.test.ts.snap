@@ -162,7 +162,14 @@ Object {
     "a": "10",
     "b": "20",
   },
-  "innerError": undefined,
+  "innerError": Object {
+    "code": 123,
+    "data": Object {
+      "a": "10",
+      "b": "20",
+    },
+    "message": "error message",
+  },
   "message": "Returned error: error message",
   "name": "InvalidResponseError",
 }
