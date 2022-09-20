@@ -24,7 +24,8 @@ describe('logs_api', () => {
 			it.each(validDecodeLogsData)(
 				'should pass for valid values: %j',
 				({ input: { abi, data, topics }, output }) => {
-					expect(decodeLog(abi, data, topics)).toEqual(output);
+					const expected = decodeLog(abi, data, topics);
+					expect(JSON.parse(JSON.stringify(expected))).toEqual(output);
 				},
 			);
 		});
