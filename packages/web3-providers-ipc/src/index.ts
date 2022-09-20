@@ -174,8 +174,15 @@ export default class IpcProvider<
 		}
 
 		if (!this._socket.writable) {
-			throw new Error('Can not send a request. The internal socket is not writable.');
+			console.error(
+				'Can not send a request. The internal socket is not `writable`. Request data: ',
+				request,
+			);
+			console.error('this._socket: ', this._socket);
+			const dummyPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
+			return dummyPromise;
 		}
+
 		try {
 			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
 			this._requestQueue.set(requestId, defPromise);
