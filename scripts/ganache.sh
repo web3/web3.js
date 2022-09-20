@@ -12,10 +12,10 @@ start() {
 
 	if [ -z "${ORIGARGS[1]}" ]
 	then
-		docker run --publish 8545:8545 trufflesuite/ganache:latest -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123"
+		docker run --publish 8545:8545 trufflesuite/ganache:latest -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123" --networkId 1337
 	else
 		echo "Starting ganache ..."
-		docker run --detach --publish 8545:8545 trufflesuite/ganache:latest -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123"
+		docker run --detach --publish 8545:8545 trufflesuite/ganache:latest -m "$WEB3_SYSTEM_TEST_MNEMONIC" -a 5 -p $WEB3_SYSTEM_TEST_PORT --wallet.passphrase "123" --networkId 1337
 
 		echo "Waiting for ganache..."
 		npx wait-port "$WEB3_SYSTEM_TEST_PORT"
