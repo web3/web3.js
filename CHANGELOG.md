@@ -602,5 +602,9 @@ Released with 1.0.0-beta.37 code base.
 -  Support of `safe` and `finalized` block tags added (#5410)
 
 ## [Unreleased]
-
 ## [1.8.1]
+### Fixed
+-  Fixed types for getPastEvents (#4955) (#5260)
+
+
+
