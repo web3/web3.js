@@ -71,7 +71,7 @@ var outputBigNumberFormatter = function (number) {
 };
 
 /**
- * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ * Returns true if the given blockNumber is 'latest', 'pending', 'earliest, 'finalized' or 'safe'
  *
  * @method isPredefinedBlockNumber
  *
@@ -80,7 +80,7 @@ var outputBigNumberFormatter = function (number) {
  * @returns {Boolean}
  */
 var isPredefinedBlockNumber = function (blockNumber) {
-    return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
+    return ['latest','pending','earliest','finalized','safe'].includes(blockNumber);
 };
 
 /**
@@ -101,7 +101,7 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
 };
 
 /**
- * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
+ * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'finalized', 'safe', 'genesis'
  *
  * @param {String|Number|BN|BigNumber} blockNumber
  *

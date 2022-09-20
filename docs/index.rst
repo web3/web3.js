@@ -7,6 +7,8 @@ web3.js is a collection of libraries that allow you to interact with a local or 
 
 The following documentation will guide you through :ref:`installing and running web3.js <adding-web3>` as well as providing an :ref:`API reference documentation <#id1>` with examples.
 
+.. note:: `Web3.js 4.x <https://github.com/ChainSafe/web3.js/releases/tag/v4.0.0-alpha.0>`_ has been released. Checkout 4.x `API documentation and migration guide <https://docs.web3js.org/>`_ for testing, early feedback and contributions. 
+
 Contents:
 
 :ref:`Keyword Index <genindex>`, :ref:`Search Page <search>`
