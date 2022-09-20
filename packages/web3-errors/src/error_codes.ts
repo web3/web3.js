@@ -38,6 +38,7 @@ export const ERR_CONTRACT_MISSING_DEPLOY_DATA = 306;
 export const ERR_CONTRACT_MISSING_ADDRESS = 307;
 export const ERR_CONTRACT_MISSING_FROM_ADDRESS = 308;
 export const ERR_CONTRACT_INSTANTIATION = 309;
+export const ERR_CONTRACT_EXECUTION_REVERTED = 310;
 
 // Transaction error codes
 export const ERR_TX = 400;
@@ -74,7 +75,6 @@ export const ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER = 428;
 export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
 
 export const ERR_TX_NOT_FOUND = 430;
-
 export const ERR_TX_SEND_TIMEOUT = 431;
 export const ERR_TX_BLOCK_TIMEOUT = 432;
 
