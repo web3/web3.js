@@ -71,7 +71,7 @@ var outputBigNumberFormatter = function (number) {
 };
 
 /**
- * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ * Returns true if the given blockNumber is 'latest', 'pending', 'earliest, 'finalized' or 'safe'
  *
  * @method isPredefinedBlockNumber
  *
@@ -80,7 +80,7 @@ var outputBigNumberFormatter = function (number) {
  * @returns {Boolean}
  */
 var isPredefinedBlockNumber = function (blockNumber) {
-    return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
+    return ['latest','pending','earliest','finalized','safe'].includes(blockNumber);
 };
 
 /**
@@ -101,7 +101,7 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
 };
 
 /**
- * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
+ * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'finalized', 'safe', 'genesis'
  *
  * @param {String|Number|BN|BigNumber} blockNumber
  *
@@ -277,20 +277,21 @@ var outputTransactionReceiptFormatter = function (receipt) {
         throw new Error('Received receipt is invalid: ' + receipt);
     }
 
-    if (receipt.blockNumber !== null)
-        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
-    if (receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
-
+    if(!this.hexFormat){
+        if (receipt.blockNumber !== null)
+            receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
+        if (receipt.transactionIndex !== null)
+            receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
+        receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
+        receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+        if (receipt.effectiveGasPrice) {
+            receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
+        }
+    }
     if (Array.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
-    if (receipt.effectiveGasPrice) {
-        receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
-    }
     if (receipt.contractAddress) {
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }

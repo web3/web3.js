@@ -538,8 +538,6 @@ Released with 1.0.0-beta.37 code base.
 
 -  Fixed build issues of 1.7.2
 
-## [Unreleased]
-
 ## [1.7.4]
 
 ### Fixed
@@ -548,11 +546,13 @@ Released with 1.0.0-beta.37 code base.
 -  Fix static tuple encoding (#4673) (#4884)
 -  Fix bug in handleRevert logic for eth_sendRawTransaction (#4902)
 -  Fix resolve type of getBlock function (#4911)
+-  Web3-utils BN fix (#5132)
 
 ### Changed
 -  Replace deprecated String.prototype.substr() (#4855)
 -  Exporting AbiCoder as coder (#4937)
 -  Github build workflow updated min build for node.js 12 and tests for 12, 14 and 16 (#5014)
+-  Updated libraries using BN and the BN library (#5072)
 
 ### Added
 - Generic types for `Contract`, now you can add types for your contract methods and events
@@ -561,3 +561,51 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  `npm audit fix` to address vulnerabilities and update libraries (#5014)
+
+## [1.7.5]
+
+### Changed
+-  Replace xhr2-cookies deps to cross-fetch for web3-providers-http (#5085)
+
+### Added
+-  Documentation details about `maxFeePerGas` and `maxPriorityFeePerGas` (#5121)
+-  Added `createAccessList` types in web3.eth (#5146)
+
+### Fixed
+-  Improving `AbstractProvider` interface (#5150)
+-  Fix typos in web3-eth-accounts.rst & TESTING.md (#5047)
+-  Fix remove wallet using an index when an account address and address lowercase are equal (#5049)
+-  Improve README.md & Fix typos (#4848)
+-  Add optional hex formatting parameter for getTransactionrReceipt (#5153)
+-  Fix transactionRoot -> transactionsRoot in BlockHeader (#5083)
+-  Fix Promise in Accounts.signTransaction() throwing errors that cannot be caught (#4724)
+-  Fixed unit tests & removed dead code for web3-providers-http (#5228)
+
+### Security
+-  Updated `got` lib version and fixed other libs using npm audit fix (#5178) (#5254)
+
+## [1.8.0]
+
+### Changed
+-  Updated `sha3` and `sha3Raw` type definition to accept `Buffer`
+-  Removing legacy field in lerna.json (#5403)
+-  Correct `eth_sendSignedTransaction` code example (#5402)
+
+### Fixed
+-  Browser builds support polyfills (#5031) (#5053) (#4659) (#4767)
+-  Update node version on actions to fix breaking mosaic test (#5354) 
+-  Start incrementing jsonrpc.id from random number (#5327)
+-  `web3-eth-contract`'s `call` and `send` methods no longer mutate `options` argument (#5394)
+-  Improvement using provided gas options in web3-eth-accounts for eip-1559 transactions (#5012)
+
+### Added
+-  Add missing function type "receive" in `AbiType` (#5165)
+-  Support of `safe` and `finalized` block tags added (#5410)
+
+## [Unreleased]
+## [1.8.1]
+### Fixed
+-  Fixed types for getPastEvents (#4955) (#5260)
+
+
+

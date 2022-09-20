@@ -26,6 +26,8 @@ import {sha3} from 'web3-utils';
 // $ExpectType string | null
 sha3('234');
 // $ExpectType string | null
+sha3(Buffer.from('123'));
+// $ExpectType string | null
 sha3(new BN(3));
 
 // $ExpectError
