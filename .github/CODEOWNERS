@@ -1,0 +1,5 @@
+# For details about the contents of this file, see
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Automatically assigns members of the CHainSafe web3.js team to new pending PRs as reviewers
+* @chainsafe/web3-js
