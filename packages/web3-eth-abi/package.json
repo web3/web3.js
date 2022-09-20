@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-abi",
-	"version": "4.0.1-alpha.0",
+    "version": "4.0.1-alpha.0",
 	"description": "Web3 module encode and decode EVM in/output.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-abi",

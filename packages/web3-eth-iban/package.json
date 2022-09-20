@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-iban",
-	"version": "4.0.1-alpha.0",
+    "version": "4.0.1-alpha.0",
 	"description": "This package converts Ethereum addresses to IBAN addresses and vice versa.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
