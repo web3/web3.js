@@ -39,7 +39,7 @@ describe('Web3 net', () => {
 
 	it('should be able to get id', async () => {
 		const networkId = await web3Net.getId();
-		expect(networkId).toBe(BigInt(1111));
+		expect(networkId).toBe(BigInt(1337));
 	});
 
 	it('should be able to listen', async () => {
