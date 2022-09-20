@@ -20,12 +20,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Bytes, HexString, Numbers, TransactionReceipt } from 'web3-types';
 import {
 	ERR_RAW_TX_UNDEFINED,
-	ERR_SIGNATURE_FAILED,
 	ERR_TX,
 	ERR_TX_BLOCK_TIMEOUT,
 	ERR_TX_CONTRACT_NOT_STORED,
 	ERR_TX_CHAIN_ID_MISMATCH,
 	ERR_TX_DATA_AND_INPUT,
+	ERR_TX_GAS_MISMATCH,
 	ERR_TX_INVALID_CALL,
 	ERR_TX_INVALID_CHAIN_INFO,
 	ERR_TX_INVALID_FEE_MARKET_GAS,
@@ -50,6 +50,7 @@ import {
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
 	ERR_TX_SEND_TIMEOUT,
+	ERR_TX_SIGNING,
 	ERR_TX_UNABLE_TO_POPULATE_NONCE,
 	ERR_TX_UNSUPPORTED_EIP_1559,
 	ERR_TX_UNSUPPORTED_TYPE,
@@ -253,7 +254,7 @@ export class MissingGasError extends InvalidValueError {
 }
 
 export class TransactionGasMismatchError extends InvalidValueError {
-	public code = ERR_TX_MISSING_GAS;
+	public code = ERR_TX_GAS_MISMATCH;
 
 	public constructor(value: {
 		gas: Numbers | undefined;
@@ -392,6 +393,12 @@ export class TransactionSendTimeoutError extends Web3Error {
 	}
 }
 
+function transactionTimeoutHint(transactionHash?: Bytes) {
+	return `Please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${
+		transactionHash ? transactionHash.toString() : 'not available'
+	}`;
+}
+
 export class TransactionPollingTimeoutError extends Web3Error {
 	public code = ERR_TX_POLLING_TIMEOUT;
 
@@ -399,7 +406,7 @@ export class TransactionPollingTimeoutError extends Web3Error {
 		super(
 			`Transaction was not mined within ${
 				value.numberOfSeconds
-			} seconds, please make sure your transaction was properly sent. Be aware that it might still be pending or mined!\n\tTransaction Hash: ${value.transactionHash.toString()}`,
+			} seconds. ${transactionTimeoutHint(value.transactionHash)}`,
 		);
 	}
 }
@@ -415,9 +422,7 @@ export class TransactionBlockTimeoutError extends Web3Error {
 		super(
 			`Transaction started at ${value.starterBlockNumber} but was not mined within ${
 				value.numberOfBlocks
-			} blocks, please make sure your transaction was properly sent and there no pervious pending transaction for the same account. However, be aware that it might still be mined!\n\tTransaction Hash: ${
-				value.transactionHash ? value.transactionHash.toString() : 'not available'
-			}`,
+			} blocks. ${transactionTimeoutHint(value.transactionHash)}`,
 		);
 	}
 }
@@ -433,7 +438,7 @@ export class TransactionMissingReceiptOrBlockHashError extends InvalidValueError
 		super(
 			`receipt: ${JSON.stringify(
 				value.receipt,
-			)}, blockHash: ${value.blockHash.toString()}, transactionHash: ${value.transactionHash.toString()}`,
+			)}, blockHash: ${value.blockHash?.toString()}, transactionHash: ${value.transactionHash?.toString()}`,
 			`Receipt missing or blockHash null`,
 		);
 	}
@@ -447,8 +452,11 @@ export class TransactionReceiptMissingBlockNumberError extends InvalidValueError
 	}
 }
 
-export class SignatureError extends InvalidValueError {
-	public code = ERR_SIGNATURE_FAILED;
+export class TransactionSigningError extends Web3Error {
+	public code = ERR_TX_SIGNING;
+	public constructor(errorDetails: string) {
+		super(`Invalid signature. "${errorDetails}"`);
+	}
 }
 
 export class LocalWalletNotAvailableError extends InvalidValueError {
