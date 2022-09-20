@@ -174,6 +174,8 @@ export default class IpcProvider<
 		}
 
 		console.warn('IpcProvider->connectionStatus', this.getStatus());
+		console.warn('IpcProvider->socket writable', this._socket.writable);
+		console.warn('IpcProvider->socket destroyed', this._socket.destroyed);
 		console.warn('IpcProvider->connectionStatus: stack', new Error().stack);
 
 		try {
