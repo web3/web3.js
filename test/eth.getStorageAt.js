@@ -48,6 +48,18 @@ var tests = [{
     result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
     call: 'eth_'+ method
+}, {
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'finalized'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'finalized'],
+    result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    call: 'eth_'+ method
+}, {
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'safe'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0xb', 'safe'],
+    result: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4747d33b27bb249a2dbab4c0612bf9cafd33b27bb249a2dbab4c0612bf9caf4c1950855',
+    call: 'eth_'+ method
 }
 // TODO: Fixing of test.method.js cloning of the arguments does destroy the BN object. Manually calling of utils.numberToHex with new BN('11'); does work.
 // ,  {

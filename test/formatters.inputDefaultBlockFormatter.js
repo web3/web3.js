@@ -8,7 +8,9 @@ var tests = [
     { value: 'pending', expected: 'pending' },
     { value: 'earliest', expected: 'earliest' },
     { value: 1, expected: '0x1' },
-    { value: '0x1', expected: '0x1' }
+    { value: '0x1', expected: '0x1' },
+    { value: 'safe', expected: 'safe' },
+    { value: 'finalized', expected: 'finalized' }
 ];
 
 describe('lib/web3/formatters', function () {

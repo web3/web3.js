@@ -27,6 +27,18 @@ var tests = [{
     result: '0xb',
     formattedResult: 11,
     call: 'eth_getBlockTransactionCountByNumber'
+},{
+    args: ['safe'],
+    formattedArgs: ['safe'],
+    result: '0xb',
+    formattedResult: 11,
+    call: 'eth_getBlockTransactionCountByNumber'
+},{
+    args: ['finalized'],
+    formattedArgs: ['finalized'],
+    result: '0xb',
+    formattedResult: 11,
+    call: 'eth_getBlockTransactionCountByNumber'
 }];
 
 testMethod.runTests('eth', method, tests);
