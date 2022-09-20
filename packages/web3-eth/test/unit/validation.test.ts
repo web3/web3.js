@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable jest/no-conditional-expect */
 
-import { InvalidTransactionCall, InvalidTransactionWithSender } from '../../src/errors';
+import { InvalidTransactionCall, InvalidTransactionWithSender } from 'web3-errors';
 import {
 	isAccessList,
 	isAccessListEntry,

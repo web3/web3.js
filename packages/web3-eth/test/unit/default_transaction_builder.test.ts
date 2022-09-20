@@ -27,7 +27,7 @@ import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
-} from '../../src/errors';
+} from 'web3-errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 import * as rpcMethods from '../../src/rpc_methods';
 

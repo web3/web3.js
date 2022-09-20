@@ -30,7 +30,7 @@ import {
 	MissingGasError,
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
-} from '../../src/errors';
+} from 'web3-errors';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const invalidTransactionObject: any[] = ['42', false, '0x0', BigInt(42), () => {}];
