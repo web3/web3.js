@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { isNullish } from 'web3-validator';
 
-export type AsyncFunction<T> = (...args: unknown[]) => Promise<T>;
+export type AsyncFunction<T, K = unknown> = (...args: K[]) => Promise<T>;
 
 export function waitWithTimeout<T>(
 	awaitable: Promise<T> | AsyncFunction<T>,
@@ -106,11 +106,13 @@ export function rejectIfConditionAtInterval<T>(
 	interval: number,
 ): [NodeJS.Timer, Promise<never>] {
 	let intervalId: NodeJS.Timer | undefined;
+	let isRejected = false;
 	const rejectIfCondition = new Promise<never>((_, reject) => {
 		intervalId = setInterval(() => {
 			(async () => {
-				const error = await cond();
+				const error = await cond(isRejected);
 				if (error) {
+					isRejected = true;
 					clearInterval(intervalId);
 					reject(error);
 				}

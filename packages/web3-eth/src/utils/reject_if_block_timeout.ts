@@ -32,7 +32,10 @@ export function rejectIfBlockTimeout(
 	interval: number,
 	transactionHash?: Bytes,
 ): [NodeJS.Timer, Promise<never>] {
-	return rejectIfConditionAtInterval(async () => {
+	return rejectIfConditionAtInterval(async (stopCalling: boolean | unknown) => {
+		if (stopCalling) {
+			return undefined;
+		}
 		const lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 		const numberOfBlocks = lastBlockNumber - starterBlockNumber;
 		if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
