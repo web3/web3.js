@@ -42,3 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `Web3EthExecutionAPI` export (#5441)
 -   `Web3NetAPI` export (#5441)
 -   `EthPersonalAPI` export (#5441)
+-   `privateKeyToAddress` type and export (#5458)
+-   Exported schemas from `web3-eth`'s `schemas.ts` (#5458)

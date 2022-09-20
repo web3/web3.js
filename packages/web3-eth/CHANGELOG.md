@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   `web3-rpc-methods` dependency (#5441)
+-   `web3-eth-transaction-utils` dependency (#5458)
+-   `getAccounts` rpc method wrapper (#5458)
 
 ### Changed
 
@@ -53,3 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)
+-   `formatTransaction` is now imported from `web3-eth-transaction-util` instead of local import (#5458)
+-   `utils/format_transaction.ts` exports (now exported from `web3-eth-transaction-utils`) (#5458)
+-   `utils/prepare_transaction_for_signing.ts` exports (now exported from `web3-eth-transaction-utils`) (#5458)
+-   `detectTransactionType` export (now exported from `web3-eth-transaction-utils`) (#5458)
+-   `transactionBuilder` export (now exported from `web3-eth-transaction-utils`) (#5458)

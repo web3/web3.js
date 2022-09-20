@@ -40,12 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   `web3-rpc-methods` dependency (#5441)
+-   `web3-eth-transaction-utils` dependency (#5458)
 
 ### Changed
 
 -   Import `EthPersonalAPI` from `web3-types` instead of local import (#5441)
 -   Replace the imported methods from `rcp_methods.ts` with `personalRpcMethods` imports from `web3-rpc-methods` (#5441)
 -   Replace use of `EthPersonalAPIManager` with `Web3RequestManager<EthPersonalAPI>` (#5441)
+-   `formatTransaction` is now imported from `web3-eth-transaction-util` instead of `web3-eth` (#5458)
 
 ### Removed
 
