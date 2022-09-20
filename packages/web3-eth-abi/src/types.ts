@@ -88,11 +88,19 @@ export type AbiEventFragment = AbiBaseFragment & {
 	readonly anonymous?: boolean;
 };
 
+// https://docs.soliditylang.org/en/latest/abi-spec.html#errors
+export type AbiErrorFragment = AbiBaseFragment & {
+	readonly name: string;
+	readonly type: string | 'error';
+	readonly inputs?: ReadonlyArray<AbiParameter>;
+};
+
 // https://docs.soliditylang.org/en/latest/abi-spec.html#json
 export type AbiFragment =
 	| AbiConstructorFragment
 	| AbiFunctionFragment
 	| AbiEventFragment
+	| AbiErrorFragment
 	| AbiFallbackFragment;
 
 export type ContractAbi = ReadonlyArray<AbiFragment>;
