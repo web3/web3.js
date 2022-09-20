@@ -1,6 +1,6 @@
 {
 	"name": "web3-validator",
-	"version": "0.1.1-alpha.0",
+    "version": "0.1.1-alpha.0",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "dist/index.js",
 	"browser": "dist/index.min.js",
