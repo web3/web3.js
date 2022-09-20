@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
-import { SubscriptionError } from 'web3-errors';
+import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
 	call,
 	estimateGas,
@@ -27,6 +27,7 @@ import {
 } from 'web3-eth';
 import {
 	AbiConstructorFragment,
+	AbiErrorFragment,
 	AbiEventFragment,
 	AbiFragment,
 	AbiFunctionFragment,
@@ -38,6 +39,7 @@ import {
 	encodeEventSignature,
 	encodeFunctionSignature,
 	FilterAbis,
+	isAbiErrorFragment,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
 	jsonInterfaceMethodToString,
@@ -62,8 +64,13 @@ import {
 } from 'web3-utils';
 import { isNullish, validator, utils as validatorUtils } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
-import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
-import { Web3ContractError } from './errors';
+import {
+	decodeEventABI,
+	decodeMethodReturn,
+	encodeEventABI,
+	encodeMethodABI,
+	decodeErrorData,
+} from './encoding';
 import { LogsSubscription } from './log_subscription';
 import {
 	ContractAbiWithSignature,
@@ -865,7 +872,11 @@ export class Contract<Abi extends ContractAbi>
 
 		let result: ContractAbi = [];
 
-		for (const a of abis) {
+		const functionsAbi = abis.filter(abi => abi.type !== 'error');
+		const errorsAbi = abis.filter(abi =>
+			isAbiErrorFragment(abi),
+		) as unknown as AbiErrorFragment[];
+		for (const a of functionsAbi) {
 			const abi: Mutable<AbiFragment & { signature: HexString }> = {
 				...a,
 				signature: '',
@@ -887,13 +898,13 @@ export class Contract<Abi extends ContractAbi>
 				if (methodName in this._functions) {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi),
+						method: this._createContractMethod(abi, errorsAbi),
 						cascadeFunction: this._functions[methodName].method,
 					};
 				} else {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi),
+						method: this._createContractMethod(abi, errorsAbi),
 					};
 				}
 
@@ -934,7 +945,10 @@ export class Contract<Abi extends ContractAbi>
 		this._jsonInterface = [...result] as unknown as ContractAbiWithSignature;
 	}
 
-	private _createContractMethod<T extends AbiFunctionFragment>(abi: T): ContractBoundMethod<T> {
+	private _createContractMethod<T extends AbiFunctionFragment, E extends AbiErrorFragment>(
+		abi: T,
+		errorsAbis: E[],
+	): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 
@@ -952,9 +966,9 @@ export class Contract<Abi extends ContractAbi>
 				return {
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodCall(abi, params, options, block),
+						this._contractMethodCall(abi, params, errorsAbis, options, block),
 					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(abi, params, options),
+						this._contractMethodSend(abi, params, options), // TODO: refactor to parse errorsAbi
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -971,9 +985,9 @@ export class Contract<Abi extends ContractAbi>
 			return {
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
-					this._contractMethodCall(abi, params, options, block),
+					this._contractMethodCall(abi, params, errorsAbis, options, block),
 				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(abi, params, options),
+					this._contractMethodSend(abi, params, options), // TODO: refactor to parse errorsAbi
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -986,9 +1000,13 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private async _contractMethodCall<
+		E extends AbiErrorFragment,
+		Options extends PayableCallOptions | NonPayableCallOptions,
+	>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
+		errorsAbi: E[],
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
@@ -998,8 +1016,16 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: this.options,
 		});
-
-		return decodeMethodReturn(abi, await call(this, tx, block, DEFAULT_RETURN_FORMAT));
+		try {
+			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
+			return decodeMethodReturn(abi, result);
+		} catch (error: unknown) {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+			throw error;
+		}
 	}
 
 	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
