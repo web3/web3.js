@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-ens",
-	"version": "4.0.1-alpha.0",
+    "version": "4.0.1-alpha.0",
 	"description": "This package has ENS functions for interacting with Ethereum Name Service.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
