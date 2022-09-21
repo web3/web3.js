@@ -16,12 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Address, Bytes, HexString, Numbers } from 'web3-types';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
+import { isDataFormatValid } from '../fixtures/formatter';
 import {
 	DEFAULT_RETURN_FORMAT,
 	FMT_BYTES,
 	FMT_NUMBER,
 	format,
 	FormatType,
+	isDataFormat,
 } from '../../src/formatter';
 
 type TestTransactionInfoType = {
@@ -711,6 +713,13 @@ describe('formatter', () => {
 				});
 
 				expect(result).toEqual(expected);
+			});
+		});
+		describe('isDataFormat', () => {
+			describe('valid cases', () => {
+				it.each(isDataFormatValid)('%s', (input, output) => {
+					expect(isDataFormat(input)).toEqual(output);
+				});
 			});
 		});
 	});

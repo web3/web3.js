@@ -171,6 +171,10 @@ export const soliditySha3InvalidData: [any, string][] = [
 export const encodePackData: [TypedObject[] | TypedObjectAbbreviated[], any][] = [
 	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
 	[
+		[{ type: 'int[]', value: '01' }],
+		'0x0000000000000000000000000000000000000000000000000000000000000001',
+	],
+	[
 		[{ type: 'int', value: 31323334 }],
 		'0x0000000000000000000000000000000000000000000000000000000001ddf4c6',
 	],
@@ -281,4 +285,9 @@ export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
 		'0x2d19cd91fbcc44e6412f92c11da7907cdedb1ace04c47447b42a61f1cd63b85a',
 	],
 	[BigInt(3), '0x2a80e1ef1d7842f27f2e6be0972bb708b9a135c38860dbe73c27c3486c34f4de'],
+];
+
+export const elementaryNameValidData: [any, string][] = [
+	['uint128', '128'],
+	['int256', '256'],
 ];

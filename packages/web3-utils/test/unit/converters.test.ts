@@ -39,6 +39,7 @@ import {
 	utf8ToHex,
 	toChecksumAddress,
 	bytesToBuffer,
+	toBigInt,
 } from '../../src/converters';
 
 import {
@@ -57,6 +58,7 @@ import {
 	numberToHexInvalidData,
 	numberToHexValidData,
 	toHexValidData,
+	toHexInvalidData,
 	toWeiInvalidData,
 	toWeiValidData,
 	utf8ToHexInvalidData,
@@ -64,6 +66,9 @@ import {
 	toCheckSumValidData,
 	bytesToBufferInvalidData,
 	bytesToBufferValidData,
+	toBigIntValidData,
+	toBigIntInvalidData,
+	toCheckSumInvalidData,
 } from '../fixtures/converters';
 
 describe('converters', () => {
@@ -309,6 +314,12 @@ describe('converters', () => {
 				expect(toHex(input, true)).toEqual(output[1]);
 			});
 		});
+
+		describe('invalid cases', () => {
+			it.each(toHexInvalidData)('%s', (input, output) => {
+				expect(() => toHex(input)).toThrow(output);
+			});
+		});
 	});
 
 	describe('toNumber', () => {
@@ -351,7 +362,9 @@ describe('converters', () => {
 			});
 		});
 		describe('invalid cases', () => {
-			it.todo('should throw error for invalid cases');
+			it.each(toCheckSumInvalidData)('%s', (input, output) => {
+				expect(() => toChecksumAddress(input)).toThrow(output);
+			});
 		});
 	});
 	describe('bytesToBuffer', () => {
@@ -366,6 +379,19 @@ describe('converters', () => {
 				it.each(bytesToBufferInvalidData)('%s', (input, output) => {
 					expect(() => bytesToBuffer(input)).toThrow(output);
 				});
+			});
+		});
+	});
+	describe('toBigInt', () => {
+		describe('valid cases', () => {
+			it.each(toBigIntValidData)('%s', (input, output) => {
+				expect(toBigInt(input)).toEqual(output);
+			});
+		});
+
+		describe('invalid cases', () => {
+			it.each(toBigIntInvalidData)('%s', (input, output) => {
+				expect(() => toBigInt(input)).toThrow(output);
 			});
 		});
 	});
