@@ -36,7 +36,13 @@ export function rejectIfBlockTimeout(
 		if (stopCalling) {
 			return undefined;
 		}
-		const lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
+		let lastBlockNumber;
+		try {
+			lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
+		} catch (error) {
+			console.warn('An error happen while trying to get the block number', error);
+			return undefined;
+		}
 		const numberOfBlocks = lastBlockNumber - starterBlockNumber;
 		if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
 			return new TransactionBlockTimeoutError({
