@@ -17,31 +17,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3Context, Web3ContextObject } from 'web3-core';
 import { Contract, NonPayableMethodObject } from 'web3-eth-contract';
-// import { resolve } from 'path';
 import { ResolverMethodMissingError } from 'web3-errors';
-// import { Bytes, Address, DataFormat } from 'web3-utils';
-// import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { sha3Raw, sha3 } from 'web3-utils';
 import { Registry } from '../../src/registry';
 import { Resolver } from '../../src/resolver';
-// import { ENS } from '../../src/ens';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
-// import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 import { methodsInInterface, interfaceIds } from '../../src/config';
 import { namehash } from '../../src/utils';
 
 describe('resolver', () => {
-	// class ResolverExtended extends Resolver {
-	// 	public async getResolverContractAdapterExtended(ENSName: string) {
-	// 		//  TODO : (Future 4.1.0 TDB) cache resolver contract if frequently queried same ENS name, refresh cache based on TTL and usage, also limit cache size, optional cache with a flag
-	// 		return this.getResolverContractAdapter(ENSName);
-	// 	}
-	// } // so we can mock getResolverContractAdapter
-
 	let object: Web3ContextObject;
 	let registry: Registry;
 	let resolver: Resolver;
-	// let registryResolver: Resolver;
 	let contract: Contract<typeof PublicResolverAbi>;
 	const mockAddress = '0x0000000000000000000000000000000000000000';
 	const ENS_NAME = 'web3js.eth';
@@ -98,12 +85,11 @@ describe('resolver', () => {
 			},
 		);
 	});
-	describe('setAddress', () => {
-		it('valid', async () => {
+	describe('addr', () => {
+		it('setAddr valid', async () => {
 			const checkInteraface = jest.spyOn(resolver, 'checkInterfaceSupport');
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 
-			jest.spyOn(contract.methods, 'setAddr').mockReturnValue({
+			const setAddrMock = jest.spyOn(contract.methods, 'setAddr').mockReturnValue({
 				send: jest.fn(),
 			} as unknown as NonPayableMethodObject<any, any>);
 
@@ -119,15 +105,40 @@ describe('resolver', () => {
 				});
 			});
 
-			// todo add expect for ENS_NAME
 			await resolver.setAddress(ENS_NAME, mockAddress, { from: mockAddress });
 			expect(checkInteraface).toHaveBeenCalled();
-			// expect(getResolverContractAdapter).toHaveBeenCalledWith('name.eth');
+			expect(setAddrMock).toHaveBeenCalledWith(namehash(ENS_NAME), mockAddress);
+		});
+
+		it('getAddress', async () => {
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: async () => Promise.resolve(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const addrMock = jest.spyOn(contract.methods, 'addr').mockReturnValue({
+				call: async () => Promise.resolve(true),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await resolver.getAddress(ENS_NAME);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(
+				interfaceIds[methodsInInterface.addr],
+			);
+			expect(addrMock).toHaveBeenCalledWith(namehash(ENS_NAME), 60);
 		});
 	});
 
-	describe('setPubkey', () => {
-		it('should set Pubkey', async () => {
+	describe('pubkey', () => {
+		it('setPubkey', async () => {
 			const setPubKeyMethod = methodsInInterface.setPubkey;
 
 			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
@@ -160,10 +171,36 @@ describe('resolver', () => {
 			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[setPubKeyMethod]);
 			expect(send).toHaveBeenCalledWith(sendOptions);
 		});
+
+		it('getPubkey', async () => {
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: async () => Promise.resolve(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const pubkeyMock = jest.spyOn(contract.methods, 'pubkey').mockReturnValue({
+				call: jest.fn(),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await resolver.getPubkey(ENS_NAME);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(
+				interfaceIds[methodsInInterface.pubkey],
+			);
+			expect(pubkeyMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+		});
 	});
 
-	describe('setContenthash', () => {
-		it('should set contenthash', async () => {
+	describe('Contenthash', () => {
+		it('setContenthash', async () => {
 			const setContenthashMethod = methodsInInterface.setContenthash;
 			const hash = sha3Raw('justToHash');
 
@@ -196,6 +233,32 @@ describe('resolver', () => {
 			expect(setContenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME), hash);
 			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[setContenthashMethod]);
 			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('getContenthash', async () => {
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: async () => Promise.resolve(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const contenthashMock = jest.spyOn(contract.methods, 'contenthash').mockReturnValue({
+				call: jest.fn(),
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await resolver.getContenthash(ENS_NAME);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(
+				interfaceIds[methodsInInterface.contenthash],
+			);
+			expect(contenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME));
 		});
 	});
 
