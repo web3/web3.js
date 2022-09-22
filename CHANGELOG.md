@@ -765,6 +765,10 @@ should use 4.0.1-alpha.0 for testing.
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
 
+#### web3-utils
+
+-   Added and exported three reusable utility functions: `pollTillDefined`, `rejectIfTimeout` and `rejectIfConditionAtInterval` which are useful when dealing with promises that involves polling, rejecting after timeout or rejecting if a condition was met when calling repeatably at every time intervals.
+
 ### Changed
 
 #### web3-error
