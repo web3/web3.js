@@ -14,39 +14,35 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { Web3Context } from 'web3-core';
-import { TransactionPollingTimeoutError } from 'web3-errors';
-import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
-import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
+import { EthExecutionAPI, Bytes } from 'web3-types';
+import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 
+import { TransactionSendTimeoutError } from 'web3-errors';
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
-import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
+import { getBlockNumber } from '../rpc_method_wrappers';
 
-export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
+/**
+ * An internal function to send a transaction or throws if sending did not finish during the timeout during the blocks-timeout.
+ * @param web3Context the context to read the configurations from
+ * @param sendTransactionFunc the function that will send the transaction (could be sendTransaction or sendRawTransaction)
+ * @param transactionHash to be used inside the exception message if there will be any exceptions.
+ * @returns the Promise<string> returned by the `sendTransactionFunc`.
+ */
+export async function trySendTransaction(
 	web3Context: Web3Context<EthExecutionAPI>,
-	transactionHash: Bytes,
-	returnFormat: ReturnFormat,
-): Promise<TransactionReceipt> {
-	const pollingInterval =
-		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
-
-	const awaitableTransactionReceipt = pollTillDefined(async () => {
-		try {
-			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
-		} catch (error) {
-			console.warn('An error happen while trying to get the transaction receipt', error);
-			return undefined;
-		}
-	}, pollingInterval);
+	sendTransactionFunc: AsyncFunction<string>,
+	transactionHash?: Bytes,
+): Promise<string> {
+	const pollingInterval = web3Context.transactionPollingInterval;
 
 	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
-		web3Context.transactionPollingTimeout,
-		new TransactionPollingTimeoutError({
-			numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
+		web3Context.transactionSendTimeout,
+		new TransactionSendTimeoutError({
+			numberOfSeconds: web3Context.transactionSendTimeout / 1000,
 			transactionHash,
 		}),
 	);
@@ -60,11 +56,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	);
 
 	try {
-		return await Promise.race([
-			awaitableTransactionReceipt,
-			rejectOnTimeout,
-			rejectOnBlockTimeout,
-		]);
+		return await Promise.race([sendTransactionFunc(), rejectOnTimeout, rejectOnBlockTimeout]);
 	} finally {
 		clearTimeout(timeoutId);
 		clearInterval(intervalId);

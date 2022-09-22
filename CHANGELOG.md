@@ -748,6 +748,12 @@ should use 4.0.1-alpha.0 for testing.
 -   Added the error code `ERR_TX_GAS_MISMATCH` and used it inside `TransactionGasMismatchError` (#5462)
 -   Added `SignatureError` to `web3-errors/src/errors/signature_errors.ts` (moved from `web3-eth/src/errors.ts`) (#5462)
 -   Added the errors' classes to `web3-errors/src/errors/transaction_errors.ts` from `web3-eth/src/errors.ts` (#5462)
+-   Added `TransactionBlockTimeoutError` class and its error code `ERR_TX_BLOCK_TIMEOUT` (#5294)
+
+#### web3-eth
+
+-   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
+-   Implemented the logic for `transactionBlockTimeout` (#5294)
 
 #### web3-eth-abi
 
@@ -758,6 +764,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
+
+#### web3-utils
+
+-   Added and exported three reusable utility functions: `pollTillDefined`, `rejectIfTimeout` and `rejectIfConditionAtInterval` which are useful when dealing with promises that involves polling, rejecting after timeout or rejecting if a condition was met when calling repeatably at every time intervals.
 
 ### Changed
 

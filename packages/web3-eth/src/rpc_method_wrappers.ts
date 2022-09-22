@@ -41,21 +41,11 @@ import {
 	TransactionWithLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import {
-	ETH_DATA_FORMAT,
-	FormatType,
-	DataFormat,
-	DEFAULT_RETURN_FORMAT,
-	format,
-	waitWithTimeout,
-} from 'web3-utils';
+import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import {
-	TransactionError,
-	TransactionRevertError,
-	SignatureError,
-	TransactionSendTimeoutError,
-} from 'web3-errors';
+import { SignatureError, TransactionError, TransactionRevertError } from 'web3-errors';
+
+import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import * as rpcMethods from './rpc_methods';
 import {
 	accountSchema,
@@ -77,11 +67,12 @@ import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
 // eslint-disable-next-line import/no-cycle
+import { trySendTransaction } from './utils/try_send_transaction';
+// eslint-disable-next-line import/no-cycle
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { Web3EthExecutionAPI } from './web3_eth_execution_api';
 import { NUMBER_DATA_FORMAT } from './constants';
-import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 
 /**
  *
@@ -1119,27 +1110,23 @@ export function sendTransaction<
 								transactionFormatted as Record<string, unknown>,
 							);
 
-							transactionHash = await waitWithTimeout(
-								rpcMethods.sendRawTransaction(
-									web3Context.requestManager,
-									signedTransaction.rawTransaction,
-								),
-								web3Context.transactionSendTimeout,
-								new TransactionSendTimeoutError({
-									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
-									transactionHash: signedTransaction.transactionHash,
-								}),
+							transactionHash = await trySendTransaction(
+								web3Context,
+								async (): Promise<string> =>
+									rpcMethods.sendRawTransaction(
+										web3Context.requestManager,
+										signedTransaction.rawTransaction,
+									),
+								signedTransaction.transactionHash,
 							);
 						} else {
-							transactionHash = await waitWithTimeout(
-								rpcMethods.sendTransaction(
-									web3Context.requestManager,
-									transactionFormatted as Partial<TransactionWithSenderAPI>,
-								),
-								web3Context.transactionSendTimeout,
-								new TransactionSendTimeoutError({
-									numberOfSeconds: web3Context.transactionSendTimeout / 1000,
-								}),
+							transactionHash = await trySendTransaction(
+								web3Context,
+								async (): Promise<string> =>
+									rpcMethods.sendTransaction(
+										web3Context.requestManager,
+										transactionFormatted as Partial<TransactionWithSenderAPI>,
+									),
 							);
 						}
 
@@ -1190,6 +1177,7 @@ export function sendTransaction<
 								);
 							}
 							reject(transactionReceiptFormatted as unknown as ResolveType);
+							return;
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
@@ -1340,9 +1328,13 @@ export function sendSignedTransaction<
 						// 	await getRevertReason(web3Context, transaction, returnFormat);
 						// }
 
-						const transactionHash = await rpcMethods.sendRawTransaction(
-							web3Context.requestManager,
-							signedTransactionFormattedHex,
+						const transactionHash = await trySendTransaction(
+							web3Context,
+							async (): Promise<string> =>
+								rpcMethods.sendRawTransaction(
+									web3Context.requestManager,
+									signedTransactionFormattedHex,
+								),
 						);
 
 						if (promiEvent.listenerCount('sent') > 0) {
@@ -1392,6 +1384,7 @@ export function sendSignedTransaction<
 								);
 							}
 							reject(transactionReceiptFormatted as unknown as ResolveType);
+							return;
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}

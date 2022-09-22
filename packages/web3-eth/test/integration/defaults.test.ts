@@ -19,7 +19,11 @@ import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt, Web3BaseProvider } from 'web3-types';
-import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from 'web3-errors';
+import {
+	TransactionBlockTimeoutError,
+	TransactionPollingTimeoutError,
+	TransactionSendTimeoutError,
+} from 'web3-errors';
 import {
 	prepareTransactionForSigning,
 	SendTransactionEvents,
@@ -46,6 +50,8 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
+
+const MAX_32_SIGNED_INTEGER = 2147483647;
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -478,14 +484,14 @@ describe('defaults', () => {
 
 			// Cause the events to take a long time (more than blockHeaderTimeout),
 			//	to ensure that polling of new blocks works in such cases.
-			// I will cause the providers that supports subscription (like WebSocket)
+			// This will cause the providers that supports subscription (like WebSocket)
 			// 	to never return data through listening to new events
-			// let pr = new Promise(res => setTimeout(res, 5000));
 
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
 			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
-				// eslint-disable-next-line no-promise-executor-return
-				await new Promise(res => setTimeout(res, 5000));
+				await new Promise(res => {
+					setTimeout(res, 1000000);
+				});
 			};
 
 			// Make the test run faster by casing the polling to start after 1 second
@@ -498,9 +504,9 @@ describe('defaults', () => {
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 			> = tempEth.sendTransaction({
+				from,
 				to,
 				value,
-				from,
 			});
 
 			const confirmationPromise = new Promise((resolve: (status: bigint) => void) => {
@@ -519,26 +525,21 @@ describe('defaults', () => {
 						if (confirmations >= 2) {
 							sentTx.removeAllListeners();
 							resolve(status);
+						} else {
+							// Send a transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
+							await tempEth.sendTransaction({
+								from,
+								to,
+								value,
+							});
 						}
 					},
 				);
 			});
-
-			// To cause the development node (like Ganache) to generate new block for the new transaction
-			// When another block is generated, the pervious transaction would be able to have 2 confirmations
-			// eslint-disable-next-line no-promise-executor-return
-			await new Promise<void>(resolve => setTimeout(resolve, 1000));
-			const tx = tempEth.sendTransaction({
-				to,
-				value,
-				from,
-			});
-			await tx;
+			await sentTx;
 
 			// Ensure the promise the get the confirmations resolves with no error
-
 			const status = await confirmationPromise;
-
 			expect(status).toBe(BigInt(1));
 		});
 
@@ -582,6 +583,70 @@ describe('defaults', () => {
 				} else {
 					throw error;
 				}
+			}
+		});
+
+		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+			const eth = new Web3Eth(clientUrl);
+			const tempAcc2 = await createTempAccount();
+
+			// Make the test run faster by casing the polling to start after 2 blocks
+			eth.transactionBlockTimeout = 2;
+			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
+			//	does not respond, when raising the nonce
+			eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
+			// Increase other timeouts
+			eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
+
+			const from = tempAcc2.address;
+			const to = tempAcc.address;
+			const value = `0x0`;
+
+			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
+			const sentTx: Web3PromiEvent<
+				TransactionReceipt,
+				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+			> = eth.sendTransaction({
+				to,
+				value,
+				from,
+				// The previous test has the nonce set to Number.MAX_SAFE_INTEGER.
+				//	So, just decrease 1 from it here to not fall into another error.
+				nonce: Number.MAX_SAFE_INTEGER - 1,
+			});
+
+			// Some providers (mostly used for development) will make blocks only when there are new transactions
+			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`. And do nothing if an error happens.
+			setTimeout(() => {
+				(async () => {
+					try {
+						await eth.sendTransaction({
+							from: tempAcc.address,
+							to: tempAcc2.address,
+							value,
+						});
+					} catch (error) {
+						// Nothing needed to be done.
+					}
+					try {
+						await eth.sendTransaction({
+							from: tempAcc.address,
+							to: tempAcc2.address,
+							value,
+						});
+					} catch (error) {
+						// Nothing needed to be done.
+					}
+				})() as unknown;
+			}, 100);
+
+			try {
+				await sentTx;
+			} catch (error) {
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 			}
 		});
 
