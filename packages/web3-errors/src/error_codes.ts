@@ -76,6 +76,7 @@ export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
 
 export const ERR_TX_NOT_FOUND = 430;
 export const ERR_TX_SEND_TIMEOUT = 431;
+export const ERR_TX_BLOCK_TIMEOUT = 432;
 
 export const ERR_TX_SIGNING = 433;
 export const ERR_TX_GAS_MISMATCH = 434;

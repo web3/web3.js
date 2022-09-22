@@ -21,6 +21,7 @@ import { Bytes, HexString, Numbers, TransactionReceipt } from 'web3-types';
 import {
 	ERR_RAW_TX_UNDEFINED,
 	ERR_TX,
+	ERR_TX_BLOCK_TIMEOUT,
 	ERR_TX_CONTRACT_NOT_STORED,
 	ERR_TX_CHAIN_ID_MISMATCH,
 	ERR_TX_DATA_AND_INPUT,
@@ -40,19 +41,19 @@ import {
 	ERR_TX_MISSING_CUSTOM_CHAIN_ID,
 	ERR_TX_MISSING_GAS,
 	ERR_TX_NO_CONTRACT_ADDRESS,
+	ERR_TX_NOT_FOUND,
 	ERR_TX_OUT_OF_GAS,
+	ERR_TX_POLLING_TIMEOUT,
+	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
+	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
 	ERR_TX_REVERT_INSTRUCTION,
 	ERR_TX_REVERT_TRANSACTION,
 	ERR_TX_REVERT_WITHOUT_REASON,
-	ERR_TX_NOT_FOUND,
 	ERR_TX_SEND_TIMEOUT,
 	ERR_TX_SIGNING,
 	ERR_TX_UNABLE_TO_POPULATE_NONCE,
 	ERR_TX_UNSUPPORTED_EIP_1559,
 	ERR_TX_UNSUPPORTED_TYPE,
-	ERR_TX_POLLING_TIMEOUT,
-	ERR_TX_RECEIPT_MISSING_OR_BLOCKHASH_NULL,
-	ERR_TX_RECEIPT_MISSING_BLOCK_NUMBER,
 } from '../error_codes';
 import { InvalidValueError, Web3Error } from '../web3_error_base';
 
@@ -157,6 +158,7 @@ export class TransactionNotFound extends TransactionError {
 		this.code = ERR_TX_NOT_FOUND;
 	}
 }
+
 export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;
 
@@ -406,6 +408,22 @@ export class TransactionPollingTimeoutError extends Web3Error {
 			`Transaction was not mined within ${
 				value.numberOfSeconds
 			} seconds. ${transactionTimeoutHint(value.transactionHash)}`,
+		);
+	}
+}
+
+export class TransactionBlockTimeoutError extends Web3Error {
+	public code = ERR_TX_BLOCK_TIMEOUT;
+
+	public constructor(value: {
+		starterBlockNumber: number;
+		numberOfBlocks: number;
+		transactionHash?: Bytes;
+	}) {
+		super(
+			`Transaction started at ${value.starterBlockNumber} but was not mined within ${
+				value.numberOfBlocks
+			} blocks. ${transactionTimeoutHint(value.transactionHash)}`,
 		);
 	}
 }
