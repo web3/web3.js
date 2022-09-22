@@ -19,6 +19,7 @@ import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt, Web3BaseProvider } from 'web3-types';
+import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from 'web3-errors';
 import {
 	prepareTransactionForSigning,
 	SendTransactionEvents,
@@ -45,7 +46,6 @@ import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSen
 import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
-import { TransactionPollingTimeoutError, TransactionSendTimeoutError } from '../../src/errors';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;

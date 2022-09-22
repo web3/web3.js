@@ -25,7 +25,7 @@ import {
 } from 'web3-utils';
 import { Transaction } from 'web3-types';
 import { isNullish } from 'web3-validator';
-import { TransactionDataAndInputError } from '../errors';
+import { TransactionDataAndInputError } from 'web3-errors';
 import { transactionSchema } from '../schemas';
 
 export function formatTransaction<

@@ -14,13 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import { Web3Context } from 'web3-core';
+import { TransactionPollingTimeoutError } from 'web3-errors';
 import { DataFormat, isNullish, waitWithTimeout } from 'web3-utils';
 
 // eslint-disable-next-line import/no-cycle
 import { getTransactionReceipt } from '../rpc_method_wrappers';
-import { TransactionPollingTimeoutError } from '../errors';
 
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
