@@ -173,16 +173,18 @@ export default class IpcProvider<
 			await this.waitForConnection();
 		}
 
-		// if (!this._socket.writable) {
-		// 	console.error(
-		// 		'Can not send a request. The internal socket is not `writable`. Request data: ',
-		// 		request,
-		// 	);
-		// 	// TODO: once https://github.com/web3/web3.js/issues/5460 is implemented, just throw an exception,
-		// 	//	and so the user can catch it by listening to the error event.
-		// 	const dummyPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-		// 	return dummyPromise;
-		// }
+		// TODO: once https://github.com/web3/web3.js/issues/5460 is implemented, remove this block.
+		// 	And catch the error by listening to the error event.
+		// Additionally, after both https://github.com/web3/web3.js/issues/5466 and https://github.com/web3/web3.js/issues/5467
+		//	are implemented. There should be no case in the tests that cause a request to the provider after closing the connection.
+		if (!this._socket.writable) {
+			console.error(
+				'Can not send a request. The internal socket is not `writable`. Request data: ',
+				request,
+			);
+			const dummyPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
+			return dummyPromise;
+		}
 
 		try {
 			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();

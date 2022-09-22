@@ -21,13 +21,11 @@ export type AsyncFunction<T, K = unknown> = (...args: K[]) => Promise<T>;
 
 export function waitWithTimeout<T>(
 	awaitable: Promise<T> | AsyncFunction<T>,
-	stopCalling: boolean,
 	timeout: number,
 	error: Error,
 ): Promise<T>;
 export function waitWithTimeout<T>(
 	awaitable: Promise<T> | AsyncFunction<T>,
-	stopCalling: boolean,
 	timeout: number,
 ): Promise<T | undefined>;
 
@@ -37,13 +35,9 @@ export function waitWithTimeout<T>(
  */
 export async function waitWithTimeout<T>(
 	awaitable: Promise<T> | AsyncFunction<T>,
-	stopCalling: boolean,
 	timeout: number,
 	error?: Error,
 ): Promise<T | undefined> {
-	if (stopCalling) {
-		return undefined;
-	}
 	let timeoutId: NodeJS.Timeout | undefined;
 	const result = await Promise.race([
 		awaitable instanceof Promise ? awaitable : awaitable(),
@@ -64,23 +58,20 @@ export async function pollTillDefined<T>(
 	func: AsyncFunction<T>,
 	interval: number,
 ): Promise<Exclude<T, undefined>> {
-	const awaitableRes = waitWithTimeout(func, false, interval);
+	const awaitableRes = waitWithTimeout(func, interval);
 
 	let intervalId: NodeJS.Timer | undefined;
-	let stopCalling = false;
 	const polledRes = new Promise<Exclude<T, undefined>>((resolve, reject) => {
 		intervalId = setInterval(() => {
 			(async () => {
 				try {
-					const res = await waitWithTimeout(func, stopCalling, interval);
+					const res = await waitWithTimeout(func, interval);
 
 					if (!isNullish(res)) {
-						stopCalling = true;
 						clearInterval(intervalId);
 						resolve(res as unknown as Exclude<T, undefined>);
 					}
 				} catch (error) {
-					stopCalling = true;
 					clearInterval(intervalId);
 					reject(error);
 				}
@@ -91,7 +82,6 @@ export async function pollTillDefined<T>(
 	// If the first call to awaitableRes succeeded, return the result
 	const res = await awaitableRes;
 	if (!isNullish(res)) {
-		stopCalling = true;
 		if (intervalId) {
 			clearInterval(intervalId);
 		}
@@ -116,13 +106,11 @@ export function rejectIfConditionAtInterval<T>(
 	interval: number,
 ): [NodeJS.Timer, Promise<never>] {
 	let intervalId: NodeJS.Timer | undefined;
-	let stopCalling = false;
 	const rejectIfCondition = new Promise<never>((_, reject) => {
 		intervalId = setInterval(() => {
 			(async () => {
-				const error = await cond(stopCalling);
+				const error = await cond();
 				if (error) {
-					stopCalling = true;
 					clearInterval(intervalId);
 					reject(error);
 				}
