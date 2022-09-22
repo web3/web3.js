@@ -158,6 +158,7 @@ export class TransactionNotFound extends TransactionError {
 		this.code = ERR_TX_NOT_FOUND;
 	}
 }
+
 export class InvalidTransactionWithSender extends InvalidValueError {
 	public code = ERR_TX_INVALID_SENDER;
 
