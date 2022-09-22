@@ -21,7 +21,7 @@ import { Contract, NonPayableMethodObject } from 'web3-eth-contract';
 import { ResolverMethodMissingError } from 'web3-errors';
 // import { Bytes, Address, DataFormat } from 'web3-utils';
 // import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import { sha3Raw } from 'web3-utils';
+import { sha3Raw, sha3 } from 'web3-utils';
 import { Registry } from '../../src/registry';
 import { Resolver } from '../../src/resolver';
 // import { ENS } from '../../src/ens';
@@ -111,6 +111,8 @@ describe('resolver', () => {
 				call: jest.fn().mockReturnValue(true),
 			} as unknown as NonPayableMethodObject<any, any>);
 
+			// todo when moving this mock in beforeAll, jest calls the actual implementation, how to fix that
+			// I use this in many places
 			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
 				return new Promise(resolve => {
 					resolve(contract);
@@ -186,10 +188,6 @@ describe('resolver', () => {
 					call: jest.fn().mockReturnValue(true),
 				} as unknown as NonPayableMethodObject<any, any>);
 
-			// await expect(
-			// 	resolver.checkInterfaceSupport(contract, setPubKeyMethod),
-			// ).resolves.not.toThrow();
-
 			const sendOptions = { from: mockAddress };
 			await expect(
 				resolver.setContenthash(ENS_NAME, hash, sendOptions),
@@ -199,5 +197,75 @@ describe('resolver', () => {
 			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[setContenthashMethod]);
 			expect(send).toHaveBeenCalledWith(sendOptions);
 		});
+	});
+
+	describe('supportsInterface', () => {
+		it('check supportsInterface for non strict hex id', async () => {
+			const interfaceId = 'setAddr';
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call');
+
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(resolver.supportsInterface(ENS_NAME, interfaceId)).resolves.not.toThrow();
+
+			// expect(setContenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME), hash);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(sha3(interfaceId)?.substring(0, 10));
+			expect(call).toHaveBeenCalled();
+		});
+
+		it('check supportsInterface for empty non strict hex id', async () => {
+			const interfaceId = ''; // empty
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			await expect(resolver.supportsInterface(ENS_NAME, interfaceId)).rejects.toThrow(
+				new Error('Invalid interface Id'),
+			);
+		});
+
+		it.each(Object.values(interfaceIds))(
+			'check supportsInterface for valid hex ids',
+			async () => {
+				const interfaceId = 'setAddr';
+				jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+					return new Promise(resolve => {
+						resolve(contract);
+					});
+				});
+
+				// eslint-disable-next-line @typescript-eslint/no-empty-function
+				const call = jest.spyOn({ call: () => {} }, 'call');
+
+				const supportsInterfaceMock = jest
+					.spyOn(contract.methods, 'supportsInterface')
+					.mockReturnValue({
+						call,
+					} as unknown as NonPayableMethodObject<any, any>);
+
+				await expect(
+					resolver.supportsInterface(ENS_NAME, interfaceId),
+				).resolves.not.toThrow();
+
+				// expect(setContenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME), hash);
+				expect(supportsInterfaceMock).toHaveBeenCalledWith(
+					sha3(interfaceId)?.substring(0, 10),
+				);
+				expect(call).toHaveBeenCalled();
+			},
+		);
 	});
 });
