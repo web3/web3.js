@@ -29,7 +29,7 @@ import { isNullish } from 'web3-validator';
 import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
-} from '../errors';
+} from 'web3-errors';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';

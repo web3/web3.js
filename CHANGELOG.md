@@ -744,6 +744,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Add optional `innerError` property to the abstract class `Web3Error`. This `innerError` could be `Error`, `Error[]` or `undefined`. (#5435) (#5434)
 -   The class `Web3ContractError` is moved to this package from `web3-eth-contract`. (#5434)
+-   Added the error code `ERR_TX_SIGNING` and used it inside `TransactionSigningError` (#5462)
+-   Added the error code `ERR_TX_GAS_MISMATCH` and used it inside `TransactionGasMismatchError` (#5462)
+-   Added `SignatureError` to `web3-errors/src/errors/signature_errors.ts` (moved from `web3-eth/src/errors.ts`) (#5462)
+-   Added the errors' classes to `web3-errors/src/errors/transaction_errors.ts` from `web3-eth/src/errors.ts` (#5462)
 
 #### web3-eth-abi
 
@@ -755,7 +759,17 @@ should use 4.0.1-alpha.0 for testing.
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
 
+### Changed
+
+#### web3-error
+
+-   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
+
 ### Fixed
+
+#### web3-error
+
+-   Corrected the error code for `JSONRPC_ERR_UNAUTHORIZED` to be `4100` (#5462)
 
 #### web3-eth-contract
 
@@ -764,3 +778,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-abi
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
+
+### Removed
+
+#### web3-eth
+
+-   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)

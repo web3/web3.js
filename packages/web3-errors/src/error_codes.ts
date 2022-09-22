@@ -77,6 +77,9 @@ export const ERR_TX_LOCAL_WALLET_NOT_AVAILABLE = 429;
 export const ERR_TX_NOT_FOUND = 430;
 export const ERR_TX_SEND_TIMEOUT = 431;
 
+export const ERR_TX_SIGNING = 433;
+export const ERR_TX_GAS_MISMATCH = 434;
+
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;
@@ -113,7 +116,7 @@ export const GENESIS_BLOCK_NUMBER = '0x0';
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#provider-errors
 export const JSONRPC_ERR_REJECTED_REQUEST = 4001;
-export const JSONRPC_ERR_UNAUTHORIZED = 4001;
+export const JSONRPC_ERR_UNAUTHORIZED = 4100;
 export const JSONRPC_ERR_UNSUPPORTED_METHOD = 4200;
 export const JSONRPC_ERR_DISCONNECTED = 4900;
 export const JSONRPC_ERR_CHAIN_DISCONNECTED = 4901;
