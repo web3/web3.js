@@ -21,12 +21,14 @@ import { Contract, NonPayableMethodObject } from 'web3-eth-contract';
 import { ResolverMethodMissingError } from 'web3-errors';
 // import { Bytes, Address, DataFormat } from 'web3-utils';
 // import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { sha3Raw } from 'web3-utils';
 import { Registry } from '../../src/registry';
 import { Resolver } from '../../src/resolver';
 // import { ENS } from '../../src/ens';
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 // import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 import { methodsInInterface, interfaceIds } from '../../src/config';
+import { namehash } from '../../src/utils';
 
 describe('resolver', () => {
 	// class ResolverExtended extends Resolver {
@@ -42,6 +44,9 @@ describe('resolver', () => {
 	// let registryResolver: Resolver;
 	let contract: Contract<typeof PublicResolverAbi>;
 	const mockAddress = '0x0000000000000000000000000000000000000000';
+	const ENS_NAME = 'web3js.eth';
+	const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
+	const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
 
 	beforeAll(() => {
 		const context = new Web3Context('http://test.com');
@@ -50,14 +55,6 @@ describe('resolver', () => {
 		registry = new Registry(object);
 		resolver = new Resolver(registry);
 		contract = new Contract(PublicResolverAbi, mockAddress);
-
-		// const setAddr = jest.spyOn(contract.methods, 'setAddr');
-		// jest.jest.mo;
-		// setAddr.send = jest.fn();
-		// [''],
-		// '',
-		// new Contract.providers.HttpProvider('http://test.com'),
-		// );
 	});
 
 	describe('checkInterfaceSupport', () => {
@@ -120,23 +117,87 @@ describe('resolver', () => {
 				});
 			});
 
-			await resolver.setAddress('name.eth', mockAddress, { from: mockAddress });
+			// todo add expect for ENS_NAME
+			await resolver.setAddress(ENS_NAME, mockAddress, { from: mockAddress });
 			expect(checkInteraface).toHaveBeenCalled();
 			// expect(getResolverContractAdapter).toHaveBeenCalledWith('name.eth');
 		});
 	});
 
-	// it('should', () => {
-	// 	const registry = new Registry(object);
-	// 	const resolver = new Resolver(registry);
+	describe('setPubkey', () => {
+		it('should set Pubkey', async () => {
+			const setPubKeyMethod = methodsInInterface.setPubkey;
 
-	// 	expect(resolver.getAddress).toBeDefined();
-	// 	expect(resolver.checkInterfaceSupport).toBeDefined();
-	// 	expect(resolver.setAddress).toBeDefined();
-	// 	expect(resolver.setPubkey).toBeDefined();
-	// 	expect(resolver.setContenthash).toBeDefined();
-	// 	expect(resolver.supportsInterface).toBeDefined();
-	// 	expect(resolver.getPubkey).toBeDefined();
-	// 	expect(resolver.getContenthash).toBeDefined();
-	// });
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setPubKeyMock = jest.spyOn(contract.methods, 'setPubkey').mockReturnValue({
+				send,
+			} as unknown as NonPayableMethodObject<any, any>);
+
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: jest.fn().mockReturnValue(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await expect(resolver.setPubkey(ENS_NAME, x, y, sendOptions)).resolves.not.toThrow();
+
+			expect(setPubKeyMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				namehash(x),
+				namehash(y),
+			);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[setPubKeyMethod]);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+	});
+
+	describe('setContenthash', () => {
+		it('should set contenthash', async () => {
+			const setContenthashMethod = methodsInInterface.setContenthash;
+			const hash = sha3Raw('justToHash');
+
+			jest.spyOn(registry, 'getResolver').mockImplementation(async () => {
+				return new Promise(resolve => {
+					resolve(contract);
+				});
+			});
+
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setContenthashMock = jest
+				.spyOn(contract.methods, 'setContenthash')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const supportsInterfaceMock = jest
+				.spyOn(contract.methods, 'supportsInterface')
+				.mockReturnValue({
+					call: jest.fn().mockReturnValue(true),
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			// await expect(
+			// 	resolver.checkInterfaceSupport(contract, setPubKeyMethod),
+			// ).resolves.not.toThrow();
+
+			const sendOptions = { from: mockAddress };
+			await expect(
+				resolver.setContenthash(ENS_NAME, hash, sendOptions),
+			).resolves.not.toThrow();
+
+			expect(setContenthashMock).toHaveBeenCalledWith(namehash(ENS_NAME), hash);
+			expect(supportsInterfaceMock).toHaveBeenCalledWith(interfaceIds[setContenthashMethod]);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+	});
 });
