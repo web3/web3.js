@@ -201,24 +201,401 @@ describe('registry', () => {
 			);
 			expect(send).toHaveBeenCalledWith(sendOptions);
 		});
+		it('setSubnodeOwner with non strict hex label', async () => {
+			// const checkInteraface = jest.spyOn(resolver, 'checkInterfaceSupport');
 
-		// it('setSubnodeOwner throw (transaction reverted)', async () => {
-		// 	// eslint-disable-next-line @typescript-eslint/no-empty-function
-		// 	const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
-		// 		throw new Error();
-		// 	});
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
 
-		// 	const setSubnodeOwnerMock = jest
-		// 		.spyOn(registry['contract'].methods, 'setSubnodeOwner')
-		// 		.mockReturnValue({ send } as unknown as NonPayableMethodObject<any, any>);
+			const setSubnodeOwnerMock = jest
+				.spyOn(registry['contract'].methods, 'setSubnodeOwner')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
 
-		// 	const sendOptions = { from: mockAddress };
-		// 	await expect(async () => {
-		// 		await registry.setSubnodeOwner(ENS_NAME, SubnodeOwner, sendOptions);
-		// 	}).rejects.toThrow(new Error());
-		// 	expect(setSubnodeOwnerMock).toHaveBeenCalledWith(namehash(ENS_NAME), SubnodeOwner);
-		// 	expect(send).toHaveBeenCalledWith(sendOptions);
-		// });
+			const sendOptions = { from: mockAddress };
+			await registry.setSubnodeOwner(ENS_NAME, ENS_NAME, mockAddress, sendOptions);
+			expect(setSubnodeOwnerMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				label,
+				mockAddress,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('setSubnodeOwner throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setSubnodeOwnerMock = jest
+				.spyOn(registry['contract'].methods, 'setSubnodeOwner')
+				.mockReturnValue({ send } as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await expect(async () => {
+				await registry.setSubnodeOwner(ENS_NAME, label, mockAddress, sendOptions);
+			}).rejects.toThrow(new Error());
+			expect(setSubnodeOwnerMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				label,
+				mockAddress,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+	});
+
+	describe('SubnodeRecord', () => {
+		const label = sha3Raw(ENS_NAME);
+		const TTL = 3600;
+
+		it('setSubnodeRecord', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setSubnodeRecordMock = jest
+				.spyOn(registry['contract'].methods, 'setSubnodeRecord')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await registry.setSubnodeRecord(
+				ENS_NAME,
+				label,
+				mockAddress,
+				mockAddress,
+				TTL,
+				sendOptions,
+			);
+			expect(setSubnodeRecordMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				label,
+				mockAddress,
+				mockAddress,
+				TTL,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('setSubnodeRecord with non strict hex label', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setSubnodeRecordMock = jest
+				.spyOn(registry['contract'].methods, 'setSubnodeRecord')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await registry.setSubnodeRecord(
+				ENS_NAME,
+				ENS_NAME,
+				mockAddress,
+				mockAddress,
+				TTL,
+				sendOptions,
+			);
+			expect(setSubnodeRecordMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				label,
+				mockAddress,
+				mockAddress,
+				TTL,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+		it('setSubnodeRecord throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setSubnodeRecordMock = jest
+				.spyOn(registry['contract'].methods, 'setSubnodeRecord')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+
+			await expect(async () => {
+				await registry.setSubnodeRecord(
+					ENS_NAME,
+					label,
+					mockAddress,
+					mockAddress,
+					TTL,
+					sendOptions,
+				);
+			}).rejects.toThrow(new Error());
+			expect(setSubnodeRecordMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				label,
+				mockAddress,
+				mockAddress,
+				TTL,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+	});
+	describe('ApprovalForAll', () => {
+		it('setApprovalForAll', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setApprovalForAllMock = jest
+				.spyOn(registry['contract'].methods, 'setApprovalForAll')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await registry.setApprovalForAll(ENS_NAME, true, sendOptions);
+			expect(setApprovalForAllMock).toHaveBeenCalledWith(ENS_NAME, true);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('setApprovalForAll throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setApprovalForAllMock = jest
+				.spyOn(registry['contract'].methods, 'setApprovalForAll')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await expect(async () => {
+				await registry.setApprovalForAll(ENS_NAME, true, sendOptions);
+			}).rejects.toThrow(new Error());
+			expect(setApprovalForAllMock).toHaveBeenCalledWith(ENS_NAME, true);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('isApprovedForAll', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call');
+
+			const isApprovedForAllMock = jest
+				.spyOn(registry['contract'].methods, 'isApprovedForAll')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await registry.isApprovedForAll(ENS_NAME, ENS_NAME);
+			expect(isApprovedForAllMock).toHaveBeenCalledWith(ENS_NAME, ENS_NAME);
+			expect(call).toHaveBeenCalled();
+		});
+		it('isApprovedForAll throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call').mockImplementation(() => {
+				throw new Error();
+			});
+			const isApprovedForAllMock = jest
+				.spyOn(registry['contract'].methods, 'isApprovedForAll')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(async () => {
+				await registry.isApprovedForAll(ENS_NAME, ENS_NAME);
+			}).rejects.toThrow(new Error());
+			expect(isApprovedForAllMock).toHaveBeenCalledWith(ENS_NAME, ENS_NAME);
+			expect(call).toHaveBeenCalled();
+		});
+	});
+
+	describe('record', () => {
+		const TTL = 3600;
+		it('setRecord', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send');
+
+			const setRecordMock = jest
+				.spyOn(registry['contract'].methods, 'setRecord')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await registry.setRecord(ENS_NAME, mockAddress, mockAddress, TTL, sendOptions);
+			expect(setRecordMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				mockAddress,
+				mockAddress,
+				TTL,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+		it('setRecord throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setRecordMock = jest
+				.spyOn(registry['contract'].methods, 'setRecord')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+
+			await expect(async () => {
+				await registry.setRecord(ENS_NAME, mockAddress, mockAddress, TTL, sendOptions);
+			}).rejects.toThrow(new Error());
+			expect(setRecordMock).toHaveBeenCalledWith(
+				namehash(ENS_NAME),
+				mockAddress,
+				mockAddress,
+				TTL,
+			);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+		it('recordExists', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call');
+
+			const setRecordMock = jest
+				.spyOn(registry['contract'].methods, 'recordExists')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await registry.recordExists(ENS_NAME);
+			expect(setRecordMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+			expect(call).toHaveBeenCalled();
+		});
+		it('recordExists throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setRecordMock = jest
+				.spyOn(registry['contract'].methods, 'recordExists')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(async () => {
+				await registry.recordExists(ENS_NAME);
+			}).rejects.toThrow(new Error());
+			expect(setRecordMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+			expect(call).toHaveBeenCalled();
+		});
+	});
+
+	describe('resolver', () => {
+		it('setResolver', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: async () => {} }, 'send');
+
+			const setResolverMock = jest
+				.spyOn(registry['contract'].methods, 'setResolver')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+			await registry.setResolver(ENS_NAME, mockAddress, sendOptions);
+			expect(setResolverMock).toHaveBeenCalledWith(namehash(ENS_NAME), mockAddress);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+		it('setResolver throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const send = jest.spyOn({ send: () => {} }, 'send').mockImplementation(() => {
+				throw new Error();
+			});
+
+			const setResolverMock = jest
+				.spyOn(registry['contract'].methods, 'setResolver')
+				.mockReturnValue({
+					send,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			const sendOptions = { from: mockAddress };
+
+			await expect(async () => {
+				await registry.setResolver(ENS_NAME, mockAddress, sendOptions);
+			}).rejects.toThrow(new Error());
+			expect(setResolverMock).toHaveBeenCalledWith(namehash(ENS_NAME), mockAddress);
+			expect(send).toHaveBeenCalledWith(sendOptions);
+		});
+
+		it('resolver', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest
+				.spyOn(
+					{
+						call: async () => {
+							return mockAddress;
+						},
+					},
+					'call',
+				)
+				.mockReturnValue(Promise.resolve(mockAddress));
+
+			const resolverMock = jest
+				.spyOn(registry['contract'].methods, 'resolver')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await registry.getResolver(ENS_NAME);
+			expect(resolverMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+			expect(call).toHaveBeenCalled();
+		});
+
+		it('resolver (return non string)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest
+				.spyOn(
+					{
+						call: async () => {
+							return 5; // something that is not string
+						},
+					},
+					'call',
+				)
+				.mockReturnValue(Promise.resolve(5)); // something that is not string
+
+			const resolverMock = jest
+				.spyOn(registry['contract'].methods, 'resolver')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(async () => {
+				await registry.getResolver(ENS_NAME);
+			}).rejects.toThrow(new Error());
+			expect(resolverMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+			expect(call).toHaveBeenCalled();
+		});
+
+		it('resolver throw (transaction reverted)', async () => {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			const call = jest.spyOn({ call: () => {} }, 'call').mockImplementation(() => {
+				throw new Error();
+			});
+			const resolverMock = jest
+				.spyOn(registry['contract'].methods, 'resolver')
+				.mockReturnValue({
+					call,
+				} as unknown as NonPayableMethodObject<any, any>);
+
+			await expect(async () => {
+				await registry.getResolver(ENS_NAME);
+			}).rejects.toThrow(new Error());
+			expect(resolverMock).toHaveBeenCalledWith(namehash(ENS_NAME));
+			expect(call).toHaveBeenCalled();
+		});
 	});
 	// it('Doesn"t support interface', async () => {
 	// 	const methodName = methodsInInterface.setAddr; // Just a method to pass first check
