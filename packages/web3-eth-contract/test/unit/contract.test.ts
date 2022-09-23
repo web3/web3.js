@@ -333,5 +333,98 @@ describe('Contract', () => {
 			// contract.options.jsonInterface = abi; TODO also check changing abi on the fly
 			expect(contract.options.jsonInterface).toStrictEqual(sampleStorageContractABI);
 		});
+
+		it('getPastEvents', async () => {
+			const from = '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2';
+			const gas = '1000000';
+			const sendOptions = { from, gas };
+
+			const deployedAddr = '0x20bc23D0598b12c34cBDEf1fae439Ba8744DB426';
+
+			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
+
+			const spyTx = jest
+				.spyOn(eth, 'sendTransaction')
+				.mockImplementation((_objInstance, _tx, _returnformat) => {
+					const newContract = contract.clone();
+					newContract.options.address = deployedAddr;
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(newContract) as any;
+				});
+
+			const fromBlock = 'earliest';
+			const toBlock = 'latest';
+			const topics = ['0x7d7846723bda52976e0286c6efffee937ee9f76817a867ec70531ad29fb1fc0e'];
+			const getLogsResult = [
+				{
+					logIndex: 1,
+					transactionIndex: 0,
+					transactionHash:
+						'0xbe70733bcf87282c0ba9bf3c0e2d545084fad48bd571c314140c8dc1db882673',
+					blockHash: '0x78755c18c9a0a1283fa04b2f78c7794c249395b08f7f7dff304034d64d6a1607',
+					blockNumber: 25,
+					address: '0x2D029a4bd792d795f35e0583F64eD9DedeBBa849',
+					data: '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+					topics: ['0x7d7846723bda52976e0286c6efffee937ee9f76817a867ec70531ad29fb1fc0e'],
+					type: 'mined',
+					id: 'log_886b29f0',
+				},
+			];
+
+			const spyGetLogs = jest
+				.spyOn(eth, 'getLogs')
+				.mockImplementation((_objInstance, _params, _returnformat) => {
+					expect(_params.address).toStrictEqual(deployedAddr.toLocaleLowerCase());
+					expect(_params.fromBlock).toStrictEqual(fromBlock);
+					expect(_params.toBlock).toStrictEqual(toBlock);
+					expect(_params.topics).toStrictEqual(topics);
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(getLogsResult) as any;
+				});
+
+			const deployedContract = await contract
+				.deploy({
+					data: GreeterBytecode,
+					arguments: ['My Greeting'],
+				})
+				.send(sendOptions);
+
+			const pastEvent = await deployedContract.getPastEvents('GREETING_CHANGED', {
+				fromBlock,
+				toBlock,
+			});
+
+			const expectedObj = [
+				{
+					logIndex: BigInt(1),
+					transactionIndex: BigInt(0),
+					transactionHash:
+						'0xbe70733bcf87282c0ba9bf3c0e2d545084fad48bd571c314140c8dc1db882673',
+					blockHash: '0x78755c18c9a0a1283fa04b2f78c7794c249395b08f7f7dff304034d64d6a1607',
+					blockNumber: BigInt(25),
+					address: '0x2D029a4bd792d795f35e0583F64eD9DedeBBa849',
+					data: '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+					topics: ['0x7d7846723bda52976e0286c6efffee937ee9f76817a867ec70531ad29fb1fc0e'],
+					returnValues: {
+						'0': 'Hello',
+						__length__: 1,
+						greeting: 'Hello',
+					},
+					event: 'GREETING_CHANGED',
+					signature: '0x7d7846723bda52976e0286c6efffee937ee9f76817a867ec70531ad29fb1fc0e',
+					raw: {
+						data: '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000',
+						topics: [
+							'0x7d7846723bda52976e0286c6efffee937ee9f76817a867ec70531ad29fb1fc0e',
+						],
+					},
+				},
+			];
+
+			expect(pastEvent).toStrictEqual(expectedObj);
+			spyTx.mockClear();
+			spyGetLogs.mockClear();
+		});
 	});
 });
