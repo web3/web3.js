@@ -17,15 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { isBytes, isNullish } from 'web3-validator';
-import { Bytes } from 'web3-types';
+import { Bytes, Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getBlockByHash, getBlockByNumber } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getBlock } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, mockRpcResponseHydrated, testData } from './fixtures/get_block';
 import { blockSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getBlock', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -51,11 +50,9 @@ describe('getBlock', () => {
 			}
 
 			await getBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(inputBlockIsBytes ? getBlockByHash : getBlockByNumber).toHaveBeenCalledWith(
-				web3Context.requestManager,
-				inputBlockFormatted,
-				hydrated,
-			);
+			expect(
+				inputBlockIsBytes ? ethRpcMethods.getBlockByHash : ethRpcMethods.getBlockByNumber,
+			).toHaveBeenCalledWith(web3Context.requestManager, inputBlockFormatted, hydrated);
 		},
 	);
 
@@ -72,7 +69,9 @@ describe('getBlock', () => {
 			);
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
-				(inputBlockIsBytes ? getBlockByHash : getBlockByNumber) as jest.Mock
+				(inputBlockIsBytes
+					? ethRpcMethods.getBlockByHash
+					: ethRpcMethods.getBlockByNumber) as jest.Mock
 			).mockResolvedValueOnce(expectedMockRpcResponse);
 
 			const result = await getBlock(web3Context, ...inputParameters, expectedReturnFormat);

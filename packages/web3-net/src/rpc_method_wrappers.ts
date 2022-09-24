@@ -17,14 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { DataFormat, format } from 'web3-utils';
 import { Web3Context } from 'web3-core';
-import * as rpcMethods from './rpc_methods';
-import { Web3NetAPI } from './web3_net_api';
+import { Web3NetAPI } from 'web3-types';
+import { netRpcMethods } from 'web3-rpc-methods';
 
 export async function getId<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3NetAPI>,
 	returnFormat: ReturnFormat,
 ) {
-	const response = await rpcMethods.getId(web3Context.requestManager);
+	const response = await netRpcMethods.getId(web3Context.requestManager);
 
 	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
 }
@@ -33,11 +33,11 @@ export async function getPeerCount<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<Web3NetAPI>,
 	returnFormat: ReturnFormat,
 ) {
-	const response = await rpcMethods.getPeerCount(web3Context.requestManager);
+	const response = await netRpcMethods.getPeerCount(web3Context.requestManager);
 
 	// Data returned is number in hex format
 	return format({ eth: 'uint' }, response as unknown as number, returnFormat);
 }
 
 export const isListening = async (web3Context: Web3Context<Web3NetAPI>) =>
-	rpcMethods.isListening(web3Context.requestManager);
+	netRpcMethods.isListening(web3Context.requestManager);

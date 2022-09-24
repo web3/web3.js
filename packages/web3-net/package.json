@@ -40,6 +40,7 @@
 	},
 	"dependencies": {
 		"web3-core": "^4.0.1-alpha.0",
+		"web3-rpc-methods": "^0.1.0-alpha.0",
 		"web3-types": "^0.1.1-alpha.0",
 		"web3-utils": "^4.0.1-alpha.0"
 	}

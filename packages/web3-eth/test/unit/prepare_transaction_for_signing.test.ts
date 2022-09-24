@@ -24,8 +24,8 @@ import {
 	FeeMarketEIP1559Transaction,
 	Transaction,
 } from '@ethereumjs/tx';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import * as rpcMethods from '../../src/rpc_methods';
 import { prepareTransactionForSigning } from '../../src/utils/prepare_transaction_for_signing';
 import { validTransactions } from '../fixtures/prepare_transaction_for_signing';
 
@@ -52,7 +52,7 @@ describe('prepareTransactionForSigning', () => {
 			) => {
 				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
-				jest.spyOn(rpcMethods, 'getBlockByNumber').mockImplementation(() => mockBlock);
+				jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(() => mockBlock);
 
 				const ethereumjsTx = await prepareTransactionForSigning(
 					expectedTransaction,
