@@ -16,14 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getTransactionByHash } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getTransaction } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction';
 import { formatTransaction } from '../../../src';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransaction', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -43,7 +43,7 @@ describe('getTransaction', () => {
 			);
 
 			await getTransaction(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(getTransactionByHash).toHaveBeenCalledWith(
+			expect(ethRpcMethods.getTransactionByHash).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputTransactionHashFormatted,
 			);
@@ -58,7 +58,9 @@ describe('getTransaction', () => {
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(getTransactionByHash as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(ethRpcMethods.getTransactionByHash as jest.Mock).mockResolvedValueOnce(
+				mockRpcResponse,
+			);
 
 			const result = await getTransaction(
 				web3Context,

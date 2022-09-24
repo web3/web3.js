@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Personal } from './personal';
 
-export * from './types';
 export * from './personal';
 
 export default Personal;

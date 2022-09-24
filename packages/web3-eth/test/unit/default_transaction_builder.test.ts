@@ -23,15 +23,16 @@ import {
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
 import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
 } from 'web3-errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
-import * as rpcMethods from '../../src/rpc_methods';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 const expectedNetworkId = '0x4';
 jest.mock('web3-net', () => ({
@@ -111,12 +112,12 @@ describe('defaultTransactionBuilder', () => {
 	let getTransactionCountSpy: jest.SpyInstance;
 
 	beforeEach(() => {
-		jest.spyOn(rpcMethods, 'getBlockByNumber').mockResolvedValue(mockBlockData);
+		jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockResolvedValue(mockBlockData);
 		getTransactionCountSpy = jest
-			.spyOn(rpcMethods, 'getTransactionCount')
+			.spyOn(ethRpcMethods, 'getTransactionCount')
 			.mockResolvedValue(expectedNonce);
-		jest.spyOn(rpcMethods, 'getGasPrice').mockResolvedValue(expectedGasPrice);
-		jest.spyOn(rpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
+		jest.spyOn(ethRpcMethods, 'getGasPrice').mockResolvedValue(expectedGasPrice);
+		jest.spyOn(ethRpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
 
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
@@ -406,7 +407,7 @@ describe('defaultTransactionBuilder', () => {
 	describe('should populate maxPriorityFeePerGas and maxFeePerGas', () => {
 		it('should throw Eip1559NotSupportedError', async () => {
 			const mockBlockDataNoBaseFeePerGas = { ...mockBlockData, baseFeePerGas: undefined };
-			jest.spyOn(rpcMethods, 'getBlockByNumber').mockImplementation(
+			jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(
 				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
 				() => mockBlockDataNoBaseFeePerGas,

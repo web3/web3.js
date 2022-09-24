@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth",
-    "version": "4.0.1-alpha.0",
+	"version": "4.0.1-alpha.0",
 	"description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -53,6 +53,7 @@
 		"web3-eth-accounts": "^4.0.1-alpha.0",
 		"web3-net": "^4.0.1-alpha.0",
 		"web3-providers-ws": "^4.0.1-alpha.0",
+		"web3-rpc-methods": "^0.1.0-alpha.0",
 		"web3-types": "^0.1.1-alpha.0",
 		"web3-utils": "^4.0.1-alpha.0",
 		"web3-validator": "^0.1.1-alpha.0"

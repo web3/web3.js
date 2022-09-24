@@ -25,13 +25,13 @@ import {
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { DataFormat, format, numberToHex } from 'web3-utils';
 import { isNullish } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
 import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
 } from 'web3-errors';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
-import { getBlockByNumber } from '../rpc_methods';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { transactionReceiptSchema } from '../schemas';
 
@@ -60,7 +60,7 @@ const watchByPolling = <ReturnFormat extends DataFormat, ResolveType = Transacti
 			if (confirmations >= web3Context.transactionConfirmationBlocks)
 				clearInterval(intervalId);
 
-			const nextBlock = await getBlockByNumber(
+			const nextBlock = await ethRpcMethods.getBlockByNumber(
 				web3Context.requestManager,
 				numberToHex(BigInt(transactionReceipt.blockNumber) + BigInt(confirmations)),
 				false,

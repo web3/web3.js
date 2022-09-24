@@ -15,12 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getMining } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { isMining } from '../../../src/rpc_method_wrappers';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('isMining', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -31,6 +31,6 @@ describe('isMining', () => {
 
 	it('should call rpcMethods.getMining with expected parameters', async () => {
 		await isMining(web3Context);
-		expect(getMining).toHaveBeenCalledWith(web3Context.requestManager);
+		expect(ethRpcMethods.getMining).toHaveBeenCalledWith(web3Context.requestManager);
 	});
 });

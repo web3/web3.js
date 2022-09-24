@@ -31,10 +31,11 @@ import {
 	Hardfork,
 	Transaction,
 	TransactionWithLocalWalletIndex,
+	Web3NetAPI,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
-import { getId, Web3NetAPI } from 'web3-net';
+import { getId } from 'web3-net';
 import { isNullish, isNumber } from 'web3-validator';
 import {
 	InvalidTransactionWithSender,
