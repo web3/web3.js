@@ -42,7 +42,14 @@ import {
 	Web3EthExecutionAPI,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	toChecksumAddress,
+} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { SignatureError, TransactionError, TransactionRevertError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
@@ -71,6 +78,8 @@ import {
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { trySendTransaction } from './utils/try_send_transaction';
 
 /**
  *
