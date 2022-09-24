@@ -30,7 +30,7 @@ import { ethRpcMethods } from 'web3-rpc-methods';
 import {
 	TransactionMissingReceiptOrBlockHashError,
 	TransactionReceiptMissingBlockNumberError,
-} from '../errors';
+} from 'web3-errors';
 import { SendSignedTransactionEvents, SendTransactionEvents } from '../types';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 import { transactionReceiptSchema } from '../schemas';

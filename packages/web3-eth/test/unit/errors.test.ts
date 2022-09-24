@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InvalidTransactionCall, InvalidTransactionWithSender } from '../../src/errors';
+import { InvalidTransactionCall, InvalidTransactionWithSender } from 'web3-errors';
 import { InvalidTransactionWithSenderData, InvalidTransactionCallData } from '../fixtures/errors';
 
 describe('errors', () => {

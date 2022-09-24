@@ -29,7 +29,7 @@ import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
-} from '../../src/errors';
+} from 'web3-errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 
 jest.mock('web3-rpc-methods');

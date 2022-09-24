@@ -48,3 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `Web3NetAPI` is now imported from `web3-types` instead of `web3-net` (#5441)
 -   Moved `rpc_methods` tests to `web3-rpc-methods` (#5441)
 -   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
+-   Implemented the logic for `transactionBlockTimeout` (#5294)
+
+### Removed
+
+-   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)

@@ -44,7 +44,7 @@ import {
 	MissingGasError,
 	TransactionGasMismatchError,
 	UnsupportedFeeMarketError,
-} from './errors';
+} from 'web3-errors';
 import { formatTransaction } from './utils/format_transaction';
 import { InternalTransaction } from './types';
 
