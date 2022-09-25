@@ -1181,18 +1181,30 @@ export class Contract<Abi extends ContractAbi>
 		returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 	): ContractBoundEvent {
 		return (...params: unknown[]) => {
-			const encodedParams = encodeEventABI(this.options, abi, params[0] as EventParameters);
-
+			const { topics, fromBlock } = encodeEventABI(
+				this.options,
+				abi,
+				params[0] as EventParameters,
+			);
 			const sub = new LogsSubscription(
 				{
 					address: this.options.address,
-					topics: encodedParams.topics,
+					topics,
 					abi,
 					jsonInterface: this._jsonInterface,
 				},
 				{ requestManager: this.requestManager, returnFormat },
 			);
-
+			if (!isNullish(fromBlock)) {
+				// emit past events when fromBlock is defined
+				this.getPastEvents(abi.name, { fromBlock, topics }, returnFormat)
+					.then(logs => {
+						logs.forEach(log => sub.emit('data', log as EventLog));
+					})
+					.catch(() => {
+						sub.emit('error', new SubscriptionError('Failed to get past events.'));
+					});
+			}
 			this.subscriptionManager?.addSubscription(sub).catch(() => {
 				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
 			});
