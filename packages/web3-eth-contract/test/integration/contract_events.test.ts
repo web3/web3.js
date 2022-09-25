@@ -126,7 +126,44 @@ describe('contract', () => {
 		);
 	});
 
-	describe('events subscription with HTTP', () => {
+		itIf(isWs)(
+			'should fetch past events when "fromBlock" is passed to contract.events.<eventName>',
+			async () => {
+				const eventValues = [11, 12, 13, 14];
+				// eslint-disable-next-line jest/no-standalone-expect
+				return expect(
+					processAsync(async resolve => {
+						// trigger multiple events
+						await Promise.all(
+							eventValues.map(v => {
+								return contractDeployed.methods
+									.firesMultiValueEvent('Event Value', v, false)
+									.send(sendOptions);
+							}),
+						);
+						const event = contractDeployed.events.MultiValueEvent({
+							fromBlock: 'earliest',
+						});
+
+						const pastEvents = [];
+						event.on('data', d => {
+							pastEvents.push(d);
+							if (pastEvents.length === eventValues.length) {
+								resolve(pastEvents);
+							}
+						});
+					}),
+				).resolves.toEqual(
+					expect.arrayContaining([
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+					]),
+				);
+			},
+		);
+
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
 			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
