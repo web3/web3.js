@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
-import { TransactionReceipt, Web3BaseProvider } from 'web3-types';
+import { Hardfork, TransactionReceipt, ValidChains, Web3BaseProvider } from 'web3-types';
 import {
 	TransactionBlockTimeoutError,
 	TransactionPollingTimeoutError,
@@ -650,23 +650,23 @@ describe('defaults', () => {
 			}
 		});
 
-		it('maxListenersWarningThreshold', () => {
+		it('maxListenersWarningThreshold test default config', () => {
 			// default
 			expect(web3Eth.maxListenersWarningThreshold).toBe(100);
-
-			// after set
-			web3Eth.setConfig({
+		});
+		it('maxListenersWarningThreshold set maxListeners through variable', () => {
+			eth2 = new Web3Eth({});
+			eth2.maxListenersWarningThreshold = 3;
+			expect(eth2.maxListenersWarningThreshold).toBe(3);
+			expect(eth2.getMaxListeners()).toBe(3);
+		});
+		it('maxListenersWarningThreshold set config', () => {
+			const eth = new Web3Eth({});
+			eth.setConfig({
 				maxListenersWarningThreshold: 3,
 			});
-			expect(web3Eth.maxListenersWarningThreshold).toBe(3);
-
-			// set by create new instance
-			eth2 = new Web3Eth({
-				config: {
-					maxListenersWarningThreshold: 4,
-				},
-			});
-			expect(eth2.maxListenersWarningThreshold).toBe(4);
+			expect(eth2.maxListenersWarningThreshold).toBe(3);
+			expect(eth2.getMaxListeners()).toBe(3);
 		});
 		it('defaultNetworkId', async () => {
 			// default
@@ -775,17 +775,19 @@ describe('defaults', () => {
 			);
 			expect(res.common.hardfork()).toBe('istanbul');
 		});
-		it('defaultCommon', () => {
+		it('defaultCommon', async () => {
 			// default
 			expect(web3Eth.defaultCommon).toBeUndefined();
+			const baseChain: ValidChains = 'mainnet';
+			const hardfork: Hardfork = 'dao';
 			const common = {
 				customChain: {
 					name: 'test',
 					networkId: 123,
 					chainId: 1234,
 				},
-				baseChain: 12345,
-				hardfork: 'dao',
+				baseChain,
+				hardfork,
 			};
 			// after set
 			web3Eth.setConfig({

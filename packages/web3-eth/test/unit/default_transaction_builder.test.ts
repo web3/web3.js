@@ -19,6 +19,8 @@ import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
 	Transaction,
+	ValidChains,
+	Hardfork,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
@@ -275,6 +277,36 @@ describe('defaultTransactionBuilder', () => {
 			});
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
+
+		it('should use web3Context.defaultCommon to populate', async () => {
+			const baseChain: ValidChains = 'mainnet';
+			const hardfork: Hardfork = 'berlin';
+			const customCommon = {
+				customChain: {
+					name: 'custom',
+					networkId: '0x3',
+					chainId: '0x1',
+				},
+				baseChain,
+				hardfork,
+			};
+
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultCommon: customCommon,
+				},
+			});
+
+			const input = { ...transaction };
+			delete input.common;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.common).toStrictEqual(customCommon);
+		});
 	});
 
 	describe('should populate chainId', () => {
@@ -431,7 +463,6 @@ describe('defaultTransactionBuilder', () => {
 				transaction: input,
 				web3Context,
 			});
-			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.gasPrice).toBeUndefined();
 		});

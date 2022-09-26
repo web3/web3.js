@@ -31,6 +31,7 @@ import {
 	Hardfork,
 	Transaction,
 	TransactionWithLocalWalletIndex,
+	Common,
 	Web3NetAPI,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
@@ -162,6 +163,17 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	}
 
 	if (isNullish(populatedTransaction.common)) {
+		if (options.web3Context.defaultCommon) {
+			const common = options.web3Context.defaultCommon as unknown as Common;
+			const chainId = common.customChain.chainId as string;
+			const networkId = common.customChain.networkId as string;
+			const name = common.customChain.name as string;
+			populatedTransaction.common = {
+				...common,
+				customChain: { chainId, networkId, name },
+			};
+		}
+
 		if (isNullish(populatedTransaction.chain)) {
 			populatedTransaction.chain = options.web3Context.defaultChain as ValidChains;
 		}
