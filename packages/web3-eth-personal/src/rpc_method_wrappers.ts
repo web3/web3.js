@@ -14,87 +14,82 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+import { Web3RequestManager } from 'web3-core';
 import { ETH_DATA_FORMAT, isHexStrict, toChecksumAddress, utf8ToHex } from 'web3-utils';
 import { formatTransaction } from 'web3-eth';
-import { Address, HexString, Transaction } from 'web3-types';
+import { Address, EthPersonalAPI, HexString, Transaction } from 'web3-types';
 import { validator } from 'web3-validator';
-import {
-	getAccounts as rpcGetAccounts,
-	lockAccount as rpcLockAccount,
-	newAccount as rpcNewAccount,
-	unlockAccount as rpcUnlockAccount,
-	importRawKey as rpcImportRawKey,
-	sendTransaction as rpcSendTransaction,
-	signTransaction as rpcSignTransaction,
-	sign as rpcSign,
-	ecRecover as rpcEcRecover,
-} from './rcp_methods';
-import { EthPersonalAPIManager } from './types';
+import { personalRpcMethods } from 'web3-rpc-methods';
 
-export const getAccounts = async (requestManager: EthPersonalAPIManager) => {
-	const result = await rpcGetAccounts(requestManager);
+export const getAccounts = async (requestManager: Web3RequestManager<EthPersonalAPI>) => {
+	const result = await personalRpcMethods.getAccounts(requestManager);
 
 	return result.map(toChecksumAddress);
 };
 
-export const newAccount = async (requestManager: EthPersonalAPIManager, password: string) => {
+export const newAccount = async (
+	requestManager: Web3RequestManager<EthPersonalAPI>,
+	password: string,
+) => {
 	validator.validate(['string'], [password]);
 
-	const result = await rpcNewAccount(requestManager, password);
+	const result = await personalRpcMethods.newAccount(requestManager, password);
 
 	return toChecksumAddress(result);
 };
 
 export const unlockAccount = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	address: Address,
 	password: string,
 	unlockDuration: number,
 ) => {
 	validator.validate(['address', 'string', 'uint'], [address, password, unlockDuration]);
 
-	return rpcUnlockAccount(requestManager, address, password, unlockDuration);
+	return personalRpcMethods.unlockAccount(requestManager, address, password, unlockDuration);
 };
 
-export const lockAccount = async (requestManager: EthPersonalAPIManager, address: Address) => {
+export const lockAccount = async (
+	requestManager: Web3RequestManager<EthPersonalAPI>,
+	address: Address,
+) => {
 	validator.validate(['address'], [address]);
 
-	return rpcLockAccount(requestManager, address);
+	return personalRpcMethods.lockAccount(requestManager, address);
 };
 
 export const importRawKey = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	keyData: HexString,
 	passphrase: string,
 ) => {
 	validator.validate(['string', 'string'], [keyData, passphrase]);
 
-	return rpcImportRawKey(requestManager, keyData, passphrase);
+	return personalRpcMethods.importRawKey(requestManager, keyData, passphrase);
 };
 
 export const sendTransaction = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	tx: Transaction,
 	passphrase: string,
 ) => {
 	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
 
-	return rpcSendTransaction(requestManager, formattedTx, passphrase);
+	return personalRpcMethods.sendTransaction(requestManager, formattedTx, passphrase);
 };
 
 export const signTransaction = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	tx: Transaction,
 	passphrase: string,
 ) => {
 	const formattedTx = formatTransaction(tx, ETH_DATA_FORMAT);
 
-	return rpcSignTransaction(requestManager, formattedTx, passphrase);
+	return personalRpcMethods.signTransaction(requestManager, formattedTx, passphrase);
 };
 
 export const sign = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	data: HexString,
 	address: Address,
 	passphrase: string,
@@ -103,11 +98,11 @@ export const sign = async (
 
 	const dataToSign = isHexStrict(data) ? data : utf8ToHex(data);
 
-	return rpcSign(requestManager, dataToSign, address, passphrase);
+	return personalRpcMethods.sign(requestManager, dataToSign, address, passphrase);
 };
 
 export const ecRecover = async (
-	requestManager: EthPersonalAPIManager,
+	requestManager: Web3RequestManager<EthPersonalAPI>,
 	signedData: HexString,
 	signature: string,
 ) => {
@@ -115,5 +110,5 @@ export const ecRecover = async (
 
 	const signedDataString = isHexStrict(signedData) ? signedData : utf8ToHex(signedData);
 
-	return rpcEcRecover(requestManager, signedDataString, signature);
+	return personalRpcMethods.ecRecover(requestManager, signedDataString, signature);
 };

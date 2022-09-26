@@ -30,7 +30,7 @@ import {
 	KeyStoreVersionError,
 	PBKDF2IterationsError,
 	PrivateKeyLengthError,
-	SignerError,
+	TransactionSigningError,
 	UndefinedRawTransactionError,
 } from 'web3-errors';
 import { Address, Bytes, HexString } from 'web3-types';
@@ -248,7 +248,7 @@ export const signTransaction = async (
 ): Promise<SignTransactionResult> => {
 	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
-		throw new SignerError('Signer Error');
+		throw new TransactionSigningError('Signer Error');
 
 	const validationErrors = signedTx.validate(true);
 
@@ -257,7 +257,7 @@ export const signTransaction = async (
 		for (const validationError of validationErrors) {
 			errorString += `${errorString} ${validationError}.`;
 		}
-		throw new SignerError(errorString);
+		throw new TransactionSigningError(errorString);
 	}
 
 	const rawTx = bytesToHex(signedTx.serialize());
@@ -621,7 +621,7 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		privateKey: bytesToHex(privateKeyBuffer),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		signTransaction: (_tx: Record<string, unknown>) => {
-			throw new SignerError('Do not have network access to sign the transaction');
+			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),

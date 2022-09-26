@@ -290,8 +290,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				gas: '0x5208',
 			});
 
-			// TODO: Debug why the assertions are not being called
-			// expect.assertions(1);
+			expect.assertions(1);
 		});
 	});
 });

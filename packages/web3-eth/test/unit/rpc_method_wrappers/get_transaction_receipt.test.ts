@@ -16,14 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getTransactionReceipt as rpcMethodsGetTransactionReceipt } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getTransactionReceipt } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_receipt';
 import { transactionReceiptSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransactionReceipt', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -43,7 +43,7 @@ describe('getTransactionReceipt', () => {
 			);
 
 			await getTransactionReceipt(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsGetTransactionReceipt).toHaveBeenCalledWith(
+			expect(ethRpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputTransactionHashFormatted,
 			);
@@ -59,7 +59,9 @@ describe('getTransactionReceipt', () => {
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(rpcMethodsGetTransactionReceipt as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(
+				mockRpcResponse,
+			);
 
 			const result = await getTransactionReceipt(
 				web3Context,
