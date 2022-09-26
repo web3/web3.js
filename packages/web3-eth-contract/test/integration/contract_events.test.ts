@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Contract } from '../../src';
+import { Contract, EventLog } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { processAsync } from '../shared_fixtures/utils';
 import {
@@ -136,6 +136,7 @@ describe('contract', () => {
 						// trigger multiple events
 						await Promise.all(
 							eventValues.map(v => {
+								// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 								return contractDeployed.methods
 									.firesMultiValueEvent('Event Value', v, false)
 									.send(sendOptions);
@@ -145,7 +146,7 @@ describe('contract', () => {
 							fromBlock: 'earliest',
 						});
 
-						const pastEvents = [];
+						const pastEvents: EventLog[] = [];
 						event.on('data', d => {
 							pastEvents.push(d);
 							if (pastEvents.length === eventValues.length) {
