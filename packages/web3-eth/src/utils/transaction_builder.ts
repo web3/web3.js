@@ -32,18 +32,19 @@ import {
 	Transaction,
 	TransactionWithLocalWalletIndex,
 	Common,
+	Web3NetAPI,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
-import { getId, Web3NetAPI } from 'web3-net';
+import { getId } from 'web3-net';
 import { isNullish, isNumber } from 'web3-validator';
-import { NUMBER_DATA_FORMAT } from '../constants';
 import {
 	InvalidTransactionWithSender,
 	LocalWalletNotAvailableError,
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
-} from '../errors';
+} from 'web3-errors';
+import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { getChainId, getTransactionCount } from '../rpc_method_wrappers';
 import { detectTransactionType } from './detect_transaction_type';

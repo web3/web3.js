@@ -16,19 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
-import { Bytes } from 'web3-types';
+import { Bytes, Web3EthExecutionAPI } from 'web3-types';
 import { isBytes, isNullish } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import {
-	getTransactionByBlockHashAndIndex,
-	getTransactionByBlockNumberAndIndex,
-} from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getTransactionFromBlock } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_from_block';
 import { formatTransaction } from '../../../src';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransactionFromBlock', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -61,8 +57,8 @@ describe('getTransactionFromBlock', () => {
 			await getTransactionFromBlock(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(
 				inputBlockIsBytes
-					? getTransactionByBlockHashAndIndex
-					: getTransactionByBlockNumberAndIndex,
+					? ethRpcMethods.getTransactionByBlockHashAndIndex
+					: ethRpcMethods.getTransactionByBlockNumberAndIndex,
 			).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputBlockFormatted,
@@ -83,8 +79,8 @@ describe('getTransactionFromBlock', () => {
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
-					? getTransactionByBlockHashAndIndex
-					: getTransactionByBlockNumberAndIndex) as jest.Mock
+					? ethRpcMethods.getTransactionByBlockHashAndIndex
+					: ethRpcMethods.getTransactionByBlockNumberAndIndex) as jest.Mock
 			).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getTransactionFromBlock(

@@ -34,3 +34,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [Unreleased]
+
+### Added
+
+-   `web3-rpc-methods` dependency (#5441)
+
+### Changed
+
+-   Import `EthPersonalAPI` from `web3-types` instead of local import (#5441)
+-   Replace the imported methods from `rcp_methods.ts` with `personalRpcMethods` imports from `web3-rpc-methods` (#5441)
+-   Replace use of `EthPersonalAPIManager` with `Web3RequestManager<EthPersonalAPI>` (#5441)
+
+### Removed
+
+-   Exported type `EthPersonalAPIManager`, `EthPersonalAPI` is not exported via `web3-types` (#5441)

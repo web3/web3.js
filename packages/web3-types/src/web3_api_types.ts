@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { JsonRpcId, JsonRpcIdentifier } from './json_rpc_types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Web3APISpec = Record<string, (...params: any) => any>;
 export type Web3APIMethod<T extends Web3APISpec> = string & keyof T;
 export type Web3APIParams<API extends Web3APISpec, Method extends Web3APIMethod<API>> = Parameters<

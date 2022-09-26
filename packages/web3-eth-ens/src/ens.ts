@@ -22,10 +22,17 @@ import {
 	ENSUnsupportedNetworkError,
 } from 'web3-errors';
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { getId, Web3NetAPI } from 'web3-net';
-import { Address, SupportedProviders, EthExecutionAPI, TransactionReceipt } from 'web3-types';
+import { getId } from 'web3-net';
+import {
+	Address,
+	SupportedProviders,
+	EthExecutionAPI,
+	TransactionReceipt,
+	Web3NetAPI,
+} from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FormatType, FMT_NUMBER, DataFormat } from 'web3-utils';
 import { NonPayableCallOptions, Contract } from 'web3-eth-contract';
+
 import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { Registry } from './registry';
 import { registryAddresses } from './config';
@@ -226,8 +233,10 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	/*
 	 * Resolves an ENS name to an Ethereum address.
 	 */
-	public async getAddress(ENSName: string) {
-		return this._resolver.getAddress(ENSName);
+
+	// eslint-disable-next-line @typescript-eslint/no-inferrable-types
+	public async getAddress(ENSName: string, coinType: number = 60) {
+		return this._resolver.getAddress(ENSName, coinType);
 	}
 
 	/*
