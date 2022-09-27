@@ -155,7 +155,6 @@ export const validateCustomChainInfo = (transaction: InternalTransaction) => {
 				txChainId: transaction.chainId,
 				customChainId: transaction.common.customChain.chainId,
 			});
-		// check networkID
 	}
 };
 export const validateChainInfo = (transaction: InternalTransaction) => {
