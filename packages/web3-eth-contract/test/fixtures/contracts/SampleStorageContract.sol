@@ -15,45 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// sample storage contract ABI
-export const sampleStorageContractABI = [
-	{
-		anonymous: false,
-		inputs: [
-			{
-				indexed: false,
-				internalType: 'uint256',
-				name: 'param',
-				type: 'uint256',
-			},
-		],
-		name: 'NEWNUM',
-		type: 'event',
-	},
-	{
-		inputs: [],
-		name: 'retrieveNum',
-		outputs: [
-			{
-				internalType: 'uint256',
-				name: '',
-				type: 'uint256',
-			},
-		],
-		stateMutability: 'view',
-		type: 'function',
-	},
-	{
-		inputs: [
-			{
-				internalType: 'uint256',
-				name: 'param',
-				type: 'uint256',
-			},
-		],
-		name: 'storeNum',
-		outputs: [],
-		stateMutability: 'nonpayable',
-		type: 'function',
-	},
-];
+pragma solidity ^0.8.7;
+
+contract SampleStorageContract {
+
+    uint256 uintNum;
+
+    event NEWNUM(uint256 param);
+
+    function storeNum(uint256 param) public {
+        uintNum = param;
+        emit NEWNUM(param);
+    }
+
+    function retrieveNum() public view returns (uint256){
+        return uintNum;
+    }
+}
