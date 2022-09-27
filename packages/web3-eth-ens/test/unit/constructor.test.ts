@@ -15,14 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { Web3Context, Web3ContextObject } from 'web3-core';
 import { Registry } from '../../src/registry';
 import { Resolver } from '../../src/resolver';
 import { ENS } from '../../src/ens';
 import { registryAddresses } from '../../src/config';
 
-describe('registry', () => {
-	it('should construct with expected methods', () => {
-		const registry = new Registry();
+describe('ens', () => {
+	let object: Web3ContextObject;
+
+	beforeAll(() => {
+		const context = new Web3Context('http://test.com');
+		object = context.getContextObject() as Web3ContextObject;
+	});
+	it('should construct registry with expected methods', () => {
+		const registry = new Registry(object);
 
 		expect(registry.getOwner).toBeDefined();
 		expect(registry.getResolver).toBeDefined();
@@ -36,11 +43,9 @@ describe('registry', () => {
 		expect(registry.setSubnodeRecord).toBeDefined();
 		expect(registry.setTTL).toBeDefined();
 	});
-});
 
-describe('resolver', () => {
-	it('should construct with expected methods', () => {
-		const registry = new Registry();
+	it('should construct resolver with expected methods', () => {
+		const registry = new Registry(object);
 		const resolver = new Resolver(registry);
 
 		expect(resolver.getAddress).toBeDefined();
@@ -52,10 +57,8 @@ describe('resolver', () => {
 		expect(resolver.getPubkey).toBeDefined();
 		expect(resolver.getContenthash).toBeDefined();
 	});
-});
 
-describe('ens', () => {
-	it('should construct with expected methods', () => {
+	it('should construct main ens class with expected methods', () => {
 		const ens = new ENS(registryAddresses.main, 'http://127.0.0.1:8545');
 
 		expect(ens.getResolver).toBeDefined();

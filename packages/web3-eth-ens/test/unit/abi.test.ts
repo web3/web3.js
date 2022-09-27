@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Registry from '../../src/abi/registry';
+import { ENSRegistryAbi as Registry } from '../../src/abi/ens/ENSRegistry';
 import ReverseRegistrar from '../../src/abi/reverse_registrar';
-import * as ENSRegistry from '../fixtures/ens/registry.json';
+import * as ENSRegistry from '../fixtures/ens/ENSRegistry.json';
 import * as ENSReverseRegistrar from '../fixtures/ens/reverse_registrar.json';
 
 describe('ABI', () => {
 	describe('Registry', () => {
 		it('should have valid ABI', () => {
-			expect(JSON.parse(ENSRegistry.result)).toEqual(Registry);
+			expect(ENSRegistry.abi).toEqual(Registry);
 		});
 	});
 

@@ -18,12 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3BaseProvider } from 'web3-types';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import {
-	getSystemTestProvider,
-	createTempAccount,
-	itIf,
-	isIpc,
-} from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('defaults', () => {
@@ -47,27 +42,24 @@ describe('contract', () => {
 		});
 
 		describe('defaultAccount', () => {
-			itIf(!isIpc)(
-				'should use "defaultAccount" on "Contract" level instead of "from"',
-				async () => {
-					// eslint-disable-next-line prefer-destructuring
-					Contract.defaultAccount = acc.address;
+			it('should use "defaultAccount" on "Contract" level instead of "from"', async () => {
+				// eslint-disable-next-line prefer-destructuring
+				Contract.defaultAccount = acc.address;
 
-					const receiptHandler = jest.fn();
+				const receiptHandler = jest.fn();
 
-					// We didn't specify "from" in this call
-					await contract
-						.deploy(deployOptions)
-						.send({ gas: '1000000' })
-						.on('receipt', receiptHandler);
+				// We didn't specify "from" in this call
+				await contract
+					.deploy(deployOptions)
+					.send({ gas: '1000000' })
+					.on('receipt', receiptHandler);
 
-					// We didn't specify "from" in this call
-					// eslint-disable-next-line jest/no-standalone-expect
-					expect(receiptHandler).toHaveBeenCalledWith(
-						expect.objectContaining({ from: acc.address }),
-					);
-				},
-			);
+				// We didn't specify "from" in this call
+				// eslint-disable-next-line jest/no-standalone-expect
+				expect(receiptHandler).toHaveBeenCalledWith(
+					expect.objectContaining({ from: acc.address }),
+				);
+			});
 
 			it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
 				const deployedContract = await contract.deploy(deployOptions).send(sendOptions);

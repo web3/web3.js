@@ -57,7 +57,6 @@ describeIf(isWs)('subscription', () => {
 	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
-	let from: string;
 	const testDataString = 'someTestString';
 	let tempAcc: { address: string; privateKey: string };
 
@@ -79,7 +78,7 @@ describeIf(isWs)('subscription', () => {
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs`, async () => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
-			from = tempAcc.address;
+			const from = tempAcc.address;
 			deployOptions = {
 				data: BasicBytecode,
 				arguments: [10, 'string init value'],

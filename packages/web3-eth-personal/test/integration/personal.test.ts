@@ -24,7 +24,7 @@ import {
 	createAccount,
 	createNewAccount,
 	createTempAccount,
-	closeOpenConnection
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('personal integration tests', () => {

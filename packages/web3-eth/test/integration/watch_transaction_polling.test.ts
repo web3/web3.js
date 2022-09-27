@@ -18,7 +18,6 @@ import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
 import { TransactionReceipt } from 'web3-types';
 import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxes } from './helper';
 
 import {
 	closeOpenConnection,
@@ -67,17 +66,24 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 				value,
 				from,
 			});
-			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
 				// eslint-disable-next-line no-void
-				void sentTx.on('confirmation', ({ confirmations }) => {
-					expect(Number(confirmations)).toBeGreaterThanOrEqual(shouldBe);
-					shouldBe += 1;
-					if (shouldBe >= waitConfirmations) {
-						resolve();
-					}
-				});
+				void sentTx.on(
+					'confirmation',
+					async ({ confirmations }: { confirmations: bigint }) => {
+						if (confirmations >= waitConfirmations) {
+							resolve();
+						} else {
+							// Send a transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
+							await web3Eth.sendTransaction({
+								to,
+								value,
+								from,
+							});
+						}
+					},
+				);
 			});
 			await new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -89,8 +95,8 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			});
 
 			await sentTx;
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
+			sentTx.removeAllListeners();
 		});
 	});
 });

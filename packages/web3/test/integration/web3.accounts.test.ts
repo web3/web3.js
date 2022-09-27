@@ -32,12 +32,13 @@ describe('web3.accounts', () => {
 	let tempAccount: string;
 	let web3: Web3;
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-		tempAccount = (await createTempAccount()).address;
 		web3 = new Web3(clientUrl);
-
 		await waitForOpenConnection(web3);
+	});
+	beforeEach(async () => {
+		tempAccount = (await createTempAccount()).address;
 	});
 
 	afterAll(async () => {
@@ -112,7 +113,8 @@ describe('web3.accounts', () => {
 				await expect(account.signTransaction(tx)).rejects.toThrow('gasLimit is too low.');
 			});
 
-			// This test should fail, but it's not. Need to debug further to figure out why.
+			// TODO This test should fail, but it's not. Need to debug further to figure out why.
+			// eslint-disable-next-line jest/no-disabled-tests
 			it.skip('should throw error if signed by private key not associated with "from" field', async () => {
 				const account: Web3Account = web3.eth.accounts.create();
 

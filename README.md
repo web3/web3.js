@@ -25,6 +25,11 @@ yarn add web3
 -   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
 -   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
 
+## Useful links
+
+-   [Web3 tree shaking support guide](https://docs.web3js.org/docs/guides/web3_tree_shaking_support_guide)
+-   [React App Example](https://github.com/ChainSafe/web3js-example-react-app)
+
 ## Architecture Overview
 
 | Package                                                                                           | Version                                                                                        | License                                                                                                               | Docs                                                                                         | Description                                                                                                   |
