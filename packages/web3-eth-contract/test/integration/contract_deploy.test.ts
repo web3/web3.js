@@ -18,7 +18,14 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, isWs, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	isWs,
+	createTempAccount,
+	createNewAccount,
+	signTxAndSendEIP2930,
+	signTxAndSendEIP1559,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -26,7 +33,10 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
-
+		let localAccount: { address: string; privateKey: string };
+		beforeAll(async () => {
+			localAccount = await createNewAccount({ refill: true });
+		});
 		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -40,6 +50,38 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+		describe('local account', () => {
+			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
+				'should deploy the contract %p',
+				async signTxAndSend => {
+					const deployData = contract.deploy(deployOptions);
+
+					const res = await signTxAndSend(
+						{
+							data: deployData.encodeABI(),
+						},
+						localAccount.privateKey,
+					);
+					expect(Number(res.status)).toBe(1);
+				},
+			);
+
+			it('deploy should fail with low baseFeeGas EIP1559', async () => {
+				const deployData = contract.deploy(deployOptions);
+				await expect(
+					signTxAndSendEIP1559(
+						{
+							data: deployData.encodeABI(),
+							maxFeePerGas: 1,
+							maxPriorityFeePerGas: 1,
+						},
+						localAccount.privateKey,
+					),
+				).rejects.toThrow(
+					"VM Exception while processing transaction: Transaction's maxFeePerGas",
+				);
+			});
 		});
 
 		it('should deploy the contract', async () => {

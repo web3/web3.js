@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { LogsOutput } from 'web3-types';
 import { Contract } from '../../src';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../shared_fixtures/build/ERC20Token';
 import {
@@ -22,6 +23,10 @@ import {
 	describeIf,
 	isWs,
 	createTempAccount,
+	createNewAccount,
+	refillAccount,
+	signAndSendContractMethodEIP1559,
+	signAndSendContractMethodEIP2930,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -54,9 +59,21 @@ describe('contract', () => {
 
 		describe('contract instance', () => {
 			let contractDeployed: Contract<typeof ERC20TokenAbi>;
+			let localAccount: { address: string; privateKey: string };
+			let mainAcc: { address: string; privateKey: string };
+			const prepareForTransfer = async (value: string) => {
+				const tempAccount = await createTempAccount();
+				await contractDeployed.methods
+					.transfer(localAccount.address, value)
+					.send(sendOptions);
+				return tempAccount;
+			};
+
 			beforeAll(async () => {
-				const acc = await createTempAccount();
-				sendOptions = { from: acc.address, gas: '10000000' };
+				mainAcc = await createTempAccount();
+				localAccount = await createNewAccount();
+				await refillAccount(mainAcc.address, localAccount.address, '20000000000000000');
+				sendOptions = { from: mainAcc.address, gas: '10000000' };
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
 			describe('methods', () => {
@@ -84,6 +101,128 @@ describe('contract', () => {
 					expect(await contractDeployed.methods.balanceOf(acc2.address).call()).toBe(
 						value,
 					);
+				});
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should transfer tokens with local wallet %p',
+					async signAndSendContractMethod => {
+						const value = BigInt(10);
+						const tempAccount = await prepareForTransfer(value.toString());
+						await signAndSendContractMethod(
+							contractDeployed.options.address as string,
+							contractDeployed.methods.transfer(tempAccount.address, value),
+							localAccount.privateKey,
+						);
+
+						expect(
+							await contractDeployed.methods.balanceOf(tempAccount.address).call(),
+						).toBe(value);
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should approve and transferFrom tokens with local wallet %p',
+					async signAndSendContractMethod => {
+						const value = BigInt(10);
+						const transferFromValue = BigInt(4);
+						const tempAccount = await prepareForTransfer(value.toString());
+						// approve
+						const res = await signAndSendContractMethod(
+							contractDeployed.options.address as string,
+							contractDeployed.methods.approve(localAccount.address, value),
+							localAccount.privateKey,
+						);
+
+						expect(res.status).toBe(BigInt(1));
+						expect(
+							(res.logs as LogsOutput[])[0].topics[2].endsWith(
+								localAccount.address.substring(2),
+							),
+						).toBe(true);
+
+						// transferFrom
+						await signAndSendContractMethod(
+							contractDeployed.options.address as string,
+							contractDeployed.methods.transferFrom(
+								localAccount.address,
+								tempAccount.address,
+								transferFromValue,
+							),
+							localAccount.privateKey,
+						);
+						expect(
+							await contractDeployed.methods.balanceOf(tempAccount.address).call(),
+						).toBe(transferFromValue);
+
+						// allowance
+						expect(
+							await contractDeployed.methods
+								.allowance(localAccount.address, localAccount.address)
+								.call(),
+						).toBe(value - transferFromValue);
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should approve and transferFrom tokens with local wallet %p',
+					async signAndSendContractMethod => {
+						const value = BigInt(10);
+						const transferFromValue = BigInt(4);
+						const tempAccount = await prepareForTransfer(value.toString());
+						// approve
+						await signAndSendContractMethod(
+							contractDeployed.options.address as string,
+							contractDeployed.methods.approve(
+								tempAccount.address,
+								transferFromValue,
+							),
+							tempAccount.privateKey,
+						);
+
+						// allowance
+						expect(
+							await contractDeployed.methods
+								.allowance(tempAccount.address, tempAccount.address)
+								.call(),
+						).toBe(transferFromValue);
+
+						// increaseAllowance
+						await signAndSendContractMethod(
+							contractDeployed.options.address as string,
+							contractDeployed.methods.increaseAllowance(
+								tempAccount.address,
+								transferFromValue,
+							),
+							tempAccount.privateKey,
+						);
+
+						// allowance
+						expect(
+							await contractDeployed.methods
+								.allowance(tempAccount.address, tempAccount.address)
+								.call(),
+						).toBe(transferFromValue + transferFromValue);
+					},
+				);
+				it.skip('should return estimated gas of contract constructor', async () => {
+					// @TODO: uncomment this after finish issue #5473
+					const estimatedGas = await contract.deploy(deployOptions).estimateGas({
+						from: mainAcc.address,
+						gas: '10000000',
+						type: '0x2',
+					});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				});
+				it('should return estimated gas of contract method', async () => {
+					const tempAccount = await createTempAccount();
+
+					const estimatedGas = await contractDeployed.methods
+						.approve(tempAccount.address, '0x1')
+						.estimateGas({
+							type: '0x2',
+							gas: '1000000',
+							from: tempAccount.address,
+						});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
 				});
 			});
 
