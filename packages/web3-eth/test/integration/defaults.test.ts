@@ -560,8 +560,11 @@ describe('defaults', () => {
 					to,
 					value,
 					from,
-					nonce: Number.MAX_SAFE_INTEGER,
+					// Give a high nonce so the transaction stuck forever.
+					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
+					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
 				});
+				expect(true).toBe(false); // the test should fail if there is no exception
 			} catch (error) {
 				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
 				if (error instanceof TransactionSendTimeoutError) {
@@ -588,6 +591,7 @@ describe('defaults', () => {
 
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
 			const eth = new Web3Eth(clientUrl);
+			const tempAcc1 = await createTempAccount();
 			const tempAcc2 = await createTempAccount();
 
 			// Make the test run faster by casing the polling to start after 2 blocks
@@ -598,8 +602,8 @@ describe('defaults', () => {
 			// Increase other timeouts
 			eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
 
-			const from = tempAcc2.address;
-			const to = tempAcc.address;
+			const from = tempAcc1.address;
+			const to = tempAcc2.address;
 			const value = `0x0`;
 
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
@@ -610,38 +614,24 @@ describe('defaults', () => {
 				to,
 				value,
 				from,
-				// The previous test has the nonce set to Number.MAX_SAFE_INTEGER.
-				//	So, just decrease 1 from it here to not fall into another error.
-				nonce: Number.MAX_SAFE_INTEGER - 1,
+				// Give a high nonce so the transaction stuck forever.
+				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
+				nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
 			});
 
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
-			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`. And do nothing if an error happens.
-			setTimeout(() => {
-				(async () => {
-					try {
-						await eth.sendTransaction({
-							from: tempAcc.address,
-							to: tempAcc2.address,
-							value,
-						});
-					} catch (error) {
-						// Nothing needed to be done.
-					}
-					try {
-						await eth.sendTransaction({
-							from: tempAcc.address,
-							to: tempAcc2.address,
-							value,
-						});
-					} catch (error) {
-						// Nothing needed to be done.
-					}
-				})() as unknown;
-			}, 100);
+			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`.
+			await sendFewTxes({
+				web3Eth: eth,
+				from: tempAcc2.address,
+				to: tempAcc1.address,
+				times: 2,
+				value: '0x1',
+			});
 
 			try {
 				await sentTx;
+				expect(true).toBe(false); // the test should fail if there is no exception
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
@@ -775,7 +765,7 @@ describe('defaults', () => {
 			);
 			expect(res.common.hardfork()).toBe('istanbul');
 		});
-		it('defaultCommon', async () => {
+		it('defaultCommon', () => {
 			// default
 			expect(web3Eth.defaultCommon).toBeUndefined();
 			const baseChain: ValidChains = 'mainnet';
