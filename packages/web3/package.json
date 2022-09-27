@@ -22,7 +22,7 @@
 		"clean": "rimraf dist",
 		"prebuild": "rimraf dist",
 		"build": "yarn version:output && tsc --build",
-		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo '/* eslint-disable header/header */ export const Web3PkgInfo = { version: \"'$npm_package_version'\" }' > ./src/version.ts",
+		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo \"/* eslint-disable header/header */ export const Web3PkgInfo = { version: '$npm_package_version' };\" > ./src/version.ts",
 		"build:web": "npx webpack",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",

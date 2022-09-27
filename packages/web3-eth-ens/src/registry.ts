@@ -18,16 +18,24 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Contract, NonPayableCallOptions } from 'web3-eth-contract';
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, isHexStrict, sha3Raw } from 'web3-utils';
 import { Address } from 'web3-types';
-import REGISTRY from './abi/registry';
-import { RESOLVER } from './abi/resolver';
+import { Web3ContextObject } from 'web3-core';
+import { ENSRegistryAbi } from './abi/ens/ENSRegistry';
+import { PublicResolverAbi } from './abi/ens/PublicResolver';
 import { registryAddresses } from './config';
 import { namehash } from './utils';
 
 export class Registry {
-	private readonly contract: Contract<typeof REGISTRY>;
+	private readonly contract: Contract<typeof ENSRegistryAbi>;
+	private readonly context: Web3ContextObject;
 
-	public constructor(customRegistryAddress?: Address) {
-		this.contract = new Contract(REGISTRY, customRegistryAddress ?? registryAddresses.main);
+	public constructor(context: Web3ContextObject, customRegistryAddress?: Address) {
+		this.contract = new Contract(
+			ENSRegistryAbi,
+			customRegistryAddress ?? registryAddresses.main,
+			context,
+		);
+
+		this.context = context;
 	}
 	public async getOwner(name: string) {
 		try {
@@ -79,7 +87,7 @@ export class Registry {
 	}
 
 	public setSubnodeOwner(
-		name: string,
+		node: string,
 		label: string,
 		address: Address,
 		txConfig: NonPayableCallOptions, // TODO: web3-eth txconfig should be replaced with sendTransaction type
@@ -89,7 +97,7 @@ export class Registry {
 		try {
 			const receipt = this.contract.methods
 				.setSubnodeOwner(
-					namehash(name),
+					namehash(node),
 					hexStrictLabel,
 					format({ eth: 'address' }, address, returnFormat),
 				)
@@ -179,7 +187,7 @@ export class Registry {
 				.then(address => {
 					// address type is unknown, not sure why
 					if (typeof address === 'string') {
-						const contract = new Contract(RESOLVER, address);
+						const contract = new Contract(PublicResolverAbi, address, this.context);
 						// TODO: set contract provider needs to be added when ens current provider
 						return contract;
 					}
