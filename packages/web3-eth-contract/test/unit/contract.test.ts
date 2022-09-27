@@ -245,7 +245,7 @@ describe('Contract', () => {
 			};
 			expect(contract.defaultCommon).toBeUndefined();
 			contract.defaultCommon = defaultCommon;
-			// expect(contract.defaultHardfork).toStrictEqual(defaultCommon);   // TODO check if is being fixed in 5419
+			expect(contract.defaultCommon).toStrictEqual(defaultCommon); // TODO check if is being fixed in 5419, it should throw error as contract.defaultHardfork != contract.defaultCommon.hardfork
 
 			const transactionBlockTimeout = 130;
 			expect(contract.transactionBlockTimeout).toBe(50);
