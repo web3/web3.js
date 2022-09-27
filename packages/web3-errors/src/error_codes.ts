@@ -81,6 +81,9 @@ export const ERR_TX_BLOCK_TIMEOUT = 432;
 export const ERR_TX_SIGNING = 433;
 export const ERR_TX_GAS_MISMATCH = 434;
 
+export const ERR_TX_CHAIN_MISMATCH = 435;
+export const ERR_TX_HARDFORK_MISMATCH = 436;
+
 // Connection error codes
 export const ERR_CONN = 500;
 export const ERR_CONN_INVALID = 501;

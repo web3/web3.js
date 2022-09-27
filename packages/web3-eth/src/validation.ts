@@ -29,6 +29,8 @@ import {
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
+	BaseChainMismatchError,
+	HardforkMismatchError,
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
 	Eip1559GasPriceError,
@@ -153,9 +155,9 @@ export const validateCustomChainInfo = (transaction: InternalTransaction) => {
 				txChainId: transaction.chainId,
 				customChainId: transaction.common.customChain.chainId,
 			});
+		// check networkID
 	}
 };
-
 export const validateChainInfo = (transaction: InternalTransaction) => {
 	if (
 		!isNullish(transaction.common) &&
@@ -172,6 +174,31 @@ export const validateChainInfo = (transaction: InternalTransaction) => {
 			chain: transaction.chain,
 			hardfork: transaction.hardfork,
 		});
+};
+export const validateBaseChain = (transaction: InternalTransaction) => {
+	if (!isNullish(transaction.common))
+		if (!isNullish(transaction.common.baseChain))
+			if (!isNullish(transaction.chain) && (transaction.chain !== transaction.common.baseChain))
+			{
+				throw new BaseChainMismatchError({
+					txChain: transaction.chain,
+					baseChain: transaction.common.baseChain,
+				});
+
+			};
+		};
+export const validateHardfork = (transaction: InternalTransaction) => {
+	if (!isNullish(transaction.common))
+		if (!isNullish(transaction.common.hardfork))
+			if (
+				!isNullish(transaction.hardfork) &&
+				transaction.hardfork !== transaction.common.hardfork
+			) {
+				throw new HardforkMismatchError({
+					txHardfork: transaction.hardfork,
+					commonHardfork: transaction.common.hardfork,
+				});
+			}
 };
 
 export const validateLegacyGas = (transaction: InternalTransaction) => {
