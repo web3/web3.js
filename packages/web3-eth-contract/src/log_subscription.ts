@@ -24,6 +24,7 @@ import { DataFormat } from 'web3-utils';
 import { decodeEventABI } from './encoding';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, EventLog } from './types';
+import { Web3APISpec } from 'web3-types';
 
 /**
  * LogSubscription to be used to subscribe to events logs.
@@ -79,7 +80,8 @@ import { ContractAbiWithSignature, EventLog } from './types';
  * }
  * ```
  */
-export class LogsSubscription extends Web3Subscription<
+export class LogsSubscription<API extends Web3APISpec> extends Web3Subscription<
+	API,
 	{
 		error: Error;
 		connected: number;
@@ -113,7 +115,7 @@ export class LogsSubscription extends Web3Subscription<
 			jsonInterface: ContractAbiWithSignature;
 		},
 		options: {
-			requestManager: Web3RequestManager;
+			requestManager: Web3RequestManager<API>;
 			returnFormat?: DataFormat;
 		},
 	) {

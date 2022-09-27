@@ -25,6 +25,7 @@ import {
 	Topic,
 	BlockHeaderOutput,
 	LogsOutput,
+	EthExecutionAPI,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
@@ -35,6 +36,7 @@ type CommonSubscriptionEvents = {
 };
 
 export class LogsSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: LogsOutput;
 	},
@@ -59,6 +61,7 @@ export class LogsSubscription extends Web3Subscription<
 }
 
 export class NewPendingTransactionsSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: HexString;
 	}
@@ -78,6 +81,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 }
 
 export class NewHeadsSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: BlockHeaderOutput;
 	}
@@ -97,6 +101,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 }
 
 export class SyncingSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: SyncOutput;
 		changed: boolean;

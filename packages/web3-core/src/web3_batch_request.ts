@@ -19,17 +19,18 @@ import { JsonRpcBatchResponse, JsonRpcOptionalRequest, JsonRpcRequest } from 'we
 import { jsonRpc, Web3DeferredPromise } from 'web3-utils';
 import { OperationAbortError, OperationTimeoutError, ResponseError } from 'web3-errors';
 import { Web3RequestManager } from './web3_request_manager';
+import { Web3APISpec } from 'web3-types';
 
 export const DEFAULT_BATCH_REQUEST_TIMEOUT = 1000;
 
-export class Web3BatchRequest {
-	private readonly _requestManager: Web3RequestManager;
+export class Web3BatchRequest<API extends Web3APISpec> {
+	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _requests: Map<
 		number,
 		{ payload: JsonRpcRequest; promise: Web3DeferredPromise<unknown> }
 	>;
 
-	public constructor(requestManager: Web3RequestManager) {
+	public constructor(requestManager: Web3RequestManager<API>) {
 		this._requestManager = requestManager;
 		this._requests = new Map();
 	}

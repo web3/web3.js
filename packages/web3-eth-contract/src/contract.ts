@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
+import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3SubscriptionConstructor } from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
 	call,
@@ -49,12 +49,12 @@ import {
 	BlockNumberOrTag,
 	BlockTags,
 	Bytes,
-	EthExecutionAPI,
 	Filter,
 	HexString,
 	LogsInput,
 	Mutable,
 	Common,
+	Web3APISpec,
 } from 'web3-types';
 import {
 	DataFormat,
@@ -149,6 +149,11 @@ export type ContractEventEmitterInterface<Abi extends ContractAbi> = {
 
 type EventParameters = Parameters<typeof encodeEventABI>[2];
 
+type ContractSubscriptions = {
+	logs: typeof LogsSubscription,
+	newHeads: typeof NewHeadsSubscription,
+	newBlockHeaders: typeof NewHeadsSubscription,
+};
 const contractSubscriptions = {
 	logs: LogsSubscription,
 	newHeads: NewHeadsSubscription,
@@ -158,8 +163,14 @@ const contractSubscriptions = {
 /**
  * The class designed to interact with smart contracts on the Ethereum blockchain.
  */
-export class Contract<Abi extends ContractAbi>
-	extends Web3Context<EthExecutionAPI, typeof contractSubscriptions>
+export class Contract<
+	API extends Web3APISpec,
+	Abi extends ContractAbi,
+	RegisteredSubs extends {
+		[key: string]: Web3SubscriptionConstructor<API>;
+	} = ContractSubscriptions
+>
+	extends Web3Context<API, RegisteredSubs>
 	implements Web3EventEmitter<ContractEventEmitterInterface<Abi>>
 {
 	/**
@@ -1121,7 +1132,7 @@ export class Contract<Abi extends ContractAbi>
 		return (...params: unknown[]) => {
 			const encodedParams = encodeEventABI(this.options, abi, params[0] as EventParameters);
 
-			const sub = new LogsSubscription(
+			const sub = new LogsSubscription<API>(
 				{
 					address: this.options.address,
 					topics: encodedParams.topics,

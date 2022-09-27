@@ -23,7 +23,6 @@ import {
 	Web3BaseProvider,
 	Web3APISpec,
 	Web3APIParams,
-	EthExecutionAPI,
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
@@ -34,10 +33,10 @@ import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
 import { Web3RequestManager } from './web3_request_manager';
 
 export abstract class Web3Subscription<
+	API extends Web3APISpec,
 	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
-	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
@@ -130,7 +129,7 @@ export abstract class Web3Subscription<
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
+	SubscriptionType extends Web3Subscription<API, any, any> = Web3Subscription<API, any, any>,
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

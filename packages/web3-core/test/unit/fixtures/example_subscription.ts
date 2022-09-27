@@ -18,9 +18,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Subscription } from '../../../src';
 
 export class ExampleSubscription extends Web3Subscription<
+	{ eth_subscribe: (newHeads: string) => void },
 	{ data: string },
-	{ param1: string },
-	{ eth_subscribe: (newHeads: string) => void }
+	{ param1: string }
 > {
 	// eslint-disable-next-line class-methods-use-this
 	protected _buildSubscriptionParams() {
