@@ -29,7 +29,7 @@ import {
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
-	BaseChainMismatchError,
+	ChainMismatchError,
 	HardforkMismatchError,
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
@@ -178,15 +178,16 @@ export const validateChainInfo = (transaction: InternalTransaction) => {
 export const validateBaseChain = (transaction: InternalTransaction) => {
 	if (!isNullish(transaction.common))
 		if (!isNullish(transaction.common.baseChain))
-			if (!isNullish(transaction.chain) && (transaction.chain !== transaction.common.baseChain))
-			{
-				throw new BaseChainMismatchError({
+			if (
+				!isNullish(transaction.chain) &&
+				transaction.chain !== transaction.common.baseChain
+			) {
+				throw new ChainMismatchError({
 					txChain: transaction.chain,
 					baseChain: transaction.common.baseChain,
 				});
-
-			};
-		};
+			}
+};
 export const validateHardfork = (transaction: InternalTransaction) => {
 	if (!isNullish(transaction.common))
 		if (!isNullish(transaction.common.hardfork))
@@ -294,6 +295,8 @@ export const validateTransactionForSigning = (
 
 	validateCustomChainInfo(transaction);
 	validateChainInfo(transaction);
+	validateBaseChain(transaction);
+	validateHardfork(transaction);
 
 	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
 	validateGas(formattedTransaction);
