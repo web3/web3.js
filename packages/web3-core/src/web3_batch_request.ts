@@ -15,21 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { JsonRpcBatchResponse, JsonRpcOptionalRequest, JsonRpcRequest } from 'web3-types';
+import { JsonRpcBatchResponse, JsonRpcOptionalRequest, JsonRpcRequest, Web3APISpec } from 'web3-types';
 import { jsonRpc, Web3DeferredPromise } from 'web3-utils';
 import { OperationAbortError, OperationTimeoutError, ResponseError } from 'web3-errors';
 import { Web3RequestManager } from './web3_request_manager';
 
 export const DEFAULT_BATCH_REQUEST_TIMEOUT = 1000;
 
-export class Web3BatchRequest {
-	private readonly _requestManager: Web3RequestManager;
+export class Web3BatchRequest<API extends Web3APISpec>  {
+	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _requests: Map<
 		number,
 		{ payload: JsonRpcRequest; promise: Web3DeferredPromise<unknown> }
 	>;
 
-	public constructor(requestManager: Web3RequestManager) {
+	public constructor(requestManager: Web3RequestManager<API>) {
 		this._requestManager = requestManager;
 		this._requests = new Map();
 	}

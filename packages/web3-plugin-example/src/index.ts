@@ -41,7 +41,7 @@ declare module 'web3' {
 	}
 }
 
-export class ChainlinkPlugin extends Web3PluginBase<Web3APISpec> {
+export class ChainlinkPlugin extends Web3PluginBase<ChainlinkPluginAPI> {
 	public pluginNamespace = 'chainlink';
 
 	protected readonly _contract: Contract<typeof AggregatorV3InterfaceABI>;

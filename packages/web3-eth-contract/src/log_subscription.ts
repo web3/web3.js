@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { LogsInput, HexString, Topic } from 'web3-types';
+import { LogsInput, HexString, Topic, Web3APISpec } from 'web3-types';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
 import { AbiEventFragment } from 'web3-eth-abi';
 // eslint-disable-next-line import/no-cycle
@@ -79,7 +79,8 @@ import { ContractAbiWithSignature, EventLog } from './types';
  * }
  * ```
  */
-export class LogsSubscription extends Web3Subscription<
+export class LogsSubscription<API extends Web3APISpec> extends Web3Subscription<
+	API,
 	{
 		error: Error;
 		connected: number;
@@ -113,7 +114,7 @@ export class LogsSubscription extends Web3Subscription<
 			jsonInterface: ContractAbiWithSignature;
 		},
 		options: {
-			requestManager: Web3RequestManager;
+			requestManager: Web3RequestManager<API>;
 			returnFormat?: DataFormat;
 		},
 	) {
@@ -125,6 +126,8 @@ export class LogsSubscription extends Web3Subscription<
 		this.jsonInterface = args.jsonInterface;
 	}
 
+	// TODO
+	// @ts-ignore
 	protected _buildSubscriptionParams() {
 		return ['logs', { address: this.address, topics: this.topics }] as [
 			'logs',

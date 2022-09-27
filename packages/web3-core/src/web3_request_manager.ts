@@ -26,7 +26,6 @@ import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
 import WSProvider from 'web3-providers-ws';
 import {
-	EthExecutionAPI,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
@@ -63,7 +62,7 @@ const availableProviders = {
 };
 
 export class Web3RequestManager<
-	API extends Web3APISpec = EthExecutionAPI,
+	API extends Web3APISpec,
 > extends Web3EventEmitter<{
 	[key in Web3RequestManagerEvent]: SupportedProviders<API> | undefined;
 }> {

@@ -25,6 +25,9 @@ import {
 	Topic,
 	BlockHeaderOutput,
 	LogsOutput,
+	EthExecutionAPI,
+	Web3APIMethod,
+	Web3APIParams,
 } from 'web3-types';
 import { Web3Subscription } from 'web3-core';
 import { blockHeaderSchema, logSchema, syncSchema } from './schemas';
@@ -34,7 +37,8 @@ type CommonSubscriptionEvents = {
 	connected: number;
 };
 
-export class LogsSubscription extends Web3Subscription<
+export class LogsSubscription<Method extends Web3APIMethod<EthExecutionAPI> = 'eth_subscribe'> extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: LogsOutput;
 	},
@@ -42,11 +46,16 @@ export class LogsSubscription extends Web3Subscription<
 		readonly fromBlock?: BlockNumberOrTag;
 		readonly address?: Address | Address[];
 		readonly topics?: Topic[];
-	}
+	},
+	Method
 > {
+	protected _buildSubscriptionMethod() {
+		return 'eth_subscribe' as Method
+	}
+
 	protected _buildSubscriptionParams() {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return ['logs', this.args] as ['logs', any];
+		return ['logs', this.args] as Web3APIParams<EthExecutionAPI, Method>
 	}
 
 	public _processSubscriptionResult(data: LogsOutput) {
@@ -59,6 +68,7 @@ export class LogsSubscription extends Web3Subscription<
 }
 
 export class NewPendingTransactionsSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: HexString;
 	}
@@ -78,6 +88,7 @@ export class NewPendingTransactionsSubscription extends Web3Subscription<
 }
 
 export class NewHeadsSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: BlockHeaderOutput;
 	}
@@ -97,6 +108,7 @@ export class NewHeadsSubscription extends Web3Subscription<
 }
 
 export class SyncingSubscription extends Web3Subscription<
+	EthExecutionAPI,
 	CommonSubscriptionEvents & {
 		data: SyncOutput;
 		changed: boolean;

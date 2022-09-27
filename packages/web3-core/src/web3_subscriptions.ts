@@ -23,10 +23,10 @@ import {
 	Web3BaseProvider,
 	Web3APISpec,
 	Web3APIParams,
-	EthExecutionAPI,
 	Log,
 	JsonRpcNotification,
 	JsonRpcSubscriptionResult,
+	Web3APIMethod,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
 import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
@@ -34,10 +34,11 @@ import { Web3EventEmitter, Web3EventMap } from './web3_event_emitter';
 import { Web3RequestManager } from './web3_request_manager';
 
 export abstract class Web3Subscription<
+	API extends Web3APISpec,
 	EventMap extends Web3EventMap,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	ArgsType = any,
-	API extends Web3APISpec = EthExecutionAPI,
+	Method extends Web3APIMethod<API> = any
 > extends Web3EventEmitter<EventMap> {
 	private readonly _requestManager: Web3RequestManager<API>;
 	private readonly _lastBlock?: BlockOutput;
@@ -65,7 +66,7 @@ export abstract class Web3Subscription<
 
 	public async subscribe() {
 		this._id = await this._requestManager.send({
-			method: 'eth_subscribe',
+			method: this._buildSubscriptionMethod(),
 			params: this._buildSubscriptionParams(),
 		});
 
@@ -121,7 +122,13 @@ export abstract class Web3Subscription<
 	}
 
 	// eslint-disable-next-line class-methods-use-this
-	protected _buildSubscriptionParams(): Web3APIParams<API, 'eth_subscribe'> {
+	protected _buildSubscriptionMethod(): Method {
+		// This should be overridden in the subclass
+		throw new Error('Implement in the child class');
+	}
+
+	// eslint-disable-next-line class-methods-use-this
+	protected _buildSubscriptionParams(): Web3APIParams<API, Method> {
 		// This should be overridden in the subclass
 		throw new Error('Implement in the child class');
 	}
@@ -130,7 +137,7 @@ export abstract class Web3Subscription<
 export type Web3SubscriptionConstructor<
 	API extends Web3APISpec,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	SubscriptionType extends Web3Subscription<any, any, API> = Web3Subscription<any, any, API>,
+	SubscriptionType extends Web3Subscription<API, any, any> = Web3Subscription<API, any, any>,
 > = new (
 	// We accept any type of arguments here and don't deal with this type internally
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
