@@ -92,15 +92,23 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	// The following variable will stay true except if the data arrived,
 	//	or if watching started after an error had occurred.
 	let needToWatchLater = true;
+	let lastCaughtBlockNumber: bigint;
 	setImmediate(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
 			.then((subscription: NewHeadsSubscription) => {
 				subscription.on('data', async (newBlockHeader: BlockHeaderOutput) => {
 					needToWatchLater = false;
-					if (!newBlockHeader?.number) {
+					if (
+						!newBlockHeader?.number ||
+						// For some cases, the on-data event is fired couple times for the same block!
+						// This needs investigation but seems to be because of multiple `subscription.on('data'...)` even it should be a problem.
+						lastCaughtBlockNumber === newBlockHeader?.number
+					) {
 						return;
 					}
+					lastCaughtBlockNumber = BigInt(newBlockHeader?.number);
+
 					const confirmations =
 						BigInt(newBlockHeader.number) -
 						BigInt(transactionReceipt.blockNumber) +

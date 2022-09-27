@@ -72,6 +72,7 @@ describeIf(isWs)('subscription', () => {
 
 			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
 			await pr;
+			await web3Eth.clearSubscriptions();
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);

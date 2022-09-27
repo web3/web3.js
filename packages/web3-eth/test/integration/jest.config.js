@@ -34,6 +34,8 @@ module.exports = {
 	 */
 	restoreMocks: true,
 
+	verbose: true,
+
 	/**
 	 * resetModules [boolean]
 	 *

@@ -22,7 +22,7 @@ import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
 
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
-import { rejectIfBlockTimeout } from './reject_if_block_timeout';
+import { resolveIfBlockTimeout } from './resolve_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
 
@@ -34,7 +34,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const awaitableTransactionReceipt = pollTillDefined(async () => {
+	const awaitableTransactionReceipt: Promise<TransactionReceipt> = pollTillDefined(async () => {
 		try {
 			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
 		} catch (error) {
@@ -43,7 +43,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}
 	}, pollingInterval);
 
-	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
+	const [timeoutId, rejectOnTimeout]: [NodeJS.Timer, Promise<never>] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
 		new TransactionPollingTimeoutError({
 			numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
@@ -52,21 +52,27 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	);
 
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const [intervalId, rejectOnBlockTimeout] = rejectIfBlockTimeout(
+	const rejectOnBlockTimeout = resolveIfBlockTimeout(
 		web3Context,
 		starterBlockNumber,
-		pollingInterval,
 		transactionHash,
 	);
 
 	try {
-		return await Promise.race([
+		const res = await Promise.race([
 			awaitableTransactionReceipt,
 			rejectOnTimeout,
 			rejectOnBlockTimeout,
 		]);
+		if (res instanceof Array) {
+			const [error, endExecutionFunc] = res;
+			endExecutionFunc();
+			throw error;
+		} else {
+			return res;
+		}
 	} finally {
 		clearTimeout(timeoutId);
-		clearInterval(intervalId);
+		// TODO: Refactor to call endExecutionFunc()
 	}
 }
