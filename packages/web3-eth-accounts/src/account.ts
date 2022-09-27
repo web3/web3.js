@@ -246,7 +246,6 @@ export const signTransaction = async (
 	// To make it compatible with rest of the API, have to keep it async
 	// eslint-disable-next-line @typescript-eslint/require-await
 ): Promise<SignTransactionResult> => {
-	// console.log(instanceof transaction)
 	const signedTx = transaction.sign(Buffer.from(privateKey.substring(2), 'hex'));
 	if (isNullish(signedTx.v) || isNullish(signedTx.r) || isNullish(signedTx.s))
 		throw new SignerError('Signer Error');
