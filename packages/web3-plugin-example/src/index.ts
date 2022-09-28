@@ -18,8 +18,8 @@ import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
 import { Web3EthPluginBase } from 'web3-core';
 import { Address, BlockNumberOrTag } from 'web3-types';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// import { Web3 } from 'web3';
+// @ts-expect-error 'Web3' is declared but its value is never read.
+import { Web3 } from 'web3';
 
 import { AggregatorV3InterfaceABI } from './aggregator_v3_interface_abi';
 
