@@ -58,6 +58,7 @@ describe('contract', () => {
 					const deployData = contract.deploy(deployOptions);
 
 					const res = await signTxAndSend(
+						contract.provider,
 						{
 							data: deployData.encodeABI(),
 						},
@@ -71,6 +72,7 @@ describe('contract', () => {
 				const deployData = contract.deploy(deployOptions);
 				await expect(
 					signTxAndSendEIP1559(
+						contract.provider,
 						{
 							data: deployData.encodeABI(),
 							maxFeePerGas: 1,
@@ -81,6 +83,34 @@ describe('contract', () => {
 				).rejects.toThrow(
 					"VM Exception while processing transaction: Transaction's maxFeePerGas",
 				);
+			});
+			it.skip('should return estimated gas of contract constructor', async () => {
+				// @TODO: uncomment this after finish issue #5473
+				const estimatedGas = await new Contract(GreeterAbi, undefined, {
+					provider: getSystemTestProvider(),
+				})
+					.deploy({
+						data: GreeterBytecode,
+						arguments: ['My Greeting'],
+					})
+					.estimateGas({
+						from: acc.address,
+						gas: '10000000',
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract method', async () => {
+				const tempAccount = await createTempAccount();
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+
+				const estimatedGas = await contractDeployed.methods
+					.setGreeting('Hello')
+					.estimateGas({
+						type: '0x2',
+						gas: '1000000',
+						from: tempAccount.address,
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
 			});
 		});
 

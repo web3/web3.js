@@ -108,6 +108,7 @@ describe('contract', () => {
 						const value = BigInt(10);
 						const tempAccount = await prepareForTransfer(value.toString());
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.transfer(tempAccount.address, value),
 							localAccount.privateKey,
@@ -127,6 +128,7 @@ describe('contract', () => {
 						const tempAccount = await prepareForTransfer(value.toString());
 						// approve
 						const res = await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.approve(localAccount.address, value),
 							localAccount.privateKey,
@@ -141,6 +143,7 @@ describe('contract', () => {
 
 						// transferFrom
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.transferFrom(
 								localAccount.address,
@@ -170,6 +173,7 @@ describe('contract', () => {
 						const tempAccount = await prepareForTransfer(value.toString());
 						// approve
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.approve(
 								tempAccount.address,
@@ -187,6 +191,7 @@ describe('contract', () => {
 
 						// increaseAllowance
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.increaseAllowance(
 								tempAccount.address,
@@ -203,27 +208,6 @@ describe('contract', () => {
 						).toBe(transferFromValue + transferFromValue);
 					},
 				);
-				it.skip('should return estimated gas of contract constructor', async () => {
-					// @TODO: uncomment this after finish issue #5473
-					const estimatedGas = await contract.deploy(deployOptions).estimateGas({
-						from: mainAcc.address,
-						gas: '10000000',
-						type: '0x2',
-					});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				});
-				it('should return estimated gas of contract method', async () => {
-					const tempAccount = await createTempAccount();
-
-					const estimatedGas = await contractDeployed.methods
-						.approve(tempAccount.address, '0x1')
-						.estimateGas({
-							type: '0x2',
-							gas: '1000000',
-							from: tempAccount.address,
-						});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				});
 			});
 
 			describeIf(isWs)('events', () => {

@@ -102,6 +102,7 @@ describe('contract', () => {
 					async signAndSendContractMethod => {
 						const tempAccount = await createTempAccount();
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
 								tempAccount.address,
@@ -127,6 +128,7 @@ describe('contract', () => {
 						const tempAccount = await createTempAccount();
 						const tempAccountTo = await createTempAccount();
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
 								tempAccount.address,
@@ -137,6 +139,7 @@ describe('contract', () => {
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.transferFrom(
 								tempAccount.address,
@@ -162,6 +165,7 @@ describe('contract', () => {
 						const tempAccount = await createTempAccount();
 						const tempAccountTo = await createTempAccount();
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
 								tempAccount.address,
@@ -173,11 +177,13 @@ describe('contract', () => {
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.approve(tempAccountTo.address, tokenId),
 							tempAccount.privateKey,
 						);
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.safeTransferFrom(
 								tempAccount.address,
@@ -204,6 +210,7 @@ describe('contract', () => {
 						const tempAccount = await createTempAccount();
 						const tempAccountTo = await createTempAccount();
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
 								tempAccount.address,
@@ -215,6 +222,7 @@ describe('contract', () => {
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.approve(tempAccountTo.address, tokenId),
 							tempAccount.privateKey,
@@ -233,6 +241,7 @@ describe('contract', () => {
 						const tempAccount = await createTempAccount();
 						const tempAccountTo = await createTempAccount();
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
 								tempAccount.address,
@@ -242,6 +251,7 @@ describe('contract', () => {
 						);
 
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.setApprovalForAll(tempAccountTo.address, true),
 							tempAccount.privateKey,
@@ -254,6 +264,7 @@ describe('contract', () => {
 						).toBe(true);
 
 						await signAndSendContractMethod(
+							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.setApprovalForAll(
 								tempAccountTo.address,

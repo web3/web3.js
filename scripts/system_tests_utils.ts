@@ -303,10 +303,11 @@ export const getSystemTestAccounts = async (): Promise<string[]> =>
 // };
 
 export const signTxAndSendEIP1559 = async (
+	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
 ): Promise<Receipt> => {
-	const web3 = new Web3(getSystemTestProvider());
+	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
 		...tx,
@@ -318,10 +319,11 @@ export const signTxAndSendEIP1559 = async (
 };
 
 export const signTxAndSendEIP2930 = async (
+	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
 ): Promise<Receipt> => {
-	const web3 = new Web3(getSystemTestProvider());
+	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
 		...tx,
@@ -333,11 +335,13 @@ export const signTxAndSendEIP2930 = async (
 };
 
 export const signAndSendContractMethodEIP1559 = async (
+	provider: unknown,
 	address: string,
 	method: NonPayableMethodObject,
 	privateKey: string,
 ) =>
 	signTxAndSendEIP1559(
+		provider,
 		{
 			to: address,
 			data: method.encodeABI(),
@@ -346,11 +350,13 @@ export const signAndSendContractMethodEIP1559 = async (
 	);
 
 export const signAndSendContractMethodEIP2930 = async (
+	provider: unknown,
 	address: string,
 	method: NonPayableMethodObject,
 	privateKey: string,
 ) =>
 	signTxAndSendEIP2930(
+		provider,
 		{
 			to: address,
 			data: method.encodeABI(),
