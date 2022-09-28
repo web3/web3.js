@@ -22,6 +22,7 @@ import {
 	Web3AccountProvider,
 	SupportedProviders,
 	HexString,
+	EthExecutionAPI,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { ExistingPluginNamespaceError } from 'web3-errors';
@@ -68,15 +69,14 @@ export type Web3ContextInitOptions<
 	wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 };
 
-export type Web3ContextConstructor<
-	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-	T extends Web3Context,
-	T2 extends unknown[],
-> = new (...args: [...extras: T2, context: Web3ContextObject]) => T;
+// eslint-disable-next-line no-use-before-define
+export type Web3ContextConstructor<T extends Web3Context, T2 extends unknown[]> = new (
+	...args: [...extras: T2, context: Web3ContextObject]
+) => T;
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextFactory<
-	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line no-use-before-define
 	T extends Web3Context,
 	T2 extends unknown[],
 > = Web3ContextConstructor<T, T2> & {
@@ -93,7 +93,7 @@ export class Web3Context<
 	public static readonly providers = Web3RequestManager.providers;
 	public static givenProvider?: SupportedProviders<never>;
 	public readonly providers = Web3RequestManager.providers;
-	protected _requestManager: Web3RequestManager<API | unknown>;
+	protected _requestManager: Web3RequestManager<API>;
 	protected _subscriptionManager?: Web3SubscriptionManager<API, RegisteredSubs>;
 	protected _accountProvider?: Web3AccountProvider<Web3BaseWalletAccount>;
 	protected _wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
@@ -179,7 +179,7 @@ export class Web3Context<
 		return new this(...(args.reverse() as [...T3, Web3ContextObject]));
 	}
 
-	public getContextObject(): Web3ContextObject<API | any, RegisteredSubs> {
+	public getContextObject(): Web3ContextObject<API, RegisteredSubs> {
 		return {
 			config: this.getConfig(),
 			provider: this.provider,
@@ -198,7 +198,6 @@ export class Web3Context<
 	 * and link it to current context. This can be used to initiate a global context object
 	 * and then use it to create new objects of any type extended by `Web3Context`.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public use<T extends Web3Context, T2 extends unknown[]>(
 		ContextRef: Web3ContextConstructor<T, T2>,
 		...args: [...T2]
@@ -233,7 +232,7 @@ export class Web3Context<
 	}
 
 	// eslint-disable-next-line no-use-before-define
-	public registerPlugin(plugin: Web3PluginBase<any>) {
+	public registerPlugin(plugin: Web3PluginBase) {
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 		if (this[plugin.pluginNamespace] !== undefined)
 			throw new ExistingPluginNamespaceError(plugin.pluginNamespace);
@@ -289,6 +288,12 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;
 
-export abstract class Web3PluginBase<API extends Web3APISpec> extends Web3Context<API> {
+export abstract class Web3PluginBase<
+	API extends Web3APISpec = EthExecutionAPI,
+> extends Web3Context<API> {
 	public abstract pluginNamespace: string;
 }
+
+export abstract class Web3EthPluginBase<API extends Web3APISpec> extends Web3PluginBase<
+	API & EthExecutionAPI
+> {}

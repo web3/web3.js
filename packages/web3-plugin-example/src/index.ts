@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
-import { Web3PluginBase } from 'web3-core';
-import { Address, Web3APISpec } from 'web3-types';
-// @ts-expect-error 'Web3' is declared but its value is never read.
-import { Web3 } from 'web3';
+import { Web3EthPluginBase } from 'web3-core';
+import { Address, BlockNumberOrTag } from 'web3-types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// import { Web3 } from 'web3';
 
 import { AggregatorV3InterfaceABI } from './aggregator_v3_interface_abi';
 
@@ -31,17 +31,11 @@ interface Price {
 	answeredInRound: string;
 }
 
-interface ChainlinkPluginAPI extends Web3APISpec {
-	getPrice: () => Promise<Price>;
-}
+export type ChainlinkPluginAPI = {
+	customJsonRpcMethod: () => Promise<Price>;
+};
 
-declare module 'web3' {
-	interface Web3 {
-		chainlink: ChainlinkPluginAPI;
-	}
-}
-
-export class ChainlinkPlugin extends Web3PluginBase<ChainlinkPluginAPI> {
+export class ChainlinkPlugin extends Web3EthPluginBase<ChainlinkPluginAPI> {
 	public pluginNamespace = 'chainlink';
 
 	protected readonly _contract: Contract<typeof AggregatorV3InterfaceABI>;
@@ -51,8 +45,44 @@ export class ChainlinkPlugin extends Web3PluginBase<ChainlinkPluginAPI> {
 		this._contract = new Contract(abi, address);
 	}
 
-	public async getPrice() {
+	/**
+	 * An example for calling a custom JSON RPC function called customJsonRpcMethod
+	 * Supposing that the connected Ethereum Node provides non-standard function called `customJsonRpcMethod`
+	 */
+	public async customApi() {
+		return this._requestManager.send({
+			method: 'customJsonRpcMethod',
+			params: [],
+		});
+	}
+
+	/**
+	 * An example for providing a method that calls a smart contract and do possibly do some processing
+	 * @returns a promise to Price
+	 */
+	public async getPrice(): Promise<Price> {
+		// call any function(s) or smart contract method(s)
 		if (this._contract.currentProvider === undefined) this._contract.link(this);
-		return this._contract.methods.latestRoundData().call();
+		const price = await this._contract.methods.latestRoundData().call();
+		// do whatever processing needed and return
+		return price as unknown as Price;
+	}
+
+	/**
+	 * Just to show how the standard JSON RPC methods could be called as usual
+	 * @returns a promise to a string
+	 */
+	public async getBalance(address: Address, blockNumber: BlockNumberOrTag) {
+		// call any standard
+		return this._requestManager.send({
+			method: 'eth_getBalance',
+			params: [address, blockNumber],
+		});
+	}
+}
+
+declare module 'web3' {
+	interface Web3 {
+		chainlink: ChainlinkPlugin;
 	}
 }
