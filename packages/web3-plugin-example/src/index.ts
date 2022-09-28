@@ -17,31 +17,21 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
 import { Web3PluginBase } from 'web3-core';
-import { Address, Web3APISpec } from 'web3-types';
+import { Address } from 'web3-types';
 // @ts-expect-error 'Web3' is declared but its value is never read.
 import { Web3 } from 'web3';
 
 import { AggregatorV3InterfaceABI } from './aggregator_v3_interface_abi';
 
-interface Price {
+type Price = {
 	roundId: string;
 	answer: string;
 	startedAt: string;
 	updatedAt: string;
 	answeredInRound: string;
-}
+};
 
-interface ChainlinkPluginAPI extends Web3APISpec {
-	getPrice: () => Promise<Price>;
-}
-
-declare module 'web3' {
-	interface Web3 {
-		chainlink: ChainlinkPluginAPI;
-	}
-}
-
-export class ChainlinkPlugin extends Web3PluginBase<Web3APISpec> {
+export class ChainlinkPlugin extends Web3PluginBase {
 	public pluginNamespace = 'chainlink';
 
 	protected readonly _contract: Contract<typeof AggregatorV3InterfaceABI>;
@@ -53,6 +43,12 @@ export class ChainlinkPlugin extends Web3PluginBase<Web3APISpec> {
 
 	public async getPrice() {
 		if (this._contract.currentProvider === undefined) this._contract.link(this);
-		return this._contract.methods.latestRoundData().call();
+		return this._contract.methods.latestRoundData().call() as unknown as Promise<Price>;
+	}
+}
+
+declare module 'web3' {
+	interface Web3 {
+		chainlink: ChainlinkPlugin;
 	}
 }
