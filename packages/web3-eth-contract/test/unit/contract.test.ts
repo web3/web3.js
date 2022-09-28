@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as eth from 'web3-eth';
+import { ValidChains } from 'web3-types';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -240,7 +241,7 @@ describe('Contract', () => {
 
 			const defaultCommon = {
 				customChain: { name: 'testnet', networkId: '5678', chainId: '5634' },
-				baseChain: 'mainnet',
+				baseChain: 'mainnet' as ValidChains,
 				hardFork: 'petersburg',
 			};
 			expect(contract.defaultCommon).toBeUndefined();
