@@ -235,7 +235,7 @@ export class Web3Context<
 	}
 
 	// eslint-disable-next-line no-use-before-define
-	public registerPlugin(plugin: Web3PluginBase<any>) {
+	public registerPlugin(plugin: Web3PluginBase) {
 		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
 		if (this[plugin.pluginNamespace] !== undefined)
 			throw new ExistingPluginNamespaceError(plugin.pluginNamespace);

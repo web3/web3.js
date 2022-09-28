@@ -209,10 +209,10 @@ describe('Web3Context', () => {
 			const context = new Context1('http://test/abc');
 			const pluginNamespace = 'plugin';
 
-			class Plugin extends Web3PluginBase<Web3APISpec> {
+			class Plugin extends Web3PluginBase {
 				public pluginNamespace = pluginNamespace;
 			}
-			class Plugin2 extends Web3PluginBase<Web3APISpec> {
+			class Plugin2 extends Web3PluginBase {
 				public pluginNamespace = pluginNamespace;
 			}
 
