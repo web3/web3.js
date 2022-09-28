@@ -292,6 +292,8 @@ export type TransactionBuilder<
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;
 
-export abstract class Web3PluginBase<API extends Web3APISpec> extends Web3Context<API> {
+export abstract class Web3PluginBase<
+	API extends Web3APISpec = Web3APISpec,
+> extends Web3Context<API> {
 	public abstract pluginNamespace: string;
 }
