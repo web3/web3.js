@@ -17,18 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { isBytes, isNullish } from 'web3-validator';
-import { Bytes } from 'web3-types';
+import { Bytes, Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import {
-	getUncleByBlockHashAndIndex,
-	getUncleByBlockNumberAndIndex,
-} from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getUncle } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_uncle';
 import { blockSchema } from '../../../src/schemas';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getUncle', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -60,7 +56,9 @@ describe('getUncle', () => {
 
 			await getUncle(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
 			expect(
-				inputBlockIsBytes ? getUncleByBlockHashAndIndex : getUncleByBlockNumberAndIndex,
+				inputBlockIsBytes
+					? ethRpcMethods.getUncleByBlockHashAndIndex
+					: ethRpcMethods.getUncleByBlockNumberAndIndex,
 			).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputBlockFormatted,
@@ -82,8 +80,8 @@ describe('getUncle', () => {
 			const inputBlockIsBytes = isBytes(inputBlock as Bytes);
 			(
 				(inputBlockIsBytes
-					? getUncleByBlockHashAndIndex
-					: getUncleByBlockNumberAndIndex) as jest.Mock
+					? ethRpcMethods.getUncleByBlockHashAndIndex
+					: ethRpcMethods.getUncleByBlockNumberAndIndex) as jest.Mock
 			).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getUncle(web3Context, ...inputParameters, expectedReturnFormat);

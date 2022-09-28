@@ -16,11 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ERR_SIGNATURE_FAILED } from '../error_codes';
-import { Web3Error } from '../web3_error_base';
+import { InvalidValueError } from '../web3_error_base';
 
-export class SignerError extends Web3Error {
+export class SignatureError extends InvalidValueError {
 	public code = ERR_SIGNATURE_FAILED;
-	public constructor(errorDetails: string) {
-		super(`Invalid signature. "${errorDetails}"`);
-	}
 }

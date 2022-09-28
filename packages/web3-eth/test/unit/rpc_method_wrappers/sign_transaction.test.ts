@@ -17,15 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT } from 'web3-utils';
 import { isString } from 'web3-validator';
-import { SignedTransactionInfoAPI } from 'web3-types';
+import { SignedTransactionInfoAPI, Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { signTransaction as rpcMethodsSignTransaction } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { signTransaction } from '../../../src/rpc_method_wrappers';
 import { returnFormat, testData } from './fixtures/sign_transaction';
 import { formatTransaction } from '../../../src';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('signTransaction', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -40,14 +39,14 @@ describe('signTransaction', () => {
 			const [inputTransaction, signedTransactionInfo] = inputParameters;
 			const inputTransactionFormatted = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
 
-			(rpcMethodsSignTransaction as jest.Mock).mockResolvedValueOnce(
+			(ethRpcMethods.signTransaction as jest.Mock).mockResolvedValueOnce(
 				isString(signedTransactionInfo as string)
 					? signedTransactionInfo
 					: (signedTransactionInfo as SignedTransactionInfoAPI).raw,
 			);
 
 			await signTransaction(web3Context, inputTransaction, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsSignTransaction).toHaveBeenCalledWith(
+			expect(ethRpcMethods.signTransaction).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputTransactionFormatted,
 			);
@@ -59,7 +58,7 @@ describe('signTransaction', () => {
 		async (_, inputParameters) => {
 			const [inputTransaction, signedTransactionInfo, expectedFormattedResult] =
 				inputParameters;
-			(rpcMethodsSignTransaction as jest.Mock).mockResolvedValueOnce(
+			(ethRpcMethods.signTransaction as jest.Mock).mockResolvedValueOnce(
 				isString(signedTransactionInfo as string)
 					? signedTransactionInfo
 					: (signedTransactionInfo as SignedTransactionInfoAPI).raw,

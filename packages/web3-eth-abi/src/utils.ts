@@ -34,7 +34,13 @@ export const isAbiFragment = (item: unknown): item is AbiFragment =>
 	!isNullish(item) &&
 	typeof item === 'object' &&
 	!isNullish((item as { type: string }).type) &&
-	['function', 'event', 'constructor'].includes((item as { type: string }).type);
+	['function', 'event', 'constructor', 'error'].includes((item as { type: string }).type);
+
+export const isAbiErrorFragment = (item: unknown): item is AbiEventFragment =>
+	!isNullish(item) &&
+	typeof item === 'object' &&
+	!isNullish((item as { type: string }).type) &&
+	(item as { type: string }).type === 'error';
 
 export const isAbiEventFragment = (item: unknown): item is AbiEventFragment =>
 	!isNullish(item) &&
@@ -278,7 +284,7 @@ export const flattenTypes = (
  * returns a string
  */
 export const jsonInterfaceMethodToString = (json: AbiFragment): string => {
-	if (isAbiEventFragment(json) || isAbiFunctionFragment(json)) {
+	if (isAbiErrorFragment(json) || isAbiEventFragment(json) || isAbiFunctionFragment(json)) {
 		if (json.name?.includes('(')) {
 			return json.name;
 		}
