@@ -16,8 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
-import { Web3PluginBase } from 'web3-core';
-import { Address } from 'web3-types';
+import { Web3Context, Web3PluginBase } from 'web3-core';
+import { Address, Web3APISpec } from 'web3-types';
 // @ts-expect-error 'Web3' is declared but its value is never read.
 import { Web3 } from 'web3';
 
@@ -41,8 +41,12 @@ export class ChainlinkPlugin extends Web3PluginBase {
 		this._contract = new Contract(abi, address);
 	}
 
+	public link(parentContext: Web3Context<Web3APISpec>) {
+		super.link(parentContext);
+		this._contract.link(parentContext);
+	}
+
 	public async getPrice() {
-		if (this._contract.currentProvider === undefined) this._contract.link(this);
 		return this._contract.methods.latestRoundData().call() as unknown as Promise<Price>;
 	}
 }
