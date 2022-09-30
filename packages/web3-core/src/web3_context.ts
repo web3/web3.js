@@ -288,12 +288,26 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;
 
+/**
+ * To implement a plugin that connects to a Node that does not fully implements the Ethereum JSON RPC standard methods,
+ * 	inherit from this Class.
+ * This class would also be used if the plugin was for non-Ethereum systems that could be supported later.
+ * 	However, for such implementation, more research and modifications would be needed.
+ */
 export abstract class Web3PluginBase<
-	API extends Web3APISpec = EthExecutionAPI,
+	API extends Web3APISpec = Web3APISpec,
 > extends Web3Context<API> {
 	public abstract pluginNamespace: string;
 }
 
-export abstract class Web3EthPluginBase<API extends Web3APISpec> extends Web3PluginBase<
+/**
+ * To implement a plugin that connects to a Node that fully implements the Ethereum JSON RPC standard methods,
+ * 	inherit from this Class.
+ * And if the plugin provides more than the Ethereum JSON RPC standard methods, you can pass
+ * 	the specification of additional methods similar to the following:
+ *  `export class CustomPlugin extends Web3EthPluginBase<CustomPluginAPI> {...}`
+ *
+ */
+export abstract class Web3EthPluginBase<API extends Web3APISpec = unknown> extends Web3PluginBase<
 	API & EthExecutionAPI
 > {}
