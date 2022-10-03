@@ -59,20 +59,18 @@ describe('contract', () => {
 
 		describe('contract instance', () => {
 			let contractDeployed: Contract<typeof ERC20TokenAbi>;
-			let localAccount: { address: string; privateKey: string };
+			let pkAccount: { address: string; privateKey: string };
 			let mainAcc: { address: string; privateKey: string };
 			const prepareForTransfer = async (value: string) => {
 				const tempAccount = await createTempAccount();
-				await contractDeployed.methods
-					.transfer(localAccount.address, value)
-					.send(sendOptions);
+				await contractDeployed.methods.transfer(pkAccount.address, value).send(sendOptions);
 				return tempAccount;
 			};
 
 			beforeAll(async () => {
 				mainAcc = await createTempAccount();
-				localAccount = await createNewAccount();
-				await refillAccount(mainAcc.address, localAccount.address, '20000000000000000');
+				pkAccount = await createNewAccount();
+				await refillAccount(mainAcc.address, pkAccount.address, '20000000000000000');
 				sendOptions = { from: mainAcc.address, gas: '10000000' };
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
@@ -111,7 +109,7 @@ describe('contract', () => {
 							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.transfer(tempAccount.address, value),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 
 						expect(
@@ -130,14 +128,14 @@ describe('contract', () => {
 						const res = await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
-							contractDeployed.methods.approve(localAccount.address, value),
-							localAccount.privateKey,
+							contractDeployed.methods.approve(pkAccount.address, value),
+							pkAccount.privateKey,
 						);
 
 						expect(res.status).toBe(BigInt(1));
 						expect(
 							(res.logs as LogsOutput[])[0].topics[2].endsWith(
-								localAccount.address.substring(2),
+								pkAccount.address.substring(2),
 							),
 						).toBe(true);
 
@@ -146,11 +144,11 @@ describe('contract', () => {
 							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.transferFrom(
-								localAccount.address,
+								pkAccount.address,
 								tempAccount.address,
 								transferFromValue,
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 						expect(
 							await contractDeployed.methods.balanceOf(tempAccount.address).call(),
@@ -159,7 +157,7 @@ describe('contract', () => {
 						// allowance
 						expect(
 							await contractDeployed.methods
-								.allowance(localAccount.address, localAccount.address)
+								.allowance(pkAccount.address, pkAccount.address)
 								.call(),
 						).toBe(value - transferFromValue);
 					},

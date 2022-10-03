@@ -58,11 +58,11 @@ describe('contract', () => {
 		describe('contract instance', () => {
 			let acc: { address: string; privateKey: string };
 			let acc2: { address: string; privateKey: string };
-			let localAccount: { address: string; privateKey: string };
+			let pkAccount: { address: string; privateKey: string };
 			beforeAll(async () => {
 				acc = await createTempAccount();
-				localAccount = await createNewAccount();
-				await refillAccount(acc.address, localAccount.address, '20000000000000000');
+				pkAccount = await createNewAccount();
+				await refillAccount(acc.address, pkAccount.address, '20000000000000000');
 			});
 			beforeEach(async () => {
 				acc2 = await createTempAccount();
@@ -108,7 +108,7 @@ describe('contract', () => {
 								tempAccount.address,
 								'http://my-nft-award',
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
@@ -134,7 +134,7 @@ describe('contract', () => {
 								tempAccount.address,
 								'http://my-nft-award',
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
@@ -171,7 +171,7 @@ describe('contract', () => {
 								tempAccount.address,
 								'http://my-nft-award',
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 
 						const logs = await contractDeployed.getPastEvents('Transfer');
@@ -216,7 +216,7 @@ describe('contract', () => {
 								tempAccount.address,
 								'http://my-nft-award',
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
@@ -247,7 +247,7 @@ describe('contract', () => {
 								tempAccount.address,
 								'http://my-nft-award',
 							),
-							localAccount.privateKey,
+							pkAccount.privateKey,
 						);
 
 						await signAndSendContractMethod(

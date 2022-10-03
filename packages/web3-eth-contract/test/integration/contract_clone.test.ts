@@ -40,7 +40,6 @@ describe('contract', () => {
 		it('should clone the contract but with same address', async () => {
 			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
 			const newContract = deployedContract.clone();
-
 			expect(newContract).toBeInstanceOf(Contract);
 			expect(newContract).not.toBe(deployedContract);
 			expect(newContract.options.address).toBe(deployedContract.options.address);

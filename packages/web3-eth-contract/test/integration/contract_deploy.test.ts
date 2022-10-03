@@ -33,9 +33,9 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
-		let localAccount: { address: string; privateKey: string };
+		let pkAccount: { address: string; privateKey: string };
 		beforeAll(async () => {
-			localAccount = await createNewAccount({ refill: true });
+			pkAccount = await createNewAccount({ refill: true });
 		});
 		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
@@ -62,7 +62,7 @@ describe('contract', () => {
 						{
 							data: deployData.encodeABI(),
 						},
-						localAccount.privateKey,
+						pkAccount.privateKey,
 					);
 					expect(Number(res.status)).toBe(1);
 				},
@@ -78,7 +78,7 @@ describe('contract', () => {
 							maxFeePerGas: 1,
 							maxPriorityFeePerGas: 1,
 						},
-						localAccount.privateKey,
+						pkAccount.privateKey,
 					),
 				).rejects.toThrow(
 					"VM Exception while processing transaction: Transaction's maxFeePerGas",

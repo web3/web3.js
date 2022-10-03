@@ -363,3 +363,10 @@ export const signAndSendContractMethodEIP2930 = async (
 		},
 		privateKey,
 	);
+
+export const createLocalAccount = async (web3: Web3) => {
+	const account = web3.eth.accounts.create();
+	await refillAccount((await createTempAccount()).address, account.address, '10000000000000000');
+	web3.eth.accounts.wallet.add(account);
+	return account;
+};

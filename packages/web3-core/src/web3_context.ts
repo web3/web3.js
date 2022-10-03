@@ -167,6 +167,10 @@ export class Web3Context<
 		return this._wallet;
 	}
 
+	public set wallet(wallet: Web3BaseWallet<Web3BaseWalletAccount> | undefined) {
+		this._wallet = wallet;
+	}
+
 	public get accountProvider() {
 		return this._accountProvider;
 	}
