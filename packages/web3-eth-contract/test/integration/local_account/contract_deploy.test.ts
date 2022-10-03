@@ -48,8 +48,10 @@ describe('contract', () => {
 
 		describe('local account', () => {
 			it.each(['0x1', '0x2'])('should deploy contract %p', async txType => {
+				const acc = await createLocalAccount(web3);
 				const deployedContract = await contract.deploy(deployOptions).send({
 					...sendOptions,
+					from: acc.address,
 					type: txType,
 				});
 				expect(deployedContract.options.address).toBeDefined();
