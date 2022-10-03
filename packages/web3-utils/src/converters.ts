@@ -384,8 +384,7 @@ export const toWei = (number: Numbers, unit: EtherUnits): string => {
 };
 
 export const toChecksumAddress = (address: Address): string => {
-	// if (address === '0x')
-	// return ''
+	if (address === '0x') return '';
 	if (!isAddress(address, false)) {
 		throw new InvalidAddressError(address);
 	}
