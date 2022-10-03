@@ -42,7 +42,7 @@ describe('Web3DeferredPromise', () => {
 		});
 	});
 
-	describe('start timer promise', () => {
+	describe('Web3DeferredPromise timeout', () => {
 		it('%s', async () => {
 			const promise = new Web3DeferredPromise({
 				timeout: 100,
@@ -51,6 +51,7 @@ describe('Web3DeferredPromise', () => {
 			});
 			// eslint-disable-next-line jest/no-conditional-expect
 			await promise.catch(val => expect(val).toEqual(new Error('DeferredPromise timed out')));
+			expect(promise.state).toBe('rejected');
 		});
 	});
 });

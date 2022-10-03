@@ -15,15 +15,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { waitWithTimeout } from '../../src/promise_helpers';
+import { waitWithTimeout, rejectIfTimeout } from '../../src/promise_helpers';
 
-async function asyncHelper() {
+const asyncHelper = async () => {
 	await new Promise(resolve => {
 		setTimeout(() => {
 			resolve('resolved');
-		}, 2000);
+		}, 200);
 	});
-}
+};
 
 describe('promise helpers', () => {
 	describe('waitWithTimeout resolve', () => {
@@ -38,14 +38,17 @@ describe('promise helpers', () => {
 	});
 	describe('waitWithTimeout timeout', () => {
 		it('%s', async () => {
-			await expect(
-				waitWithTimeout(
-					asyncHelper,
-					1000,
-					new Error('time out'),
-					// eslint-disable-next-line jest/no-conditional-expect
-				),
-			).rejects.toThrow(new Error('time out'));
+			await expect(waitWithTimeout(asyncHelper, 100, new Error('time out'))).rejects.toThrow(
+				new Error('time out'),
+			);
+		});
+	});
+	describe('rejectIfTimeout timeout', () => {
+		it('%s', async () => {
+			const [timerId, promise] = rejectIfTimeout(100, new Error('time out'));
+			// eslint-disable-next-line jest/no-conditional-expect
+			await promise.catch(value => expect(value).toEqual(new Error('time out')));
+			clearTimeout(timerId);
 		});
 	});
 });
