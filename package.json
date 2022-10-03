@@ -52,7 +52,7 @@
 		"format": "lerna run format --stream --parallel",
 		"test": "lerna run test --stream --parallel",
 		"test:unit": "lerna run test:unit --stream --parallel",
-		"test:integration": "lerna run test:integration --stream --parallel",
+		"test:integration": "lerna run test:integration --stream",
 		"test:e2e:ganache:http": "./scripts/test-runner.sh ganache http",
 		"test:e2e:ganache:ws": "./scripts/test-runner.sh ganache ws",
 		"test:e2e:geth:http": "./scripts/test-runner.sh geth http",
