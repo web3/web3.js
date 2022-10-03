@@ -15,32 +15,42 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Web3DeferredPromise
-} from '../../src/web3_deferred_promise';
-import {
-} from '../fixtures/json_rpc';
+import { Web3DeferredPromise } from '../../src/web3_deferred_promise';
+import {} from '../fixtures/json_rpc';
 
 describe('Web3DeferredPromise', () => {
-	describe('create Web3DeferredPromise', () => {
-        it('%s', () => {
-
-				new Web3DeferredPromise();
-        });
+	describe('getState Web3DeferredPromise', () => {
+		it('%s', () => {
+			const promise = new Web3DeferredPromise();
+			expect(promise.state).toBe('pending');
+		});
 	});
-    describe('getState Web3DeferredPromise', () => {
-        it('%s', () => {
+	describe('Web3DeferredPromise resolves promise', () => {
+		it('%s', () => {
+			const promise = new Web3DeferredPromise();
+			promise.resolve('mockValue');
+			expect(promise.state).toBe('fulfilled');
+		});
+	});
+	describe('Web3DeferredPromise reject promise', () => {
+		it('%s', async () => {
+			const promise = new Web3DeferredPromise();
+			promise.reject(new Error('fail'));
+			// eslint-disable-next-line jest/no-conditional-expect
+			await promise.catch(val => expect(val).toEqual(new Error('fail')));
+			expect(promise.state).toBe('rejected');
+		});
+	});
 
-        const promise = new Web3DeferredPromise();
-        expect(promise.state).toBe('pending');
-        })
-    });
-    describe('Web3DeferredPromise fulfill promise', () => {
-        it('%s', () => {
-        const promise = new Web3DeferredPromise();
-        jest.spyOn(promise, 'then').mockResolvedValue('mockValue');
-        promise.resolve('mockValue');
-        expect(promise.then).toHaveBeenCalledTimes(1);
-        })
-    });
+	describe('start timer promise', () => {
+		it('%s', async () => {
+			const promise = new Web3DeferredPromise({
+				timeout: 100,
+				eagerStart: true,
+				timeoutMessage: 'DeferredPromise timed out',
+			});
+			// eslint-disable-next-line jest/no-conditional-expect
+			await promise.catch(val => expect(val).toEqual(new Error('DeferredPromise timed out')));
+		});
+	});
 });
