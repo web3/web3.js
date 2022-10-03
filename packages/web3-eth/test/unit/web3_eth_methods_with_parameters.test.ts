@@ -14,12 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-/* eslint-disable import/namespace */
-
-// eslint-disable-next-line import/no-named-as-default
 import Web3Eth from '../../src/index';
-import * as rpcMethods from '../../src/rpc_methods';
 import * as rpcMethodWrappers from '../../src/rpc_method_wrappers';
 import {
 	getBlockNumberValidData,
@@ -53,7 +50,7 @@ import {
 	txReceipt,
 } from '../fixtures/web3_eth_methods_with_parameters';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 jest.mock('../../src/rpc_method_wrappers');
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 jest.spyOn(rpcMethodWrappers, 'getTransaction').mockResolvedValue(tx);
@@ -274,7 +271,7 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getStorageAt(...input);
-							expect(rpcMethods.getStorageAt).toHaveBeenCalledWith(
+							expect(ethRpcMethods.getStorageAt).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								...rpcMethodParameters,
 							);
@@ -287,7 +284,7 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getCode(...input);
-							expect(rpcMethods.getCode).toHaveBeenCalledWith(
+							expect(ethRpcMethods.getCode).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								...rpcMethodParameters,
 							);
@@ -298,7 +295,7 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe.skip('sendSignedTransaction', () => {
 					it.each(sendSignedTransactionValidData)('input: %s', async input => {
 						await web3Eth.sendSignedTransaction(input);
-						expect(rpcMethods.sendRawTransaction).toHaveBeenCalledWith(
+						expect(ethRpcMethods.sendRawTransaction).toHaveBeenCalledWith(
 							web3Eth.requestManager,
 							input,
 						);
@@ -308,7 +305,7 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe.skip('sign', () => {
 					it.each(signValidData)('input: %s', async input => {
 						await web3Eth.sign(...input);
-						expect(rpcMethods.sign).toHaveBeenCalledWith(
+						expect(ethRpcMethods.sign).toHaveBeenCalledWith(
 							web3Eth.requestManager,
 							...input,
 						);
@@ -320,7 +317,7 @@ describe('web3_eth_methods_with_parameters', () => {
 						'input: %s\nrpcMethodParameters: %s',
 						async (input, rpcMethodParameters) => {
 							await web3Eth.getPastLogs(input);
-							expect(rpcMethods.getLogs).toHaveBeenCalledWith(
+							expect(ethRpcMethods.getLogs).toHaveBeenCalledWith(
 								web3Eth.requestManager,
 								rpcMethodParameters,
 							);
@@ -331,7 +328,7 @@ describe('web3_eth_methods_with_parameters', () => {
 				describe('submitWork', () => {
 					it.each(submitWorkValidData)('input: %s', async input => {
 						await web3Eth.submitWork(...input);
-						expect(rpcMethods.submitWork).toHaveBeenCalledWith(
+						expect(ethRpcMethods.submitWork).toHaveBeenCalledWith(
 							web3Eth.requestManager,
 							...input,
 						);

@@ -14,10 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { Socket } from 'net';
+
 import { Web3Error } from './error_types';
-import { EthExecutionAPI } from './eth_execution_api';
+import { EthExecutionAPI } from './apis/eth_execution_api';
 import {
 	JsonRpcNotification,
 	JsonRpcPayload,
@@ -109,6 +109,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		callback: (err?: Error | null, response?: JsonRpcResponse<R>) => void,
 	) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		this.request(payload as Web3APIPayload<API, any>)
 			.then(response => {
 				callback(undefined, response);
@@ -123,6 +124,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	 * @param payload - Request Payload
 	 */
 	public async sendAsync<R = JsonRpcResult, P = unknown>(payload: JsonRpcPayload<P>) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return this.request(payload as Web3APIPayload<API, any>) as Promise<JsonRpcResponse<R>>;
 	}
 

@@ -16,13 +16,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { sign as rpcMethodsSign } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { sign } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/sign';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('sign', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -42,7 +42,7 @@ describe('sign', () => {
 			);
 
 			await sign(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsSign).toHaveBeenCalledWith(
+			expect(ethRpcMethods.sign).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
 				inputMessageFormatted,
@@ -59,7 +59,7 @@ describe('sign', () => {
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(rpcMethodsSign as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(ethRpcMethods.sign as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await sign(web3Context, ...inputParameters, expectedReturnFormat);
 			expect(result).toStrictEqual(expectedFormattedResult);

@@ -17,13 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { isNullish } from 'web3-validator';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getTransactionCount as rpcMethodsGetTransactionCount } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getTransactionCount } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_count';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getTransactionCount', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -50,7 +50,7 @@ describe('getTransactionCount', () => {
 			}
 
 			await getTransactionCount(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsGetTransactionCount).toHaveBeenCalledWith(
+			expect(ethRpcMethods.getTransactionCount).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
 				inputBlockNumberFormatted,
@@ -67,7 +67,7 @@ describe('getTransactionCount', () => {
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(rpcMethodsGetTransactionCount as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(ethRpcMethods.getTransactionCount as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getTransactionCount(
 				web3Context,

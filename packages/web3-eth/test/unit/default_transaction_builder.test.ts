@@ -19,19 +19,22 @@ import {
 	PopulatedUnsignedEip1559Transaction,
 	PopulatedUnsignedEip2930Transaction,
 	Transaction,
+	ValidChains,
+	Hardfork,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
 import {
 	Eip1559NotSupportedError,
 	UnableToPopulateNonceError,
 	UnsupportedTransactionTypeError,
-} from '../../src/errors';
+} from 'web3-errors';
 import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
-import * as rpcMethods from '../../src/rpc_methods';
 
-jest.mock('../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 const expectedNetworkId = '0x4';
 jest.mock('web3-net', () => ({
@@ -111,12 +114,12 @@ describe('defaultTransactionBuilder', () => {
 	let getTransactionCountSpy: jest.SpyInstance;
 
 	beforeEach(() => {
-		jest.spyOn(rpcMethods, 'getBlockByNumber').mockResolvedValue(mockBlockData);
+		jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockResolvedValue(mockBlockData);
 		getTransactionCountSpy = jest
-			.spyOn(rpcMethods, 'getTransactionCount')
+			.spyOn(ethRpcMethods, 'getTransactionCount')
 			.mockResolvedValue(expectedNonce);
-		jest.spyOn(rpcMethods, 'getGasPrice').mockResolvedValue(expectedGasPrice);
-		jest.spyOn(rpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
+		jest.spyOn(ethRpcMethods, 'getGasPrice').mockResolvedValue(expectedGasPrice);
+		jest.spyOn(ethRpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
 
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
 	});
@@ -274,6 +277,36 @@ describe('defaultTransactionBuilder', () => {
 			});
 			expect(result.hardfork).toBe(web3Context.defaultHardfork);
 		});
+
+		it('should use web3Context.defaultCommon to populate', async () => {
+			const baseChain: ValidChains = 'mainnet';
+			const hardfork: Hardfork = 'berlin';
+			const customCommon = {
+				customChain: {
+					name: 'custom',
+					networkId: '0x3',
+					chainId: '0x1',
+				},
+				baseChain,
+				hardfork,
+			};
+
+			web3Context = new Web3Context<EthExecutionAPI>({
+				provider: new HttpProvider('http://127.0.0.1'),
+				config: {
+					defaultCommon: customCommon,
+				},
+			});
+
+			const input = { ...transaction };
+			delete input.common;
+
+			const result = await defaultTransactionBuilder({
+				transaction: input,
+				web3Context,
+			});
+			expect(result.common).toStrictEqual(customCommon);
+		});
 	});
 
 	describe('should populate chainId', () => {
@@ -406,7 +439,7 @@ describe('defaultTransactionBuilder', () => {
 	describe('should populate maxPriorityFeePerGas and maxFeePerGas', () => {
 		it('should throw Eip1559NotSupportedError', async () => {
 			const mockBlockDataNoBaseFeePerGas = { ...mockBlockData, baseFeePerGas: undefined };
-			jest.spyOn(rpcMethods, 'getBlockByNumber').mockImplementation(
+			jest.spyOn(ethRpcMethods, 'getBlockByNumber').mockImplementation(
 				// @ts-expect-error - Mocked implementation doesn't have correct method signature
 				// (i.e. requestManager, blockNumber, hydrated params), but that doesn't matter for the test
 				() => mockBlockDataNoBaseFeePerGas,
@@ -430,7 +463,6 @@ describe('defaultTransactionBuilder', () => {
 				transaction: input,
 				web3Context,
 			});
-			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.maxPriorityFeePerGas).toBe(expectedGasPrice);
 			expect(result.gasPrice).toBeUndefined();
 		});
