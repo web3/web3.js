@@ -591,9 +591,8 @@ export class Contract<Abi extends ContractAbi>
 	 * ```
 	 */
 	public clone() {
-		let newContract;
 		if (this.options.address) {
-			newContract = new Contract<Abi>(
+			return new Contract<Abi>(
 				this._jsonInterface as unknown as Abi,
 				this.options.address,
 				{
@@ -604,22 +603,22 @@ export class Contract<Abi extends ContractAbi>
 					data: this.options.data,
 					provider: this.currentProvider,
 				},
+				this.getContextObject(),
 			);
-		} else {
-			newContract = new Contract<Abi>(this._jsonInterface as unknown as Abi, {
+		}
+
+		return new Contract<Abi>(
+			this._jsonInterface as unknown as Abi,
+			{
 				gas: this.options.gas,
 				gasPrice: this.options.gasPrice,
 				gasLimit: this.options.gasLimit,
 				from: this.options.from,
 				data: this.options.data,
 				provider: this.currentProvider,
-			});
-		}
-
-		if (this.wallet) {
-			newContract.wallet = this.wallet;
-		}
-		return newContract;
+			},
+			this.getContextObject(),
+		);
 	}
 
 	/**
