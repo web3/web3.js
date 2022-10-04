@@ -14,8 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// @ts-expect-error 'Web3' is declared but its value is never read.
-import { Web3 } from 'web3';
+import 'web3';
 import { Web3PluginBase } from 'web3-core';
 
 type CustomRpcApi = {
