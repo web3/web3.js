@@ -68,22 +68,6 @@ describe('contract', () => {
 				},
 			);
 
-			it('deploy should fail with low baseFeeGas EIP1559', async () => {
-				const deployData = contract.deploy(deployOptions);
-				await expect(
-					signTxAndSendEIP1559(
-						contract.provider,
-						{
-							data: deployData.encodeABI(),
-							maxFeePerGas: 1,
-							maxPriorityFeePerGas: 1,
-						},
-						pkAccount.privateKey,
-					),
-				).rejects.toThrow(
-					"VM Exception while processing transaction: Transaction's maxFeePerGas",
-				);
-			});
 			it.skip('should return estimated gas of contract constructor', async () => {
 				// @TODO: uncomment this after finish issue #5473
 				const estimatedGas = await new Contract(GreeterAbi, undefined, {

@@ -46,30 +46,26 @@ describe('contract', () => {
 			};
 		});
 
-		describe('local account', () => {
-			it.each(['0x1', '0x2'])('should deploy contract %p', async txType => {
-				const acc = await createLocalAccount(web3);
-				const deployedContract = await contract.deploy(deployOptions).send({
-					...sendOptions,
-					from: acc.address,
-					type: txType,
-				});
-				expect(deployedContract.options.address).toBeDefined();
+		it.each(['0x1', '0x2'])('should deploy contract %p', async txType => {
+			const acc = await createLocalAccount(web3);
+			const deployedContract = await contract.deploy(deployOptions).send({
+				...sendOptions,
+				from: acc.address,
+				type: txType,
 			});
+			expect(deployedContract.options.address).toBeDefined();
 		});
 
 		it('deploy should fail with low baseFeeGas EIP1559', async () => {
 			await expect(
 				contract.deploy(deployOptions).send({
 					type: '0x2',
-					gas: '1000000',
+					gas: '1000',
 					maxFeePerGas: '0x1',
 					maxPriorityFeePerGas: '0x1',
 					from: localAccount.address,
 				}),
-			).rejects.toThrow(
-				"VM Exception while processing transaction: Transaction's maxFeePerGas",
-			);
+			).rejects.toThrow('Signer Error Signer Error  gasLimit is too low');
 		});
 
 		it.each(['0x1', '0x2'])(
