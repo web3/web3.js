@@ -22,7 +22,7 @@ import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
 
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
-import { resolveIfBlockTimeout } from './resolve_if_block_timeout';
+import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
 
@@ -52,24 +52,19 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	);
 
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const resolveOnBlockTimeout = await resolveIfBlockTimeout(
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
 		web3Context,
 		starterBlockNumber,
 		transactionHash,
 	);
-	const [promiseToErrorIfBlockTimeout, blockTimeoutResourceCleaner] = resolveOnBlockTimeout;
 
 	try {
-		const res = await Promise.race([
+		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
+		return await Promise.race([
 			awaitableTransactionReceipt,
-			rejectOnTimeout,
-			promiseToErrorIfBlockTimeout,
+			rejectOnTimeout, // this will throw an error on Transaction Polling Timeout
+			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
-		if (res instanceof Error) {
-			throw res;
-		} else {
-			return res;
-		}
 	} finally {
 		clearTimeout(timeoutId);
 		blockTimeoutResourceCleaner.onTermination();

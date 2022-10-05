@@ -21,7 +21,7 @@ import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 import { TransactionSendTimeoutError } from 'web3-errors';
 import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
-import { resolveIfBlockTimeout } from './resolve_if_block_timeout';
+import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
 import { getBlockNumber } from '../rpc_method_wrappers';
 
@@ -46,25 +46,19 @@ export async function trySendTransaction(
 	);
 
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const resolveOnBlockTimeout = await resolveIfBlockTimeout(
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
 		web3Context,
 		starterBlockNumber,
 		transactionHash,
 	);
 
-	const [promiseToErrorIfBlockTimeout, blockTimeoutResourceCleaner] = resolveOnBlockTimeout;
-
 	try {
-		const res = await Promise.race([
-			sendTransactionFunc(),
-			rejectOnTimeout,
-			promiseToErrorIfBlockTimeout,
+		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
+		return await Promise.race([
+			sendTransactionFunc(), // this is the function that will send the transaction
+			rejectOnTimeout, // this will throw an error on Transaction Send Timeout
+			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
-		if (res instanceof Error) {
-			throw res;
-		} else {
-			return res;
-		}
 	} finally {
 		clearTimeout(timeoutId);
 		blockTimeoutResourceCleaner.onTermination();

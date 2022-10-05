@@ -32,9 +32,9 @@ function resolveByPolling(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): [Promise<Error>, ResourceCleaner] {
+): [Promise<never>, ResourceCleaner] {
 	const pollingInterval = web3Context.transactionPollingInterval;
-	const [intervalId, promiseToError]: [NodeJS.Timer, Promise<Error>] =
+	const [intervalId, promiseToError]: [NodeJS.Timer, Promise<never>] =
 		rejectIfConditionAtInterval(async () => {
 			let lastBlockNumber;
 			try {
@@ -65,7 +65,7 @@ async function resolveBySubscription(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): Promise<[Promise<Error>, ResourceCleaner]> {
+): Promise<[Promise<never>, ResourceCleaner]> {
 	// The following variable will stay true except if the data arrived,
 	//	or if watching started after an error had occurred.
 	let needToWatchLater = true;
@@ -73,9 +73,12 @@ async function resolveBySubscription(
 	let subscription: NewHeadsSubscription;
 	let resourceCleaner: ResourceCleaner;
 	// internal helper function
-	function revertToPolling(resolve: (value: Error | PromiseLike<Error>) => void, error?: Error) {
-		if (error) {
-			// 	console.debug('error happened at subscription revert to polling...', error);
+	function revertToPolling(
+		reject: (value: Error | PromiseLike<Error>) => void,
+		previousError?: Error,
+	) {
+		if (previousError) {
+			// 	console.debug('error happened at subscription revert to polling...', previousError);
 		}
 		resourceCleaner.onTermination();
 
@@ -86,7 +89,7 @@ async function resolveBySubscription(
 			transactionHash,
 		);
 		resourceCleaner.onTermination = newResourceCleaner.onTermination;
-		resolve(promiseToError);
+		promiseToError.catch(error => reject(error as Error));
 	}
 	try {
 		subscription = (await web3Context.subscriptionManager?.subscribe(
@@ -108,7 +111,7 @@ async function resolveBySubscription(
 		// console.debug('error happened when trying to subscribe to `newHeads`.', error);
 		return resolveByPolling(web3Context, starterBlockNumber, transactionHash);
 	}
-	const promiseToError: Promise<Error> = new Promise(resolve => {
+	const promiseToError: Promise<never> = new Promise((_, reject) => {
 		try {
 			subscription.on('data', (lastBlockHeader: BlockHeaderOutput) => {
 				needToWatchLater = false;
@@ -123,7 +126,7 @@ async function resolveBySubscription(
 					// console.debug(
 					// 	'Transaction Block Timeout Error has been resolved by subscription',
 					// );
-					resolve(
+					reject(
 						new TransactionBlockTimeoutError({
 							starterBlockNumber,
 							numberOfBlocks,
@@ -133,10 +136,10 @@ async function resolveBySubscription(
 				}
 			});
 			subscription.on('error', error => {
-				revertToPolling(resolve, error);
+				revertToPolling(reject, error);
 			});
 		} catch (error) {
-			revertToPolling(resolve, error as Error);
+			revertToPolling(reject, error as Error);
 		}
 
 		// Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
@@ -145,7 +148,7 @@ async function resolveBySubscription(
 				// console.debug(
 				// 	'blockHeaderTimeout reached without getting the blocks by subscription. Try by polling',
 				// );
-				revertToPolling(resolve);
+				revertToPolling(reject);
 			}
 		}, web3Context.blockHeaderTimeout * 1000);
 	});
@@ -156,13 +159,13 @@ async function resolveBySubscription(
 /* TODO: After merge, there will be constant block mining time (exactly 12 second each block, except slot missed that currently happens in <1% of slots. ) so we can optimize following function
 for POS NWs, we can skip checking getBlockNumber(); after interval and calculate only based on time  that certain num of blocked are mined after that for internal double check, can do one getBlockNumber() call and timeout. 
 */
-export async function resolveIfBlockTimeout(
+export async function rejectIfBlockTimeout(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): Promise<[Promise<Error>, ResourceCleaner]> {
+): Promise<[Promise<never>, ResourceCleaner]> {
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
-	let callingRes: [Promise<Error>, ResourceCleaner];
+	let callingRes: [Promise<never>, ResourceCleaner];
 	if (provider.supportsSubscriptions()) {
 		callingRes = await resolveBySubscription(web3Context, starterBlockNumber, transactionHash);
 	} else {
