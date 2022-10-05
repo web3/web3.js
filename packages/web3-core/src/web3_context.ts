@@ -289,10 +289,20 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
 }) => Promise<ReturnType>;
 
 /**
- * To implement a plugin that connects to a Node that does not fully implements the Ethereum JSON RPC standard methods,
- * 	inherit from this Class.
- * This class would also be used if the plugin was for non-Ethereum systems that could be supported later.
- * 	However, for such implementation, more research and modifications would be needed.
+ * Extend this class when creating a plugin that either doesn't require {@link EthExecutionAPI},
+ * or interacts with a RPC node that doesn't fully implement {@link EthExecutionAPI}.
+ *
+ * To add type support for RPC methods to the {@link Web3RequestManager},
+ * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+ *
+ * ```ts
+ * type CustomRpcApi = {
+ *	custom_rpc_method: () => string;
+ *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+ * };
+ *
+ * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+ * ```
  */
 export abstract class Web3PluginBase<
 	API extends Web3APISpec = Web3APISpec,
@@ -301,12 +311,20 @@ export abstract class Web3PluginBase<
 }
 
 /**
- * To implement a plugin that connects to a Node that fully implements the Ethereum JSON RPC standard methods,
- * 	inherit from this Class.
- * And if the plugin provides more than the Ethereum JSON RPC standard methods, you can pass
- * 	the specification of additional methods similar to the following:
- *  `export class CustomPlugin extends Web3EthPluginBase<CustomPluginAPI> {...}`
+ * Extend this class when creating a plugin that makes use of {@link EthExecutionAPI},
+ * or depends on other Web3 packages (such as `web3-eth-contract`) that depend on {@link EthExecutionAPI}.
  *
+ * To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
+ * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+ *
+ * ```ts
+ * type CustomRpcApi = {
+ *	custom_rpc_method: () => string;
+ *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+ * };
+ *
+ * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+ * ```
  */
 export abstract class Web3EthPluginBase<API extends Web3APISpec = unknown> extends Web3PluginBase<
 	API & EthExecutionAPI
