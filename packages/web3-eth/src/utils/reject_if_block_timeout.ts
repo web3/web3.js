@@ -25,7 +25,7 @@ import { getBlockNumber } from '../rpc_method_wrappers';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 
 export interface ResourceCleaner {
-	onTermination: () => void;
+	clean: () => void;
 }
 
 function resolveByPolling(
@@ -54,11 +54,11 @@ function resolveByPolling(
 			return undefined;
 		}, pollingInterval);
 
-	const onTermination = () => {
+	const clean = () => {
 		clearInterval(intervalId);
 	};
 
-	return [promiseToError, { onTermination }];
+	return [promiseToError, { clean }];
 }
 
 async function resolveBySubscription(
@@ -78,9 +78,9 @@ async function resolveBySubscription(
 		previousError?: Error,
 	) {
 		if (previousError) {
-			// 	console.debug('error happened at subscription revert to polling...', previousError);
+			// console.debug('error happened at subscription revert to polling...', previousError);
 		}
-		resourceCleaner.onTermination();
+		resourceCleaner.clean();
 
 		needToWatchLater = false;
 		const [promiseToError, newResourceCleaner] = resolveByPolling(
@@ -88,7 +88,7 @@ async function resolveBySubscription(
 			starterBlockNumber,
 			transactionHash,
 		);
-		resourceCleaner.onTermination = newResourceCleaner.onTermination;
+		resourceCleaner.clean = newResourceCleaner.clean;
 		promiseToError.catch(error => reject(error as Error));
 	}
 	try {
@@ -96,7 +96,7 @@ async function resolveBySubscription(
 			'newHeads',
 		)) as unknown as NewHeadsSubscription;
 		resourceCleaner = {
-			onTermination: () => {
+			clean: () => {
 				subscription
 					?.unsubscribe()
 					.then(() => {
@@ -126,6 +126,14 @@ async function resolveBySubscription(
 					// console.debug(
 					// 	'Transaction Block Timeout Error has been resolved by subscription',
 					// );
+
+					// console.log(
+					// 	'resolveBySubscription -> starterBlockNumber:',
+					// 	lastBlockHeader.number,
+					// 	', transactionHash:',
+					// 	transactionHash,
+					// );
+
 					reject(
 						new TransactionBlockTimeoutError({
 							starterBlockNumber,
@@ -161,11 +169,11 @@ for POS NWs, we can skip checking getBlockNumber(); after interval and calculate
 */
 export async function rejectIfBlockTimeout(
 	web3Context: Web3Context<EthExecutionAPI>,
-	starterBlockNumber: number,
 	transactionHash?: Bytes,
 ): Promise<[Promise<never>, ResourceCleaner]> {
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
 	let callingRes: [Promise<never>, ResourceCleaner];
+	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 	if (provider.supportsSubscriptions()) {
 		callingRes = await resolveBySubscription(web3Context, starterBlockNumber, transactionHash);
 	} else {

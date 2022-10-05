@@ -17,13 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { EthExecutionAPI, Bytes } from 'web3-types';
 import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
-
 import { TransactionSendTimeoutError } from 'web3-errors';
-import { NUMBER_DATA_FORMAT } from '../constants';
-// eslint-disable-next-line import/no-cycle
-import { rejectIfBlockTimeout } from './reject_if_block_timeout';
-// eslint-disable-next-line import/no-cycle
-import { getBlockNumber } from '../rpc_method_wrappers';
 
 /**
  * An internal function to send a transaction or throws if sending did not finish during the timeout during the blocks-timeout.
@@ -44,23 +38,13 @@ export async function trySendTransaction(
 			transactionHash,
 		}),
 	);
-
-	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
-		web3Context,
-		starterBlockNumber,
-		transactionHash,
-	);
-
 	try {
 		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
 		return await Promise.race([
 			sendTransactionFunc(), // this is the function that will send the transaction
 			rejectOnTimeout, // this will throw an error on Transaction Send Timeout
-			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
 		clearTimeout(timeoutId);
-		blockTimeoutResourceCleaner.onTermination();
 	}
 }

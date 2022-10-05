@@ -20,11 +20,10 @@ import { TransactionPollingTimeoutError } from 'web3-errors';
 import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
 
-import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
-import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
+import { getTransactionReceipt } from '../rpc_method_wrappers';
 
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -51,10 +50,8 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}),
 	);
 
-	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
 		web3Context,
-		starterBlockNumber,
 		transactionHash,
 	);
 
@@ -67,6 +64,6 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		]);
 	} finally {
 		clearTimeout(timeoutId);
-		blockTimeoutResourceCleaner.onTermination();
+		blockTimeoutResourceCleaner.clean();
 	}
 }

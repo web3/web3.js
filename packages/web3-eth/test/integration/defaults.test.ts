@@ -596,11 +596,11 @@ describe('defaults', () => {
 
 			// Make the test run faster by casing the polling to start after 2 blocks
 			eth.transactionBlockTimeout = 2;
-			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
-			//	does not respond, when raising the nonce
+
+			// Increase other timeouts so only `transactionBlockTimeout` would be reached
 			eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
-			// Increase other timeouts
 			eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
+			eth.blockHeaderTimeout = MAX_32_SIGNED_INTEGER / 1000;
 
 			const from = tempAcc1.address;
 			const to = tempAcc2.address;
@@ -620,8 +620,9 @@ describe('defaults', () => {
 			});
 
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
-			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`.
-			await sendFewTxes({
+			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
+			// eslint-disable-next-line no-void
+			void sendFewTxes({
 				web3Eth: eth,
 				from: tempAcc2.address,
 				to: tempAcc1.address,
@@ -631,7 +632,9 @@ describe('defaults', () => {
 
 			try {
 				await sentTx;
-				expect(true).toBe(false); // the test should fail if there is no exception
+				throw new Error(
+					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
+				);
 			} catch (error) {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
