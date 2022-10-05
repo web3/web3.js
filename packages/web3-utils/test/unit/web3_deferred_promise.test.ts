@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3DeferredPromise } from '../../src/web3_deferred_promise';
-import {} from '../fixtures/json_rpc';
 
 describe('Web3DeferredPromise', () => {
 	describe('getState Web3DeferredPromise', () => {

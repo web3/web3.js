@@ -17,14 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { waitWithTimeout, rejectIfTimeout } from '../../src/promise_helpers';
 
-const asyncHelper = async () => {
-	await new Promise(resolve => {
-		setTimeout(() => {
-			resolve('resolved');
-		}, 200);
-	});
-};
-
 describe('promise helpers', () => {
 	describe('waitWithTimeout resolve', () => {
 		it('%s', async () => {
@@ -38,6 +30,13 @@ describe('promise helpers', () => {
 	});
 	describe('waitWithTimeout timeout', () => {
 		it('%s', async () => {
+			const asyncHelper = async () => {
+				await new Promise(resolve => {
+					setTimeout(() => {
+						resolve('resolved');
+					}, 200);
+				});
+			};
 			await expect(waitWithTimeout(asyncHelper, 100, new Error('time out'))).rejects.toThrow(
 				new Error('time out'),
 			);

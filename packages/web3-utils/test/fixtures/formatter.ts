@@ -14,10 +14,22 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { FMT_NUMBER, FMT_BYTES } from '../../src/formatter';
 
 export const isDataFormatValid: [any, boolean][] = [
 	[{ number: 'number', bytes: 'number' }, true],
 	[{}, false],
 ];
 
-export const convertScalarValueValid: [any, any, any][] = [];
+export const convertScalarValueValid: [[any, any, any], any][] = [
+	[[100, 'int', { number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX }], 100],
+	[[100, 'uint', { number: FMT_NUMBER.HEX, bytes: FMT_BYTES.HEX }], '0x64'],
+	[[64, 'uint8', { number: FMT_NUMBER.STR }], '64'],
+
+	[[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES.HEX }], '0xff'],
+	[
+		[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES.UINT8ARRAY }],
+		new Uint8Array(Buffer.from('FF', 'hex')),
+	],
+	[[Buffer.from('FF', 'hex'), 'bytes', { bytes: FMT_BYTES }], Buffer.from('FF', 'hex')],
+];
