@@ -46,26 +46,27 @@ export async function trySendTransaction(
 	);
 
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const resolveOnBlockTimeout = resolveIfBlockTimeout(
+	const resolveOnBlockTimeout = await resolveIfBlockTimeout(
 		web3Context,
 		starterBlockNumber,
 		transactionHash,
 	);
 
+	const [promiseToErrorIfBlockTimeout, blockTimeoutResourceCleaner] = resolveOnBlockTimeout;
+
 	try {
 		const res = await Promise.race([
 			sendTransactionFunc(),
 			rejectOnTimeout,
-			resolveOnBlockTimeout,
+			promiseToErrorIfBlockTimeout,
 		]);
-		if (typeof res === 'string') {
+		if (res instanceof Error) {
+			throw res;
+		} else {
 			return res;
 		}
-		const [error, endExecutionFunc] = res;
-		endExecutionFunc();
-		throw error;
 	} finally {
 		clearTimeout(timeoutId);
-		// TODO: Refactor to call endExecutionFunc()
+		blockTimeoutResourceCleaner.onTermination();
 	}
 }

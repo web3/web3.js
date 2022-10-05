@@ -24,11 +24,15 @@ import { NUMBER_DATA_FORMAT } from '../constants';
 import { getBlockNumber } from '../rpc_method_wrappers';
 import { NewHeadsSubscription } from '../web3_subscriptions';
 
-async function resolveByPolling(
+export interface ResourceCleaner {
+	onTermination: () => void;
+}
+
+function resolveByPolling(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): Promise<[Error, () => void]> {
+): [Promise<Error>, ResourceCleaner] {
 	const pollingInterval = web3Context.transactionPollingInterval;
 	const [intervalId, promiseToError]: [NodeJS.Timer, Promise<Error>] =
 		rejectIfConditionAtInterval(async () => {
@@ -36,7 +40,7 @@ async function resolveByPolling(
 			try {
 				lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 			} catch (error) {
-				// console.warn('An error happen while trying to get the block number', error);
+				// console.debug('An error happen while trying to get the block number', error);
 				return undefined;
 			}
 			const numberOfBlocks = lastBlockNumber - starterBlockNumber;
@@ -49,26 +53,62 @@ async function resolveByPolling(
 			}
 			return undefined;
 		}, pollingInterval);
-	const endExecution = () => {
+
+	const onTermination = () => {
 		clearInterval(intervalId);
 	};
 
-	return [await promiseToError, endExecution];
+	return [promiseToError, { onTermination }];
 }
 
 async function resolveBySubscription(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): Promise<[Error, () => void]> {
+): Promise<[Promise<Error>, ResourceCleaner]> {
 	// The following variable will stay true except if the data arrived,
 	//	or if watching started after an error had occurred.
 	let needToWatchLater = true;
-	// TODO: put in try/catch
-	const subscription: NewHeadsSubscription = (await web3Context.subscriptionManager?.subscribe(
-		'newHeads',
-	)) as unknown as NewHeadsSubscription;
-	const res: Promise<[Error, () => void]> = new Promise(resolve => {
+
+	let subscription: NewHeadsSubscription;
+	let resourceCleaner: ResourceCleaner;
+	// internal helper function
+	function revertToPolling(resolve: (value: Error | PromiseLike<Error>) => void, error?: Error) {
+		// if (error) {
+		// 	console.debug('error happened at subscription revert to polling...', error);
+		// }
+		resourceCleaner.onTermination();
+
+		needToWatchLater = false;
+		const [promiseToError, newResourceCleaner] = resolveByPolling(
+			web3Context,
+			starterBlockNumber,
+			transactionHash,
+		);
+		resourceCleaner.onTermination = newResourceCleaner.onTermination;
+		resolve(promiseToError);
+	}
+	try {
+		subscription = (await web3Context.subscriptionManager?.subscribe(
+			'newHeads',
+		)) as unknown as NewHeadsSubscription;
+		resourceCleaner = {
+			onTermination: () => {
+				subscription
+					?.unsubscribe()
+					.then(() => {
+						// console.debug('ending subscription successfully');
+					})
+					.catch(() => {
+						// console.debug('error happened while ending subscription', error);
+					});
+			},
+		};
+	} catch (error) {
+		// console.debug('error happened when trying to subscribe to `newHeads`.', error);
+		return resolveByPolling(web3Context, starterBlockNumber, transactionHash);
+	}
+	const promiseToError: Promise<Error> = new Promise(resolve => {
 		try {
 			subscription.on('data', (lastBlockHeader: BlockHeaderOutput) => {
 				needToWatchLater = false;
@@ -80,62 +120,37 @@ async function resolveBySubscription(
 				);
 
 				if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
-					resolve([
+					// console.debug(
+					// 	'Transaction Block Timeout Error has been resolved by subscription',
+					// );
+					resolve(
 						new TransactionBlockTimeoutError({
 							starterBlockNumber,
 							numberOfBlocks,
 							transactionHash,
 						}),
-						async () => {
-							try {
-								console.warn('ending subscription');
-								await subscription?.unsubscribe();
-							} catch (err) {
-								// do nothing
-							}
-						},
-					]);
+					);
 				}
 			});
-			subscription.on('error', async error => {
-				console.warn('error happened at subscription revert to polling...', error);
-				try {
-					await subscription?.unsubscribe();
-				} catch (err) {
-					// do nothing
-				}
-
-				needToWatchLater = false;
-				resolve(resolveByPolling(web3Context, starterBlockNumber, transactionHash));
+			subscription.on('error', error => {
+				revertToPolling(resolve, error);
 			});
 		} catch (error) {
-			console.warn('error happened at subscription revert to polling...', error);
-			if (subscription) {
-				try {
-					await subscription?.unsubscribe();
-				} catch (err) {
-					// do nothing
-				}
-			}
-
-			needToWatchLater = false;
-			resolve(resolveByPolling(web3Context, starterBlockNumber, transactionHash));
+			revertToPolling(resolve, error as Error);
 		}
 
 		// Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
 		setTimeout(() => {
 			if (needToWatchLater) {
-				console.warn(
-					'blockHeaderTimeout reached without getting the blocks by subscription. Try by polling',
-				);
-				// eslint-disable-next-line @typescript-eslint/no-floating-promises
-				subscription?.unsubscribe();
-				resolve(resolveByPolling(web3Context, starterBlockNumber, transactionHash));
+				// console.debug(
+				// 	'blockHeaderTimeout reached without getting the blocks by subscription. Try by polling',
+				// );
+				revertToPolling(resolve);
 			}
 		}, web3Context.blockHeaderTimeout * 1000);
 	});
 
-	return res;
+	return [promiseToError, resourceCleaner];
 }
 
 /* TODO: After merge, there will be constant block mining time (exactly 12 second each block, except slot missed that currently happens in <1% of slots. ) so we can optimize following function
@@ -145,15 +160,13 @@ export async function resolveIfBlockTimeout(
 	web3Context: Web3Context<EthExecutionAPI>,
 	starterBlockNumber: number,
 	transactionHash?: Bytes,
-): Promise<[Error, () => void]> {
+): Promise<[Promise<Error>, ResourceCleaner]> {
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
-	let callingRes;
+	let callingRes: [Promise<Error>, ResourceCleaner];
 	if (provider.supportsSubscriptions()) {
 		callingRes = await resolveBySubscription(web3Context, starterBlockNumber, transactionHash);
 	} else {
-		callingRes = await resolveByPolling(web3Context, starterBlockNumber, transactionHash);
+		callingRes = resolveByPolling(web3Context, starterBlockNumber, transactionHash);
 	}
-	const [error, resourceReleaseFunc] = callingRes;
-	resourceReleaseFunc();
-	throw error;
+	return callingRes;
 }

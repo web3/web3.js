@@ -52,27 +52,26 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	);
 
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const rejectOnBlockTimeout = resolveIfBlockTimeout(
+	const resolveOnBlockTimeout = await resolveIfBlockTimeout(
 		web3Context,
 		starterBlockNumber,
 		transactionHash,
 	);
+	const [promiseToErrorIfBlockTimeout, blockTimeoutResourceCleaner] = resolveOnBlockTimeout;
 
 	try {
 		const res = await Promise.race([
 			awaitableTransactionReceipt,
 			rejectOnTimeout,
-			rejectOnBlockTimeout,
+			promiseToErrorIfBlockTimeout,
 		]);
-		if (res instanceof Array) {
-			const [error, endExecutionFunc] = res;
-			endExecutionFunc();
-			throw error;
+		if (res instanceof Error) {
+			throw res;
 		} else {
 			return res;
 		}
 	} finally {
 		clearTimeout(timeoutId);
-		// TODO: Refactor to call endExecutionFunc()
+		blockTimeoutResourceCleaner.onTermination();
 	}
 }
