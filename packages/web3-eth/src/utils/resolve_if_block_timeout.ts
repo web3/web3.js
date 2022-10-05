@@ -74,9 +74,9 @@ async function resolveBySubscription(
 	let resourceCleaner: ResourceCleaner;
 	// internal helper function
 	function revertToPolling(resolve: (value: Error | PromiseLike<Error>) => void, error?: Error) {
-		// if (error) {
-		// 	console.debug('error happened at subscription revert to polling...', error);
-		// }
+		if (error) {
+			// 	console.debug('error happened at subscription revert to polling...', error);
+		}
 		resourceCleaner.onTermination();
 
 		needToWatchLater = false;
