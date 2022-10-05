@@ -18,7 +18,7 @@ import 'web3';
 import { Web3Context, Web3PluginBase } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
-import { Address, Numbers, Web3APISpec } from 'web3-types';
+import { Address, Numbers } from 'web3-types';
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, numberToHex } from 'web3-utils';
 
 import { ERC20TokenAbi } from './ERC20Token';
@@ -43,7 +43,7 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	 * @param parentContext - The context to be added to the instance of `ChainlinkPlugin`,
 	 * and by extension, the instance of `Contract`.
 	 */
-	public link(parentContext: Web3Context<Web3APISpec>) {
+	public link(parentContext: Web3Context) {
 		super.link(parentContext);
 		this._contract.link(parentContext);
 	}
