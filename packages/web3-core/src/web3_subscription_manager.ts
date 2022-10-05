@@ -116,7 +116,10 @@ export class Web3SubscriptionManager<
 	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
 		const result = [];
 		for (const [id, sub] of this.subscriptions.entries()) {
-			if (!condition || (typeof condition === 'function' && condition({ id, sub }))) {
+			if (
+				(!condition || (typeof condition === 'function' && condition({ id, sub }))) &&
+				sub.id
+			) {
 				result.push(this.removeSubscription(sub));
 			}
 		}
