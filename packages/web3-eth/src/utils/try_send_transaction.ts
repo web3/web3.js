@@ -19,6 +19,9 @@ import { EthExecutionAPI, Bytes } from 'web3-types';
 import { AsyncFunction, rejectIfTimeout } from 'web3-utils';
 import { TransactionSendTimeoutError } from 'web3-errors';
 
+// eslint-disable-next-line import/no-cycle
+import { rejectIfBlockTimeout } from './reject_if_block_timeout';
+
 /**
  * An internal function to send a transaction or throws if sending did not finish during the timeout during the blocks-timeout.
  * @param web3Context - the context to read the configurations from
@@ -38,13 +41,21 @@ export async function trySendTransaction(
 			transactionHash,
 		}),
 	);
+
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
+		web3Context,
+		transactionHash,
+	);
+
 	try {
 		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
 		return await Promise.race([
 			sendTransactionFunc(), // this is the function that will send the transaction
 			rejectOnTimeout, // this will throw an error on Transaction Send Timeout
+			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
 		clearTimeout(timeoutId);
+		blockTimeoutResourceCleaner.clean();
 	}
 }
