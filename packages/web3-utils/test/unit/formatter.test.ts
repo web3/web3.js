@@ -16,12 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Address, Bytes, HexString, Numbers } from 'web3-types';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
+import { isDataFormatValid, convertScalarValueValid } from '../fixtures/formatter';
 import {
 	DEFAULT_RETURN_FORMAT,
 	FMT_BYTES,
 	FMT_NUMBER,
 	format,
 	FormatType,
+	isDataFormat,
+	convertScalarValue,
 } from '../../src/formatter';
 
 type TestTransactionInfoType = {
@@ -711,6 +714,30 @@ describe('formatter', () => {
 				});
 
 				expect(result).toEqual(expected);
+			});
+		});
+		describe('isDataFormat', () => {
+			describe('valid cases', () => {
+				it.each(isDataFormatValid)('%s', (input, output) => {
+					expect(isDataFormat(input)).toEqual(output);
+				});
+			});
+		});
+		describe('convertScalar', () => {
+			describe('valid cases', () => {
+				it.each(convertScalarValueValid)('%s', (input, output) => {
+					expect(convertScalarValue(...input)).toEqual(output);
+				});
+			});
+			describe('convertScalar bigint', () => {
+				it.each(convertScalarValueValid)('%s', () => {
+					expect(
+						convertScalarValue(100, 'int', {
+							number: FMT_NUMBER.BIGINT,
+							bytes: FMT_BYTES.BUFFER,
+						}),
+					).toBe(BigInt(100));
+				});
 			});
 		});
 	});
