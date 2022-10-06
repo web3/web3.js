@@ -16,29 +16,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3Context, Web3ContextObject } from 'web3-core';
-import { Contract, NonPayableMethodObject } from 'web3-eth-contract';
-import { ResolverMethodMissingError } from 'web3-errors';
-import { sha3Raw, sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { NonPayableMethodObject } from 'web3-eth-contract';
+import { sha3Raw } from 'web3-utils';
 import { Registry } from '../../src/registry';
-import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
-import { methodsInInterface, interfaceIds } from '../../src/config';
 import { namehash } from '../../src/utils';
 
 describe('registry', () => {
 	let object: Web3ContextObject;
 	let registry: Registry;
-	let contract: Contract<typeof ENSRegistryAbi>;
 	const mockAddress = '0x0000000000000000000000000000000000000000';
 	const ENS_NAME = 'web3js.eth';
-	const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
-	const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
 
 	beforeAll(() => {
 		const context = new Web3Context('http://test.com');
 		object = context.getContextObject() as Web3ContextObject;
 
 		registry = new Registry(object);
-		contract = new Contract(ENSRegistryAbi, mockAddress);
 	});
 
 	afterEach(() => {
