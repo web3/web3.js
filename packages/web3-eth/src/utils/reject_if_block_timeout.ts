@@ -97,8 +97,8 @@ async function resolveBySubscription(
 		)) as unknown as NewHeadsSubscription;
 		resourceCleaner = {
 			clean: () => {
-				subscription
-					?.unsubscribe()
+				web3Context.subscriptionManager
+					?.removeSubscription(subscription)
 					.then(() => {
 						// console.debug('ending subscription successfully');
 					})
