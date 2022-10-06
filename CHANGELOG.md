@@ -602,12 +602,14 @@ Released with 1.0.0-beta.37 code base.
 -  Support of `safe` and `finalized` block tags added (#5410)
 
 ## [Unreleased]
+
 ## [1.8.1]
 ### Fixed
 -  Fixed types for getPastEvents (#4955) (#5260)
 
-### Updated
--  Updating UUID@3.3.2 to UUID@9.0.0
+### Changed
+-  Bump `UUID` package from `3.3.2` to `9.0.0`
+-  Bump `ethers` package from `^5.1.4` to `^5.7.1` 
 
 
 

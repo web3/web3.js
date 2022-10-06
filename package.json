@@ -116,7 +116,7 @@
         "decache": "^4.6.0",
         "dependency-check": "^4.1.0",
         "ethereumjs-util": "^7.1.0",
-        "ethers": "^5.4.4",
+        "ethers": "^5.7.1",
         "fetch-mock": "^9.11.0",
         "ganache-cli": "^6.12.0",
         "jshint": "^2.12.0",
