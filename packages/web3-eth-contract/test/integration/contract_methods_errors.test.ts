@@ -29,7 +29,8 @@ describe('contract errors', () => {
 
 	describe('Test EIP-838 Error Codes', () => {
 		const addr = '0xbd0B4B009a76CA97766360F04f75e05A3E449f1E';
-		it('testError1', async () => {
+		// The following will be updated when implementing https://github.com/web3/web3.js/issues/5482
+		it.skip('testError1', async () => {
 			const abi = [
 				{
 					inputs: [
@@ -75,6 +76,27 @@ describe('contract errors', () => {
 			expect(error?.innerError?.errorArgs?.value).toEqual(BigInt(42));
 			expect(error?.innerError?.errorName).toBe('TestError1');
 			expect(error?.innerError?.errorSignature).toBe('TestError1(address,uint256)');
+
+			// TODO: use something similar to the following (when implementing https://github.com/web3/web3.js/issues/5482)
+			// expect(error).toMatchObject({
+			// 	message: expect.stringContaining(
+			// 		'Error happened while trying to execute a function inside a smart contract',
+			// 	),
+			// 	code: ERR_CONTRACT_EXECUTION_REVERTED,
+			// 	error: {
+			// 		innerError: {
+			// 			code: 3,
+			// 			errorArgs: {
+			// 				0: addr,
+			// 				1: BigInt(42),
+			// 				addr,
+			// 				value: 42,
+			// 			},
+			// 			errorName: 'TestError1',
+			// 			errorSignature: 'TestError1(address,uint256)',
+			// 		},
+			// 	},
+			// });
 		});
 	});
 });
