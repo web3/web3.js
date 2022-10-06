@@ -27,13 +27,13 @@ var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scrypt = require('scrypt-js');
-var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var {TransactionFactory} = require('@ethereumjs/tx');
 var Common = require('@ethereumjs/common').default;
 var HardForks = require('@ethereumjs/common').Hardfork;
 var ethereumjsUtil = require('ethereumjs-util');
+const { v4: uuidv4 } = require('uuid');
 
 var isNot = function(value) {
     return (typeof value === 'undefined') || value === null;
@@ -602,7 +602,7 @@ Accounts.prototype.encrypt = function(privateKey, password, options) {
 
     return {
         version: 3,
-        id: uuid.v4({random: options.uuid || cryp.randomBytes(16)}),
+        id: uuidv4({random: options.uuid || cryp.randomBytes(16)}),
         address: account.address.toLowerCase().replace('0x', ''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),

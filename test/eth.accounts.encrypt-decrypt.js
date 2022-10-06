@@ -198,6 +198,13 @@ function runTests(){
             assert.equal(acc.privateKey, ethWall.privateKey);
         });
 
+        it("creates a uuid using encrypt", async () => {
+            var ethAccounts = new Accounts();
+
+            var encrypt = ethAccounts.encrypt(pw, "123");
+            assert.equal(encrypt.id).to.not.equal(null);
+        });
+
         it("decrypt static signature using ethers wallet and eth.account and compare", async () => {
             var ethAccounts = new Accounts();
 

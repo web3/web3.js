@@ -606,5 +606,8 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 -  Fixed types for getPastEvents (#4955) (#5260)
 
+### Updated
+-  Updating UUID@3.3.2 to UUID@9.0.0
+
 
 
