@@ -41,6 +41,10 @@ describe('registry', () => {
 		contract = new Contract(ENSRegistryAbi, mockAddress);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	it('constructor with custom address', async () => {
 		const tempRegistry = new Registry(object, mockAddress);
 
