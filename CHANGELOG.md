@@ -610,6 +610,8 @@ Released with 1.0.0-beta.37 code base.
 ### Changed
 -  Bump `UUID` package from `3.3.2` to `9.0.0`
 -  Bump `ethers` package from `^5.1.4` to `^5.7.1` 
-
+-  Bump `@ethereumjs/tx` package from `3.3.2` to `3.5.2`
+-  Bump `@ethereumjs/common` package from `2.5.0` to `2.6.4`
+-  Bump `@ethereumjs-util` package from `7.1.0` to `7.1.5`
 
 

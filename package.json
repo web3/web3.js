@@ -115,7 +115,7 @@
         "crypto-js": "^3.3.0",
         "decache": "^4.6.0",
         "dependency-check": "^4.1.0",
-        "ethereumjs-util": "^7.1.0",
+        "ethereumjs-util": "^7.1.5",
         "ethers": "^5.7.1",
         "fetch-mock": "^9.11.0",
         "ganache-cli": "^6.12.0",
