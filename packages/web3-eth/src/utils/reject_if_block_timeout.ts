@@ -97,14 +97,18 @@ async function resolveBySubscription(
 		)) as unknown as NewHeadsSubscription;
 		resourceCleaner = {
 			clean: () => {
-				web3Context.subscriptionManager
-					?.removeSubscription(subscription)
-					.then(() => {
-						// console.debug('ending subscription successfully');
-					})
-					.catch(() => {
-						// console.debug('error happened while ending subscription', error);
-					});
+				// Remove the subscription, if it was not removed somewhere
+				// 	else by calling, for example, subscriptionManager.clear()
+				if (subscription.id) {
+					web3Context.subscriptionManager
+						?.removeSubscription(subscription)
+						.then(() => {
+							// console.debug('ending subscription successfully');
+						})
+						.catch(() => {
+							// console.debug('error happened while ending subscription', error);
+						});
+				}
 			},
 		};
 	} catch (error) {
