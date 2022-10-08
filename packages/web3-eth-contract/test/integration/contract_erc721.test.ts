@@ -15,13 +15,18 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Contract } from '../../src';
+import { utf8ToHex } from 'web3-utils';
+import { Contract, EventLog } from '../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import {
 	getSystemTestProvider,
 	describeIf,
 	isWs,
 	createTempAccount,
+	signAndSendContractMethodEIP1559,
+	signAndSendContractMethodEIP2930,
+	createNewAccount,
+	refillAccount,
 } from '../fixtures/system_test_utils';
 import { processAsync, toUpperCaseHex } from '../shared_fixtures/utils';
 
@@ -53,8 +58,13 @@ describe('contract', () => {
 		describe('contract instance', () => {
 			let acc: { address: string; privateKey: string };
 			let acc2: { address: string; privateKey: string };
-			beforeEach(async () => {
+			let pkAccount: { address: string; privateKey: string };
+			beforeAll(async () => {
 				acc = await createTempAccount();
+				pkAccount = await createNewAccount();
+				await refillAccount(acc.address, pkAccount.address, '20000000000000000');
+			});
+			beforeEach(async () => {
 				acc2 = await createTempAccount();
 				sendOptions = { from: acc.address, gas: '10000000' };
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
@@ -70,16 +80,13 @@ describe('contract', () => {
 				});
 
 				it('should award item', async () => {
-					const acc3 = await createTempAccount();
+					const tempAccount = await createTempAccount();
 					await contractDeployed.methods
-						.awardItem(acc3.address, 'http://my-nft-uri')
+						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
 
 					const logs = await contractDeployed.getPastEvents('Transfer');
-					// TODO: Type of the getPastEvents are not valid.
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-expect-error
-					const tokenId = logs[0]?.returnValues?.tokenId;
+					const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
 
 					expect(
 						toUpperCaseHex(
@@ -87,8 +94,192 @@ describe('contract', () => {
 								.ownerOf(tokenId)
 								.call()) as unknown as string,
 						),
-					).toBe(toUpperCaseHex(acc3.address));
+					).toBe(toUpperCaseHex(tempAccount.address));
 				});
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should award item with local wallet %p',
+					async signAndSendContractMethod => {
+						const tempAccount = await createTempAccount();
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.awardItem(
+								tempAccount.address,
+								'http://my-nft-award',
+							),
+							pkAccount.privateKey,
+						);
+						const logs = await contractDeployed.getPastEvents('Transfer');
+						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						expect(
+							toUpperCaseHex(
+								(await contractDeployed.methods
+									.ownerOf(tokenId)
+									.call()) as unknown as string,
+							),
+						).toBe(toUpperCaseHex(tempAccount.address));
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should transferFrom item with local wallet %p',
+					async signAndSendContractMethod => {
+						const tempAccount = await createTempAccount();
+						const tempAccountTo = await createTempAccount();
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.awardItem(
+								tempAccount.address,
+								'http://my-nft-award',
+							),
+							pkAccount.privateKey,
+						);
+						const logs = await contractDeployed.getPastEvents('Transfer');
+						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.transferFrom(
+								tempAccount.address,
+								tempAccountTo.address,
+								tokenId,
+							),
+							tempAccount.privateKey,
+						);
+
+						expect(
+							toUpperCaseHex(
+								(await contractDeployed.methods
+									.ownerOf(tokenId)
+									.call()) as unknown as string,
+							),
+						).toBe(toUpperCaseHex(tempAccountTo.address));
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should safeTransferFrom item with local wallet %p',
+					async signAndSendContractMethod => {
+						const tempAccount = await createTempAccount();
+						const tempAccountTo = await createTempAccount();
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.awardItem(
+								tempAccount.address,
+								'http://my-nft-award',
+							),
+							pkAccount.privateKey,
+						);
+
+						const logs = await contractDeployed.getPastEvents('Transfer');
+						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.approve(tempAccountTo.address, tokenId),
+							tempAccount.privateKey,
+						);
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.safeTransferFrom(
+								tempAccount.address,
+								tempAccountTo.address,
+								tokenId,
+								utf8ToHex('1'),
+							),
+							tempAccount.privateKey,
+						);
+
+						expect(
+							toUpperCaseHex(
+								(await contractDeployed.methods
+									.ownerOf(tokenId)
+									.call()) as unknown as string,
+							),
+						).toBe(toUpperCaseHex(tempAccountTo.address));
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should approve item with local wallet %p',
+					async signAndSendContractMethod => {
+						const tempAccount = await createTempAccount();
+						const tempAccountTo = await createTempAccount();
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.awardItem(
+								tempAccount.address,
+								'http://my-nft-award',
+							),
+							pkAccount.privateKey,
+						);
+						const logs = await contractDeployed.getPastEvents('Transfer');
+						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.approve(tempAccountTo.address, tokenId),
+							tempAccount.privateKey,
+						);
+
+						const res = await contractDeployed.methods.getApproved(tokenId).call();
+						expect(res.toString().toUpperCase()).toBe(
+							tempAccountTo.address.toUpperCase(),
+						);
+					},
+				);
+
+				it.each([signAndSendContractMethodEIP1559, signAndSendContractMethodEIP2930])(
+					'should set approve for all item with local wallet %p',
+					async signAndSendContractMethod => {
+						const tempAccount = await createTempAccount();
+						const tempAccountTo = await createTempAccount();
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.awardItem(
+								tempAccount.address,
+								'http://my-nft-award',
+							),
+							pkAccount.privateKey,
+						);
+
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.setApprovalForAll(tempAccountTo.address, true),
+							tempAccount.privateKey,
+						);
+
+						expect(
+							await contractDeployed.methods
+								.isApprovedForAll(tempAccount.address, tempAccountTo.address)
+								.call(),
+						).toBe(true);
+
+						await signAndSendContractMethod(
+							contract.provider,
+							contractDeployed.options.address as string,
+							contractDeployed.methods.setApprovalForAll(
+								tempAccountTo.address,
+								false,
+							),
+							tempAccount.privateKey,
+						);
+
+						expect(
+							await contractDeployed.methods
+								.isApprovedForAll(tempAccount.address, tempAccountTo.address)
+								.call(),
+						).toBe(false);
+					},
+				);
 			});
 
 			describeIf(isWs)('events', () => {
