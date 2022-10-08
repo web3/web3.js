@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Numbers, HexString, BlockNumberOrTag, Common } from 'web3-types';
-import { HardforkMismatchError, ChainMismatchError} from 'web3-errors';
+import { HardforkMismatchError, ChainMismatchError } from 'web3-errors';
 import { isNullish, toHex } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
@@ -415,15 +415,24 @@ export abstract class Web3Config
 	 * Will set the default common property
 	 *
 	 */
-	public set defaultCommon(val) {
+	public set defaultCommon(val: Common | undefined) {
 		// validation check if default hardfork is set and matches defaultCommon hardfork
-		if(!isNullish(this._config.defaultHardfork)&& !isNullish(val.hardfork && this._config.defaultHardfork !== val.hardfork))
-		new HardforkMismatchError(this._config.defaultHardfork, val.hardfork);
-		if(!isNullish(this._config.defaultChain)&& !isNullish(val.baseChain && this._config.defaultChain !== val.baseChain))
-		new ChainMismatchError(this._config.defaultChain, val.baseChain);
+		if (
+			!isNullish(this._config.defaultHardfork) &&
+			!isNullish(val) &&
+			!isNullish(val.hardfork) &&
+			this._config.defaultHardfork !== val.hardfork
+		)
+			throw new HardforkMismatchError(this._config.defaultHardfork, val.hardfork);
+		if (
+			!isNullish(this._config.defaultChain) &&
+			!isNullish(val) &&
+			!isNullish(val.baseChain) &&
+			this._config.defaultChain !== val.baseChain
+		)
+			throw new ChainMismatchError(this._config.defaultChain, val.baseChain);
 		this._triggerConfigChange('defaultCommon', val);
 
-		
 		this._config.defaultCommon = val;
 	}
 
