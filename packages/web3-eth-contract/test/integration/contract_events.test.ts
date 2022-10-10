@@ -51,9 +51,9 @@ describe('contract', () => {
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
-	describe('events', () => {
-		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
-		itIf(isWs).skip('should trigger the "contract.events.<eventName>"', async () => {
+	// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
+	describe.skip('events', () => {
+		itIf(isWs)('should trigger the "contract.events.<eventName>"', async () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			return expect(
 				processAsync(async (resolve, reject) => {
@@ -74,8 +74,7 @@ describe('contract', () => {
 			);
 		});
 
-		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
-		itIf(isWs).skip(
+		itIf(isWs)(
 			'should trigger the "contract.events.<eventName>" for indexed parameters',
 			async () => {
 				const res = await processAsync(async (resolve, reject) => {
@@ -101,8 +100,7 @@ describe('contract', () => {
 			},
 		);
 
-		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
-		itIf(isWs).skip(
+		itIf(isWs)(
 			'should trigger when "fromBlock" is passed to contract.events.<eventName>',
 			async () => {
 				// eslint-disable-next-line jest/no-standalone-expect
@@ -127,7 +125,9 @@ describe('contract', () => {
 				);
 			},
 		);
+	});
 
+	describe('events subscription with HTTP', () => {
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
 			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
