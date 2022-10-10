@@ -77,6 +77,7 @@ describeIf(isWs)('subscription', () => {
 
 			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
 			await pr;
+			await web3Eth.subscriptionManager?.removeSubscription(sub);
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
