@@ -545,3 +545,17 @@ export const invalidEthTypeData: string[] = [
 	'my-addresss',
 	'boolean',
 ];
+
+export const validCodePoints: [number, number][] = [
+	[48, 0],
+	[51, 3],
+	[55, 7],
+	[57, 9],
+	[65, 10],
+	[70, 15],
+	[97, 10],
+	[100, 13],
+	[102, 15],
+];
+
+export const invalidCodePoints: number[] = [-100, -5, 0, 30, 58, 75, 90, 103, 200];

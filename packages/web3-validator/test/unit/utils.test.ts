@@ -15,8 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ethAbiToJsonSchema, transformJsonDataToAbiFormat } from '../../src/utils';
+import {
+	codePointToInt,
+} from '../../src/utils';
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
+import {
+	validCodePoints,
+	invalidCodePoints,
+} from '../fixtures/validation';
 
 describe('utils', () => {
 	describe('ethAbiToJsonSchema', () => {
@@ -40,4 +46,17 @@ describe('utils', () => {
 			});
 		});
 	});
+
+	describe('codePointToInt', () => {
+		it.each(validCodePoints)('valid code points', (input, res) => {
+			expect(codePointToInt(input)).toEqual(res);
+		});
+
+		it.each(invalidCodePoints)('valid code points', (input: number) => {
+			expect(() => {
+				codePointToInt(input);
+			}).toThrow(new Error(`Invalid code point: ${input}`));
+		});
+	});
+
 });
