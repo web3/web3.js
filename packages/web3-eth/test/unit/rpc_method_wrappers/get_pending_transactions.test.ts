@@ -16,14 +16,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getPendingTransactions as rpcMethodsGetPendingTransactions } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getPendingTransactions } from '../../../src/rpc_method_wrappers';
 import { formatTransaction } from '../../../src';
 import { mockRpcResponse } from './fixtures/get_pending_transactions';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getPendingTransactions', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -33,9 +33,11 @@ describe('getPendingTransactions', () => {
 	});
 
 	it('should call rpcMethods.getPendingTransactions with expected parameters', async () => {
-		(rpcMethodsGetPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+		(ethRpcMethods.getPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 		await getPendingTransactions(web3Context, DEFAULT_RETURN_FORMAT);
-		expect(rpcMethodsGetPendingTransactions).toHaveBeenCalledWith(web3Context.requestManager);
+		expect(ethRpcMethods.getPendingTransactions).toHaveBeenCalledWith(
+			web3Context.requestManager,
+		);
 	});
 
 	it('should format return value using provided return format', async () => {
@@ -43,7 +45,7 @@ describe('getPendingTransactions', () => {
 		const expectedFormattedResult = mockRpcResponse.map(transaction =>
 			formatTransaction(transaction, expectedReturnFormat),
 		);
-		(rpcMethodsGetPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+		(ethRpcMethods.getPendingTransactions as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 		const result = await getPendingTransactions(web3Context, expectedReturnFormat);
 		expect(result).toStrictEqual(expectedFormattedResult);

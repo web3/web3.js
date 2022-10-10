@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TransactionReceipt, TransactionInfo } from 'web3-types';
-import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { hexToNumber, hexToString, numberToHex, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
@@ -28,12 +27,12 @@ import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 
 import {
+	closeOpenConnection,
 	getSystemTestBackend,
 	getSystemTestProvider,
 	createNewAccount,
 	itIf,
 	isIpc,
-	isWs,
 	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
@@ -82,11 +81,9 @@ describe('rpc', () => {
 		}
 	});
 
-	afterAll(() => {
-		if (isWs) {
-			(web3Eth.provider as WebSocketProvider).disconnect();
-			(contract.provider as WebSocketProvider).disconnect();
-		}
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(contract);
 	});
 
 	describe('methods', () => {

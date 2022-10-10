@@ -1,6 +1,6 @@
 {
 	"name": "web3-utils",
-    "sideEffects": false,
+	"sideEffects": false,
 	"version": "4.0.1-alpha.0",
 	"description": "Collection of utility functions used in web3.js.",
 	"main": "dist/index.js",

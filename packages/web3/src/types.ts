@@ -63,6 +63,7 @@ export interface Web3EthInterface extends Eth {
 	 * web3.eth.Contract.setProvider(myProvider)
 	 * ```
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	Contract: Web3ContractConstructor<any>;
 	Iban: typeof Iban;
 	net: Net;

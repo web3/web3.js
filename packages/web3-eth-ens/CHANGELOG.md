@@ -34,3 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [Unreleased]
+
+### Changed
+
+-   `Web3NetAPI` is now imported from `web3-types` instead of `web3-net` (#5441)

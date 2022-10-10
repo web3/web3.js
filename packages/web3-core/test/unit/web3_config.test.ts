@@ -40,6 +40,10 @@ const defaultConfig = {
 	defaultTransactionType: '0x0',
 	defaultMaxPriorityFeePerGas: toHex(2500000000),
 };
+const setValue = {
+	string: 'newValue',
+	number: 99,
+};
 
 describe('Web3Config', () => {
 	it('should init default config values', () => {
@@ -61,18 +65,19 @@ describe('Web3Config', () => {
 	it.each(Object.keys(defaultConfig))('should expose a public setter for "%s"', key => {
 		const obj = new MyConfigObject();
 		const setterSpy = jest.spyOn(obj, key as keyof MyConfigObject, 'set');
-
-		obj[key as never] = undefined as never;
+		obj[key as keyof MyConfigObject] = obj[key as never];
 		expect(setterSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it.each(Object.keys(defaultConfig))('should set new config for "%s"', key => {
 		const obj = new MyConfigObject();
 
-		obj[key as never] = 'newValue' as never;
+		const valueType = typeof obj[key as never];
+		const newValue = setValue[valueType as never];
+		obj[key as never] = newValue;
 		const result = obj[key as never];
 
-		expect(result).toBe('newValue');
+		expect(result).toBe(newValue);
 	});
 
 	it.each(Object.keys(defaultConfig))(
@@ -81,16 +86,16 @@ describe('Web3Config', () => {
 			const obj = new MyConfigObject();
 			const configChange = jest.fn();
 			obj.on(Web3ConfigEvent.CONFIG_CHANGE, configChange);
-
-			obj[key as never] = 'newValue' as never;
-
+			const valueType = typeof obj[key as never];
+			const newValue = setValue[valueType as never];
+			obj[key as never] = newValue;
 			if (key === 'transactionPollingInterval') return;
 
 			expect(configChange).toHaveBeenCalledTimes(1);
 			expect(configChange).toHaveBeenCalledWith({
 				name: key,
 				oldValue: defaultConfig[key as never],
-				newValue: 'newValue',
+				newValue,
 			});
 		},
 	);

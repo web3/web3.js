@@ -1,6 +1,6 @@
 {
 	"name": "web3-errors",
-    "version": "0.1.1-alpha.0",
+	"version": "0.1.1-alpha.0",
 	"description": "This package has web3 error classes",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",

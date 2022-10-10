@@ -54,6 +54,7 @@ import {
 	HexString,
 	LogsInput,
 	Mutable,
+	Common,
 } from 'web3-types';
 import {
 	DataFormat,
@@ -199,7 +200,7 @@ export class Contract<Abi extends ContractAbi>
 	/**
 	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
 	 */
-	public static defaultCommon?: Record<string, unknown>;
+	public static defaultCommon?: Common;
 
 	/**
 	 * Can be used to set {@link Contract.transactionSendTimeout} for all contracts.
@@ -412,11 +413,11 @@ export class Contract<Abi extends ContractAbi>
 		super.defaultHardfork = value;
 	}
 
-	public get defaultCommon() {
+	public get defaultCommon(): Common | undefined {
 		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
 	}
 
-	public set defaultCommon(value: Record<string, unknown> | undefined) {
+	public set defaultCommon(value: Common | undefined) {
 		super.defaultCommon = value;
 	}
 
@@ -591,24 +592,33 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public clone() {
 		if (this.options.address) {
-			return new Contract<Abi>(this._jsonInterface as unknown as Abi, this.options.address, {
+			return new Contract<Abi>(
+				this._jsonInterface as unknown as Abi,
+				this.options.address,
+				{
+					gas: this.options.gas,
+					gasPrice: this.options.gasPrice,
+					gasLimit: this.options.gasLimit,
+					from: this.options.from,
+					data: this.options.data,
+					provider: this.currentProvider,
+				},
+				this.getContextObject(),
+			);
+		}
+
+		return new Contract<Abi>(
+			this._jsonInterface as unknown as Abi,
+			{
 				gas: this.options.gas,
 				gasPrice: this.options.gasPrice,
 				gasLimit: this.options.gasLimit,
 				from: this.options.from,
 				data: this.options.data,
 				provider: this.currentProvider,
-			});
-		}
-
-		return new Contract<Abi>(this._jsonInterface as unknown as Abi, {
-			gas: this.options.gas,
-			gasPrice: this.options.gasPrice,
-			gasLimit: this.options.gasLimit,
-			from: this.options.from,
-			data: this.options.data,
-			provider: this.currentProvider,
-		});
+			},
+			this.getContextObject(),
+		);
 	}
 
 	/**
@@ -1080,7 +1090,6 @@ export class Contract<Abi extends ContractAbi>
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				newContract.options.address = receipt.contractAddress;
-
 				return newContract;
 			},
 		});

@@ -17,13 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { isNullish } from 'web3-validator';
+import { Web3EthExecutionAPI } from 'web3-types';
+import { ethRpcMethods } from 'web3-rpc-methods';
 
-import { getBalance as rpcMethodsGetBalance } from '../../../src/rpc_methods';
-import { Web3EthExecutionAPI } from '../../../src/web3_eth_execution_api';
 import { getBalance } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_balance';
 
-jest.mock('../../../src/rpc_methods');
+jest.mock('web3-rpc-methods');
 
 describe('getBalance', () => {
 	let web3Context: Web3Context<Web3EthExecutionAPI>;
@@ -50,7 +50,7 @@ describe('getBalance', () => {
 			}
 
 			await getBalance(web3Context, ...inputParameters, DEFAULT_RETURN_FORMAT);
-			expect(rpcMethodsGetBalance).toHaveBeenCalledWith(
+			expect(ethRpcMethods.getBalance).toHaveBeenCalledWith(
 				web3Context.requestManager,
 				inputAddress,
 				inputBlockNumberFormatted,
@@ -67,7 +67,7 @@ describe('getBalance', () => {
 				mockRpcResponse,
 				expectedReturnFormat,
 			);
-			(rpcMethodsGetBalance as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
+			(ethRpcMethods.getBalance as jest.Mock).mockResolvedValueOnce(mockRpcResponse);
 
 			const result = await getBalance(web3Context, ...inputParameters, expectedReturnFormat);
 			expect(result).toBe(expectedFormattedResult);
