@@ -356,6 +356,13 @@ export abstract class Web3Config
 	}
 
 	public set defaultChain(val) {
+		if (
+			!isNullish(this._config.defaultCommon) &&
+			!isNullish(this._config.defaultCommon.baseChain) &&
+			val !== this._config.defaultCommon.baseChain
+		)
+			throw new ConfigChainMismatchError(this._config.defaultChain, val);
+
 		this._triggerConfigChange('defaultChain', val);
 
 		this._config.defaultChain = val;
@@ -389,6 +396,12 @@ export abstract class Web3Config
 	 *
 	 */
 	public set defaultHardfork(val) {
+		if (
+			!isNullish(this._config.defaultCommon) &&
+			!isNullish(this._config.defaultCommon.hardfork) &&
+			val !== this._config.defaultCommon.hardfork
+		)
+			throw new ConfigHardforkMismatchError(this._config.defaultCommon.hardfork, val);
 		this._triggerConfigChange('defaultHardfork', val);
 
 		this._config.defaultHardfork = val;
