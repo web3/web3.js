@@ -52,13 +52,15 @@ describe('contract', () => {
 	});
 
 	describe('events', () => {
-		itIf(isWs)('should trigger the "contract.events.<eventName>"', async () => {
+		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
+		itIf(isWs).skip('should trigger the "contract.events.<eventName>"', async () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			return expect(
-				processAsync(async resolve => {
+				processAsync(async (resolve, reject) => {
 					const event = contractDeployed.events.MultiValueEvent();
 
 					event.on('data', resolve);
+					event.on('error', reject);
 
 					// trigger event
 					await contractDeployed.methods
@@ -72,15 +74,17 @@ describe('contract', () => {
 			);
 		});
 
-		itIf(isWs)(
+		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
+		itIf(isWs).skip(
 			'should trigger the "contract.events.<eventName>" for indexed parameters',
 			async () => {
-				const res = await processAsync(async resolve => {
+				const res = await processAsync(async (resolve, reject) => {
 					const event = contractDeployed.events.MultiValueIndexedEvent({
 						filter: { val: 100 },
 					});
 
 					event.on('data', resolve);
+					event.on('error', reject);
 
 					// trigger event
 					await contractDeployed.methods
@@ -97,17 +101,19 @@ describe('contract', () => {
 			},
 		);
 
-		itIf(isWs)(
+		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
+		itIf(isWs).skip(
 			'should trigger when "fromBlock" is passed to contract.events.<eventName>',
 			async () => {
 				// eslint-disable-next-line jest/no-standalone-expect
 				return expect(
-					processAsync(async resolve => {
+					processAsync(async (resolve, reject) => {
 						const event = contractDeployed.events.MultiValueEvent({
 							fromBlock: 'latest',
 						});
 
 						event.on('data', resolve);
+						event.on('error', reject);
 
 						// trigger event
 						await contractDeployed.methods
@@ -142,7 +148,8 @@ describe('contract', () => {
 
 	describeIf(isWs)('getPastEvents', () => {
 		// TODO: Debug why this tests is hanging the websocket
-		it('should return all past events', async () => {
+		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
+		it.skip('should return all past events', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
