@@ -16,12 +16,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
+	ethAbiToJsonSchema,
+	transformJsonDataToAbiFormat,
 	codePointToInt,
+	hexToNumber,
 } from '../../src/utils';
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import {
 	validCodePoints,
 	invalidCodePoints,
+	validHexStrictDataWithNumber,
+	invalidHexData,
 } from '../fixtures/validation';
 
 describe('utils', () => {
@@ -59,4 +64,15 @@ describe('utils', () => {
 		});
 	});
 
+	describe('hexToNumber', () => {
+		it.each(validHexStrictDataWithNumber)('valid hex string data', (input, res) => {
+			expect(hexToNumber(input)).toEqual(res);
+		});
+
+		it.each(invalidHexData)('invalidHexData', (input: string) => {
+			expect(() => {
+				hexToNumber(input);
+			}).toThrow(new Error('Invalid hex string'));
+		});
+	});
 });

@@ -109,15 +109,27 @@ export const invalidIntDataWithAbiType: [any, string][] = [
 	['-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b', 'uint8'],
 ];
 
+export const validHexStrictDataWithNumber: [string, number | bigint][] = [
+	['0x48', 72],
+	['0x123c', 4668],
+	[
+		'0xdec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
+		BigInt('6297078121011128569053558207054331251192909352593326480842737114300118477835'),
+	],
+	[
+		'0xd115bffabbdd893a6f7cea402e7338643ced44a6',
+		BigInt('1193664110518272216229793131906554422260021413030'),
+	],
+	[
+		'0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc',
+		BigInt('254497623817844434235817792799421766503337286396'),
+	],
+	['0x1', 1],
+	['0xcd', 205],
+	['-0xcd', -205],
+];
 export const validHexStrictData: any[] = [
-	'0x48',
-	'0x123c',
-	'0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
-	'0xd115bffabbdd893a6f7cea402e7338643ced44a6',
-	'0x2C941171bD2A7aEda7c2767c438DfF36EAaFdaFc',
-	'0x1',
-	'0xcd',
-	'-0xcd',
+	...validHexStrictDataWithNumber.map(tuple => tuple[0]),
 	'-0x0dec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
 ];
 
