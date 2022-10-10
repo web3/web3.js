@@ -39,6 +39,7 @@ describeIf(isWs)('subscription', () => {
 		providerWs = new WebSocketProvider(clientUrl);
 	});
 	afterAll(() => {
+		web3Eth.subscriptionManager?.clear();
 		providerWs.disconnect();
 	});
 

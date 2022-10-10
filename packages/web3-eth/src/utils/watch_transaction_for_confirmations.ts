@@ -92,7 +92,7 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 	// The following variable will stay true except if the data arrived,
 	//	or if watching started after an error had occurred.
 	let needToWatchLater = true;
-	let lastCaughtBlockNumber: bigint;
+	let lastCaughtBlockHash: string;
 	setImmediate(() => {
 		web3Context.subscriptionManager
 			?.subscribe('newHeads')
@@ -102,12 +102,12 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 					if (
 						!newBlockHeader?.number ||
 						// For some cases, the on-data event is fired couple times for the same block!
-						// This needs investigation but seems to be because of multiple `subscription.on('data'...)` even it should be a problem.
-						lastCaughtBlockNumber === newBlockHeader?.number
+						// This needs investigation but seems to be because of multiple `subscription.on('data'...)` even this should not cause that.
+						lastCaughtBlockHash === newBlockHeader?.parentHash
 					) {
 						return;
 					}
-					lastCaughtBlockNumber = BigInt(newBlockHeader?.number);
+					lastCaughtBlockHash = newBlockHeader?.parentHash as string;
 
 					const confirmations =
 						BigInt(newBlockHeader.number) -
@@ -128,11 +128,11 @@ const watchBySubscription = <ReturnFormat extends DataFormat, ResolveType = Tran
 						),
 					});
 					if (confirmations >= web3Context.transactionConfirmationBlocks) {
-						await subscription.unsubscribe();
+						await web3Context.subscriptionManager?.removeSubscription(subscription);
 					}
 				});
 				subscription.on('error', async () => {
-					await subscription.unsubscribe();
+					await web3Context.subscriptionManager?.removeSubscription(subscription);
 
 					needToWatchLater = false;
 					watchByPolling({
