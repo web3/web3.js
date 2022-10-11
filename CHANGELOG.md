@@ -739,6 +739,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-core
 
 -   If the response error was `execution reverted`, raise `ContractExecutionError` and pass the response error to it in order to be set as `innerError` (this innerError will be decoded at web3-eth-contract if its ABI was provided according to EIP-838). (#5434)
+-   `registerPlugin` method to `Web3Context` (#5393)
+-   `Web3PluginBase` exported abstract class (#5393)
+-   `Web3EthPluginBase` exported abstract class (#5393)
 
 #### web3-error
 
@@ -749,6 +752,7 @@ should use 4.0.1-alpha.0 for testing.
 -   Added `SignatureError` to `web3-errors/src/errors/signature_errors.ts` (moved from `web3-eth/src/errors.ts`) (#5462)
 -   Added the errors' classes to `web3-errors/src/errors/transaction_errors.ts` from `web3-eth/src/errors.ts` (#5462)
 -   Added `TransactionBlockTimeoutError` class and its error code `ERR_TX_BLOCK_TIMEOUT` (#5294)
+-   `ExistingPluginNamespaceError` class and it's error code `ERR_EXISTING_PLUGIN_NAMESPACE` (#5393)
 
 #### web3-eth
 
@@ -771,6 +775,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Changed
 
+#### web3
+
+-   `Web3` is now a default and named export (#5393)
+
 #### web3-error
 
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
@@ -788,6 +796,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-abi
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
+
+#### web3-types
+
+-   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` not support `unknown` APIs (#5393)
 
 ### Removed
 
