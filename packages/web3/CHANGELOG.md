@@ -52,3 +52,9 @@ But this internal behavior is not exposed any further. Though you can achieve sa
 ```ts
 web3.currentProvider.disconnect();
 ```
+
+## [Unreleased]
+
+### Changed
+
+-   `Web3` is now a default and named export (#5393)
