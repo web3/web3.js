@@ -39,9 +39,3 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 		});
 	}
 }
-
-declare module 'web3' {
-	interface Web3 {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
-}

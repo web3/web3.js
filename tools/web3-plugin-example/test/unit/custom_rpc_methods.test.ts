@@ -18,13 +18,18 @@ import Web3 from 'web3';
 
 import { CustomRpcMethodsPlugin } from '../../src/custom_rpc_methods';
 
+declare module 'web3' {
+	interface Web3 {
+		customRpcMethods: CustomRpcMethodsPlugin;
+	}
+}
+
 describe('CustomRpcMethodsPlugin Tests', () => {
 	it('should register CustomRpcMethodsPlugin plugin', () => {
 		const web3 = new Web3('http://127.0.0.1:8545');
 		web3.registerPlugin(new CustomRpcMethodsPlugin());
 		// Both CustomRpcMethodsPlugin and ContractMethodWrappersPlugin
 		// redeclare the web3 module, and this seems to confuse the TypeScript server
-		// @ts-expect-error  Unsafe call of an `any` typed value
 		expect(web3.customRpcMethods).toBeDefined();
 	});
 
@@ -42,7 +47,6 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 		it('should call CustomRpcMethodsPlugin.customRpcMethod with expected RPC object', async () => {
 			// Both CustomRpcMethodsPlugin and ContractMethodWrappersPlugin
 			// redeclare the web3 module, and this seems to confuse the TypeScript server
-			// @ts-expect-error Unsafe call of an `any` typed value
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			await web3.customRpcMethods.customRpcMethod();
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({
@@ -56,7 +60,6 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 			const parameter2 = 42;
 			// Both CustomRpcMethodsPlugin and ContractMethodWrappersPlugin
 			// redeclare the web3 module, and this seems to confuse the TypeScript server
-			// @ts-expect-error Unsafe call of an `any` typed value
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			await web3.customRpcMethods.customRpcMethodWithParameters(parameter1, parameter2);
 			expect(requestManagerSendSpy).toHaveBeenCalledWith({

@@ -86,9 +86,3 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 		};
 	}
 }
-
-declare module 'web3' {
-	interface Web3 {
-		contractMethodWrappersPlugin: ContractMethodWrappersPlugin;
-	}
-}

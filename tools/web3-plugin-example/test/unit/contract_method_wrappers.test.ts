@@ -20,6 +20,12 @@ import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { ContractMethodWrappersPlugin } from '../../src/contract_method_wrappers';
 import { ERC20TokenAbi } from '../../src/ERC20Token';
 
+declare module 'web3' {
+	interface Web3 {
+		contractMethodWrappersPlugin: ContractMethodWrappersPlugin;
+	}
+}
+
 describe('CustomRpcMethodsPlugin Tests', () => {
 	it('should register CustomRpcMethodsPlugin plugin', () => {
 		const web3 = new Web3('http://127.0.0.1:8545');
