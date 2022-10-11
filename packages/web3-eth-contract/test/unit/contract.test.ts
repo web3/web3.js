@@ -239,13 +239,13 @@ describe('Contract', () => {
 			contract.defaultHardfork = defaultHardfork;
 			expect(contract.defaultHardfork).toStrictEqual(defaultHardfork);
 
-			const baseChain = 'mainnet';
+			const baseChain = 'mainnet' as ValidChains;
 			contract.defaultChain = baseChain;
-			expect(contract.defaultChain).toBe('mainnet');
+			expect(contract.defaultChain).toBe(baseChain);
 
 			const defaultCommonDifferentHardfork = {
 				customChain: { name: 'testnet', networkId: '5678', chainId: '5634' },
-				baseChain: 'mainnet' as ValidChains,
+				baseChain,
 				hardfork: 'petersburg' as Hardfork,
 			};
 			expect(contract.defaultCommon).toBeUndefined();
