@@ -88,7 +88,7 @@ describe('contract', () => {
 			});
 
 			describeIf(isWs)('events', () => {
-				it('should emit transfer event', async () => {
+				it.skip('should emit transfer event', async () => {
 					const acc2 = await createTempAccount();
 					await expect(
 						processAsync(async resolve => {
