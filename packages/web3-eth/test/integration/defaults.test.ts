@@ -472,6 +472,25 @@ describe('defaults', () => {
 			expect(eth2.blockHeaderTimeout).toBe(4);
 		});
 
+		it('enableExperimentalFeatures', () => {
+			// default
+			expect(web3Eth.enableExperimentalFeatures).toBe(false);
+
+			// after set
+			web3Eth.setConfig({
+				enableExperimentalFeatures: true,
+			});
+			expect(web3Eth.enableExperimentalFeatures).toBe(true);
+
+			// set by create new instance
+			eth2 = new Web3Eth({
+				config: {
+					enableExperimentalFeatures: true,
+				},
+			});
+			expect(eth2.enableExperimentalFeatures).toBe(true);
+		});
+
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
 			const tempAcc2 = await createTempAccount();
 			tempEth = new Web3Eth(clientUrl);
