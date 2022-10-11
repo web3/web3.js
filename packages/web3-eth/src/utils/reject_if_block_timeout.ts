@@ -178,7 +178,8 @@ export async function rejectIfBlockTimeout(
 	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
 	let callingRes: [Promise<never>, ResourceCleaner];
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	if (provider.supportsSubscriptions()) {
+	// TODO: once https://github.com/web3/web3.js/issues/5521 is implemented, remove checking for `enableExperimentalFeatures`
+	if (provider.supportsSubscriptions() && web3Context.enableExperimentalFeatures) {
 		callingRes = await resolveBySubscription(web3Context, starterBlockNumber, transactionHash);
 	} else {
 		callingRes = resolveByPolling(web3Context, starterBlockNumber, transactionHash);

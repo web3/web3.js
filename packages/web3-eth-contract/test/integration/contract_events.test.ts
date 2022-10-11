@@ -51,8 +51,7 @@ describe('contract', () => {
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 	});
 
-	// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
-	describe.skip('events', () => {
+	describe('events', () => {
 		itIf(isWs)('should trigger the "contract.events.<eventName>"', async () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			return expect(
@@ -148,8 +147,7 @@ describe('contract', () => {
 
 	describeIf(isWs)('getPastEvents', () => {
 		// TODO: Debug why this tests is hanging the websocket
-		// TODO: Un-skip the following test when working on https://github.com/web3/web3.js/issues/5517
-		it.skip('should return all past events', async () => {
+		it('should return all past events', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
