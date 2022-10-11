@@ -40,7 +40,7 @@ function resolveByPolling(
 			try {
 				lastBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 			} catch (error) {
-				// console.debug('An error happen while trying to get the block number', error);
+				console.warn('An error happen while trying to get the block number', error);
 				return undefined;
 			}
 			const numberOfBlocks = lastBlockNumber - starterBlockNumber;
@@ -78,7 +78,7 @@ async function resolveBySubscription(
 		previousError?: Error,
 	) {
 		if (previousError) {
-			// console.debug('error happened at subscription revert to polling...', previousError);
+			console.warn('error happened at subscription. So revert to polling...', previousError);
 		}
 		resourceCleaner.clean();
 
@@ -103,16 +103,15 @@ async function resolveBySubscription(
 					web3Context.subscriptionManager
 						?.removeSubscription(subscription)
 						.then(() => {
-							// console.debug('ending subscription successfully');
+							// Subscription ended successfully
 						})
 						.catch(() => {
-							// console.debug('error happened while ending subscription', error);
+							// An error happened while ending subscription. But no need to take any action.
 						});
 				}
 			},
 		};
 	} catch (error) {
-		// console.debug('error happened when trying to subscribe to `newHeads`.', error);
 		return resolveByPolling(web3Context, starterBlockNumber, transactionHash);
 	}
 	const promiseToError: Promise<never> = new Promise((_, reject) => {
@@ -127,17 +126,7 @@ async function resolveBySubscription(
 				);
 
 				if (numberOfBlocks >= web3Context.transactionBlockTimeout) {
-					// console.debug(
-					// 	'Transaction Block Timeout Error has been resolved by subscription',
-					// );
-
-					// console.log(
-					// 	'resolveBySubscription -> starterBlockNumber:',
-					// 	lastBlockHeader.number,
-					// 	', transactionHash:',
-					// 	transactionHash,
-					// );
-
+					// Transaction Block Timeout is known to be reached by subscribing to new heads
 					reject(
 						new TransactionBlockTimeoutError({
 							starterBlockNumber,
@@ -157,9 +146,6 @@ async function resolveBySubscription(
 		// Fallback to polling if tx receipt didn't arrived in "blockHeaderTimeout" [10 seconds]
 		setTimeout(() => {
 			if (needToWatchLater) {
-				// console.debug(
-				// 	'blockHeaderTimeout reached without getting the blocks by subscription. Try by polling',
-				// );
 				revertToPolling(reject);
 			}
 		}, web3Context.blockHeaderTimeout * 1000);
