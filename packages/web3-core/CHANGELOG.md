@@ -40,3 +40,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   If the response error was `execution reverted`, raise `ContractExecutionError` and pass the response error to it in order to be set as `innerError` (this innerError will be decoded at web3-eth-contract if its ABI was provided according to EIP-838). (#5434)
+-   Added a new configuration variable `enableExperimentalFeatures`. (#5481)
