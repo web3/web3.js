@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { FullValidationSchema, JsonSchema, ShortValidationSchema } from '../../src/types';
 
-export const abiToJsonSchemaCases: {
+export type AbiToJsonSchemaCase = {
 	title: string;
 	abi: {
 		fullSchema: FullValidationSchema;
@@ -29,9 +29,10 @@ export const abiToJsonSchemaCases: {
 		shortSchema: JsonSchema;
 		data: Record<string, unknown> | Array<unknown>;
 	};
-}[] = [
+};
+export const abiToJsonSchemaCases: AbiToJsonSchemaCase[] = [
 	{
-		title: 'single param',
+		title: 'single param uint',
 		abi: {
 			fullSchema: [{ name: 'a', type: 'uint' }],
 			shortSchema: ['uint'],
@@ -51,6 +52,75 @@ export const abiToJsonSchemaCases: {
 				maxItems: 1,
 			},
 			data: [12],
+		},
+	},
+	{
+		title: 'single param address',
+		abi: {
+			fullSchema: [{ name: 'a', type: 'address' }],
+			shortSchema: ['address'],
+			data: ['0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b'],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [{ $id: 'a', eth: 'address' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [{ $id: '/0/0', eth: 'address' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			data: ['0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b'],
+		},
+	},
+	{
+		title: 'single param bool',
+		abi: {
+			fullSchema: [{ name: 'a', type: 'bool' }],
+			shortSchema: ['bool'],
+			data: [true],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [{ $id: 'a', eth: 'bool' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [{ $id: '/0/0', eth: 'bool' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			data: [true],
+		},
+	},
+	{
+		title: 'single param bytes',
+		abi: {
+			fullSchema: [{ name: 'a', type: 'bytes' }],
+			shortSchema: ['bytes'],
+			data: ['0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b'],
+		},
+		json: {
+			fullSchema: {
+				type: 'array',
+				items: [{ $id: 'a', eth: 'bytes' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			shortSchema: {
+				type: 'array',
+				items: [{ $id: '/0/0', eth: 'bytes' }],
+				minItems: 1,
+				maxItems: 1,
+			},
+			data: ['0xCB00CDE33a7a0Fba30C63745534F1f7Ae607076b'],
 		},
 	},
 

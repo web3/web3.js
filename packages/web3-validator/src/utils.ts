@@ -218,6 +218,7 @@ export const transformJsonDataToAbiFormat = (
 			abiName = abi.name;
 			abiComponents = abi.components as FullValidationSchema;
 			// If its short form string value e.g. ['uint']
+			// todo abis is FullValidationSchema aka ReadOnlyArray<AbiParameter>, thus abi cannot be something else, so may next two ifs are reduntant
 		} else if (typeof abi === 'string') {
 			abiType = abi;
 
@@ -329,6 +330,7 @@ export const hexToNumber = (value: string): bigint | number => {
 		return negative ? -num : num;
 	}
 
+	// todo will never be here
 	if (num < Number.MIN_SAFE_INTEGER) {
 		return num;
 	}
@@ -366,7 +368,7 @@ export const padLeft = (value: ValidInputTypes, characterAmount: number, sign = 
 	if (typeof value === 'string' && !isHexStrict(value)) {
 		return value.padStart(characterAmount, sign);
 	}
-
+	// typeof value === 'string' && isHexStrict(value) will never evaluate to false
 	const hex = typeof value === 'string' && isHexStrict(value) ? value : numberToHex(value);
 
 	const [prefix, hexValue] = hex.startsWith('-') ? ['-0x', hex.slice(3)] : ['0x', hex.slice(2)];

@@ -15,11 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ValidInputTypes } from '../../src/types';
 import {
 	ethAbiToJsonSchema,
 	transformJsonDataToAbiFormat,
 	codePointToInt,
 	hexToNumber,
+	numberToHex,
+	padLeft,
 } from '../../src/utils';
 import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import {
@@ -27,6 +30,10 @@ import {
 	invalidCodePoints,
 	validHexStrictDataWithNumber,
 	invalidHexData,
+	validHexStrictData,
+	validStringNumbersWithHex,
+	invalidStringNumbers,
+	padLeftData,
 } from '../fixtures/validation';
 
 describe('utils', () => {
@@ -73,6 +80,36 @@ describe('utils', () => {
 			expect(() => {
 				hexToNumber(input);
 			}).toThrow(new Error('Invalid hex string'));
+		});
+	});
+	describe('numberToHex', () => {
+		it.each(validHexStrictDataWithNumber.map(tuple => [tuple[1], tuple[0]]))(
+			'valid numbers and bigints',
+			(input, res) => {
+				expect(numberToHex(input)).toEqual((res as string).toLowerCase());
+			},
+		);
+
+		it.each(validHexStrictData)('valid hex strings', input => {
+			expect(numberToHex(input)).toEqual((input as string).toLowerCase());
+		});
+
+		it.each(validStringNumbersWithHex)('valid string numbers', (input, res) => {
+			expect(numberToHex(input)).toEqual(res.toLowerCase());
+		});
+
+		it.each(invalidStringNumbers)('invalid string number', (input: ValidInputTypes) => {
+			expect(() => {
+				numberToHex(input);
+			}).toThrow(new Error('Invalid number value'));
+		});
+	});
+
+	describe('padLeft', () => {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		it.each(padLeftData.data)('valid numbers and bigints', (input, res) => {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			expect(padLeft(input, padLeftData.padDigits)).toBe(res);
 		});
 	});
 });
