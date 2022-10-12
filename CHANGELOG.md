@@ -804,7 +804,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-types
 
--   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` not support `unknown` APIs (#5393)
+-   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
 
 ### Removed
 
