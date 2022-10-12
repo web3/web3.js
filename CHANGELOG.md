@@ -784,6 +784,11 @@ should use 4.0.1-alpha.0 for testing.
 
 -   `Web3` is now a default and named export (#5393)
 
+#### web3-core
+
+-   Default value for `API` generic for `Web3ContextObject` from `any` to `unknown` (#5393)
+-   Default value for `API` generic for `Web3ContextInitOptions` from `any` to `unknown` (#5393)
+
 #### web3-error
 
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
@@ -804,7 +809,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-types
 
--   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` not support `unknown` APIs (#5393)
+-   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
 
 ### Removed
 
