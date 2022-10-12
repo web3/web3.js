@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import 'web3';
 import { Web3Context, Web3PluginBase } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
