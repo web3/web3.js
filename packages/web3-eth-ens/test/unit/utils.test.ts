@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { namehash } from '../../src/utils';
-import { namehashValidData } from '../fixtures/utils';
+import { namehash, normalize } from '../../src/utils';
+import { namehashValidData, normalizeValidData } from '../fixtures/utils';
 
 describe('ens utils', () => {
 	describe('namehash', () => {
@@ -24,6 +24,12 @@ describe('ens utils', () => {
 			it.each(namehashValidData)('%s', (input, output) => {
 				expect(namehash(input)).toEqual(output);
 			});
+		});
+	});
+
+	describe('toAscii', () => {
+		it.each(normalizeValidData)('should normalize %s', (input, output) => {
+			expect(normalize(input)).toEqual(output);
 		});
 	});
 });
