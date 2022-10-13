@@ -29,7 +29,7 @@ describe('registry', () => {
 
 	beforeAll(() => {
 		const context = new Web3Context('http://test.com');
-		object = context.getContextObject() as Web3ContextObject;
+		object = context.getContextObject();
 
 		registry = new Registry(object);
 	});
