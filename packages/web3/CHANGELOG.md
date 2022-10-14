@@ -52,3 +52,13 @@ But this internal behavior is not exposed any further. Though you can achieve sa
 ```ts
 web3.currentProvider.disconnect();
 ```
+
+## [Unreleased]
+
+### Added
+
+-   `web3-eth-transaction-utils` dependency (#5458)
+
+### Changed
+
+-   `prepareTransactionForSigning` is now imported from `web3-eth-transaction-utils` instead of `web3-eth` (#5458)

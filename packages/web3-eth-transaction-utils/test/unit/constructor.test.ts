@@ -15,18 +15,23 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './error_types';
-export * from './apis/eth_execution_api';
-export * from './apis/web3_eth_execution_api';
-export * from './apis/web3_net_api';
-export * from './apis/eth_personal_api';
-export * from './eth_types';
-export * from './json_rpc_types';
-export * from './primitives_types';
-export * from './utility_types';
-export * from './web3_api_types';
-export * from './web3_base_provider';
-export * from './web3_base_wallet';
-export * from './web3_deferred_promise_type';
-export * from './private_key_to_address';
-export * from './web3_eth_schemas';
+// import Web3ProviderBase from '../../src/index'
+// import {ProviderOptions} from '../../types'
+
+describe('constructs a PLACEHOLDER instance with expected properties', () => {
+	// let providerOptions: ProviderOptions
+
+	beforeEach(() => {
+		// providerOptions = {
+		//     providerUrl: 'http://127.0.0.1:8545'
+		// }
+	});
+
+	it('should construct with expected properties', () => {
+		// const web3ProviderBase = new Web3ProviderBase(providerOptions)
+		// expect(web3ProviderBase).toMatchObject({
+		//     _providerUrl: providerOptions.providerUrl
+		// })
+		expect(true).toBeTruthy();
+	});
+});

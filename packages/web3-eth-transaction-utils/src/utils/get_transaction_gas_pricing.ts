@@ -14,14 +14,20 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { FormatType, DataFormat, format, ETH_DATA_FORMAT } from 'web3-utils';
 import { Web3Context } from 'web3-core';
-import { EthExecutionAPI, Numbers, Transaction } from 'web3-types';
-import { isNullish } from 'web3-validator';
-import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from 'web3-errors';
-// eslint-disable-next-line import/no-cycle
-import { getBlock, getGasPrice } from '../rpc_method_wrappers';
+import {
+	blockSchema,
+	BlockTag,
+	EthExecutionAPI,
+	HexString,
+	Numbers,
+	Transaction,
+} from 'web3-types';
+import { isBlockTag, isBytes, isNullish } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
+import { Eip1559NotSupportedError, UnsupportedTransactionTypeError } from '../errors';
 import { InternalTransaction } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionType } from './transaction_builder';
@@ -31,7 +37,36 @@ async function getEip1559GasPricing<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	returnFormat: ReturnFormat,
 ): Promise<FormatType<{ maxPriorityFeePerGas?: Numbers; maxFeePerGas?: Numbers }, ReturnFormat>> {
-	const block = await getBlock(web3Context, web3Context.defaultBlock, false, returnFormat);
+	let block;
+	if (isBytes(web3Context.defaultBlock)) {
+		const blockHashFormatted = format(
+			{ eth: 'bytes32' },
+			web3Context.defaultBlock,
+			ETH_DATA_FORMAT,
+		);
+		block = format(
+			blockSchema,
+			await ethRpcMethods.getBlockByHash(
+				web3Context.requestManager,
+				blockHashFormatted,
+				false,
+			),
+			returnFormat,
+		);
+	} else {
+		const blockNumberFormatted = isBlockTag(web3Context.defaultBlock as HexString)
+			? (web3Context.defaultBlock as BlockTag)
+			: format({ eth: 'uint' }, web3Context.defaultBlock as Numbers, ETH_DATA_FORMAT);
+		block = format(
+			blockSchema,
+			await ethRpcMethods.getBlockByNumber(
+				web3Context.requestManager,
+				blockNumberFormatted,
+				false,
+			),
+			returnFormat,
+		);
+	}
 
 	if (isNullish(block.baseFeePerGas)) throw new Eip1559NotSupportedError();
 
@@ -90,7 +125,11 @@ export async function getTransactionGasPricing<ReturnFormat extends DataFormat>(
 			(transactionType === '0x0' || transactionType === '0x1')
 		)
 			return {
-				gasPrice: await getGasPrice(web3Context, returnFormat),
+				gasPrice: format(
+					{ eth: 'uint ' },
+					await ethRpcMethods.getGasPrice(web3Context.requestManager),
+					returnFormat,
+				) as FormatType<Numbers, ReturnFormat>,
 				maxPriorityFeePerGas: undefined,
 				maxFeePerGas: undefined,
 			};

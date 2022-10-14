@@ -19,10 +19,9 @@ import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, format } from 'web3-utils';
 import { isNullish } from 'web3-validator';
 import { Web3EthExecutionAPI } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import { formatTransaction, getTransactionGasPricing } from 'web3-eth-transaction-utils';
 
 import { sendTransaction } from '../../../src/rpc_method_wrappers';
-import { formatTransaction } from '../../../src';
-import * as GetTransactionGasPricing from '../../../src/utils/get_transaction_gas_pricing';
 import * as WaitForTransactionReceipt from '../../../src/utils/wait_for_transaction_receipt';
 import * as WatchTransactionForConfirmations from '../../../src/utils/watch_transaction_for_confirmations';
 import {
@@ -33,7 +32,6 @@ import {
 import { transactionReceiptSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
-jest.mock('../../../src/utils/wait_for_transaction_receipt');
 jest.mock('../../../src/utils/watch_transaction_for_confirmations');
 
 describe('sendTransaction', () => {
@@ -52,10 +50,10 @@ describe('sendTransaction', () => {
 		`getTransactionGasPricing is called only when expected\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			const getTransactionGasPricingSpy = jest.spyOn(
-				GetTransactionGasPricing,
+				getTransactionGasPricing,
 				'getTransactionGasPricing',
 			);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 			await sendTransaction(
@@ -82,7 +80,7 @@ describe('sendTransaction', () => {
 		`sending event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 			await sendTransaction(
@@ -102,7 +100,7 @@ describe('sendTransaction', () => {
 		`should call ethRpcMethods.sendTransaction with expected parameters\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 			await sendTransaction(
@@ -122,7 +120,7 @@ describe('sendTransaction', () => {
 		`sent event should emit with formattedTransaction\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			const formattedTransaction = formatTransaction(inputTransaction, ETH_DATA_FORMAT);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 
@@ -145,7 +143,7 @@ describe('sendTransaction', () => {
 			(ethRpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 
@@ -163,12 +161,12 @@ describe('sendTransaction', () => {
 	);
 
 	it.each(testData)(
-		`should call WaitForTransactionReceipt.waitForTransactionReceipt with expected parameters\n ${testMessage}`,
+		`should call ethRpcMethods.getTransactionReceipt with expected parameters\n ${testMessage}`,
 		async (_, inputTransaction, sendTransactionOptions) => {
 			(ethRpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
-			(WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock).mockResolvedValue(
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValue(
 				expectedTransactionReceipt,
 			);
 
@@ -178,8 +176,8 @@ describe('sendTransaction', () => {
 				DEFAULT_RETURN_FORMAT,
 				sendTransactionOptions,
 			);
-			expect(WaitForTransactionReceipt.waitForTransactionReceipt).toHaveBeenCalledWith(
-				web3Context,
+			expect(ethRpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
+				web3Context.requestManager,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,
 			);
@@ -220,9 +218,9 @@ describe('sendTransaction', () => {
 				expectedTransactionReceipt,
 				DEFAULT_RETURN_FORMAT,
 			);
-			(
-				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
-			).mockResolvedValueOnce(formattedTransactionReceipt);
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(
+				formattedTransactionReceipt,
+			);
 
 			await sendTransaction(
 				web3Context,
@@ -245,9 +243,9 @@ describe('sendTransaction', () => {
 				expectedTransactionReceipt,
 				DEFAULT_RETURN_FORMAT,
 			);
-			(
-				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
-			).mockResolvedValueOnce(formattedTransactionReceipt);
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(
+				formattedTransactionReceipt,
+			);
 			expect(
 				await sendTransaction(
 					web3Context,
@@ -275,9 +273,9 @@ describe('sendTransaction', () => {
 			(ethRpcMethods.sendTransaction as jest.Mock).mockResolvedValueOnce(
 				expectedTransactionHash,
 			);
-			(
-				WaitForTransactionReceipt.waitForTransactionReceipt as jest.Mock
-			).mockResolvedValueOnce(expectedTransactionReceipt);
+			(ethRpcMethods.getTransactionReceipt as jest.Mock).mockResolvedValueOnce(
+				expectedTransactionReceipt,
+			);
 
 			const promiEvent = sendTransaction(
 				web3Context,
@@ -288,8 +286,8 @@ describe('sendTransaction', () => {
 
 			await promiEvent;
 
-			expect(WaitForTransactionReceipt.waitForTransactionReceipt).toHaveBeenCalledWith(
-				web3Context,
+			expect(ethRpcMethods.getTransactionReceipt).toHaveBeenCalledWith(
+				web3Context.requestManager,
 				expectedTransactionHash,
 				DEFAULT_RETURN_FORMAT,
 			);

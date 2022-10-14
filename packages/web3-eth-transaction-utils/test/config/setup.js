@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,7 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './detect_transaction_type';
-export * from './format_transaction';
-export * from './prepare_transaction_for_signing';
-export * from './transaction_builder';
+// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('jest-extended');
+
+// @todo extend jest to have "toHaveBeenCalledOnceWith" matcher.
+
+process.env.NODE_ENV = 'test';
