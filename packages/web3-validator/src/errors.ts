@@ -20,6 +20,8 @@ import { Web3ValidationErrorObject } from './types';
 import { isNullish } from './validation';
 
 const errorFormatter = (error: Web3ValidationErrorObject): string => {
+	// TODO: Remove before merge. It has been added to investigate error in the GitHub actions.
+	console.error('Web3 validator error found', error);
 	if (error.message && error.instancePath && error.params && !isNullish(error.params.value)) {
 		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		return `value "${(error.params as { value: unknown }).value}" at "${error.instancePath}" ${
@@ -28,7 +30,10 @@ const errorFormatter = (error: Web3ValidationErrorObject): string => {
 	}
 
 	if (error.message && error.instancePath) {
-		return `value at "${error.instancePath}" ${error.message}`;
+		// TODO: Remove text after `error.message`. It has been added to investigate error in the GitHub actions.
+		return `value at "${error.instancePath}" ${
+			error.message
+		}, Stringified error object: ${JSON.stringify(error, undefined, '\t')}`;
 	}
 
 	if (error.instancePath) {

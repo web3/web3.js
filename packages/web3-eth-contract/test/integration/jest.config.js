@@ -18,6 +18,9 @@ module.exports = {
 	 */
 	restoreMocks: true,
 
+	// TODO: Remove before merge. It has been added to investigate error in the GitHub actions.
+	verbose: true,
+
 	/**
 	 * resetModules [boolean]
 	 *
