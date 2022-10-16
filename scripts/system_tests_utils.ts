@@ -32,10 +32,14 @@ import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { EthExecutionAPI, Bytes, Web3BaseProvider, Transaction } from 'web3-types';
+import { EthExecutionAPI, Bytes, Web3BaseProvider, Transaction, Receipt } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Web3 from 'web3';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NonPayableMethodObject } from 'web3-eth-contract';
 import accountsString from './accounts.json';
 
 /**
@@ -190,6 +194,16 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 	};
 };
 
+export const refillAccount = async (from: string, to: string, value: string | number) => {
+	const web3Eth = new Web3Eth(DEFAULT_SYSTEM_PROVIDER);
+
+	await web3Eth.sendTransaction({
+		from,
+		to,
+		value,
+	});
+};
+
 let mainAcc: string;
 export const createNewAccount = async (config?: {
 	unlock?: boolean;
@@ -216,16 +230,10 @@ export const createNewAccount = async (config?: {
 
 	if (config?.refill) {
 		const web3Personal = new Personal(clientUrl);
-		const web3Eth = new Web3Eth(clientUrl);
 		if (!mainAcc) {
 			[mainAcc] = await web3Personal.getAccounts();
 		}
-
-		await web3Eth.sendTransaction({
-			from: mainAcc,
-			to: acc.address,
-			value: '100000000000000000',
-		});
+		await refillAccount(mainAcc, acc.address, '100000000000000000');
 	}
 
 	return { address: acc.address.toLowerCase(), privateKey: acc.privateKey };
@@ -289,3 +297,89 @@ export const getSystemTestAccountsWithKeys = async (): Promise<
 
 export const getSystemTestAccounts = async (): Promise<string[]> =>
 	(await getSystemTestAccountsWithKeys()).map(a => a.address);
+
+// export const signTxAndSend = async (tx: any, privateKey: string): Promise<Receipt> => {
+// 	const web3 = new Web3(getSystemTestProvider());
+// 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
+// 	tx.gas = '0x5208';
+// 	tx.gasLimit = '4200000';
+// 	tx.from = acc.address;
+// 	// tx.v = '0x1';
+// 	// tx.r = '0x0';
+// 	// tx.s = '0x0';
+// 	// x.gasPrice = '0x4a817c800';
+// 	// tx.maxFeePerGas = '0x1229298c00';
+// 	// tx.maxPriorityFeePerGas = '0x49504f80';
+// 	tx.type = '0x0';
+// 	const signedTx = await acc.signTransaction(tx);
+// 	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+// };
+
+export const signTxAndSendEIP1559 = async (
+	provider: unknown,
+	tx: Record<string, unknown>,
+	privateKey: string,
+): Promise<Receipt> => {
+	const web3 = new Web3(provider as Web3BaseProvider);
+	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
+	const signedTx = await acc.signTransaction({
+		...tx,
+		type: '0x2',
+		gas: tx.gas ?? '1000000',
+		from: acc.address,
+	});
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+};
+
+export const signTxAndSendEIP2930 = async (
+	provider: unknown,
+	tx: Record<string, unknown>,
+	privateKey: string,
+): Promise<Receipt> => {
+	const web3 = new Web3(provider as Web3BaseProvider);
+	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
+	const signedTx = await acc.signTransaction({
+		...tx,
+		type: '0x1',
+		gas: tx.gas ?? '1000000',
+		from: acc.address,
+	});
+	return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+};
+
+export const signAndSendContractMethodEIP1559 = async (
+	provider: unknown,
+	address: string,
+	method: NonPayableMethodObject,
+	privateKey: string,
+) =>
+	signTxAndSendEIP1559(
+		provider,
+		{
+			to: address,
+			data: method.encodeABI(),
+		},
+		privateKey,
+	);
+
+export const signAndSendContractMethodEIP2930 = async (
+	provider: unknown,
+	address: string,
+	method: NonPayableMethodObject,
+	privateKey: string,
+) =>
+	signTxAndSendEIP2930(
+		provider,
+		{
+			to: address,
+			data: method.encodeABI(),
+		},
+		privateKey,
+	);
+
+export const createLocalAccount = async (web3: Web3) => {
+	const account = web3.eth.accounts.create();
+	await refillAccount((await createTempAccount()).address, account.address, '10000000000000000');
+	web3.eth.accounts.wallet.add(account);
+	return account;
+};

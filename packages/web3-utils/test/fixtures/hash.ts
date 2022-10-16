@@ -166,10 +166,27 @@ export const soliditySha3InvalidData: [any, string][] = [
 	[1, 'Invalid value given "1". Error: invalid type, type not supported.'],
 	[BigInt(1010), 'Invalid value given "1010". Error: invalid type, type not supported.'],
 	[undefined, 'Invalid value given "undefined". Error: invalid type, type not supported.'],
+	[{ t: 'int8', v: 500 }, 'Invalid value given "500". Error: value is larger than size.'],
+	[
+		{ t: 'bytes', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c' },
+		'Invalid value given "0x407D73d8a49eeb85D32Cf465507dd71d507100c". Error: can not parse as byte data.',
+	],
+	[
+		{ t: 'bytes8', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100' },
+		'Invalid value given "0x407D73d8a49eeb85D32Cf465507dd71d507100". Error: can not parse as byte data.',
+	],
 ];
 
 export const encodePackData: [TypedObject[] | TypedObjectAbbreviated[], any][] = [
 	[[{ type: 'string', value: '31323334' }], '0x3331333233333334'],
+	[
+		[{ type: 'int[]', value: '01' }],
+		'0x0000000000000000000000000000000000000000000000000000000000000001',
+	],
+	[
+		[{ type: 'uint[]', value: '01' }],
+		'0x0000000000000000000000000000000000000000000000000000000000000001',
+	],
 	[
 		[{ type: 'int', value: 31323334 }],
 		'0x0000000000000000000000000000000000000000000000000000000001ddf4c6',
@@ -281,4 +298,9 @@ export const keccak256ValidData: [string | Uint8Array | bigint, string][] = [
 		'0x2d19cd91fbcc44e6412f92c11da7907cdedb1ace04c47447b42a61f1cd63b85a',
 	],
 	[BigInt(3), '0x2a80e1ef1d7842f27f2e6be0972bb708b9a135c38860dbe73c27c3486c34f4de'],
+];
+
+export const elementaryNameValidData: [any, string][] = [
+	['uint128', '128'],
+	['int256', '256'],
 ];
