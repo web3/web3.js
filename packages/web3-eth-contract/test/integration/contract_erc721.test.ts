@@ -87,7 +87,7 @@ describe('contract', () => {
 
 					const logs = await contractDeployed.getPastEvents('Transfer');
 					// eslint-disable-next-line
-					console.log('logs', JSON.stringify(logs));
+					console.log('logs should award item', JSON.stringify(logs));
 					const tokenId = toBigInt(
 						(logs[0] as EventLog)?.returnValues?.tokenId as string,
 					);
@@ -116,7 +116,10 @@ describe('contract', () => {
 						);
 						const logs = await contractDeployed.getPastEvents('Transfer');
 						// eslint-disable-next-line
-						console.log('logs', JSON.stringify(logs));
+						console.log(
+							'logs should award item with local wallet',
+							JSON.stringify(logs),
+						);
 						const tokenId = toBigInt(
 							(logs[0] as EventLog)?.returnValues?.tokenId as string,
 						);
