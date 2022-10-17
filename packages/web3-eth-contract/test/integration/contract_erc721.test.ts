@@ -86,7 +86,9 @@ describe('contract', () => {
 						.send(sendOptions);
 
 					const logs = await contractDeployed.getPastEvents('Transfer');
-					const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+					const tokenId = toBigInt(
+						(logs[0] as EventLog)?.returnValues?.tokenId as string,
+					);
 
 					expect(
 						toUpperCaseHex(
