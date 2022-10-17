@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { toBigInt, utf8ToHex } from 'web3-utils';
+import { Receipt } from 'web3-types';
 import { Contract, EventLog } from '../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import {
@@ -70,6 +71,22 @@ describe('contract', () => {
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
 
+			const getTokenId = async (res: Receipt) => {
+				const topic = (res.logs as EventLog[])[0]?.topics[0];
+				const logs = await contractDeployed.getPastEvents('Transfer');
+				// eslint-disable-next-line
+				console.log('getTokenId res', res);
+				// eslint-disable-next-line
+				console.log('getTokenId logs', logs);
+
+				const tokenId = toBigInt(
+					(logs.find(l => (l as EventLog).topics.includes(topic)) as EventLog)
+						?.returnValues?.tokenId,
+				);
+				// eslint-disable-next-line
+				console.log('getTokenId tokenId', tokenId);
+				return tokenId;
+			};
 			describe('methods', () => {
 				it('should return the name', async () => {
 					expect(await contractDeployed.methods.name().call()).toBe('GameItem');
@@ -81,16 +98,11 @@ describe('contract', () => {
 
 				it('should award item', async () => {
 					const tempAccount = await createTempAccount();
-					await contractDeployed.methods
+					const res = await contractDeployed.methods
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
 
-					const logs = await contractDeployed.getPastEvents('Transfer');
-					// eslint-disable-next-line
-					console.log('logs should award item', JSON.stringify(logs));
-					const tokenId = toBigInt(
-						(logs[0] as EventLog)?.returnValues?.tokenId as string,
-					);
+					const tokenId = await getTokenId(res);
 
 					expect(
 						toUpperCaseHex(
@@ -105,7 +117,7 @@ describe('contract', () => {
 					'should award item with local wallet %p',
 					async signAndSendContractMethod => {
 						const tempAccount = await createTempAccount();
-						await signAndSendContractMethod(
+						const res = await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
@@ -114,15 +126,9 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						// eslint-disable-next-line
-						console.log(
-							'logs should award item with local wallet',
-							JSON.stringify(logs),
-						);
-						const tokenId = toBigInt(
-							(logs[0] as EventLog)?.returnValues?.tokenId as string,
-						);
+
+						const tokenId = await getTokenId(res);
+
 						expect(
 							toUpperCaseHex(
 								(await contractDeployed.methods
@@ -138,7 +144,7 @@ describe('contract', () => {
 					async signAndSendContractMethod => {
 						const tempAccount = await createTempAccount();
 						const tempAccountTo = await createTempAccount();
-						await signAndSendContractMethod(
+						const res = await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
 							contractDeployed.methods.awardItem(
@@ -147,10 +153,7 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						const tokenId = toBigInt(
-							(logs[0] as EventLog)?.returnValues?.tokenId as string,
-						);
+						const tokenId = await getTokenId(res);
 						await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
