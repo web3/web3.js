@@ -74,18 +74,11 @@ describe('contract', () => {
 			const getTokenId = async (res: Receipt) => {
 				const topic = (res.logs as EventLog[])[0]?.topics[0];
 				const logs = await contractDeployed.getPastEvents('Transfer');
-				// eslint-disable-next-line
-				console.log('getTokenId res', res);
-				// eslint-disable-next-line
-				console.log('getTokenId logs', logs);
 
-				const tokenId = toBigInt(
+				return toBigInt(
 					(logs.find(l => (l as EventLog).topics.includes(topic)) as EventLog)
 						?.returnValues?.tokenId,
 				);
-				// eslint-disable-next-line
-				console.log('getTokenId tokenId', tokenId);
-				return tokenId;
 			};
 			describe('methods', () => {
 				it('should return the name', async () => {
