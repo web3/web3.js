@@ -115,6 +115,8 @@ describe('contract', () => {
 							pkAccount.privateKey,
 						);
 						const logs = await contractDeployed.getPastEvents('Transfer');
+						// eslint-disable-next-line
+						console.log('logs', JSON.stringify(logs));
 						const tokenId = toBigInt(
 							(logs[0] as EventLog)?.returnValues?.tokenId as string,
 						);
