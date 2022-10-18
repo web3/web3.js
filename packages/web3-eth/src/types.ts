@@ -14,38 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { TransactionError } from 'web3-errors';
-import { Bytes, Numbers, Transaction, TransactionReceipt } from 'web3-types';
-import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
-
-export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
-
-export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
-	sending: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
-	sent: FormatType<Transaction, typeof ETH_DATA_FORMAT>;
-	transactionHash: FormatType<Bytes, ReturnFormat>;
-	receipt: FormatType<TransactionReceipt, ReturnFormat>;
-	confirmation: {
-		confirmations: FormatType<Numbers, ReturnFormat>;
-		receipt: FormatType<TransactionReceipt, ReturnFormat>;
-		latestBlockHash: FormatType<Bytes, ReturnFormat>;
-	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
-};
-
-export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
-	sending: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
-	sent: FormatType<Bytes, typeof ETH_DATA_FORMAT>;
-	transactionHash: FormatType<Bytes, ReturnFormat>;
-	receipt: FormatType<TransactionReceipt, ReturnFormat>;
-	confirmation: {
-		confirmations: FormatType<Numbers, ReturnFormat>;
-		receipt: FormatType<TransactionReceipt, ReturnFormat>;
-		latestBlockHash: FormatType<Bytes, ReturnFormat>;
-	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
-};
+import { TransactionReceipt } from 'web3-types';
 
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;

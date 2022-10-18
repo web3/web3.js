@@ -17,14 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
-import {
-	call,
-	estimateGas,
-	getLogs,
-	NewHeadsSubscription,
-	sendTransaction,
-	SendTransactionEvents,
-} from 'web3-eth';
+import { call, estimateGas, getLogs, sendTransaction } from 'web3-eth';
+import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth-tx-utils';
 import {
 	AbiConstructorFragment,
 	AbiErrorFragment,

@@ -370,19 +370,6 @@
     crc-32 "^1.2.0"
     ethereumjs-util "^7.1.5"
 
-"@ethereumjs/common@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.npmjs.org/@ethereumjs/common/-/common-3.0.0.tgz#a8786536e2af71d01e5d3f1c3a0272bc935fd817"
-  integrity sha512-yHgMom5HFlAJIu8fmA1n0UvBnanhULfuNQAD+tT6ZR6sndLUz2Mc4eegF3Rby579lqJMAc/rpsToP7wA/i4R/w==
-  dependencies:
-    "@ethereumjs/util" "^8.0.0"
-    crc-32 "^1.2.0"
-
-"@ethereumjs/rlp@^4.0.0", "@ethereumjs/rlp@^4.0.0-beta.2":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@ethereumjs/rlp/-/rlp-4.0.0.tgz#66719891bd727251a7f233f9ca80212d1994f8c8"
-  integrity sha512-LM4jS5n33bJN60fM5EC8VeyhUgga6/DjCPBV2vWjnfVtobqtOiNC4SQ1MRFqyBSmJGGdB533JZWewyvlcdJtkQ==
-
 "@ethereumjs/tx@^3.3.0", "@ethereumjs/tx@^3.5.2":
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/@ethereumjs/tx/-/tx-3.5.2.tgz#197b9b6299582ad84f9527ca961466fce2296c1c"
@@ -390,24 +377,6 @@
   dependencies:
     "@ethereumjs/common" "^2.6.4"
     ethereumjs-util "^7.1.5"
-
-"@ethereumjs/tx@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@ethereumjs/tx/-/tx-4.0.0.tgz#da284dd1d3407d910a055da99dc0d1c917097a8c"
-  integrity sha512-W3Fc61kAA3D6vJad2vsfh9ygdaMeScYpf49ephoo/0y+CP9IN+MMrqA6mx1X0Fr/jf52IuW4hDHE/rmgadBV6g==
-  dependencies:
-    "@ethereumjs/common" "^3.0.0"
-    "@ethereumjs/rlp" "^4.0.0"
-    "@ethereumjs/util" "^8.0.0"
-    ethereum-cryptography "^1.1.2"
-
-"@ethereumjs/util@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/@ethereumjs/util/-/util-8.0.0.tgz#52363fe29113c0ee70c8e9df20bc713e00089720"
-  integrity sha512-Zz/Ovar0VU/CaYHLvigBTjG5PmkG0OzjvRjjoXRJbJcdWJoTCN2N4BYgoCBOZomKjaAT4ABpQ7wer6ZFOglvjg==
-  dependencies:
-    "@ethereumjs/rlp" "^4.0.0-beta.2"
-    ethereum-cryptography "^1.1.2"
 
 "@ethersproject/abi@^5.6.4":
   version "5.6.4"

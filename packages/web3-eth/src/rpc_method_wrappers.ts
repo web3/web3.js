@@ -42,36 +42,30 @@ import {
 	Web3EthExecutionAPI,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
-import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import { SignatureError, TransactionError, TransactionRevertError } from 'web3-errors';
-import { ethRpcMethods } from 'web3-rpc-methods';
-
-import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
+	SendSignedTransactionEvents,
+	SendTransactionEvents,
 	accountSchema,
 	blockSchema,
 	feeHistorySchema,
 	logSchema,
 	transactionReceiptSchema,
 	transactionInfoSchema,
-} from './schemas';
-import {
-	SendSignedTransactionEvents,
-	SendSignedTransactionOptions,
-	SendTransactionEvents,
-	SendTransactionOptions,
-} from './types';
-// eslint-disable-next-line import/no-cycle
-import { getTransactionFromAttr } from './utils/transaction_builder';
-import { formatTransaction } from './utils/format_transaction';
-// eslint-disable-next-line import/no-cycle
-import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
-// eslint-disable-next-line import/no-cycle
-import { trySendTransaction } from './utils/try_send_transaction';
-// eslint-disable-next-line import/no-cycle
-import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
-import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
+	decodeSignedTransaction,
+	getTransactionFromAttr,
+	formatTransaction,
+	getTransactionGasPricing,
+	trySendTransaction,
+	waitForTransactionReceipt,
+	watchTransactionForConfirmations,
+} from 'web3-eth-tx-utils';
+import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
+import { SendSignedTransactionOptions, SendTransactionOptions } from './types';
+
 import { NUMBER_DATA_FORMAT } from './constants';
 
 /**

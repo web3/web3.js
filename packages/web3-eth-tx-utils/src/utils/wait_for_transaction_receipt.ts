@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import { TransactionPollingTimeoutError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-import { EthExecutionAPI, Bytes } from 'web3-types';
+import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import {
 	DataFormat,
 	rejectIfTimeout,
@@ -53,7 +53,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 					transactionHashFormatted,
 				),
 				returnFormat,
-			);
+			) as unknown as TransactionReceipt;
 		} catch (error) {
 			console.warn('An error happen while trying to get the transaction receipt', error);
 			return undefined;

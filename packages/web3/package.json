@@ -69,6 +69,7 @@
 		"web3-eth-ens": "^4.0.1-alpha.0",
 		"web3-eth-iban": "^4.0.1-alpha.0",
 		"web3-eth-personal": "^4.0.1-alpha.0",
+		"web3-eth-tx-utils": "0.1.0-alpha.0",
 		"web3-net": "^4.0.1-alpha.0",
 		"web3-types": "^0.1.1-alpha.0",
 		"web3-utils": "^4.0.1-alpha.0"

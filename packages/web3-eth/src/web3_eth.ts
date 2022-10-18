@@ -35,17 +35,17 @@ import {
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
-import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import { ethRpcMethods } from 'web3-rpc-methods';
-
-import * as rpcMethodsWrappers from './rpc_method_wrappers';
-import { SendTransactionOptions } from './types';
 import {
 	LogsSubscription,
 	NewPendingTransactionsSubscription,
 	NewHeadsSubscription,
 	SyncingSubscription,
-} from './web3_subscriptions';
+} from 'web3-eth-tx-utils';
+import { toChecksumAddress, DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { ethRpcMethods } from 'web3-rpc-methods';
+
+import * as rpcMethodsWrappers from './rpc_method_wrappers';
+import { SendTransactionOptions } from './types';
 
 type RegisteredSubscription = {
 	logs: typeof LogsSubscription;
