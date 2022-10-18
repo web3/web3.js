@@ -71,8 +71,8 @@ describe('contract', () => {
 				contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 			});
 
-			const getTokenId = async (res: Receipt) => {
-				const logs = await contractDeployed.getPastEvents('Transfer');
+			const getTokenId = async (c: Contract<typeof ERC721TokenAbi>, res: Receipt) => {
+				const logs = await c.getPastEvents('Transfer');
 				// eslint-disable-next-line
 				console.log('res.transactionHash', res.transactionHash, 'logs', logs);
 				return toBigInt(
@@ -97,7 +97,7 @@ describe('contract', () => {
 					const res = await contractDeployed.methods
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
-					const tokenId = await getTokenId(res);
+					const tokenId = await getTokenId(contractDeployed, res);
 					expect(
 						toUpperCaseHex(
 							(await contractDeployed.methods
@@ -121,7 +121,7 @@ describe('contract', () => {
 							pkAccount.privateKey,
 						);
 
-						const tokenId = await getTokenId(res);
+						const tokenId = await getTokenId(contractDeployed, res);
 
 						expect(
 							toUpperCaseHex(
@@ -147,7 +147,7 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const tokenId = await getTokenId(res);
+						const tokenId = await getTokenId(contractDeployed, res);
 						await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
