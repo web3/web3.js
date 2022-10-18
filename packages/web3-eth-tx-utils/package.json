@@ -36,7 +36,8 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4"
+		"typescript": "^4.7.4",
+		"web3-providers-http": "^4.0.1-alpha.0"
 	},
 	"dependencies": {
 		"@ethereumjs/common": "^2.6.5",
