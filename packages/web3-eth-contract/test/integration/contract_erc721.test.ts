@@ -97,6 +97,8 @@ describe('contract', () => {
 					const res = await contractDeployed.methods
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
+					// eslint-disable-next-line
+					console.log('should award item');
 					const tokenId = await getTokenId(contractDeployed, res);
 					expect(
 						toUpperCaseHex(
@@ -120,7 +122,11 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-
+						// eslint-disable-next-line
+						console.log(
+							'should award item with local wallet',
+							signAndSendContractMethod,
+						);
 						const tokenId = await getTokenId(contractDeployed, res);
 
 						expect(
@@ -146,6 +152,11 @@ describe('contract', () => {
 								'http://my-nft-award',
 							),
 							pkAccount.privateKey,
+						);
+						// eslint-disable-next-line
+						console.log(
+							'should transferFrom item with local wallet',
+							signAndSendContractMethod,
 						);
 						const tokenId = await getTokenId(contractDeployed, res);
 						await signAndSendContractMethod(
