@@ -73,7 +73,8 @@ describe('contract', () => {
 
 			const getTokenId = async (res: Receipt) => {
 				const logs = await contractDeployed.getPastEvents('Transfer');
-
+				// eslint-disable-next-line
+				console.log('res.transactionHash', res.transactionHash, 'logs', logs);
 				return toBigInt(
 					(
 						logs.find(
