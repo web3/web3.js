@@ -40,7 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   `web3-rpc-methods` dependency (#5441)
--   `web3-eth-tx-utils` dependency (#5546)
 
 ### Changed
 

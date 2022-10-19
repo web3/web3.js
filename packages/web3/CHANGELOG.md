@@ -52,9 +52,3 @@ But this internal behavior is not exposed any further. Though you can achieve sa
 ```ts
 web3.currentProvider.disconnect();
 ```
-
-## [Unreleased]
-
-### Added
-
--   `web3-eth-tx-utils` dependency (#5546)

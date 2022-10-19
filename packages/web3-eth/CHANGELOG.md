@@ -40,7 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   `web3-rpc-methods` dependency (#5441)
--   `web3-eth-tx-utils` dependency (#5546)
 
 ### Changed
 
@@ -54,7 +53,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)
--   Moved `defaultTransactionTypeParser`, `detectTransactionType`, `detectRawTransactionType`, `formatTransaction`, `prepareTransactionForSigning`, `getTransactionFromAttr`, `getTransactionNonce`, `getTransactionType`, `defaultTransactionBuilder, `transactionBuilder`exports to`web3-eth-tx-utils` (#5546)
--   Moved exported schemas to `web3-eth-tx-utils` (#5546)
--   Moved exported validation methods to `web3-eth-tx-utils` (#5546)
--   Moved exported `LogsSubscription`, `NewPendingTransactionsSubscription`, `NewHeadsSubscription`, `SyncingSubscription` to `web3-eth-tx-utils` (#5546)
