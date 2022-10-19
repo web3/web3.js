@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Corrected the error code for `JSONRPC_ERR_UNAUTHORIZED` to be `4100` (#5462)
+-   Type of `starterBlockNumber` and `numberOfBlocks` from `number` to `Numbers` for `TransactionBlockTimeoutError` (#5546)
 
 ### Fixed
 
