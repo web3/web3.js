@@ -133,7 +133,7 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						// eslint-disable-next-line
+
 						const tokenId = toBigInt(0);
 						await signAndSendContractMethod(
 							contract.provider,
