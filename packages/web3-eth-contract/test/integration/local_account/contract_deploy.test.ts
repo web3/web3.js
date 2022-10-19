@@ -46,6 +46,24 @@ describe('contract', () => {
 			};
 		});
 
+		it.each(['0x1', '0x2'])('should emit the "sending" event', async txType => {
+			const handler = jest.fn();
+			const acc = await createLocalAccount(web3);
+			const promiEvent = contract
+				.deploy(deployOptions)
+				.send({
+					...sendOptions,
+					from: acc.address,
+					type: txType,
+				})
+				.on('sending', handler);
+
+			// Deploy the contract
+			await promiEvent;
+
+			expect(handler).toHaveBeenCalled();
+		});
+
 		it.each(['0x1', '0x2'])('should deploy contract %p', async txType => {
 			const acc = await createLocalAccount(web3);
 			const deployedContract = await contract.deploy(deployOptions).send({
@@ -128,20 +146,6 @@ describe('contract', () => {
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('transactionHash', handler);
-
-			// Deploy the contract
-			await promiEvent;
-
-			expect(handler).toHaveBeenCalled();
-		});
-
-		it('should emit the "sending" event', async () => {
-			const handler = jest.fn();
-
-			const promiEvent = contract
-				.deploy(deployOptions)
-				.send(sendOptions)
-				.on('sending', handler);
 
 			// Deploy the contract
 			await promiEvent;
