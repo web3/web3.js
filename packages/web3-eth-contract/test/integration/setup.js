@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('../config/setup');
-
-const jestTimeout = 15000;
+const jestTimeout = String(process.env.WEB3_SYSTEM_TEST_PROVIDER).includes('ipc') ? 20000 : 15000;
 
 jest.setTimeout(jestTimeout);
