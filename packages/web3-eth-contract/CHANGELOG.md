@@ -177,6 +177,7 @@ const transactionHash = receipt.transactionHash;
 
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
+-   `web3-eth-tx-utils` dependency (#5546)
 
 ### Fixed
 
