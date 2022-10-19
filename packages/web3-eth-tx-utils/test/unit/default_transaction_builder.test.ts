@@ -25,7 +25,7 @@ import {
 import { Web3Context } from 'web3-core';
 import HttpProvider from 'web3-providers-http';
 import { isNullish } from 'web3-validator';
-import { ethRpcMethods } from 'web3-rpc-methods';
+import { ethRpcMethods, netRpcMethods } from 'web3-rpc-methods';
 
 import {
 	Eip1559NotSupportedError,
@@ -36,12 +36,8 @@ import { defaultTransactionBuilder } from '../../src/utils/transaction_builder';
 
 jest.mock('web3-rpc-methods');
 
-const expectedNetworkId = '0x4';
-jest.mock('web3-net', () => ({
-	getId: jest.fn().mockImplementation(() => expectedNetworkId),
-}));
-
 describe('defaultTransactionBuilder', () => {
+	const expectedNetworkId = '0x4';
 	const expectedFrom = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01';
 	const expectedNonce = '0x42';
 	const expectedGas = BigInt(21000);
@@ -122,6 +118,10 @@ describe('defaultTransactionBuilder', () => {
 		jest.spyOn(ethRpcMethods, 'getChainId').mockResolvedValue(expectedChainId);
 
 		web3Context = new Web3Context<EthExecutionAPI>(new HttpProvider('http://127.0.0.1'));
+	});
+
+	beforeAll(() => {
+		jest.spyOn(netRpcMethods, 'getId').mockResolvedValue(expectedNetworkId);
 	});
 
 	it.skip('should call override method', async () => {

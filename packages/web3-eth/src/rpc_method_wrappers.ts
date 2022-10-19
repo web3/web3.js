@@ -1316,7 +1316,7 @@ export function sendSignedTransaction<
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
-						// todo enable handleRevert for sendSignedTransaction when we have a function to decode transactions
+						// TODO enable handleRevert for sendSignedTransaction when we have a function to decode transactions
 						// importing a package for this would increase the size of the library
 						// if (web3Context.handleRevert) {
 						// 	await getRevertReason(web3Context, transaction, returnFormat);

@@ -20,9 +20,9 @@ import { isNullish } from 'web3-validator';
 import { Web3EthExecutionAPI } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { feeHistorySchema } from 'web3-eth-tx-utils';
 import { getFeeHistory } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_fee_history';
-import { feeHistorySchema } from '../../../src/schemas';
 import { NUMBER_DATA_FORMAT } from '../../../src/constants';
 
 jest.mock('web3-rpc-methods');

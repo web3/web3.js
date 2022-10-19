@@ -20,9 +20,9 @@ import { isNullish } from 'web3-validator';
 import { DEFAULT_RETURN_FORMAT, ETH_DATA_FORMAT, FMT_BYTES, FMT_NUMBER, format } from 'web3-utils';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { formatTransaction } from 'web3-eth-tx-utils';
 import { call } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/call';
-import { formatTransaction } from '../../../src';
 
 jest.mock('web3-rpc-methods');
 

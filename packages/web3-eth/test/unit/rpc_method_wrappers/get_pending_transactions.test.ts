@@ -19,8 +19,8 @@ import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { Web3EthExecutionAPI } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { formatTransaction } from 'web3-eth-tx-utils';
 import { getPendingTransactions } from '../../../src/rpc_method_wrappers';
-import { formatTransaction } from '../../../src';
 import { mockRpcResponse } from './fixtures/get_pending_transactions';
 
 jest.mock('web3-rpc-methods');

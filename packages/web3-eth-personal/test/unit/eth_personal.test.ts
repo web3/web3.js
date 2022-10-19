@@ -17,12 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import * as utils from 'web3-utils';
-import * as eth from 'web3-eth';
+import * as ethTxUtils from 'web3-eth-tx-utils';
 import { validator } from 'web3-validator';
 import { Personal } from '../../src/index';
 
 jest.mock('web3-utils');
 jest.mock('web3-eth');
+jest.mock('web3-eth-tx-utils');
 
 describe('Personal', () => {
 	let personal: Personal;
@@ -166,7 +167,7 @@ describe('Personal', () => {
 				from: '0x528ABBBa47c33600245066398072799A9b7e2d9E',
 				to: '0x9988BBBa47c33600245066398072799A9b7e2d9E',
 			};
-			jest.spyOn(eth, 'formatTransaction').mockReturnValue(tx);
+			jest.spyOn(ethTxUtils, 'formatTransaction').mockReturnValue(tx);
 
 			await personal.sendTransaction(tx, 'password');
 
@@ -181,12 +182,12 @@ describe('Personal', () => {
 				from: '0x528ABBBa47c33600245066398072799A9b7e2d9E',
 				to: '0x9988BBBa47c33600245066398072799A9b7e2d9E',
 			};
-			jest.spyOn(eth, 'formatTransaction').mockReturnValue(tx);
+			jest.spyOn(ethTxUtils, 'formatTransaction').mockReturnValue(tx);
 
 			await personal.sendTransaction(tx, 'password');
 
-			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
+			expect(ethTxUtils.formatTransaction).toHaveBeenCalledTimes(1);
+			expect(ethTxUtils.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
 		});
 	});
 
@@ -196,7 +197,7 @@ describe('Personal', () => {
 				from: '0x528ABBBa47c33600245066398072799A9b7e2d9E',
 				to: '0x9988BBBa47c33600245066398072799A9b7e2d9E',
 			};
-			jest.spyOn(eth, 'formatTransaction').mockReturnValue(tx);
+			jest.spyOn(ethTxUtils, 'formatTransaction').mockReturnValue(tx);
 
 			await personal.signTransaction(tx, 'password');
 
@@ -211,12 +212,12 @@ describe('Personal', () => {
 				from: '0x528ABBBa47c33600245066398072799A9b7e2d9E',
 				to: '0x9988BBBa47c33600245066398072799A9b7e2d9E',
 			};
-			jest.spyOn(eth, 'formatTransaction').mockReturnValue(tx);
+			jest.spyOn(ethTxUtils, 'formatTransaction').mockReturnValue(tx);
 
 			await personal.signTransaction(tx, 'password');
 
-			expect(eth.formatTransaction).toHaveBeenCalledTimes(1);
-			expect(eth.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
+			expect(ethTxUtils.formatTransaction).toHaveBeenCalledTimes(1);
+			expect(ethTxUtils.formatTransaction).toHaveBeenCalledWith(tx, ETH_DATA_FORMAT);
 		});
 	});
 

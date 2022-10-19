@@ -27,7 +27,9 @@ import {
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
+import { Web3Eth } from 'web3-eth';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { prepareTransactionForSigning } from 'web3-eth-tx-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Context } from 'web3-core';
 

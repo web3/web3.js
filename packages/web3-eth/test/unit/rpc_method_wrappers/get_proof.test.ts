@@ -20,9 +20,9 @@ import { isNullish } from 'web3-validator';
 import { Web3EthExecutionAPI } from 'web3-types';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { accountSchema } from 'web3-eth-tx-utils';
 import { getProof } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_proof';
-import { accountSchema } from '../../../src/schemas';
 
 jest.mock('web3-rpc-methods');
 

@@ -20,9 +20,9 @@ import { Bytes, Web3EthExecutionAPI } from 'web3-types';
 import { isBytes, isNullish } from 'web3-validator';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { formatTransaction } from 'web3-eth-tx-utils';
 import { getTransactionFromBlock } from '../../../src/rpc_method_wrappers';
 import { mockRpcResponse, testData } from './fixtures/get_transaction_from_block';
-import { formatTransaction } from '../../../src';
 
 jest.mock('web3-rpc-methods');
 

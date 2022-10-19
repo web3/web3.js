@@ -21,7 +21,7 @@ import {
 	TransactionSignedAPI,
 } from 'web3-types';
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { decodeSignedTransaction } from '../../../../src/utils/decode_signed_transaction';
+import { decodeSignedTransaction } from 'web3-eth-tx-utils';
 
 const rawLegacyTransaction: Transaction = {
 	type: '0x0',
