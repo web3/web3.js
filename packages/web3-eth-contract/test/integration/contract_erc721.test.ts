@@ -74,7 +74,7 @@ describe('contract', () => {
 			const getTokenId = async (c: Contract<typeof ERC721TokenAbi>, res: Receipt) => {
 				const logs = await c.getPastEvents('Transfer');
 				// eslint-disable-next-line
-				console.log('res.transactionHash', res.transactionHash, 'logs', logs);
+				console.log('res.transactionHash', res, 'logs', logs);
 				return toBigInt(
 					(
 						logs.find(
@@ -94,12 +94,20 @@ describe('contract', () => {
 
 				it('should award item', async () => {
 					const tempAccount = await createTempAccount();
-					const res = await contractDeployed.methods
+					const resPromi = contractDeployed.methods
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
+
+					const res = await new Promise(resolve => {
+						// eslint-disable-next-line
+						resPromi.on('receipt', (d: Receipt) => {
+							resolve(d);
+						});
+					}).catch(console.error);
+
 					// eslint-disable-next-line
 					console.log('should award item');
-					const tokenId = await getTokenId(contractDeployed, res);
+					const tokenId = await getTokenId(contractDeployed, res as Receipt);
 					expect(
 						toUpperCaseHex(
 							(await contractDeployed.methods
