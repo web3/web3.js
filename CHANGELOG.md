@@ -769,6 +769,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Added and exported three reusable utility functions: `pollTillDefined`, `rejectIfTimeout` and `rejectIfConditionAtInterval` which are useful when dealing with promises that involves polling, rejecting after timeout or rejecting if a condition was met when calling repeatably at every time intervals.
 
+#### web3-eth-tx-utils
+
+-   Init package `web3-eth-tx-utils` (#5545)
+
 ### Changed
 
 #### web3-error
@@ -794,3 +798,4 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth
 
 -   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)
+-   Moved transaction related utils from `web3-eth` to the new package `web3-eth-tx-utils` (#5545)
