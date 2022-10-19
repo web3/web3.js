@@ -18,7 +18,9 @@ import { Block, TransactionInfo, TransactionReceipt } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
 import { AbiEventFragment } from 'web3-eth-abi';
-import { SendTransactionEvents, Web3Eth } from '../../src';
+import { SendTransactionEvents } from 'web3-eth-tx-utils';
+
+import { Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 
 type SendFewTxParams = {

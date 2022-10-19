@@ -28,8 +28,14 @@ import {
 	prepareTransactionForSigning,
 	SendTransactionEvents,
 	transactionBuilder,
-	Web3Eth,
-} from '../../src';
+	defaultTransactionBuilder,
+	getTransactionFromAttr,
+	getTransactionType,
+	detectTransactionType,
+	getTransactionGasPricing,
+} from 'web3-eth-tx-utils';
+
+import { Web3Eth } from '../../src';
 
 import {
 	closeOpenConnection,
@@ -40,15 +46,8 @@ import {
 	itIf,
 } from '../fixtures/system_test_utils';
 
-import {
-	defaultTransactionBuilder,
-	getTransactionFromAttr,
-	getTransactionType,
-} from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
-import { detectTransactionType } from '../../dist';
-import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;

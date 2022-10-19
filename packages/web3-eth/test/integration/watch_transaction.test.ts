@@ -18,7 +18,9 @@ import WebSocketProvider from 'web3-providers-ws';
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Web3BaseProvider, TransactionReceipt } from 'web3-types';
 import { Web3PromiEvent } from 'web3-core';
-import { Web3Eth, SendTransactionEvents } from '../../src';
+import { SendTransactionEvents } from 'web3-eth-tx-utils';
+
+import { Web3Eth } from '../../src';
 import { sendFewTxes } from './helper';
 
 import {

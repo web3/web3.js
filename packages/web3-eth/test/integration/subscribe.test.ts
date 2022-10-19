@@ -16,14 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { Web3BaseProvider } from 'web3-types';
-/* eslint-disable import/no-named-as-default */
-import Web3Eth from '../../src/index';
 import {
 	NewHeadsSubscription,
 	SyncingSubscription,
 	NewPendingTransactionsSubscription,
 	LogsSubscription,
-} from '../../src';
+} from 'web3-eth-tx-utils';
+
+/* eslint-disable import/no-named-as-default */
+import Web3Eth from '../../src/index';
 import {
 	getSystemTestProvider,
 	describeIf,

@@ -21,10 +21,11 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-types';
 import { numberToHex } from 'web3-utils';
+import { LogsSubscription } from 'web3-eth-tx-utils';
+
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
-import { LogsSubscription } from '../../src/web3_subscriptions';
 import {
 	createTempAccount,
 	describeIf,

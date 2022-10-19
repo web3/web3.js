@@ -16,9 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { BlockHeaderOutput, Web3BaseProvider } from 'web3-types';
+import { NewHeadsSubscription } from 'web3-eth-tx-utils';
+
 import { Web3Eth } from '../../src';
 import { sendFewTxes, Resolve } from './helper';
-import { NewHeadsSubscription } from '../../src/web3_subscriptions';
 import {
 	createTempAccount,
 	describeIf,

@@ -18,13 +18,18 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
-import { Web3Eth, InternalTransaction, transactionSchema } from '../../../src';
+import {
+	InternalTransaction,
+	transactionSchema,
+	getTransactionGasPricing,
+} from 'web3-eth-tx-utils';
+
+import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
-import { getTransactionGasPricing } from '../../../src/utils/get_transaction_gas_pricing';
 
 const HEX_NUMBER_DATA_FORMAT = { bytes: FMT_BYTES.HEX, number: FMT_NUMBER.HEX } as const;
 

@@ -21,6 +21,7 @@ import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { validator } from 'web3-validator';
+import { blockSchema } from 'web3-eth-tx-utils';
 
 import { Web3Eth } from '../../src';
 
@@ -35,7 +36,6 @@ import {
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { toAllVariants } from '../shared_fixtures/utils';
 import { sendFewTxes, validateTransaction } from './helper';
-import { blockSchema } from '../../src/schemas';
 
 describe('rpc with block', () => {
 	let web3Eth: Web3Eth;
