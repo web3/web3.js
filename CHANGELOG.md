@@ -798,4 +798,3 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth
 
 -   Moved the errors' classes from `web3-eth/src/errors.ts` to `web3-errors/src/errors/transaction_errors.ts` (#5462)
--   Moved transaction related utils from `web3-eth` to the new package `web3-eth-tx-utils` (#5545)
