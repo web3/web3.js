@@ -26,7 +26,7 @@ describe('ens', () => {
 
 	beforeAll(() => {
 		const context = new Web3Context('http://test.com');
-		object = context.getContextObject() as Web3ContextObject;
+		object = context.getContextObject();
 	});
 	it('should construct registry with expected methods', () => {
 		const registry = new Registry(object);

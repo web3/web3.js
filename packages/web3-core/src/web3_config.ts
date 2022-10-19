@@ -16,7 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Numbers, HexString, BlockNumberOrTag, Common } from 'web3-types';
-import { toHex } from 'web3-utils';
+import { ConfigHardforkMismatchError, ConfigChainMismatchError } from 'web3-errors';
+import { isNullish, toHex } from 'web3-utils';
 import { TransactionTypeParser } from './types';
 // eslint-disable-next-line import/no-cycle
 import { TransactionBuilder } from './web3_context';
@@ -355,6 +356,13 @@ export abstract class Web3Config
 	}
 
 	public set defaultChain(val) {
+		if (
+			!isNullish(this._config.defaultCommon) &&
+			!isNullish(this._config.defaultCommon.baseChain) &&
+			val !== this._config.defaultCommon.baseChain
+		)
+			throw new ConfigChainMismatchError(this._config.defaultChain, val);
+
 		this._triggerConfigChange('defaultChain', val);
 
 		this._config.defaultChain = val;
@@ -388,6 +396,12 @@ export abstract class Web3Config
 	 *
 	 */
 	public set defaultHardfork(val) {
+		if (
+			!isNullish(this._config.defaultCommon) &&
+			!isNullish(this._config.defaultCommon.hardfork) &&
+			val !== this._config.defaultCommon.hardfork
+		)
+			throw new ConfigHardforkMismatchError(this._config.defaultCommon.hardfork, val);
 		this._triggerConfigChange('defaultHardfork', val);
 
 		this._config.defaultHardfork = val;
@@ -414,7 +428,22 @@ export abstract class Web3Config
 	 * Will set the default common property
 	 *
 	 */
-	public set defaultCommon(val) {
+	public set defaultCommon(val: Common | undefined) {
+		// validation check if default hardfork is set and matches defaultCommon hardfork
+		if (
+			!isNullish(this._config.defaultHardfork) &&
+			!isNullish(val) &&
+			!isNullish(val.hardfork) &&
+			this._config.defaultHardfork !== val.hardfork
+		)
+			throw new ConfigHardforkMismatchError(this._config.defaultHardfork, val.hardfork);
+		if (
+			!isNullish(this._config.defaultChain) &&
+			!isNullish(val) &&
+			!isNullish(val.baseChain) &&
+			this._config.defaultChain !== val.baseChain
+		)
+			throw new ConfigChainMismatchError(this._config.defaultChain, val.baseChain);
 		this._triggerConfigChange('defaultCommon', val);
 
 		this._config.defaultCommon = val;
