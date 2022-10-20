@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { utf8ToHex } from 'web3-utils';
-import { Contract, EventLog } from '../../src';
+import { toBigInt, utf8ToHex } from 'web3-utils';
+import { Contract } from '../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import {
 	getSystemTestProvider,
@@ -85,9 +85,7 @@ describe('contract', () => {
 						.awardItem(tempAccount.address, 'http://my-nft-uri')
 						.send(sendOptions);
 
-					const logs = await contractDeployed.getPastEvents('Transfer');
-					const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
-
+					const tokenId = toBigInt(0);
 					expect(
 						toUpperCaseHex(
 							(await contractDeployed.methods
@@ -110,8 +108,7 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						const tokenId = toBigInt(0);
 						expect(
 							toUpperCaseHex(
 								(await contractDeployed.methods
@@ -136,8 +133,8 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+
+						const tokenId = toBigInt(0);
 						await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
@@ -174,8 +171,7 @@ describe('contract', () => {
 							pkAccount.privateKey,
 						);
 
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						const tokenId = toBigInt(0);
 						await signAndSendContractMethod(
 							contract.provider,
 							contractDeployed.options.address as string,
@@ -218,8 +214,7 @@ describe('contract', () => {
 							),
 							pkAccount.privateKey,
 						);
-						const logs = await contractDeployed.getPastEvents('Transfer');
-						const tokenId = (logs[0] as EventLog)?.returnValues?.tokenId as string;
+						const tokenId = toBigInt(0);
 
 						await signAndSendContractMethod(
 							contract.provider,
