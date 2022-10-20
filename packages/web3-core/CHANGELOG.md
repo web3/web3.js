@@ -48,3 +48,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Default value for `API` generic for `Web3ContextObject` from `any` to `unknown` (#5393)
 -   Default value for `API` generic for `Web3ContextInitOptions` from `any` to `unknown` (#5393)
+-   Added validation when `defaultHardfork` and `defaultCommon.hardfork` are different in web3config
+-   Added validation when `defaultChain` and `defaultCommon.basechain` are different in web3config

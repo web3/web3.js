@@ -29,6 +29,8 @@ import {
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
 import {
+	ChainMismatchError,
+	HardforkMismatchError,
 	ChainIdMismatchError,
 	CommonOrChainAndHardforkError,
 	Eip1559GasPriceError,
@@ -155,7 +157,6 @@ export const validateCustomChainInfo = (transaction: InternalTransaction) => {
 			});
 	}
 };
-
 export const validateChainInfo = (transaction: InternalTransaction) => {
 	if (
 		!isNullish(transaction.common) &&
@@ -172,6 +173,32 @@ export const validateChainInfo = (transaction: InternalTransaction) => {
 			chain: transaction.chain,
 			hardfork: transaction.hardfork,
 		});
+};
+export const validateBaseChain = (transaction: InternalTransaction) => {
+	if (!isNullish(transaction.common))
+		if (!isNullish(transaction.common.baseChain))
+			if (
+				!isNullish(transaction.chain) &&
+				transaction.chain !== transaction.common.baseChain
+			) {
+				throw new ChainMismatchError({
+					txChain: transaction.chain,
+					baseChain: transaction.common.baseChain,
+				});
+			}
+};
+export const validateHardfork = (transaction: InternalTransaction) => {
+	if (!isNullish(transaction.common))
+		if (!isNullish(transaction.common.hardfork))
+			if (
+				!isNullish(transaction.hardfork) &&
+				transaction.hardfork !== transaction.common.hardfork
+			) {
+				throw new HardforkMismatchError({
+					txHardfork: transaction.hardfork,
+					commonHardfork: transaction.common.hardfork,
+				});
+			}
 };
 
 export const validateLegacyGas = (transaction: InternalTransaction) => {
@@ -267,6 +294,8 @@ export const validateTransactionForSigning = (
 
 	validateCustomChainInfo(transaction);
 	validateChainInfo(transaction);
+	validateBaseChain(transaction);
+	validateHardfork(transaction);
 
 	const formattedTransaction = formatTransaction(transaction as Transaction, ETH_DATA_FORMAT);
 	validateGas(formattedTransaction);
