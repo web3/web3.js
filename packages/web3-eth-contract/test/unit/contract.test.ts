@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as eth from 'web3-eth';
-import { ValidChains } from 'web3-types';
+import { ValidChains, Hardfork } from 'web3-types';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -172,14 +172,12 @@ describe('Contract', () => {
 
 			const contract = new Contract(GreeterAbi);
 
-			const spyTx = jest
-				.spyOn(eth, 'sendTransaction')
-				.mockImplementation((_objInstance, _tx) => {
-					const newContract = contract.clone();
-					newContract.options.address = deployedAddr;
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
-				});
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
 
 			const spyEthCall = jest.spyOn(eth, 'call').mockImplementation((_objInstance, _tx) => {
 				expect(_tx.to).toStrictEqual(deployedAddr);
@@ -239,14 +237,52 @@ describe('Contract', () => {
 			contract.defaultHardfork = defaultHardfork;
 			expect(contract.defaultHardfork).toStrictEqual(defaultHardfork);
 
+			const baseChain = 'mainnet' as ValidChains;
+			contract.defaultChain = baseChain;
+			expect(contract.defaultChain).toBe(baseChain);
+
+			const defaultCommonDifferentHardfork = {
+				customChain: { name: 'testnet', networkId: '5678', chainId: '5634' },
+				baseChain,
+				hardfork: 'petersburg' as Hardfork,
+			};
+			expect(contract.defaultCommon).toBeUndefined();
+
+			// Test that defaultcommon will error when defaulthardfork is not matching
+			// Has to be wrapped in another function to check Error
+			expect(() => {
+				contract.defaultCommon = defaultCommonDifferentHardfork;
+			}).toThrow(
+				new Error(
+					'Web3Config hardfork doesnt match in defaultHardfork constantinople and common.hardfork petersburg',
+				),
+			);
+
+			expect(contract.defaultCommon).toBeUndefined();
+
+			// Should error when defaultCommon has different chain than defaultChain
+			const defaultCommonDifferentChain = {
+				customChain: { name: 'testnet', networkId: '5678', chainId: '5634' },
+				baseChain: 'sepolia' as ValidChains,
+				hardfork: 'constantinople' as Hardfork,
+			};
+			expect(() => {
+				contract.defaultCommon = defaultCommonDifferentChain;
+			}).toThrow(
+				new Error(
+					'Web3Config chain doesnt match in defaultHardfork mainnet and common.hardfork sepolia',
+				),
+			);
+
+			expect(contract.defaultCommon).toBeUndefined();
+
 			const defaultCommon = {
 				customChain: { name: 'testnet', networkId: '5678', chainId: '5634' },
 				baseChain: 'mainnet' as ValidChains,
-				hardFork: 'petersburg',
+				hardfork: 'constantinople' as Hardfork,
 			};
-			expect(contract.defaultCommon).toBeUndefined();
 			contract.defaultCommon = defaultCommon;
-			expect(contract.defaultCommon).toStrictEqual(defaultCommon); // TODO check if is being fixed in 5419, it should throw error as contract.defaultHardfork != contract.defaultCommon.hardfork
+			expect(contract.defaultCommon).toBe(defaultCommon);
 
 			const transactionBlockTimeout = 130;
 			expect(contract.transactionBlockTimeout).toBe(50);
@@ -328,14 +364,12 @@ describe('Contract', () => {
 		it('getPastEvents with filter should work', async () => {
 			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
 
-			const spyTx = jest
-				.spyOn(eth, 'sendTransaction')
-				.mockImplementation((_objInstance, _tx) => {
-					const newContract = contract.clone();
-					newContract.options.address = deployedAddr;
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
-				});
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
 
 			const spyGetLogs = jest
 				.spyOn(eth, 'getLogs')
@@ -371,14 +405,12 @@ describe('Contract', () => {
 		it('getPastEvents for all events should work', async () => {
 			const contract = new Contract<typeof GreeterAbi>(GreeterAbi);
 
-			const spyTx = jest
-				.spyOn(eth, 'sendTransaction')
-				.mockImplementation((_objInstance, _tx) => {
-					const newContract = contract.clone();
-					newContract.options.address = deployedAddr;
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
-				});
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
 
 			const spyGetLogs = jest
 				.spyOn(eth, 'getLogs')
@@ -414,14 +446,12 @@ describe('Contract', () => {
 				// {data: GreeterBytecode,} // TODO bug fix https://github.com/web3/web3.js/issues/5473 setting data via options causing this issue
 			);
 
-			const spyTx = jest
-				.spyOn(eth, 'sendTransaction')
-				.mockImplementation((_objInstance, _tx) => {
-					const newContract = contract.clone();
-					newContract.options.address = deployedAddr;
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
-				});
+			const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation(() => {
+				const newContract = contract.clone();
+				newContract.options.address = deployedAddr;
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return Promise.resolve(newContract) as any;
+			});
 
 			const spyEstimateGas = jest
 				.spyOn(eth, 'estimateGas')
@@ -451,7 +481,7 @@ describe('Contract', () => {
 			spyEstimateGas.mockClear();
 		});
 
-		it('contract method send without contract address should throw error', async () => {
+		it('contract method send without contract address should throw error', () => {
 			const arg = 'Hello';
 
 			const contract = new Contract(GreeterAbi);
@@ -461,7 +491,7 @@ describe('Contract', () => {
 			);
 		});
 
-		it('contract method send without from address should throw error', async () => {
+		it('contract method send without from address should throw error', () => {
 			const gas = '1000000';
 			const sendOptionsSpecial = { gas };
 			const arg = 'Hello';
