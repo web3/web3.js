@@ -780,10 +780,6 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Changed
 
-#### web3
-
--   `Web3` is now a default and named export (#5393)
-
 #### web3-core
 
 -   Default value for `API` generic for `Web3ContextObject` from `any` to `unknown` (#5393)
