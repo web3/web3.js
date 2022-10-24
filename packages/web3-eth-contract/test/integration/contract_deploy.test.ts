@@ -69,60 +69,72 @@ describe('contract', () => {
 				},
 			);
 
-			it('should return estimated gas of contract constructor', async () => {
-				const estimatedGas = await new Contract(GreeterAbi, undefined, {
-					provider: getSystemTestProvider(),
-				})
-					.deploy({
-						data: GreeterBytecode,
-						arguments: ['My Greeting'],
+			it.each(['0x1', '0x2'])(
+				'should return estimated gas of contract constructor %p',
+				async type => {
+					const estimatedGas = await new Contract(GreeterAbi, undefined, {
+						provider: getSystemTestProvider(),
 					})
-					.estimateGas({
-						type: '0x2',
-						from: acc.address,
-						gas: '1000000',
-					});
-				expect(Number(estimatedGas)).toBeGreaterThan(0);
-			});
-			it('should return estimated gas of contract constructor without arguments', async () => {
-				const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
-					provider: getSystemTestProvider(),
-				})
-					.deploy({
-						data: ERC721TokenBytecode,
-						arguments: [],
+						.deploy({
+							data: GreeterBytecode,
+							arguments: ['My Greeting'],
+						})
+						.estimateGas({
+							type,
+							from: acc.address,
+							gas: '1000000',
+						});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				},
+			);
+			it.each(['0x1', '0x2'])(
+				'should return estimated gas of contract constructor without arguments',
+				async type => {
+					const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
+						provider: getSystemTestProvider(),
 					})
-					.estimateGas({
-						type: '0x2',
-						from: acc.address,
-						gas: '10000000',
-					});
-				expect(Number(estimatedGas)).toBeGreaterThan(0);
-			});
-			it('should return estimated gas of contract method', async () => {
-				const tempAccount = await createTempAccount();
-				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+						.deploy({
+							data: ERC721TokenBytecode,
+							arguments: [],
+						})
+						.estimateGas({
+							type,
+							from: acc.address,
+							gas: '10000000',
+						});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				},
+			);
+			it.each(['0x1', '0x2'])(
+				'should return estimated gas of contract method',
+				async type => {
+					const tempAccount = await createTempAccount();
+					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
-				const estimatedGas = await contractDeployed.methods
-					.setGreeting('Hello')
-					.estimateGas({
-						type: '0x2',
+					const estimatedGas = await contractDeployed.methods
+						.setGreeting('Hello')
+						.estimateGas({
+							type,
+							gas: '1000000',
+							from: tempAccount.address,
+						});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				},
+			);
+			it.each(['0x1', '0x2'])(
+				'should return estimated gas of contract method without arguments',
+				async type => {
+					const tempAccount = await createTempAccount();
+					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+
+					const estimatedGas = await contractDeployed.methods.increment().estimateGas({
+						type,
 						gas: '1000000',
 						from: tempAccount.address,
 					});
-				expect(Number(estimatedGas)).toBeGreaterThan(0);
-			});
-			it('should return estimated gas of contract method without arguments', async () => {
-				const tempAccount = await createTempAccount();
-				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-
-				const estimatedGas = await contractDeployed.methods.increment().estimateGas({
-					type: '0x2',
-					gas: '1000000',
-					from: tempAccount.address,
-				});
-				expect(Number(estimatedGas)).toBeGreaterThan(0);
-			});
+					expect(Number(estimatedGas)).toBeGreaterThan(0);
+				},
+			);
 		});
 
 		it('should deploy the contract', async () => {
