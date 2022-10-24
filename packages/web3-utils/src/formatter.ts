@@ -78,12 +78,13 @@ const findSchemaByDataPath = (
 	oneOfPath: [string, number][] = [],
 ): JsonSchema | undefined => {
 	let result: JsonSchema = { ...schema } as JsonSchema;
+	let previousDataPath;
 
 	for (const dataPart of dataPath) {
-		if (result.oneOf && result.name) {
+		if (result.oneOf && previousDataPath) {
 			// eslint-disable-next-line no-loop-func
 			const path = oneOfPath.find((element: [string, number]) => element[0] === result.name);
-			if (path && path[0] === result.name) {
+			if (path && path[0] === previousDataPath) {
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 				result = result.oneOf[path[1]];
 			}
@@ -107,7 +108,8 @@ const findSchemaByDataPath = (
 		} else if (result.items && Array.isArray(result.items)) {
 			result = (result.items as JsonSchema[])[parseInt(dataPart, 10)];
 		}
-		result.name = dataPart;
+
+		if (result && dataPart) previousDataPath = dataPart;
 	}
 
 	return result;
