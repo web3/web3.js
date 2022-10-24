@@ -72,10 +72,22 @@ export type FormatType<T, F extends DataFormat> = number extends Extract<T, Numb
 	  }
 	: T;
 
-const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchema | undefined => {
+const findSchemaByDataPath = (
+	schema: JsonSchema,
+	dataPath: string[],
+	oneOfPath: [string, number][] = [],
+): JsonSchema | undefined => {
 	let result: JsonSchema = { ...schema } as JsonSchema;
 
 	for (const dataPart of dataPath) {
+		if (result.oneOf && result.name) {
+			// eslint-disable-next-line no-loop-func
+			const path = oneOfPath.find((element: [string, number]) => element[0] === result.name);
+			if (path && path[0] === result.name) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+				result = result.oneOf[path[1]];
+			}
+		}
 		if (!result.properties && !result.items) {
 			return undefined;
 		}
@@ -95,6 +107,7 @@ const findSchemaByDataPath = (schema: JsonSchema, dataPath: string[]): JsonSchem
 		} else if (result.items && Array.isArray(result.items)) {
 			result = (result.items as JsonSchema[])[parseInt(dataPart, 10)];
 		}
+		result.name = dataPart;
 	}
 
 	return result;
@@ -145,6 +158,7 @@ export const convert = (
 	schema: JsonSchema,
 	dataPath: string[],
 	format: DataFormat,
+	oneOfPath: [string, number][] = [],
 ) => {
 	// If it's a scalar value
 	if (!isObject(data) && !Array.isArray(data)) {
@@ -155,7 +169,7 @@ export const convert = (
 
 	for (const [key, value] of Object.entries(object)) {
 		dataPath.push(key);
-		const schemaProp = findSchemaByDataPath(schema, dataPath);
+		const schemaProp = findSchemaByDataPath(schema, dataPath, oneOfPath);
 
 		// If value is a scaler value
 		if (isNullish(schemaProp)) {
@@ -186,31 +200,19 @@ export const convert = (
 				// over each possible schema and check if they type of the schema
 				// matches the type of value[0], and if so we use the oneOfSchemaProp
 				// as the schema for formatting
-				for (const oneOfSchemaProp of schemaProp.oneOf) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+				schemaProp.oneOf.forEach((oneOfSchemaProp: JsonSchema, index: number) => {
 					if (
 						!Array.isArray(schemaProp?.items) &&
 						((typeof value[0] === 'object' &&
-							((oneOfSchemaProp as JsonSchema)?.items as JsonSchema)?.type ===
-								'object') ||
+							(oneOfSchemaProp?.items as JsonSchema)?.type === 'object') ||
 							(typeof value[0] === 'string' &&
-								((oneOfSchemaProp as JsonSchema)?.items as JsonSchema)?.type !==
-									'object'))
+								(oneOfSchemaProp?.items as JsonSchema)?.type !== 'object'))
 					) {
-						_schemaProp = oneOfSchemaProp as JsonSchema;
+						_schemaProp = oneOfSchemaProp;
+						oneOfPath.push([key, index]);
 					}
-				}
-
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-				const oneOfProperty = dataPath.slice(0, -1).reduce(
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
-					(xs, x) => (xs?.[x] ? xs[x] : xs),
-					schema.properties,
-				);
-
-				if (oneOfProperty) {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-					oneOfProperty[dataPath.at(-1) as string] = { ..._schemaProp };
-				}
+				});
 			}
 
 			if (isNullish(_schemaProp?.items)) {
@@ -247,6 +249,7 @@ export const convert = (
 						schema,
 						dataPath,
 						format,
+						oneOfPath,
 					);
 				}
 
