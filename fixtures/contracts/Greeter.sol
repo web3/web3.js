@@ -3,22 +3,29 @@
 pragma solidity ^0.8.13;
 
 contract Greeter {
-	string private greeting;
-	event GREETING_CHANGING(string from, string to);
-	event GREETING_CHANGED(string greeting);
+    uint256 counter;
+    string private greeting;
 
-	constructor(string memory _greeting) {
-		greeting = _greeting;
-	}
+    event GREETING_CHANGING(string from, string to);
+    event GREETING_CHANGED(string greeting);
 
-	function greet() public view returns (string memory) {
-		return greeting;
-	}
+    constructor(string memory _greeting) {
+        greeting = _greeting;
+        counter = 0;
+    }
 
-	function setGreeting(string memory _greeting) public returns (bool, string memory) {
-		emit GREETING_CHANGING(greeting, _greeting);
-		greeting = _greeting;
-		emit GREETING_CHANGED(greeting);
-		return (true, greeting);
-	}
+    function greet() public view returns (string memory) {
+        return greeting;
+    }
+
+    function setGreeting(string memory _greeting) public returns (bool, string memory) {
+        emit GREETING_CHANGING(greeting, _greeting);
+        greeting = _greeting;
+        emit GREETING_CHANGED(greeting);
+        return (true, greeting);
+    }
+
+    function increment() public {
+        counter = counter + 1;
+    }
 }
