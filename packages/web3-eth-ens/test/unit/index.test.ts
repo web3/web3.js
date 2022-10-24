@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -14,15 +14,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import * as ens from '../../src';
+import { registryAddresses } from '../../src';
 
-export const namehashValidData: [string, string][] = [
-	['', '0x0000000000000000000000000000000000000000000000000000000000000000'],
-	['eth', '0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae'],
-	['foo.eth', '0xde9b09fd7c5f901e23a3f19fecc54828e9c848539801e86591bd9801b019f84f'],
-];
-
-export const normalizeValidData: [string, string][] = [
-	['öbb.at', 'xn--bb-eka.at'],
-	['xn--bb-eka.at', 'xn--bb-eka.at'],
-	['XN--BB-EKA.AT', 'xn--bb-eka.at'],
-];
+describe('main package', () => {
+	it('should import', () => {
+		expect(registryAddresses).toBeDefined();
+		expect(ens.ENS).toBeDefined();
+	});
+});

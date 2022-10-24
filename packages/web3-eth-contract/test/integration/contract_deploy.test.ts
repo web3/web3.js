@@ -18,7 +18,14 @@ import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
-import { getSystemTestProvider, isWs, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	isWs,
+	createTempAccount,
+	createNewAccount,
+	signTxAndSendEIP2930,
+	signTxAndSendEIP1559,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	describe('deploy', () => {
@@ -26,7 +33,10 @@ describe('contract', () => {
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
 		let acc: { address: string; privateKey: string };
-
+		let pkAccount: { address: string; privateKey: string };
+		beforeAll(async () => {
+			pkAccount = await createNewAccount({ refill: true });
+		});
 		beforeEach(async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -40,6 +50,52 @@ describe('contract', () => {
 			};
 
 			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+		describe('local account', () => {
+			it.each([signTxAndSendEIP1559, signTxAndSendEIP2930])(
+				'should deploy the contract %p',
+				async signTxAndSend => {
+					const deployData = contract.deploy(deployOptions);
+
+					const res = await signTxAndSend(
+						contract.provider,
+						{
+							data: deployData.encodeABI(),
+						},
+						pkAccount.privateKey,
+					);
+					expect(Number(res.status)).toBe(1);
+				},
+			);
+
+			it.skip('should return estimated gas of contract constructor', async () => {
+				// @TODO: uncomment this after finish issue #5473
+				const estimatedGas = await new Contract(GreeterAbi, undefined, {
+					provider: getSystemTestProvider(),
+				})
+					.deploy({
+						data: GreeterBytecode,
+						arguments: ['My Greeting'],
+					})
+					.estimateGas({
+						from: acc.address,
+						gas: '10000000',
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract method', async () => {
+				const tempAccount = await createTempAccount();
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+
+				const estimatedGas = await contractDeployed.methods
+					.setGreeting('Hello')
+					.estimateGas({
+						type: '0x2',
+						gas: '1000000',
+						from: tempAccount.address,
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
 		});
 
 		it('should deploy the contract', async () => {

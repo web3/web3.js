@@ -592,24 +592,33 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public clone() {
 		if (this.options.address) {
-			return new Contract<Abi>(this._jsonInterface as unknown as Abi, this.options.address, {
+			return new Contract<Abi>(
+				this._jsonInterface as unknown as Abi,
+				this.options.address,
+				{
+					gas: this.options.gas,
+					gasPrice: this.options.gasPrice,
+					gasLimit: this.options.gasLimit,
+					from: this.options.from,
+					data: this.options.data,
+					provider: this.currentProvider,
+				},
+				this.getContextObject(),
+			);
+		}
+
+		return new Contract<Abi>(
+			this._jsonInterface as unknown as Abi,
+			{
 				gas: this.options.gas,
 				gasPrice: this.options.gasPrice,
 				gasLimit: this.options.gasLimit,
 				from: this.options.from,
 				data: this.options.data,
 				provider: this.currentProvider,
-			});
-		}
-
-		return new Contract<Abi>(this._jsonInterface as unknown as Abi, {
-			gas: this.options.gas,
-			gasPrice: this.options.gasPrice,
-			gasLimit: this.options.gasLimit,
-			from: this.options.from,
-			data: this.options.data,
-			provider: this.currentProvider,
-		});
+			},
+			this.getContextObject(),
+		);
 	}
 
 	/**
@@ -1081,7 +1090,6 @@ export class Contract<Abi extends ContractAbi>
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				newContract.options.address = receipt.contractAddress;
-
 				return newContract;
 			},
 		});

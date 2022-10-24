@@ -73,6 +73,12 @@ describe('validation', () => {
 					expect(isContractAddressInBloom(bloom, address)).toBeTruthy();
 				});
 			});
+
+			describe('invalid cases', () => {
+				it.each(invalidUserEthereumAddressInBloomData)('%s', (bloom, address) => {
+					expect(isContractAddressInBloom(bloom, address)).toBeFalsy();
+				});
+			});
 		});
 	});
 });
