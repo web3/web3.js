@@ -199,6 +199,18 @@ export const convert = (
 						_schemaProp = oneOfSchemaProp as JsonSchema;
 					}
 				}
+
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+				const oneOfProperty = dataPath.slice(0, -1).reduce(
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+					(xs, x) => (xs?.[x] ? xs[x] : xs),
+					schema.properties,
+				);
+
+				if (oneOfProperty) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+					oneOfProperty[dataPath.at(-1) as string] = { ..._schemaProp };
+				}
 			}
 
 			if (isNullish(_schemaProp?.items)) {
