@@ -37,13 +37,10 @@ describe('contract', () => {
 		let pkAccount: { address: string; privateKey: string };
 		beforeAll(async () => {
 			pkAccount = await createNewAccount({ refill: true });
-		});
-		beforeEach(async () => {
+			acc = await createTempAccount();
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
-
-			acc = await createTempAccount();
 
 			deployOptions = {
 				data: GreeterBytecode,
@@ -108,7 +105,6 @@ describe('contract', () => {
 			it.each(['0x1', '0x2'])(
 				'should return estimated gas of contract method',
 				async type => {
-					const tempAccount = await createTempAccount();
 					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 					const estimatedGas = await contractDeployed.methods
@@ -116,7 +112,7 @@ describe('contract', () => {
 						.estimateGas({
 							type,
 							gas: '1000000',
-							from: tempAccount.address,
+							from: acc.address,
 						});
 					expect(Number(estimatedGas)).toBeGreaterThan(0);
 				},
@@ -124,13 +120,12 @@ describe('contract', () => {
 			it.each(['0x1', '0x2'])(
 				'should return estimated gas of contract method without arguments',
 				async type => {
-					const tempAccount = await createTempAccount();
 					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 					const estimatedGas = await contractDeployed.methods.increment().estimateGas({
 						type,
 						gas: '1000000',
-						from: tempAccount.address,
+						from: acc.address,
 					});
 					expect(Number(estimatedGas)).toBeGreaterThan(0);
 				},
