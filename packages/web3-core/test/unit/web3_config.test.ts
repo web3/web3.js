@@ -28,7 +28,9 @@ const defaultConfig = {
 	defaultNetworkId: undefined,
 	defaultCommon: undefined,
 	defaultHardfork: 'london',
-	enableExperimentalFeatures: false,
+	enableExperimentalFeatures: {
+		useSubscriptionWhenCheckingBlockTimeout: false,
+	},
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,
 	transactionBlockTimeout: 50,

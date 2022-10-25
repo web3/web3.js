@@ -778,7 +778,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth
 
--   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `enableExperimentalFeatures` is `true`). (#5481)
+-   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `useSubscriptionWhenCheckingBlockTimeout` at `enableExperimentalFeatures` is `true`). (#5481)
 -   At some test cases, optimize some codes. (#5481)
 
 ### Fixed

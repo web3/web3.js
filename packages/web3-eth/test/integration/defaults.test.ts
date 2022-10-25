@@ -474,21 +474,27 @@ describe('defaults', () => {
 
 		it('enableExperimentalFeatures', () => {
 			// default
-			expect(web3Eth.enableExperimentalFeatures).toBe(false);
+			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
+				false,
+			);
 
 			// after set
 			web3Eth.setConfig({
-				enableExperimentalFeatures: true,
+				enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
 			});
-			expect(web3Eth.enableExperimentalFeatures).toBe(true);
+			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
+				true,
+			);
 
 			// set by create new instance
 			eth2 = new Web3Eth({
 				config: {
-					enableExperimentalFeatures: true,
+					enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
 				},
 			});
-			expect(eth2.enableExperimentalFeatures).toBe(true);
+			expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
+				true,
+			);
 		});
 
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
@@ -671,8 +677,8 @@ describe('defaults', () => {
 				const eth = new Web3Eth(clientUrl);
 
 				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
-				//	with `enableExperimentalFeatures` equal true.
-				eth.enableExperimentalFeatures = true;
+				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
+				eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
 
 				const tempAcc1 = await createTempAccount();
 				const tempAcc2 = await createTempAccount();

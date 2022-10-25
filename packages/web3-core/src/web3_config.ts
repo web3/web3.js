@@ -44,7 +44,10 @@ export interface Web3ConfigOptions {
 	defaultCommon?: Common;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
-	enableExperimentalFeatures: boolean;
+	enableExperimentalFeatures: {
+		useSubscriptionWhenCheckingBlockTimeout: boolean;
+		// other experimental features...
+	};
 	transactionBuilder?: TransactionBuilder;
 	transactionTypeParser?: TransactionTypeParser;
 }
@@ -81,7 +84,9 @@ export abstract class Web3Config
 		defaultCommon: undefined,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
-		enableExperimentalFeatures: false,
+		enableExperimentalFeatures: {
+			useSubscriptionWhenCheckingBlockTimeout: false,
+		},
 		transactionBuilder: undefined,
 		transactionTypeParser: undefined,
 	};
@@ -335,7 +340,7 @@ export abstract class Web3Config
 
 	/**
 	 * The enableExperimentalFeatures is used to enable trying new experimental features that is still not fully implemented or not fully tested or still has some related issues.
-	 * Default is `false`.
+	 * Default is `false` for every feature.
 	 */
 	public get enableExperimentalFeatures() {
 		return this._config.enableExperimentalFeatures;
