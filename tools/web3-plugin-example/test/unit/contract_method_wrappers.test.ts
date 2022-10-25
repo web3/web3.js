@@ -82,13 +82,13 @@ describe('CustomRpcMethodsPlugin Tests', () => {
 				'0xc41b9a4f654c44552e135f770945916f57c069b80326f9a5f843e613491ab6b1';
 
 			requestManagerSendSpy.mockResolvedValueOnce(expectedGasPrice);
-			// Not sure what's being mocked here
+			// Mocking block number for trySendTransaction call
 			requestManagerSendSpy.mockResolvedValueOnce('0x1');
 			requestManagerSendSpy.mockResolvedValueOnce(expectedTransactionHash);
-			// Not sure what's being mocked here
-			requestManagerSendSpy.mockResolvedValueOnce('0x42');
-			// Not sure what's being mocked here
-			requestManagerSendSpy.mockResolvedValueOnce('0x42');
+			// Mocking response for getTransactionReceipt for waitForTransactionReceipt
+			requestManagerSendSpy.mockResolvedValueOnce({});
+			// Mocking getBlockNumber for waitForTransactionReceipt
+			requestManagerSendSpy.mockResolvedValueOnce('0x2');
 			requestManagerSendSpy.mockResolvedValueOnce(expectedSenderBalance);
 			requestManagerSendSpy.mockResolvedValueOnce(expectedRecipientBalance);
 
