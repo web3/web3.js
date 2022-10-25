@@ -150,7 +150,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 
 There currently exists [an issue](https://github.com/web3/web3.js/issues/5492) with certain Web3.js packages not correctly linking their `Web3Context` with the context of the class the user has registered the plugin with. As mentioned in the issue, this can result in a bug where a plugin instantiates an instance of `Contract` (from `web3-eth-contract`) and attempts to call a method on the `Contract` instance (which uses the `requestManager` to make a call to the Ethereum provider), resulting in a [ProviderError](/api/web3-errors/class/ProviderError) even though the plugin user has set a provider and it should be available to the plugin.
 
-A workaround for this issue is available, below is an an example of it:
+A workaround for this issue is available, below is an example of it:
 
 ```typescript
 import { Web3Context, Web3PluginBase } from 'web3-core';
