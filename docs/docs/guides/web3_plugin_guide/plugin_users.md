@@ -62,7 +62,7 @@ web3.simplePlugin.simpleMethod();
 
 #### Why is `@ts-expect-error` Required
 
-`// @ts-expect-error Property 'simplePlugin' does not exist on type 'Web3'` is required in order for TypeScript to compile this code; This is due to the lack of module augmentation. `.simplePlugin` is not apart of the standard interface of the `Web3` class that TypeScript is made aware of when we import `Web3`. Module augmentation is us telling TypeScript,
+`// @ts-expect-error Property 'simplePlugin' does not exist on type 'Web3'` is required in order for TypeScript to compile this code; This is due to the lack of module augmentation. `.simplePlugin` is not a part of the standard interface of the `Web3` class that TypeScript is made aware of when we import `Web3`. Module augmentation is us telling TypeScript,
 
 _"Hey, we're modifying the `Web3` class interface to include the interface of `SimplePlugin`"_
 
