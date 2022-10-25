@@ -24,6 +24,7 @@ import {
 	ERR_OPERATION_ABORT,
 	ERR_OPERATION_TIMEOUT,
 	ERR_PARAM,
+	ERR_EXISTING_PLUGIN_NAMESPACE,
 } from '../error_codes';
 import { Web3Error } from '../web3_error_base';
 
@@ -66,4 +67,12 @@ export class OperationAbortError extends Web3Error {
 
 export class AbiError extends Web3Error {
 	public code = ERR_ABI_ENCODING;
+}
+
+export class ExistingPluginNamespaceError extends Web3Error {
+	public code = ERR_EXISTING_PLUGIN_NAMESPACE;
+
+	public constructor(pluginNamespace: string) {
+		super(`A plugin with the namespace: ${pluginNamespace} has already been registered.`);
+	}
 }

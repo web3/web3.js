@@ -13,6 +13,9 @@ Object {
     "defaultMaxPriorityFeePerGas": "0x9502f900",
     "defaultNetworkId": undefined,
     "defaultTransactionType": "0x0",
+    "enableExperimentalFeatures": Object {
+      "useSubscriptionWhenCheckingBlockTimeout": false,
+    },
     "handleRevert": false,
     "maxListenersWarningThreshold": 100,
     "transactionBlockTimeout": 50,

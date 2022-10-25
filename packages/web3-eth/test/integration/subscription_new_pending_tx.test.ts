@@ -39,6 +39,7 @@ describeIf(isWs)('subscription', () => {
 		providerWs = new WebSocketProvider(clientUrl);
 	});
 	afterAll(() => {
+		web3Eth.subscriptionManager?.clear();
 		providerWs.disconnect();
 	});
 
@@ -101,6 +102,9 @@ describeIf(isWs)('subscription', () => {
 						waitList = [];
 					}
 					if (times >= checkTxCount) {
+						sub.off('data', () => {
+							// no need to do anything
+						});
 						resolve();
 					}
 				})().catch(console.error);
@@ -109,14 +113,12 @@ describeIf(isWs)('subscription', () => {
 			for (const hash of txHashes) {
 				expect(receipts).toContain(hash);
 			}
-
-			await web3Eth.clearSubscriptions();
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
 			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(subName);
 			expect(sub.id).toBeDefined();
-			await web3Eth.clearSubscriptions();
+			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			expect(sub.id).toBeUndefined();
 		});
 	});

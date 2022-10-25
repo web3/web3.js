@@ -20,11 +20,10 @@ import { TransactionPollingTimeoutError } from 'web3-errors';
 import { EthExecutionAPI, Bytes, TransactionReceipt } from 'web3-types';
 import { DataFormat, rejectIfTimeout, pollTillDefined } from 'web3-utils';
 
-import { NUMBER_DATA_FORMAT } from '../constants';
 // eslint-disable-next-line import/no-cycle
 import { rejectIfBlockTimeout } from './reject_if_block_timeout';
 // eslint-disable-next-line import/no-cycle
-import { getBlockNumber, getTransactionReceipt } from '../rpc_method_wrappers';
+import { getTransactionReceipt } from '../rpc_method_wrappers';
 
 export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -34,7 +33,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 	const pollingInterval =
 		web3Context.transactionReceiptPollingInterval ?? web3Context.transactionPollingInterval;
 
-	const awaitableTransactionReceipt = pollTillDefined(async () => {
+	const awaitableTransactionReceipt: Promise<TransactionReceipt> = pollTillDefined(async () => {
 		try {
 			return getTransactionReceipt(web3Context, transactionHash, returnFormat);
 		} catch (error) {
@@ -43,7 +42,7 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}
 	}, pollingInterval);
 
-	const [timeoutId, rejectOnTimeout] = rejectIfTimeout(
+	const [timeoutId, rejectOnTimeout]: [NodeJS.Timer, Promise<never>] = rejectIfTimeout(
 		web3Context.transactionPollingTimeout,
 		new TransactionPollingTimeoutError({
 			numberOfSeconds: web3Context.transactionPollingTimeout / 1000,
@@ -51,22 +50,20 @@ export async function waitForTransactionReceipt<ReturnFormat extends DataFormat>
 		}),
 	);
 
-	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
-	const [intervalId, rejectOnBlockTimeout] = rejectIfBlockTimeout(
+	const [rejectOnBlockTimeout, blockTimeoutResourceCleaner] = await rejectIfBlockTimeout(
 		web3Context,
-		starterBlockNumber,
-		pollingInterval,
 		transactionHash,
 	);
 
 	try {
+		// If an error happened here, do not catch it, just clear the resources before raising it to the caller function.
 		return await Promise.race([
 			awaitableTransactionReceipt,
-			rejectOnTimeout,
-			rejectOnBlockTimeout,
+			rejectOnTimeout, // this will throw an error on Transaction Polling Timeout
+			rejectOnBlockTimeout, // this will throw an error on Transaction Block Timeout
 		]);
 	} finally {
 		clearTimeout(timeoutId);
-		clearInterval(intervalId);
+		blockTimeoutResourceCleaner.clean();
 	}
 }
