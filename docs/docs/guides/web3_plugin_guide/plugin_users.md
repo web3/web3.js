@@ -76,7 +76,7 @@ This section of the guide will delve deeper into setting up module augmentation,
 
 There exists a [limitation](https://github.com/web3/web3.js/pull/5393/#discussion_r1000727269) with TypeScript's module augmentation: it can only handle _named modules_. So that Web3.js stays backwards compatible, our most commonly used modules (e.g. `Web3`, `Web3Eth`, `Contract`) are exported as `default` exports and are not explicitly named as required by TypeScript for module augmentation. The workaround for this issue is to create a separate file within your project where you import the default module you wish to augment and re-export it as a named module:
 
-Re-exporting `Web3`, `Web3Context`, and `Web3Eth` as a named modules:
+Re-exporting `Web3`, `Web3Context`, and `Web3Eth` as named modules:
 
 ```typescript
 import Web3 from 'web3';
@@ -93,7 +93,7 @@ import Web3Eth from 'web3-eth';
 export { Web3Eth };
 ```
 
-The file that performs this re-exporting can be named whatever, but the sake of this guide, we'll be assuming the file is named `web3_export_helper.ts`.
+The file that performs this re-exporting can be named whatever, but for the sake of this guide, we'll be assuming the file is named `web3_export_helper.ts`.
 
 ### Re-declaring the Module
 
