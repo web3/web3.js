@@ -335,7 +335,7 @@ export abstract class Web3Config
 
 	/**
 	 * The enableExperimentalFeatures is used to enable trying new experimental features that is still not fully implemented or not fully tested or still has some related issues.
-	 * Default is `10` seconds.
+	 * Default is `false`.
 	 */
 	public get enableExperimentalFeatures() {
 		return this._config.enableExperimentalFeatures;
