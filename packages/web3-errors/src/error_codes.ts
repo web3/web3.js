@@ -153,4 +153,3 @@ export const ERR_VALIDATION = 1100;
 // Core error codes
 export const ERR_CORE_HARDFORK_MISMATCH = 1101;
 export const ERR_CORE_CHAIN_MISMATCH = 1102;
-
