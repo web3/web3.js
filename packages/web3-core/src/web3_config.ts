@@ -339,7 +339,7 @@ export abstract class Web3Config
 	}
 
 	/**
-	 * The enableExperimentalFeatures is used to enable trying new experimental features that is still not fully implemented or not fully tested or still has some related issues.
+	 * The enableExperimentalFeatures is used to enable trying new experimental features that are still not fully implemented or not fully tested or still have some related issues.
 	 * Default is `false` for every feature.
 	 */
 	public get enableExperimentalFeatures() {
