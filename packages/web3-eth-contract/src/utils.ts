@@ -95,12 +95,10 @@ export const getEthTxCallParams = ({
 		options as unknown as Record<string, unknown>,
 	) as unknown as TransactionCall;
 
-	if (!txParams.data) {
-		txParams = {
-			...txParams,
-			data: encodeMethodABI(abi, params, txParams.data),
-		};
-	}
+	txParams = {
+		...txParams,
+		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
+	};
 
 	return txParams;
 };
