@@ -39,10 +39,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   `Web3EthExecutionAPI` export (#5441)
--   `Web3NetAPI` export (#5441)
--   `EthPersonalAPI` export (#5441)
-
-### Changed
-
--   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
+-   Example plugin for wrapping contract methods to provide custom functionality (#5393)
+-   Example plugin for custom RPC methods using the `requestManager` (#5393)

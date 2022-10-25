@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+// eslint-disable-next-line max-classes-per-file
 import {
 	Web3APISpec,
 	Web3BaseWallet,
@@ -22,8 +22,11 @@ import {
 	Web3AccountProvider,
 	SupportedProviders,
 	HexString,
+	EthExecutionAPI,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
+import { ExistingPluginNamespaceError } from 'web3-errors';
+
 import { isSupportedProvider } from './utils';
 // eslint-disable-next-line import/no-cycle
 import { Web3Config, Web3ConfigEvent, Web3ConfigOptions } from './web3_config';
@@ -34,8 +37,7 @@ import { Web3BatchRequest } from './web3_batch_request';
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextObject<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,8 +54,7 @@ export type Web3ContextObject<
 };
 
 export type Web3ContextInitOptions<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,23 +69,22 @@ export type Web3ContextInitOptions<
 	wallet?: Web3BaseWallet<Web3BaseWalletAccount>;
 };
 
-export type Web3ContextConstructor<
-	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-	T extends Web3Context<any>,
-	T2 extends unknown[],
-> = new (...args: [...extras: T2, context: Web3ContextObject]) => T;
+// eslint-disable-next-line no-use-before-define
+export type Web3ContextConstructor<T extends Web3Context, T2 extends unknown[]> = new (
+	...args: [...extras: T2, context: Web3ContextObject]
+) => T;
 
 // To avoid circular dependencies, we need to export type from here.
 export type Web3ContextFactory<
-	// eslint-disable-next-line no-use-before-define, @typescript-eslint/no-explicit-any
-	T extends Web3Context<any>,
+	// eslint-disable-next-line no-use-before-define
+	T extends Web3Context,
 	T2 extends unknown[],
 > = Web3ContextConstructor<T, T2> & {
 	fromContextObject(this: Web3ContextConstructor<T, T2>, contextObject: Web3ContextObject): T;
 };
 
 export class Web3Context<
-	API extends Web3APISpec,
+	API extends Web3APISpec = unknown,
 	RegisteredSubs extends {
 		[key: string]: Web3SubscriptionConstructor<API>;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -172,7 +172,7 @@ export class Web3Context<
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public static fromContextObject<T extends Web3Context<any>, T3 extends unknown[]>(
+	public static fromContextObject<T extends Web3Context, T3 extends unknown[]>(
 		this: Web3ContextConstructor<T, T3>,
 		...args: [Web3ContextObject, ...T3]
 	) {
@@ -198,8 +198,7 @@ export class Web3Context<
 	 * and link it to current context. This can be used to initiate a global context object
 	 * and then use it to create new objects of any type extended by `Web3Context`.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	public use<T extends Web3Context<any>, T2 extends unknown[]>(
+	public use<T extends Web3Context, T2 extends unknown[]>(
 		ContextRef: Web3ContextConstructor<T, T2>,
 		...args: [...T2]
 	) {
@@ -218,7 +217,7 @@ export class Web3Context<
 	/**
 	 * Link current context to another context.
 	 */
-	public link<T extends Web3Context<API, RegisteredSubs>>(parentContext: T) {
+	public link<T extends Web3Context>(parentContext: T) {
 		this.setConfig(parentContext.getConfig());
 		this._requestManager = parentContext.requestManager;
 		this.provider = parentContext.provider;
@@ -230,6 +229,19 @@ export class Web3Context<
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			this.setConfig({ [event.name]: event.newValue });
 		});
+	}
+
+	// eslint-disable-next-line no-use-before-define
+	public registerPlugin(plugin: Web3PluginBase) {
+		// @ts-expect-error No index signature with a parameter of type 'string' was found on type 'Web3Context<API, RegisteredSubs>'
+		if (this[plugin.pluginNamespace] !== undefined)
+			throw new ExistingPluginNamespaceError(plugin.pluginNamespace);
+
+		const _pluginObject = {
+			[plugin.pluginNamespace]: plugin,
+		};
+		_pluginObject[plugin.pluginNamespace].link(this);
+		Object.assign(this, _pluginObject);
 	}
 
 	public get provider(): SupportedProviders<API> | string | undefined {
@@ -268,11 +280,52 @@ export class Web3Context<
 
 // To avoid cycle dependency declare this type in this file
 // TODO: When we have `web3-types` package we can share TransactionType
-export type TransactionBuilder<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	API extends Web3APISpec = any,
-> = <ReturnType = Record<string, unknown>>(options: {
+export type TransactionBuilder<API extends Web3APISpec = unknown> = <
+	ReturnType = Record<string, unknown>,
+>(options: {
 	transaction: Record<string, unknown>;
 	web3Context: Web3Context<API>;
 	privateKey?: HexString | Buffer;
 }) => Promise<ReturnType>;
+
+/**
+ * Extend this class when creating a plugin that either doesn't require {@link EthExecutionAPI},
+ * or interacts with a RPC node that doesn't fully implement {@link EthExecutionAPI}.
+ *
+ * To add type support for RPC methods to the {@link Web3RequestManager},
+ * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+ *
+ * ```ts
+ * type CustomRpcApi = {
+ *	custom_rpc_method: () => string;
+ *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+ * };
+ *
+ * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+ * ```
+ */
+export abstract class Web3PluginBase<
+	API extends Web3APISpec = Web3APISpec,
+> extends Web3Context<API> {
+	public abstract pluginNamespace: string;
+}
+
+/**
+ * Extend this class when creating a plugin that makes use of {@link EthExecutionAPI},
+ * or depends on other Web3 packages (such as `web3-eth-contract`) that depend on {@link EthExecutionAPI}.
+ *
+ * To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
+ * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
+ *
+ * ```ts
+ * type CustomRpcApi = {
+ *	custom_rpc_method: () => string;
+ *	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
+ * };
+ *
+ * class CustomPlugin extends Web3PluginBase<CustomRpcApi> {...}
+ * ```
+ */
+export abstract class Web3EthPluginBase<API extends Web3APISpec = unknown> extends Web3PluginBase<
+	API & EthExecutionAPI
+> {}

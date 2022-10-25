@@ -85,7 +85,7 @@ const maxNumberOfAttempts = 10;
 const intervalTime = 5000; // ms
 
 export const waitForOpenConnection = async (
-	web3Context: Web3Context<any>,
+	web3Context: Web3Context,
 	currentAttempt = 1,
 	status = 'connected',
 ) =>
@@ -110,7 +110,7 @@ export const waitForOpenConnection = async (
 		}, intervalTime);
 	});
 
-export const closeOpenConnection = async (web3Context: Web3Context<any>) => {
+export const closeOpenConnection = async (web3Context: Web3Context) => {
 	if (!isWs && !isIpc) {
 		return;
 	}
