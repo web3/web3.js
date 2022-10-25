@@ -38,15 +38,15 @@ describe('contract', () => {
 		beforeAll(async () => {
 			pkAccount = await createNewAccount({ refill: true });
 			acc = await createTempAccount();
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
-
+		});
+		beforeEach(() => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 		describe('local account', () => {
@@ -66,70 +66,54 @@ describe('contract', () => {
 				},
 			);
 
-			it.each(['0x1', '0x2'])(
-				'should return estimated gas of contract constructor %p',
-				async type => {
-					const estimatedGas = await new Contract(GreeterAbi, undefined, {
-						provider: getSystemTestProvider(),
+			it('should return estimated gas of contract constructor %p', async () => {
+				const estimatedGas = await new Contract(GreeterAbi, undefined, {
+					provider: getSystemTestProvider(),
+				})
+					.deploy({
+						data: GreeterBytecode,
+						arguments: ['My Greeting'],
 					})
-						.deploy({
-							data: GreeterBytecode,
-							arguments: ['My Greeting'],
-						})
-						.estimateGas({
-							type,
-							from: acc.address,
-							gas: '1000000',
-						});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				},
-			);
-			it.each(['0x1', '0x2'])(
-				'should return estimated gas of contract constructor without arguments',
-				async type => {
-					const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
-						provider: getSystemTestProvider(),
+					.estimateGas({
+						from: acc.address,
+						gas: '1000000',
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract constructor without arguments', async () => {
+				const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
+					provider: getSystemTestProvider(),
+				})
+					.deploy({
+						data: ERC721TokenBytecode,
+						arguments: [],
 					})
-						.deploy({
-							data: ERC721TokenBytecode,
-							arguments: [],
-						})
-						.estimateGas({
-							type,
-							from: acc.address,
-							gas: '10000000',
-						});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				},
-			);
-			it.each(['0x1', '0x2'])(
-				'should return estimated gas of contract method',
-				async type => {
-					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+					.estimateGas({
+						from: acc.address,
+						gas: '10000000',
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract method', async () => {
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
-					const estimatedGas = await contractDeployed.methods
-						.setGreeting('Hello')
-						.estimateGas({
-							type,
-							gas: '1000000',
-							from: acc.address,
-						});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				},
-			);
-			it.each(['0x1', '0x2'])(
-				'should return estimated gas of contract method without arguments',
-				async type => {
-					const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-
-					const estimatedGas = await contractDeployed.methods.increment().estimateGas({
-						type,
+				const estimatedGas = await contractDeployed.methods
+					.setGreeting('Hello')
+					.estimateGas({
 						gas: '1000000',
 						from: acc.address,
 					});
-					expect(Number(estimatedGas)).toBeGreaterThan(0);
-				},
-			);
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract method without arguments', async () => {
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+
+				const estimatedGas = await contractDeployed.methods.increment().estimateGas({
+					gas: '1000000',
+					from: acc.address,
+				});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
 		});
 
 		it('should deploy the contract', async () => {
