@@ -60,8 +60,7 @@ The following represents the plugin user's code:
 
 ```typescript
 // registering_a_plugin.ts
-import { Web3Context } from 'web3-core';
-
+import { Web3Context } from './web3_export_helper';
 import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
 
 declare module 'web3-core' {
@@ -99,8 +98,7 @@ Below is representing a plugin user's code that does not configure an Ethereum p
 
 ```typescript
 // registering_a_plugin.ts
-import { Web3Context } from 'web3-core';
-
+import { Web3Context } from './web3_export_helper';
 import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
 
 declare module 'web3-core' {

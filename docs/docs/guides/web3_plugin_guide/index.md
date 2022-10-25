@@ -11,7 +11,7 @@ In addition to the Web3.js standard libraries, plugins add specific functionalit
 
 ### Module Augmentation
 
-In order to provide typing support for the registered plugin, the plugin user must [augment the module](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) they're registering the plugin onto. In simpler terms, we must make TypeScript aware that we are modifying a module's (i.e. a package such as `web3` or `web3-eth`) interface with additional methods, properties, and/or classes. A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
+In order to provide typing support for the registered plugin, the plugin user must [augment the module](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) they're registering the plugin with. In simpler terms, we must make TypeScript aware that we are modifying a module's (i.e. a package such as `web3` or `web3-eth`) interface with additional methods, properties, and/or classes. A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
 
 The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends` `Web3Context` has the ability to add on the plugin's additional functionality to it's interface. Because of this, the burden of module augmentation falls on the plugin user as Web3.js and the plugin author are unaware of the module the end user is calling `registerPlugin` on.
 
@@ -47,7 +47,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 }
 ```
 
-In the below example, the end user is registering the above `CustomRpcMethodsPlugin` onto an instance of `Web3Context`:
+In the below example, the end user is registering the above `CustomRpcMethodsPlugin` with an instance of `Web3Context`:
 
 ```typescript
 // registering_a_plugin.ts
@@ -79,8 +79,8 @@ Now after augmenting the `Web3Context` interface from the `web3-core` module, we
 
 ##### `web3Context.customRpcMethods.customRpcMethod`
 
-![custom rpc method](./assets/custom_rpc_method.png "web3Context.customRpcMethods.customRpcMethod")
+![custom rpc method](./assets/custom_rpc_method.png 'web3Context.customRpcMethods.customRpcMethod')
 
 ##### `web3Context.customRpcMethods.customRpcMethodWithParameters`
 
-![custom rpc method with parameters](./assets/custom_rpc_method_with_parameters.png "web3Context.customRpcMethods.customRpcMethodWithParameters")
+![custom rpc method with parameters](./assets/custom_rpc_method_with_parameters.png 'web3Context.customRpcMethods.customRpcMethodWithParameters')
