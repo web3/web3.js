@@ -15,11 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 export const processAsync = async (
-	processFunc: (resolver: (value: unknown) => void) => Promise<unknown> | unknown,
+	processFunc: (
+		resolver: (value: unknown) => void,
+		reject: (value: unknown) => void,
+	) => Promise<unknown> | unknown,
 ) =>
-	new Promise(resolve => {
+	new Promise((resolve, reject) => {
 		(async () => {
-			await processFunc(resolve);
+			await processFunc(resolve, reject);
 		})() as unknown;
 	});
 

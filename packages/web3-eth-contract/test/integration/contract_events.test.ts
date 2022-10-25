@@ -55,10 +55,11 @@ describe('contract', () => {
 		itIf(isWs)('should trigger the "contract.events.<eventName>"', async () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			return expect(
-				processAsync(async resolve => {
+				processAsync(async (resolve, reject) => {
 					const event = contractDeployed.events.MultiValueEvent();
 
 					event.on('data', resolve);
+					event.on('error', reject);
 
 					// trigger event
 					await contractDeployed.methods
@@ -75,12 +76,13 @@ describe('contract', () => {
 		itIf(isWs)(
 			'should trigger the "contract.events.<eventName>" for indexed parameters',
 			async () => {
-				const res = await processAsync(async resolve => {
+				const res = await processAsync(async (resolve, reject) => {
 					const event = contractDeployed.events.MultiValueIndexedEvent({
 						filter: { val: 100 },
 					});
 
 					event.on('data', resolve);
+					event.on('error', reject);
 
 					// trigger event
 					await contractDeployed.methods
@@ -102,12 +104,13 @@ describe('contract', () => {
 			async () => {
 				// eslint-disable-next-line jest/no-standalone-expect
 				return expect(
-					processAsync(async resolve => {
+					processAsync(async (resolve, reject) => {
 						const event = contractDeployed.events.MultiValueEvent({
 							fromBlock: 'latest',
 						});
 
 						event.on('data', resolve);
+						event.on('error', reject);
 
 						// trigger event
 						await contractDeployed.methods
@@ -121,7 +124,9 @@ describe('contract', () => {
 				);
 			},
 		);
+	});
 
+	describe('events subscription with HTTP', () => {
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
 			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
