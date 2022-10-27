@@ -1,6 +1,6 @@
 # web3-eth-ens
 
-[![NPM Package][npm-image]][npm-url] 
+[![NPM Package][npm-image]][npm-url]
 
 This is a sub-package of [web3.js][repo].
 
@@ -10,10 +10,18 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth-ens) or using [Yarn](https://yarnpkg.com/package/web3-eth-ens)
+
+### Using NPM
 
 ```bash
 npm install web3-eth-ens
+```
+
+### Using Yarn
+
+```bash
+yarn add web3-eth-ens
 ```
 
 ## Usage
@@ -22,7 +30,7 @@ npm install web3-eth-ens
 const eth = new Web3Eth(web3.currentProvider);
 const ens = new EthEns(eth);
 
-ens.getAddress('ethereum.eth').then(function(result) {
+ens.getAddress("ethereum.eth").then(function (result) {
     console.log(result);
 });
 ```

@@ -1,25 +1,33 @@
 # web3-providers-ipc
 
-[![NPM Package][npm-image]][npm-url] 
+[![NPM Package][npm-image]][npm-url]
 This is an IPC provider sub-package for [web3.js][repo].
 
 Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-providers-ipc) or using [Yarn](https://yarnpkg.com/package/web3-providers-ipc)
+
+### Using NPM
 
 ```bash
 npm install web3-providers-ipc
 ```
 
+### Using Yarn
+
+```bash
+yarn add web3-providers-ipc
+```
+
 ## Usage
 
 ```js
-const Web3IpcProvider = require('web3-providers-ipc');
+const Web3IpcProvider = require("web3-providers-ipc");
 const net = require(net);
 
-const ipc = new Web3IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
+const ipc = new Web3IpcProvider("/Users/me/Library/Ethereum/geth.ipc", net);
 ```
 
 ## Types

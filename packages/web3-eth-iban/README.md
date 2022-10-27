@@ -1,6 +1,6 @@
 # web3-eth-iban
 
-[![NPM Package][npm-image]][npm-url] 
+[![NPM Package][npm-image]][npm-url]
 
 This is a sub package of [web3.js][repo]
 
@@ -10,19 +10,27 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth-iban) or using [Yarn](https://yarnpkg.com/package/web3-eth-iban)
+
+### Using NPM
 
 ```bash
 npm install web3-eth-iban
 ```
 
+### Using Yarn
+
+```bash
+yarn add web3-eth-iban
+```
+
 ## Usage
 
 ```js
-const Web3EthIban = require('web3-eth-iban');
+const Web3EthIban = require("web3-eth-iban");
 
-const iban = new Web3EthIban('XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3');
-iban.toAddress() > '0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B';
+const iban = new Web3EthIban("XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3");
+iban.toAddress() > "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B";
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
