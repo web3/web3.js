@@ -143,13 +143,6 @@ const config = {
 						label: 'GitHub',
 						position: 'right',
 					},
-
-					// Right
-					{
-						type: 'docsVersionDropdown',
-						position: 'right',
-						dropdownActiveClassDisabled: true,
-					},
 				],
 			},
 			footer: {
