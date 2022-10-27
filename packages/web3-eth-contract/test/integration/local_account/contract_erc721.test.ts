@@ -19,7 +19,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Web3Account } from 'web3-eth-accounts';
-import { utf8ToHex } from 'web3-utils';
 import { Contract, EventLog } from '../../../src';
 import { ERC721TokenAbi, ERC721TokenBytecode } from '../../shared_fixtures/build/ERC721Token';
 import { getSystemTestProvider, createLocalAccount } from '../../fixtures/system_test_utils';
@@ -117,7 +116,7 @@ describe('contract', () => {
 			expect(res.toString().toUpperCase()).toBe(toAccount.address.toUpperCase());
 
 			await contractDeployed.methods
-				.safeTransferFrom(tempAccount.address, toAccount.address, tokenId, utf8ToHex('1'))
+				.safeTransferFrom(tempAccount.address, toAccount.address, tokenId)
 				.send({
 					...sendOptions,
 					type,

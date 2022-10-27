@@ -63,7 +63,13 @@ import {
 	isDataFormat,
 	toChecksumAddress,
 } from 'web3-utils';
-import { isNullish, validator, utils as validatorUtils } from 'web3-validator';
+import {
+	isNullish,
+	validator,
+	utils as validatorUtils,
+	ValidationSchemaInput,
+	Web3ValidatorError,
+} from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import {
 	decodeEventABI,
@@ -256,10 +262,9 @@ export class Contract<Abi extends ContractAbi>
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			method: ContractBoundMethod<any>;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			cascadeFunction?: ContractBoundMethod<any>;
 		}
 	> = {};
-
+	private readonly _overloadedMethodAbis: Record<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
@@ -344,6 +349,8 @@ export class Contract<Abi extends ContractAbi>
 					: undefined,
 			registeredSubscriptions: contractSubscriptions,
 		});
+
+		this._overloadedMethodAbis = {};
 
 		// eslint-disable-next-line no-nested-ternary
 		const returnDataFormat = isDataFormat(contextOrReturnFormat)
@@ -905,16 +912,23 @@ export class Contract<Abi extends ContractAbi>
 
 				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
 
+				const contractMethod = this._createContractMethod(abi, errorsAbi);
+
+				if (!this._overloadedMethodAbis[abi.name]) {
+					this._overloadedMethodAbis[abi.name] = [];
+				}
+
+				this._overloadedMethodAbis[abi.name].push(abi);
+
 				if (methodName in this._functions) {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi, errorsAbi),
-						cascadeFunction: this._functions[methodName].method,
+						method: contractMethod,
 					};
 				} else {
 					this._functions[methodName] = {
 						signature: methodSignature,
-						method: this._createContractMethod(abi, errorsAbi),
+						method: contractMethod,
 					};
 				}
 
@@ -961,31 +975,77 @@ export class Contract<Abi extends ContractAbi>
 	): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
+			let methodAbi: AbiFunctionFragment = this._overloadedMethodAbis[abi.name][0];
+			if (this._overloadedMethodAbis[abi.name].length === 1) {
+				try {
+					abiParams = validatorUtils.transformJsonDataToAbiFormat(
+						methodAbi.inputs ?? [],
+						params,
+					);
+				} catch (error) {
+					throw new Web3ContractError(
+						`Invalid parameters for method ${methodAbi.name}: ${
+							(error as Error).message
+						}`,
+					);
+				}
+				validator.validate(abi.inputs ?? [], abiParams);
+			} else {
+				const arrayOfAbis: AbiFunctionFragment[] = this._overloadedMethodAbis[
+					abi.name
+				].filter(_abi => (_abi.inputs ?? []).length === params.length);
 
-			try {
-				abiParams = validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
-			} catch (error) {
-				throw new Web3ContractError(
-					`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
-				);
+				const errors: Web3ValidatorError[] = [];
+
+				for (const _abi of arrayOfAbis) {
+					try {
+						try {
+							abiParams = validatorUtils.transformJsonDataToAbiFormat(
+								_abi.inputs ?? [],
+								params,
+							);
+						} catch (error) {
+							throw new Web3ContractError(
+								`Invalid parameters for method ${_abi.name}: ${
+									(error as Error).message
+								}`,
+							);
+						}
+						validator.validate(
+							_abi.inputs as unknown as ValidationSchemaInput,
+							abiParams,
+						);
+						methodAbi = _abi;
+						break;
+					} catch (e) {
+						errors.push(e as Web3ValidatorError);
+					}
+				}
+				if (errors.length === arrayOfAbis.length) {
+					throw new Error(errors[0].message);
+				}
 			}
 
-			validator.validate(abi.inputs ?? [], abiParams);
-
-			if (abi.stateMutability === 'payable' || abi.stateMutability === 'pure') {
+			if (methodAbi.stateMutability === 'payable' || methodAbi.stateMutability === 'pure') {
 				return {
 					arguments: params,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodCall(abi, params, errorsAbis, options, block),
+						this._contractMethodCall(methodAbi, params, errorsAbis, options, block),
 					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(abi, params, options), // TODO: refactor to parse errorsAbi
+						this._contractMethodSend(methodAbi, params, options), // TODO: refactor to parse errorsAbi
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
 						options?: PayableCallOptions,
 						returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-					) => this._contractMethodEstimateGas({ abi, params, returnFormat, options }),
-					encodeABI: () => encodeMethodABI(abi, params),
+					) =>
+						this._contractMethodEstimateGas({
+							abi: methodAbi,
+							params,
+							returnFormat,
+							options,
+						}),
+					encodeABI: () => encodeMethodABI(methodAbi, params),
 				} as unknown as PayableMethodObject<
 					ContractMethod<T>['Inputs'],
 					ContractMethod<T>['Outputs']
@@ -995,14 +1055,20 @@ export class Contract<Abi extends ContractAbi>
 			return {
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
-					this._contractMethodCall(abi, params, errorsAbis, options, block),
+					this._contractMethodCall(methodAbi, params, errorsAbis, options, block),
 				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(abi, params, options), // TODO: refactor to parse errorsAbi
+					this._contractMethodSend(methodAbi, params, options), // TODO: refactor to parse errorsAbi
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-				) => this._contractMethodEstimateGas({ abi, params, returnFormat, options }),
-				encodeABI: () => encodeMethodABI(abi, params),
+				) =>
+					this._contractMethodEstimateGas({
+						abi: methodAbi,
+						params,
+						returnFormat,
+						options,
+					}),
+				encodeABI: () => encodeMethodABI(methodAbi, params),
 			} as unknown as NonPayableMethodObject<
 				ContractMethod<T>['Inputs'],
 				ContractMethod<T>['Outputs']
