@@ -7,7 +7,7 @@ sidebar_label: web3.eth.subscribe
 
 ## Breaking Changes
 
-### clearSubscriptions
+### web3.eth.clearSubscriptions
 
 In 1.x, `web3.eth.clearSubscriptions` returns `true`.
 

@@ -92,7 +92,7 @@ export interface HttpHeader {
 ```
 
 In 4.x, the options is of type `HttpProviderOptions`, which is an object with a `providerOptions` key and value a `RequestInit` object.
-Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html)
+Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html).
 
 For example:
 
@@ -162,7 +162,7 @@ export interface ReconnectOptions {
 ```
 
 In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See
-Regarding `RequestInit` see [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`
+Regarding `RequestInit` see [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
 In 4.x a second option parameter can be given regarding reconnecting.
 

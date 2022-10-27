@@ -1,9 +1,9 @@
 ---
 sidebar_position: 10
-sidebar_label: Web3.utils
+sidebar_label: web3.utils
 ---
 
-# Web3 Utils Migration Guide
+# web3 Utils Migration Guide
 
 ## Import
 

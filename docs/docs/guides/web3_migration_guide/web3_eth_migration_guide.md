@@ -7,7 +7,7 @@ sidebar_label: web3.eth
 
 ## Breaking Changes
 
-All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x
+All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x.
 
 ### Return Values
 
@@ -138,7 +138,7 @@ All the API level interfaces returning or accepting `null` in 1.x, use `undefine
 
 #### web3.eth.getHashrate
 
-`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`
+`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`.
 
 #### web3.eth.getFeeHistory
 
@@ -164,8 +164,8 @@ await web3.eth.getFeeHistory('0x1', 'latest', []);
 
 #### web3.eth.sendTransaction
 
--   `userTransactionObject.chain` no longer defaults to `mainnet`, will be `undefined` if not provided
--   `userTransactionObject.hardfork` no longer defaults to `london`, will be `undefined` if not provided
+-   `userTransactionObject.chain` no longer defaults to `"mainnet"`, will be `undefined` if not provided
+-   `userTransactionObject.hardfork` no longer defaults to `"london"`, will be `undefined` if not provided
 
 ### PromiEvents
 
@@ -369,7 +369,7 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
 
 ### web3.eth.sign
 
--   To-be-signed data must be provided as a Hex String
+-   To-be-signed data must be provided as a `Hex String`
 
 ```typescript
 // In 1.x, data can be provided as both a UTF-8 string and a hex string
@@ -393,7 +393,7 @@ await web3.eth.sign(
 
 -   In 1.x, for untyped, `0x0` and `0x1` typed transactions, `maxPriorityFeePerGas` and `maxFeePerGas` are set to `null`. For `0x2` typed transactions, `gasPrice` is set to `null`. In 4.x these properties are not present unless provided
 -   In 1.x contract deployment data is provided via the `input` property, while in 4.x it is provided using the `data` property
--   In 1.x the hash of the transaction is included in the returned transaction object, while in 4.x it's not
+-   In 1.x the hash of the transaction is included in the returned `transaction` object, while in 4.x it's not
 
 ```typescript
 // In 1.x - Legacy (type 0x0) transaction
@@ -571,7 +571,7 @@ await web3.eth
 
 ### web3.eth.getChainId
 
-Returns a `BigInt` instead of a number string
+Returns a `BigInt` instead of a number string.
 
 ```typescript
 // in 1.x
