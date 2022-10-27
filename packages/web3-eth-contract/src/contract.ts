@@ -69,6 +69,7 @@ import {
 	utils as validatorUtils,
 	ValidationSchemaInput,
 	Web3ValidatorError,
+	Web3ValidationErrorObject,
 } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
 import {
@@ -893,6 +894,7 @@ export class Contract<Abi extends ContractAbi>
 		const errorsAbi = abis.filter(abi =>
 			isAbiErrorFragment(abi),
 		) as unknown as AbiErrorFragment[];
+
 		for (const a of functionsAbi) {
 			const abi: Mutable<AbiFragment & { signature: HexString }> = {
 				...a,
@@ -971,49 +973,38 @@ export class Contract<Abi extends ContractAbi>
 		this._jsonInterface = [...result] as unknown as ContractAbiWithSignature;
 	}
 
+	// eslint-disable-next-line class-methods-use-this
+	private _getAbiParams(abi: AbiFunctionFragment, params: unknown[]): Array<unknown> {
+		try {
+			return validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
+		} catch (error) {
+			throw new Web3ContractError(
+				`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
+			);
+		}
+	}
 	private _createContractMethod<T extends AbiFunctionFragment, E extends AbiErrorFragment>(
 		abi: T,
 		errorsAbis: E[],
 	): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
-			const abis = this._overloadedMethodAbis.get(abi.name)!;
+			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
 			let methodAbi: AbiFunctionFragment = abis[0];
-			if (abis.length === 1) {
-				try {
-					abiParams = validatorUtils.transformJsonDataToAbiFormat(
-						methodAbi.inputs ?? [],
-						params,
-					);
-				} catch (error) {
-					throw new Web3ContractError(
-						`Invalid parameters for method ${methodAbi.name}: ${
-							(error as Error).message
-						}`,
-					);
-				}
+
+			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
+				_abi => (_abi.inputs ?? []).length === params.length,
+			);
+
+			if (abis.length === 1 || arrayOfAbis.length === 0) {
+				abiParams = this._getAbiParams(methodAbi, params);
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
-				const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
-					_abi => (_abi.inputs ?? []).length === params.length,
-				);
-
-				const errors: Web3ValidatorError[] = [];
+				const errors: Web3ValidationErrorObject[] = [];
 
 				for (const _abi of arrayOfAbis) {
 					try {
-						try {
-							abiParams = validatorUtils.transformJsonDataToAbiFormat(
-								_abi.inputs ?? [],
-								params,
-							);
-						} catch (error) {
-							throw new Web3ContractError(
-								`Invalid parameters for method ${_abi.name}: ${
-									(error as Error).message
-								}`,
-							);
-						}
+						abiParams = this._getAbiParams(_abi, params);
 						validator.validate(
 							_abi.inputs as unknown as ValidationSchemaInput,
 							abiParams,
@@ -1021,11 +1012,11 @@ export class Contract<Abi extends ContractAbi>
 						methodAbi = _abi;
 						break;
 					} catch (e) {
-						errors.push(e as Web3ValidatorError);
+						errors.push(e as Web3ValidationErrorObject);
 					}
 				}
 				if (errors.length === arrayOfAbis.length) {
-					throw new Error(errors[0].message);
+					throw new Web3ValidatorError(errors);
 				}
 			}
 
