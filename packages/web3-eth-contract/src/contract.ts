@@ -264,7 +264,7 @@ export class Contract<Abi extends ContractAbi>
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		}
 	> = {};
-	private readonly _overloadedMethodAbis: Record<string, AbiFunctionFragment[]>;
+	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
@@ -350,7 +350,7 @@ export class Contract<Abi extends ContractAbi>
 			registeredSubscriptions: contractSubscriptions,
 		});
 
-		this._overloadedMethodAbis = {};
+		this._overloadedMethodAbis = new Map<string, AbiFunctionFragment[]>();
 
 		// eslint-disable-next-line no-nested-ternary
 		const returnDataFormat = isDataFormat(contextOrReturnFormat)
@@ -914,11 +914,13 @@ export class Contract<Abi extends ContractAbi>
 
 				const contractMethod = this._createContractMethod(abi, errorsAbi);
 
-				if (!this._overloadedMethodAbis[abi.name]) {
-					this._overloadedMethodAbis[abi.name] = [];
+				if (!this._overloadedMethodAbis.get(abi.name)) {
+					this._overloadedMethodAbis.set(abi.name, []);
 				}
-
-				this._overloadedMethodAbis[abi.name].push(abi);
+				this._overloadedMethodAbis.set(abi.name, [
+					...(this._overloadedMethodAbis.get(abi.name) ?? []),
+					abi,
+				]);
 
 				if (methodName in this._functions) {
 					this._functions[methodName] = {
@@ -975,8 +977,9 @@ export class Contract<Abi extends ContractAbi>
 	): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
-			let methodAbi: AbiFunctionFragment = this._overloadedMethodAbis[abi.name][0];
-			if (this._overloadedMethodAbis[abi.name].length === 1) {
+			const abis = this._overloadedMethodAbis.get(abi.name)!;
+			let methodAbi: AbiFunctionFragment = abis[0];
+			if (abis.length === 1) {
 				try {
 					abiParams = validatorUtils.transformJsonDataToAbiFormat(
 						methodAbi.inputs ?? [],
@@ -991,9 +994,9 @@ export class Contract<Abi extends ContractAbi>
 				}
 				validator.validate(abi.inputs ?? [], abiParams);
 			} else {
-				const arrayOfAbis: AbiFunctionFragment[] = this._overloadedMethodAbis[
-					abi.name
-				].filter(_abi => (_abi.inputs ?? []).length === params.length);
+				const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
+					_abi => (_abi.inputs ?? []).length === params.length,
+				);
 
 				const errors: Web3ValidatorError[] = [];
 
