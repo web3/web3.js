@@ -99,6 +99,7 @@ describe('contract ERC721 overloaded functions', () => {
 			),
 		).toBe(toUpperCaseHex(toAccount.address));
 	});
+
 	it('transferFrom with 3 invalid arguments', () => {
 		expect(() =>
 			contractDeployed.methods
@@ -106,6 +107,7 @@ describe('contract ERC721 overloaded functions', () => {
 				.safeTransferFrom(1, 2, 3),
 		).toThrow('Web3 validator');
 	});
+
 	it('transferFrom with 2 arguments', () => {
 		expect(() =>
 			// @ts-expect-error-next-line
