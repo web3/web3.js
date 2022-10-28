@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-eth-tx-utils` contains utility functions for Web3.js ETH transactions.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth-tx-utils) or using [Yarn](https://yarnpkg.com/package/web3-eth-tx-utils)
+
+### Using NPM
+
+```bash
+npm install web3-eth-tx-utils
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-eth-tx-utils

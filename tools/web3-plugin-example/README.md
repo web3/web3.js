@@ -12,7 +12,17 @@
 
 This is an example of a plugin implementation for [web3.js](https://github.com/ChainSafe/web3.js).
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-plugin-example) or using [Yarn](https://yarnpkg.com/package/web3-plugin-example)
+
+### Using NPM
+
+```bash
+npm install web3-plugin-example
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-plugin-example

@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-types` contains the common data structures and interfaces used in [web3.js][repo].
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-types) or using [Yarn](https://yarnpkg.com/package/web3-types)
+
+### Using NPM
+
+```bash
+npm install web3-types
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-types

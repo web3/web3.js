@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-net` package allows to interact with an Ethereum node’s network properties.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-net) or using [Yarn](https://yarnpkg.com/package/web3-net)
+
+### Using NPM
+
+```bash
+npm install web3-net
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-net
