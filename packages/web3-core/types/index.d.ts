@@ -242,6 +242,7 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+    removed: boolean;
 }
 
 // had to move `web3-net` due to other modules in `1.x` not referencing
