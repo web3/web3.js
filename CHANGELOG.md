@@ -608,6 +608,7 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 -  Fixed types for getPastEvents (#4955) (#5260)
+-  Fix Log type by adding missing `removed` property (#4877)
 
 ### Changed
 
