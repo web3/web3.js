@@ -98,7 +98,11 @@ export class Web3Validator {
 			]);
 		}
 
-		if (!this._validator.validate(jsonSchema, data)) {
+		const schemaKey = JSON.stringify(jsonSchema);
+		if (!this._validator.getSchema(schemaKey)) {
+			this._validator.addSchema(jsonSchema, schemaKey);
+		}
+		if (!this._validator.validate(schemaKey, data)) {
 			const errors = this._validator.errors as Web3ValidationErrorObject[];
 
 			if (options?.silent) {
