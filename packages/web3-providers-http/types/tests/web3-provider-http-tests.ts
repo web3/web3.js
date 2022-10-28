@@ -35,7 +35,6 @@ const httpProvider = new HttpProvider('http://localhost:8545', {
     ],
     withCredentials: false,
     agent: {
-        baseUrl: 'base',
         http: new http.Agent({}),
         https: new https.Agent({})
     }

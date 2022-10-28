@@ -81,7 +81,19 @@ var tests = [{
     result: proof,
     formattedResult: formattedProof,
     call: call
-}
+}, {
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', [0xb], 'safe'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', ['0xb'], 'safe'],
+    result: proof,
+    formattedResult: formattedProof,
+    call: call
+},  {
+    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', [0xb], 'finalized'],
+    formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', ['0xb'], 'finalized'],
+    result: proof,
+    formattedResult: formattedProof,
+    call: call
+}, 
 // TODO: Fixing of test.method.js cloning of the arguments does destroy the BN object. Manually calling of utils.numberToHex with new BN('11'); does work.
 // ,  {
 //     args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', [new BN('11')], 'latest'],

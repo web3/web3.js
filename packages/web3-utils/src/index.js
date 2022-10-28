@@ -173,7 +173,7 @@ var hexToAscii = function(hex) {
         i = 2;
     }
     for (; i < l; i+=2) {
-        var code = parseInt(hex.substr(i, 2), 16);
+        var code = parseInt(hex.slice(i, i + 2), 16);
         str += String.fromCharCode(code);
     }
 
@@ -318,7 +318,7 @@ var toChecksumAddress = function (address) {
  * Returns -1 if a<b, 1 if a>b; 0 if a == b.
  * For more details on this type of function, see
  * developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
- *
+ * Block tag `safe` and `block number` combination param is not supported
  * @method compareBlockNumbers
  *
  * @param {String|Number|BN} a
@@ -328,36 +328,42 @@ var toChecksumAddress = function (address) {
  * @returns {Number} -1, 0, or 1
  */
 var compareBlockNumbers = function(a, b) {
-    if (a == b) {
+    // Increasing order: (genesis = earliest), safe, (finalized ~ latest), pending
+    // safe vs block-num cant be compared as block number provided can be on left or right side of safe tag, until safe tag block number is extracted and compared
+    if (a === b) {
         return 0;
-    } else if (("genesis" == a || "earliest" == a || 0 == a) && ("genesis" == b || "earliest" ==  b || 0 == b)) {
+    } else if (("genesis" === a || "earliest" === a || 0 === a) && ("genesis" === b || "earliest" ===  b || 0 === b)) {
         return 0;
-    } else if ("genesis" == a || "earliest" == a) {
+    } else if ("genesis" === a || "earliest" === a || a === 0) {
         // b !== a, thus a < b
         return -1;
-    } else if ("genesis" == b || "earliest" == b) {
+    } else if ("genesis" === b || "earliest" === b || b === 0) {
         // b !== a, thus a > b
         return 1;
-    } else if (a == "latest") {
-        if (b == "pending") {
+    } else if (a === "latest" || a === "finalized") {
+        if (b === "pending") {
             return -1;
         } else {
             // b !== ("pending" OR "latest"), thus a > b
             return 1;
         }
-    } else if (b === "latest") {
-        if (a == "pending") {
+    } else if (b === "latest" || b === "finalized") {
+        if (a === "pending") {
             return 1;
         } else {
             // b !== ("pending" OR "latest"), thus a > b
-            return -1 
+            return -1
         }
-    } else if (a == "pending") {
+    } else if (a === "pending") {
         // b (== OR <) "latest", thus a > b
         return 1;
-    } else if (b == "pending") {
+    } else if (b === "pending") {
         return -1;
-    } else {
+    } else if(a === "safe" || b === "safe") {
+        // either a or b is "safe" and the other one did not fall into any of the conditions above, so the other one is a number
+        return undefined;
+    }
+    else {
         let bnA = new BN(a);
         let bnB = new BN(b);
         if(bnA.lt(bnB)) {

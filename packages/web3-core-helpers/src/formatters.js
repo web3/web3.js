@@ -71,7 +71,7 @@ var outputBigNumberFormatter = function (number) {
 };
 
 /**
- * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ * Returns true if the given blockNumber is 'latest', 'pending', 'earliest, 'finalized' or 'safe'
  *
  * @method isPredefinedBlockNumber
  *
@@ -80,7 +80,7 @@ var outputBigNumberFormatter = function (number) {
  * @returns {Boolean}
  */
 var isPredefinedBlockNumber = function (blockNumber) {
-    return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
+    return ['latest','pending','earliest','finalized','safe'].includes(blockNumber);
 };
 
 /**
@@ -101,7 +101,7 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
 };
 
 /**
- * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'genesis'
+ * Returns the given block number as hex string or the predefined block number 'latest', 'pending', 'earliest', 'finalized', 'safe', 'genesis'
  *
  * @param {String|Number|BN|BigNumber} blockNumber
  *
@@ -157,7 +157,7 @@ var _txInputFormatter = function (options) {
     if (options.gas || options.gasLimit) {
         options.gas = options.gas || options.gasLimit;
     }
-    
+
     if (options.maxPriorityFeePerGas || options.maxFeePerGas) {
         delete options.gasPrice;
     }
@@ -277,20 +277,21 @@ var outputTransactionReceiptFormatter = function (receipt) {
         throw new Error('Received receipt is invalid: ' + receipt);
     }
 
-    if (receipt.blockNumber !== null)
-        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
-    if (receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
-
+    if(!this.hexFormat){
+        if (receipt.blockNumber !== null)
+            receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
+        if (receipt.transactionIndex !== null)
+            receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
+        receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
+        receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+        if (receipt.effectiveGasPrice) {
+            receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
+        }
+    }
     if (Array.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
-    if (receipt.effectiveGasPrice) {
-        receipt.effectiveGasPrice = utils.hexToNumber(receipt.effectiveGasPrice)
-    }
     if (receipt.contractAddress) {
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
@@ -402,7 +403,7 @@ var outputLogFormatter = function (log) {
         typeof log.transactionHash === 'string' &&
         typeof log.logIndex === 'string') {
         var shaId = utils.sha3(log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', ''));
-        log.id = 'log_' + shaId.replace('0x', '').substr(0, 8);
+        log.id = 'log_' + shaId.replace('0x', '').slice(0, 8);
     } else if (!log.id) {
         log.id = null;
     }

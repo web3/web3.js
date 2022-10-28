@@ -105,4 +105,36 @@ describe('InputLogFormatterTest', function() {
             address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         });
     });
+
+    it('call inputLogFormatter with a valid log and safe tag toBlock', function() {
+        var log = {
+            fromBlock: 'earliest',
+            toBlock: 'safe',
+            topics: ['0x0'],
+            address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
+        };
+
+        assert.deepEqual(formatters.inputLogFormatter(log), {
+            fromBlock: 'earliest',
+            toBlock: 'safe',
+            topics: ['0x0'],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        });
+    });
+
+    it('call inputLogFormatter with a valid log and finalized tag toBlock', function() {
+        var log = {
+            fromBlock: 'earliest',
+            toBlock: 'finalized',
+            topics: ['0x0'],
+            address: '0x03C9A938fF7f54090d0d99e2c6f80380510Ea078'
+        };
+
+        assert.deepEqual(formatters.inputLogFormatter(log), {
+            fromBlock: 'earliest',
+            toBlock: 'finalized',
+            topics: ['0x0'],
+            address: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
+        });
+    });
 });

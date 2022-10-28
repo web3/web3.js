@@ -455,7 +455,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                                                 to: parsedTx.to,
                                                 from: parsedTx.from,
                                                 gas: parsedTx.gasLimit.toHexString(),
-                                                gasPrice: parsedTx.gasPrice.toHexString(),
+                                                gasPrice: parsedTx.gasPrice ? parsedTx.gasPrice.toHexString() : undefined,
                                                 value: parsedTx.value.toHexString()
                                             });
                                         }
@@ -630,9 +630,16 @@ Method.prototype.buildCall = function () {
 
     // actual send function
     var send = function () {
-        var defer = promiEvent(!isSendTx),
-            payload = method.toPayload(Array.prototype.slice.call(arguments));
 
+        let args = Array.prototype.slice.call(arguments);
+
+        var defer = promiEvent(!isSendTx),
+            payload = method.toPayload(args);
+
+        method.hexFormat = false;
+        if(method.call === 'eth_getTransactionReceipt'){
+            method.hexFormat = (payload.params.length  < args.length && args[args.length - 1] === 'hex')
+        }
         // CALLBACK function
         var sendTxCallback = function (err, result) {
             if (method.handleRevert && isCall && method.abiCoder) {

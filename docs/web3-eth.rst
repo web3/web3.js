@@ -191,6 +191,8 @@ Default block parameters can be one of the following:
 - ``"earliest"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+- ``"finalized"`` - ``String``: (For POS networks) The finalized block is one which has been accepted as canonical by >2/3 of validators. 
+- ``"safe"`` - ``String``: (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work networks latest blocks.
 
 Default is ``"latest"``
 
@@ -884,7 +886,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the balance of.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -925,7 +927,7 @@ Parameters
 
 1. ``String`` - The address to get the storage from.
 2. ``Number|String|BN|BigNumber`` - The index position of the storage.
-3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+3. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -963,7 +965,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the code from.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1002,7 +1004,7 @@ Returns a block matching the block number or block hash.
 Parameters
 ----------
 
-1. ``String|Number|BN|BigNumber`` - The block number or block hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or block hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. If ``false`` it will only contains the transaction hashes.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -1085,7 +1087,7 @@ Parameters
 ----------
 
 
-1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1125,7 +1127,7 @@ Parameters
 ----------
 
 
-1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1162,7 +1164,7 @@ Returns a blocks uncle by a given uncle index position.
 Parameters
 ----------
 
-1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
 3. ``Boolean`` - (optional, default ``false``) If specified ``true``, the returned block will contain all transactions as objects. By default it is ``false`` so, there is no need to explictly specify false. And, if ``false`` it will only contains the transaction hashes.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
@@ -1356,7 +1358,7 @@ Parameters
 ----------
 
 
-1. ``String|Number|BN|BigNumber`` - A block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number|BN|BigNumber`` - A block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The transaction's index position.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -1401,7 +1403,8 @@ Parameters
 ----------
 
 1. ``String`` - The transaction hash.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+2. ``String`` - (optional) The ``hex`` keyword can be passed as second argument, in order to format in hex, values that would be ``Number`` otherwise. 
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 .. _eth-gettransactionreceipt-return:
@@ -1415,16 +1418,16 @@ Returns
 
   - ``status`` - ``Boolean``: ``TRUE`` if the transaction was successful, ``FALSE`` if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
-  - ``blockNumber`` - ``Number``: Block number where this transaction was in.
+  - ``blockNumber`` - ``Number`` (or ``hex String``): Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
-  - ``transactionIndex``- ``Number``: Integer of the transactions index position in the block.
+  - ``transactionIndex``- ``Number`` (or ``hex String``): Integer of the transactions index position in the block.
   - ``from`` - ``String``: Address of the sender.
   - ``to`` - ``String``: Address of the receiver. ``null`` when it's a contract creation transaction.
   - ``contractAddress`` - ``String``: The contract address created, if the transaction was a contract creation, otherwise ``null``.
-  - ``cumulativeGasUsed`` - ``Number``: The total amount of gas used when this transaction was executed in the block.
-  - ``gasUsed`` - ``Number``:  The amount of gas used by this specific transaction alone.
+  - ``cumulativeGasUsed`` - ``Number`` (or ``hex String``): The total amount of gas used when this transaction was executed in the block.
+  - ``gasUsed`` - ``Number`` (or ``hex String``):  The amount of gas used by this specific transaction alone.
   - ``logs`` - ``Array``: Array of log objects, which this transaction generated.
-  - ``effectiveGasPrice`` - ``Number``:  The actual value per gas deducted from the senders account. Before EIP-1559, this is equal to the transaction's gas price. After, it is equal to baseFeePerGas + min(maxFeePerGas - baseFeePerGas, maxPriorityFeePerGas).
+  - ``effectiveGasPrice`` - ``Number`` (or ``hex String``):  The actual value per gas deducted from the senders account. Before EIP-1559, this is equal to the transaction's gas price. After, it is equal to baseFeePerGas + min(maxFeePerGas - baseFeePerGas, maxPriorityFeePerGas).
 
 -------
 Example
@@ -1444,6 +1447,22 @@ Example
       "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
       "cumulativeGasUsed": 314159,
       "gasUsed": 30234,
+      "logs": [{
+             // logs as returned by getPastLogs, etc.
+         }, ...]
+    }
+
+    var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b','hex')
+    .then(console.log);
+    > {
+      "status": true,
+      "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+      "transactionIndex": '0x0',
+      "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+      "blockNumber": '0x3',
+      "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+      "cumulativeGasUsed": '0x4cb2f',
+      "gasUsed": '0x761a',
       "logs": [{
              // logs as returned by getPastLogs, etc.
          }, ...]
@@ -1469,7 +1488,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the numbers of transactions from.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1647,9 +1666,9 @@ Example
     }
 
     var tx = new Tx(rawTx, {'chain':'ropsten'});
-    tx.sign(privateKey);
+    var signedTx = tx.sign(privateKey);
 
-    var serializedTx = tx.serialize();
+    var serializedTx = signedTx.serialize();
 
     // console.log(serializedTx.toString('hex'));
     // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
@@ -1787,7 +1806,7 @@ Parameters
 ----------
 
 1. ``Object`` - A transaction object, see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>`. For calls the ``from`` property is optional however it is highly recommended to explicitly set it or it may default to `address(0)` depending on your node or provider.
-2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+2. ``Number|String|BN|BigNumber`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -1871,8 +1890,8 @@ Parameters
 ----------
 
 1. ``Object`` - The filter options as follows:
-  - ``fromBlock`` - ``Number|String``: The number of the earliest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
-  - ``toBlock`` -  ``Number|String``: The number of the latest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
+  - ``fromBlock`` - ``Number|String``: The number of the earliest block (or any of block tag ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used). By default ``"latest"``.
+  - ``toBlock`` -  ``Number|String``: The number of the latest block (or any of block tag ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used). By default ``"latest"``.
   - ``address`` -  ``String|Array``: An address or a list of addresses to only get logs from particular account(s).
   - ``topics`` - ``Array``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x12...']``. You can also pass an array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
 
@@ -2016,7 +2035,7 @@ requestAccounts
 
     web3.eth.requestAccounts([callback])
 
-This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvidder and IpcProvider).
+This method will request/enable the accounts from the current environment. This method will only work if you're using the injected provider from a application like Metamask, Status or TrustWallet. It doesn't work if you're connected to a node with a default Web3.js provider (WebsocketProvider, HttpProvider and IpcProvider).
 
 For more information about the behavior of this method please read `EIP-1102: Opt-in account exposure <https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1102.md>`_.
 
@@ -2116,7 +2135,7 @@ Parameters
 
 1. ``String`` 20 Bytes:  The Address of the account or contract.
 2. ``Number[] | BigNumber[] | BN[] | String[]`` 32 Bytes: Array of storage-keys which should be proofed and included. See :ref:`web3.eth.getStorageAt <eth-getStorageAt>`.
-3. ``Number | String | BN | BigNumber``: Integer block number. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+3. ``Number | String | BN | BigNumber``: Integer block number. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` can also be used.
 4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -2191,7 +2210,7 @@ Parameters
 ----------
 
 1. A transaction object, see :ref:`web3.eth.sendTransaction <eth-sendtransaction-return>` with the difference that this method is specifically for contract method executions.
-2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"``, ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the access list generation as the second argument, or with an error object as the first argument.
 
 

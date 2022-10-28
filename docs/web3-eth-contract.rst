@@ -144,6 +144,8 @@ The default block parameters can be one of the following:
 - ``"earliest"`` - ``String``: The genesis block
 - ``"latest"`` - ``String``: The latest block (current head of the blockchain)
 - ``"pending"`` - ``String``: The currently mined block (including pending transactions)
+- ``"finalized"`` - ``String``: (For POS networks) The finalized block is one which has been accepted as canonical by >2/3 of validators. 
+- ``"safe"`` - ``String``: (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work networks latest blocks.
 
 Default is ``"latest"``.
 
@@ -792,7 +794,7 @@ Parameters
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from. For calls the ``from`` property is optional however it is highly recommended to explicitly set it or it may default to `address(0)` depending on your node or provider.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this call "transaction".
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit).
-2. ``defaultBlock`` - ``Number|String|BN|BigNumber`` (optional): If you pass this parameter it will not use the default block set with :ref:`contract.defaultBlock <defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"``, and ``"pending"`` can also be used.  Useful for requesting data from or replaying transactions in past blocks.
+2. ``defaultBlock`` - ``Number|String|BN|BigNumber`` (optional): If you pass this parameter it will not use the default block set with :ref:`contract.defaultBlock <defaultblock>`. Pre-defined block numbers as ``"earliest"``, ``"latest"``, ``"pending"``, ``"safe"`` or ``"finalized"``  can also be used.  Useful for requesting data from or replaying transactions in past blocks.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
 
 -------
@@ -1083,7 +1085,7 @@ Parameters
 1. ``options`` - ``Object``: The options used for calling.
     * ``from`` - ``String``: The address the call "transaction" should be made from.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. Access list response will return amount of gas used.
-2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``block`` - ``String|Number|BN|BigNumber`` (optional): The block number or hash. Or the string ``"earliest"``, ``"latest"`` , ``"pending"`` , ``"safe"`` or ``"finalized"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the access list generation as the second argument, or with an error object as the first argument.
 
 -------
@@ -1215,7 +1217,7 @@ Parameters
 
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used. For specific range use :ref:`getPastEvents <getPastEvents>`.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"`` , ``"safe"`` or ``"finalized"`` can also be used. For specific range use :ref:`getPastEvents <getPastEvents>`.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically. Each topic can also be a nested array of topics that behaves as “or” operation between the given nested topics.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
@@ -1324,8 +1326,8 @@ Parameters
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
-    * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"earliest"``, ``"latest"`` and ``"pending"`` can also be used.
+    * ``fromBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"`` , ``"safe"`` or ``"finalized"`` can also be used.
+    * ``toBlock`` - ``Number|String|BN|BigNumber`` (optional): The block number (less than or equal to) to get events up to (Defaults to ``"latest"``). Pre-defined block numbers as ``"earliest"``, ``"latest"`` , ``"pending"`` , ``"safe"`` or ``"finalized"`` can also be used.
     * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically. Each topic can also be a nested array of topics that behaves as “or” operation between the given nested topics.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
