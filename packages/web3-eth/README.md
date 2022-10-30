@@ -27,9 +27,9 @@ yarn add web3-eth
 ## Usage
 
 ```js
-const Web3Eth = require("web3-eth");
+const Web3Eth = require('web3-eth');
 
-const eth = new Web3Eth("ws://localhost:8546");
+const eth = new Web3Eth('ws://localhost:8546');
 ```
 
 ## Types

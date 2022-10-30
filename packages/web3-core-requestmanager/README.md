@@ -27,12 +27,10 @@ yarn add web3-core-requestmanager
 ## Usage
 
 ```js
-const Web3WsProvider = require("web3-providers-ws");
-const Web3RequestManager = require("web3-core-requestmanager");
+const Web3WsProvider = require('web3-providers-ws');
+const Web3RequestManager = require('web3-core-requestmanager');
 
-const requestManager = new Web3RequestManager(
-    new Web3WsProvider("ws://localhost:8546")
-);
+const requestManager = new Web3RequestManager(new Web3WsProvider('ws://localhost:8546'));
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/

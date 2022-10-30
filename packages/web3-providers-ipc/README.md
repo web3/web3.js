@@ -24,10 +24,10 @@ yarn add web3-providers-ipc
 ## Usage
 
 ```js
-const Web3IpcProvider = require("web3-providers-ipc");
+const Web3IpcProvider = require('web3-providers-ipc');
 const net = require(net);
 
-const ipc = new Web3IpcProvider("/Users/me/Library/Ethereum/geth.ipc", net);
+const ipc = new Web3IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
 ```
 
 ## Types

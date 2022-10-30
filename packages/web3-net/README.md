@@ -27,9 +27,9 @@ yarn add web3-net
 ## Usage
 
 ```js
-const Web3Net = require("web3-net");
+const Web3Net = require('web3-net');
 
-const net = new Web3Net("ws://localhost:8546");
+const net = new Web3Net('ws://localhost:8546');
 ```
 
 ## Types

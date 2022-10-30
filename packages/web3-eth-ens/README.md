@@ -30,7 +30,7 @@ yarn add web3-eth-ens
 const eth = new Web3Eth(web3.currentProvider);
 const ens = new EthEns(eth);
 
-ens.getAddress("ethereum.eth").then(function (result) {
+ens.getAddress('ethereum.eth').then(function(result) {
     console.log(result);
 });
 ```

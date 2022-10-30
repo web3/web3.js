@@ -27,21 +27,23 @@ yarn add web3-core-promievent
 ## Usage
 
 ```js
-const Web3PromiEvent = require("web3-core-promievent");
+const Web3PromiEvent = require('web3-core-promievent');
 
-const myFunc = function () {
+const myFunc = function(){
     const promiEvent = Web3PromiEvent();
-
-    setTimeout(function () {
-        promiEvent.eventEmitter.emit("done", "Hello!");
-        promiEvent.resolve("Hello!");
+    
+    setTimeout(function() {
+        promiEvent.eventEmitter.emit('done', 'Hello!');
+        promiEvent.resolve('Hello!');
     }, 10);
-
+    
     return promiEvent.eventEmitter;
 };
 
 // and run it
-myFunc().on("done", console.log).then(console.log);
+myFunc()
+.on('done', console.log)
+.then(console.log);
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
