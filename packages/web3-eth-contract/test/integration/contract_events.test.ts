@@ -134,14 +134,14 @@ describe('contract', () => {
 				return expect(
 					processAsync(async resolve => {
 						// trigger multiple events
-						await Promise.all(
-							eventValues.map(v => {
-								// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-								return contractDeployed.methods
-									.firesMultiValueEvent('Event Value', v, false)
-									.send(sendOptions);
-							}),
-						);
+						for (const eventValue of eventValues) {
+							// Wait for every transaction, before firing the next one, to prevent a possible nonce duplication.
+							// eslint-disable-next-line no-await-in-loop
+							await contractDeployed.methods
+								.firesMultiValueEvent('Event Value', eventValue, false)
+								.send(sendOptions);
+						}
+
 						const event = contractDeployed.events.MultiValueEvent({
 							fromBlock: 'earliest',
 						});
