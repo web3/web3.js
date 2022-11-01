@@ -29,7 +29,7 @@ import { Web3Context, TransactionBuilder, TransactionTypeParser, Web3PromiEvent 
 import { Wallet } from 'web3-eth-accounts';
 // import * as accountProvider from 'web3-eth-accounts/src/account';
 import * as Web3Eth from 'web3-eth';
-import { TransactionBlockTimeoutError } from 'web3-errors';
+import { TransactionBlockTimeoutError, TransactionPollingTimeoutError } from 'web3-errors';
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
@@ -43,6 +43,7 @@ import {
 	isHttp,
 } from '../fixtures/system_test_utils';
 
+type Resolve = (value?: unknown) => void;
 const MAX_32_SIGNED_INTEGER = 2147483647;
 
 jest.mock('web3-eth', () => {
@@ -62,6 +63,12 @@ describe('contract defaults', () => {
 	let acc: { address: string; privateKey: string };
 
 	beforeEach(async () => {
+		Contract.defaultCommon = undefined;
+		Contract.transactionBlockTimeout = undefined;
+		Contract.blockHeaderTimeout = undefined;
+		Contract.transactionConfirmationBlocks = undefined;
+		Contract.transactionPollingTimeout = undefined;
+		Contract.transactionPollingInterval = undefined;
 		contract = new Contract(GreeterAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
@@ -257,31 +264,6 @@ describe('contract defaults', () => {
 		});
 	});
 	describeIf(isWs)('transactionBlockTimeout', () => {
-		const baseChain = 'mainnet' as ValidChains;
-		const common = {
-			customChain: { name: 'testnet', networkId: '1337', chainId: '1337' },
-			baseChain,
-			hardfork: 'london' as Hardfork,
-		};
-
-		// todo this doesn't set defaultCommon, too
-		// it.only('should use "defaultCommon" on "Contract" level', async () => {
-		// 	Contract.defaultCommon = common;
-
-		// 	const callSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-		// 	contract = await contract.deploy(deployOptions).send(sendOptions);
-
-		// 	expect(callSpy).toHaveBeenCalledWith(
-		// 		expect.objectContaining({
-		// 			_config: expect.objectContaining({ defaultCommon: common }),
-		// 		}),
-		// 		expect.any(Object),
-		// 		undefined,
-		// 		expect.any(Object),
-		// 	);
-		// });
-
 		it('should use "transactionBlockTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
@@ -303,7 +285,7 @@ describe('contract defaults', () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			// Make the test run faster by casing the polling to start after 2 blocks
-			contract.transactionBlockTimeout = 2;
+			contract.transactionBlockTimeout = 1;
 			// Prevent transaction from stucking for a long time if the provider (like Ganache v7.4.0)
 			//	does not respond, when raising the nonce
 			contract.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
@@ -313,15 +295,25 @@ describe('contract defaults', () => {
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 			// The previous test has the nonce set to Number.MAX_SAFE_INTEGER.
 			//	So, just decrease 1 from it here to not fall into another error.
-			const sentTx = contract.methods
-				.setGreeting('New Greeting')
-				.send({ ...sendOptions, nonce: (Number.MAX_SAFE_INTEGER - 1).toString() });
+			const sentTx = contract.methods.setGreeting('New Greeting with high nonce').send({
+				...sendOptions,
+				nonce: (Number.MAX_SAFE_INTEGER - 1).toString(),
+			});
+
+			// const eth = new Web3Eth.Web3Eth(getSystemTestProvider());
+			// const tempAcc2 = await createTempAccount();
 
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
 			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`. And do nothing if an error happens.
 			setTimeout(() => {
 				(async () => {
 					try {
+						// await eth.sendTransaction({
+						// 	from: tempAcc2.address,
+						// 	to: tempAcc2.address,
+						// 	value: '0x0',
+						// });
+
 						await contract.methods.setGreeting('New Greeting').send(sendOptions);
 					} catch (error) {
 						// Nothing needed to be done.
@@ -342,6 +334,81 @@ describe('contract defaults', () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 			}
+		});
+	});
+
+	describeIf(isWs)('blockHeaderTimeout', () => {
+		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
+			expect(Contract.blockHeaderTimeout).toBeUndefined();
+			const blockHeaderTimeout = 100;
+			Contract.blockHeaderTimeout = blockHeaderTimeout;
+
+			expect(Contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
+		});
+
+		it('should use "blockHeaderTimout" on "instance" level', async () => {
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(contract.blockHeaderTimeout).toBe(10);
+
+			const blockHeaderTimeout = 1;
+			contract.blockHeaderTimeout = blockHeaderTimeout;
+
+			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
+
+			const sentTx = contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+			const confirmationPromise = new Promise((resolve: Resolve) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on(
+					'confirmation',
+					async ({ confirmations }: { confirmations: bigint }) => {
+						if (confirmations >= blockHeaderTimeout) {
+							resolve();
+						} else {
+							// Send a transaction to cause dev providers creating new blocks to fire the 'confirmation' event again.
+							await contract.methods.setGreeting('New Greeting').send(sendOptions);
+						}
+					},
+				);
+			});
+			await new Promise((resolve: Resolve) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: TransactionReceipt) => {
+					expect(params.status).toBe(BigInt(1));
+					resolve();
+				});
+			});
+
+			await sentTx;
+			await confirmationPromise;
+			sentTx.removeAllListeners();
+		});
+	});
+	describeIf(isHttp)('transactionPollingInterval', () => {
+		it('should use "transactionPollingInterval" on "Contract" level', async () => {
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(Contract.transactionPollingInterval).toBeUndefined();
+
+			const transactionPollingInterval = 500;
+			Contract.transactionPollingInterval = transactionPollingInterval;
+
+			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
+		});
+
+		it('should use "transactionPollingTimeout" on "instance" level', async () => {
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			const transactionPollingInterval = 500;
+			contract.transactionPollingInterval = transactionPollingInterval;
+
+			expect(contract.transactionPollingInterval).toBe(500);
 		});
 	});
 });
