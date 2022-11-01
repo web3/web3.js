@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
-import { TransactionInfo, TransactionReceipt } from 'web3-types';
+import { TransactionInfo, TransactionReceipt, Transaction } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -155,6 +155,11 @@ describe('rpc with block', () => {
 				b.totalDifficulty = '0x0';
 			}
 			expect(validator.validateJSONSchema(blockSchema, b)).toBeUndefined();
+
+			if (hydrated && b.transactions?.length > 0) {
+				// eslint-disable-next-line jest/no-conditional-expect
+				expect(b.transactions).toBeInstanceOf(Array<Transaction>);
+			}
 		});
 
 		it.each(
