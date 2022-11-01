@@ -262,7 +262,6 @@ export class Contract<Abi extends ContractAbi>
 			signature: string;
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			method: ContractBoundMethod<any>;
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		}
 	> = {};
 	private readonly _overloadedMethodAbis: Map<string, AbiFunctionFragment[]>;
