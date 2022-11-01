@@ -38,8 +38,7 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4",
-		"web3-eth-contract": "^4.0.1-alpha.0"
+		"typescript": "^4.7.4"
 	},
 	"dependencies": {
 		"idna-uts46-hx": "^3.5.0",

@@ -41,7 +41,6 @@
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
 		"web3-eth-abi": "^4.0.1-alpha.1",
-		"web3-eth-accounts": "^4.0.1-alpha.0",
 		"web3-providers-http": "^4.0.1-alpha.1"
 	},
 	"dependencies": {
