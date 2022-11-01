@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-eth-contract` contains the contract package used in `web3-eth`.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth-contract) or using [Yarn](https://yarnpkg.com/package/web3-eth-contract)
+
+### Using NPM
+
+```bash
+npm install web3-eth-contract
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-eth-contract

@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-eth` contains modules to interact with the Ethereum blockchain and smart contracts.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth) or using [Yarn](https://yarnpkg.com/package/web3-eth)
+
+### Using NPM
+
+```bash
+npm install web3-eth
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-eth

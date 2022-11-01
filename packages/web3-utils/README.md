@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-utils` This contains useful utility functions for Dapp developers.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-utils) or using [Yarn](https://yarnpkg.com/package/web3-utils)
+
+### Using NPM
+
+```bash
+npm install web3-utils
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-utils

@@ -23,12 +23,13 @@ describe('contract', () => {
 	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
+	let acc: Record<string, string>;
 
 	beforeAll(async () => {
 		contract = new Contract(BasicAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
-		const acc = await createTempAccount();
+		acc = await createTempAccount();
 
 		deployOptions = {
 			data: BasicBytecode,
@@ -51,6 +52,20 @@ describe('contract', () => {
 					'2': false,
 					__length__: 3,
 				});
+			});
+
+			it('should run call method of the contract if data is provided at initiation', async () => {
+				const tempContract = new Contract(BasicAbi, {
+					provider: getSystemTestProvider(),
+					data: BasicBytecode,
+					from: acc.address,
+					gas: '1000000',
+				});
+				const deployedTempContract = await tempContract
+					.deploy({ arguments: [10, 'string init value'] })
+					.send();
+				const res = await deployedTempContract.methods.getStringValue().call();
+				expect(res).toBe('string init value');
 			});
 
 			describe('revert handling', () => {
@@ -81,9 +96,9 @@ describe('contract', () => {
 			});
 
 			it('should returns a receipt (EIP-1559, maxFeePerGas and maxPriorityFeePerGas specified)', async () => {
-				const acc = await createTempAccount();
+				const tempAcc = await createTempAccount();
 
-				const sendOptionsLocal = { from: acc.address, gas: '1000000' };
+				const sendOptionsLocal = { from: tempAcc.address, gas: '1000000' };
 
 				const contractLocal = await contract.deploy(deployOptions).send(sendOptionsLocal);
 				const receipt = await contractLocal.methods
@@ -105,6 +120,21 @@ describe('contract', () => {
 				// To avoid issue with the `objectContaining` and `cypress` had to add
 				// these expectations explicitly on each attribute
 				expect(receipt.status).toEqual(BigInt(1));
+			});
+
+			it('should run send method of the contract if data is provided at initiation', async () => {
+				const tempContract = new Contract(BasicAbi, {
+					provider: getSystemTestProvider(),
+					data: BasicBytecode,
+					from: acc.address,
+					gas: '1000000',
+				});
+				const deployedTempContract = await tempContract
+					.deploy({ arguments: [10, 'string init value'] })
+					.send();
+				await deployedTempContract.methods.setValues(10, 'TEST', true).send();
+
+				expect(await deployedTempContract.methods.getStringValue().call()).toBe('TEST');
 			});
 
 			// TODO: Get and match the revert error message
