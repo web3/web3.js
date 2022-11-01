@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [4.0.1-alpha.1]
 
 ### Added
 
@@ -52,3 +52,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added validation when `defaultChain` and `defaultCommon.basechain` are different in web3config
 -   Added a new configuration variable `enableExperimentalFeatures`. (#5481)
 
+## [Unreleased]

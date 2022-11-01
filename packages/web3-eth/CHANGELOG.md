@@ -35,12 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [4.0.1-alpha.1]
 
 ### Added
 
 -   `web3-rpc-methods` dependency (#5441)
--   added chain and hardfork validation for transaction and transaction.common object in `validateTransactionForSigning`
+-   Added chain and hardfork validation for transaction and transaction.common object in `validateTransactionForSigning`
 
 ### Changed
 
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
 -   Implemented the logic for `transactionBlockTimeout` (#5294)
 -   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `useSubscriptionWhenCheckingBlockTimeout` at `enableExperimentalFeatures` is `true`). (#5481)
--   At some test cases, optimize some codes. (#5481)
+-   At some test cases, optimized some codes. (#5481)
 
 ### Removed
 
@@ -60,3 +60,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Fix `getBlock` returning empty transactions object on `hydrated` true (#5556)
+
+## [Unreleased]

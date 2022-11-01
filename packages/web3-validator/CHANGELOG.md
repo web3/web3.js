@@ -35,8 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [0.1.1-alpha.1]
 
-### Added
+### Removed
 
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
+
+## [Unreleased]

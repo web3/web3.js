@@ -171,7 +171,7 @@ const transactionHash = receipt.transactionHash;
 </p>
 </details>
 
-## [Unreleased]
+## [4.0.1-alpha.1]
 
 ### Added
 
@@ -181,3 +181,5 @@ const transactionHash = receipt.transactionHash;
 ### Fixed
 
 -   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`. (#5435)
+
+## [Unreleased]
