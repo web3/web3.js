@@ -16,7 +16,49 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { HexString } from './primitives_types';
 
-export type Web3EncryptedWallet = string;
+export type Cipher = 'aes-128-ctr' | 'aes-128-cbc' | 'aes-256-cbc';
+
+export type CipherOptions = {
+	salt?: Buffer | string;
+	iv?: Buffer | string;
+	kdf?: 'scrypt' | 'pbkdf2';
+	dklen?: number;
+	c?: number; // iterrations
+	n?: number; // cpu/memory cost
+	r?: number; // block size
+	p?: number; // parallelization cost
+};
+
+export type ScryptParams = {
+	dklen: number;
+	n: number;
+	p: number;
+	r: number;
+	salt: Buffer | string;
+};
+export type PBKDF2SHA256Params = {
+	c: number; // iterations
+	dklen: number;
+	prf: 'hmac-sha256';
+	salt: Buffer | string;
+};
+
+export type KeyStore = {
+	crypto: {
+		cipher: Cipher;
+		ciphertext: string;
+		cipherparams: {
+			iv: string;
+		};
+		kdf: 'pbkdf2' | 'scrypt';
+		kdfparams: ScryptParams | PBKDF2SHA256Params;
+		mac: HexString;
+	};
+	id: string;
+	version: 3;
+	address: string;
+};
+export type Web3EncryptedWallet = KeyStore;
 
 export interface Web3BaseWalletAccount {
 	[key: string]: unknown;

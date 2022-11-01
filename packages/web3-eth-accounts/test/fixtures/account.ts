@@ -26,7 +26,7 @@ import {
 	PBKDF2IterationsError,
 } from 'web3-errors';
 import { sign, signTransaction, encrypt } from '../../src/account';
-import { CipherOptions, KeyStore } from '../../src/types';
+import { CipherOptions, KeyStore } from 'web3-types';
 
 export const validPrivateKeyToAddressData: [string, string][] = [
 	[

@@ -172,7 +172,7 @@ export class Wallet<
 	 * Get the account of the wallet with either the index or public address.
 	 *
 	 * @param addressOrIndex - A string of the address or number index within the wallet.
-	 * @returns The account object or undefined if the account doesnt exist
+	 * @returns The account object or undefined if the account doesn't exist
 	 */
 
 	public get(addressOrIndex: string | number): T | undefined {
@@ -193,7 +193,7 @@ export class Wallet<
 	 * Removes an account from the wallet.
 	 *
 	 * @param addressOrIndex - The account address, or index in the wallet.
-	 * @returns true if the wallet was removed. false if it couldn’t be found.
+	 * @returns true if the wallet was removed. false if it couldn't be found.
 	 * ```ts
 	 * web3.eth.accounts.wallet.add('0xbce9b59981303e76c4878b1a6d7b088ec6b9dd5c966b7d5f54d7a749ff683387');
 	 *
@@ -279,8 +279,11 @@ export class Wallet<
 	 * ]
 	 * ```
 	 */
-	public async encrypt(password: string, options?: Record<string, unknown> | undefined) {
-		return Promise.all(this.map(async account => account.encrypt(password, options)));
+	public async encrypt(
+		password: string,
+		options?: Record<string, unknown> | undefined,
+	): Promise<Web3EncryptedWallet[]> {
+		return Promise.all(this.map((account: T) => account.encrypt(password, options)));
 	}
 
 	/**
@@ -358,16 +361,15 @@ export class Wallet<
 	 * ```
 	 */
 	public async decrypt(
-		encryptedWallets: string[],
+		encryptedWallets: Web3EncryptedWallet[],
 		password: string,
 		options?: Record<string, unknown> | undefined,
 	) {
 		const results = await Promise.all(
-			encryptedWallets.map(async wallet =>
-				this._accountProvider.decrypt(wallet, password, options),
+			encryptedWallets.map((wallet: Web3EncryptedWallet) =>
+				this._accountProvider.decrypt(JSON.stringify(wallet), password, options),
 			),
 		);
-
 		for (const res of results) {
 			this.add(res);
 		}
