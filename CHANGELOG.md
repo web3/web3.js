@@ -822,7 +822,6 @@ should use 4.0.1-alpha.0 for testing.
 -   Replace the imported methods from `rpc_methods.ts` with `ethRpcMethods` imports from `web3-rpc-methods` (#5441)
 -   `Web3NetAPI` is now imported from `web3-types` instead of `web3-net` (#5441)
 -   Moved `rpc_methods` tests to `web3-rpc-methods` (#5441)
--   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
 -   Implemented the logic for `transactionBlockTimeout` (#5294)
 -   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `useSubscriptionWhenCheckingBlockTimeout` at `enableExperimentalFeatures` is `true`). (#5481)
 -   At some test cases, optimized some codes. (#5481)
@@ -859,6 +858,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth
 
 -   Fix `getBlock` returning empty transactions object on `hydrated` true (#5556)
+-   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
 
 #### web3-eth-contract
 
