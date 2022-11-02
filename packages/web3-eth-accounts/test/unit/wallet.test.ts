@@ -271,10 +271,10 @@ describe('Wallet', () => {
 			const options = { myOptions: 'myOptions' };
 
 			when(accountProvider.decrypt)
-				.calledWith('{"address": "encrypted_account1"}', 'password', options)
+				.calledWith(encryptedAccount1, 'password', options)
 				.mockResolvedValue(account1);
 			when(accountProvider.decrypt)
-				.calledWith('{"address": "encrypted_account2"}', 'password', options)
+				.calledWith(encryptedAccount2, 'password', options)
 				.mockResolvedValue(account2);
 
 			await wallet.decrypt([encryptedAccount1, encryptedAccount2], 'password', options);

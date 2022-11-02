@@ -89,7 +89,11 @@ export interface Web3BaseWalletAccount {
 export interface Web3AccountProvider<T> {
 	privateKeyToAccount: (privateKey: string) => T;
 	create: () => T;
-	decrypt: (keystore: string, password: string, options?: Record<string, unknown>) => Promise<T>;
+	decrypt: (
+		keystore: Web3EncryptedWallet | string,
+		password: string,
+		options?: Record<string, unknown>,
+	) => Promise<T>;
 }
 
 export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> extends Array<T> {

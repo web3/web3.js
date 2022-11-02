@@ -367,7 +367,7 @@ export class Wallet<
 	) {
 		const results = await Promise.all(
 			encryptedWallets.map((wallet: Web3EncryptedWallet) =>
-				this._accountProvider.decrypt(JSON.stringify(wallet), password, options),
+				this._accountProvider.decrypt(wallet, password, options),
 			),
 		);
 		for (const res of results) {
