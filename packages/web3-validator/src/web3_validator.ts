@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import Ajv from 'ajv';
-import { sha256 } from 'ethereum-cryptography/sha256';
+import { blake2b } from 'ethereum-cryptography/blake2b';
 import { utf8ToBytes, toHex } from 'ethereum-cryptography/utils';
 import { ethAbiToJsonSchema } from './utils';
 import { ValidationSchemaInput, Web3ValidationErrorObject, Web3ValidationOptions } from './types';
@@ -100,7 +100,7 @@ export class Web3Validator {
 			]);
 		}
 
-		const schemaKey = toHex(sha256(utf8ToBytes(JSON.stringify(jsonSchema))));
+		const schemaKey = toHex(blake2b(utf8ToBytes(JSON.stringify(jsonSchema))));
 		if (!this._validator.getSchema(schemaKey)) {
 			this._validator.addSchema(jsonSchema, schemaKey);
 		}
