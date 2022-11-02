@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3BaseWallet, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-types';
+import { Web3BaseWallet, Web3BaseWalletAccount, KeyStore } from 'web3-types';
 import { isNullish } from 'web3-validator';
 import { WebStorage } from './types';
 
@@ -282,8 +282,8 @@ export class Wallet<
 	public async encrypt(
 		password: string,
 		options?: Record<string, unknown> | undefined,
-	): Promise<Web3EncryptedWallet[]> {
-		return Promise.all(this.map((account: T) => account.encrypt(password, options)));
+	): Promise<KeyStore[]> {
+		return Promise.all(this.map(async (account: T) => account.encrypt(password, options)));
 	}
 
 	/**
@@ -361,12 +361,12 @@ export class Wallet<
 	 * ```
 	 */
 	public async decrypt(
-		encryptedWallets: Web3EncryptedWallet[],
+		encryptedWallets: KeyStore[],
 		password: string,
 		options?: Record<string, unknown> | undefined,
 	) {
 		const results = await Promise.all(
-			encryptedWallets.map((wallet: Web3EncryptedWallet) =>
+			encryptedWallets.map(async (wallet: KeyStore) =>
 				this._accountProvider.decrypt(wallet, password, options),
 			),
 		);
@@ -432,7 +432,7 @@ export class Wallet<
 		const keystore = storage.getItem(keyName ?? this._defaultKeyName);
 
 		if (keystore) {
-			await this.decrypt((JSON.parse(keystore) as Web3EncryptedWallet[]) || [], password);
+			await this.decrypt((JSON.parse(keystore) as KeyStore[]) || [], password);
 		}
 
 		return this;

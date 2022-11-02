@@ -58,7 +58,6 @@ export type KeyStore = {
 	version: 3;
 	address: string;
 };
-export type Web3EncryptedWallet = KeyStore;
 
 export interface Web3BaseWalletAccount {
 	[key: string]: unknown;
@@ -80,17 +79,14 @@ export interface Web3BaseWalletAccount {
 		readonly message?: string;
 		readonly signature: HexString;
 	};
-	readonly encrypt: (
-		password: string,
-		options?: Record<string, unknown>,
-	) => Promise<Web3EncryptedWallet>;
+	readonly encrypt: (password: string, options?: Record<string, unknown>) => Promise<KeyStore>;
 }
 
 export interface Web3AccountProvider<T> {
 	privateKeyToAccount: (privateKey: string) => T;
 	create: () => T;
 	decrypt: (
-		keystore: Web3EncryptedWallet | string,
+		keystore: KeyStore | string,
 		password: string,
 		options?: Record<string, unknown>,
 	) => Promise<T>;
@@ -112,9 +108,9 @@ export abstract class Web3BaseWallet<T extends Web3BaseWalletAccount> extends Ar
 	public abstract encrypt(
 		password: string,
 		options?: Record<string, unknown>,
-	): Promise<Web3EncryptedWallet[]>;
+	): Promise<KeyStore[]>;
 	public abstract decrypt(
-		encryptedWallet: Web3EncryptedWallet[],
+		encryptedWallet: KeyStore[],
 		password: string,
 		options?: Record<string, unknown>,
 	): Promise<this>;

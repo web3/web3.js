@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
 import { when } from 'jest-when';
-import { Web3AccountProvider, Web3BaseWalletAccount, Web3EncryptedWallet } from 'web3-types';
+import { Web3AccountProvider, Web3BaseWalletAccount, KeyStore } from 'web3-types';
 import { Wallet } from '../../src/wallet';
 
 describe('Wallet', () => {
@@ -264,8 +264,8 @@ describe('Wallet', () => {
 
 	describe('decrypt', () => {
 		it('should decrypt all accounts and add to wallet', async () => {
-			const encryptedAccount1 = { address: 'encrypted_account1' } as Web3EncryptedWallet;
-			const encryptedAccount2 = { address: 'encrypted_account2' } as Web3EncryptedWallet;
+			const encryptedAccount1 = { address: 'encrypted_account1' } as KeyStore;
+			const encryptedAccount2 = { address: 'encrypted_account2' } as KeyStore;
 			const account1 = { address: 'my_address1' } as any;
 			const account2 = { address: 'my_address2' } as any;
 			const options = { myOptions: 'myOptions' };
@@ -304,7 +304,7 @@ describe('Wallet', () => {
 		});
 
 		it('should encrypt wallet and store with local storage for given key', async () => {
-			const encryptedWallet = [{ address: 'encryptedWallet' }] as Web3EncryptedWallet[];
+			const encryptedWallet = [{ address: 'encryptedWallet' }] as KeyStore[];
 			jest.spyOn(wallet, 'encrypt').mockResolvedValue(encryptedWallet);
 
 			await wallet.save('password', 'myKey');
@@ -319,7 +319,7 @@ describe('Wallet', () => {
 		});
 
 		it('should encrypt wallet and store with local storage with default key', async () => {
-			const encryptedWallet = [{ address: 'encryptedWallet' }] as Web3EncryptedWallet[];
+			const encryptedWallet = [{ address: 'encryptedWallet' }] as KeyStore[];
 			jest.spyOn(wallet, 'encrypt').mockResolvedValue(encryptedWallet);
 
 			await wallet.save('password');

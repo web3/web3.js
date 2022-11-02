@@ -38,10 +38,9 @@ import {
 	Bytes,
 	HexString,
 	CipherOptions,
-	KeyStore,
 	PBKDF2SHA256Params,
 	ScryptParams,
-	Web3EncryptedWallet,
+	KeyStore,
 } from 'web3-types';
 import {
 	bytesToBuffer,
@@ -491,7 +490,7 @@ export const encrypt = async (
 	privateKey: Bytes,
 	password: string | Buffer,
 	options?: CipherOptions,
-): Promise<Web3EncryptedWallet> => {
+): Promise<KeyStore> => {
 	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	// if given salt or iv is a string, convert it to a Uint8Array
@@ -624,9 +623,8 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
-		encrypt: (password: string, options?: Record<string, unknown>) => {
-			return encrypt(privateKeyBuffer, password, options);
-		},
+		encrypt: async (password: string, options?: Record<string, unknown>) =>
+			encrypt(privateKeyBuffer, password, options),
 	};
 };
 
