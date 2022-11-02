@@ -31,6 +31,7 @@ import { Wallet } from 'web3-eth-accounts';
 import * as Web3Eth from 'web3-eth';
 import { TransactionBlockTimeoutError, TransactionPollingTimeoutError } from 'web3-errors';
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { ethRpcMethods } from 'web3-rpc-methods';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
@@ -55,6 +56,14 @@ jest.mock('web3-eth', () => {
 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
 	};
 });
+jest.mock('web3-rpc-methods', () => {
+	const original = jest.requireActual('web3-rpc-methods');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	return {
+		...original,
+		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+	};
+});
 
 describe('contract defaults', () => {
 	let contract: Contract<typeof GreeterAbi>;
@@ -69,6 +78,8 @@ describe('contract defaults', () => {
 		Contract.transactionConfirmationBlocks = undefined;
 		Contract.transactionPollingTimeout = undefined;
 		Contract.transactionPollingInterval = undefined;
+		Contract.handleRevert = undefined;
+
 		contract = new Contract(GreeterAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
@@ -390,6 +401,7 @@ describe('contract defaults', () => {
 			sentTx.removeAllListeners();
 		});
 	});
+
 	describeIf(isHttp)('transactionPollingInterval', () => {
 		it('should use "transactionPollingInterval" on "Contract" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
@@ -408,7 +420,45 @@ describe('contract defaults', () => {
 			const transactionPollingInterval = 500;
 			contract.transactionPollingInterval = transactionPollingInterval;
 
-			expect(contract.transactionPollingInterval).toBe(500);
+			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
+		});
+	});
+
+	describe('handleRevert', () => {
+		it('should use "handleRevert" on "Contract" level', async () => {
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(Contract.handleRevert).toBeUndefined();
+
+			expect(contract.handleRevert).toBeFalsy();
+
+			const handleRevert = true;
+			Contract.handleRevert = handleRevert;
+
+			expect(contract.handleRevert).toBe(handleRevert);
+
+			const sendTransactionSpy = jest.spyOn(ethRpcMethods, 'sendTransaction');
+
+			await contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+			expect(sendTransactionSpy).toHaveBeenCalled();
+		});
+
+		it('should use "handleRevert" on "instance" level', async () => {
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(contract.handleRevert).toBeFalsy();
+
+			const handleRevert = true;
+			contract.handleRevert = handleRevert;
+
+			expect(contract.handleRevert).toBe(handleRevert);
+
+			const sendTransactionSpy = jest.spyOn(ethRpcMethods, 'sendTransaction');
+
+			await contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+			expect(sendTransactionSpy).toHaveBeenCalled();
 		});
 	});
 });
