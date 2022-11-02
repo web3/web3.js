@@ -42,7 +42,7 @@ describeIf(getSystemTestBackend() === 'infura')('Black Box Unit Tests - web3.eth
 
 			expect(await contract.methods.name().call()).toBe('Tether USD');
 			expect(await contract.methods.symbol().call()).toBe('USDT');
-			expect(await contract.methods.decimals().call()).toBe('6');
+			expect(await contract.methods.decimals().call()).toBe(BigInt(6));
 		});
 	});
 });
@@ -80,8 +80,8 @@ describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'gana
 
 				expect(await contract.methods.name().call()).toBe('Gold');
 				expect(await contract.methods.symbol().call()).toBe('GLD');
-				expect(await contract.methods.decimals().call()).toBe('18');
-				expect(await contract.methods.totalSupply().call()).toBe('420');
+				expect(await contract.methods.decimals().call()).toBe(BigInt(18));
+				expect(await contract.methods.totalSupply().call()).toBe(BigInt(420));
 			});
 		});
 	},
