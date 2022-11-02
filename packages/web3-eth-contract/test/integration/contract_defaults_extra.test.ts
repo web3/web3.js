@@ -79,31 +79,17 @@ describe('contract defaults', () => {
 	});
 
 	describe('defaultHardfork', () => {
-		// todo this test is not working, bug or error in test?
-		// it.only('should use "defaultHardfork" on "Contract" level', async () => {
-		// 	const hardfork = 'berlin';
+		it('should use "defaultHardfork" on "Contract" level', async () => {
+			const hardfork = 'berlin';
 
-		// 	Contract.defaultHardfork = hardfork;
+			Contract.defaultHardfork = hardfork;
 
-		// 	contract = await contract.deploy(deployOptions).send(sendOptions);
+			contract = await contract.deploy(deployOptions).send(sendOptions);
 
-		// 	// await contract.methods.setGreeting('New Greeting').send(sendOptions);
-		// 	// await contract.methods.greet().send(sendOptions);
+			expect(contract.defaultHardfork).toBe(hardfork);
 
-		// 	expect(contract.defaultHardfork).toBe(hardfork);
-		// 	const callSpy = jest.spyOn(Web3Eth, 'call');
-
-		// 	await contract.methods.greet().call();
-
-		// 	expect(callSpy).toHaveBeenCalledWith(
-		// 		expect.objectContaining({
-		// 			_config: expect.objectContaining({ defaultHardfork: hardfork }),
-		// 		}),
-		// 		expect.any(Object),
-		// 		undefined,
-		// 		expect.any(Object),
-		// 	);
-		// });
+			await contract.methods.greet().call();
+		});
 
 		it('should use "defaultHardfork" on "instance" level', async () => {
 			const hardfork = 'berlin';
@@ -165,29 +151,51 @@ describe('contract defaults', () => {
 			hardfork: 'london' as Hardfork,
 		};
 
-		// todo this doesn't set defaultCommon, too
-		// it.only('should use "defaultCommon" on "Contract" level', async () => {
+		beforeEach(async () => {
+			Contract.defaultCommon = undefined;
+			Contract.transactionBlockTimeout = undefined;
+			Contract.blockHeaderTimeout = undefined;
+			Contract.transactionConfirmationBlocks = undefined;
+			Contract.transactionPollingTimeout = undefined;
+			Contract.transactionPollingInterval = undefined;
+			Contract.handleRevert = undefined;
+
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+			acc = await createTempAccount();
+
+			deployOptions = {
+				data: GreeterBytecode,
+				arguments: ['My Greeting'],
+			};
+
+			sendOptions = { from: acc.address, gas: '1000000' };
+
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+		});
+
+		// todo this test fails, seems like a bug. any thoughts?
+		// it('should use "defaultCommon" on "Contract" level', async () => {
 		// 	Contract.defaultCommon = common;
 
-		// 	const callSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+		// 	const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
-		// 	contract = await contract.deploy(deployOptions).send(sendOptions);
+		// 	expect(contract.defaultCommon).toMatchObject(common);
 
-		// 	expect(callSpy).toHaveBeenCalledWith(
+		// 	await contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+		// 	expect(sendTransactionSpy).toHaveBeenLastCalledWith(
 		// 		expect.objectContaining({
 		// 			_config: expect.objectContaining({ defaultCommon: common }),
 		// 		}),
 		// 		expect.any(Object),
-		// 		undefined,
 		// 		expect.any(Object),
 		// 	);
 		// });
 
 		it('should use "defaultCommon" on "instance" level', async () => {
 			contract.defaultCommon = common;
-
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
 			const callSpy = jest.spyOn(Web3Eth, 'call');
 
 			await contract.methods.greet().call();
