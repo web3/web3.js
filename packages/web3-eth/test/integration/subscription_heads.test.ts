@@ -44,40 +44,45 @@ describeIf(isWs)('subscription', () => {
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		providerWs = new WebSocketProvider(clientUrl);
+		web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 	});
 	afterAll(() => {
 		providerWs.disconnect();
 	});
-
 	describe('heads', () => {
 		it.each(subNames)(`wait for ${checkTxCount} newHeads`, async (subName: SubName) => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
 
 			let times = 0;
-			const pr = new Promise((resolve: Resolve) => {
+			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
 					if (data.parentHash) {
 						times += 1;
 					}
 					expect(times).toBeGreaterThanOrEqual(times);
 					if (times >= checkTxCount) {
+						sub.off('data', () => {
+							// no need to do anything
+						});
 						resolve();
 					}
+				});
+				sub.on('error', error => {
+					reject(error);
 				});
 			});
 
 			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
 			await pr;
+			await web3Eth.subscriptionManager?.removeSubscription(sub);
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			expect(sub.id).toBeDefined();
-			await web3Eth.clearSubscriptions();
+			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			expect(sub.id).toBeUndefined();
 		});
 	});

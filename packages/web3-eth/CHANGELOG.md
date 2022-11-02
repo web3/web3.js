@@ -50,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Moved `rpc_methods` tests to `web3-rpc-methods` (#5441)
 -   [setimmediate](https://github.com/yuzujs/setImmediate) package to polyfill [setImmediate](https://nodejs.org/api/timers.html#setimmediatecallback-args) for browsers (#5450)
 -   Implemented the logic for `transactionBlockTimeout` (#5294)
+-   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `useSubscriptionWhenCheckingBlockTimeout` at `enableExperimentalFeatures` is `true`). (#5481)
+-   At some test cases, optimize some codes. (#5481)
 
 ### Removed
 

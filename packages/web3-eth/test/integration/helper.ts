@@ -52,12 +52,16 @@ export const sendFewTxes = async ({
 		});
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
-			(await new Promise((resolve: Resolve) => {
+			(await new Promise((resolve: Resolve, reject) => {
 				// tx promise is handled separately
 				// eslint-disable-next-line no-void
 				void tx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve(params);
+				});
+				// eslint-disable-next-line no-void
+				void tx.on('error', error => {
+					reject(error);
 				});
 			})) as TransactionReceipt,
 		);

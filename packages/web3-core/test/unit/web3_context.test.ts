@@ -16,8 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line max-classes-per-file
+import { ExistingPluginNamespaceError } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
-import { Web3Context } from '../../src/web3_context';
+import { Web3Context, Web3PluginBase } from '../../src/web3_context';
 import { Web3RequestManager } from '../../src/web3_request_manager';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -199,6 +200,25 @@ describe('Web3Context', () => {
 			child.link(parent);
 
 			expect(child.provider).toBe(parent.provider);
+		});
+	});
+
+	describe('registerPlugin', () => {
+		it('should throw ExistingPluginNamespaceError', () => {
+			const context = new Context1('http://test/abc');
+			const pluginNamespace = 'plugin';
+
+			class Plugin extends Web3PluginBase {
+				public pluginNamespace = pluginNamespace;
+			}
+			class Plugin2 extends Web3PluginBase {
+				public pluginNamespace = pluginNamespace;
+			}
+
+			context.registerPlugin(new Plugin());
+			expect(() => context.registerPlugin(new Plugin2())).toThrow(
+				new ExistingPluginNamespaceError(pluginNamespace),
+			);
 		});
 	});
 });

@@ -44,6 +44,10 @@ export interface Web3ConfigOptions {
 	defaultCommon?: Common;
 	defaultTransactionType: Numbers;
 	defaultMaxPriorityFeePerGas: Numbers;
+	enableExperimentalFeatures: {
+		useSubscriptionWhenCheckingBlockTimeout: boolean;
+		// other experimental features...
+	};
 	transactionBuilder?: TransactionBuilder;
 	transactionTypeParser?: TransactionTypeParser;
 }
@@ -80,6 +84,9 @@ export abstract class Web3Config
 		defaultCommon: undefined,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
+		enableExperimentalFeatures: {
+			useSubscriptionWhenCheckingBlockTimeout: false,
+		},
 		transactionBuilder: undefined,
 		transactionTypeParser: undefined,
 	};
@@ -329,6 +336,23 @@ export abstract class Web3Config
 		this._triggerConfigChange('blockHeaderTimeout', val);
 
 		this._config.blockHeaderTimeout = val;
+	}
+
+	/**
+	 * The enableExperimentalFeatures is used to enable trying new experimental features that are still not fully implemented or not fully tested or still have some related issues.
+	 * Default is `false` for every feature.
+	 */
+	public get enableExperimentalFeatures() {
+		return this._config.enableExperimentalFeatures;
+	}
+
+	/**
+	 * Will set the enableExperimentalFeatures
+	 */
+	public set enableExperimentalFeatures(val) {
+		this._triggerConfigChange('enableExperimentalFeatures', val);
+
+		this._config.enableExperimentalFeatures = val;
 	}
 
 	public get maxListenersWarningThreshold() {

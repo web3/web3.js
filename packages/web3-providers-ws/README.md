@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-providers-ws` contains the Web3.js provider for the Websocket protocol.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-providers-ws) or using [Yarn](https://yarnpkg.com/package/web3-providers-ws)
+
+### Using NPM
+
+```bash
+npm install web3-providers-ws
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-providers-ws

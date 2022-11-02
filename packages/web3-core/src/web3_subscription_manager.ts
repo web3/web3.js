@@ -99,7 +99,9 @@ export class Web3SubscriptionManager<
 
 	public async removeSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (isNullish(sub.id)) {
-			throw new SubscriptionError('Subscription is not subscribed yet.');
+			throw new SubscriptionError(
+				'Subscription is not subscribed yet. Or, had already been unsubscribed but not through the Subscription Manager.',
+			);
 		}
 
 		if (!this._subscriptions.has(sub.id)) {

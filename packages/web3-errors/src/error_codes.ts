@@ -26,6 +26,7 @@ export const ERR_METHOD_NOT_IMPLEMENTED = 202;
 export const ERR_OPERATION_TIMEOUT = 203;
 export const ERR_OPERATION_ABORT = 204;
 export const ERR_ABI_ENCODING = 205;
+export const ERR_EXISTING_PLUGIN_NAMESPACE = 206;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;
@@ -152,4 +153,3 @@ export const ERR_VALIDATION = 1100;
 // Core error codes
 export const ERR_CORE_HARDFORK_MISMATCH = 1101;
 export const ERR_CORE_CHAIN_MISMATCH = 1102;
-

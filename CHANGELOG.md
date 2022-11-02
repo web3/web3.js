@@ -739,6 +739,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-core
 
 -   If the response error was `execution reverted`, raise `ContractExecutionError` and pass the response error to it in order to be set as `innerError` (this innerError will be decoded at web3-eth-contract if its ABI was provided according to EIP-838). (#5434)
+-   Added a new configuration variable `enableExperimentalFeatures`. (#5481)
+-   `registerPlugin` method to `Web3Context` (#5393)
+-   `Web3PluginBase` exported abstract class (#5393)
+-   `Web3EthPluginBase` exported abstract class (#5393)
 
 #### web3-error
 
@@ -749,6 +753,7 @@ should use 4.0.1-alpha.0 for testing.
 -   Added `SignatureError` to `web3-errors/src/errors/signature_errors.ts` (moved from `web3-eth/src/errors.ts`) (#5462)
 -   Added the errors' classes to `web3-errors/src/errors/transaction_errors.ts` from `web3-eth/src/errors.ts` (#5462)
 -   Added `TransactionBlockTimeoutError` class and its error code `ERR_TX_BLOCK_TIMEOUT` (#5294)
+-   `ExistingPluginNamespaceError` class and it's error code `ERR_EXISTING_PLUGIN_NAMESPACE` (#5393)
 
 #### web3-eth
 
@@ -765,15 +770,30 @@ should use 4.0.1-alpha.0 for testing.
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
 
+#### web3-plugin-example
+
+-   Example plugin for wrapping contract methods to provide custom functionality (#5393)
+-   Example plugin for custom RPC methods using the `requestManager` (#5393)
+
 #### web3-utils
 
 -   Added and exported three reusable utility functions: `pollTillDefined`, `rejectIfTimeout` and `rejectIfConditionAtInterval` which are useful when dealing with promises that involves polling, rejecting after timeout or rejecting if a condition was met when calling repeatably at every time intervals.
 
 ### Changed
 
+#### web3-core
+
+-   Default value for `API` generic for `Web3ContextObject` from `any` to `unknown` (#5393)
+-   Default value for `API` generic for `Web3ContextInitOptions` from `any` to `unknown` (#5393)
+
 #### web3-error
 
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
+
+#### web3-eth
+
+-   Use subscription at `rejectIfBlockTimeout` when the provider supports subscription. Implement this as an experimental feature (if `useSubscriptionWhenCheckingBlockTimeout` at `enableExperimentalFeatures` is `true`). (#5481)
+-   At some test cases, optimize some codes. (#5481)
 
 ### Fixed
 
@@ -792,6 +812,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-abi
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
+
+#### web3-types
+
+-   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
 
 ### Removed
 

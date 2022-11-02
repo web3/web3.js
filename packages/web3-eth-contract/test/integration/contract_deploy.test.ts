@@ -16,6 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Contract } from '../../src';
 import { sleep } from '../shared_fixtures/utils';
+import { ERC721TokenAbi, ERC721TokenBytecode } from '../shared_fixtures/build/ERC721Token';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { DeployRevertAbi, DeployRevertBytecode } from '../shared_fixtures/build/DeployRevert';
 import {
@@ -36,19 +37,16 @@ describe('contract', () => {
 		let pkAccount: { address: string; privateKey: string };
 		beforeAll(async () => {
 			pkAccount = await createNewAccount({ refill: true });
-		});
-		beforeEach(async () => {
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
 			acc = await createTempAccount();
-
 			deployOptions = {
 				data: GreeterBytecode,
 				arguments: ['My Greeting'],
 			};
-
+		});
+		beforeEach(() => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 		describe('local account', () => {
@@ -68,8 +66,7 @@ describe('contract', () => {
 				},
 			);
 
-			it.skip('should return estimated gas of contract constructor', async () => {
-				// @TODO: uncomment this after finish issue #5473
+			it('should return estimated gas of contract constructor %p', async () => {
 				const estimatedGas = await new Contract(GreeterAbi, undefined, {
 					provider: getSystemTestProvider(),
 				})
@@ -79,21 +76,42 @@ describe('contract', () => {
 					})
 					.estimateGas({
 						from: acc.address,
+						gas: '1000000',
+					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract constructor without arguments', async () => {
+				const estimatedGas = await new Contract(ERC721TokenAbi, undefined, {
+					provider: getSystemTestProvider(),
+				})
+					.deploy({
+						data: ERC721TokenBytecode,
+						arguments: [],
+					})
+					.estimateGas({
+						from: acc.address,
 						gas: '10000000',
 					});
 				expect(Number(estimatedGas)).toBeGreaterThan(0);
 			});
 			it('should return estimated gas of contract method', async () => {
-				const tempAccount = await createTempAccount();
 				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
 
 				const estimatedGas = await contractDeployed.methods
 					.setGreeting('Hello')
 					.estimateGas({
-						type: '0x2',
 						gas: '1000000',
-						from: tempAccount.address,
+						from: acc.address,
 					});
+				expect(Number(estimatedGas)).toBeGreaterThan(0);
+			});
+			it('should return estimated gas of contract method without arguments', async () => {
+				const contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
+
+				const estimatedGas = await contractDeployed.methods.increment().estimateGas({
+					gas: '1000000',
+					from: acc.address,
+				});
 				expect(Number(estimatedGas)).toBeGreaterThan(0);
 			});
 		});

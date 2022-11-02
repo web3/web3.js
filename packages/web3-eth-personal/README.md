@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-eth-personal` Web3 module to interact with the Ethereum blockchain accounts stored in the node.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-eth-personal) or using [Yarn](https://yarnpkg.com/package/web3-eth-personal)
+
+### Using NPM
+
+```bash
+npm install web3-eth-personal
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-eth-personal

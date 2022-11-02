@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-rpc-methods` contains RPC methods for various ETH related protocols.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-rpc-methods) or using [Yarn](https://yarnpkg.com/package/web3-rpc-methods)
+
+### Using NPM
+
+```bash
+npm install web3-rpc-methods
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-rpc-methods

@@ -14,7 +14,17 @@ This is a sub-package of [web3.js][repo].
 
 `web3-errors` This package has web3 error classes.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-errors) or using [Yarn](https://yarnpkg.com/package/web3-errors)
+
+### Using NPM
+
+```bash
+npm install web3-errors
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3-errors

@@ -14,10 +14,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+import { abiToJsonSchemaCases } from '../fixtures/abi_to_json_schema';
 import { Web3Validator } from '../../src/web3_validator';
+import { Web3ValidatorError } from '../../src/errors';
 import * as keywords from '../../src/keywords';
 import * as formats from '../../src/formats';
+import { validNotBaseTypeData } from '../fixtures/validation';
 
 describe('web3-validator', () => {
 	describe('Web3Validator', () => {
@@ -79,6 +81,73 @@ describe('web3-validator', () => {
 						message: 'must pass "uint" validation',
 						params: { value: -1 },
 						schemaPath: '#/items/0/eth',
+					},
+				]);
+			});
+
+			it('should return undefined for empty schema and empty data', () => {
+				expect(validator.validate([], [])).toBeUndefined();
+			});
+
+			it('should return error is schema is empty but data no', () => {
+				const data = [1];
+				const testFunction = () => {
+					validator.validate([], data);
+				};
+				expect(testFunction).toThrow(
+					'value at "/0" empty schema against data can not be validated',
+				);
+
+				expect(testFunction).toThrow(Web3ValidatorError);
+			});
+
+			it.each(validNotBaseTypeData)(
+				'should pass for valid non base type data %s',
+				({ dataType, data }: { dataType: string; data: any }) => {
+					expect(validator.validate([dataType], [data])).toBeUndefined();
+				},
+			);
+		});
+		describe('validateJsonSchema', () => {
+			it.each(abiToJsonSchemaCases.slice(0, 5))('should pass for valid data', abi => {
+				const jsonSchema = abi.json;
+				expect(
+					validator.validateJSONSchema(jsonSchema.fullSchema, jsonSchema.data),
+				).toBeUndefined();
+			});
+
+			it('should throw', () => {
+				expect(() => {
+					validator.validateJSONSchema(
+						{
+							type: 'array',
+							items: [{ $id: 'a', eth: 'uint' }],
+							minItems: 1,
+							maxItems: 1,
+						},
+						[],
+					);
+				}).toThrow(Web3ValidatorError);
+			});
+			it('should return errors on silent', () => {
+				expect(
+					validator.validateJSONSchema(
+						{
+							type: 'array',
+							items: [{ $id: 'a', eth: 'uint' }],
+							minItems: 1,
+							maxItems: 1,
+						},
+						[],
+						{ silent: true },
+					),
+				).toMatchObject([
+					{
+						instancePath: '',
+						schemaPath: '#/minItems',
+						keyword: 'minItems',
+						params: { limit: 1 },
+						message: 'must NOT have fewer than 1 items',
 					},
 				]);
 			});
