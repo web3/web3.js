@@ -15,31 +15,16 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// import { Web3BaseProvider, Web3AccountProvider } from 'web3-types';
-import {
-	Web3BaseProvider,
-	Web3BaseWallet,
-	Web3BaseWalletAccount,
-	ValidChains,
-	Hardfork,
-	Receipt,
-	TransactionReceipt,
-} from 'web3-types';
-import { Web3Context, TransactionBuilder, TransactionTypeParser, Web3PromiEvent } from 'web3-core';
-import { Wallet } from 'web3-eth-accounts';
-// import * as accountProvider from 'web3-eth-accounts/src/account';
+import { ValidChains, Hardfork, TransactionReceipt } from 'web3-types';
 import * as Web3Eth from 'web3-eth';
-import { TransactionBlockTimeoutError, TransactionPollingTimeoutError } from 'web3-errors';
-import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
+import { TransactionBlockTimeoutError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
 	getSystemTestProvider,
 	createTempAccount,
-	createAccountProvider,
 	describeIf,
-	itIf,
 	isWs,
 	isHttp,
 } from '../fixtures/system_test_utils';
@@ -143,63 +128,6 @@ describe('contract defaults', () => {
 				expect.any(Object),
 			);
 		});
-
-		// eslint-disable-next-line jest/expect-expect
-		// it('should use "defaultHardfork" on "instance" level', async () => {
-		// const wallet: Wallet = new Wallet(accountProvider as Web3AccountProvider<any>);
-		// const wallet: Wallet = new Wallet();
-		// wallet.create(1);
-		// console.log('----', getSystemTestProvider());
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-
-		// const account = new Accounts.Accounts();
-		// const account = create();
-		// const con = new Web3Context({
-		// 	provider: getSystemTestProvider(),
-		// 	// wallet: wallet as Web3BaseWallet<Web3BaseWalletAccount>,
-		// });
-
-		// const accountProvider = createAccountProvider(con);
-		// const wallet = new Wallet(accountProvider);
-		// wallet.create(1);
-
-		// console.log('account', account.address);
-		// const w = new Wallet(account);
-		// account.console.log(wallet);
-
-		// console.log('-------------------');
-		// console.log(context.wallet?.get(0)?.address, wallet);
-		// console.log('-------------------');
-
-		// const context = new Web3Context({
-		// 	wallet,
-		// 	provider: getSystemTestProvider(),
-		// });
-
-		// console.log('@@@@@@@@@@@@@@@', context.wallet?.get(0));
-		// contract = new Contract(GreeterAbi, context);
-		// // const a = account.create('random');
-		// // const wallet = new Wallet(a as Accounts));
-		// contract = await contract
-		// 	.deploy(deployOptions)
-		// 	.send({ from: context.wallet?.get(0)?.address });
-
-		// await contract.methods.setGreeting('New Greeting').send();
-
-		// const requestSpy = jest.spyOn(
-		// 	contract.currentProvider as Web3BaseProvider,
-		// 	'request',
-		// );
-		// contract.defaultHardfork = 'pending';
-		// Contract.defaultHardfork = undefined;
-
-		// await contract.methods.greet().call();
-
-		// expect(requestSpy).toHaveBeenCalledWith(
-		// 	expect.objectContaining({ params: [expect.any(Object), 'pending'] }),
-		// );
-		// const wallet = new Accounts.Wallet();
-		// });
 	});
 
 	describe('defaultChain', () => {
@@ -285,11 +213,6 @@ describe('contract defaults', () => {
 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-			// 	.on('confirmation', data => {
-			// 		console.log('receipt', data);
-			// 	});
-			// console.log('tx', tx);
-			// await contract.methods.greet().call();
 		});
 
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
@@ -311,20 +234,11 @@ describe('contract defaults', () => {
 				nonce: (Number.MAX_SAFE_INTEGER - 1).toString(),
 			});
 
-			// const eth = new Web3Eth.Web3Eth(getSystemTestProvider());
-			// const tempAcc2 = await createTempAccount();
-
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
 			// So, send 2 transactions because in this test `transactionBlockTimeout = 2`. And do nothing if an error happens.
 			setTimeout(() => {
 				(async () => {
 					try {
-						// await eth.sendTransaction({
-						// 	from: tempAcc2.address,
-						// 	to: tempAcc2.address,
-						// 	value: '0x0',
-						// });
-
 						await contract.methods.setGreeting('New Greeting').send(sendOptions);
 					} catch (error) {
 						// Nothing needed to be done.
