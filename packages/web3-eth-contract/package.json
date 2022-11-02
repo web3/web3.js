@@ -50,7 +50,7 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-eth-accounts": "^1.8.0",
+		"web3-eth-accounts": "^4.0.1-alpha.0",
 		"web3-rpc-methods": "^0.1.0-alpha.0"
 	}
 }
