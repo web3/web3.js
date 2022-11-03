@@ -32,23 +32,27 @@ import {
 type Resolve = (value?: unknown) => void;
 const MAX_32_SIGNED_INTEGER = 2147483647;
 
-jest.mock('web3-eth', () => {
-	const original = jest.requireActual('web3-eth');
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-	return {
-		...original,
-		call: jest.fn().mockImplementation(original.call),
-		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-	};
-});
-jest.mock('web3-rpc-methods', () => {
-	const original = jest.requireActual('web3-rpc-methods');
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-	return {
-		...original,
-		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-	};
-});
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+if (!global.Cypress) {
+	jest.mock('web3-eth', () => {
+		const original = jest.requireActual('web3-eth');
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+		return {
+			...original,
+			call: jest.fn().mockImplementation(original.call),
+			sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+		};
+	});
+}
+// jest.mock('web3-rpc-methods', () => {
+// 	const original = jest.requireActual('web3-rpc-methods');
+// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+// 	return {
+// 		...original,
+// 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+// 	};
+// });
 
 describe('contract defaults', () => {
 	let contract: Contract<typeof GreeterAbi>;
