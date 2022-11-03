@@ -14,7 +14,17 @@ This is the main package of [web3.js](https://github.com/ChainSafe/web3.js).
 
 `web3` contains the ideal setup for a Web3.js package.
 
-###### Get it from the NPM Registry
+## Installation
+
+You can install the package either using [NPM](https://www.npmjs.com/package/web3) or using [Yarn](https://yarnpkg.com/package/web3)
+
+### Using NPM
+
+```bash
+npm install web3
+```
+
+### Using Yarn
 
 ```bash
 yarn add web3
