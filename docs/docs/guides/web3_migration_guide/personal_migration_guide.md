@@ -9,9 +9,9 @@ sidebar_label: web3.eth.personal
 
 ### extend
 
-In 4.x, the method `extend` is deprecated in 4.x.
+In 4.x the method `extend` is deprecated.
 
-It will not have:
+web3 4.x will not have:
 
 ```ts
 // -> web3.extend

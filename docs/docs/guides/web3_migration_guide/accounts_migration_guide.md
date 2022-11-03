@@ -5,7 +5,7 @@ sidebar_label: web3.eth.accounts
 
 # web3.eth.accounts Migration Guide
 
-## Breaking changes
+## Breaking Changes
 
 ### web3.eth.accounts.create and wallet.create
 

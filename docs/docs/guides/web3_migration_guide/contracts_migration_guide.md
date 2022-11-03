@@ -5,9 +5,9 @@ sidebar_label: web3.eth.Contract
 
 # web3.eth.Contract Migration Guide
 
-### Breaking Changes
+## Breaking Changes
 
-#### Receipt Status
+### Receipt Status
 
 The `receipt.status` will now be be an `unsigned integer` instead of `boolean` value to comply with the specification.
 
@@ -33,7 +33,7 @@ myContract.methods
 The `unsigned integer` type is dependent on the data format you specified. Default type is `BigInt`.
 :::
 
-#### Deploy `’sending’` and `'sent'` event will fire only the params
+### Deploy `’sending’` and `'sent'` event will fire only the params
 
 In 1.x, when following was executed `deploy().send().on(‘sending’, payload => {})`. The `payload` was the complete the JSON-RPC Payload. In 4.x, it will just be the transaction which is about to be transmitted. Earlier it was accessible by from `payload.params[0]`, now will be available directly to event handler.
 
@@ -57,7 +57,7 @@ myContract
 	});
 ```
 
-#### Deploy ’confirmations’ handler will be invoked with object
+### Deploy ’confirmations’ handler will be invoked with object
 
 In 1.x, the `confirmations` handler was invoked with multiple parameters. But in 4.x there will be one parameter as object but with all the same properties.
 
@@ -69,14 +69,14 @@ myContract .send().on(‘confirmation’, (confirmations: number, receipt: objec
 myContract .send().on(‘confirmation’, ({confirmations: bigint, receipt: object, latestBlockHash: string}) => {})
 ```
 
-#### Strict validation for `encodeABI`
+### Strict validation for `encodeABI`
 
 `encodeABI` now have strict validation for the ABI types. It's not limited to mentioned use cases below, but applied in general. Some use cases are:
 
 -   Earlier a `byte32` ABI type was successfully encoded even providing less bytes as input. Now it will throw an error.
 -   Earlier a `byte32` ABI type was successfully encoded even with an empty bytes. Now it will throw an error.
 
-#### Different error message for creating object without `new` keyword
+### Different error message for creating object without `new` keyword
 
 The error message will be different if you try to create a contract object without a `new` keyword.
 
@@ -90,7 +90,7 @@ const contract = Contract(jsonInterface, address);
 // Class constructor ContractBuilder cannot be invoked without 'new'
 ```
 
-#### No warning message when `toBlock` passed to event subscription
+### No warning message when `toBlock` passed to event subscription
 
 In 1.x, if you pass the `toBlock` as event options you would get a warning message:
 
@@ -98,7 +98,7 @@ In 1.x, if you pass the `toBlock` as event options you would get a warning messa
 
 In 4.x, you will not get any warning but `toBlock` will still have no effect.
 
-#### The contract `send` method will now resolve with the `receipt` object
+### The contract `send` method will now resolve with the `receipt` object
 
 In 1.x, the contract `.send` method was always resolved with `transactionHash`. That enforces the user to make an extra call to get any further information. In 4.x the `.send` function will resolve with `receipt` object.
 
