@@ -915,9 +915,6 @@ export class Contract<Abi extends ContractAbi>
 
 				const contractMethod = this._createContractMethod(abi, errorsAbi);
 
-				if (!this._overloadedMethodAbis.get(abi.name)) {
-					this._overloadedMethodAbis.set(abi.name, []);
-				}
 				this._overloadedMethodAbis.set(abi.name, [
 					...(this._overloadedMethodAbis.get(abi.name) ?? []),
 					abi,
