@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-ipc",
-	"version": "4.0.1-alpha.0",
+	"version": "4.0.1-alpha.1",
 	"description": "IPC provider for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -39,8 +39,8 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-errors": "^0.1.1-alpha.0",
-		"web3-types": "^0.1.1-alpha.0",
-		"web3-utils": "^4.0.1-alpha.0"
+		"web3-errors": "^0.1.1-alpha.1",
+		"web3-types": "^0.1.1-alpha.1",
+		"web3-utils": "^4.0.1-alpha.1"
 	}
 }

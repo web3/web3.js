@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [4.0.1-alpha.1]
 
 ### Added
 
@@ -50,3 +50,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   `rpcMethods` export, these methods are now exported via `web3-rpc-methods` as `netRpcMethods` (#5441)
 -   `Web3NetAPI` export, now exported via `web3-types` as `Web3NetAPI` (#5441)
+
+## [Unreleased]

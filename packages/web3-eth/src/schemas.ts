@@ -84,7 +84,7 @@ export const transactionSchema = {
 			eth: 'address',
 		},
 		to: {
-			eth: 'address',
+			oneOf: [{ eth: 'address' }, { type: 'null' }],
 		},
 		value: {
 			eth: 'uint',
@@ -174,7 +174,7 @@ export const transactionInfoSchema = {
 			eth: 'address',
 		},
 		to: {
-			eth: 'address',
+			oneOf: [{ eth: 'address' }, { type: 'null' }],
 		},
 		value: {
 			eth: 'uint',

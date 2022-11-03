@@ -34,3 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [4.0.1-alpha.1]
+
+### Added
+
+-   Show error message and return dummy promise if socket is not writable (#5294)
+
+## [Unreleased]
