@@ -1015,7 +1015,31 @@ export class Contract<Abi extends ContractAbi>
 					throw new Web3ValidatorError(errors);
 				}
 			}
-
+			if (methodAbi.stateMutability === 'payable') {
+				return {
+					arguments: abiParams,
+					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
+						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
+					send: (options?: PayableTxOptions) =>
+						this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+					estimateGas: async <
+						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
+					>(
+						options?: PayableCallOptions,
+						returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+					) =>
+						this._contractMethodEstimateGas({
+							abi: methodAbi,
+							params: abiParams,
+							returnFormat,
+							options,
+						}),
+					encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+				} as unknown as PayableMethodObject<
+					ContractMethod<T>['Inputs'],
+					ContractMethod<T>['Outputs']
+				>;
+			}
 			return {
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
