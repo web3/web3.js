@@ -3,13 +3,13 @@ sidebar_position: 1
 sidebar_label: 'Plugin Users'
 ---
 
-# Web3.js Plugin User's Guide
+# web3.js Plugin User's Guide
 
-This guide intends to provide the necessary context for registering plugins with Web3.js packages.
+This guide intends to provide the necessary context for registering plugins with web3.js packages.
 
 ## Before Getting Started
 
-It's highly recommended you as a plugin user understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can get the most out of TypeScript's type safety while using Web3.js plugins.
+It's highly recommended you as a plugin user understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can get the most out of TypeScript's type safety while using web3.js plugins.
 
 ## Installing the Plugin
 
@@ -27,9 +27,9 @@ Unless otherwise mentioned by the plugin author, installing a plugin should be a
 
 ## Registering the Plugin
 
-The `.registerPlugin` method is what we're going to be using to add a plugin to an instance of a class sourced from Web3.js' modules (i.e. `Web3` or `Web3Eth`). This method only exists on classes that extend `Web3Context`, so it may not be available on every class you import from a Web3.js package.
+The `.registerPlugin` method is what we're going to be using to add a plugin to an instance of a class sourced from web3.js' modules (i.e. `Web3` or `Web3Eth`). This method only exists on classes that extend `Web3Context`, so it may not be available on every class you import from a Web3.js package.
 
-Below are a couple examples of registering the following `SimplePlugin` with various classes imported from various Web3.js packages:
+Below are a couple examples of registering the following `SimplePlugin` with various classes imported from various web3.js packages:
 
 This is an example plugin being used for demonstration purposes:
 
@@ -74,7 +74,7 @@ This section of the guide will delve deeper into setting up module augmentation,
 
 ### Creating an Export Helper File
 
-There exists a [limitation](https://github.com/web3/web3.js/pull/5393/#discussion_r1000727269) with TypeScript's module augmentation: it can only handle _named modules_. So that Web3.js stays backwards compatible, our most commonly used modules (e.g. `Web3`, `Web3Eth`, `Contract`) are exported as `default` exports and are not explicitly named as required by TypeScript for module augmentation. The workaround for this issue is to create a separate file within your project where you import the default module you wish to augment and re-export it as a named module:
+There exists a [limitation](https://github.com/web3/web3.js/pull/5393/#discussion_r1000727269) with TypeScript's module augmentation: it can only handle _named modules_. So that web3.js stays backwards compatible, our most commonly used modules (e.g. `Web3`, `Web3Eth`, `Contract`) are exported as `default` exports and are not explicitly named as required by TypeScript for module augmentation. The workaround for this issue is to create a separate file within your project where you import the default module you wish to augment and re-export it as a named module:
 
 Re-exporting `Web3`, `Web3Context`, and `Web3Eth` as named modules:
 
@@ -97,7 +97,7 @@ The file that performs this re-exporting can be named whatever, but for the sake
 
 ### Re-declaring the Module
 
-The first step is telling TypeScript that we're interested in re-defining a module's (i.e. a Web3.js package such as `web3-core`, `web3`, or `web3-eth`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each Web3.js module, but when registering a plugin, we're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
+The first step is telling TypeScript that we're interested in re-defining a module's (i.e. a web3.js package such as `web3-core`, `web3`, or `web3-eth`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, we're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
 
 We start with the following:
 

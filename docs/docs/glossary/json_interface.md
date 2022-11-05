@@ -2,9 +2,9 @@
 title: JSON Interface
 ---
 
-The JSON interface is a JSON object describing the [Application Binary Interface (ABI)](https://docs.soliditylang.org/en/develop/abi-spec.html) for an Ethereum smart contract.
+The JSON interface is a `JSON` object describing the [Application Binary Interface (ABI)](https://docs.soliditylang.org/en/develop/abi-spec.html) for an Ethereum smart contract.
 
-Using this JSON interface, web3.js is able to create a JavaScript object representing the smart contract , its methods and events using the web3.eth.Contract object.
+Using this JSON interface, web3.js is able to create a JavaScript object representing the smart contract , its methods and events using the `web3.eth.Contract` object.
 
 ### Specification
 
@@ -12,23 +12,27 @@ Using this JSON interface, web3.js is able to create a JavaScript object represe
 
 -   `type`: `"function"`, `"constructor"` (can be omitted, defaulting to `"function"`; `"fallback"` also possible but not relevant in web3.js);
 -   `name`: the name of the function (only present for function types);
--   `constant`: true if function is specified to not modify the blockchain state;
--   `payable`: true if function accepts ether, defaults to false;
--   `stateMutability`: a string with one of the following values: pure (specified to not read blockchain state), view (same as constant above), non-payable and payable (same as payable above);
--   `inputs`: an array of objects, each of which contains:
+-   `constant`: `true` if function is specified to not modify the blockchain state;
+-   `payable`: `true` if function accepts ether, defaults to false;
+-   `stateMutability`: a `string` with one of the following values: `"pure"` (specified to not read blockchain state), `"view"` (same as constant above), `"non-payable"` and `"payable"` (same as payable above);
+-   `inputs`: an `Array of objects`, each of which contains:
     -- `name`: the name of the parameter;
     -- `type`: the canonical type of the parameter.
--   `outputs`: an array of objects, same as inputs, can be omitted if no outputs exist.
+-   `outputs`: an `Array of objects`, same as inputs, can be omitted if no outputs exist.
 
 #### Events
 
--   `type`: always "event"
+-   `type`: always `"event"`
 -   `name`: the name of the event;
--   `inputs`: an array of objects, each of which contains:
-    -- `name`: the name of the parameter;
-    -- `type`: the canonical type of the parameter.
-    -- `indexed`: true if the field is part of the log’s topics, false if it is one of the log’s data segment.
-    -- `anonymous`: true if the event was declared as anonymous.
+-   `inputs`: an `Array of objects`, each of which contains:
+
+    -   `name`: the name of the parameter;
+
+    -   `type`: the canonical type of the parameter.
+
+    -   `indexed`: `true` if the field is part of the log’s topics, false if it is one of the log’s data segment.
+
+    -   `anonymous`: `true` if the event was declared as anonymous.
 
 #### Example
 

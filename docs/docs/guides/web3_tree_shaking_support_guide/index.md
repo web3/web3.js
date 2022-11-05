@@ -1,11 +1,11 @@
 ---
 sidebar_position: 2
-sidebar_label: Web3.tree.shaking
+sidebar_label: web3 Tree Shaking Guide
 ---
 
-# Web3 Tree shaking Support Guide
+# web3 Tree shaking Support Guide
 
-1. Use the `production` mode configuration option to enable various optimizations including minification and tree shaking. Set to your webpack.config:
+1. Use the `production` mode configuration option to enable various optimizations including minification and tree shaking. Set your webpack.config:
 
 ```js
 "mode":"production"
@@ -17,25 +17,27 @@ sidebar_label: Web3.tree.shaking
 "sideEffects": false
 ```
 
-**_NOTE:_** For further information about `sideEffects` see: https://webpack.js.org/guides/tree-shaking/
+:::note
+For further information about `sideEffects` see [webpack docs](https://webpack.js.org/guides/tree-shaking/)
 
-3. Set your tsconfig module to `ES2015` or higher to support `imports`, because tree shaking does not work with `require`:
+::: 3. Set your tsconfig module to `ES2015` or higher to support `imports`, because tree shaking does not work with `require`:
 
 ```json
 "module": "ES2015"
 ```
 
-4. Use only packages which you need:
-   For example, if you need `web.eth`:
+4. Use the specific packages which you need,
+
+    For example, if you need `web.eth`:
 
 ```ts
 import Web3Eth from 'web3-eth';
 ```
 
-If you need only few functions from `web3-utils`:
+If you only need a few functions from `web3-utils`:
 
 ```ts
 import { numberToHex, hexToNumber } from 'web3-utils';
 ```
 
-Example app with tree shaking you can find here https://github.com/ChainSafe/web3js-example-react-app
+You can find an example app with tree shaking [here](https://github.com/ChainSafe/web3js-example-react-app).
