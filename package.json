@@ -21,7 +21,7 @@
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",
-        "test": "[[ \"$(node -v | cut -c 2-3)\" -ge 17 ]] && export NODE_OPTIONS=--openssl-legacy-provider; mocha -R spec --require ts-node/register --grep E2E --invert",
+        "test": "mocha -R spec --require ts-node/register --grep E2E --invert",
         "test:unit": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --grep E2E --invert --exit",
         "test:cov": "npm run cov:clean && npm run test:unit && npm run test:e2e:clients && npm run cov:merge_reports",
         "dtslint": "lerna run dtslint",
