@@ -1,11 +1,11 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Migration: From 1.x'
+sidebar_label: 'Migration from 1.x'
 ---
 
-# Migration: From 1.x
+# Migration from 1.x
 
-This migration guide is for migration from Web3.js 1.x to Web3.js 4.x.
+This migration guide is for migration from web3.js 1.x to web3.js 4.x.
 
 ## Breaking Changes
 
@@ -38,9 +38,9 @@ It will not have:
 const batch = new web3.BatchRequest();
 ```
 
-#### add()
+#### batch.add()
 
-in 1.x nothing was returned, in 4.x returns a deferred promise which can be used to run specific code after completion of each respective request
+In 1.x nothing was returned, in 4.x returns a deferred promise which can be used to run specific code after completion of each respective request.
 
 ```ts
 // in 1.x
@@ -69,9 +69,9 @@ request2Promise.then(response => {
 });
 ```
 
-#### execute()
+#### batch.execute()
 
-in 4.x execute returns a promise, where 1.x was based on the callbacks of requests passed to `add`
+In 4.x execute returns a promise, where 1.x was based on the callbacks of requests passed to `add`.
 
 ```ts
 // in 1.x
@@ -85,7 +85,9 @@ const responses = await batch.execute();
 
 All the re-useable types which were earlier been exposed from `web3` package are now moved to independent package `web3-types` package.
 
-NOTE: We don't encourage to use `@types/web3` package any more.
+:::note
+We don't encourage using the `@types/web3` package.
+:::
 
 ```ts
 // Provider types
@@ -100,7 +102,7 @@ import type {
 } from 'web3-types';
 ```
 
-Similarly some useable types from old package `web3-core` are also moved to `web3-types`;
+Similarly some useable types from the old package `web3-core` are also moved to `web3-types`
 
 ```ts
 // in 1.x
@@ -112,7 +114,7 @@ import type { Transaction, TransactionReceipt } from 'web3-types';
 
 ### Formatters
 
-The package `web3-core-helpers` is not maintained any more starting 4.x releases. And the formatters are moved to the `web3-core` package.
+Starting 4.x releases, the package `web3-core-helpers` will not be maintained and the formatters are now moved to the `web3-core` package.
 
 ```ts
 // in 1.x
@@ -124,7 +126,7 @@ import { formatters } from 'web3-core';
 
 ### PromiEvent
 
-The package `web3-core-promievent` is not maintained any more starting 4.x releases. And the class is moved to the `web3-core` package.
+Starting 4.x releases, the package `web3-core-promievent` will not be maintained and the class are now moved to the `web3-core` package.
 
 ```ts
 // in 1.x

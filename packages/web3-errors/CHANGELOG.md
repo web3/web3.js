@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [0.1.1-alpha.1]
 
 ### Added
 
@@ -51,7 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Corrected the error code for `JSONRPC_ERR_UNAUTHORIZED` to be `4100` (#5462)
-
-### Fixed
-
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
+
+## [Unreleased]

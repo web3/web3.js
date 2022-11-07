@@ -1,11 +1,11 @@
 ---
 sidebar_position: 1
-sidebar_label: 'Web3 Plugins'
+sidebar_label: 'web3 Plugins'
 ---
 
-# Web3.js Plugins Guide
+# web3.js Plugins Guide
 
-In addition to the Web3.js standard libraries, plugins add specific functionality to the end user. This extra functionality could be wrappers around specific contracts, additional RPC method wrappers, or could even extend the logic of Web3.js methods.
+In addition to the web3.js standard libraries, plugins add specific functionality to the end user. This extra functionality could be wrappers around specific contracts, additional RPC method wrappers, or could even extend the logic of web3.js methods.
 
 ## Before Getting Started
 
@@ -13,9 +13,9 @@ In addition to the Web3.js standard libraries, plugins add specific functionalit
 
 In order to provide typing support for the registered plugin, the plugin user must [augment the module](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) they're registering the plugin with. In simpler terms, we must make TypeScript aware that we are modifying a module's (i.e. a package such as `web3` or `web3-eth`) interface with additional methods, properties, and/or classes. A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
 
-The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends` `Web3Context` has the ability to add on the plugin's additional functionality to it's interface. Because of this, the burden of module augmentation falls on the plugin user as Web3.js and the plugin author are unaware of the module the end user is calling `registerPlugin` on.
+The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends` `Web3Context` has the ability to add on the plugin's additional functionality to it's interface. Because of this, the burden of module augmentation falls on the plugin user as web3.js and the plugin author are unaware of the module the end user is calling `registerPlugin` on.
 
-#### Web3.js Example
+#### web3.js Example
 
 The following is an example plugin that adds additional RPC method wrappers:
 

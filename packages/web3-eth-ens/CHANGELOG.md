@@ -35,8 +35,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [4.0.1-alpha.1]
 
 ### Changed
 
 -   `Web3NetAPI` is now imported from `web3-types` instead of `web3-net` (#5441)
+
+## [Unreleased]

@@ -34,3 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [0.1.1-alpha.1]
+
+### Removed
+
+-   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
+
+## [Unreleased]

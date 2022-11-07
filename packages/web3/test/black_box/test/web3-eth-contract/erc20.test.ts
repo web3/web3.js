@@ -20,10 +20,10 @@ import Contract from 'web3-eth-contract';
 import {
 	closeOpenConnection,
 	describeIf,
-	getSystemTestAccounts,
 	getSystemTestBackend,
 	isWs,
 	getSystemTestProvider,
+	createNewAccount,
 } from 'web3/test/shared_fixtures/system_tests_utils';
 import { ERC20TokenAbi, ERC20TokenBytecode } from '../fixtures/contracts/ERC20Token';
 
@@ -42,7 +42,7 @@ describeIf(getSystemTestBackend() === 'infura')('Black Box Unit Tests - web3.eth
 
 			expect(await contract.methods.name().call()).toBe('Tether USD');
 			expect(await contract.methods.symbol().call()).toBe('USDT');
-			expect(await contract.methods.decimals().call()).toBe('6');
+			expect(await contract.methods.decimals().call()).toBe(BigInt(6));
 		});
 	});
 });
@@ -51,12 +51,16 @@ describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'gana
 	'Black Box Unit Tests - web3.eth.Contract',
 	() => {
 		describe('Geth || Ganache - ERC20', () => {
-			let accounts;
+			let account;
 			let web3: Web3;
 			let deployedContract: Contract<typeof ERC20TokenAbi>;
 
 			beforeAll(async () => {
-				accounts = await getSystemTestAccounts();
+				account = await createNewAccount({
+					unlock: true,
+					refill: true,
+					doNotImport: false,
+				});
 
 				web3 = new Web3(getSystemTestProvider());
 				deployedContract = await new web3.eth.Contract(ERC20TokenAbi)
@@ -65,7 +69,7 @@ describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'gana
 						// @ts-expect-error Type 'string' is not assignable to type 'undefined'.
 						arguments: ['420'],
 					})
-					.send({ from: accounts[0], gas: '10000000' });
+					.send({ from: account.address, gas: '10000000' });
 			});
 
 			afterAll(async () => {
@@ -80,8 +84,8 @@ describeIf(getSystemTestBackend() === 'geth' || getSystemTestBackend() === 'gana
 
 				expect(await contract.methods.name().call()).toBe('Gold');
 				expect(await contract.methods.symbol().call()).toBe('GLD');
-				expect(await contract.methods.decimals().call()).toBe('18');
-				expect(await contract.methods.totalSupply().call()).toBe('420');
+				expect(await contract.methods.decimals().call()).toBe(BigInt(18));
+				expect(await contract.methods.totalSupply().call()).toBe(BigInt(420));
 			});
 		});
 	},

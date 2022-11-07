@@ -35,9 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
-
-### Fixed
+## [4.0.1-alpha.1]
 
 ### Added
 
@@ -47,3 +45,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
+
+## [Unreleased]

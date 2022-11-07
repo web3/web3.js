@@ -1,13 +1,24 @@
 ---
 sidebar_position: 7
-sidebar_label: Web3.eth.personal
+sidebar_label: web3.eth.personal
 ---
 
-# Web3.eth.personal Migration Guide
+# web3.eth.personal Migration Guide
 
 ## Breaking Changes
 
-Method `extend` is deprecated in 4.x
+### extend
+
+In 4.x the method `extend` is deprecated.
+
+web3 4.x will not have:
+
+```ts
+// -> web3.extend
+// -> web3.eth.extend
+// -> web3.shh.extend
+// -> web3.bzz.extend
+```
 
 ### Defaults and Configs
 
