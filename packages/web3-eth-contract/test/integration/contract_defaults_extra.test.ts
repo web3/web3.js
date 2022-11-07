@@ -19,6 +19,7 @@ import { ValidChains, Hardfork, TransactionReceipt } from 'web3-types';
 import * as Web3Eth from 'web3-eth';
 import { TransactionBlockTimeoutError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import { exit } from 'process';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
@@ -32,19 +33,21 @@ import {
 type Resolve = (value?: unknown) => void;
 const MAX_32_SIGNED_INTEGER = 2147483647;
 
+// cypress doesn't support mocking
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-if (!global.Cypress) {
-	jest.mock('web3-eth', () => {
-		const original = jest.requireActual('web3-eth');
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return {
-			...original,
-			call: jest.fn().mockImplementation(original.call),
-			sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-		};
-	});
+if (window.Cypress) {
+	exit();
 }
+jest.mock('web3-eth', () => {
+	const original = jest.requireActual('web3-eth');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	return {
+		...original,
+		call: jest.fn().mockImplementation(original.call),
+		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+	};
+});
 // jest.mock('web3-rpc-methods', () => {
 // 	const original = jest.requireActual('web3-rpc-methods');
 // 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
