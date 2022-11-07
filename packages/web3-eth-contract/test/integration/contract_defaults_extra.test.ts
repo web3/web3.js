@@ -16,9 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ValidChains, Hardfork, TransactionReceipt } from 'web3-types';
-import * as Web3Eth from 'web3-eth';
 import { TransactionBlockTimeoutError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import * as Web3Eth from 'web3-eth';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
@@ -32,32 +32,17 @@ import {
 type Resolve = (value?: unknown) => void;
 const MAX_32_SIGNED_INTEGER = 2147483647;
 
-try {
-	jest.mock('web3-eth', () => {
-		const original = jest.requireActual('web3-eth');
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-		return {
-			...original,
-			call: jest.fn().mockImplementation(original.call),
-			sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-		};
-	});
-} catch {
-	// cypress
-}
-// cypress doesn't support mocking
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-describeIf(!global.Cypress)('contract defaults', () => {
-	// jest.mock('web3-rpc-methods', () => {
-	// 	const original = jest.requireActual('web3-rpc-methods');
-	// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-	// 	return {
-	// 		...original,
-	// 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-	// 	};
-	// });
+jest.mock('web3-eth', () => {
+	const original = jest.requireActual('web3-eth');
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	return {
+		...original,
+		call: jest.fn().mockImplementation(original.call),
+		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+	};
+});
 
+describe('contract defaults (extra)', () => {
 	let contract: Contract<typeof GreeterAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
@@ -231,7 +216,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 		});
 	});
 	describeIf(isWs)('transactionBlockTimeout', () => {
-		test('should use "transactionBlockTimeout" on "instance" level', async () => {
+		it('should use "transactionBlockTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.transactionBlockTimeout).toBe(50);
@@ -243,7 +228,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 		});
 
-		test('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			// Make the test run faster by casing the polling to start after 2 blocks
@@ -291,7 +276,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 	});
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
-		test('should use "blockHeaderTimeout" on "Contract" level', async () => {
+		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
 			expect(Contract.blockHeaderTimeout).toBeUndefined();
 			const blockHeaderTimeout = 100;
 			Contract.blockHeaderTimeout = blockHeaderTimeout;
@@ -302,7 +287,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
 		});
 
-		test('should use "blockHeaderTimout" on "instance" level', async () => {
+		it('should use "blockHeaderTimout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.blockHeaderTimeout).toBe(10);
@@ -345,7 +330,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 	});
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
-		test('should use "transactionPollingInterval" on "Contract" level', async () => {
+		it('should use "transactionPollingInterval" on "Contract" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(Contract.transactionPollingInterval).toBeUndefined();
@@ -356,7 +341,7 @@ describeIf(!global.Cypress)('contract defaults', () => {
 			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
 		});
 
-		test('should use "transactionPollingTimeout" on "instance" level', async () => {
+		it('should use "transactionPollingTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			const transactionPollingInterval = 500;
