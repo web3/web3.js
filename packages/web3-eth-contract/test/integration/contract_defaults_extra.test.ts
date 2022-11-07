@@ -19,7 +19,6 @@ import { ValidChains, Hardfork, TransactionReceipt } from 'web3-types';
 import * as Web3Eth from 'web3-eth';
 import { TransactionBlockTimeoutError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-import { exit } from 'process';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
@@ -32,13 +31,6 @@ import {
 
 type Resolve = (value?: unknown) => void;
 const MAX_32_SIGNED_INTEGER = 2147483647;
-
-// cypress doesn't support mocking
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-if (global.Cypress) {
-	exit();
-}
 jest.mock('web3-eth', () => {
 	const original = jest.requireActual('web3-eth');
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -48,16 +40,19 @@ jest.mock('web3-eth', () => {
 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
 	};
 });
-// jest.mock('web3-rpc-methods', () => {
-// 	const original = jest.requireActual('web3-rpc-methods');
-// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-// 	return {
-// 		...original,
-// 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
-// 	};
-// });
+// cypress doesn't support mocking
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+describeIf(!global.Cypress)('contract defaults', () => {
+	// jest.mock('web3-rpc-methods', () => {
+	// 	const original = jest.requireActual('web3-rpc-methods');
+	// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+	// 	return {
+	// 		...original,
+	// 		sendTransaction: jest.fn().mockImplementation(original.sendTransaction),
+	// 	};
+	// });
 
-describe('contract defaults', () => {
 	let contract: Contract<typeof GreeterAbi>;
 	let deployOptions: Record<string, unknown>;
 	let sendOptions: Record<string, unknown>;
@@ -91,11 +86,23 @@ describe('contract defaults', () => {
 
 			Contract.defaultHardfork = hardfork;
 
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.defaultHardfork).toBe(hardfork);
 
 			await contract.methods.greet().call();
+
+			await contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+			expect(sendTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({
+					_config: expect.objectContaining({ defaultHardfork: hardfork }),
+				}),
+				expect.any(Object),
+				expect.any(Object),
+			);
 		});
 
 		it('should use "defaultHardfork" on "instance" level', async () => {
@@ -218,7 +225,7 @@ describe('contract defaults', () => {
 		});
 	});
 	describeIf(isWs)('transactionBlockTimeout', () => {
-		it('should use "transactionBlockTimeout" on "instance" level', async () => {
+		test('should use "transactionBlockTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.transactionBlockTimeout).toBe(50);
@@ -230,7 +237,7 @@ describe('contract defaults', () => {
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 		});
 
-		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+		test('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			// Make the test run faster by casing the polling to start after 2 blocks
@@ -278,7 +285,7 @@ describe('contract defaults', () => {
 	});
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
-		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
+		test('should use "blockHeaderTimeout" on "Contract" level', async () => {
 			expect(Contract.blockHeaderTimeout).toBeUndefined();
 			const blockHeaderTimeout = 100;
 			Contract.blockHeaderTimeout = blockHeaderTimeout;
@@ -289,7 +296,7 @@ describe('contract defaults', () => {
 			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
 		});
 
-		it('should use "blockHeaderTimout" on "instance" level', async () => {
+		test('should use "blockHeaderTimout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.blockHeaderTimeout).toBe(10);
@@ -332,7 +339,7 @@ describe('contract defaults', () => {
 	});
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
-		it('should use "transactionPollingInterval" on "Contract" level', async () => {
+		test('should use "transactionPollingInterval" on "Contract" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(Contract.transactionPollingInterval).toBeUndefined();
@@ -343,7 +350,7 @@ describe('contract defaults', () => {
 			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
 		});
 
-		it('should use "transactionPollingTimeout" on "instance" level', async () => {
+		test('should use "transactionPollingTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			const transactionPollingInterval = 500;
