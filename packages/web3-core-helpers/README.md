@@ -1,6 +1,6 @@
 # web3-core-helpers
 
-[![NPM Package][npm-image]][npm-url] 
+[![NPM Package][npm-image]][npm-url]
 
 This is a sub-package of [web3.js][repo] with useful helper functions.
 
@@ -8,10 +8,18 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+You can install the package either using [NPM](https://www.npmjs.com/package/web3-core-helpers) or using [Yarn](https://yarnpkg.com/package/web3-core-helpers)
+
+### Using NPM
 
 ```bash
 npm install web3-core-helpers
+```
+
+### Using Yarn
+
+```bash
+yarn add web3-core-helpers
 ```
 
 ## Usage
