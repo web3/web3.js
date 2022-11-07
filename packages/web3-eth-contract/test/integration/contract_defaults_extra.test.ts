@@ -36,7 +36,7 @@ const MAX_32_SIGNED_INTEGER = 2147483647;
 // cypress doesn't support mocking
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-if (window.Cypress) {
+if (global.Cypress) {
 	exit();
 }
 jest.mock('web3-eth', () => {
