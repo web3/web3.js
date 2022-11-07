@@ -124,7 +124,6 @@ describe('contract', () => {
 				);
 			},
 		);
-	});
 
 		itIf(isWs)(
 			'should fetch past events when "fromBlock" is passed to contract.events.<eventName>',
@@ -164,7 +163,9 @@ describe('contract', () => {
 				);
 			},
 		);
+	});
 
+	describe('events subscription with HTTP', () => {
 		itIf(isHttp)('should fail to subscribe', async () => {
 			// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
 			const failedSubscriptionPromise = new Promise<void>((resolve, reject) => {
