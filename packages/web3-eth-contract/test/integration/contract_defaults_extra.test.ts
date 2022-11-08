@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ValidChains, Hardfork, TransactionReceipt } from 'web3-types';
 import * as Web3Eth from 'web3-eth';
 import { TransactionBlockTimeoutError } from 'web3-errors';
-import { ethRpcMethods } from 'web3-rpc-methods';
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import {
@@ -364,7 +363,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(contract.handleRevert).toBe(handleRevert);
 
-			const sendTransactionSpy = jest.spyOn(ethRpcMethods, 'sendTransaction');
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
@@ -381,7 +380,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(contract.handleRevert).toBe(handleRevert);
 
-			const sendTransactionSpy = jest.spyOn(ethRpcMethods, 'sendTransaction');
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
