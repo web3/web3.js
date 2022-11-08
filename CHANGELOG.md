@@ -785,6 +785,14 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Changed
 
+#### web3-types
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore
+
+#### web3-eth-accounts
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore
+
 #### web3-core
 
 -   Default value for `API` generic for `Web3ContextObject` from `any` to `unknown` (#5393)
