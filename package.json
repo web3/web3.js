@@ -88,6 +88,7 @@
 		"clean-webpack-plugin": "^4.0.0",
 		"crypto-browserify": "^3.12.0",
 		"cypress-jest-adapter": "^0.1.1",
+		"cypress-select-tests": "^1.7.1",
 		"declaration-bundler-webpack-plugin": "^1.0.3",
 		"eslint": "^8.20.0",
 		"http-browserify": "^1.7.0",
