@@ -77,7 +77,6 @@
 		"compile:contracts": "node ./scripts/compile_contracts.js && yarn format && yarn lint:fix"
 	},
 	"devDependencies": {
-		"@cypress/grep": "^3.1.0",
 		"@cypress/webpack-preprocessor": "^5.12.0",
 		"@droppedcode/typedoc-plugin-relative-includes": "^1.0.2",
 		"@openzeppelin/contracts": "^4.7.1",

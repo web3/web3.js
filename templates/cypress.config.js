@@ -21,10 +21,7 @@ const config = {
 		// We've imported your old cypress plugins here.
 		// You may want to clean this up later by importing these.
 		setupNodeEvents(on, config) {
-			const pluginConfig = require('./cypress/plugins/index.js')(on, config);
-			return {
-				...pluginConfig,
-			};
+			return require('./cypress/plugins/index.js')(on, config);
 		},
 		specPattern: 'test/integration/**/**/*.test.ts',
 		excludeSpecPattern: ['**/contract_defaults_extra.test.ts'],

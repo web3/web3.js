@@ -20,10 +20,7 @@ import './commands';
 // require('./commands')
 
 import 'cypress-jest-adapter';
-import registerCypressGrep from '@cypress/grep';
 
-// register cypress-grep
-registerCypressGrep();
 // Enable the hook to match Jest
 global.beforeAll = global.before;
 global.afterAll = global.after;
