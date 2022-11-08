@@ -28,7 +28,7 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title} 4.x</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <p> Web3.js is a collection of libraries that allow you to interact with a local or remote ethereum node using HTTP, IPC or WebSocket.
+        <p> web3.js is a collection of libraries that allow you to interact with a local or remote ethereum node using HTTP, IPC or WebSocket.
 The following documentation will guide you through the breaking changes between 1.x and the 4.x version of web3.js as well as providing an API reference documentation with examples.</p>
       </div>
     </header>
@@ -39,8 +39,8 @@ export default function Home(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Web3.js Ethereum TypeScript library">
+      title={`${siteConfig.title}`}
+      description="web3.js Ethereum TypeScript library">
       <HomepageHeader />
     </Layout>
   );

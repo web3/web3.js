@@ -39,8 +39,8 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1-alpha.0",
-		"web3-types": "^0.1.1-alpha.0",
-		"web3-validator": "^0.1.1-alpha.0"
+		"web3-core": "^4.0.1-alpha.1",
+		"web3-types": "^0.1.1-alpha.1",
+		"web3-validator": "^0.1.1-alpha.1"
 	}
 }

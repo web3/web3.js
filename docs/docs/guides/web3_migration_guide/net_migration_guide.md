@@ -1,20 +1,20 @@
 ---
 sidebar_position: 9
-sidebar_label: Web3.*.net
+sidebar_label: web3.*.net
 ---
 
-# Web3 Net Migration Guide
+# web3 Net Migration Guide
 
 ## Breaking Changes
 
-### getId
+### web3.\*.net.getId
 
--   The bzz and shh package are deprecated, therefore `web3.bzz.net.getId` and `web3.shh.net.getId` functions are not available
+The `bzz` and `shh` package are deprecated, therefore `web3.bzz.net.getId` and `web3.shh.net.getId` functions are not available.
 
-### isListening
+### web3.\*.net.isListening
 
--   The bzz and shh package are deprecated, therefore `web3.bzz.net.isListening` and `web3.shh.net.isListening` functions are not available
+The `bzz` and `shh` package are deprecated, therefore `web3.bzz.net.isListening` and `web3.shh.net.isListening` functions are not available.
 
-### getPeerCount
+### web3.\*.net.getPeerCount
 
--   The bzz and shh package are deprecated, therefore `web3.bzz.net.getPeerCount` and `web3.shh.net.getPeerCount` functions are not available
+The `bzz` and `shh` package are deprecated, therefore `web3.bzz.net.getPeerCount` and `web3.shh.net.getPeerCount` functions are not available.

@@ -1,22 +1,22 @@
 ---
 sidebar_position: 3
-sidebar_label: Web3.eth
+sidebar_label: web3.eth
 ---
 
-# Web3.eth Migration Guide
+# web3.eth Migration Guide
 
 ## Breaking Changes
 
-All the API level interfaces returning or accepting `null` in `1.x`, use `undefined` in `4.x`
+All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x.
 
 ### Return Values
 
-##### Returns a `BigInt` instead of a number string
+#### Returns a `BigInt` instead of a number string
 
 -   `web3.eth.getGasPrice`
 -   `web3.eth.getBalance`
 
-##### Returns a `BigInt` instead of a number
+#### Returns a `BigInt` instead of a number
 
 -   `web3.eth.getBlockNumber`
 -   `web3.eth.getBlockTransactionCount`
@@ -26,7 +26,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
 
 ---
 
-##### `web3.eth.getBlock`
+#### web3.eth.getBlock
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `baseFeePerGas`
@@ -39,7 +39,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
     -   `difficulty`
     -   `totalDifficulty`
 
-##### `web3.eth.getUncle`
+#### web3.eth.getUncle
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `baseFeePerGas`
@@ -51,7 +51,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
 -   Returns a `BigInt` instead of a number string for the following properties:
     -   `difficulty`
 
-##### `web3.eth.getTransaction`
+#### web3.eth.getTransaction
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `blockNumber`
@@ -66,7 +66,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
     -   `value`
     -   `chainId`
 
-##### `web3.eth.getPendingTransactions`
+#### web3.eth.getPendingTransactions
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `blockNumber`
@@ -80,7 +80,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
     -   `maxPriorityFeePerGas`
     -   `value`
 
-##### `web3.eth.getTransactionFromBlock`
+#### web3.eth.getTransactionFromBlock
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `blockNumber`
@@ -94,7 +94,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
     -   `maxPriorityFeePerGas`
     -   `value`
 
-##### `web3.eth.getTransactionReceipt`
+#### web3.eth.getTransactionReceipt
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `blockNumber`
@@ -105,7 +105,7 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
 -   Returns a `BigInt` instead of a boolean for the following properties:
     -   `status`
 
-##### `web3.eth.sendSignedTransaction`
+#### web3.eth.sendSignedTransaction
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `blockNumber`
@@ -122,27 +122,27 @@ All the API level interfaces returning or accepting `null` in `1.x`, use `undefi
 
 ### Defaults and Configs
 
--   All default values that returned `null` in 1.x, in 4.x return `undefined`. There are:
+-   In 1.x all default values that returned `null` now return `undefined` in 4.x, these include:
 
     -   `givenProvider`
     -   `currentProvider`
     -   `web3.eth.defaultAccount`
         -   1.x has `undefined` documented as default, but in implementation it's `null`
 
--   `web3.eth.defaultHardfork` default is `london` instead of `undefined`
-    -   1.x has `london` documented as default, but in implementation it's `undefined`
--   `web3.eth.defaultChain` default is `mainnet` instead of `undefined`
-    -   1.x has `mainnet` documented as default, but in implementation it's `undefined`
+-   `web3.eth.defaultHardfork` default is `"london"` instead of `undefined`
+    -   1.x has `"london"` documented as default, but in implementation it's `undefined`
+-   `web3.eth.defaultChain` default is `"mainnet"` instead of `undefined`
+    -   1.x has `"mainnet"` documented as default, but in implementation it's `undefined`
 
 ### Web3Eth Methods
 
-### `web3.eth.getHashrate`
+#### web3.eth.getHashrate
 
-`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`
+`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`.
 
-### `web3.eth.getFeeHistory`
+#### web3.eth.getFeeHistory
 
-`4.x` returns a `BigInt` for `oldestBlock` instead of the hex string that's returned in `1.x`
+4.x returns a `BigInt` for `oldestBlock` instead of the hex string that's returned in 1.x.
 
 ```typescript
 // in 1.x
@@ -162,16 +162,16 @@ await web3.eth.getFeeHistory('0x1', 'latest', []);
 // }
 ```
 
-### `web3.eth.sendTransaction`
+#### web3.eth.sendTransaction
 
--   `userTransactionObject.chain` no longer defaults to `mainnet`, will be `undefined` if not provided
--   `userTransactionObject.hardfork` no longer defaults to `london`, will be `undefined` if not provided
+-   `userTransactionObject.chain` no longer defaults to `"mainnet"`, will be `undefined` if not provided
+-   `userTransactionObject.hardfork` no longer defaults to `"london"`, will be `undefined` if not provided
 
-#### PromiEvents
+### PromiEvents
 
-##### `sending`
+#### sending
 
--   In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+-   In 1.x, this event listenter would receive a `payload` object as an arguement. In 4.x, just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -204,9 +204,9 @@ web3.eth.sendTransaction({ ... }).on('sending', (sendTransactionObject) => { ...
 // }
 ```
 
-###### `sent`
+#### sent
 
--   In `1.x`, this event listenter would receive a `payload` object as an arguement, in `4.x` just the sent transaction object is recieved
+-   In 1.x, this event listenter would receive a `payload` object as an arguement. In 4.x just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -237,7 +237,7 @@ web3.eth.sendTransaction({ ... }).on('sent', (sentTransactionObject) => { ... })
 // }
 ```
 
-##### `receipt`
+#### receipt
 
 -   The `receipt` object the event listener receives:
     -   Returns a `BigInt` instead of a number for the following properties:
@@ -289,9 +289,9 @@ web3.eth.sendTransaction({ ... }).on('receipt', (receipt) => { ... });
 // }
 ```
 
-##### `confirmation`
+#### confirmation
 
--   In `1.x`, this event listener would receive `confirmationNumber` and `receipt` as arguments, in `4.x` an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
+-   In 1.x, this event listener would receive `confirmationNumber` and `receipt` as arguments, in 4.x an object containing the properties: `confirmationNumber`, `receipt`, and `latestBlockHash` will be received
 -   `confirmationNumber` is returned as a `BigInt` instead of a number
 -   For the returned `receipt` object:
     -   Returns a `BigInt` instead of a number for the following properties:
@@ -349,7 +349,7 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => { .
 // }
 ```
 
--   In `1.x`, an event was emitted for each confirmation starting from `0` (the first block the transaction was included in), in `4.x` confirmations start from `1` and the first event to be emitted will have a `confirmationNumber` of `2`
+-   In 1.x, an event was emitted for each confirmation starting from `0` (the first block the transaction was included in), in 4.x confirmations start from `1` and the first event to be emitted will have a `confirmationNumber` of `2`
 
 ```typescript
 // in 1.x
@@ -367,9 +367,9 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
 });
 ```
 
-### `web3.eth.sign`
+### web3.eth.sign
 
--   To-be-signed data must be provided as a Hex String
+-   To-be-signed data must be provided as a `Hex String`
 
 ```typescript
 // In 1.x, data can be provided as both a UTF-8 string and a hex string
@@ -389,11 +389,11 @@ await web3.eth.sign(
 // 0x7907ca312eb55a54673255dfa4e947d7533dcf746460c82b50e281fe88a6f0d17d602d2205b2d7c137cf7cb9b86a7ea976fd062e39bc08373dffa72f020776e11c
 ```
 
-### `web3.eth.signTransaction`
+### web3.eth.signTransaction
 
--   In `1.x`, for untyped, `0x0` and `0x1` typed transactions, `maxPriorityFeePerGas` and `maxFeePerGas` are set to `null`. For `0x2` typed transactions, `gasPrice` is set to `null`. In `4.x` these properties are not present unless provided
--   In `1.x` contract deployment data is provided via the `input` property, while in `4.x` it is provided using the `data` property
--   In `1.x` the hash of the transaction is included in the returned transaction object, while in `4.x` it's not
+-   In 1.x, for untyped, `0x0` and `0x1` typed transactions, `maxPriorityFeePerGas` and `maxFeePerGas` are set to `null`. For `0x2` typed transactions, `gasPrice` is set to `null`. In 4.x these properties are not present unless provided
+-   In 1.x contract deployment data is provided via the `input` property, while in 4.x it is provided using the `data` property
+-   In 1.x the hash of the transaction is included in the returned `transaction` object, while in 4.x it's not
 
 ```typescript
 // In 1.x - Legacy (type 0x0) transaction
@@ -510,7 +510,7 @@ await web3.eth.signTransaction({
 // }
 ```
 
-### `web3.eth.getPastLogs`
+### web3.eth.getPastLogs
 
 -   Returns a `BigInt` instead of a number for the following properties:
     -   `logIndex`
@@ -569,76 +569,30 @@ await web3.eth
 //   ];
 ```
 
-### `web3.eth.getWork`
+### web3.eth.getChainId
 
-same as in 1.x
-
-```typescript
-web3.eth.getWork().then(console.log);
-// [
-// 	'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-// 	'0x5EED00000000000000000000000000005EED0000000000000000000000000000',
-// 	'0xd1ff1c01710000000000000000000000d1ff1c01710000000000000000000000',
-// ];
-```
-
-### `web3.eth.submitWork`
-
-same as in 1.x
+Returns a `BigInt` instead of a number string.
 
 ```typescript
-web3.eth
-	.submitWork([
-		'0x0000000000000001',
-		'0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-		'0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000',
-	])
-	.then(console.log);
-//true
-```
-
-### `web3.eth.requestAccouts`
-
-same as 1.x, returns array of addressed (must be used with injected provider)
-
-```typescript
-await web3.eth.requestAccounts();
-//['0xb839Aa3ECdd24c0Fa2fa382Ca179b88a0b33804f']
-```
-
-### `web3.eth.getChainId`
-
-Returns a `BigInt` instead of a number string
-
-```typescript
-//in 1.x
+// in 1.x
 web3.eth.getChainId().then(console.log);
-//1337
+// 1337
 
-//in 4.x
+// in 4.x
 web3.eth.getChainId().then(console.log);
-//1337n
+// 1337n
 ```
 
-### `web3.eth.getNodeInfo`
-
-same as in 1.x
-
-```typescript
-web3.eth.getNodeInfo().then(console.log);
-// Geth/v1.10.18-unstable-b3af0a55/linux-arm64/go1.18.1
-```
-
-### `web3.eth.getProof`
+### web3.eth.getProof
 
 -   Returns a `BigInt` instead of a number string for the following properties:
     -   `balance`
     -   `nonce`
 
-`balance` and `nonce` in 1.x were described as numbers
+In 1.x, `balance` and `nonce` were described as numbers.
 
 ```typescript
-//in 1.x
+// in 1.x
 web3.eth
 	.getProof(
 		'0x10d53fb7D9C9EedC40A97B51663fFd8DcC651a6b',
@@ -669,7 +623,7 @@ web3.eth
 //     { key: '0x1', value: '0x0', proof: [Array] }
 //   ]
 //}
-//in 4.x
+// in 4.x
 web3.eth
 	.getProof(
 		'0x10d53fb7D9C9EedC40A97B51663fFd8DcC651a6b',

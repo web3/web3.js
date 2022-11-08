@@ -1,7 +1,7 @@
 ---
-title: Web3 Providers Migration Guide
+title: web3.providers Migration Guide
 sidebar_position: 2
-sidebar_label: Web3.providers
+sidebar_label: web3.providers
 ---
 
 There are multiple ways to set the provider.
@@ -19,7 +19,7 @@ The key rule for setting provider is as follows:
 2. For contracts `web3.Contract.setProvider` can be used to set provider for **all instances** of contracts created by `web3.eth.Contract`.
 
 :::tip
-A provider can be either `string` type or [`SupportedProviders`](/api/web3-core#SupportedProviders).
+A provider can be either type `string` or [`SupportedProviders`](/api/web3-core#SupportedProviders).
 :::
 
 ## Examples
@@ -60,15 +60,15 @@ const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
 
 The Injected provider should be in compliance with [EIP1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md).
 
-Web3.js 4.x Provider specifications are defined in https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts for Injected Providers
+The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
 
 ### Provider Options
 
-There are differences in the objects that could be passed in providers' constructors.
+There are differences in the objects that could be passed in the Provider constructors.
 
 #### HttpProvider
 
-In `1.x` options passed in the constructor should be of type `HttpProviderOptions` (see `web3-core/types` in `1.x`). The `HttpProviderOptions` interface consists of
+In 1.x, options passed in the constructor should be of type [`HttpProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L173). The `HttpProviderOptions` interface consists of:
 
 ```ts
 export interface HttpProviderOptions {
@@ -91,13 +91,13 @@ export interface HttpHeader {
 }
 ```
 
-In `4.x` the options is of type `HttpProviderOptions`, which is an object with a `providerOptions` key and value a `RequestInit` object.
-Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html)
+In 4.x, the options is of type `HttpProviderOptions`, which is an object with a `providerOptions` key and value a `RequestInit` object.
+Regarding `RequestInit` see [microsoft's github](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules_typedoc_node_modules_typescript_lib_lib_dom_d_.requestinit.html).
 
 For example:
 
 ```ts
-//in 1.x
+// in 1.x
 let httpOptions = {
     keepAlive: true,
     withCredentials: false,
@@ -114,7 +114,7 @@ let httpOptions = {
     }
 };
 
-//in 4.x
+// in 4.x
 let httpOptions = {
 	providerOptions: {
 		body: undefined,
@@ -138,7 +138,7 @@ let httpOptions = {
 
 #### WebsocketProvider
 
-In `1.x` options passed in the constructor should be of type `WebsocketProviderOptions` (see `web3-core/types` in `1.x`). The `WebsocketProviderOptions` interface consists of
+In 1.x, options passed in the constructor should be of type [`WebsocketProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L192). The `WebsocketProviderOptions` interface consists of:
 
 ```ts
 export interface WebsocketProviderOptions {
@@ -161,10 +161,10 @@ export interface ReconnectOptions {
 }
 ```
 
-In `4.x` the options object is of type `ClientRequestArgs` or of `ClientOptions`. See
-Regarding `RequestInit` see [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`
+In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See
+Regarding `RequestInit` see [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
-In `4.x` a second option parameter can be given regarding reconnecting.
+In 4.x a second option parameter can be given regarding reconnecting.
 
 The interface:
 

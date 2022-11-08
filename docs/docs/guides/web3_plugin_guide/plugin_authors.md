@@ -3,13 +3,13 @@ sidebar_position: 0
 sidebar_label: 'Plugin Authors'
 ---
 
-# Web3.js Plugin Author's Guide
+# web3.js Plugin Author's Guide
 
-This guide intends to provide the necessary context for developing plugins for Web3.js.
+This guide intends to provide the necessary context for developing plugins for web3.js.
 
 ## Before Getting Started
 
-It's highly recommended you as the plugin author understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can communicate to your users that they are responsible for augmenting the class interface they register your plugin with if they desire to have type support when using your plugin. Ideally this could be solved for by the plugin author, or better yet Web3.js, but so far a better solution is unknown - if you have any ideas, please [create an issue](https://github.com/web3/web3.js/issues/new/choose) and help us improve Web3.js' UX.
+It's highly recommended you as the plugin author understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can communicate to your users that they are responsible for augmenting the class interface they register your plugin with if they desire to have type support when using your plugin. Ideally this could be solved for by the plugin author, or better yet web3.js, but so far a better solution is unknown - if you have any ideas, please [create an issue](https://github.com/web3/web3.js/issues/new/choose) and help us improve web3.js' UX.
 
 ## Plugin Dependencies
 
@@ -144,11 +144,11 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 }
 ```
 
-## Using Web3.js Packages within Your Plugin
+## Using web3.js Packages within Your Plugin
 
 ### Overriding `Web3Context`'s `.link` Method
 
-There currently exists [an issue](https://github.com/web3/web3.js/issues/5492) with certain Web3.js packages not correctly linking their `Web3Context` with the context of the class the user has registered the plugin with. As mentioned in the issue, this can result in a bug where a plugin instantiates an instance of `Contract` (from `web3-eth-contract`) and attempts to call a method on the `Contract` instance (which uses the `requestManager` to make a call to the Ethereum provider), resulting in a [ProviderError](/api/web3-errors/class/ProviderError) even though the plugin user has set a provider and it should be available to the plugin.
+There currently exists [an issue](https://github.com/web3/web3.js/issues/5492) with certain web3.js packages not correctly linking their `Web3Context` with the context of the class the user has registered the plugin with. As mentioned in the issue, this can result in a bug where a plugin instantiates an instance of `Contract` (from `web3-eth-contract`) and attempts to call a method on the `Contract` instance (which uses the `requestManager` to make a call to the Ethereum provider), resulting in a [ProviderError](/api/web3-errors/class/ProviderError) even though the plugin user has set a provider and it should be available to the plugin.
 
 A workaround for this issue is available, below is an example of it:
 
@@ -199,7 +199,7 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 
 The workaround is overwriting the inherited `link` method (inherited from `Web3PluginBase` which inherits it from `Web3Context`) and explicitly calling `.link` on the `Contract` instance. The `parentContext` will get passed when the user calls `registerPlugin`, it will be the context of the class the user is registering your plugin with.
 
-The following is the workaround, and will probably need to be done for any instantiated Web3.js package your plugin uses that makes use of `Web3Context`:
+The following is the workaround, and will probably need to be done for any instantiated web3.js package your plugin uses that makes use of `Web3Context`:
 
 ```typescript
 public link(parentContext: Web3Context) {

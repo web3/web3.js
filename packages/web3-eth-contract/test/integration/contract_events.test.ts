@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Contract } from '../../src';
+import { Contract, EventLog } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { processAsync } from '../shared_fixtures/utils';
 import {
@@ -121,6 +121,45 @@ describe('contract', () => {
 					expect.objectContaining({
 						event: 'MultiValueEvent',
 					}),
+				);
+			},
+		);
+
+		itIf(isWs)(
+			'should fetch past events when "fromBlock" is passed to contract.events.<eventName>',
+			async () => {
+				const eventValues = [11, 12, 13, 14];
+				// eslint-disable-next-line jest/no-standalone-expect
+				return expect(
+					processAsync(async resolve => {
+						// trigger multiple events
+						for (const eventValue of eventValues) {
+							// Wait for every transaction, before firing the next one, to prevent a possible nonce duplication.
+							// eslint-disable-next-line no-await-in-loop
+							await contractDeployed.methods
+								.firesMultiValueEvent('Event Value', eventValue, false)
+								.send(sendOptions);
+						}
+
+						const event = contractDeployed.events.MultiValueEvent({
+							fromBlock: 'earliest',
+						});
+
+						const pastEvents: EventLog[] = [];
+						event.on('data', d => {
+							pastEvents.push(d);
+							if (pastEvents.length === eventValues.length) {
+								resolve(pastEvents);
+							}
+						});
+					}),
+				).resolves.toEqual(
+					expect.arrayContaining([
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+						expect.objectContaining({ event: 'MultiValueEvent' }),
+					]),
 				);
 			},
 		);
