@@ -1,6 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+// https://github.com/webpack/webpack/issues/13572#issuecomment-923736472
+const crypto = require("crypto");
+const crypto_createHash_alg = crypto.createHash;
+crypto.createHash = (algorithm, options ) => crypto_createHash_alg(algorithm == "md4" ? "sha256" : algorithm, options);
 
 module.exports = {
     mode: "production",
