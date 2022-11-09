@@ -42,10 +42,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `Web3EthExecutionAPI` export (#5441)
 -   `Web3NetAPI` export (#5441)
 -   `EthPersonalAPI` export (#5441)
--   These types were moved from `web3-eth-accounts` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore
 
 ### Changed
 
 -   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
 
 ## [Unreleased]
+
+### Added
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )

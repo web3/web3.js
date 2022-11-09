@@ -893,3 +893,15 @@ should use 4.0.1-alpha.0 for testing.
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-types
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+### Removed
+
+#### web3-eth-accounts
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
