@@ -17,11 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 
-import { Web3AccountProvider } from 'web3-types';
+import { Web3AccountProvider, KeyStore } from 'web3-types';
 import { isBrowser, isElectron, itIf } from '../fixtures/system_test_utils';
 import { Wallet } from '../../src';
 import * as accountProvider from '../../src/account';
-import { Web3Account } from '../../dist';
 
 describe('Wallet', () => {
 	let wallet: Wallet;
@@ -222,14 +221,10 @@ describe('Wallet', () => {
 			wallet.add(account1);
 			wallet.add(account2);
 
-			const result: string[] = await wallet.encrypt('password', options);
+			const result: KeyStore[] = await wallet.encrypt('password', options);
 			expect(result).toHaveLength(2);
-			expect(`0x${(JSON.parse(result[0]) as Web3Account)?.address.toLowerCase()}`).toBe(
-				account1.address.toLowerCase(),
-			);
-			expect(`0x${(JSON.parse(result[1]) as Web3Account)?.address.toLowerCase()}`).toBe(
-				account2.address.toLowerCase(),
-			);
+			expect(`0x${result[0]?.address.toLowerCase()}`).toBe(account1.address.toLowerCase());
+			expect(`0x${result[1]?.address.toLowerCase()}`).toBe(account2.address.toLowerCase());
 		});
 	});
 

@@ -863,7 +863,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`. (#5435)
--   Emit past contract events based on `fromBlock`  when passed to `contract.events.someEventName` (#5201)
+-   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 
 #### web3-eth-abi
 
@@ -893,3 +893,15 @@ should use 4.0.1-alpha.0 for testing.
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-types
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+### Removed
+
+#### web3-eth-accounts
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )

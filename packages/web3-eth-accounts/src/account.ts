@@ -33,7 +33,15 @@ import {
 	TransactionSigningError,
 	UndefinedRawTransactionError,
 } from 'web3-errors';
-import { Address, Bytes, HexString } from 'web3-types';
+import {
+	Address,
+	Bytes,
+	HexString,
+	CipherOptions,
+	PBKDF2SHA256Params,
+	ScryptParams,
+	KeyStore,
+} from 'web3-types';
 import {
 	bytesToBuffer,
 	bytesToHex,
@@ -47,16 +55,7 @@ import {
 } from 'web3-utils';
 import { isBuffer, isNullish, isString, validator } from 'web3-validator';
 import { keyStoreSchema } from './schemas';
-import {
-	CipherOptions,
-	KeyStore,
-	PBKDF2SHA256Params,
-	ScryptParams,
-	SignatureObject,
-	SignResult,
-	SignTransactionResult,
-	Web3Account,
-} from './types';
+import { SignatureObject, SignResult, SignTransactionResult, Web3Account } from './types';
 
 /**
  * Get the private key buffer after the validation
@@ -574,7 +573,6 @@ export const encrypt = async (
 	const ciphertext = bytesToHex(cipher).slice(2);
 
 	const mac = sha3Raw(Buffer.from([...derivedKey.slice(16, 32), ...cipher])).replace('0x', '');
-
 	return {
 		version: 3,
 		id: uuidV4(),
@@ -625,11 +623,8 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 		},
 		sign: (data: Record<string, unknown> | string) =>
 			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
-		encrypt: async (password: string, options?: Record<string, unknown>) => {
-			const data = await encrypt(privateKeyBuffer, password, options);
-
-			return JSON.stringify(data);
-		},
+		encrypt: async (password: string, options?: Record<string, unknown>) =>
+			encrypt(privateKeyBuffer, password, options),
 	};
 };
 

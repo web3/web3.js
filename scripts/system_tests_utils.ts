@@ -32,7 +32,14 @@ import { prepareTransactionForSigning, Web3Eth } from 'web3-eth';
 import { Web3Context } from 'web3-core';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { EthExecutionAPI, Bytes, Web3BaseProvider, Transaction, Receipt } from 'web3-types';
+import {
+	EthExecutionAPI,
+	Bytes,
+	Web3BaseProvider,
+	Transaction,
+	Receipt,
+	KeyStore,
+} from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -164,7 +171,7 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 	};
 
 	const decryptWithContext = async (
-		keystore: string,
+		keystore: string | KeyStore,
 		password: string,
 		options?: Record<string, unknown>,
 	) => {
