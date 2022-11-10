@@ -7,8 +7,9 @@ sidebar_label: web3.eth.ens
 
 ## Breaking Changes
 
-All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x.
-Functions don't accept a callback.
+-   All the API level interfaces returning or accepting `null` in 1.x, use `undefined` in 4.x.
+-   Functions don't accept a callback anymore.
+-   Functions that accepted an optional `TransactionConfig` as the last argument, now accept an optional `NonPayableCallOptions`. See `web3-eth-contract` package for more details.
 
 #### receipt
 
@@ -44,13 +45,6 @@ Functions don't accept a callback.
 
 ### Not implemented (yet)
 
--   Returns a `BigInt` instead of a number for the following properties:
-    -   `baseFeePerGas`
-    -   `gasLimit`
-    -   `gasUsed`
-    -   `number`
-    -   `size`
-    -   `timestamp`
--   Returns a `BigInt` instead of a number string for the following properties:
-    -   `difficulty`
-    -   `totalDifficulty`
+-   The following functions are implemented yet:
+    -   `getMultihash`
+    -   `setMultihash`
