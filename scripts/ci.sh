@@ -7,6 +7,8 @@
 # Exit immediately on error
 set -o errexit
 
+[[ "$(node -v | cut -c 2-3)" -ge 17 ]] && export NODE_OPTIONS=--openssl-legacy-provider;
+
 if [ "$TEST" = "unit" ]; then
 
   npm run build
