@@ -320,4 +320,6 @@ export const toBigIntValidData: [any, bigint][] = [
 
 export const toBigIntInvalidData: [any, string][] = [
 	[Buffer.from(''), 'can not parse as number data'],
+	['wwwww', ' Error: can not parse as number data'],
+	['zzzzee0xiiuu', ' Error: can not parse as number data'],
 ];
