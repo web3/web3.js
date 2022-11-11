@@ -22,9 +22,9 @@ Passing callbacks to functions is no longer supported, except for event listener
 It will not have:
 
 ```ts
-// -> web3.bzz.net
-// -> web3.shh.net
-// -> web3.extend
+// web3.bzz is NOT available
+// web3.shh is NOT available
+// web3.extend is NOT available
 ```
 
 ### Defaults and Configs

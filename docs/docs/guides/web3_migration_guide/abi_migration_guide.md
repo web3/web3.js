@@ -23,7 +23,7 @@ export interface AbiInput {
 }
 ```
 
-In 4.x::
+In 4.x:
 
 ```
 
