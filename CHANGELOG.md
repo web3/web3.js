@@ -607,7 +607,6 @@ Released with 1.0.0-beta.37 code base.
 
 -  Fixed types for getPastEvents (#4955) (#5260)
 -  Fix Log type by adding missing `removed` property (#4877)
--  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
 
 ### Changed
 
@@ -616,3 +615,5 @@ Released with 1.0.0-beta.37 code base.
 ## [Unreleased]
 
 ## [1.8.2]
+
+-  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
