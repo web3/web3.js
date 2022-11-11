@@ -20,6 +20,7 @@ import {
 	validator,
 	isAddress,
 	isHexStrict,
+	isHex,
 	utils as validatorUtils,
 	isNullish,
 } from 'web3-validator';
@@ -282,12 +283,9 @@ export const toBigInt = (value: unknown): bigint => {
 		return value;
 	}
 
-	if (typeof value === 'string' && !isHexStrict(value)) {
+	// isHex passes for dec, too
+	if (typeof value === 'string' && isHex(value)) {
 		return BigInt(value);
-	}
-
-	if (typeof value === 'string' && isHexStrict(value)) {
-		return BigInt(hexToNumber(value));
 	}
 
 	throw new InvalidNumberError(value);
