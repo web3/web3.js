@@ -77,4 +77,3 @@ Web3.modules = {
 core.addProviders(Web3);
 
 module.exports = Web3;
-

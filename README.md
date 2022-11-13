@@ -17,7 +17,9 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node
+You can install the package either using [NPM](https://www.npmjs.com/package/web3) or using [Yarn](https://yarnpkg.com/package/web3)
+
+### Using NPM
 
 ```bash
 npm install web3
