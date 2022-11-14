@@ -18,3 +18,8 @@ The `bzz` and `shh` package are deprecated, therefore `web3.bzz.net.isListening`
 ### web3.\*.net.getPeerCount
 
 The `bzz` and `shh` package are deprecated, therefore `web3.bzz.net.getPeerCount` and `web3.shh.net.getPeerCount` functions are not available.
+
+```typescript
+// web3.bzz.net is NOT available
+// web3.shh.net is NOT available
+```
