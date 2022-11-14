@@ -900,6 +900,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
 
+### Fixed
+
+-   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+
 ### Removed
 
 #### web3-eth-accounts
