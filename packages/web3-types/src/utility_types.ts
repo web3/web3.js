@@ -30,14 +30,18 @@ export type ConnectionEvent = {
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export type EncodingTypes = Numbers | boolean | Numbers[] | boolean[];
+
 export type TypedObject = {
 	type: string;
 	value: EncodingTypes;
 };
+
 export type TypedObjectAbbreviated = {
 	t: string;
 	v: EncodingTypes;
 };
+
+export type Sha3Input = TypedObject | TypedObjectAbbreviated | Numbers | boolean | object;
 
 export type IndexKeysForArray<A extends readonly unknown[]> = Exclude<keyof A, keyof []>;
 
