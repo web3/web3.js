@@ -214,7 +214,7 @@ export const toAscii = hexToAscii;
  * Auto converts any given value into it's hex representation.
  */
 export const toHex = (
-	value: Numbers | Bytes | Address | boolean,
+	value: Numbers | Bytes | Address | boolean | object,
 	returnType?: boolean,
 ): HexString | ValueTypes => {
 	if (typeof value === 'string' && isAddress(value)) {
@@ -233,6 +233,10 @@ export const toHex = (
 
 	if (typeof value === 'bigint') {
 		return returnType ? 'bigint' : numberToHex(value);
+	}
+
+	if (typeof value === 'object' && !!value) {
+		return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
 	}
 
 	if (typeof value === 'string') {

@@ -214,10 +214,7 @@ export const toHexValidData: [Numbers | Bytes | Address | boolean, [HexString, V
 ];
 
 export const toHexInvalidData: [any, string][] = [
-	[
-		Buffer.from('123'),
-		'Invalid value given "{"type":"Buffer","data":[49,50,51]}". Error: can not be converted to hex.',
-	],
+	[undefined, 'Invalid value given "undefined". Error: can not be converted to hex.'],
 ];
 
 const conversionBaseData: [[Numbers, EtherUnits], string][] = [

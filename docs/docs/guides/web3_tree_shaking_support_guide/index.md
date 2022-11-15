@@ -11,7 +11,7 @@ sidebar_label: web3 Tree Shaking Guide
 "mode":"production"
 ```
 
-2. Add a `sideEffects` property to your project's package.json file:
+2. Add a `sideEffects` property to your project's `package.json` file:
 
 ```json
 "sideEffects": false

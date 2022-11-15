@@ -33,7 +33,7 @@ myContract.methods
 The `unsigned integer` type is dependent on the data format you specified. Default type is `BigInt`.
 :::
 
-### Deploy `’sending’` and `'sent'` event will fire only the params
+### Deploy `sending` and `sent` event will fire only the params
 
 In 1.x, when following was executed `deploy().send().on(‘sending’, payload => {})`. The `payload` was the complete the JSON-RPC Payload. In 4.x, it will just be the transaction which is about to be transmitted. Earlier it was accessible by from `payload.params[0]`, now will be available directly to event handler.
 
@@ -71,7 +71,7 @@ myContract .send().on(‘confirmation’, ({confirmations: bigint, receipt: obje
 
 ### Strict validation for `encodeABI`
 
-`encodeABI` now have strict validation for the ABI types. It's not limited to mentioned use cases below, but applied in general. Some use cases are:
+`encodeABI` now has strict validation for the ABI types. It's not limited to the mentioned use cases below, but applied in general. Some use cases are:
 
 -   Earlier a `byte32` ABI type was successfully encoded even providing less bytes as input. Now it will throw an error.
 -   Earlier a `byte32` ABI type was successfully encoded even with an empty bytes. Now it will throw an error.
