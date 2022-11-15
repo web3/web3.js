@@ -14,7 +14,8 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3PluginBase } from 'web3-core';
+// @ts-expect-error 'Web3Context' is declared but its value is never read.
+import { Web3Context, Web3PluginBase } from 'web3-core';
 
 type CustomRpcApi = {
 	custom_rpc_method: () => string;
@@ -36,5 +37,12 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 			method: 'custom_rpc_method_with_parameters',
 			params: [parameter1, parameter2],
 		});
+	}
+}
+
+// Module Augmentation
+declare module 'web3-core' {
+	interface Web3Context {
+		customRpcMethods: CustomRpcMethodsPlugin;
 	}
 }
