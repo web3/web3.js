@@ -33,6 +33,8 @@ if (!typeof window === undefined) {
 require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
+} else {
+    require('cross-fetch');
 }
 
 /**
