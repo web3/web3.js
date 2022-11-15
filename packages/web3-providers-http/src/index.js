@@ -155,7 +155,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 
         callback(errors.InvalidConnection(this.host));
     }
-    if(window === undefined){
+    if(typeof window === undefined){
         crossFetch =  require('cross-fetch')
         fetch(this.host, options)
         .then(success.bind(this))
