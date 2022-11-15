@@ -268,7 +268,15 @@ export const toNumber = (value: Numbers): number | bigint => {
 			: value;
 	}
 
-	return hexToNumber(numberToHex(value));
+	if (typeof value === 'string' && isHexStrict(value)) {
+		return hexToNumber(value);
+	}
+
+	try {
+		return toNumber(BigInt(value));
+	} catch {
+		throw new InvalidNumberError(value);
+	}
 };
 
 /**
