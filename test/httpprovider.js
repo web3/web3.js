@@ -7,8 +7,8 @@ var http = require('http');
 var https = require('https');
 var Web3 = require('../packages/web3');
 var HttpProvider = require('../packages/web3-providers-http');
+fetch = require('cross-fetch');
 var fetchMock = require('fetch-mock');
-
 function isObject(object) {
     return object != null && typeof object === 'object';
 }

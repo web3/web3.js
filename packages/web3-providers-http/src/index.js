@@ -33,7 +33,9 @@ if (!typeof window === undefined) {
     require('cross-fetch/polyfill');
     require('es6-promise').polyfill();
     require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
-} 
+}  else {
+    require('cross-fetch');
+}
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -155,16 +157,9 @@ HttpProvider.prototype.send = function (payload, callback) {
 
         callback(errors.InvalidConnection(this.host));
     }
-    if(typeof window === undefined){
-        crossFetch =  require('cross-fetch')
-        fetch(this.host, options)
-        .then(success.bind(this))
-        .catch(failed.bind(this));
-    } else {
-        fetch(this.host, options)
-        .then(success.bind(this))
-        .catch(failed.bind(this));
-    }
+    fetch(this.host, options)
+    .then(success.bind(this))
+    .catch(failed.bind(this));
 };
 
 HttpProvider.prototype.disconnect = function () {
