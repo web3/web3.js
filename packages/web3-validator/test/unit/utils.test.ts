@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { InvalidNumberError } from 'web3-errors';
 import { ValidInputTypes } from '../../src/types';
 import {
 	ethAbiToJsonSchema,
@@ -101,7 +102,7 @@ describe('utils', () => {
 		it.each(invalidStringNumbers)('invalid string number', (input: ValidInputTypes) => {
 			expect(() => {
 				numberToHex(input);
-			}).toThrow(new Error('Invalid number value'));
+			}).toThrow(new InvalidNumberError(input));
 		});
 	});
 
