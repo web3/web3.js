@@ -29,13 +29,11 @@ var https = require('https');
 
 // check if node isn't being run
 if (!typeof window === undefined) {
-// Apply missing polyfill for IE
-require('cross-fetch/polyfill');
-require('es6-promise').polyfill();
-require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
-} else {
-    const fetch = require('cross-fetch');
-}
+    // Apply missing polyfill for IE
+    require('cross-fetch/polyfill');
+    require('es6-promise').polyfill();
+    require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
+} 
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -157,10 +155,16 @@ HttpProvider.prototype.send = function (payload, callback) {
 
         callback(errors.InvalidConnection(this.host));
     }
-
-    fetch(this.host, options)
+    if(window === undefined){
+        crossFetch =  require('cross-fetch')
+        fetch(this.host, options)
         .then(success.bind(this))
         .catch(failed.bind(this));
+    } else {
+        fetch(this.host, options)
+        .then(success.bind(this))
+        .catch(failed.bind(this));
+    }
 };
 
 HttpProvider.prototype.disconnect = function () {
