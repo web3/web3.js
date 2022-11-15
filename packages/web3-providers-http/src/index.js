@@ -34,7 +34,7 @@ require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 } else {
-    const fetch = require('cross-fetch');
+    fetch = require('cross-fetch');
 }
 
 /**
