@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { InvalidNumberError } from 'web3-errors';
 import { VALID_ETH_BASE_TYPES } from './constants';
 import {
 	FullValidationSchema,
@@ -349,14 +350,14 @@ export const numberToHex = (value: ValidInputTypes): string => {
 	}
 
 	if (typeof value === 'string' && isHexStrict(value)) {
-		return numberToHex(hexToNumber(value));
+		return value.toLowerCase();
 	}
 
 	if (typeof value === 'string' && !isHexStrict(value)) {
 		return numberToHex(BigInt(value));
 	}
 
-	throw new Error('Invalid number value');
+	throw new InvalidNumberError(value);
 };
 
 /**
