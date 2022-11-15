@@ -7,10 +7,6 @@ sidebar_label: 'Plugin Users'
 
 This guide intends to provide the necessary context for registering plugins with web3.js packages.
 
-## Before Getting Started
-
-It's highly recommended you as a plugin user understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can get the most out of TypeScript's type safety while using web3.js plugins.
-
 ## Installing the Plugin
 
 Unless otherwise mentioned by the plugin author, installing a plugin should be as simple as `yarn add plugin-name`. This should add the plugin as a dependency within your `package.json` and the plugin should be available to import within your code.
@@ -72,106 +68,4 @@ and TypeScript will be able to infer the interface of `SimplePlugin` so that we 
 
 This section of the guide will delve deeper into setting up module augmentation, if you run into any issues, please don't hesitate to [create an issue](https://github.com/web3/web3.js/issues/new/choose) or drop a message in the `web3js-general` channel in the ChainSafe [Discord](https://discord.gg/yjyvFRP), and someone from the team/community will assist you.
 
-### Creating an Export Helper File
 
-There exists a [limitation](https://github.com/web3/web3.js/pull/5393/#discussion_r1000727269) with TypeScript's module augmentation: it can only handle _named modules_. So that web3.js stays backwards compatible, our most commonly used modules (e.g. `Web3`, `Web3Eth`, `Contract`) are exported as `default` exports and are not explicitly named as required by TypeScript for module augmentation. The workaround for this issue is to create a separate file within your project where you import the default module you wish to augment and re-export it as a named module:
-
-Re-exporting `Web3`, `Web3Context`, and `Web3Eth` as named modules:
-
-```typescript
-import Web3 from 'web3';
-export { Web3 };
-```
-
-```typescript
-import Web3Context from 'web3-core';
-export { Web3Context };
-```
-
-```typescript
-import Web3Eth from 'web3-eth';
-export { Web3Eth };
-```
-
-The file that performs this re-exporting can be named whatever, but for the sake of this guide, we'll be assuming the file is named `web3_export_helper.ts`.
-
-### Re-declaring the Module
-
-The first step is telling TypeScript that we're interested in re-defining a module's (i.e. a web3.js package such as `web3-core`, `web3`, or `web3-eth`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, we're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
-
-We start with the following:
-
-```typescript
-import { Web3 } from './web3_export_helper';
-
-declare module 'web3' {...}
-```
-
-In the above example, we're interested in registering a plugin to an instance of `Web3Context` from the `web3-core` module. So we tell TypeScript that we're going to manually declare the module interface for `web3-core`.
-
-### Adding our Plugin's Interface
-
-Now that TypeScript's aware that the interface of the `web3-core` module is going to be augmented, we add our changes. In this case, we're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what we're going to be calling `.registerPlugin` on:
-
-```typescript
-import SimplePlugin from 'web3-plugin';
-
-import { Web3 } from './web3_export_helper';
-
-declare module 'web3' {
-	interface Web3 {
-		simplePlugin: SimplePlugin;
-	}
-}
-```
-
-:::info
-The property name (i.e. `pluginNamespace`), `simplePlugin` in
-
-```typescript
-{
-	simplePlugin: SimplePlugin;
-}
-```
-
-**MUST** be the same as the `pluginNamespace` set by the plugin.
-
-```typescript
-import { Web3PluginBase } from 'web3-core';
-
-export class SimplePlugin extends Web3PluginBase {
-	public pluginNamespace = 'simplePlugin';
-
-	...
-}
-```
-
-This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance you call `.registerPlugin` on:
-
-```typescript
-const web3 = new Web3('http://127.0.0.1:8545');
-web3.registerPlugin(new SimplePlugin());
-// Now simplePlugin (i.e. the pluginNamespace) isavailable
-// on our instance of Web3
-web3.simplePlugin;
-```
-
-:::
-
-And that's all that's required to augment a named module to add type support for a plugin. Now you should be able to remove the `// @ts-expect-error` from the above code example:
-
-```typescript
-import Web3 from 'web3';
-import SimplePlugin from 'web3-plugin';
-
-declare module 'web3' {
-	interface Web3 {
-		simplePlugin: SimplePlugin;
-	}
-}
-
-const web3 = new Web3('http://127.0.0.1:8545');
-web3.registerPlugin(new SimplePlugin());
-
-web3.simplePlugin.simpleMethod();
-```
