@@ -46,7 +46,7 @@ sidebar_label: web3.eth.ens
 #### `getTTL`
 
 -   `web3.eth.ens.getTTL`
-    In 4.x a `bigint` is returned instead of a number.
+    In 4.x a `bigint` is returned instead of a `number`.
 
 ### Not implemented (yet)
 
