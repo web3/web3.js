@@ -350,7 +350,9 @@ export const numberToHex = (value: ValidInputTypes): string => {
 	}
 
 	if (typeof value === 'string' && isHexStrict(value)) {
-		return value.toLowerCase();
+		const [negative, hex] = value.startsWith('-') ? [true, value.slice(1)] : [false, value];
+		const hexValue = hex.split(/^(-)?0(x|X)/).slice(-1)[0];
+		return `${negative ? '-' : ''}0x${hexValue.replace(/^0+/, '').toLowerCase()}`;
 	}
 
 	if (typeof value === 'string' && !isHexStrict(value)) {
