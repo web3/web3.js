@@ -28,7 +28,7 @@ sidebar_label: web3.eth.ens
 -   `web3.eth.ens.registryAddress`
     In `1.x` ens was trying to find the registry address of the current network. In `4.x` the default value is set to the address of registry address in the mainnet.
 
-#### registry
+#### web3.eth.ens.registry
 
 -   `web3.eth.ens.registry`
     `registry` was the way to get the ENS registry in `1.x`. In `4.x` the registry functionality is exposed directly through the `ens` class.
