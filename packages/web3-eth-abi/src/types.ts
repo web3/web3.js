@@ -186,14 +186,21 @@ export type MatchPrimitiveType<
 	| never;
 
 export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+	// check if params are empty array
 	Params extends readonly []
-		? []
-		: Params extends readonly [infer H, ...infer R]
+		? void // if yes outputs is void
+		: Params extends readonly [infer H, ...infer R] // check if Params is array
 		? H extends AbiParameter
-			? // TODO: Find a way to set name for tuple item
-			  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
+			? [
+					MatchPrimitiveType<H['type'], H['components']>,
+					...ContractMethodOutputParameters<R>,
+			  ] &
+					H['name'] extends '' // check if output param name is empty string
+				? []
+				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
+						ContractMethodOutputParameters<R>
 			: ContractMethodOutputParameters<R>
-		: Params extends undefined | unknown
+		: Params extends undefined | unknown // param is not array, check if undefined
 		? []
 		: Params;
 
