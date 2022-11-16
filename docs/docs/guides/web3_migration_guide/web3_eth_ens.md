@@ -23,7 +23,7 @@ sidebar_label: web3.eth.ens
     -   Returns a `BigInt` instead of a boolean for the following properties:
         -   `status`
 
-#### registryAddress
+#### web3.eth.ens.registryAddress
 
 -   `web3.eth.ens.registryAddress`
     In `1.x` ens was trying to find the registry address of the current network. In `4.x` the default value is set to the address of registry address in the mainnet.
