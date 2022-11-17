@@ -27,14 +27,11 @@ var errors = require('web3-core-helpers').errors;
 var http = require('http');
 var https = require('https');
 
-// check if node isn't being run
-if (!typeof window === undefined) {
-    // Apply missing polyfill for IE
-    require('cross-fetch/polyfill');
-    require('es6-promise').polyfill();
-    require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
-}  else {
-    require('cross-fetch');
+// check if built with node
+require('cross-fetch/polyfill');
+require('es6-promise').polyfill();
+if (typeof window === "undefined"){
+    if (!global.Request)require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
 }
 
 /**
