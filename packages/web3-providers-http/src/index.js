@@ -27,14 +27,13 @@ var errors = require('web3-core-helpers').errors;
 var http = require('http');
 var https = require('https');
 
-// check if node isn't being run
-if (!typeof window === undefined) {
 // Apply missing polyfill for IE
 require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
-require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
-} else {
-    fetch = require('cross-fetch');
+
+// import abortController if abortController is not included in node
+if(typeof window === "undefined" && !global.AbortController){
+    require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 }
 
 /**
