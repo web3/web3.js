@@ -617,3 +617,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
 -  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
+-  Updated BN type definition minimum to avoid issues with breaking inconsistencies (#5640)
