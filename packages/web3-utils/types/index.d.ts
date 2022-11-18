@@ -169,7 +169,7 @@ export interface Utils {
     isContractAddressInBloom(bloom: string, contractAddress: string): boolean;
     isTopicInBloom(bloom: string, topic: string): boolean;
     isTopic(topic: string): boolean;
-    jsonInterfaceMethodToString(abiItem: AbiItem): string;
+    _jsonInterfaceMethodToString(abiItem: AbiItem): string;
     soliditySha3(...val: Mixed[]): string | null;
     soliditySha3Raw(...val: Mixed[]): string;
     encodePacked(...val: Mixed[]): string | null;
