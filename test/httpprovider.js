@@ -90,10 +90,6 @@ describe('web3-providers-http', function () {
         });
 
         it('should timeout by delayed response', async function () {
-            // TODO theres a bug in nodejs v14 that isn't mocking fetch properly and uses fetch itself, skipping needs investigation.
-            if (parseFloat(process.versions.node) < 15) {
-                this.skip()
-            } else {
                 var provider = new HttpProvider('/fetchMock', { timeout: 500 });
                 var web3 = new Web3(provider);
 
@@ -101,14 +97,9 @@ describe('web3-providers-http', function () {
 
                 await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, 'CONNECTION TIMEOUT: timeout of 500 ms achived');
                 fetchMock.restore();
-                }
         });
 
         it('should send basic async request', async function () {
-            // TODO theres a bug in nodejs v14 that isn't mocking fetch properly and uses fetch itself, skipping needs investigation.
-            if (parseFloat(process.versions.node) < 15) {
-                this.skip()
-            } else {
                 var provider = new HttpProvider('/fetchMock');
 
                 var reqObject = {
@@ -157,7 +148,6 @@ describe('web3-providers-http', function () {
                 var chainId = await web3.eth.getChainId();
                 assert.equal(chainId, 1);
                 fetchMock.restore();
-        }
         });
     });
 });

@@ -32,7 +32,7 @@ require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
 
 // import abortController if abortController is not included in node
-if(typeof window === "undefined" && !global.AbortController){
+if(typeof global !== "undefined" && !global.AbortController){
     require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 }
 
