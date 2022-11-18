@@ -30,8 +30,8 @@ var https = require('https');
 // check if built with node
 require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
-if(!global.AbortController){
-require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
+if(typeof global !== "undefined" && !global.AbortController){
+    require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
 }
 
 /**
