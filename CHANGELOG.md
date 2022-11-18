@@ -899,11 +899,19 @@ should use 4.0.1-alpha.0 for testing.
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
 
+#### web3-utils
+
+-   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
+
 ### Fixed
 
 #### web3-eth-contract
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
+
+#### web3-utils
+
+-   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
 
 ### Removed
 

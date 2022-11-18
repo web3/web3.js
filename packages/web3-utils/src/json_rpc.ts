@@ -29,7 +29,7 @@ import {
 	JsonRpcSubscriptionResult,
 } from 'web3-types';
 
-let messageId = 0;
+import { uuidV4 } from './uuid';
 
 export const isResponseWithResult = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,
@@ -89,16 +89,12 @@ export const isBatchResponse = <Result = unknown, Error = unknown>(
 
 export const toPayload = <ParamType = unknown[]>(
 	request: JsonRpcOptionalRequest<ParamType>,
-): JsonRpcPayload<ParamType> => {
-	messageId += 1;
-
-	return {
-		jsonrpc: request.jsonrpc ?? '2.0',
-		id: request.id ?? messageId,
-		method: request.method,
-		params: request.params ?? undefined,
-	};
-};
+): JsonRpcPayload<ParamType> => ({
+	jsonrpc: request.jsonrpc ?? '2.0',
+	id: request.id ?? uuidV4(),
+	method: request.method,
+	params: request.params ?? undefined,
+});
 
 export const toBatchPayload = (requests: JsonRpcOptionalRequest<unknown>[]): JsonRpcBatchRequest =>
 	requests.map(request => toPayload<unknown>(request)) as JsonRpcBatchRequest;
