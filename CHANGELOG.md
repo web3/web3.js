@@ -614,4 +614,6 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
-## [1.8.2]
+### Fixed
+
+-  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
