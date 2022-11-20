@@ -17,7 +17,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
 	InvalidStringError,
-	InvalidTypeError,
 	InvalidBooleanError,
 	InvalidAddressError,
 	InvalidSizeError,
@@ -27,9 +26,24 @@ import {
 } from 'web3-errors';
 import { keccak256 } from 'ethereum-cryptography/keccak';
 import { isAddress, isHexStrict, isNullish } from 'web3-validator';
-import { Numbers, TypedObject, TypedObjectAbbreviated, EncodingTypes, Bytes } from 'web3-types';
+import {
+	Numbers,
+	TypedObject,
+	TypedObjectAbbreviated,
+	EncodingTypes,
+	Bytes,
+	Sha3Input,
+} from 'web3-types';
 import { leftPad, rightPad, toTwosComplement } from './string_manipulation';
-import { utf8ToHex, hexToBytes, toNumber, bytesToHex, bytesToBuffer } from './converters';
+import {
+	utf8ToHex,
+	hexToBytes,
+	toNumber,
+	bytesToHex,
+	bytesToBuffer,
+	toHex,
+	toBigInt,
+} from './converters';
 
 const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
@@ -80,17 +94,40 @@ export { keccak256Wrapper as keccak256 };
 /**
  * returns type and value
  */
-const getType = (arg: TypedObject | TypedObjectAbbreviated | Numbers): [string, EncodingTypes] => {
+const getType = (arg: Sha3Input): [string, EncodingTypes] => {
+	if (Array.isArray(arg)) {
+		throw new Error('Autodetection of array types is not supported.');
+	}
+
+	let type;
+	let value;
+	// if type is given
 	if (
 		typeof arg === 'object' &&
 		('t' in arg || 'type' in arg) &&
 		('v' in arg || 'value' in arg)
 	) {
-		const type1 = 't' in arg ? arg.t : arg.type;
-		const val = 'v' in arg ? arg.v : arg.value;
-		return [type1, val];
+		type = 't' in arg ? arg.t : arg.type;
+		value = 'v' in arg ? arg.v : arg.value;
+
+		// otherwise try to guess the type
+	} else {
+		type = toHex(arg, true);
+		value = toHex(arg);
+
+		if (!type.startsWith('int') && !type.startsWith('uint')) {
+			type = 'bytes';
+		}
 	}
-	throw new InvalidTypeError(arg);
+
+	if (
+		(type.startsWith('int') || type.startsWith('uint')) &&
+		typeof value === 'string' &&
+		!/^(-)?0x/i.test(value)
+	) {
+		value = toBigInt(value);
+	}
+	return [type, value];
 };
 
 /**
@@ -209,9 +246,7 @@ const solidityPack = (type: string, val: EncodingTypes): string => {
 /**
  * returns a string of the tightly packed value given based on the type
  */
-export const processSolidityEncodePackedArgs = (
-	arg: TypedObject | TypedObjectAbbreviated | Numbers,
-): string => {
+export const processSolidityEncodePackedArgs = (arg: Sha3Input): string => {
 	const [type, val] = getType(arg);
 
 	// array case
@@ -228,11 +263,9 @@ export const processSolidityEncodePackedArgs = (
 /**
  * Encode packed arguments to a hexstring
  */
-export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]): string => {
+export const encodePacked = (...values: Sha3Input[]): string => {
 	const args = Array.prototype.slice.call(values);
-
 	const hexArgs = args.map(processSolidityEncodePackedArgs);
-
 	return `0x${hexArgs.join('').toLowerCase()}`;
 };
 
@@ -240,9 +273,8 @@ export const encodePacked = (...values: TypedObject[] | TypedObjectAbbreviated[]
  * Will tightly pack values given in the same way solidity would then hash.
  * returns a hash string, or null if input is empty
  */
-export const soliditySha3 = (
-	...values: TypedObject[] | TypedObjectAbbreviated[]
-): string | undefined => sha3(encodePacked(...values));
+export const soliditySha3 = (...values: Sha3Input[]): string | undefined =>
+	sha3(encodePacked(...values));
 
 /**
  * Will tightly pack values given in the same way solidity would then hash.

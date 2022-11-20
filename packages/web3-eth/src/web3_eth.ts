@@ -177,10 +177,10 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	 * @returns The number of hashes per second that the node is mining with.
 	 *
 	 * ```ts
-	 * web3.eth.getHashrate().then(console.log);
+	 * web3.eth.getHashRate().then(console.log);
 	 * > 493736n
 	 *
-	 * web3.eth.getHashrate({ number: FMT_NUMBER.HEX , bytes: FMT_BYTES.HEX }).then(console.log);
+	 * web3.eth.getHashRate({ number: FMT_NUMBER.HEX , bytes: FMT_BYTES.HEX }).then(console.log);
 	 * > "0x788a8"
 	 * ```
 	 */

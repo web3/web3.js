@@ -163,9 +163,6 @@ export const soliditySha3RawValidData: [
 ];
 
 export const soliditySha3InvalidData: [any, string][] = [
-	[1, 'Invalid value given "1". Error: invalid type, type not supported.'],
-	[BigInt(1010), 'Invalid value given "1010". Error: invalid type, type not supported.'],
-	[undefined, 'Invalid value given "undefined". Error: invalid type, type not supported.'],
 	[{ t: 'int8', v: 500 }, 'Invalid value given "500". Error: value is larger than size.'],
 	[
 		{ t: 'bytes', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c' },
