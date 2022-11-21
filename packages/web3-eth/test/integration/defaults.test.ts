@@ -146,7 +146,7 @@ describe('defaults', () => {
 			const fromPass2 = await contractMsgFrom.methods
 				?.from()
 				.call({ from: tempAcc2.address });
-			expect(fromDefault).toBe(tempAcc.address.toLowerCase());
+			expect(fromDefault).toBe(tempAcc.address);
 			expect(fromPass).toBe(tempAcc.address.toLowerCase());
 			expect(fromPass2).toBe(tempAcc2.address.toLowerCase());
 		});
