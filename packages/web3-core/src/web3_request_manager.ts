@@ -32,6 +32,7 @@ import {
 	JsonRpcPayload,
 	JsonRpcResponse,
 	JsonRpcResponseWithError,
+	JsonRpcResponseWithResult,
 	SupportedProviders,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -183,8 +184,12 @@ export class Web3RequestManager<
 		if (isEIP1193Provider(provider)) {
 			return (provider as Web3BaseProvider<API>)
 				.request<Method, ResponseType>(payload as Web3APIPayload<API, Method>)
-				.then(res =>
-					this._processJsonRpcResponse(payload, res, { legacy: true, error: false }),
+				.then(
+					res =>
+						this._processJsonRpcResponse(payload, res, {
+							legacy: true,
+							error: false,
+						}) as JsonRpcResponseWithResult<ResponseType>,
 				)
 				.catch(error =>
 					this._processJsonRpcResponse(

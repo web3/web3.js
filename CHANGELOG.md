@@ -909,6 +909,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 
+#### web3-types
+
+-   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+
 #### web3-utils
 
 -   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
