@@ -264,13 +264,14 @@ export const toWeiValidData: [[Numbers, EtherUnits], string][] = [
 ];
 
 export const fromWeiInvalidData: [[any, any], string][] = [
-	[['123.34', 'kwei'], 'value "123.34" at "/0" must pass "int" validation'],
+	// eslint-disable-next-line no-useless-escape
+	[['123.34', 'kwei'], 'Invalid value given "123.34". Error: can not parse as number data.'],
 	// Using "null" value intentionally for validation
 	// eslint-disable-next-line no-null/no-null
-	[[null, 'kwei'], 'value at "/0" must pass "int" validation'],
-	[[undefined, 'kwei'], 'value at "/0" must pass "int" validation'],
-	[[{}, 'kwei'], 'value "[object Object]" at "/0" must pass "int" validation'],
-	[['data', 'kwei'], 'value "data" at "/0" must pass "int" validation'],
+	[[null, 'kwei'], 'Invalid value given "undefined". Error: can not parse as number data.'],
+	[[undefined, 'kwei'], 'Invalid value given "undefined". Error: can not parse as number data.'],
+	[[{}, 'kwei'], 'Invalid value given "{}". Error: can not parse as number data'],
+	[['data', 'kwei'], 'Invalid value given "data". Error: can not parse as number data.'],
 	[['1234', 'uwei'], 'Invalid value given "uwei". Error: invalid unit.'],
 ];
 
@@ -317,4 +318,6 @@ export const toBigIntValidData: [any, bigint][] = [
 
 export const toBigIntInvalidData: [any, string][] = [
 	[Buffer.from(''), 'can not parse as number data'],
+	['wwwww', ' Error: can not parse as number data'],
+	['zzzzee0xiiuu', ' Error: can not parse as number data'],
 ];
