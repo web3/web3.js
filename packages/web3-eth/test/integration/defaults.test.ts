@@ -146,9 +146,15 @@ describe('defaults', () => {
 			const fromPass2 = await contractMsgFrom.methods
 				?.from()
 				.call({ from: tempAcc2.address });
-			expect(fromDefault).toBe(tempAcc.address.toLowerCase());
-			expect(fromPass).toBe(tempAcc.address.toLowerCase());
-			expect(fromPass2).toBe(tempAcc2.address.toLowerCase());
+			expect((fromDefault as unknown as string).toLowerCase()).toBe(
+				tempAcc.address.toLowerCase(),
+			);
+			expect((fromPass as unknown as string).toLowerCase()).toBe(
+				tempAcc.address.toLowerCase(),
+			);
+			expect((fromPass2 as unknown as string).toLowerCase()).toBe(
+				tempAcc2.address.toLowerCase(),
+			);
 		});
 
 		it('handleRevert', () => {
