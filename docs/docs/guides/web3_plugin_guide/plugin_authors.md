@@ -8,7 +8,7 @@ sidebar_label: 'Plugin Authors'
 This guide intends to provide the necessary context for developing plugins for web3.js.
 
 :::caution
-To provide type safety and hinting for your plugin users, please refer to the [Setting Up Module Augmentation](/docs/guides/web3_plugin_guide/plugin_authors#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
+To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](/docs/guides/web3_plugin_guide/plugin_authors#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
 :::
 
 ## Plugin Dependencies
@@ -203,7 +203,7 @@ public link(parentContext: Web3Context) {
 
 ## Setting Up Module Augmentation
 
-In order to provide typing support for your plugin when it's registered by the user, we must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` module. In simpler terms, we're making TypeScript aware that we are modifying the interface of `Web3Context`, and any class that extends it, to include the interface of your plugin (i.e. your plugin's added methods, properties, etc.). A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
+In order to provide type safety and IntelliSense for your plugin when it's registered by the user, you must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` module. In simpler terms, you will be making TypeScript aware that you are modifying the interface of `Web3Context`, and any class that extends it, to include the interface of your plugin (i.e. your plugin's added methods, properties, etc.). A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
 
 ### A Quick Disclaimer
 
@@ -250,6 +250,7 @@ The above screenshot shows intellisense thinking `.customRpcMethods.someMethod` 
 Currently TypeScript's module augmentation only supports named exports, so the first step in augmenting `Web3Context` is to re-export it as a named export. To do this we're going to create a `reexported_web3_context.ts` file (the name of this file can be whatever, but for the sake of this guide, we're going to assume it's named `reexported_web3_context.ts` and is located within the same directory as our `custom_rpc_methods_plugin.ts` file). The file contents should be as follows:
 
 ```typescript
+// reexported_web3_context.ts
 import { Web3Context } from 'web3-core';
 
 export { Web3Context };
@@ -257,7 +258,7 @@ export { Web3Context };
 
 ### Re-declaring the Module
 
-Now we're going to tell TypeScript that we're interested in re-defining a module's (in this case `reexported_web3_context`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, we're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
+Now you're going to tell TypeScript that you're interested in re-defining a module's (in this case `reexported_web3_context`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, you're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
 
 We start with the following:
 
@@ -283,7 +284,7 @@ declare module './reexported_web3_context' {...}
 
 ### Adding our Plugin's Interface
 
-Now that TypeScript's aware that the interface of the `reexport_web3_context` module is going to be augmented, we add our changes. In this case, we're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what we're going to be calling `.registerPlugin` on:
+Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add our changes. In this case, you're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
 
 ```typescript
 // custom_rpc_methods_plugin.ts
@@ -343,7 +344,7 @@ web3.customRpcMethods;
 
 ### Exporting Our Augmented Web3Context
 
-Lastly we just need to export our augmented `Web3Context` by adding the following after our module re-declaration:
+Lastly, you just need to export our augmented `Web3Context` by adding the following after our module re-declaration:
 
 ```typescript
 export { Web3Context };
@@ -371,6 +372,6 @@ declare module './custom_rpc_methods_plugin.ts' {
 	}
 }
 
-// Here is where we are exporting our augmented Web3Context
+// Here is where you are exporting your augmented Web3Context
 export { Web3Context };
 ```
