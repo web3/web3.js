@@ -132,7 +132,7 @@ describe('web3-providers-http', function () {
                     method: 'POST',
                     credentials: 'omit',
                     headers: {
-                    'Content-Type': 'application/json'
+                      'Content-Type': 'application/json'
                     },
                     body: reqObject
                 };
