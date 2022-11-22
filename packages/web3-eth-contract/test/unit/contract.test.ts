@@ -209,6 +209,8 @@ describe('Contract', () => {
 			const clonnedContract = contract.clone();
 
 			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+
+			contract.options.jsonInterface = GreeterAbi;
 		});
 
 		it('should clone new contract', () => {
@@ -216,6 +218,26 @@ describe('Contract', () => {
 
 			const clonnedContract = contract.clone();
 			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+		});
+
+		it('should be able to update the jsonInterface', () => {
+			const contract = new Contract(sampleStorageContractABI);
+
+			expect(contract.methods.retrieveNum).toBeDefined();
+			expect(contract.methods.storeNum).toBeDefined();
+
+			expect(contract.methods.greet).toBeUndefined();
+			expect(contract.methods.increment).toBeUndefined();
+			expect(contract.methods.setGreeting).toBeUndefined();
+
+			contract.options.jsonInterface = GreeterAbi;
+
+			expect(contract.methods.retrieveNum).toBeUndefined();
+			expect(contract.methods.storeNum).toBeUndefined();
+
+			expect(contract.methods.greet).toBeDefined();
+			expect(contract.methods.increment).toBeDefined();
+			expect(contract.methods.setGreeting).toBeDefined();
 		});
 
 		it('defaults set and get should work', () => {
