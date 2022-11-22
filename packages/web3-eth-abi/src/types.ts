@@ -190,7 +190,11 @@ export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown>
 	Params extends readonly []
 		? []
 		: Params extends readonly [infer H, ...infer R] // check if Params is an array
-		? H extends AbiParameter
+		? R extends [] // if only one output in array
+			? H extends AbiParameter
+				? MatchPrimitiveType<H['type'], H['components']>
+				: []
+			: H extends AbiParameter // if more than 1 outputs
 			? [
 					MatchPrimitiveType<H['type'], H['components']>,
 					...ContractMethodOutputParameters<R>,
