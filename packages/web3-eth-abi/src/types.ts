@@ -188,8 +188,8 @@ export type MatchPrimitiveType<
 export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
 	// check if params are empty array
 	Params extends readonly []
-		? void // if yes outputs is void
-		: Params extends readonly [infer H, ...infer R] // check if Params is array
+		? []
+		: Params extends readonly [infer H, ...infer R] // check if Params is an array
 		? H extends AbiParameter
 			? [
 					MatchPrimitiveType<H['type'], H['components']>,
