@@ -185,28 +185,39 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
-export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+/**
+ * Recursive outputs resolver
+ */
+type ContractMethodOutputParametersResolver<Params extends ReadonlyArray<unknown> | undefined> =
 	// check if params are empty array
 	Params extends readonly []
 		? []
-		: Params extends readonly [infer H, ...infer R] // check if Params is an array
-		? R extends [] // if only one output in array
-			? H extends AbiParameter
-				? MatchPrimitiveType<H['type'], H['components']>
-				: []
-			: H extends AbiParameter // if more than 1 outputs
+		: Params extends readonly [infer H, ...infer R] // check if Params is array
+		? H extends AbiParameter
 			? [
 					MatchPrimitiveType<H['type'], H['components']>,
-					...ContractMethodOutputParameters<R>,
+					...ContractMethodOutputParametersResolver<R>,
 			  ] &
 					H['name'] extends '' // check if output param name is empty string
-				? []
+				? [
+						MatchPrimitiveType<H['type'], H['components']>,
+						...ContractMethodOutputParametersResolver<R>,
+				  ]
 				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
-						ContractMethodOutputParameters<R>
-			: ContractMethodOutputParameters<R>
+						ContractMethodOutputParametersResolver<R>
+			: ContractMethodOutputParametersResolver<R>
 		: Params extends undefined | unknown // param is not array, check if undefined
 		? []
 		: Params;
+
+export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+	Params extends readonly []
+		? void
+		: Params extends readonly [infer E]
+		? E extends AbiParameter
+			? MatchPrimitiveType<E['type'], E['components']>
+			: unknown
+		: ContractMethodOutputParametersResolver<Params>;
 
 export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> | undefined> =
 	Params extends readonly []
