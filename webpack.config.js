@@ -1,10 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-// https://github.com/webpack/webpack/issues/13572#issuecomment-923736472
-const crypto = require("crypto");
-const crypto_createHash_alg = crypto.createHash;
-crypto.createHash = (algorithm, options ) => crypto_createHash_alg(algorithm == "md4" ? "sha256" : algorithm, options);
 
 module.exports = {
     mode: "production",
@@ -12,7 +7,6 @@ module.exports = {
         web3: "./packages/web3/lib/index.js",
     },
     plugins: [
-        new CleanWebpackPlugin(),
         new webpack.SourceMapDevToolPlugin({
             filename: "[file].map",
         }),
@@ -28,8 +22,24 @@ module.exports = {
             // To avoid blotting up the `bn.js` library all over the packages 
             // use single library instance. 
             "bn.js": path.resolve(__dirname, 'node_modules/bn.js')
-        }
+        },
+        fallback: {
+            buffer: require.resolve('buffer'),
+            https: require.resolve('https-browserify'),
+            http: require.resolve("stream-http"),
+            stream: require.resolve("stream-browserify"),
+            crypto: require.resolve("crypto-browserify"),
+        },
+
     },
+    plugins: [
+		new webpack.ProvidePlugin({
+			process: 'process/browser',
+		}),
+        new webpack.ProvidePlugin({
+			Buffer: ['buffer', 'Buffer'],
+		}),
+	],
     module: {
         rules: [
             {
@@ -63,5 +73,6 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         library: "Web3",
         libraryTarget: "umd",
+        clean: true,
     },
 };
