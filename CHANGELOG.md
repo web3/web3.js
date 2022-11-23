@@ -916,6 +916,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
+-   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5309).
 
 ### Removed
 
