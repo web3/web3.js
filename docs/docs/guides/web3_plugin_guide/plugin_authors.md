@@ -260,14 +260,12 @@ export { Web3Context };
 
 Now you're going to tell TypeScript that you're interested in re-defining a module's (in this case `reexported_web3_context`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, you're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
 
-We start with the following:
-
 ```typescript
 // custom_rpc_methods_plugin.ts
 import { Web3PluginBase } from 'web3-core';
 
-// Here we are importing our re-exported Web3Context
-// from the above section
+// Here the re-exported Web3Context from
+// the previous section is being imported
 import { Web3Context } from './reexported_web3_context';
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase {
@@ -278,7 +276,8 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 	}
 }
 
-// Here is where we are beginning to augment the Web3Context module
+// Here is the declaration to TypeScript that you are
+// augmenting the imported module (i.e. ./reexported_web3_context)
 declare module './reexported_web3_context' {...}
 ```
 
