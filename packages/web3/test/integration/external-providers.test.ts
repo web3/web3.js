@@ -18,18 +18,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
 
+import In3Client from 'in3';
+
+import { setRequestIdStart } from 'web3-utils';
+
 import Web3 from '../../src/index';
 import { getSystemTestMnemonic } from '../shared_fixtures/system_tests_utils';
 
 describe('compatibility with external providers', () => {
-	it('should accept a simple EIP1193 provider', async () => {
+	it('should accept a simple EIP1193 provider', () => {
 		interface RequestArguments {
 			readonly method: string;
 			readonly params?: readonly unknown[] | object;
 		}
 
 		class Provider {
-			// eslint-disable-next-line class-methods-use-this
+			// eslint-disable-next-line class-methods-use-this, @typescript-eslint/require-await, @typescript-eslint/no-unused-vars
 			public async request(_: RequestArguments): Promise<unknown> {
 				return undefined as unknown;
 			}
@@ -40,7 +44,7 @@ describe('compatibility with external providers', () => {
 		expect(provider).toBeDefined();
 	});
 
-	it('should accept a ganache provider', async () => {
+	it('should accept a `ganache` provider', async () => {
 		const { provider } = ganache.server({
 			wallet: {
 				mnemonic: getSystemTestMnemonic(),
@@ -57,5 +61,24 @@ describe('compatibility with external providers', () => {
 		});
 
 		await expect(tx).resolves.not.toThrow();
+	});
+
+	it('should accept an `in3` provider', async () => {
+		// use the In3Client as Http-Provider for web3.js
+		const web3 = new Web3(
+			new In3Client({
+				proof: 'standard',
+				signatureCount: 1,
+				requestCount: 2,
+				chainId: 'mainnet',
+			}).createWeb3Provider(),
+		);
+
+		// TODO: remove the next line after this issue is closed: https://github.com/blockchainsllc/in3/issues/46
+		setRequestIdStart(0);
+
+		// get the last block number
+		const block = await web3.eth.getBlockNumber();
+		expect(typeof block).toBe('bigint');
 	});
 });
