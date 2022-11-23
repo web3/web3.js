@@ -18,7 +18,7 @@ At the minimum, your plugin should depend on the `4.x` version of `web3-core`. T
 ```json
 {
 	"name": "web3-plugin-custom-rpc-methods",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"peerDependencies": {
 		"web3-core": ">= 4.0.1-alpha.0 < 5"
 	}
@@ -89,7 +89,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
-Below is representing a plugin user's code that does not configure an Ethereum provider, resulting in a thrown [ProviderError](/api/web3-errors/class/ProviderError):
+Below depicts a plugin user's code that does not configure an Ethereum provider, resulting in a thrown [ProviderError](/api/web3-errors/class/ProviderError) when calling `customRpcMethod`:
 
 ```typescript
 // registering_a_plugin.ts
