@@ -69,7 +69,7 @@ describe('compatibility with external providers', () => {
 			new In3Client({
 				proof: 'standard',
 				signatureCount: 1,
-				requestCount: 2,
+				requestCount: 1,
 				chainId: 'mainnet',
 			}).createWeb3Provider(),
 		);
