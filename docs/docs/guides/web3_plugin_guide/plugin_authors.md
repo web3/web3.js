@@ -162,9 +162,10 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	}
 
 	/**
-	 * This method overrides the inherited `link` method from `Web3PluginBase`
-	 * to add to a configured `RequestManager` to our Contract instance
-	 * when `Web3.registerPlugin` is called.
+	 * This method overrides the inherited `link` method from
+	 * `Web3PluginBase` to add a configured `RequestManager`
+	 * to the Contract instance when `Web3.registerPlugin`
+	 * is called.
 	 *
 	 * @param parentContext - The context to be added to the instance of `ChainlinkPlugin`,
 	 * and by extension, the instance of `Contract`.
@@ -242,12 +243,12 @@ The following represent what your plugin users would see:
 
 ![web3 context augmentation side effect](./assets/web3_context_augmentation_side_effect.png 'web3Context augmentation side effect')
 
-The above screenshot shows intellisense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though we haven't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
+The above screenshot shows intellisense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though the plugin user hasn't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
 :::
 
 ### Re-exporting Web3Context
 
-Currently TypeScript's module augmentation only supports named exports, so the first step in augmenting `Web3Context` is to re-export it as a named export. To do this we're going to create a `reexported_web3_context.ts` file (the name of this file can be whatever, but for the sake of this guide, we're going to assume it's named `reexported_web3_context.ts` and is located within the same directory as our `custom_rpc_methods_plugin.ts` file). The file contents should be as follows:
+Currently TypeScript's module augmentation only supports named exports, so the first step in augmenting `Web3Context` is to re-export it as a named export. To do this you're going to create a `reexported_web3_context.ts` file (the name of this file can be whatever you prefer, but for the sake of this guide, it's going to be assumed it's named `reexported_web3_context.ts` and is located within the same directory as the `custom_rpc_methods_plugin.ts` file). The file contents should be as follows:
 
 ```typescript
 // reexported_web3_context.ts
@@ -281,9 +282,9 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 declare module './reexported_web3_context' {...}
 ```
 
-### Adding our Plugin's Interface
+### Adding Your Plugin's Interface
 
-Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add our changes. In this case, you're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
+Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add your plugin's interface. In this case, you're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
 
 ```typescript
 // custom_rpc_methods_plugin.ts
@@ -300,7 +301,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 
 declare module './reexported_web3_context.ts' {
-	// Here is where we're adding our plugin's
+	// Here is where you're adding your plugin's
 	// interface to the interface of Web3Context
 	interface Web3Context {
 		customRpcMethods: CustomRpcMethodsPlugin;
@@ -335,15 +336,15 @@ This is because `.registerPlugin` will use the `pluginNamespace` property provid
 const web3 = new Web3('http://127.0.0.1:8545');
 web3.registerPlugin(new CustomRpcMethodsPlugin());
 // Now customRpcMethods (i.e. the pluginNamespace) is available
-// on our instance of Web3
+// on the instance of Web3
 web3.customRpcMethods;
 ```
 
 :::
 
-### Exporting Our Augmented Web3Context
+### Exporting The Augmented Web3Context
 
-Lastly, you just need to export our augmented `Web3Context` by adding the following after our module re-declaration:
+Lastly, you just need to export the augmented `Web3Context` by adding the following after the module re-declaration:
 
 ```typescript
 export { Web3Context };
