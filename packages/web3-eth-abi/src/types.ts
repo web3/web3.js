@@ -185,25 +185,44 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
+type ContractMethodOutputParametersRecursive<Params extends ReadonlyArray<unknown> | undefined> =
+	// check if params are empty array
+	Params extends readonly []
+		? []
+		: Params extends readonly [infer H, ...infer R] // check if Params is an array
+		? H extends AbiParameter // if more than 1 outputs
+			? [
+					MatchPrimitiveType<H['type'], H['components']>,
+					...ContractMethodOutputParametersRecursive<R>,
+			  ] &
+					H['name'] extends '' // check if output param name is empty string
+				? []
+				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
+						ContractMethodOutputParametersRecursive<R>
+			: ContractMethodOutputParametersRecursive<R>
+		: Params extends undefined | unknown // param is not array, check if undefined
+		? []
+		: Params;
+
 export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
 	// check if params are empty array
 	Params extends readonly []
 		? []
 		: Params extends readonly [infer H, ...infer R] // check if Params is an array
-		? R extends [] // if only one output in array
+		? R extends readonly [] // if only one output in array
 			? H extends AbiParameter
 				? MatchPrimitiveType<H['type'], H['components']>
 				: []
 			: H extends AbiParameter // if more than 1 outputs
 			? [
 					MatchPrimitiveType<H['type'], H['components']>,
-					...ContractMethodOutputParameters<R>,
+					...ContractMethodOutputParametersRecursive<R>,
 			  ] &
 					H['name'] extends '' // check if output param name is empty string
 				? []
 				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
-						ContractMethodOutputParameters<R>
-			: ContractMethodOutputParameters<R>
+						ContractMethodOutputParametersRecursive<R>
+			: ContractMethodOutputParametersRecursive<R>
 		: Params extends undefined | unknown // param is not array, check if undefined
 		? []
 		: Params;
