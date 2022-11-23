@@ -50,6 +50,7 @@
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-config-web3-base": "0.1.0",
 		"eslint-plugin-import": "^2.26.0",
+		"ganache": "^7.5.0",
 		"jest": "^28.1.3",
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
