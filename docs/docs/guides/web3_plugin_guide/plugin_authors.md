@@ -207,7 +207,7 @@ In order to provide type safety and IntelliSense for your plugin when it's regis
 
 ### A Quick Disclaimer
 
-The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add on your plugin's additional functionality to it's interface. By augmenting `Web3Context` to include your plugin's interface, we're essentially providing a blanket augmentation that adds you plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
+The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. By augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
 
 :::warning
 By augmenting `Web3Context` (and by extension all class interfaces that extend it), your plugin's interface will show up in things like intellisense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered - This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`
