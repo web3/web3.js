@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
 -   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5309).
+-   Export a new function `isPromise` that generates a random v4 Uuid (#5309).
 
 ### Fixed
 

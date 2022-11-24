@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import { isPromise } from 'util/types';
+
 import {
 	ContractExecutionError,
 	InvalidResponseError,
@@ -43,7 +43,7 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
-import { isNullish, jsonRpc } from 'web3-utils';
+import { isNullish, isPromise, jsonRpc } from 'web3-utils';
 import {
 	isEIP1193Provider,
 	isLegacyRequestProvider,
@@ -241,7 +241,9 @@ export class Web3RequestManager<
 				// So check if the returned result is a promise and resolve with it accordingly.
 				// And, in this case we expect the callback provided above to never be called.
 				if (isPromise(result)) {
-					const responsePromise = result as Promise<JsonRpcResponse<ResponseType>>;
+					const responsePromise = result as unknown as Promise<
+						JsonRpcResponse<ResponseType>
+					>;
 					responsePromise.then(resolveWithResponse).catch(rejectWithError);
 				}
 			});

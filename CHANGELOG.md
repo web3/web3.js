@@ -902,6 +902,8 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
+-   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5309).
+-   Export a new function `isPromise` that generates a random v4 Uuid (#5309).
 
 ### Fixed
 
@@ -916,7 +918,6 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
--   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5309).
 
 ### Removed
 
