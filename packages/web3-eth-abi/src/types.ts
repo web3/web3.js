@@ -203,16 +203,14 @@ type ContractMethodOutputParametersRecursiveArray<
 					...ContractMethodOutputParametersRecursiveArray<R>,
 			  ]
 			: []
-		: Params extends undefined | unknown // param is not array, check if undefined
-		? []
-		: Params;
+		: [];
 
 type ContractMethodOutputParametersRecursiveRecord<
 	Params extends ReadonlyArray<unknown> | undefined,
 > =
 	// check if params are empty array
 	Params extends readonly []
-		? undefined
+		? []
 		: Params extends readonly [infer H, ...infer R] // check if Params is an array
 		? H extends AbiParameter
 			? H['name'] extends '' // check if output param name is empty string
@@ -221,7 +219,7 @@ type ContractMethodOutputParametersRecursiveRecord<
 						ContractMethodOutputParametersRecursiveRecord<R>
 			: ContractMethodOutputParametersRecursiveRecord<R>
 		: Params extends undefined | unknown // param is not array, check if undefined
-		? undefined
+		? []
 		: Params;
 
 export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
@@ -233,21 +231,10 @@ export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown>
 			? H extends AbiParameter
 				? MatchPrimitiveType<H['type'], H['components']>
 				: []
-			: H extends AbiParameter // if more than 1 outputs
-			? ArrToObjectWithFunctions<
-					[
-						MatchPrimitiveType<H['type'], H['components']>,
-						...ContractMethodOutputParametersRecursiveArray<R>,
-					]
-			  > &
-					H['name'] extends '' // check if output param name is empty string
-				? NonNullable<ContractMethodOutputParametersRecursiveRecord<R>>
-				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
-						NonNullable<ContractMethodOutputParametersRecursiveRecord<R>>
-			: []
-		: Params extends undefined | unknown // param is not array, check if undefined
-		? []
-		: Params;
+			: // if more than one output
+			  ArrToObjectWithFunctions<[...ContractMethodOutputParametersRecursiveArray<Params>]> &
+					ContractMethodOutputParametersRecursiveRecord<Params>
+		: [];
 
 export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> | undefined> =
 	Params extends readonly []
