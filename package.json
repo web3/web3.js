@@ -1,59 +1,91 @@
 {
-	"name": "web3.js",
-	"private": true,
-	"description": "Ethereum JavaScript API wrapper repository",
-	"license": "LGPL-3.0",
-	"engines": {
-		"node": ">=11.0.0"
-	},
-	"main": "./packages/web3/src/index.js",
-	"bundlesize": [
-		{
-			"path": "./packages/web3/dist/web3.min.js",
-			"maxSize": "1.5 mB",
-			"compression": "none"
-		}
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ethereum/web3.js.git"
-	},
-	"homepage": "https://github.com/ethereum/web3.js",
-	"bugs": {
-		"url": "https://github.com/ethereum/web3.js/issues"
-	},
-	"keywords": [
-		"Ethereum",
-		"JavaScript",
-		"API"
-	],
-	"author": "ethereum.org",
-	"authors": [
-		{
-			"name": "Fabian Vogelsteller",
-			"email": "fabian@ethereum.org",
-			"homepage": "https://github.com/frozeman"
-		},
-		{
-			"name": "Marek Kotewicz",
-			"email": "marek@parity.io",
-			"url": "https://github.com/debris"
-		},
-		{
-			"name": "Marian Oancea",
-			"url": "https://github.com/cubedro"
-		},
-		{
-			"name": "Gav Wood",
-			"email": "g@parity.io",
-			"homepage": "http://gavwood.com"
-		},
-		{
-			"name": "Jeffery Wilcke",
-			"email": "jeffrey.wilcke@ethereum.org",
-			"url": "https://github.com/obscuren"
-		}
-	],
+    "name": "web3.js",
+    "private": true,
+    "description": "Ethereum JavaScript API wrapper repository",
+    "license": "LGPL-3.0",
+    "engines": {
+        "node": ">=11.0.0"
+    },
+    "main": "./packages/web3/src/index.js",
+    "bundlesize": [
+        {
+            "path": "./packages/web3/dist/web3.min.js",
+            "maxSize": "1.5 mB",
+            "compression": "none"
+        }
+    ],
+    "scripts": {
+        "version": "npm run build",
+        "postinstall": "npm run bootstrap",
+        "build": "npm run bootstrap && lerna run compile && webpack && cp -r ./dist ./packages/web3",
+        "publish": "lerna publish",
+        "bootstrap": "lerna bootstrap --hoist",
+        "lint": "jshint *.js packages",
+        "test": "mocha -R spec --require ts-node/register --grep E2E --invert",
+        "test:unit": "nyc --no-clean --silent _mocha -- -R spec --require ts-node/register --grep E2E --invert --exit",
+        "test:cov": "npm run cov:clean && npm run test:unit && npm run test:e2e:clients && npm run cov:merge_reports",
+        "dtslint": "lerna run dtslint",
+        "depcheck": "lerna exec dependency-check -- --missing --verbose .",
+        "bundlesize": "bundlesize || true",
+        "geth": "geth-dev-assistant --accounts 5 --tag stable --gasLimit 7000000",
+        "test:e2e:ganache": "bash ./scripts/e2e.ganache.sh",
+        "test:e2e:geth:auto": "bash ./scripts/e2e.geth.automine.sh",
+        "test:e2e:geth:insta": "bash ./scripts/e2e.geth.instamine.sh",
+        "test:e2e:clients": "npm run test:e2e:ganache && npm run test:e2e:geth:insta && npm run test:e2e:geth:auto",
+        "test:e2e:chrome": "bash ./scripts/e2e.chrome.sh",
+        "test:e2e:firefox": "bash ./scripts/e2e.firefox.sh",
+        "test:e2e:min": "bash ./scripts/e2e.min.sh",
+        "test:e2e:cdn": "bash ./scripts/e2e.cdn.sh",
+        "test:e2e:browsers": "npm run build && npm run test:e2e:chrome && npm run test:e2e:firefox",
+        "test:e2e:publish": "bash ./scripts/e2e.npm.publish.sh",
+        "test:e2e:truffle": "bash ./scripts/e2e.truffle.sh",
+        "test:e2e:mosaic": "bash ./scripts/e2e.mosaic.sh",
+        "test:e2e:ganache:core": "bash ./scripts/e2e.ganache.core.sh",
+        "test:e2e:gnosis:dex": "bash ./scripts/e2e.gnosis.dex.sh",
+        "ci": "bash ./scripts/ci.sh",
+        "cov:clean": "rimraf .nyc_output && rimraf coverage",
+        "cov:merge_reports": "nyc report --reporter=lcov --reporter=html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ethereum/web3.js.git"
+    },
+    "homepage": "https://github.com/ethereum/web3.js",
+    "bugs": {
+        "url": "https://github.com/ethereum/web3.js/issues"
+    },
+    "keywords": [
+        "Ethereum",
+        "JavaScript",
+        "API"
+    ],
+    "author": "ethereum.org",
+    "authors": [
+        {
+            "name": "Fabian Vogelsteller",
+            "email": "fabian@ethereum.org",
+            "homepage": "https://github.com/frozeman"
+        },
+        {
+            "name": "Marek Kotewicz",
+            "email": "marek@parity.io",
+            "url": "https://github.com/debris"
+        },
+        {
+            "name": "Marian Oancea",
+            "url": "https://github.com/cubedro"
+        },
+        {
+            "name": "Gav Wood",
+            "email": "g@parity.io",
+            "homepage": "http://gavwood.com"
+        },
+        {
+            "name": "Jeffery Wilcke",
+            "email": "jeffrey.wilcke@ethereum.org",
+            "url": "https://github.com/obscuren"
+        }
+    ],
 	"devDependencies": {
 		"@babel/cli": "^7.12.1",
 		"@babel/core": "^7.12.3",
