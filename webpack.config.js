@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-
 module.exports = {
     mode: "production",
     entry: {
@@ -16,7 +15,13 @@ module.exports = {
                 return /(.*\/genesisStates\/.*\.json)/.test(resource)
             },
         }),
-    ],
+        new webpack.ProvidePlugin({
+			process: 'process/browser',
+		}),
+        new webpack.ProvidePlugin({
+			Buffer: ['buffer', 'Buffer'],
+		}),
+	],
     resolve: {
         alias: {
             // To avoid blotting up the `bn.js` library all over the packages 
@@ -32,14 +37,7 @@ module.exports = {
         },
 
     },
-    plugins: [
-		new webpack.ProvidePlugin({
-			process: 'process/browser',
-		}),
-        new webpack.ProvidePlugin({
-			Buffer: ['buffer', 'Buffer'],
-		}),
-	],
+		
     module: {
         rules: [
             {
