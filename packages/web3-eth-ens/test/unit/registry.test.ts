@@ -38,7 +38,7 @@ describe('registry', () => {
 		jest.clearAllMocks();
 	});
 
-	it('constructor with custom address', () => {
+	it('constructor with custom address', async () => {
 		const tempRegistry = new Registry(object, mockAddress);
 
 		expect(tempRegistry).toBeInstanceOf(Registry);
@@ -531,7 +531,7 @@ describe('registry', () => {
 			const call = jest
 				.spyOn(
 					{
-						call: () => {
+						call: async () => {
 							return mockAddress;
 						},
 					},
@@ -555,7 +555,7 @@ describe('registry', () => {
 			const call = jest
 				.spyOn(
 					{
-						call: () => {
+						call: async () => {
 							return 5; // something that is not string
 						},
 					},
