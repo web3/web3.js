@@ -65,10 +65,11 @@ describe('compatibility with external providers', () => {
 
 	it('should accept an `in3` provider', async () => {
 		// use the In3Client as Http-Provider for web3.js
+		// Note: it could takes long time to get something from `in3` because of its decentralized nature.
 		const web3 = new Web3(
 			new In3Client({
-				proof: 'standard',
-				signatureCount: 1,
+				proof: 'none',
+				signatureCount: 0,
 				requestCount: 1,
 				chainId: 'mainnet',
 			}).createWeb3Provider(),
