@@ -41,8 +41,11 @@ export const isEIP1193Provider = <API extends Web3APISpec>(
 ): provider is EIP1193Provider<API> =>
 	typeof provider !== 'string' &&
 	'request' in provider &&
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-	(provider.request as any)[Symbol.toStringTag] === 'AsyncFunction';
+	(provider.request.constructor.name === 'AsyncFunction' ||
+		// Some providers that follow a previous drafted version of EIP1193 has a `request` function
+		//	that is not defined as `async` (but it returns a promise).
+		// like: https://github.dev/NomicFoundation/hardhat/blob/62bea2600785595ba36f2105564076cf5cdf0fd8/packages/hardhat-core/src/internal/core/providers/backwards-compatibility.ts#L19
+		provider.request.constructor.name === 'Function');
 
 export const isLegacySendProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,

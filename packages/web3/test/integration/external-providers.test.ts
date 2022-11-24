@@ -17,12 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
-
+// eslint-disable-next-line import/no-extraneous-dependencies
+import hardhat from 'hardhat';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import In3Client from 'in3';
 
 import { setRequestIdStart } from 'web3-utils';
 
 import Web3 from '../../src/index';
+
 import { getSystemTestMnemonic } from '../shared_fixtures/system_tests_utils';
 
 describe('compatibility with external providers', () => {
@@ -79,7 +82,35 @@ describe('compatibility with external providers', () => {
 		setRequestIdStart(0);
 
 		// get the last block number
-		const block = await web3.eth.getBlockNumber();
-		expect(typeof block).toBe('bigint');
+		const blockNumber = await web3.eth.getBlockNumber();
+		expect(typeof blockNumber).toBe('bigint');
+	});
+
+	it('should accept a `hardhat` provider', async () => {
+		// use the hardhat provider for web3.js
+		const web3 = new Web3(hardhat.network.provider);
+
+		const accounts = await web3.eth.getAccounts();
+
+		expect(accounts).toBeDefined();
+		expect(accounts.length).toBeGreaterThan(0);
+
+		// get the last block number
+		const blockNumber0 = await web3.eth.getBlockNumber();
+		expect(typeof blockNumber0).toBe('bigint');
+
+		const tx = web3.eth.sendTransaction({
+			to: accounts[1],
+			from: accounts[0],
+			value: '1',
+		});
+		await expect(tx).resolves.not.toThrow();
+
+		// get the last block number
+		const blockNumber1 = await web3.eth.getBlockNumber();
+		expect(typeof blockNumber1).toBe('bigint');
+
+		// After sending a transaction, the blocknumber is supposed to be greater than or equal the block number before sending the transaction
+		expect(blockNumber1).toBeGreaterThanOrEqual(blockNumber0);
 	});
 });
