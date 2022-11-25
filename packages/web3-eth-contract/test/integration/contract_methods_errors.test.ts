@@ -29,19 +29,19 @@ describe('contract errors', () => {
 
 	beforeAll(async () => {
 		const acc = await createTempAccount();
-		// sendOptions = { from: acc.address };
-		sendOptions = { from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e' };
+		sendOptions = { from: acc.address };
+		// sendOptions = { from: '0xe2597eb05cf9a87eb1309e86750c903ec38e527e' };
 
-		contract = new Contract(VendingMachineAbi, '0xf4cBA7d9F1bCefCB35C51352C158721D14EAAf7e', {
+		contract = new Contract(VendingMachineAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
-		// deployOptions = {
-		// 	data: VendingMachineBytecode,
-		// };
+		deployOptions = {
+			data: VendingMachineBytecode,
+		};
 
-		// const sendOptionsLocal = { from: acc.address, gas: '10000000' };
-		// deployedContract = await contract.deploy(deployOptions).send(sendOptionsLocal);
+		const sendOptionsLocal = { from: acc.address, gas: '10000000' };
+		deployedContract = await contract.deploy(deployOptions).send(sendOptionsLocal);
 
 		// console.log(deployedContract['_address'], acc);
 		// console.log(getSystemTestProvider());
@@ -54,7 +54,7 @@ describe('contract errors', () => {
 		it('testError1', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
-				await contract.methods.withdraw().send(sendOptions);
+				await deployedContract.methods.withdraw().send(sendOptions);
 
 				// execution should throw before this line, if not throw here to indicate an issue.
 			} catch (err: any) {
@@ -64,7 +64,7 @@ describe('contract errors', () => {
 			expect(error).toBeDefined();
 
 			// eslint-disable-next-line no-console
-			console.log(error?.innerError);
+			console.log(error);
 
 			// expect(error?.code).toEqual(ERR_CONTRACT_EXECUTION_REVERTED);
 			// expect(error?.innerError?.code).toBe(3);
@@ -78,25 +78,25 @@ describe('contract errors', () => {
 			// expect(error?.innerError?.errorSignature).toBe('TestError1(address,uint256)');
 
 			// TODO: use something similar to the following (when implementing https://github.com/web3/web3.js/issues/5482)
-			expect(error).toMatchObject({
-				message: expect.stringContaining(
-					'Error happened while trying to execute a function inside a smart contract',
-				),
-				code: ERR_CONTRACT_EXECUTION_REVERTED,
-				error: {
-					innerError: {
-						code: 3,
-						// errorArgs: {
-						// 	0: addr,
-						// 	1: BigInt(42),
-						// 	addr,
-						// 	value: 42,
-						// },
-						errorName: 'TestError1',
-						errorSignature: 'TestError1(address,uint256)',
-					},
-				},
-			});
+			// expect(error).toMatchObject({
+			// 	message: expect.stringContaining(
+			// 		'Error happened while trying to execute a function inside a smart contract',
+			// 	),
+			// 	code: ERR_CONTRACT_EXECUTION_REVERTED,
+			// 	error: {
+			// 		innerError: {
+			// 			code: 3,
+			// 			// errorArgs: {
+			// 			// 	0: addr,
+			// 			// 	1: BigInt(42),
+			// 			// 	addr,
+			// 			// 	value: 42,
+			// 			// },
+			// 			errorName: 'TestError1',
+			// 			errorSignature: 'TestError1(address,uint256)',
+			// 		},
+			// 	},
+			// });
 		});
 	});
 });

@@ -975,18 +975,19 @@ export class Contract<Abi extends ContractAbi>
 			return validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
 		} catch (error) {
 			throw new Web3ContractError(
-				`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
+				`Invalid parameters for method ${abi.name}: ${(error as Error).message}\``,
 			);
 		}
 	}
 	private _createContractMethod<T extends AbiFunctionFragment, E extends AbiErrorFragment>(
 		abi: T,
-		errorsAbis: E[],
+		abisOfErros: E[],
 	): ContractBoundMethod<T> {
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
 			let methodAbi: AbiFunctionFragment = abis[0];
+			const errorsAbis = abisOfErros;
 
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
@@ -1020,8 +1021,8 @@ export class Contract<Abi extends ContractAbi>
 					arguments: abiParams,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
-					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+					send: async (options?: PayableTxOptions) =>
+						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1044,8 +1045,8 @@ export class Contract<Abi extends ContractAbi>
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
-				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+				send: async (options?: NonPayableTxOptions) =>
+					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1092,9 +1093,13 @@ export class Contract<Abi extends ContractAbi>
 		}
 	}
 
-	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private async _contractMethodSend<
+		E extends AbiErrorFragment,
+		Options extends PayableCallOptions | NonPayableCallOptions,
+	>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
+		errorsAbi: E[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
@@ -1111,8 +1116,15 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-
-		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		try {
+			return await sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		} catch (error: unknown) {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+			throw error;
+		}
 	}
 
 	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
