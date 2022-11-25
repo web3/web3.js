@@ -17,23 +17,21 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
 			process: 'process/browser',
-		}),
-        new webpack.ProvidePlugin({
-			Buffer: ['buffer', 'Buffer'],
+            Buffer: ['buffer', 'Buffer']
 		}),
 	],
     resolve: {
         alias: {
             // To avoid blotting up the `bn.js` library all over the packages 
             // use single library instance. 
-            "bn.js": path.resolve(__dirname, 'node_modules/bn.js')
+            "bn.js": path.resolve(__dirname, 'node_modules/bn.js'),
+            'ethereumjs-util': path.resolve(__dirname, 'node_modules/ethereumjs-util')
         },
         fallback: {
-            buffer: require.resolve('buffer'),
             https: require.resolve('https-browserify'),
             http: require.resolve("stream-http"),
-            stream: require.resolve("stream-browserify"),
             crypto: require.resolve("crypto-browserify"),
+            stream: false,
         },
 
     },
