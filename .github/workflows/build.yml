@@ -127,7 +127,7 @@ jobs:
         browser: ['electron', 'chrome', 'firefox']
     steps:
       - uses: browser-actions/setup-firefox@latest
-      - run: firefox --version
+        if: matrix.browser == 'firefox'
       - uses: actions/download-artifact@v3
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
