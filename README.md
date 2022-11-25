@@ -110,7 +110,9 @@ If you are using the types in a `commonjs` module, like in a Node app, you just 
 
 ### Web3 and Create-react-app
 
-If you are using create-react-app version >=5 you may run into issues building. This is because NodeJS polyfills are not included in the latest version of create-react-app.
+** UPDATE: If you are facing any issues with create-react-app or angular, make sure you are using a web3 version of 1.8.0 or greater, as its been fixed ** 
+
+If you are using create-react-app version >=5 you may run into issues building. This is because NodeJS polyfills are not included in the latest version of create-react-app. 
 
 ### Solution
 

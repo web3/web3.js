@@ -614,7 +614,16 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Changed
+
+- Updated Webpack 4 to Webpack 5, more details at (#5629)
+- `crypto-browserify` module has moved from node builds to webpack builds for polyfilling browsers (#5629)
+
 ### Fixed
 
 -  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
 -  Fixed Next.js builds failing on Node.js v16, Abortcontroller added if it doesn't exist globally (#5601)
+
+### Removed
+
+- `clean-webpack-plugin` has been removed from dev-dependencies (#5629)
