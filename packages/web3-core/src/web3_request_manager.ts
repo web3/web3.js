@@ -236,10 +236,10 @@ export class Web3RequestManager<
 				// Some providers, that follow a previous drafted version of EIP1193, has a `request` function
 				//	that is not defined as `async`, but it returns a promise.
 				// Such providers would not be picked with if(isEIP1193Provider(provider)) above
-				//	because the `request` function is defined with `async` so the function definition is not `AsyncFunction`.
-				// like: https://github.dev/NomicFoundation/hardhat/blob/62bea2600785595ba36f2105564076cf5cdf0fd8/packages/hardhat-core/src/internal/core/providers/backwards-compatibility.ts#L19
-				// So check if the returned result is a promise and resolve with it accordingly.
-				// And, in this case we expect the callback provided above to never be called.
+				//	because the `request` function was not defined with `async` and so the function definition is not `AsyncFunction`.
+				// Like this provider: https://github.dev/NomicFoundation/hardhat/blob/62bea2600785595ba36f2105564076cf5cdf0fd8/packages/hardhat-core/src/internal/core/providers/backwards-compatibility.ts#L19
+				// So check if the returned result is a Promise, and resolve with it accordingly.
+				// Note: in this case we expect the callback provided above to never be called.
 				if (isPromise(result)) {
 					const responsePromise = result as unknown as Promise<
 						JsonRpcResponse<ResponseType>
