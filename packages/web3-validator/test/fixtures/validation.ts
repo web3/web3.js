@@ -136,7 +136,10 @@ export const validHexStrictData: any[] = [
 
 export const invalidHexData: any[] = [
 	'Heeäööä👅D34ɝɣ24Єͽ',
-	'-1000',
+	'',
+	'-',
+	'0x',
+	'-0x',
 	'0xH',
 	'I have 100£',
 	'\u0000',
@@ -152,10 +155,12 @@ export const invalidHexData: any[] = [
 export const invalidHexStrictData: any[] = [
 	...invalidHexData,
 	'45',
+	'-45',
 	'',
 	'0',
 	1,
 	BigInt(12),
+	BigInt(''),
 	BigInt(-255),
 	-42,
 	4.2,
@@ -164,7 +169,7 @@ export const invalidHexStrictData: any[] = [
 export const validHexData: any[] = [
 	...validHexStrictData,
 	'45',
-	'',
+	'-45',
 	'0',
 	1,
 	BigInt(12),
