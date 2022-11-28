@@ -4,12 +4,12 @@ pragma solidity ^0.8.13;
 
 error Unauthorized();
 
-contract VendingMachine {
+contract ErrorsContract {
 	address payable owner = payable(0x0);
 
 	constructor() {}
 
-	function withdraw() public {
+	function unauthorize() public {
 		if (msg.sender != owner) revert Unauthorized();
 
 		owner.transfer(address(this).balance);
