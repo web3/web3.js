@@ -284,7 +284,7 @@ declare module './reexported_web3_context' {...}
 
 ### Adding Your Plugin's Interface
 
-Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add your plugin's interface. In this case, you're adding the interface of `SimplePlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
+Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add your plugin's interface. In this case, you're adding the interface of `CustomRpcMethodsPlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
 
 ```typescript
 // custom_rpc_methods_plugin.ts
@@ -368,7 +368,7 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 
 declare module './custom_rpc_methods_plugin.ts' {
 	interface Web3Context {
-		simplePlugin: SimplePlugin;
+		customRpcMethods: CustomRpcMethodsPlugin;
 	}
 }
 
