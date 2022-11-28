@@ -1078,7 +1078,10 @@ export class Contract<Abi extends ContractAbi>
 			abi,
 			params,
 			options,
-			contractOptions: this.options,
+			contractOptions: {
+				...this.options,
+				from: this.options.from ?? this.getConfig().defaultAccount,
+			},
 		});
 		try {
 			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);

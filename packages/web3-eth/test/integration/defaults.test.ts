@@ -141,13 +141,20 @@ describe('defaults', () => {
 			expect(tx2.from).toBe(tempAcc2.address.toLowerCase());
 			expect(tx2Send.from).toBe(tempAcc2.address.toLowerCase());
 
-			// TODO: uncomment this test after finish #5117
-			// const fromDefault = await contractMsgFrom.methods?.from().call();
-			// const fromPass = await contractMsgFrom.methods?.from().call({from:tempAcc.address});
-			// const fromPass2 = await contractMsgFrom.methods?.from().call({from:tempAcc2.address});
-			// expect(fromDefault).toBe(tempAcc.address.toLowerCase());
-			// expect(fromPass).toBe(tempAcc.address.toLowerCase());
-			// expect(fromPass2).toBe(tempAcc2.address.toLowerCase());
+			const fromDefault = await contractMsgFrom.methods?.from().call();
+			const fromPass = await contractMsgFrom.methods?.from().call({ from: tempAcc.address });
+			const fromPass2 = await contractMsgFrom.methods
+				?.from()
+				.call({ from: tempAcc2.address });
+			expect((fromDefault as unknown as string).toLowerCase()).toBe(
+				tempAcc.address.toLowerCase(),
+			);
+			expect((fromPass as unknown as string).toLowerCase()).toBe(
+				tempAcc.address.toLowerCase(),
+			);
+			expect((fromPass2 as unknown as string).toLowerCase()).toBe(
+				tempAcc2.address.toLowerCase(),
+			);
 		});
 
 		it('handleRevert', () => {
