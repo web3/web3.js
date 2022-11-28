@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ContractExecutionError, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
-import { VendingMachineAbi, VendingMachineBytecode } from '../shared_fixtures/build/VendingMachine';
+import { ErrorsContractAbi, ErrorsContractBytecode } from '../shared_fixtures/build/ErrorsContract';
 import { Contract } from '../../src';
 import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
@@ -25,21 +25,21 @@ jest.setTimeout(600000);
 
 describe('contract errors', () => {
 	let sendOptions: Record<string, unknown>;
-	let contract: Contract<typeof VendingMachineAbi>;
+	let contract: Contract<typeof ErrorsContractAbi>;
 	let deployOptions: Record<string, unknown>;
 
-	let deployedContract: Contract<typeof VendingMachineAbi>;
+	let deployedContract: Contract<typeof ErrorsContractAbi>;
 
 	beforeAll(async () => {
 		const acc = await createTempAccount();
 		sendOptions = { from: acc.address };
 
-		contract = new Contract(VendingMachineAbi, undefined, {
+		contract = new Contract(ErrorsContractAbi, undefined, {
 			provider: getSystemTestProvider(),
 		});
 
 		deployOptions = {
-			data: VendingMachineBytecode,
+			data: ErrorsContractBytecode,
 		};
 
 		const sendOptionsLocal = { from: acc.address, gas: '10000000' };
@@ -54,7 +54,7 @@ describe('contract errors', () => {
 		it('Unauthorized', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
-				await deployedContract.methods.withdraw().send(sendOptions);
+				await deployedContract.methods.unauthorize().send(sendOptions);
 
 				// execution should throw before this line, if not throw here to indicate an issue.
 			} catch (err: any) {
