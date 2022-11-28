@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as eth from 'web3-eth';
 import { ValidChains, Hardfork } from 'web3-types';
+import { Web3ContractError } from 'web3-errors';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -480,17 +481,17 @@ describe('Contract', () => {
 			spyEstimateGas.mockClear();
 		});
 
-		it('contract method send without contract address should throw error', () => {
+		it('contract method send without contract address should throw error', async () => {
 			const arg = 'Hello';
 
 			const contract = new Contract(GreeterAbi);
 
-			expect(() => contract.methods.setGreeting(arg).send(sendOptions)).toThrow(
-				'Contract address not specified',
-			);
+			await expect(async () => {
+				await contract.methods.setGreeting(arg).send(sendOptions);
+			}).rejects.toThrow(new Web3ContractError('Contract address not specified'));
 		});
 
-		it('contract method send without from address should throw error', () => {
+		it('contract method send without from address should throw error', async () => {
 			const gas = '1000000';
 			const sendOptionsSpecial = { gas };
 			const arg = 'Hello';
@@ -499,9 +500,9 @@ describe('Contract', () => {
 			contract.options.address = '0x12364916b10Ae90076dDa6dE756EE1395BB69ec2';
 
 			/* eslint-disable no-useless-escape */
-			expect(() => contract.methods.setGreeting(arg).send(sendOptionsSpecial)).toThrow(
-				'Contract "from" address not specified',
-			);
+			await expect(async () => {
+				await contract.methods.setGreeting(arg).send(sendOptionsSpecial);
+			}).rejects.toThrow('Contract "from" address not specified');
 		});
 	});
 });
