@@ -863,7 +863,6 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   According to the latest change in `web3-eth-abi`, the decoded values of the large numbers, returned from function calls or events, are now available as `BigInt`. (#5435)
--   Emit past contract events based on `fromBlock`  when passed to `contract.events.someEventName` (#5201)
 
 #### web3-eth-abi
 
@@ -893,3 +892,33 @@ should use 4.0.1-alpha.0 for testing.
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
 ## [Unreleased]
+
+### Added
+
+#### web3-types
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+#### web3-utils
+
+-   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
+
+### Fixed
+
+#### web3-eth-contract
+
+-   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
+
+#### web3-types
+
+-   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+
+#### web3-utils
+
+-   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
+
+### Removed
+
+#### web3-eth-accounts
+
+-   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )

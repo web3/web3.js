@@ -51,5 +51,16 @@ export const isBatchResponseValidTest: [any, boolean][] = [
 ];
 
 export const toPayloadValidTest: [any, any][] = [
-	[{ method: 'delete' }, { method: 'delete', id: 1, jsonrpc: '2.0', params: undefined }],
+	[
+		{ method: 'delete' },
+		{
+			method: 'delete',
+			id: expect.stringMatching(
+				// Uuid
+				'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+			),
+			jsonrpc: '2.0',
+			params: undefined,
+		},
+	],
 ];

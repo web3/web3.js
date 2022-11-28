@@ -23,9 +23,9 @@
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
-		"test:e2e:electron": "npx cypress run --headless --browser electron",
-		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
-		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
+		"test:e2e:electron": "npx cypress run --headless --browser electron --env grep='ignore',invert=true",
+		"test:e2e:chrome": "npx cypress run --headless --browser chrome --env grep='ignore',invert=true",
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox --env grep='ignore',invert=true"
 	},
 	"dependencies": {
 		"web3-core": "^4.0.1-alpha.1",
@@ -49,6 +49,7 @@
 		"jest-extended": "^3.0.1",
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4"
+		"typescript": "^4.7.4",
+		"web3-eth-accounts": "^4.0.1-alpha.0"
 	}
 }

@@ -138,7 +138,12 @@ All the API level interfaces returning or accepting `null` in 1.x, use `undefine
 
 #### web3.eth.getHashrate
 
-`getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`.
+4.x `getHashrate` is deprecated, and will be removed in a future release. Please use `getHashRate`.
+
+```
+web3.eth.getHashrate // -> deprecated, do not use
+web3.eth.getHashRate // -> correct usage
+```
 
 #### web3.eth.getFeeHistory
 
@@ -171,7 +176,7 @@ await web3.eth.getFeeHistory('0x1', 'latest', []);
 
 #### sending
 
--   In 1.x, this event listenter would receive a `payload` object as an arguement. In 4.x, just the sent transaction object is recieved
+-   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x, just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -206,7 +211,7 @@ web3.eth.sendTransaction({ ... }).on('sending', (sendTransactionObject) => { ...
 
 #### sent
 
--   In 1.x, this event listenter would receive a `payload` object as an arguement. In 4.x just the sent transaction object is recieved
+-   In 1.x, the event listener would receive a `payload` object as an argument. In 4.x just the sent transaction object is recieved
 
 ```typescript
 // in 1.x
@@ -369,7 +374,7 @@ web3.eth.sendTransaction({ ... }).on('confirmation', (confirmationObject) => {
 
 ### web3.eth.sign
 
--   To-be-signed data must be provided as a `Hex String`
+-   To-be-signed data must be provided as a `HexString`
 
 ```typescript
 // In 1.x, data can be provided as both a UTF-8 string and a hex string

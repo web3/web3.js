@@ -25,14 +25,15 @@ export type Web3APIParams<
 > = API extends Exclude<Web3APISpec, unknown> ? Parameters<API[Method]> : unknown;
 
 export interface Web3APIRequest<API extends Web3APISpec, Method extends Web3APIMethod<API>> {
-	method: Method;
-	params: Web3APIParams<API, Method>;
+	method: Method | string;
+	params?: Web3APIParams<API, Method> | readonly unknown[] | object;
 }
 
 export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIMethod<API>>
 	extends Web3APIRequest<API, Method> {
 	readonly jsonrpc?: JsonRpcIdentifier;
 	readonly id?: JsonRpcId;
+	readonly requestOptions?: unknown;
 }
 
 export type Web3APIReturnType<
