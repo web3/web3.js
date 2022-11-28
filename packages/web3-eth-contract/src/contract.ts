@@ -254,6 +254,7 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public static handleRevert?: boolean;
 
+	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
 	private _address?: Address;
 	private _functions: Record<
@@ -600,7 +601,7 @@ export class Contract<Abi extends ContractAbi>
 	public clone() {
 		if (this.options.address) {
 			return new Contract<Abi>(
-				this._jsonInterface as unknown as Abi,
+				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
 				this.options.address,
 				{
 					gas: this.options.gas,
@@ -615,7 +616,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		return new Contract<Abi>(
-			this._jsonInterface as unknown as Abi,
+			[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
 			{
 				gas: this.options.gas,
 				gasPrice: this.options.gasPrice,
@@ -967,6 +968,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 
 		this._jsonInterface = [...result] as unknown as ContractAbiWithSignature;
+		this._errorsInterface = errorsAbi;
 	}
 
 	// eslint-disable-next-line class-methods-use-this
@@ -983,11 +985,13 @@ export class Contract<Abi extends ContractAbi>
 		abi: T,
 		abisOfErros: E[],
 	): ContractBoundMethod<T> {
+		const errorsAbis = abisOfErros;
+
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
 			let methodAbi: AbiFunctionFragment = abis[0];
-			const errorsAbis = abisOfErros;
+			const internalErrorsAbis = errorsAbis;
 
 			const arrayOfAbis: AbiFunctionFragment[] = abis.filter(
 				_abi => (_abi.inputs ?? []).length === params.length,
@@ -1020,9 +1024,15 @@ export class Contract<Abi extends ContractAbi>
 				return {
 					arguments: abiParams,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
+						this._contractMethodCall(
+							methodAbi,
+							abiParams,
+							internalErrorsAbis,
+							options,
+							block,
+						),
 					send: async (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options), // TODO: refactor to parse errorsAbi #5587
+						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1044,9 +1054,15 @@ export class Contract<Abi extends ContractAbi>
 			return {
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
-					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
+					this._contractMethodCall(
+						methodAbi,
+						abiParams,
+						internalErrorsAbis,
+						options,
+						block,
+					),
 				send: async (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options), // TODO: refactor to parse errorsAbi #5587
+					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
