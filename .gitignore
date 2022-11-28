@@ -38,4 +38,4 @@ package-lock.json
 tmp/
 
 # Incubed (in3) nodelist
-packages/web3/.in3/nodelist_1_0xac1b824795e1eb1f6e609fe0da9b9af8beaab60f
+packages/web3/.in3/
