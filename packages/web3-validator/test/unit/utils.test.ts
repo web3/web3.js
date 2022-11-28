@@ -92,7 +92,9 @@ describe('utils', () => {
 		);
 
 		it.each(validHexStrictData)('valid hex strings', input => {
-			expect(numberToHex(input)).toEqual((input as string).toLowerCase());
+			expect(numberToHex(input)).toEqual(
+				(input === '' ? '0x' : (input as string)).toLowerCase(),
+			);
 		});
 
 		it.each(validStringNumbersWithHex)('valid string numbers', (input, res) => {

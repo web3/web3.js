@@ -30,10 +30,6 @@ export const isBytes = (
 		abiType: 'bytes',
 	},
 ) => {
-	if (value === '0x') {
-		return true;
-	}
-
 	if (
 		typeof value !== 'string' &&
 		!Buffer.isBuffer(value) &&
