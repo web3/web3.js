@@ -42,3 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix `isHex`returning `false` for `-123`, fix `isHexStrict` returning `true` for `-0x`, and fix `isHex` returning `true` for empty strings `` (#5373).
