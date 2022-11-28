@@ -211,9 +211,9 @@ In order to provide type safety and IntelliSense for your plugin when it's regis
 The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. By augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
 
 :::warning
-By augmenting `Web3Context` (and by extension all class interfaces that extend it), your plugin's interface will show up in things like intellisense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered - This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`
+By augmenting `Web3Context` (and by extension all class interfaces that extend it), your plugin's interface will show up in things like IntelliSense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered - This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`
 
-For context, here is a code example of this augmentation side-effect (the code in this example is further explained in the subsequent sections):
+For context, here is an example of your plugin's interface showing up in IntelliSense even though your plugin hasn't been registered (the code in this example is further explained in the subsequent sections):
 
 ```typescript
 // custom_rpc_methods_plugin.ts
@@ -241,9 +241,9 @@ export { Web3Context };
 
 The following represent what your plugin users would see:
 
-![web3 context augmentation side effect](./assets/web3_context_augmentation_side_effect.png 'web3Context augmentation side effect')
+![web3 context augmentation side effect](./assets/web3_context_augmentation.png 'web3Context augmentation side effect')
 
-The above screenshot shows intellisense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though the plugin user hasn't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
+The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though the plugin user hasn't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
 :::
 
 ### Re-exporting Web3Context
