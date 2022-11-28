@@ -241,7 +241,7 @@ export { Web3Context };
 
 The following represent what your plugin users would see:
 
-![web3 context augmentation side effect](./assets/web3_context_augmentation.png 'web3Context augmentation side effect')
+![web3 context augmentation](./assets/web3_context_augmentation.png 'web3Context augmentation')
 
 The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though the plugin user hasn't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
 :::
