@@ -18,7 +18,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractExecutionError, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
 import { ErrorsContractAbi, ErrorsContractBytecode } from '../shared_fixtures/build/ErrorsContract';
 import { Contract } from '../../src';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	getSystemTestBackend,
+	describeIf,
+} from '../fixtures/system_test_utils';
 
 // todo remove
 jest.setTimeout(600000);
@@ -45,12 +50,10 @@ describe('contract errors', () => {
 		const sendOptionsLocal = { from: acc.address, gas: '10000000' };
 		deployedContract = await contract.deploy(deployOptions).send(sendOptionsLocal);
 
-		// console.log(deployedContract['_address'], acc);
-		// console.log(getSystemTestProvider());
 		contract.setProvider(getSystemTestProvider());
 	});
 
-	describe('Test EIP-838 Error Codes', () => {
+	describeIf(getSystemTestBackend() === 'geth')('Test EIP-838 Error Codes', () => {
 		it('Unauthorized', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
