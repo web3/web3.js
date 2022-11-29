@@ -87,8 +87,6 @@ describe('contract errors', () => {
 
 			expect(error).toBeDefined();
 
-			// eslint-disable-next-line no-console
-			console.log('received', error);
 			expect(error).toMatchObject({
 				message: expect.stringContaining(
 					'Error happened while trying to execute a function inside a smart contract',
