@@ -7,9 +7,9 @@ sidebar_label: 'Plugin Authors'
 
 This guide intends to provide the necessary context for developing plugins for web3.js.
 
-## Before Getting Started
-
-It's highly recommended you as the plugin author understand the limitations of TypeScript's module augmentation as described in the [main plugin guide](/docs/guides/web3_plugin_guide/), so you can communicate to your users that they are responsible for augmenting the class interface they register your plugin with if they desire to have type support when using your plugin. Ideally this could be solved for by the plugin author, or better yet web3.js, but so far a better solution is unknown - if you have any ideas, please [create an issue](https://github.com/web3/web3.js/issues/new/choose) and help us improve web3.js' UX.
+:::caution
+To provide type safety and IntelliSense for your plugin users, please refer to the [Setting Up Module Augmentation](/docs/guides/web3_plugin_guide/plugin_authors#setting-up-module-augmentation) section for how to augment the `Web3Context` module to enable typing features for your plugin.
+:::
 
 ## Plugin Dependencies
 
@@ -18,7 +18,7 @@ At the minimum, your plugin should depend on the `4.x` version of `web3-core`. T
 ```json
 {
 	"name": "web3-plugin-custom-rpc-methods",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"peerDependencies": {
 		"web3-core": ">= 4.0.1-alpha.0 < 5"
 	}
@@ -35,6 +35,16 @@ Your plugin class should `extend` the `Web3PluginBase` abstract class. This clas
 import { Web3PluginBase } from 'web3-core';
 
 export class CustomRpcMethodsPlugin extends Web3PluginBase { ... }
+```
+
+### Extending `Web3EthPluginBase`
+
+In addition to `Web3PluginBase`, you can choose to extend `Web3EthPluginBase` which will provide the [Ethereum JSON RPC API interface](http://localhost:3000/api/web3-types#EthExecutionAPI), which packages such as `Web3Eth` use, as a generic to your plugin's `requestManager`, giving it type support for the [Ethereum JSON RPC spec](https://ethereum.github.io/execution-apis/api-documentation/). This would be the recommended approach if your plugin makes Ethereum JSON RPC calls directly to a provider using web3's provided `requestManager`.
+
+```typescript
+import { Web3EthPluginBase } from 'web3-core';
+
+export class CustomRpcMethodsPlugin extends Web3EthPluginBase { ... }
 ```
 
 ### `pluginNamespace`
@@ -60,14 +70,9 @@ The following represents the plugin user's code:
 
 ```typescript
 // registering_a_plugin.ts
-import { Web3Context } from './web3_export_helper';
-import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
+import { Web3Context } from 'web3-core';
 
-declare module 'web3-core' {
-	interface Web3Context {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
-}
+import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
 
 const web3Context = new Web3Context('http://127.0.0.1:8545');
 web3Context.registerPlugin(new CustomRpcMethodsPlugin());
@@ -94,18 +99,13 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase {
 }
 ```
 
-Below is representing a plugin user's code that does not configure an Ethereum provider, resulting in a thrown [ProviderError](/api/web3-errors/class/ProviderError):
+Below depicts a plugin user's code that does not configure an Ethereum provider, resulting in a thrown [ProviderError](/api/web3-errors/class/ProviderError) when calling `customRpcMethod`:
 
 ```typescript
 // registering_a_plugin.ts
-import { Web3Context } from './web3_export_helper';
-import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
+import { Web3Context } from 'web3-core';
 
-declare module 'web3-core' {
-	interface Web3Context {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
-}
+import { CustomRpcMethodsPlugin } from './custom_rpc_methods_plugin';
 
 const web3Context = new Web3Context();
 web3Context.registerPlugin(new CustomRpcMethodsPlugin());
@@ -172,9 +172,10 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	}
 
 	/**
-	 * This method overrides the inherited `link` method from `Web3PluginBase`
-	 * to add to a configured `RequestManager` to our Contract instance
-	 * when `Web3.registerPlugin` is called.
+	 * This method overrides the inherited `link` method from
+	 * `Web3PluginBase` to add a configured `RequestManager`
+	 * to the Contract instance when `Web3.registerPlugin`
+	 * is called.
 	 *
 	 * @param parentContext - The context to be added to the instance of `ChainlinkPlugin`,
 	 * and by extension, the instance of `Contract`.
@@ -209,4 +210,178 @@ public link(parentContext: Web3Context) {
 	// plugin user is registering the plugin with
 	this._contract.link(parentContext);
 }
+```
+
+## Setting Up Module Augmentation
+
+In order to provide type safety and IntelliSense for your plugin when it's registered by the user, you must [augment](https://www.typescriptlang.org/docs/handbook/declaration-merging.html#module-augmentation) the `Web3Context` module. In simpler terms, you will be making TypeScript aware that you are modifying the interface of `Web3Context`, and any class that extends it, to include the interface of your plugin (i.e. your plugin's added methods, properties, etc.). A good tutorial that further explains the topic can be found [here](https://www.digitalocean.com/community/tutorials/typescript-module-augmentation).
+
+### A Quick Disclaimer
+
+The `registerPlugin` method exists on the `Web3Context` class, so any class that `extends Web3Context` has the ability to add your plugin's additional functionality to its interface. By augmenting `Web3Context` to include your plugin's interface, you're essentially providing a blanket augmentation that adds your plugin's interface to **all** Web3 modules that extend `Web3Context` (i.e. `web3`, `web3-eth`, `web3-eth-contract`, etc.).
+
+:::warning
+By augmenting `Web3Context` (and by extension all class interfaces that extend it), your plugin's interface will show up in things like IntelliSense for **all** Web3 modules that extend `Web3Context`, even if your plugin isn't registered - This is something worth making your users aware of, as they'll only be able to use your plugin if they register it with a Web3 class instance using `.registerPlugin`
+
+For context, here is an example of your plugin's interface showing up in IntelliSense even though your plugin hasn't been registered (the code in this example is further explained in the subsequent sections):
+
+```typescript
+// custom_rpc_methods_plugin.ts
+import { Web3PluginBase } from 'web3-core';
+
+import { Web3Context } from './reexported_web3_context';
+
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+	public pluginNamespace = 'customRpcMethods';
+
+	public someMethod() {
+		return 'someValue';
+	}
+}
+
+// Module Augmentation
+declare module './reexported_web3_context' {
+	interface Web3Context {
+		customRpcMethods: CustomRpcMethodsPlugin;
+	}
+}
+
+export { Web3Context };
+```
+
+The following represent what your plugin users would see:
+
+![web3 context augmentation](./assets/web3_context_augmentation.png 'web3Context augmentation')
+
+The above screenshot shows IntelliSense thinking `.customRpcMethods.someMethod` is available to call on the instance of `Web3`, even though the plugin user hasn't registered `CustomRpcMethodsPlugin` - running this code would result in an error.
+:::
+
+### Re-exporting Web3Context
+
+Currently TypeScript's module augmentation only supports named exports, so the first step in augmenting `Web3Context` is to re-export it as a named export. To do this you're going to create a `reexported_web3_context.ts` file (the name of this file can be whatever you prefer, but for the sake of this guide, it's going to be assumed it's named `reexported_web3_context.ts` and is located within the same directory as the `custom_rpc_methods_plugin.ts` file). The file contents should be as follows:
+
+```typescript
+// reexported_web3_context.ts
+import { Web3Context } from 'web3-core';
+
+export { Web3Context };
+```
+
+### Re-declaring the Module
+
+Now you're going to tell TypeScript that you're interested in re-defining a module's (in this case `reexported_web3_context`) interface. In simpler terms, TypeScript is already aware of what methods and classes exist for each web3.js module, but when registering a plugin, you're adding additional methods and/or classes to the module's interface and TypeScript needs a little help understanding what's going to be available within the module after the plugin is registered.
+
+```typescript
+// custom_rpc_methods_plugin.ts
+import { Web3PluginBase } from 'web3-core';
+
+// Here the re-exported Web3Context from
+// the previous section is being imported
+import { Web3Context } from './reexported_web3_context';
+
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+	public pluginNamespace = 'customRpcMethods';
+
+	public someMethod() {
+		return 'someValue';
+	}
+}
+
+// Here is the declaration to TypeScript that you are
+// augmenting the imported module (i.e. ./reexported_web3_context)
+declare module './reexported_web3_context' {...}
+```
+
+### Adding Your Plugin's Interface
+
+Now that TypeScript is aware that the interface of the `reexport_web3_context` module is going to be augmented, you can add your plugin's interface. In this case, you're adding the interface of `CustomRpcMethodsPlugin` to the interface of `Web3Context` which is what the **plugin-user** is going to be calling `.registerPlugin` on:
+
+```typescript
+// custom_rpc_methods_plugin.ts
+import { Web3PluginBase } from 'web3-core';
+
+import { Web3Context } from './reexport_web3_context';
+
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+	public pluginNamespace = 'customRpcMethods';
+
+	public someMethod() {
+		return 'someValue';
+	}
+}
+
+declare module './reexported_web3_context.ts' {
+	// Here is where you're adding your plugin's
+	// interface to the interface of Web3Context
+	interface Web3Context {
+		customRpcMethods: CustomRpcMethodsPlugin;
+	}
+}
+```
+
+:::info
+The property name (i.e. `pluginNamespace`), `customRpcMethods` in
+
+```typescript
+{
+	customRpcMethods: CustomRpcMethodsPlugin;
+}
+```
+
+**MUST** be the same as the `pluginNamespace` set by the plugin.
+
+```typescript
+import { Web3PluginBase } from 'web3-core';
+
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+	public pluginNamespace = 'customRpcMethods';
+
+	...
+}
+```
+
+This is because `.registerPlugin` will use the `pluginNamespace` property provided by the plugin as the property name when it registers the plugin with the class instance you call `.registerPlugin` on:
+
+```typescript
+const web3 = new Web3('http://127.0.0.1:8545');
+web3.registerPlugin(new CustomRpcMethodsPlugin());
+// Now customRpcMethods (i.e. the pluginNamespace) is available
+// on the instance of Web3
+web3.customRpcMethods;
+```
+
+:::
+
+### Exporting The Augmented Web3Context
+
+Lastly, you just need to export the augmented `Web3Context` by adding the following after the module re-declaration:
+
+```typescript
+export { Web3Context };
+```
+
+The full code example is as follows:
+
+```typescript
+// custom_rpc_methods_plugin.ts
+import { Web3PluginBase } from 'web3-core';
+
+import { Web3Context } from './custom_rpc_methods_plugin';
+
+export class CustomRpcMethodsPlugin extends Web3PluginBase {
+	public pluginNamespace = 'customRpcMethods';
+
+	public someMethod() {
+		return 'someValue';
+	}
+}
+
+declare module './custom_rpc_methods_plugin.ts' {
+	interface Web3Context {
+		customRpcMethods: CustomRpcMethodsPlugin;
+	}
+}
+
+// Here is where you are exporting your augmented Web3Context
+export { Web3Context };
 ```
