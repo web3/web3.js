@@ -81,7 +81,7 @@ describe('contract', () => {
 					expect(error).toBeDefined();
 					expect(error).toBeInstanceOf(Web3ContractError);
 					expect(error?.innerError.message).toBe(
-						'Returned error: execution reverted: REVERTED WITH REVERT',
+						'execution reverted: REVERTED WITH REVERT',
 					);
 				});
 			});
