@@ -37,6 +37,16 @@ import { Web3PluginBase } from 'web3-core';
 export class CustomRpcMethodsPlugin extends Web3PluginBase { ... }
 ```
 
+### Extending `Web3EthPluginBase`
+
+In addition to `Web3PluginBase`, you can choose to extend `Web3EthPluginBase` which will provide the [Ethereum JSON RPC API interface](http://localhost:3000/api/web3-types#EthExecutionAPI), which packages such as `Web3Eth` use, as a generic to your plugin's `requestManager`, giving it type support for the [Ethereum JSON RPC spec](https://ethereum.github.io/execution-apis/api-documentation/). The would be the recommended approach if your plugin makes Ethereum JSON RPC calls directly to a provider using web3's provided `requestManager`.
+
+```typescript
+import { Web3EthPluginBase } from 'web3-core';
+
+export class CustomRpcMethodsPlugin extends Web3EthPluginBase { ... }
+```
+
 ### `pluginNamespace`
 
 After extending the `Web3PluginBase` class, your plugin will need a `public` `pluginNamespace` property that configures how your plugin will be accessed on the class your plugin was registered with. In the following example, the `pluginNamespace` is set to `customRpcMethods`, so when the user registers the plugin they will access your plugin as follows:
