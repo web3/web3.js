@@ -79,9 +79,7 @@ describe('contract', () => {
 					}
 
 					expect(error).toBeDefined();
-					expect(error?.innerError.message).toContain(
-						'execution reverted: REVERTED WITH REVERT',
-					);
+					expect(error?.innerError.message).toContain('REVERTED WITH REVERT');
 				});
 			});
 		});
