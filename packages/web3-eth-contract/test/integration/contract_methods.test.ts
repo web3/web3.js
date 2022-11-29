@@ -80,7 +80,7 @@ describe('contract', () => {
 
 					expect(error).toBeDefined();
 					expect(error).toBeInstanceOf(Web3ContractError);
-					expect(error?.innerError.message).toBe(
+					expect(error?.innerError.message).toContain(
 						'execution reverted: REVERTED WITH REVERT',
 					);
 				});
