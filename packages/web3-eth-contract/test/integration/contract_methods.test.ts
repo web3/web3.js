@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { ContractExecutionError, Web3ContractError } from 'web3-errors';
+import { ContractExecutionError } from 'web3-errors';
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
@@ -79,7 +79,6 @@ describe('contract', () => {
 					}
 
 					expect(error).toBeDefined();
-					expect(error).toBeInstanceOf(Web3ContractError);
 					expect(error?.innerError.message).toContain(
 						'execution reverted: REVERTED WITH REVERT',
 					);
