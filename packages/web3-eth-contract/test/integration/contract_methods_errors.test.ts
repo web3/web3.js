@@ -61,7 +61,6 @@ describe('contract errors', () => {
 				error = err;
 			}
 
-			// console.log(error);
 			expect(error).toBeDefined();
 
 			expect(error).toMatchObject({
@@ -72,6 +71,33 @@ describe('contract errors', () => {
 				innerError: {
 					errorName: 'Unauthorized',
 					errorSignature: 'Unauthorized()',
+				},
+			});
+		});
+
+		it('Error with parameter', async () => {
+			let error: ContractExecutionError | undefined;
+			try {
+				await deployedContract.methods.badRequire().send(sendOptions);
+
+				// execution should throw before this line, if not throw here to indicate an issue.
+			} catch (err: any) {
+				error = err;
+			}
+
+			expect(error).toBeDefined();
+
+			expect(error).toMatchObject({
+				message: expect.stringContaining(
+					'Error happened while trying to execute a function inside a smart contract',
+				),
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
+				innerError: {
+					errorName: 'CustomError',
+					errorSignature: 'CustomError(string)',
+					errorArgs: {
+						0: 'reverted using custom Error',
+					},
 				},
 			});
 		});
