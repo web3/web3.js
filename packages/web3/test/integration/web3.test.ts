@@ -142,7 +142,7 @@ describe('Web3 instance', () => {
 				newProvider = new Web3.providers.IpcProvider(clientUrl);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
+			web3.setProvider(newProvider as SupportedProviders);
 
 			expect(web3.provider).toBe(newProvider);
 		});

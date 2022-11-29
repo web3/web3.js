@@ -68,12 +68,10 @@ describe('eth', () => {
 
 			const deoloyedContract = await contract.deploy(deployOptions).send(sendOptions);
 			const { provider } = web3Eth;
-			web3Eth.setProvider(
-				deoloyedContract.provider as SupportedProviders<Web3EthExecutionAPI>,
-			);
+			web3Eth.setProvider(deoloyedContract.provider as SupportedProviders);
 
 			expect(web3Eth.provider).toBe(deoloyedContract.provider);
-			web3Eth.setProvider(provider as SupportedProviders<Web3EthExecutionAPI>);
+			web3Eth.setProvider(provider as SupportedProviders);
 		});
 		it('providers', () => {
 			const res = web3Eth.providers;
