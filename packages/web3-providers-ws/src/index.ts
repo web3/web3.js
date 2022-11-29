@@ -390,7 +390,7 @@ export default class WebSocketProvider<
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
-		this._wsEventEmitter.emit('close', undefined, {
+		this._wsEventEmitter.emit('disconnect', undefined, {
 			code,
 			reason,
 		} as OnCloseEvent);
