@@ -903,11 +903,17 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
 
+#### web3-eth-contract
+
+-   `SpecialOutput` type was added as a generic type into the call function to support reassigning output types (#5631)
+-   Overloaded functions types (`ContractOverloadedMethodInputs`, `ContractOverloadedMethodOutputs`) was added (#5631)
+
 ### Fixed
 
 #### web3-eth-contract
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
+-   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
 
 #### web3-types
 
@@ -920,6 +926,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   Fix `isHex`returning `false` for `-123`, fix `isHexStrict` returning `true` for `-0x`, and fix `isHex` returning `true` for empty strings `` (#5373).
+
+#### web3-eth-abi
+
+-   Fix ContractMethodOutputParameters type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
 ### Removed
 

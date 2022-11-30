@@ -173,6 +173,11 @@ export type PrimitiveTupleType<
 		: never
 	: never;
 
+type ObjectToArray<T extends unknown[]> = T extends [...infer R, infer A]
+	? Record<R['length'], A> & ObjectToArray<R>
+	: T;
+type ArrToObjectWithFunctions<T extends unknown[]> = Array<unknown> & ObjectToArray<T>;
+
 export type MatchPrimitiveType<
 	Type extends string,
 	Components extends ReadonlyArray<AbiParameter> | undefined,
@@ -185,17 +190,51 @@ export type MatchPrimitiveType<
 	| PrimitiveTupleType<Type, Components>
 	| never;
 
-export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+type ContractMethodOutputParametersRecursiveArray<
+	Params extends ReadonlyArray<unknown> | undefined,
+> =
+	// check if params are empty array
 	Params extends readonly []
 		? []
-		: Params extends readonly [infer H, ...infer R]
+		: Params extends readonly [infer H, ...infer R] // check if Params is an array
 		? H extends AbiParameter
-			? // TODO: Find a way to set name for tuple item
-			  [MatchPrimitiveType<H['type'], H['components']>, ...ContractMethodOutputParameters<R>]
-			: ContractMethodOutputParameters<R>
-		: Params extends undefined | unknown
+			? [
+					MatchPrimitiveType<H['type'], H['components']>,
+					...ContractMethodOutputParametersRecursiveArray<R>,
+			  ]
+			: []
+		: [];
+
+type ContractMethodOutputParametersRecursiveRecord<
+	Params extends ReadonlyArray<unknown> | undefined,
+> =
+	// check if params are empty array
+	Params extends readonly []
+		? []
+		: Params extends readonly [infer H, ...infer R] // check if Params is an array
+		? H extends AbiParameter
+			? H['name'] extends '' // check if output param name is empty string
+				? ContractMethodOutputParametersRecursiveRecord<R>
+				: Record<H['name'], MatchPrimitiveType<H['type'], H['components']>> & // sets key-value pair of output param name and type
+						ContractMethodOutputParametersRecursiveRecord<R>
+			: ContractMethodOutputParametersRecursiveRecord<R>
+		: Params extends undefined | unknown // param is not array, check if undefined
 		? []
 		: Params;
+
+export type ContractMethodOutputParameters<Params extends ReadonlyArray<unknown> | undefined> =
+	// check if params are empty array
+	Params extends readonly []
+		? void
+		: Params extends readonly [infer H, ...infer R] // check if Params is an array
+		? R extends readonly [] // if only one output in array
+			? H extends AbiParameter
+				? MatchPrimitiveType<H['type'], H['components']>
+				: []
+			: // if more than one output
+			  ArrToObjectWithFunctions<[...ContractMethodOutputParametersRecursiveArray<Params>]> &
+					ContractMethodOutputParametersRecursiveRecord<Params>
+		: [];
 
 export type ContractMethodInputParameters<Params extends ReadonlyArray<unknown> | undefined> =
 	Params extends readonly []
