@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import * as eth from 'web3-eth';
 import { ValidChains, Hardfork } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
+import { Web3PromiEvent } from 'web3-core';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
@@ -133,11 +134,29 @@ describe('Contract', () => {
 			const arg = 'Hello';
 			const contract = new Contract(GreeterAbi);
 
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
+			// const send = jest.spyOn(
+			// 	{
+			// 		send: () => {
+			// 			return { on: () => {} };
+			// 		},
+			// 	},
+			// 	'send',
+			// );
+
+			// const setResolverMock = jest.spyOn(ens['_registry'], 'setResolver').mockReturnValue({
+			// 	send,
+			// } as unknown as Web3PromiEvent<any, any>);
 			const spyTx = jest
 				.spyOn(eth, 'sendTransaction')
 				.mockImplementation((_objInstance, _tx) => {
 					const newContract = contract.clone();
 					newContract.options.address = deployedAddr;
+
+					// jest.spyOn(newContract.methods.setGreeting(arg), 'send').mockReturnValue({
+					// 	send,
+					// 	status: '0x1',
+					// } as unknown as Web3PromiEvent<any, any>);
 
 					if (
 						_tx.data ===
@@ -145,13 +164,24 @@ describe('Contract', () => {
 					) {
 						// eslint-disable-next-line
 						expect(_tx.to).toStrictEqual(deployedAddr);
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-						return Promise.resolve({ status: '0x1' }) as any;
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+						return { status: '0x1', on: () => {} } as any;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
-				});
 
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return Promise.resolve(Object.assign(newContract, { on: () => {} })) as any;
+				});
+			// const spyTx = jest.spyOn(eth, 'sendTransaction').mockImplementation((...args) => {
+			// 	// const actualEth = jest.requireActual('web3-eth');
+
+			// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			// 	// const transactionToSend = actualEth.sendTransaction(args);
+			// 	// Object.assign(transactionToSend, { on: () => {} });
+			// 	// return transactionToSend;
+			// 	// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+			// 	// eslint-disable-next-line @typescript-eslint/no-empty-function
+			// 	return { on: () => {} } as unknown as Web3PromiEvent<any, any>;
+			// });
 			const deployedContract = await contract
 				.deploy({
 					data: GreeterBytecode,

@@ -1152,13 +1152,6 @@ export class Contract<Abi extends ContractAbi>
 		});
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
 
-		// if (
-		// 	(
-		// 		this.getContextObject().requestManager.provider as unknown as {
-		// 			supportsSubscriptions: () => boolean;
-		// 		}
-		// 	)?.supportsSubscriptions()
-		// ) {
 		// eslint-disable-next-line no-void
 		void transactionToSend.on('contractExecutionError', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
@@ -1166,7 +1159,6 @@ export class Contract<Abi extends ContractAbi>
 				decodeErrorData(errorsAbi, error.innerError);
 			}
 		});
-		// }
 
 		return transactionToSend;
 	}
