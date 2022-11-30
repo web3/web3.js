@@ -25,9 +25,6 @@ import {
 	describeIf,
 } from '../fixtures/system_test_utils';
 
-// todo remove
-jest.setTimeout(600000);
-
 describe('contract errors', () => {
 	let sendOptions: Record<string, unknown>;
 	let contract: Contract<typeof ErrorsContractAbi>;

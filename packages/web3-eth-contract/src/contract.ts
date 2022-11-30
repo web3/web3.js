@@ -977,7 +977,7 @@ export class Contract<Abi extends ContractAbi>
 			return validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
 		} catch (error) {
 			throw new Web3ContractError(
-				`Invalid parameters for method ${abi.name}: ${(error as Error).message}\``,
+				`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
 			);
 		}
 	}
@@ -1031,7 +1031,7 @@ export class Contract<Abi extends ContractAbi>
 							options,
 							block,
 						),
-					send: async (options?: PayableTxOptions) =>
+					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -1061,7 +1061,7 @@ export class Contract<Abi extends ContractAbi>
 						options,
 						block,
 					),
-				send: async (options?: NonPayableTxOptions) =>
+				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
@@ -1112,7 +1112,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 	}
 
-	private async _contractMethodSend<
+	private _contractMethodSend<
 		E extends AbiErrorFragment,
 		Options extends PayableCallOptions | NonPayableCallOptions,
 	>(
@@ -1135,15 +1135,25 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-		try {
-			return await sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
-		} catch (error: unknown) {
-			if (error instanceof ContractExecutionError) {
-				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
-			}
-			throw error;
+		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+
+		if (
+			(
+				this.getContextObject().requestManager.provider as unknown as {
+					supportsSubscriptions: () => boolean;
+				}
+			)?.supportsSubscriptions()
+		) {
+			// eslint-disable-next-line no-void
+			void transactionToSend.on('contractExecutionError', (error: unknown) => {
+				if (error instanceof ContractExecutionError) {
+					// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+					decodeErrorData(errorsAbi, error.innerError);
+				}
+			});
 		}
+
+		return transactionToSend;
 	}
 
 	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
