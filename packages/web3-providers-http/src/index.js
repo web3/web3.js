@@ -30,7 +30,11 @@ var https = require('https');
 // Apply missing polyfill for IE
 require('cross-fetch/polyfill');
 require('es6-promise').polyfill();
-require('abortcontroller-polyfill/dist/polyfill-patch-fetch');
+
+// import abortController if abortController is not included in node
+if(typeof global !== "undefined" && !global.AbortController){
+    require('abortcontroller-polyfill/dist/polyfill-patch-fetch')
+}
 
 /**
  * HttpProvider should be used to send rpc calls over http

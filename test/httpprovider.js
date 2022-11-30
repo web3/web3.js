@@ -71,10 +71,12 @@ describe('web3-providers-http', function () {
 
     describe('send', function () {
         it('should fail with invalid remote node connection', async function () {
+
             var provider = new HttpProvider('http://localhost:8545');
             var web3 = new Web3(provider);
 
             await expect(web3.eth.getChainId()).to.be.rejectedWith(Error, "CONNECTION ERROR: Couldn't connect to node http://localhost:8545.");
+            
         });
 
         it('should fail for non-json format response', async function () {
