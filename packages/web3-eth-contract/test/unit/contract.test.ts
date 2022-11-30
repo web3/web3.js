@@ -18,7 +18,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import * as eth from 'web3-eth';
 import { ValidChains, Hardfork } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
-import { Web3PromiEvent } from 'web3-core';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
