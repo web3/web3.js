@@ -72,6 +72,18 @@ describe('Contract', () => {
 
 			expect(contract).toBeInstanceOf(Contract);
 		});
+
+		it('should set the provider upon instantiation', () => {
+			const provider = 'http://127.0.0.1:8545';
+			const contract = new Contract([], '', {
+				provider,
+			});
+
+			expect(contract.provider).toEqual({
+				clientUrl: provider,
+				httpProviderOptions: undefined,
+			});
+		});
 	});
 
 	describe('Contract functions and defaults', () => {

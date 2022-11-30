@@ -356,18 +356,6 @@ export class Contract<Abi extends ContractAbi>
 				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
 				? optionsOrContextOrReturnFormat
 				: contextOrReturnFormat),
-			provider:
-				typeof addressOrOptionsOrContext !== 'string'
-					? addressOrOptionsOrContext?.provider ??
-					  // eslint-disable-next-line no-nested-ternary
-					  (typeof optionsOrContextOrReturnFormat === 'object' &&
-					  'provider' in optionsOrContextOrReturnFormat
-							? optionsOrContextOrReturnFormat.provider
-							: typeof contextOrReturnFormat === 'object' &&
-							  'provider' in contextOrReturnFormat
-							? contextOrReturnFormat?.provider
-							: Contract.givenProvider)
-					: undefined,
 			registeredSubscriptions: contractSubscriptions,
 		});
 
