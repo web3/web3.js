@@ -46,6 +46,7 @@ export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
 	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
+	contractExecutionError: ContractExecutionError | ResponseError<any>;
 };
 
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
