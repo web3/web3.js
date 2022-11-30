@@ -190,3 +190,7 @@ const transactionHash = receipt.transactionHash;
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
+
+### Removed
+
+-   Erroneous set `provider` logic in Contract constructor (#5669)

@@ -932,3 +932,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-accounts
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+#### web3-eth-contract
+
+-   Erroneous set `provider` logic in Contract constructor (#5669)
