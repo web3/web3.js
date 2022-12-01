@@ -16,7 +16,6 @@
     "dependencies": {
         "@ethereumjs/common": "2.5.0",
         "@ethereumjs/tx": "3.3.2",
-        "crypto-browserify": "^3.12.0",
         "eth-lib": "0.2.8",
         "ethereumjs-util": "^7.1.5",
         "scrypt-js": "^3.0.1",
