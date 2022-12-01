@@ -27,22 +27,8 @@ module.exports = {
         alias: {
             // To avoid blotting up the `bn.js` library all over the packages 
             // use single library instance. 
-<<<<<<< Updated upstream
             "bn.js": path.resolve(__dirname, 'node_modules/bn.js')
         }
-=======
-            "bn.js": path.resolve(__dirname, 'node_modules/bn.js'),
-            'ethereumjs-util': path.resolve(__dirname, 'node_modules/ethereumjs-util'),
-            "typescript": path.resolve(__dirname, 'node_modules/typescript')
-        },
-        fallback: {
-            https: require.resolve('https-browserify'),
-            http: require.resolve("stream-http"),
-            crypto: require.resolve("crypto-browserify"),
-            stream: require.resolve("stream-browserify")
-        },
-
->>>>>>> Stashed changes
     },
     module: {
         rules: [
