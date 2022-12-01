@@ -88,7 +88,8 @@ jobs:
               with:
                   node-version: 14
             - uses: actions/checkout@v2
-
+            - uses: browser-actions/setup-firefox@latest
+              if: matrix.testCmd == 'e2e_browsers'
             - uses: actions/cache@v2
               id: cache-deps
               if: env.TEST == 'unit_and_e2e_clients' || env.TEST == 'e2e_browsers'
