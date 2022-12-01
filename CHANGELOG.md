@@ -935,4 +935,4 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-contract
 
--   Erroneous set `provider` logic in Contract constructor (#5669)
+-   Remove erroneous `addressOrOptionsOrContext !== 'string'` check  in Contract constructor (#5669)

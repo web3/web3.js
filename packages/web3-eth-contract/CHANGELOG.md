@@ -193,4 +193,4 @@ const transactionHash = receipt.transactionHash;
 
 ### Removed
 
--   Erroneous set `provider` logic in Contract constructor (#5669)
+-   Remove erroneous `addressOrOptionsOrContext !== 'string'` check  in Contract constructor (#5669)
