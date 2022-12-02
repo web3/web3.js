@@ -12,8 +12,8 @@ These should pass for PRs to merge:
 | Test type | npm command | Example | Description | CI Only |
 | --------- | --------------- | ------ | ----------- | ----- |
 | unit | test | [eth.accounts.sign.js][1] | For discrete pieces of logic |
-| integration | test:e2e:clients | [e2e.contract.events.js][2] | Tests using geth and ganache-cli, (insta-mining and interval mining.) Easy to write and good for modeling complex use-cases |
-| browser | test:e2e:browsers | | The integration tests run in a headless browser using web3.min.js (browserified, vs. ganache-cli) |
+| integration | test:e2e:clients | [e2e.contract.events.js][2] | Tests using geth and ganache, (insta-mining and interval mining.) Easy to write and good for modeling complex use-cases |
+| browser | test:e2e:browsers | | The integration tests run in a headless browser using web3.min.js (browserified, vs. ganache) |
 | typescript | dtslint | -- | TS type definitions tests |
 | dependencies  | depcheck | -- | Verifies every dependency is listed correctly in the module package |
 | bundle | test:e2e:min | [e2e.minified.js][3] | Verifies minified bundle loads in a headless browser *without* being webpacked / browserified | :white_check_mark: |
@@ -45,7 +45,7 @@ CI job.
 
 The npm script `test:e2e:clients` greps all tests with an `[ @E2E ]` tag
 in their mocha test description and runs them against:
-+ ganache-cli
++ ganache
 + geth stable (POA, single instance, instamining)
 + geth stable (POA, single instance, mining at 2s intervals)
 
