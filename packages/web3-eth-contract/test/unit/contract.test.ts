@@ -21,6 +21,7 @@ import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
+import { getSystemTestProvider } from '../fixtures/system_test_utils';
 
 jest.mock('web3-eth');
 
@@ -74,7 +75,7 @@ describe('Contract', () => {
 		});
 
 		it('should set the provider upon instantiation', () => {
-			const provider = 'http://127.0.0.1:8545';
+			const provider = getSystemTestProvider();
 			const contract = new Contract([], '', {
 				provider,
 			});
