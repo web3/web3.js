@@ -25,7 +25,10 @@ module.exports = {
             // To avoid blotting up the `bn.js` library all over the packages 
             // use single library instance. 
             "bn.js": path.resolve(__dirname, 'node_modules/bn.js'),
-            'ethereumjs-util': path.resolve(__dirname, 'node_modules/ethereumjs-util')
+            'ethereumjs-util': path.resolve(__dirname, 'node_modules/ethereumjs-util'),
+            "buffer": path.resolve(__dirname, 'node_modules/buffer'),
+            
+            
         },
         fallback: {
             https: require.resolve('https-browserify'),

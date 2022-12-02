@@ -624,6 +624,7 @@ Released with 1.0.0-beta.37 code base.
 
 -  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
 -  Fixed Next.js builds failing on Node.js v16, Abortcontroller added if it doesn't exist globally (#5601)
+-  Builds fixed by updating all typescript versions to 4.1 (#5675) 
 
 ### Removed
 
