@@ -363,18 +363,16 @@ export class Contract<Abi extends ContractAbi>
 		) {
 			provider = addressOrOptionsOrContext.provider;
 		} else if (
-			provider === undefined &&
 			typeof optionsOrContextOrReturnFormat === 'object' &&
 			'provider' in optionsOrContextOrReturnFormat
 		) {
 			provider = optionsOrContextOrReturnFormat.provider;
 		} else if (
-			provider === undefined &&
 			typeof contextOrReturnFormat === 'object' &&
 			'provider' in contextOrReturnFormat
 		) {
 			provider = contextOrReturnFormat.provider;
-		} else if (provider === undefined && Contract.givenProvider !== undefined) {
+		} else {
 			provider = Contract.givenProvider;
 		}
 
