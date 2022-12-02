@@ -633,3 +633,4 @@ Released with 1.0.0-beta.37 code base.
 ### Added
 
 - `https-browserify`, `process`, `stream-browserify`, `stream-http`, `crypto-browserify` added to dev-dependencies for polyfilling (#5629)
+- Add `readable-stream` to dev-dependancies for webpack (#5629) 
