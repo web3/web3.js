@@ -347,25 +347,40 @@ export class Contract<Abi extends ContractAbi>
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
 	) {
+		let contractContext;
+		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
+			contractContext = addressOrOptionsOrContext;
+		} else if (isWeb3ContractContext(optionsOrContextOrReturnFormat)) {
+			contractContext = optionsOrContextOrReturnFormat;
+		} else {
+			contractContext = contextOrReturnFormat;
+		}
+
+		let provider;
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
+			provider = addressOrOptionsOrContext.provider;
+		} else if (
+			provider === undefined &&
+			typeof optionsOrContextOrReturnFormat === 'object' &&
+			'provider' in optionsOrContextOrReturnFormat
+		) {
+			provider = optionsOrContextOrReturnFormat.provider;
+		} else if (
+			provider === undefined &&
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
+			provider = contextOrReturnFormat.provider;
+		} else if (provider === undefined && Contract.givenProvider !== undefined) {
+			provider = Contract.givenProvider;
+		}
+
 		super({
-			// Due to abide by the rule that super must be first call in constructor
-			// Have to do this complex ternary conditions
-			// eslint-disable-next-line no-nested-ternary
-			...(isWeb3ContractContext(addressOrOptionsOrContext)
-				? addressOrOptionsOrContext
-				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
-				? optionsOrContextOrReturnFormat
-				: contextOrReturnFormat),
-			provider:
-				(addressOrOptionsOrContext as Web3ContractContext)?.provider ??
-				// eslint-disable-next-line no-nested-ternary
-				(typeof optionsOrContextOrReturnFormat === 'object' &&
-				'provider' in optionsOrContextOrReturnFormat
-					? optionsOrContextOrReturnFormat.provider
-					: typeof contextOrReturnFormat === 'object' &&
-					  'provider' in contextOrReturnFormat
-					? contextOrReturnFormat?.provider
-					: Contract.givenProvider),
+			...contractContext,
+			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
 
