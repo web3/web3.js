@@ -133,6 +133,7 @@ export const validHexStrictData: any[] = [
 	...validHexStrictDataWithNumber.map(tuple => tuple[0]),
 	'-0xdec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
 	'0x',
+	'0X',
 ];
 
 export const invalidHexData: any[] = [
