@@ -58,9 +58,9 @@ Example: Remote Node Provider
 
 .. code-block:: javascript
 
-    // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
+    // Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode) or Nodereal (https://nodereal.io/meganode), is simple.
     var Web3 = require('web3');
-    var web3 = new Web3("https://eth-mainnet.alchemyapi.io/v2/your-api-key");
+    var web3 = new Web3("https://eth-mainnet.alchemyapi.io/v2/your-api-key")//(https://eth-mainnet.nodereal.io/v1/your-api-key);
 
 
 ------------------------------------------------------------------------------
