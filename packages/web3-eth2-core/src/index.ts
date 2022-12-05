@@ -26,7 +26,7 @@ export class ETH2Core {
                 baseURL: baseUrl
             })
         } catch (error) {
-            throw new Error(`Failed to create HTTP client: ${error.message}`)
+            throw new Error(`Failed to create HTTP client: ${(error as Error).message}`)
         }
     }
 
@@ -39,7 +39,7 @@ export class ETH2Core {
             this._httpClient = ETH2Core.createHttpClient(provider)
             this.provider = provider
         } catch (error) {
-            throw new Error(`Failed to set provider: ${error.message}`)
+            throw new Error(`Failed to set provider: ${(error as Error).message}`)
         }
     }
 
@@ -58,7 +58,7 @@ export class ETH2Core {
             
             return computedRoute
         } catch (error) {
-            throw new Error(`Failed to build route: ${error.message}`)
+            throw new Error(`Failed to build route: ${(error as Error).message}`)
         }
     }
 
@@ -76,7 +76,7 @@ export class ETH2Core {
                     if (method.outputFormatter) data = method.outputFormatter(data)
                     return data
                 } catch (error) {
-                    throw new Error(`${method.errorPrefix} ${error.message}`)
+                    throw new Error(`${method.errorPrefix} ${(error as Error).message}`)
                 }
             }
         }
