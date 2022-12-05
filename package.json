@@ -7,13 +7,6 @@
         "node": ">=11.0.0"
     },
     "main": "./packages/web3/src/index.js",
-    "bundlesize": [
-        {
-            "path": "./packages/web3/dist/web3.min.js",
-            "maxSize": "1.5 mB",
-            "compression": "none"
-        }
-    ],
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
@@ -107,7 +100,6 @@
         "bn.js": "^5.2.1",
         "browserify": "^16.5.2",
         "buffer": "^4.9.2",
-        "bundlesize": "^0.18.0",
         "chai": "^4.2.0",
         "chai-as-promised": "^7.1.1",
         "core-js": "^3.6.5",
