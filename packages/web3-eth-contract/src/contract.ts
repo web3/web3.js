@@ -1020,7 +1020,7 @@ export class Contract<Abi extends ContractAbi>
 					arguments: abiParams,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(methodAbi, errorsAbis, abiParams, options, block),
-					send: (options?: PayableTxOptions) =>
+					send: async (options?: PayableTxOptions) =>
 						this._contractMethodSend(methodAbi, errorsAbis, abiParams, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
@@ -1044,7 +1044,7 @@ export class Contract<Abi extends ContractAbi>
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(methodAbi, errorsAbis, abiParams, options, block),
-				send: (options?: NonPayableTxOptions) =>
+				send: async (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, errorsAbis, abiParams, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
@@ -1092,7 +1092,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 	}
 
-	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		errorsAbi: AbiErrorFragment[],
 		params: unknown[],
@@ -1114,7 +1114,7 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		try {
-			return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+			return await sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
