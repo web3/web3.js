@@ -1019,9 +1019,9 @@ export class Contract<Abi extends ContractAbi>
 				return {
 					arguments: abiParams,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
-						this._contractMethodCall(methodAbi, errorsAbis, abiParams, options, block),
+						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 					send: async (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, errorsAbis, abiParams, options),
+						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1043,9 +1043,9 @@ export class Contract<Abi extends ContractAbi>
 			return {
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
-					this._contractMethodCall(methodAbi, errorsAbis, abiParams, options, block),
+					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 				send: async (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, errorsAbis, abiParams, options),
+					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1066,8 +1066,8 @@ export class Contract<Abi extends ContractAbi>
 
 	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
-		errorsAbi: AbiErrorFragment[],
 		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
@@ -1094,8 +1094,8 @@ export class Contract<Abi extends ContractAbi>
 
 	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
-		errorsAbi: AbiErrorFragment[],
 		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
