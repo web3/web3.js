@@ -14,15 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3Context } from 'web3-core/dist/web3_context';
+import { Web3Context } from 'web3-core';
 
 import { CustomRpcMethodsPlugin } from '../../src/custom_rpc_methods';
-
-declare module 'web3-core' {
-	interface Web3Context {
-		customRpcMethods: CustomRpcMethodsPlugin;
-	}
-}
 
 describe('CustomRpcMethodsPlugin Tests', () => {
 	it('should register CustomRpcMethodsPlugin plugin', () => {
