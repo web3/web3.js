@@ -177,6 +177,8 @@ const transactionHash = receipt.transactionHash;
 
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
+-   `SpecialOutput` type was added as a generic type into the call function to support reassigning output types (#5631)
+-   Overloaded functions types (`ContractOverloadedMethodInputs`, `ContractOverloadedMethodOutputs`) was added (#5631)
 
 ### Fixed
 
