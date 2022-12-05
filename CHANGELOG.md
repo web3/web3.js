@@ -923,6 +923,10 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
 
+#### web3-validator
+
+-   Fix `isHex`returning `false` for `-123`, fix `isHexStrict` returning `true` for `-0x`, and fix `isHex` returning `true` for empty strings `` (#5373).
+
 #### web3-eth-abi
 
 -   Fix ContractMethodOutputParameters type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
