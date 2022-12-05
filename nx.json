@@ -5,7 +5,7 @@
       "options": {
         "cacheableOperations": [
           "compile",
-          "type-check"
+          "bootstrap"
         ]
       }
     }
