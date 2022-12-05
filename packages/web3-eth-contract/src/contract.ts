@@ -1061,7 +1061,7 @@ export class Contract<Abi extends ContractAbi>
 				arguments: abiParams,
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
-				send: async (options?: NonPayableTxOptions) =>
+				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
@@ -1109,7 +1109,7 @@ export class Contract<Abi extends ContractAbi>
 		}
 	}
 
-	private async _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
+	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
 		errorsAbi: AbiErrorFragment[],
@@ -1130,17 +1130,17 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		try {
-			const promiEvent = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
-			await promiEvent;
-			return promiEvent;
-		} catch (error: unknown) {
+		const promiEvent = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		promiEvent.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
 				decodeErrorData(errorsAbi, error.innerError);
 			}
-			throw error;
-		}
+		});
+
+		return promiEvent;
 	}
 
 	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
