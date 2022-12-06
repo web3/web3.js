@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventEmitter } from 'events';
 import { ClientRequestArgs } from 'http';
 import WebSocket, { ClientOptions, CloseEvent, ErrorEvent, MessageEvent } from 'isomorphic-ws';
 import {
@@ -27,7 +26,6 @@ import {
 	Web3APIPayload,
 	Web3APIReturnType,
 	Web3APISpec,
-	Web3BaseProvider,
 	Web3ProviderEventCallback,
 	Web3ProviderStatus,
 	JsonRpcResponseWithResult,
@@ -42,18 +40,18 @@ import {
 	RequestAlreadySentError,
 	ResponseError,
 } from 'web3-errors';
-import { EventEmittedCallback, OnCloseEvent, ReconnectOptions, WSRequestItem } from './types';
+import { EventEmittedCallback, ReconnectOptions, WSRequestItem } from './types';
+import Eip1193Provider from './Eip1193Provider';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution
 /** @ignore */
 export { ClientOptions } from 'isomorphic-ws';
 export { ReconnectOptions } from './types';
+
 export default class WebSocketProvider<
 	API extends Web3APISpec = EthExecutionAPI,
-> extends Web3BaseProvider<API> {
-	private readonly _wsEventEmitter: EventEmitter = new EventEmitter();
-
+> extends Eip1193Provider<API> {
 	private readonly _clientUrl: string;
 	private readonly _wsProviderOptions?: ClientOptions | ClientRequestArgs;
 
@@ -142,15 +140,15 @@ export default class WebSocketProvider<
 		type: 'message' | string,
 		callback: Web3ProviderEventCallback<T> | EventEmittedCallback,
 	): void {
-		this._wsEventEmitter.on(type, callback);
+		this._eventEmitter.on(type, callback);
 	}
 
 	public once<T = JsonRpcResult>(type: string, callback: Web3ProviderEventCallback<T>): void {
-		this._wsEventEmitter.once(type, callback);
+		this._eventEmitter.once(type, callback);
 	}
 
 	public removeListener(type: string, callback: Web3ProviderEventCallback): void {
-		this._wsEventEmitter.removeListener(type, callback);
+		this._eventEmitter.removeListener(type, callback);
 	}
 
 	public connect(): void {
@@ -179,10 +177,10 @@ export default class WebSocketProvider<
 		}
 	}
 
-	public disconnect(code?: number, reason?: string): void {
-		this._emitCloseEvent(code, reason);
+	public disconnect(code?: number, data?: string): void {
+		this._emitCloseEvent(code, data);
 		this._removeSocketListeners();
-		this._webSocketConnection?.close(code, reason);
+		this._webSocketConnection?.close(code, data);
 	}
 
 	public reset(): void {
@@ -248,7 +246,7 @@ export default class WebSocketProvider<
 	}
 
 	public removeAllListeners(type: string): void {
-		this._wsEventEmitter.removeAllListeners(type);
+		this._eventEmitter.removeAllListeners(type);
 	}
 
 	private _init() {
@@ -305,7 +303,7 @@ export default class WebSocketProvider<
 				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
 				(response as JsonRpcNotification).method.endsWith('_subscription')
 			) {
-				this._wsEventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', undefined, response);
 				return;
 			}
 
@@ -317,10 +315,10 @@ export default class WebSocketProvider<
 			}
 
 			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-				this._wsEventEmitter.emit('message', undefined, response);
+				this._eventEmitter.emit('message', undefined, response);
 				requestItem.deferredPromise.resolve(response);
 			} else {
-				this._wsEventEmitter.emit('message', response, undefined);
+				this._eventEmitter.emit('message', response, undefined);
 				requestItem?.deferredPromise.reject(new ResponseError(response));
 			}
 
@@ -328,9 +326,8 @@ export default class WebSocketProvider<
 		}
 	}
 
-	private _onConnect() {
-		this._reconnectAttempts = 0;
-		this._wsEventEmitter.emit('open');
+	protected _onConnect() {
+		super._onConnect();
 		this._sendPendingRequests();
 	}
 
@@ -357,7 +354,7 @@ export default class WebSocketProvider<
 	}
 
 	private _onError(event: ErrorEvent): void {
-		this._wsEventEmitter.emit('error', event);
+		this._eventEmitter.emit('error', event);
 	}
 
 	private _clearQueues(event?: CloseEvent) {
@@ -390,9 +387,6 @@ export default class WebSocketProvider<
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
-		this._wsEventEmitter.emit('disconnect', undefined, {
-			code,
-			reason,
-		} as OnCloseEvent);
+		this._onDisconnect(code, reason);
 	}
 }

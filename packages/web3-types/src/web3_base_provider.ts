@@ -27,7 +27,15 @@ import {
 	JsonRpcResult,
 	JsonRpcSubscriptionResult,
 } from './json_rpc_types';
-import { Web3APISpec, Web3APIMethod, Web3APIReturnType, Web3APIPayload } from './web3_api_types';
+import {
+	Web3APISpec,
+	Web3APIMethod,
+	Web3APIReturnType,
+	Web3APIPayload,
+	ProviderConnectInfo,
+	ProviderRpcError,
+	ProviderDisconnectInfo,
+} from './web3_api_types';
 
 const symbol = Symbol.for('web3/base-provider');
 
@@ -35,7 +43,7 @@ const symbol = Symbol.for('web3/base-provider');
 export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';
 
 export type Web3ProviderEventCallback<T = JsonRpcResult> = (
-	error: Error | undefined,
+	error: Error | ProviderRpcError | undefined,
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
 
@@ -136,22 +144,23 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	>(args: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
+
 	public abstract on<T = JsonRpcResult>(
-		type: 'message' | 'disconnect' | string,
+		type: 'disconnect',
+		callback: Web3ProviderEventCallback<ProviderDisconnectInfo>,
+	): void;
+	public abstract on<T = JsonRpcResult>(
+		type: 'message' | string,
 		callback: Web3ProviderEventCallback<T>,
 	): void;
 	public abstract on(
 		type: 'connect' | 'chainChanged',
-		callback: Web3ProviderEventCallback<{
-			readonly [key: string]: unknown;
-			readonly chainId: string;
-		}>,
+		callback: Web3ProviderEventCallback<ProviderConnectInfo>,
 	): void;
 	public abstract on(
 		type: 'accountsChanged',
 		callback: Web3ProviderEventCallback<{
-			readonly [key: string]: unknown;
-			readonly accountsChanged: string[];
+			readonly accounts: string[];
 		}>,
 	): void;
 	public abstract removeListener(type: string, callback: Web3ProviderEventCallback): void;

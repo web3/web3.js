@@ -28,7 +28,14 @@ export interface EthSubscription extends ProviderMessage {
 		readonly result: unknown;
 	};
 }
+export interface ProviderRpcError extends Error {
+	code: number;
+	data?: unknown;
+}
 export interface ProviderConnectInfo {
+	readonly chainId: string;
+}
+export interface ProviderDisconnectInfo {
 	readonly chainId: string;
 }
 export type Web3APISpec = Record<string, (...params: any) => any> | unknown;
