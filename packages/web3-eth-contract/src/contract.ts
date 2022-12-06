@@ -1037,7 +1037,7 @@ export class Contract<Abi extends ContractAbi>
 					arguments: abiParams,
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
-					send: async (options?: PayableTxOptions) =>
+					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
