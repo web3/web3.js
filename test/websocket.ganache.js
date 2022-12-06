@@ -8,7 +8,7 @@ const { spawn } = require('child_process');
 
 const intervalTime = 1000 // ms
 
-export const waitForOpenConnection = async (
+const waitForOpenConnection = async (
 	server,
 	currentAttempt = 1,
     maxNumberOfAttempts = 5,
