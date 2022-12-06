@@ -23,9 +23,9 @@ import {
 	Web3BaseProvider,
 } from 'web3-types';
 import { EventEmitter } from 'events';
-import { toPayload } from 'web3-utils';
+import { toPayload } from './json_rpc';
 
-export default abstract class Eip1193Provider<
+export abstract class Eip1193Provider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {
 	protected readonly _eventEmitter: EventEmitter = new EventEmitter();
@@ -43,7 +43,6 @@ export default abstract class Eip1193Provider<
 			}) as Web3APIPayload<API, Web3APIMethod<API>>,
 		);
 		return data?.result ?? '';
-		return '';
 	}
 
 	private async _getAccounts(): Promise<HexString[]> {
@@ -54,7 +53,6 @@ export default abstract class Eip1193Provider<
 			}) as Web3APIPayload<API, Web3APIMethod<API>>,
 		);
 		return data?.result ?? [];
-		return [];
 	}
 
 	protected _onConnect() {
@@ -74,7 +72,7 @@ export default abstract class Eip1193Provider<
 			.catch(err => {
 				// todo: add error handler
 				// eslint-disable-next-line no-console
-				console.log(err);
+				console.error(err);
 			});
 
 		this._getAccounts()
@@ -92,7 +90,7 @@ export default abstract class Eip1193Provider<
 			.catch(err => {
 				// todo: add error handler
 				// eslint-disable-next-line no-console
-				console.log(err);
+				console.error(err);
 			});
 	}
 

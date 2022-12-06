@@ -31,7 +31,7 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 	let clientWsUrl: string;
 	let webSocketProvider: WebSocketProvider;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientWsUrl = getSystemTestProvider();
 	});
 	beforeEach(() => {
@@ -59,10 +59,10 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 				}) as Web3ProviderEventCallback<ProviderRpcError>);
 			});
 
-			webSocketProvider.disconnect(4100, 'Some reason');
+			webSocketProvider.disconnect(4100, 'Some extra data');
 			const err = await disconnectPromise;
 			expect(err.code).toBe(4100);
-			expect(err.data).toBe('Some reason');
+			expect(err.data).toBe('Some extra data');
 		});
 		it('should send chainChanged event', async () => {
 			await waitForOpenConnection(webSocketProvider, 0);

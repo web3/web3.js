@@ -34,7 +34,6 @@ import {
 	Web3APIPayload,
 	ProviderConnectInfo,
 	ProviderRpcError,
-	ProviderDisconnectInfo,
 } from './web3_api_types';
 
 const symbol = Symbol.for('web3/base-provider');
@@ -145,9 +144,9 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
 
-	public abstract on<T = JsonRpcResult>(
+	public abstract on(
 		type: 'disconnect',
-		callback: Web3ProviderEventCallback<ProviderDisconnectInfo>,
+		callback: Web3ProviderEventCallback<ProviderRpcError>,
 	): void;
 	public abstract on<T = JsonRpcResult>(
 		type: 'message' | string,
@@ -171,7 +170,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;
-	public abstract disconnect(code?: number, reason?: string): void;
+	public abstract disconnect(code?: number, data?: string): void;
 	public abstract reset(): void;
 }
 

@@ -30,7 +30,13 @@ import {
 	Web3ProviderStatus,
 	JsonRpcResponseWithResult,
 } from 'web3-types';
-import { jsonRpc, isNullish, Web3DeferredPromise, ChunkResponseParser } from 'web3-utils';
+import {
+	jsonRpc,
+	isNullish,
+	Web3DeferredPromise,
+	ChunkResponseParser,
+	Eip1193Provider,
+} from 'web3-utils';
 import {
 	InvalidClientError,
 	InvalidConnectionError,
@@ -41,7 +47,6 @@ import {
 	ResponseError,
 } from 'web3-errors';
 import { EventEmittedCallback, ReconnectOptions, WSRequestItem } from './types';
-import Eip1193Provider from './Eip1193Provider';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution
@@ -328,6 +333,7 @@ export default class WebSocketProvider<
 
 	protected _onConnect() {
 		super._onConnect();
+		this._reconnectAttempts = 0;
 		this._sendPendingRequests();
 	}
 

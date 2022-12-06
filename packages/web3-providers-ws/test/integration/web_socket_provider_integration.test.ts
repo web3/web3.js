@@ -22,12 +22,14 @@ import {
 	JsonRpcSubscriptionResult,
 	JsonRpcId,
 	JsonRpcResponse,
+	ProviderRpcError,
+	Web3ProviderEventCallback,
 } from 'web3-types';
 import { Web3DeferredPromise } from 'web3-utils';
 
 import { Web3WSProviderError } from 'web3-errors';
 import WebSocketProvider from '../../src/index';
-import { OnCloseEvent, WSRequestItem } from '../../src/types';
+import { WSRequestItem } from '../../src/types';
 import { waitForOpenConnection } from '../fixtures/helpers';
 
 import {
@@ -122,25 +124,23 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 		it('should subscribe to `connect` event', async () => {
 			const openPromise = new Promise((resolve: Resolve) => {
-				webSocketProvider.on('open', () => {
+				webSocketProvider.on('connect', () => {
 					resolve('resolved');
 				});
 			});
 			await expect(openPromise).resolves.toBe('resolved');
 		});
 
-		it('should subscribe to `close` event', async () => {
+		it('should subscribe to `disconnect` event', async () => {
 			const code = 1000;
 
-			const closePromise = new Promise((resolve: Resolve) => {
-				webSocketProvider.on('close', (err?: Error, event?: OnCloseEvent) => {
-					if (err) {
-						throw new Error(err.message);
-					}
-					expect(event?.code).toEqual(code);
-					resolve();
-				});
+			const closePromise = new Promise<ProviderRpcError>(resolve => {
+				webSocketProvider.on('disconnect', ((error: ProviderRpcError) => {
+					expect(error?.code).toEqual(code);
+					resolve(error);
+				}) as Web3ProviderEventCallback<ProviderRpcError>);
 			});
+
 			currentAttempt = 0;
 			await waitForOpenConnection(webSocketProvider, currentAttempt);
 			webSocketProvider.disconnect(code);
@@ -163,7 +163,7 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 
 		it('should reset', async () => {
 			class TestReset extends WebSocketProvider {
-				public pendigRequestsSize() {
+				public pendingRequestsSize() {
 					return this._pendingRequestsQueue.size;
 				}
 
@@ -195,13 +195,13 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 			};
 
 			testResetProvider.setPendingRequest(jsonRpcPayload.id, reqItem);
-			expect(testResetProvider.pendigRequestsSize()).toBe(1);
+			expect(testResetProvider.pendingRequestsSize()).toBe(1);
 
 			testResetProvider.setSentRequest(jsonRpcPayload.id, reqItem);
 			expect(testResetProvider.sentRequestsSize()).toBe(1);
 
 			testResetProvider.reset();
-			expect(testResetProvider.pendigRequestsSize()).toBe(0);
+			expect(testResetProvider.pendingRequestsSize()).toBe(0);
 			expect(testResetProvider.sentRequestsSize()).toBe(0);
 
 			testResetProvider.disconnect(1000);

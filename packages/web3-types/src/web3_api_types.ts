@@ -35,9 +35,6 @@ export interface ProviderRpcError extends Error {
 export interface ProviderConnectInfo {
 	readonly chainId: string;
 }
-export interface ProviderDisconnectInfo {
-	readonly chainId: string;
-}
 export type Web3APISpec = Record<string, (...params: any) => any> | unknown;
 export type Web3APIMethod<T extends Web3APISpec> = string & keyof Exclude<T, unknown>;
 export type Web3APIParams<
