@@ -75,7 +75,7 @@ describe('contract defaults (extra)', () => {
 
 			Contract.defaultHardfork = hardfork;
 
-			// const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
@@ -85,14 +85,11 @@ describe('contract defaults (extra)', () => {
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
-			// todo investigate. this fails, too
-			// expect(sendTransactionSpy).toHaveBeenCalledWith(
-			// 	expect.objectContaining({
-			// 		_config: expect.objectContaining({ defaultHardfork: hardfork }),
-			// 	}),
-			// 	expect.any(Object),
-			// 	expect.any(Object),
-			// );
+			expect(sendTransactionSpy).toHaveBeenCalledWith(
+				expect.objectContaining({ defaultHardfork: hardfork }),
+				expect.any(Object),
+				expect.any(Object),
+			);
 		});
 
 		it('should use "defaultHardfork" on "instance" level', async () => {
@@ -179,24 +176,21 @@ describe('contract defaults (extra)', () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 		});
 
-		// todo this test fails, seems like a bug. any thoughts?
-		// it('should use "defaultCommon" on "Contract" level', async () => {
-		// 	Contract.defaultCommon = common;
+		it('should use "defaultCommon" on "Contract" level', async () => {
+			Contract.defaultCommon = common;
 
-		// 	const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
-		// 	expect(contract.defaultCommon).toMatchObject(common);
+			expect(contract.defaultCommon).toMatchObject(common);
 
-		// 	await contract.methods.setGreeting('New Greeting').send(sendOptions);
+			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
-		// 	expect(sendTransactionSpy).toHaveBeenLastCalledWith(
-		// 		expect.objectContaining({
-		// 			_config: expect.objectContaining({ defaultCommon: common }),
-		// 		}),
-		// 		expect.any(Object),
-		// 		expect.any(Object),
-		// 	);
-		// });
+			expect(sendTransactionSpy).toHaveBeenLastCalledWith(
+				expect.objectContaining({ defaultCommon: common }),
+				expect.any(Object),
+				expect.any(Object),
+			);
+		});
 
 		it('should use "defaultCommon" on "instance" level', async () => {
 			contract.defaultCommon = common;
