@@ -96,6 +96,9 @@ describeIf(isWs)('WebSocketProvider - implemented methods', () => {
 						if (error) {
 							throw new Error(error.message);
 						}
+						if (result?.id !== jsonRpcPayload.id) {
+							return;
+						}
 						expect(result?.id).toBe(jsonRpcPayload.id);
 						resolve();
 					},

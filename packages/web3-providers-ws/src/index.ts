@@ -246,7 +246,6 @@ export default class WebSocketProvider<
 		if (this.getStatus() === 'disconnected') {
 			throw new ConnectionNotOpenError();
 		}
-
 		this._webSocketConnection.send(JSON.stringify(payload));
 	}
 
@@ -393,6 +392,6 @@ export default class WebSocketProvider<
 	}
 
 	private _emitCloseEvent(code?: number, reason?: string): void {
-		this._onDisconnect(code, reason);
+		super._onDisconnect(code, reason);
 	}
 }
