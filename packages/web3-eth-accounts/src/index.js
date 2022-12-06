@@ -25,7 +25,7 @@
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
-var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
+var cryp = require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
