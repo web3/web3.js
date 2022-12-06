@@ -398,7 +398,7 @@ describe('transaction and message signing [ @E2E ]', function() {
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
         basic.defaultChain = 'mainnet';
-        basic.defaultHardfork = 'istanbul';
+        basic.defaultHardfork = 'london';
 
         instance = await basic
             .deploy()
