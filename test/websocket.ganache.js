@@ -81,6 +81,7 @@ describe('WebsocketProvider (ganache)', function () {
         this.timeout(5000)
 
         const options = {}
+        ganache.provider().disconnect()
         server = ganache.server(options)
         await server.listen(port,async err => {
             if (err) throw err
