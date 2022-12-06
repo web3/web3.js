@@ -19,7 +19,7 @@ import HttpProvider from 'web3-providers-http';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { SupportedProviders, Web3EthExecutionAPI } from 'web3-types';
+import { SupportedProviders } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
@@ -68,12 +68,10 @@ describe('eth', () => {
 
 			const deoloyedContract = await contract.deploy(deployOptions).send(sendOptions);
 			const { provider } = web3Eth;
-			web3Eth.setProvider(
-				deoloyedContract.provider as SupportedProviders<Web3EthExecutionAPI>,
-			);
+			web3Eth.setProvider(deoloyedContract.provider as SupportedProviders);
 
 			expect(web3Eth.provider).toBe(deoloyedContract.provider);
-			web3Eth.setProvider(provider as SupportedProviders<Web3EthExecutionAPI>);
+			web3Eth.setProvider(provider as SupportedProviders);
 		});
 		it('providers', () => {
 			const res = web3Eth.providers;

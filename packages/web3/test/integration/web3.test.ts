@@ -15,12 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-	JsonRpcOptionalRequest,
-	Web3BaseProvider,
-	Web3EthExecutionAPI,
-	SupportedProviders,
-} from 'web3-types';
+import { JsonRpcOptionalRequest, Web3BaseProvider, SupportedProviders } from 'web3-types';
 import Contract from 'web3-eth-contract';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
@@ -142,7 +137,7 @@ describe('Web3 instance', () => {
 				newProvider = new Web3.providers.IpcProvider(clientUrl);
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-			web3.setProvider(newProvider as SupportedProviders<Web3EthExecutionAPI>);
+			web3.setProvider(newProvider as SupportedProviders);
 
 			expect(web3.provider).toBe(newProvider);
 		});

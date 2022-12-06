@@ -902,6 +902,8 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
+-   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5652).
+-   Export a new function `isPromise` that checks if an object is a promise (#5652).
 
 #### web3-eth-contract
 
