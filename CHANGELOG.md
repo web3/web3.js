@@ -630,7 +630,6 @@ Released with 1.0.0-beta.37 code base.
 ### Removed
 
 - `clean-webpack-plugin` has been removed from dev-dependencies (#5629)
-- `bundlesize` has been removed from dev-dependencies (#5629)
 
 ### Added
 
