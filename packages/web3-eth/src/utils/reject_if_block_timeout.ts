@@ -161,12 +161,12 @@ export async function rejectIfBlockTimeout(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transactionHash?: Bytes,
 ): Promise<[Promise<never>, ResourceCleaner]> {
-	const provider: Web3BaseProvider = web3Context.requestManager.provider as Web3BaseProvider;
+	const { provider } = web3Context.requestManager;
 	let callingRes: [Promise<never>, ResourceCleaner];
 	const starterBlockNumber = await getBlockNumber(web3Context, NUMBER_DATA_FORMAT);
 	// TODO: once https://github.com/web3/web3.js/issues/5521 is implemented, remove checking for `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout`
 	if (
-		provider.supportsSubscriptions() &&
+		(provider as Web3BaseProvider).supportsSubscriptions?.() &&
 		web3Context.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout
 	) {
 		callingRes = await resolveBySubscription(web3Context, starterBlockNumber, transactionHash);

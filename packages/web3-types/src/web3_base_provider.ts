@@ -35,6 +35,7 @@ import {
 	ProviderConnectInfo,
 	ProviderRpcError,
 } from './web3_api_types';
+import { Web3EthExecutionAPI } from './apis/web3_eth_execution_api';
 
 const symbol = Symbol.for('web3/base-provider');
 
@@ -174,7 +175,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	public abstract reset(): void;
 }
 
-export type SupportedProviders<API extends Web3APISpec> =
+export type SupportedProviders<API extends Web3APISpec = Web3EthExecutionAPI> =
 	| EIP1193Provider<API>
 	| Web3BaseProvider<API>
 	| LegacyRequestProvider

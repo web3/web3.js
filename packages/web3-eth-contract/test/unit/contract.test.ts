@@ -21,6 +21,7 @@ import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
+import { getSystemTestProvider } from '../fixtures/system_test_utils';
 
 jest.mock('web3-eth');
 
@@ -71,6 +72,18 @@ describe('Contract', () => {
 			);
 
 			expect(contract).toBeInstanceOf(Contract);
+		});
+
+		it('should set the provider upon instantiation', () => {
+			const provider = getSystemTestProvider();
+			const contract = new Contract([], '', {
+				provider,
+			});
+
+			expect(contract.provider).toEqual({
+				clientUrl: provider,
+				httpProviderOptions: undefined,
+			});
 		});
 	});
 
@@ -209,6 +222,8 @@ describe('Contract', () => {
 			const clonnedContract = contract.clone();
 
 			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+
+			contract.options.jsonInterface = GreeterAbi;
 		});
 
 		it('should clone new contract', () => {
@@ -216,6 +231,26 @@ describe('Contract', () => {
 
 			const clonnedContract = contract.clone();
 			expect(JSON.stringify(contract)).toStrictEqual(JSON.stringify(clonnedContract));
+		});
+
+		it('should be able to update the jsonInterface', () => {
+			const contract = new Contract(sampleStorageContractABI);
+
+			expect(contract.methods.retrieveNum).toBeDefined();
+			expect(contract.methods.storeNum).toBeDefined();
+
+			expect(contract.methods.greet).toBeUndefined();
+			expect(contract.methods.increment).toBeUndefined();
+			expect(contract.methods.setGreeting).toBeUndefined();
+
+			contract.options.jsonInterface = GreeterAbi;
+
+			expect(contract.methods.retrieveNum).toBeUndefined();
+			expect(contract.methods.storeNum).toBeUndefined();
+
+			expect(contract.methods.greet).toBeDefined();
+			expect(contract.methods.increment).toBeDefined();
+			expect(contract.methods.setGreeting).toBeDefined();
 		});
 
 		it('defaults set and get should work', () => {

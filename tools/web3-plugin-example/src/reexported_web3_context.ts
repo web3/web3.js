@@ -14,11 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { Web3Context } from 'web3-core';
 
-// Have to use `require` because of Jest issue https://jestjs.io/docs/ecmascript-modules
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('../config/setup');
-
-const jestTimeout = 30000; // Sometimes `in3` takes long time because of its decentralized nature.
-
-jest.setTimeout(jestTimeout);
+export { Web3Context };

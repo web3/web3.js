@@ -132,11 +132,17 @@ export const validHexStrictDataWithNumber: [string, number | bigint][] = [
 export const validHexStrictData: any[] = [
 	...validHexStrictDataWithNumber.map(tuple => tuple[0]),
 	'-0xdec0518fa672a70027b04c286582e543ab17319fbdd384fa7bc8f3d5a542c0b',
+	'0x',
+	'0X',
 ];
 
 export const invalidHexData: any[] = [
 	'Heeäööä👅D34ɝɣ24Єͽ',
-	'-1000',
+	'',
+	'-',
+	'-0x',
+	'x',
+	'0x0x',
 	'0xH',
 	'I have 100£',
 	'\u0000',
@@ -152,10 +158,11 @@ export const invalidHexData: any[] = [
 export const invalidHexStrictData: any[] = [
 	...invalidHexData,
 	'45',
-	'',
+	'-45',
 	'0',
 	1,
 	BigInt(12),
+	BigInt(''),
 	BigInt(-255),
 	-42,
 	4.2,
@@ -164,7 +171,7 @@ export const invalidHexStrictData: any[] = [
 export const validHexData: any[] = [
 	...validHexStrictData,
 	'45',
-	'',
+	'-45',
 	'0',
 	1,
 	BigInt(12),
