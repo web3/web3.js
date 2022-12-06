@@ -347,27 +347,38 @@ export class Contract<Abi extends ContractAbi>
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
 	) {
+		let contractContext;
+		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
+			contractContext = addressOrOptionsOrContext;
+		} else if (isWeb3ContractContext(optionsOrContextOrReturnFormat)) {
+			contractContext = optionsOrContextOrReturnFormat;
+		} else {
+			contractContext = contextOrReturnFormat;
+		}
+
+		let provider;
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
+			provider = addressOrOptionsOrContext.provider;
+		} else if (
+			typeof optionsOrContextOrReturnFormat === 'object' &&
+			'provider' in optionsOrContextOrReturnFormat
+		) {
+			provider = optionsOrContextOrReturnFormat.provider;
+		} else if (
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
+			provider = contextOrReturnFormat.provider;
+		} else {
+			provider = Contract.givenProvider;
+		}
+
 		super({
-			// Due to abide by the rule that super must be first call in constructor
-			// Have to do this complex ternary conditions
-			// eslint-disable-next-line no-nested-ternary
-			...(isWeb3ContractContext(addressOrOptionsOrContext)
-				? addressOrOptionsOrContext
-				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
-				? optionsOrContextOrReturnFormat
-				: contextOrReturnFormat),
-			provider:
-				typeof addressOrOptionsOrContext !== 'string'
-					? addressOrOptionsOrContext?.provider ??
-					  // eslint-disable-next-line no-nested-ternary
-					  (typeof optionsOrContextOrReturnFormat === 'object' &&
-					  'provider' in optionsOrContextOrReturnFormat
-							? optionsOrContextOrReturnFormat.provider
-							: typeof contextOrReturnFormat === 'object' &&
-							  'provider' in contextOrReturnFormat
-							? contextOrReturnFormat?.provider
-							: Contract.givenProvider)
-					: undefined,
+			...contractContext,
+			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
 

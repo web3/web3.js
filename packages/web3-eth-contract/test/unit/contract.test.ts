@@ -21,6 +21,7 @@ import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 import { AllGetPastEventsData, getLogsData, getPastEventsData } from '../fixtures/unitTestFixtures';
+import { getSystemTestProvider } from '../fixtures/system_test_utils';
 
 jest.mock('web3-eth');
 
@@ -71,6 +72,18 @@ describe('Contract', () => {
 			);
 
 			expect(contract).toBeInstanceOf(Contract);
+		});
+
+		it('should set the provider upon instantiation', () => {
+			const provider = getSystemTestProvider();
+			const contract = new Contract([], '', {
+				provider,
+			});
+
+			expect(contract.provider).toEqual({
+				clientUrl: provider,
+				httpProviderOptions: undefined,
+			});
 		});
 	});
 

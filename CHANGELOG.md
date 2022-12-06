@@ -914,6 +914,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
+-   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
 
 #### web3-types
 
