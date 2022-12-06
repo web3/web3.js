@@ -59,7 +59,7 @@ describe('method.send [ @E2E ]', function () {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
-        it('errors on OOG', async function () {
+        it.skip('errors on OOG', async function () {
             try {
                 var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
                 await instance
