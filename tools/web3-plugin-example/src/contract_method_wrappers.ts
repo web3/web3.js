@@ -14,13 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3Context, Web3PluginBase } from 'web3-core';
+import { Web3PluginBase } from 'web3-core';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract from 'web3-eth-contract';
 import { Address, Numbers } from 'web3-types';
 import { DataFormat, DEFAULT_RETURN_FORMAT, format, numberToHex } from 'web3-utils';
 
 import { ERC20TokenAbi } from './ERC20Token';
+import { Web3Context } from './reexported_web3_context';
 
 export class ContractMethodWrappersPlugin extends Web3PluginBase {
 	public pluginNamespace = 'contractMethodWrappersPlugin';
@@ -85,3 +86,12 @@ export class ContractMethodWrappersPlugin extends Web3PluginBase {
 		};
 	}
 }
+
+// Module Augmentation
+declare module './reexported_web3_context' {
+	interface Web3Context {
+		contractMethodWrappersPlugin: ContractMethodWrappersPlugin;
+	}
+}
+
+export { Web3Context };

@@ -47,3 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix ContractMethodOutputParameters type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (5631)

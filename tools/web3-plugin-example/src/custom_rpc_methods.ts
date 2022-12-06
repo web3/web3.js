@@ -16,6 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Web3PluginBase } from 'web3-core';
 
+import { Web3Context } from './reexported_web3_context';
+
 type CustomRpcApi = {
 	custom_rpc_method: () => string;
 	custom_rpc_method_with_parameters: (parameter1: string, parameter2: number) => string;
@@ -38,3 +40,12 @@ export class CustomRpcMethodsPlugin extends Web3PluginBase<CustomRpcApi> {
 		});
 	}
 }
+
+// Module Augmentation
+declare module './reexported_web3_context' {
+	interface Web3Context {
+		customRpcMethods: CustomRpcMethodsPlugin;
+	}
+}
+
+export { Web3Context };
