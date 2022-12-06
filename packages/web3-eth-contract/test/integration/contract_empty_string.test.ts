@@ -19,8 +19,8 @@ import { Contract } from '../../src';
 import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 import { MyContractAbi, MyContractBytecode } from '../fixtures/MyContract';
 
-describe('contract', () => {
-	describe('clone', () => {
+describe('contract's function's calls', () => {
+	describe('encoding edge cases', () => {
 		let contract: Contract<typeof MyContractAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
