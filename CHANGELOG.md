@@ -897,7 +897,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-contract
 
--   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5587).
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
 
 #### web3-types
 

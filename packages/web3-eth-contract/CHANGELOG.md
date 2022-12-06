@@ -188,7 +188,7 @@ const transactionHash = receipt.transactionHash;
 
 ### Added
 
--   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5587).
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
 
 ### Fixed
 
