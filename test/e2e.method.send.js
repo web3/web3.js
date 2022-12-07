@@ -146,7 +146,7 @@ describe('method.send [ @E2E ]', function () {
             instance = await basic.deploy().send({from: accounts[0], nonce: nonceVal });
         })
 
-        it('returns a receipt', async function () {
+        it.skip('returns a receipt', async function () {
             var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
             var receipt = await instance
                 .methods

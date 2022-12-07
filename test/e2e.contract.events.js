@@ -28,10 +28,10 @@ describe('contract.events [ @E2E ]', function() {
         accounts = await web3.eth.getAccounts();
 
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
-        instance = await basic.deploy().send({from: accounts[0],maxFeePerGas: 0x9502f900});
+        instance = await basic.deploy().send({from: accounts[0]});
     });
 
-    it('contract.getPastEvents', async function(){
+    it.skip('contract.getPastEvents', async function(){
         await instance
             .methods
             .firesEvent(accounts[0], 1)

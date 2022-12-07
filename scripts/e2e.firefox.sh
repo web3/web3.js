@@ -23,7 +23,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo " "
 
 # Launch ganache, track its PID and wait until port is open
-npx ganache > /dev/null &
+npx ganache --server.ws true > /dev/null &
 client=$!
 npx wait-port 8545
 
