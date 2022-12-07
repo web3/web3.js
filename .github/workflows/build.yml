@@ -24,7 +24,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: yarn
       - run: corepack enable
-      - run: yarn
+      - run: yarn install
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
         with:
