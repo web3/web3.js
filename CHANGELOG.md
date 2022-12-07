@@ -895,6 +895,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3-eth-contract
+
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
+
 #### web3-types
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )

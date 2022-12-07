@@ -157,11 +157,13 @@ describe('Contract', () => {
 					) {
 						// eslint-disable-next-line
 						expect(_tx.to).toStrictEqual(deployedAddr);
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-						return Promise.resolve({ status: '0x1' }) as any;
+
+						// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+						return { status: '0x1', on: () => {} } as any;
 					}
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-					return Promise.resolve(newContract) as any;
+
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-empty-function
+					return Promise.resolve(Object.assign(newContract, { on: () => {} })) as any;
 				});
 
 			const deployedContract = await contract

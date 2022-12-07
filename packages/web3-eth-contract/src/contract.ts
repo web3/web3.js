@@ -1049,7 +1049,7 @@ export class Contract<Abi extends ContractAbi>
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1073,7 +1073,7 @@ export class Contract<Abi extends ContractAbi>
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1092,13 +1092,10 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	private async _contractMethodCall<
-		E extends AbiErrorFragment,
-		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(
+	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
-		errorsAbi: E[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
@@ -1126,6 +1123,7 @@ export class Contract<Abi extends ContractAbi>
 	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
@@ -1143,7 +1141,17 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		const promiEvent = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		promiEvent.on('error', (error: unknown) => {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+		});
+
+		return promiEvent;
 	}
 
 	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(
