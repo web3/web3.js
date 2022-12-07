@@ -44,8 +44,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: corepack enable
       - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
+      - run: corepack enable
       - run: yarn lint
 
   build-web:
@@ -64,8 +64,8 @@ jobs:
           with:
             node-version: ${{ matrix.node }}
             cache: yarn
-        - run: corepack enable
         -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: corepack enable
         -   run: yarn build:web
 
   unit:
@@ -84,8 +84,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: corepack enable
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: corepack enable
       - run: yarn test:unit
 
   integration:
@@ -110,8 +110,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: corepack enable
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: corepack enable
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
@@ -137,8 +137,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
-      - run: corepack enable
       -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: corepack enable
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
 
@@ -158,12 +158,8 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: corepack enable
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: corepack enable
       - run: npm install --no-package-lock --no-save --force cypress
       - name: Cypress run
         uses: cypress-io/github-action@v4
@@ -180,14 +176,10 @@ jobs:
         matrix:
             node: [ 16 ]
     steps:
-        -   uses: actions/download-artifact@v3
-            with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-        - uses: actions/setup-node@v3
+        - uses: actions/download-artifact@v3
           with:
-            node-version: ${{ matrix.node }}
-            cache: yarn
+              name: web3-${{ matrix.node }}.js.tar.gz
+              path: /tmp
+        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         - run: corepack enable
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        -   run: yarn build:docs
+        - run: yarn build:docs
