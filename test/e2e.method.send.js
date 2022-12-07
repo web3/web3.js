@@ -135,18 +135,25 @@ describe('method.send [ @E2E ]', function () {
         if (process.env.GETH_INSTAMINE) return;
 
         before(async function () {
+            this.timeout(10000)
+
             var port = utils.getWebsocketPort();
-
+            console.log(1)
             web3 = new Web3('ws://localhost:' + port);
+            console.log(11)
             accounts = await web3.eth.getAccounts();
-
+            console.log("accounts",accounts)
+            console.log(111)
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
 
+            console.log(1111)
             var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
+            console.log(111114)
             instance = await basic.deploy().send({from: accounts[0], nonce: nonceVal });
+            console.log(111115)
         })
 
-        it.skip('returns a receipt', async function () {
+        it('returns a receipt', async function () {
             var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
             var receipt = await instance
                 .methods
