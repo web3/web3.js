@@ -7,7 +7,7 @@ const { spawn } = require('child_process');
 
 const intervalTime = 1000 // ms
 
-const ganacheOptions = { Chain: {hardfork: 'muirGlacier'}}
+const ganacheOptions = { Chain: {hardfork: 'muirGlacier'}, server: { ws: true } }
 const waitForOpenConnection = async (
 	server,
 	currentAttempt = 1,
@@ -56,9 +56,8 @@ describe('WebsocketProvider (ganache)', function () {
     afterEach(async function () {
         // Might already be closed..
         try {
-            const toCloseServer = await waitForOpenConnection(server)
-            if(toCloseServer)
-                await server.close()
+            await waitForOpenConnection(server)
+            await server.close()
         } catch (err) {
         }
     })
