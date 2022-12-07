@@ -40,12 +40,8 @@ jobs:
         with:
           name: web3-14.js.tar.gz
           path: /tmp
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
       - run: corepack enable
+      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
       - run: yarn lint
 
   build-web:
@@ -60,12 +56,8 @@ jobs:
             with:
                 name: web3-${{ matrix.node }}.js.tar.gz
                 path: /tmp
-        - uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node }}
-            cache: yarn
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         - run: corepack enable
+        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:web
 
   unit:
@@ -80,10 +72,6 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
       - run: yarn test:unit
@@ -106,10 +94,6 @@ jobs:
         with:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
       - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
@@ -133,11 +117,6 @@ jobs:
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      - uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-          cache: yarn
-      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
