@@ -33,7 +33,7 @@ yarn add web3
 ## Prerequisites
 
 -   :gear: [NodeJS](https://nodejs.org/) (LTS/Fermium)
--   :toolbox: [Yarn](https://yarnpkg.com/)/[Lerna](https://lerna.js.org/)
+-   :toolbox: `corepack enable`
 
 ## Useful links
 

@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: yarn
+      - run: corepack enable
       - run: yarn
       - run: tar -czf /tmp/web3-${{ matrix.node }}.js.tar.gz --exclude="./.git" ./
       - uses: actions/upload-artifact@v3
@@ -48,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            node: [ 14, 16 ]
+          node: [14, 16]
     steps:
         -   uses: actions/download-artifact@v3
             with:
@@ -82,7 +83,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [14, 16]
+        node: [14, 16, 18]
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
@@ -104,7 +105,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [ 14, 16 ]
+        node: [14, 16]
         backend: [ 'geth' ]
         mode: [ 'ipc' ]
     steps:

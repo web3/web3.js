@@ -10,37 +10,25 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
-		"build": "tsc --build",
+		"clean": "run -T rimraf dist",
+		"build": "yarn run clean && run -T tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
-		"lint": "eslint --ext .js,.ts .",
-		"lint:fix": "eslint --fix --ext .js,.ts .",
-		"format": "prettier --write '**/*'",
-		"test": "jest --config=./test/unit/jest.config.js",
-		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
-		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
-		"test:watch": "npm test -- --watch",
-		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests --runInBand"
+		"lint": "run -T eslint --ext .js,.ts .",
+		"lint:fix": "run -T eslint --fix --ext .js,.ts .",
+		"format": "run -T prettier --write '**/*'",
+		"test": "run -T jest --config=./test/unit/jest.config.js",
+		"test:coverage": "run -T jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
+		"test:ci": "run -T jest --coverage=true --coverage-reporters=json --verbose",
+		"test:watch": "yarn test -- --watch",
+		"test:unit": "run -T jest --config=./test/unit/jest.config.js",
+		"test:integration": "run -T jest --config=./test/integration/jest.config.js --passWithNoTests --runInBand"
 	},
 	"devDependencies": {
-		"@types/jest": "^28.1.6",
-		"@typescript-eslint/eslint-plugin": "^5.30.7",
-		"@typescript-eslint/parser": "^5.30.7",
-		"eslint": "^8.20.0",
-		"eslint-config-prettier": "^8.5.0",
-		"eslint-config-web3-base": "0.1.0",
-		"eslint-plugin-import": "^2.26.0",
-		"jest": "^28.1.3",
-		"jest-extended": "^3.0.1",
-		"prettier": "^2.7.1",
-		"ts-jest": "^28.0.7",
-		"typescript": "^4.7.4"
+		"jest-extended": "^3.0.1"
 	},
 	"dependencies": {
-		"web3-errors": "^0.1.1-alpha.1",
-		"web3-types": "^0.1.1-alpha.1",
-		"web3-utils": "^4.0.1-alpha.1"
+		"web3-errors": "workspace:^",
+		"web3-types": "workspace:^",
+		"web3-utils": "workspace:^"
 	}
 }
