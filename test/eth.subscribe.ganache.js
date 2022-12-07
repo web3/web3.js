@@ -11,8 +11,12 @@ describe('subscription connect/reconnect', function () {
     const Web3 = getWeb3();
 
     beforeEach(async function () {
-        server = ganache.server({port: port, blockTime: 1});
-       await server.listen(port);
+        server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+        await server.listen(port,async err => {
+            if (err) throw err;
+
+        });
+
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
     });
@@ -190,7 +194,7 @@ describe('subscription connect/reconnect', function () {
             assert(counter >= 1);
 
             // Connect to a different client;
-            const newServer = ganache.server({port: 8777, blockTime: 1});
+            const newServer = ganache.server({ miner: { blockTime: 1 }});
             await newServer.listen(8777);
 
             const finalCount = counter;
@@ -320,7 +324,7 @@ describe('subscription connect/reconnect', function () {
 
             // Stage 1: Close & re-open server
             await server.close();
-            server = ganache.server({port: port, blockTime: 1});
+            server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
            await server.listen(port);
             stage = 1;
         });
@@ -350,7 +354,7 @@ describe('subscription connect/reconnect', function () {
 
             // Stage 1: Close & re-open server
             await server.close();
-            server = ganache.server({port: port, blockTime: 1});
+            server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
            await server.listen(port);
             stage = 1;
         });

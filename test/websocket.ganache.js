@@ -1,6 +1,5 @@
 const assert = require('assert')
 const ganache = require('ganache')
-const pify = require('pify')
 const utils = require('./helpers/test.utils')
 const Web3 = utils.getWeb3()
 
@@ -400,7 +399,7 @@ describe('WebsocketProvider (ganache)', function () {
         this.timeout(10000)
 
         return new Promise(async function (resolve) {
-            server = ganache.server({port: port})
+            server = ganache.server(ganacheOptions )
             await server.listen(port)
 
             web3 = new Web3(
@@ -433,7 +432,7 @@ describe('WebsocketProvider (ganache)', function () {
         this.timeout(6000)
 
         return new Promise(async function (resolve, reject) {
-            server = ganache.server({port: port})
+            server = ganache.server(ganacheOptions)
            await server.listen(port)
 
             web3 = new Web3(
@@ -551,8 +550,8 @@ describe('WebsocketProvider (ganache)', function () {
         let stage = 0;
 
         return new Promise(async function (resolve) {
-            server = ganache.server({port: port});
-            await pify(server.listen)(port);
+            server = ganache.server(ganacheOptions);
+            server.listen(port);
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
@@ -563,7 +562,7 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
-                    await pify(server.close)();
+                    await server.close();
                     stage = 1;
                 }
             });
@@ -573,8 +572,8 @@ describe('WebsocketProvider (ganache)', function () {
 
                 const deferred = web3.eth.getBlockNumber();
 
-                server = ganache.server({port: port});
-                await pify(server.listen)(port);
+                server = ganache.server(ganacheOptions);
+                await server.listen(port);
 
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
@@ -587,7 +586,7 @@ describe('WebsocketProvider (ganache)', function () {
 
     it('errors when failing to reconnect after data is lost mid-chunk', async function () {
         this.timeout(7000)
-        server = ganache.server({port: port})
+        server = ganache.server(ganacheOptions)
        await server.listen(port)
 
         web3 = new Web3(
