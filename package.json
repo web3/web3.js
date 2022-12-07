@@ -34,7 +34,7 @@
 	"scripts": {
 		"version": "yarn run bootstrap && yarn build",
 		"prebuild": "yarn clean",
-		"build": "yarn workspaces foreach -vpt --jobs unlimited run build",
+		"build": "yarn workspaces foreach -vp --topological-dev --jobs unlimited run build",
 		"build:web": "yarn workspaces foreach -vpt --jobs unlimited run build:web",
 		"build:docs": "cd docs && yarn install && yarn build",
 		"clean": "yarn workspaces foreach -vpt run clean",
