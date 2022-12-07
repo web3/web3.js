@@ -5,7 +5,7 @@ var Parent = require('./sources/Parent');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
-describe('contract.events [ @E2E ]', function() {
+describe.skip('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
 
