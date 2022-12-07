@@ -17,8 +17,7 @@
     "scripts": {
         "version": "npm run build",
         "postinstall": "npm run bootstrap",
-        "build": "npm run bootstrap && lerna run compile && webpack && cp -r ./dist ./packages/web3",
-        "build-no-cache": "npm run bootstrap && lerna run compile --skip-nx-cache && webpack && cp -r ./dist ./packages/web3",
+        "build": "npm run bootstrap && lerna run compile --skip-nx-cache && webpack && cp -r ./dist ./packages/web3",
         "publish": "lerna publish",
         "bootstrap": "lerna bootstrap --hoist",
         "lint": "jshint *.js packages",
@@ -130,7 +129,6 @@
         "karma-spec-reporter": "0.0.32",
         "lerna": "^6.1.0",
         "mocha": "^6.2.3",
-        "nx": "^15.2.4",
         "nyc": "^14.1.1",
         "pify": "^4.0.1",
         "process": "^0.11.10",
