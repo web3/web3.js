@@ -4,7 +4,7 @@ var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 var {TransactionFactory} = require('@ethereumjs/tx');
 
-describe.skip('transaction and message signing [ @E2E ]', function() {
+describe('transaction and message signing [ @E2E ]', function() {
     let web3;
     let accounts;
     let wallet;

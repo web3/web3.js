@@ -59,7 +59,7 @@ describe('method.send [ @E2E ]', function () {
             assert(web3.utils.isHexStrict(receipt.transactionHash));
         });
 
-        it.skip('errors on OOG', async function () {
+        it('errors on OOG', async function () {
             try {
                 var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
                 await instance
@@ -130,7 +130,7 @@ describe('method.send [ @E2E ]', function () {
         });
     });
 
-    describe.skip('ws', function () {
+    describe('ws', function () {
         // Websockets extremely erratic for geth instamine...
         if (process.env.GETH_INSTAMINE) return;
 
