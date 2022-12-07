@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Address, Bytes, Numbers } from 'web3-types';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
-import { MatchPrimitiveType } from '../../src/types';
+import { ContractMethodOutputParameters, MatchPrimitiveType } from '../../src';
 
 describe('types', () => {
 	describe('primitive types', () => {
@@ -155,6 +155,103 @@ describe('types', () => {
 					MatchPrimitiveType<'tuple[]', [{ type: 'uint'; name: 'a' }]>
 				>().toExtend<{ a: Numbers }[]>(),
 			);
+		});
+	});
+
+	describe('contract', () => {
+		describe('outputs', () => {
+			typecheck('empty outputs should result in []', () =>
+				expectTypeOf<ContractMethodOutputParameters<[]>>().toExtend<void>(),
+			);
+
+			typecheck('single outputs should result in that type', () => {
+				const abi = [
+					{
+						name: '',
+						type: 'string',
+					},
+				] as const;
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>
+				>().toExtend<string>();
+			});
+
+			typecheck('multiple outputs should result in object indexed by numbers', () => {
+				const abi = [
+					{
+						name: '',
+						type: 'string',
+					},
+					{
+						name: '',
+						type: 'int',
+					},
+				] as const;
+
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>[0]
+				>().toExtend<string>();
+			});
+
+			typecheck('multiple outputs should result in object indexed by numbers', () => {
+				const abi = [
+					{
+						name: '',
+						type: 'string',
+					},
+					{
+						name: '',
+						type: 'int',
+					},
+				] as const;
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>[1]
+				>().toExtend<Numbers>();
+			});
+
+			typecheck('multiple outputs should result in object indexed by name', () => {
+				const abi = [
+					{
+						name: 'first',
+						type: 'string',
+					},
+					{
+						name: 'second',
+						type: 'int',
+					},
+				] as const;
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>['first']
+				>().toExtend<string>();
+			});
+
+			typecheck('multiple outputs should result in object indexed by name', () => {
+				const abi = [
+					{
+						name: 'first',
+						type: 'string',
+					},
+					{
+						name: 'second',
+						type: 'int',
+					},
+				] as const;
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>['second']
+				>().toExtend<Numbers>();
+			});
+
+			typecheck('single output should result as in exactly one type', () => {
+				const abi = [
+					{
+						name: 'first',
+						type: 'string',
+					},
+				] as const;
+				return expectTypeOf<
+					ContractMethodOutputParameters<typeof abi>
+				>().toExtend<string>();
+			});
 		});
 	});
 });

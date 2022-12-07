@@ -41,8 +41,7 @@ export const isEIP1193Provider = <API extends Web3APISpec>(
 ): provider is EIP1193Provider<API> =>
 	typeof provider !== 'string' &&
 	'request' in provider &&
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-	(provider.request as any)[Symbol.toStringTag] === 'AsyncFunction';
+	provider.request.constructor.name === 'AsyncFunction';
 
 export const isLegacySendProvider = <API extends Web3APISpec>(
 	provider: SupportedProviders<API>,

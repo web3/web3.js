@@ -16,23 +16,22 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import HDWalletProvider from '@truffle/hdwallet-provider';
-import Web3 from '../../src/index';
+
+import { performBasicRpcCalls } from './helper';
 import {
 	createNewAccount,
 	describeIf,
 	getSystemTestProvider,
 	isIpc,
-	itIf,
-} from '../shared_fixtures/system_tests_utils';
+} from '../../shared_fixtures/system_tests_utils';
+import Web3 from '../../../src';
 
-describeIf(!isIpc)('Create Web3 class instance with external providers', () => {
+describeIf(!isIpc)('compatibility with `truffle` `HDWalletProvider` provider', () => {
 	let provider: HDWalletProvider;
-	let clientUrl: string;
-	let web3: Web3;
 
 	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
-		const account = await createNewAccount();
+		const clientUrl = getSystemTestProvider();
+		const account = await createNewAccount({ unlock: true, refill: true });
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 		provider = new HDWalletProvider({
 			privateKeys: [account.privateKey],
@@ -44,27 +43,10 @@ describeIf(!isIpc)('Create Web3 class instance with external providers', () => {
 		provider.engine.stop();
 	});
 	test('should create instance with external wallet provider', () => {
-		web3 = new Web3(provider);
+		const web3 = new Web3(provider);
 		expect(web3).toBeInstanceOf(Web3);
 	});
-
-	itIf(
-		process.env.INFURA_GOERLI_WS
-			? process.env.INFURA_GOERLI_WS.toString().includes('ws')
-			: false,
-	)('should create instance with string of external ws provider', () => {
-		web3 = new Web3(process.env.INFURA_GOERLI_WS);
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(web3).toBeInstanceOf(Web3);
-	});
-
-	itIf(
-		process.env.INFURA_GOERLI_HTTP
-			? process.env.INFURA_GOERLI_HTTP.toString().includes('http')
-			: false,
-	)('should create instance with string of external http provider', () => {
-		web3 = new Web3(process.env.INFURA_GOERLI_HTTP);
-		// eslint-disable-next-line jest/no-standalone-expect
-		expect(web3).toBeInstanceOf(Web3);
+	test('should initialize Web3, get accounts & block number and send a transaction', async () => {
+		await performBasicRpcCalls(provider);
 	});
 });

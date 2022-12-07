@@ -17,6 +17,19 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { isNullish } from 'web3-validator';
 
+/**
+ * An alternative to the node function `isPromise` that exists in `util/types` because it is not available on the browser.
+ * @param object to check if it is a `Promise`
+ * @returns `true` if it is an `object` or a `function` that has a `then` function. And returns `false` otherwise.
+ */
+export function isPromise(object: unknown): boolean {
+	return (
+		(typeof object === 'object' || typeof object === 'function') &&
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		(typeof (object as any).then as unknown) === 'function'
+	);
+}
+
 export type AsyncFunction<T, K = unknown> = (...args: K[]) => Promise<T>;
 
 export function waitWithTimeout<T>(

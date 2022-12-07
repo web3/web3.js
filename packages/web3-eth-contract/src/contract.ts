@@ -36,6 +36,8 @@ import {
 	ContractEvent,
 	ContractEvents,
 	ContractMethod,
+	ContractMethodInputParameters,
+	ContractMethodOutputParameters,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	FilterAbis,
@@ -102,7 +104,6 @@ import {
 	isWeb3ContractContext,
 } from './utils';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ContractBoundMethod<
 	Abi extends AbiFunctionFragment,
 	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
@@ -111,6 +112,26 @@ type ContractBoundMethod<
 ) => Method['Abi']['stateMutability'] extends 'payable' | 'pure'
 	? PayableMethodObject<Method['Inputs'], Method['Outputs']>
 	: NonPayableMethodObject<Method['Inputs'], Method['Outputs']>;
+
+export type ContractOverloadedMethodInputs<AbiArr extends ReadonlyArray<unknown>> = NonNullable<
+	AbiArr extends readonly []
+		? undefined
+		: AbiArr extends readonly [infer A, ...infer R]
+		? A extends AbiFunctionFragment
+			? ContractMethodInputParameters<A['inputs']> | ContractOverloadedMethodInputs<R>
+			: undefined
+		: undefined
+>;
+
+export type ContractOverloadedMethodOutputs<AbiArr extends ReadonlyArray<unknown>> = NonNullable<
+	AbiArr extends readonly []
+		? undefined
+		: AbiArr extends readonly [infer A, ...infer R]
+		? A extends AbiFunctionFragment
+			? ContractMethodOutputParameters<A['outputs']> | ContractOverloadedMethodOutputs<R>
+			: undefined
+		: undefined
+>;
 
 // To avoid circular dependency between types and encoding, declared these types here.
 export type ContractMethodsInterface<Abi extends ContractAbi> = {
@@ -326,27 +347,38 @@ export class Contract<Abi extends ContractAbi>
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
 	) {
+		let contractContext;
+		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
+			contractContext = addressOrOptionsOrContext;
+		} else if (isWeb3ContractContext(optionsOrContextOrReturnFormat)) {
+			contractContext = optionsOrContextOrReturnFormat;
+		} else {
+			contractContext = contextOrReturnFormat;
+		}
+
+		let provider;
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
+			provider = addressOrOptionsOrContext.provider;
+		} else if (
+			typeof optionsOrContextOrReturnFormat === 'object' &&
+			'provider' in optionsOrContextOrReturnFormat
+		) {
+			provider = optionsOrContextOrReturnFormat.provider;
+		} else if (
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
+			provider = contextOrReturnFormat.provider;
+		} else {
+			provider = Contract.givenProvider;
+		}
+
 		super({
-			// Due to abide by the rule that super must be first call in constructor
-			// Have to do this complex ternary conditions
-			// eslint-disable-next-line no-nested-ternary
-			...(isWeb3ContractContext(addressOrOptionsOrContext)
-				? addressOrOptionsOrContext
-				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
-				? optionsOrContextOrReturnFormat
-				: contextOrReturnFormat),
-			provider:
-				typeof addressOrOptionsOrContext !== 'string'
-					? addressOrOptionsOrContext?.provider ??
-					  // eslint-disable-next-line no-nested-ternary
-					  (typeof optionsOrContextOrReturnFormat === 'object' &&
-					  'provider' in optionsOrContextOrReturnFormat
-							? optionsOrContextOrReturnFormat.provider
-							: typeof contextOrReturnFormat === 'object' &&
-							  'provider' in contextOrReturnFormat
-							? contextOrReturnFormat?.provider
-							: Contract.givenProvider)
-					: undefined,
+			...contractContext,
+			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
 
@@ -912,25 +944,20 @@ export class Contract<Abi extends ContractAbi>
 					abi.constant;
 
 				abi.payable = abi.stateMutability === 'payable' ?? abi.payable;
-
-				const contractMethod = this._createContractMethod(abi, errorsAbi);
-
 				this._overloadedMethodAbis.set(abi.name, [
 					...(this._overloadedMethodAbis.get(abi.name) ?? []),
 					abi,
 				]);
 
-				if (methodName in this._functions) {
-					this._functions[methodName] = {
-						signature: methodSignature,
-						method: contractMethod,
-					};
-				} else {
-					this._functions[methodName] = {
-						signature: methodSignature,
-						method: contractMethod,
-					};
-				}
+				const contractMethod = this._createContractMethod(
+					this._overloadedMethodAbis.get(abi.name) ?? [],
+					errorsAbi,
+				);
+
+				this._functions[methodName] = {
+					signature: methodSignature,
+					method: contractMethod,
+				};
 
 				// We don't know a particular type of the Abi method so can't type check
 				this._methods[abi.name as keyof ContractMethodsInterface<Abi>] = this._functions[
@@ -979,10 +1006,11 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 	}
-	private _createContractMethod<T extends AbiFunctionFragment, E extends AbiErrorFragment>(
-		abi: T,
+	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
+		abiArr: T,
 		errorsAbis: E[],
-	): ContractBoundMethod<T> {
+	): ContractBoundMethod<T[0]> {
+		const abi = abiArr[abiArr.length - 1];
 		return (...params: unknown[]) => {
 			let abiParams!: Array<unknown>;
 			const abis = this._overloadedMethodAbis.get(abi.name) ?? [];
@@ -1021,7 +1049,7 @@ export class Contract<Abi extends ContractAbi>
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+						this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1036,8 +1064,8 @@ export class Contract<Abi extends ContractAbi>
 						}),
 					encodeABI: () => encodeMethodABI(methodAbi, abiParams),
 				} as unknown as PayableMethodObject<
-					ContractMethod<T>['Inputs'],
-					ContractMethod<T>['Outputs']
+					ContractOverloadedMethodInputs<T>,
+					ContractOverloadedMethodOutputs<T>
 				>;
 			}
 			return {
@@ -1045,7 +1073,7 @@ export class Contract<Abi extends ContractAbi>
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(methodAbi, abiParams, errorsAbis, options, block),
 				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, options), // TODO: refactor to parse errorsAbi #5587
+					this._contractMethodSend(methodAbi, abiParams, errorsAbis, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1058,19 +1086,16 @@ export class Contract<Abi extends ContractAbi>
 					}),
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
 			} as unknown as NonPayableMethodObject<
-				ContractMethod<T>['Inputs'],
-				ContractMethod<T>['Outputs']
+				ContractOverloadedMethodInputs<T>,
+				ContractOverloadedMethodOutputs<T>
 			>;
 		};
 	}
 
-	private async _contractMethodCall<
-		E extends AbiErrorFragment,
-		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(
+	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
-		errorsAbi: E[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
@@ -1098,6 +1123,7 @@ export class Contract<Abi extends ContractAbi>
 	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
@@ -1115,7 +1141,17 @@ export class Contract<Abi extends ContractAbi>
 			contractOptions: modifiedContractOptions,
 		});
 
-		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+		const promiEvent = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		promiEvent.on('error', (error: unknown) => {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+		});
+
+		return promiEvent;
 	}
 
 	private _contractMethodDeploySend<Options extends PayableCallOptions | NonPayableCallOptions>(

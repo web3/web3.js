@@ -177,6 +177,8 @@ const transactionHash = receipt.transactionHash;
 
 -   Decoding error data, using Error ABI if available, according to EIP-838. (#5434)
 -   The class `Web3ContractError` is moved from this package to `web3-error`. (#5434)
+-   `SpecialOutput` type was added as a generic type into the call function to support reassigning output types (#5631)
+-   Overloaded functions types (`ContractOverloadedMethodInputs`, `ContractOverloadedMethodOutputs`) was added (#5631)
 
 ### Fixed
 
@@ -184,9 +186,16 @@ const transactionHash = receipt.transactionHash;
 
 ## [4.0.1-alpha.2]
 
+### Added
+
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
+
 ### Fixed
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
+-   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
 
 ## [Unreleased]
+
+=======
