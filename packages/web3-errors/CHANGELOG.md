@@ -53,4 +53,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Corrected the error code for `JSONRPC_ERR_UNAUTHORIZED` to be `4100` (#5462)
 -   Moved `SignerError` from `web3-errors/src/errors/signature_errors.ts` to `web3-errors/src/errors/transaction_errors.ts`, and renamed it to `TransactionSigningError` (#5462)
 
+## [4.0.1-alpha.2]
+
+### Changed
+
+-   Updated Web3.js dependencies (#5664)
+
 ## [Unreleased]

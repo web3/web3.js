@@ -46,6 +46,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
 
+## [4.0.1-alpha.2]
+
+### Changed
+
+-   Updated Web3.js dependencies (#5664)
+
 ## [Unreleased]
 
 ### Fixed
