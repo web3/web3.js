@@ -348,27 +348,38 @@ export class Contract<Abi extends ContractAbi>
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
 	) {
+		let contractContext;
+		if (isWeb3ContractContext(addressOrOptionsOrContext)) {
+			contractContext = addressOrOptionsOrContext;
+		} else if (isWeb3ContractContext(optionsOrContextOrReturnFormat)) {
+			contractContext = optionsOrContextOrReturnFormat;
+		} else {
+			contractContext = contextOrReturnFormat;
+		}
+
+		let provider;
+		if (
+			typeof addressOrOptionsOrContext === 'object' &&
+			'provider' in addressOrOptionsOrContext
+		) {
+			provider = addressOrOptionsOrContext.provider;
+		} else if (
+			typeof optionsOrContextOrReturnFormat === 'object' &&
+			'provider' in optionsOrContextOrReturnFormat
+		) {
+			provider = optionsOrContextOrReturnFormat.provider;
+		} else if (
+			typeof contextOrReturnFormat === 'object' &&
+			'provider' in contextOrReturnFormat
+		) {
+			provider = contextOrReturnFormat.provider;
+		} else {
+			provider = Contract.givenProvider;
+		}
+
 		super({
-			// Due to abide by the rule that super must be first call in constructor
-			// Have to do this complex ternary conditions
-			// eslint-disable-next-line no-nested-ternary
-			...(isWeb3ContractContext(addressOrOptionsOrContext)
-				? addressOrOptionsOrContext
-				: isWeb3ContractContext(optionsOrContextOrReturnFormat)
-				? optionsOrContextOrReturnFormat
-				: contextOrReturnFormat),
-			provider:
-				typeof addressOrOptionsOrContext !== 'string'
-					? addressOrOptionsOrContext?.provider ??
-					  // eslint-disable-next-line no-nested-ternary
-					  (typeof optionsOrContextOrReturnFormat === 'object' &&
-					  'provider' in optionsOrContextOrReturnFormat
-							? optionsOrContextOrReturnFormat.provider
-							: typeof contextOrReturnFormat === 'object' &&
-							  'provider' in contextOrReturnFormat
-							? contextOrReturnFormat?.provider
-							: Contract.givenProvider)
-					: undefined,
+			...contractContext,
+			provider,
 			registeredSubscriptions: contractSubscriptions,
 		});
 
@@ -1047,7 +1058,7 @@ export class Contract<Abi extends ContractAbi>
 							block,
 						),
 					send: (options?: PayableTxOptions) =>
-						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
+						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1077,7 +1088,7 @@ export class Contract<Abi extends ContractAbi>
 						block,
 					),
 				send: (options?: NonPayableTxOptions) =>
-					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options), // TODO: refactor to parse errorsAbi #5587
+					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1096,13 +1107,10 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	private async _contractMethodCall<
-		E extends AbiErrorFragment,
-		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(
+	private async _contractMethodCall<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
-		errorsAbi: E[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		block?: BlockNumberOrTag,
 	) {
@@ -1127,13 +1135,10 @@ export class Contract<Abi extends ContractAbi>
 		}
 	}
 
-	private _contractMethodSend<
-		E extends AbiErrorFragment,
-		Options extends PayableCallOptions | NonPayableCallOptions,
-	>(
+	private _contractMethodSend<Options extends PayableCallOptions | NonPayableCallOptions>(
 		abi: AbiFunctionFragment,
 		params: unknown[],
-		errorsAbi: E[],
+		errorsAbi: AbiErrorFragment[],
 		options?: Options,
 		contractOptions?: ContractOptions,
 	) {
