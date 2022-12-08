@@ -140,7 +140,6 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
-      - run: yarn global add cypress
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:

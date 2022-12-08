@@ -22,9 +22,9 @@
 		"test:watch": "yarn test -- --watch",
 		"test:unit": "run -T jest --config=./test/unit/jest.config.js",
 		"test:integration": "run -T jest --config=./test/integration/jest.config.js --runInBand --forceExit",
-		"test:e2e:electron": "run -T cypress run --headless --browser electron --env grep='ignore',invert=true",
-		"test:e2e:chrome": "run -T cypress run --headless --browser chrome --env grep='ignore',invert=true",
-		"test:e2e:firefox": "run -T cypress run --headless --browser firefox --env grep='ignore',invert=true"
+		"test:e2e:electron": "yarn dlx cypress run --headless --browser electron --env grep='ignore',invert=true",
+		"test:e2e:chrome": "yarn dlx cypress run --headless --browser chrome --env grep='ignore',invert=true",
+		"test:e2e:firefox": "yarn dlx cypress run --headless --browser firefox --env grep='ignore',invert=true"
 	},
 	"dependencies": {
 		"web3-core": "workspace:^",
