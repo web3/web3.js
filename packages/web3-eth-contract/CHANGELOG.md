@@ -186,6 +186,10 @@ const transactionHash = receipt.transactionHash;
 
 ## [Unreleased]
 
+### Added
+
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
+
 ### Fixed
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
