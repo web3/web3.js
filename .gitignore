@@ -36,3 +36,6 @@ tsconfig.tsbuildinfo
 package-lock.json
 
 tmp/
+
+# Incubed (in3) nodelist
+packages/web3/.in3/
