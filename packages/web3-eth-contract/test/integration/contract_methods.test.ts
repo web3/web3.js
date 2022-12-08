@@ -17,12 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ContractExecutionError } from 'web3-errors';
 import { Contract } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
-import {
-	getSystemTestProvider,
-	createTempAccount,
-	getSystemTestBackend,
-	itIf,
-} from '../fixtures/system_test_utils';
+import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
 
 describe('contract', () => {
 	let contract: Contract<typeof BasicAbi>;
@@ -75,32 +70,19 @@ describe('contract', () => {
 			});
 
 			describe('revert handling', () => {
-				itIf(getSystemTestBackend() === 'geth')(
-					'should returns the expected revert reason string',
-					async () => {
-						let error: ContractExecutionError | undefined;
-						try {
-							await contractDeployed.methods.reverts().call();
-						} catch (err: any) {
-							error = err;
-						}
+				it('should returns the expected revert reason string', async () => {
+					let error: ContractExecutionError | undefined;
+					try {
+						await contractDeployed.methods.reverts().call();
+					} catch (err: any) {
+						error = err;
+					}
 
-						// eslint-disable-next-line jest/no-standalone-expect
-						expect(error).toBeDefined();
-						// eslint-disable-next-line jest/no-standalone-expect
-						expect(error?.innerError.message).toContain('REVERTED WITH REVERT');
-					},
-				);
-
-				itIf(getSystemTestBackend() === 'ganache')(
-					'should returns the expected revert reason string',
-					async () => {
-						// eslint-disable-next-line jest/no-standalone-expect
-						return expect(contractDeployed.methods.reverts().call()).rejects.toThrow(
-							'REVERTED WITH REVERT',
-						);
-					},
-				);
+					// eslint-disable-next-line jest/no-standalone-expect
+					expect(error).toBeDefined();
+					// eslint-disable-next-line jest/no-standalone-expect
+					expect(error?.innerError.message).toContain('REVERTED WITH REVERT');
+				});
 			});
 		});
 
