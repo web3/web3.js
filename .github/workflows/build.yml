@@ -86,7 +86,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [14, 16, 18]
+        node: [14, 16]
         backend: ['geth', 'ganache']
         mode: ['http', 'ws']
     steps:
@@ -117,6 +117,7 @@ jobs:
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
       -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
@@ -139,7 +140,7 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: corepack enable
-      - run: npm install --no-package-lock --no-save --force cypress
+      - run: yarn global add cypress
       - name: Cypress run
         uses: cypress-io/github-action@v4
         with:

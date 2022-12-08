@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node: [14, 16, 18]
+        node: [14, 16]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
