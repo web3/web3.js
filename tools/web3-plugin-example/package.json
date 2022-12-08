@@ -27,8 +27,7 @@
 		"test:coverage": "run -T jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:ci": "run -T jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "yarn test -- --watch",
-		"test:unit": "run -T jest --config=./test/unit/jest.config.js",
-		"test:integration": "run -T jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:unit": "run -T jest --config=./test/unit/jest.config.js"
 	},
 	"devDependencies": {
 		"jest-extended": "^3.0.1",
