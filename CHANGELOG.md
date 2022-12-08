@@ -895,6 +895,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3-eth-contract
+
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
+
 #### web3-types
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
@@ -902,6 +906,13 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Export a new function `uuidV4` that generates a random v4 Uuid (#5373).
+-   Enable passing a starting number, to increment based on it, for the Json Rpc Request `id` (#5652).
+-   Export a new function `isPromise` that checks if an object is a promise (#5652).
+
+#### web3-eth-contract
+
+-   `SpecialOutput` type was added as a generic type into the call function to support reassigning output types (#5631)
+-   Overloaded functions types (`ContractOverloadedMethodInputs`, `ContractOverloadedMethodOutputs`) was added (#5631)
 
 ### Fixed
 
@@ -909,6 +920,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
+-   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
 
 #### web3-types
 
@@ -917,6 +929,14 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-utils
 
 -   Use Uuid for the response id, to fix the issue "Responses get mixed up due to conflicting payload IDs" (#5373).
+
+#### web3-validator
+
+-   Fix `isHex`returning `false` for `-123`, fix `isHexStrict` returning `true` for `-0x`, and fix `isHex` returning `true` for empty strings `` (#5373).
+
+#### web3-eth-abi
+
+-   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
 ### Removed
 

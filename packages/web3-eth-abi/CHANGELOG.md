@@ -45,5 +45,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Return `BigInt` instead of `string` when decoding function parameters for large numbers, such as `uint256`. (#5435)
+-   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
+
+## [4.0.1-alpha.2]
+
+### Changed
+
+-   Updated Web3.js dependencies (#5664)
+
+### Fixed
+
+-   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
 ## [Unreleased]

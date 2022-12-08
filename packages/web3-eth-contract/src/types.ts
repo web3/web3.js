@@ -233,7 +233,11 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
-	call(tx?: NonPayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
+
+	call<SpecialOutput = Outputs>(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<SpecialOutput>;
 
 	/**
 	 * This will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
@@ -390,7 +394,10 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
-	call(tx?: PayableCallOptions, block?: BlockNumberOrTag): Promise<Outputs>;
+	call<SpecialOutput = Outputs>(
+		tx?: PayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<SpecialOutput>;
 
 	/**
 	 * Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
