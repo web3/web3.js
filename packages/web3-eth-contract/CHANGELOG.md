@@ -197,3 +197,4 @@ const transactionHash = receipt.transactionHash;
 -   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
 
 ## [Unreleased]
+
