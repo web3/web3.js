@@ -57,3 +57,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+-   The method `getConfig()` of `Web3Config` can returns the value of `defaultCommon`, if it was set as a property of a static class that inherit from `Web3Config` (#5688)

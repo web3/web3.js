@@ -916,15 +916,16 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Fixed
 
+#### web3-core
+
+-   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+-   The method `getConfig()` of `Web3Config` can returns `defaultCommon` if it was set as a property of a static class that inherit from `Web3Config` (#5688)
+
 #### web3-eth-contract
 
 -   Emit past contract events based on `fromBlock` when passed to `contract.events.someEventName` (#5201)
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
 -   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
-
-#### web3-types
-
--   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
 
 #### web3-utils
 
