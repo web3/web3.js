@@ -21,11 +21,11 @@ fi
 # To model publication correctly, this script needs to run
 # without web3's dev deps being installed. It installs
 # what it needs here.
-npm install -g verdaccio@4.4.4
+npm install -g verdaccio@5.18.0
 npm install -g npm-auth-to-token@1.0.0
-npm install -g lerna@^3.20.2
-npm install -g typescript@^3.9.5
-npm install -g webpack@^4.44.1 webpack-cli@^3.3.12 clean-webpack-plugin@^3.0.0
+npm install -g lerna@^6.1.0
+npm install -g typescript@^4.1
+npm install -g webpack@^5.75.0 webpack-cli@^5
 
 # Launch npm proxy registry and save pid to kill server (req. in Windows env)
 verdaccio --config verdaccio.yml &
