@@ -51,4 +51,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Exported type `EthPersonalAPIManager`, `EthPersonalAPI` is not exported via `web3-types` (#5441)
 
+## [4.0.1-alpha.2]
+
+### Changed
+
+-   Updated Web3.js dependencies (#5664)
+
 ## [Unreleased]

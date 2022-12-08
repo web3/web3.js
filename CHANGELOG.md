@@ -891,7 +891,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
-## [Unreleased]
+## [4.0.1-alpha.2]
 
 ### Added
 
@@ -936,10 +936,12 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-abi
 
--   Fix ContractMethodOutputParameters type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
+-   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
 ### Removed
 
 #### web3-eth-accounts
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+## [Unreleased]

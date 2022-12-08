@@ -35,9 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
-## [Unreleased]
+## [0.1.0-alpha.1]
 
 ### Added
 
 -   Example plugin for wrapping contract methods to provide custom functionality (#5393)
 -   Example plugin for custom RPC methods using the `requestManager` (#5393)
+
+## [Unreleased]

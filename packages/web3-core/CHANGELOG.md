@@ -52,8 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Added validation when `defaultChain` and `defaultCommon.basechain` are different in web3config
 -   Added a new configuration variable `enableExperimentalFeatures`. (#5481)
 
-## [Unreleased]
+## [4.0.1-alpha.2]
 
 ### Fixed
 
 -   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+
+## [Unreleased]
