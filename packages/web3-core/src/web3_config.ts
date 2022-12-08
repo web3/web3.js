@@ -80,7 +80,6 @@ export abstract class Web3Config
 		defaultNetworkId: undefined,
 		defaultChain: 'mainnet',
 		defaultHardfork: 'london',
-		// TODO - Check if there is a default Common
 		defaultCommon: undefined,
 		defaultTransactionType: '0x0',
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
@@ -98,7 +97,15 @@ export abstract class Web3Config
 	}
 
 	public getConfig() {
-		return this._config;
+		return {
+			...this._config,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+			defaultCommon: {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+				...(this.constructor as any).defaultCommon,
+				...this._config.defaultCommon,
+			},
+		};
 	}
 
 	public setConfig(options: Partial<Web3ConfigOptions>) {

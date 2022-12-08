@@ -180,18 +180,22 @@ describe('contract defaults (extra)', () => {
 
 		it('should use "defaultCommon" on "Contract" level', async () => {
 			Contract.defaultCommon = common;
+			expect(Contract.defaultCommon).toMatchObject(common);
 
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+			const getConfigSpy = jest.spyOn(contract, 'getConfig');
 
-			expect(contract.defaultCommon).toMatchObject(common);
+			await contract.methods.greet().call();
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
-			expect(sendTransactionSpy).toHaveBeenLastCalledWith(
-				expect.objectContaining({ defaultCommon: common }),
-				expect.any(Object),
-				expect.any(Object),
-			);
+			// the method `getConfig` will be called twice. One time when calling `greet()`,
+			//	and another time when sending a transaction for `setGreeting('New Greeting')`)
+			expect(getConfigSpy.mock.results[0].value).toMatchObject({
+				defaultCommon: common,
+			});
+			expect(getConfigSpy.mock.results[1].value).toMatchObject({
+				defaultCommon: common,
+			});
 		});
 
 		it('should use "defaultCommon" on "instance" level', async () => {
