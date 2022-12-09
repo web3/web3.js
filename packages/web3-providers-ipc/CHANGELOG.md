@@ -41,4 +41,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Show error message and return dummy promise if socket is not writable (#5294)
 
+## [4.0.1-alpha.2]
+
+### Changed
+
+-   Updated Web3.js dependencies (#5664)
+
 ## [Unreleased]
