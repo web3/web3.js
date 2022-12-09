@@ -47,7 +47,7 @@ fi
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	TEST_COMMAND="test:integration"
 else
-	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
+	TEST_COMMAND="workspaces foreach -v run test:e2e:$ENGINE"
 fi
 
 

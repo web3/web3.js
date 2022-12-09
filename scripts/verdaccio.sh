@@ -35,52 +35,45 @@ createVerdaccioNPMUser() {
 }
 
 loginNPMUser() {
-    npm-auth-to-token \
+    yarn dlx npm-auth-to-token \
         -u test \
         -p test \
         -e test@test.com \
         -r http://localhost:4873
 }
 
-lernaUpdatePackageVersions() {
-    lerna version 5.0.0 \
-        --ignore-scripts \
-        --no-push \
-        --no-private \
-        --no-git-tag-version \
-        --yes
+yarnUpdatePackageVersions() {
+    yarn workspaces foreach -vp version 5.0.0 -i
 }
 
-lernaBuildAndCommit() {
+yarnBuildAndCommit() {
     yarn build
 
     git add .
     git commit -m "Comitting for black box publish"
 }
 
-lernaPublish() {
-    lerna publish from-package \
-        --dist-tag blackbox \
-        --no-git-tag-version \
-        --no-push \
-        --registry http://localhost:4873 \
-        --ignore-scripts \
-        --yes
+yarnPublish() {
+    echo npmRegistryServer: "http://localhost:4873" >> ./.yarnrc.yml
+    yarn workspaces foreachnpm publish \
+        --tolerate-republish \
+        --tag blackbox \
+        --access public \
 }
 
 publish() {
     echo "Publishing to verdaccio ..."
-
-    npx wait-port -t 60000 4873
+    yarn dlx wait-port -t 60000 4873
 
     createVerdaccioNPMUser
     loginNPMUser
-    lernaUpdatePackageVersions
-    lernaBuildAndCommit
-    lernaPublish
+    yarnUpdatePackageVersions
+    yarnBuildAndCommit
+    yarnPublish
 }
 
 startBackgroundAndPublish() {
+    corepack enable
     startBackground && publish
 }
 
@@ -91,8 +84,8 @@ publish) publish ;;
 startBackgroundAndPublish) startBackgroundAndPublish ;;
 createVerdaccioNPMUser) createVerdaccioNPMUser ;;
 loginNPMUser) loginNPMUser ;;
-lernaUpdatePackageVersions) lernaUpdatePackageVersions ;;
-lernaBuildAndCommit) lernaBuildAndCommit ;;
-lernaPublish) lernaPublish ;;
+yarnUpdatePackageVersions) yarnUpdatePackageVersions ;;
+yarnBuildAndCommit) yarnBuildAndCommit ;;
+yarnPublish) yarnPublish ;;
 *) helpFunction ;; # Print helpFunction in case parameter is non-existent
 esac
