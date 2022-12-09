@@ -99,12 +99,7 @@ export abstract class Web3Config
 	public getConfig() {
 		return {
 			...this._config,
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			defaultCommon: {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-				...(this.constructor as any).defaultCommon,
-				...this._config.defaultCommon,
-			},
+			defaultCommon: this.defaultCommon,
 		};
 	}
 
@@ -451,8 +446,16 @@ export abstract class Web3Config
 	 * Default is `undefined`.
 	 *
 	 */
-	public get defaultCommon() {
-		return this._config.defaultCommon;
+	public get defaultCommon(): Common | undefined {
+		const defaultCommon = {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+			...((this.constructor as any).defaultCommon as Common),
+			...this._config.defaultCommon,
+		};
+		if (Object.keys(defaultCommon).length) {
+			return defaultCommon;
+		}
+		return undefined;
 	}
 
 	/**

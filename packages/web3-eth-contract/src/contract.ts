@@ -452,14 +452,6 @@ export class Contract<Abi extends ContractAbi>
 		super.defaultHardfork = value;
 	}
 
-	public get defaultCommon(): Common | undefined {
-		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
-	}
-
-	public set defaultCommon(value: Common | undefined) {
-		super.defaultCommon = value;
-	}
-
 	public get transactionSendTimeout() {
 		return (
 			(this.constructor as typeof Contract).transactionSendTimeout ??

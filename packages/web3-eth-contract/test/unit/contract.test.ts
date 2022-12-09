@@ -318,7 +318,7 @@ describe('Contract', () => {
 				hardfork: 'constantinople' as Hardfork,
 			};
 			contract.defaultCommon = defaultCommon;
-			expect(contract.defaultCommon).toBe(defaultCommon);
+			expect(contract.defaultCommon).toStrictEqual(defaultCommon);
 
 			const transactionBlockTimeout = 130;
 			expect(contract.transactionBlockTimeout).toBe(50);
