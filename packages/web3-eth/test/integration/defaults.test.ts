@@ -883,7 +883,7 @@ describe('defaults', () => {
 			web3Eth.setConfig({
 				defaultCommon: common,
 			});
-			expect(web3Eth.defaultCommon).toBe(common);
+			expect(web3Eth.defaultCommon).toEqual(common);
 
 			// set by create new instance
 			eth2 = new Web3Eth({
@@ -891,7 +891,7 @@ describe('defaults', () => {
 					defaultCommon: common,
 				},
 			});
-			expect(eth2.defaultCommon).toBe(common);
+			expect(eth2.defaultCommon).toEqual(common);
 		});
 		it('defaultTransactionType', () => {
 			// default
