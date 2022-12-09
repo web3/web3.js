@@ -428,14 +428,6 @@ export class Contract<Abi extends ContractAbi>
 		});
 	}
 
-	public get defaultAccount() {
-		return (this.constructor as typeof Contract).defaultAccount ?? super.defaultAccount;
-	}
-
-	public set defaultAccount(value: Address | undefined) {
-		super.defaultAccount = value;
-	}
-
 	public get defaultBlock() {
 		return (this.constructor as typeof Contract).defaultBlock ?? super.defaultBlock;
 	}
@@ -1123,7 +1115,7 @@ export class Contract<Abi extends ContractAbi>
 		modifiedContractOptions = {
 			...modifiedContractOptions,
 			data: undefined,
-			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
+			from: modifiedContractOptions.from ?? this.defaultAccount,
 		};
 
 		const tx = getSendTxParams({
@@ -1155,7 +1147,7 @@ export class Contract<Abi extends ContractAbi>
 		let modifiedContractOptions = contractOptions ?? this.options;
 		modifiedContractOptions = {
 			...modifiedContractOptions,
-			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
+			from: modifiedContractOptions.from ?? this.defaultAccount,
 		};
 
 		const tx = getSendTxParams({

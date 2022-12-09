@@ -182,20 +182,8 @@ describe('contract defaults (extra)', () => {
 			Contract.defaultCommon = common;
 			expect(Contract.defaultCommon).toMatchObject(common);
 
-			const getConfigSpy = jest.spyOn(contract, 'getConfig');
-
-			await contract.methods.greet().call();
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			// the method `getConfig` will be called twice. One time when calling `greet()`,
-			//	and another time when sending a transaction for `setGreeting('New Greeting')`)
-			expect(getConfigSpy.mock.results[0].value).toMatchObject({
-				defaultCommon: common,
-			});
-			expect(getConfigSpy.mock.results[1].value).toMatchObject({
-				defaultCommon: common,
-			});
+			// Any contract instance will use the defaultCommon if set on the class level
+			expect(contract.defaultCommon).toMatchObject(common);
 		});
 
 		it('should use "defaultCommon" on "instance" level', async () => {

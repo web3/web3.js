@@ -135,6 +135,8 @@ export abstract class Web3Config
 	}
 
 	/**
+	 * Returns the `defaultAccount` from inside the config.
+	 * And if not found return the `defaultAccount` if set into the static property of the inherit class
 	 * This default address is used as the default `from` property, if no `from` property is specified in for the following methods:
 	 * - web3.eth.sendTransaction()
 	 * - web3.eth.call()
@@ -142,7 +144,11 @@ export abstract class Web3Config
 	 * - myContract.methods.myMethod().send()
 	 */
 	public get defaultAccount() {
-		return this._config.defaultAccount;
+		return (
+			this._config.defaultAccount ??
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+			((this.constructor as any).defaultAccount as string | undefined)
+		);
 	}
 	/**
 	 * Will set the default account.
