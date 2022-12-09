@@ -614,8 +614,24 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Changed
+
+- Updated Webpack 4 to Webpack 5, more details at (#5629)
+- `crypto-browserify` module is now used only in webpack builds for polyfilling browsers (#5629)
+- Updated `ethereumjs-util` to `7.1.5` (#5629)
+- Updated `lerna` 4 to version 6 (#5680) 
+
 ### Fixed
 
 -  Fixed types for `web3.utils._jsonInterfaceMethodToString` (#5550)
 -  Fixed Next.js builds failing on Node.js v16, Abortcontroller added if it doesn't exist globally (#5601)
 -  Builds fixed by updating all typescript versions to 4.1 (#5675) 
+
+### Removed
+
+- `clean-webpack-plugin` has been removed from dev-dependencies (#5629)
+
+### Added
+
+- `https-browserify`, `process`, `stream-browserify`, `stream-http`, `crypto-browserify` added to dev-dependencies for polyfilling (#5629)
+- Add `readable-stream` to dev-dependancies for webpack (#5629) 
