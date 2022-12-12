@@ -56,37 +56,45 @@ export abstract class Eip1193Provider<
 	}
 
 	protected _onConnect() {
-		this._getChainId()
-			.then(chainId => {
-				if (chainId !== this._chainId) {
-					this._chainId = chainId;
-					this._eventEmitter.emit('chainChanged', undefined, {
-						chainId: this._chainId,
-					});
-				}
+		Promise.all([
+			this._getChainId()
+				.then(chainId => {
+					if (chainId !== this._chainId) {
+						this._chainId = chainId;
+						this._eventEmitter.emit('chainChanged', undefined, {
+							chainId: this._chainId,
+						});
+					}
+				})
+				.catch(err => {
+					// todo: add error handler
+					// eslint-disable-next-line no-console
+					console.error(err);
+				}),
 
+			this._getAccounts()
+				.then(accounts => {
+					if (
+						!(
+							this._accounts.length === accounts.length &&
+							accounts.every(v => accounts.includes(v))
+						)
+					) {
+						this._accounts = accounts;
+						this._onAccountsChanged();
+					}
+				})
+				.catch(err => {
+					// todo: add error handler
+					// eslint-disable-next-line no-console
+					console.error(err);
+				}),
+		])
+			.then(() =>
 				this._eventEmitter.emit('connect', undefined, {
 					chainId: this._chainId,
-				});
-			})
-			.catch(err => {
-				// todo: add error handler
-				// eslint-disable-next-line no-console
-				console.error(err);
-			});
-
-		this._getAccounts()
-			.then(accounts => {
-				if (
-					!(
-						this._accounts.length === accounts.length &&
-						accounts.every(v => accounts.includes(v))
-					)
-				) {
-					this._accounts = accounts;
-					this._onAccountsChanged();
-				}
-			})
+				}),
+			)
 			.catch(err => {
 				// todo: add error handler
 				// eslint-disable-next-line no-console

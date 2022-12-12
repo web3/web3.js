@@ -36,8 +36,18 @@ import {
 	ProviderRpcError,
 } from './web3_api_types';
 import { Web3EthExecutionAPI } from './apis/web3_eth_execution_api';
+import { Web3DeferredPromise } from './web3_deferred_promise_type';
 
 const symbol = Symbol.for('web3/base-provider');
+
+export interface SocketRequestItem<
+	API extends Web3APISpec,
+	Method extends Web3APIMethod<API>,
+	ResponseType,
+> {
+	payload: Web3APIPayload<API, Method>;
+	deferredPromise: Web3DeferredPromise<ResponseType>;
+}
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';

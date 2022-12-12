@@ -22,20 +22,20 @@ import {
 	ProviderRpcError,
 	Web3ProviderEventCallback,
 } from 'web3-types';
-import WebSocketProvider from '../../src/index';
+import IpcProvider from '../../src/index';
 
-import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
+import { getSystemTestProvider, describeIf, isIpc } from '../fixtures/system_test_utils';
 import { waitForCloseConnection, waitForOpenConnection } from '../fixtures/helpers';
 
-describeIf(isWs)('WebSocketProvider - eip1193', () => {
+describeIf(isIpc)('IpcProvider - eip1193', () => {
 	let socketPath: string;
-	let socketProvider: WebSocketProvider;
+	let socketProvider: IpcProvider;
 
 	beforeAll(() => {
 		socketPath = getSystemTestProvider();
 	});
 	beforeEach(() => {
-		socketProvider = new WebSocketProvider(socketPath);
+		socketProvider = new IpcProvider(socketPath);
 	});
 	afterEach(async () => {
 		socketProvider.disconnect(1000);
@@ -51,6 +51,7 @@ describeIf(isWs)('WebSocketProvider - eip1193', () => {
 			});
 			expect(hexToNumber(chainId)).toBeGreaterThan(0);
 		});
+
 		it('should send disconnect event', async () => {
 			await waitForOpenConnection(socketProvider);
 			const disconnectPromise = new Promise<ProviderRpcError>(resolve => {

@@ -16,9 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
-import WebSocketProvider from '../../src/index';
+import IpcProvider from '../../src/index';
 
-export const waitForOpenConnection = async (provider: WebSocketProvider) => {
+export const waitForOpenConnection = async (provider: IpcProvider) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
 		provider.on('connect', ((_error, data) => {
 			resolve(data as unknown as ProviderConnectInfo);
@@ -26,7 +26,7 @@ export const waitForOpenConnection = async (provider: WebSocketProvider) => {
 	});
 };
 
-export const waitForCloseConnection = async (provider: WebSocketProvider) => {
+export const waitForCloseConnection = async (provider: IpcProvider) => {
 	return new Promise<ProviderRpcError>(resolve => {
 		provider.on('disconnect', ((_error, data) => {
 			resolve(data as unknown as ProviderRpcError);

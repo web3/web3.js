@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,8 +15,31 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export type ReconnectOptions = {
-	autoReconnect: boolean;
-	delay: number;
-	maxAttempts: number;
+export const validConnectionStrings = [
+	'ws://localhost:8545',
+	'ws://www.localhost',
+	'ws://localhost',
+	'wss://foo.com',
+	'ws://foo.ninja',
+	'wss://foo.com',
+	'ws://foo.com:8545',
+];
+
+export const invalidConnectionStrings = [
+	'htt://localhost:8545',
+	'http//localhost:8545',
+	'ipc://localhost:8545',
+	'',
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	null,
+	undefined,
+	42,
+];
+
+export const wsProviderOptions = {
+	followRedirects: true,
+	handshakeTimeout: 1500,
+	maxRedirects: 3,
+	perMessageDeflate: true,
 };
