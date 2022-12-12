@@ -52,7 +52,7 @@ type ReconnectOptions = {
 
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
 
-export class SocketProvider<
+export abstract class SocketProvider<
 	MessageEvent,
 	CloseEvent,
 	ErrorEvent,
@@ -107,10 +107,14 @@ export class SocketProvider<
 	protected _init() {
 		this._reconnectAttempts = 0;
 	}
-	// eslint-disable-next-line class-methods-use-this
-	public connect(): void {
-		throw Error('Method connect is not implemented');
-	}
+	public abstract connect(): void;
+	protected abstract _addSocketListeners(): void;
+	protected abstract _removeSocketListeners(): void;
+	protected abstract _onCloseEvent(_event: unknown): void;
+	protected abstract _sendToSocket(_payload: Web3APIPayload<API, any>): void;
+	protected abstract _parseResponses(_event: MessageEvent): JsonRpcResponse[];
+	protected abstract _clearQueues(_event?: unknown): void;
+	protected abstract _closeSocketConnection(_code?: number, _data?: string): void;
 	// eslint-disable-next-line class-methods-use-this
 	protected _validateProviderPath(path: string): boolean {
 		return !!path;
@@ -118,10 +122,6 @@ export class SocketProvider<
 	// eslint-disable-next-line class-methods-use-this
 	public supportsSubscriptions(): boolean {
 		return true;
-	}
-	// eslint-disable-next-line class-methods-use-this
-	public getStatus(): any {
-		throw Error('Method getStatus is not implemented');
 	}
 	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.on(type, callback);
@@ -133,10 +133,6 @@ export class SocketProvider<
 		this._eventEmitter.removeListener(type, callback);
 	}
 
-	// eslint-disable-next-line class-methods-use-this
-	protected _closeSocketConnection(_code?: number, _data?: string) {
-		throw Error('Method _closeSocketConnection is not implemented');
-	}
 	protected _onDisconnect(code?: number, data?: string) {
 		super._onDisconnect(code, data);
 	}
@@ -150,21 +146,11 @@ export class SocketProvider<
 	public removeAllListeners(type: string): void {
 		this._eventEmitter.removeAllListeners(type);
 	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _addSocketListeners(): void {
-		throw Error('Method _addSocketListeners is not implemented');
-	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _removeSocketListeners(): void {
-		throw Error('Method _closeSocketConnection is not implemented');
-	}
+
 	protected _onError(event: ErrorEvent): void {
 		this._eventEmitter.emit('error', event);
 	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _onCloseEvent(_event: unknown): void {
-		throw Error('Method _onClose is not implemented');
-	}
+
 	public reset(): void {
 		this._sentRequestsQueue.clear();
 		this._pendingRequestsQueue.clear();
@@ -234,10 +220,7 @@ export class SocketProvider<
 
 		return deferredPromise;
 	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _sendToSocket(_payload: Web3APIPayload<API, any>) {
-		throw Error('Method _sendToSocket is not implemented');
-	}
+
 	protected _onConnect() {
 		this._reconnectAttempts = 0;
 		super._onConnect();
@@ -251,10 +234,7 @@ export class SocketProvider<
 			this._sentRequestsQueue.set(id, value);
 		}
 	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _parseResponses(_event: MessageEvent): JsonRpcResponse[] {
-		throw Error('Method _parseResponses is not implemented');
-	}
+
 	protected _onMessage(event: MessageEvent): void {
 		const responses = this._parseResponses(event);
 		if (!responses) {
@@ -289,9 +269,5 @@ export class SocketProvider<
 
 			this._sentRequestsQueue.delete(requestId);
 		}
-	}
-	// eslint-disable-next-line class-methods-use-this
-	protected _clearQueues(_event?: unknown) {
-		throw new Error('Method _clearQueues is not implemented');
 	}
 }
