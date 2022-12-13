@@ -16,12 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import {
-	InvalidConnectionError,
-	ConnectionNotOpenError,
-	Web3WSProviderError,
-	InvalidClientError,
-} from 'web3-errors';
+import { InvalidConnectionError, ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
 import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
@@ -82,11 +77,10 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	protected _sendToSocket<Method extends Web3APIMethod<API>>(
 		payload: Web3APIPayload<API, Method>,
 	): void {
-		if (!this._socketConnection) {
-			throw new Web3WSProviderError('IPC connection is not created');
+		if (this.getStatus() === 'disconnected') {
+			throw new ConnectionNotOpenError();
 		}
-
-		this._socketConnection.write(JSON.stringify(payload));
+		this._socketConnection?.write(JSON.stringify(payload));
 	}
 
 	protected _onCloseEvent(event: CloseEvent): void {

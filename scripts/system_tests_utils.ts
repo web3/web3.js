@@ -94,8 +94,8 @@ export const itIf = (condition: (() => boolean) | boolean) =>
 export const describeIf = (condition: (() => boolean) | boolean) =>
 	(typeof condition === 'function' ? condition() : condition) ? describe : describe.skip;
 
-const maxNumberOfAttempts = 10;
-const intervalTime = 5000; // ms
+const maxNumberOfAttempts = 100;
+const intervalTime = 500; // ms
 
 export const waitForOpenConnection = async (
 	web3Context: Web3Context,
@@ -103,7 +103,7 @@ export const waitForOpenConnection = async (
 	status = 'connected',
 ) =>
 	new Promise<void>((resolve, reject) => {
-		if (!getSystemTestProvider().startsWith('ws')) {
+		if (!(isWs || isIpc)) {
 			resolve();
 			return;
 		}
@@ -124,7 +124,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isWs && !isIpc) {
+	if (!(isWs || isIpc)) {
 		return;
 	}
 

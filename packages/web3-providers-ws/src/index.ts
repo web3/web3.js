@@ -28,7 +28,7 @@ import {
 	Web3ProviderStatus,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
-import { InvalidConnectionError, ConnectionNotOpenError, Web3WSProviderError } from 'web3-errors';
+import { InvalidConnectionError, ConnectionNotOpenError } from 'web3-errors';
 import { SocketProvider } from 'web3-utils';
 
 export { ClientRequestArgs } from 'http';
@@ -90,14 +90,10 @@ export default class WebSocketProvider<
 	protected _sendToSocket<Method extends Web3APIMethod<API>>(
 		payload: Web3APIPayload<API, Method>,
 	): void {
-		if (!this._socketConnection) {
-			throw new Web3WSProviderError('WebSocket connection is not created');
-		}
-
 		if (this.getStatus() === 'disconnected') {
 			throw new ConnectionNotOpenError();
 		}
-		this._socketConnection.send(JSON.stringify(payload));
+		this._socketConnection?.send(JSON.stringify(payload));
 	}
 
 	protected _addSocketListeners(): void {

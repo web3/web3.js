@@ -44,7 +44,7 @@ describe('Web3 instance', () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 			expect(web3).toBeInstanceOf(Web3);
-			await waitForSocketConnect(web3.provider);
+			await waitForSocketConnect(web3.provider as IpcProvider);
 			expect((web3.provider as IpcProvider).getStatus()).toBe('connected');
 		});
 	});

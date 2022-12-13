@@ -22,6 +22,7 @@ import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('eth', () => {
@@ -32,6 +33,7 @@ describe('eth', () => {
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth(clientUrl);
+		await waitForOpenConnection(web3Eth);
 	});
 	afterAll(async () => {
 		await closeOpenConnection(web3Eth);
@@ -41,6 +43,7 @@ describe('eth', () => {
 		it('BatchRequest', async () => {
 			const acc1 = await createTempAccount();
 			const acc2 = await createTempAccount();
+
 			const batch = new web3Eth.BatchRequest();
 			const request1 = {
 				id: 10,
