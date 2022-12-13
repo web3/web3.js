@@ -12,7 +12,7 @@
         "compile": "tsc -b tsconfig.json"
     },
     "dependencies": {
-        "util": "^0.12.0",
+        "util": "^0.12.5",
         "web3-core-helpers": "1.8.1",
         "web3-providers-http": "1.8.1",
         "web3-providers-ipc": "1.8.1",

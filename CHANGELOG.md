@@ -620,6 +620,7 @@ Released with 1.0.0-beta.37 code base.
 - `crypto-browserify` module is now used only in webpack builds for polyfilling browsers (#5629)
 - Updated `ethereumjs-util` to `7.1.5` (#5629)
 - Updated `lerna` 4 to version 6 (#5680) 
+- Bump utils 0.12.0 to 0.12.5 (#5691)
 
 ### Fixed
 
