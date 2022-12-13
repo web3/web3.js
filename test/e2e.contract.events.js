@@ -5,7 +5,7 @@ var Parent = require('./sources/Parent');
 var utils = require('./helpers/test.utils');
 var Web3 = utils.getWeb3();
 
-describe.skip('contract.events [ @E2E ]', function() {
+describe('contract.events [ @E2E ]', function() {
     // `getPastEvents` not working with Geth instamine over websockets.
     if (process.env.GETH_INSTAMINE) return;
 
@@ -23,7 +23,6 @@ describe.skip('contract.events [ @E2E ]', function() {
 
     beforeEach(async function(){
         this.timeout(10000)
-        
         port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
@@ -33,7 +32,7 @@ describe.skip('contract.events [ @E2E ]', function() {
         instance = await basic.deploy().send({from: accounts[0]});
     });
 
-    it.skip('contract.getPastEvents', async function(){
+    it('contract.getPastEvents', async function(){
         await instance
             .methods
             .firesEvent(accounts[0], 1)
@@ -336,7 +335,7 @@ describe.skip('contract.events [ @E2E ]', function() {
     // This test only runs against the ganache client launched in scripts/e2e.ganache.sh
     // It's too complicated for geth auto-mining (we'd have to poll for blocks)
     // and geth instamine's websockets connection is too fragile for the tests in this file.
-    it.skip('backfills missed events when auto-reconnecting', function(){
+    it('backfills missed events when auto-reconnecting', function(){
         if(!process.env.GANACHE) return;
         this.timeout(20000);
 
