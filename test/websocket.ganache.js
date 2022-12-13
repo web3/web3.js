@@ -544,6 +544,8 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
+    //this fails, deferred promise is executed
+    //todo investigate
     it.skip('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
