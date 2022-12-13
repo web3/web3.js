@@ -24,8 +24,13 @@ import {
 } from 'web3-types';
 import IpcProvider from '../../src/index';
 
-import { getSystemTestProvider, describeIf, isIpc } from '../fixtures/system_test_utils';
-import { waitForCloseConnection, waitForOpenConnection } from '../fixtures/helpers';
+import {
+	getSystemTestProvider,
+	describeIf,
+	isIpc,
+	waitForSocketConnect,
+	waitForSocketDisconnect,
+} from '../fixtures/system_test_utils';
 
 describeIf(isIpc)('IpcProvider - eip1193', () => {
 	let socketPath: string;
@@ -39,7 +44,7 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 	});
 	afterEach(async () => {
 		socketProvider.disconnect(1000);
-		await waitForCloseConnection(socketProvider);
+		await waitForSocketDisconnect(socketProvider);
 	});
 
 	describe('check events', () => {
@@ -53,7 +58,7 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 		});
 
 		it('should send disconnect event', async () => {
-			await waitForOpenConnection(socketProvider);
+			await waitForSocketConnect(socketProvider);
 			const disconnectPromise = new Promise<ProviderRpcError>(resolve => {
 				socketProvider.on('disconnect', ((error: ProviderRpcError) => {
 					resolve(error);
@@ -66,36 +71,36 @@ describeIf(isIpc)('IpcProvider - eip1193', () => {
 			expect(err.data).toBe('Some extra data');
 		});
 		it('should send chainChanged event', async () => {
-			await waitForOpenConnection(socketProvider);
+			await waitForSocketConnect(socketProvider);
 			// @ts-expect-error set private variable
 			socketProvider._chainId = '0x1';
 			socketProvider.disconnect(1000);
-			await waitForCloseConnection(socketProvider);
+			await waitForSocketDisconnect(socketProvider);
 			const chainChangedPromise = new Promise<ProviderConnectInfo>(resolve => {
 				socketProvider.on('chainChanged', ((_error, data) => {
 					resolve(data as unknown as ProviderConnectInfo);
 				}) as Web3ProviderEventCallback<ProviderConnectInfo>);
 			});
 			socketProvider.connect();
-			await waitForOpenConnection(socketProvider);
+			await waitForSocketConnect(socketProvider);
 			const changedData = await chainChangedPromise;
 			expect(changedData.chainId).not.toBe('0x1');
 			expect(hexToNumber(changedData.chainId)).toBeGreaterThan(0);
 		});
 		it('should send accountsChanged event', async () => {
-			await waitForOpenConnection(socketProvider);
+			await waitForSocketConnect(socketProvider);
 
 			// @ts-expect-error set private variable
 			socketProvider._accounts = ['1', '2'];
 			socketProvider.disconnect(1000);
-			await waitForCloseConnection(socketProvider);
+			await waitForSocketDisconnect(socketProvider);
 			const chainChangedPromise = new Promise<{ accounts: HexString[] }>(resolve => {
 				socketProvider.on('accountsChanged', ((_error, data) => {
 					resolve(data as unknown as { accounts: HexString[] });
 				}) as Web3ProviderEventCallback<{ accounts: HexString[] }>);
 			});
 			socketProvider.connect();
-			await waitForOpenConnection(socketProvider);
+			await waitForSocketConnect(socketProvider);
 			const changedData = await chainChangedPromise;
 
 			expect(JSON.stringify(changedData.accounts)).not.toBe(JSON.stringify(['1', '2']));

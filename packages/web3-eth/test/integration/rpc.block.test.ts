@@ -18,8 +18,6 @@ import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import { TransactionInfo, TransactionReceipt, Transaction } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Contract } from 'web3-eth-contract';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
 import { validator } from 'web3-validator';
 
 import { Web3Eth } from '../../src';
@@ -28,7 +26,6 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 	createNewAccount,
-	isIpc,
 	createTempAccount,
 	closeOpenConnection,
 } from '../fixtures/system_test_utils';
@@ -74,10 +71,6 @@ describe('rpc with block', () => {
 			data: BasicBytecode,
 			arguments: [10, 'string init value'],
 		};
-		if (isIpc) {
-			await (contract.provider as IpcProvider).waitForConnection();
-			await (web3Eth.provider as IpcProvider).waitForConnection();
-		}
 	});
 	beforeAll(async () => {
 		tempAcc = await createTempAccount();

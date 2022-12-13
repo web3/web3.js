@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ETH_DATA_FORMAT, format } from 'web3-utils';
+import { ETH_DATA_FORMAT, format, SocketProvider } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create,
@@ -39,6 +39,11 @@ import {
 	Transaction,
 	Receipt,
 	KeyStore,
+	ProviderConnectInfo,
+	Web3ProviderEventCallback,
+	ProviderRpcError,
+	JsonRpcSubscriptionResult,
+	JsonRpcNotification,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -47,6 +52,7 @@ import Web3 from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import accountsString from './accounts.json';
 
 /**
@@ -389,4 +395,29 @@ export const createLocalAccount = async (web3: Web3) => {
 	await refillAccount((await createTempAccount()).address, account.address, '10000000000000000');
 	web3.eth.accounts.wallet.add(account);
 	return account;
+};
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+// eslint-disable-next-line arrow-body-style
+export const waitForSocketConnect = async (provider: SocketProvider<any, any, any>) => {
+	return new Promise<ProviderConnectInfo>(resolve => {
+		(provider as SocketProvider).on('connect', ((
+			_error: Error | ProviderRpcError | undefined,
+			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderConnectInfo> | undefined,
+		) => {
+			resolve(data as unknown as ProviderConnectInfo);
+		}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+	});
+};
+
+// eslint-disable-next-line arrow-body-style
+export const waitForSocketDisconnect = async (provider: SocketProvider<any, any, any>) => {
+	return new Promise<ProviderRpcError>(resolve => {
+		(provider as SocketProvider).on('disconnect', ((
+			_error: ProviderRpcError | Error | undefined,
+			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderRpcError> | undefined,
+		) => {
+			resolve(data as unknown as ProviderRpcError);
+		}) as Web3ProviderEventCallback<ProviderRpcError>);
+	});
 };
