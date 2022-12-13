@@ -42,7 +42,7 @@ import { Eip1193Provider } from './web3_eip1193_provider';
 import { ChunkResponseParser } from './chunk_response_parser';
 import { isNullish } from './validation';
 import { Web3DeferredPromise } from './web3_deferred_promise';
-import { jsonRpc } from '.';
+import * as jsonRpc from './json_rpc';
 
 type ReconnectOptions = {
 	autoReconnect: boolean;

@@ -29,7 +29,7 @@ import {
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { InvalidConnectionError, ConnectionNotOpenError, Web3WSProviderError } from 'web3-errors';
-import { SocketProvider } from 'web3-utils/dist/socket_provider';
+import { SocketProvider } from 'web3-utils';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution

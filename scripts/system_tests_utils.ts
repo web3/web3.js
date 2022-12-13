@@ -401,7 +401,7 @@ export const createLocalAccount = async (web3: Web3) => {
 // eslint-disable-next-line arrow-body-style
 export const waitForSocketConnect = async (provider: SocketProvider<any, any, any>) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
-		(provider as SocketProvider).on('connect', ((
+		provider.on('connect', ((
 			_error: Error | ProviderRpcError | undefined,
 			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderConnectInfo> | undefined,
 		) => {
@@ -413,7 +413,7 @@ export const waitForSocketConnect = async (provider: SocketProvider<any, any, an
 // eslint-disable-next-line arrow-body-style
 export const waitForSocketDisconnect = async (provider: SocketProvider<any, any, any>) => {
 	return new Promise<ProviderRpcError>(resolve => {
-		(provider as SocketProvider).on('disconnect', ((
+		provider.on('disconnect', ((
 			_error: ProviderRpcError | Error | undefined,
 			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderRpcError> | undefined,
 		) => {

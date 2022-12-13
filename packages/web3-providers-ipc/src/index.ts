@@ -22,7 +22,7 @@ import {
 	Web3WSProviderError,
 	InvalidClientError,
 } from 'web3-errors';
-import { SocketProvider } from 'web3-utils/dist/socket_provider';
+import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	JsonRpcId,
