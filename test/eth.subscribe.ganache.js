@@ -286,7 +286,6 @@ describe('subscription connect/reconnect', function () {
                 })
 
             web3.eth.currentProvider.on('close', function (err) {
-                console.log("inside close", err.reason)
                 counter++;
                 assert(err.reason.includes('Server closed by client'));
                 assert(err.code === 1000);

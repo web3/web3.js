@@ -25,7 +25,6 @@ describe('transaction and message signing [ @E2E ]', function() {
         // Create a funded account w/ a private key
         wallet = web3.eth.accounts.wallet.create(10);
 
-        console.log(await web3.eth.getBalance(accounts[0]))
         await web3.eth.sendTransaction({
             from: accounts[0],
             to: wallet[0].address,

@@ -369,7 +369,6 @@ describe('contract.events [ @E2E ]', function() {
                     counter++;
 
                     if (counter === 2){
-                        console.log(event.blockNumber,finalBlock)
                         assert(finalBlock >= event.blockNumber || finalBlock <= event.blockNumber + 2);
                         this.removeAllListeners();
                         resolve();
