@@ -14,29 +14,28 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
-// eslint-disable-next-line import/no-extraneous-dependencies
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { Web3BaseProvider } from 'web3-types';
 import { Web3Eth } from '../../src';
+import {
+	closeOpenConnection,
+	describeIf,
+	getSystemTestProvider,
+	isSocket,
+} from '../fixtures/system_test_utils';
 import { LogsSubscription } from '../../src/web3_subscriptions';
-import { describeIf, getSystemTestProvider, isWs } from '../fixtures/system_test_utils';
+// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-extraneous-dependencies
 
-describeIf(isWs)('subscription', () => {
-	let clientUrl: string;
+describeIf(isSocket)('subscription', () => {
 	let web3Eth: Web3Eth;
-	let providerWs: WebSocketProvider;
-	beforeAll(async () => {
-		clientUrl = getSystemTestProvider();
-		providerWs = new WebSocketProvider(clientUrl);
+	beforeAll(() => {
+		web3Eth = new Web3Eth(getSystemTestProvider());
 	});
-	afterAll(() => {
-		providerWs.disconnect();
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('logs', () => {
 		it(`clear`, async () => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 			const sub: LogsSubscription = await web3Eth.subscribe('logs');
 			expect(sub.id).toBeDefined();
 			await web3Eth.clearSubscriptions();

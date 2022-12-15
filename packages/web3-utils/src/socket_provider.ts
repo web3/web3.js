@@ -182,7 +182,13 @@ export abstract class SocketProvider<
 		Method extends Web3APIMethod<API>,
 		ResultType = Web3APIReturnType<API, Method>,
 	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
-		if (isNullish(this._socketConnection)) throw new Error('Connection is undefined');
+		if (isNullish(this._socketConnection)) {
+			throw new Error('Connection is undefined');
+		}
+		// if socket disconnected - open connection
+		if (this.getStatus() === 'disconnected') {
+			this.connect();
+		}
 
 		const requestId = jsonRpc.isBatchRequest(request)
 			? (request as unknown as JsonRpcBatchRequest)[0].id

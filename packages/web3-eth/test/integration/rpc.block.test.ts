@@ -54,7 +54,7 @@ describe('rpc with block', () => {
 	let tempAcc: { address: string; privateKey: string };
 	let tempAcc2: { address: string; privateKey: string };
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth({
 			provider: clientUrl,

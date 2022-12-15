@@ -28,12 +28,11 @@ import {
 	isIpc,
 } from '../fixtures/system_test_utils';
 
-const waitConfirmations = 5;
+const waitConfirmations = 3;
 
 type Resolve = (value?: unknown) => void;
 
 describeIf(isHttp || isIpc)('watch polling transaction', () => {
-	let web3Eth: Web3Eth;
 	let clientUrl: string;
 	let tempAcc: { address: string; privateKey: string };
 	let tempAcc2: { address: string; privateKey: string };
@@ -42,16 +41,13 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 		tempAcc = await createTempAccount();
 		tempAcc2 = await createTempAccount();
 	});
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-	});
-	afterAll(async () => {
-		await closeOpenConnection(web3Eth);
 	});
 
 	describe('wait for confirmation polling', () => {
 		it('polling', async () => {
-			web3Eth = new Web3Eth(clientUrl);
+			const web3Eth = new Web3Eth(clientUrl);
 			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
 			const from = tempAcc.address;
@@ -97,6 +93,7 @@ describeIf(isHttp || isIpc)('watch polling transaction', () => {
 			await sentTx;
 			await confirmationPromise;
 			sentTx.removeAllListeners();
+			await closeOpenConnection(web3Eth);
 		});
 	});
 });

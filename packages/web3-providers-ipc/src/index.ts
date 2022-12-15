@@ -56,7 +56,7 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		if (!existsSync(this._socketPath)) {
 			throw new InvalidClientError(this._socketPath);
 		}
-		if (!this._socketConnection) {
+		if (!this._socketConnection || this.getStatus() === 'disconnected') {
 			this._socketConnection = new Socket();
 		}
 		try {
@@ -165,7 +165,6 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 
 	protected _onDisconnect(code?: number, data?: string): void {
 		this._connectionStatus = 'disconnected';
-		this._socketConnection = undefined;
 		super._onDisconnect(code, data);
 	}
 }

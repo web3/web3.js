@@ -80,6 +80,7 @@ export const isChrome: boolean = getSystemTestEngine() === 'chrome';
 export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
 export const isElectron: boolean = getSystemTestEngine() === 'electron';
 export const isNode: boolean = getSystemTestEngine() === 'isNode';
+export const isSocket: boolean = isWs || isIpc;
 export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';

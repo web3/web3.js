@@ -25,6 +25,7 @@ import {
 	TransactionSendTimeoutError,
 } from 'web3-errors';
 import {
+	detectTransactionType,
 	prepareTransactionForSigning,
 	SendTransactionEvents,
 	transactionBuilder,
@@ -36,7 +37,6 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
-	isIpc,
 	isWs,
 	itIf,
 } from '../fixtures/system_test_utils';
@@ -48,7 +48,6 @@ import {
 } from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
-import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
 import { Resolve, sendFewTxes } from './helper';
 
@@ -63,12 +62,12 @@ describe('defaults', () => {
 	let sendOptions: Record<string, unknown>;
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeAll(() => {
+	beforeEach(() => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth(clientUrl);
 	});
 
-	afterAll(async () => {
+	afterEach(async () => {
 		await closeOpenConnection(web3Eth);
 		await closeOpenConnection(eth2);
 	});
@@ -324,8 +323,7 @@ describe('defaults', () => {
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
 		});
 
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
+		it('transactionConfirmationBlocks implementation', async () => {
 			const tempAcc2 = await createTempAccount();
 			const waitConfirmations = 1;
 			const eth = new Web3Eth(web3Eth.provider);
@@ -367,6 +365,7 @@ describe('defaults', () => {
 			await receiptPromise;
 			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
 			await confirmationPromise;
+			await closeOpenConnection(eth);
 		});
 
 		it('transactionPollingInterval and transactionPollingTimeout', () => {
@@ -574,6 +573,7 @@ describe('defaults', () => {
 			// Ensure the promise the get the confirmations resolves with no error
 			const status = await confirmationPromise;
 			expect(status).toBe(BigInt(1));
+			await closeOpenConnection(tempEth);
 		});
 
 		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
@@ -620,6 +620,7 @@ describe('defaults', () => {
 					throw error;
 				}
 			}
+			await closeOpenConnection(eth);
 		});
 
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
@@ -674,6 +675,7 @@ describe('defaults', () => {
 				// eslint-disable-next-line jest/no-conditional-expect
 				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 			}
+			await closeOpenConnection(eth);
 		});
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
@@ -737,6 +739,7 @@ describe('defaults', () => {
 					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
 					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
 				}
+				await closeOpenConnection(eth);
 			},
 		);
 

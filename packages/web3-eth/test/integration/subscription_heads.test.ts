@@ -14,45 +14,38 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
-import { BlockHeaderOutput, Web3BaseProvider } from 'web3-types';
+import { BlockHeaderOutput } from 'web3-types';
 import { Web3Eth } from '../../src';
-import { sendFewTxes, Resolve } from './helper';
+import { Resolve } from './helper';
 import { NewHeadsSubscription } from '../../src/web3_subscriptions';
 import {
+	closeOpenConnection,
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isWs,
+	isSocket,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 5;
+const checkTxCount = 3;
 type SubName = 'newHeads' | 'newBlockHeaders';
 const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
 
-describeIf(isWs)('subscription', () => {
-	let web3Eth: Web3Eth;
+describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
-	let providerWs: WebSocketProvider;
-	let tempAcc: { address: string; privateKey: string };
 	let tempAcc2: { address: string; privateKey: string };
 
 	beforeEach(async () => {
-		tempAcc = await createTempAccount();
 		tempAcc2 = await createTempAccount();
 	});
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		providerWs = new WebSocketProvider(clientUrl);
-		web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
-	});
-	afterAll(() => {
-		providerWs.disconnect();
 	});
 	describe('heads', () => {
-		it.each(subNames)(`wait for ${checkTxCount} newHeads`, async (subName: SubName) => {
+		it.each(subNames)(`wait for ${checkTxCount} newBlockHeaders`, async (subName: SubName) => {
+			const web3Eth = new Web3Eth(clientUrl);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
-			const from = tempAcc.address;
+			const tempAccForEachTest = await createTempAccount();
+			const from = tempAccForEachTest.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
 
@@ -74,16 +67,26 @@ describeIf(isWs)('subscription', () => {
 					reject(error);
 				});
 			});
+			for (let i = 0; i < checkTxCount; i += 1) {
+				// eslint-disable-next-line no-await-in-loop
+				await web3Eth.sendTransaction({
+					to,
+					value,
+					from,
+				});
+			}
 
-			await sendFewTxes({ web3Eth, from, to, value, times: checkTxCount });
 			await pr;
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
+			await closeOpenConnection(web3Eth);
 		});
 		it.each(subNames)(`clear`, async (subName: SubName) => {
+			const web3Eth = new Web3Eth(clientUrl);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
 			expect(sub.id).toBeDefined();
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			expect(sub.id).toBeUndefined();
+			await closeOpenConnection(web3Eth);
 		});
 	});
 });
