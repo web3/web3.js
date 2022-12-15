@@ -18,6 +18,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     };
 
     before(async function(){
+        this.timeout(10000)
         web3 = new Web3('http://localhost:8545');
         accounts = await web3.eth.getAccounts();
 
@@ -415,6 +416,7 @@ describe('transaction and message signing [ @E2E ]', function() {
     });
 
     it('wallet executes method call using customCommon option', async function(){
+        this.timeout(10000)
         const networkId = await web3.eth.net.getId();
         const chainId = await web3.eth.getChainId();
 

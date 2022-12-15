@@ -22,7 +22,7 @@ describe('contract.events [ @E2E ]', function() {
     };
 
     beforeEach(async function(){
-        this.timeout(10000)
+        this.timeout(15000)
         port = utils.getWebsocketPort();
 
         web3 = new Web3('ws://localhost:' + port);
