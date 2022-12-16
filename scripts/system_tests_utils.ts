@@ -104,7 +104,7 @@ export const waitForOpenConnection = async (
 	status = 'connected',
 ) =>
 	new Promise<void>((resolve, reject) => {
-		if (!(isWs || isIpc)) {
+		if (!isSocket) {
 			resolve();
 			return;
 		}
@@ -125,7 +125,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!(isWs || isIpc)) {
+	if (!isSocket) {
 		return;
 	}
 

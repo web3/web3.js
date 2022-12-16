@@ -37,8 +37,9 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
-	isWs,
+	isSocket,
 	itIf,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -680,11 +681,11 @@ describe('defaults', () => {
 
 		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
 		// 	And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
-		itIf(isWs)(
+		itIf(isSocket)(
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {
 				const eth = new Web3Eth(clientUrl);
-
+				await waitForOpenConnection(eth);
 				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
 				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
 				eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;

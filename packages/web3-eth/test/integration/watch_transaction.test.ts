@@ -25,7 +25,8 @@ import {
 	describeIf,
 	createTempAccount,
 	closeOpenConnection,
-	isWs,
+	isSocket,
+	waitForOpenConnection,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
@@ -33,10 +34,11 @@ const waitConfirmations = 3;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(isWs)('watch subscription transaction', () => {
+describeIf(isSocket)('watch subscription transaction', () => {
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
+			await waitForOpenConnection(web3Eth);
 			const tempAccount = await createTempAccount();
 			const tempAccount2 = await createTempAccount();
 

@@ -21,24 +21,25 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isWs,
+	isSocket,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
 
-type SubName = 'pendingTransactions' | 'newPendingTransactions';
-const subNames: SubName[] = ['pendingTransactions', 'newPendingTransactions'];
-
-describeIf(isWs)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
-		it.each(subNames)(`wait ${checkTxCount} transaction - %s`, async subName => {
+		it(`wait ${checkTxCount} transaction - %s`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
 			const [tempAcc, tempAcc2] = await Promise.all([
 				createTempAccount(),
 				createTempAccount(),
 			]);
+			await waitForOpenConnection(web3Eth);
 
-			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(subName);
+			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(
+				'pendingTransactions',
+			);
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
@@ -103,9 +104,12 @@ describeIf(isWs)('subscription', () => {
 			}
 			await closeOpenConnection(web3Eth);
 		});
-		it.each(subNames)(`clear`, async (subName: SubName) => {
+		it(`clear`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
-			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(subName);
+			await waitForOpenConnection(web3Eth);
+			const sub: NewPendingTransactionsSubscription = await web3Eth.subscribe(
+				'pendingTransactions',
+			);
 			expect(sub.id).toBeDefined();
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			expect(sub.id).toBeUndefined();

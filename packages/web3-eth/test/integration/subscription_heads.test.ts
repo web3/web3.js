@@ -23,14 +23,13 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isWs,
+	isSocket,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 3;
-type SubName = 'newHeads' | 'newBlockHeaders';
-const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
+const checkTxCount = 5;
 
-describeIf(isWs)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let tempAcc2: { address: string; privateKey: string };
 
@@ -41,14 +40,14 @@ describeIf(isWs)('subscription', () => {
 		clientUrl = getSystemTestProvider();
 	});
 	describe('heads', () => {
-		it.each(subNames)(`wait for ${checkTxCount} newBlockHeaders`, async (subName: SubName) => {
+		it(`wait for ${checkTxCount} newHeads`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);
-			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
+			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
 			const tempAccForEachTest = await createTempAccount();
 			const from = tempAccForEachTest.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
-
+			await waitForOpenConnection(web3Eth);
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
 				sub.on('data', (data: BlockHeaderOutput) => {
@@ -57,9 +56,9 @@ describeIf(isWs)('subscription', () => {
 					}
 					expect(times).toBeGreaterThanOrEqual(times);
 					if (times >= checkTxCount) {
-						sub.off('data', () => {
-							// no need to do anything
-						});
+						// sub.off('data', () => {
+						// 	no need to do anything
+						// });
 						resolve();
 					}
 				});
@@ -68,7 +67,8 @@ describeIf(isWs)('subscription', () => {
 				});
 			});
 			for (let i = 0; i < checkTxCount; i += 1) {
-				web3Eth
+				// eslint-disable-next-line no-await-in-loop
+				await web3Eth
 					.sendTransaction({
 						to,
 						value,
@@ -81,9 +81,10 @@ describeIf(isWs)('subscription', () => {
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			await closeOpenConnection(web3Eth);
 		});
-		it.each(subNames)(`clear`, async (subName: SubName) => {
+		it(`clear`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);
-			const sub: NewHeadsSubscription = await web3Eth.subscribe(subName);
+			await waitForOpenConnection(web3Eth);
+			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
 			expect(sub.id).toBeDefined();
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
 			expect(sub.id).toBeUndefined();
