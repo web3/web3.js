@@ -23,15 +23,14 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isIpc,
-	isSocket,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 3;
 type SubName = 'newHeads' | 'newBlockHeaders';
 const subNames: Array<SubName> = ['newHeads', 'newBlockHeaders'];
 
-describeIf(isSocket)('subscription', () => {
+describeIf(isWs)('subscription', () => {
 	let clientUrl: string;
 	let tempAcc2: { address: string; privateKey: string };
 
@@ -68,11 +67,7 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			for (let i = 0; i < checkTxCount * (isIpc ? 2 : 1); i += 1) {
-				// eslint-disable-next-line no-await-in-loop
-				await new Promise(resolve => {
-					setTimeout(resolve, 1000);
-				});
+			for (let i = 0; i < checkTxCount; i += 1) {
 				web3Eth
 					.sendTransaction({
 						to,
