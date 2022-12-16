@@ -23,6 +23,7 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
+	isIpc,
 	isSocket,
 } from '../fixtures/system_test_utils';
 
@@ -67,13 +68,18 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			for (let i = 0; i < checkTxCount; i += 1) {
+			for (let i = 0; i < checkTxCount * (isIpc ? 2 : 1); i += 1) {
 				// eslint-disable-next-line no-await-in-loop
-				await web3Eth.sendTransaction({
-					to,
-					value,
-					from,
+				await new Promise(resolve => {
+					setTimeout(resolve, 1000);
 				});
+				web3Eth
+					.sendTransaction({
+						to,
+						value,
+						from,
+					})
+					.catch(console.error);
 			}
 
 			await pr;
