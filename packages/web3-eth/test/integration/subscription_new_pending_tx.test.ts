@@ -21,7 +21,7 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isSocket,
+	isWs,
 } from '../fixtures/system_test_utils';
 
 const checkTxCount = 2;
@@ -29,7 +29,7 @@ const checkTxCount = 2;
 type SubName = 'pendingTransactions' | 'newPendingTransactions';
 const subNames: SubName[] = ['pendingTransactions', 'newPendingTransactions'];
 
-describeIf(isSocket)('subscription', () => {
+describeIf(isWs)('subscription', () => {
 	describe('new pending transaction', () => {
 		it.each(subNames)(`wait ${checkTxCount} transaction - %s`, async subName => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());

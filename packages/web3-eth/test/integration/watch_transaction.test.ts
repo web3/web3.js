@@ -23,9 +23,9 @@ import { sendFewTxes } from './helper';
 import {
 	getSystemTestProvider,
 	describeIf,
-	isSocket,
 	createTempAccount,
 	closeOpenConnection,
+	isWs,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
@@ -33,7 +33,7 @@ const waitConfirmations = 3;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(isSocket)('watch subscription transaction', () => {
+describeIf(isWs)('watch subscription transaction', () => {
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
