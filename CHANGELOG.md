@@ -945,3 +945,9 @@ should use 4.0.1-alpha.0 for testing.
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-validator
+
+-   Fix issue when importing `web3-validator` package within browser environments (Webpack minified filename changed from `index.min.js` to `web3-validator.min.js`) (#5710)
