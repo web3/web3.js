@@ -17,4 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 const { getWebPackConfig } = require('../../webpack.base.config');
 
-module.exports = getWebPackConfig(__dirname, 'index.min.js', 'web3-validator', 'src/index.ts');
+module.exports = getWebPackConfig(
+	__dirname,
+	'web3-validator.min.js',
+	'web3-validator',
+	'src/index.ts',
+);
