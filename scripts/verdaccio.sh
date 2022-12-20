@@ -35,7 +35,7 @@ createVerdaccioNPMUser() {
 }
 
 loginNPMUser() {
-    npm-auth-to-token \
+    npx npm-auth-to-token \
         -u test \
         -p test \
         -e test@test.com \
@@ -43,7 +43,7 @@ loginNPMUser() {
 }
 
 lernaUpdatePackageVersions() {
-    lerna version 5.0.0 \
+    npx lerna version 5.0.0 \
         --ignore-scripts \
         --no-push \
         --no-private \
@@ -59,7 +59,7 @@ lernaBuildAndCommit() {
 }
 
 lernaPublish() {
-    lerna publish from-package \
+    npx lerna publish from-package \
         --dist-tag blackbox \
         --no-git-tag-version \
         --no-push \
