@@ -945,3 +945,9 @@ should use 4.0.1-alpha.0 for testing.
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
 
 ## [Unreleased]
+
+### Fixed
+
+#### web3-validator
+
+-   Fix build error '"type"' does not satisfy the constraint (#5712)
