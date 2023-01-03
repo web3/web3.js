@@ -287,3 +287,7 @@ export type ContractEvents<Abis extends ContractAbi> = {
 		AbiEventFragment & { type: 'event' }
 	> as Abi['name']]: ContractEvent<Abi>;
 };
+
+export interface DecodedParams extends Record<string, unknown> {
+	__length__: number;
+}

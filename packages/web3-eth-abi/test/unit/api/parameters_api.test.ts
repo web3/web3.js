@@ -108,8 +108,9 @@ describe('parameters_api', () => {
 					const rwAbi = abi as AbiInput[];
 					const encodedBytes = encodeParameters(abi, params);
 					expect(JSON.parse(JSON.stringify(encodedBytes))).toEqual(output);
-					const decodedBytes = decodeParameters(rwAbi, encodedBytes);
-					expect(JSON.parse(JSON.stringify(decodedBytes))).toEqual(outputResult);
+
+					const decodedParams = decodeParameters(rwAbi, encodedBytes);
+					expect(JSON.parse(JSON.stringify(decodedParams))).toEqual(outputResult);
 				},
 			);
 		});
