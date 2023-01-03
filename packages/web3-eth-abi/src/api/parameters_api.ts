@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiError } from 'web3-errors';
-import { ParamType } from '@ethersproject/abi';
+import { ParamType, Result } from '@ethersproject/abi';
 import { HexString } from 'web3-types';
 import ethersAbiCoder from '../ethers_abi_coder';
-import { AbiInput } from '../types';
+import { AbiInput, DecodedParams } from '../types';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
 /**
@@ -93,6 +93,29 @@ export const encodeParameters = (abi: ReadonlyArray<AbiInput>, params: unknown[]
 export const encodeParameter = (abi: AbiInput, param: unknown): string =>
 	encodeParameters([abi], [param]);
 
+// If encoded param is an array and there are mixed on integer and string keys
+const isParamRequiredToConvert = (data: Result): boolean =>
+	Array.isArray(data) &&
+	Object.keys(data).filter(k => Number.isInteger(+k)).length !== Object.keys(data).length;
+
+// Ethers-Encoder return the decoded result as an array with additional string indexes for named params
+// We want these to be converted to an object with named keys
+const formatArrayResToObject = (data: Result): DecodedParams => {
+	const returnValue: DecodedParams = {
+		__length__: 0,
+	};
+
+	for (const key of Object.keys(data)) {
+		returnValue[key] =
+			Array.isArray(data[key]) && isParamRequiredToConvert(data[key] as Result)
+				? formatArrayResToObject(data[key] as Result)
+				: data[key];
+
+		returnValue.__length__ += Number.isInteger(+key) ? 1 : 0;
+	}
+	return returnValue;
+};
+
 /**
  * Should be used to decode list of params
  */
@@ -116,44 +139,7 @@ export const decodeParametersWith = (
 			`0x${bytes.replace(/0x/i, '')}`,
 			loose,
 		);
-		const returnValue: { [key: string]: unknown; __length__: number } = {
-			__length__: 0,
-		};
-		for (const [i, abi] of abis.entries()) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			let decodedValue = res[i];
-
-			const isStringObject = typeof abi === 'object' && abi.type && abi.type === 'string';
-			const isStringType = typeof abi === 'string' && abi === 'string';
-
-			// only convert `0x` to null if it's not string value
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			decodedValue =
-				// Using "null" value to match with legacy behavior
-				// eslint-disable-next-line no-null/no-null
-				decodedValue === '0x' && !isStringObject && !isStringType ? null : decodedValue;
-
-			if (!!abi && typeof abi === 'object' && !Array.isArray(abi)) {
-				// the length of the abi object will always be 1
-				for (const j of Object.keys(abi)) {
-					const abiObject: { [key: string]: unknown } = abi; // abi is readonly have to create a new const
-					if (!!abiObject[j] && typeof abiObject[j] === 'object') {
-						// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-						decodedValue = formatDecodedObject(
-							abiObject[j] as { [key: string]: unknown },
-							decodedValue as { [key: string]: unknown },
-						);
-					}
-				}
-			}
-			if (!!abi && typeof abi === 'object' && abi?.name) {
-				returnValue[(abi as { name: string })?.name] = decodedValue;
-			}
-			returnValue[i] = decodedValue;
-			returnValue.__length__ += 1;
-		}
-
-		return returnValue;
+		return formatArrayResToObject(res);
 	} catch (err) {
 		throw new AbiError(`Parameter decoding error: ${(err as Error).message}`);
 	}

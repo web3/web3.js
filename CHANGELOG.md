@@ -948,6 +948,10 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Fixed
 
+#### web3-eth-abi
+
+-   Parameters decoding error for nested components (#5714)
+
 #### web3-validator
 
 -   Fix build error '"type"' does not satisfy the constraint (#5712)
