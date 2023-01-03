@@ -948,10 +948,11 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Fixed
 
+#### web3-validator
+
+-   Fix issue when importing `web3-validator` package within browser environments (Webpack minified filename changed from `index.min.js` to `web3-validator.min.js`) (#5710)
+-   Fix build error '"type"' does not satisfy the constraint (#5712)
+
 #### web3-eth-abi
 
 -   Parameters decoding error for nested components (#5714)
-
-#### web3-validator
-
--   Fix build error '"type"' does not satisfy the constraint (#5712)

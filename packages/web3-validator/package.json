@@ -3,7 +3,7 @@
 	"version": "0.1.1-alpha.2",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "dist/index.js",
-	"browser": "dist/index.min.js",
+	"browser": "dist/web3-validator.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
