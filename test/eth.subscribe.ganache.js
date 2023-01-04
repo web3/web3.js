@@ -1,6 +1,5 @@
 const assert = require('assert');
-const ganache = require('ganache-cli');
-const pify = require('pify');
+const ganache = require('ganache');
 const { getWeb3, waitSeconds } = require('./helpers/test.utils');
 
 describe('subscription connect/reconnect', function () {
@@ -12,8 +11,12 @@ describe('subscription connect/reconnect', function () {
     const Web3 = getWeb3();
 
     beforeEach(async function () {
-        server = ganache.server({port: port, blockTime: 1});
-        await pify(server.listen)(port);
+        server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+        await server.listen(port,async err => {
+            if (err) throw err;
+
+        });
+
         web3 = new Web3('ws://localhost:' + port);
         accounts = await web3.eth.getAccounts();
     });
@@ -21,7 +24,7 @@ describe('subscription connect/reconnect', function () {
     afterEach(async function () {
         // Might already be closed..
         try {
-            await pify(server.close)();
+            await server.close();
         } catch (err) {
         }
     });
@@ -167,7 +170,7 @@ describe('subscription connect/reconnect', function () {
             // This delay seems to be required (on Travis).
             await waitSeconds(1);
 
-            await pify(server.close)();
+            await server.close();
 
             await waitSeconds(1)
             resolve();
@@ -191,15 +194,15 @@ describe('subscription connect/reconnect', function () {
             assert(counter >= 1);
 
             // Connect to a different client;
-            const newServer = ganache.server({port: 8777, blockTime: 1});
-            await pify(newServer.listen)(8777);
+            const newServer = ganache.server({ miner: { blockTime: 1 }});
+            await newServer.listen(8777);
 
             const finalCount = counter;
             web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8777'));
 
             await waitSeconds(2);
             assert.equal(counter, finalCount);
-            await pify(newServer.close)();
+            await newServer.close();
             resolve();
         });
     })
@@ -259,13 +262,13 @@ describe('subscription connect/reconnect', function () {
     });
 
     it('errors when the `eth_subscribe` request got send, the reponse isnt returned from the node, and the connection does get closed in the mean time', async function () {
-        await pify(server.close)();
+        await server.close();
 
         return new Promise(async function (resolve) {
             web3.eth
                 .subscribe('newBlockHeaders')
                 .once('error', function (err) {
-                    assert(err.message.includes('CONNECTION ERROR: Couldn\'t connect to node on WS'));
+                    assert(err.message.includes('connection not open on send()'));
                     resolve();
                 });
         });
@@ -279,13 +282,13 @@ describe('subscription connect/reconnect', function () {
             web3.eth
                 .subscribe('newBlockHeaders')
                 .once('data', async function () {
-                    await pify(server.close)();
+                    await server.close();
                 })
 
             web3.eth.currentProvider.on('close', function (err) {
                 counter++;
-                assert(err.reason.includes('Connection dropped by remote peer.'));
-                assert(err.code === 1006);
+                assert(err.reason.includes('Server closed by client'));
+                assert(err.code === 1000);
             });
 
             // Make sure error handler doesn't fire twice
@@ -319,9 +322,9 @@ describe('subscription connect/reconnect', function () {
                 });
 
             // Stage 1: Close & re-open server
-            await pify(server.close)();
-            server = ganache.server({port: port, blockTime: 1});
-            await pify(server.listen)(port);
+            await server.close();
+            server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+           await server.listen(port);
             stage = 1;
         });
     });
@@ -349,9 +352,9 @@ describe('subscription connect/reconnect', function () {
                 });
 
             // Stage 1: Close & re-open server
-            await pify(server.close)();
-            server = ganache.server({port: port, blockTime: 1});
-            await pify(server.listen)(port);
+            await server.close();
+            server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+           await server.listen(port);
             stage = 1;
         });
     });
