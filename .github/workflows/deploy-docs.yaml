@@ -1,12 +1,9 @@
 name: Docs CloudFlare Deploy
 on: 
   push:
-    branches:
-      - '4.x'
-  pull_request:
-    branches:
-      - '4.x'
-      - 'release/4*'
+    branches-ignore:
+      - "1.x"
+      - "1.x/*"
 jobs:
   deploy:
       runs-on: ubuntu-latest
