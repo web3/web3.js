@@ -56,4 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
+## [4.0.1-alpha.3]
+
+### Fixed
+
+-   Parameters decoding error for nested components (#5714)
+
+### Changed
+
+-   Updated dependencies (#5725)
+
 ## [Unreleased]
