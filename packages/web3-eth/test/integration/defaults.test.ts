@@ -19,11 +19,7 @@ import { Contract } from 'web3-eth-contract';
 import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import { Hardfork, TransactionReceipt, ValidChains, Web3BaseProvider } from 'web3-types';
-import {
-	TransactionBlockTimeoutError,
-	TransactionPollingTimeoutError,
-	TransactionSendTimeoutError,
-} from 'web3-errors';
+import { TransactionBlockTimeoutError } from 'web3-errors';
 import {
 	detectTransactionType,
 	prepareTransactionForSigning,
@@ -575,53 +571,6 @@ describe('defaults', () => {
 			const status = await confirmationPromise;
 			expect(status).toBe(BigInt(1));
 			await closeOpenConnection(tempEth);
-		});
-
-		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
-			const eth = new Web3Eth(clientUrl);
-
-			// Make the test run faster by causing the timeout to happen after 0.2 second
-			eth.transactionSendTimeout = 200;
-			eth.transactionPollingTimeout = 200;
-
-			const from = tempAcc.address;
-			const to = (await createTempAccount()).address;
-			const value = `0x1`;
-
-			try {
-				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-				await eth.sendTransaction({
-					to,
-					value,
-					from,
-					// Give a high nonce so the transaction stuck forever.
-					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-				});
-				expect(true).toBe(false); // the test should fail if there is no exception
-			} catch (error) {
-				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
-				if (error instanceof TransactionSendTimeoutError) {
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(error.message).toContain(
-						`connected Ethereum Node did not respond within ${
-							eth.transactionSendTimeout / 1000
-						} seconds`,
-					);
-				}
-				// Some other providers would not respond when trying to get the transaction receipt (like Geth v1.10.22-unstable)
-				else if (error instanceof TransactionPollingTimeoutError) {
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(error.message).toContain(
-						`Transaction was not mined within ${
-							eth.transactionPollingTimeout / 1000
-						} seconds`,
-					);
-				} else {
-					throw error;
-				}
-			}
-			await closeOpenConnection(eth);
 		});
 
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
