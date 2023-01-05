@@ -63,7 +63,7 @@ import {
 	SendTransactionOptions,
 } from './types';
 // eslint-disable-next-line import/no-cycle
-import { getTransactionFromAttr } from './utils/transaction_builder';
+import { getTransactionFromAttr, getTransactionToAttr } from './utils/transaction_builder';
 import { formatTransaction } from './utils/format_transaction';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionGasPricing } from './utils/get_transaction_gas_pricing';
@@ -1063,6 +1063,7 @@ export function sendTransaction<
 							{
 								...transaction,
 								from: getTransactionFromAttr(web3Context, transaction),
+								to: getTransactionToAttr(web3Context, transaction),
 							},
 							ETH_DATA_FORMAT,
 						);
