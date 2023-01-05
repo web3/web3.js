@@ -57,4 +57,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated Web3.js dependencies (#5664)
 
+## [4.0.1-alpha.3]
+
+### Changed
+
+-   Updated dependencies (#5725)
+
 ## [Unreleased]

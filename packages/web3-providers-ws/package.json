@@ -1,6 +1,6 @@
 {
 	"name": "web3-providers-ws",
-	"version": "4.0.1-alpha.2",
+	"version": "4.0.1-alpha.3",
 	"description": "Websocket provider for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -47,7 +47,7 @@
 		"isomorphic-ws": "^5.0.0",
 		"web3-errors": "^0.1.1-alpha.2",
 		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.2",
+		"web3-utils": "^4.0.1-alpha.3",
 		"ws": "^8.8.1"
 	}
 }
