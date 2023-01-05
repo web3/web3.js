@@ -367,8 +367,10 @@ export interface TransactionCall extends Transaction {
 	to: Address;
 }
 
-export interface TransactionWithLocalWalletIndex extends TransactionBase {
+export interface TransactionWithLocalWalletIndex extends Omit<TransactionBase, 'to'> {
 	from?: Numbers;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | Numbers | null;
 }
 
 export interface TransactionInfo extends Transaction {
