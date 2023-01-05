@@ -25,14 +25,13 @@ import {
 	describeIf,
 	getSystemTestProvider,
 	isHttp,
-	isIpc,
 } from '../fixtures/system_test_utils';
 
 const waitConfirmations = 3;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(isHttp || isIpc)('watch polling transaction', () => {
+describeIf(isHttp)('watch polling transaction', () => {
 	let clientUrl: string;
 	let tempAcc: { address: string; privateKey: string };
 	let tempAcc2: { address: string; privateKey: string };

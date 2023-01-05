@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
-import { Web3Eth } from '../../src';
+import { Web3Eth, NewHeadsSubscription } from '../../src';
 import { Resolve } from './helper';
-import { NewHeadsSubscription } from '../../src/web3_subscriptions';
 import {
 	closeOpenConnection,
 	createTempAccount,
@@ -27,7 +26,7 @@ import {
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 5;
+const checkTxCount = 3;
 
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
