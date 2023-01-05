@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
-import { Resolve } from './helper';
+import { Resolve, sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
 	createTempAccount,
@@ -65,21 +65,14 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			for (let i = 0; i < checkTxCount; i += 1) {
-				// @TODO: Investigate why we need timeout here #5730
-				// eslint-disable-next-line no-await-in-loop
-				await new Promise(resolve => {
-					setTimeout(resolve, 500);
-				});
-				// eslint-disable-next-line no-await-in-loop
-				await web3Eth
-					.sendTransaction({
-						to,
-						value,
-						from,
-					})
-					.catch(console.error);
-			}
+
+			await sendFewTxes({
+				web3Eth,
+				from,
+				to,
+				value,
+				times: checkTxCount,
+			});
 
 			await pr;
 			await web3Eth.subscriptionManager?.removeSubscription(sub);
