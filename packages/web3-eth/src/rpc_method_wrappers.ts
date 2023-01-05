@@ -1135,7 +1135,8 @@ export function sendTransaction<
 							transactionHash as Bytes,
 							returnFormat,
 						);
-
+						// eslint-disable-next-line no-console
+						console.log('sent');
 						if (promiEvent.listenerCount('sent') > 0) {
 							promiEvent.emit('sent', transactionFormatted);
 						}
