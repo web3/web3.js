@@ -135,11 +135,11 @@ describe('method.send [ @E2E ]', function () {
         if (process.env.GETH_INSTAMINE) return;
 
         before(async function () {
-            var port = utils.getWebsocketPort();
+            this.timeout(10000)
 
+            var port = utils.getWebsocketPort();
             web3 = new Web3('ws://localhost:' + port);
             accounts = await web3.eth.getAccounts();
-            
             basic = new web3.eth.Contract(Basic.abi, basicOptions);
 
             var nonceVal = await web3.eth.getTransactionCount(accounts[0]);
