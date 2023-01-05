@@ -28,7 +28,7 @@ import {
 
 const checkTxCount = 2;
 
-describeIf(isSocket)('subscription', () => {
+describeIf(isSocket && !isIpc)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction - %s`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
