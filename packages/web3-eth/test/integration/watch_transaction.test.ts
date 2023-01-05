@@ -18,7 +18,7 @@ import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionReceipt } from 'web3-types';
 import { Web3PromiEvent } from 'web3-core';
 import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxes } from './helper';
+import { sendFewTxesWithoutReceipt } from './helper';
 
 import {
 	getSystemTestProvider,
@@ -77,7 +77,13 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				});
 			});
 			await receiptPromise;
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxesWithoutReceipt({
+				web3Eth,
+				from,
+				to,
+				value,
+				times: waitConfirmations,
+			});
 			await confirmationPromise;
 			await closeOpenConnection(web3Eth);
 		});

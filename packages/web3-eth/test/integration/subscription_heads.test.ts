@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
-import { Resolve, sendFewTxes } from './helper';
+import { Resolve, sendFewTxesWithoutReceipt } from './helper';
 import {
 	closeOpenConnection,
 	createTempAccount,
@@ -65,8 +65,7 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-
-			await sendFewTxes({
+			await sendFewTxesWithoutReceipt({
 				web3Eth,
 				from,
 				to,

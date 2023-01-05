@@ -30,7 +30,7 @@ import {
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-import { sendFewTxes } from './helper';
+import { sendFewTxesWithoutReceipt } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
 /* eslint-disable jest/no-standalone-expect */
@@ -83,7 +83,7 @@ describe('defaults', () => {
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
 			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 			// eslint-disable-next-line no-void
-			void sendFewTxes({
+			void sendFewTxesWithoutReceipt({
 				web3Eth: eth,
 				from: tempAcc2.address,
 				to: tempAcc1.address,
@@ -147,7 +147,7 @@ describe('defaults', () => {
 				// Some providers (mostly used for development) will make blocks only when there are new transactions
 				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 				// eslint-disable-next-line no-void
-				void sendFewTxes({
+				void sendFewTxesWithoutReceipt({
 					web3Eth: eth,
 					from: tempAcc2.address,
 					to: tempAcc1.address,

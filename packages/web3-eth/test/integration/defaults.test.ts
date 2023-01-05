@@ -32,9 +32,6 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
-	// isSocket,
-	// itIf,
-	// waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -45,7 +42,7 @@ import {
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
-import { Resolve, sendFewTxes } from './helper';
+import { Resolve, sendFewTxes, sendFewTxesWithoutReceipt } from './helper';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -352,7 +349,13 @@ describe('defaults', () => {
 			});
 			await sentTx;
 			await receiptPromise;
-			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
+			await sendFewTxesWithoutReceipt({
+				web3Eth: eth,
+				from,
+				to,
+				value,
+				times: waitConfirmations,
+			});
 			await confirmationPromise;
 			await closeOpenConnection(eth);
 		});

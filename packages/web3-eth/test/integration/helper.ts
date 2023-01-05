@@ -27,6 +27,7 @@ type SendFewTxParams = {
 	from: string;
 	value: string;
 	times?: number;
+	waitReceipt?: boolean;
 };
 export type Resolve = (value?: TransactionReceipt) => void;
 export const sendFewTxes = async ({
@@ -43,6 +44,7 @@ export const sendFewTxes = async ({
 		await new Promise<void>(resolve => {
 			setTimeout(resolve, 500);
 		});
+
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
 			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
@@ -65,6 +67,38 @@ export const sendFewTxes = async ({
 					reject(error);
 				});
 			})) as TransactionReceipt,
+		);
+	}
+
+	return res;
+};
+
+export const sendFewTxesWithoutReceipt = async ({
+	web3Eth,
+	to,
+	value,
+	from,
+	times = 3,
+}: SendFewTxParams): Promise<
+	Web3PromiEvent<TransactionReceipt, SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>>[]
+> => {
+	const res: Web3PromiEvent<
+		TransactionReceipt,
+		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	>[] = [];
+	for (let i = 0; i < times; i += 1) {
+		// @TODO: Investigate why we need timeout here #5730
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise<void>(resolve => {
+			setTimeout(resolve, 500);
+		});
+
+		res.push(
+			web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			}),
 		);
 	}
 
