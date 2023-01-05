@@ -25,7 +25,6 @@ import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
-	isIpc,
 	isSocket,
 	itIf,
 	waitForOpenConnection,
