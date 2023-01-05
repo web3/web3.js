@@ -33,6 +33,7 @@ import {
 	TransactionWithLocalWalletIndex,
 	Common,
 	Web3NetAPI,
+	Numbers,
 } from 'web3-types';
 import { Web3Context } from 'web3-core';
 import { privateKeyToAddress } from 'web3-eth-accounts';
@@ -40,6 +41,7 @@ import { getId } from 'web3-net';
 import { isNullish, isNumber } from 'web3-validator';
 import {
 	InvalidTransactionWithSender,
+	InvalidTransactionWithReceiver,
 	LocalWalletNotAvailableError,
 	TransactionDataAndInputError,
 	UnableToPopulateNonceError,
@@ -53,19 +55,22 @@ import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 import { transactionSchema } from '../schemas';
 import { InternalTransaction } from '../types';
 
-export const getTransactionFromAttr = (
+const isFromAttr = (attr: 'from' | 'to'): attr is 'from' => attr === 'from';
+
+const getTransactionFromOrToAttr = (
+	attr: 'from' | 'to',
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction?: Transaction | TransactionWithLocalWalletIndex,
 	privateKey?: HexString | Buffer,
-) => {
-	if (transaction?.from !== undefined) {
-		if (typeof transaction.from === 'string' && isAddress(transaction.from)) {
-			return transaction.from;
+): Address | undefined => {
+	if (transaction?.[attr] !== undefined) {
+		if (typeof transaction[attr] === 'string' && isAddress(transaction[attr] as string)) {
+			return transaction[attr] as Address;
 		}
-		if (isNumber(transaction.from)) {
+		if (isNumber(transaction[attr] as Numbers)) {
 			if (web3Context.wallet) {
 				const account = web3Context.wallet.get(
-					format({ eth: 'uint' }, transaction.from, NUMBER_DATA_FORMAT),
+					format({ eth: 'uint' }, transaction[attr] as Numbers, NUMBER_DATA_FORMAT),
 				);
 
 				if (!isNullish(account)) {
@@ -76,14 +81,23 @@ export const getTransactionFromAttr = (
 			}
 			throw new LocalWalletNotAvailableError();
 		} else {
-			throw new InvalidTransactionWithSender(transaction.from);
+			throw isFromAttr(attr)
+				? new InvalidTransactionWithSender(transaction.from)
+				: // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+				  new InvalidTransactionWithReceiver(transaction.to);
 		}
 	}
-	if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
-	if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
+	if (isFromAttr(attr)) {
+		if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
+		if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
+	}
 
 	return undefined;
 };
+
+export const getTransactionFromAttr = getTransactionFromOrToAttr.bind(undefined, 'from');
+
+export const getTransactionToAttr = getTransactionFromOrToAttr.bind(undefined, 'to');
 
 export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
