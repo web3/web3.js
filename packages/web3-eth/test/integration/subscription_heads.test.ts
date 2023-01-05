@@ -66,6 +66,11 @@ describeIf(isSocket)('subscription', () => {
 				});
 			});
 			for (let i = 0; i < checkTxCount; i += 1) {
+				// @TODO: Investigate why we need timeout here #5730
+				// eslint-disable-next-line no-await-in-loop
+				await new Promise(resolve => {
+					setTimeout(resolve, 500);
+				});
 				// eslint-disable-next-line no-await-in-loop
 				await web3Eth
 					.sendTransaction({
