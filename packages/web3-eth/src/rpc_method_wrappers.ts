@@ -87,6 +87,9 @@ import { NUMBER_DATA_FORMAT } from './constants';
 export const getProtocolVersion = async (web3Context: Web3Context<EthExecutionAPI>) =>
 	ethRpcMethods.getProtocolVersion(web3Context.requestManager);
 
+
+// export const test = async (web3Context: Web3Context<EthExecutionAPI>) =>
+// 	ethRpcMethods.test(web3Context.requestManager);
 // TODO Add returnFormat parameter
 /**
  * Checks if the node is currently syncing.

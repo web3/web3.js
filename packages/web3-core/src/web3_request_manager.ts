@@ -43,7 +43,9 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
-import { isNullish, isPromise, jsonRpc } from 'web3-utils';
+import { isNullish, isPromise, jsonRpc, 
+	isResponseRpcError,
+	getRpcError, } from 'web3-utils';
 import {
 	isEIP1193Provider,
 	isLegacyRequestProvider,
@@ -320,7 +322,13 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
-			if (
+			// check if response error code and message match rpc errorcode EIP-1474
+			if (isResponseRpcError(response as JsonRpcResponseWithError))
+				{
+					const err = getRpcError(response.error.code);
+					throw new err(response as JsonRpcResponseWithError);
+				}
+			else if (
 				(response.error as unknown as { message: string })?.message === 'execution reverted'
 			) {
 				// This message means that there was an error while executing the code of the smart contract
