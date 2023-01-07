@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-contract",
-	"version": "4.0.1-alpha.2",
+	"version": "4.0.1-alpha.3",
 	"description": "Web3 module to interact with Ethereum smart contracts.",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-contract",
@@ -28,13 +28,13 @@
 		"test:e2e:firefox": "npx cypress run --headless --browser firefox --env grep='ignore',invert=true"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1-alpha.2",
+		"web3-core": "^4.0.1-alpha.3",
 		"web3-errors": "^0.1.1-alpha.2",
-		"web3-eth": "^4.0.1-alpha.2",
-		"web3-eth-abi": "^4.0.1-alpha.2",
+		"web3-eth": "^4.0.1-alpha.3",
+		"web3-eth-abi": "^4.0.1-alpha.3",
 		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.2",
-		"web3-validator": "^0.1.1-alpha.2"
+		"web3-utils": "^4.0.1-alpha.3",
+		"web3-validator": "^0.1.1-alpha.3"
 	},
 	"devDependencies": {
 		"@humeris/espresso-shot": "^4.0.0",
@@ -50,6 +50,6 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-eth-accounts": "^4.0.1-alpha.2"
+		"web3-eth-accounts": "^4.0.1-alpha.3"
 	}
 }

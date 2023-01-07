@@ -196,4 +196,10 @@ const transactionHash = receipt.transactionHash;
 -   Use different types for `ContractOptions` -> `jsonInterface` setter and getter (#5474)
 -   An issue within the `Contract` constructor where `provider` wasn't being set when provided within the `optionsOrContextOrReturnFormat` argument (#5669)
 
+## [4.0.1-alpha.3]
+
+### Changed
+
+-   Updated dependencies (#5725)
+
 ## [Unreleased]

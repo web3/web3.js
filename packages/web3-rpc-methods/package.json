@@ -1,6 +1,6 @@
 {
 	"name": "web3-rpc-methods",
-	"version": "0.1.0-alpha.1",
+	"version": "0.1.0-alpha.2",
 	"description": "Ethereum RPC methods for Web3 4.x.x",
 	"main": "dist/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -39,8 +39,8 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1-alpha.2",
+		"web3-core": "^4.0.1-alpha.3",
 		"web3-types": "^0.1.1-alpha.2",
-		"web3-validator": "^0.1.1-alpha.2"
+		"web3-validator": "^0.1.1-alpha.3"
 	}
 }

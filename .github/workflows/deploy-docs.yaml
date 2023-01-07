@@ -1,0 +1,28 @@
+name: Docs CloudFlare Deploy
+on: 
+  push:
+    branches-ignore:
+      - "1.x"
+      - "1.x/*"
+jobs:
+  deploy:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        deployments: write
+      steps:
+          - uses: actions/checkout@v3
+          - uses: actions/setup-node@v3
+            with:
+              cache: yarn
+              node-version: '16'
+          - run: yarn install --frozen-lockfile
+          - run: yarn run build:docs
+          - name: Publish to Cloudflare Pages
+            uses: cloudflare/pages-action@1
+            with:
+              apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+              accountId: 2238a825c5aca59233eab1f221f7aefb
+              projectName: web3-js-docs
+              directory: ./docs/build
+              gitHubToken: ${{ secrets.GITHUB_TOKEN }}

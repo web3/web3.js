@@ -32,8 +32,9 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcPayload,
 	JsonRpcResponse,
-	JsonRpcResponseWithError,
+	JsonRpcError,
 	JsonRpcResponseWithResult,
+	JsonRpcResponseWithError,
 	SupportedProviders,
 	Web3APIMethod,
 	Web3APIPayload,
@@ -43,9 +44,7 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
-import { isNullish, isPromise, jsonRpc, 
-	isResponseRpcError,
-	getRpcError, } from 'web3-utils';
+import { isNullish, isPromise, jsonRpc, isResponseRpcError, getRpcError } from 'web3-utils';
 import {
 	isEIP1193Provider,
 	isLegacyRequestProvider,
@@ -323,19 +322,10 @@ export class Web3RequestManager<
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
 			// check if response error code and message match rpc errorcode EIP-1474
-			if (isResponseRpcError(response as JsonRpcResponseWithError))
-				{
-					const err = getRpcError(response.error.code);
-					throw new err(response as JsonRpcResponseWithError);
-				}
-			else if (
-				(response.error as unknown as { message: string })?.message === 'execution reverted'
-			) {
-				// This message means that there was an error while executing the code of the smart contract
-				// However, more processing will happen at a higher level to decode the error data,
-				//	according to the Error ABI, if it was available as of EIP-838.
-				throw new ContractExecutionError((response as JsonRpcResponseWithError).error);
-			} else {
+			if (isResponseRpcError(response as JsonRpcResponseWithError)) {
+				const Err = getRpcError(response.error.code);
+				throw new Err(response as JsonRpcResponseWithError);
+			} else if (!Web3RequestManager._isReverted(response)) {
 				throw new InvalidResponseError<ErrorType>(response);
 			}
 		}
@@ -347,6 +337,7 @@ export class Web3RequestManager<
 		}
 
 		if ((response as unknown) instanceof Error) {
+			Web3RequestManager._isReverted(response);
 			throw response;
 		}
 
@@ -391,6 +382,24 @@ export class Web3RequestManager<
 		throw new ResponseError(response, 'Invalid response');
 	}
 
+	private static _isReverted<ResultType, ErrorType>(
+		response: JsonRpcResponse<ResultType, ErrorType>,
+	): boolean {
+		let error: JsonRpcError | undefined;
+
+		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
+			error = (response as JsonRpcResponseWithError).error;
+		} else if ((response as unknown) instanceof Error) {
+			error = response as unknown as JsonRpcError;
+		}
+
+		// This message means that there was an error while executing the code of the smart contract
+		// However, more processing will happen at a higher level to decode the error data,
+		//	according to the Error ABI, if it was available as of EIP-838.
+		if (error?.message.includes('revert')) throw new ContractExecutionError(error);
+
+		return false;
+	}
 	// Need to use same types as _processJsonRpcResponse so have to declare as instance method
 	// eslint-disable-next-line class-methods-use-this
 	private _buildResponse<ResultType, ErrorType, RequestType>(

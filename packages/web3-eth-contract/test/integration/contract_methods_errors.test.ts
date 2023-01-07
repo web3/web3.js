@@ -16,48 +16,45 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ContractExecutionError, ERR_CONTRACT_EXECUTION_REVERTED } from 'web3-errors';
+import { ErrorsContractAbi, ErrorsContractBytecode } from '../shared_fixtures/build/ErrorsContract';
 import { Contract } from '../../src';
-import { createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	getSystemTestBackend,
+	describeIf,
+} from '../fixtures/system_test_utils';
 
 describe('contract errors', () => {
 	let sendOptions: Record<string, unknown>;
+	let contract: Contract<typeof ErrorsContractAbi>;
+	let deployOptions: Record<string, unknown>;
+
+	let deployedContract: Contract<typeof ErrorsContractAbi>;
 
 	beforeAll(async () => {
 		const acc = await createTempAccount();
 		sendOptions = { from: acc.address };
+
+		contract = new Contract(ErrorsContractAbi, undefined, {
+			provider: getSystemTestProvider(),
+		});
+
+		deployOptions = {
+			data: ErrorsContractBytecode,
+		};
+
+		const sendOptionsLocal = { from: acc.address, gas: '10000000' };
+		deployedContract = await contract.deploy(deployOptions).send(sendOptionsLocal);
+
+		contract.setProvider(getSystemTestProvider());
 	});
 
-	describe('Test EIP-838 Error Codes', () => {
-		const addr = '0xbd0B4B009a76CA97766360F04f75e05A3E449f1E';
-		// The following will be updated when implementing https://github.com/web3/web3.js/issues/5482
-		it.skip('testError1', async () => {
-			const abi = [
-				{
-					inputs: [
-						{ internalType: 'address', name: 'addr', type: 'address' },
-						{ internalType: 'uint256', name: 'value', type: 'uint256' },
-					],
-					name: 'TestError1',
-					type: 'error',
-				},
-				{
-					inputs: [
-						{ internalType: 'bool', name: 'pass', type: 'bool' },
-						{ internalType: 'address', name: 'addr', type: 'address' },
-						{ internalType: 'uint256', name: 'value', type: 'uint256' },
-					],
-					name: 'testError1',
-					outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-					stateMutability: 'pure',
-					type: 'function',
-				},
-			] as const;
-			const contract = new Contract(abi, addr);
-			contract.setProvider('https://ropsten.infura.io/v3/49a0efa3aaee4fd99797bfa94d8ce2f1');
-
+	describeIf(getSystemTestBackend() === 'geth')('Test EIP-838 Error Codes', () => {
+		it('Unauthorized', async () => {
 			let error: ContractExecutionError | undefined;
 			try {
-				await contract.methods.testError1(false, addr, 42).call(sendOptions);
+				await deployedContract.methods.unauthorize().send(sendOptions);
 
 				// execution should throw before this line, if not throw here to indicate an issue.
 			} catch (err: any) {
@@ -66,37 +63,43 @@ describe('contract errors', () => {
 
 			expect(error).toBeDefined();
 
-			expect(error?.code).toEqual(ERR_CONTRACT_EXECUTION_REVERTED);
-			expect(error?.innerError?.code).toBe(3);
-			expect(error?.innerError?.errorArgs && error?.innerError?.errorArgs[0]).toEqual(addr);
-			expect(error?.innerError?.errorArgs?.addr).toEqual(addr);
-			expect(error?.innerError?.errorArgs && error?.innerError?.errorArgs[1]).toEqual(
-				BigInt(42),
-			);
-			expect(error?.innerError?.errorArgs?.value).toEqual(BigInt(42));
-			expect(error?.innerError?.errorName).toBe('TestError1');
-			expect(error?.innerError?.errorSignature).toBe('TestError1(address,uint256)');
+			expect(error).toMatchObject({
+				message: expect.stringContaining(
+					'Error happened while trying to execute a function inside a smart contract',
+				),
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
+				innerError: {
+					errorName: 'Unauthorized',
+					errorSignature: 'Unauthorized()',
+				},
+			});
+		});
 
-			// TODO: use something similar to the following (when implementing https://github.com/web3/web3.js/issues/5482)
-			// expect(error).toMatchObject({
-			// 	message: expect.stringContaining(
-			// 		'Error happened while trying to execute a function inside a smart contract',
-			// 	),
-			// 	code: ERR_CONTRACT_EXECUTION_REVERTED,
-			// 	error: {
-			// 		innerError: {
-			// 			code: 3,
-			// 			errorArgs: {
-			// 				0: addr,
-			// 				1: BigInt(42),
-			// 				addr,
-			// 				value: 42,
-			// 			},
-			// 			errorName: 'TestError1',
-			// 			errorSignature: 'TestError1(address,uint256)',
-			// 		},
-			// 	},
-			// });
+		it('Error with parameter', async () => {
+			let error: ContractExecutionError | undefined;
+			try {
+				await deployedContract.methods.badRequire().send(sendOptions);
+
+				// execution should throw before this line, if not throw here to indicate an issue.
+			} catch (err: any) {
+				error = err;
+			}
+
+			expect(error).toBeDefined();
+
+			expect(error).toMatchObject({
+				message: expect.stringContaining(
+					'Error happened while trying to execute a function inside a smart contract',
+				),
+				code: ERR_CONTRACT_EXECUTION_REVERTED,
+				innerError: {
+					errorName: 'CustomError',
+					errorSignature: 'CustomError(string)',
+					errorArgs: {
+						0: 'reverted using custom Error',
+					},
+				},
+			});
 		});
 	});
 });
