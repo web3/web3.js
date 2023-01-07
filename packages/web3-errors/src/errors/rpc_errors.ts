@@ -19,160 +19,158 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { JsonRpcResponseWithError, JsonRpcId, JsonRpcError } from 'web3-types';
 import { Web3Error } from '../web3_error_base';
-import { ERR_RPC_INTERNAL_ERROR, ERR_RPC_INVALID_INPUT, ERR_RPC_INVALID_JSON, ERR_RPC_INVALID_METHOD, ERR_RPC_INVALID_PARAMS, ERR_RPC_INVALID_REQUEST, ERR_RPC_LIMIT_EXCEEDED, ERR_RPC_MISSING_RESOURCE, ERR_RPC_NOT_SUPPORTED, ERR_RPC_TRANSACTION_REJECTED, ERR_RPC_UNAVAILABLE_RESOURCE, ERR_RPC_UNSUPPORTED_METHOD} from '../error_codes';
-export const rpcErrorCodes = {
-    ERR_RPC_INTERNAL_ERROR,
-    ERR_RPC_INVALID_INPUT,
-    ERR_RPC_INVALID_JSON,
-    ERR_RPC_INVALID_METHOD,
-    ERR_RPC_INVALID_PARAMS,
-    ERR_RPC_INVALID_REQUEST,
-    ERR_RPC_LIMIT_EXCEEDED,
-    ERR_RPC_MISSING_RESOURCE,
-    ERR_RPC_NOT_SUPPORTED,
-    ERR_RPC_TRANSACTION_REJECTED,
-    ERR_RPC_UNAVAILABLE_RESOURCE,
-    ERR_RPC_UNSUPPORTED_METHOD
-};
+import {
+	ERR_RPC_INTERNAL_ERROR,
+	ERR_RPC_INVALID_INPUT,
+	ERR_RPC_INVALID_JSON,
+	ERR_RPC_INVALID_METHOD,
+	ERR_RPC_INVALID_PARAMS,
+	ERR_RPC_INVALID_REQUEST,
+	ERR_RPC_LIMIT_EXCEEDED,
+	ERR_RPC_MISSING_RESOURCE,
+	ERR_RPC_NOT_SUPPORTED,
+	ERR_RPC_TRANSACTION_REJECTED,
+	ERR_RPC_UNAVAILABLE_RESOURCE,
+	ERR_RPC_UNSUPPORTED_METHOD,
+} from '../error_codes';
 
-
-
-// make this a base
 export class RpcError extends Web3Error {
-    public code: number;
-    public id: JsonRpcId;
-    public jsonrpc: string;
-    public jsonRpcError: JsonRpcError;
+	public code: number;
+	public id: JsonRpcId;
+	public jsonrpc: string;
+	public jsonRpcError: JsonRpcError;
 	public constructor(rpcError: JsonRpcResponseWithError, message?: string) {
-		super(message ? message : "rpc error");
-        this.code = rpcError.error.code;
-        this.id = rpcError.id;
-        this.jsonrpc = rpcError.jsonrpc;
-        this.jsonRpcError = rpcError.error
+		super(message ?? `An Rpc error has occured with a code of ${rpcError.error.code}`);
+		this.code = rpcError.error.code;
+		this.id = rpcError.id;
+		this.jsonrpc = rpcError.jsonrpc;
+		this.jsonRpcError = rpcError.error;
 	}
 
-    public toJSON() {
+	public toJSON() {
 		return { ...super.toJSON(), error: this.jsonRpcError, id: this.id, jsonRpc: this.jsonrpc };
 	}
 }
 
 export class ParseError extends RpcError {
-
+	public code = ERR_RPC_INVALID_JSON;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Parse error");
+		super(rpcError, 'Parse error');
 	}
 }
 
 export class InvalidRequestError extends RpcError {
-
+	public code = ERR_RPC_INVALID_REQUEST;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Invalid request");
+		super(rpcError, 'Invalid request');
 	}
 }
 
 export class MethodNotFoundError extends RpcError {
-
+	public code = ERR_RPC_INVALID_METHOD;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Method not found");
+		super(rpcError, 'Method not found');
 	}
 }
 
 export class InvalidParamsError extends RpcError {
-
+	public code = ERR_RPC_INVALID_PARAMS;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Invalid request");
+		super(rpcError, 'Invalid request');
 	}
 }
 
 export class InternalError extends RpcError {
-
+	public code = ERR_RPC_INTERNAL_ERROR;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Internal error");
+		super(rpcError, 'Internal error');
 	}
 }
 
 export class InvalidInputError extends RpcError {
-
+	public code = ERR_RPC_INVALID_INPUT;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Invalid input");
+		super(rpcError, 'Invalid input');
 	}
 }
 
 export class MethodNotSupported extends RpcError {
-
+	public code = ERR_RPC_UNSUPPORTED_METHOD;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Method not supported");
+		super(rpcError, 'Method not supported');
 	}
 }
 
 export class ResourceUnavailableError extends RpcError {
-
+	public code = ERR_RPC_UNAVAILABLE_RESOURCE;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Resource unavailable");
+		super(rpcError, 'Resource unavailable');
 	}
 }
 
 export class ResourcesNotFoundError extends RpcError {
-
+	public code = ERR_RPC_MISSING_RESOURCE;
 	public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Resource not found");
+		super(rpcError, 'Resource not found');
 	}
 }
 
 export class VersionNotSupportedError extends RpcError {
-    public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "JSON-RPC version not supported");
+	public code = ERR_RPC_NOT_SUPPORTED;
+	public constructor(rpcError: JsonRpcResponseWithError) {
+		super(rpcError, 'JSON-RPC version not supported');
 	}
 }
 
 export class TransactionRejectedError extends RpcError {
-    public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Transaction rejected");
+	public code = ERR_RPC_TRANSACTION_REJECTED;
+	public constructor(rpcError: JsonRpcResponseWithError) {
+		super(rpcError, 'Transaction rejected');
 	}
 }
 
 export class LimitExceededError extends RpcError {
-    public constructor(rpcError: JsonRpcResponseWithError) {
-		super(rpcError, "Limit exceeded");
+	public code = ERR_RPC_LIMIT_EXCEEDED;
+	public constructor(rpcError: JsonRpcResponseWithError) {
+		super(rpcError, 'Limit exceeded');
 	}
 }
 
-export const rpcErrorValues: {[k: string]: {message: string}} = {
-    '-32700': {
-        message: "Parse error"
-    },
-    '-32600': {
-        message: "Invalid request"
-    },
-    '-32601': {
-        message: "Method not found"
-    },
-    '-32602': {
-        message: "Invalid params"
-    },
-    '-32603': {
-        message: "Internal Error"
-    },
-    '-32000': {
-        message: "Invalid input"
-    },
-    '-32001': {
-        message: "Resource not found"
-    },
-    '-32002': {
-        message: "Resource unavailable"
-    },
-    '-32003': {
-        message: "Transaction rejected"
-    },
-    '-32004': {
-        message: "Method not supported"
-    },
-    '-32005': {
-        message: "Limit exceeded"
-    },
-    '-32006': {
-        message: "JSON-RPC version not supported"
-    }
-    
-}
+export const rpcErrorValues: { [k: string]: { message: string } } = {
+	'-32700': {
+		message: 'Parse error',
+	},
+	'-32600': {
+		message: 'Invalid request',
+	},
+	'-32601': {
+		message: 'Method not found',
+	},
+	'-32602': {
+		message: 'Invalid params',
+	},
+	'-32603': {
+		message: 'Internal Error',
+	},
+	'-32000': {
+		message: 'Invalid input',
+	},
+	'-32001': {
+		message: 'Resource not found',
+	},
+	'-32002': {
+		message: 'Resource unavailable',
+	},
+	'-32003': {
+		message: 'Transaction rejected',
+	},
+	'-32004': {
+		message: 'Method not supported',
+	},
+	'-32005': {
+		message: 'Limit exceeded',
+	},
+	'-32006': {
+		message: 'JSON-RPC version not supported',
+	},
+};

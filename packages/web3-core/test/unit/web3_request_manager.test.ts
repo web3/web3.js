@@ -25,7 +25,7 @@ import {
 	JsonRpcIdentifier,
 } from 'web3-types';
 import { jsonRpc } from 'web3-utils';
-import { 
+import {
 	InvalidResponseError,
 	ParseError,
 	InvalidRequestError,
@@ -39,8 +39,8 @@ import {
 	LimitExceededError,
 	VersionNotSupportedError,
 	RpcError,
-	ResourceUnavailableError
- } from 'web3-errors';
+	ResourceUnavailableError,
+} from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
 import WSProvider from 'web3-providers-ws';
 import IpcProvider from 'web3-providers-ipc';
@@ -297,7 +297,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an parse rpc error', async () => {
 			const parseErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32700, message: 'Parse Error' },
 			};
 			const manager = new Web3RequestManager();
@@ -311,9 +311,7 @@ describe('Web3RequestManager', () => {
 
 			jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
-			await expect(manager.send(request)).rejects.toThrow(
-				new ParseError(parseErrorResponse),
-			);
+			await expect(manager.send(request)).rejects.toThrow(new ParseError(parseErrorResponse));
 			expect(myProvider.request).toHaveBeenCalledTimes(1);
 			expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 		});
@@ -321,8 +319,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an invalid request rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32600, message: 'Invalid request Error' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32600, message: 'Invalid Request' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -343,11 +341,11 @@ describe('Web3RequestManager', () => {
 			expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 		});
 
-		it('should pass request to provider and reject with an invalid method rpc error', async () => {
+		it('should pass request to provider and reject with an invalid Method error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32601, message: 'Invalid request Error' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32601, message: 'Method not found' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -363,6 +361,7 @@ describe('Web3RequestManager', () => {
 			await expect(manager.send(request)).rejects.toThrow(
 				new MethodNotFoundError(rpcErrorResponse),
 			);
+			// await expect(manager.send(request)).rejects.toThrow(parseErrorResponse.error.message);
 			expect(myProvider.request).toHaveBeenCalledTimes(1);
 			expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 		});
@@ -370,8 +369,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an invalid method rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32602, message: 'Invalid request Error' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32602, message: 'Invalid params' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -394,7 +393,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an internal rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32603, message: 'Internal Error' },
 			};
 			const manager = new Web3RequestManager();
@@ -418,7 +417,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an Invalid input rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32000, message: 'Invalid input' },
 			};
 			const manager = new Web3RequestManager();
@@ -442,7 +441,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an resource not found rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32001, message: 'Resource not found' },
 			};
 			const manager = new Web3RequestManager();
@@ -466,7 +465,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an resource unavailable rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32002, message: 'Resource not found' },
 			};
 			const manager = new Web3RequestManager();
@@ -490,7 +489,7 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an Transaction rejected rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
+				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32003, message: 'Resource not found' },
 			};
 			const manager = new Web3RequestManager();
@@ -514,8 +513,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with an method not supported rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32004, message: 'Resource not found' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32004, message: 'Method not supported' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -538,8 +537,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with a limited exceeded rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32005, message: 'Resource not found' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32005, message: 'Limit exceeded' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -562,8 +561,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with a JSON-RPC version not supported rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32006, message: 'Resource not found' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32006, message: 'JSON-RPC version not supported' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -586,8 +585,8 @@ describe('Web3RequestManager', () => {
 		it('should pass request to provider and reject with a generic rpc error', async () => {
 			const rpcErrorResponse = {
 				id: 1,
-				jsonrpc: '2.0' as JsonRpcIdentifier, 
-				error: { code: -32015, message: 'Resource not found' },
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32015, message: 'Custom rpc error' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -600,9 +599,7 @@ describe('Web3RequestManager', () => {
 
 			jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
-			await expect(manager.send(request)).rejects.toThrow(
-				new RpcError(rpcErrorResponse),
-			);
+			await expect(manager.send(request)).rejects.toThrow(new RpcError(rpcErrorResponse));
 			expect(myProvider.request).toHaveBeenCalledTimes(1);
 			expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 		});
@@ -710,7 +707,7 @@ describe('Web3RequestManager', () => {
 			it('should pass request to provider and resolve if provider resolves it', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
-					request: jest.fn().mockImplementation(async _ => {
+					request: jest.fn().mockImplementation(async () => {
 						return Promise.resolve(successResponse);
 					}),
 				} as any;
@@ -725,7 +722,7 @@ describe('Web3RequestManager', () => {
 			it('should pass request to provider and reject if provider throws error', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
-					request: jest.fn().mockImplementation(async _ => {
+					request: jest.fn().mockImplementation(async () => {
 						return Promise.reject(errorResponse);
 					}),
 				} as any;
@@ -740,7 +737,7 @@ describe('Web3RequestManager', () => {
 			it('should pass request to provider and reject if provider returns error', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
-					request: jest.fn().mockImplementation(async _ => {
+					request: jest.fn().mockImplementation(async () => {
 						return Promise.resolve(errorResponse);
 					}),
 				} as any;
@@ -765,7 +762,7 @@ describe('Web3RequestManager', () => {
 			it('should pass request to provider and resolve if provider resolves it', async () => {
 				const manager = new Web3RequestManager();
 				const myProvider = {
-					request: jest.fn().mockImplementation(async _ => {
+					request: jest.fn().mockImplementation(async () => {
 						return Promise.resolve(successResponse.result);
 					}),
 				} as any;
