@@ -323,6 +323,7 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
+			console.log(response)
 			if (isResponseRpcError(response as JsonRpcResponseWithError)) {
 				const rpcErrorResponse = response as JsonRpcResponseWithError;
 				// check if response error code and message match an EIP-1474 or a standard rpc error code
