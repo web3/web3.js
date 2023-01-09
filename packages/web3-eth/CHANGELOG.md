@@ -68,3 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Updated Web3.js dependencies (#5664)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Enable transaction with local wallet index in the `to` field (#5731)
