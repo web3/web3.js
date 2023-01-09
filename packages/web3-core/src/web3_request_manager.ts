@@ -323,13 +323,16 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
-			console.log(response)
 			if (isResponseRpcError(response as JsonRpcResponseWithError)) {
 				const rpcErrorResponse = response as JsonRpcResponseWithError;
 				// check if response error code and message match an EIP-1474 or a standard rpc error code
-				if (rpcErrorsMap.has(rpcErrorResponse.error.code)) {
+				if (
+					rpcErrorsMap.has(rpcErrorResponse.error.code) &&
+					rpcErrorsMap.get(rpcErrorResponse.error.code)?.message ===
+						rpcErrorResponse.error.message
+				) {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					const Err = rpcErrorsMap.get(rpcErrorResponse.error.code)!;
+					const Err = rpcErrorsMap.get(rpcErrorResponse.error.code)!.error;
 					throw new Err(rpcErrorResponse);
 				} else {
 					throw new RpcError(rpcErrorResponse);
