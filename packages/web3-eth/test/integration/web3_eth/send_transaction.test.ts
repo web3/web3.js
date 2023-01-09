@@ -83,6 +83,69 @@ describe('Web3Eth.sendTransaction', () => {
 		});
 	});
 
+	it('should make a simple value transfer - with local wallet indexed receiver', async () => {
+		const web3EthWithWallet = new Web3Eth(getSystemTestProvider());
+		const accountProvider = createAccountProvider(web3Eth);
+		const wallet = new Wallet(accountProvider);
+
+		web3EthWithWallet['_accountProvider'] = accountProvider;
+		web3EthWithWallet['_wallet'] = wallet;
+
+		web3EthWithWallet.wallet?.add(tempAcc.privateKey);
+
+		const transaction: TransactionWithLocalWalletIndex = {
+			from: tempAcc.address,
+			to: 0,
+			gas: 21000,
+			value: BigInt(1),
+		};
+		const response = await web3EthWithWallet.sendTransaction(transaction);
+		expect(response.status).toBe(BigInt(1));
+
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
+
+		expect(minedTransactionData).toMatchObject({
+			from: tempAcc.address,
+			to: wallet.get(0)?.address.toLocaleLowerCase(),
+			value: BigInt(1),
+		});
+	});
+
+	it('should make a simple value transfer - with local wallet indexed sender and receiver', async () => {
+		const web3EthWithWallet = new Web3Eth(getSystemTestProvider());
+		const accountProvider = createAccountProvider(web3Eth);
+		const wallet = new Wallet(accountProvider);
+
+		web3EthWithWallet['_accountProvider'] = accountProvider;
+		web3EthWithWallet['_wallet'] = wallet;
+
+		const tempAcc2 = await createTempAccount();
+
+		web3EthWithWallet.wallet?.add(tempAcc.privateKey);
+
+		web3EthWithWallet.wallet?.add(tempAcc2.privateKey);
+
+		const transaction: TransactionWithLocalWalletIndex = {
+			from: 0,
+			to: 1,
+			gas: 21000,
+			value: BigInt(1),
+		};
+		const response = await web3EthWithWallet.sendTransaction(transaction);
+		expect(response.status).toBe(BigInt(1));
+
+		const minedTransactionData = await web3EthWithWallet.getTransaction(
+			response.transactionHash,
+		);
+
+		expect(minedTransactionData).toMatchObject({
+			from: tempAcc.address,
+			to: wallet.get(1)?.address.toLocaleLowerCase(),
+			value: BigInt(1),
+		});
+	});
 	it('should make a transaction with no value transfer', async () => {
 		const transaction: Transaction = {
 			from: tempAcc.address,
