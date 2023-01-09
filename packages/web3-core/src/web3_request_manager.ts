@@ -22,6 +22,8 @@ import {
 	InvalidResponseError,
 	ProviderError,
 	ResponseError,
+	rpcErrorsMap,
+	RpcError,
 } from 'web3-errors';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
@@ -44,7 +46,7 @@ import {
 	Web3BaseProvider,
 	Web3BaseProviderConstructor,
 } from 'web3-types';
-import { isNullish, isPromise, jsonRpc, isResponseRpcError, getRpcError } from 'web3-utils';
+import { isNullish, isPromise, jsonRpc, isResponseRpcError } from 'web3-utils';
 import {
 	isEIP1193Provider,
 	isLegacyRequestProvider,
@@ -321,10 +323,16 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
-			// check if response error code and message match rpc errorcode EIP-1474
 			if (isResponseRpcError(response as JsonRpcResponseWithError)) {
-				const Err = getRpcError(response.error.code);
-				throw new Err(response as JsonRpcResponseWithError);
+				const rpcErrorResponse = response as JsonRpcResponseWithError;
+				// check if response error code and message match an EIP-1474 or a standard rpc error code
+				if (rpcErrorsMap.has(rpcErrorResponse.error.code)) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const Err = rpcErrorsMap.get(rpcErrorResponse.error.code)!;
+					throw new Err(rpcErrorResponse);
+				} else {
+					throw new RpcError(rpcErrorResponse);
+				}
 			} else if (!Web3RequestManager._isReverted(response)) {
 				throw new InvalidResponseError<ErrorType>(response);
 			}

@@ -28,69 +28,13 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcSubscriptionResult,
 } from 'web3-types';
-import {
-	ParseError,
-	InvalidRequestError,
-	MethodNotFoundError,
-	InvalidParamsError,
-	InternalError,
-	InvalidInputError,
-	ResourcesNotFoundError,
-	ResourceUnavailableError,
-	TransactionRejectedError,
-	MethodNotSupported,
-	LimitExceededError,
-	VersionNotSupportedError,
-	RpcError,
-	rpcErrorValues,
-} from 'web3-errors';
+import { rpcErrorsMap } from 'web3-errors';
 import { uuidV4 } from './uuid';
 
-export const getRpcError = (code: number) => {
-	const codeStr = code.toString();
-	if (codeStr === '-32700') {
-		return ParseError;
-	}
-	if (codeStr === '-32600') {
-		return InvalidRequestError;
-	}
-	if (codeStr === '-32601') {
-		return MethodNotFoundError;
-	}
-	if (codeStr === '-32602') {
-		return InvalidParamsError;
-	}
-	if (codeStr === '-32603') {
-		return InternalError;
-	}
-	if (codeStr === '-32000') {
-		return InvalidInputError;
-	}
-	if (codeStr === '-32001') {
-		return ResourcesNotFoundError;
-	}
-	if (codeStr === '-32002') {
-		return ResourceUnavailableError;
-	}
-	if (codeStr === '-32003') {
-		return TransactionRejectedError;
-	}
-	if (codeStr === '-32004') {
-		return MethodNotSupported;
-	}
-	if (codeStr === '-32005') {
-		return LimitExceededError;
-	}
-	if (codeStr === '-32006') {
-		return VersionNotSupportedError;
-	}
-	// otherwise return a generic rpc error
-	return RpcError;
-};
 // check if code is a valid rpc server error code
 export const isResponseRpcError = (rpcError: JsonRpcResponseWithError) => {
 	const errorCode = rpcError.error.code;
-	return errorCode.toString() in rpcErrorValues || (errorCode >= -32099 && errorCode <= -32000);
+	return rpcErrorsMap.has(errorCode) || (errorCode >= -32099 && errorCode <= -32000);
 };
 
 export const isResponseWithResult = <Result = unknown, Error = unknown>(
