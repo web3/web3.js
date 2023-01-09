@@ -327,9 +327,8 @@ export class Web3RequestManager<
 				const rpcErrorResponse = response as JsonRpcResponseWithError;
 				// check if response error code and message match an EIP-1474 or a standard rpc error code
 				if (
-					rpcErrorsMap.has(rpcErrorResponse.error.code) &&
 					rpcErrorsMap.get(rpcErrorResponse.error.code)?.message ===
-						rpcErrorResponse.error.message
+					rpcErrorResponse.error.message
 				) {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const Err = rpcErrorsMap.get(rpcErrorResponse.error.code)!.error;

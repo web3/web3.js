@@ -298,7 +298,7 @@ describe('Web3RequestManager', () => {
 			const parseErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
-				error: { code: -32700, message: 'Parse Error' },
+				error: { code: -32700, message: 'Parse error' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -320,7 +320,7 @@ describe('Web3RequestManager', () => {
 			const rpcErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
-				error: { code: -32600, message: 'Invalid Request' },
+				error: { code: -32600, message: 'Invalid request' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -394,7 +394,7 @@ describe('Web3RequestManager', () => {
 			const rpcErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
-				error: { code: -32603, message: 'Internal Error' },
+				error: { code: -32603, message: 'Internal error' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -466,7 +466,7 @@ describe('Web3RequestManager', () => {
 			const rpcErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
-				error: { code: -32002, message: 'Resource not found' },
+				error: { code: -32002, message: 'Resource unavailable' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
@@ -490,7 +490,7 @@ describe('Web3RequestManager', () => {
 			const rpcErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
-				error: { code: -32003, message: 'Resource not found' },
+				error: { code: -32003, message: 'Transaction rejected' },
 			};
 			const manager = new Web3RequestManager();
 			const myProvider = {
