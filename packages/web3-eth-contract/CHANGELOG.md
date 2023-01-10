@@ -203,3 +203,7 @@ const transactionHash = receipt.transactionHash;
 -   Updated dependencies (#5725)
 
 ## [Unreleased]
+
+### Changed
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
