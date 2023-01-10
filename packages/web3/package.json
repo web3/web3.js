@@ -20,8 +20,8 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "yarn version:output && tsc --build",
 		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo \"/* eslint-disable header/header */ export const Web3PkgInfo = { version: '$npm_package_version' };\" > ./src/version.ts",
 		"build:web": "npx webpack",

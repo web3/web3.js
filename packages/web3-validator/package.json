@@ -12,8 +12,8 @@
 		"dist/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "tsc --build",
 		"build:web": "npx webpack",
 		"build:check": "node -e \"require('./dist')\"",

@@ -11,8 +11,8 @@
 		"lib/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "tsc --build",
 		"build:check": "node -e \"require('./dist')\"",
 		"lint": "eslint --ext .js,.ts .",
