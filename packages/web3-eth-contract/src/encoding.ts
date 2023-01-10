@@ -35,7 +35,7 @@ import {
 	jsonInterfaceMethodToString,
 } from 'web3-eth-abi';
 
-import { blockSchema, logSchema } from 'web3-eth/dist/schemas';
+import { blockSchema, logSchema } from 'web3-eth';
 
 import { Eip838ExecutionError, Web3ContractError } from 'web3-errors';
 // eslint-disable-next-line import/no-cycle

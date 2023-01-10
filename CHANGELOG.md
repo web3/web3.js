@@ -961,6 +961,78 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Changed
 
+#### web3
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-core
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-errors
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-abi
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-accounts
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-contract
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-ens
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-iban
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-eth-personal
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-net
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-providers-http
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-providers-ipc
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-providers-ws
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-rpc-methods
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+#### web3-types
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-utils
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-validator
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
 #### web3-providers-ipc
 
 -   Refactor to use common SocketProvider class (#5683)

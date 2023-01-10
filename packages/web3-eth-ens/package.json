@@ -2,18 +2,18 @@
 	"name": "web3-eth-ens",
 	"version": "4.0.1-alpha.3",
 	"description": "This package has ENS functions for interacting with Ethereum Name Service.",
-	"main": "dist/index.js",
+	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
 	"files": [
-		"dist/**/*"
+		"lib/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "tsc --build",
-		"build:check": "node -e \"require('./dist')\"",
+		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",

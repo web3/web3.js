@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws/dist';
+import WebSocketProvider from 'web3-providers-ws';
 import { Web3BaseProvider } from 'web3-types';
 /* eslint-disable  import/no-extraneous-dependencies */
 import IpcProvider from 'web3-providers-ipc';

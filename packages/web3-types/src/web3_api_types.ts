@@ -21,6 +21,7 @@ export interface ProviderMessage {
 	readonly type: string;
 	readonly data: unknown;
 }
+
 export interface EthSubscription extends ProviderMessage {
 	readonly type: 'eth_subscription';
 	readonly data: {
@@ -28,13 +29,16 @@ export interface EthSubscription extends ProviderMessage {
 		readonly result: unknown;
 	};
 }
+
 export interface ProviderRpcError extends Error {
 	code: number;
 	data?: unknown;
 }
+
 export interface ProviderConnectInfo {
 	readonly chainId: string;
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Web3APISpec = Record<string, (...params: any) => any> | unknown;
 export type Web3APIMethod<T extends Web3APISpec> = string & keyof Exclude<T, unknown>;
 export type Web3APIParams<
@@ -57,4 +61,5 @@ export interface Web3APIPayload<API extends Web3APISpec, Method extends Web3APIM
 export type Web3APIReturnType<
 	API extends Web3APISpec,
 	Method extends Web3APIMethod<API>,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 > = API extends Record<string, (...params: any) => any> ? ReturnType<API[Method]> : any;
