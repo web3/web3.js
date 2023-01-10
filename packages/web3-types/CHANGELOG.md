@@ -57,9 +57,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
 
-## [Unreleased]
+## [0.1.1-alpha.3]
 
 ### Changed
 
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
+
+## [Unreleased]
