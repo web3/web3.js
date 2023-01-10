@@ -34,11 +34,9 @@ export interface ProviderRpcError extends Error {
 	code: number;
 	data?: unknown;
 }
-
 export interface ProviderConnectInfo {
 	readonly chainId: string;
 }
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Web3APISpec = Record<string, (...params: any) => any> | unknown;
 export type Web3APIMethod<T extends Web3APISpec> = string & keyof Exclude<T, unknown>;
