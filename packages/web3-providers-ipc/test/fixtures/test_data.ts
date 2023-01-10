@@ -15,18 +15,31 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export * from './converters';
-export * from './validation';
-export * from './formatter';
-export * from './hash';
-export * from './random';
-export * from './string_manipulation';
-export * from './objects';
-export * from './promise_helpers';
-export * from './json_rpc';
-export * as jsonRpc from './json_rpc';
-export * from './web3_deferred_promise';
-export * from './chunk_response_parser';
-export * from './uuid';
-export * from './web3_eip1193_provider';
-export * from './socket_provider';
+export const validConnectionStrings = [
+	'ws://localhost:8545',
+	'ws://www.localhost',
+	'ws://localhost',
+	'wss://foo.com',
+	'ws://foo.ninja',
+	'wss://foo.com',
+	'ws://foo.com:8545',
+];
+
+export const invalidConnectionStrings = [
+	'htt://localhost:8545',
+	'http//localhost:8545',
+	'ipc://localhost:8545',
+	'',
+	// Using "null" value intentionally for validation
+	// eslint-disable-next-line no-null/no-null
+	null,
+	undefined,
+	42,
+];
+
+export const wsProviderOptions = {
+	followRedirects: true,
+	handshakeTimeout: 1500,
+	maxRedirects: 3,
+	perMessageDeflate: true,
+};

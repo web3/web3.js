@@ -14,7 +14,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { hexToNumber } from 'web3-utils';
 import { Web3Eth } from '../../src';
@@ -23,7 +22,7 @@ import {
 	closeOpenConnection,
 	createTempAccount,
 	getSystemTestProvider,
-	isWs,
+	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
 describe('eth', () => {
@@ -33,18 +32,8 @@ describe('eth', () => {
 
 	beforeAll(async () => {
 		clientUrl = getSystemTestProvider();
-
-		if (isWs) {
-			web3Eth = new Web3Eth(
-				new WebSocketProvider(
-					clientUrl,
-					{},
-					{ delay: 1, autoReconnect: false, maxAttempts: 1 },
-				),
-			);
-		} else {
-			web3Eth = new Web3Eth(clientUrl);
-		}
+		web3Eth = new Web3Eth(clientUrl);
+		await waitForOpenConnection(web3Eth);
 	});
 	afterAll(async () => {
 		await closeOpenConnection(web3Eth);
@@ -54,6 +43,7 @@ describe('eth', () => {
 		it('BatchRequest', async () => {
 			const acc1 = await createTempAccount();
 			const acc2 = await createTempAccount();
+
 			const batch = new web3Eth.BatchRequest();
 			const request1 = {
 				id: 10,

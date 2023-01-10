@@ -15,265 +15,156 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { EventEmitter } from 'events';
-import { existsSync } from 'fs';
 import { Socket } from 'net';
+import { InvalidConnectionError, ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
+import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
 	JsonRpcId,
-	JsonRpcNotification,
-	JsonRpcResponseWithResult,
-	JsonRpcResult,
+	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
-	Web3APIReturnType,
 	Web3APISpec,
-	Web3BaseProvider,
-	Web3ProviderEventCallback,
 	Web3ProviderStatus,
 } from 'web3-types';
-import {
-	ConnectionNotOpenError,
-	InvalidClientError,
-	InvalidConnectionError,
-	ResponseError,
-} from 'web3-errors';
-import { isNullish, Web3DeferredPromise, jsonRpc, ChunkResponseParser } from 'web3-utils';
+import { existsSync } from 'fs';
 
-type WaitOptions = {
-	timeOutTime: number;
-	maxNumberOfAttempts: number;
-};
-export default class IpcProvider<
-	API extends Web3APISpec = EthExecutionAPI,
-> extends Web3BaseProvider<API> {
-	private readonly _emitter: EventEmitter = new EventEmitter();
-	private readonly _socketPath: string;
-	private readonly _socket: Socket;
-	private readonly chunkResponseParser: ChunkResponseParser;
-	private waitOptions: WaitOptions;
+// todo had to ignore, introduce error in doc generation,see why/better solution
+/** @ignore */
+
+export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> extends SocketProvider<
+	Buffer | string,
+	CloseEvent,
+	Error,
+	API
+> {
 	private _connectionStatus: Web3ProviderStatus;
-
-	private readonly _requestQueue: Map<JsonRpcId, Web3DeferredPromise<unknown>>;
-
+	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
+	protected _socketConnection?: Socket;
 	public constructor(socketPath: string) {
-		super();
-
-		this._connectionStatus = 'disconnected';
-		this._socketPath = socketPath;
-		this._socket = new Socket();
-
-		this._requestQueue = new Map<JsonRpcId, Web3DeferredPromise<unknown>>();
-
-		this.connect();
-		this.waitOptions = {
-			timeOutTime: 5000,
-			maxNumberOfAttempts: 10,
-		};
-		this.chunkResponseParser = new ChunkResponseParser();
-		this.chunkResponseParser.onError(() => {
-			this._clearQueues();
-		});
+		super(socketPath);
+		this._connectionStatus = 'connecting';
 	}
 
 	public getStatus(): Web3ProviderStatus {
+		if (this._socketConnection?.connecting) {
+			return 'connecting';
+		}
 		return this._connectionStatus;
 	}
-
-	/* eslint-disable class-methods-use-this */
-	public supportsSubscriptions(): boolean {
-		return true;
-	}
-
-	public on<T = JsonRpcResult>(
-		type: 'message' | 'connect' | 'disconnect' | string,
-		callback: Web3ProviderEventCallback<T>,
-	): void {
-		this._emitter.on(type, callback);
-	}
-
-	public once<T = JsonRpcResult>(type: string, callback: Web3ProviderEventCallback<T>): void {
-		this._emitter.once(type, callback);
-	}
-
-	public removeListener(type: string, callback: Web3ProviderEventCallback): void {
-		this._emitter.removeListener(type, callback);
-	}
-
 	public connect(): void {
 		if (!existsSync(this._socketPath)) {
 			throw new InvalidClientError(this._socketPath);
 		}
-
+		if (!this._socketConnection || this.getStatus() === 'disconnected') {
+			this._socketConnection = new Socket();
+		}
 		try {
+			this._connectionStatus = 'connecting';
 			this._addSocketListeners();
-			this._socket.connect({ path: this._socketPath });
+			this._socketConnection.connect({ path: this._socketPath });
 		} catch (e) {
 			throw new InvalidConnectionError(this._socketPath);
 		}
 	}
 
-	public disconnect(): void {
-		this._requestQueue.clear();
-		this._removeSocketListeners();
-		this._socket.end();
-	}
-
-	public reset(): void {
-		this._requestQueue.clear();
-
-		this._removeSocketListeners();
-		this._addSocketListeners();
-	}
-
-	public get waitTimeOut(): number {
-		return this.waitOptions.timeOutTime;
-	}
-
-	public set waitTimeOut(timeOut: number) {
-		this.waitOptions.timeOutTime = timeOut;
-	}
-
-	public get waitMaxNumberOfAttempts(): number {
-		return this.waitOptions.maxNumberOfAttempts;
-	}
-
-	public set waitMaxNumberOfAttempts(maxNumberOfAttempts: number) {
-		this.waitOptions.maxNumberOfAttempts = maxNumberOfAttempts;
-	}
-
-	public async waitForConnection(): Promise<void> {
-		return new Promise<void>((resolve, reject) => {
-			let currentAttempt = 0;
-			const interval = setInterval(() => {
-				if (currentAttempt > this.waitMaxNumberOfAttempts - 1) {
-					clearInterval(interval);
-					reject(new ConnectionNotOpenError());
-				} else if (this.getStatus() === 'connected') {
-					clearInterval(interval);
-					resolve();
-				}
-				currentAttempt += 1;
-			}, this.waitTimeOut / this.waitMaxNumberOfAttempts);
+	protected _closeSocketConnection(code?: number, data?: string) {
+		this._socketConnection?.end(() => {
+			this._onDisconnect(code, data);
 		});
 	}
 
-	// eslint-disable-next-line @typescript-eslint/require-await
-	public async request<
-		Method extends Web3APIMethod<API>,
-		ResultType = Web3APIReturnType<API, Method>,
-	>(request: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>> {
-		if (isNullish(this._socket)) throw new Error('IPC connection is undefined');
-
-		const requestId = jsonRpc.isBatchRequest(request) ? request[0].id : request.id;
-
-		if (isNullish(requestId)) throw new Error('Request Id not defined');
-
-		if (this.getStatus() !== 'connected') {
-			await this.waitForConnection();
+	protected _sendToSocket<Method extends Web3APIMethod<API>>(
+		payload: Web3APIPayload<API, Method>,
+	): void {
+		if (this.getStatus() === 'disconnected') {
+			throw new ConnectionNotOpenError();
 		}
-
-		// TODO: once https://github.com/web3/web3.js/issues/5460 is implemented, remove this block.
-		// 	And catch the error by listening to the error event.
-		// Additionally, after both https://github.com/web3/web3.js/issues/5466 and https://github.com/web3/web3.js/issues/5467
-		//	are implemented. There should be no case in the tests that cause a request to the provider after closing the connection.
-		if (!this._socket.writable) {
-			console.error(
-				'Can not send a request. The internal socket is not `writable`. Request data: ',
-				request,
-			);
-			const dummyPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-			return dummyPromise;
-		}
-
-		try {
-			const defPromise = new Web3DeferredPromise<JsonRpcResponseWithResult<ResultType>>();
-			this._requestQueue.set(requestId, defPromise);
-			this._socket.write(JSON.stringify(request));
-
-			return defPromise;
-		} catch (error) {
-			this._requestQueue.delete(requestId);
-			throw error;
-		}
+		this._socketConnection?.write(JSON.stringify(payload));
 	}
 
-	public removeAllListeners(type: string): void {
-		this._emitter.removeAllListeners(type);
-	}
-
-	private _onMessage(e: Buffer | string): void {
-		const responses = this.chunkResponseParser.parseResponse(
-			typeof e === 'string' ? e : e.toString('utf8'),
-		);
-		if (!responses) {
+	protected _onCloseEvent(event: CloseEvent): void {
+		if (
+			this._reconnectOptions.autoReconnect &&
+			(![1000, 1001].includes(event.code) || !event.wasClean)
+		) {
+			this._reconnect();
 			return;
 		}
-		for (const response of responses) {
-			if (
-				jsonRpc.isResponseWithNotification(response as JsonRpcNotification) &&
-				(response as JsonRpcNotification).method.endsWith('_subscription')
-			) {
-				this._emitter.emit('message', undefined, response);
-				return;
-			}
 
-			const requestId = jsonRpc.isBatchResponse(response) ? response[0].id : response.id;
-			const requestItem = this._requestQueue.get(requestId);
-
-			if (!requestItem) {
-				return;
-			}
-
-			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
-				this._emitter.emit('message', undefined, response);
-				requestItem.resolve(response);
-			} else {
-				this._emitter.emit('message', response, undefined);
-				requestItem?.reject(new ResponseError(response));
-			}
-
-			this._requestQueue.delete(requestId);
-		}
-	}
-
-	private _clearQueues(event?: CloseEvent) {
-		if (this._requestQueue.size > 0) {
-			this._requestQueue.forEach((request: Web3DeferredPromise<unknown>, key: JsonRpcId) => {
-				request.reject(new ConnectionNotOpenError(event));
-				this._requestQueue.delete(key);
-			});
-		}
-
+		this._clearQueues(event);
 		this._removeSocketListeners();
+		this._onDisconnect(event.code, event.reason);
 	}
 
-	private _onConnect() {
-		this._connectionStatus = 'connected';
-		this._emitter.emit('connect');
+	protected _parseResponses(e: Buffer | string) {
+		return this.chunkResponseParser.parseResponse(
+			typeof e === 'string' ? e : e.toString('utf8'),
+		);
 	}
 
-	private _onDisconnect(): void {
-		this._connectionStatus = 'disconnected';
-		this._emitter.emit('disconnect');
-	}
-
-	private _onClose(event: CloseEvent): void {
+	protected _onClose(event: CloseEvent): void {
 		this._clearQueues(event);
 		this._removeSocketListeners();
 	}
 
-	private _addSocketListeners(): void {
-		this._socket.on('connect', this._onConnect.bind(this));
-		this._socket.on('end', this._onDisconnect.bind(this));
-		this._socket.on('close', this._onClose.bind(this));
-		this._socket.on('data', this._onMessage.bind(this));
+	protected _addSocketListeners(): void {
+		this._socketConnection?.on('data', this._onMessageHandler);
+		this._socketConnection?.on('connect', this._onOpenHandler);
+		this._socketConnection?.on('close', this._onClose.bind(this));
+		this._socketConnection?.on('end', this._onCloseHandler);
+		let errorListeners: unknown[] | undefined;
+		try {
+			errorListeners = (this._socketConnection as Socket)?.listeners('error');
+		} catch (error) {
+			// At some cases (at GitHub pipeline) there is an error raised when trying to access the listeners
+			//	However, no need to do take any specific action in this case beside try adding the event listener for `error`
+			this._socketConnection?.on('error', this._onErrorHandler);
+			return;
+		}
+		// The error event listener may be already there because we do not remove it like the others
+		// 	So we add it only if it was not already added
+		if (!errorListeners || errorListeners.length === 0) {
+			this._socketConnection?.on('error', this._onErrorHandler);
+		}
 	}
 
-	private _removeSocketListeners(): void {
-		this._socket?.removeAllListeners('connect');
-		this._socket?.removeAllListeners('end');
-		this._socket?.removeAllListeners('close');
-		this._socket?.removeAllListeners('data');
+	protected _removeSocketListeners(): void {
+		this._socketConnection?.removeAllListeners('connect');
+		this._socketConnection?.removeAllListeners('end');
+		this._socketConnection?.removeAllListeners('close');
+		this._socketConnection?.removeAllListeners('data');
+	}
+
+	protected _clearQueues(event?: CloseEvent) {
+		if (this._pendingRequestsQueue.size > 0) {
+			this._pendingRequestsQueue.forEach(
+				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
+					request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					this._pendingRequestsQueue.delete(key);
+				},
+			);
+		}
+
+		if (this._sentRequestsQueue.size > 0) {
+			this._sentRequestsQueue.forEach(
+				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
+					request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					this._sentRequestsQueue.delete(key);
+				},
+			);
+		}
+
+		this._removeSocketListeners();
+	}
+
+	protected _onConnect() {
+		this._connectionStatus = 'connected';
+		super._onConnect();
+	}
+
+	protected _onDisconnect(code?: number, data?: string): void {
+		this._connectionStatus = 'disconnected';
+		super._onDisconnect(code, data);
 	}
 }

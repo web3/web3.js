@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ETH_DATA_FORMAT, format } from 'web3-utils';
+import { ETH_DATA_FORMAT, format, SocketProvider } from 'web3-utils';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
 	create,
@@ -39,6 +39,11 @@ import {
 	Transaction,
 	Receipt,
 	KeyStore,
+	ProviderConnectInfo,
+	Web3ProviderEventCallback,
+	ProviderRpcError,
+	JsonRpcSubscriptionResult,
+	JsonRpcNotification,
 } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Personal } from 'web3-eth-personal';
@@ -47,6 +52,7 @@ import Web3 from 'web3';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import accountsString from './accounts.json';
 
 /**
@@ -74,6 +80,7 @@ export const isChrome: boolean = getSystemTestEngine() === 'chrome';
 export const isFirefox: boolean = getSystemTestEngine() === 'firefox';
 export const isElectron: boolean = getSystemTestEngine() === 'electron';
 export const isNode: boolean = getSystemTestEngine() === 'isNode';
+export const isSocket: boolean = isWs || isIpc;
 export const isBrowser: boolean = ['chrome', 'firefox'].includes(getSystemTestEngine());
 
 export const getSystemTestMnemonic = (): string => getEnvVar('WEB3_SYSTEM_TEST_MNEMONIC') ?? '';
@@ -88,8 +95,8 @@ export const itIf = (condition: (() => boolean) | boolean) =>
 export const describeIf = (condition: (() => boolean) | boolean) =>
 	(typeof condition === 'function' ? condition() : condition) ? describe : describe.skip;
 
-const maxNumberOfAttempts = 10;
-const intervalTime = 5000; // ms
+const maxNumberOfAttempts = 100;
+const intervalTime = 500; // ms
 
 export const waitForOpenConnection = async (
 	web3Context: Web3Context,
@@ -97,7 +104,7 @@ export const waitForOpenConnection = async (
 	status = 'connected',
 ) =>
 	new Promise<void>((resolve, reject) => {
-		if (!getSystemTestProvider().startsWith('ws')) {
+		if (!isSocket) {
 			resolve();
 			return;
 		}
@@ -118,7 +125,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isWs && !isIpc) {
+	if (!isSocket) {
 		return;
 	}
 
@@ -389,4 +396,29 @@ export const createLocalAccount = async (web3: Web3) => {
 	await refillAccount((await createTempAccount()).address, account.address, '10000000000000000');
 	web3.eth.accounts.wallet.add(account);
 	return account;
+};
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+// eslint-disable-next-line arrow-body-style
+export const waitForSocketConnect = async (provider: SocketProvider<any, any, any>) => {
+	return new Promise<ProviderConnectInfo>(resolve => {
+		provider.on('connect', ((
+			_error: Error | ProviderRpcError | undefined,
+			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderConnectInfo> | undefined,
+		) => {
+			resolve(data as unknown as ProviderConnectInfo);
+		}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+	});
+};
+
+// eslint-disable-next-line arrow-body-style
+export const waitForSocketDisconnect = async (provider: SocketProvider<any, any, any>) => {
+	return new Promise<ProviderRpcError>(resolve => {
+		provider.on('disconnect', ((
+			_error: ProviderRpcError | Error | undefined,
+			data: JsonRpcSubscriptionResult | JsonRpcNotification<ProviderRpcError> | undefined,
+		) => {
+			resolve(data as unknown as ProviderRpcError);
+		}) as Web3ProviderEventCallback<ProviderRpcError>);
+	});
 };

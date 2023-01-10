@@ -30,6 +30,7 @@ import {
 	isWs,
 	isIpc,
 	closeOpenConnection,
+	isSocket,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
@@ -132,9 +133,10 @@ describe('ens', () => {
 	});
 
 	afterAll(async () => {
-		if (isWs || isIpc) {
+		if (isSocket) {
 			await closeOpenConnection(ens);
-			await closeOpenConnection(ens['_registry']['contract']);
+			// @ts-expect-error @typescript-eslint/ban-ts-comment
+			await closeOpenConnection(ens?._registry?.contract);
 			await closeOpenConnection(getEnsResolver);
 			await closeOpenConnection(setEnsResolver);
 			await closeOpenConnection(registry);

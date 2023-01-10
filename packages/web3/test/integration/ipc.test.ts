@@ -21,6 +21,7 @@ import {
 	describeIf,
 	isIpc,
 	closeOpenConnection,
+	waitForSocketConnect,
 } from '../shared_fixtures/system_tests_utils';
 import Web3 from '../../src/index';
 
@@ -43,7 +44,7 @@ describe('Web3 instance', () => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 			expect(web3).toBeInstanceOf(Web3);
-			await (web3.provider as IpcProvider).waitForConnection();
+			await waitForSocketConnect(web3.provider as IpcProvider);
 			expect((web3.provider as IpcProvider).getStatus()).toBe('connected');
 		});
 	});

@@ -1032,3 +1032,19 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+#### web3-providers-ipc
+
+-   Refactor to use common SocketProvider class (#5683)
+
+#### web3-providers-ws
+
+-   Refactor to use common SocketProvider class (#5683)
+
+#### web3-utils
+
+-   Add SocketProvider class and Eip1193Provider abstract class (#5683)
+
+#### web3-types
+
+-   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)

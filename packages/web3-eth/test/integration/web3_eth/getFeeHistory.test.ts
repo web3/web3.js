@@ -29,7 +29,7 @@ describeIf(getSystemTestBackend().includes('geth'))('Web3Eth.getFeeHistory', () 
 	let web3Eth: Web3Eth;
 	let systemProvider: string;
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		systemProvider = getSystemTestProvider();
 		web3Eth = new Web3Eth(systemProvider);
 	});

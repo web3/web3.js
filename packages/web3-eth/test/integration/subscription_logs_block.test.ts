@@ -21,6 +21,8 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-types';
 import { numberToHex } from 'web3-utils';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
@@ -30,6 +32,8 @@ import {
 	describeIf,
 	getSystemTestProvider,
 	isWs,
+	isSocket,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 2;
@@ -50,22 +54,22 @@ const makeFewTxToContract = async ({
 		prs.push(await contract.methods?.firesStringEvent(testDataString).send(sendOptions));
 	}
 };
-describeIf(isWs)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
-	let providerWs: WebSocketProvider;
+	let providerWs: WebSocketProvider | IpcProvider;
 	let contract: Contract<typeof BasicAbi>;
 	const testDataString = 'someTestString';
 
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		providerWs = new WebSocketProvider(clientUrl);
+		providerWs = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 	});
-	afterAll(() => {
+	afterAll(async () => {
 		providerWs.disconnect();
-		(contract.provider as WebSocketProvider).disconnect();
+		await closeOpenConnection(contract);
 	});
 
 	describe('logs', () => {

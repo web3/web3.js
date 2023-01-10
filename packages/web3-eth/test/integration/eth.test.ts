@@ -42,7 +42,7 @@ describe('eth', () => {
 	let sendOptions: Record<string, unknown>;
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeAll(async () => {
+	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth(clientUrl);
 		contract = new Contract(BasicAbi, {

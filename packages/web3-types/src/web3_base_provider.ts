@@ -27,16 +27,33 @@ import {
 	JsonRpcResult,
 	JsonRpcSubscriptionResult,
 } from './json_rpc_types';
-import { Web3APISpec, Web3APIMethod, Web3APIReturnType, Web3APIPayload } from './web3_api_types';
+import {
+	Web3APISpec,
+	Web3APIMethod,
+	Web3APIReturnType,
+	Web3APIPayload,
+	ProviderConnectInfo,
+	ProviderRpcError,
+} from './web3_api_types';
 import { Web3EthExecutionAPI } from './apis/web3_eth_execution_api';
+import { Web3DeferredPromise } from './web3_deferred_promise_type';
 
 const symbol = Symbol.for('web3/base-provider');
+
+export interface SocketRequestItem<
+	API extends Web3APISpec,
+	Method extends Web3APIMethod<API>,
+	ResponseType,
+> {
+	payload: Web3APIPayload<API, Method>;
+	deferredPromise: Web3DeferredPromise<ResponseType>;
+}
 
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#connectivity
 export type Web3ProviderStatus = 'connecting' | 'connected' | 'disconnected';
 
 export type Web3ProviderEventCallback<T = JsonRpcResult> = (
-	error: Error | undefined,
+	error: Error | ProviderRpcError | undefined,
 	result?: JsonRpcSubscriptionResult | JsonRpcNotification<T>,
 ) => void;
 
@@ -137,22 +154,23 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	>(args: Web3APIPayload<API, Method>): Promise<JsonRpcResponseWithResult<ResultType>>;
 
 	// https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md#events
+
+	public abstract on(
+		type: 'disconnect',
+		callback: Web3ProviderEventCallback<ProviderRpcError>,
+	): void;
 	public abstract on<T = JsonRpcResult>(
-		type: 'message' | 'disconnect' | string,
+		type: 'message' | string,
 		callback: Web3ProviderEventCallback<T>,
 	): void;
 	public abstract on(
 		type: 'connect' | 'chainChanged',
-		callback: Web3ProviderEventCallback<{
-			readonly [key: string]: unknown;
-			readonly chainId: string;
-		}>,
+		callback: Web3ProviderEventCallback<ProviderConnectInfo>,
 	): void;
 	public abstract on(
 		type: 'accountsChanged',
 		callback: Web3ProviderEventCallback<{
-			readonly [key: string]: unknown;
-			readonly accountsChanged: string[];
+			readonly accounts: string[];
 		}>,
 	): void;
 	public abstract removeListener(type: string, callback: Web3ProviderEventCallback): void;
@@ -163,7 +181,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 	): void;
 	public abstract removeAllListeners?(type: string): void;
 	public abstract connect(): void;
-	public abstract disconnect(code?: number, reason?: string): void;
+	public abstract disconnect(code?: number, data?: string): void;
 	public abstract reset(): void;
 }
 

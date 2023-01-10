@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,29 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3APIMethod, Web3APIPayload, Web3APISpec, Web3DeferredPromise } from 'web3-types';
-
 export type ReconnectOptions = {
 	autoReconnect: boolean;
 	delay: number;
 	maxAttempts: number;
 };
-
-export interface WSRequestItem<
-	API extends Web3APISpec,
-	Method extends Web3APIMethod<API>,
-	ResponseType,
-> {
-	payload: Web3APIPayload<API, Method>;
-	deferredPromise: Web3DeferredPromise<ResponseType>;
-}
-
-export type OnCloseEvent = {
-	code: number;
-	reason: string;
-};
-
-export type EventEmittedCallback = (
-	error: Error | undefined,
-	event?: OnCloseEvent | undefined,
-) => void;

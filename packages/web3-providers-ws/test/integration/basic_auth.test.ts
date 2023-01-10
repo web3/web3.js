@@ -18,7 +18,7 @@ import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Server } from 'http';
 
-import { waitForOpenConnection } from '../fixtures/helpers';
+import { waitForCloseConnection, waitForOpenConnection } from '../fixtures/helpers';
 import WebSocketProvider from '../../src/index';
 import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
 
@@ -26,7 +26,6 @@ describeIf(isWs)('Support of Basic Auth', () => {
 	let server: Server;
 	let clientWsUrl: string;
 	let webSocketProvider: WebSocketProvider;
-	let currentAttempt = 0;
 
 	beforeAll(() => {
 		clientWsUrl = getSystemTestProvider();
@@ -74,18 +73,18 @@ describeIf(isWs)('Support of Basic Auth', () => {
 			{},
 			{ delay: 1, autoReconnect: false, maxAttempts: 1 },
 		);
-		currentAttempt = 0;
 	});
 	afterEach(async () => {
 		// make sure we try to close the connection after it is established
 		if (webSocketProvider.getStatus() === 'connecting') {
-			await waitForOpenConnection(webSocketProvider, currentAttempt);
+			await waitForOpenConnection(webSocketProvider);
 		}
 		webSocketProvider.disconnect();
+		await waitForCloseConnection(webSocketProvider);
 	});
 	// eslint-disable-next-line jest/expect-expect
 	test('should connect with basic auth', async () => {
-		await waitForOpenConnection(webSocketProvider, currentAttempt);
-		webSocketProvider.disconnect();
+		await waitForOpenConnection(webSocketProvider);
+		expect(webSocketProvider.getStatus()).toBe('connected');
 	});
 });

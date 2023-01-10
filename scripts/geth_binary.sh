@@ -21,11 +21,11 @@ getOS(){
 getDownloadLink(){
     case "$OS" in
       SOLARIS*) LINK="-" ;;
-      OSX*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.10.19-23bee162.tar.gz" ;;
-      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.19-23bee162.tar.gz" ;;
-      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.19-23bee162.tar.gz" ;;
-      WINDOWS*)    LINK="-" ;;
-      "ALSO WINDOWS"*)  LINK="-" ;;
+      OSX*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.10.26-e5eb32ac.tar.gz" ;;
+      LINUX*)   LINK="https://gethstore.blob.core.windows.net/builds/geth-linux-386-1.10.26-e5eb32ac.tar.gz" ;;
+      BSD*)     LINK="https://gethstore.blob.core.windows.net/builds/geth-darwin-amd64-1.10.26-e5eb32ac.tar.gz" ;;
+      WINDOWS*)    LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.10.26-e5eb32ac.exe" ;;
+      "ALSO WINDOWS"*)  LINK="https://gethstore.blob.core.windows.net/builds/geth-windows-386-1.10.26-e5eb32ac.exe" ;;
       *)        LINK="-" ;;
     esac
 }

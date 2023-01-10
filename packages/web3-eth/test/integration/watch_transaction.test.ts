@@ -14,44 +14,33 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import WebSocketProvider from 'web3-providers-ws';
 import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import { Web3BaseProvider, TransactionReceipt } from 'web3-types';
+import { TransactionReceipt } from 'web3-types';
 import { Web3PromiEvent } from 'web3-core';
 import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxes } from './helper';
+import { sendFewTxesWithoutReceipt } from './helper';
 
 import {
 	getSystemTestProvider,
 	describeIf,
-	isWs,
 	createTempAccount,
+	closeOpenConnection,
+	isSocket,
+	waitForOpenConnection,
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
-const waitConfirmations = 5;
+const waitConfirmations = 2;
 
 type Resolve = (value?: unknown) => void;
 
-describeIf(isWs)('watch subscription transaction', () => {
-	let web3Eth: Web3Eth;
-	let providerWs: WebSocketProvider;
-	let clientUrl: string;
-
-	beforeAll(() => {
-		clientUrl = getSystemTestProvider();
-
-		providerWs = new WebSocketProvider(clientUrl);
-	});
-	afterAll(() => {
-		providerWs.disconnect();
-	});
-
+describeIf(isSocket)('watch subscription transaction', () => {
 	describe('wait for confirmation subscription', () => {
 		it('subscription to heads', async () => {
+			const web3Eth = new Web3Eth(getSystemTestProvider());
+			await waitForOpenConnection(web3Eth);
 			const tempAccount = await createTempAccount();
 			const tempAccount2 = await createTempAccount();
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
 
 			web3Eth.setConfig({ transactionConfirmationBlocks: waitConfirmations });
 
@@ -88,8 +77,15 @@ describeIf(isWs)('watch subscription transaction', () => {
 				});
 			});
 			await receiptPromise;
-			await sendFewTxes({ web3Eth, from, to, value, times: waitConfirmations });
+			await sendFewTxesWithoutReceipt({
+				web3Eth,
+				from,
+				to,
+				value,
+				times: waitConfirmations,
+			});
 			await confirmationPromise;
+			await closeOpenConnection(web3Eth);
 		});
 	});
 });
