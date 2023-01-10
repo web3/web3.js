@@ -975,4 +975,4 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-types
 
--   Add ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo types (#5683)
+-   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
