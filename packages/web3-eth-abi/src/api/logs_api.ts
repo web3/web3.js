@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { HexString } from 'web3-types';
-import { AbiParameter } from '../types';
+import { AbiParameter, DecodedParams } from '../types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
@@ -24,7 +24,7 @@ const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufix
 /**
  * Decodes ABI-encoded log data and indexed topic data
  */
-export const decodeLog = <ReturnType extends Record<string, unknown>>(
+export const decodeLog = <ReturnType extends DecodedParams>(
 	inputs: Array<AbiParameter>,
 	data: HexString,
 	topics: string | string[],
@@ -42,7 +42,7 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 		}
 	}
 
-	const decodedNonIndexedInputs: { [key: string]: unknown; __length__: number } = data
+	const decodedNonIndexedInputs: DecodedParams = data
 		? decodeParametersWith(Object.values(nonIndexedInputs), data, true)
 		: { __length__: 0 };
 
@@ -55,7 +55,7 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 			: clonedTopics[index + offset],
 	);
 
-	const returnValues: { [key: string]: unknown; __length__: number } = { __length__: 0 };
+	const returnValues: DecodedParams = { __length__: 0 };
 
 	let indexedCounter = 0;
 	let nonIndexedCounter = 0;
@@ -80,5 +80,5 @@ export const decodeLog = <ReturnType extends Record<string, unknown>>(
 		returnValues.__length__ += 1;
 	}
 
-	return returnValues as ReturnType & { __length__: number };
+	return returnValues as ReturnType;
 };

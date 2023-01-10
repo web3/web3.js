@@ -891,9 +891,13 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Removed direct function `toJSON()` in `Web3ValidatorError` class as its available via base class (#5435)
 
-## [Unreleased]
+## [4.0.1-alpha.2]
 
 ### Added
+
+#### web3-eth-contract
+
+-   Decoding error data, using Error ABI if available, if error was returned from a smart contract function call (#5662).
 
 #### web3-types
 
@@ -932,10 +936,25 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3-eth-abi
 
--   Fix ContractMethodOutputParameters type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
+-   Fix `ContractMethodOutputParameters` type to support output object types by index and string key. Also, it returns void if ABI doesn't have outputs and returns exactly one type if the output array has only one element. (#5631)
 
 ### Removed
 
 #### web3-eth-accounts
 
 -   These types were moved from `web3-eth-accounts` to `web3-types` package: Cipher, CipherOptions, ScryptParams, PBKDF2SHA256Params, KeyStore (#5581 )
+
+## [4.0.1-alpha.3]
+
+### Fixed
+
+#### web3-validator
+
+-   Fix issue when importing `web3-validator` package within browser environments (Webpack minified filename changed from `index.min.js` to `web3-validator.min.js`) (#5710)
+-   Fix build error '"type"' does not satisfy the constraint (#5712)
+
+#### web3-eth-abi
+
+-   Parameters decoding error for nested components (#5714)
+
+## [Unreleased]

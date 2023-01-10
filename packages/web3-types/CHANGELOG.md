@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   `Web3APISpec`, `Web3APIMethod`, and `Web3APIParams` now supports `unknown` APIs (#5393)
 
-## [Unreleased]
+## [0.1.1-alpha.2]
 
 ### Added
 
@@ -56,3 +56,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
+
+## [Unreleased]

@@ -16,7 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { AbiParameter, Optional } from 'web3-types';
-import { ErrorObject, JSONSchemaType } from 'ajv';
+import { ErrorObject } from 'ajv';
+import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 
 export { JSONSchemaType } from 'ajv';
 export { DataValidateFunction, DataValidationCxt } from 'ajv/dist/types';
@@ -64,6 +65,6 @@ export type Web3ValidationOptions = {
 
 // In `JSONSchemaType` from `ajv` the `type` is required
 // We need to make it optional
-export type JsonSchema = Optional<JSONSchemaType<unknown>, 'type'> & {
+export type JsonSchema = Optional<SomeJSONSchema, 'type'> & {
 	readonly eth?: string;
 };

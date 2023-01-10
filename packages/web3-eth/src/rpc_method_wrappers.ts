@@ -44,7 +44,12 @@ import {
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import { SignatureError, TransactionError, TransactionRevertError } from 'web3-errors';
+import {
+	SignatureError,
+	TransactionError,
+	TransactionRevertError,
+	ContractExecutionError,
+} from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
@@ -1196,12 +1201,16 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
+						if (error instanceof ContractExecutionError) {
+							promiEvent.emit('contractExecutionError', error);
+						}
 						if (promiEvent.listenerCount('error') > 0) {
 							promiEvent.emit(
 								'error',
 								new TransactionError((error as Error).message),
 							);
 						}
+
 						reject(error);
 					}
 				})() as unknown;
