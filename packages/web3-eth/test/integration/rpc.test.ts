@@ -23,7 +23,6 @@ import { hexToNumber, hexToString, numberToHex, FMT_BYTES, FMT_NUMBER } from 'we
 import { AbiEventFragment } from 'web3-eth-abi';
 import { getStorageSlotNumForLongString } from 'web3-utils/src';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 
 import {
@@ -32,7 +31,6 @@ import {
 	getSystemTestProvider,
 	createNewAccount,
 	itIf,
-	isIpc,
 	createTempAccount,
 } from '../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
@@ -61,7 +59,6 @@ describe('rpc', () => {
 				transactionPollingTimeout: 2000,
 			},
 		});
-
 		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
@@ -75,10 +72,6 @@ describe('rpc', () => {
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
 		contractDeployed = await contract.deploy(deployOptions).send(sendOptions);
-		if (isIpc) {
-			await (contract.provider as IpcProvider).waitForConnection();
-			await (web3Eth.provider as IpcProvider).waitForConnection();
-		}
 	});
 
 	afterAll(async () => {

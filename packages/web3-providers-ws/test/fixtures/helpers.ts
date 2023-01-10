@@ -15,27 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
 import WebSocketProvider from '../../src/index';
 
-export const waitForOpenConnection = async (
-	provider: WebSocketProvider,
-	currentAttempt: number,
-	status = 'connected',
-) => {
-	return new Promise<void>((resolve, reject) => {
-		const maxNumberOfAttempts = 10;
-		const intervalTime = 2000; // ms
+export const waitForOpenConnection = async (provider: WebSocketProvider) => {
+	return new Promise<ProviderConnectInfo>(resolve => {
+		provider.on('connect', ((_error, data) => {
+			resolve(data as unknown as ProviderConnectInfo);
+		}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+	});
+};
 
-		const interval = setInterval(() => {
-			if (currentAttempt > maxNumberOfAttempts - 1) {
-				clearInterval(interval);
-				reject(new Error('Maximum number of attempts exceeded'));
-			} else if (provider.getStatus() === status) {
-				clearInterval(interval);
-				resolve();
-			}
-			// eslint-disable-next-line no-plusplus, no-param-reassign
-			currentAttempt++;
-		}, intervalTime);
+export const waitForCloseConnection = async (provider: WebSocketProvider) => {
+	return new Promise<ProviderRpcError>(resolve => {
+		provider.on('disconnect', ((_error, data) => {
+			resolve(data as unknown as ProviderRpcError);
+		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };

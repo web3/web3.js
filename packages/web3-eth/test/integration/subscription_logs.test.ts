@@ -20,6 +20,8 @@ import { Contract, decodeEventABI } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AbiEventFragment } from 'web3-eth-abi';
 import { Web3BaseProvider } from 'web3-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import IpcProvider from 'web3-providers-ipc';
 import { Web3Eth } from '../../src';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { eventAbi, Resolve } from './helper';
@@ -28,7 +30,9 @@ import {
 	describeIf,
 	getSystemTestProvider,
 	isWs,
+	isSocket,
 	createTempAccount,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 const checkEventCount = 2;
@@ -49,10 +53,10 @@ const makeFewTxToContract = async ({
 		prs.push(await contract.methods?.firesStringEvent(testDataString).send(sendOptions));
 	}
 };
-describeIf(isWs)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
 	let web3Eth: Web3Eth;
-	let providerWs: WebSocketProvider;
+	let provider: WebSocketProvider | IpcProvider;
 	let contract: Contract<typeof BasicAbi>;
 	let contractDeployed: Contract<typeof BasicAbi>;
 	let deployOptions: Record<string, unknown>;
@@ -65,19 +69,19 @@ describeIf(isWs)('subscription', () => {
 	});
 	beforeAll(() => {
 		clientUrl = getSystemTestProvider();
-		providerWs = new WebSocketProvider(clientUrl);
+		provider = isWs ? new WebSocketProvider(clientUrl) : new IpcProvider(clientUrl);
 		contract = new Contract(BasicAbi, undefined, {
 			provider: clientUrl,
 		});
 	});
-	afterAll(() => {
-		providerWs.disconnect();
-		(contract.provider as WebSocketProvider).disconnect();
+	afterAll(async () => {
+		provider.disconnect();
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('logs', () => {
 		it(`wait for ${checkEventCount} logs`, async () => {
-			web3Eth = new Web3Eth(providerWs as Web3BaseProvider);
+			web3Eth = new Web3Eth(provider as Web3BaseProvider);
 			const from = tempAcc.address;
 			deployOptions = {
 				data: BasicBytecode,

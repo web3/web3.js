@@ -62,29 +62,39 @@ describe('IpcProvider', () => {
 
 		it('should add listeners to socket', () => {
 			const provider = new IpcProvider(socketPath);
-			jest.spyOn(provider['_socket'], 'on');
+			// @ts-expect-error-next-line
+			jest.spyOn(provider._socketConnection, 'on');
 
-			expect(provider['_socket'].on).toHaveBeenCalledWith('connect', expect.any(Function));
-			expect(provider['_socket'].on).toHaveBeenCalledWith('end', expect.any(Function));
-			expect(provider['_socket'].on).toHaveBeenCalledWith('close', expect.any(Function));
-			expect(provider['_socket'].on).toHaveBeenCalledWith('data', expect.any(Function));
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.on).toHaveBeenCalledWith(
+				'connect',
+				expect.any(Function),
+			);
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.on).toHaveBeenCalledWith('end', expect.any(Function));
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.on).toHaveBeenCalledWith(
+				'close',
+				expect.any(Function),
+			);
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.on).toHaveBeenCalledWith(
+				'data',
+				expect.any(Function),
+			);
 		});
 
 		it('should connect to socket path', () => {
 			const provider = new IpcProvider(socketPath);
-			jest.spyOn(provider['_socket'], 'connect');
+			// @ts-expect-error-next-line
+			jest.spyOn(provider._socketConnection, 'connect');
 
-			expect(provider['_socket'].connect).toHaveBeenCalledTimes(1);
-			expect(provider['_socket'].connect).toHaveBeenCalledWith({ path: socketPath });
-		});
-		it('check wait params', () => {
-			const provider = new IpcProvider(socketPath);
-			expect(provider.waitTimeOut).toBe(5000);
-			expect(provider.waitMaxNumberOfAttempts).toBe(10);
-			provider.waitTimeOut = 300;
-			provider.waitMaxNumberOfAttempts = 20;
-			expect(provider.waitTimeOut).toBe(300);
-			expect(provider.waitMaxNumberOfAttempts).toBe(20);
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.connect).toHaveBeenCalledTimes(1);
+			// @ts-expect-error-next-line
+			expect(provider._socketConnection.connect).toHaveBeenCalledWith({
+				path: socketPath,
+			});
 		});
 	});
 });

@@ -20,11 +20,7 @@ import { hexToNumber, numberToHex, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionBuilder, TransactionTypeParser, Web3Context, Web3PromiEvent } from 'web3-core';
 import { Hardfork, TransactionReceipt, ValidChains, Web3BaseProvider } from 'web3-types';
 import {
-	TransactionBlockTimeoutError,
-	TransactionPollingTimeoutError,
-	TransactionSendTimeoutError,
-} from 'web3-errors';
-import {
+	detectTransactionType,
 	prepareTransactionForSigning,
 	SendTransactionEvents,
 	transactionBuilder,
@@ -36,9 +32,6 @@ import {
 	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
-	isIpc,
-	isWs,
-	itIf,
 } from '../fixtures/system_test_utils';
 
 import {
@@ -48,11 +41,8 @@ import {
 } from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
-import { detectTransactionType } from '../../dist';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
-import { Resolve, sendFewTxes } from './helper';
-
-const MAX_32_SIGNED_INTEGER = 2147483647;
+import { Resolve, sendFewTxes, sendFewTxesWithoutReceipt } from './helper';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -63,16 +53,9 @@ describe('defaults', () => {
 	let sendOptions: Record<string, unknown>;
 	let tempAcc: { address: string; privateKey: string };
 
-	beforeAll(() => {
+	beforeEach(async () => {
 		clientUrl = getSystemTestProvider();
 		web3Eth = new Web3Eth(clientUrl);
-	});
-
-	afterAll(async () => {
-		await closeOpenConnection(web3Eth);
-		await closeOpenConnection(eth2);
-	});
-	beforeEach(async () => {
 		tempAcc = await createTempAccount();
 		contract = new Contract(BasicAbi, web3Eth.getContextObject() as any);
 		deployOptions = {
@@ -80,6 +63,11 @@ describe('defaults', () => {
 			arguments: [10, 'string init value'],
 		};
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
+	});
+
+	afterEach(async () => {
+		await closeOpenConnection(web3Eth);
+		await closeOpenConnection(eth2);
 	});
 
 	describe('defaults', () => {
@@ -156,7 +144,6 @@ describe('defaults', () => {
 				tempAcc2.address.toLowerCase(),
 			);
 		});
-
 		it('handleRevert', () => {
 			/*
             //TO DO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
@@ -283,7 +270,6 @@ describe('defaults', () => {
 			});
 			expect(eth2.transactionSendTimeout).toBe(120);
 		});
-
 		it('transactionBlockTimeout', () => {
 			// default
 			expect(web3Eth.transactionBlockTimeout).toBe(50);
@@ -323,9 +309,7 @@ describe('defaults', () => {
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(eth2.transactionConfirmationBlocks).toBe(4);
 		});
-
-		// TODO: remove itIf when finish #5144
-		itIf(!isIpc)('transactionConfirmationBlocks implementation', async () => {
+		it('transactionConfirmationBlocks implementation', async () => {
 			const tempAcc2 = await createTempAccount();
 			const waitConfirmations = 1;
 			const eth = new Web3Eth(web3Eth.provider);
@@ -365,10 +349,16 @@ describe('defaults', () => {
 			});
 			await sentTx;
 			await receiptPromise;
-			await sendFewTxes({ web3Eth: eth, from, to, value, times: waitConfirmations });
+			await sendFewTxesWithoutReceipt({
+				web3Eth: eth,
+				from,
+				to,
+				value,
+				times: waitConfirmations,
+			});
 			await confirmationPromise;
+			await closeOpenConnection(eth);
 		});
-
 		it('transactionPollingInterval and transactionPollingTimeout', () => {
 			// default
 			expect(web3Eth.transactionPollingInterval).toBe(1000);
@@ -478,7 +468,6 @@ describe('defaults', () => {
 			});
 			expect(eth2.blockHeaderTimeout).toBe(4);
 		});
-
 		it('enableExperimentalFeatures', () => {
 			// default
 			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
@@ -503,7 +492,6 @@ describe('defaults', () => {
 				true,
 			);
 		});
-
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
 			const tempAcc2 = await createTempAccount();
 
@@ -574,172 +562,8 @@ describe('defaults', () => {
 			// Ensure the promise the get the confirmations resolves with no error
 			const status = await confirmationPromise;
 			expect(status).toBe(BigInt(1));
+			await closeOpenConnection(tempEth);
 		});
-
-		it('should fail if Ethereum Node did not respond because of a high nonce', async () => {
-			const eth = new Web3Eth(clientUrl);
-
-			// Make the test run faster by causing the timeout to happen after 0.2 second
-			eth.transactionSendTimeout = 200;
-			eth.transactionPollingTimeout = 200;
-
-			const from = tempAcc.address;
-			const to = (await createTempAccount()).address;
-			const value = `0x1`;
-
-			try {
-				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-				await eth.sendTransaction({
-					to,
-					value,
-					from,
-					// Give a high nonce so the transaction stuck forever.
-					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-				});
-				expect(true).toBe(false); // the test should fail if there is no exception
-			} catch (error) {
-				// Some providers would not respond to the RPC request when sending a transaction (like Ganache v7.4.0)
-				if (error instanceof TransactionSendTimeoutError) {
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(error.message).toContain(
-						`connected Ethereum Node did not respond within ${
-							eth.transactionSendTimeout / 1000
-						} seconds`,
-					);
-				}
-				// Some other providers would not respond when trying to get the transaction receipt (like Geth v1.10.22-unstable)
-				else if (error instanceof TransactionPollingTimeoutError) {
-					// eslint-disable-next-line jest/no-conditional-expect
-					expect(error.message).toContain(
-						`Transaction was not mined within ${
-							eth.transactionPollingTimeout / 1000
-						} seconds`,
-					);
-				} else {
-					throw error;
-				}
-			}
-		});
-
-		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
-			const eth = new Web3Eth(clientUrl);
-			const tempAcc1 = await createTempAccount();
-			const tempAcc2 = await createTempAccount();
-
-			// Make the test run faster by casing the polling to start after 2 blocks
-			eth.transactionBlockTimeout = 2;
-
-			// Increase other timeouts so only `transactionBlockTimeout` would be reached
-			eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
-			eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
-			eth.blockHeaderTimeout = MAX_32_SIGNED_INTEGER / 1000;
-
-			const from = tempAcc1.address;
-			const to = tempAcc2.address;
-			const value = `0x0`;
-
-			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-			const sentTx: Web3PromiEvent<
-				TransactionReceipt,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = eth.sendTransaction({
-				to,
-				value,
-				from,
-				// Give a high nonce so the transaction stuck forever.
-				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-				nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-			});
-
-			// Some providers (mostly used for development) will make blocks only when there are new transactions
-			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
-			// eslint-disable-next-line no-void
-			void sendFewTxes({
-				web3Eth: eth,
-				from: tempAcc2.address,
-				to: tempAcc1.address,
-				times: 2,
-				value: '0x1',
-			});
-
-			try {
-				await sentTx;
-				throw new Error(
-					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-				);
-			} catch (error) {
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-				// eslint-disable-next-line jest/no-conditional-expect
-				expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-			}
-		});
-
-		// The code of this test case is identical to the pervious one except for `eth.enableExperimentalFeatures = true`
-		// 	And this test case will be removed once https://github.com/web3/web3.js/issues/5521 is implemented.
-		itIf(isWs)(
-			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
-			async () => {
-				const eth = new Web3Eth(clientUrl);
-
-				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
-				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
-				eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
-
-				const tempAcc1 = await createTempAccount();
-				const tempAcc2 = await createTempAccount();
-
-				// Make the test run faster by casing the polling to start after 2 blocks
-				eth.transactionBlockTimeout = 2;
-
-				// Increase other timeouts so only `transactionBlockTimeout` would be reached
-				eth.transactionSendTimeout = MAX_32_SIGNED_INTEGER;
-				eth.transactionPollingTimeout = MAX_32_SIGNED_INTEGER;
-				eth.blockHeaderTimeout = MAX_32_SIGNED_INTEGER / 1000;
-
-				const from = tempAcc1.address;
-				const to = tempAcc2.address;
-				const value = `0x0`;
-
-				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-				const sentTx: Web3PromiEvent<
-					TransactionReceipt,
-					SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-				> = eth.sendTransaction({
-					to,
-					value,
-					from,
-					// Give a high nonce so the transaction stuck forever.
-					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-				});
-
-				// Some providers (mostly used for development) will make blocks only when there are new transactions
-				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
-				// eslint-disable-next-line no-void
-				void sendFewTxes({
-					web3Eth: eth,
-					from: tempAcc2.address,
-					to: tempAcc1.address,
-					times: 2,
-					value: '0x1',
-				});
-
-				try {
-					await sentTx;
-					throw new Error(
-						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
-					);
-				} catch (error) {
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect(error).toBeInstanceOf(TransactionBlockTimeoutError);
-					// eslint-disable-next-line jest/no-conditional-expect, jest/no-standalone-expect
-					expect((error as Error).message).toMatch(/was not mined within [0-9]+ blocks/);
-				}
-			},
-		);
-
 		it('maxListenersWarningThreshold test default config', () => {
 			// default
 			expect(web3Eth.maxListenersWarningThreshold).toBe(100);

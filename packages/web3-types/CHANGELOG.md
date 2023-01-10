@@ -58,3 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Make the `request` method of `EIP1193Provider` class, compatible with EIP 1193 (#5591)
 
 ## [Unreleased]
+
+### Changed
+
+-   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)

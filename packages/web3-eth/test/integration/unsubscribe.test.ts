@@ -16,19 +16,28 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws/dist';
 import { Web3BaseProvider } from 'web3-types';
-/* eslint-disable import/no-named-as-default */
+/* eslint-disable  import/no-extraneous-dependencies */
+import IpcProvider from 'web3-providers-ipc';
 import Web3Eth from '../../src/index';
 import { NewHeadsSubscription, SyncingSubscription } from '../../src/web3_subscriptions';
-import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	describeIf,
+	isWs,
+	isSocket,
+	closeOpenConnection,
+} from '../fixtures/system_test_utils';
 
-describeIf(isWs)('unsubscribe', () => {
+describeIf(isSocket)('unsubscribe', () => {
 	let web3Eth: Web3Eth;
-	let provider: WebSocketProvider;
+	let provider: WebSocketProvider | IpcProvider;
 	beforeAll(() => {
-		provider = new WebSocketProvider(getSystemTestProvider());
+		provider = isWs
+			? new WebSocketProvider(getSystemTestProvider())
+			: new IpcProvider(getSystemTestProvider());
 	});
-	afterAll(() => {
-		provider.disconnect();
+	afterAll(async () => {
+		await closeOpenConnection(web3Eth);
 	});
 
 	describe('unsubscribe from', () => {
