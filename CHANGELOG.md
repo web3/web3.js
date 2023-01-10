@@ -951,3 +951,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth
 
 -   Enable transaction with local wallet index in the `to` field (#5731)
+
+#### web3-eth
+
+-   Add error for invalid transaction receiver (#5731)
