@@ -958,3 +958,13 @@ should use 4.0.1-alpha.0 for testing.
 -   Parameters decoding error for nested components (#5714)
 
 ## [Unreleased]
+
+### Changed
+
+#### web3-providers-ipc
+
+-   Refactor to use common SocketProvider class (#5683)
+
+#### web3-providers-ws
+
+-   Refactor to use common SocketProvider class (#5683)
