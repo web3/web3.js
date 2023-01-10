@@ -7,7 +7,7 @@
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
 	"files": [
-		"dist/**/*"
+		"lib/**/*"
 	],
 	"scripts": {
 		"clean": "rimraf dist",

@@ -16,6 +16,7 @@
 		"API"
 	],
 	"files": [
+		"lib/**/*",
 		"dist/**/*"
 	],
 	"scripts": {

@@ -8,6 +8,7 @@
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
 	"files": [
+		"lib/**/*",
 		"dist/**/*"
 	],
 	"scripts": {
