@@ -2,7 +2,7 @@
 	"name": "web3",
 	"version": "4.0.1-alpha.3",
 	"description": "Ethereum JavaScript API",
-	"main": "dist/index.js",
+	"main": "lib/index.js",
 	"browser": "dist/web3.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
