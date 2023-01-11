@@ -313,7 +313,7 @@ describe('Web3RequestManager', () => {
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
 				await expect(manager.send(request)).rejects.toThrow(
-					new RpcError(parseErrorResponse),
+					new InvalidResponseError(parseErrorResponse),
 				);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
@@ -337,7 +337,7 @@ describe('Web3RequestManager', () => {
 				jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
 
 				await expect(manager.send(request)).rejects.toThrow(
-					new RpcError(parseErrorResponse),
+					new InvalidResponseError(parseErrorResponse),
 				);
 				expect(myProvider.request).toHaveBeenCalledTimes(1);
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
