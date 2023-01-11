@@ -54,3 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Updated dependencies (#5725)
 
 ## [Unreleased]
+
+### Changed
+
+-   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+-   Refactor to use common SocketProvider class (#5683)

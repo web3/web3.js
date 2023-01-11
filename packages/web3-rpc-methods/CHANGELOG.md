@@ -48,3 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Updated dependencies (#5725)
 
 ## [Unreleased]
+
+### Changed
+
+-   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)

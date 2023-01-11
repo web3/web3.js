@@ -1,4 +1,5 @@
 dist
+lib
 jest.config.js
 webpack.config.js
 .eslintrc.js

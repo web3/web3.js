@@ -2,7 +2,7 @@
 	"name": "web3",
 	"version": "4.0.1-alpha.3",
 	"description": "Ethereum JavaScript API",
-	"main": "dist/index.js",
+	"main": "lib/index.js",
 	"browser": "dist/web3.min.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
@@ -16,15 +16,16 @@
 		"API"
 	],
 	"files": [
+		"lib/**/*",
 		"dist/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "yarn version:output && tsc --build",
 		"version:output": "[ -z $npm_package_version ] && rm ./src/version.ts || echo \"/* eslint-disable header/header */ export const Web3PkgInfo = { version: '$npm_package_version' };\" > ./src/version.ts",
 		"build:web": "npx webpack",
-		"build:check": "node -e \"require('./dist')\"",
+		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",

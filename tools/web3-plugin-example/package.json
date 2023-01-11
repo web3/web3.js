@@ -14,13 +14,13 @@
 		"API"
 	],
 	"files": [
-		"dist/**/*"
+		"lib/**/*"
 	],
 	"scripts": {
-		"clean": "rimraf dist",
-		"prebuild": "rimraf dist",
+		"clean": "rimraf dist && rimraf lib",
+		"prebuild": "yarn clean",
 		"build": "tsc --build",
-		"build:check": "node -e \"require('./dist')\"",
+		"build:check": "node -e \"require('./lib')\"",
 		"lint": "eslint --ext .js,.ts .",
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
