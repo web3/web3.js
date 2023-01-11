@@ -46,6 +46,7 @@ export interface Web3ConfigOptions {
 	defaultMaxPriorityFeePerGas: Numbers;
 	enableExperimentalFeatures: {
 		useSubscriptionWhenCheckingBlockTimeout: boolean;
+		useRpcCallSpecification: boolean; // EIP-1474 https://eips.ethereum.org/EIPS/eip-1474
 		// other experimental features...
 	};
 	transactionBuilder?: TransactionBuilder;
@@ -86,6 +87,7 @@ export abstract class Web3Config
 		defaultMaxPriorityFeePerGas: toHex(2500000000),
 		enableExperimentalFeatures: {
 			useSubscriptionWhenCheckingBlockTimeout: false,
+			useRpcCallSpecification: false,
 		},
 		transactionBuilder: undefined,
 		transactionTypeParser: undefined,

@@ -479,7 +479,7 @@ describe('defaults', () => {
 			expect(eth2.blockHeaderTimeout).toBe(4);
 		});
 
-		it('enableExperimentalFeatures', () => {
+		it('enableExperimentalFeatures useSubscriptionWhenCheckingBlockTimeout', () => {
 			// default
 			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				false,
@@ -502,6 +502,25 @@ describe('defaults', () => {
 			expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				true,
 			);
+		});
+
+		it('enableExperimentalFeatures useRpcCallSpecification', () => {
+			// default
+			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(false);
+
+			// after set
+			web3Eth.setConfig({
+				enableExperimentalFeatures: { useRpcCallSpecification: true },
+			});
+			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+
+			// set by create new instance
+			eth2 = new Web3Eth({
+				config: {
+					enableExperimentalFeatures: { useRpcCallSpecification: true },
+				},
+			});
+			expect(eth2.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
 		});
 
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {

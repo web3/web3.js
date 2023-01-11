@@ -294,13 +294,35 @@ describe('Web3RequestManager', () => {
 			await expect(manager.send(request)).rejects.toThrow('Provider not available');
 		});
 
-		it('should pass request to provider and reject with an parse rpc error', async () => {
+		it('should pass request to provider and reject with a generic rpc error when rpc call specification is undefined', async () => {
 			const parseErrorResponse = {
 				id: 1,
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32700, message: 'Parse error' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined);
+			const myProvider = {
+				request: jest
+					.fn()
+					.mockImplementation((_, cb: (error?: any, data?: any) => void) => {
+						cb(parseErrorResponse);
+					}),
+			} as any;
+
+			jest.spyOn(manager, 'provider', 'get').mockReturnValue(myProvider);
+
+			await expect(manager.send(request)).rejects.toThrow(new RpcError(parseErrorResponse));
+			expect(myProvider.request).toHaveBeenCalledTimes(1);
+			expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
+		});
+
+		it('should pass request to provider and reject with an parse rpc error when rpc call specification is true', async () => {
+			const parseErrorResponse = {
+				id: 1,
+				jsonrpc: '2.0' as JsonRpcIdentifier,
+				error: { code: -32700, message: 'Parse error' },
+			};
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -322,7 +344,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32600, message: 'Invalid request' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -347,7 +369,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32601, message: 'Method not found' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -372,7 +394,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32602, message: 'Invalid params' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -396,7 +418,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32603, message: 'Internal error' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -420,7 +442,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32000, message: 'Invalid input' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -444,7 +466,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32001, message: 'Resource not found' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -468,7 +490,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32002, message: 'Resource unavailable' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -492,7 +514,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32003, message: 'Transaction rejected' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -516,7 +538,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32004, message: 'Method not supported' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -540,7 +562,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32005, message: 'Limit exceeded' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -564,7 +586,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32006, message: 'JSON-RPC version not supported' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()
@@ -588,7 +610,7 @@ describe('Web3RequestManager', () => {
 				jsonrpc: '2.0' as JsonRpcIdentifier,
 				error: { code: -32015, message: 'Custom rpc error' },
 			};
-			const manager = new Web3RequestManager();
+			const manager = new Web3RequestManager(undefined, undefined, true);
 			const myProvider = {
 				request: jest
 					.fn()

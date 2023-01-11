@@ -73,13 +73,18 @@ export class Web3RequestManager<
 	[key in Web3RequestManagerEvent]: SupportedProviders<API> | undefined;
 }> {
 	private _provider?: SupportedProviders<API>;
-
-	public constructor(provider?: SupportedProviders<API> | string, net?: Socket) {
+	private readonly useRpcCallSpecification?: boolean;
+	public constructor(
+		provider?: SupportedProviders<API> | string,
+		net?: Socket,
+		useRpcCallSpecification?: boolean,
+	) {
 		super();
 
 		if (!isNullish(provider)) {
 			this.setProvider(provider, net);
 		}
+		this.useRpcCallSpecification = useRpcCallSpecification;
 	}
 
 	public static get providers() {
@@ -323,13 +328,11 @@ export class Web3RequestManager<
 		// This is the majority of the cases so check these first
 		// A valid JSON-RPC response with error object
 		if (jsonRpc.isResponseWithError<ErrorType>(response)) {
+			// check if its an rpc error
 			if (isResponseRpcError(response as JsonRpcResponseWithError)) {
 				const rpcErrorResponse = response as JsonRpcResponseWithError;
-				// check if response error code and message match an EIP-1474 or a standard rpc error code
-				if (
-					rpcErrorsMap.get(rpcErrorResponse.error.code)?.message ===
-					rpcErrorResponse.error.message
-				) {
+				// check if rpc error flag is on and response error code match an EIP-1474 or a standard rpc error code
+				if (this.useRpcCallSpecification && rpcErrorsMap.get(rpcErrorResponse.error.code)) {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const Err = rpcErrorsMap.get(rpcErrorResponse.error.code)!.error;
 					throw new Err(rpcErrorResponse);

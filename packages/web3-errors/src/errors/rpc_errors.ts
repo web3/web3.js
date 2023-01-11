@@ -136,37 +136,30 @@ export class LimitExceededError extends RpcError {
 	}
 }
 
-export const rpcErrorsMap = new Map<number, { error: typeof RpcError; message: string }>();
-rpcErrorsMap.set(ERR_RPC_INVALID_JSON, { error: ParseError, message: 'Parse error' });
+export const rpcErrorsMap = new Map<number, { error: typeof RpcError }>();
+rpcErrorsMap.set(ERR_RPC_INVALID_JSON, { error: ParseError });
 rpcErrorsMap.set(ERR_RPC_INVALID_REQUEST, {
 	error: InvalidRequestError,
-	message: 'Invalid request',
 });
 rpcErrorsMap.set(ERR_RPC_INVALID_METHOD, {
 	error: MethodNotFoundError,
-	message: 'Method not found',
 });
-rpcErrorsMap.set(ERR_RPC_INVALID_PARAMS, { error: InvalidParamsError, message: 'Invalid params' });
-rpcErrorsMap.set(ERR_RPC_INTERNAL_ERROR, { error: InternalError, message: 'Internal error' });
-rpcErrorsMap.set(ERR_RPC_INVALID_INPUT, { error: InvalidInputError, message: 'Invalid input' });
+rpcErrorsMap.set(ERR_RPC_INVALID_PARAMS, { error: InvalidParamsError });
+rpcErrorsMap.set(ERR_RPC_INTERNAL_ERROR, { error: InternalError });
+rpcErrorsMap.set(ERR_RPC_INVALID_INPUT, { error: InvalidInputError });
 rpcErrorsMap.set(ERR_RPC_UNSUPPORTED_METHOD, {
 	error: MethodNotSupported,
-	message: 'Method not supported',
 });
 rpcErrorsMap.set(ERR_RPC_UNAVAILABLE_RESOURCE, {
 	error: ResourceUnavailableError,
-	message: 'Resource unavailable',
 });
 rpcErrorsMap.set(ERR_RPC_TRANSACTION_REJECTED, {
 	error: TransactionRejectedError,
-	message: 'Transaction rejected',
 });
 rpcErrorsMap.set(ERR_RPC_MISSING_RESOURCE, {
 	error: ResourcesNotFoundError,
-	message: 'Resource not found',
 });
 rpcErrorsMap.set(ERR_RPC_NOT_SUPPORTED, {
 	error: VersionNotSupportedError,
-	message: 'JSON-RPC version not supported',
 });
-rpcErrorsMap.set(ERR_RPC_LIMIT_EXCEEDED, { error: LimitExceededError, message: 'Limit exceeded' });
+rpcErrorsMap.set(ERR_RPC_LIMIT_EXCEEDED, { error: LimitExceededError });
