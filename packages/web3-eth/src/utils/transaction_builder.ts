@@ -30,7 +30,9 @@ import {
 	ValidChains,
 	Hardfork,
 	Transaction,
-	TransactionWithLocalWalletIndex,
+	TransactionWithFromLocalWalletIndex,
+	TransactionWithToLocalWalletIndex,
+	TransactionWithToAndFromLocalWalletIndex,
 	Common,
 	Web3NetAPI,
 	Numbers,
@@ -60,10 +62,14 @@ const isFromAttr = (attr: 'from' | 'to'): attr is 'from' => attr === 'from';
 const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
 	web3Context: Web3Context<EthExecutionAPI>,
-	transaction?: Transaction | TransactionWithLocalWalletIndex,
+	transaction?:
+		| Transaction
+		| TransactionWithFromLocalWalletIndex
+		| TransactionWithToLocalWalletIndex
+		| TransactionWithToAndFromLocalWalletIndex,
 	privateKey?: HexString | Buffer,
 ): Address | undefined => {
-	if (transaction?.[attr] !== undefined) {
+	if (transaction !== undefined && attr in transaction && transaction[attr] !== undefined) {
 		if (typeof transaction[attr] === 'string' && isAddress(transaction[attr] as string)) {
 			return transaction[attr] as Address;
 		}
