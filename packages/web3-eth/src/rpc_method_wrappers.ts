@@ -41,7 +41,7 @@ import {
 	Web3EthExecutionAPI,
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
-	TransactionWithToAndFromLocalWalletIndex,
+	TransactionWithFromAndToLocalWalletIndex,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
@@ -942,7 +942,7 @@ export async function getTransactionCount<ReturnFormat extends DataFormat>(
 
 /**
  * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
- * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex}, or {@link TransactionWithToAndFromLocalWalletIndex} to send.
+ * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex}, or {@link TransactionWithFromAndToLocalWalletIndex} to send.
  * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
  * @param options A configuration object used to change the behavior of the `sendTransaction` method.
  * @returns If `await`ed or `.then`d (i.e. the promise resolves), the transaction hash is returned.
@@ -1056,7 +1056,7 @@ export function sendTransaction<
 		| Transaction
 		| TransactionWithFromLocalWalletIndex
 		| TransactionWithToLocalWalletIndex
-		| TransactionWithToAndFromLocalWalletIndex,
+		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
 	options?: SendTransactionOptions<ResolveType>,
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {

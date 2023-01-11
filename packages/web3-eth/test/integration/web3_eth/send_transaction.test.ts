@@ -19,7 +19,7 @@ import {
 	Transaction,
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
-	TransactionWithToAndFromLocalWalletIndex,
+	TransactionWithFromAndToLocalWalletIndex,
 } from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import { isHexStrict } from 'web3-validator';
@@ -132,7 +132,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		web3EthWithWallet.wallet?.add(tempAcc2.privateKey);
 
-		const transaction: TransactionWithToAndFromLocalWalletIndex = {
+		const transaction: TransactionWithFromAndToLocalWalletIndex = {
 			from: 0,
 			to: 1,
 			gas: 21000,

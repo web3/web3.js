@@ -375,7 +375,7 @@ export interface TransactionWithToLocalWalletIndex extends Omit<Transaction, 'to
 	to: Numbers;
 }
 
-export interface TransactionWithToAndFromLocalWalletIndex extends Omit<Transaction, 'to' | 'from'> {
+export interface TransactionWithFromAndToLocalWalletIndex extends Omit<Transaction, 'from' | 'to'> {
 	from: Numbers;
 	to: Numbers;
 }

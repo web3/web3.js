@@ -32,7 +32,7 @@ import {
 	Transaction,
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
-	TransactionWithToAndFromLocalWalletIndex,
+	TransactionWithFromAndToLocalWalletIndex,
 	Common,
 	Web3NetAPI,
 	Numbers,
@@ -66,7 +66,7 @@ const getTransactionFromOrToAttr = (
 		| Transaction
 		| TransactionWithFromLocalWalletIndex
 		| TransactionWithToLocalWalletIndex
-		| TransactionWithToAndFromLocalWalletIndex,
+		| TransactionWithFromAndToLocalWalletIndex,
 	privateKey?: HexString | Buffer,
 ): Address | undefined => {
 	if (transaction !== undefined && attr in transaction && transaction[attr] !== undefined) {

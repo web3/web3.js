@@ -33,7 +33,7 @@ import {
 	Web3EthExecutionAPI,
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
-	TransactionWithToAndFromLocalWalletIndex,
+	TransactionWithFromAndToLocalWalletIndex,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
@@ -824,7 +824,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 	}
 
 	/**
-	 * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex} or {@link TransactionWithToAndFromLocalWalletIndex} to send.
+	 * @param transaction The {@link Transaction}, {@link TransactionWithFromLocalWalletIndex}, {@link TransactionWithToLocalWalletIndex} or {@link TransactionWithFromAndToLocalWalletIndex} to send.
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) Specifies how the return data should be formatted.
 	 * @param options A configuration object used to change the behavior of the `sendTransaction` method.
 	 * @returns If `await`ed or `.then`d (i.e. the promise resolves), the transaction hash is returned.
@@ -934,7 +934,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			| Transaction
 			| TransactionWithFromLocalWalletIndex
 			| TransactionWithToLocalWalletIndex
-			| TransactionWithToAndFromLocalWalletIndex,
+			| TransactionWithFromAndToLocalWalletIndex,
 		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
 		options?: SendTransactionOptions,
 	) {
