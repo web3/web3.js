@@ -477,7 +477,10 @@ describe('defaults', () => {
 
 			// after set
 			web3Eth.setConfig({
-				enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
+				enableExperimentalFeatures: {
+					useSubscriptionWhenCheckingBlockTimeout: true,
+					useRpcCallSpecification: false,
+				},
 			});
 			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				true,
@@ -486,7 +489,10 @@ describe('defaults', () => {
 			// set by create new instance
 			eth2 = new Web3Eth({
 				config: {
-					enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
+					enableExperimentalFeatures: {
+						useSubscriptionWhenCheckingBlockTimeout: true,
+						useRpcCallSpecification: false,
+					},
 				},
 			});
 			expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
@@ -500,14 +506,20 @@ describe('defaults', () => {
 
 			// after set
 			web3Eth.setConfig({
-				enableExperimentalFeatures: { useRpcCallSpecification: true },
+				enableExperimentalFeatures: {
+					useSubscriptionWhenCheckingBlockTimeout: false,
+					useRpcCallSpecification: true,
+				},
 			});
 			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
 
 			// set by create new instance
 			eth2 = new Web3Eth({
 				config: {
-					enableExperimentalFeatures: { useRpcCallSpecification: true },
+					enableExperimentalFeatures: {
+						useSubscriptionWhenCheckingBlockTimeout: false,
+						useRpcCallSpecification: true,
+					},
 				},
 			});
 			expect(eth2.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
