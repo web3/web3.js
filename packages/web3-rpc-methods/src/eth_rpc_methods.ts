@@ -46,7 +46,7 @@ export async function getSyncing(requestManager: Web3RequestManager) {
 
 export async function getCoinbase(requestManager: Web3RequestManager) {
 	return requestManager.send({
-		method: 'test',
+		method: 'eth_coinbase',
 		params: [],
 	});
 }
