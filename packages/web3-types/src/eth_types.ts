@@ -359,7 +359,8 @@ interface TransactionBase {
 
 export interface Transaction extends TransactionBase {
 	from?: Address;
-	to?: Address;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | null;
 }
 
 export interface TransactionCall extends Transaction {
