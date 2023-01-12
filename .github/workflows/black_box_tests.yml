@@ -3,6 +3,7 @@ on:
     push:
       branches:
         - release/**
+        - */4.x/black-box-test/**
       tags:
         - v4.*
 jobs:
@@ -47,4 +48,31 @@ jobs:
         - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         - run: |
             yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash
+  black-box-web:
+      name: Black Box Browser Tests
+      needs: build
+      runs-on: ubuntu-latest
+      env:
+        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+        INFURA_WSS: ${{ secrets.INFURA_WSS }}
+        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        MODE: ${{ matrix.mode }}
+      strategy:
+        fail-fast: false
+        matrix:
+          node: [14, 16]
+          mode: ['http', 'ws']
+          backend: ['geth', 'infura']
+          browser: ['chrome', 'firefox', 'electron']
+      steps:
+        - uses: browser-actions/setup-firefox@latest
+          if: matrix.browser == 'firefox'
+        - uses: actions/download-artifact@v3
+          with:
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
+        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: |
+            yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}:${{ matrix.browser }}
           shell: bash
