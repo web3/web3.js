@@ -5,6 +5,9 @@
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
 	"scripts": {
+		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
+		"test:e2e:electron": "npx cypress run --headless --browser electron",
+		"test:e2e:firefox": "npx cypress run --headless --browser firefox",
 		"test:ganache:http": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
 		"test:ganache:ws": "WEB3_SYSTEM_TEST_BACKEND=ganache WEB3_SYSTEM_TEST_PROVIDER=ws://localhost:8545 jest --forceExit",
 		"test:geth:http": "WEB3_SYSTEM_TEST_BACKEND=geth WEB3_SYSTEM_TEST_PROVIDER=http://localhost:8545 jest",
@@ -34,7 +37,8 @@
 		"web3-eth": "5.0.0",
 		"web3-eth-abi": "5.0.0",
 		"web3-eth-contract": "5.0.0",
+		"web3-types": "5.0.0",
 		"web3-validator": "5.0.0",
-		"web3-types": "5.0.0"
+		"webpack": "^5.75.0"
 	}
 }
