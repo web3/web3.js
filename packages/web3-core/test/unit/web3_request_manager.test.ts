@@ -343,7 +343,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an parse rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with a parse rpc error when rpc call specification flag is true', async () => {
 				const parseErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
@@ -465,7 +465,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an Invalid input rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with an invalid input rpc error when rpc call specification flag is true', async () => {
 				const rpcErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
@@ -489,7 +489,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an resource not found rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with a resource not found rpc error when rpc call specification flag is true', async () => {
 				const rpcErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
@@ -513,7 +513,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an resource unavailable rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with a resource unavailable rpc error when rpc call specification flag is true', async () => {
 				const rpcErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
@@ -537,7 +537,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an Transaction rejected rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with a transaction rejected rpc error when rpc call specification flag is true', async () => {
 				const rpcErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
@@ -561,7 +561,7 @@ describe('Web3RequestManager', () => {
 				expect(myProvider.request).toHaveBeenCalledWith(payload, expect.any(Function));
 			});
 
-			it('should pass request to provider and reject with an method not supported rpc error when rpc call specification flag is true', async () => {
+			it('should pass request to provider and reject with a method not supported rpc error when rpc call specification flag is true', async () => {
 				const rpcErrorResponse = {
 					id: 1,
 					jsonrpc: '2.0' as JsonRpcIdentifier,
