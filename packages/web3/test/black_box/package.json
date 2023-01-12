@@ -32,6 +32,7 @@
 		"ts-jest": "^28.0.7",
 		"ts-loader": "^9.4.1",
 		"ts-node": "^10.9.1",
+		"typescript": "^4.9.4",
 		"web3": "5.0.0",
 		"web3-core": "5.0.0",
 		"web3-eth": "5.0.0",
