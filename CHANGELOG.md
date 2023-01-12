@@ -957,7 +957,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Parameters decoding error for nested components (#5714)
 
-## [Unreleased]
+## [4.0.1-alpha.4]
 
 ### Changed
 
@@ -968,7 +968,6 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-core
 
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
--   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
 
 #### web3-errors
 
@@ -1049,3 +1048,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-types
 
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
+
+## [Unreleased]
+
+-   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)

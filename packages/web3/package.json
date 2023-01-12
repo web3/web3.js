@@ -1,6 +1,6 @@
 {
 	"name": "web3",
-	"version": "4.0.1-alpha.3",
+	"version": "4.0.1-alpha.4",
 	"description": "Ethereum JavaScript API",
 	"main": "lib/index.js",
 	"browser": "dist/web3.min.js",
@@ -59,22 +59,22 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-providers-http": "^4.0.1-alpha.3",
-		"web3-providers-ipc": "^4.0.1-alpha.3",
-		"web3-providers-ws": "^4.0.1-alpha.3"
+		"web3-providers-http": "^4.0.1-alpha.4",
+		"web3-providers-ipc": "^4.0.1-alpha.4",
+		"web3-providers-ws": "^4.0.1-alpha.4"
 	},
 	"dependencies": {
-		"web3-core": "^4.0.1-alpha.3",
-		"web3-errors": "^0.1.1-alpha.2",
-		"web3-eth": "^4.0.1-alpha.3",
-		"web3-eth-abi": "^4.0.1-alpha.3",
-		"web3-eth-accounts": "^4.0.1-alpha.3",
-		"web3-eth-contract": "^4.0.1-alpha.3",
-		"web3-eth-ens": "^4.0.1-alpha.3",
-		"web3-eth-iban": "^4.0.1-alpha.3",
-		"web3-eth-personal": "^4.0.1-alpha.3",
-		"web3-net": "^4.0.1-alpha.3",
-		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.3"
+		"web3-core": "^4.0.1-alpha.4",
+		"web3-errors": "^0.1.1-alpha.3",
+		"web3-eth": "^4.0.1-alpha.4",
+		"web3-eth-abi": "^4.0.1-alpha.4",
+		"web3-eth-accounts": "^4.0.1-alpha.4",
+		"web3-eth-contract": "^4.0.1-alpha.4",
+		"web3-eth-ens": "^4.0.1-alpha.4",
+		"web3-eth-iban": "^4.0.1-alpha.4",
+		"web3-eth-personal": "^4.0.1-alpha.4",
+		"web3-net": "^4.0.1-alpha.4",
+		"web3-types": "^0.1.1-alpha.3",
+		"web3-utils": "^4.0.1-alpha.4"
 	}
 }

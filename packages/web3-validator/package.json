@@ -1,6 +1,6 @@
 {
 	"name": "web3-validator",
-	"version": "0.1.1-alpha.3",
+	"version": "0.1.1-alpha.4",
 	"description": "JSON-Schema compatible validator for web3",
 	"main": "lib/index.js",
 	"browser": "dist/web3-validator.min.js",
@@ -30,8 +30,8 @@
 	"dependencies": {
 		"ajv": "^8.11.0",
 		"ethereum-cryptography": "^1.1.2",
-		"web3-errors": "^0.1.1-alpha.2",
-		"web3-types": "^0.1.1-alpha.2"
+		"web3-errors": "^0.1.1-alpha.3",
+		"web3-types": "^0.1.1-alpha.3"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",

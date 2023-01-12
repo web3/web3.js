@@ -1,6 +1,6 @@
 {
 	"name": "web3-core",
-	"version": "4.0.1-alpha.3",
+	"version": "4.0.1-alpha.4",
 	"description": "Web3 core tools for sub-packages. This is an internal package.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -25,14 +25,14 @@
 		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
 	},
 	"dependencies": {
-		"web3-errors": "^0.1.1-alpha.2",
-		"web3-eth-iban": "^4.0.1-alpha.3",
-		"web3-providers-http": "^4.0.1-alpha.3",
-		"web3-providers-ipc": "^4.0.1-alpha.3",
-		"web3-providers-ws": "^4.0.1-alpha.3",
-		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.3",
-		"web3-validator": "^0.1.1-alpha.3"
+		"web3-errors": "^0.1.1-alpha.3",
+		"web3-eth-iban": "^4.0.1-alpha.4",
+		"web3-providers-http": "^4.0.1-alpha.4",
+		"web3-providers-ipc": "^4.0.1-alpha.4",
+		"web3-providers-ws": "^4.0.1-alpha.4",
+		"web3-types": "^0.1.1-alpha.3",
+		"web3-utils": "^4.0.1-alpha.4",
+		"web3-validator": "^0.1.1-alpha.4"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
