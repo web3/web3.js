@@ -96,6 +96,7 @@ startBackgroundAndPublish() {
 case $1 in
 start) start ;;
 stop) stop ;;
+prePublish) prePublish ;;
 publish) publish ;;
 startBackgroundAndPrePublish) startBackgroundAndPrePublish;;
 startBackgroundAndPublish) startBackgroundAndPublish ;;
