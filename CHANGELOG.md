@@ -1050,3 +1050,9 @@ should use 4.0.1-alpha.0 for testing.
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
 
 ## [Unreleased]
+
+### Added
+
+#### web3
+
+-   Black box tests to be executed within a browser environment (#5754)

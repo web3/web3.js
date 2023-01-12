@@ -60,3 +60,7 @@ web3.currentProvider.disconnect();
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 
 ## [Unreleased]
+
+### Added
+
+-   Black box tests to be executed within a browser environment (#5754)
