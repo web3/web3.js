@@ -3,7 +3,7 @@
 ORIGARGS=("$@")
 
 helpFunction() {
-	echo "Usage: $0 [start|stop|publish|startAndPublish] [background]"
+	echo "Usage: $0 [start|stop|publish|startBackgroundAndPrePublish|startBackgroundAndPublish] [background]"
 	exit 1 # Exit script after printing help
 }
 
@@ -68,8 +68,8 @@ lernaPublish() {
         --yes
 }
 
-publish() {
-    echo "Publishing to verdaccio ..."
+prePublish() {
+    echo "Performing pre-publish steps..."
 
     npx wait-port -t 60000 4873
 
@@ -77,7 +77,16 @@ publish() {
     loginNPMUser
     lernaUpdatePackageVersions
     lernaBuildAndCommit
-    lernaPublish
+}
+
+publish() {
+    echo "Publishing to verdaccio ..."
+
+    prePublish && lernaPublish
+}
+
+startBackgroundAndPrePublish() {
+    startBackground && prePublish
 }
 
 startBackgroundAndPublish() {
@@ -88,6 +97,7 @@ case $1 in
 start) start ;;
 stop) stop ;;
 publish) publish ;;
+startBackgroundAndPrePublish) startBackgroundAndPrePublish;;
 startBackgroundAndPublish) startBackgroundAndPublish ;;
 createVerdaccioNPMUser) createVerdaccioNPMUser ;;
 loginNPMUser) loginNPMUser ;;
