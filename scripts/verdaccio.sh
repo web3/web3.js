@@ -53,6 +53,7 @@ lernaUpdatePackageVersions() {
 
 lernaBuildAndCommit() {
     yarn build
+    yarn build:web
 
     git add .
     git commit -m "Comitting for black box publish"
