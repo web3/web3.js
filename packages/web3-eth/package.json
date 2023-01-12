@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth",
-	"version": "4.0.1-alpha.3",
+	"version": "4.0.1-alpha.4",
 	"description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -40,21 +40,21 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3-eth-abi": "^4.0.1-alpha.3",
-		"web3-providers-http": "^4.0.1-alpha.3"
+		"web3-eth-abi": "^4.0.1-alpha.4",
+		"web3-providers-http": "^4.0.1-alpha.4"
 	},
 	"dependencies": {
 		"@ethereumjs/common": "^2.6.5",
 		"@ethereumjs/tx": "^3.5.2",
 		"setimmediate": "^1.0.5",
-		"web3-core": "^4.0.1-alpha.3",
-		"web3-errors": "^0.1.1-alpha.2",
-		"web3-eth-accounts": "^4.0.1-alpha.3",
-		"web3-net": "^4.0.1-alpha.3",
-		"web3-providers-ws": "^4.0.1-alpha.3",
-		"web3-rpc-methods": "^0.1.0-alpha.2",
-		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.3",
-		"web3-validator": "^0.1.1-alpha.3"
+		"web3-core": "^4.0.1-alpha.4",
+		"web3-errors": "^0.1.1-alpha.3",
+		"web3-eth-accounts": "^4.0.1-alpha.4",
+		"web3-net": "^4.0.1-alpha.4",
+		"web3-providers-ws": "^4.0.1-alpha.4",
+		"web3-rpc-methods": "^0.1.0-alpha.3",
+		"web3-types": "^0.1.1-alpha.3",
+		"web3-utils": "^4.0.1-alpha.4",
+		"web3-validator": "^0.1.1-alpha.4"
 	}
 }

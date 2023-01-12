@@ -1,6 +1,6 @@
 {
 	"name": "web3-plugin-example",
-	"version": "0.1.0-alpha.2",
+	"version": "0.1.0-alpha.3",
 	"description": "Example implementations of Web3.js' 4.x plugin system",
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"engines": {
@@ -43,12 +43,12 @@
 		"prettier": "^2.7.1",
 		"ts-jest": "^28.0.7",
 		"typescript": "^4.7.4",
-		"web3": "^4.0.1-alpha.3",
-		"web3-core": "^4.0.1-alpha.3",
-		"web3-eth-abi": "^4.0.1-alpha.3",
-		"web3-eth-contract": "^4.0.1-alpha.3",
-		"web3-types": "^0.1.1-alpha.2",
-		"web3-utils": "^4.0.1-alpha.3"
+		"web3": "^4.0.1-alpha.4",
+		"web3-core": "^4.0.1-alpha.4",
+		"web3-eth-abi": "^4.0.1-alpha.4",
+		"web3-eth-contract": "^4.0.1-alpha.4",
+		"web3-types": "^0.1.1-alpha.3",
+		"web3-utils": "^4.0.1-alpha.4"
 	},
 	"peerDependencies": {
 		"web3-core": ">= 4.0.1-alpha.0 < 5",
