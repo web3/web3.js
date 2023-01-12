@@ -11,8 +11,7 @@ helpFunction() {
 
 BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
-PROVIDER_URL=${ORIGARGS[2]}
-BROWSER=${ORIGARGS[3]}
+BROWSER=${ORIGARGS[2]}
 
 SUPPORTED_BACKENDS=("ganache" "geth" "infura")
 SUPPORTED_MODE=("http" "ws")
