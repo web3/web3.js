@@ -37,6 +37,7 @@ import {
 	ERR_TX_INVALID_NONCE_OR_CHAIN_ID,
 	ERR_TX_INVALID_OBJECT,
 	ERR_TX_INVALID_SENDER,
+	ERR_TX_INVALID_RECEIVER,
 	ERR_TX_LOCAL_WALLET_NOT_AVAILABLE,
 	ERR_TX_MISSING_CHAIN_INFO,
 	ERR_TX_MISSING_CUSTOM_CHAIN,
@@ -168,7 +169,13 @@ export class InvalidTransactionWithSender extends InvalidValueError {
 		super(value, 'invalid transaction with sender');
 	}
 }
+export class InvalidTransactionWithReceiver extends InvalidValueError {
+	public code = ERR_TX_INVALID_RECEIVER;
 
+	public constructor(value: unknown) {
+		super(value, 'invalid transaction with receiver');
+	}
+}
 export class InvalidTransactionCall extends InvalidValueError {
 	public code = ERR_TX_INVALID_CALL;
 

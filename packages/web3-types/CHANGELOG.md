@@ -65,3 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
 
 ## [Unreleased]
+
+### Added
+
+-   Add `TransactionWithFromLocalWalletIndex`, `TransactionWithToLocalWalletIndex` and `TransactionWithFromAndToLocalWalletIndex` types (#5731)
