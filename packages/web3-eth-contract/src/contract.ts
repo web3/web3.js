@@ -210,71 +210,6 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public readonly options: ContractOptions;
 
-	/**
-	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
-	 */
-	public static defaultAccount?: HexString;
-
-	/**
-	 * Can be used to set {@link Contract.defaultBlock} for all contracts.
-	 */
-	public static defaultBlock?: BlockNumberOrTag;
-
-	/**
-	 * Can be used to set {@link Contract.defaultHardfork} for all contracts.
-	 */
-	public static defaultHardfork?: string;
-
-	/**
-	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
-	 */
-	public static defaultCommon?: Common;
-
-	/**
-	 * Can be used to set {@link Contract.transactionSendTimeout} for all contracts.
-	 */
-	public static transactionSendTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionBlockTimeout} for all contracts.
-	 */
-	public static transactionBlockTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionConfirmationBlocks} for all contracts.
-	 */
-	public static transactionConfirmationBlocks?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionPollingInterval} for all contracts.
-	 */
-	public static transactionPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionPollingTimeout} for all contracts.
-	 */
-	public static transactionPollingTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionReceiptPollingInterval} for all contracts.
-	 */
-	public static transactionReceiptPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionConfirmationPollingInterval} for all contracts.
-	 */
-	public static transactionConfirmationPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.blockHeaderTimeout} for all contracts.
-	 */
-	public static blockHeaderTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.handleRevert} for all contracts.
-	 */
-	public static handleRevert?: boolean;
-
 	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
 	private _address?: Address;
@@ -429,12 +364,33 @@ export class Contract<Abi extends ContractAbi>
 		});
 	}
 
+	/**
+	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
+	 */
+	public static get defaultAccount() {
+		return (this.constructor as typeof Contract).defaultAccount;
+	}
+
+	public static set defaultAccount(value: Address | undefined) {
+		Contract.defaultAccount = value;
+	}
 	public get defaultAccount() {
 		return (this.constructor as typeof Contract).defaultAccount ?? super.defaultAccount;
 	}
 
 	public set defaultAccount(value: Address | undefined) {
 		super.defaultAccount = value;
+	}
+
+	/**
+	 * Can be used to set {@link Contract.defaultBlock} for all contracts.
+	 */
+	public static get defaultBlock() {
+		return (this.constructor as typeof Contract).defaultBlock;
+	}
+
+	public static set defaultBlock(value: BlockNumberOrTag) {
+		Contract.defaultBlock = value;
 	}
 
 	public get defaultBlock() {
@@ -445,6 +401,17 @@ export class Contract<Abi extends ContractAbi>
 		super.defaultBlock = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.defaultHardfork} for all contracts.
+	 */
+	public static get defaultHardfork() {
+		return (this.constructor as typeof Contract).defaultHardfork;
+	}
+
+	public static set defaultHardfork(value: string) {
+		Contract.defaultHardfork = value;
+	}
+
 	public get defaultHardfork() {
 		return (this.constructor as typeof Contract).defaultHardfork ?? super.defaultHardfork;
 	}
@@ -453,12 +420,34 @@ export class Contract<Abi extends ContractAbi>
 		super.defaultHardfork = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
+	 */
+	public static get defaultCommon(): Common | undefined {
+		return (this.constructor as typeof Contract).defaultCommon;
+	}
+
+	public static set defaultCommon(value: Common | undefined) {
+		(this.constructor as typeof Contract).defaultCommon = value;
+	}
+
 	public get defaultCommon(): Common | undefined {
 		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
 	}
 
 	public set defaultCommon(value: Common | undefined) {
 		super.defaultCommon = value;
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+		// (this as unknown as Web3Context).setConfig({ defaultCommon: value });
+		// this.contractWeb3Config.defaultCommon = value;
+	}
+
+	public static get transactionSendTimeout() {
+		return (this.constructor as typeof Contract).transactionSendTimeout;
+	}
+
+	public static set transactionSendTimeout(value: number) {
+		Contract.transactionSendTimeout = value;
 	}
 
 	public get transactionSendTimeout() {
@@ -472,6 +461,17 @@ export class Contract<Abi extends ContractAbi>
 		super.transactionSendTimeout = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.transactionBlockTimeout} for all contracts.
+	 */
+	public static get transactionBlockTimeout() {
+		return (this.constructor as typeof Contract).transactionBlockTimeout;
+	}
+
+	public static set transactionBlockTimeout(value: number | undefined) {
+		Contract.transactionBlockTimeout = value;
+	}
+
 	public get transactionBlockTimeout() {
 		return (
 			(this.constructor as typeof Contract).transactionBlockTimeout ??
@@ -481,6 +481,17 @@ export class Contract<Abi extends ContractAbi>
 
 	public set transactionBlockTimeout(value: number) {
 		super.transactionBlockTimeout = value;
+	}
+
+	/**
+	 * Can be used to set {@link Contract.transactionConfirmationBlocks} for all contracts.
+	 */
+	public static get transactionConfirmationBlocks() {
+		return (this.constructor as typeof Contract).transactionConfirmationBlocks;
+	}
+
+	public static set transactionConfirmationBlocks(value: number) {
+		Contract.transactionConfirmationBlocks = value;
 	}
 
 	public get transactionConfirmationBlocks() {
@@ -494,6 +505,17 @@ export class Contract<Abi extends ContractAbi>
 		super.transactionConfirmationBlocks = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.transactionPollingInterval} for all contracts.
+	 */
+	public static get transactionPollingInterval() {
+		return (this.constructor as typeof Contract).transactionPollingInterval;
+	}
+
+	public static set transactionPollingInterval(value: number) {
+		Contract.transactionPollingInterval = value;
+	}
+
 	public get transactionPollingInterval() {
 		return (
 			(this.constructor as typeof Contract).transactionPollingInterval ??
@@ -503,6 +525,17 @@ export class Contract<Abi extends ContractAbi>
 
 	public set transactionPollingInterval(value: number) {
 		super.transactionPollingInterval = value;
+	}
+
+	/**
+	 * Can be used to set {@link Contract.transactionPollingTimeout} for all contracts.
+	 */
+	public static get transactionPollingTimeout() {
+		return (this.constructor as typeof Contract).transactionPollingTimeout;
+	}
+
+	public static set transactionPollingTimeout(value: number) {
+		Contract.transactionPollingTimeout = value;
 	}
 
 	public get transactionPollingTimeout() {
@@ -516,6 +549,17 @@ export class Contract<Abi extends ContractAbi>
 		super.transactionPollingTimeout = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.transactionReceiptPollingInterval} for all contracts.
+	 */
+	public static get transactionReceiptPollingInterval() {
+		return (this.constructor as typeof Contract).transactionReceiptPollingInterval;
+	}
+
+	public static set transactionReceiptPollingInterval(value: number) {
+		Contract.transactionReceiptPollingInterval = value;
+	}
+
 	public get transactionReceiptPollingInterval() {
 		return (
 			(this.constructor as typeof Contract).transactionReceiptPollingInterval ??
@@ -525,6 +569,17 @@ export class Contract<Abi extends ContractAbi>
 
 	public set transactionReceiptPollingInterval(value: number | undefined) {
 		super.transactionReceiptPollingInterval = value;
+	}
+
+	/**
+	 * Can be used to set {@link Contract.transactionConfirmationPollingInterval} for all contracts.
+	 */
+	public static get transactionConfirmationPollingInterval() {
+		return (this.constructor as typeof Contract).transactionConfirmationPollingInterval;
+	}
+
+	public static set transactionConfirmationPollingInterval(value: number) {
+		Contract.transactionConfirmationPollingInterval = value;
 	}
 
 	public get transactionConfirmationPollingInterval() {
@@ -538,12 +593,34 @@ export class Contract<Abi extends ContractAbi>
 		super.transactionConfirmationPollingInterval = value;
 	}
 
+	/**
+	 * Can be used to set {@link Contract.blockHeaderTimeout} for all contracts.
+	 */
+	public static get blockHeaderTimeout() {
+		return (this.constructor as typeof Contract).blockHeaderTimeout;
+	}
+
+	public static set blockHeaderTimeout(value: number | undefined) {
+		Contract.blockHeaderTimeout = value;
+	}
+
 	public get blockHeaderTimeout() {
 		return (this.constructor as typeof Contract).blockHeaderTimeout ?? super.blockHeaderTimeout;
 	}
 
 	public set blockHeaderTimeout(value: number) {
 		super.blockHeaderTimeout = value;
+	}
+
+	/**
+	 * Can be used to set {@link Contract.handleRevert} for all contracts.
+	 */
+	public static get handleRevert() {
+		return (this.constructor as typeof Contract).handleRevert;
+	}
+
+	public static set handleRevert(value: boolean) {
+		Contract.handleRevert = value;
 	}
 
 	public get handleRevert() {
