@@ -26,6 +26,8 @@ describe('Black Box Unit Tests - web3.eth.getTransaction', () => {
 	let web3: Web3;
 
 	beforeAll(() => {
+		// eslint-disable-next-line
+		console.log('PROCESS ENV THIS', process.env);
 		web3 = new Web3(getSystemTestProvider());
 	});
 
