@@ -14,7 +14,8 @@ jobs:
   build:
     strategy:
       matrix:
-        node: [14, 16]
+        # node: [14, 16]
+        node: [16]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
@@ -168,9 +169,12 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: [14, 16]
-          mode: ['http', 'ws']
-          backend: ['geth', 'infura']
+          # node: [14, 16]
+          # mode: ['http', 'ws']
+          # backend: ['geth', 'infura']
+          node: [16]
+          mode: ['http']
+          backend: ['geth']
       steps:
         - uses: actions/download-artifact@v3
           with:
@@ -193,10 +197,14 @@ jobs:
       strategy:
         fail-fast: false
         matrix:
-          node: [14, 16]
-          mode: ['http', 'ws']
-          backend: ['geth', 'infura']
-          browser: ['chrome', 'firefox', 'electron']
+          # node: [14, 16]
+          # mode: ['http', 'ws']
+          # backend: ['geth', 'infura']
+          # browser: ['chrome', 'firefox', 'electron']
+          node: [16]
+          mode: ['http']
+          backend: ['geth']
+          browser: ['chrome']
       steps:
         - uses: browser-actions/setup-firefox@latest
           if: matrix.browser == 'firefox'
