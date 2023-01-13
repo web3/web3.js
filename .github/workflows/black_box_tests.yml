@@ -4,6 +4,7 @@ on:
       branches:
         - release/**
         - */4.x/black-box-test/**
+        - wyatt/4.x/browser-build-tests
       tags:
         - v4.*
 jobs:
