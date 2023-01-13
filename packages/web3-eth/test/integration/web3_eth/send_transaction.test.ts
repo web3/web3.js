@@ -142,7 +142,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		expect(minedTransactionData).toMatchObject({
 			from: tempAcc.address,
-			to: wallet.get(1)?.address.toLocaleLowerCase(),
+			to: wallet.get(1)?.address.toLowerCase(),
 			value: BigInt(1),
 		});
 	});
