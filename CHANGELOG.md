@@ -1050,3 +1050,13 @@ should use 4.0.1-alpha.0 for testing.
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
 
 ## [Unreleased]
+
+### Removed
+
+#### web3
+
+-   `build` entry from `package.json` (#5755)
+
+#### web3-validator
+
+-   `build` entry from `package.json` (#5755)

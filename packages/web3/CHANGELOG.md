@@ -60,3 +60,7 @@ web3.currentProvider.disconnect();
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 
 ## [Unreleased]
+
+### Removed
+
+-   `build` entry from `package.json` (#5755)
