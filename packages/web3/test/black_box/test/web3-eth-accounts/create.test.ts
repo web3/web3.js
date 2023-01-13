@@ -24,8 +24,6 @@ import {
 } from 'web3/test/shared_fixtures/system_tests_utils';
 import { validator } from 'web3-validator';
 
-jest.setTimeout(15000);
-
 // TODO Consider adding this to web3.eth.accounts package
 const accountSchema = {
 	type: 'object',
