@@ -15,7 +15,12 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Transaction, TransactionWithLocalWalletIndex } from 'web3-types';
+import {
+	Transaction,
+	TransactionWithFromLocalWalletIndex,
+	TransactionWithToLocalWalletIndex,
+	TransactionWithFromAndToLocalWalletIndex,
+} from 'web3-types';
 import { Wallet } from 'web3-eth-accounts';
 import { isHexStrict } from 'web3-validator';
 
@@ -63,7 +68,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		web3EthWithWallet.wallet?.add(tempAcc.privateKey);
 
-		const transaction: TransactionWithLocalWalletIndex = {
+		const transaction: TransactionWithFromLocalWalletIndex = {
 			from: 0,
 			to: '0x0000000000000000000000000000000000000000',
 			gas: 21000,
@@ -93,7 +98,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		web3EthWithWallet.wallet?.add(tempAcc.privateKey);
 
-		const transaction: TransactionWithLocalWalletIndex = {
+		const transaction: TransactionWithToLocalWalletIndex = {
 			from: tempAcc.address,
 			to: 0,
 			gas: 21000,
@@ -127,7 +132,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 		web3EthWithWallet.wallet?.add(tempAcc2.privateKey);
 
-		const transaction: TransactionWithLocalWalletIndex = {
+		const transaction: TransactionWithFromAndToLocalWalletIndex = {
 			from: 0,
 			to: 1,
 			gas: 21000,
