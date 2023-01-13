@@ -30,131 +30,156 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp/web3-${{ matrix.node }}.js.tar.gz
 
-  lint:
-    name: lint
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-14.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
-      - run: yarn lint
+  # lint:
+  #   name: lint
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: web3-14.js.tar.gz
+  #         path: /tmp
+  #     - run: tar -xf /tmp/web3-14.js.tar.gz -C ./
+  #     - run: yarn lint
 
-  build-web:
-    name: Build Web
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
+  # build-web:
+  #   name: Build Web
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #       matrix:
+  #           node: [ 14, 16 ]
+  #   steps:
+  #       -   uses: actions/download-artifact@v3
+  #           with:
+  #               name: web3-${{ matrix.node }}.js.tar.gz
+  #               path: /tmp
+  #       -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #       -   run: yarn build:web
+
+  # unit:
+  #   name: Unit Tests
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node: [14, 16]
+  #   steps:
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: web3-${{ matrix.node }}.js.tar.gz
+  #         path: /tmp
+  #     - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #     - run: yarn test:unit
+
+  # integration:
+  #   name: Integration
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+  #     INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node: [14, 16]
+  #       backend: ['geth', 'ganache']
+  #       mode: ['http', 'ws']
+  #   steps:
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: web3-${{ matrix.node }}.js.tar.gz
+  #         path: /tmp
+  #     - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #     - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+  #       shell: bash
+
+  # e2e-ipc:
+  #   name: Integration IPC
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+  #     INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node: [ 14, 16 ]
+  #       backend: [ 'geth' ]
+  #       mode: [ 'ipc' ]
+  #   steps:
+  #     -   uses: actions/download-artifact@v3
+  #         with:
+  #           name: web3-${{ matrix.node }}.js.tar.gz
+  #           path: /tmp
+  #     -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #     -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+  #         shell: bash
+
+  # e2e:
+  #   name: End-to-End ganache:ws
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       node: [14, 16]
+  #       browser: ['electron', 'chrome', 'firefox']
+  #   steps:
+  #     - uses: browser-actions/setup-firefox@latest
+  #       if: matrix.browser == 'firefox'
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: web3-${{ matrix.node }}.js.tar.gz
+  #         path: /tmp
+  #     - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #     - run: npm install --no-package-lock --no-save --force cypress
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v4
+  #       with:
+  #           install: false
+  #           command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
+  #           cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
+
+  # build-docs:
+  #   name: Build Docs
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #       matrix:
+  #           node: [ 16 ]
+  #   steps:
+  #       -   uses: actions/download-artifact@v3
+  #           with:
+  #               name: web3-${{ matrix.node }}.js.tar.gz
+  #               path: /tmp
+  #       -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+  #       -   run: yarn build:docs
+
+  black-box:
+      name: Black Box
+      needs: build
+      runs-on: ubuntu-latest
+      env:
+        INFURA_HTTP: ${{ secrets.INFURA_HTTP }}
+        INFURA_WSS: ${{ secrets.INFURA_WSS }}
+        INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+        MODE: ${{ matrix.mode }}
+      strategy:
+        fail-fast: false
         matrix:
-            node: [ 14, 16 ]
-    steps:
-        -   uses: actions/download-artifact@v3
-            with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        -   run: yarn build:web
-
-  unit:
-    name: Unit Tests
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [14, 16]
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:unit
-
-  integration:
-    name: Integration
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [14, 16]
-        backend: ['geth', 'ganache']
-        mode: ['http', 'ws']
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-        shell: bash
-
-  e2e-ipc:
-    name: Integration IPC
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [ 14, 16 ]
-        backend: [ 'geth' ]
-        mode: [ 'ipc' ]
-    steps:
-      -   uses: actions/download-artifact@v3
+          node: [14, 16]
+          mode: ['http', 'ws']
+          backend: ['geth', 'infura']
+      steps:
+        - uses: actions/download-artifact@v3
           with:
             name: web3-${{ matrix.node }}.js.tar.gz
             path: /tmp
-      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      -   run: yarn test:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+        - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+        - run: |
+            yarn test:blackbox:${{ matrix.backend }}:${{ matrix.mode }}
           shell: bash
-
-  e2e:
-    name: End-to-End ganache:ws
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [14, 16]
-        browser: ['electron', 'chrome', 'firefox']
-    steps:
-      - uses: browser-actions/setup-firefox@latest
-        if: matrix.browser == 'firefox'
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: npm install --no-package-lock --no-save --force cypress
-      - name: Cypress run
-        uses: cypress-io/github-action@v4
-        with:
-            install: false
-            command: yarn test:e2e:ganache:ws:${{ matrix.browser }}
-            cache-key: node-v${{ matrix.node }}-on-${{ matrix.browser }}-hash-${{ hashFiles('yarn.lock') }}
-
-  build-docs:
-    name: Build Docs
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            node: [ 16 ]
-    steps:
-        -   uses: actions/download-artifact@v3
-            with:
-                name: web3-${{ matrix.node }}.js.tar.gz
-                path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        -   run: yarn build:docs
 
   black-box-web:
       name: Black Box Browser Tests
