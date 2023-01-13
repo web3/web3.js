@@ -57,9 +57,7 @@ import { getTransactionGasPricing } from './get_transaction_gas_pricing';
 import { transactionSchema } from '../schemas';
 import { InternalTransaction } from '../types';
 
-const isFromAttr = (attr: 'from' | 'to'): attr is 'from' => attr === 'from';
-
-const getTransactionFromOrToAttr = (
+export const getTransactionFromOrToAttr = (
 	attr: 'from' | 'to',
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction?:
@@ -87,23 +85,19 @@ const getTransactionFromOrToAttr = (
 			}
 			throw new LocalWalletNotAvailableError();
 		} else {
-			throw isFromAttr(attr)
+			throw attr === 'from'
 				? new InvalidTransactionWithSender(transaction.from)
 				: // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 				  new InvalidTransactionWithReceiver(transaction.to);
 		}
 	}
-	if (isFromAttr(attr)) {
+	if (attr === 'from') {
 		if (!isNullish(privateKey)) return privateKeyToAddress(privateKey);
 		if (!isNullish(web3Context.defaultAccount)) return web3Context.defaultAccount;
 	}
 
 	return undefined;
 };
-
-export const getTransactionFromAttr = getTransactionFromOrToAttr.bind(undefined, 'from');
-
-export const getTransactionToAttr = getTransactionFromOrToAttr.bind(undefined, 'to');
 
 export const getTransactionNonce = async <ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
@@ -146,7 +140,8 @@ export async function defaultTransactionBuilder<ReturnType = Record<string, unkn
 	) as InternalTransaction;
 
 	if (isNullish(populatedTransaction.from)) {
-		populatedTransaction.from = getTransactionFromAttr(
+		populatedTransaction.from = getTransactionFromOrToAttr(
+			'from',
 			options.web3Context,
 			undefined,
 			options.privateKey,
