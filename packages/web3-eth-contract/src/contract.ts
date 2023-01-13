@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
+import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigOptions } from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
 	call,
@@ -225,6 +225,7 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
+	private static readonly contractWeb3Config: Partial<Web3ConfigOptions> = {};
 	/**
 	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
 	 *
@@ -362,6 +363,8 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
+
+		this.setConfig(Contract.contractWeb3Config);
 	}
 
 	/**
@@ -373,6 +376,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultAccount(value: Address | undefined) {
 		Contract.defaultAccount = value;
+		Contract.contractWeb3Config.defaultAccount = value;
 	}
 	public get defaultAccount() {
 		return (this.constructor as typeof Contract).defaultAccount ?? super.defaultAccount;
@@ -391,6 +395,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultBlock(value: BlockNumberOrTag) {
 		Contract.defaultBlock = value;
+		Contract.contractWeb3Config.defaultBlock = value;
 	}
 
 	public get defaultBlock() {
@@ -410,6 +415,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultHardfork(value: string) {
 		Contract.defaultHardfork = value;
+		Contract.contractWeb3Config.defaultHardfork = value;
 	}
 
 	public get defaultHardfork() {
@@ -429,6 +435,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultCommon(value: Common | undefined) {
 		(this.constructor as typeof Contract).defaultCommon = value;
+		Contract.contractWeb3Config.defaultCommon = value;
 	}
 
 	public get defaultCommon(): Common | undefined {
@@ -448,6 +455,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionSendTimeout(value: number) {
 		Contract.transactionSendTimeout = value;
+		Contract.contractWeb3Config.transactionSendTimeout = value;
 	}
 
 	public get transactionSendTimeout() {
@@ -470,6 +478,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionBlockTimeout(value: number | undefined) {
 		Contract.transactionBlockTimeout = value;
+		Contract.contractWeb3Config.transactionBlockTimeout = value;
 	}
 
 	public get transactionBlockTimeout() {
@@ -492,6 +501,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionConfirmationBlocks(value: number) {
 		Contract.transactionConfirmationBlocks = value;
+		Contract.contractWeb3Config.transactionConfirmationBlocks = value;
 	}
 
 	public get transactionConfirmationBlocks() {
@@ -514,6 +524,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionPollingInterval(value: number) {
 		Contract.transactionPollingInterval = value;
+		Contract.contractWeb3Config.transactionPollingInterval = value;
 	}
 
 	public get transactionPollingInterval() {
@@ -536,6 +547,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionPollingTimeout(value: number) {
 		Contract.transactionPollingTimeout = value;
+		Contract.contractWeb3Config.transactionPollingTimeout = value;
 	}
 
 	public get transactionPollingTimeout() {
@@ -558,6 +570,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionReceiptPollingInterval(value: number) {
 		Contract.transactionReceiptPollingInterval = value;
+		Contract.contractWeb3Config.transactionReceiptPollingInterval = value;
 	}
 
 	public get transactionReceiptPollingInterval() {
@@ -567,7 +580,7 @@ export class Contract<Abi extends ContractAbi>
 		);
 	}
 
-	public set transactionReceiptPollingInterval(value: number | undefined) {
+	public set transactionReceiptPollingInterval(value: number) {
 		super.transactionReceiptPollingInterval = value;
 	}
 
@@ -580,6 +593,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionConfirmationPollingInterval(value: number) {
 		Contract.transactionConfirmationPollingInterval = value;
+		Contract.contractWeb3Config.transactionConfirmationPollingInterval = value;
 	}
 
 	public get transactionConfirmationPollingInterval() {
@@ -602,6 +616,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set blockHeaderTimeout(value: number | undefined) {
 		Contract.blockHeaderTimeout = value;
+		Contract.contractWeb3Config.blockHeaderTimeout = value;
 	}
 
 	public get blockHeaderTimeout() {
@@ -621,6 +636,7 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set handleRevert(value: boolean) {
 		Contract.handleRevert = value;
+		Contract.contractWeb3Config.handleRevert = value;
 	}
 
 	public get handleRevert() {
