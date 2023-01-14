@@ -36,7 +36,7 @@ import {
 
 import {
 	defaultTransactionBuilder,
-	getTransactionFromAttr,
+	getTransactionFromOrToAttr,
 	getTransactionType,
 } from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
@@ -101,7 +101,7 @@ describe('defaults', () => {
 			expect(eth2.defaultAccount).toBe(tempAcc3.address);
 
 			// check utils
-			expect(getTransactionFromAttr(eth2)).toBe(tempAcc3.address);
+			expect(getTransactionFromOrToAttr('from', eth2)).toBe(tempAcc3.address);
 			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
 			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 			contractMsgFrom.setConfig({

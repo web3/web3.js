@@ -84,6 +84,7 @@ export const ERR_TX_GAS_MISMATCH = 434;
 
 export const ERR_TX_CHAIN_MISMATCH = 435;
 export const ERR_TX_HARDFORK_MISMATCH = 436;
+export const ERR_TX_INVALID_RECEIVER = 437;
 
 // Connection error codes
 export const ERR_CONN = 500;
