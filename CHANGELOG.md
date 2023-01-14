@@ -1049,7 +1049,7 @@ should use 4.0.1-alpha.0 for testing.
 
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
 
-## [Unreleased]
+## [4.0.1-alpha.5]
 
 ### Removed
 
@@ -1061,18 +1061,78 @@ should use 4.0.1-alpha.0 for testing.
 
 -   `build` entry from `package.json` (#5755)
 
+### Changed
+
+#### web3-core
+
+-   web3.js dependencies (#5757)
+
+#### web3-errors
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-abi
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-accounts
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-contract
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-ens
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-iban
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-personal
+
+-   web3.js dependencies (#5757)
+
+#### web3-eth-net
+
+-   web3.js dependencies (#5757)
+
+#### web3-providers-http
+
+-   web3.js dependencies (#5757)
+
+#### web3-providers-ipc
+
+-   web3.js dependencies (#5757)
+
+#### web3-providers-ws
+
+-   web3.js dependencies (#5757)
+
+#### web3-rpc-methods
+
+-   web3.js dependencies (#5757)
+
+#### web3-utils
+
+-   web3.js dependencies (#5757)
+
 ### Fixed
 
 #### web3-eth
 
 -   Enable transaction with local wallet index in the `to` field (#5731)
 
-#### web3-eth
-
--   Add error for invalid transaction receiver (#5731)
-
 ### Added
 
 #### web3-types
 
 -   Add `TransactionWithFromLocalWalletIndex`, `TransactionWithToLocalWalletIndex` and `TransactionWithFromAndToLocalWalletIndex` types (#5731)
+
+## [Unreleased]

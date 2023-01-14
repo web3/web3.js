@@ -64,8 +64,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 -   These types were added: ProviderRpcError, EthSubscription, ProviderMessage, ProviderConnectInfo (#5683)
 
-## [Unreleased]
+## [0.1.1-alpha.4]
 
 ### Added
 
 -   Add `TransactionWithFromLocalWalletIndex`, `TransactionWithToLocalWalletIndex` and `TransactionWithFromAndToLocalWalletIndex` types (#5731)
+
+## [Unreleased]
