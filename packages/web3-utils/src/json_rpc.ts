@@ -28,8 +28,14 @@ import {
 	JsonRpcBatchResponse,
 	JsonRpcSubscriptionResult,
 } from 'web3-types';
-
+import { rpcErrorsMap } from 'web3-errors';
 import { uuidV4 } from './uuid';
+
+// check if code is a valid rpc server error code
+export const isResponseRpcError = (rpcError: JsonRpcResponseWithError) => {
+	const errorCode = rpcError.error.code;
+	return rpcErrorsMap.has(errorCode) || (errorCode >= -32099 && errorCode <= -32000);
+};
 
 export const isResponseWithResult = <Result = unknown, Error = unknown>(
 	response: JsonRpcResponse<Result, Error>,
