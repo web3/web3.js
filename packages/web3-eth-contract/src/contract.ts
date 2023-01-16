@@ -376,7 +376,8 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultAccount(value: Address | undefined) {
 		(this.constructor as typeof Contract).defaultAccount = value;
-		Contract.contractWeb3Config.defaultAccount = value;
+		if (value === undefined) delete Contract.contractWeb3Config.defaultAccount;
+		else Contract.contractWeb3Config.defaultAccount = value;
 	}
 	public get defaultAccount() {
 		return super.defaultAccount ?? (this.constructor as typeof Contract).defaultAccount;
@@ -393,9 +394,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).defaultBlock;
 	}
 
-	public static set defaultBlock(value: BlockNumberOrTag) {
+	public static set defaultBlock(value: BlockNumberOrTag | undefined) {
 		(this.constructor as typeof Contract).defaultBlock = value;
-		Contract.contractWeb3Config.defaultBlock = value;
+		if (value === undefined) delete Contract.contractWeb3Config.defaultBlock;
+		else Contract.contractWeb3Config.defaultBlock = value;
 	}
 
 	public get defaultBlock() {
@@ -413,9 +415,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).defaultHardfork;
 	}
 
-	public static set defaultHardfork(value: string) {
+	public static set defaultHardfork(value: string | undefined) {
 		(this.constructor as typeof Contract).defaultHardfork = value;
-		Contract.contractWeb3Config.defaultHardfork = value;
+		if (value === undefined) delete Contract.contractWeb3Config.defaultHardfork;
+		else Contract.contractWeb3Config.defaultHardfork = value;
 	}
 
 	public get defaultHardfork() {
@@ -435,7 +438,8 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set defaultCommon(value: Common | undefined) {
 		(this.constructor as typeof Contract).defaultCommon = value;
-		Contract.contractWeb3Config.defaultCommon = value;
+		if (value === undefined) delete Contract.contractWeb3Config.defaultCommon;
+		else Contract.contractWeb3Config.defaultCommon = value;
 	}
 
 	public get defaultCommon(): Common | undefined {
@@ -453,9 +457,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionSendTimeout;
 	}
 
-	public static set transactionSendTimeout(value: number) {
+	public static set transactionSendTimeout(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionSendTimeout = value;
-		Contract.contractWeb3Config.transactionSendTimeout = value;
+		if (value === undefined) delete Contract.contractWeb3Config.transactionSendTimeout;
+		else Contract.contractWeb3Config.transactionSendTimeout = value;
 	}
 
 	public get transactionSendTimeout() {
@@ -478,7 +483,8 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set transactionBlockTimeout(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionBlockTimeout = value;
-		Contract.contractWeb3Config.transactionBlockTimeout = value;
+		if (value === undefined) delete Contract.contractWeb3Config.transactionBlockTimeout;
+		else Contract.contractWeb3Config.transactionBlockTimeout = value;
 	}
 
 	public get transactionBlockTimeout() {
@@ -499,9 +505,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionConfirmationBlocks;
 	}
 
-	public static set transactionConfirmationBlocks(value: number) {
+	public static set transactionConfirmationBlocks(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionConfirmationBlocks = value;
-		Contract.contractWeb3Config.transactionConfirmationBlocks = value;
+		if (value === undefined) delete Contract.contractWeb3Config.transactionConfirmationBlocks;
+		else Contract.contractWeb3Config.transactionConfirmationBlocks = value;
 	}
 
 	public get transactionConfirmationBlocks() {
@@ -522,9 +529,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionPollingInterval;
 	}
 
-	public static set transactionPollingInterval(value: number) {
+	public static set transactionPollingInterval(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionPollingInterval = value;
-		Contract.contractWeb3Config.transactionPollingInterval = value;
+		if (value === undefined) delete Contract.contractWeb3Config.transactionPollingInterval;
+		else Contract.contractWeb3Config.transactionPollingInterval = value;
 	}
 
 	public get transactionPollingInterval() {
@@ -545,9 +553,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionPollingTimeout;
 	}
 
-	public static set transactionPollingTimeout(value: number) {
+	public static set transactionPollingTimeout(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionPollingTimeout = value;
-		Contract.contractWeb3Config.transactionPollingTimeout = value;
+		if (value === undefined) delete Contract.contractWeb3Config.transactionPollingTimeout;
+		else Contract.contractWeb3Config.transactionPollingTimeout = value;
 	}
 
 	public get transactionPollingTimeout() {
@@ -568,9 +577,11 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionReceiptPollingInterval;
 	}
 
-	public static set transactionReceiptPollingInterval(value: number) {
+	public static set transactionReceiptPollingInterval(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionReceiptPollingInterval = value;
-		Contract.contractWeb3Config.transactionReceiptPollingInterval = value;
+		if (value === undefined)
+			delete Contract.contractWeb3Config.transactionReceiptPollingInterval;
+		else Contract.contractWeb3Config.transactionReceiptPollingInterval = value;
 	}
 
 	public get transactionReceiptPollingInterval() {
@@ -580,7 +591,7 @@ export class Contract<Abi extends ContractAbi>
 		);
 	}
 
-	public set transactionReceiptPollingInterval(value: number) {
+	public set transactionReceiptPollingInterval(value: number | undefined) {
 		super.transactionReceiptPollingInterval = value;
 	}
 
@@ -591,9 +602,11 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).transactionConfirmationPollingInterval;
 	}
 
-	public static set transactionConfirmationPollingInterval(value: number) {
+	public static set transactionConfirmationPollingInterval(value: number | undefined) {
 		(this.constructor as typeof Contract).transactionConfirmationPollingInterval = value;
-		Contract.contractWeb3Config.transactionConfirmationPollingInterval = value;
+		if (value === undefined)
+			delete Contract.contractWeb3Config.transactionConfirmationPollingInterval;
+		else Contract.contractWeb3Config.transactionConfirmationPollingInterval = value;
 	}
 
 	public get transactionConfirmationPollingInterval() {
@@ -616,7 +629,8 @@ export class Contract<Abi extends ContractAbi>
 
 	public static set blockHeaderTimeout(value: number | undefined) {
 		(this.constructor as typeof Contract).blockHeaderTimeout = value;
-		Contract.contractWeb3Config.blockHeaderTimeout = value;
+		if (value === undefined) delete Contract.contractWeb3Config.blockHeaderTimeout;
+		else Contract.contractWeb3Config.blockHeaderTimeout = value;
 	}
 
 	public get blockHeaderTimeout() {
@@ -634,9 +648,10 @@ export class Contract<Abi extends ContractAbi>
 		return (this.constructor as typeof Contract).handleRevert;
 	}
 
-	public static set handleRevert(value: boolean) {
+	public static set handleRevert(value: boolean | undefined) {
 		(this.constructor as typeof Contract).handleRevert = value;
-		Contract.contractWeb3Config.handleRevert = value;
+		if (value === undefined) delete Contract.contractWeb3Config.handleRevert;
+		else Contract.contractWeb3Config.handleRevert = value;
 	}
 
 	public get handleRevert() {
