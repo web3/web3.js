@@ -16,7 +16,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
-// @ts-expect-error-next-line
 import { exec } from 'child_process';
 import path from 'path';
 import IpcProvider from '../../src/index';
