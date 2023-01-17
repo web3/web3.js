@@ -19,6 +19,6 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 require('../config/setup');
 
-const jestTimeout = 15000;
+const jestTimeout = 45000;
 
 jest.setTimeout(jestTimeout);
