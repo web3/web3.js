@@ -14,9 +14,11 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
-import WebSocketProvider from '../../src/index';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ganache from 'ganache';
+import WebSocketProvider from '../../src';
+import { getSystemTestMnemonic } from './system_test_utils';
 
 export const waitForOpenConnection = async (provider: WebSocketProvider) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
@@ -33,3 +35,19 @@ export const waitForCloseConnection = async (provider: WebSocketProvider) => {
 		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };
+export const createGanacheServer = async (port: number) => {
+	const server = ganache.server({
+		wallet: {
+			mnemonic: getSystemTestMnemonic(),
+		},
+	});
+	await server.listen(port);
+	return server;
+};
+
+export const waitForEvent = async (web3Provider: WebSocketProvider, eventName: string) =>
+	new Promise(resolve => {
+		web3Provider.on(eventName, (error: any, data: any) => {
+			resolve(data || error);
+		});
+	});

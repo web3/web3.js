@@ -20,8 +20,6 @@ import { InvalidConnectionError, ConnectionNotOpenError, InvalidClientError } fr
 import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
-	JsonRpcId,
-	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APISpec,
@@ -41,8 +39,9 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	private _connectionStatus: Web3ProviderStatus;
 	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 	protected _socketConnection?: Socket;
-	public constructor(socketPath: string) {
-		super(socketPath);
+
+	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
+		super(socketPath, options, reconnectOptions);
 		this._connectionStatus = 'connecting';
 	}
 
@@ -52,19 +51,33 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		}
 		return this._connectionStatus;
 	}
+
 	public connect(): void {
 		if (!existsSync(this._socketPath)) {
+			if (this.isReconnecting) {
+				setImmediate(() => {
+					this._reconnect();
+				});
+				return;
+			}
 			throw new InvalidClientError(this._socketPath);
 		}
-		if (!this._socketConnection || this.getStatus() === 'disconnected') {
-			this._socketConnection = new Socket();
-		}
 		try {
+			if (!this._socketConnection || this.getStatus() === 'disconnected') {
+				this._socketConnection = new Socket();
+			}
 			this._connectionStatus = 'connecting';
 			this._addSocketListeners();
 			this._socketConnection.connect({ path: this._socketPath });
 		} catch (e) {
-			throw new InvalidConnectionError(this._socketPath);
+			if (this.isReconnecting) {
+				setImmediate(() => {
+					this._reconnect();
+				});
+			} else {
+				this._connectionStatus = 'disconnected';
+				throw new InvalidConnectionError(this._socketPath);
+			}
 		}
 	}
 
@@ -84,17 +97,15 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	}
 
 	protected _onCloseEvent(event: CloseEvent): void {
-		if (
-			this._reconnectOptions.autoReconnect &&
-			(![1000, 1001].includes(event.code) || !event.wasClean)
-		) {
+		if (!event && this._reconnectOptions.autoReconnect) {
+			this._connectionStatus = 'disconnected';
 			this._reconnect();
 			return;
 		}
 
 		this._clearQueues(event);
 		this._removeSocketListeners();
-		this._onDisconnect(event.code, event.reason);
+		this._onDisconnect(event?.code, event?.reason);
 	}
 
 	protected _parseResponses(e: Buffer | string) {
@@ -136,28 +147,6 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.removeAllListeners('data');
 	}
 
-	protected _clearQueues(event?: CloseEvent) {
-		if (this._pendingRequestsQueue.size > 0) {
-			this._pendingRequestsQueue.forEach(
-				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					this._pendingRequestsQueue.delete(key);
-				},
-			);
-		}
-
-		if (this._sentRequestsQueue.size > 0) {
-			this._sentRequestsQueue.forEach(
-				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					this._sentRequestsQueue.delete(key);
-				},
-			);
-		}
-
-		this._removeSocketListeners();
-	}
-
 	protected _onConnect() {
 		this._connectionStatus = 'connected';
 		super._onConnect();
@@ -166,5 +155,13 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	protected _onDisconnect(code?: number, data?: string): void {
 		this._connectionStatus = 'disconnected';
 		super._onDisconnect(code, data);
+	}
+	protected _onError(event: Error): void {
+		// do not send error while trying to reconnect
+		if (this._reconnectAttempts === 0) {
+			this._eventEmitter.emit('error', event);
+		} else {
+			this._reconnect();
+		}
 	}
 }
