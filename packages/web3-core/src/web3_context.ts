@@ -159,6 +159,9 @@ export class Web3Context<
 		return this._requestManager;
 	}
 
+	/**
+	 * Will return the current subscriptionManager ({@link Web3SubscriptionManager})
+	 */
 	public get subscriptionManager() {
 		return this._subscriptionManager;
 	}
@@ -244,22 +247,85 @@ export class Web3Context<
 		Object.assign(this, _pluginObject);
 	}
 
+	/**
+	 * @returns Returns the current provider
+	 *
+	 * ```ts
+	 * const web3 = new Web3Context("http://localhost:8545");
+	 * console.log(web3.provider);
+	 * > HttpProvider {
+	 * 	clientUrl: 'http://localhost:8545',
+	 * 	httpProviderOptions: undefined
+	 *  }
+	 * ```
+	 */
+
 	public get provider(): SupportedProviders<API> | string | undefined {
 		return this.requestManager.provider;
 	}
+
+	/**
+	 * Will set the current provider.
+	 *
+	 * Accepted providers are of type {@link SupportedProviders}
+	 * ```ts
+	 *  const web3Context = new web3ContextContext("http://localhost:8545");
+	 * web3Context.provider = "ws://localhost:8545";
+	 * console.log(web3Context.provider);
+	 * > WebSocketProvider {
+	 * _eventEmitter: EventEmitter {
+	 * _events: [Object: null prototype] {},
+	 * _eventsCount: 0,
+	 * ...
+	 * }
+	 * ```
+	 */
 
 	public set provider(provider: SupportedProviders<API> | string | undefined) {
 		this.requestManager.setProvider(provider);
 	}
 
+	/**
+	 * @returns Returns the current provider
+	 *
+	 * ```ts
+	 * const web3Context = new Web3Context("http://localhost:8545");
+	 * console.log(web3Context.provider);
+	 * > HttpProvider {
+	 * 	clientUrl: 'http://localhost:8545',
+	 * 	httpProviderOptions: undefined
+	 *  }
+	 * ```
+	 */
 	public get currentProvider(): SupportedProviders<API> | string | undefined {
 		return this.requestManager.provider;
 	}
 
+	/**
+	 * Will set the current provider.
+	 *
+	 * Accepted providers are of type {@link SupportedProviders}
+	 * ```ts
+	 *  const web3Context = new Web3Context("http://localhost:8545");
+	 * web3Context.currentProvider = "ws://localhost:8545";
+	 * console.log(web3Context.provider);
+	 * > WebSocketProvider {
+	 * _eventEmitter: EventEmitter {
+	 * _events: [Object: null prototype] {},
+	 * _eventsCount: 0,
+	 * ...
+	 * }
+	 * ```
+	 */
 	public set currentProvider(provider: SupportedProviders<API> | string | undefined) {
 		this.requestManager.setProvider(provider);
 	}
 
+	/**
+	 * Will return the givenProvider if available.
+	 *
+	 * When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser. Will return the given provider by the (browser) environment, otherwise `undefined`.
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	public get givenProvider() {
 		return Web3Context.givenProvider;

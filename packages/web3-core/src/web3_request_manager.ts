@@ -80,14 +80,23 @@ export class Web3RequestManager<
 		}
 	}
 
+	/**
+	 * Will return all available providers
+	 */
 	public static get providers() {
 		return availableProviders;
 	}
 
+	/**
+	 * @returns Returns the current provider
+	 */
 	public get provider() {
 		return this._provider;
 	}
 
+	/**
+	 * Will return all available providers
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	public get providers() {
 		return availableProviders;
@@ -131,6 +140,13 @@ export class Web3RequestManager<
 		return true;
 	}
 
+	/**
+	 *
+	 * Will execute a request
+	 * @param request of type {@link Web3APIRequest}
+	 * @returns The response of the request {@link ResponseType}. If there is error
+	 * in the response, will throw an error
+	 */
 	public async send<
 		Method extends Web3APIMethod<API>,
 		ResponseType = Web3APIReturnType<API, Method>,
@@ -144,6 +160,10 @@ export class Web3RequestManager<
 		throw new ResponseError(response);
 	}
 
+	/**
+	 * Same as send, but, will execute a batch of requests
+	 * @param request {@link JsonRpcBatchRequest}
+	 */
 	public async sendBatch(request: JsonRpcBatchRequest): Promise<JsonRpcBatchResponse<unknown>> {
 		const response = await this._sendRequest<never, never>(request);
 

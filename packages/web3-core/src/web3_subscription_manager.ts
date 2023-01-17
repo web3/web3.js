@@ -38,6 +38,16 @@ export class Web3SubscriptionManager<
 		InstanceType<RegisteredSubs[keyof RegisteredSubs]>
 	> = new Map();
 
+	/**
+	 *
+	 * @param requestManager
+	 * @param registeredSubscriptions
+	 *
+	 * ```ts
+	 * const requestManager = new Web3RequestManager("ws://localhost:8545");
+	 * const subscriptionManager = new Web3SubscriptionManager(requestManager, {});
+	 * ```
+	 */
 	public constructor(
 		public readonly requestManager: Web3RequestManager<API>,
 		public readonly registeredSubscriptions: RegisteredSubs,
@@ -51,6 +61,14 @@ export class Web3SubscriptionManager<
 		});
 	}
 
+	/**
+	 * @param name The subscription you want to subscribe to
+	 * @param args (optional) Optional additional parameters, depending on the subscription type
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
+	 *
+	 * Will subscribe to a specific topic (note: name)
+	 * @returns The subscription object
+	 */
 	public async subscribe<T extends keyof RegisteredSubs>(
 		name: T,
 		args?: ConstructorParameters<RegisteredSubs[T]>[0],
@@ -75,10 +93,19 @@ export class Web3SubscriptionManager<
 		return subscription;
 	}
 
+	/**
+	 * Will returns all subscriptions.
+	 */
 	public get subscriptions() {
 		return this._subscriptions;
 	}
 
+	/**
+	 *
+	 * @param sub A {@link Web3Subscription} objects
+	 *
+	 * Adds an instance of {@link Web3Subscription} and subscribes to it
+	 */
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (!this.supportsSubscriptions()) {
 			throw new SubscriptionError('The current provider does not support subscriptions');
@@ -114,7 +141,11 @@ export class Web3SubscriptionManager<
 		this._subscriptions.delete(id);
 		return id;
 	}
-
+	/**
+	 * Will unsubscribe all subscriptions that fullfil the condition
+	 * @param condition A functions that acces and `id` and a `subscription` and return `true` or `false`
+	 * @returns An array of all the un-subscribed subcriptions
+	 */
 	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
 		const result = [];
 		for (const [id, sub] of this.subscriptions.entries()) {
@@ -126,10 +157,17 @@ export class Web3SubscriptionManager<
 		return Promise.all(result);
 	}
 
+	/**
+	 * Clears all subscriptions
+	 */
 	public clear() {
 		this._subscriptions.clear();
 	}
 
+	/**
+	 *
+	 * @returns `true` or `false` depending on if the current providers supports subscriptions
+	 */
 	public supportsSubscriptions(): boolean {
 		return isNullish(this.requestManager.provider)
 			? false
