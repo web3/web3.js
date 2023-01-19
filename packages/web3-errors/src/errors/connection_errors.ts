@@ -35,8 +35,8 @@ export class ConnectionError extends Web3Error {
 	public errorCode?: number;
 	public errorReason?: string;
 
-	public constructor(message: string, event?: ConnectionEvent) {
-		super(message);
+	public constructor(message: string, event?: ConnectionEvent, innerError?: Error | Error[]) {
+		super(message, innerError);
 
 		if (event) {
 			this.errorCode = event.code;

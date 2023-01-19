@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import { InvalidConnectionError, ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
+import { ConnectionNotOpenError, InvalidClientError, ConnectionError } from 'web3-errors';
 import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
@@ -76,7 +76,15 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 				});
 			} else {
 				this._connectionStatus = 'disconnected';
-				throw new InvalidConnectionError(this._socketPath);
+				if (e && (e as Error).message) {
+					throw new ConnectionError(
+						`Error while connecting to ${this._socketPath}. Reason: ${
+							(e as Error).message
+						}`,
+					);
+				} else {
+					throw new InvalidClientError(this._socketPath);
+				}
 			}
 		}
 	}
@@ -156,6 +164,7 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._connectionStatus = 'disconnected';
 		super._onDisconnect(code, data);
 	}
+
 	protected _onError(event: Error): void {
 		// do not send error while trying to reconnect
 		if (this._reconnectAttempts === 0) {

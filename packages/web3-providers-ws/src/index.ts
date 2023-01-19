@@ -25,7 +25,7 @@ import {
 	Web3ProviderStatus,
 } from 'web3-types';
 import { isNullish, SocketProvider } from 'web3-utils';
-import { InvalidConnectionError, ConnectionNotOpenError } from 'web3-errors';
+import { ConnectionNotOpenError, ConnectionError, InvalidClientError } from 'web3-errors';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution
@@ -73,7 +73,15 @@ export default class WebSocketProvider<
 			this._addSocketListeners();
 		} catch (e) {
 			if (!this.isReconnecting) {
-				throw new InvalidConnectionError(this._socketPath);
+				if (e && (e as Error).message) {
+					throw new ConnectionError(
+						`Error while connecting to ${this._socketPath}. Reason: ${
+							(e as Error).message
+						}`,
+					);
+				} else {
+					throw new InvalidClientError(this._socketPath);
+				}
 			}
 		}
 	}

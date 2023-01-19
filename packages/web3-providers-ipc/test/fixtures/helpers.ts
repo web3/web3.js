@@ -64,14 +64,17 @@ const getPid = async (port: number): Promise<number> => {
 	}
 };
 
-export const startGethServer = async (
-	port: number,
-): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
+export const stopGethServerIFExists = async (port: number) => {
 	const prevPid = await getPid(port);
 	if (prevPid > 0) {
 		// close previous server
 		await execPromise(`kill -9 ${prevPid}`);
 	}
+};
+export const startGethServer = async (
+	port: number,
+): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
+	await stopGethServerIFExists(port);
 
 	await execPromise(
 		`cd ../../ \n

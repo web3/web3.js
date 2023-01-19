@@ -23,11 +23,15 @@ import {
 	waitForOpenConnection,
 	startGethServer,
 	waitForEvent,
+	stopGethServerIFExists,
 } from '../fixtures/helpers';
 
 const PORT = 8547;
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
+		afterAll(async () => {
+			await stopGethServerIFExists(PORT);
+		});
 		it('check defaults', async () => {
 			const web3Provider = new IpcProvider(getSystemTestProvider());
 			// @ts-expect-error-next-line
