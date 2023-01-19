@@ -68,9 +68,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		const self = this;
 
 		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			private static readonly _contracts: Contract<any>[] = [];
-
 			public constructor(jsonInterface: Abi);
 			public constructor(jsonInterface: Abi, address: Address);
 			public constructor(jsonInterface: Abi, options: ContractInitOptions);
@@ -91,16 +88,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				} else {
 					super(jsonInterface, self.getContextObject());
 				}
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				ContractBuilder._contracts.push(this as Contract<any>);
-			}
-
-			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>): boolean {
-				for (const contract of ContractBuilder._contracts) {
-					contract.provider = _provider;
-				}
-				return true;
 			}
 		}
 
