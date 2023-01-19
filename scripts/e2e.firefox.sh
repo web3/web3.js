@@ -23,7 +23,7 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo " "
 
 # Launch ganache, track its PID and wait until port is open
-npx ganache-cli --noVMErrorsOnRPCResponse > /dev/null &
+npx ganache --miner.instamine eager --miner.blockTime 0.5 --server.ws true > /dev/null &
 client=$!
 npx wait-port 8545
 

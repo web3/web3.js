@@ -23,12 +23,12 @@ echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo " "
 
 # Launch ganache, track its PID and wait until port is open
-npx ganache-cli --noVMErrorsOnRPCResponse > /dev/null &
+npx ganache --miner.instamine eager --miner.blockTime 0.5 --server.ws true > /dev/null &
 client=$!
 npx wait-port 8545
 
 # Test
-GANACHE=true nyc --no-clean --silent _mocha -- \
+GANACHE=true npx nyc --no-clean --silent _mocha -- \
   --reporter spec \
   --require ts-node/register \
   --grep 'E2E' \
