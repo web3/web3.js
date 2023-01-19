@@ -26,11 +26,12 @@ import {
 	stopGethServerIFExists,
 } from '../fixtures/helpers';
 
-const PORT = 8547;
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
 		afterAll(async () => {
-			await stopGethServerIFExists(PORT);
+			await stopGethServerIFExists(8547);
+			await stopGethServerIFExists(8548);
+			await stopGethServerIFExists(8549);
 		});
 		it('check defaults', async () => {
 			const web3Provider = new IpcProvider(getSystemTestProvider());
@@ -65,7 +66,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			await waitForCloseConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
-			const server = await startGethServer(PORT);
+			const server = await startGethServer(8547);
 			const web3Provider = new IpcProvider(server.path);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			const disconnectPromise = waitForEvent(web3Provider, 'disconnect');
@@ -74,7 +75,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			await server.close();
 		});
 		it('should connect, disconnect and reconnect', async () => {
-			const server = await startGethServer(PORT);
+			const server = await startGethServer(8548);
 			const web3Provider = new IpcProvider(
 				`${server.path}`,
 				{},
@@ -89,14 +90,14 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			const connectEvent = waitForEvent(web3Provider, 'connect');
 			// eslint-disable-next-line no-promise-executor-return
 			await new Promise(resolve => setTimeout(resolve, 1000));
-			const server2 = await startGethServer(PORT);
+			const server2 = await startGethServer(8548);
 			expect(!!(await connectEvent)).toBe(true);
 			web3Provider.disconnect();
 			await waitForEvent(web3Provider, 'disconnect');
 			await server2.close();
 		});
 		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
-			const server = await startGethServer(PORT);
+			const server = await startGethServer(8549);
 			const web3Provider = new IpcProvider(
 				server.path,
 				{},

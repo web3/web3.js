@@ -16,9 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import ganache from 'ganache';
+import { exec } from 'child_process';
 import WebSocketProvider from '../../src';
-import { getSystemTestMnemonic } from './system_test_utils';
 
 export const waitForOpenConnection = async (provider: WebSocketProvider) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
@@ -35,15 +34,6 @@ export const waitForCloseConnection = async (provider: WebSocketProvider) => {
 		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };
-export const createGanacheServer = async (port: number) => {
-	const server = ganache.server({
-		wallet: {
-			mnemonic: getSystemTestMnemonic(),
-		},
-	});
-	await server.listen(port);
-	return server;
-};
 
 export const waitForEvent = async (web3Provider: WebSocketProvider, eventName: string) =>
 	new Promise(resolve => {
@@ -51,3 +41,62 @@ export const waitForEvent = async (web3Provider: WebSocketProvider, eventName: s
 			resolve(data || error);
 		});
 	});
+
+const execPromise = async (command: string): Promise<string> =>
+	new Promise((resolve, reject) => {
+		exec(command, (error, stdout, stderr) => {
+			if (error) {
+				reject(error);
+				return;
+			}
+			if (stderr) {
+				reject(stderr);
+				return;
+			}
+			resolve(stdout);
+		});
+	});
+
+const getPid = async (port: number): Promise<number> => {
+	try {
+		const pidStr = await execPromise(`lsof -Fp -i:${port}| grep '^p'`);
+		if (pidStr) {
+			return Number(pidStr.slice(1));
+		}
+		return 0;
+	} catch (e) {
+		return 0;
+	}
+};
+
+export const stopGethServerIFExists = async (port: number) => {
+	const prevPid = await getPid(port);
+	if (prevPid > 0) {
+		// close previous server
+		await execPromise(`kill -9 ${prevPid}`);
+	}
+};
+export const startGethServer = async (
+	authPort: number,
+	port: number,
+): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
+	await stopGethServerIFExists(port);
+
+	await execPromise(
+		`cd ../../ \n
+		$(pwd)/tmp/geth --authrpc.port ${authPort} --ws --ws.addr 0.0.0.0 --ws.port ${port} --ws.api personal,web3,eth,admin,debug,miner,txpool,net --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
+	);
+
+	// eslint-disable-next-line no-promise-executor-return
+	await new Promise(resolve => setTimeout(resolve, 1000));
+	const pid = await getPid(port);
+	return {
+		pid,
+		path: `ws://localhost:${port}`,
+		close: async (): Promise<void> => {
+			if (pid > 0) {
+				await execPromise(`kill -9 ${pid}`);
+			}
+		},
+	};
+};
