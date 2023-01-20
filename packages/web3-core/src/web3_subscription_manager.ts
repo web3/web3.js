@@ -166,7 +166,7 @@ export class Web3SubscriptionManager<
 
 	/**
 	 *
-	 * @returns `true` or `false` depending on if the current providers supports subscriptions
+	 * @returns `true` or `false` depending on if the current provider supports subscriptions
 	 */
 	public supportsSubscriptions(): boolean {
 		return isNullish(this.requestManager.provider)
