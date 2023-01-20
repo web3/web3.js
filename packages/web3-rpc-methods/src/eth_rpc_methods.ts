@@ -23,7 +23,7 @@ import {
 	HexString8Bytes,
 	HexStringBytes,
 	TransactionCallAPI,
-	TransactionWithSenderAPI,
+	GenericTransactionAPI,
 	Uint,
 	Uint256,
 	Web3EthExecutionAPI,
@@ -206,7 +206,7 @@ export async function sign(
 // : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function signTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
+	transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
 ) {
 	return requestManager.send({
 		method: 'eth_signTransaction',
@@ -220,7 +220,7 @@ export async function signTransaction(
 // : validateTransactionWithSender(transaction, true) with true being a isPartial flag
 export async function sendTransaction(
 	requestManager: Web3RequestManager,
-	transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
+	transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
 ) {
 	return requestManager.send({
 		method: 'eth_sendTransaction',
@@ -258,7 +258,7 @@ export async function call(
 // TODO Not sure how to best validate Partial<TransactionWithSender>
 export async function estimateGas(
 	requestManager: Web3RequestManager,
-	transaction: Partial<TransactionWithSenderAPI>,
+	transaction: Partial<GenericTransactionAPI>,
 	blockNumber: BlockNumberOrTag,
 ) {
 	validator.validate(['blockNumberOrTag'], [blockNumber]);

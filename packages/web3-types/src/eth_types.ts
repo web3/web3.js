@@ -454,7 +454,7 @@ export interface BlockBase<
 	readonly hash?: ByteType;
 }
 
-export type block = BlockBase<
+export type Block = BlockBase<
 	Bytes,
 	Bytes,
 	Numbers,

@@ -23,7 +23,7 @@ import {
 	Transaction2930UnsignedAPI,
 	TransactionLegacyUnsignedAPI,
 	TransactionCall,
-	TransactionWithSenderAPI,
+	GenericTransactionAPI,
 } from 'web3-types';
 import { InvalidTransactionCall, InvalidTransactionWithSender } from 'web3-errors';
 
@@ -120,7 +120,7 @@ export const isTransaction2930UnsignedValidData = (): [Transaction2930UnsignedAP
 		];
 	});
 
-export const isTransactionWithSenderValidData = (): [TransactionWithSenderAPI, true][] => {
+export const isTransactionWithSenderValidData = (): [GenericTransactionAPI, true][] => {
 	const transactions = [
 		...isTransaction1559UnsignedValidData(),
 		...isTransactionLegacyUnsignedValidData(),

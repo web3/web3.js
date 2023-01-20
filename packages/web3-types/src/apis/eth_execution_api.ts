@@ -124,20 +124,7 @@ export interface SignedTransactionInfoAPI {
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L244
-export interface GenericTransaction {
-	readonly type: HexStringSingleByte;
-	readonly nonce: Uint;
-	readonly to: Address;
-	readonly from: Address;
-	readonly gas: Uint;
-	readonly value: Uint;
-	readonly input: HexStringBytes;
-	readonly gasPrice: Uint;
-	readonly maxPriorityFeePerGas: Uint;
-	readonly maxFeePerGas: Uint;
-	readonly accessList: AccessList;
-	readonly chainId: Uint;
-}
+export type GenericTransactionAPI = TransactionUnsignedAPI & { from: Address };
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.yaml#L2
 export type BlockAPI = BlockBase<
@@ -227,7 +214,7 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.yaml
 	eth_call: (transaction: TransactionCallAPI, blockNumber: BlockNumberOrTag) => HexStringBytes;
 	eth_estimateGas: (
-		transaction: Partial<GenericTransaction>,
+		transaction: Partial<GenericTransactionAPI>,
 		blockNumber: BlockNumberOrTag,
 	) => Uint;
 
@@ -262,7 +249,7 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.yaml
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
 	eth_signTransaction: (
-		transaction: GenericTransaction | Partial<GenericTransaction>,
+		transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
 	) => HexStringBytes | SignedTransactionInfoAPI;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.yaml
@@ -277,7 +264,7 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.yaml
 	eth_sendTransaction: (
-		transaction: GenericTransaction | Partial<GenericTransaction>,
+		transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
 	) => HexString32Bytes;
 	eth_sendRawTransaction: (transaction: HexStringBytes) => HexString32Bytes;
 

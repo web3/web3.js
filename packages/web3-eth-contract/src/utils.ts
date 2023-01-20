@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContractError } from 'web3-errors';
 import { AbiFunctionFragment } from 'web3-eth-abi';
-import { TransactionWithSenderAPI, TransactionCall, HexString } from 'web3-types';
+import { GenericTransactionAPI, TransactionCall, HexString } from 'web3-types';
 import { isNullish, mergeDeep, toHex } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
 import {
@@ -113,7 +113,7 @@ export const getEstimateGasParams = ({
 	params: unknown[];
 	options?: PayableCallOptions | NonPayableCallOptions;
 	contractOptions: ContractOptions;
-}): Partial<TransactionWithSenderAPI> => {
+}): Partial<GenericTransactionAPI> => {
 	let txParams = mergeDeep(
 		{
 			to: contractOptions.address,
@@ -130,7 +130,7 @@ export const getEstimateGasParams = ({
 		data: encodeMethodABI(abi, params, txParams.data ? toHex(txParams.data) : undefined),
 	};
 
-	return txParams as TransactionWithSenderAPI;
+	return txParams as GenericTransactionAPI;
 };
 
 export const isContractInitOptions = (options: unknown): options is ContractOptions =>
