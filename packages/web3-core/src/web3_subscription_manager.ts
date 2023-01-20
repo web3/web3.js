@@ -142,7 +142,7 @@ export class Web3SubscriptionManager<
 		return id;
 	}
 	/**
-	 * Will unsubscribe all subscriptions that fullfil the condition
+	 * Will unsubscribe all subscriptions that fulfill the condition
 	 * @param condition A functions that acces and `id` and a `subscription` and return `true` or `false`
 	 * @returns An array of all the un-subscribed subcriptions
 	 */
