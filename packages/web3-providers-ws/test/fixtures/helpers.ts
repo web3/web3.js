@@ -74,7 +74,7 @@ export const startGethServer = async (
 	);
 
 	// eslint-disable-next-line no-promise-executor-return
-	await new Promise(resolve => setTimeout(resolve, 1000));
+	await new Promise(resolve => setTimeout(resolve, 500));
 
 	return {
 		path: `ws://localhost:${port}`,

@@ -40,6 +40,12 @@ const IPC_PATH = path.join(__dirname, 'some.ipc');
 const execPromise = async (command: string): Promise<string> =>
 	new Promise((resolve, reject) => {
 		exec(command, (error, stdout, stderr) => {
+			// eslint-disable-next-line no-console
+			console.log({
+				error,
+				stdout,
+				stderr,
+			});
 			if (error) {
 				reject(error);
 				return;
@@ -97,6 +103,8 @@ export const startGethServer = async (
 		pid,
 		path: IPC_PATH,
 		close: async (): Promise<void> => {
+			// eslint-disable-next-line no-console
+			console.log('close', pid);
 			if (pid > 0) {
 				await execPromise(`kill -9 ${pid}`);
 			}

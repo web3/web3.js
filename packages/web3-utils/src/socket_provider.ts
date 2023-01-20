@@ -167,8 +167,8 @@ export abstract class SocketProvider<
 	}
 
 	protected _onError(event: ErrorEvent): void {
-		// do not send error while trying to reconnect
-		if (this._reconnectAttempts === 0) {
+		// do not emit error while trying to reconnect
+		if (!this.isReconnecting) {
 			this._eventEmitter.emit('error', event);
 		}
 	}

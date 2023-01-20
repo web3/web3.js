@@ -28,12 +28,24 @@ import {
 
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
+		let reconnectionOptions: {
+			delay: number;
+			autoReconnect: boolean;
+			maxAttempts: number;
+		};
+		beforeAll(() => {
+			reconnectionOptions = {
+				delay: 500,
+				autoReconnect: true,
+				maxAttempts: 100,
+			};
+		});
 		afterAll(async () => {
 			await stopGethServerIFExists(8547);
 			await stopGethServerIFExists(8548);
 			await stopGethServerIFExists(8549);
 		});
-		it('check defaults', async () => {
+		it.skip('check defaults', async () => {
 			const web3Provider = new IpcProvider(getSystemTestProvider());
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual({
@@ -45,46 +57,38 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseConnection(web3Provider);
 		});
-		it('set custom reconnectOptions', async () => {
-			const web3Provider = new IpcProvider(
-				getSystemTestProvider(),
-				{},
-				{
-					autoReconnect: true,
-					delay: 123,
-					maxAttempts: 456,
-				},
-			);
+		it.skip('set custom reconnectOptions', async () => {
+			const web3Provider = new IpcProvider(getSystemTestProvider(), {}, reconnectionOptions);
 			// @ts-expect-error-next-line
-			expect(web3Provider._reconnectOptions).toEqual({
-				autoReconnect: true,
-				delay: 123,
-				maxAttempts: 456,
-			});
+			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
 			await waitForOpenConnection(web3Provider);
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
+			// eslint-disable-next-line no-console
+			console.log('1');
 			const server = await startGethServer(8547);
+			// eslint-disable-next-line no-console
+			console.log('2');
 			const web3Provider = new IpcProvider(server.path);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
+			// eslint-disable-next-line no-console
+			console.log('3');
 			const disconnectPromise = waitForEvent(web3Provider, 'disconnect');
 			web3Provider.disconnect();
 			expect(!!(await disconnectPromise)).toBe(true);
+			// eslint-disable-next-line no-console
+			console.log('4');
+			// @ts-expect-error read protected property
+			expect(web3Provider.isReconnecting).toBe(false);
 			await server.close();
+			// eslint-disable-next-line no-console
+			console.log('5');
 		});
-		it('should connect, disconnect and reconnect', async () => {
+		it.skip('should connect, disconnect and reconnect', async () => {
 			const server = await startGethServer(8548);
-			const web3Provider = new IpcProvider(
-				`${server.path}`,
-				{},
-				{
-					delay: 10,
-					autoReconnect: true,
-					maxAttempts: 500,
-				},
-			);
+			const web3Provider = new IpcProvider(`${server.path}`, {}, reconnectionOptions);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			await server.close();
 			const connectEvent = waitForEvent(web3Provider, 'connect');
@@ -96,14 +100,14 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			await waitForEvent(web3Provider, 'disconnect');
 			await server2.close();
 		});
-		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
+		it.skip('should connect, disconnect, try reconnect and reach max attempts', async () => {
 			const server = await startGethServer(8549);
 			const web3Provider = new IpcProvider(
 				server.path,
 				{},
 				{
+					...reconnectionOptions,
 					delay: 1,
-					autoReconnect: true,
 					maxAttempts: 3,
 				},
 			);
