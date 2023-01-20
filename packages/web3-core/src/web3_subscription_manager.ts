@@ -143,7 +143,7 @@ export class Web3SubscriptionManager<
 	}
 	/**
 	 * Will unsubscribe all subscriptions that fulfill the condition
-	 * @param condition A functions that acces and `id` and a `subscription` and return `true` or `false`
+	 * @param condition : A function that access and `id` and a `subscription` and return `true` or `false`
 	 * @returns An array of all the un-subscribed subcriptions
 	 */
 	public async unsubscribe(condition?: ShouldUnsubscribeCondition) {
