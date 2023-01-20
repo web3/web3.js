@@ -27,9 +27,8 @@ import {
 	Web3APISpec,
 	Web3ProviderStatus,
 } from 'web3-types';
-import { isNullish } from 'web3-utils';
+import { isNullish, SocketProvider } from 'web3-utils';
 import { InvalidConnectionError, ConnectionNotOpenError } from 'web3-errors';
-import { SocketProvider } from 'web3-utils';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution
@@ -159,3 +158,5 @@ export default class WebSocketProvider<
 		this._removeSocketListeners();
 	}
 }
+
+export { WebSocketProvider };

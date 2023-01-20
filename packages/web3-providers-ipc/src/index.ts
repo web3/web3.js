@@ -168,3 +168,5 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		super._onDisconnect(code, data);
 	}
 }
+
+export { IpcProvider };
