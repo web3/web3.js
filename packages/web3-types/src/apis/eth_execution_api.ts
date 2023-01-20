@@ -128,6 +128,7 @@ export interface GenericTransaction {
 	readonly type: HexStringSingleByte;
 	readonly nonce: Uint;
 	readonly to: Address;
+	readonly from: Address;
 	readonly gas: Uint;
 	readonly value: Uint;
 	readonly input: HexStringBytes;
