@@ -66,4 +66,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
 -   Add SocketProvider class and Eip1193Provider abstract class (#5683)
 
+## [4.0.1-alpha.5]
+
+### Changed
+
+-   web3.js dependencies (#5757)
+
 ## [Unreleased]

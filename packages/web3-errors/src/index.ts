@@ -28,3 +28,4 @@ export * from './errors/transaction_errors';
 export * from './errors/utils_errors';
 export * from './errors/response_errors';
 export * from './errors/core_errors';
+export * from './errors/rpc_errors';

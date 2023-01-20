@@ -338,8 +338,6 @@ interface TransactionBase {
 	value?: Numbers;
 	accessList?: AccessList;
 	common?: Common;
-	// eslint-disable-next-line @typescript-eslint/ban-types
-	to?: Address | null;
 	gas?: Numbers;
 	gasPrice?: Numbers;
 	type?: Numbers;
@@ -361,14 +359,25 @@ interface TransactionBase {
 
 export interface Transaction extends TransactionBase {
 	from?: Address;
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	to?: Address | null;
 }
 
 export interface TransactionCall extends Transaction {
 	to: Address;
 }
 
-export interface TransactionWithLocalWalletIndex extends TransactionBase {
-	from?: Numbers;
+export interface TransactionWithFromLocalWalletIndex extends Omit<Transaction, 'from'> {
+	from: Numbers;
+}
+
+export interface TransactionWithToLocalWalletIndex extends Omit<Transaction, 'to'> {
+	to: Numbers;
+}
+
+export interface TransactionWithFromAndToLocalWalletIndex extends Omit<Transaction, 'from' | 'to'> {
+	from: Numbers;
+	to: Numbers;
 }
 
 export interface TransactionInfo extends Transaction {

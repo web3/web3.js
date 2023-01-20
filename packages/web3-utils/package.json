@@ -1,7 +1,7 @@
 {
 	"name": "web3-utils",
 	"sideEffects": false,
-	"version": "4.0.1-alpha.4",
+	"version": "4.0.1-alpha.5",
 	"description": "Collection of utility functions used in web3.js.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -43,8 +43,8 @@
 	},
 	"dependencies": {
 		"ethereum-cryptography": "^1.1.2",
-		"web3-errors": "^0.1.1-alpha.3",
-		"web3-types": "^0.1.1-alpha.3",
-		"web3-validator": "^0.1.1-alpha.4"
+		"web3-errors": "^0.1.1-alpha.4",
+		"web3-types": "^0.1.1-alpha.4",
+		"web3-validator": "^0.1.1-alpha.5"
 	}
 }

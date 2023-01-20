@@ -36,7 +36,7 @@ import {
 
 import {
 	defaultTransactionBuilder,
-	getTransactionFromAttr,
+	getTransactionFromOrToAttr,
 	getTransactionType,
 } from '../../src/utils';
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
@@ -101,7 +101,7 @@ describe('defaults', () => {
 			expect(eth2.defaultAccount).toBe(tempAcc3.address);
 
 			// check utils
-			expect(getTransactionFromAttr(eth2)).toBe(tempAcc3.address);
+			expect(getTransactionFromOrToAttr('from', eth2)).toBe(tempAcc3.address);
 			// TODO: after handleRevert implementation https://github.com/ChainSafe/web3.js/issues/5069 add following tests in future release
 			//  set handleRevert true and test following functions with invalid input tx data and see revert reason present in error details:
 			contractMsgFrom.setConfig({
@@ -468,7 +468,8 @@ describe('defaults', () => {
 			});
 			expect(eth2.blockHeaderTimeout).toBe(4);
 		});
-		it('enableExperimentalFeatures', () => {
+
+		it('enableExperimentalFeatures useSubscriptionWhenCheckingBlockTimeout', () => {
 			// default
 			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				false,
@@ -476,7 +477,10 @@ describe('defaults', () => {
 
 			// after set
 			web3Eth.setConfig({
-				enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
+				enableExperimentalFeatures: {
+					useSubscriptionWhenCheckingBlockTimeout: true,
+					useRpcCallSpecification: false,
+				},
 			});
 			expect(web3Eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				true,
@@ -485,13 +489,42 @@ describe('defaults', () => {
 			// set by create new instance
 			eth2 = new Web3Eth({
 				config: {
-					enableExperimentalFeatures: { useSubscriptionWhenCheckingBlockTimeout: true },
+					enableExperimentalFeatures: {
+						useSubscriptionWhenCheckingBlockTimeout: true,
+						useRpcCallSpecification: false,
+					},
 				},
 			});
 			expect(eth2.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout).toBe(
 				true,
 			);
 		});
+
+		it('enableExperimentalFeatures useRpcCallSpecification', () => {
+			// default
+			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(false);
+
+			// after set
+			web3Eth.setConfig({
+				enableExperimentalFeatures: {
+					useSubscriptionWhenCheckingBlockTimeout: false,
+					useRpcCallSpecification: true,
+				},
+			});
+			expect(web3Eth.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+
+			// set by create new instance
+			eth2 = new Web3Eth({
+				config: {
+					enableExperimentalFeatures: {
+						useSubscriptionWhenCheckingBlockTimeout: false,
+						useRpcCallSpecification: true,
+					},
+				},
+			});
+			expect(eth2.enableExperimentalFeatures.useRpcCallSpecification).toBe(true);
+		});
+
 		it('should fallback to polling if provider support `on` but `newBlockHeaders` does not arrive in `blockHeaderTimeout` seconds', async () => {
 			const tempAcc2 = await createTempAccount();
 

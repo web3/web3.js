@@ -1,6 +1,6 @@
 {
 	"name": "web3-eth-ens",
-	"version": "4.0.1-alpha.4",
+	"version": "4.0.1-alpha.5",
 	"description": "This package has ENS functions for interacting with Ethereum Name Service.",
 	"main": "lib/index.js",
 	"repository": "https://github.com/ChainSafe/web3.js",
@@ -42,12 +42,12 @@
 	},
 	"dependencies": {
 		"idna-uts46-hx": "^3.5.0",
-		"web3-core": "^4.0.1-alpha.4",
-		"web3-errors": "^0.1.1-alpha.3",
-		"web3-eth": "^4.0.1-alpha.4",
-		"web3-eth-contract": "^4.0.1-alpha.4",
-		"web3-net": "^4.0.1-alpha.4",
-		"web3-types": "^0.1.1-alpha.3",
-		"web3-utils": "^4.0.1-alpha.4"
+		"web3-core": "^4.0.1-alpha.5",
+		"web3-errors": "^0.1.1-alpha.4",
+		"web3-eth": "^4.0.1-alpha.5",
+		"web3-eth-contract": "^4.0.1-alpha.5",
+		"web3-net": "^4.0.1-alpha.5",
+		"web3-types": "^0.1.1-alpha.4",
+		"web3-utils": "^4.0.1-alpha.5"
 	}
 }

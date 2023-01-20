@@ -135,7 +135,13 @@ export class Web3Context<
 
 		this.setConfig(config ?? {});
 
-		this._requestManager = requestManager ?? new Web3RequestManager<API>(provider);
+		this._requestManager =
+			requestManager ??
+			new Web3RequestManager<API>(
+				provider,
+				undefined,
+				config?.enableExperimentalFeatures?.useSubscriptionWhenCheckingBlockTimeout,
+			);
 
 		if (subscriptionManager) {
 			this._subscriptionManager = subscriptionManager;
