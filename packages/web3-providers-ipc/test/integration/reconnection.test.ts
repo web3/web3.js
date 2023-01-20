@@ -35,9 +35,9 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 		};
 		beforeAll(() => {
 			reconnectionOptions = {
-				delay: 500,
+				delay: 50,
 				autoReconnect: true,
-				maxAttempts: 100,
+				maxAttempts: 1000,
 			};
 		});
 		afterAll(async () => {

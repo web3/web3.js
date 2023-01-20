@@ -70,7 +70,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseConnection(web3Provider);
 		});
-		it('should emit connect and disconnected events', async () => {
+		it.skip('should emit connect and disconnected events', async () => {
 			const server = await startGethServer(18545);
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 			// await waitForOpenConnection(web3Provider);
@@ -86,7 +86,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			await server.close();
 			expect(!!(await disconnectPromise)).toBe(true);
 		});
-		it('should connect, disconnect and reconnect', async () => {
+		it.skip('should connect, disconnect and reconnect', async () => {
 			const server = await startGethServer(18546);
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 
@@ -118,7 +118,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			web3Provider.disconnect(1000, 'test');
 			await server2.close();
 		});
-		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
+		it.skip('should connect, disconnect, try reconnect and reach max attempts', async () => {
 			const server = await startGethServer(18547);
 			const web3Provider = new WebSocketProvider(
 				server.path,

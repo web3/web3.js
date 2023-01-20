@@ -42,6 +42,7 @@ const execPromise = async (command: string): Promise<string> =>
 		exec(command, (error, stdout, stderr) => {
 			// eslint-disable-next-line no-console
 			console.log({
+				command,
 				error,
 				stdout,
 				stderr,
@@ -92,11 +93,16 @@ export const startGethServer = async (
 
 	await execPromise(
 		`cd ../../ \n
-		$(pwd)/tmp/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
+		$(pwd)/tmp/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+			port + 1000
+		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
 	);
 
 	// eslint-disable-next-line no-promise-executor-return
 	await new Promise(resolve => setTimeout(resolve, 1000));
+	// eslint-disable-next-line no-console
+	console.log('check dir', IPC_PATH, await execPromise(`ls ${__dirname}`));
+
 	const pid = await getPid(port);
 
 	return {
