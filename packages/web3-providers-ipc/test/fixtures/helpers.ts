@@ -92,14 +92,16 @@ export const startGethServer = async (
 	await stopGethServerIFExists(port);
 
 	await execPromise(
-		`cd ../../ \n
-		$(pwd)/tmp/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+		`cd ../../ \n $(pwd)/tmp/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+			port + 1000
+		} --http --http.addr 0.0.0.0 --http.port ${
 			port + 1000
 		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
 	);
-
+	// eslint-disable-next-line no-console
+	console.log('finish execute');
 	// eslint-disable-next-line no-promise-executor-return
-	await new Promise(resolve => setTimeout(resolve, 1000));
+	await new Promise(resolve => setTimeout(resolve, 500));
 	// eslint-disable-next-line no-console
 	console.log('check dir', IPC_PATH, await execPromise(`ls ${__dirname}`));
 
