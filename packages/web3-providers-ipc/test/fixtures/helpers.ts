@@ -71,6 +71,14 @@ export const stopGethServerIFExists = async (port: number) => {
 		await execPromise(`kill -9 ${prevPid}`);
 	}
 };
+
+export const waitForEvent = async (web3Provider: IpcProvider, eventName: string) =>
+	new Promise(resolve => {
+		web3Provider.on(eventName, (error: any, data: any) => {
+			resolve(data || error);
+		});
+	});
+
 export const startGethServer = async (
 	port: number,
 ): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
@@ -95,10 +103,3 @@ export const startGethServer = async (
 		},
 	};
 };
-
-export const waitForEvent = async (web3Provider: IpcProvider, eventName: string) =>
-	new Promise(resolve => {
-		web3Provider.on(eventName, (error: any, data: any) => {
-			resolve(data || error);
-		});
-	});

@@ -22,17 +22,17 @@ import { describeIf, isWs, getSystemTestProvider } from '../fixtures/system_test
 import {
 	waitForCloseConnection,
 	waitForOpenConnection,
-	stopGethServerIFExists,
 	startGethServer,
 	waitForEvent,
+	stopServerIfExists,
 } from '../fixtures/helpers';
 
 describeIf(isWs)('WebSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
 		afterAll(async () => {
-			await stopGethServerIFExists(18545);
-			await stopGethServerIFExists(18546);
-			await stopGethServerIFExists(18547);
+			await stopServerIfExists(18545);
+			await stopServerIfExists(18546);
+			await stopServerIfExists(18547);
 		});
 		it('check defaults', async () => {
 			const web3Provider = new WebSocketProvider(getSystemTestProvider());
@@ -67,7 +67,7 @@ describeIf(isWs)('WebSocketProvider - reconnection', () => {
 			await waitForCloseConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
-			const server = await startGethServer(8547, 18545);
+			const server = await startGethServer(18545);
 			const web3Provider = new WebSocketProvider(
 				server.path,
 				{},
@@ -90,12 +90,12 @@ describeIf(isWs)('WebSocketProvider - reconnection', () => {
 			expect(!!(await disconnectPromise)).toBe(true);
 		});
 		it('should connect, disconnect and reconnect', async () => {
-			const server = await startGethServer(8548, 18546);
+			const server = await startGethServer(18546);
 			const web3Provider = new WebSocketProvider(
 				server.path,
 				{},
 				{
-					delay: 1,
+					delay: 10,
 					autoReconnect: true,
 					maxAttempts: 500,
 				},
@@ -115,7 +115,7 @@ describeIf(isWs)('WebSocketProvider - reconnection', () => {
 			web3Provider._addSocketListeners();
 			await server.close();
 			const connectEvent = waitForEvent(web3Provider, 'connect');
-			const server2 = await startGethServer(8548, 18546);
+			const server2 = await startGethServer(18546);
 			expect(!!(await connectEvent)).toBe(true);
 			// @ts-expect-error-next-line
 			web3Provider._onCloseHandler = (event: CloseEvent) => {
@@ -126,12 +126,16 @@ describeIf(isWs)('WebSocketProvider - reconnection', () => {
 			web3Provider._removeSocketListeners();
 			// @ts-expect-error-next-line
 			web3Provider._addSocketListeners();
+			// @ts-expect-error set protected option
+			web3Provider._reconnectOptions = {
+				delay: 100,
+				autoReconnect: false,
+				maxAttempts: 50,
+			};
 			await server2.close();
-			web3Provider.disconnect(1000, 'test');
-			await waitForCloseConnection(web3Provider);
 		});
 		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
-			const server = await startGethServer(8549, 18547);
+			const server = await startGethServer(18547);
 			const web3Provider = new WebSocketProvider(
 				server.path,
 				{},

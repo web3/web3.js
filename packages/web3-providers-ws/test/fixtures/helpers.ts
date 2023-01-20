@@ -43,60 +43,43 @@ export const waitForEvent = async (web3Provider: WebSocketProvider, eventName: s
 	});
 
 const execPromise = async (command: string): Promise<string> =>
-	new Promise((resolve, reject) => {
-		exec(command, (error, stdout, stderr) => {
-			if (error) {
-				reject(error);
-				return;
-			}
+	new Promise(resolve => {
+		exec(command, (_, stdout, stderr) => {
 			if (stderr) {
-				reject(stderr);
+				resolve(stderr);
 				return;
 			}
 			resolve(stdout);
 		});
 	});
 
-const getPid = async (port: number): Promise<number> => {
-	try {
-		const pidStr = await execPromise(`lsof -Fp -i:${port}| grep '^p'`);
-		if (pidStr) {
-			return Number(pidStr.slice(1));
-		}
-		return 0;
-	} catch (e) {
-		return 0;
+export const stopServerIfExists = async (port: number) => {
+	const res = await execPromise(
+		`$(docker ps --filter publish=${port}/tcp | grep '8545') && echo \${S:0:12}`,
+	);
+	if (res) {
+		await execPromise(
+			`S=$(docker ps --filter publish=${port}/tcp | grep '8545') && docker container stop \${S:0:12}`,
+		);
 	}
 };
 
-export const stopGethServerIFExists = async (port: number) => {
-	const prevPid = await getPid(port);
-	if (prevPid > 0) {
-		// close previous server
-		await execPromise(`kill -9 ${prevPid}`);
-	}
-};
 export const startGethServer = async (
-	authPort: number,
 	port: number,
-): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
-	await stopGethServerIFExists(port);
+): Promise<{ path: string; close: () => Promise<void> }> => {
+	await stopServerIfExists(port);
 
 	await execPromise(
-		`cd ../../ \n
-		$(pwd)/tmp/geth --authrpc.port ${authPort} --ws --ws.addr 0.0.0.0 --ws.port ${port} --ws.api personal,web3,eth,admin,debug,miner,txpool,net --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
+		`docker run -d -p ${port}:${port} ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port ${port} --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev`,
 	);
 
 	// eslint-disable-next-line no-promise-executor-return
 	await new Promise(resolve => setTimeout(resolve, 1000));
-	const pid = await getPid(port);
+
 	return {
-		pid,
 		path: `ws://localhost:${port}`,
 		close: async (): Promise<void> => {
-			if (pid > 0) {
-				await execPromise(`kill -9 ${pid}`);
-			}
+			await stopServerIfExists(port);
 		},
 	};
 };
