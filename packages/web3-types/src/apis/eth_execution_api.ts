@@ -21,14 +21,16 @@ import {
 	HexStringBytes,
 	HexStringSingleByte,
 	HexString256Bytes,
-	Topic,
+	FeeHistoryBase,
 	HexString8Bytes,
 	Uint256,
 	BlockNumberOrTag,
 	Filter,
 	AccessList,
 	TransactionHash,
-	Uncles,
+	TransactionReceiptBase,
+	BlockBase,
+	LogBase,
 } from '../eth_types';
 import { HexString } from '../primitives_types';
 
@@ -124,60 +126,26 @@ export interface SignedTransactionInfoAPI {
 export type TransactionWithSenderAPI = TransactionUnsignedAPI & { from: Address };
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.json#L2
-export interface BlockAPI {
-	readonly parentHash: HexString32Bytes;
-	readonly sha3Uncles: HexString32Bytes;
-	readonly miner: HexString;
-	readonly stateRoot: HexString32Bytes;
-	readonly transactionsRoot: HexString32Bytes;
-	readonly receiptsRoot: HexString32Bytes;
-	readonly logsBloom?: HexString256Bytes;
-	readonly difficulty?: Uint;
-	readonly number?: Uint;
-	readonly gasLimit: Uint;
-	readonly gasUsed: Uint;
-	readonly timestamp: Uint;
-	readonly extraData: HexStringBytes;
-	readonly mixHash: HexString32Bytes;
-	readonly nonce?: Uint;
-	readonly totalDifficulty: Uint;
-	readonly baseFeePerGas?: Uint;
-	readonly size: Uint;
-	readonly transactions: TransactionHash[] | TransactionInfoAPI[];
-	readonly uncles: Uncles;
-	readonly hash?: HexString32Bytes;
-}
+export type BlockAPI = BlockBase<
+	HexString32Bytes,
+	HexString,
+	Uint,
+	HexStringBytes,
+	TransactionHash[] | TransactionInfoAPI[],
+	HexString256Bytes
+>;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L2
-export interface LogAPI {
-	readonly removed?: boolean;
-	readonly logIndex?: Uint;
-	readonly transactionIndex?: Uint;
-	readonly transactionHash?: HexString32Bytes;
-	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: Uint;
-	readonly address?: Address;
-	readonly data?: HexStringBytes;
-	readonly topics?: Topic | Topic[];
-}
+// https://github.com/ethereum/execution-apis/blob/9500d379f872f73bcea9bc4ed21b30965099d4d7/src/schemas/receipt.yaml
+export type LogAPI = LogBase<Uint, HexString32Bytes>;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
-export interface TransactionReceiptAPI {
-	readonly transactionHash: HexString32Bytes;
-	readonly transactionIndex: Uint;
-	readonly blockHash: HexString32Bytes;
-	readonly blockNumber: Uint;
-	readonly from: Address;
-	readonly to: Address;
-	readonly cumulativeGasUsed: Uint;
-	readonly gasUsed: Uint;
-	readonly contractAddress?: Address;
-	readonly logs: LogAPI[];
-	readonly logsBloom: HexString256Bytes;
-	readonly root: HexString32Bytes;
-	readonly status: '0x1' | '0x0';
-	readonly effectiveGasPrice: Uint;
-}
+export type TransactionReceiptAPI = TransactionReceiptBase<
+	Uint,
+	HexString32Bytes,
+	HexString256Bytes,
+	LogAPI
+>;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/client.json#L2
 export type SyncingStatusAPI =
@@ -185,11 +153,7 @@ export type SyncingStatusAPI =
 	| boolean;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.json#L53
-export interface FeeHistoryResultAPI {
-	readonly oldestBlock: Uint;
-	readonly baseFeePerGas: Uint;
-	readonly reward: number[][];
-}
+export type FeeHistoryResultAPI = FeeHistoryBase<Uint>;
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L2
 export type FilterResultsAPI = HexString32Bytes[] | LogAPI[];
