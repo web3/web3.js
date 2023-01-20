@@ -64,8 +64,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated dependencies (#5725)
 
-## [Unreleased]
+## [4.0.1-alpha.4]
 
 ### Changed
 
 -   `tsc` compiled files moved to `lib/` directory from `dist/` (#5739)
+
+## [4.0.1-alpha.5]
+
+### Changed
+
+-   web3.js dependencies (#5757)
+
+## [Unreleased]
+
+### Added
+
+-   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)

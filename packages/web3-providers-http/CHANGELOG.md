@@ -47,8 +47,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updated dependencies (#5725)
 
-## [Unreleased]
+## [4.0.1-alpha.4]
 
 ### Changed
 
 -   `main` and `files` entries in `package.json` changed to `lib/` directory from `dist/` (#5739)
+
+## [4.0.1-alpha.5]
+
+### Changed
+
+-   web3.js dependencies (#5757)
+
+## [Unreleased]

@@ -30,6 +30,7 @@ const defaultConfig = {
 	defaultHardfork: 'london',
 	enableExperimentalFeatures: {
 		useSubscriptionWhenCheckingBlockTimeout: false,
+		useRpcCallSpecification: false,
 	},
 	handleRevert: false,
 	maxListenersWarningThreshold: 100,

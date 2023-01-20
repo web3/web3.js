@@ -14,6 +14,7 @@ Object {
     "defaultNetworkId": undefined,
     "defaultTransactionType": "0x0",
     "enableExperimentalFeatures": Object {
+      "useRpcCallSpecification": false,
       "useSubscriptionWhenCheckingBlockTimeout": false,
     },
     "handleRevert": false,
@@ -52,6 +53,7 @@ Object {
       "clientUrl": "http://test/abc",
       "httpProviderOptions": undefined,
     },
+    "useRpcCallSpecification": undefined,
   },
   "subscriptionManager": Web3SubscriptionManager {
     "_subscriptions": Map {},
@@ -70,6 +72,7 @@ Object {
         "clientUrl": "http://test/abc",
         "httpProviderOptions": undefined,
       },
+      "useRpcCallSpecification": undefined,
     },
   },
   "wallet": undefined,
