@@ -19,7 +19,18 @@ import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from
 import { exec } from 'child_process';
 import path from 'path';
 import IpcProvider from '../../src/index';
+// eslint-disable-next-line no-console
+console.log('DIR NAME', __dirname);
 
+const IPC_DIR_PATH = __dirname.endsWith('fixtures')
+	? path.join(__dirname, '..', '..', '..', '..', 'tmp')
+	: path.join(__dirname, 'tmp');
+const IPC_PATH = path.join(IPC_DIR_PATH, 'some.ipc');
+// eslint-disable-next-line no-console
+console.log({
+	IPC_DIR_PATH,
+	IPC_PATH,
+});
 export const waitForOpenConnection = async (provider: IpcProvider) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
 		provider.on('connect', ((_error, data) => {
@@ -90,12 +101,9 @@ export const startGethServer = async (
 ): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
 	await stopGethServerIFExists(port);
 	// eslint-disable-next-line no-console
-	console.log(
-		'check dir before',
-		await execPromise(`cd ../../ && TMP_FOLDER=$(pwd)/tmp && ls $TMP_FOLDER`),
-	);
+	console.log('check dir before', await execPromise(`ls ${IPC_DIR_PATH}`));
 	await execPromise(
-		`TMP_FOLDER=$(pwd)/tmp\nIPC_PATH=$TMP_FOLDER/some.ipc && cd ../../ \n $(pwd)/tmp/geth --ipcpath $IPC_PATH --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+		`${IPC_DIR_PATH}/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
 			port + 1000
 		} --http --http.addr 0.0.0.0 --http.port ${
 			port + 1000
@@ -104,16 +112,13 @@ export const startGethServer = async (
 	// eslint-disable-next-line no-console
 	console.log('finish execute');
 	// eslint-disable-next-line no-console
-	console.log(
-		'check dir after',
-		await execPromise(`cd ../../ && TMP_FOLDER=$(pwd)/tmp && ls $TMP_FOLDER`),
-	);
+	console.log('check dir after', await execPromise(`ls ${IPC_DIR_PATH}`));
 
 	const pid = await getPid(port);
 
 	return {
 		pid,
-		path: path.join(__dirname, '..', '..', 'tmp', 'some.ipc'),
+		path: IPC_PATH,
 		close: async (): Promise<void> => {
 			// eslint-disable-next-line no-console
 			console.log('close', pid);

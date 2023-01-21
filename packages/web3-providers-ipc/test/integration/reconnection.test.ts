@@ -70,7 +70,7 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 			console.log('1');
 			const server = await startGethServer(8547);
 			// eslint-disable-next-line no-console
-			console.log('2');
+			console.log('2 server.path', server.path);
 			const web3Provider = new IpcProvider(server.path);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			// eslint-disable-next-line no-console
