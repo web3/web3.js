@@ -89,7 +89,11 @@ export const startGethServer = async (
 	port: number,
 ): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
 	await stopGethServerIFExists(port);
-
+	// eslint-disable-next-line no-console
+	console.log(
+		'check dir before',
+		await execPromise(`cd ../../ && TMP_FOLDER=$(pwd)/tmp && ls $TMP_FOLDER`),
+	);
 	await execPromise(
 		`TMP_FOLDER=$(pwd)/tmp\nIPC_PATH=$TMP_FOLDER/some.ipc && cd ../../ \n $(pwd)/tmp/geth --ipcpath $IPC_PATH --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
 			port + 1000
@@ -101,7 +105,7 @@ export const startGethServer = async (
 	console.log('finish execute');
 	// eslint-disable-next-line no-console
 	console.log(
-		'check dir',
+		'check dir after',
 		await execPromise(`cd ../../ && TMP_FOLDER=$(pwd)/tmp && ls $TMP_FOLDER`),
 	);
 
