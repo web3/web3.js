@@ -35,7 +35,6 @@ export const waitForCloseConnection = async (provider: IpcProvider) => {
 		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };
-const IPC_PATH = path.join(__dirname, 'some.ipc');
 
 const execPromise = async (command: string): Promise<string> =>
 	new Promise((resolve, reject) => {
@@ -92,24 +91,25 @@ export const startGethServer = async (
 	await stopGethServerIFExists(port);
 
 	await execPromise(
-		`cd ../../ \n $(pwd)/tmp/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+		`TMP_FOLDER=$(pwd)/tmp\nIPC_PATH=$TMP_FOLDER/some.ipc && cd ../../ \n $(pwd)/tmp/geth --ipcpath $IPC_PATH --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
 			port + 1000
 		} --http --http.addr 0.0.0.0 --http.port ${
 			port + 1000
-		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null &`,
+		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null & \n npx wait-port ${port}`,
 	);
 	// eslint-disable-next-line no-console
 	console.log('finish execute');
-	// eslint-disable-next-line no-promise-executor-return
-	await new Promise(resolve => setTimeout(resolve, 500));
 	// eslint-disable-next-line no-console
-	console.log('check dir', IPC_PATH, await execPromise(`ls ${__dirname}`));
+	console.log(
+		'check dir',
+		await execPromise(`cd ../../ && TMP_FOLDER=$(pwd)/tmp && ls $TMP_FOLDER`),
+	);
 
 	const pid = await getPid(port);
 
 	return {
 		pid,
-		path: IPC_PATH,
+		path: path.join(__dirname, '..', '..', 'tmp', 'some.ipc'),
 		close: async (): Promise<void> => {
 			// eslint-disable-next-line no-console
 			console.log('close', pid);

@@ -70,11 +70,8 @@ export const startGethServer = async (
 	await stopServerIfExists(port);
 
 	await execPromise(
-		`docker run -d -p ${port}:${port} ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port ${port} --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev`,
+		`docker run -d -p ${port}:${port} ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port ${port} --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev && npx wait-port ${port}`,
 	);
-
-	// eslint-disable-next-line no-promise-executor-return
-	await new Promise(resolve => setTimeout(resolve, 500));
 
 	return {
 		path: `ws://localhost:${port}`,
