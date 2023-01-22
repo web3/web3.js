@@ -18,19 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
 import { exec } from 'child_process';
 import path from 'path';
+import fs from 'fs';
 import IpcProvider from '../../src/index';
-// eslint-disable-next-line no-console
-console.log('DIR NAME', __dirname);
 
-const IPC_DIR_PATH = __dirname.endsWith('fixtures')
-	? path.join(__dirname, '..', '..', '..', '..', 'tmp')
-	: path.join(__dirname, 'tmp');
+const IPC_DIR_PATH = path.join(__dirname, '..', '..', '..', '..', 'tmp');
 const IPC_PATH = path.join(IPC_DIR_PATH, 'some.ipc');
-// eslint-disable-next-line no-console
-console.log({
-	IPC_DIR_PATH,
-	IPC_PATH,
-});
+const IPC_ORIGIN_PATH = path.join(IPC_DIR_PATH, 'some.ipc');
+
+const createSymlink = `ln -s ${path.join(IPC_DIR_PATH, 'ipc.ipc')} ${IPC_ORIGIN_PATH}`;
+
 export const waitForOpenConnection = async (provider: IpcProvider) => {
 	return new Promise<ProviderConnectInfo>(resolve => {
 		provider.on('connect', ((_error, data) => {
@@ -50,13 +46,6 @@ export const waitForCloseConnection = async (provider: IpcProvider) => {
 const execPromise = async (command: string): Promise<string> =>
 	new Promise((resolve, reject) => {
 		exec(command, (error, stdout, stderr) => {
-			// eslint-disable-next-line no-console
-			console.log({
-				command,
-				error,
-				stdout,
-				stderr,
-			});
 			if (error) {
 				reject(error);
 				return;
@@ -69,25 +58,25 @@ const execPromise = async (command: string): Promise<string> =>
 		});
 	});
 
-const getPid = async (port: number): Promise<number> => {
-	try {
-		const pidStr = await execPromise(`lsof -Fp -i:${port}| grep '^p'`);
-		if (pidStr) {
-			return Number(pidStr.slice(1));
-		}
-		return 0;
-	} catch (e) {
-		return 0;
-	}
-};
+// const getPid = async (port: number): Promise<number> => {
+// 	try {
+// 		const pidStr = await execPromise(`lsof -Fp -i:${port}| grep '^p'`);
+// 		if (pidStr) {
+// 			return Number(pidStr.slice(1));
+// 		}
+// 		return 0;
+// 	} catch (e) {
+// 		return 0;
+// 	}
+// };
 
-export const stopGethServerIFExists = async (port: number) => {
-	const prevPid = await getPid(port);
-	if (prevPid > 0) {
-		// close previous server
-		await execPromise(`kill -9 ${prevPid}`);
-	}
-};
+// export const stopGethServerIFExists = async (port: number) => {
+// 	const prevPid = await getPid(port);
+// 	if (prevPid > 0) {
+// 		// close previous server
+// 		await execPromise(`kill -9 ${prevPid}`);
+// 	}
+// };
 
 export const waitForEvent = async (web3Provider: IpcProvider, eventName: string) =>
 	new Promise(resolve => {
@@ -96,35 +85,51 @@ export const waitForEvent = async (web3Provider: IpcProvider, eventName: string)
 		});
 	});
 
-export const startGethServer = async (
-	port: number,
-): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
-	await stopGethServerIFExists(port);
-	// eslint-disable-next-line no-console
-	console.log('check dir before', await execPromise(`ls ${IPC_DIR_PATH}`));
-	await execPromise(
-		`${IPC_DIR_PATH}/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
-			port + 1000
-		} --http --http.addr 0.0.0.0 --http.port ${
-			port + 1000
-		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null & \n npx wait-port ${port}`,
-	);
-	// eslint-disable-next-line no-console
-	console.log('finish execute');
-	// eslint-disable-next-line no-console
-	console.log('check dir after', await execPromise(`ls ${IPC_DIR_PATH}`));
-
-	const pid = await getPid(port);
-
+const removeIfExists = () => {
+	if (fs.existsSync(IPC_PATH)) {
+		fs.unlinkSync(IPC_PATH);
+	}
+};
+export const startGethServer = async (): Promise<{ path: string; close: () => void }> => {
+	removeIfExists();
+	await execPromise(createSymlink);
 	return {
-		pid,
 		path: IPC_PATH,
-		close: async (): Promise<void> => {
-			// eslint-disable-next-line no-console
-			console.log('close', pid);
-			if (pid > 0) {
-				await execPromise(`kill -9 ${pid}`);
-			}
+		close: (): void => {
+			removeIfExists();
 		},
 	};
 };
+
+// export const startGethServer = async (
+// 	port: number,
+// ): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
+// 	await stopGethServerIFExists(port);
+// 	// eslint-disable-next-line no-console
+// 	console.log('check dir before', await execPromise(`ls ${IPC_DIR_PATH}`));
+// 	await execPromise(
+// 		`${IPC_DIR_PATH}/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
+// 			port + 1000
+// 		} --http --http.addr 0.0.0.0 --http.port ${
+// 			port + 1000
+// 		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null & \n npx wait-port ${port}`,
+// 	);
+// 	// eslint-disable-next-line no-console
+// 	console.log('finish execute');
+// 	// eslint-disable-next-line no-console
+// 	console.log('check dir after', await execPromise(`ls ${IPC_DIR_PATH}`));
+//
+// 	const pid = await getPid(port);
+//
+// 	return {
+// 		pid,
+// 		path: IPC_PATH,
+// 		close: async (): Promise<void> => {
+// 			// eslint-disable-next-line no-console
+// 			console.log('close', pid);
+// 			if (pid > 0) {
+// 				await execPromise(`kill -9 ${pid}`);
+// 			}
+// 		},
+// 	};
+// };
