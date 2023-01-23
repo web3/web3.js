@@ -123,7 +123,7 @@ export interface SignedTransactionInfoAPI {
 }
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L244
-export type GenericTransactionAPI = TransactionUnsignedAPI & { from: Address };
+export type TransactionWithSenderAPI = TransactionUnsignedAPI & { from: Address };
 
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.yaml#L2
 export type BlockAPI = BlockBase<
@@ -213,7 +213,7 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.yaml
 	eth_call: (transaction: TransactionCallAPI, blockNumber: BlockNumberOrTag) => HexStringBytes;
 	eth_estimateGas: (
-		transaction: Partial<GenericTransactionAPI>,
+		transaction: Partial<TransactionWithSenderAPI>,
 		blockNumber: BlockNumberOrTag,
 	) => Uint;
 
@@ -248,7 +248,7 @@ export type EthExecutionAPI = {
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.yaml
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
 	eth_signTransaction: (
-		transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
+		transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
 	) => HexStringBytes | SignedTransactionInfoAPI;
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.yaml
@@ -263,7 +263,7 @@ export type EthExecutionAPI = {
 
 	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.yaml
 	eth_sendTransaction: (
-		transaction: GenericTransactionAPI | Partial<GenericTransactionAPI>,
+		transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
 	) => HexString32Bytes;
 	eth_sendRawTransaction: (transaction: HexStringBytes) => HexString32Bytes;
 

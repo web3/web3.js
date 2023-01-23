@@ -20,7 +20,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import {
 	EthExecutionAPI,
 	TransactionInfo,
-	GenericTransactionAPI,
+	TransactionWithSenderAPI,
 	SignedTransactionInfoAPI,
 	Web3BaseWalletAccount,
 	Address,
@@ -1137,7 +1137,7 @@ export function sendTransaction<
 								async (): Promise<string> =>
 									ethRpcMethods.sendTransaction(
 										web3Context.requestManager,
-										transactionFormatted as Partial<GenericTransactionAPI>,
+										transactionFormatted as Partial<TransactionWithSenderAPI>,
 									),
 							);
 						}

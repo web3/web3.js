@@ -24,7 +24,7 @@ import {
 	TransactionCall,
 	TransactionLegacyUnsignedAPI,
 	Transaction,
-	GenericTransactionAPI,
+	TransactionWithSenderAPI,
 } from 'web3-types';
 import { ETH_DATA_FORMAT } from 'web3-utils';
 import { isAddress, isHexStrict, isHexString32Bytes, isNullish, isUInt } from 'web3-validator';
@@ -107,7 +107,7 @@ export function isTransactionLegacyUnsigned(value: TransactionLegacyUnsignedAPI)
 	return true;
 }
 
-export function isTransactionWithSender(value: GenericTransactionAPI): boolean {
+export function isTransactionWithSender(value: TransactionWithSenderAPI): boolean {
 	if (!isAddress(value.from)) return false;
 	if (!isBaseTransaction(value)) return false;
 	if (
@@ -120,7 +120,7 @@ export function isTransactionWithSender(value: GenericTransactionAPI): boolean {
 	return true;
 }
 
-export function validateTransactionWithSender(value: GenericTransactionAPI) {
+export function validateTransactionWithSender(value: TransactionWithSenderAPI) {
 	if (!isTransactionWithSender(value)) throw new InvalidTransactionWithSender(value);
 }
 
