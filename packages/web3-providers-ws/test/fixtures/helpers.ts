@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { ProviderConnectInfo, ProviderRpcError, Web3ProviderEventCallback } from 'web3-types';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { exec } from 'child_process';
 import WebSocketProvider from '../../src';
 
 export const waitForOpenConnection = async (provider: WebSocketProvider) => {
@@ -41,42 +39,3 @@ export const waitForEvent = async (web3Provider: WebSocketProvider, eventName: s
 			resolve(data || error);
 		});
 	});
-
-const execPromise = async (command: string): Promise<string> =>
-	new Promise(resolve => {
-		exec(command, (_, stdout, stderr) => {
-			if (stderr) {
-				resolve(stderr);
-				return;
-			}
-			resolve(stdout);
-		});
-	});
-
-export const stopServerIfExists = async (port: number) => {
-	const res = await execPromise(
-		`$(docker ps --filter publish=${port}/tcp | grep '8545') && echo \${S:0:12}`,
-	);
-	if (res) {
-		await execPromise(
-			`S=$(docker ps --filter publish=${port}/tcp | grep '8545') && docker container stop \${S:0:12}`,
-		);
-	}
-};
-
-export const startGethServer = async (
-	port: number,
-): Promise<{ path: string; close: () => Promise<void> }> => {
-	await stopServerIfExists(port);
-
-	await execPromise(
-		`docker run -d -p ${port}:${port} ethereum/client-go --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port ${port} --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev && npx wait-port ${port}`,
-	);
-
-	return {
-		path: `ws://localhost:${port}`,
-		close: async (): Promise<void> => {
-			await stopServerIfExists(port);
-		},
-	};
-};

@@ -58,26 +58,6 @@ const execPromise = async (command: string): Promise<string> =>
 		});
 	});
 
-// const getPid = async (port: number): Promise<number> => {
-// 	try {
-// 		const pidStr = await execPromise(`lsof -Fp -i:${port}| grep '^p'`);
-// 		if (pidStr) {
-// 			return Number(pidStr.slice(1));
-// 		}
-// 		return 0;
-// 	} catch (e) {
-// 		return 0;
-// 	}
-// };
-
-// export const stopGethServerIFExists = async (port: number) => {
-// 	const prevPid = await getPid(port);
-// 	if (prevPid > 0) {
-// 		// close previous server
-// 		await execPromise(`kill -9 ${prevPid}`);
-// 	}
-// };
-
 export const waitForEvent = async (web3Provider: IpcProvider, eventName: string) =>
 	new Promise(resolve => {
 		web3Provider.on(eventName, (error: any, data: any) => {
@@ -100,36 +80,3 @@ export const startGethServer = async (): Promise<{ path: string; close: () => vo
 		},
 	};
 };
-
-// export const startGethServer = async (
-// 	port: number,
-// ): Promise<{ pid: number; path: string; close: () => Promise<void> }> => {
-// 	await stopGethServerIFExists(port);
-// 	// eslint-disable-next-line no-console
-// 	console.log('check dir before', await execPromise(`ls ${IPC_DIR_PATH}`));
-// 	await execPromise(
-// 		`${IPC_DIR_PATH}/geth --ipcpath ${IPC_PATH} --authrpc.port ${port} --ws --ws.addr 0.0.0.0 --ws.port ${
-// 			port + 1000
-// 		} --http --http.addr 0.0.0.0 --http.port ${
-// 			port + 1000
-// 		} --nodiscover --nousb --allow-insecure-unlock --dev --dev.period=0 &>/dev/null & \n npx wait-port ${port}`,
-// 	);
-// 	// eslint-disable-next-line no-console
-// 	console.log('finish execute');
-// 	// eslint-disable-next-line no-console
-// 	console.log('check dir after', await execPromise(`ls ${IPC_DIR_PATH}`));
-//
-// 	const pid = await getPid(port);
-//
-// 	return {
-// 		pid,
-// 		path: IPC_PATH,
-// 		close: async (): Promise<void> => {
-// 			// eslint-disable-next-line no-console
-// 			console.log('close', pid);
-// 			if (pid > 0) {
-// 				await execPromise(`kill -9 ${pid}`);
-// 			}
-// 		},
-// 	};
-// };

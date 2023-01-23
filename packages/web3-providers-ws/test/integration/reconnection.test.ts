@@ -19,13 +19,8 @@ import { CloseEvent } from 'ws';
 import WebSocketProvider from '../../src';
 
 import { describeIf, isWs, getSystemTestProvider, isBrowser } from '../fixtures/system_test_utils';
-import {
-	waitForCloseConnection,
-	waitForOpenConnection,
-	startGethServer,
-	waitForEvent,
-	stopServerIfExists,
-} from '../fixtures/helpers';
+import { waitForCloseConnection, waitForOpenConnection, waitForEvent } from '../fixtures/helpers';
+import { createProxy } from '../fixtures/proxy';
 
 describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
@@ -40,11 +35,6 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 				autoReconnect: true,
 				maxAttempts: 100,
 			};
-		});
-		afterAll(async () => {
-			await stopServerIfExists(18545);
-			await stopServerIfExists(18546);
-			await stopServerIfExists(18547);
 		});
 		it('check defaults', async () => {
 			const web3Provider = new WebSocketProvider(getSystemTestProvider());
@@ -70,24 +60,25 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			web3Provider.disconnect(1000, 'test');
 			await waitForCloseConnection(web3Provider);
 		});
-		it.skip('should emit connect and disconnected events', async () => {
-			const server = await startGethServer(18545);
+		it('should emit connect and disconnected events', async () => {
+			const server = await createProxy(18545, getSystemTestProvider());
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
-			// await waitForOpenConnection(web3Provider);
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
 			// @ts-expect-error set protected option
 			web3Provider._reconnectOptions = {
 				...reconnectionOptions,
 				autoReconnect: false,
 			};
+
 			const disconnectPromise = waitForEvent(web3Provider, 'disconnect');
 			// @ts-expect-error read protected property
 			expect(web3Provider.isReconnecting).toBe(false);
 			await server.close();
+
 			expect(!!(await disconnectPromise)).toBe(true);
 		});
-		it.skip('should connect, disconnect and reconnect', async () => {
-			const server = await startGethServer(18546);
+		it('should connect, disconnect and reconnect', async () => {
+			const server = await createProxy(18546, getSystemTestProvider());
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
@@ -104,7 +95,7 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			web3Provider._addSocketListeners();
 			await server.close();
 			const connectEvent = waitForEvent(web3Provider, 'connect');
-			const server2 = await startGethServer(18546);
+			const server2 = await createProxy(18546, getSystemTestProvider());
 			expect(!!(await connectEvent)).toBe(true);
 			// @ts-expect-error-next-line
 			web3Provider._onCloseHandler = (event: CloseEvent) => {
@@ -116,10 +107,11 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			// @ts-expect-error-next-line
 			web3Provider._addSocketListeners();
 			web3Provider.disconnect(1000, 'test');
+			await waitForEvent(web3Provider, 'disconnect');
 			await server2.close();
 		});
-		it.skip('should connect, disconnect, try reconnect and reach max attempts', async () => {
-			const server = await startGethServer(18547);
+		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
+			const server = await createProxy(18547, getSystemTestProvider());
 			const web3Provider = new WebSocketProvider(
 				server.path,
 				{},
@@ -141,8 +133,13 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			web3Provider._removeSocketListeners();
 			// @ts-expect-error run protected method
 			web3Provider._addSocketListeners();
-
-			const errorEvent = waitForEvent(web3Provider, 'error');
+			const errorEvent = new Promise(resolve => {
+				web3Provider.on('error', message => {
+					if (typeof message === 'string') {
+						resolve(message);
+					}
+				});
+			});
 
 			await server.close();
 			const errorMessage = await errorEvent;
