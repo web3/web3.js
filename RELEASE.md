@@ -36,11 +36,11 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 11. Create a draft release on Github similar to [this](https://github.com/ChainSafe/web3.js/releases/tag/web3-providers-base%401.0.0-alpha.1)
     - Check `This is a pre-release`
     - In the release description, copy all entries in `CHANGELOG.md` for the version being released
-11. Click `Save draft`
-12. Open pull request to merge branch created in `Step 2` (`release/bumped-version`) into `4.x`
-13. Wait for all tests to pass in github CI/CD , If there are any unusual warnings or errors in logs, discuss with team
-14. When sufficient approvals have been met, merge the pull request
-15. Publish documentation changes
-16. Publish draft release created in `Step 9`
-17. Run `npx lerna publish from-package --ignore-scripts --dist-tag alpha` in the root directory to publish packages to NPM
+12. Click `Save draft`
+13. Open pull request to merge branch created in `Step 2` (`release/bumped-version`) into `4.x`
+14. Wait for all tests to pass in github CI/CD , If there are any unusual warnings or errors in logs, discuss with team
+15. When sufficient approvals have been met, merge the pull request
+16. Publish documentation changes
+17. Publish draft release created in `Step 11`
+18. Run `npx lerna publish from-package --ignore-scripts --dist-tag alpha` in the root directory to publish packages to NPM
     - lerna will not invoke life cycle scripts before publishing and this will publish all packages to NPM public registry
