@@ -26,14 +26,14 @@ Further details about versioning can be found in the [semver 2.0.0 specification
 3. `yarn`: Verify all dependencies have been installed
 4. Bump packages version numbers using `lerna version --no-push --no-private --no-git-tag-version` . This will update package versions and also run lifecycle scripts.
     - It will prompt for new version , modify package metadata and run life cycle scripts (in our case `version`), for bootstrapping lerna will use underlying yarn.
-5. Run `yarn build:web` after lerna updates version and builds lib . This will bundle minified builds.
-6. Commit the version bump changes and builds in release branch created in step 2
-7. `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v4.0.1-alpha.0`
-8. `git push origin release/bumped-version`: Push release branch to `origin`
-9. `git push origin --tags`: Push release tag created in `Step 7` to `origin`
-10. Create a draft release on Github similar to [this](https://github.com/ChainSafe/web3.js/releases/tag/web3-providers-base%401.0.0-alpha.1)
-    - When creating the release, select the tag created in `step 7` ( e.g. `v4.0.1-alpha.0`)
-    - Release title should also be like tag title ( e.g. `v4.0.1-alpha.0`) prefixed with `v`
+5. Update the root and each package's `CHANGELOG.md`: Replace the `## [Unreleased]` header with new package version, and move `## [Unreleased]` header below listed changes
+    - For root `CHANGELOG.md` copy over all the listed changes for each package
+6. Run `yarn build:web` after lerna updates version and builds lib . This will bundle minified builds.
+7. Commit the version bump changes and builds in release branch created in step 2
+8. `git tag bumped-version`: Tag the commit with bumped version having prefix `v` , e.g. `git tag v4.0.1-alpha.0`
+9. `git push origin release/bumped-version`: Push release branch to `origin`
+10. `git push origin --tags`: Push release tag created in `Step 8` to `origin`
+11. Create a draft release on Github similar to [this](https://github.com/ChainSafe/web3.js/releases/tag/web3-providers-base%401.0.0-alpha.1)
     - Check `This is a pre-release`
     - In the release description, copy all entries in `CHANGELOG.md` for the version being released
 11. Click `Save draft`
