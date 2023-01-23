@@ -467,7 +467,7 @@ export interface FeeHistoryBase<NumberType> {
 	readonly oldestBlock: NumberType;
 	readonly baseFeePerGas: NumberType;
 	readonly reward: NumberType[][];
-	readonly gasUsedRatio: NumberType;
+	readonly gasUsedRatio: NumberType[];
 }
 
 export type FeeHistory = FeeHistoryBase<Numbers>;
