@@ -459,7 +459,7 @@ describe('WebsocketProvider (ganache)', function () {
     })
 
     // This test fails - the logic running in reconnect timeout doesn't know about the disconnect?
-    it.skip('allows disconnection on lost connection, when reconnect is enabled', function () {
+    it('allows disconnection on lost connection, when reconnect is enabled', function () {
         this.timeout(6000)
         let stage = 0
 
@@ -546,7 +546,7 @@ describe('WebsocketProvider (ganache)', function () {
 
     //this fails, deferred promise is executed
     //todo investigate
-    it.skip('queues requests made while connection is lost / executes on reconnect', function () {
+    it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
 
