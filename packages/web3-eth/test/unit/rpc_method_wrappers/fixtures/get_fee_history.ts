@@ -20,7 +20,7 @@ export const mockRpcResponse: FeeHistoryResultAPI = {
 	oldestBlock: '0xa30950',
 	baseFeePerGas: '0x9',
 	reward: [],
-	gasUsedRatio: [0],
+	gasUsedRatio: ['0'],
 };
 
 /**
