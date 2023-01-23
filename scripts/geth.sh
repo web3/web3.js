@@ -10,10 +10,6 @@ helpFunction() {
 start() {
 	. scripts/env.sh
 
-    processID=`lsof -Fp -i:${WEB3_SYSTEM_TEST_PORT}| grep '^p'`
-    kill -9 ${processID##p}
-    stop()
-    
 	if [ -z "${ORIGARGS[1]}" ]
 	then
 		echo "Starting geth..."
