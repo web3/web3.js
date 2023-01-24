@@ -553,25 +553,23 @@ describe('WebsocketProvider (ganache)', function () {
     it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
-
+        console.log("first statement")
         return new Promise(async function (resolve) {
+            console.log("inside the promise")
             server = ganache.server(ganacheOptions);
-            try {
-                await server.listen(port);
-            } catch(e) {
-                reject(e);
-              }
 
+            await server.listen(port);
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
                     host + port,
                     {reconnect: {auto: true, delay: 2000, maxAttempts: 5}}
                 )
             );
-
+            
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
                     try {
+                        console.log("before closing the server")
                     await server.close();
                     } catch(e) {
                         reject(e);
@@ -582,21 +580,24 @@ describe('WebsocketProvider (ganache)', function () {
 
             setTimeout(async function(){
                 assert(stage === 1);
-
+                console.log("trying to get block")
                 const deferred = web3.eth.getBlockNumber();
 
                 try {
+                console.log("creating second server")
                 server = ganache.server(ganacheOptions);
             } catch(e) {
                 reject(e);
               }
                 try {
+                    console.log("second listen")
                 await server.listen(port);
                 } catch(e) {
                     reject(e);
                   }
 
                 try {
+                    console.log("before deferred")
                     const blockNumber = await deferred;
                     assert(blockNumber === 0);
                     web3.currentProvider.removeAllListeners();
