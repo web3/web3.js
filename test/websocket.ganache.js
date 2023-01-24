@@ -556,7 +556,11 @@ describe('WebsocketProvider (ganache)', function () {
 
         return new Promise(async function (resolve) {
             server = ganache.server(ganacheOptions);
-            await server.listen(port);
+            try {
+                await server.listen(port);
+            } catch(e) {
+                reject(e);
+              }
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
