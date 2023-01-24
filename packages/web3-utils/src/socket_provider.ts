@@ -31,8 +31,10 @@ import {
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3ProviderEventCallback,
+	Web3ProviderStatus,
 } from 'web3-types';
 import {
+	ConnectionError,
 	ConnectionNotOpenError,
 	InvalidClientError,
 	PendingRequestsOnReconnectingError,
@@ -71,6 +73,7 @@ export abstract class SocketProvider<
 	protected readonly _providerOptions?: object;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
 	protected readonly _onCloseHandler: (event: CloseEvent) => void;
@@ -78,6 +81,7 @@ export abstract class SocketProvider<
 
 	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
 		super();
+		this._connectionStatus = 'connecting';
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
@@ -114,8 +118,32 @@ export abstract class SocketProvider<
 		this._reconnectAttempts = 0;
 	}
 
-	public abstract connect(): void;
+	public connect(): void {
+		try {
+			this._openSocketConnection();
+			this._connectionStatus = 'connecting';
+			this._addSocketListeners();
+		} catch (e) {
+			if (!this.isReconnecting) {
+				this._connectionStatus = 'disconnected';
+				if (e && (e as Error).message) {
+					throw new ConnectionError(
+						`Error while connecting to ${this._socketPath}. Reason: ${
+							(e as Error).message
+						}`,
+					);
+				} else {
+					throw new InvalidClientError(this._socketPath);
+				}
+			} else {
+				setImmediate(() => {
+					this._reconnect();
+				});
+			}
+		}
+	}
 
+	protected abstract _openSocketConnection(): void;
 	protected abstract _addSocketListeners(): void;
 
 	protected abstract _removeSocketListeners(): void;
@@ -151,6 +179,7 @@ export abstract class SocketProvider<
 	}
 
 	protected _onDisconnect(code?: number, data?: string) {
+		this._connectionStatus = 'disconnected';
 		super._onDisconnect(code, data);
 	}
 
@@ -168,7 +197,9 @@ export abstract class SocketProvider<
 
 	protected _onError(event: ErrorEvent): void {
 		// do not emit error while trying to reconnect
-		if (!this.isReconnecting) {
+		if (this.isReconnecting) {
+			this._reconnect();
+		} else {
 			this._eventEmitter.emit('error', event);
 		}
 	}
@@ -264,6 +295,7 @@ export abstract class SocketProvider<
 	}
 
 	protected _onConnect() {
+		this._connectionStatus = 'connected';
 		this._reconnectAttempts = 0;
 		super._onConnect();
 		this._sendPendingRequests();

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Socket } from 'net';
-import { ConnectionNotOpenError, InvalidClientError, ConnectionError } from 'web3-errors';
+import { ConnectionNotOpenError, InvalidClientError } from 'web3-errors';
 import { SocketProvider } from 'web3-utils';
 import {
 	EthExecutionAPI,
@@ -36,14 +36,8 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 	Error,
 	API
 > {
-	private _connectionStatus: Web3ProviderStatus;
 	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 	protected _socketConnection?: Socket;
-
-	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
-		super(socketPath, options, reconnectOptions);
-		this._connectionStatus = 'connecting';
-	}
 
 	public getStatus(): Web3ProviderStatus {
 		if (this._socketConnection?.connecting) {
@@ -51,42 +45,15 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		}
 		return this._connectionStatus;
 	}
-
-	public connect(): void {
+	protected _openSocketConnection() {
 		if (!existsSync(this._socketPath)) {
-			if (this.isReconnecting) {
-				setImmediate(() => {
-					this._reconnect();
-				});
-				return;
-			}
 			throw new InvalidClientError(this._socketPath);
 		}
-		try {
-			if (!this._socketConnection || this.getStatus() === 'disconnected') {
-				this._socketConnection = new Socket();
-			}
-			this._connectionStatus = 'connecting';
-			this._addSocketListeners();
-			this._socketConnection.connect({ path: this._socketPath });
-		} catch (e) {
-			if (this.isReconnecting) {
-				setImmediate(() => {
-					this._reconnect();
-				});
-			} else {
-				this._connectionStatus = 'disconnected';
-				if (e && (e as Error).message) {
-					throw new ConnectionError(
-						`Error while connecting to ${this._socketPath}. Reason: ${
-							(e as Error).message
-						}`,
-					);
-				} else {
-					throw new InvalidClientError(this._socketPath);
-				}
-			}
+		if (!this._socketConnection || this.getStatus() === 'disconnected') {
+			this._socketConnection = new Socket();
 		}
+
+		this._socketConnection.connect({ path: this._socketPath });
 	}
 
 	protected _closeSocketConnection(code?: number, data?: string) {
@@ -104,27 +71,10 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.write(JSON.stringify(payload));
 	}
 
-	protected _onCloseEvent(event: CloseEvent): void {
-		if (!event && this._reconnectOptions.autoReconnect) {
-			this._connectionStatus = 'disconnected';
-			this._reconnect();
-			return;
-		}
-
-		this._clearQueues(event);
-		this._removeSocketListeners();
-		this._onDisconnect(event?.code, event?.reason);
-	}
-
 	protected _parseResponses(e: Buffer | string) {
 		return this.chunkResponseParser.parseResponse(
 			typeof e === 'string' ? e : e.toString('utf8'),
 		);
-	}
-
-	protected _onClose(event: CloseEvent): void {
-		this._clearQueues(event);
-		this._removeSocketListeners();
 	}
 
 	protected _addSocketListeners(): void {
@@ -155,22 +105,20 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._socketConnection?.removeAllListeners('data');
 	}
 
-	protected _onConnect() {
-		this._connectionStatus = 'connected';
-		super._onConnect();
-	}
-
-	protected _onDisconnect(code?: number, data?: string): void {
-		this._connectionStatus = 'disconnected';
-		super._onDisconnect(code, data);
-	}
-
-	protected _onError(event: Error): void {
-		// do not send error while trying to reconnect
-		if (this._reconnectAttempts === 0) {
-			this._eventEmitter.emit('error', event);
-		} else {
+	protected _onCloseEvent(event: CloseEvent): void {
+		if (!event && this._reconnectOptions.autoReconnect) {
+			this._connectionStatus = 'disconnected';
 			this._reconnect();
+			return;
 		}
+
+		this._clearQueues(event);
+		this._removeSocketListeners();
+		this._onDisconnect(event?.code, event?.reason);
+	}
+
+	protected _onClose(event: CloseEvent): void {
+		this._clearQueues(event);
+		this._removeSocketListeners();
 	}
 }
