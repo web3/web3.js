@@ -485,6 +485,9 @@ describe('WebsocketProvider (ganache)', function () {
                 }
             })
 
+            web3.currentProvider.on('close', function (err) {
+                resolve()
+            })
             web3.currentProvider.on('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'))
                 reject(new Error('Could not disconnect...'))
@@ -564,7 +567,11 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
+                    try {
                     await server.close();
+                    } catch(e) {
+                        reject(e);
+                      }
                     stage = 1;
                 }
             });
@@ -574,7 +581,11 @@ describe('WebsocketProvider (ganache)', function () {
 
                 const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
+                try {
                 await server.listen(port);
+                } catch(e) {
+                    reject(e);
+                  }
 
                 try {
                     const blockNumber = await deferred;
