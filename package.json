@@ -52,7 +52,7 @@
 		"lint:fix": "lerna run lint:fix --stream --parallel",
 		"format": "lerna run format --stream --parallel && prettier --write ./scripts/**/*.ts",
 		"test": "lerna run test --stream --parallel",
-		"test:unit": "lerna run test:unit --stream --parallel",
+		"test:unit": "lerna run test:unit --stream --parallel && jest --config=./scripts/jest.config.js",
 		"test:integration": "lerna run test:integration --stream",
 		"test:e2e:ganache:http": "./scripts/test-runner.sh ganache http",
 		"test:e2e:ganache:ws": "./scripts/test-runner.sh ganache ws",
