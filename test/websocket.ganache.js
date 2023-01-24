@@ -572,9 +572,8 @@ describe('WebsocketProvider (ganache)', function () {
                 assert(stage === 1);
 
                 const deferred = web3.eth.getBlockNumber();
-                await server.open(port);
-                // server = ganache.server(ganacheOptions);
-                // await server.listen(port);
+                server = ganache.server(ganacheOptions);
+                await server.listen(port);
 
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
