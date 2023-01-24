@@ -481,6 +481,7 @@ describe('WebsocketProvider (ganache)', function () {
                     await server.close()
                     web3.currentProvider.disconnect()
                     stage = 1
+                    resolve()
                 }
             })
 
