@@ -84,6 +84,7 @@ export const ERR_TX_GAS_MISMATCH = 434;
 
 export const ERR_TX_CHAIN_MISMATCH = 435;
 export const ERR_TX_HARDFORK_MISMATCH = 436;
+export const ERR_TX_INVALID_RECEIVER = 437;
 
 // Connection error codes
 export const ERR_CONN = 500;
@@ -153,3 +154,17 @@ export const ERR_VALIDATION = 1100;
 // Core error codes
 export const ERR_CORE_HARDFORK_MISMATCH = 1101;
 export const ERR_CORE_CHAIN_MISMATCH = 1102;
+
+// rpc error codes EIP-1474
+export const ERR_RPC_INVALID_JSON = -32700;
+export const ERR_RPC_INVALID_REQUEST = -32600;
+export const ERR_RPC_INVALID_METHOD = -32601;
+export const ERR_RPC_INVALID_PARAMS = -32602;
+export const ERR_RPC_INTERNAL_ERROR = -32603;
+export const ERR_RPC_INVALID_INPUT = -32000;
+export const ERR_RPC_MISSING_RESOURCE = -32001;
+export const ERR_RPC_UNAVAILABLE_RESOURCE = -32002;
+export const ERR_RPC_TRANSACTION_REJECTED = -32003;
+export const ERR_RPC_UNSUPPORTED_METHOD = -32004;
+export const ERR_RPC_LIMIT_EXCEEDED = -32005;
+export const ERR_RPC_NOT_SUPPORTED = -32006;
