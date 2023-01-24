@@ -575,11 +575,14 @@ describe('WebsocketProvider (ganache)', function () {
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
 
-                const blockNumber = await deferred;
-                assert(blockNumber === 0);
-
-                web3.currentProvider.removeAllListeners();
-                resolve();
+                try {
+                    const blockNumber = await deferred;
+                    assert(blockNumber === 0);
+                    web3.currentProvider.removeAllListeners();
+                    resolve();
+                  } catch(e) {
+                    reject(e);
+                  }
             },2500);
         });
     });
