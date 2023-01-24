@@ -552,7 +552,7 @@ describe('WebsocketProvider (ganache)', function () {
 
         return new Promise(async function (resolve) {
             server = ganache.server(ganacheOptions);
-            server.listen(port);
+            await server.listen(port);
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
@@ -572,9 +572,9 @@ describe('WebsocketProvider (ganache)', function () {
                 assert(stage === 1);
 
                 const deferred = web3.eth.getBlockNumber();
-
-                server = ganache.server(ganacheOptions);
-                await server.listen(port);
+                await server.open(port);
+                // server = ganache.server(ganacheOptions);
+                // await server.listen(port);
 
                 const blockNumber = await deferred;
                 assert(blockNumber === 0);
