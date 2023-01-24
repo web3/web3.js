@@ -210,6 +210,28 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public readonly options: ContractOptions;
 
+	/**
+	 * The `contractWeb3Config` of type {@link Web3ConfigOptions} is used to set the defaults for all contracts
+	 *
+	 * Specifically you can set:
+	 *
+	 *  `defaultAccount`
+	 *  `defaultBlock`
+	 *  `defaultHardfork`
+	 *  `defaultCommon`
+	 *  `transactionSendTimeout`
+	 *  `transactionBlockTimeout`
+	 *  `transactionConfirmationBlocks`
+	 *  `transactionPollingInterval`
+	 *  `transactionPollingTimeout`
+	 *  `transactionReceiptPollingInterval`
+	 *  `transactionConfirmationPollingInterval`
+	 *  `blockHeaderTimeout`
+	 *  `handleRevert`
+	 */
+
+	public static contractWeb3Config: Partial<Web3ConfigOptions> = {};
+
 	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
 	private _address?: Address;
@@ -365,28 +387,6 @@ export class Contract<Abi extends ContractAbi>
 
 		this.setConfig(Contract.contractWeb3Config);
 	}
-
-	/**
-	 * The `contractWeb3Config` of type {@link Web3ConfigOptions} is used to set the defaults for all contracts
-	 *
-	 * Specifically you can set:
-	 *
-	 *  `defaultAccount`
-	 *  `defaultBlock`
-	 *  `defaultHardfork`
-	 *  `defaultCommon`
-	 *  `transactionSendTimeout`
-	 *  `transactionBlockTimeout`
-	 *  `transactionConfirmationBlocks`
-	 *  `transactionPollingInterval`
-	 *  `transactionPollingTimeout`
-	 *  `transactionReceiptPollingInterval`
-	 *  `transactionConfirmationPollingInterval`
-	 *  `blockHeaderTimeout`
-	 *  `handleRevert`
-	 */
-
-	public static contractWeb3Config: Partial<Web3ConfigOptions> = {};
 
 	/**
 	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
