@@ -568,37 +568,26 @@ describe('WebsocketProvider (ganache)', function () {
             
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
-                    try {
                         console.log("before closing the server")
                     await server.close();
-                    } catch(e) {
-                        reject(e);
-                      }
                     stage = 1;
                 }
             });
 
             setTimeout(async function(){
                 assert(stage === 1);
-                console.log("trying to get block")
+
                 const deferred = web3.eth.getBlockNumber();
-
-                try {
                 console.log("creating second server")
+                console.log(deferred);
                 server = ganache.server(ganacheOptions);
-            } catch(e) {
-                reject(e);
-              }
-                try {
-                    console.log("second listen")
+
+                console.log("second listen")
                 await server.listen(port);
-                } catch(e) {
-                    reject(e);
-                  }
 
                 try {
-                    console.log("before deferred")
-                    const blockNumber = await deferred;
+                    console.log("before")
+                    const blockNumber = await web3.eth.getBlockNumber();
                     assert(blockNumber === 0);
                     web3.currentProvider.removeAllListeners();
                     resolve();
