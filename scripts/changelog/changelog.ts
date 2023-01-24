@@ -14,339 +14,186 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-// eslint-disable-next-line import/no-extraneous-dependencies
-import yargs from 'yargs';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { hideBin } from 'yargs/helpers';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import inquirer from 'inquirer';
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import chalk from 'chalk';
 
-type SectionHeader = 'Added' | 'Changed' | 'Deprecated' | 'Removed' | 'Fixed' | 'Security';
-const SECTION_HEADERS = ['Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security'];
+export interface ChangelogConfig {
+	packagesDirectoryPath: string;
+	packagesChangelogPath: string;
+	rootChangelogPath: string;
+}
 
-const _getListOfPackageNames = () =>
-	readdirSync('./packages', { withFileTypes: true })
+interface Command {
+	name: string;
+	description: string;
+	arguments: string[];
+	example: string;
+	commandFunction: (args?: string[]) => any;
+}
+
+const DEFAULT_CHANGELOG_CONFIG = {
+	packagesDirectoryPath: './packages',
+	packagesChangelogPath: 'CHANGELOG.md',
+	rootChangelogPath: './CHANGELOG.md',
+};
+const ENTRY_SECTION_HEADERS = ['Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security'];
+
+export const getListOfPackageNames = (packagesDirectory: string) =>
+	readdirSync(packagesDirectory, { withFileTypes: true })
 		.filter(dirent => dirent.isDirectory())
 		.map(dirent => dirent.name);
 
-const _addEntry = async (sectionHeader: SectionHeader, args: Record<string, unknown>) => {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-	const { packageName }: { packageName: string } = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'packageName',
-			message: 'Which package would you like to add your entry to?',
-			choices: _getListOfPackageNames(),
-		},
-	]);
-	const filePath = `./packages/${packageName}/CHANGELOG.md`;
-
-	// eslint-disable-next-line no-console
-	console.log(`Adding entry under ${sectionHeader} section in ${filePath}`);
-
-	const parsedChangelog = readFileSync(filePath, 'utf8').split(/\n/);
-	const unreleasedHeaderIndex = parsedChangelog.findIndex(item => item === '## [Unreleased]');
-	const unreleasedSection = parsedChangelog.splice(unreleasedHeaderIndex);
-
-	let sectionHeaderIndex = unreleasedSection.findIndex(item => item === `### ${sectionHeader}`);
-	if (sectionHeaderIndex === -1) {
-		unreleasedSection.push(...[`### ${sectionHeader}`, '']);
-	}
-	sectionHeaderIndex = unreleasedSection.findIndex(item => item === `### ${sectionHeader}`);
-
-	// Contains desired section, but could still contain other sections
-	const desiredSection = unreleasedSection.slice(sectionHeaderIndex);
-	// Remove any sections after desiredSection
-	const nextSectionHeaderIndex = desiredSection
-		.slice(1)
-		.findIndex(item => item.startsWith('### '));
-	if (nextSectionHeaderIndex !== -1) desiredSection.splice(nextSectionHeaderIndex);
-
-	const newEntry = `-   ${args.entry as string}`;
-	// If last line in desiredSection is a new line, add newEntry before it
-	if (desiredSection.length > 2 && desiredSection[desiredSection.length - 1] === '') {
-		desiredSection.splice(desiredSection.length - 1, 0, ...[newEntry, '']);
-		// If desiredSection only contains sectionHeader and a new line, add newEntry and
-		// a new line after
-	} else if (desiredSection.length === 2) {
-		desiredSection.push(...[newEntry, '']);
-	} else desiredSection.push(newEntry);
-
-	// Replace existing desiredSection with modified version
-	unreleasedSection.splice(sectionHeaderIndex, desiredSection.length - 1, ...desiredSection);
-
-	// Replace existing Unreleased section with modified version
-	parsedChangelog.splice(unreleasedHeaderIndex, 0, ...unreleasedSection);
-
-	writeFileSync(filePath, parsedChangelog.join('\n'));
-};
-
-const _getRootGroupedSectionEntryItems = () => {
-	const parsedRootChangelog = readFileSync('./CHANGELOG.md', 'utf8').split(/\n/);
-	const rootUnreleasedHeaderIndex = parsedRootChangelog.findIndex(
+export const getUnreleasedSection = (parsedChangelog: string[]) => {
+	const unreleasedSectionHeaderIndex = parsedChangelog.findIndex(
 		item => item === '## [Unreleased]',
 	);
-	const rootUnreleasedSection = parsedRootChangelog.splice(rootUnreleasedHeaderIndex);
-
-	const rootUnreleasedSectionHeaderIndices = [];
-	for (const [unreleasedEntryIndex, unreleasedEntry] of rootUnreleasedSection.entries()) {
-		if (SECTION_HEADERS.includes(unreleasedEntry.replace(/###\s/, '')))
-			rootUnreleasedSectionHeaderIndices.push(unreleasedEntryIndex);
-	}
-
-	const rootUnreleasedSections = [];
-	for (const [index, sectionHeaderIndex] of rootUnreleasedSectionHeaderIndices.entries()) {
-		const section = rootUnreleasedSection.slice(
-			sectionHeaderIndex,
-			rootUnreleasedSectionHeaderIndices[index + 1],
-		);
-		rootUnreleasedSections.push(section);
-	}
-
-	const rootUnreleasedSectionEntries: Record<string, Record<string, string[]>> = {};
-	for (const rootUnreleasedSectionEntry of rootUnreleasedSections) {
-		const sectionEntryItemHeaderIndices = [];
-		const sectionEntryItemsIndices = [];
-		for (const [
-			sectionEntryItemIndex,
-			sectionEntryItem,
-		] of rootUnreleasedSectionEntry.entries()) {
-			if (sectionEntryItem.startsWith('#### web3'))
-				sectionEntryItemHeaderIndices.push(sectionEntryItemIndex);
-			else if (sectionEntryItem.startsWith('- '))
-				sectionEntryItemsIndices.push(sectionEntryItemIndex);
-		}
-
-		const groupedSectionEntryItems: Record<string, string[]> = {};
-		for (const sectionEntryItemHeaderIndex of sectionEntryItemHeaderIndices) {
-			const sectionEntryItems = [];
-			for (const sectionEntryItemIndex of sectionEntryItemsIndices) {
-				sectionEntryItems.push(rootUnreleasedSectionEntry[sectionEntryItemIndex]);
-			}
-
-			groupedSectionEntryItems[rootUnreleasedSectionEntry[sectionEntryItemHeaderIndex]] =
-				sectionEntryItems;
-			rootUnreleasedSectionEntries[rootUnreleasedSectionEntry[0]] = groupedSectionEntryItems;
-		}
-	}
-
-	return rootUnreleasedSectionEntries;
+	const unreleasedSection = parsedChangelog.splice(unreleasedSectionHeaderIndex);
+	return unreleasedSection;
 };
 
-const _getPackageGroupedUnreleasedSectionEntryItems = (packageName: string) => {
-	const filePath = `./packages/${packageName}/CHANGELOG.md`;
-	const parsedChangelog = readFileSync(filePath, 'utf8').split(/\n/);
-	const unreleasedHeaderIndex = parsedChangelog.findIndex(item => item === '## [Unreleased]');
-	const unreleasedSection = parsedChangelog.splice(unreleasedHeaderIndex);
+export const getRootGroupedUnreleasedEntries = (unreleasedSection: string[]) => {
+	const groupedUnreleasedEntries: Record<string, Record<string, string[]>> = {};
 
-	const sectionHeaderIndices = [];
-	for (const [unreleasedEntryIndex, unreleasedEntry] of unreleasedSection.entries()) {
-		if (SECTION_HEADERS.includes(unreleasedEntry.replace(/###\s/, '')))
-			sectionHeaderIndices.push(unreleasedEntryIndex);
-	}
-
-	const packageUnreleasedSections = [];
-	for (const [index, sectionHeaderIndex] of sectionHeaderIndices.entries()) {
-		const section = unreleasedSection.slice(
-			sectionHeaderIndex,
-			sectionHeaderIndices[index + 1],
-		);
-		packageUnreleasedSections.push(section);
-	}
-
-	const packageGroupedSectionEntryItems: Record<string, string[]> = {};
-	for (const packageUnreleasedSection of packageUnreleasedSections) {
-		const sectionEntryItems = [];
-		for (const sectionEntryItem of packageUnreleasedSection) {
-			if (sectionEntryItem.startsWith('- ')) sectionEntryItems.push(sectionEntryItem);
+	let lastPackageHeaderIndex = 0;
+	let lastEntryHeaderIndex = 0;
+	for (const [index, item] of unreleasedSection.entries()) {
+		// substring(4) removes "### " from entry headers (e.g. "### Changed" -> "Changed")
+		if (ENTRY_SECTION_HEADERS.includes(item.substring(4))) {
+			groupedUnreleasedEntries[unreleasedSection[index]] = {};
+			lastEntryHeaderIndex = index;
+		} else if (item.startsWith('#### ')) {
+			groupedUnreleasedEntries[unreleasedSection[lastEntryHeaderIndex]][item] = [];
+			lastPackageHeaderIndex = index;
+		} else if (item.startsWith('-')) {
+			const entryHeader = unreleasedSection[lastEntryHeaderIndex];
+			const packageHeader = unreleasedSection[lastPackageHeaderIndex];
+			groupedUnreleasedEntries[entryHeader][packageHeader].push(item);
 		}
-
-		packageGroupedSectionEntryItems[packageUnreleasedSection[0]] = sectionEntryItems;
 	}
 
-	return packageGroupedSectionEntryItems;
+	return groupedUnreleasedEntries;
 };
 
-const _unSyncedReport = (
-	whatsMissing: Record<string, Record<string, string[]>>,
-	verbose = false,
-) => {
-	let totalMissingEntryItems = 0;
-	const packagesWithMissingEntryItems: string[] = [];
+export const getPackageGroupedUnreleasedEntries = (unreleasedSection: string[]) => {
+	const groupedUnreleasedEntries: Record<string, string[]> = {};
 
-	for (const sectionHeader of Object.keys(whatsMissing)) {
-		for (const packageName of Object.keys(whatsMissing[sectionHeader])) {
-			totalMissingEntryItems += whatsMissing[sectionHeader][packageName].length;
-			if (!packagesWithMissingEntryItems.includes(packageName))
-				packagesWithMissingEntryItems.push(packageName);
+	let lastEntryHeaderIndex = 0;
+	for (const [index, item] of unreleasedSection.entries()) {
+		// substring(4) removes "### " from entry headers (e.g. "### Changed" -> "Changed")
+		if (ENTRY_SECTION_HEADERS.includes(item.substring(4))) {
+			groupedUnreleasedEntries[item] = [];
+			lastEntryHeaderIndex = index;
+		} else if (item.startsWith('-   ')) {
+			const entryHeader = unreleasedSection[lastEntryHeaderIndex];
+			groupedUnreleasedEntries[entryHeader].push(item);
 		}
 	}
 
-	// eslint-disable-next-line no-console
-	console.log(
-		`Root CHANGELOG.md is ${chalk.red('missing')} ${chalk.yellow(
-			`${totalMissingEntryItems} total changes`,
-		)}, from ${chalk.yellow(`${packagesWithMissingEntryItems.length} packages`)}`,
+	return groupedUnreleasedEntries;
+};
+
+export const syncChangelogs = (args?: string[]) => {
+	const CHANGELOG_CONFIG: ChangelogConfig =
+		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
+			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
+			: DEFAULT_CHANGELOG_CONFIG;
+
+	const parsedRootChangelog = readFileSync(CHANGELOG_CONFIG.rootChangelogPath, 'utf8').split(
+		/\n/,
 	);
-	// eslint-disable-next-line no-console
-	if (verbose) console.log(whatsMissing);
-};
+	const rootGroupedUnreleasedEntries = getRootGroupedUnreleasedEntries(
+		getUnreleasedSection(parsedRootChangelog),
+	);
+	writeFileSync('./foo.json', JSON.stringify(rootGroupedUnreleasedEntries));
 
-const _checkForUnSyncedChanges = (args: Record<string, unknown>) => {
-	const whatsMissing: Record<string, Record<string, string[]>> = {};
-	const rootGroupedUnreleasedSectionEntries = _getRootGroupedSectionEntryItems();
+	// TODO Remove after debugging
+	// eslint-disable-next-line no-unreachable-loop
+	for (const packageName of getListOfPackageNames(CHANGELOG_CONFIG.packagesDirectoryPath)) {
+		const parsedChangelog = readFileSync(
+			`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
+			'utf8',
+		).split(/\n/);
+		const packageGroupedUnreleasedEntries = getPackageGroupedUnreleasedEntries(
+			getUnreleasedSection(parsedChangelog),
+		);
 
-	for (const packageName of _getListOfPackageNames()) {
-		const packageGroupedUnreleasedSectionEntries =
-			_getPackageGroupedUnreleasedSectionEntryItems(packageName);
+		for (const entrySectionHeader of ENTRY_SECTION_HEADERS) {
+			const formattedEntrySectionHeader = `### ${entrySectionHeader}`;
+			const formattedPackageEntryHeader = `#### ${packageName}`;
 
-		for (const sectionHeader of SECTION_HEADERS) {
-			const formattedSectionHeader = `### ${sectionHeader}`;
-			if (packageGroupedUnreleasedSectionEntries[formattedSectionHeader] !== undefined) {
-				if (rootGroupedUnreleasedSectionEntries[formattedSectionHeader] === undefined) {
-					whatsMissing[sectionHeader] = {
-						...whatsMissing[sectionHeader],
-						[packageName]:
-							packageGroupedUnreleasedSectionEntries[formattedSectionHeader],
-					};
+			const packageEntrySection =
+				packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
+			if (packageEntrySection !== undefined) {
+				// PackageName has a formattedEntrySectionHeader listed in packageName/CHANGELOG.md
 
-					// add section header and package entries
-				} else if (
-					rootGroupedUnreleasedSectionEntries[formattedSectionHeader][
-						`#### ${packageName}`
+				if (rootGroupedUnreleasedEntries[formattedEntrySectionHeader] === undefined) {
+					// Root CHANGELOG.md is missing formattedEntrySectionHeader
+					rootGroupedUnreleasedEntries[formattedEntrySectionHeader] = {};
+				}
+
+				if (
+					rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+						formattedPackageEntryHeader
 					] === undefined
 				) {
-					whatsMissing[sectionHeader] = {
-						...whatsMissing[sectionHeader],
-						[packageName]:
-							packageGroupedUnreleasedSectionEntries[formattedSectionHeader],
-					};
-
-					// add package header and entries to existing root section
+					// Root CHANGELOG.md is missing formattedPackageEntryHeader for formattedEntrySectionHeader
+					rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+						formattedPackageEntryHeader
+					] = packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
 				} else {
-					for (const packageSectionEntryItem of packageGroupedUnreleasedSectionEntries[
-						formattedSectionHeader
+					for (const packageEntry of packageGroupedUnreleasedEntries[
+						formattedEntrySectionHeader
 					]) {
 						if (
-							!rootGroupedUnreleasedSectionEntries[formattedSectionHeader][
-								`#### ${packageName}`
-							].includes(packageSectionEntryItem)
+							!rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+								formattedPackageEntryHeader
+							].includes(packageEntry)
 						) {
-							whatsMissing[sectionHeader] = {
-								...whatsMissing[sectionHeader],
-								[packageName]: [
-									// ...whatsMissing[sectionHeader][packageName],
-									packageSectionEntryItem,
-								],
-							};
+							rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+								formattedPackageEntryHeader
+							].push(packageEntry);
 						}
 					}
-
-					// check existing section for all package entries
 				}
 			}
 		}
+		// console.log(rootGroupedUnreleasedEntries);
+		break;
 	}
-
-	_unSyncedReport(whatsMissing, args.verbose as boolean);
 };
 
-// const _sync = () => {
+const COMMANDS: Command[] = [
+	// {
+	// 	name: '[packageName]',
+	// 	description:
+	// 		'Updates the CHANGELOG.md for packageName with specified changelogHeader and changelogEntry',
+	// 	arguments: ['changelogHeader', 'changelogEntry'],
+	// 	example: 'yarn changelog [packageName] [changelogHeader] [changelogEntry]',
+	// 	commandFunction: () => {},
+	// },
+	{
+		name: 'sync',
+		description:
+			'Checks CHANGELOG.md for each package in ./packages/ for entries not included in root CHANGELOG.md',
+		arguments: [],
+		example: 'sync',
+		commandFunction: syncChangelogs,
+	},
+];
 
-// }
+const parseArgs = (): any => {
+	const commandArg = process.argv[2];
+	for (const command of COMMANDS) {
+		if (command.name === commandArg) {
+			return command.commandFunction(process.argv.slice(3));
+		}
+	}
 
-(() => {
-	// eslint-disable-next-line @typescript-eslint/no-floating-promises
-	yargs(hideBin(process.argv))
-		.command(
-			'added [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Added section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Added', argv);
-			},
-		)
-		.command(
-			'changed [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Changed section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Changed', argv);
-			},
-		)
-		.command(
-			'deprecated [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Deprecated section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Deprecated', argv);
-			},
-		)
-		.command(
-			'removed [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Removed section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Removed', argv);
-			},
-		)
-		.command(
-			'fixed [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Fixed section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Fixed', argv);
-			},
-		)
-		.command(
-			'security [entry]',
-			"Used to add an entry to a specified package's CHANGELOG under the Security section",
-			_yargs =>
-				_yargs.positional('entry', {
-					describe: 'The entry to be added to the CHANGELOG',
-				}),
-			async argv => {
-				await _addEntry('Security', argv);
-			},
-		)
-		.command(
-			'check-sync',
-			'Used to check for changes listed in packages/ CHANGELOGs but not root CHANGELOG',
-			_yargs =>
-				_yargs.option('verbose', {
-					alias: 'v',
-					// type: boolean,
-					describe: "Provide detailed log of what's missing from root CHANGELOG",
-				}),
-			argv => {
-				_checkForUnSyncedChanges(argv);
-			},
-		)
-		// .command(
-		// 	'sync',
-		// 	'Used to combine all CHANGELOGs found in packages/ into the root CHANGELOG',
-		// 	{},
-		// 	async () => {
-		// 		await _checkForUnSyncedChanges();
-		// 	},
-		// )
-		.parse();
-})();
+	// eslint-disable-next-line no-console
+	console.log('Invalid command, please refer to below table for expected commands:');
+	// eslint-disable-next-line no-console
+	console.table(COMMANDS);
+	return undefined;
+};
+
+parseArgs();
