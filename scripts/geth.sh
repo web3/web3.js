@@ -9,7 +9,9 @@ helpFunction() {
 
 start() {
 	. scripts/env.sh
-
+	docker ps -q --filter ancestor="ethereum/client-go" | xargs -r docker stop
+    processID=`lsof -Fp -i:${WEB3_SYSTEM_TEST_PORT}| grep '^p'`
+    kill -9 ${processID##p}
 	if [ -z "${ORIGARGS[1]}" ]
 	then
 		echo "Starting geth..."
