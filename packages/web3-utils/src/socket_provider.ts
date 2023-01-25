@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import {
+	ConnectionEvent,
 	EthExecutionAPI,
 	JsonRpcBatchRequest,
 	JsonRpcBatchResponse,
@@ -30,8 +31,11 @@ import {
 	Web3APIReturnType,
 	Web3APISpec,
 	Web3ProviderEventCallback,
+	Web3ProviderStatus,
 } from 'web3-types';
 import {
+	ConnectionError,
+	ConnectionNotOpenError,
 	InvalidClientError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
@@ -58,6 +62,7 @@ export abstract class SocketProvider<
 	ErrorEvent,
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Eip1193Provider<API> {
+	protected isReconnecting: boolean;
 	protected readonly _socketPath: string;
 	protected readonly chunkResponseParser: ChunkResponseParser;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
@@ -68,12 +73,15 @@ export abstract class SocketProvider<
 	protected readonly _providerOptions?: object;
 	protected readonly _reconnectOptions: ReconnectOptions;
 	protected _socketConnection?: unknown;
+	protected _connectionStatus: Web3ProviderStatus;
 	protected readonly _onMessageHandler: (event: MessageEvent) => void;
 	protected readonly _onOpenHandler: () => void;
 	protected readonly _onCloseHandler: (event: CloseEvent) => void;
 	protected readonly _onErrorHandler: (event: ErrorEvent) => void;
+
 	public constructor(socketPath: string, options?: object, reconnectOptions?: object) {
 		super();
+		this._connectionStatus = 'connecting';
 		this._onMessageHandler = this._onMessage.bind(this);
 		this._onOpenHandler = this._onConnect.bind(this);
 		this._onCloseHandler = this._onCloseEvent.bind(this);
@@ -103,39 +111,78 @@ export abstract class SocketProvider<
 		this.chunkResponseParser.onError(() => {
 			this._clearQueues();
 		});
+		this.isReconnecting = false;
 	}
+
 	protected _init() {
 		this._reconnectAttempts = 0;
 	}
-	public abstract connect(): void;
+
+	public connect(): void {
+		try {
+			this._openSocketConnection();
+			this._connectionStatus = 'connecting';
+			this._addSocketListeners();
+		} catch (e) {
+			if (!this.isReconnecting) {
+				this._connectionStatus = 'disconnected';
+				if (e && (e as Error).message) {
+					throw new ConnectionError(
+						`Error while connecting to ${this._socketPath}. Reason: ${
+							(e as Error).message
+						}`,
+					);
+				} else {
+					throw new InvalidClientError(this._socketPath);
+				}
+			} else {
+				setImmediate(() => {
+					this._reconnect();
+				});
+			}
+		}
+	}
+
+	protected abstract _openSocketConnection(): void;
 	protected abstract _addSocketListeners(): void;
+
 	protected abstract _removeSocketListeners(): void;
+
 	protected abstract _onCloseEvent(_event: unknown): void;
+
 	protected abstract _sendToSocket(_payload: Web3APIPayload<API, any>): void;
+
 	protected abstract _parseResponses(_event: MessageEvent): JsonRpcResponse[];
-	protected abstract _clearQueues(_event?: unknown): void;
+
 	protected abstract _closeSocketConnection(_code?: number, _data?: string): void;
+
 	// eslint-disable-next-line class-methods-use-this
 	protected _validateProviderPath(path: string): boolean {
 		return !!path;
 	}
+
 	// eslint-disable-next-line class-methods-use-this
 	public supportsSubscriptions(): boolean {
 		return true;
 	}
+
 	public on<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.on(type, callback);
 	}
+
 	public once<T = JsonRpcResult>(type: EventType, callback: Web3ProviderEventCallback<T>): void {
 		this._eventEmitter.once(type, callback);
 	}
+
 	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
 		this._eventEmitter.removeListener(type, callback);
 	}
 
 	protected _onDisconnect(code?: number, data?: string) {
+		this._connectionStatus = 'disconnected';
 		super._onDisconnect(code, data);
 	}
+
 	public disconnect(code?: number, data?: string): void {
 		this._removeSocketListeners();
 		if (this.getStatus() !== 'disconnected') {
@@ -143,12 +190,18 @@ export abstract class SocketProvider<
 		}
 		this._onDisconnect(code, data);
 	}
+
 	public removeAllListeners(type: string): void {
 		this._eventEmitter.removeAllListeners(type);
 	}
 
 	protected _onError(event: ErrorEvent): void {
-		this._eventEmitter.emit('error', event);
+		// do not emit error while trying to reconnect
+		if (this.isReconnecting) {
+			this._reconnect();
+		} else {
+			this._eventEmitter.emit('error', event);
+		}
 	}
 
 	public reset(): void {
@@ -159,7 +212,14 @@ export abstract class SocketProvider<
 		this._removeSocketListeners();
 		this._addSocketListeners();
 	}
+
 	protected _reconnect(): void {
+		if (this.isReconnecting) {
+			return;
+		}
+
+		this.isReconnecting = true;
+
 		if (this._sentRequestsQueue.size > 0) {
 			this._sentRequestsQueue.forEach(
 				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
@@ -170,11 +230,18 @@ export abstract class SocketProvider<
 		}
 
 		if (this._reconnectAttempts < this._reconnectOptions.maxAttempts) {
+			this._reconnectAttempts += 1;
 			setTimeout(() => {
-				this._reconnectAttempts += 1;
 				this._removeSocketListeners();
 				this.connect();
+				this.isReconnecting = false;
 			}, this._reconnectOptions.delay);
+		} else {
+			this.isReconnecting = false;
+			this._clearQueues();
+			this._removeSocketListeners();
+			const errorMsg = `Max connection attempts exceeded (${this._reconnectOptions.maxAttempts})`;
+			this._eventEmitter.emit('error', errorMsg);
 		}
 	}
 
@@ -228,6 +295,7 @@ export abstract class SocketProvider<
 	}
 
 	protected _onConnect() {
+		this._connectionStatus = 'connected';
 		this._reconnectAttempts = 0;
 		super._onConnect();
 		this._sendPendingRequests();
@@ -275,5 +343,27 @@ export abstract class SocketProvider<
 
 			this._sentRequestsQueue.delete(requestId);
 		}
+	}
+
+	protected _clearQueues(event?: ConnectionEvent) {
+		if (this._pendingRequestsQueue.size > 0) {
+			this._pendingRequestsQueue.forEach(
+				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
+					request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					this._pendingRequestsQueue.delete(key);
+				},
+			);
+		}
+
+		if (this._sentRequestsQueue.size > 0) {
+			this._sentRequestsQueue.forEach(
+				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
+					request.deferredPromise.reject(new ConnectionNotOpenError(event));
+					this._sentRequestsQueue.delete(key);
+				},
+			);
+		}
+
+		this._removeSocketListeners();
 	}
 }
