@@ -38,12 +38,6 @@ export const sendFewTxes = async ({
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
-		// @TODO: Investigate why we need timeout here #5730
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
-
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
 			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
@@ -85,13 +79,8 @@ export const sendFewTxesWithoutReceipt = async ({
 		TransactionReceipt,
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>[] = [];
-	for (let i = 0; i < times; i += 1) {
-		// @TODO: Investigate why we need timeout here #5730
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
 
+	for (let i = 0; i < times; i += 1) {
 		res.push(
 			web3Eth.sendTransaction({
 				to,
