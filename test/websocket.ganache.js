@@ -480,13 +480,13 @@ describe('WebsocketProvider (ganache)', function () {
                 if (stage === 0){
                     await server.close()
                     stage = 1
-                    web3.currentProvider.disconnect()
+                    disconnect = web3.currentProvider.disconnect()
+                    if (disconnect){
+                        resolve()
+                    } else {
+                        reject()
+                    }
                 }
-            })
-
-            web3.currentProvider.on('disconnect', async function (){
-                // disconnect on lost connection was successful
-                resolve();
             })
 
             web3.currentProvider.on('error', function (error) {
