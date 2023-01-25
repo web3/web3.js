@@ -27,7 +27,7 @@ interface Command {
 	description: string;
 	arguments: string[];
 	example: string;
-	commandFunction: (args?: string[]) => any;
+	commandFunction: (args?: string[]) => unknown;
 }
 
 const DEFAULT_CHANGELOG_CONFIG = {
@@ -46,7 +46,7 @@ export const getUnreleasedSection = (parsedChangelog: string[]) => {
 	const unreleasedSectionHeaderIndex = parsedChangelog.findIndex(
 		item => item === '## [Unreleased]',
 	);
-	const unreleasedSection = parsedChangelog.splice(unreleasedSectionHeaderIndex);
+	const unreleasedSection = parsedChangelog.slice(unreleasedSectionHeaderIndex);
 	return unreleasedSection;
 };
 
@@ -97,18 +97,15 @@ export const syncChangelogs = (args?: string[]) => {
 		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
 			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
 			: DEFAULT_CHANGELOG_CONFIG;
-
 	const parsedRootChangelog = readFileSync(CHANGELOG_CONFIG.rootChangelogPath, 'utf8').split(
 		/\n/,
 	);
 	const rootGroupedUnreleasedEntries = getRootGroupedUnreleasedEntries(
 		getUnreleasedSection(parsedRootChangelog),
 	);
-	writeFileSync('./foo.json', JSON.stringify(rootGroupedUnreleasedEntries));
+	const listOfPackageNames = getListOfPackageNames(CHANGELOG_CONFIG.packagesDirectoryPath);
 
-	// TODO Remove after debugging
-	// eslint-disable-next-line no-unreachable-loop
-	for (const packageName of getListOfPackageNames(CHANGELOG_CONFIG.packagesDirectoryPath)) {
+	for (const packageName of listOfPackageNames) {
 		const parsedChangelog = readFileSync(
 			`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
 			'utf8',
@@ -131,35 +128,36 @@ export const syncChangelogs = (args?: string[]) => {
 					rootGroupedUnreleasedEntries[formattedEntrySectionHeader] = {};
 				}
 
-				if (
-					rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
-						formattedPackageEntryHeader
-					] === undefined
-				) {
-					// Root CHANGELOG.md is missing formattedPackageEntryHeader for formattedEntrySectionHeader
-					rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
-						formattedPackageEntryHeader
-					] = packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
-				} else {
-					for (const packageEntry of packageGroupedUnreleasedEntries[
-						formattedEntrySectionHeader
-					]) {
-						if (
-							!rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
-								formattedPackageEntryHeader
-							].includes(packageEntry)
-						) {
-							rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
-								formattedPackageEntryHeader
-							].push(packageEntry);
-						}
-					}
-				}
+				rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+					formattedPackageEntryHeader
+				] = packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
 			}
 		}
-		// console.log(rootGroupedUnreleasedEntries);
-		break;
 	}
+
+	const flattenedRootGroupedUnreleasedEntries: string[] = [];
+	for (const key of Object.keys(rootGroupedUnreleasedEntries)) {
+		const element = rootGroupedUnreleasedEntries[key];
+		flattenedRootGroupedUnreleasedEntries.push(key);
+		flattenedRootGroupedUnreleasedEntries.push('');
+		for (const packageName of listOfPackageNames) {
+			const formattedPackageEntryHeader = `#### ${packageName}`;
+			const element2 = element[formattedPackageEntryHeader];
+			if (element[formattedPackageEntryHeader] !== undefined) {
+				flattenedRootGroupedUnreleasedEntries.push(formattedPackageEntryHeader);
+				flattenedRootGroupedUnreleasedEntries.push('');
+				flattenedRootGroupedUnreleasedEntries.push(...element2);
+				flattenedRootGroupedUnreleasedEntries.push('');
+			}
+		}
+	}
+
+	// +2 is so the header, ## [Unreleased], and the newline after it don't get removed
+	parsedRootChangelog.splice(
+		parsedRootChangelog.findIndex(item => item === '## [Unreleased]') + 2,
+	);
+	parsedRootChangelog.push(...flattenedRootGroupedUnreleasedEntries);
+	writeFileSync(CHANGELOG_CONFIG.rootChangelogPath, parsedRootChangelog.join('\n'));
 };
 
 const COMMANDS: Command[] = [
@@ -181,7 +179,7 @@ const COMMANDS: Command[] = [
 	},
 ];
 
-const parseArgs = (): any => {
+const parseArgs = (): unknown => {
 	const commandArg = process.argv[2];
 	for (const command of COMMANDS) {
 		if (command.name === commandArg) {
