@@ -18,18 +18,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { ClientRequestArgs } from 'http';
 import WebSocket, { ClientOptions, CloseEvent } from 'isomorphic-ws';
 import {
-	ConnectionEvent,
 	EthExecutionAPI,
-	JsonRpcId,
-	SocketRequestItem,
 	Web3APIMethod,
 	Web3APIPayload,
 	Web3APISpec,
 	Web3ProviderStatus,
 } from 'web3-types';
-import { isNullish } from 'web3-utils';
-import { InvalidConnectionError, ConnectionNotOpenError } from 'web3-errors';
-import { SocketProvider } from 'web3-utils';
+import { isNullish, SocketProvider } from 'web3-utils';
+import { ConnectionNotOpenError } from 'web3-errors';
 
 export { ClientRequestArgs } from 'http';
 // todo had to ignore, introduce error in doc generation,see why/better solution
@@ -63,28 +59,18 @@ export default class WebSocketProvider<
 		}
 		return 'disconnected';
 	}
-
-	public connect(): void {
-		try {
-			this._socketConnection = new WebSocket(
-				this._socketPath,
-				undefined,
-				this._providerOptions && Object.keys(this._providerOptions).length === 0
-					? undefined
-					: this._providerOptions,
-			);
-
-			this._addSocketListeners();
-		} catch (e) {
-			throw new InvalidConnectionError(this._socketPath);
-		}
+	protected _openSocketConnection() {
+		this._socketConnection = new WebSocket(
+			this._socketPath,
+			undefined,
+			this._providerOptions && Object.keys(this._providerOptions).length === 0
+				? undefined
+				: this._providerOptions,
+		);
 	}
 
 	protected _closeSocketConnection(code?: number, data?: string) {
 		this._socketConnection?.close(code, data);
-	}
-	protected _parseResponses(event: WebSocket.MessageEvent) {
-		return this.chunkResponseParser.parseResponse(event.data as string);
 	}
 
 	protected _sendToSocket<Method extends Web3APIMethod<API>>(
@@ -94,6 +80,10 @@ export default class WebSocketProvider<
 			throw new ConnectionNotOpenError();
 		}
 		this._socketConnection?.send(JSON.stringify(payload));
+	}
+
+	protected _parseResponses(event: WebSocket.MessageEvent) {
+		return this.chunkResponseParser.parseResponse(event.data as string);
 	}
 
 	protected _addSocketListeners(): void {
@@ -116,6 +106,13 @@ export default class WebSocketProvider<
 		}
 	}
 
+	protected _removeSocketListeners(): void {
+		this._socketConnection?.removeEventListener('message', this._onMessageHandler);
+		this._socketConnection?.removeEventListener('open', this._onOpenHandler);
+		this._socketConnection?.removeEventListener('close', this._onCloseHandler);
+		// note: we intentionally keep the error event listener to be able to emit it in case an error happens when closing the connection
+	}
+
 	protected _onCloseEvent(event: CloseEvent): void {
 		if (
 			this._reconnectOptions.autoReconnect &&
@@ -128,34 +125,5 @@ export default class WebSocketProvider<
 		this._clearQueues(event);
 		this._removeSocketListeners();
 		this._onDisconnect(event.code, event.reason);
-	}
-
-	protected _removeSocketListeners(): void {
-		this._socketConnection?.removeEventListener('message', this._onMessageHandler);
-		this._socketConnection?.removeEventListener('open', this._onOpenHandler);
-		this._socketConnection?.removeEventListener('close', this._onCloseHandler);
-		// note: we intentionally keep the error event listener to be able to emit it in case an error happens when closing the connection
-	}
-
-	protected _clearQueues(event?: ConnectionEvent) {
-		if (this._pendingRequestsQueue.size > 0) {
-			this._pendingRequestsQueue.forEach(
-				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					this._pendingRequestsQueue.delete(key);
-				},
-			);
-		}
-
-		if (this._sentRequestsQueue.size > 0) {
-			this._sentRequestsQueue.forEach(
-				(request: SocketRequestItem<any, any, any>, key: JsonRpcId) => {
-					request.deferredPromise.reject(new ConnectionNotOpenError(event));
-					this._sentRequestsQueue.delete(key);
-				},
-			);
-		}
-
-		this._removeSocketListeners();
 	}
 }
