@@ -1514,9 +1514,7 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			subscription instanceof LogsSubscription &&
 			name === 'logs' &&
 			typeof args === 'object' &&
-			// @ts-expect-error Property 'fromBlock' does not exist on type '(ConstructorParameters<RegisteredSubscription[T]>[0] & object) | (ConstructorParameters<RegisteredSubscription[T]>[0] & null)'.
 			args.fromBlock &&
-			// @ts-expect-error Property 'fromBlock' does not exist on type '(ConstructorParameters<RegisteredSubscription[T]>[0] & object) | (ConstructorParameters<RegisteredSubscription[T]>[0] & null)'.
 			Number.isFinite(Number(args.fromBlock))
 		) {
 			setImmediate(() => {
