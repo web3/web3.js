@@ -14,16 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import { copyFileSync, readFileSync, unlinkSync } from 'fs';
+
 import * as Changelog from '../../changelog';
 import {
 	mockParsedPackageChangelog,
 	mockPackageUnreleasedSection,
 	mockPackageGroupedUnreleasedEntries,
-} from '../fixtures/mock_parsed_package_changelog';
+} from '../fixtures/mock_package_parsed_changelog';
 import {
 	mockRootGroupedUnreleasedEntries,
+	mockRootSyncedChangelog,
 	mockRootUnreleasedSection,
-} from '../fixtures/mock_parsed_root_changelog';
+} from '../fixtures/mock_root_parsed_changelog';
 
 describe('Changelog script tests', () => {
 	it('should get list of directory names in ../fixtures/mock_packages_directory', () => {
@@ -49,6 +52,19 @@ describe('Changelog script tests', () => {
 	});
 
 	it('should sync all package CHANGELOGs with root CHANGELOG.md', () => {
+		const rootChangelogPath =
+			'./scripts/changelog/test/fixtures/mock_packages_directory/mock_root_CHANGELOG.md';
+
+		copyFileSync(
+			'./scripts/changelog/test/fixtures/mock_root_unsynced_CHANGELOG.tmpl',
+			rootChangelogPath,
+		);
+
 		Changelog.syncChangelogs(['./scripts/changelog/test/unit/test_changelog_config.json']);
+
+		const parsedRootChangelog = readFileSync(rootChangelogPath, 'utf8').split(/\n/);
+		expect(parsedRootChangelog).toEqual(mockRootSyncedChangelog);
+
+		unlinkSync(rootChangelogPath);
 	});
 });
