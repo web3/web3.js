@@ -479,15 +479,16 @@ describe('WebsocketProvider (ganache)', function () {
                 // Stay isolated, just in case
                 if (stage === 0){
                     await server.close()
-                    web3.currentProvider.disconnect()
                     stage = 1
-                    resolve()
+                    web3.currentProvider.disconnect()
                 }
             })
 
-            web3.currentProvider.on('close', function (err) {
-                resolve()
+            web3.currentProvider.on('disconnect', async function (){
+                // disconnect on lost connection was successful
+                resolve();
             })
+
             web3.currentProvider.on('error', function (error) {
                 assert(error.message.includes('Maximum number of reconnect attempts reached!'))
                 reject(new Error('Could not disconnect...'))
