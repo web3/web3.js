@@ -23,18 +23,25 @@ import {
 	mockPackageGroupedUnreleasedEntries,
 } from '../fixtures/mock_package_parsed_changelog';
 import {
+	mockRootFlattenedSyncedUnreleasedEntries,
 	mockRootGroupedUnreleasedEntries,
 	mockRootSyncedChangelog,
+	mockRootSyncedGroupedUnreleasedEntries,
 	mockRootUnreleasedSection,
 } from '../fixtures/mock_root_parsed_changelog';
 import TestChangelogConfig from './test_changelog_config.json';
 
 describe('Changelog script tests', () => {
-	it('should get list of directory names in ../fixtures/mock_packages_directory', () => {
-		const result = Changelog.getListOfPackageNames(
+	let listOfPackageNames: string[];
+
+	beforeAll(() => {
+		listOfPackageNames = Changelog.getListOfPackageNames(
 			'./scripts/changelog/test/fixtures/mock_packages_directory',
 		);
-		expect(result).toEqual(['mock-package-1', 'mock-package-2', 'mock-package-3']);
+	});
+
+	it('should get list of directory names in ../fixtures/mock_packages_directory', () => {
+		expect(listOfPackageNames).toEqual(['mock-package-1', 'mock-package-2', 'mock-package-3']);
 	});
 
 	it('should get package unreleased section', () => {
@@ -50,6 +57,28 @@ describe('Changelog script tests', () => {
 	it('should get package grouped unreleased entries', () => {
 		const result = Changelog.getPackageGroupedUnreleasedEntries(mockPackageUnreleasedSection);
 		expect(result).toEqual(mockPackageGroupedUnreleasedEntries);
+	});
+
+	it('should get synced grouped unreleased entries', () => {
+		const result = Changelog.getSyncedGroupedUnreleasedEntries(
+			listOfPackageNames,
+			TestChangelogConfig,
+			mockRootGroupedUnreleasedEntries,
+		);
+		expect(result).toEqual(mockRootSyncedGroupedUnreleasedEntries);
+	});
+
+	it('should flatten synced unreleased entries', () => {
+		const syncedGroupedUnreleasedEntries = Changelog.getSyncedGroupedUnreleasedEntries(
+			listOfPackageNames,
+			TestChangelogConfig,
+			mockRootGroupedUnreleasedEntries,
+		);
+		const result = Changelog.flattenSyncedUnreleasedEntries(
+			syncedGroupedUnreleasedEntries,
+			listOfPackageNames,
+		);
+		expect(result).toEqual(mockRootFlattenedSyncedUnreleasedEntries);
 	});
 
 	it('should sync all package CHANGELOGs with root CHANGELOG.md', () => {

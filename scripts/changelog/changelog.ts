@@ -30,6 +30,8 @@ interface Command {
 	commandFunction: (args?: string[]) => unknown;
 }
 
+type GroupedUnreleasedEntries = Record<string, Record<string, string[]>>;
+
 const DEFAULT_CHANGELOG_CONFIG = {
 	packagesDirectoryPath: './packages',
 	packagesChangelogPath: 'CHANGELOG.md',
@@ -51,7 +53,7 @@ export const getUnreleasedSection = (parsedChangelog: string[]) => {
 };
 
 export const getRootGroupedUnreleasedEntries = (unreleasedSection: string[]) => {
-	const groupedUnreleasedEntries: Record<string, Record<string, string[]>> = {};
+	const groupedUnreleasedEntries: GroupedUnreleasedEntries = {};
 
 	let lastPackageHeaderIndex = 0;
 	let lastEntryHeaderIndex = 0;
@@ -91,23 +93,15 @@ export const getPackageGroupedUnreleasedEntries = (unreleasedSection: string[]) 
 	return groupedUnreleasedEntries;
 };
 
-export const syncChangelogs = (args?: string[]) => {
-	const CHANGELOG_CONFIG: ChangelogConfig =
-		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
-			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
-			: DEFAULT_CHANGELOG_CONFIG;
-	const parsedRootChangelog = readFileSync(CHANGELOG_CONFIG.rootChangelogPath, 'utf8').split(
-		/\n/,
-	);
-	const rootGroupedUnreleasedEntries = getRootGroupedUnreleasedEntries(
-		getUnreleasedSection(parsedRootChangelog),
-	);
-	const listOfPackageNames = getListOfPackageNames(CHANGELOG_CONFIG.packagesDirectoryPath);
-
+export const getSyncedGroupedUnreleasedEntries = (
+	listOfPackageNames: string[],
+	changelogConfig: ChangelogConfig,
+	rootGroupedUnreleasedEntries: GroupedUnreleasedEntries,
+) => {
+	const _rootGroupedUnreleasedEntries: GroupedUnreleasedEntries = rootGroupedUnreleasedEntries;
 	for (const packageName of listOfPackageNames) {
 		const parsedChangelog = readFileSync(
-			`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
+			`${changelogConfig.packagesDirectoryPath}/${packageName}/${changelogConfig.packagesChangelogPath}`,
 			'utf8',
 		).split(/\n/);
 		const packageGroupedUnreleasedEntries = getPackageGroupedUnreleasedEntries(
@@ -123,40 +117,70 @@ export const syncChangelogs = (args?: string[]) => {
 			if (packageEntrySection !== undefined) {
 				// PackageName has a formattedEntrySectionHeader listed in packageName/CHANGELOG.md
 
-				if (rootGroupedUnreleasedEntries[formattedEntrySectionHeader] === undefined) {
+				if (_rootGroupedUnreleasedEntries[formattedEntrySectionHeader] === undefined) {
 					// Root CHANGELOG.md is missing formattedEntrySectionHeader
-					rootGroupedUnreleasedEntries[formattedEntrySectionHeader] = {};
+					_rootGroupedUnreleasedEntries[formattedEntrySectionHeader] = {};
 				}
 
-				rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
+				_rootGroupedUnreleasedEntries[formattedEntrySectionHeader][
 					formattedPackageEntryHeader
 				] = packageGroupedUnreleasedEntries[formattedEntrySectionHeader];
 			}
 		}
 	}
 
-	const flattenedRootGroupedUnreleasedEntries: string[] = [];
-	for (const key of Object.keys(rootGroupedUnreleasedEntries)) {
-		const element = rootGroupedUnreleasedEntries[key];
-		flattenedRootGroupedUnreleasedEntries.push(key);
-		flattenedRootGroupedUnreleasedEntries.push('');
+	return _rootGroupedUnreleasedEntries;
+};
+
+export const flattenSyncedUnreleasedEntries = (
+	syncedGroupedUnreleasedEntries: GroupedUnreleasedEntries,
+	listOfPackageNames: string[],
+) => {
+	const flattenedSyncedUnreleasedEntries: string[] = [];
+	for (const key of Object.keys(syncedGroupedUnreleasedEntries)) {
+		const element = syncedGroupedUnreleasedEntries[key];
+		flattenedSyncedUnreleasedEntries.push(key);
+		flattenedSyncedUnreleasedEntries.push('');
 		for (const packageName of listOfPackageNames) {
 			const formattedPackageEntryHeader = `#### ${packageName}`;
 			const element2 = element[formattedPackageEntryHeader];
 			if (element[formattedPackageEntryHeader] !== undefined) {
-				flattenedRootGroupedUnreleasedEntries.push(formattedPackageEntryHeader);
-				flattenedRootGroupedUnreleasedEntries.push('');
-				flattenedRootGroupedUnreleasedEntries.push(...element2);
-				flattenedRootGroupedUnreleasedEntries.push('');
+				flattenedSyncedUnreleasedEntries.push(formattedPackageEntryHeader);
+				flattenedSyncedUnreleasedEntries.push('');
+				flattenedSyncedUnreleasedEntries.push(...element2);
+				flattenedSyncedUnreleasedEntries.push('');
 			}
 		}
 	}
+
+	return flattenedSyncedUnreleasedEntries;
+};
+
+export const syncChangelogs = (args?: string[]) => {
+	const CHANGELOG_CONFIG: ChangelogConfig =
+		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
+			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
+			: DEFAULT_CHANGELOG_CONFIG;
+	const parsedRootChangelog = readFileSync(CHANGELOG_CONFIG.rootChangelogPath, 'utf8').split(
+		/\n/,
+	);
+	const listOfPackageNames = getListOfPackageNames(CHANGELOG_CONFIG.packagesDirectoryPath);
+	const syncedGroupedUnreleasedEntries = getSyncedGroupedUnreleasedEntries(
+		listOfPackageNames,
+		CHANGELOG_CONFIG,
+		getRootGroupedUnreleasedEntries(getUnreleasedSection(parsedRootChangelog)),
+	);
+	const flattenedSyncedUnreleasedEntries = flattenSyncedUnreleasedEntries(
+		syncedGroupedUnreleasedEntries,
+		listOfPackageNames,
+	);
 
 	// +2 is so the header, ## [Unreleased], and the newline after it don't get removed
 	parsedRootChangelog.splice(
 		parsedRootChangelog.findIndex(item => item === '## [Unreleased]') + 2,
 	);
-	parsedRootChangelog.push(...flattenedRootGroupedUnreleasedEntries);
+	parsedRootChangelog.push(...flattenedSyncedUnreleasedEntries);
 	writeFileSync(CHANGELOG_CONFIG.rootChangelogPath, parsedRootChangelog.join('\n'));
 };
 
