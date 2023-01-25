@@ -484,12 +484,10 @@ describe('WebsocketProvider (ganache)', function () {
                     disconnect = web3.currentProvider.disconnect()
                     console.log("disconnect")
                     console.log(disconnect)
-                    if (disconnect){
-                        resolve()
-                    } else {
-                        reject()
-                    }
                 }
+            })
+            web3.currentProvider.on('end', async function (){
+                resolve();
             })
 
             web3.currentProvider.on('error', function (error) {
