@@ -4,6 +4,7 @@ const utils = require('./helpers/test.utils')
 const Web3 = utils.getWeb3()
 
 const { spawn } = require('child_process');
+const { disconnect } = require('process');
 
 const intervalTime = 1000 // ms
 
@@ -481,6 +482,8 @@ describe('WebsocketProvider (ganache)', function () {
                     await server.close()
                     stage = 1
                     disconnect = web3.currentProvider.disconnect()
+                    console.log("disconnect")
+                    console.log(disconnect)
                     if (disconnect){
                         resolve()
                     } else {
