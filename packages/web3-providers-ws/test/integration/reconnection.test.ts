@@ -18,8 +18,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { CloseEvent } from 'ws';
 import WebSocketProvider from '../../src';
 
-import { describeIf, isWs, getSystemTestProvider, isBrowser } from '../fixtures/system_test_utils';
-import { waitForCloseConnection, waitForOpenConnection, waitForEvent } from '../fixtures/helpers';
+import {
+	describeIf,
+	isWs,
+	getSystemTestProvider,
+	isBrowser,
+	waitForOpenSocketConnection,
+	waitForCloseSocketConnection,
+	waitForEvent,
+} from '../fixtures/system_test_utils';
 import { createProxy } from '../fixtures/proxy';
 
 describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
@@ -44,9 +51,9 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 				delay: 5000,
 				maxAttempts: 5,
 			});
-			await waitForOpenConnection(web3Provider);
+			await waitForOpenSocketConnection(web3Provider);
 			web3Provider.disconnect(1000, 'test');
-			await waitForCloseConnection(web3Provider);
+			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('set custom reconnectOptions', async () => {
 			const web3Provider = new WebSocketProvider(
@@ -56,9 +63,9 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
-			await waitForOpenConnection(web3Provider);
+			await waitForOpenSocketConnection(web3Provider);
 			web3Provider.disconnect(1000, 'test');
-			await waitForCloseConnection(web3Provider);
+			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
 			const server = await createProxy(18545, getSystemTestProvider());

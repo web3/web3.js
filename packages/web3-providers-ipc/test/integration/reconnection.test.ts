@@ -17,13 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import IpcProvider from '../../src';
 
-import { describeIf, getSystemTestProvider, isIpc } from '../fixtures/system_test_utils';
 import {
-	waitForCloseConnection,
-	waitForOpenConnection,
-	startGethServer,
+	describeIf,
+	getSystemTestProvider,
+	isIpc,
+	waitForOpenSocketConnection,
+	waitForCloseSocketConnection,
 	waitForEvent,
-} from '../fixtures/helpers';
+} from '../fixtures/system_test_utils';
+import { startGethServer } from '../fixtures/helpers';
 
 describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 	describe('subscribe event tests', () => {
@@ -47,17 +49,17 @@ describeIf(isIpc)('IpcSocketProvider - reconnection', () => {
 				delay: 5000,
 				maxAttempts: 5,
 			});
-			await waitForOpenConnection(web3Provider);
+			await waitForOpenSocketConnection(web3Provider);
 			web3Provider.disconnect(1000, 'test');
-			await waitForCloseConnection(web3Provider);
+			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('set custom reconnectOptions', async () => {
 			const web3Provider = new IpcProvider(getSystemTestProvider(), {}, reconnectionOptions);
 			// @ts-expect-error-next-line
 			expect(web3Provider._reconnectOptions).toEqual(reconnectionOptions);
-			await waitForOpenConnection(web3Provider);
+			await waitForOpenSocketConnection(web3Provider);
 			web3Provider.disconnect(1000, 'test');
-			await waitForCloseConnection(web3Provider);
+			await waitForCloseSocketConnection(web3Provider);
 		});
 		it('should emit connect and disconnected events', async () => {
 			const web3Provider = new IpcProvider(getSystemTestProvider());

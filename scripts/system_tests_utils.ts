@@ -422,3 +422,27 @@ export const waitForSocketDisconnect = async (provider: SocketProvider<any, any,
 		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };
+
+export const waitForOpenSocketConnection = async (provider: SocketProvider<any, any, any>) =>
+	new Promise<ProviderConnectInfo>(resolve => {
+		provider.on('connect', ((_error, data) => {
+			resolve(data as unknown as ProviderConnectInfo);
+		}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+	});
+
+export const waitForCloseSocketConnection = async (provider: SocketProvider<any, any, any>) =>
+	new Promise<ProviderRpcError>(resolve => {
+		provider.on('disconnect', ((_error, data) => {
+			resolve(data as unknown as ProviderRpcError);
+		}) as Web3ProviderEventCallback<ProviderRpcError>);
+	});
+
+export const waitForEvent = async (
+	web3Provider: SocketProvider<any, any, any>,
+	eventName: string,
+) =>
+	new Promise(resolve => {
+		web3Provider.on(eventName, (error: any, data: any) => {
+			resolve(data || error);
+		});
+	});
