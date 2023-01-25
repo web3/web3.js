@@ -34,3 +34,133 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - I've improved the security in XY (#1000)
 
 -->
+
+## [0.1.0-alpha.1]
+
+### Added
+
+-   I've added feature XY #2 (#1001)
+
+### Changed
+
+-   I've cleaned up XY #2 (#1001)
+
+### Deprecated
+
+-   I've deprecated XY #2 (#1001)
+
+### Removed
+
+-   I've removed XY #2 (#1001)
+
+### Fixed
+
+-   I've fixed XY #2 (#1001)
+
+### Security
+
+-   I've improved the security in XY #2 (#1001)
+
+## [0.1.0]
+
+### Added
+
+-   I've added feature XY #2 (#1002)
+
+### Changed
+
+-   I've cleaned up XY #2 (#1002)
+
+### Deprecated
+
+-   I've deprecated XY #2 (#1002)
+
+### Removed
+
+-   I've removed XY #2 (#1002)
+
+### Fixed
+
+-   I've fixed XY #2 (#1002)
+
+### Security
+
+-   I've improved the security in XY #2 (#1002)
+
+## [0.1.1]
+
+### Added
+
+-   I've added feature XY #2 (#1003)
+
+### Changed
+
+-   I've cleaned up XY #2 (#1003)
+
+### Deprecated
+
+-   I've deprecated XY #2 (#1003)
+
+### Removed
+
+-   I've removed XY #2 (#1003)
+
+### Fixed
+
+-   I've fixed XY #2 (#1003)
+
+### Security
+
+-   I've improved the security in XY #2 (#1003)
+
+## [1.0.0]
+
+### Added
+
+-   I've added feature XY #2 (#1004)
+
+### Changed
+
+-   I've cleaned up XY #2 (#1004)
+
+### Deprecated
+
+-   I've deprecated XY #2 (#1004)
+
+### Removed
+
+-   I've removed XY #2 (#1004)
+
+### Fixed
+
+-   I've fixed XY #2 (#1004)
+
+### Security
+
+-   I've improved the security in XY #2 (#1004)
+
+## [Unreleased]
+
+### Added
+
+-   I've added feature XY #2 (#1005)
+
+### Changed
+
+-   I've cleaned up XY #2 (#1005)
+
+### Deprecated
+
+-   I've deprecated XY #2 (#1005)
+
+### Removed
+
+-   I've removed XY #2 (#1005)
+
+### Fixed
+
+-   I've fixed XY #2 (#1005)
+
+### Security
+
+-   I've improved the security in XY #2 (#1005)

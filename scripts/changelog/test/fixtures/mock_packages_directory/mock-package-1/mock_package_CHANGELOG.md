@@ -169,6 +169,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   I've added feature XY (#1005)
+
 ### Changed
 
 -   I've cleaned up XY (#1005)
