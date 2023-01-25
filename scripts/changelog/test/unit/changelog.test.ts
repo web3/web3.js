@@ -27,6 +27,7 @@ import {
 	mockRootSyncedChangelog,
 	mockRootUnreleasedSection,
 } from '../fixtures/mock_root_parsed_changelog';
+import TestChangelogConfig from './test_changelog_config.json';
 
 describe('Changelog script tests', () => {
 	it('should get list of directory names in ../fixtures/mock_packages_directory', () => {
@@ -52,19 +53,19 @@ describe('Changelog script tests', () => {
 	});
 
 	it('should sync all package CHANGELOGs with root CHANGELOG.md', () => {
-		const rootChangelogPath =
-			'./scripts/changelog/test/fixtures/mock_packages_directory/mock_root_CHANGELOG.md';
-
 		copyFileSync(
 			'./scripts/changelog/test/fixtures/mock_root_unsynced_CHANGELOG.tmpl',
-			rootChangelogPath,
+			TestChangelogConfig.rootChangelogPath,
 		);
 
 		Changelog.syncChangelogs(['./scripts/changelog/test/unit/test_changelog_config.json']);
 
-		const parsedRootChangelog = readFileSync(rootChangelogPath, 'utf8').split(/\n/);
+		const parsedRootChangelog = readFileSync(
+			TestChangelogConfig.rootChangelogPath,
+			'utf8',
+		).split(/\n/);
 		expect(parsedRootChangelog).toEqual(mockRootSyncedChangelog);
 
-		unlinkSync(rootChangelogPath);
+		unlinkSync(TestChangelogConfig.rootChangelogPath);
 	});
 });
