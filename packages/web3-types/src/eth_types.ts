@@ -363,6 +363,10 @@ export interface Transaction extends TransactionBase {
 	to?: Address | null;
 }
 
+export interface TransactionForAccessList extends Transaction {
+	from: Address;
+}
+
 export interface TransactionCall extends Transaction {
 	to: Address;
 }
