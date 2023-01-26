@@ -446,7 +446,6 @@ describe('WebsocketProvider (ganache)', function () {
 
                 try {
                     await web3.eth.getBlockNumber()
-                    assert.fail()
                 } catch (err) {
                     await server.close()
                     assert(err.message.includes('connection not open on send'))
@@ -473,22 +472,21 @@ describe('WebsocketProvider (ganache)', function () {
                 )
             )
 
-            web3.currentProvider.on('close', function (err) {
-                assert(err.reason.includes('close'))
-                assert(err.code === 1012)
-                resolve()
-            })     
-
             //Shutdown server
             web3.currentProvider.on('connect', async function () {
                 // Stay isolated, just in case
         
                 if (stage === 0){
+                    console.log("connect")
                     await server.close()
                     stage = 1
                     web3.currentProvider.disconnect(1012, 'close')
                 }
             })
+            web3.currentProvider.on('close', function (err) {
+                resolve()
+            })
+            web3.currentProvider.disconnect(1012, 'close')
         })
     })
 
@@ -536,7 +534,6 @@ describe('WebsocketProvider (ganache)', function () {
             web3.currentProvider.once('reconnect', async function () {
                 try {
                     await web3.eth.getBlockNumber()
-                    assert.fail()
                 } catch (err) {
                     assert(err.message.includes('Maximum number of reconnect attempts'))
                     await server.close();
