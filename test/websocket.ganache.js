@@ -578,8 +578,9 @@ describe('WebsocketProvider (ganache)', function () {
                 if (blockNumber === undefined) {
                     reject();
                 }
-                web3.currentProvider.removeAllListeners();
             },1000);
+        await server.close();
+        web3.currentProvider.removeAllListeners();
         resolve();
         });
     });
