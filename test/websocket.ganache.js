@@ -573,12 +573,12 @@ describe('WebsocketProvider (ganache)', function () {
                 } catch (error) {
                     reject();
                 }
-                web3.currentProvider.removeAllListeners();
                 if (blockNumber === undefined) {
                     reject();
                 }
+                web3.currentProvider.removeAllListeners();
                 resolve();
-            },2500);
+            },1000);
         });
     });
 
