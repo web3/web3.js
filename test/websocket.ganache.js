@@ -458,8 +458,8 @@ describe('WebsocketProvider (ganache)', function () {
     });
 
     it('allows disconnection on lost connection, when reconnect is enabled', function () {
-        this.timeout(6000);
-        let stage = 0;
+        this.timeout(6000)
+        let stage = 0
 
         return new Promise(async function (resolve) {
             server = ganache.server(ganacheOptions)
@@ -483,10 +483,10 @@ describe('WebsocketProvider (ganache)', function () {
             })
             web3.currentProvider.on('close', function (err) {
                 assert(err.code, 1012)
-                resolve();
-            });
-        });
-    });
+                resolve()
+            })
+        })
+    })
 
     it('uses the custom configured delay on re-connect', function () {
         let timeout
@@ -566,20 +566,20 @@ describe('WebsocketProvider (ganache)', function () {
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
-                // manually reconnect so we don't error out
-                web3.currentProvider.reconnect();
                 const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
                 try {
                     blockNumber = await deferred;
-                    resolve(true);
                 } catch (error) {
-                    reject(error);
+                    reject();
                 }
                 web3.currentProvider.removeAllListeners();
-
-            }, 1000);
+                if (blockNumber === undefined) {
+                    reject();
+                }
+                resolve();
+            },2500);
         });
     });
 
