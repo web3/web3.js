@@ -21,7 +21,7 @@
 		"url": "https://github.com/ChainSafe/web3.js/issues"
 	},
 	"engines": {
-		"node": ">=12",
+		"node": ">=14",
 		"npm": ">=6.12.0"
 	},
 	"workspaces": {
