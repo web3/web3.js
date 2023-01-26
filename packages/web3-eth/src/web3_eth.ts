@@ -34,6 +34,7 @@ import {
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
+	TransactionForAccessList,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
@@ -1471,6 +1472,14 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			rewardPercentiles,
 			returnFormat,
 		);
+	}
+
+	public async createAccessList<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: TransactionForAccessList,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.createAccessList(this, transaction, blockNumber, returnFormat);
 	}
 
 	/**
