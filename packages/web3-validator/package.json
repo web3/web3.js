@@ -6,6 +6,10 @@
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
+	"engines": {
+		"node": ">=14",
+		"npm": ">=6.12.0"
+	},
 	"files": [
 		"lib/**/*",
 		"dist/**/*"
