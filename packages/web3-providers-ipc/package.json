@@ -22,7 +22,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
