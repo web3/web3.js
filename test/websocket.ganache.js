@@ -588,8 +588,9 @@ describe('WebsocketProvider (ganache)', function () {
                     if (blockNumber === undefined) {
                         reject();
                     }
-                    resolve();
                 },2500);
+
+                resolve();
             })
         });
 
