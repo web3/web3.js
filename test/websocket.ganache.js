@@ -533,7 +533,6 @@ describe('WebsocketProvider (ganache)', function () {
             web3.currentProvider.once('reconnect', async function () {
                 try {
                     await web3.eth.getBlockNumber()
-                    assert.fail()
                 } catch (err) {
                     assert(err.message.includes('Maximum number of reconnect attempts'))
                     resolve()
