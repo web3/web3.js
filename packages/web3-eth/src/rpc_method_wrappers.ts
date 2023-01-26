@@ -54,6 +54,8 @@ import {
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 
+import { TransactionForAccessList } from 'web3-types';
+import { AccessList } from 'web3-types';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -62,6 +64,7 @@ import {
 	logSchema,
 	transactionReceiptSchema,
 	transactionInfoSchema,
+	accessListSchema,
 } from './schemas';
 import {
 	SendSignedTransactionEvents,
@@ -1939,4 +1942,32 @@ async function getRevertReason<ReturnFormat extends DataFormat>(
 	} catch (err) {
 		throw new TransactionRevertError((err as Error).message);
 	}
+}
+
+/**
+ * This function generates access list for a transaction.
+ *
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ * @param transaction - A transaction object where all properties are optional except `from`, however it's also recommended to include the `to` property.
+ * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while sending this request.
+ * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data should be formatted.
+ * @returns The returned data of the createAccessList, e.g. The generated access list for transaction.
+ */
+export async function createAccessList<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: TransactionForAccessList,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+	returnFormat: ReturnFormat,
+) {
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
+		? (blockNumber as BlockTag)
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
+	const response = (await ethRpcMethods.createAccessList(
+		web3Context.requestManager,
+		formatTransaction(transaction, ETH_DATA_FORMAT),
+		blockNumberFormatted,
+	)) as unknown as AccessList;
+
+	return format(accessListSchema, response, returnFormat);
 }
