@@ -16,7 +16,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { copyFileSync, readFileSync, unlinkSync } from 'fs';
 
-import * as Changelog from '../../changelog';
+import {
+	flattenSyncedUnreleasedEntries,
+	getPackageGroupedUnreleasedEntries,
+	getRootGroupedUnreleasedEntries,
+	getSyncedGroupedUnreleasedEntries,
+	getUnreleasedSection,
+	syncChangelogs,
+} from '../../src/sync';
+import { getListOfPackageNames } from '../../src/helpers';
 import {
 	mockParsedPackageChangelog,
 	mockPackageUnreleasedSection,
@@ -31,36 +39,32 @@ import {
 } from '../fixtures/mock_root_parsed_changelog';
 import TestChangelogConfig from './test_changelog_config.json';
 
-describe('Changelog script tests', () => {
+describe('Changelog Sync tests', () => {
 	let listOfPackageNames: string[];
 
 	beforeAll(() => {
-		listOfPackageNames = Changelog.getListOfPackageNames(
+		listOfPackageNames = getListOfPackageNames(
 			'./scripts/changelog/test/fixtures/mock_packages_directory',
 		);
 	});
 
-	it('should get list of directory names in ../fixtures/mock_packages_directory', () => {
-		expect(listOfPackageNames).toEqual(['mock-package-1', 'mock-package-2', 'mock-package-3']);
-	});
-
 	it('should get package unreleased section', () => {
-		const result = Changelog.getUnreleasedSection(mockParsedPackageChangelog);
+		const result = getUnreleasedSection(mockParsedPackageChangelog);
 		expect(result).toEqual(mockPackageUnreleasedSection);
 	});
 
 	it('should get root grouped unreleased entries', () => {
-		const result = Changelog.getRootGroupedUnreleasedEntries(mockRootUnreleasedSection);
+		const result = getRootGroupedUnreleasedEntries(mockRootUnreleasedSection);
 		expect(result).toEqual(mockRootGroupedUnreleasedEntries);
 	});
 
 	it('should get package grouped unreleased entries', () => {
-		const result = Changelog.getPackageGroupedUnreleasedEntries(mockPackageUnreleasedSection);
+		const result = getPackageGroupedUnreleasedEntries(mockPackageUnreleasedSection);
 		expect(result).toEqual(mockPackageGroupedUnreleasedEntries);
 	});
 
 	it('should get synced grouped unreleased entries', () => {
-		const result = Changelog.getSyncedGroupedUnreleasedEntries(
+		const result = getSyncedGroupedUnreleasedEntries(
 			listOfPackageNames,
 			TestChangelogConfig,
 			mockRootGroupedUnreleasedEntries,
@@ -69,12 +73,12 @@ describe('Changelog script tests', () => {
 	});
 
 	it('should flatten synced unreleased entries', () => {
-		const syncedGroupedUnreleasedEntries = Changelog.getSyncedGroupedUnreleasedEntries(
+		const syncedGroupedUnreleasedEntries = getSyncedGroupedUnreleasedEntries(
 			listOfPackageNames,
 			TestChangelogConfig,
 			mockRootGroupedUnreleasedEntries,
 		);
-		const result = Changelog.flattenSyncedUnreleasedEntries(
+		const result = flattenSyncedUnreleasedEntries(
 			syncedGroupedUnreleasedEntries,
 			listOfPackageNames,
 		);
@@ -87,7 +91,7 @@ describe('Changelog script tests', () => {
 			TestChangelogConfig.rootChangelogPath,
 		);
 
-		Changelog.syncChangelogs(['./scripts/changelog/test/unit/test_changelog_config.json']);
+		syncChangelogs(['./scripts/changelog/test/unit/test_changelog_config.json']);
 
 		const parsedRootChangelog = readFileSync(
 			TestChangelogConfig.rootChangelogPath,

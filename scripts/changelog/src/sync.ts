@@ -14,35 +14,16 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { readdirSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
-export interface ChangelogConfig {
-	packagesDirectoryPath: string;
-	packagesChangelogPath: string;
-	rootChangelogPath: string;
-}
-
-interface Command {
-	name: string;
-	description: string;
-	arguments: string[];
-	example: string;
-	commandFunction: (args?: string[]) => unknown;
-}
-
-type GroupedUnreleasedEntries = Record<string, Record<string, string[]>>;
-
-const DEFAULT_CHANGELOG_CONFIG = {
-	packagesDirectoryPath: './packages',
-	packagesChangelogPath: 'CHANGELOG.md',
-	rootChangelogPath: './CHANGELOG.md',
-};
-const ENTRY_SECTION_HEADERS = ['Added', 'Changed', 'Deprecated', 'Removed', 'Fixed', 'Security'];
-
-export const getListOfPackageNames = (packagesDirectory: string) =>
-	readdirSync(packagesDirectory, { withFileTypes: true })
-		.filter(dirent => dirent.isDirectory())
-		.map(dirent => dirent.name);
+// eslint-disable-next-line import/no-cycle
+import {
+	ChangelogConfig,
+	DEFAULT_CHANGELOG_CONFIG,
+	ENTRY_SECTION_HEADERS,
+	GroupedUnreleasedEntries,
+} from './types';
+import { getListOfPackageNames } from './helpers';
 
 export const getUnreleasedSection = (parsedChangelog: string[]) => {
 	const unreleasedSectionHeaderIndex = parsedChangelog.findIndex(
@@ -183,39 +164,3 @@ export const syncChangelogs = (args?: string[]) => {
 	parsedRootChangelog.push(...flattenedSyncedUnreleasedEntries);
 	writeFileSync(CHANGELOG_CONFIG.rootChangelogPath, parsedRootChangelog.join('\n'));
 };
-
-const COMMANDS: Command[] = [
-	// {
-	// 	name: '[packageName]',
-	// 	description:
-	// 		'Updates the CHANGELOG.md for packageName with specified changelogHeader and changelogEntry',
-	// 	arguments: ['changelogHeader', 'changelogEntry'],
-	// 	example: 'yarn changelog [packageName] [changelogHeader] [changelogEntry]',
-	// 	commandFunction: () => {},
-	// },
-	{
-		name: 'sync',
-		description:
-			'Checks CHANGELOG.md for each package in ./packages/ for entries not included in root CHANGELOG.md',
-		arguments: [],
-		example: 'sync',
-		commandFunction: syncChangelogs,
-	},
-];
-
-const parseArgs = (): unknown => {
-	const commandArg = process.argv[2];
-	for (const command of COMMANDS) {
-		if (command.name === commandArg) {
-			return command.commandFunction(process.argv.slice(3));
-		}
-	}
-
-	// eslint-disable-next-line no-console
-	console.log('Invalid command, please refer to below table for expected commands:');
-	// eslint-disable-next-line no-console
-	console.table(COMMANDS);
-	return undefined;
-};
-
-parseArgs();
