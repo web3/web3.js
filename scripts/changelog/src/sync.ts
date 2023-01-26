@@ -140,8 +140,7 @@ export const flattenSyncedUnreleasedEntries = (
 // @ts-expect-error 'commandName' is declared but its value is never read
 export const syncChangelogs = (commandName: string, args?: string[]) => {
 	const CHANGELOG_CONFIG: ChangelogConfig =
-		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
+		args?.[0] !== undefined && args[0].endsWith('.json')
 			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
 			: DEFAULT_CHANGELOG_CONFIG;
 	const parsedRootChangelog = readFileSync(CHANGELOG_CONFIG.rootChangelogPath, 'utf8').split(

@@ -21,12 +21,15 @@ import { ChangelogConfig, DEFAULT_CHANGELOG_CONFIG } from './types';
 import { getPackageGroupedUnreleasedEntries, getUnreleasedSection } from './sync';
 
 export const addChangelogEntry = (commandName: string, args: string[]) => {
-	const CHANGELOG_CONFIG: ChangelogConfig =
-		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
-		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')
-			? (JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig)
-			: DEFAULT_CHANGELOG_CONFIG;
-	const [_, packageName, changelogEntry] = args;
+	let CHANGELOG_CONFIG: ChangelogConfig;
+	if (args?.[0] !== undefined && args[0].endsWith('.json')) {
+		CHANGELOG_CONFIG = JSON.parse(readFileSync(args[0], 'utf8')) as ChangelogConfig;
+		args.shift();
+	} else {
+		CHANGELOG_CONFIG = DEFAULT_CHANGELOG_CONFIG;
+	}
+
+	const [packageName, changelogEntry] = args;
 	const parsedChangelog = readFileSync(
 		`${CHANGELOG_CONFIG.packagesDirectoryPath}/${packageName}/${CHANGELOG_CONFIG.packagesChangelogPath}`,
 		'utf8',
