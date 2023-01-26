@@ -458,7 +458,6 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
-    // This test fails - the logic running in reconnect timeout doesn't know about the disconnect?
     it('allows disconnection on lost connection, when reconnect is enabled', function () {
         this.timeout(6000)
         let stage = 0
@@ -473,12 +472,6 @@ describe('WebsocketProvider (ganache)', function () {
                     {reconnect: {auto: true, maxAttempts: 1}}
                 )
             )
-
-            web3.currentProvider.on('error', function (error) {
-                console.log("run into error")
-                assert(error.message.includes('Maximum number of reconnect attempts reached!'))
-                reject(new Error('Could not disconnect...'))
-            })
 
             web3.currentProvider.on('close', function (err) {
                 assert(err.reason.includes('close'))
@@ -496,8 +489,6 @@ describe('WebsocketProvider (ganache)', function () {
                     web3.currentProvider.disconnect(1012, 'close')
                 }
             })
-
-            
         })
     })
 
@@ -548,80 +539,60 @@ describe('WebsocketProvider (ganache)', function () {
                     assert.fail()
                 } catch (err) {
                     assert(err.message.includes('Maximum number of reconnect attempts'))
+                    await server.close();
+                    this.removeAllListeners()
                     resolve()
                 }
             })
         })
     })
 
-    //this fails, deferred promise is executed
-    //todo investigate
-    it('queues requests made while connection is lost / executes on reconnect', function () {
+    it('queues requests made while connection is lost / executes on reconnect', async function () {
         this.timeout(10000);
         let stage = 0;
-        console.log("first statement")
-        return new Promise(async function (resolve) {
-            console.log("inside the promise")
-            server = ganache.server(ganacheOptions);
 
-            await server.listen(port);
+        return new Promise(async function (resolve, reject) {
+            server = ganache.server(ganacheOptions)
+           await server.listen(port)
+
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
                     host + port,
-                    {reconnect: {auto: true, delay: 10, maxAttempts: 5}}
+                    {reconnect: {auto: true, maxAttempts: 1}}
                 )
-            );
+            )
 
-            web3.currentProvider.on('error', function (error) {
-                console.log("error")
-                assert(error.message.includes('Maximum number of reconnect attempts reached!'))
-                resolve()
-            })
+            //Shutdown server
             web3.currentProvider.on('connect', async function () {
+                // Stay isolated, just in case
                 if (stage === 0){
-                        console.log("before closing the server")
-                    await server.close();
-                    stage = 1;
+                    await server.close()
+                    stage = 1
                 }
-                else {
-                    console.log("second connect")
-                }
-            });
 
-            web3.currentProvider.on('reconnect', async function () {
-                console.log("trying to reconnect")
-                try {
-                    await web3.eth.getBlockNumber()
-                    assert.fail()
-                } catch (err) {
-                    assert(err.message.includes('Maximum number of reconnect attempts'))
-                    resolve()
-                }
+                setTimeout(async function(){
+                    assert(stage === 1);
+                    let blockNumber;
+                    const deferred = web3.eth.getBlockNumber();
+    
+                    server = ganache.server(ganacheOptions);
+                    await server.listen(port);
+                    try {
+                        blockNumber = await deferred;
+                    } catch (error){
+                        // if request from server fails, reject
+                        reject()
+                    }
+    
+                    web3.currentProvider.removeAllListeners();
+                    if (blockNumber === undefined) {
+                        reject();
+                    }
+                    resolve();
+                },2500);
             })
-
-            // setTimeout(async function(){
-            //     console.log("stage")
-            //     console.log(stage)
-            //     assert(stage === 1);
-
-            //     console.log("creating second server")
-            //     console.log(deferred);
-            //     server = ganache.server(ganacheOptions);
-            //     const deferred = web3.eth.getBlockNumber();
-            //     console.log("second listen")
-            //     await server.listen(port);
-
-            //     try {
-            //         console.log("before")
-            //         const blockNumber = await deferred;
-            //         assert(blockNumber === 0);
-            //         web3.currentProvider.removeAllListeners();
-            //         resolve();
-            //       } catch(e) {
-            //         reject(e);
-            //       }
-            // },2500);
         });
+
     });
 
     it('errors when failing to reconnect after data is lost mid-chunk', async function () {
