@@ -577,8 +577,8 @@ describe('WebsocketProvider (ganache)', function () {
                     reject();
                 }
                 web3.currentProvider.removeAllListeners();
-                resolve();
             },1000);
+        resolve();
         });
     });
 
