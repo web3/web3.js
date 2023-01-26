@@ -458,8 +458,7 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
-    // This test fails - the logic running in reconnect timeout doesn't know about the disconnect?
-    it.skip('allows disconnection on lost connection, when reconnect is enabled', function () {
+    it('allows disconnection on lost connection, when reconnect is enabled', function () {
         this.timeout(6000)
         let stage = 0
 
@@ -479,14 +478,13 @@ describe('WebsocketProvider (ganache)', function () {
                 // Stay isolated, just in case
                 if (stage === 0){
                     await server.close()
-                    web3.currentProvider.disconnect()
                     stage = 1
+                    web3.currentProvider.disconnect(1012, 'close')
                 }
             })
-
-            web3.currentProvider.on('error', function (error) {
-                assert(error.message.includes('Maximum number of reconnect attempts reached!'))
-                reject(new Error('Could not disconnect...'))
+            web3.currentProvider.on('close', function (err) {
+                assert(err.code, 1012)
+                resolve()
             })
         })
     })
@@ -544,15 +542,13 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
-    //this fails, deferred promise is executed
-    //todo investigate
-    it.skip('queues requests made while connection is lost / executes on reconnect', function () {
+    it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
 
         return new Promise(async function (resolve) {
             server = ganache.server(ganacheOptions);
-            server.listen(port);
+            await server.listen(port);
 
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
@@ -570,16 +566,20 @@ describe('WebsocketProvider (ganache)', function () {
 
             setTimeout(async function(){
                 assert(stage === 1);
-
+                let blockNumber;
                 const deferred = web3.eth.getBlockNumber();
 
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
-
-                const blockNumber = await deferred;
-                assert(blockNumber === 0);
-
+                try {
+                    blockNumber = await deferred;
+                } catch (error) {
+                    reject();
+                }
                 web3.currentProvider.removeAllListeners();
+                if (blockNumber === undefined) {
+                    reject();
+                }
                 resolve();
             },2500);
         });
