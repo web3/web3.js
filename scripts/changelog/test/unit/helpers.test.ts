@@ -41,7 +41,7 @@ describe('Changelog Helpers tests', () => {
 		process.argv = ['', '', 'mockCommand'];
 		parseArgs(commands);
 
-		expect(commands[0].commandFunction).toHaveBeenCalledWith([]);
+		expect(commands[0].commandFunction).toHaveBeenCalledWith('mockCommand', []);
 	});
 
 	it('should parse args and execute mockCommandFunction2 with two arguments', () => {
@@ -49,7 +49,7 @@ describe('Changelog Helpers tests', () => {
 		process.argv = ['', '', 'mockCommand2', ...expectedArguments];
 		parseArgs(commands);
 
-		expect(commands[1].commandFunction).toHaveBeenCalledWith(expectedArguments);
+		expect(commands[1].commandFunction).toHaveBeenCalledWith('mockCommand2', expectedArguments);
 	});
 
 	it('should parse args, not execute either commandFunctions, and call console.log and console.table', () => {

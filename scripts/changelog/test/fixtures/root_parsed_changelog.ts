@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const mockRootUnreleasedSection = [
+export const rootUnreleasedSection = [
 	'## [Unreleased]',
 	'',
 	'### Added',
@@ -113,7 +113,7 @@ export const mockRootUnreleasedSection = [
 	'',
 ];
 
-export const mockParsedRootChangelog = [
+export const parsedRootChangelog = [
 	'# Changelog',
 	'',
 	'All notable changes to this project will be documented in this file.',
@@ -524,10 +524,10 @@ export const mockParsedRootChangelog = [
 	"- I've improved the security in XY #4 (#1004)",
 	"- I've improved the security in XY #5 (#1004)",
 	'',
-	...mockRootUnreleasedSection,
+	...rootUnreleasedSection,
 ];
 
-export const mockRootGroupedUnreleasedEntries = {
+export const rootGroupedUnreleasedEntries = {
 	'### Added': {
 		'#### mock-package-1': ["- I've added feature XY (#1005)"],
 		'#### mock-package-2': ["- I've added feature XY #2 (#1005)"],
@@ -584,7 +584,7 @@ export const mockRootGroupedUnreleasedEntries = {
 	},
 };
 
-export const mockRootSyncedGroupedUnreleasedEntries = {
+export const rootSyncedGroupedUnreleasedEntries = {
 	'### Added': {
 		'#### mock-package-1': ["-   I've added feature XY (#1005)"],
 		'#### mock-package-2': ["-   I've added feature XY #2 (#1005)"],
@@ -641,7 +641,7 @@ export const mockRootSyncedGroupedUnreleasedEntries = {
 	},
 };
 
-export const mockRootFlattenedSyncedUnreleasedEntries = [
+export const rootFlattenedSyncedUnreleasedEntries = [
 	'### Added',
 	'',
 	'#### mock-package-1',
@@ -740,7 +740,7 @@ export const mockRootFlattenedSyncedUnreleasedEntries = [
 	'',
 ];
 
-export const mockRootSyncedChangelog = [
+export const rootSyncedChangelog = [
 	'# Changelog',
 	'',
 	'All notable changes to this project will be documented in this file.',
@@ -1156,5 +1156,5 @@ export const mockRootSyncedChangelog = [
 	'',
 	'## [Unreleased]',
 	'',
-	...mockRootFlattenedSyncedUnreleasedEntries,
+	...rootFlattenedSyncedUnreleasedEntries,
 ];

@@ -137,7 +137,8 @@ export const flattenSyncedUnreleasedEntries = (
 	return flattenedSyncedUnreleasedEntries;
 };
 
-export const syncChangelogs = (args?: string[]) => {
+// @ts-expect-error 'commandName' is declared but its value is never read
+export const syncChangelogs = (commandName: string, args?: string[]) => {
 	const CHANGELOG_CONFIG: ChangelogConfig =
 		// eslint-disable-next-line @typescript-eslint/prefer-optional-chain
 		args !== undefined && args[0] !== undefined && args[0].endsWith('.json')

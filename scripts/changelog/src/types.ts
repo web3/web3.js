@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line import/no-cycle
+import { addChangelogEntry } from './add_changelog_entry';
+// eslint-disable-next-line import/no-cycle
 import { syncChangelogs } from './sync';
 
 export interface ChangelogConfig {
@@ -28,7 +30,7 @@ export interface Command {
 	description: string;
 	arguments: string[];
 	example: string;
-	commandFunction: (args?: string[]) => unknown;
+	commandFunction: (commandName: string, args: string[]) => unknown;
 }
 
 export type GroupedUnreleasedEntries = Record<string, Record<string, string[]>>;
@@ -48,22 +50,27 @@ export const ENTRY_SECTION_HEADERS = [
 	'Security',
 ];
 
-export const COMMANDS: Command[] = [
-	{
+export const getCommands = () => {
+	const commands: Command[] = [];
+
+	commands.push({
 		name: 'sync',
 		description:
 			'Checks CHANGELOG.md for each package in ./packages/ for entries not included in root CHANGELOG.md',
 		arguments: [],
 		example: 'sync',
 		commandFunction: syncChangelogs,
-	},
-	{
-		name: ENTRY_SECTION_HEADERS.join(' || ').toLocaleLowerCase(),
-		description:
-			'Updates the CHANGELOG.md for packageName with specified changelogHeader and changelogEntry',
-		arguments: ['packageName', 'changelogEntry'],
-		example: 'yarn changelog [changelogHeader] [packageName] [changelogEntry]',
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		commandFunction: () => {},
-	},
-];
+	});
+
+	for (const entrySectionHeader of ENTRY_SECTION_HEADERS) {
+		commands.push({
+			name: entrySectionHeader.toLowerCase(),
+			description: `Adds changelogEntry to packageName's CHANGELOG.md under ${entrySectionHeader} header`,
+			arguments: ['packageName', 'changelogEntry'],
+			example: `yarn changelog ${entrySectionHeader.toLowerCase()} [packageName] [changelogEntry]`,
+			commandFunction: addChangelogEntry,
+		});
+	}
+
+	return commands;
+};

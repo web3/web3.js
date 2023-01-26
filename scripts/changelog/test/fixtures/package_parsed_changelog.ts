@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-export const mockPackageUnreleasedSection = [
+export const packageUnreleasedSection = [
 	'## [Unreleased]',
 	'',
 	'### Added',
@@ -33,7 +33,7 @@ export const mockPackageUnreleasedSection = [
 	'',
 ];
 
-export const mockParsedPackageChangelog = [
+export const parsedPackageChangelog = [
 	'# Changelog',
 	'',
 	'All notable changes to this project will be documented in this file.',
@@ -101,10 +101,10 @@ export const mockParsedPackageChangelog = [
 	'',
 	'-   `build` entry from `package.json` (#5755)',
 	'',
-	...mockPackageUnreleasedSection,
+	...packageUnreleasedSection,
 ];
 
-export const mockPackageGroupedUnreleasedEntries = {
+export const packageGroupedUnreleasedEntries = {
 	'### Added': ['-   random text (#425)'],
 	'### Removed': ['-   `build` entry from `package.json` (#420)', '-   `bar` (#424)'],
 	'### Changed': [

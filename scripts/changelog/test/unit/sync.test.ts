@@ -26,17 +26,17 @@ import {
 } from '../../src/sync';
 import { getListOfPackageNames } from '../../src/helpers';
 import {
-	mockParsedPackageChangelog,
-	mockPackageUnreleasedSection,
-	mockPackageGroupedUnreleasedEntries,
-} from '../fixtures/mock_package_parsed_changelog';
+	parsedPackageChangelog,
+	packageUnreleasedSection,
+	packageGroupedUnreleasedEntries,
+} from '../fixtures/package_parsed_changelog';
 import {
-	mockRootFlattenedSyncedUnreleasedEntries,
-	mockRootGroupedUnreleasedEntries,
-	mockRootSyncedChangelog,
-	mockRootSyncedGroupedUnreleasedEntries,
-	mockRootUnreleasedSection,
-} from '../fixtures/mock_root_parsed_changelog';
+	rootFlattenedSyncedUnreleasedEntries,
+	rootGroupedUnreleasedEntries,
+	rootSyncedChangelog,
+	rootSyncedGroupedUnreleasedEntries,
+	rootUnreleasedSection,
+} from '../fixtures/root_parsed_changelog';
 import TestChangelogConfig from './test_changelog_config.json';
 
 describe('Changelog Sync tests', () => {
@@ -49,55 +49,55 @@ describe('Changelog Sync tests', () => {
 	});
 
 	it('should get package unreleased section', () => {
-		const result = getUnreleasedSection(mockParsedPackageChangelog);
-		expect(result).toEqual(mockPackageUnreleasedSection);
+		const result = getUnreleasedSection(parsedPackageChangelog);
+		expect(result).toEqual(packageUnreleasedSection);
 	});
 
 	it('should get root grouped unreleased entries', () => {
-		const result = getRootGroupedUnreleasedEntries(mockRootUnreleasedSection);
-		expect(result).toEqual(mockRootGroupedUnreleasedEntries);
+		const result = getRootGroupedUnreleasedEntries(rootUnreleasedSection);
+		expect(result).toEqual(rootGroupedUnreleasedEntries);
 	});
 
 	it('should get package grouped unreleased entries', () => {
-		const result = getPackageGroupedUnreleasedEntries(mockPackageUnreleasedSection);
-		expect(result).toEqual(mockPackageGroupedUnreleasedEntries);
+		const result = getPackageGroupedUnreleasedEntries(packageUnreleasedSection);
+		expect(result).toEqual(packageGroupedUnreleasedEntries);
 	});
 
 	it('should get synced grouped unreleased entries', () => {
 		const result = getSyncedGroupedUnreleasedEntries(
 			listOfPackageNames,
 			TestChangelogConfig,
-			mockRootGroupedUnreleasedEntries,
+			rootGroupedUnreleasedEntries,
 		);
-		expect(result).toEqual(mockRootSyncedGroupedUnreleasedEntries);
+		expect(result).toEqual(rootSyncedGroupedUnreleasedEntries);
 	});
 
 	it('should flatten synced unreleased entries', () => {
 		const syncedGroupedUnreleasedEntries = getSyncedGroupedUnreleasedEntries(
 			listOfPackageNames,
 			TestChangelogConfig,
-			mockRootGroupedUnreleasedEntries,
+			rootGroupedUnreleasedEntries,
 		);
 		const result = flattenSyncedUnreleasedEntries(
 			syncedGroupedUnreleasedEntries,
 			listOfPackageNames,
 		);
-		expect(result).toEqual(mockRootFlattenedSyncedUnreleasedEntries);
+		expect(result).toEqual(rootFlattenedSyncedUnreleasedEntries);
 	});
 
 	it('should sync all package CHANGELOGs with root CHANGELOG.md', () => {
 		copyFileSync(
-			'./scripts/changelog/test/fixtures/mock_root_unsynced_CHANGELOG.tmpl',
+			'./scripts/changelog/test/fixtures/root_unsynced_CHANGELOG.tmpl',
 			TestChangelogConfig.rootChangelogPath,
 		);
 
-		syncChangelogs(['./scripts/changelog/test/unit/test_changelog_config.json']);
+		syncChangelogs('sync', ['./scripts/changelog/test/unit/test_changelog_config.json']);
 
 		const parsedRootChangelog = readFileSync(
 			TestChangelogConfig.rootChangelogPath,
 			'utf8',
 		).split(/\n/);
-		expect(parsedRootChangelog).toEqual(mockRootSyncedChangelog);
+		expect(parsedRootChangelog).toEqual(rootSyncedChangelog);
 
 		unlinkSync(TestChangelogConfig.rootChangelogPath);
 	});

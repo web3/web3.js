@@ -17,13 +17,13 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { readdirSync } from 'fs';
 
 // eslint-disable-next-line import/no-cycle
-import { Command, COMMANDS } from './types';
+import { Command, getCommands } from './types';
 
-export const parseArgs = (commands: Command[] = COMMANDS): unknown => {
+export const parseArgs = (commands: Command[] = getCommands()): unknown => {
 	const commandArg = process.argv[2];
 	for (const command of commands) {
 		if (command.name === commandArg) {
-			return command.commandFunction(process.argv.slice(3));
+			return command.commandFunction(command.name, process.argv.slice(3));
 		}
 	}
 
