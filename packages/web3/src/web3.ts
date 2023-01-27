@@ -98,6 +98,11 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 					}
 				});
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+				this._eventEmitter.on('ContractCloned', (contract: Contract<any>) => {
+					ContractBuilder._contracts.push(contract);
+				});
+
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				ContractBuilder._contracts.push(this as Contract<any>);
 			}

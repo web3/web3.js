@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { EventEmitter } from 'events';
 import {
 	Web3Context,
 	Web3EventEmitter,
@@ -258,6 +259,7 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
+	protected readonly _eventEmitter: EventEmitter = new EventEmitter();
 	/**
 	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
 	 *
@@ -403,7 +405,7 @@ export class Contract<Abi extends ContractAbi>
 
 		if (Contract.sync_with_globals) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-restricted-globals
-			contractThis.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+			this.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 				contractThis.setConfig({ [event.name]: event.newValue });
 			});
 		}
@@ -637,8 +639,10 @@ export class Contract<Abi extends ContractAbi>
 	 * ```
 	 */
 	public clone() {
+		let newContract: Contract<any>;
+
 		if (this.options.address) {
-			return new Contract<Abi>(
+			newContract = new Contract<Abi>(
 				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
 				this.options.address,
 				{
@@ -653,7 +657,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 
-		return new Contract<Abi>(
+		newContract = new Contract<Abi>(
 			[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
 			{
 				gas: this.options.gas,
@@ -665,6 +669,10 @@ export class Contract<Abi extends ContractAbi>
 			},
 			this.getContextObject(),
 		);
+
+		this._eventEmitter.emit('ContractCloned', newContract);
+
+		return newContract;
 	}
 
 	/**
@@ -776,6 +784,7 @@ export class Contract<Abi extends ContractAbi>
 				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
 				delete modifiedOptions.to;
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
 					args as unknown[],
