@@ -286,7 +286,7 @@ describe('Web3 instance', () => {
 			contract = new web3.eth.Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
-			// contract = await contract.deploy(deployOptions).send(sendOptions);
+
 			web3.defaultHardfork = hardfork;
 
 			expect(contract.defaultHardfork).toBe(hardfork);
