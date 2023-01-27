@@ -15,7 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigOptions } from 'web3-core';
+import {
+	Web3Context,
+	Web3EventEmitter,
+	Web3PromiEvent,
+	Web3ConfigOptions,
+	Web3ConfigEvent,
+} from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
 	call,
@@ -232,6 +238,11 @@ export class Contract<Abi extends ContractAbi>
 
 	public static contractWeb3Config: Partial<Web3ConfigOptions> = {};
 
+	/**
+	 * Set to true if you want contracts' defaults to sync with global defaults.
+	 */
+	public static sync_with_globals = false;
+
 	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
 	private _address?: Address;
@@ -386,6 +397,16 @@ export class Contract<Abi extends ContractAbi>
 		});
 
 		this.setConfig(Contract.contractWeb3Config);
+
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const contractThis = this;
+
+		if (Contract.sync_with_globals) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-restricted-globals
+			contractThis.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				contractThis.setConfig({ [event.name]: event.newValue });
+			});
+		}
 	}
 
 	/**
