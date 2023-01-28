@@ -118,7 +118,7 @@ Static accessible property of the Web3 class and property of the instance as wel
     Web3.utils
     web3.utils
 
-Utility functions are also exposes on the ``Web3`` class object directly.
+Utility functions are also exposed on the ``Web3`` class object directly.
 
 See :ref:`web3.utils <utils>` for more.
 
