@@ -547,7 +547,7 @@ describe('WebsocketProvider (ganache)', function () {
         let stage = 0;
 
         return new Promise(async function (resolve, reject) {
-            server = ganache.serve  r(ganacheOptions);
+            server = ganache.server(ganacheOptions);
             await server.listen(port);
 
             web3 = new Web3(
