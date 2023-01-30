@@ -20,6 +20,7 @@ import Contract from 'web3-eth-contract';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
 import WebsocketProvider from 'web3-providers-ws';
+import { FMT_BYTES, FMT_NUMBER } from 'web3-utils';
 import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
@@ -35,6 +36,298 @@ import {
 } from '../shared_fixtures/system_tests_utils';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
+// describe.only('error', () => {
+// 	// eslint-disable-next-line jest/expect-expect
+// 	it('should throw an error if no contract address is provided', async () => {
+// 		const abi = [
+// 			{
+// 				inputs: [],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'constructor',
+// 			},
+// 			{
+// 				anonymous: false,
+// 				inputs: [
+// 					{
+// 						indexed: true,
+// 						internalType: 'address',
+// 						name: 'owner',
+// 						type: 'address',
+// 					},
+// 					{
+// 						indexed: true,
+// 						internalType: 'address',
+// 						name: 'spender',
+// 						type: 'address',
+// 					},
+// 					{
+// 						indexed: false,
+// 						internalType: 'uint256',
+// 						name: 'value',
+// 						type: 'uint256',
+// 					},
+// 				],
+// 				name: 'Approval',
+// 				type: 'event',
+// 			},
+// 			{
+// 				anonymous: false,
+// 				inputs: [
+// 					{
+// 						indexed: true,
+// 						internalType: 'address',
+// 						name: 'previousOwner',
+// 						type: 'address',
+// 					},
+// 					{
+// 						indexed: true,
+// 						internalType: 'address',
+// 						name: 'newOwner',
+// 						type: 'address',
+// 					},
+// 				],
+// 				name: 'OwnershipTransferred',
+// 				type: 'event',
+// 			},
+// 			{
+// 				anonymous: false,
+// 				inputs: [
+// 					{
+// 						indexed: true,
+// 						internalType: 'address',
+// 						name: 'from',
+// 						type: 'address',
+// 					},
+// 					{ indexed: true, internalType: 'address', name: 'to', type: 'address' },
+// 					{
+// 						indexed: false,
+// 						internalType: 'uint256',
+// 						name: 'value',
+// 						type: 'uint256',
+// 					},
+// 				],
+// 				name: 'Transfer',
+// 				type: 'event',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: '_decimals',
+// 				outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: '_name',
+// 				outputs: [{ internalType: 'string', name: '', type: 'string' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: '_symbol',
+// 				outputs: [{ internalType: 'string', name: '', type: 'string' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'owner', type: 'address' },
+// 					{ internalType: 'address', name: 'spender', type: 'address' },
+// 				],
+// 				name: 'allowance',
+// 				outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'spender', type: 'address' },
+// 					{ internalType: 'uint256', name: 'amount', type: 'uint256' },
+// 				],
+// 				name: 'approve',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
+// 				name: 'balanceOf',
+// 				outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
+// 				name: 'burn',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'decimals',
+// 				outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'spender', type: 'address' },
+// 					{ internalType: 'uint256', name: 'subtractedValue', type: 'uint256' },
+// 				],
+// 				name: 'decreaseAllowance',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'getOwner',
+// 				outputs: [{ internalType: 'address', name: '', type: 'address' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'spender', type: 'address' },
+// 					{ internalType: 'uint256', name: 'addedValue', type: 'uint256' },
+// 				],
+// 				name: 'increaseAllowance',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
+// 				name: 'mint',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'name',
+// 				outputs: [{ internalType: 'string', name: '', type: 'string' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'owner',
+// 				outputs: [{ internalType: 'address', name: '', type: 'address' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [],
+// 				name: 'renounceOwnership',
+// 				outputs: [],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'symbol',
+// 				outputs: [{ internalType: 'string', name: '', type: 'string' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: true,
+// 				inputs: [],
+// 				name: 'totalSupply',
+// 				outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+// 				payable: false,
+// 				stateMutability: 'view',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'recipient', type: 'address' },
+// 					{ internalType: 'uint256', name: 'amount', type: 'uint256' },
+// 				],
+// 				name: 'transfer',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [
+// 					{ internalType: 'address', name: 'sender', type: 'address' },
+// 					{ internalType: 'address', name: 'recipient', type: 'address' },
+// 					{ internalType: 'uint256', name: 'amount', type: 'uint256' },
+// 				],
+// 				name: 'transferFrom',
+// 				outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 			{
+// 				constant: false,
+// 				inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
+// 				name: 'transferOwnership',
+// 				outputs: [],
+// 				payable: false,
+// 				stateMutability: 'nonpayable',
+// 				type: 'function',
+// 			},
+// 		];
+// 		const web3 = new Web3('https://bsc-dataseed.binance.org');
+// 		const contract = new web3.eth.Contract(abi, '0xe9e7cea3dedca5984780bafc599bd69add087d56');
+
+// 		const transferEvent = await contract.getPastEvents(
+// 			'Transfer',
+// 			{
+// 				fromBlock: '2518880',
+// 				toBlock: '2518880',
+// 			},
+// 			{
+// 				number: FMT_NUMBER.HEX,
+// 				bytes: FMT_BYTES.HEX,
+// 			},
+// 		);
+
+// 		console.log(transferEvent);
+// 	});
+// });
 describe('Web3 instance', () => {
 	let clientUrl: string;
 	let accounts: string[];

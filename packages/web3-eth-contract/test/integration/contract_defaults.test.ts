@@ -44,10 +44,13 @@ describe('contract', () => {
 		describe('defaultAccount', () => {
 			it('should use "defaultAccount" on "Contract" level instead of "from"', async () => {
 				// eslint-disable-next-line prefer-destructuring
-				Contract.defaultAccount = acc.address;
+				Contract.contractWeb3Config.defaultAccount = acc.address;
 
 				const receiptHandler = jest.fn();
 
+				contract = new Contract(GreeterAbi, undefined, {
+					provider: getSystemTestProvider(),
+				});
 				// We didn't specify "from" in this call
 				await contract
 					.deploy(deployOptions)
@@ -63,7 +66,7 @@ describe('contract', () => {
 
 			it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
 				const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-				Contract.defaultAccount = undefined;
+				Contract.contractWeb3Config.defaultAccount = undefined;
 				// eslint-disable-next-line prefer-destructuring
 				deployedContract.defaultAccount = acc.address;
 				// We didn't specify "from" in this call
@@ -74,7 +77,7 @@ describe('contract', () => {
 			});
 
 			it('should throw error when "from" is not set on any level', () => {
-				Contract.defaultAccount = undefined;
+				Contract.contractWeb3Config.defaultAccount = undefined;
 				contract.defaultAccount = undefined;
 
 				expect(() => contract.deploy(deployOptions).send({ gas: '1000000' })).toThrow(
@@ -93,7 +96,7 @@ describe('contract', () => {
 					contract.currentProvider as Web3BaseProvider,
 					'request',
 				);
-				Contract.defaultBlock = 'pending';
+				Contract.contractWeb3Config.defaultBlock = 'pending';
 
 				// Forcefully delete this property from the contract instance
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -117,7 +120,7 @@ describe('contract', () => {
 					'request',
 				);
 				contract.defaultBlock = 'pending';
-				Contract.defaultBlock = undefined;
+				Contract.contractWeb3Config.defaultBlock = undefined;
 
 				await contract.methods.greet().call();
 
@@ -140,7 +143,7 @@ describe('contract', () => {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				contract.defaultBlock = undefined;
-				Contract.defaultBlock = undefined;
+				Contract.contractWeb3Config.defaultBlock = undefined;
 
 				await contract.methods.greet().call(undefined, 'pending');
 

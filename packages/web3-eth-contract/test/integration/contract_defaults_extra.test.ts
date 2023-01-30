@@ -66,7 +66,7 @@ describe('contract defaults (extra)', () => {
 		it('should use "defaultHardfork" on "Contract" level', async () => {
 			const hardfork = 'berlin';
 
-			Contract.defaultHardfork = hardfork;
+			Contract.contractWeb3Config.defaultHardfork = hardfork;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -93,13 +93,15 @@ describe('contract defaults (extra)', () => {
 
 		it('should use "defaultHardfork" on "instance" level', async () => {
 			const hardfork = 'berlin';
-			contract.defaultHardfork = hardfork;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
 			contract = await contract.deploy(deployOptions).send(sendOptions);
+			// console.log(!!contract);
+			contract.defaultHardfork = hardfork;
+			Contract.contractWeb3Config.defaultHardfork = 'london';
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 			await contract.methods.greet().send(sendOptions);
@@ -177,7 +179,7 @@ describe('contract defaults (extra)', () => {
 		});
 
 		it('should use "defaultCommon" on "Contract" level', async () => {
-			Contract.defaultCommon = common;
+			Contract.contractWeb3Config.defaultCommon = common;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
