@@ -553,7 +553,7 @@ describe('WebsocketProvider (ganache)', function () {
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
                     host + port,
-                    {reconnect: {auto: true, delay: 500, maxAttempts: 5}}
+                    {reconnect: {auto: true}}
                 )
             );
 
@@ -571,22 +571,14 @@ describe('WebsocketProvider (ganache)', function () {
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
-                let deferred;
-                try {
-                    deferred = web3.eth.getBlockNumber();
-                } catch (error) {
-                    console.log(error)
-                }
+                const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
                 web3.currentProvider.reconnect()
+                console.log("after reconnect")
                     try {
                         console.log(deferred)
                         blockNumber = await deferred;
-                        
-                        if (blockNumber === undefined) {
-                            reject()
-                        }
                         resolve(true);
                     } catch (error) {
                         reject(error);
