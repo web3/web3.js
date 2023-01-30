@@ -17,11 +17,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContextInitOptions, Web3PromiEvent } from 'web3-core';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
-import { AbiFragment, ContractAbi } from 'web3-eth-abi';
 import {
+	AbiFragment,
 	Address,
 	BlockNumberOrTag,
 	Bytes,
+	ContractAbi,
 	EthExecutionAPI,
 	HexString,
 	HexString32Bytes,
