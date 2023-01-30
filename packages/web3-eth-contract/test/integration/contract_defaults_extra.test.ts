@@ -159,7 +159,7 @@ describe('contract defaults (extra)', () => {
 		const common = {
 			customChain: { name: 'testnet', networkId: '1337', chainId: '1337' },
 			baseChain,
-			hardfork: 'berlin' as Hardfork,
+			hardfork: 'london' as Hardfork,
 		};
 
 		beforeEach(async () => {
@@ -295,19 +295,19 @@ describe('contract defaults (extra)', () => {
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
 		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
-			expect(Contract.blockHeaderTimeout).toBeUndefined();
+			expect(Contract.contractWeb3Config.blockHeaderTimeout).toBeUndefined();
 			const blockHeaderTimeout = 100;
-			Contract.blockHeaderTimeout = blockHeaderTimeout;
+			Contract.contractWeb3Config.blockHeaderTimeout = blockHeaderTimeout;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
 
-			expect(Contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
+			expect(Contract.contractWeb3Config.blockHeaderTimeout).toBe(blockHeaderTimeout);
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
-			Contract.blockHeaderTimeout = 10;
+			Contract.contractWeb3Config.blockHeaderTimeout = 10;
 		});
 
 		it('should use "blockHeaderTimout" on "instance" level', async () => {
@@ -358,10 +358,10 @@ describe('contract defaults (extra)', () => {
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
 		it('should use "transactionPollingInterval" on "Contract" level', async () => {
-			expect(Contract.transactionPollingInterval).toBeUndefined();
+			expect(Contract.contractWeb3Config.transactionPollingInterval).toBeUndefined();
 
 			const transactionPollingInterval = 500;
-			Contract.transactionPollingInterval = transactionPollingInterval;
+			Contract.contractWeb3Config.transactionPollingInterval = transactionPollingInterval;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
