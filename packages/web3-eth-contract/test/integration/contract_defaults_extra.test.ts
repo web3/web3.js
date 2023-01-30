@@ -381,10 +381,10 @@ describe('contract defaults (extra)', () => {
 
 	describe('handleRevert', () => {
 		it('should use "handleRevert" on "Contract" level', async () => {
-			expect(Contract.handleRevert).toBeUndefined();
+			expect(Contract.contractWeb3Config.handleRevert).toBeUndefined();
 
 			const handleRevert = true;
-			Contract.handleRevert = handleRevert;
+			Contract.contractWeb3Config.handleRevert = handleRevert;
 
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -400,7 +400,7 @@ describe('contract defaults (extra)', () => {
 
 			expect(sendTransactionSpy).toHaveBeenCalled();
 
-			Contract.handleRevert = false;
+			Contract.contractWeb3Config.handleRevert = false;
 		});
 
 		it('should use "handleRevert" on "instance" level', async () => {
