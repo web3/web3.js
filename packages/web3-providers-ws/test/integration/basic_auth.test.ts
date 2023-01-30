@@ -17,10 +17,14 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import express from 'express';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { Server } from 'http';
-
-import { waitForCloseConnection, waitForOpenConnection } from '../fixtures/helpers';
 import WebSocketProvider from '../../src/index';
-import { getSystemTestProvider, describeIf, isWs } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	describeIf,
+	isWs,
+	waitForOpenSocketConnection,
+	waitForCloseSocketConnection,
+} from '../fixtures/system_test_utils';
 
 describeIf(isWs)('Support of Basic Auth', () => {
 	let server: Server;
@@ -77,14 +81,14 @@ describeIf(isWs)('Support of Basic Auth', () => {
 	afterEach(async () => {
 		// make sure we try to close the connection after it is established
 		if (webSocketProvider.getStatus() === 'connecting') {
-			await waitForOpenConnection(webSocketProvider);
+			await waitForOpenSocketConnection(webSocketProvider);
 		}
 		webSocketProvider.disconnect();
-		await waitForCloseConnection(webSocketProvider);
+		await waitForCloseSocketConnection(webSocketProvider);
 	});
 	// eslint-disable-next-line jest/expect-expect
 	test('should connect with basic auth', async () => {
-		await waitForOpenConnection(webSocketProvider);
+		await waitForOpenSocketConnection(webSocketProvider);
 		expect(webSocketProvider.getStatus()).toBe('connected');
 	});
 });

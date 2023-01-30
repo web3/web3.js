@@ -6,6 +6,10 @@
 	"repository": "https://github.com/ChainSafe/web3.js",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
+	"engines": {
+		"node": ">=14",
+		"npm": ">=6.12.0"
+	},
 	"files": [
 		"lib/**/*"
 	],
@@ -22,7 +26,7 @@
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
-		"test:integration": "jest --config=./test/integration/jest.config.js --passWithNoTests"
+		"test:integration": "jest --config=./test/integration/jest.config.js"
 	},
 	"devDependencies": {
 		"@types/jest": "^28.1.6",
