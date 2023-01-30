@@ -562,6 +562,10 @@ describe('WebsocketProvider (ganache)', function () {
                     await server.close();
                     stage = 1;
                 }
+                console.log("connect")
+            });
+            web3.currentProvider.on('reconnect', async function () {
+                console.log("reconnect")
             });
 
             setTimeout(async function(){
@@ -575,11 +579,11 @@ describe('WebsocketProvider (ganache)', function () {
                     try {
                         blockNumber = await deferred;
                         if (blockNumber === undefined) {
-                            reject();
+                            reject()
                         }
                         resolve(true);
                     } catch (error) {
-                        reject();
+                        reject(error);
                     } 
                 }, 1000);
                 
