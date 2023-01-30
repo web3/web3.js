@@ -36,6 +36,7 @@
 		"prebuild": "yarn clean",
 		"build": "lerna run build --stream",
 		"build:web": "lerna run build:web --stream",
+		"build:web:analyze": "lerna run build:web:analyze --stream",
 		"build:docs": "cd docs && yarn install && yarn build",
 		"clean": "lerna run clean --stream --parallel",
 		"ganache:start": "WEB3_SYSTEM_TEST_BACKEND=ganache && ./scripts/ganache.sh start",
@@ -114,5 +115,7 @@
 		"webpack-cli": "^4.10.0"
 	},
 	"packageManager": "yarn@1.22.15",
-	"dependencies": {}
+	"dependencies": {
+		"webpack-bundle-analyzer": "^4.7.0"
+	}
 }
