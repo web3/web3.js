@@ -559,8 +559,10 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
+                    console.log("on connect")
                     await server.close();
                     stage = 1;
+                    console.log("on close")
                 }
             });
 
@@ -568,17 +570,20 @@ describe('WebsocketProvider (ganache)', function () {
                 assert(stage === 1);
                 let blockNumber;
                 const deferred = web3.eth.getBlockNumber();
-
+                console.log("create deferred")
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
+                console.log("after listening")
                 try {
                     blockNumber = await deferred;
+                    console.log("try to get block number")
                 } catch (error) {
                     reject();
                 }
                 if (blockNumber === undefined) {
                     reject();
                 }
+                console.log("resolve now")
                 resolve();
                 await server.close();
                 web3.currentProvider.removeAllListeners();
