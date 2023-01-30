@@ -27,9 +27,9 @@ export const namehash = (inputName: string) => {
 	for (let i = 0; i < 32; i += 1) {
 		node += '00';
 	}
-	const name = normalize(inputName);
 
-	if (name) {
+	if (inputName) {
+		const name = normalize(inputName);
 		const labels = name.split('.');
 
 		for (let i = labels.length - 1; i >= 0; i -= 1) {
