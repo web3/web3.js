@@ -547,7 +547,7 @@ describe('WebsocketProvider (ganache)', function () {
         let stage = 0;
 
         return new Promise(async function (resolve, reject) {
-            server = ganache.server(ganacheOptions);
+            server = ganache.serve  r(ganacheOptions);
             await server.listen(port);
 
             web3 = new Web3(
@@ -576,17 +576,16 @@ describe('WebsocketProvider (ganache)', function () {
                 console.log("after listening")
                 try {
                     blockNumber = await deferred;
-                    console.log("try to get block number")
+                    if (blockNumber === undefined) {
+                        reject();
+                    }
+                    await server.close();
+                    web3.currentProvider.removeAllListeners();
+                    resolve();
                 } catch (error) {
                     reject();
                 }
-                if (blockNumber === undefined) {
-                    reject();
-                }
-                console.log("resolve now")
-                resolve();
-                await server.close();
-                web3.currentProvider.removeAllListeners();
+                
             },1000);
         });
     });
