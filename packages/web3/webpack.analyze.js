@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 const { getWebPackConfig } = require('../../webpack.base.config');
 
 const config = getWebPackConfig(__dirname, 'web3.min.js', 'Web3', 'src/web3.ts');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 module.exports = {
 	...config,
@@ -26,6 +26,7 @@ module.exports = {
 		...config.plugins,
 		new BundleAnalyzerPlugin({
 			generateStatsFile: true,
+			statsFilename: process.env.STATS_FILE ?? 'stats.json',
 			defaultSizes: process.env.ANALYZE_SERVER ? 'stat' : 'gzip',
 			analyzerMode: process.env.ANALYZE_SERVER ? 'server' : 'json',
 		}),

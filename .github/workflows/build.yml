@@ -53,27 +53,21 @@ jobs:
                 path: /tmp
         -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
         -   run: yarn build:web:analyze
-        -   name: Upload default branch stats
-            if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
-            uses: actions/upload-artifact@v3
+            env:
+              STATS_FILE: ${{ github.ref_name }}.json
+        -   name: Cache default branch stats
+            uses: actions/cache@v3
             with:
-              name: web3-bundle-stats-default
-              path: packages/web3/dist/stats.json
-        -   name: Download default branch stats
-            if: github.event_name != 'push'
-            uses: actions/download-artifact@v3
-            continue-on-error: true
-            with:
-              name: web3-bundle-stats-default
-              path: "./web3-main.stats.json"
+              path: packages/web3/dist/4.x.json
+              key: web3-bundle-stats-default
         -   name: Compare bundle stats
             uses: github/webpack-bundlesize-compare-action@v1
             if: github.event_name != 'push'
             continue-on-error: true
             with:
               github-token: ${{ secrets.GITHUB_TOKEN }}
-              current-stats-json-path: "packages/web3/dist/stats.json"
-              base-stats-json-path: "./web3-main.stats.json"
+              current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
+              base-stats-json-path: "packages/web3/dist/4.x.json"
 
   unit:
     name: Unit Tests
