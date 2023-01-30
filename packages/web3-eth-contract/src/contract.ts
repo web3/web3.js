@@ -1193,7 +1193,11 @@ export class Contract<Abi extends ContractAbi>
 		let modifiedContractOptions = contractOptions ?? this.options;
 		modifiedContractOptions = {
 			...modifiedContractOptions,
-			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
+			from:
+				modifiedContractOptions.from ??
+				this.defaultAccount ??
+				Contract.contractWeb3Config.defaultAccount ??
+				undefined,
 		};
 
 		const tx = getSendTxParams({
