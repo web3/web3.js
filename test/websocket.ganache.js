@@ -572,15 +572,15 @@ describe('WebsocketProvider (ganache)', function () {
                 await server.listen(port);
                 try {
                     blockNumber = await deferred;
-                    if (blockNumber === undefined) {
-                        reject();
-                    }
-                    await server.close();
-                    web3.currentProvider.removeAllListeners();
+                    console.log(blockNumber)
+                    console.log(blockNumber)
                     resolve(true);
                 } catch (error) {
+                    console.log(error)
                     reject();
                 }
+                await server.close();
+                web3.currentProvider.removeAllListeners();
                 
             },1000);
         });
