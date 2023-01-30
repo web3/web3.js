@@ -580,9 +580,9 @@ describe('WebsocketProvider (ganache)', function () {
                     reject();
                 }
                 resolve();
+                await server.close();
+                web3.currentProvider.removeAllListeners();
             },1000);
-        await server.close();
-        web3.currentProvider.removeAllListeners();
         });
     });
 
