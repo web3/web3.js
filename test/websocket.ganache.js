@@ -542,7 +542,7 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
-    it(':wq requests made while connection is lost / executes on reconnect', function () {
+    it('queues requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
 
@@ -562,10 +562,6 @@ describe('WebsocketProvider (ganache)', function () {
                     await server.close();
                     stage = 1;
                 }
-                console.log("connect")
-            });
-            web3.currentProvider.on('reconnect', async function () {
-                console.log("reconnect")
             });
 
             setTimeout(async function(){
@@ -575,12 +571,14 @@ describe('WebsocketProvider (ganache)', function () {
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
                 setTimeout(async function() {
+                    web3.currentProvider.reconnect()
                     try {
                         blockNumber = await deferred;
-                        console.log(blockNumber)
+                        if (blockNumber === undefined) {
+                            reject();
+                        }
                         resolve(true);
                     } catch (error) {
-                        console.log(error)
                         reject();
                     } 
                 }, 1000);
