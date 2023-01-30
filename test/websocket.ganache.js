@@ -562,6 +562,10 @@ describe('WebsocketProvider (ganache)', function () {
                     await server.close();
                     stage = 1;
                 }
+                console.log("connect")
+            });
+            web3.currentProvider.on('reconnect', async function () {
+                console.log("reconnect")
             });
 
             setTimeout(async function(){
