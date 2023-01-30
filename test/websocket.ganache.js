@@ -570,15 +570,16 @@ describe('WebsocketProvider (ganache)', function () {
                 const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
-                try {
-                    blockNumber = await deferred;
-                    console.log(blockNumber)
-                    console.log(blockNumber)
-                    resolve(true);
-                } catch (error) {
-                    console.log(error)
-                    reject();
-                }
+                setTimeout(async function() {
+                    try {
+                        blockNumber = await deferred;
+                        console.log(blockNumber)
+                        resolve(true);
+                    } catch (error) {
+                        console.log(error)
+                        reject();
+                    } 
+                }, 1000);
                 await server.close();
                 web3.currentProvider.removeAllListeners();
                 
