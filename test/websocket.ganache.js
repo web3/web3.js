@@ -574,10 +574,12 @@ describe('WebsocketProvider (ganache)', function () {
                 const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
+                web3.currentProvider.reconnect()
                 setTimeout(async function() {
-                    web3.currentProvider.reconnect()
                     try {
+                        console.log(deferred)
                         blockNumber = await deferred;
+                        
                         if (blockNumber === undefined) {
                             reject()
                         }
