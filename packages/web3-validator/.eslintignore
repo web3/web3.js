@@ -3,3 +3,4 @@ lib
 jest.config.js
 .eslintrc.js
 webpack.config.js
+webpack.analyze.js
