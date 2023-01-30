@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
 import { Web3Context } from 'web3-core';
-import Web3Eth from 'web3-eth';
+import Web3Eth, { registeredSubscriptions } from 'web3-eth';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
 import { ENS, registryAddresses } from 'web3-eth-ens';
@@ -47,7 +47,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
-		super({ provider });
+		super({ provider, registeredSubscriptions });
 
 		if (isNullish(provider) || (typeof provider === 'string' && provider.trim() === '')) {
 			console.warn(
