@@ -126,7 +126,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket || web3Context.provider instanceof HttpProvider) {
+	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
 		return;
 	}
 
