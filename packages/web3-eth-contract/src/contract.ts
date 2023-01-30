@@ -655,20 +655,20 @@ export class Contract<Abi extends ContractAbi>
 				},
 				this.getContextObject(),
 			);
+		} else {
+			newContract = new Contract<Abi>(
+				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
+				{
+					gas: this.options.gas,
+					gasPrice: this.options.gasPrice,
+					gasLimit: this.options.gasLimit,
+					from: this.options.from,
+					data: this.options.data,
+					provider: this.currentProvider,
+				},
+				this.getContextObject(),
+			);
 		}
-
-		newContract = new Contract<Abi>(
-			[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
-			{
-				gas: this.options.gas,
-				gasPrice: this.options.gasPrice,
-				gasLimit: this.options.gasLimit,
-				from: this.options.from,
-				data: this.options.data,
-				provider: this.currentProvider,
-			},
-			this.getContextObject(),
-		);
 
 		this._eventEmitter.emit('ContractCloned', newContract);
 
