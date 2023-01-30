@@ -542,7 +542,7 @@ describe('WebsocketProvider (ganache)', function () {
         })
     })
 
-    it('queues requests made while connection is lost / executes on reconnect', function () {
+    it(':wq requests made while connection is lost / executes on reconnect', function () {
         this.timeout(10000);
         let stage = 0;
 
@@ -553,7 +553,7 @@ describe('WebsocketProvider (ganache)', function () {
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
                     host + port,
-                    {reconnect: {auto: true, delay: 2000, maxAttempts: 5}}
+                    {reconnect: {auto: true, delay: 100, maxAttempts: 5}}
                 )
             );
 
@@ -584,8 +584,6 @@ describe('WebsocketProvider (ganache)', function () {
                         reject();
                     } 
                 }, 1000);
-                await server.close();
-                web3.currentProvider.removeAllListeners();
                 
             },1000);
         });
