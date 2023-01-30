@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as fs from 'fs';
-import { InvalidClientError } from 'web3-errors';
+import { ConnectionError, InvalidClientError } from 'web3-errors';
 import IpcProvider from '../../src/index';
 
 jest.mock('net');
@@ -56,8 +56,13 @@ describe('IpcProvider', () => {
 
 		it('should throw error if socket path does not exists', () => {
 			jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-
-			expect(() => new IpcProvider(socketPath)).toThrow(new InvalidClientError(socketPath));
+			expect(() => new IpcProvider(socketPath)).toThrow(
+				new ConnectionError(
+					`Error while connecting to ${socketPath}. Reason: ${
+						new InvalidClientError(socketPath).message
+					}`,
+				),
+			);
 		});
 
 		it('should add listeners to socket', () => {
