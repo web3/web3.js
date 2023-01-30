@@ -32,8 +32,8 @@ import {
 	hashMessage,
 	recover,
 	recoverTransaction,
-	sign,
-	signTransaction,
+	signWithPrivateKey,
+	signTransactionWithPrivateKey,
 	Wallet,
 	Web3Account,
 } from 'web3-eth-accounts';
@@ -84,10 +84,10 @@ export interface Web3EthInterface extends Eth {
 		signTransaction: (
 			transaction: Transaction,
 			privateKey: Bytes,
-		) => ReturnType<typeof signTransaction>;
+		) => ReturnType<typeof signTransactionWithPrivateKey>;
 		recoverTransaction: typeof recoverTransaction;
 		hashMessage: typeof hashMessage;
-		sign: typeof sign;
+		sign: typeof signWithPrivateKey;
 		recover: typeof recover;
 		encrypt: typeof encrypt;
 		decrypt: (

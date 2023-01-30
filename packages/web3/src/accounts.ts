@@ -27,8 +27,8 @@ import {
 	privateKeyToAccount,
 	recover,
 	recoverTransaction,
-	signTransaction,
-	sign,
+	signTransactionWithPrivateKey,
+	signWithPrivateKey,
 	Wallet,
 } from 'web3-eth-accounts';
 
@@ -45,7 +45,7 @@ export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) =>
 
 		const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
 
-		return signTransaction(tx, privateKeyBytes);
+		return signTransactionWithPrivateKey(tx, privateKeyBytes);
 	};
 
 	const privateKeyToAccountWithContext = (privateKey: Buffer | string) => {
@@ -95,7 +95,7 @@ export const initAccountsForContext = (context: Web3Context<EthExecutionAPI>) =>
 		decrypt: decryptWithContext,
 		recoverTransaction,
 		hashMessage,
-		sign,
+		sign: signWithPrivateKey,
 		recover,
 		encrypt,
 		wallet,

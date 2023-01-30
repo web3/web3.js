@@ -28,8 +28,8 @@ import {
 	privateKeyToAddress,
 	recover,
 	recoverTransaction,
-	sign,
-	signTransaction,
+	signWithPrivateKey,
+	signTransactionWithPrivateKey,
 } from '../../src';
 import {
 	invalidDecryptData,
@@ -94,7 +94,7 @@ describe('accounts', () => {
 		it.each(transactionsTestData)('sign transaction', async txData => {
 			const account = create();
 
-			const signedResult = await signTransaction(
+			const signedResult = await signTransactionWithPrivateKey(
 				TransactionFactory.fromTxData(txData),
 				account.privateKey,
 			);
@@ -110,7 +110,7 @@ describe('accounts', () => {
 		it.each(transactionsTestData)('Recover transaction', async txData => {
 			const account = create();
 			const txObj = { ...txData, from: account.address };
-			const signedResult = await signTransaction(
+			const signedResult = await signTransactionWithPrivateKey(
 				TransactionFactory.fromTxData(txObj),
 				account.privateKey,
 			);
@@ -130,7 +130,7 @@ describe('accounts', () => {
 	describe('Sign Message', () => {
 		describe('sign', () => {
 			it.each(signatureRecoverData)('%s', (data, testObj) => {
-				const result = sign(data, testObj.privateKey);
+				const result = signWithPrivateKey(data, testObj.privateKey);
 				expect(result.signature).toEqual(testObj.signature || testObj.signatureOrV); // makes sure we get signature and not V value
 			});
 		});

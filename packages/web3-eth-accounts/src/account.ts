@@ -112,7 +112,7 @@ export const hashMessage = (message: string): string => {
 };
 
 /**
- * Signs arbitrary data.
+ * Signs arbitrary data with a given private key.
  * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
  *
  * @param data - The data to sign
@@ -120,7 +120,7 @@ export const hashMessage = (message: string): string => {
  * @returns The signature Object containing the message, messageHash, signature r, s, v
  *
  * ```ts
- * web3.eth.accounts.sign('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+ * web3.eth.accounts.signWithPrivateKey('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
  * > {
  * message: 'Some data',
  * messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
@@ -131,7 +131,8 @@ export const hashMessage = (message: string): string => {
  * }
  * ```
  */
-export const sign = (data: string, privateKey: Bytes): SignResult => {
+
+export const signWithPrivateKey = (data: string, privateKey: Bytes): SignResult => {
 	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
 	const hash = hashMessage(data);
@@ -171,7 +172,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  *
  * Signing a legacy transaction
  * ```ts
- * signTransaction({
+ * signTransactionWithPrivateKey({
  *	to: '0x118C2E5F57FD62C2B5b46a5ae9216F4FF4011a07',
  *	value: '0x186A0',
  *	gasLimit: '0x520812',
@@ -191,7 +192,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * ```
  * Signing an eip 1559 transaction
  * ```ts
- * signTransaction({
+ * signTransactionWithPrivateKey({
  *	to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
  *	maxPriorityFeePerGas: '0x3B9ACA00',
  *	maxFeePerGas: '0xB2D05E00',
@@ -212,7 +213,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * ```
  * Signing an eip 2930 transaction
  * ```ts
- * signTransaction({
+ * signTransactionWithPrivateKey({
  *	chainId: 1,
  *	nonce: 0,
  *	gasPrice: '0x09184e72a000',
@@ -240,7 +241,7 @@ export const sign = (data: string, privateKey: Bytes): SignResult => {
  * }
  * ```
  */
-export const signTransaction = async (
+export const signTransactionWithPrivateKey = async (
 	transaction: TypedTransaction,
 	privateKey: HexString,
 	// To make it compatible with rest of the API, have to keep it async
@@ -592,7 +593,10 @@ export const privateKeyToAccount = (privateKey: Bytes, ignoreLength?: boolean): 
 			throw new TransactionSigningError('Do not have network access to sign the transaction');
 		},
 		sign: (data: Record<string, unknown> | string) =>
-			sign(typeof data === 'string' ? data : JSON.stringify(data), privateKeyBuffer),
+			signWithPrivateKey(
+				typeof data === 'string' ? data : JSON.stringify(data),
+				privateKeyBuffer,
+			),
 		encrypt: async (password: string, options?: Record<string, unknown>) =>
 			encrypt(privateKeyBuffer, password, options),
 	};
