@@ -579,10 +579,10 @@ describe('WebsocketProvider (ganache)', function () {
                 if (blockNumber === undefined) {
                     reject();
                 }
+                resolve();
             },1000);
         await server.close();
         web3.currentProvider.removeAllListeners();
-        resolve();
         });
     });
 
