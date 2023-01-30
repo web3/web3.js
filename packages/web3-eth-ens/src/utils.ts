@@ -16,10 +16,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { sha3Raw } from 'web3-utils';
-import { toAscii } from 'idna-uts46-hx';
+// eslint-disable-next-line camelcase
+import { ens_normalize } from '@adraffy/ens-normalize';
 
-export const normalize = (name: string) =>
-	toAscii(name, { useStd3ASCII: true, transitional: false, verifyDnsLength: false });
+export const normalize = (name: string) => ens_normalize(name);
 
 export const namehash = (inputName: string) => {
 	// Reject empty names:
