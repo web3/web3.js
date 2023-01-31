@@ -1144,3 +1144,7 @@ should use 4.0.1-alpha.0 for testing.
 ##### Removed
 
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed
+
+##### Added
+
+-   `registeredSubscriptions` was added by default in web3 constructor

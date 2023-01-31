@@ -70,3 +70,7 @@ web3.currentProvider.disconnect();
 ### Removed
 
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed
+
+### Added
+
+-   `registeredSubscriptions` was added by default in web3 constructor
