@@ -272,6 +272,11 @@ export interface AccessListEntry {
 }
 export type AccessList = AccessListEntry[];
 
+export type AccessListResult = {
+	readonly accessList?: AccessList;
+	readonly gasUsed?: Numbers;
+};
+
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 
 export type Hardfork =

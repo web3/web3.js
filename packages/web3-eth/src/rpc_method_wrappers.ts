@@ -42,6 +42,8 @@ import {
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
+	TransactionForAccessList,
+	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
@@ -53,9 +55,6 @@ import {
 	ContractExecutionError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-
-import { TransactionForAccessList } from 'web3-types';
-import { AccessList } from 'web3-types';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -1967,7 +1966,7 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 		web3Context.requestManager,
 		formatTransaction(transaction, ETH_DATA_FORMAT),
 		blockNumberFormatted,
-	)) as unknown as AccessList;
+	)) as unknown as AccessListResult;
 
 	return format(accessListResultSchema, response, returnFormat);
 }
