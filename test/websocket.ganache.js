@@ -559,7 +559,9 @@ describe('WebsocketProvider (ganache)', function () {
 
             web3.currentProvider.on('connect', async function () {
                 if (stage === 0){
+                    console.log("closing server")
                     await server.close();
+                    console.log(server.status)
                     stage = 1;
                 }
                 console.log("connect")
@@ -571,12 +573,12 @@ describe('WebsocketProvider (ganache)', function () {
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
-                const deferred = await web3.eth.getBlockNumber();
+                const deferred = web3.eth.getBlockNumber();
                 console.log(deferred)
                 server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
                 console.log(server)
                 await server.listen(port);
-                web3.currentProvider.reconnect()
+                await web3.currentProvider.reconnect()
                 console.log("after reconnect")
                     try {
                         console.log(deferred)
