@@ -642,3 +642,6 @@ Released with 1.0.0-beta.37 code base.
 
 ## [Unreleased]
 
+### Fixed
+
+  - Fixed skipped ws-ganache tests (#5759)
