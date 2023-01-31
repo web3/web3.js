@@ -46,7 +46,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 
 			const from = tempAccount.address;
 			const to = tempAccount2.address;
-			const value = `0x1`;
+			const value = `0x10000`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>

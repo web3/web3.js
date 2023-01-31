@@ -317,7 +317,7 @@ describe('defaults', () => {
 
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
-			const value = `0x1`;
+			const value = `0x10000`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
