@@ -45,7 +45,7 @@ describeIf(isSocket)('subscription', () => {
 			const tempAccForEachTest = await createTempAccount();
 			const from = tempAccForEachTest.address;
 			const to = tempAcc2.address;
-			const value = `0x1`;
+			const value = `0x10000`;
 			await waitForOpenConnection(web3Eth);
 			let times = 0;
 			const pr = new Promise((resolve: Resolve, reject) => {
