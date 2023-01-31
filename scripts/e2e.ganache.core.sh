@@ -8,11 +8,6 @@
 # Exit immediately on error
 set -o errexit
 
-# Install ganache
-git clone https://github.com/trufflesuite/ganache
-cd ganache
-git checkout tags/v7.7.3
-
 # Install via registry and verify
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 echo "Installing updated web3 via virtual registry "
