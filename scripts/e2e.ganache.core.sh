@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------------------
-# Run trufflesuite/ganache-core using a candidate branch of web3 which has been published
+# Run trufflesuite/ganache using a candidate branch of web3 which has been published
 # to a proxy npm registry in `e2e.npm.publish.sh`
 #
 # This test's purpose is to watch web3 execute a long, complex test suite
@@ -8,10 +8,10 @@
 # Exit immediately on error
 set -o errexit
 
-# Install ganache-core
-git clone https://github.com/trufflesuite/ganache-core
-cd ganache-core
-git checkout tags/v2.13.0
+# Install ganache
+git clone https://github.com/trufflesuite/ganache
+cd ganache
+git checkout tags/v7.7.3
 
 # Install via registry and verify
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -34,7 +34,7 @@ cat ./package.json
 
 # Test
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-echo "Running trufflesuite/ganache-core unit tests.      "
+echo "Running trufflesuite/ganache unit tests.      "
 echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
 
 npm run build
