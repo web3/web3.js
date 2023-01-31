@@ -567,22 +567,19 @@ describe('WebsocketProvider (ganache)', function () {
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
+                // manually reconnect so we don't error out
+                web3.currentProvider.reconnect();
                 const deferred = web3.eth.getBlockNumber();
                 server = ganache.server(ganacheOptions);
                 await server.listen(port);
-                setTimeout(async function() {
-                    try {
-                        blockNumber = await deferred;
-                        console.log(blockNumber)
-                        resolve(true);
-                    } catch (error) {
-                        console.log(error)
-                        reject();
-                    } 
-                }, 1000);
-                await server.close();
+                try {
+                    blockNumber = await deferred;
+                    resolve(true);
+                } catch (error) {
+                    reject(error);
+                }
                 web3.currentProvider.removeAllListeners();
-                
+
             },1000);
         });
     });
