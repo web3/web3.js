@@ -4,7 +4,6 @@ const utils = require('./helpers/test.utils')
 const Web3 = utils.getWeb3()
 
 const { spawn } = require('child_process');
-const { catch } = require('fetch-mock');
 
 const intervalTime = 1000 // ms
 
