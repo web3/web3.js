@@ -553,7 +553,7 @@ describe('WebsocketProvider (ganache)', function () {
             web3 = new Web3(
                 new Web3.providers.WebsocketProvider(
                     host + port,
-                    {reconnect: {auto: true}}
+                    {reconnect: {auto: true, maxAttempts: 10}}
                 )
             );
 
@@ -565,18 +565,30 @@ describe('WebsocketProvider (ganache)', function () {
                     stage = 1;
                 }
                 console.log("connect")
+                console.log("first")
+                console.log(await web3.eth.net.isListening());
             });
+            web3.currentProvider.on('error', function(e)
+            {
+                console.log(e)
+            })
             
 
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
+                // manually reconnect
+                web3.currentProvider.reconnect();
                 const deferred = web3.eth.getBlockNumber();
-                web3.eth.currentProvider.on('reconnect', async function () {
+                console.log(deferred)
+                web3.eth.currentProvider.on('connect', async function () {
                     console.log("reconnect")
+
+                    // console.log(await web3.eth.net.isListening());
                     try{
-                    // blockNumber = await deferred;
-                    console.log (await web3.eth.getBlockNumber());
+                    blockNumber = await deferred;
+                    // console.log (await web3.eth.getBlockNumber());
+                    console.log(blockNumber)
                     } catch(error) {
                         reject(error)
                     }
@@ -587,7 +599,7 @@ describe('WebsocketProvider (ganache)', function () {
                 server = ganache.server();
                 console.log(server)
                 await server.listen(port);
-                web3.eth.currentProvider.reconnect();
+                web3.currentProvider.reconnect();
                 
             },1000);
         });
