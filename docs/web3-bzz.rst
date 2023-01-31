@@ -168,7 +168,7 @@ Parameters
             - ``path``: The path to the file or directory.
             - ``kind``: The type of the source ``"directory"``, ``"file"`` or ``"data"``.
             - ``defaultFile`` (optional): Path of the "defaultFile" when ``"kind": "directory"``, e.g. ``"/index.html"``.
-        3. Upload file or folder in the browser. Requres and object with the following properties:
+        3. Upload file or folder in the browser. Requires and object with the following properties:
             - ``pick``: The file picker to launch. Can be ``"file"``, ``"directory"`` or ``"data"``.
 
 
