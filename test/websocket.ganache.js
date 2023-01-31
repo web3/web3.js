@@ -571,7 +571,8 @@ describe('WebsocketProvider (ganache)', function () {
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
-                const deferred = web3.eth.getBlockNumber();
+                const deferred = await web3.eth.getBlockNumber();
+                console.log(deferred)
                 server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
                 console.log(server)
                 await server.listen(port);
