@@ -64,7 +64,7 @@ import {
 	logSchema,
 	transactionReceiptSchema,
 	transactionInfoSchema,
-	accessListSchema,
+	accessListResultSchema,
 } from './schemas';
 import {
 	SendSignedTransactionEvents,
@@ -1969,5 +1969,5 @@ export async function createAccessList<ReturnFormat extends DataFormat>(
 		blockNumberFormatted,
 	)) as unknown as AccessList;
 
-	return format(accessListSchema, response, returnFormat);
+	return format(accessListResultSchema, response, returnFormat);
 }

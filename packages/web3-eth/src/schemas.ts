@@ -30,11 +30,17 @@ export const accessListItemSchema = {
 };
 
 export const accessListSchema = {
+	type: 'array',
+	items: {
+		...accessListItemSchema,
+	},
+};
+
+export const accessListResultSchema = {
 	type: 'object',
 	properties: {
 		accessList: {
-			type: 'array',
-			items: { ...accessListItemSchema },
+			...accessListSchema,
 		},
 		gasUsed: {
 			type: 'string',
