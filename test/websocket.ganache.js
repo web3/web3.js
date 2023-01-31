@@ -4,6 +4,7 @@ const utils = require('./helpers/test.utils')
 const Web3 = utils.getWeb3()
 
 const { spawn } = require('child_process');
+const { catch } = require('fetch-mock');
 
 const intervalTime = 1000 // ms
 
@@ -566,14 +567,22 @@ describe('WebsocketProvider (ganache)', function () {
                 }
                 console.log("connect")
             });
-            web3.currentProvider.on('reconnect', async function () {
-                console.log("reconnect")
-            });
+            
 
             setTimeout(async function(){
                 assert(stage === 1);
                 let blockNumber;
                 const deferred = web3.eth.getBlockNumber();
+                web3.currentProvider.on('reconnect', async function () {
+                    console.log("reconnect")
+                    try{
+                    blockNumber = await deferred;
+                    } catch(error) {
+                        reject(error)
+                    }
+                    resolve(true)
+
+                });
                 console.log(deferred)
                 server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
                 console.log(server)
