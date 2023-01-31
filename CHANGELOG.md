@@ -612,7 +612,7 @@ Released with 1.0.0-beta.37 code base.
 
 - Updated dependencies (#5529)
 
-## [Unreleased]
+## [1.8.2]
 
 ### Changed
 
@@ -639,3 +639,6 @@ Released with 1.0.0-beta.37 code base.
 
 ### Security
 -  `npm audit fix` for libraries update (#5726)
+
+## [Unreleased]
+
