@@ -19,6 +19,7 @@ import { Web3ContextInitOptions, Web3PromiEvent } from 'web3-core';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
 import { AbiFragment, ContractAbi } from 'web3-eth-abi';
 import {
+	AccessListResult,
 	Address,
 	BlockNumberOrTag,
 	Bytes,
@@ -344,6 +345,11 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): string;
+
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
@@ -504,6 +510,11 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): HexString;
+
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export type Web3ContractContext = Partial<
