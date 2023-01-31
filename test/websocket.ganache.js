@@ -547,7 +547,7 @@ describe('WebsocketProvider (ganache)', function () {
         let stage = 0;
 
         return new Promise(async function (resolve, reject) {
-            server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+            server = ganache.server();
             await server.listen(port);
 
             web3 = new Web3(
@@ -572,7 +572,7 @@ describe('WebsocketProvider (ganache)', function () {
                 assert(stage === 1);
                 let blockNumber;
                 const deferred = web3.eth.getBlockNumber();
-                web3.currentProvider.on('reconnect', async function () {
+                web3.eth.currentProvider.on('reconnect', async function () {
                     console.log("reconnect")
                     try{
                     blockNumber = await deferred;
@@ -583,10 +583,10 @@ describe('WebsocketProvider (ganache)', function () {
 
                 });
                 console.log(deferred)
-                server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
+                server = ganache.server();
                 console.log(server)
                 await server.listen(port);
-                web3.currentProvider.reconnect();
+                web3.eth.currentProvider.reconnect();
                 
             },1000);
         });
