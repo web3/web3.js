@@ -41,9 +41,9 @@ export const sendFewTxes = async ({
 	for (let i = 0; i < times; i += 1) {
 		// @TODO: Investigate why we need timeout here #5730
 		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
+		// await new Promise<void>(resolve => {
+		// 	setTimeout(resolve, 500);
+		// });
 
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
@@ -89,9 +89,9 @@ export const sendFewTxesWithoutReceipt = async ({
 	for (let i = 0; i < times; i += 1) {
 		// @TODO: Investigate why we need timeout here #5730
 		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
+		// await new Promise<void>(resolve => {
+		// 	setTimeout(resolve, 500);
+		// });
 
 		res.push(
 			web3Eth.sendTransaction({
