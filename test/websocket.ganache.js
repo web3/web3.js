@@ -578,15 +578,6 @@ describe('WebsocketProvider (ganache)', function () {
                 server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
                 console.log(server)
                 await server.listen(port);
-                await web3.currentProvider.reconnect()
-                console.log("after reconnect")
-                    try {
-                        console.log(deferred)
-                        blockNumber = await deferred;
-                        resolve(true);
-                    } catch (error) {
-                        reject(error);
-                    } 
                 
             },1000);
         });
