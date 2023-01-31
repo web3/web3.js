@@ -58,9 +58,9 @@ import {
 	ERR_TX_UNSUPPORTED_EIP_1559,
 	ERR_TX_UNSUPPORTED_TYPE,
 } from '../error_codes';
-import { InvalidValueError, Web3Error } from '../web3_error_base';
+import { InvalidValueError, BaseWeb3Error } from '../web3_error_base';
 
-export class TransactionError<ReceiptType = TransactionReceipt> extends Web3Error {
+export class TransactionError<ReceiptType = TransactionReceipt> extends BaseWeb3Error {
 	public code = ERR_TX;
 
 	public constructor(message: string, public receipt?: ReceiptType) {
@@ -72,7 +72,7 @@ export class TransactionError<ReceiptType = TransactionReceipt> extends Web3Erro
 	}
 }
 
-export class RevertInstructionError extends Web3Error {
+export class RevertInstructionError extends BaseWeb3Error {
 	public code = ERR_TX_REVERT_INSTRUCTION;
 
 	public constructor(public reason: string, public signature: string) {
@@ -84,7 +84,7 @@ export class RevertInstructionError extends Web3Error {
 	}
 }
 
-export class TransactionRevertError extends Web3Error {
+export class TransactionRevertError extends BaseWeb3Error {
 	public code = ERR_TX_REVERT_TRANSACTION;
 
 	public constructor(
@@ -405,7 +405,7 @@ export class TransactionDataAndInputError extends InvalidValueError {
 	}
 }
 
-export class TransactionSendTimeoutError extends Web3Error {
+export class TransactionSendTimeoutError extends BaseWeb3Error {
 	public code = ERR_TX_SEND_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash?: Bytes }) {
@@ -425,7 +425,7 @@ function transactionTimeoutHint(transactionHash?: Bytes) {
 	}`;
 }
 
-export class TransactionPollingTimeoutError extends Web3Error {
+export class TransactionPollingTimeoutError extends BaseWeb3Error {
 	public code = ERR_TX_POLLING_TIMEOUT;
 
 	public constructor(value: { numberOfSeconds: number; transactionHash: Bytes }) {
@@ -437,7 +437,7 @@ export class TransactionPollingTimeoutError extends Web3Error {
 	}
 }
 
-export class TransactionBlockTimeoutError extends Web3Error {
+export class TransactionBlockTimeoutError extends BaseWeb3Error {
 	public code = ERR_TX_BLOCK_TIMEOUT;
 
 	public constructor(value: {
@@ -478,7 +478,7 @@ export class TransactionReceiptMissingBlockNumberError extends InvalidValueError
 	}
 }
 
-export class TransactionSigningError extends Web3Error {
+export class TransactionSigningError extends BaseWeb3Error {
 	public code = ERR_TX_SIGNING;
 	public constructor(errorDetails: string) {
 		super(`Invalid signature. "${errorDetails}"`);

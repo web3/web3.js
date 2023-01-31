@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface Web3ErrorInterface extends Error {
+export interface Web3Error extends Error {
 	readonly name: string;
 	readonly code: number;
 	readonly stack?: string;

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { Socket } from 'net';
 
-import { Web3ErrorInterface } from './error_types';
+import { Web3Error } from './error_types';
 import { EthExecutionAPI } from './apis/eth_execution_api';
 import {
 	JsonRpcNotification,
@@ -60,7 +60,7 @@ export type Web3ProviderEventCallback<T = JsonRpcResult> = (
 export type Web3ProviderRequestCallback<ResultType = unknown> = (
 	// Used "null" value to match the legacy version
 	// eslint-disable-next-line @typescript-eslint/ban-types
-	err?: Error | Web3ErrorInterface | null | JsonRpcResponseWithError<Error>,
+	err?: Error | Web3Error | null | JsonRpcResponseWithError<Error>,
 	response?: JsonRpcResponseWithResult<ResultType>,
 ) => void;
 
@@ -132,7 +132,7 @@ export abstract class Web3BaseProvider<API extends Web3APISpec = EthExecutionAPI
 			.then(response => {
 				callback(undefined, response);
 			})
-			.catch((err: Error | Web3ErrorInterface) => {
+			.catch((err: Error | Web3Error) => {
 				callback(err);
 			});
 	}

@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 // eslint-disable-next-line max-classes-per-file
 import { JsonRpcError, JsonRpcResponse, JsonRpcResponseWithError } from 'web3-types';
-import { Web3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base';
 import { ERR_INVALID_RESPONSE, ERR_RESPONSE } from '../error_codes';
 
 // To avoid circular package dependency, copied to code here. If you update this please update same function in `json_rpc.ts`
@@ -36,7 +36,7 @@ const isResponseWithError = <Error = unknown, Result = unknown>(
 const buildErrorMessage = (response: JsonRpcResponse<unknown, unknown>): string =>
 	isResponseWithError(response) ? response.error.message : '';
 
-export class ResponseError<ErrorType = unknown> extends Web3Error {
+export class ResponseError<ErrorType = unknown> extends BaseWeb3Error {
 	public code = ERR_RESPONSE;
 	public data?: ErrorType | ErrorType[];
 
