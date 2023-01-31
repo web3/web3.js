@@ -578,7 +578,7 @@ describe('WebsocketProvider (ganache)', function () {
                 server = ganache.server({ miner: { blockTime: 1 }, server: { ws: true } });
                 console.log(server)
                 await server.listen(port);
-                web3.eth.reconnect();
+                web3.currentProvider.reconnect();
                 
             },1000);
         });
