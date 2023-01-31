@@ -1138,3 +1138,9 @@ should use 4.0.1-alpha.0 for testing.
 ## [Unreleased]
 
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
+
+#### web3
+
+##### Removed
+
+-   Private static `_contracts:Contract[]` and static `setProvider` function was removed
