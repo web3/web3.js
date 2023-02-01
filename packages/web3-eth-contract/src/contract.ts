@@ -218,28 +218,6 @@ export class Contract<Abi extends ContractAbi>
 	public readonly options: ContractOptions;
 
 	/**
-	 * The `contractWeb3Config` of type {@link Web3ConfigOptions} is used to set the defaults for all contracts
-	 *
-	 * Specifically you can set:
-	 *
-	 *  `defaultAccount`
-	 *  `defaultBlock`
-	 *  `defaultHardfork`
-	 *  `defaultCommon`
-	 *  `transactionSendTimeout`
-	 *  `transactionBlockTimeout`
-	 *  `transactionConfirmationBlocks`
-	 *  `transactionPollingInterval`
-	 *  `transactionPollingTimeout`
-	 *  `transactionReceiptPollingInterval`
-	 *  `transactionConfirmationPollingInterval`
-	 *  `blockHeaderTimeout`
-	 *  `handleRevert`
-	 */
-
-	public static contractWeb3Config: Partial<Web3ConfigOptions> = {};
-
-	/**
 	 * Set to true if you want contracts' defaults to sync with global defaults.
 	 */
 	public static sync_with_globals = false;
@@ -398,8 +376,6 @@ export class Contract<Abi extends ContractAbi>
 			get: () => this._jsonInterface,
 		});
 
-		this.setConfig(Contract.contractWeb3Config);
-
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const contractThis = this;
 
@@ -409,157 +385,6 @@ export class Contract<Abi extends ContractAbi>
 				contractThis.setConfig({ [event.name]: event.newValue });
 			});
 		}
-	}
-
-	/**
-	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
-	 */
-	public get defaultAccount() {
-		return (
-			super.defaultAccount ??
-			(this.constructor as typeof Contract).contractWeb3Config.defaultAccount
-		);
-	}
-
-	public set defaultAccount(value: Address | undefined) {
-		super.defaultAccount = value;
-	}
-
-	public get defaultBlock() {
-		return (
-			super.defaultBlock ??
-			(this.constructor as typeof Contract).contractWeb3Config.defaultBlock
-		);
-	}
-
-	public set defaultBlock(value: BlockNumberOrTag) {
-		super.defaultBlock = value;
-	}
-
-	public get defaultHardfork() {
-		return (
-			super.defaultHardfork ??
-			(this.constructor as typeof Contract).contractWeb3Config.defaultHardfork
-		);
-	}
-
-	public set defaultHardfork(value: string) {
-		super.defaultHardfork = value;
-	}
-
-	public get defaultCommon(): Common | undefined {
-		return (
-			super.defaultCommon ??
-			(this.constructor as typeof Contract).contractWeb3Config.defaultCommon
-		);
-	}
-
-	public set defaultCommon(value: Common | undefined) {
-		super.defaultCommon = value;
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-call
-		// (this as unknown as Web3Context).setConfig({ defaultCommon: value });
-		// this.contractWeb3Config.defaultCommon = value;
-	}
-
-	public get transactionSendTimeout() {
-		return (
-			super.transactionSendTimeout ??
-			(this.constructor as typeof Contract).contractWeb3Config.transactionSendTimeout
-		);
-	}
-
-	public set transactionSendTimeout(value: number) {
-		super.transactionSendTimeout = value;
-	}
-
-	public get transactionBlockTimeout() {
-		return (
-			super.transactionBlockTimeout ??
-			(this.constructor as typeof Contract).contractWeb3Config.transactionBlockTimeout
-		);
-	}
-
-	public set transactionBlockTimeout(value: number) {
-		super.transactionBlockTimeout = value;
-	}
-
-	public get transactionConfirmationBlocks() {
-		return (
-			super.transactionConfirmationBlocks ??
-			(this.constructor as typeof Contract).contractWeb3Config.transactionConfirmationBlocks
-		);
-	}
-
-	public set transactionConfirmationBlocks(value: number) {
-		super.transactionConfirmationBlocks = value;
-	}
-
-	public get transactionPollingInterval() {
-		return (
-			super.transactionPollingInterval ??
-			(this.constructor as typeof Contract).contractWeb3Config.transactionPollingInterval
-		);
-	}
-
-	public set transactionPollingInterval(value: number) {
-		super.transactionPollingInterval = value;
-	}
-
-	public get transactionPollingTimeout() {
-		return (
-			super.transactionPollingTimeout ??
-			(this.constructor as typeof Contract).contractWeb3Config.transactionPollingTimeout
-		);
-	}
-
-	public set transactionPollingTimeout(value: number) {
-		super.transactionPollingTimeout = value;
-	}
-
-	public get transactionReceiptPollingInterval() {
-		return (
-			super.transactionReceiptPollingInterval ??
-			(this.constructor as typeof Contract).contractWeb3Config
-				.transactionReceiptPollingInterval
-		);
-	}
-
-	public set transactionReceiptPollingInterval(value: number | undefined) {
-		super.transactionReceiptPollingInterval = value;
-	}
-
-	public get transactionConfirmationPollingInterval() {
-		return (
-			super.transactionConfirmationPollingInterval ??
-			(this.constructor as typeof Contract).contractWeb3Config
-				.transactionConfirmationPollingInterval
-		);
-	}
-
-	public set transactionConfirmationPollingInterval(value: number | undefined) {
-		super.transactionConfirmationPollingInterval = value;
-	}
-
-	public get blockHeaderTimeout() {
-		return (
-			super.blockHeaderTimeout ??
-			(this.constructor as typeof Contract).contractWeb3Config.blockHeaderTimeout
-		);
-	}
-
-	public set blockHeaderTimeout(value: number) {
-		super.blockHeaderTimeout = value;
-	}
-
-	public get handleRevert() {
-		return (
-			super.handleRevert ??
-			(this.constructor as typeof Contract).contractWeb3Config.handleRevert
-		);
-	}
-
-	public set handleRevert(value: boolean) {
-		super.handleRevert = value;
 	}
 
 	/**
@@ -1193,11 +1018,7 @@ export class Contract<Abi extends ContractAbi>
 		let modifiedContractOptions = contractOptions ?? this.options;
 		modifiedContractOptions = {
 			...modifiedContractOptions,
-			from:
-				modifiedContractOptions.from ??
-				this.defaultAccount ??
-				Contract.contractWeb3Config.defaultAccount ??
-				undefined,
+			from: modifiedContractOptions.from ?? this.defaultAccount ?? undefined,
 		};
 
 		const tx = getSendTxParams({
