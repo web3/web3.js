@@ -70,3 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `build` entry from `package.json` (#5755)
 
 ## [Unreleased]
+
+### Breaking Changes
+
+-   Move `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)

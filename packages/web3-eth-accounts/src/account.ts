@@ -131,7 +131,6 @@ export const hashMessage = (message: string): string => {
  * }
  * ```
  */
-
 export const sign = (data: string, privateKey: Bytes): SignResult => {
 	const privateKeyBuffer = parseAndValidatePrivateKey(privateKey);
 
