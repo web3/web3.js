@@ -23,7 +23,7 @@ import {
 	create as _createAccount,
 	decrypt,
 	privateKeyToAccount,
-	signTransactionWithPrivateKey,
+	signTransaction,
 } from 'web3-eth-accounts';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -164,7 +164,7 @@ export const createAccountProvider = (context: Web3Context<EthExecutionAPI>) => 
 
 		const privateKeyBytes = format({ eth: 'bytes' }, privateKey, ETH_DATA_FORMAT);
 
-		return signTransactionWithPrivateKey(tx, privateKeyBytes);
+		return signTransaction(tx, privateKeyBytes);
 	};
 
 	const privateKeyToAccountWithContext = (privateKey: Buffer | string) => {
