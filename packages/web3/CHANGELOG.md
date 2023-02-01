@@ -76,7 +76,7 @@ web3.currentProvider.disconnect();
 
 ### Changed
 
--   `require('web3')` will now return a namespace that contains all web3 objects. (#5771)
+-   `require('web3')` will now return all web3 exported-objects organized in namespaces . (#5771)
 
 ### Removed
 

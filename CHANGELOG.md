@@ -1171,7 +1171,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3
 
--   `require('web3')` will now return a namespace that contains all web3 objects. (#5771)
+-   `require('web3')` will now return all web3 exported-objects organized in namespaces . (#5771)
 
 #### web3-errors
 
