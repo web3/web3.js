@@ -80,6 +80,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Breaking Changes
+### Removed
 
--   Move all types and interfaces to `web3-types` (#5771)
+-   Moved all types and interfaces to `web3-types` (#5771)

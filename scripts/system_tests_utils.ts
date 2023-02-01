@@ -53,6 +53,7 @@ import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import HttpProvider from 'web3-providers-http';
 import accountsString from './accounts.json';
 
 /**
@@ -125,7 +126,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket) {
+	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
 		return;
 	}
 

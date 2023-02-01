@@ -1141,6 +1141,7 @@ should use 4.0.1-alpha.0 for testing.
 
 #### web3
 
+-   `registeredSubscriptions` was added by default in web3 constructor (#5792)
 -   Add named exports for all objects which are the default-exported-object in their packages (#5771)
 -   Export all packages' objects organized by namespaces (#5771)
 -   Add Additional flat exports for all types and constants from `web3-types` and `web3-errors`. (#5771)
@@ -1166,7 +1167,7 @@ should use 4.0.1-alpha.0 for testing.
 -   Added types from `web3-eth-abi` and `TypedArray` from (#5771)
 -   Added `TypedArray` from `web3-utils` and `web3-validator` (it was defined twice) (#5771)
 
-### Breaking Changes
+### Changed
 
 #### web3
 
@@ -1175,6 +1176,20 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-errors
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+
+#### web3-eth
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+#### web3-eth-contract
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Removed
+
+#### web3
+
+-   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
 
 #### web3-eth-abi
 
@@ -1187,13 +1202,3 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)
-
-### Changed
-
-#### web3-eth
-
--   Update imports statements for objects that was moved between web3 packages (#5771)
-
-#### web3-eth-contract
-
--   Update imports statements for objects that was moved between web3 packages (#5771)

@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
 import { Web3Context } from 'web3-core';
-import Web3Eth from 'web3-eth';
+import Web3Eth, { registeredSubscriptions } from 'web3-eth';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
 import { ENS, registryAddresses } from 'web3-eth-ens';
 import Iban from 'web3-eth-iban';
@@ -46,7 +46,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 	public eth: Web3EthInterface;
 
 	public constructor(provider?: SupportedProviders<EthExecutionAPI> | string) {
-		super({ provider });
+		super({ provider, registeredSubscriptions });
 
 		if (isNullish(provider) || (typeof provider === 'string' && provider.trim() === '')) {
 			console.warn(
@@ -67,9 +67,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		const self = this;
 
 		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			private static readonly _contracts: Contract<any>[] = [];
-
 			public constructor(jsonInterface: Abi);
 			public constructor(jsonInterface: Abi, address: Address);
 			public constructor(jsonInterface: Abi, options: ContractInitOptions);
@@ -90,16 +87,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				} else {
 					super(jsonInterface, self.getContextObject());
 				}
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				ContractBuilder._contracts.push(this as Contract<any>);
-			}
-
-			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>): boolean {
-				for (const contract of ContractBuilder._contracts) {
-					contract.provider = _provider;
-				}
-				return true;
 			}
 		}
 

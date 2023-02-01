@@ -74,6 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Breaking Changes
+### Removed
 
--   Move `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
