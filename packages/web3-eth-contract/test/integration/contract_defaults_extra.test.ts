@@ -288,6 +288,10 @@ describe('contract defaults (extra)', () => {
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
 		it('should use "transactionPollingTimeout" on "instance" level', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			const transactionPollingInterval = 500;
