@@ -46,16 +46,28 @@ jobs:
     name: Build Web
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-        matrix:
-            node: [ 14, 16 ]
     steps:
         -   uses: actions/download-artifact@v3
             with:
-                name: web3-${{ matrix.node }}.js.tar.gz
+                name: web3-16.js.tar.gz
                 path: /tmp
-        -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-        -   run: yarn build:web
+        -   run: tar -xf /tmp/web3-16.js.tar.gz -C ./
+        -   run: yarn build:web:analyze
+            env:
+              STATS_FILE: ${{ github.ref_name }}.json
+        -   name: Cache default branch stats
+            uses: actions/cache@v3
+            with:
+              path: packages/web3/dist/4.x.json
+              key: web3-bundle-stats-default
+        -   name: Compare bundle stats
+            uses: github/webpack-bundlesize-compare-action@v1
+            if: github.event_name != 'push'
+            continue-on-error: true
+            with:
+              github-token: ${{ secrets.GITHUB_TOKEN }}
+              current-stats-json-path: "packages/web3/dist/${{ github.ref_name }}.json"
+              base-stats-json-path: "packages/web3/dist/4.x.json"
 
   unit:
     name: Unit Tests
