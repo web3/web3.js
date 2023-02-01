@@ -291,36 +291,40 @@ export type Hardfork =
 	| 'spuriousDragon'
 	| 'tangerineWhistle';
 
-export interface Log {
+export interface LogBase<NumberType, ByteType> {
 	readonly removed?: boolean;
-	readonly logIndex?: Numbers;
-	readonly transactionIndex?: Numbers;
-	readonly transactionHash?: Bytes;
-	readonly blockHash?: Bytes;
-	readonly blockNumber?: Numbers;
+	readonly logIndex?: NumberType;
+	readonly transactionIndex?: NumberType;
+	readonly transactionHash?: ByteType;
+	readonly blockHash?: ByteType;
+	readonly blockNumber?: NumberType;
 	readonly address?: Address;
-	readonly data?: Bytes;
-	readonly topics?: Bytes[];
+	readonly data?: ByteType;
+	readonly topics?: ByteType[];
 	readonly id?: string;
 }
-
-export interface TransactionReceipt {
-	readonly transactionHash: Bytes;
-	readonly transactionIndex: Numbers;
-	readonly blockHash: Bytes;
-	readonly blockNumber: Numbers;
+export interface Log extends LogBase<Numbers, Bytes> {
+	readonly id?: string;
+}
+export interface TransactionReceiptBase<numberType, hashByteType, logsBloomByteType, logsType> {
+	readonly transactionHash: hashByteType;
+	readonly transactionIndex: numberType;
+	readonly blockHash: hashByteType;
+	readonly blockNumber: numberType;
 	readonly from: Address;
 	readonly to: Address;
-	readonly cumulativeGasUsed: Numbers;
-	readonly gasUsed: Numbers;
-	readonly effectiveGasPrice?: Numbers;
+	readonly cumulativeGasUsed: numberType;
+	readonly gasUsed: numberType;
+	readonly effectiveGasPrice?: numberType;
 	readonly contractAddress?: Address;
-	readonly logs: Log[];
-	readonly logsBloom: Bytes;
-	readonly root: Bytes;
-	readonly status: Numbers;
-	readonly type?: Numbers;
+	readonly logs: logsType[];
+	readonly logsBloom: logsBloomByteType;
+	readonly root: hashByteType;
+	readonly status: numberType;
+	readonly type?: numberType;
 }
+
+export type TransactionReceipt = TransactionReceiptBase<Numbers, Bytes, Bytes, Log>;
 
 export interface CustomChain {
 	name?: string;
@@ -419,36 +423,54 @@ export type PopulatedUnsignedTransaction =
 	| PopulatedUnsignedEip2930Transaction
 	| PopulatedUnsignedEip1559Transaction;
 
-export interface Block {
-	readonly parentHash: Bytes;
-	readonly sha3Uncles: Bytes;
-	readonly miner: Bytes;
-	readonly stateRoot: Bytes;
-	readonly transactionsRoot: Bytes;
-	readonly receiptsRoot: Bytes;
-	readonly logsBloom?: Bytes;
-	readonly difficulty?: Numbers;
-	readonly number: Numbers;
-	readonly gasLimit: Numbers;
-	readonly gasUsed: Numbers;
-	readonly timestamp: Numbers;
-	readonly extraData: Bytes;
-	readonly mixHash: Bytes;
-	readonly nonce: Numbers;
-	readonly totalDifficulty: Numbers;
-	readonly baseFeePerGas?: Numbers;
-	readonly size: Numbers;
-	readonly transactions: TransactionHash[] | TransactionInfo[];
+export interface BlockBase<
+	ByteType,
+	HexStringType,
+	NumberType,
+	extraDataType,
+	TransactionTypes,
+	logsBloomType,
+> {
+	readonly parentHash: ByteType;
+	readonly sha3Uncles: ByteType;
+	readonly miner: HexStringType;
+	readonly stateRoot: ByteType;
+	readonly transactionsRoot: ByteType;
+	readonly receiptsRoot: ByteType;
+	readonly logsBloom?: logsBloomType;
+	readonly difficulty?: NumberType;
+	readonly number: NumberType;
+	readonly gasLimit: NumberType;
+	readonly gasUsed: NumberType;
+	readonly timestamp: NumberType;
+	readonly extraData: extraDataType;
+	readonly mixHash: ByteType;
+	readonly nonce: NumberType;
+	readonly totalDifficulty: NumberType;
+	readonly baseFeePerGas?: NumberType;
+	readonly size: NumberType;
+	readonly transactions: TransactionTypes;
 	readonly uncles: Uncles;
-	readonly hash?: Bytes;
+	readonly hash?: ByteType;
 }
 
-export interface FeeHistory {
-	readonly oldestBlock: Numbers;
-	readonly baseFeePerGas: Numbers;
-	readonly reward: Numbers[][];
-	readonly gasUsedRatio: Numbers;
+export type Block = BlockBase<
+	Bytes,
+	Bytes,
+	Numbers,
+	Bytes,
+	TransactionHash[] | TransactionInfo[],
+	Bytes
+>;
+
+export interface FeeHistoryBase<NumberType> {
+	readonly oldestBlock: NumberType;
+	readonly baseFeePerGas: NumberType;
+	readonly reward: NumberType[][];
+	readonly gasUsedRatio: NumberType[];
 }
+
+export type FeeHistory = FeeHistoryBase<Numbers>;
 
 export interface StorageProof {
 	readonly key: Bytes;
