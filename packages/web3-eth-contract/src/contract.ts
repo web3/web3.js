@@ -405,7 +405,7 @@ export class Contract<Abi extends ContractAbi>
 
 		if (Contract.sync_with_globals) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-restricted-globals
-			this.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+			super.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 				contractThis.setConfig({ [event.name]: event.newValue });
 			});
 		}

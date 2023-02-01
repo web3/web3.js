@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 // eslint-disable-next-line max-classes-per-file
-import { Web3ConfigEvent, Web3Context } from 'web3-core';
+import { Web3Context } from 'web3-core';
 import Web3Eth, { registeredSubscriptions } from 'web3-eth';
 import { ContractAbi } from 'web3-eth-abi';
 import Contract, { ContractInitOptions } from 'web3-eth-contract';
@@ -68,8 +68,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 		const self = this;
 
 		class ContractBuilder<Abi extends ContractAbi> extends Contract<Abi> {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			private static readonly _contracts: Contract<any>[] = [];
 			public constructor(jsonInterface: Abi);
 			public constructor(jsonInterface: Abi, address: Address);
 			public constructor(jsonInterface: Abi, options: ContractInitOptions);
@@ -90,36 +88,6 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				} else {
 					super(jsonInterface, self.getContextObject());
 				}
-
-				self.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
-					for (const contract of ContractBuilder._contracts) {
-						contract.emit(Web3ConfigEvent.CONFIG_CHANGE, event);
-					}
-				});
-
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-				this._eventEmitter.on('ContractCloned', (contract: Contract<any>) => {
-					ContractBuilder._contracts.push(contract);
-				});
-
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				ContractBuilder._contracts.push(this as Contract<any>);
-			}
-
-			public static set sync_with_globals(value: boolean) {
-				Contract.sync_with_globals = value;
-			}
-
-			public static get sync_with_globals() {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-				return Contract.sync_with_globals;
-			}
-
-			public static setProvider(_provider: SupportedProviders<EthExecutionAPI>): boolean {
-				for (const contract of ContractBuilder._contracts) {
-					contract.provider = _provider;
-				}
-				return true;
 			}
 		}
 
