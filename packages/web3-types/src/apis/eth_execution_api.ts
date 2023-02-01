@@ -21,19 +21,22 @@ import {
 	HexStringBytes,
 	HexStringSingleByte,
 	HexString256Bytes,
-	Topic,
+	FeeHistoryBase,
 	HexString8Bytes,
 	Uint256,
 	BlockNumberOrTag,
 	Filter,
 	AccessList,
 	TransactionHash,
-	Uncles,
+	TransactionReceiptBase,
+	BlockBase,
+	LogBase,
 } from '../eth_types';
 import { HexString } from '../primitives_types';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
+// These types follow closely to the v1.0.0-alpha.9 Ethereum spec 
 export interface TransactionCallAPI {
 	readonly from?: Address;
 	readonly to: Address;
@@ -94,19 +97,19 @@ export interface TransactionLegacySignedAPI extends TransactionLegacyUnsignedAPI
 	readonly s: Uint;
 }
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L178
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L144
 export type TransactionUnsignedAPI =
 	| Transaction1559UnsignedAPI
 	| Transaction2930UnsignedAPI
 	| TransactionLegacyUnsignedAPI;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L262
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L211
 export type TransactionSignedAPI =
 	| Transaction1559SignedAPI
 	| Transaction2930SignedAPI
 	| TransactionLegacySignedAPI;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L269
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L216
 export type TransactionInfoAPI = TransactionSignedAPI & {
 	readonly blockHash?: HexString32Bytes;
 	readonly blockNumber?: Uint;
@@ -120,78 +123,39 @@ export interface SignedTransactionInfoAPI {
 	tx: TransactionSignedAPI;
 }
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.json#L24
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/transaction.yaml#L244
 export type TransactionWithSenderAPI = TransactionUnsignedAPI & { from: Address };
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.json#L2
-export interface BlockAPI {
-	readonly parentHash: HexString32Bytes;
-	readonly sha3Uncles: HexString32Bytes;
-	readonly miner: HexString;
-	readonly stateRoot: HexString32Bytes;
-	readonly transactionsRoot: HexString32Bytes;
-	readonly receiptsRoot: HexString32Bytes;
-	readonly logsBloom?: HexString256Bytes;
-	readonly difficulty?: Uint;
-	readonly number?: Uint;
-	readonly gasLimit: Uint;
-	readonly gasUsed: Uint;
-	readonly timestamp: Uint;
-	readonly extraData: HexStringBytes;
-	readonly mixHash: HexString32Bytes;
-	readonly nonce?: Uint;
-	readonly totalDifficulty: Uint;
-	readonly baseFeePerGas?: Uint;
-	readonly size: Uint;
-	readonly transactions: TransactionHash[] | TransactionInfoAPI[];
-	readonly uncles: Uncles;
-	readonly hash?: HexString32Bytes;
-}
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/block.yaml#L2
+export type BlockAPI = BlockBase<
+	HexString32Bytes,
+	HexString,
+	Uint,
+	HexStringBytes,
+	TransactionHash[] | TransactionInfoAPI[],
+	HexString256Bytes
+>;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L2
-export interface LogAPI {
-	readonly removed?: boolean;
-	readonly logIndex?: Uint;
-	readonly transactionIndex?: Uint;
-	readonly transactionHash?: HexString32Bytes;
-	readonly blockHash?: HexString32Bytes;
-	readonly blockNumber?: Uint;
-	readonly address?: Address;
-	readonly data?: HexStringBytes;
-	readonly topics?: Topic | Topic[];
-}
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.yaml#L2
+export type LogAPI = LogBase<Uint, HexString32Bytes>;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.json#L44
-export interface TransactionReceiptAPI {
-	readonly transactionHash: HexString32Bytes;
-	readonly transactionIndex: Uint;
-	readonly blockHash: HexString32Bytes;
-	readonly blockNumber: Uint;
-	readonly from: Address;
-	readonly to: Address;
-	readonly cumulativeGasUsed: Uint;
-	readonly gasUsed: Uint;
-	readonly contractAddress?: Address;
-	readonly logs: LogAPI[];
-	readonly logsBloom: HexString256Bytes;
-	readonly root: HexString32Bytes;
-	readonly status: '0x1' | '0x0';
-	readonly effectiveGasPrice: Uint;
-}
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/receipt.yaml#L36
+export type TransactionReceiptAPI = TransactionReceiptBase<
+	Uint,
+	HexString32Bytes,
+	HexString256Bytes,
+	LogAPI
+>;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/client.json#L2
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/client.yaml#L2
 export type SyncingStatusAPI =
 	| { startingBlock: Uint; currentBlock: Uint; highestBlock: Uint }
 	| boolean;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.json#L53
-export interface FeeHistoryResultAPI {
-	readonly oldestBlock: Uint;
-	readonly baseFeePerGas: Uint;
-	readonly reward: number[][];
-}
+// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.yaml#L42
+export type FeeHistoryResultAPI = FeeHistoryBase<Uint>;
 
-// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L2
+// https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.yaml#L2
 export type FilterResultsAPI = HexString32Bytes[] | LogAPI[];
 
 export interface CompileResultAPI {
@@ -213,7 +177,7 @@ export interface CompileResultAPI {
 
 /* eslint-disable camelcase */
 export type EthExecutionAPI = {
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/block.yaml
 	eth_getBlockByHash: (blockHash: HexString32Bytes, hydrated: boolean) => BlockAPI;
 	eth_getBlockByNumber: (blockNumber: BlockNumberOrTag, hydrated: boolean) => BlockAPI;
 	eth_getBlockTransactionCountByHash: (blockHash: HexString32Bytes) => Uint;
@@ -226,7 +190,7 @@ export type EthExecutionAPI = {
 		uncleIndex: Uint,
 	) => BlockAPI;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/transaction.yaml
 	eth_getTransactionByHash: (transactionHash: HexString32Bytes) => TransactionInfoAPI | undefined;
 	eth_getTransactionByBlockHashAndIndex: (
 		blockHash: HexString32Bytes,
@@ -240,21 +204,21 @@ export type EthExecutionAPI = {
 		transactionHash: HexString32Bytes,
 	) => TransactionReceiptAPI | undefined;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/client.yaml
 	eth_protocolVersion: () => string;
 	eth_syncing: () => SyncingStatusAPI;
 	eth_coinbase: () => Address;
 	eth_accounts: () => Address[];
 	eth_blockNumber: () => Uint;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/execute.yaml
 	eth_call: (transaction: TransactionCallAPI, blockNumber: BlockNumberOrTag) => HexStringBytes;
 	eth_estimateGas: (
 		transaction: Partial<TransactionWithSenderAPI>,
 		blockNumber: BlockNumberOrTag,
 	) => Uint;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/fee_market.yaml
 	eth_gasPrice: () => Uint;
 	eth_feeHistory: (
 		blockCount: Uint,
@@ -262,7 +226,7 @@ export type EthExecutionAPI = {
 		rewardPercentiles: number[],
 	) => FeeHistoryResultAPI;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/filter.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/filter.yaml
 	eth_newFilter: (filter: Filter) => Uint;
 	eth_newBlockFilter: () => Uint;
 	eth_newPendingTransactionFilter: () => Uint;
@@ -271,7 +235,7 @@ export type EthExecutionAPI = {
 	eth_getFilterLogs: (filterIdentifier: Uint) => FilterResultsAPI;
 	eth_getLogs: (filter: Filter) => FilterResultsAPI;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/mining.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/mining.yaml
 	eth_mining: () => boolean;
 	eth_hashrate: () => Uint;
 	eth_getWork: () => [HexString32Bytes, HexString32Bytes, HexString32Bytes];
@@ -282,13 +246,13 @@ export type EthExecutionAPI = {
 	) => boolean;
 	eth_submitHashrate: (hashRate: HexString32Bytes, id: HexString32Bytes) => boolean;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/sign.yaml
 	eth_sign: (address: Address, message: HexStringBytes) => HexString256Bytes;
 	eth_signTransaction: (
 		transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
 	) => HexStringBytes | SignedTransactionInfoAPI;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/state.yaml
 	eth_getBalance: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
 	eth_getStorageAt: (
 		address: Address,
@@ -298,7 +262,7 @@ export type EthExecutionAPI = {
 	eth_getTransactionCount: (address: Address, blockNumber: BlockNumberOrTag) => Uint;
 	eth_getCode: (address: Address, blockNumber: BlockNumberOrTag) => HexStringBytes;
 
-	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.json
+	// https://github.com/ethereum/execution-apis/blob/main/src/eth/submit.yaml
 	eth_sendTransaction: (
 		transaction: TransactionWithSenderAPI | Partial<TransactionWithSenderAPI>,
 	) => HexString32Bytes;
