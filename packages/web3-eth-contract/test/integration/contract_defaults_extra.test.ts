@@ -62,64 +62,33 @@ describe('contract defaults (extra)', () => {
 	afterEach(async () => {
 		await closeOpenConnection(contract);
 	});
-	describe('defaultHardfork', () => {
-		it('should use "defaultHardfork" on "Contract" level', async () => {
-			const hardfork = 'berlin';
 
-			Contract.contractWeb3Config.defaultHardfork = hardfork;
+	it('should use "defaultHardfork" on "instance" level', async () => {
+		const hardfork = 'berlin';
 
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(contract.defaultHardfork).toBe(hardfork);
-
-			await contract.methods.greet().call();
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			expect(sendTransactionSpy).toHaveBeenCalledWith(
-				expect.objectContaining({
-					_config: expect.objectContaining({ defaultHardfork: hardfork }),
-				}),
-				expect.any(Object),
-				expect.any(Object),
-			);
+		contract = new Contract(GreeterAbi, undefined, {
+			provider: getSystemTestProvider(),
 		});
 
-		it('should use "defaultHardfork" on "instance" level', async () => {
-			const hardfork = 'berlin';
+		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contract.defaultHardfork = hardfork;
 
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
+		await contract.methods.setGreeting('New Greeting').send(sendOptions);
+		await contract.methods.greet().send(sendOptions);
 
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-			// console.log(!!contract);
-			contract.defaultHardfork = hardfork;
-			Contract.contractWeb3Config.defaultHardfork = 'london';
+		expect(contract.defaultHardfork).toBe(hardfork);
+		const callSpy = jest.spyOn(Web3Eth, 'call');
 
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-			await contract.methods.greet().send(sendOptions);
+		await contract.methods.greet().call();
 
-			expect(contract.defaultHardfork).toBe(hardfork);
-			const callSpy = jest.spyOn(Web3Eth, 'call');
-
-			await contract.methods.greet().call();
-
-			expect(callSpy).toHaveBeenLastCalledWith(
-				expect.objectContaining({
-					_config: expect.objectContaining({ defaultHardfork: hardfork }),
-				}),
-				expect.any(Object),
-				undefined,
-				expect.any(Object),
-			);
-		});
+		expect(callSpy).toHaveBeenLastCalledWith(
+			expect.objectContaining({
+				_config: expect.objectContaining({ defaultHardfork: hardfork }),
+			}),
+			expect.any(Object),
+			undefined,
+			expect.any(Object),
+		);
 	});
 
 	describe('defaultChain', () => {
@@ -176,29 +145,6 @@ describe('contract defaults (extra)', () => {
 			sendOptions = { from: acc.address, gas: '1000000' };
 
 			contract = await contract.deploy(deployOptions).send(sendOptions);
-		});
-
-		it('should use "defaultCommon" on "Contract" level', async () => {
-			Contract.contractWeb3Config.defaultCommon = common;
-
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-			expect(contract.defaultCommon).toMatchObject(common);
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			expect(sendTransactionSpy).toHaveBeenLastCalledWith(
-				expect.objectContaining({
-					_config: expect.objectContaining({ defaultCommon: common }),
-				}),
-				expect.any(Object),
-				expect.any(Object),
-			);
 		});
 
 		it('should use "defaultCommon" on "instance" level', async () => {
@@ -294,22 +240,6 @@ describe('contract defaults (extra)', () => {
 	});
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
-		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
-			expect(Contract.contractWeb3Config.blockHeaderTimeout).toBeUndefined();
-			const blockHeaderTimeout = 100;
-			Contract.contractWeb3Config.blockHeaderTimeout = blockHeaderTimeout;
-
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
-			expect(Contract.contractWeb3Config.blockHeaderTimeout).toBe(blockHeaderTimeout);
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
-			Contract.contractWeb3Config.blockHeaderTimeout = 10;
-		});
-
 		it('should use "blockHeaderTimout" on "instance" level', async () => {
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
@@ -357,18 +287,6 @@ describe('contract defaults (extra)', () => {
 	});
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
-		it('should use "transactionPollingInterval" on "Contract" level', async () => {
-			expect(Contract.contractWeb3Config.transactionPollingInterval).toBeUndefined();
-
-			const transactionPollingInterval = 500;
-			Contract.contractWeb3Config.transactionPollingInterval = transactionPollingInterval;
-
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
-		});
-
 		it('should use "transactionPollingTimeout" on "instance" level', async () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
@@ -379,49 +297,24 @@ describe('contract defaults (extra)', () => {
 		});
 	});
 
-	describe('handleRevert', () => {
-		it('should use "handleRevert" on "Contract" level', async () => {
-			expect(Contract.contractWeb3Config.handleRevert).toBeUndefined();
-
-			const handleRevert = true;
-			Contract.contractWeb3Config.handleRevert = handleRevert;
-
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
-
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(contract.handleRevert).toBe(handleRevert);
-
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			expect(sendTransactionSpy).toHaveBeenCalled();
-
-			Contract.contractWeb3Config.handleRevert = false;
+	it('should use "handleRevert" on "instance" level', async () => {
+		contract = new Contract(GreeterAbi, undefined, {
+			provider: getSystemTestProvider(),
 		});
 
-		it('should use "handleRevert" on "instance" level', async () => {
-			contract = new Contract(GreeterAbi, undefined, {
-				provider: getSystemTestProvider(),
-			});
+		contract = await contract.deploy(deployOptions).send(sendOptions);
 
-			contract = await contract.deploy(deployOptions).send(sendOptions);
+		expect(contract.handleRevert).toBeFalsy();
 
-			expect(contract.handleRevert).toBeFalsy();
+		const handleRevert = true;
+		contract.handleRevert = handleRevert;
 
-			const handleRevert = true;
-			contract.handleRevert = handleRevert;
+		expect(contract.handleRevert).toBe(handleRevert);
 
-			expect(contract.handleRevert).toBe(handleRevert);
+		const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+		await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			expect(sendTransactionSpy).toHaveBeenCalled();
-		});
+		expect(sendTransactionSpy).toHaveBeenCalled();
 	});
 });
