@@ -1144,7 +1144,7 @@ should use 4.0.1-alpha.0 for testing.
 -   `registeredSubscriptions` was added by default in web3 constructor (#5792)
 -   Add named exports for all objects which are the default-exported-object in their packages (#5771)
 -   Export all packages' objects organized by namespaces (#5771)
--   Add Additional flat exports for all types and constants from `web3-types` and `web3-errors`. (#5771)
+-   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
 
 #### web3-core
 
