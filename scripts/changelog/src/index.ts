@@ -14,20 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+// eslint-disable-next-line import/no-cycle
+import { parseArgs } from './helpers';
 
-pragma solidity ^0.8.7;
-
-contract SampleStorageContract {
-	uint256 uintNum;
-
-	event NEWNUM(uint256 param);
-
-	function storeNum(uint256 param) public {
-		uintNum = param;
-		emit NEWNUM(param);
-	}
-
-	function retrieveNum() public view returns (uint256) {
-		return uintNum;
-	}
-}
+parseArgs();
