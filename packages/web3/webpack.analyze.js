@@ -15,19 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-pragma solidity ^0.8.7;
+const { getWebPackConfig } = require('../../webpack.base.config');
 
-contract SampleStorageContract {
-	uint256 uintNum;
+const config = getWebPackConfig(__dirname, 'web3.min.js', 'Web3', 'src/web3.ts');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-	event NEWNUM(uint256 param);
-
-	function storeNum(uint256 param) public {
-		uintNum = param;
-		emit NEWNUM(param);
-	}
-
-	function retrieveNum() public view returns (uint256) {
-		return uintNum;
-	}
-}
+module.exports = {
+	...config,
+	plugins: [
+		...config.plugins,
+		new BundleAnalyzerPlugin({
+			generateStatsFile: true,
+			statsFilename: process.env.STATS_FILE ?? 'stats.json',
+			defaultSizes: process.env.ANALYZE_SERVER ? 'stat' : 'gzip',
+			analyzerMode: process.env.ANALYZE_SERVER ? 'server' : 'json',
+		}),
+	],
+};
