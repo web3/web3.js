@@ -1081,6 +1081,9 @@ export class Contract<Abi extends ContractAbi>
 						sub.emit('error', new SubscriptionError('Failed to get past events.'));
 					});
 			}
+			this.subscriptionManager?.addSubscription(sub).catch(() => {
+				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
+			});
 
 			return sub;
 		};
