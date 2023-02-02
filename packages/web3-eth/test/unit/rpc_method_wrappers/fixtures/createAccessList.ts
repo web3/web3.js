@@ -32,9 +32,8 @@ const transaction: TransactionForAccessList = {
  * Array consists of:
  * - Test title
  * - Input parameters:
- *     - blockNumber
- *     - uncleIndex
- *     - returnFormat
+ *     - transaction
+ *     - blocknumberortag
  * - mockRpcResponse
  */
 type TestData = [string, [TransactionForAccessList, BlockNumberOrTag | undefined]];
