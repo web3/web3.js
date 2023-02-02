@@ -59,7 +59,7 @@ type RegisteredSubscription = {
 	syncing: typeof SyncingSubscription;
 };
 
-const registeredSubscriptions = {
+export const registeredSubscriptions = {
 	logs: LogsSubscription,
 	newPendingTransactions: NewPendingTransactionsSubscription,
 	newHeads: NewHeadsSubscription,

@@ -28,7 +28,7 @@ import { isAbiParameterSchema } from './validation/abi';
 import { isHexStrict } from './validation/string';
 // import { abiToJsonSchemaCases } from '../test/fixtures/abi_to_json_schema';
 
-export const parseBaseType = <T = typeof VALID_ETH_BASE_TYPES[number]>(
+export const parseBaseType = <T = (typeof VALID_ETH_BASE_TYPES)[number]>(
 	type: string,
 ): {
 	baseType?: T;

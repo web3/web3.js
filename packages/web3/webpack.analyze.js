@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,28 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { sha3Raw } from 'web3-utils';
-// eslint-disable-next-line camelcase
-import { ens_normalize } from '@adraffy/ens-normalize';
+const { getWebPackConfig } = require('../../webpack.base.config');
 
-export const normalize = (name: string) => ens_normalize(name);
+const config = getWebPackConfig(__dirname, 'web3.min.js', 'Web3', 'src/web3.ts');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-export const namehash = (inputName: string) => {
-	// Reject empty names:
-	let node = '';
-	for (let i = 0; i < 32; i += 1) {
-		node += '00';
-	}
-
-	if (inputName) {
-		const name = normalize(inputName);
-		const labels = name.split('.');
-
-		for (let i = labels.length - 1; i >= 0; i -= 1) {
-			const labelSha = sha3Raw(labels[i]).slice(2);
-			node = sha3Raw(`0x${node}${labelSha}`).slice(2);
-		}
-	}
-
-	return `0x${node}`;
+module.exports = {
+	...config,
+	plugins: [
+		...config.plugins,
+		new BundleAnalyzerPlugin({
+			generateStatsFile: true,
+			statsFilename: process.env.STATS_FILE ?? 'stats.json',
+			defaultSizes: process.env.ANALYZE_SERVER ? 'stat' : 'gzip',
+			analyzerMode: process.env.ANALYZE_SERVER ? 'server' : 'json',
+		}),
+	],
 };
