@@ -230,7 +230,7 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
-	protected readonly _eventEmitter: EventEmitter = new EventEmitter();
+	private context?: Web3Context;
 	/**
 	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
 	 *
@@ -478,7 +478,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 
-		this._eventEmitter.emit('ContractCloned', newContract);
+		newContract.suscribeToGlobalEvents(this.context as Web3Context);
 
 		return newContract;
 	}
@@ -1082,9 +1082,6 @@ export class Contract<Abi extends ContractAbi>
 						sub.emit('error', new SubscriptionError('Failed to get past events.'));
 					});
 			}
-			this.subscriptionManager?.addSubscription(sub).catch(() => {
-				sub.emit('error', new SubscriptionError('Failed to subscribe.'));
-			});
 
 			return sub;
 		};
@@ -1093,15 +1090,12 @@ export class Contract<Abi extends ContractAbi>
 	protected suscribeToGlobalEvents<T extends Web3Context>(context: T): void {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const contractThis = this;
+		this.context = context;
 
 		if (Contract.sync_with_globals) {
 			context.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 				contractThis.setConfig({ [event.name]: event.newValue });
 			});
 		}
-
-		this._eventEmitter.on('ContractCloned', newContract => {
-			this.suscribeToGlobalEvents.call(newContract, context);
-		});
 	}
 }
