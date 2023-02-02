@@ -17,10 +17,15 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
-import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
+import {
+	getSystemTestProvider,
+	createTempAccount,
+	describeIf,
+	getSystemTestBackend,
+} from '../fixtures/system_test_utils';
 
 describe('contract', () => {
-	describe('createAccessList', () => {
+	describeIf(getSystemTestBackend() === 'geth')('createAccessList', () => {
 		let contract: Contract<typeof GreeterAbi>;
 		let deployOptions: Record<string, unknown>;
 		let sendOptions: Record<string, unknown>;
