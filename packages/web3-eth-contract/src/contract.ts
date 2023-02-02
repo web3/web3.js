@@ -368,16 +368,6 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
-
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
-		const contractThis = this;
-
-		if (Contract.sync_with_globals) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-restricted-globals
-			super.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
-				contractThis.setConfig({ [event.name]: event.newValue });
-			});
-		}
 	}
 
 	/**
@@ -1098,5 +1088,20 @@ export class Contract<Abi extends ContractAbi>
 
 			return sub;
 		};
+	}
+
+	protected suscribeToGlobalEvents<T extends Web3Context>(context: T): void {
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const contractThis = this;
+
+		if (Contract.sync_with_globals) {
+			context.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				contractThis.setConfig({ [event.name]: event.newValue });
+			});
+		}
+
+		this._eventEmitter.on('ContractCloned', newContract => {
+			this.suscribeToGlobalEvents.call(newContract, context);
+		});
 	}
 }
