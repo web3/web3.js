@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const TypedArray = Object.getPrototypeOf(Uint8Array);
+import { TypedArray } from 'web3-types';
 
 // Explicitly check for the
 // eslint-disable-next-line @typescript-eslint/ban-types

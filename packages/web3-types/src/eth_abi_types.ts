@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,8 +15,51 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address, Bytes, FixedSizeArray, Numbers } from 'web3-types';
-import { ConvertToNumber } from './number_map_type';
+import { Address } from './eth_types';
+import { Bytes, Numbers } from './primitives_types';
+import { FixedSizeArray } from './utility_types';
+
+type _SolidityIndexRange =
+	| 1
+	| 2
+	| 3
+	| 4
+	| 5
+	| 6
+	| 7
+	| 8
+	| 9
+	| 10
+	| 11
+	| 12
+	| 13
+	| 14
+	| 15
+	| 16
+	| 17
+	| 18
+	| 19
+	| 20
+	| 21
+	| 22
+	| 25
+	| 26
+	| 27
+	| 28
+	| 29
+	| 30;
+
+export type ConvertToNumber<
+	T extends string,
+	Range extends number = _SolidityIndexRange,
+> = Range extends unknown ? (`${Range}` extends T ? Range : never) : never;
+
+export type Components = {
+	name: string;
+	type: string;
+	indexed?: boolean;
+	components?: Components[];
+};
 
 export interface AbiStruct {
 	[key: string]: unknown;
@@ -105,7 +148,34 @@ export type AbiFragment =
 
 export type ContractAbi = ReadonlyArray<AbiFragment>;
 
-export type AbiInput = string | AbiParameter | { readonly [key: string]: unknown };
+export type AbiInput =
+	| string
+	| AbiParameter
+	| {
+			name: string;
+			type: string;
+			components?: Components;
+			index?: boolean;
+			internalType?: string;
+	  }
+	| { readonly [key: string]: unknown };
+
+// https://docs.soliditylang.org/en/develop/abi-spec.html#json
+export type JsonFunctionInterface = {
+	type: 'function';
+	name: string;
+	inputs: Components[];
+	outputs?: AbiInput[];
+	stateMutability?: string;
+};
+
+export type JsonEventInterface = {
+	type: 'event';
+	name: string;
+	inputs: Components[];
+	indexed: boolean;
+	anonymous: boolean;
+};
 
 export type FilterAbis<Abis extends ContractAbi, Filter, Abi = Abis[number]> = Abi extends Filter
 	? Abi
@@ -149,12 +219,12 @@ export type PrimitiveBytesType<Type extends string> = Type extends `bytes${strin
 
 export type PrimitiveTupleType<
 	Type extends string,
-	Components extends ReadonlyArray<AbiParameter> | undefined = [],
-> = Components extends ReadonlyArray<AbiParameter>
+	TypeComponents extends ReadonlyArray<AbiParameter> | undefined = [],
+> = TypeComponents extends ReadonlyArray<AbiParameter>
 	? Type extends 'tuple'
 		? {
 				// eslint-disable-next-line no-use-before-define
-				[Param in Components[number] as Param['name']]: MatchPrimitiveType<
+				[Param in TypeComponents[number] as Param['name']]: MatchPrimitiveType<
 					Param['type'],
 					Param['components']
 				>;
@@ -163,7 +233,7 @@ export type PrimitiveTupleType<
 		? _TypedArray<
 				{
 					// eslint-disable-next-line no-use-before-define
-					[Param in Components[number] as Param['name']]: MatchPrimitiveType<
+					[Param in TypeComponents[number] as Param['name']]: MatchPrimitiveType<
 						Param['type'],
 						Param['components']
 					>;
@@ -180,14 +250,14 @@ type ArrToObjectWithFunctions<T extends unknown[]> = Array<unknown> & ObjectToAr
 
 export type MatchPrimitiveType<
 	Type extends string,
-	Components extends ReadonlyArray<AbiParameter> | undefined,
+	TypeComponents extends ReadonlyArray<AbiParameter> | undefined,
 > =
 	| PrimitiveAddressType<Type>
 	| PrimitiveStringType<Type>
 	| PrimitiveBooleanType<Type>
 	| PrimitiveIntegerType<Type>
 	| PrimitiveBytesType<Type>
-	| PrimitiveTupleType<Type, Components>
+	| PrimitiveTupleType<Type, TypeComponents>
 	| never;
 
 type ContractMethodOutputParametersRecursiveArray<

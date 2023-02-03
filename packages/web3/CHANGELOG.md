@@ -67,10 +67,17 @@ web3.currentProvider.disconnect();
 
 ## [Unreleased]
 
-### Removed
-
--   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
-
 ### Added
 
 -   `registeredSubscriptions` was added by default in web3 constructor (#5792)
+-   Add named exports for all objects which are the default-exported-object in their packages (#5771)
+-   Export all packages' objects organized by namespaces (#5771)
+-   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
+
+### Changed
+
+-   `require('web3')` will now return all web3 exported-objects organized in namespaces . (#5771)
+
+### Removed
+
+-   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)

@@ -17,7 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { sha3Raw } from 'web3-utils';
 import { AbiError } from 'web3-errors';
-import { AbiErrorFragment } from '../types';
+import { AbiErrorFragment } from 'web3-types';
 import { jsonInterfaceMethodToString, isAbiErrorFragment } from '../utils';
 
 /**
