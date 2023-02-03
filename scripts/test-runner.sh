@@ -45,7 +45,7 @@ if [[ $MODE == "ipc" ]]; then
 fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
-	TEST_COMMAND="test:integration$COVERAGE"
+	TEST_COMMAND="test:integration:$COVERAGE"
 else
 	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
 fi
