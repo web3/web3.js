@@ -114,7 +114,7 @@ describe('IPCProvider', () => {
 				}),
 			).rejects.toThrow('Connection not open');
 		});
-		it.skip('_onCloseHandler autoReconnect=false', () => {
+		it('_onCloseHandler autoReconnect=false', () => {
 			const ipc = new IpcProvider(socketPath, {}, { autoReconnect: false });
 			const _clearQueues = jest.fn();
 			const _removeSocketListeners = jest.fn();
@@ -137,7 +137,7 @@ describe('IPCProvider', () => {
 			expect(_removeSocketListeners).toHaveBeenCalled();
 			expect(_onDisconnect).toHaveBeenCalledWith(undefined, undefined);
 		});
-		it.skip('_onCloseHandler autoReconnect=true', () => {
+		it('_onCloseHandler autoReconnect=true', () => {
 			const ipc = new IpcProvider(socketPath);
 			const _reconnect = jest.fn();
 			// @ts-expect-error mock method
