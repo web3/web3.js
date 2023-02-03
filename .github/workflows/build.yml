@@ -183,7 +183,6 @@ jobs:
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:coverage:unit
 
-
   coverage-tests-integration:
     name: Coverage Tests - Integration
     needs: build
@@ -206,7 +205,7 @@ jobs:
       - run: yarn test:coverage:e2e:${{ matrix.backend }}:${{ matrix.mode }}
         shell: bash
 
-  e2e-ipc:
+  coverage-tests-ipc:
     name: Coverage Tests - Integration IPC
     needs: build
     runs-on: ubuntu-latest
