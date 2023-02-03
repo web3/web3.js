@@ -8,7 +8,6 @@ helpFunction() {
 	echo "Usage: $0 <geth | ganache> <http | ws> [node | electron | firefox | chrome]"
 	exit 1 # Exit script after printing help
 }
-
 BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 ENGINE=${ORIGARGS[2]}
