@@ -68,13 +68,13 @@ describe('IPCProvider', () => {
 			expect(_onDisconnect).toHaveBeenCalledWith(code, data);
 			expect(_closeSocketConnection).toHaveBeenCalledWith(code, data);
 		});
-		it.skip('getStatus', () => {
+		it('getStatus', () => {
 			const ipc = new IpcProvider(socketPath);
 			// @ts-expect-error mock field
 			ipc._socketConnection.connecting = true;
 			expect(ipc.getStatus()).toBe('connecting');
 		});
-		it.skip('socketConnection.end', () => {
+		it('socketConnection.end', () => {
 			const ipc = new IpcProvider(socketPath);
 			const end = jest.fn((cb: () => void) => {
 				cb();
@@ -97,7 +97,7 @@ describe('IPCProvider', () => {
 			expect(end).toHaveBeenCalled();
 		});
 
-		it.skip('connection error', async () => {
+		it('connection error', async () => {
 			const ipc = new IpcProvider(socketPath);
 			// @ts-expect-error mock method
 			ipc._socketConnection.connecting = false;
