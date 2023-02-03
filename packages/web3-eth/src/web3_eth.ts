@@ -34,6 +34,7 @@ import {
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
+	TransactionForAccessList,
 } from 'web3-types';
 import { isSupportedProvider, Web3Context, Web3ContextInitOptions } from 'web3-core';
 import { TransactionNotFound } from 'web3-errors';
@@ -1471,6 +1472,45 @@ export class Web3Eth extends Web3Context<Web3EthExecutionAPI, RegisteredSubscrip
 			rewardPercentiles,
 			returnFormat,
 		);
+	}
+
+	/**
+	 * This method generates an access list for a transaction.
+	 *
+	 * @param transaction - A transaction object where all properties are optional except `from`, however it's recommended to include the `to` property.
+	 * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while processing the transaction.
+	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the createAccessList should be formatted.
+	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
+	 *
+	 *  ```ts
+	 * web3.eth.createAccessList({
+	 * from: '0xDe95305a63302C3aa4d3A9B42654659AeA72b694',
+	 * data: '0x9a67c8b100000000000000000000000000000000000000000000000000000000000004d0',
+	 * gasPrice: '0x3b9aca00',
+	 * gas: '0x3d0900',
+	 * to: '0x940b25304947ae863568B3804434EC77E2160b87'
+	 * })
+	 * .then(console.log);
+	 *
+	 * > {
+	 *  "accessList": [
+	 *     {
+	 *       "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+	 *       "storageKeys": [
+	 *         "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 *       ]
+	 *     }
+	 *   ],
+	 *   "gasUsed": "0x7671"
+	 * }
+	 *  ```
+	 */
+	public async createAccessList<ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
+		transaction: TransactionForAccessList,
+		blockNumber: BlockNumberOrTag = this.defaultBlock,
+		returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
+	) {
+		return rpcMethodsWrappers.createAccessList(this, transaction, blockNumber, returnFormat);
 	}
 
 	/**

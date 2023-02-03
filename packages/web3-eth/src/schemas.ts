@@ -36,6 +36,18 @@ export const accessListSchema = {
 	},
 };
 
+export const accessListResultSchema = {
+	type: 'object',
+	properties: {
+		accessList: {
+			...accessListSchema,
+		},
+		gasUsed: {
+			type: 'string',
+		},
+	},
+};
+
 export const chainSchema = {
 	type: 'string',
 	enum: ['goerli', 'kovan', 'mainnet', 'rinkeby', 'ropsten', 'sepolia'],

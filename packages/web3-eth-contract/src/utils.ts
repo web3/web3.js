@@ -17,6 +17,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Web3ContractError } from 'web3-errors';
 import {
+	TransactionForAccessList,
 	AbiFunctionFragment,
 	TransactionWithSenderAPI,
 	TransactionCall,
@@ -146,3 +147,43 @@ export const isContractInitOptions = (options: unknown): options is ContractOpti
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
 	typeof options === 'object' && !isNullish(options) && !isContractInitOptions(options);
+
+export const getCreateAccessListParams = ({
+	abi,
+	params,
+	options,
+	contractOptions,
+}: {
+	abi: AbiFunctionFragment;
+	params: unknown[];
+	options?: PayableCallOptions | NonPayableCallOptions;
+	contractOptions: ContractOptions;
+}): TransactionForAccessList => {
+	if (!options?.to && !contractOptions.address) {
+		throw new Web3ContractError('Contract address not specified');
+	}
+
+	if (!options?.from && !contractOptions.from) {
+		throw new Web3ContractError('Contract "from" address not specified');
+	}
+
+	let txParams = mergeDeep(
+		{
+			to: contractOptions.address,
+			gas: contractOptions.gas,
+			gasPrice: contractOptions.gasPrice,
+			from: contractOptions.from,
+			data: contractOptions.data,
+		},
+		options as unknown as Record<string, unknown>,
+	) as unknown as TransactionForAccessList;
+
+	if (!txParams.data || abi.type === 'constructor') {
+		txParams = {
+			...txParams,
+			data: encodeMethodABI(abi, params, txParams.data as HexString),
+		};
+	}
+
+	return txParams;
+};
