@@ -169,7 +169,7 @@ jobs:
         -   run: yarn build:docs
 
   coverage-tests:
-    name: Coverage Tests
+    name: Unit Coverage Tests
     needs: build
     runs-on: ubuntu-latest
     strategy:
