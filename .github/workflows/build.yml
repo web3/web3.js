@@ -169,9 +169,9 @@ jobs:
         -   run: yarn build:docs
 
   coverage-tests:
-      name: Coverage Tests
-      needs: build
-      runs-on: ubuntu-latest
+    name: Coverage Tests
+    needs: build
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [16]
