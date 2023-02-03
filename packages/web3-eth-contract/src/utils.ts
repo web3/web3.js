@@ -16,8 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3ContractError } from 'web3-errors';
-import { AbiFunctionFragment } from 'web3-eth-abi';
-import { TransactionWithSenderAPI, TransactionCall, HexString } from 'web3-types';
+import {
+	AbiFunctionFragment,
+	TransactionWithSenderAPI,
+	TransactionCall,
+	HexString,
+} from 'web3-types';
 import { isNullish, mergeDeep, toHex } from 'web3-utils';
 import { encodeMethodABI } from './encoding';
 import {

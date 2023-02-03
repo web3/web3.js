@@ -26,9 +26,9 @@ import {
 	ERR_PARAM,
 	ERR_EXISTING_PLUGIN_NAMESPACE,
 } from '../error_codes';
-import { Web3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base';
 
-export class InvalidNumberOfParamsError extends Web3Error {
+export class InvalidNumberOfParamsError extends BaseWeb3Error {
 	public code = ERR_PARAM;
 
 	public constructor(public got: number, public expected: number, public method: string) {
@@ -45,11 +45,11 @@ export class InvalidNumberOfParamsError extends Web3Error {
 	}
 }
 
-export class FormatterError extends Web3Error {
+export class FormatterError extends BaseWeb3Error {
 	public code = ERR_FORMATTERS;
 }
 
-export class MethodNotImplementedError extends Web3Error {
+export class MethodNotImplementedError extends BaseWeb3Error {
 	public code = ERR_METHOD_NOT_IMPLEMENTED;
 
 	public constructor() {
@@ -57,19 +57,19 @@ export class MethodNotImplementedError extends Web3Error {
 	}
 }
 
-export class OperationTimeoutError extends Web3Error {
+export class OperationTimeoutError extends BaseWeb3Error {
 	public code = ERR_OPERATION_TIMEOUT;
 }
 
-export class OperationAbortError extends Web3Error {
+export class OperationAbortError extends BaseWeb3Error {
 	public code = ERR_OPERATION_ABORT;
 }
 
-export class AbiError extends Web3Error {
+export class AbiError extends BaseWeb3Error {
 	public code = ERR_ABI_ENCODING;
 }
 
-export class ExistingPluginNamespaceError extends Web3Error {
+export class ExistingPluginNamespaceError extends BaseWeb3Error {
 	public code = ERR_EXISTING_PLUGIN_NAMESPACE;
 
 	public constructor(pluginNamespace: string) {

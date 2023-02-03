@@ -21,6 +21,7 @@ export * from './apis/web3_eth_execution_api';
 export * from './apis/web3_net_api';
 export * from './apis/eth_personal_api';
 export * from './eth_types';
+export * from './eth_abi_types';
 export * from './json_rpc_types';
 export * from './primitives_types';
 export * from './utility_types';

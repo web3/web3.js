@@ -14,10 +14,9 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Block, TransactionInfo, TransactionReceipt } from 'web3-types';
+import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
 import { Web3PromiEvent } from 'web3-core';
-import { AbiEventFragment } from 'web3-eth-abi';
 import { SendTransactionEvents, Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 

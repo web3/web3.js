@@ -1139,16 +1139,66 @@ should use 4.0.1-alpha.0 for testing.
 
 ### Added
 
+#### web3
+
+-   `registeredSubscriptions` was added by default in web3 constructor (#5792)
+-   Add named exports for all objects which are the default-exported-object in their packages (#5771)
+-   Export all packages' objects organized by namespaces (#5771)
+-   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
+
 #### web3-core
 
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
 
+#### web3-providers-http
+
+-   Added named export for `HttpProvider` (#5771)
+
+#### web3-providers-ipc
+
+-   Added named export for `IpcProvider` (#5771)
+
+#### web3-providers-ws
+
+-   Added named export for `WebSocketProvider` (#5771)
+
+#### web3-types
+
+-   Added types from `web3-eth-abi` and `TypedArray` from (#5771)
+-   Added `TypedArray` from `web3-utils` and `web3-validator` (it was defined twice) (#5771)
+
+### Changed
+
 #### web3
 
-##### Removed
+-   `require('web3')` will now return all web3 exported-objects organized in namespaces . (#5771)
+
+#### web3-errors
+
+-   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+
+#### web3-eth
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+#### web3-eth-contract
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Removed
+
+#### web3
 
 -   Private static `_contracts:Contract[]` and static `setProvider` function was removed (#5792)
 
-##### Added
+#### web3-eth-abi
 
--   `registeredSubscriptions` was added by default in web3 constructor (#5792)
+-   Moved all types and interfaces to `web3-types` (#5771)
+
+#### web3-utils
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
+
+#### web3-validator
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)

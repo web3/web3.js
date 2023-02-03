@@ -27,12 +27,12 @@ import * as utilsErrors from '../../src/errors/utils_errors';
 import * as responseErrors from '../../src/errors/response_errors';
 
 import { ConvertValueToString } from '../fixtures/errors';
-import { Web3Error } from '../../src/web3_error_base';
+import { BaseWeb3Error } from '../../src/web3_error_base';
 
 describe('errors', () => {
 	describe('error convertToString', () => {
 		it.each(ConvertValueToString)('%s', (input, output) => {
-			expect(Web3Error.convertToString(input, true)).toEqual(output);
+			expect(BaseWeb3Error.convertToString(input, true)).toEqual(output);
 		});
 	});
 
