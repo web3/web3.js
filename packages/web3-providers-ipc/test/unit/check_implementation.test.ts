@@ -147,8 +147,10 @@ describe('IPCProvider', () => {
 			ipc._onCloseHandler();
 			expect(_reconnect).toHaveBeenCalled();
 		});
-		it.skip('listeners', () => {
-			const ipc = new IpcProvider(socketPath);
+		it('listeners', () => {
+			const ipc = new IpcProvider(socketPath, undefined, { autoReconnect: false });
+			// @ts-expect-error mock method
+			ipc.chunkResponseParser.parseResponse = jest.fn();
 			// @ts-expect-error mock method
 			ipc._socketConnection.listeners = () => {
 				throw new Error('error');
@@ -164,6 +166,10 @@ describe('IPCProvider', () => {
 			});
 			// @ts-expect-error mock method
 			ipc._socketConnection.on = on;
+			// @ts-expect-error mock method
+			ipc.isReconnecting = true;
+			// @ts-expect-error mock method
+			ipc._reconnect = jest.fn();
 
 			// @ts-expect-error mock method
 			ipc._addSocketListeners();
@@ -173,8 +179,8 @@ describe('IPCProvider', () => {
 			// @ts-expect-error mock method
 			ipc._socketConnection.removeAllListeners = removeAllListeners;
 			// @ts-expect-error mock method
-			ipc._removeSocketListeners();
-
+			ipc.isReconnecting = false;
+			ipc.disconnect();
 			expect(removeAllListeners).toHaveBeenCalledWith('end');
 			expect(removeAllListeners).toHaveBeenCalledWith('close');
 			expect(removeAllListeners).toHaveBeenCalledWith('data');
