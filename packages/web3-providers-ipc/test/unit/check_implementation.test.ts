@@ -28,6 +28,8 @@ describe('IPCProvider', () => {
 		socketPath = '/test/test.ipc';
 		jest.spyOn(fs, 'existsSync').mockReturnValue(true);
 		jest.spyOn(net.Socket.prototype, 'connect').mockImplementation(jest.fn());
+		// @ts-expect-error mock method
+		jest.spyOn(IpcProvider.prototype, '_parseResponses').mockImplementation(jest.fn());
 	});
 
 	describe('methods', () => {
