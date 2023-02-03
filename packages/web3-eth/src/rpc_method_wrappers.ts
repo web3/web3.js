@@ -49,7 +49,6 @@ import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
 	SignatureError,
 	TransactionError,
-	TransactionRevertError,
 	ContractExecutionError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
@@ -80,6 +79,8 @@ import { trySendTransaction } from './utils/try_send_transaction';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { getRevertReason } from './utils/get_revert_reason';
 
 /**
  *
@@ -1079,15 +1080,6 @@ export function sendTransaction<
 							ETH_DATA_FORMAT,
 						);
 
-						if (web3Context.handleRevert) {
-							// eslint-disable-next-line no-use-before-define
-							await getRevertReason(
-								web3Context,
-								transactionFormatted as TransactionCall,
-								returnFormat,
-							);
-						}
-
 						if (
 							!options?.ignoreGasPricing &&
 							isNullish(transactionFormatted.gasPrice) &&
@@ -1179,16 +1171,30 @@ export function sendTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							let reason;
+							if (web3Context.handleRevert) {
+								reason = await getRevertReason(
+									web3Context,
+									transactionFormatted as TransactionCall,
+									transactionReceiptFormatted,
+									returnFormat,
+								);
+							}
+
 							if (promiEvent.listenerCount('error') > 0) {
 								promiEvent.emit(
 									'error',
-									new TransactionError(
+									reason ?? new TransactionError(
 										'Transaction failed',
 										transactionReceiptFormatted,
 									),
 								);
 							}
-							reject(transactionReceiptFormatted as unknown as ResolveType);
+
+							reject(
+								reason ??
+								transactionReceiptFormatted as unknown as ResolveType
+							);
 							return;
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
@@ -1923,20 +1929,4 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	);
 
 	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
-}
-/**
- *
- * @param web3Context
- * @param transaction
- */
-async function getRevertReason<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: TransactionCall,
-	returnFormat: ReturnFormat,
-) {
-	try {
-		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
-	} catch (err) {
-		throw new TransactionRevertError((err as Error).message);
-	}
 }

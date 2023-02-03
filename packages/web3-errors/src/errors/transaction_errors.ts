@@ -93,7 +93,7 @@ export class TransactionRevertError extends BaseWeb3Error {
 		public receipt?: TransactionReceipt,
 	) {
 		super(
-			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
+			`Transaction has been reverted by the EVM:\n ${BaseWeb3Error.convertToString(receipt)}`,
 		);
 	}
 
@@ -138,11 +138,7 @@ export class TransactionRevertedWithoutReasonError extends TransactionError {
 export class TransactionOutOfGasError extends TransactionError {
 	public constructor(receipt: TransactionReceipt) {
 		super(
-			`Transaction ran out of gas. Please provide more gas:\n ${JSON.stringify(
-				receipt,
-				undefined,
-				2,
-			)}`,
+			`Transaction ran out of gas. Please provide more gas:\n ${BaseWeb3Error.convertToString(receipt)}`,
 			receipt,
 		);
 		this.code = ERR_TX_OUT_OF_GAS;
