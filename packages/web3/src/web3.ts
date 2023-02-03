@@ -89,7 +89,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 					super(jsonInterface, self.getContextObject());
 				}
 
-				super.subscribeToGlobalEvents(self);
+				super.subscribeToContextEvents(self);
 			}
 		}
 

@@ -136,9 +136,16 @@ export const getEstimateGasParams = ({
 export const isContractInitOptions = (options: unknown): options is ContractOptions =>
 	typeof options === 'object' &&
 	!isNullish(options) &&
-	['data', 'from', 'gas', 'gasPrice', 'gasLimit', 'address', 'jsonInterface'].some(
-		key => key in options,
-	);
+	[
+		'data',
+		'from',
+		'gas',
+		'gasPrice',
+		'gasLimit',
+		'address',
+		'jsonInterface',
+		'syncWithContext',
+	].some(key => key in options);
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
 	typeof options === 'object' && !isNullish(options) && !isContractInitOptions(options);

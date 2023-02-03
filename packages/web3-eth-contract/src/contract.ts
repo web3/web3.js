@@ -212,7 +212,7 @@ export class Contract<Abi extends ContractAbi>
 	/**
 	 * Set to true if you want contracts' defaults to sync with global defaults.
 	 */
-	public static sync_with_globals = false;
+	public syncWithContext = false;
 
 	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
@@ -358,6 +358,8 @@ export class Contract<Abi extends ContractAbi>
 			data: options?.data,
 		};
 
+		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
+
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
 			get: () => this._address,
@@ -477,7 +479,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 
-		newContract.subscribeToGlobalEvents(this.context as Web3Context);
+		newContract.subscribeToContextEvents(this.context as Web3Context);
 
 		return newContract;
 	}
@@ -1088,12 +1090,12 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	protected subscribeToGlobalEvents<T extends Web3Context>(context: T): void {
+	protected subscribeToContextEvents<T extends Web3Context>(context: T): void {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const contractThis = this;
 		this.context = context;
 
-		if (Contract.sync_with_globals) {
+		if (contractThis.syncWithContext) {
 			context.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
 				contractThis.setConfig({ [event.name]: event.newValue });
 			});
