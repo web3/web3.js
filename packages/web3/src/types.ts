@@ -15,10 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address, Bytes, Transaction } from 'web3-types';
+import { Address, Bytes, ContractAbi, Transaction } from 'web3-types';
 import Eth from 'web3-eth';
 import {
-	ContractAbi,
 	decodeLog,
 	decodeParameter,
 	decodeParameters,
@@ -55,7 +54,7 @@ export interface Web3EthInterface extends Eth {
 	 * Extended [Contract](/api/web3-eth-contract/class/Contract) constructor for main `web3` object. See [Contract](/api/web3-eth-contract/class/Contract) for further details.
 	 *
 	 * You can use `.setProvider` on this constructor to set provider for **all the instances** of the contracts which were created by `web3.eth.Contract`.
-	 * Please check the {@doclink guides/setting_provider | following guide} to understand more about setting provider.
+	 * Please check the {@doclink guides/web3_migration_guide/providers_migration_guide | following guide} to understand more about setting provider.
 	 *
 	 * ```ts
 	 * web3.eth.Contract.setProvider(myProvider)

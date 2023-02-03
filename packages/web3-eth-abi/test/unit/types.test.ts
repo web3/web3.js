@@ -15,9 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Address, Bytes, Numbers } from 'web3-types';
+import {
+	Address,
+	ContractMethodOutputParameters,
+	Bytes,
+	MatchPrimitiveType,
+	Numbers,
+} from 'web3-types';
 import { expectTypeOf, typecheck } from '@humeris/espresso-shot';
-import { ContractMethodOutputParameters, MatchPrimitiveType } from '../../src';
 
 describe('types', () => {
 	describe('primitive types', () => {

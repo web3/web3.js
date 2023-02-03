@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { LogsInput, HexString, Topic } from 'web3-types';
+import { AbiEventFragment, LogsInput, HexString, Topic } from 'web3-types';
 import { Web3RequestManager, Web3Subscription } from 'web3-core';
-import { AbiEventFragment } from 'web3-eth-abi';
 // eslint-disable-next-line import/no-cycle
 import { DataFormat } from 'web3-utils';
 // eslint-disable-next-line import/no-cycle

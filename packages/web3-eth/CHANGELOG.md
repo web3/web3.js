@@ -90,3 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Enable transaction with local wallet index in the `to` field (#5731)
 
 ## [Unreleased]
+
+### Changed
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
