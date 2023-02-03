@@ -826,8 +826,7 @@ export class Contract<Abi extends ContractAbi>
 			return validatorUtils.transformJsonDataToAbiFormat(abi.inputs ?? [], params);
 		} catch (error) {
 			throw new Web3ContractError(
-				// todo undo formatting, vscode bug
-				`Invalid parameters for method ${abi.name}: ${(error as Error).message}\``,
+				`Invalid parameters for method ${abi.name}: ${(error as Error).message}`,
 			);
 		}
 	}
