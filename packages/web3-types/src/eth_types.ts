@@ -216,38 +216,6 @@ export interface SyncOutput {
 
 export type Receipt = Record<string, unknown>;
 
-export type Components = {
-	name: string;
-	type: string;
-	indexed?: boolean;
-	components?: Components[];
-};
-
-export type AbiInput = {
-	name: string;
-	type: string;
-	components?: Components;
-	index?: boolean;
-	internalType?: string;
-};
-
-// https://docs.soliditylang.org/en/develop/abi-spec.html#json
-export type JsonFunctionInterface = {
-	type: 'function';
-	name: string;
-	inputs: Components[];
-	outputs?: AbiInput[];
-	stateMutability?: string;
-};
-
-export type JsonEventInterface = {
-	type: 'event';
-	name: string;
-	inputs: Components[];
-	indexed: boolean;
-	anonymous: boolean;
-};
-
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
@@ -258,13 +226,6 @@ export interface Filter {
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	readonly topics?: (null | Topic | Topic[])[];
 }
-
-// https://docs.soliditylang.org/en/latest/abi-spec.html#json
-export type AbiParameter = {
-	readonly name: string;
-	readonly type: string;
-	readonly components?: ReadonlyArray<AbiParameter | string>;
-};
 
 export interface AccessListEntry {
 	readonly address?: Address;

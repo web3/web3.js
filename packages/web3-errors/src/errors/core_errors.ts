@@ -17,10 +17,10 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
-import { Web3Error } from '../web3_error_base';
+import { BaseWeb3Error } from '../web3_error_base';
 import { ERR_CORE_HARDFORK_MISMATCH } from '../error_codes';
 
-export class ConfigHardforkMismatchError extends Web3Error {
+export class ConfigHardforkMismatchError extends BaseWeb3Error {
 	public code = ERR_CORE_HARDFORK_MISMATCH;
 
 	public constructor(defaultHardfork: string, commonHardFork: string) {
@@ -30,7 +30,7 @@ export class ConfigHardforkMismatchError extends Web3Error {
 	}
 }
 
-export class ConfigChainMismatchError extends Web3Error {
+export class ConfigChainMismatchError extends BaseWeb3Error {
 	public code = ERR_CORE_HARDFORK_MISMATCH;
 
 	public constructor(defaultHardfork: string, commonHardFork: string) {

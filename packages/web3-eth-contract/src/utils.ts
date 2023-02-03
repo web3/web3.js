@@ -16,9 +16,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3ContractError } from 'web3-errors';
-import { AbiFunctionFragment } from 'web3-eth-abi';
 import {
 	TransactionForAccessList,
+	AbiFunctionFragment,
 	TransactionWithSenderAPI,
 	TransactionCall,
 	HexString,

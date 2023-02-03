@@ -112,7 +112,7 @@ export const hashMessage = (message: string): string => {
 };
 
 /**
- * Signs arbitrary data.
+ * Signs arbitrary data with a given private key.
  * **_NOTE:_** The value passed as the data parameter will be UTF-8 HEX decoded and wrapped as follows: "\\x19Ethereum Signed Message:\\n" + message.length + message
  *
  * @param data - The data to sign

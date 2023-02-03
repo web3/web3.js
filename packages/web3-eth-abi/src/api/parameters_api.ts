@@ -17,9 +17,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 import { AbiError } from 'web3-errors';
 import { ParamType, Result } from '@ethersproject/abi';
-import { HexString } from 'web3-types';
+import { HexString, AbiInput, DecodedParams } from 'web3-types';
 import ethersAbiCoder from '../ethers_abi_coder';
-import { AbiInput, DecodedParams } from '../types';
 import { formatParam, isAbiFragment, mapTypes, modifyParams } from '../utils';
 
 /**

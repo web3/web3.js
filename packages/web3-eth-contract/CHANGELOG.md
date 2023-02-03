@@ -215,3 +215,7 @@ const transactionHash = receipt.transactionHash;
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Changed
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
