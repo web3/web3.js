@@ -21,7 +21,6 @@ import IpcProvider from '../../src/index';
 jest.mock('net');
 jest.mock('fs');
 
-// /* @ts-expect-error */
 describe('IPCProvider', () => {
 	let socketPath: string;
 
