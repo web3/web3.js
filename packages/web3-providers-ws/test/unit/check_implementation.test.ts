@@ -18,7 +18,6 @@ import WebSocket from 'isomorphic-ws';
 import WebSocketProvider from '../../src/index';
 
 jest.mock('isomorphic-ws');
-// /* @ts-expect-error */
 describe('WebSocketProvider', () => {
 	let send: () => void;
 	beforeAll(() => {
