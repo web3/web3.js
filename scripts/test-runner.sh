@@ -12,6 +12,7 @@ helpFunction() {
 BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 ENGINE=${ORIGARGS[2]}
+COVERAGE=${ORIGARGS[3]}
 
 SUPPORTED_BACKENDS=("geth" "ganache")
 SUPPORTED_MODE=("http" "ws" "ipc")
@@ -45,7 +46,7 @@ if [[ $MODE == "ipc" ]]; then
 fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
-	TEST_COMMAND="test:integration"
+	TEST_COMMAND="test:integration$COVERAGE"
 else
 	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
 fi

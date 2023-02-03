@@ -168,8 +168,8 @@ jobs:
         -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:docs
 
-  coverage-tests:
-    name: Unit Coverage Tests
+  coverage-tests-unit:
+    name: Coverage Tests - Unit
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -181,4 +181,49 @@ jobs:
           name: web3-${{ matrix.node }}.js.tar.gz
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:coverage
+      - run: yarn test:coverage:unit
+
+
+  coverage-tests-integration:
+    name: Coverage Tests - Integration
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [16]
+        backend: ['geth', 'ganache']
+        mode: ['http', 'ws']
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: web3-${{ matrix.node }}.js.tar.gz
+          path: /tmp
+      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      - run: yarn test:coverage:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+        shell: bash
+
+  e2e-ipc:
+    name: Coverage Tests - Integration IPC
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
+      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ 16 ]
+        backend: [ 'geth' ]
+        mode: [ 'ipc' ]
+    steps:
+      -   uses: actions/download-artifact@v3
+          with:
+            name: web3-${{ matrix.node }}.js.tar.gz
+            path: /tmp
+      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
+      -   run: yarn test:coverage:e2e:${{ matrix.backend }}:${{ matrix.mode }}
+          shell: bash
