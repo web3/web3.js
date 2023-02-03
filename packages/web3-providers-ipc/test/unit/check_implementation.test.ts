@@ -63,7 +63,6 @@ describe('IPCProvider', () => {
 			const ipc = new IpcProvider(socketPath);
 			// @ts-expect-error mock method
 			ipc._parseResponses = jest.fn();
-			// @ts-expect-error mock method
 			ipc.disconnect(code, data);
 			expect(_removeSocketListeners).toHaveBeenCalled();
 			expect(_onDisconnect).toHaveBeenCalledWith(code, data);
