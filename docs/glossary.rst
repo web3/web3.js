@@ -41,7 +41,7 @@ Events:
 
   - ``name``: the name of the parameter;
   - ``type``: the canonical type of the parameter.
-  - ``indexed``: ``true`` if the field is part of the log's topics, ``false`` if it one of the log's data segment.
+  - ``indexed``: ``true`` if the field is part of the log's topics, ``false`` if it is one of the log's data segment.
 - ``anonymous``: ``true`` if the event was declared as ``anonymous``.
 
 
