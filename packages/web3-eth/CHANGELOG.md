@@ -94,3 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Added
+
+-   Added `createAccessList` functionality ( #5780 )
