@@ -72,3 +72,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Changed
+
+#### web3-errors
+
+-   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)

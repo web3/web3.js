@@ -127,3 +127,5 @@ export default class WebSocketProvider<
 		this._onDisconnect(event.code, event.reason);
 	}
 }
+
+export { WebSocketProvider };

@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export type HexString = string;
-export type Bytes = Buffer | Uint8Array | ArrayBuffer | HexString;
-export type Numbers = number | bigint | string | HexString;
+export { Eip1193Provider, SocketProvider } from 'web3-utils';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const TypedArray = Object.getPrototypeOf(Uint8Array);
+export * as http from 'web3-providers-http';
+export * as ipc from 'web3-providers-ipc';
+export * as ws from 'web3-providers-ws';

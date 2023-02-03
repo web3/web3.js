@@ -9,6 +9,27 @@ This migration guide is for migration from web3.js 1.x to web3.js 4.x.
 
 ## Breaking Changes
 
+### The `web3` package will return all web3.js exported objects
+
+`require('web3')` will now return all web3 exported-objects organized in namespaces (and few are available on top level). So, it is no longer supported to write the following code:
+
+```ts
+// This will return the name space and the line after it will throw an error!
+const Web3 = require('web3');
+
+const web3 = new Web3();
+```
+
+And the correct usage now is:
+
+```ts
+const { Web3 } = require('web3');
+
+const web3 = new Web3();
+```
+
+### Passing Callbacks to functions
+
 Passing callbacks to functions is no longer supported, except for event listeners.
 
 ### Not Implemented or Exported

@@ -36,7 +36,7 @@ import { HexString } from '../primitives_types';
 
 // The types are generated manually by referring to following doc
 // https://github.com/ethereum/execution-apis
-// These types follow closely to the v1.0.0-alpha.9 Ethereum spec 
+// These types follow closely to the v1.0.0-alpha.9 Ethereum spec
 export interface TransactionCallAPI {
 	readonly from?: Address;
 	readonly to: Address;

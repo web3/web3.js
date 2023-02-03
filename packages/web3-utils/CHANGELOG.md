@@ -73,3 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Removed
+
+-   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
