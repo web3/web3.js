@@ -477,7 +477,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 
-		newContract.suscribeToGlobalEvents(this.context as Web3Context);
+		newContract.subscribeToGlobalEvents(this.context as Web3Context);
 
 		return newContract;
 	}
@@ -1088,7 +1088,7 @@ export class Contract<Abi extends ContractAbi>
 		};
 	}
 
-	protected suscribeToGlobalEvents<T extends Web3Context>(context: T): void {
+	protected subscribeToGlobalEvents<T extends Web3Context>(context: T): void {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const contractThis = this;
 		this.context = context;

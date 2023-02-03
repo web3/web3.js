@@ -282,9 +282,9 @@ describe('Web3 instance', () => {
 		it('should update defaults on contract instance', () => {
 			const hardfork = 'berlin';
 
-			web3.eth.Contract.sync_with_globals = true;
 			contract = new web3.eth.Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
+				syncWithContext: true,
 			});
 
 			web3.defaultHardfork = hardfork;
@@ -295,9 +295,9 @@ describe('Web3 instance', () => {
 		it('should update defaults on deployed contract instance', async () => {
 			const hardfork = 'berlin';
 
-			web3.eth.Contract.sync_with_globals = true;
 			contract = new web3.eth.Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
+				syncWithContext: true,
 			});
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 

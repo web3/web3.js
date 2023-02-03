@@ -89,16 +89,7 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 					super(jsonInterface, self.getContextObject());
 				}
 
-				super.suscribeToGlobalEvents(self);
-			}
-
-			public static set sync_with_globals(value: boolean) {
-				Contract.sync_with_globals = value;
-			}
-
-			public static get sync_with_globals() {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
-				return Contract.sync_with_globals;
+				super.subscribeToGlobalEvents(self);
 			}
 		}
 
