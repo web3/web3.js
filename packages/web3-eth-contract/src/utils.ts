@@ -25,6 +25,7 @@ import {
 	PayableCallOptions,
 	ContractOptions,
 	Web3ContractContext,
+	ContractInitOptions,
 } from './types';
 
 export const getSendTxParams = ({
@@ -133,7 +134,7 @@ export const getEstimateGasParams = ({
 	return txParams as TransactionWithSenderAPI;
 };
 
-export const isContractInitOptions = (options: unknown): options is ContractOptions =>
+export const isContractInitOptions = (options: unknown): options is ContractInitOptions =>
 	typeof options === 'object' &&
 	!isNullish(options) &&
 	[

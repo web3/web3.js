@@ -60,6 +60,17 @@ describe('contract', () => {
 			);
 		});
 
+		it('should set syncWithContext from init options', async () => {
+			contract = new Contract(GreeterAbi, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
+			});
+
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			expect(contract.syncWithContext).toBeTruthy();
+		});
+
 		describe('defaultBlock', () => {
 			it('should use "defaultBlock" on "instance" level', async () => {
 				contract = await contract.deploy(deployOptions).send(sendOptions);
