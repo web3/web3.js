@@ -51,7 +51,7 @@ fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
 	if [[ $TEST_OPTION == "coverage" ]]; then
-		TEST_COMMAND="coverage:test:integration"
+		TEST_COMMAND="test:coverage:integration"
 	else
 		TEST_COMMAND="test:integration"
 	fi
