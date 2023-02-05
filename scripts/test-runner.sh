@@ -17,7 +17,7 @@ SUPPORTED_BACKENDS=("geth" "ganache")
 SUPPORTED_MODE=("http" "ws" "ipc")
 # if you will add a new browser please also add it in the system_test_utils.ts => isBrowser
 SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
-SUPPORTED_TEST_OPTIONS=("coverage")
+SUPPORTED_TEST_OPTIONS=("coverage" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
 	helpFunction
