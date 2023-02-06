@@ -201,7 +201,7 @@ describe('defaults', () => {
 				from: acc.address,
 				to: tempAcc2.address,
 				times: 1,
-				value: '0x1',
+				value: '0x174876e800',
 			});
 			const balance = await eth2.getBalance(acc.address);
 			const code = await eth2.getCode(contractDeployed?.options?.address as string);
@@ -317,7 +317,7 @@ describe('defaults', () => {
 
 			const from = tempAcc.address;
 			const to = tempAcc2.address;
-			const value = `0x10000`;
+			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
@@ -353,7 +353,7 @@ describe('defaults', () => {
 				web3Eth: eth,
 				from,
 				to,
-				value,
+				value: '0x174876e800',
 				times: waitConfirmations,
 			});
 			await confirmationPromise;
