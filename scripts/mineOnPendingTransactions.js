@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, no-undef, @typescript-eslint/no-unsafe-call, no-console, @typescript-eslint/no-unsafe-assignment */
-const miningThreads = 1;
+const miningThreads = 6;
 let txBlock = 0;
 
 function checkWork() {
@@ -45,3 +45,7 @@ eth.filter('pending', (err, block) => {
 });
 
 checkWork();
+console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
+console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
+console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
+console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
