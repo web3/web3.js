@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { AbiInput } from 'web3-types';
 import { decodeParameters, encodeParameters } from '../../../src/api/parameters_api';
 import {
 	inValidDecodeParametersData,
@@ -24,7 +25,6 @@ import {
 	validEncodeDecodeParametersData,
 	validEncodeDoesNotMutateData,
 } from '../../fixtures/data';
-import { AbiInput } from '../../../src/types';
 
 describe('parameters_api', () => {
 	describe('encodeParameters', () => {

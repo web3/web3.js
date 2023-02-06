@@ -79,3 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Removed
+
+-   Moved all types and interfaces to `web3-types` (#5771)
