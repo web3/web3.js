@@ -216,38 +216,6 @@ export interface SyncOutput {
 
 export type Receipt = Record<string, unknown>;
 
-export type Components = {
-	name: string;
-	type: string;
-	indexed?: boolean;
-	components?: Components[];
-};
-
-export type AbiInput = {
-	name: string;
-	type: string;
-	components?: Components;
-	index?: boolean;
-	internalType?: string;
-};
-
-// https://docs.soliditylang.org/en/develop/abi-spec.html#json
-export type JsonFunctionInterface = {
-	type: 'function';
-	name: string;
-	inputs: Components[];
-	outputs?: AbiInput[];
-	stateMutability?: string;
-};
-
-export type JsonEventInterface = {
-	type: 'event';
-	name: string;
-	inputs: Components[];
-	indexed: boolean;
-	anonymous: boolean;
-};
-
 // https://github.com/ethereum/execution-apis/blob/main/src/schemas/filter.json#L28
 export interface Filter {
 	readonly fromBlock?: BlockNumberOrTag;
@@ -259,18 +227,16 @@ export interface Filter {
 	readonly topics?: (null | Topic | Topic[])[];
 }
 
-// https://docs.soliditylang.org/en/latest/abi-spec.html#json
-export type AbiParameter = {
-	readonly name: string;
-	readonly type: string;
-	readonly components?: ReadonlyArray<AbiParameter | string>;
-};
-
 export interface AccessListEntry {
 	readonly address?: Address;
 	readonly storageKeys?: HexString32Bytes[];
 }
 export type AccessList = AccessListEntry[];
+
+export type AccessListResult = {
+	readonly accessList?: AccessList;
+	readonly gasUsed?: Numbers;
+};
 
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 
@@ -365,6 +331,10 @@ export interface Transaction extends TransactionBase {
 	from?: Address;
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	to?: Address | null;
+}
+
+export interface TransactionForAccessList extends Transaction {
+	from: Address;
 }
 
 export interface TransactionCall extends Transaction {

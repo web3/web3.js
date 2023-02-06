@@ -321,6 +321,42 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * This comment _supports3_ [Markdown](https://marked.js.org/)
  */
+
 import Web3 from './web3';
 
-export = Web3;
+export * from './types';
+export default Web3;
+
+/**
+ * Named exports for all objects which are the default-exported-object in their packages
+ */
+export { Web3 };
+export { Web3Eth } from 'web3-eth';
+export { Contract } from 'web3-eth-contract';
+export { Iban } from 'web3-eth-iban';
+export { Personal } from 'web3-eth-personal';
+export { Net } from 'web3-net';
+export { HttpProvider } from 'web3-providers-http';
+export { IpcProvider } from 'web3-providers-ipc';
+export { WebSocketProvider } from 'web3-providers-ws';
+
+/**
+ * Export all packages grouped by name spaces
+ */
+export * as core from 'web3-core';
+export * as errors from 'web3-errors';
+export * as eth from './eth.exports';
+export * as net from 'web3-net';
+export * as providers from './providers.exports';
+export * as rpcMethods from 'web3-rpc-methods';
+export * as types from 'web3-types';
+export * as utils from 'web3-utils';
+export * as validator from 'web3-validator';
+
+/**
+ * Export all types from `web3-types` without a namespace (in addition to being available at `types` namespace).
+ * To enable the user to write: `function something(): Web3Api` without the need for `types.Web3Api`.
+ * And the same for `web3-errors`. Because this package contains error classes and constants.
+ */
+export * from 'web3-errors';
+export * from 'web3-types';

@@ -122,3 +122,5 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 		this._removeSocketListeners();
 	}
 }
+
+export { IpcProvider };

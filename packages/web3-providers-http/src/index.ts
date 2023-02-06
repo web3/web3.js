@@ -125,3 +125,5 @@ export default class HttpProvider<
 		throw new MethodNotImplementedError();
 	}
 }
+
+export { HttpProvider };

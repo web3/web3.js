@@ -1,4 +1,4 @@
-﻿/*
+/*
 This file is part of web3.js.
 
 web3.js is free software: you can redistribute it and/or modify
@@ -15,37 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-type _SolidityIndexRange =
-	| 1
-	| 2
-	| 3
-	| 4
-	| 5
-	| 6
-	| 7
-	| 8
-	| 9
-	| 10
-	| 11
-	| 12
-	| 13
-	| 14
-	| 15
-	| 16
-	| 17
-	| 18
-	| 19
-	| 20
-	| 21
-	| 22
-	| 25
-	| 26
-	| 27
-	| 28
-	| 29
-	| 30;
+export { Eip1193Provider, SocketProvider } from 'web3-utils';
 
-export type ConvertToNumber<
-	T extends string,
-	Range extends number = _SolidityIndexRange,
-> = Range extends unknown ? (`${Range}` extends T ? Range : never) : never;
+export * as http from 'web3-providers-http';
+export * as ipc from 'web3-providers-ipc';
+export * as ws from 'web3-providers-ws';

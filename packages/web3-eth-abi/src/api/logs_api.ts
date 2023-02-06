@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HexString } from 'web3-types';
-import { AbiParameter, DecodedParams } from '../types';
+import { HexString, AbiParameter, DecodedParams } from 'web3-types';
 import { decodeParameter, decodeParametersWith } from './parameters_api';
 
 const STATIC_TYPES = ['bool', 'string', 'int', 'uint', 'address', 'fixed', 'ufixed'];
