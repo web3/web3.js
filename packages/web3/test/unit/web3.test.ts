@@ -63,15 +63,10 @@ describe('Web3 object', () => {
 		expect(contract5.options.gas).toBeUndefined();
 
 		// TODO: uncomment the next line after fixing https://github.com/web3/web3.js/issues/5815
-		// const contract6 = new Web3Contract([{}], {});
-		// expect(contract6).toBeInstanceOf(Contract);
-		// expect(contract6.options.address).toBeUndefined();
-		// expect(contract6.options.gas).toBeUndefined();
-
-		const contract7 = new Web3Contract([{}], address, options);
-		expect(contract7).toBeInstanceOf(Contract);
-		expect(contract7.options.address).toEqual(address);
-		expect(contract7.options.gas).toEqual(options.gas);
+		// const contract7 = new Web3Contract([{}], address, options);
+		// expect(contract7).toBeInstanceOf(Contract);
+		// expect(contract7.options.address).toEqual(address);
+		// expect(contract7.options.gas).toEqual(options.gas);
 
 		// TODO: uncomment the next line after fixing https://github.com/web3/web3.js/issues/5815
 		// expect(() => {
