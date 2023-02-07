@@ -30,6 +30,7 @@ import {
 	PayableCallOptions,
 	ContractOptions,
 	Web3ContractContext,
+	ContractInitOptions,
 } from './types';
 
 export const getSendTxParams = ({
@@ -138,12 +139,19 @@ export const getEstimateGasParams = ({
 	return txParams as TransactionWithSenderAPI;
 };
 
-export const isContractInitOptions = (options: unknown): options is ContractOptions =>
+export const isContractInitOptions = (options: unknown): options is ContractInitOptions =>
 	typeof options === 'object' &&
 	!isNullish(options) &&
-	['data', 'from', 'gas', 'gasPrice', 'gasLimit', 'address', 'jsonInterface'].some(
-		key => key in options,
-	);
+	[
+		'data',
+		'from',
+		'gas',
+		'gasPrice',
+		'gasLimit',
+		'address',
+		'jsonInterface',
+		'syncWithContext',
+	].some(key => key in options);
 
 export const isWeb3ContractContext = (options: unknown): options is Web3ContractContext =>
 	typeof options === 'object' && !isNullish(options) && !isContractInitOptions(options);
