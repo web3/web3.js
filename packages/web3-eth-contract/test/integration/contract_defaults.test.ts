@@ -41,72 +41,37 @@ describe('contract', () => {
 			sendOptions = { from: acc.address, gas: '1000000' };
 		});
 
-		describe('defaultAccount', () => {
-			it('should use "defaultAccount" on "Contract" level instead of "from"', async () => {
-				// eslint-disable-next-line prefer-destructuring
-				Contract.defaultAccount = acc.address;
+		it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
+			const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
+			// eslint-disable-next-line prefer-destructuring
+			deployedContract.defaultAccount = acc.address;
+			// We didn't specify "from" in this call
+			const receipt = await deployedContract.methods
+				.setGreeting('New Greeting')
+				.send({ gas: '1000000' });
+			expect(receipt.from).toEqual(acc.address);
+		});
 
-				const receiptHandler = jest.fn();
+		it('should throw error when "from" is not set on any level', () => {
+			contract.defaultAccount = undefined;
 
-				// We didn't specify "from" in this call
-				await contract
-					.deploy(deployOptions)
-					.send({ gas: '1000000' })
-					.on('receipt', receiptHandler);
+			expect(() => contract.deploy(deployOptions).send({ gas: '1000000' })).toThrow(
+				'Contract "from" address not specified',
+			);
+		});
 
-				// We didn't specify "from" in this call
-				// eslint-disable-next-line jest/no-standalone-expect
-				expect(receiptHandler).toHaveBeenCalledWith(
-					expect.objectContaining({ from: acc.address }),
-				);
+		it('should set syncWithContext from init options', async () => {
+			contract = new Contract(GreeterAbi, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
 			});
 
-			it('should use "defaultAccount" on "instance" level instead of "from"', async () => {
-				const deployedContract = await contract.deploy(deployOptions).send(sendOptions);
-				Contract.defaultAccount = undefined;
-				// eslint-disable-next-line prefer-destructuring
-				deployedContract.defaultAccount = acc.address;
-				// We didn't specify "from" in this call
-				const receipt = await deployedContract.methods
-					.setGreeting('New Greeting')
-					.send({ gas: '1000000' });
-				expect(receipt.from).toEqual(acc.address);
-			});
+			contract = await contract.deploy(deployOptions).send(sendOptions);
 
-			it('should throw error when "from" is not set on any level', () => {
-				Contract.defaultAccount = undefined;
-				contract.defaultAccount = undefined;
-
-				expect(() => contract.deploy(deployOptions).send({ gas: '1000000' })).toThrow(
-					'Contract "from" address not specified',
-				);
-			});
+			expect(contract.syncWithContext).toBeTruthy();
 		});
 
 		describe('defaultBlock', () => {
-			it('should use "defaultBlock" on "Contract" level', async () => {
-				contract = await contract.deploy(deployOptions).send(sendOptions);
-
-				await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-				const requestSpy = jest.spyOn(
-					contract.currentProvider as Web3BaseProvider,
-					'request',
-				);
-				Contract.defaultBlock = 'pending';
-
-				// Forcefully delete this property from the contract instance
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-				// @ts-expect-error
-				contract.defaultBlock = undefined;
-
-				await contract.methods.greet().call();
-
-				expect(requestSpy).toHaveBeenCalledWith(
-					expect.objectContaining({ params: [expect.any(Object), 'pending'] }),
-				);
-			});
-
 			it('should use "defaultBlock" on "instance" level', async () => {
 				contract = await contract.deploy(deployOptions).send(sendOptions);
 
@@ -117,7 +82,6 @@ describe('contract', () => {
 					'request',
 				);
 				contract.defaultBlock = 'pending';
-				Contract.defaultBlock = undefined;
 
 				await contract.methods.greet().call();
 
@@ -140,7 +104,6 @@ describe('contract', () => {
 				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-expect-error
 				contract.defaultBlock = undefined;
-				Contract.defaultBlock = undefined;
 
 				await contract.methods.greet().call(undefined, 'pending');
 
