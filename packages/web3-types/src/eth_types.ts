@@ -45,8 +45,10 @@ export enum BlockTags {
 	EARLIEST = 'earliest',
 	LATEST = 'latest',
 	PENDING = 'pending',
+	SAFE = `safe`,
+	FINALIZED = `finalized`,
 }
-export type BlockTag = 'earliest' | 'latest' | 'pending';
+export type BlockTag = keyof typeof BlockTags;
 export type BlockNumberOrTag = Numbers | BlockTag;
 
 export interface Proof {
