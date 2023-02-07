@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3ContextInitOptions, Web3PromiEvent } from 'web3-core';
 import { NewHeadsSubscription, SendTransactionEvents } from 'web3-eth';
 import {
+	AccessListResult,
 	AbiFragment,
 	Address,
 	BlockNumberOrTag,
@@ -345,6 +346,35 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): string;
+
+	/**
+	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
+	 *
+	 * @param options - The options used for createAccessList.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
+	 *
+	 *  ```ts
+	 *  const result = await MyContract.methods.myFunction().createAccessList();
+	 *  console.log(result);
+	 *
+	 * > {
+	 *  "accessList": [
+	 *     {
+	 *       "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+	 *       "storageKeys": [
+	 *         "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 *       ]
+	 *     }
+	 *   ],
+	 *   "gasUsed": "0x7671"
+	 * }
+	 *  ```
+	 */
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
@@ -505,6 +535,35 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * @returns - The encoded ABI byte code to send via a transaction or call.
 	 */
 	encodeABI(): HexString;
+
+	/**
+	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
+	 *
+	 * @param options - The options used for createAccessList.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
+	 *
+	 *  ```ts
+	 *  const result = await MyContract.methods.myFunction().createAccessList();
+	 *  console.log(result);
+	 *
+	 * > {
+	 *  "accessList": [
+	 *     {
+	 *       "address": "0x15859bdf5aff2080a9968f6a410361e9598df62f",
+	 *       "storageKeys": [
+	 *         "0x0000000000000000000000000000000000000000000000000000000000000000"
+	 *       ]
+	 *     }
+	 *   ],
+	 *   "gasUsed": "0x7671"
+	 * }
+	 *  ```
+	 */
+	createAccessList(
+		tx?: NonPayableCallOptions,
+		block?: BlockNumberOrTag,
+	): Promise<AccessListResult>;
 }
 
 export type Web3ContractContext = Partial<

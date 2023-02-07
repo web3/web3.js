@@ -219,3 +219,7 @@ const transactionHash = receipt.transactionHash;
 ### Changed
 
 -   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Added
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )

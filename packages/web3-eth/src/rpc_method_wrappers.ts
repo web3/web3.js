@@ -42,17 +42,14 @@ import {
 	TransactionWithFromLocalWalletIndex,
 	TransactionWithToLocalWalletIndex,
 	TransactionWithFromAndToLocalWalletIndex,
+	TransactionForAccessList,
+	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import {
-	SignatureError,
-	TransactionError,
-	ContractExecutionError,
-} from 'web3-errors';
+import { SignatureError, TransactionError, ContractExecutionError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
-
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -61,6 +58,7 @@ import {
 	logSchema,
 	transactionReceiptSchema,
 	transactionInfoSchema,
+	accessListResultSchema,
 } from './schemas';
 import {
 	SendSignedTransactionEvents,
@@ -1184,16 +1182,16 @@ export function sendTransaction<
 							if (promiEvent.listenerCount('error') > 0) {
 								promiEvent.emit(
 									'error',
-									reason ?? new TransactionError(
-										'Transaction failed',
-										transactionReceiptFormatted,
-									),
+									reason ??
+										new TransactionError(
+											'Transaction failed',
+											transactionReceiptFormatted,
+										),
 								);
 							}
 
 							reject(
-								reason ??
-								transactionReceiptFormatted as unknown as ResolveType
+								reason ?? (transactionReceiptFormatted as unknown as ResolveType),
 							);
 							return;
 						} else {
@@ -1929,4 +1927,32 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	);
 
 	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
+}
+
+/**
+ * This function generates access list for a transaction.
+ *
+ * @param web3Context ({@link Web3Context}) Web3 configuration object that contains things such as the provider, request manager, wallet, etc.
+ * @param transaction - A transaction object where all properties are optional except `from`, however it's also recommended to include the `to` property.
+ * @param blockNumber ({@link BlockNumberOrTag} defaults to {@link Web3Eth.defaultBlock}) - Specifies what block to use as the current state of the blockchain while sending this request.
+ * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data should be formatted.
+ * @returns The returned data of the createAccessList, e.g. The generated access list for transaction.
+ */
+export async function createAccessList<ReturnFormat extends DataFormat>(
+	web3Context: Web3Context<EthExecutionAPI>,
+	transaction: TransactionForAccessList,
+	blockNumber: BlockNumberOrTag = web3Context.defaultBlock,
+	returnFormat: ReturnFormat,
+) {
+	const blockNumberFormatted = isBlockTag(blockNumber as string)
+		? (blockNumber as BlockTag)
+		: format({ eth: 'uint' }, blockNumber as Numbers, ETH_DATA_FORMAT);
+
+	const response = (await ethRpcMethods.createAccessList(
+		web3Context.requestManager,
+		formatTransaction(transaction, ETH_DATA_FORMAT),
+		blockNumberFormatted,
+	)) as unknown as AccessListResult;
+
+	return format(accessListResultSchema, response, returnFormat);
 }

@@ -233,6 +233,11 @@ export interface AccessListEntry {
 }
 export type AccessList = AccessListEntry[];
 
+export type AccessListResult = {
+	readonly accessList?: AccessList;
+	readonly gasUsed?: Numbers;
+};
+
 export type ValidChains = 'goerli' | 'kovan' | 'mainnet' | 'rinkeby' | 'ropsten' | 'sepolia';
 
 export type Hardfork =
@@ -326,6 +331,10 @@ export interface Transaction extends TransactionBase {
 	from?: Address;
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	to?: Address | null;
+}
+
+export interface TransactionForAccessList extends Transaction {
+	from: Address;
 }
 
 export interface TransactionCall extends Transaction {
