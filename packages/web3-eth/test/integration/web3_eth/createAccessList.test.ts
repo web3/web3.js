@@ -52,6 +52,7 @@ describeIf(getSystemTestBackend() === 'geth')('Web3Eth.createAccessList', () => 
 			from: tempAcc.address,
 			to: greeterContractAddress,
 			data: '0xcfae3217', // greet function call data encoded
+			gas: '0x6314',
 		};
 
 		const response = await web3Eth.createAccessList(transaction);
@@ -65,7 +66,7 @@ describeIf(getSystemTestBackend() === 'geth')('Web3Eth.createAccessList', () => 
 					],
 				},
 			],
-			gasUsed: '0x68c5',
+			gasUsed: '0x6314',
 		};
 
 		expect(response).toStrictEqual(expectedResponse);
