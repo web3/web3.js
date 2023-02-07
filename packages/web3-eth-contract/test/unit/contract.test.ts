@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import * as eth from 'web3-eth';
-import { ValidChains, Hardfork } from 'web3-types';
+import { ValidChains, Hardfork, AccessListResult, Address } from 'web3-types';
 import { Web3ContractError } from 'web3-errors';
 import { Contract } from '../../src';
 import { sampleStorageContractABI } from '../fixtures/storage';
@@ -567,6 +567,38 @@ describe('Contract', () => {
 			await expect(async () => {
 				await contract.methods.setGreeting(arg).send(sendOptionsSpecial);
 			}).rejects.toThrow('Contract "from" address not specified');
+		});
+
+		it('contract method createAccessList should work', async () => {
+			const fromAddr: Address = '0x20bc23D0598b12c34cBDEf1fae439Ba8744DB426';
+			const result: AccessListResult = {
+				accessList: [
+					{
+						address: deployedAddr,
+						storageKeys: [
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
+						],
+					},
+				],
+				gasUsed: '0x644e',
+			};
+
+			const contract = new Contract(GreeterAbi, deployedAddr);
+
+			const spyEthCall = jest
+				.spyOn(eth, 'createAccessList')
+				.mockImplementation((_objInstance, _tx) => {
+					expect(_tx.to).toStrictEqual(deployedAddr);
+					expect(_tx.data).toBe('0xcfae3217');
+					expect(_tx.from).toBe(fromAddr);
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return Promise.resolve(result) as any; // contract class should decode encodedArg
+				});
+
+			const res = await contract.methods.greet().createAccessList({ from: fromAddr });
+			expect(res).toStrictEqual(result);
+
+			spyEthCall.mockClear();
 		});
 	});
 });

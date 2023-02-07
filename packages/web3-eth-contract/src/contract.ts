@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigEvent } from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
+	createAccessList,
 	call,
 	estimateGas,
 	getLogs,
@@ -96,6 +97,7 @@ import {
 	Web3ContractContext,
 } from './types';
 import {
+	getCreateAccessListParams,
 	getEstimateGasParams,
 	getEthTxCallParams,
 	getSendTxParams,
@@ -839,6 +841,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 	}
+
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
@@ -880,6 +883,7 @@ export class Contract<Abi extends ContractAbi>
 			if (methodAbi.stateMutability === 'payable') {
 				return {
 					arguments: abiParams,
+
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(
 							methodAbi,
@@ -888,8 +892,10 @@ export class Contract<Abi extends ContractAbi>
 							options,
 							block,
 						),
+
 					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
+
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -902,7 +908,20 @@ export class Contract<Abi extends ContractAbi>
 							returnFormat,
 							options,
 						}),
+
 					encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+
+					createAccessList: async (
+						options?: NonPayableCallOptions,
+						block?: BlockNumberOrTag,
+					) =>
+						this._contractMethodCreateAccessList(
+							methodAbi,
+							abiParams,
+							internalErrorsAbis,
+							options,
+							block,
+						),
 				} as unknown as PayableMethodObject<
 					ContractOverloadedMethodInputs<T>,
 					ContractOverloadedMethodOutputs<T>
@@ -910,6 +929,7 @@ export class Contract<Abi extends ContractAbi>
 			}
 			return {
 				arguments: abiParams,
+
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(
 						methodAbi,
@@ -918,8 +938,10 @@ export class Contract<Abi extends ContractAbi>
 						options,
 						block,
 					),
+
 				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
+
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -930,7 +952,20 @@ export class Contract<Abi extends ContractAbi>
 						returnFormat,
 						options,
 					}),
+
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+
+				createAccessList: async (
+					options?: NonPayableCallOptions,
+					block?: BlockNumberOrTag,
+				) =>
+					this._contractMethodCreateAccessList(
+						methodAbi,
+						abiParams,
+						internalErrorsAbis,
+						options,
+						block,
+					),
 			} as unknown as NonPayableMethodObject<
 				ContractOverloadedMethodInputs<T>,
 				ContractOverloadedMethodOutputs<T>
@@ -957,6 +992,36 @@ export class Contract<Abi extends ContractAbi>
 		try {
 			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
 			return decodeMethodReturn(abi, result);
+		} catch (error: unknown) {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+			throw error;
+		}
+	}
+
+	private async _contractMethodCreateAccessList<
+		Options extends PayableCallOptions | NonPayableCallOptions,
+	>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
+		options?: Options,
+		block?: BlockNumberOrTag,
+	) {
+		const tx = getCreateAccessListParams({
+			abi,
+			params,
+			options,
+			contractOptions: {
+				...this.options,
+				from: this.options.from ?? this.getConfig().defaultAccount,
+			},
+		});
+
+		try {
+			return createAccessList(this, tx, block, DEFAULT_RETURN_FORMAT);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
