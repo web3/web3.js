@@ -1019,7 +1019,6 @@ export class Contract<Abi extends ContractAbi>
 				}
 
 				const newContract = this.clone();
-				// newContract.subscribeToContextEvents(this.context as Web3Context);
 
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 				newContract.options.address = receipt.contractAddress;
