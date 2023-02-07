@@ -323,6 +323,7 @@ export class Contract<Abi extends ContractAbi>
 			registeredSubscriptions: contractSubscriptions,
 		});
 
+		this.context = contractContext as Web3Context;
 		this._overloadedMethodAbis = new Map<string, AbiFunctionFragment[]>();
 
 		// eslint-disable-next-line no-nested-ternary
@@ -359,6 +360,11 @@ export class Contract<Abi extends ContractAbi>
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
+
+		if (contractContext !== undefined) {
+			// @ts-ignore
+			this.subscribeToContextEvents(contractContext);
+		}
 
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
@@ -463,7 +469,7 @@ export class Contract<Abi extends ContractAbi>
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
-				this.getContextObject(),
+				this.context,
 			);
 		} else {
 			newContract = new Contract<Abi>(
@@ -477,10 +483,10 @@ export class Contract<Abi extends ContractAbi>
 					provider: this.currentProvider,
 					syncWithContext: this.syncWithContext,
 				},
-				this.getContextObject(),
+				this.context,
 			);
 		}
-		if (this.context) newContract.subscribeToContextEvents(this.context);
+		if (this.context !== undefined) newContract.subscribeToContextEvents(this.context);
 
 		return newContract;
 	}
