@@ -220,9 +220,7 @@ const transactionHash = receipt.transactionHash;
 
 -   Fix contract defaults (#5756)
 
-### Fixed
-
--   Fix contract defaults (#5756)
+### Changed
 -   Update imports statements for objects that was moved between web3 packages (#5771)
 
 ### Added
