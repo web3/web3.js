@@ -148,7 +148,7 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-
+			console.log("first confirmation deploy conract")
 			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
@@ -159,8 +159,9 @@ describe('contract', () => {
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
+			console.log("before deploying second contract")
 			await contract.deploy(deployOptions).send(sendOptions);
-
+			console.log("after deploy");
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
 			await sleep(isWs ? 500 : 2000);
@@ -171,15 +172,16 @@ describe('contract', () => {
 
 		it('should emit the "transactionHash" event', async () => {
 			const handler = jest.fn();
-
+			console.log("before first deploy")
 			const promiEvent = contract
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('transactionHash', handler);
 
 			// Deploy the contract
+			console.log("before promievent")
 			await promiEvent;
-
+			console.log("after promievent");
 			expect(handler).toHaveBeenCalled();
 		});
 
