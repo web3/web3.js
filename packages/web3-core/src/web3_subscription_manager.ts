@@ -165,6 +165,7 @@ export class Web3SubscriptionManager<
 	}
 
 	/**
+	 * Check whether the current provider supports subscriptions.
 	 *
 	 * @returns `true` or `false` depending on if the current provider supports subscriptions
 	 */
