@@ -37,15 +37,23 @@ function checkWork() {
 	}
 }
 
-eth.filter('latest', (err, block) => {
-	checkWork();
-});
-eth.filter('pending', (err, block) => {
+const latestFilter = eth.filter('latest', (err, block) => {
+	console.log('Inside latest filter');
 	checkWork();
 });
 
+const pendingFilter = eth.filter('pending', (err, block) => {
+	console.log('Inside pending filter');
+	checkWork();
+});
+
+latestFilter.watch((error, result) => {
+	if (!error) console.log(result);
+});
+
+pendingFilter.watch((error, result) => {
+	if (!error) console.log(result);
+});
+
 checkWork();
-console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
-console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
-console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
-console.log(`**********\nMining started with ${miningThreads} threads.\n**********`);
+console.log(`**********\nMining script loaded \n**********`);
