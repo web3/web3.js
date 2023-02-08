@@ -392,8 +392,12 @@ WebsocketProvider.prototype.reconnect = function () {
 
     if (this.responseQueue.size > 0) {
         this.responseQueue.forEach(function (request, key) {
-            request.callback(errors.PendingRequestsOnReconnectingError());
-            _this.responseQueue.delete(key);
+            try{
+                _this.responseQueue.delete(key);
+                request.callback(errors.PendingRequestsOnReconnectingError())
+            }catch (e) {
+                console.error("Error encountered in reconnect: ", e)
+            }
         });
     }
 
