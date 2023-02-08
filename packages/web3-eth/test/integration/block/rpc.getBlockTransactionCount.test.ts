@@ -40,6 +40,8 @@ describe('rpc with block', () => {
 		earliest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
+		finalized: 'finalized';
+		safe: 'safe';
 		blockNumber: number | bigint;
 		blockHash: string;
 		transactionHash: string;
@@ -83,6 +85,8 @@ describe('rpc with block', () => {
 			pending: 'pending',
 			latest: 'latest',
 			earliest: 'earliest',
+			finalized: 'finalized',
+			safe: 'safe',
 			blockNumber: Number(receipt.blockNumber),
 			blockHash: String(receipt.blockHash),
 			transactionHash: String(receipt.transactionHash),
@@ -97,9 +101,24 @@ describe('rpc with block', () => {
 	describe('methods', () => {
 		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+				block:
+					| 'earliest'
+					| 'latest'
+					| 'pending'
+					| 'finalized'
+					| 'safe'
+					| 'blockHash'
+					| 'blockNumber';
 			}>({
-				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
+				block: [
+					'earliest',
+					'latest',
+					'pending',
+					'finalized',
+					'safe',
+					'blockHash',
+					'blockNumber',
+				],
 			}),
 		)('getBlockTransactionCount', async ({ block }) => {
 			const res = await web3Eth.getBlockTransactionCount(blockData[block]);
@@ -107,7 +126,11 @@ describe('rpc with block', () => {
 			if (getSystemTestBackend() === 'ganache') {
 				shouldBe = blockData[block] === 'earliest' ? 0 : 1;
 			} else {
-				shouldBe = ['earliest', 'pending'].includes(String(blockData[block])) ? 0 : 1;
+				shouldBe = ['earliest', 'pending', 'finalized', 'safe'].includes(
+					String(blockData[block]),
+				)
+					? 0
+					: 1;
 			}
 			expect(Number(res)).toBe(shouldBe);
 		});

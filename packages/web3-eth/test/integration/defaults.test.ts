@@ -178,6 +178,16 @@ describe('defaults', () => {
 			// default
 			expect(web3Eth.defaultBlock).toBe('latest');
 
+			web3Eth.setConfig({
+				defaultBlock: 'safe',
+			});
+			expect(web3Eth.defaultBlock).toBe('safe');
+
+			web3Eth.setConfig({
+				defaultBlock: 'finalized',
+			});
+			expect(web3Eth.defaultBlock).toBe('finalized');
+
 			// after set
 			web3Eth.setConfig({
 				defaultBlock: 'earliest',
