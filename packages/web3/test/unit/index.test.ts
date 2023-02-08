@@ -28,10 +28,14 @@ import * as http from 'web3-providers-http';
 import * as ipc from 'web3-providers-ipc';
 import * as ws from 'web3-providers-ws';
 
-import { providers, eth } from '../../src/index';
+import Web3Default, { Web3, providers, eth } from '../../src/index';
 
 describe('exports of web3 package', () => {
 	describe('eth exports', () => {
+		it('`Web3` is the default exported class', () => {
+			expect(Web3).toEqual(Web3Default);
+		});
+
 		it('`Web3Eth` is available under `eth`', () => {
 			expect(eth.Web3Eth).toEqual(Web3Eth);
 		});
