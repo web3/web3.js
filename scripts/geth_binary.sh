@@ -67,7 +67,6 @@ start() {
 		${TMP_FOLDER}/geth --ipcpath $IPC_PATH --nodiscover --nousb --ws --ws.addr 0.0.0.0 --ws.port $WEB3_SYSTEM_TEST_PORT --http --http.addr 0.0.0.0 --http.port $WEB3_SYSTEM_TEST_PORT --allow-insecure-unlock --http.api personal,web3,eth,admin,debug,txpool,net --ws.api personal,web3,eth,admin,debug,miner,txpool,net --dev --dev.period=1 &>/dev/null &
 		echo "Waiting for geth..."
 		npx wait-port "$WEB3_SYSTEM_TEST_PORT"
-        ${TMP_FOLDER}/geth --exec "loadScript('$TMP_FOLDER/../scripts/mineOnPendingTransactions.js');" attach $IPC_PATH &> ${TMP_FOLDER}/log &
 	fi
 }
 
