@@ -30,7 +30,7 @@ import {
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
-const waitConfirmations = 2;
+const waitConfirmations = 20;
 
 type Resolve = (value?: unknown) => void;
 
