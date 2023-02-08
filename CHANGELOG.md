@@ -645,3 +645,4 @@ Released with 1.0.0-beta.37 code base.
 ### Fixed
 
   - Fixed skipped ws-ganache tests (#5759)
+  - Fixed "provider started to reconnect error" in web3-provider-ws (#5820)
