@@ -176,6 +176,8 @@ export abstract class Web3Config
 	 * - `"earliest"` - String: The genesis block
 	 * - `"latest"` - String: The latest block (current head of the blockchain)
 	 * - `"pending"` - String: The currently mined block (including pending transactions)
+	 * - `"finalized"` - String: (For POS networks) The finalized block is one which has been accepted as canonical by greater than 2/3 of validators
+	 * - `"safe"` - String: (For POS networks) The safe head block is one which under normal network conditions, is expected to be included in the canonical chain. Under normal network conditions the safe head and the actual tip of the chain will be equivalent (with safe head trailing only by a few seconds). Safe heads will be less likely to be reorged than the proof of work network`s latest blocks.
 	 */
 	public set defaultBlock(val) {
 		this.emit(Web3ConfigEvent.CONFIG_CHANGE, {
