@@ -33,6 +33,7 @@ import {
 	isWs,
 	waitForOpenConnection,
 } from '../shared_fixtures/system_tests_utils';
+import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
 describe('Web3 instance', () => {
 	let clientUrl: string;
@@ -253,6 +254,56 @@ describe('Web3 instance', () => {
 					}),
 				]),
 			);
+		});
+	});
+
+	describe('defaults', () => {
+		let contract: Contract<typeof GreeterAbi>;
+		let deployOptions: Record<string, unknown>;
+		let sendOptions: Record<string, unknown>;
+		let acc: { address: string; privateKey: string };
+
+		beforeAll(() => {
+			web3 = new Web3(clientUrl);
+		});
+
+		beforeEach(async () => {
+			acc = await createTempAccount();
+
+			// todo import GreeterBytecode
+			deployOptions = {
+				data: GreeterBytecode,
+				arguments: ['My Greeting'],
+			};
+
+			sendOptions = { from: acc.address, gas: '1000000' };
+		});
+
+		it('should update defaults on contract instance', () => {
+			const hardfork = 'berlin';
+
+			contract = new web3.eth.Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
+			});
+
+			web3.defaultHardfork = hardfork;
+
+			expect(contract.defaultHardfork).toBe(hardfork);
+		});
+
+		it('should update defaults on deployed contract instance', async () => {
+			const hardfork = 'berlin';
+
+			contract = new web3.eth.Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+				syncWithContext: true,
+			});
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
+			web3.defaultHardfork = hardfork;
+
+			expect(contract.defaultHardfork).toBe(hardfork);
 		});
 	});
 });
