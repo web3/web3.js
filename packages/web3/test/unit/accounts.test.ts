@@ -67,16 +67,17 @@ describe('test new Web3().eth.accounts', () => {
 		jest.spyOn(ethAccounts, 'decrypt').mockReturnValue({
 			privateKey: '',
 		} as unknown as Promise<Web3Account>);
-		const account = await accounts.decrypt('', '');
-		expect(ethAccounts.decrypt).toHaveBeenCalledWith('', '', true);
 
 		await accounts.decrypt('', '', { nonStrict: false });
 		expect(ethAccounts.decrypt).toHaveBeenCalledWith('', '', false);
 
+		const account = await accounts.decrypt('', '');
+		expect(ethAccounts.decrypt).toHaveBeenCalledWith('', '', true);
+
 		await account.signTransaction({});
 
-		expect(eth.prepareTransactionForSigning).toHaveBeenCalledTimes(2);
-		expect(ethAccounts.signTransaction).toHaveBeenCalledTimes(2);
+		expect(eth.prepareTransactionForSigning).toHaveBeenCalledTimes(1);
+		expect(ethAccounts.signTransaction).toHaveBeenCalledTimes(1);
 	});
 
 	it('`create` should call the original `create` and add `signTransaction`', async () => {
