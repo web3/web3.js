@@ -21,10 +21,9 @@ import { isUInt } from './numbers';
 export const isBlockNumber = (value: string | number | bigint): boolean => isUInt(value);
 
 /**
- * Returns true if the given blockNumber is 'latest', 'pending', or 'earliest.
+ * Returns true if the given blockNumber is 'latest', 'pending', 'earliest, 'safe' or 'finalized'
  */
-export const isBlockTag = (value: string) =>
-	BlockTags.LATEST === value || BlockTags.PENDING === value || BlockTags.EARLIEST === value;
+export const isBlockTag = (value: string) => Object.values(BlockTags).includes(value as BlockTags);
 
 /**
  * Returns true if given value is valid hex string and not negative, or is a valid BlockTag

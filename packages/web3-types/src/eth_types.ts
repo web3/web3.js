@@ -48,7 +48,8 @@ export enum BlockTags {
 	SAFE = `safe`,
 	FINALIZED = `finalized`,
 }
-export type BlockTag = keyof typeof BlockTags;
+export type BlockTag = `${BlockTags}`;
+
 export type BlockNumberOrTag = Numbers | BlockTag;
 
 export interface Proof {
