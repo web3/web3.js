@@ -215,3 +215,15 @@ const transactionHash = receipt.transactionHash;
 -   web3.js dependencies (#5757)
 
 ## [Unreleased]
+
+### Fixed
+
+-   Fix contract defaults (#5756)
+
+### Changed
+
+-   Update imports statements for objects that was moved between web3 packages (#5771)
+
+### Added
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )

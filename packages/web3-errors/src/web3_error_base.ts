@@ -17,9 +17,9 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 
 /* eslint-disable max-classes-per-file */
 
-import { Web3Error as ErrorInterface } from 'web3-types';
+import { Web3Error } from 'web3-types';
 
-export abstract class Web3Error extends Error implements ErrorInterface {
+export abstract class BaseWeb3Error extends Error implements Web3Error {
 	public readonly name: string;
 	public abstract readonly code: number;
 	public stack: string | undefined;
@@ -62,11 +62,13 @@ export abstract class Web3Error extends Error implements ErrorInterface {
 	}
 }
 
-export abstract class InvalidValueError extends Web3Error {
+export abstract class InvalidValueError extends BaseWeb3Error {
 	public readonly name: string;
 
 	public constructor(value: unknown, msg: string) {
-		super(`Invalid value given "${Web3Error.convertToString(value, true)}". Error: ${msg}.`);
+		super(
+			`Invalid value given "${BaseWeb3Error.convertToString(value, true)}". Error: ${msg}.`,
+		);
 		this.name = this.constructor.name;
 	}
 }

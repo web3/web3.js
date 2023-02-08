@@ -53,6 +53,7 @@ import Web3 from 'web3';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { NonPayableMethodObject } from 'web3-eth-contract';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import HttpProvider from 'web3-providers-http';
 import accountsString from './accounts.json';
 
 /**
@@ -125,7 +126,7 @@ export const waitForOpenConnection = async (
 	});
 
 export const closeOpenConnection = async (web3Context: Web3Context) => {
-	if (!isSocket) {
+	if (!isSocket || web3Context?.provider instanceof HttpProvider) {
 		return;
 	}
 
@@ -422,3 +423,27 @@ export const waitForSocketDisconnect = async (provider: SocketProvider<any, any,
 		}) as Web3ProviderEventCallback<ProviderRpcError>);
 	});
 };
+
+export const waitForOpenSocketConnection = async (provider: SocketProvider<any, any, any>) =>
+	new Promise<ProviderConnectInfo>(resolve => {
+		provider.on('connect', ((_error, data) => {
+			resolve(data as unknown as ProviderConnectInfo);
+		}) as Web3ProviderEventCallback<ProviderConnectInfo>);
+	});
+
+export const waitForCloseSocketConnection = async (provider: SocketProvider<any, any, any>) =>
+	new Promise<ProviderRpcError>(resolve => {
+		provider.on('disconnect', ((_error, data) => {
+			resolve(data as unknown as ProviderRpcError);
+		}) as Web3ProviderEventCallback<ProviderRpcError>);
+	});
+
+export const waitForEvent = async (
+	web3Provider: SocketProvider<any, any, any>,
+	eventName: string,
+) =>
+	new Promise(resolve => {
+		web3Provider.on(eventName, (error: any, data: any) => {
+			resolve(data || error);
+		});
+	});

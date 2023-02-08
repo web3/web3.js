@@ -23,7 +23,8 @@ import { Web3RequestManager, Web3RequestManagerEvent } from './web3_request_mana
 import { Web3SubscriptionConstructor } from './web3_subscriptions';
 
 type ShouldUnsubscribeCondition = ({
-	id: sub,
+	id,
+	sub,
 }: {
 	id: string;
 	sub: unknown;

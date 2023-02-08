@@ -15,9 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Web3Context, Web3EventEmitter, Web3PromiEvent } from 'web3-core';
+import { Web3Context, Web3EventEmitter, Web3PromiEvent, Web3ConfigEvent } from 'web3-core';
 import { ContractExecutionError, SubscriptionError, Web3ContractError } from 'web3-errors';
 import {
+	createAccessList,
 	call,
 	estimateGas,
 	getLogs,
@@ -25,6 +26,14 @@ import {
 	sendTransaction,
 	SendTransactionEvents,
 } from 'web3-eth';
+import {
+	encodeEventSignature,
+	encodeFunctionSignature,
+	isAbiErrorFragment,
+	isAbiEventFragment,
+	isAbiFunctionFragment,
+	jsonInterfaceMethodToString,
+} from 'web3-eth-abi';
 import {
 	AbiConstructorFragment,
 	AbiErrorFragment,
@@ -38,25 +47,16 @@ import {
 	ContractMethod,
 	ContractMethodInputParameters,
 	ContractMethodOutputParameters,
-	encodeEventSignature,
-	encodeFunctionSignature,
-	FilterAbis,
-	isAbiErrorFragment,
-	isAbiEventFragment,
-	isAbiFunctionFragment,
-	jsonInterfaceMethodToString,
-} from 'web3-eth-abi';
-import {
 	Address,
 	BlockNumberOrTag,
 	BlockTags,
 	Bytes,
 	EthExecutionAPI,
 	Filter,
+	FilterAbis,
 	HexString,
 	LogsInput,
 	Mutable,
-	Common,
 } from 'web3-types';
 import {
 	DataFormat,
@@ -97,6 +97,7 @@ import {
 	Web3ContractContext,
 } from './types';
 import {
+	getCreateAccessListParams,
 	getEstimateGasParams,
 	getEthTxCallParams,
 	getSendTxParams,
@@ -211,69 +212,9 @@ export class Contract<Abi extends ContractAbi>
 	public readonly options: ContractOptions;
 
 	/**
-	 * Can be used to set {@link Contract.defaultAccount} for all contracts.
+	 * Set to true if you want contracts' defaults to sync with global defaults.
 	 */
-	public static defaultAccount?: HexString;
-
-	/**
-	 * Can be used to set {@link Contract.defaultBlock} for all contracts.
-	 */
-	public static defaultBlock?: BlockNumberOrTag;
-
-	/**
-	 * Can be used to set {@link Contract.defaultHardfork} for all contracts.
-	 */
-	public static defaultHardfork?: string;
-
-	/**
-	 * Can be used to set {@link Contract.defaultCommon} for all contracts.
-	 */
-	public static defaultCommon?: Common;
-
-	/**
-	 * Can be used to set {@link Contract.transactionSendTimeout} for all contracts.
-	 */
-	public static transactionSendTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionBlockTimeout} for all contracts.
-	 */
-	public static transactionBlockTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionConfirmationBlocks} for all contracts.
-	 */
-	public static transactionConfirmationBlocks?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionPollingInterval} for all contracts.
-	 */
-	public static transactionPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionPollingTimeout} for all contracts.
-	 */
-	public static transactionPollingTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionReceiptPollingInterval} for all contracts.
-	 */
-	public static transactionReceiptPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.transactionConfirmationPollingInterval} for all contracts.
-	 */
-	public static transactionConfirmationPollingInterval?: number;
-
-	/**
-	 * Can be used to set {@link Contract.blockHeaderTimeout} for all contracts.
-	 */
-	public static blockHeaderTimeout?: number;
-
-	/**
-	 * Can be used to set {@link Contract.handleRevert} for all contracts.
-	 */
-	public static handleRevert?: boolean;
+	public syncWithContext = false;
 
 	private _errorsInterface!: AbiErrorFragment[];
 	private _jsonInterface!: ContractAbiWithSignature;
@@ -290,6 +231,7 @@ export class Contract<Abi extends ContractAbi>
 	private _methods!: ContractMethodsInterface<Abi>;
 	private _events!: ContractEventsInterface<Abi>;
 
+	private context?: Web3Context;
 	/**
 	 * Creates a new contract instance with all its methods and events defined in its {@doclink glossary/json_interface | json interface} object.
 	 *
@@ -418,6 +360,8 @@ export class Contract<Abi extends ContractAbi>
 			data: options?.data,
 		};
 
+		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
+
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
 			get: () => this._address,
@@ -427,131 +371,6 @@ export class Contract<Abi extends ContractAbi>
 			set: (value: ContractAbi) => this._parseAndSetJsonInterface(value, returnDataFormat),
 			get: () => this._jsonInterface,
 		});
-	}
-
-	public get defaultAccount() {
-		return (this.constructor as typeof Contract).defaultAccount ?? super.defaultAccount;
-	}
-
-	public set defaultAccount(value: Address | undefined) {
-		super.defaultAccount = value;
-	}
-
-	public get defaultBlock() {
-		return (this.constructor as typeof Contract).defaultBlock ?? super.defaultBlock;
-	}
-
-	public set defaultBlock(value: BlockNumberOrTag) {
-		super.defaultBlock = value;
-	}
-
-	public get defaultHardfork() {
-		return (this.constructor as typeof Contract).defaultHardfork ?? super.defaultHardfork;
-	}
-
-	public set defaultHardfork(value: string) {
-		super.defaultHardfork = value;
-	}
-
-	public get defaultCommon(): Common | undefined {
-		return (this.constructor as typeof Contract).defaultCommon ?? super.defaultCommon;
-	}
-
-	public set defaultCommon(value: Common | undefined) {
-		super.defaultCommon = value;
-	}
-
-	public get transactionSendTimeout() {
-		return (
-			(this.constructor as typeof Contract).transactionSendTimeout ??
-			super.transactionSendTimeout
-		);
-	}
-
-	public set transactionSendTimeout(value: number) {
-		super.transactionSendTimeout = value;
-	}
-
-	public get transactionBlockTimeout() {
-		return (
-			(this.constructor as typeof Contract).transactionBlockTimeout ??
-			super.transactionBlockTimeout
-		);
-	}
-
-	public set transactionBlockTimeout(value: number) {
-		super.transactionBlockTimeout = value;
-	}
-
-	public get transactionConfirmationBlocks() {
-		return (
-			(this.constructor as typeof Contract).transactionConfirmationBlocks ??
-			super.transactionConfirmationBlocks
-		);
-	}
-
-	public set transactionConfirmationBlocks(value: number) {
-		super.transactionConfirmationBlocks = value;
-	}
-
-	public get transactionPollingInterval() {
-		return (
-			(this.constructor as typeof Contract).transactionPollingInterval ??
-			super.transactionPollingInterval
-		);
-	}
-
-	public set transactionPollingInterval(value: number) {
-		super.transactionPollingInterval = value;
-	}
-
-	public get transactionPollingTimeout() {
-		return (
-			(this.constructor as typeof Contract).transactionPollingTimeout ??
-			super.transactionPollingTimeout
-		);
-	}
-
-	public set transactionPollingTimeout(value: number) {
-		super.transactionPollingTimeout = value;
-	}
-
-	public get transactionReceiptPollingInterval() {
-		return (
-			(this.constructor as typeof Contract).transactionReceiptPollingInterval ??
-			super.transactionReceiptPollingInterval
-		);
-	}
-
-	public set transactionReceiptPollingInterval(value: number | undefined) {
-		super.transactionReceiptPollingInterval = value;
-	}
-
-	public get transactionConfirmationPollingInterval() {
-		return (
-			(this.constructor as typeof Contract).transactionConfirmationPollingInterval ??
-			super.transactionConfirmationPollingInterval
-		);
-	}
-
-	public set transactionConfirmationPollingInterval(value: number | undefined) {
-		super.transactionConfirmationPollingInterval = value;
-	}
-
-	public get blockHeaderTimeout() {
-		return (this.constructor as typeof Contract).blockHeaderTimeout ?? super.blockHeaderTimeout;
-	}
-
-	public set blockHeaderTimeout(value: number) {
-		super.blockHeaderTimeout = value;
-	}
-
-	public get handleRevert() {
-		return (this.constructor as typeof Contract).handleRevert ?? super.handleRevert;
-	}
-
-	public set handleRevert(value: boolean) {
-		super.handleRevert = value;
 	}
 
 	/**
@@ -631,8 +450,10 @@ export class Contract<Abi extends ContractAbi>
 	 * ```
 	 */
 	public clone() {
+		let newContract: Contract<any>;
+
 		if (this.options.address) {
-			return new Contract<Abi>(
+			newContract = new Contract<Abi>(
 				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
 				this.options.address,
 				{
@@ -642,23 +463,28 @@ export class Contract<Abi extends ContractAbi>
 					from: this.options.from,
 					data: this.options.data,
 					provider: this.currentProvider,
+					syncWithContext: this.syncWithContext,
+				},
+				this.getContextObject(),
+			);
+		} else {
+			newContract = new Contract<Abi>(
+				[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
+				{
+					gas: this.options.gas,
+					gasPrice: this.options.gasPrice,
+					gasLimit: this.options.gasLimit,
+					from: this.options.from,
+					data: this.options.data,
+					provider: this.currentProvider,
+					syncWithContext: this.syncWithContext,
 				},
 				this.getContextObject(),
 			);
 		}
+		if (this.context) newContract.subscribeToContextEvents(this.context);
 
-		return new Contract<Abi>(
-			[...this._jsonInterface, ...this._errorsInterface] as unknown as Abi,
-			{
-				gas: this.options.gas,
-				gasPrice: this.options.gasPrice,
-				gasLimit: this.options.gasLimit,
-				from: this.options.from,
-				data: this.options.data,
-				provider: this.currentProvider,
-			},
-			this.getContextObject(),
-		);
+		return newContract;
 	}
 
 	/**
@@ -770,6 +596,7 @@ export class Contract<Abi extends ContractAbi>
 				// modifiedOptions.to = '0x0000000000000000000000000000000000000000';
 				delete modifiedOptions.to;
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return this._contractMethodDeploySend(
 					abi as AbiFunctionFragment,
 					args as unknown[],
@@ -1008,6 +835,7 @@ export class Contract<Abi extends ContractAbi>
 			);
 		}
 	}
+
 	private _createContractMethod<T extends AbiFunctionFragment[], E extends AbiErrorFragment>(
 		abiArr: T,
 		errorsAbis: E[],
@@ -1049,6 +877,7 @@ export class Contract<Abi extends ContractAbi>
 			if (methodAbi.stateMutability === 'payable') {
 				return {
 					arguments: abiParams,
+
 					call: async (options?: PayableCallOptions, block?: BlockNumberOrTag) =>
 						this._contractMethodCall(
 							methodAbi,
@@ -1057,8 +886,10 @@ export class Contract<Abi extends ContractAbi>
 							options,
 							block,
 						),
+
 					send: (options?: PayableTxOptions) =>
 						this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
+
 					estimateGas: async <
 						ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT,
 					>(
@@ -1071,7 +902,20 @@ export class Contract<Abi extends ContractAbi>
 							returnFormat,
 							options,
 						}),
+
 					encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+
+					createAccessList: async (
+						options?: NonPayableCallOptions,
+						block?: BlockNumberOrTag,
+					) =>
+						this._contractMethodCreateAccessList(
+							methodAbi,
+							abiParams,
+							internalErrorsAbis,
+							options,
+							block,
+						),
 				} as unknown as PayableMethodObject<
 					ContractOverloadedMethodInputs<T>,
 					ContractOverloadedMethodOutputs<T>
@@ -1079,6 +923,7 @@ export class Contract<Abi extends ContractAbi>
 			}
 			return {
 				arguments: abiParams,
+
 				call: async (options?: NonPayableCallOptions, block?: BlockNumberOrTag) =>
 					this._contractMethodCall(
 						methodAbi,
@@ -1087,8 +932,10 @@ export class Contract<Abi extends ContractAbi>
 						options,
 						block,
 					),
+
 				send: (options?: NonPayableTxOptions) =>
 					this._contractMethodSend(methodAbi, abiParams, internalErrorsAbis, options),
+
 				estimateGas: async <ReturnFormat extends DataFormat = typeof DEFAULT_RETURN_FORMAT>(
 					options?: NonPayableCallOptions,
 					returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
@@ -1099,7 +946,20 @@ export class Contract<Abi extends ContractAbi>
 						returnFormat,
 						options,
 					}),
+
 				encodeABI: () => encodeMethodABI(methodAbi, abiParams),
+
+				createAccessList: async (
+					options?: NonPayableCallOptions,
+					block?: BlockNumberOrTag,
+				) =>
+					this._contractMethodCreateAccessList(
+						methodAbi,
+						abiParams,
+						internalErrorsAbis,
+						options,
+						block,
+					),
 			} as unknown as NonPayableMethodObject<
 				ContractOverloadedMethodInputs<T>,
 				ContractOverloadedMethodOutputs<T>
@@ -1126,6 +986,36 @@ export class Contract<Abi extends ContractAbi>
 		try {
 			const result = await call(this, tx, block, DEFAULT_RETURN_FORMAT);
 			return decodeMethodReturn(abi, result);
+		} catch (error: unknown) {
+			if (error instanceof ContractExecutionError) {
+				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
+				decodeErrorData(errorsAbi, error.innerError);
+			}
+			throw error;
+		}
+	}
+
+	private async _contractMethodCreateAccessList<
+		Options extends PayableCallOptions | NonPayableCallOptions,
+	>(
+		abi: AbiFunctionFragment,
+		params: unknown[],
+		errorsAbi: AbiErrorFragment[],
+		options?: Options,
+		block?: BlockNumberOrTag,
+	) {
+		const tx = getCreateAccessListParams({
+			abi,
+			params,
+			options,
+			contractOptions: {
+				...this.options,
+				from: this.options.from ?? this.getConfig().defaultAccount,
+			},
+		});
+
+		try {
+			return createAccessList(this, tx, block, DEFAULT_RETURN_FORMAT);
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
@@ -1264,5 +1154,17 @@ export class Contract<Abi extends ContractAbi>
 
 			return sub;
 		};
+	}
+
+	protected subscribeToContextEvents<T extends Web3Context>(context: T): void {
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const contractThis = this;
+		this.context = context;
+
+		if (contractThis.syncWithContext) {
+			context.on(Web3ConfigEvent.CONFIG_CHANGE, event => {
+				contractThis.setConfig({ [event.name]: event.newValue });
+			});
+		}
 	}
 }

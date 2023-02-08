@@ -1,0 +1,5 @@
+{
+	"packagesDirectoryPath": "./scripts/changelog/test/fixtures/mock_packages_directory",
+	"packagesChangelogPath": "MODIFIED_CHANGELOG.md",
+	"rootChangelogPath": "./scripts/changelog/test/fixtures/mock_packages_directory/CHANGELOG.md"
+}

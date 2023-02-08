@@ -6,6 +6,10 @@
 	"repository": "https://github.com/ethereum/web3.js/tree/4.x/packages/web3-eth-contract",
 	"author": "ChainSafe Systems",
 	"license": "LGPL-3.0",
+	"engines": {
+		"node": ">=14",
+		"npm": ">=6.12.0"
+	},
 	"files": [
 		"lib/**/*"
 	],
