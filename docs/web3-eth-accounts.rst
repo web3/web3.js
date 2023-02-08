@@ -194,7 +194,7 @@ Example
     web3.eth.accounts.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
-        gas: 2000000
+        gas: '2000000',
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
     .then(console.log);
     > {
@@ -209,7 +209,7 @@ Example
     web3.eth.accounts.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
-        gas: 2000000,
+        gas: '2000000',
         gasPrice: '234567897654321',
         nonce: 0,
         chainId: 1
@@ -228,7 +228,7 @@ Example
     web3.eth.accounts.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
-        gas: 2000000
+        gas: '2000000',
         common: {
           baseChain: 'mainnet',
           hardfork: 'petersburg',
