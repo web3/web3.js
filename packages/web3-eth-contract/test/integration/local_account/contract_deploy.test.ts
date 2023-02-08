@@ -118,7 +118,7 @@ describe('contract', () => {
 
 		it('should emit the "confirmation" event', async () => {
 			const confirmationHandler = jest.fn();
-			console.log("account before deploy");
+
 			await contract
 				.deploy(deployOptions)
 				.send(sendOptions)
@@ -128,7 +128,7 @@ describe('contract', () => {
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
-			console.log("before second deploy")
+
 			await contract.deploy(deployOptions).send(sendOptions);
 
 			// Wait for some fraction of time to trigger the handler
@@ -141,17 +141,14 @@ describe('contract', () => {
 
 		it('should emit the "transactionHash" event', async () => {
 			const handler = jest.fn();
-			console.log("account before deploy using promievent")
+
 			const promiEvent = contract
 				.deploy(deployOptions)
 				.send(sendOptions)
-				.on('transactionHash', handler)
-				.on('sending', () => { console.log("sending event ")})
-				.on('sent', ()=> {console.log("transaction has been sent")});
+				.on('transactionHash', handler);
 
 			// Deploy the contract
 			await promiEvent;
-			console.log("after account promievent");
 
 			expect(handler).toHaveBeenCalled();
 		});
