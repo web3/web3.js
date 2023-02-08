@@ -16,21 +16,17 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, no-undef, @typescript-eslint/no-unsafe-call, no-console, @typescript-eslint/no-unsafe-assignment */
-const miningThreads = 6;
+const miningThreads = 1;
 let txBlock = 0;
 
 function checkWork() {
 	if (eth.getBlock('pending').transactions.length > 0) {
 		txBlock = eth.getBlock('pending').number;
 		if (eth.mining) return;
-		//
 		console.log('  Transactions pending. Mining...');
 		miner.start(miningThreads);
-		while (eth.getBlock('latest').number < txBlock + 12) {
-			if (eth.getBlock('pending').transactions.length > 0)
-				txBlock = eth.getBlock('pending').number;
-		}
-		console.log('  12 confirmations achieved; mining stopped.');
+		while (eth.getBlock('pending').transactions.length > 0)
+			txBlock = eth.getBlock('pending').number;
 		miner.stop();
 	} else {
 		miner.stop();
