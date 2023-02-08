@@ -164,8 +164,9 @@ describe('contract', () => {
 			console.log("after deploy");
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
+			console.log("before sleep");
 			await sleep(isWs ? 500 : 2000);
-
+			console.log("after sleep");
 			// eslint-disable-next-line jest/no-standalone-expect
 			expect(confirmationHandler).toHaveBeenCalled();
 		});
@@ -175,8 +176,10 @@ describe('contract', () => {
 			console.log("before first deploy")
 			const promiEvent = contract
 				.deploy(deployOptions)
-				.send(sendOptions)
-				.on('transactionHash', handler);
+				.send(sendOptions)	
+				.on('transactionHash', handler)
+				.on('sending', () => { console.log("sending event ")})
+				.on('sent', ()=> {console.log("transaction has been sent")});
 
 			// Deploy the contract
 			console.log("before promievent")

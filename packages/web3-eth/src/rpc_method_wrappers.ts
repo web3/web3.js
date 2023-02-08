@@ -1111,7 +1111,7 @@ export function sendTransaction<
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', transactionFormatted);
 						}
-
+						
 						let transactionHash: HexString;
 						let wallet: Web3BaseWalletAccount | undefined;
 
@@ -1143,6 +1143,7 @@ export function sendTransaction<
 									),
 							);
 						}
+						console.log("transaction hash ",transactionHash);
 
 						const transactionHashFormatted = format(
 							{ eth: 'bytes32' },

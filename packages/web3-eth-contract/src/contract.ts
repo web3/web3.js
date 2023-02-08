@@ -1076,9 +1076,10 @@ export class Contract<Abi extends ContractAbi>
 			options,
 			contractOptions: modifiedContractOptions,
 		});
-
+		console.log("transaction contract method deploy send")
 		return sendTransaction(this, tx, DEFAULT_RETURN_FORMAT, {
 			transactionResolver: receipt => {
+				console.log(tx)
 				if (receipt.status === BigInt(0)) {
 					throw new Web3ContractError("code couldn't be stored", receipt);
 				}
