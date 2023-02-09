@@ -270,9 +270,7 @@ Object {
   "code": 406,
   "innerError": undefined,
   "message": "Transaction ran out of gas. Please provide more gas:
- {
-  \\"attr1\\": \\"attr1\\"
-}",
+ {\\"attr1\\":\\"attr1\\"}",
   "name": "TransactionOutOfGasError",
   "receipt": Object {
     "attr1": "attr1",
@@ -285,9 +283,7 @@ Object {
   "code": 402,
   "innerError": undefined,
   "message": "Transaction has been reverted by the EVM:
- {
-  \\"attr1\\": \\"attr1\\"
-}",
+ {\\"attr1\\":\\"attr1\\"}",
   "name": "TransactionRevertError",
   "reason": "message",
   "receipt": Object {
