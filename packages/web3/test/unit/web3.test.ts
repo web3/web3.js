@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Contract } from 'web3-eth-contract';
+import { Contract, ContractInitOptions } from 'web3-eth-contract';
 import { Web3 } from '../../src/web3';
 
 describe('Web3 object', () => {
@@ -33,44 +33,55 @@ describe('Web3 object', () => {
 	});
 	it('should be able to create a Contract object from Web3 -> eth.Contract', () => {
 		const Web3Contract = new Web3().eth.Contract;
+		const abi = [{ name: 'any', type: 'function' }];
 		const address = '0x0000000000000000000000000000000000000000';
 		const options = { gas: '100' };
 
-		const contract1 = new Web3Contract([{}], undefined, undefined);
+		const contract1 = new Web3Contract(abi, undefined, undefined);
 		expect(contract1).toBeInstanceOf(Contract);
 		expect(contract1.options.address).toBeUndefined();
 		expect(contract1.options.gas).toBeUndefined();
 
-		const contract2 = new Web3Contract([{}]);
+		const contract2 = new Web3Contract(abi);
 		expect(contract2).toBeInstanceOf(Contract);
 		expect(contract2.options.address).toBeUndefined();
 		expect(contract2.options.gas).toBeUndefined();
 
-		const contract3 = new Web3Contract([{}], undefined, options);
+		const contract3 = new Web3Contract(abi, undefined as unknown as string, options);
 		expect(contract3).toBeInstanceOf(Contract);
 		expect(contract3.options.address).toBeUndefined();
 		expect(contract3.options.gas).toEqual(options.gas);
 
-		const contract4 = new Web3Contract([{}], '', options);
+		const contract4 = new Web3Contract(abi, '', options);
 		expect(contract4).toBeInstanceOf(Contract);
 		expect(contract4.options.address).toBe('');
-		// TODO: uncomment the next line after fixing https://github.com/web3/web3.js/issues/5815
-		// expect(contract4.options.gas).toEqual(options.gas);
+		expect(contract4.options.gas).toEqual(options.gas);
 
-		const contract5 = new Web3Contract([{}], address);
+		const contract5 = new Web3Contract(abi, address);
 		expect(contract5).toBeInstanceOf(Contract);
 		expect(contract5.options.address).toEqual(address);
 		expect(contract5.options.gas).toBeUndefined();
 
-		// TODO: uncomment the next line after fixing https://github.com/web3/web3.js/issues/5815
-		// const contract7 = new Web3Contract([{}], address, options);
-		// expect(contract7).toBeInstanceOf(Contract);
-		// expect(contract7.options.address).toEqual(address);
-		// expect(contract7.options.gas).toEqual(options.gas);
+		const contract6 = new Web3Contract(abi, {});
+		expect(contract6).toBeInstanceOf(Contract);
+		expect(contract6.options.address).toBeUndefined();
+		expect(contract6.options.gas).toBeUndefined();
 
-		// TODO: uncomment the next line after fixing https://github.com/web3/web3.js/issues/5815
-		// expect(() => {
-		// 	new Web3Contract([{}], (() => {}) as ContractInitOptions);
-		// }).toThrowError();
+		const contract7 = new Web3Contract(abi, address, options);
+		expect(contract7).toBeInstanceOf(Contract);
+		expect(contract7.options.address).toEqual(address);
+		expect(contract7.options.gas).toEqual(options.gas);
+
+		expect(() => {
+			// eslint-disable-next-line no-new
+			new Web3Contract(abi, options as unknown as string, options);
+		}).toThrow();
+
+		expect(() => {
+			// eslint-disable-next-line no-new
+			new Web3Contract(abi, (() => {
+				/* nothing */
+			}) as ContractInitOptions);
+		}).toThrow();
 	});
 });

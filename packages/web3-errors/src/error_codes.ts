@@ -27,6 +27,7 @@ export const ERR_OPERATION_TIMEOUT = 203;
 export const ERR_OPERATION_ABORT = 204;
 export const ERR_ABI_ENCODING = 205;
 export const ERR_EXISTING_PLUGIN_NAMESPACE = 206;
+export const ERR_INVALID_METHOD_PARAMS = 207;
 
 // Contract error codes
 export const ERR_CONTRACT = 300;
