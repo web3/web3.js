@@ -37,9 +37,9 @@ import {
 	ConnectionError,
 	ConnectionNotOpenError,
 	InvalidClientError,
+	InvalidResponseError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
-	ResponseError,
 	Web3WSProviderError,
 } from 'web3-errors';
 import { Eip1193Provider } from './web3_eip1193_provider';
@@ -338,7 +338,7 @@ export abstract class SocketProvider<
 				requestItem.deferredPromise.resolve(response);
 			} else {
 				this._eventEmitter.emit('message', response, undefined);
-				requestItem?.deferredPromise.reject(new ResponseError(response));
+				requestItem?.deferredPromise.reject(new InvalidResponseError(response));
 			}
 
 			this._sentRequestsQueue.delete(requestId);
