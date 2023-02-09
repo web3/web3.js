@@ -218,7 +218,8 @@ const transactionHash = receipt.transactionHash;
 
 ### Fixed
 
--   Fix contract defaults (#5756)
+-   Fixex contract defaults (#5756)
+-   Fixed getPastEvents Error (#5819)
 
 ### Changed
 
