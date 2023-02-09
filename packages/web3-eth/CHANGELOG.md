@@ -98,3 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added `createAccessList` functionality ( #5780 )
+
+### Fixed
+
+-   A bug where EVM revert reasons weren't being properly reported for `sendTransaction` (#5825)

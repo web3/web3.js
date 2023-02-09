@@ -1150,6 +1150,14 @@ should use 4.0.1-alpha.0 for testing.
 
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
 
+#### web3-eth
+
+-   Added `createAccessList` functionality ( #5780 )
+
+#### web3-eth-contract
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )
+
 #### web3-providers-http
 
 -   Added named export for `HttpProvider` (#5771)
@@ -1161,6 +1169,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-providers-ws
 
 -   Added named export for `WebSocketProvider` (#5771)
+
+#### web3-rpc-methods
+
+-   Added `createAccessList` functionality ( #5780 )
 
 #### web3-types
 
@@ -1202,3 +1214,13 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)
+
+### Fixed
+
+#### web3-eth
+
+-   A bug where EVM revert reasons weren't being properly reported for `sendTransaction` (#5825)
+
+#### web3-eth-contract
+
+-   Fix contract defaults (#5756)
