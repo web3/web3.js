@@ -15,7 +15,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { DataFormat, DEFAULT_RETURN_FORMAT, format, isNullish } from 'web3-utils';
+import {
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	FMT_BYTES,
+	FMT_NUMBER,
+	format,
+	isNullish,
+} from 'web3-utils';
 
 import {
 	AbiConstructorFragment,
@@ -59,7 +66,6 @@ export const encodeEventABI = (
 		// eslint-disable-next-line @typescript-eslint/ban-types
 		topics?: (null | Topic | Topic[])[];
 	},
-	returnFormat: DataFormat = DEFAULT_RETURN_FORMAT,
 ) => {
 	const opts: {
 		filter: Filter;
@@ -72,11 +78,16 @@ export const encodeEventABI = (
 	};
 
 	if (!isNullish(options?.fromBlock)) {
-		opts.fromBlock = format(blockSchema.properties.number, options?.fromBlock, returnFormat);
+		opts.fromBlock = format(blockSchema.properties.number, options?.fromBlock, {
+			number: FMT_NUMBER.HEX,
+			bytes: FMT_BYTES.HEX,
+		});
 	}
-
 	if (!isNullish(options?.toBlock)) {
-		opts.toBlock = format(blockSchema.properties.number, options?.toBlock, returnFormat);
+		opts.toBlock = format(blockSchema.properties.number, options?.toBlock, {
+			number: FMT_NUMBER.HEX,
+			bytes: FMT_BYTES.HEX,
+		});
 	}
 
 	if (options?.topics && Array.isArray(options.topics)) {
