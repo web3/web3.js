@@ -154,13 +154,22 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	if (blockB === 'pending') {
 		return -1;
 	}
+	if (blockA === 'safe' && blockB === 0) {
+		return 1;
+	}
+	if (blockA === 0 && blockB === 'safe') {
+		return -1;
+	}
 	if (blockA === 'safe' || blockB === 'safe') {
 		// either a or b is "safe" and the other one did not fall into any of the conditions above, so the other one is a number
-		return undefined;
+		throw new InvalidBlockError(
+			`Cannot compare safe tag with ${blockA === 'safe' ? blockB : blockA}`,
+		);
 	}
 
 	const bigIntA = BigInt(blockA);
 	const bigIntB = BigInt(blockB);
+
 	if (bigIntA < bigIntB) {
 		return -1;
 	}

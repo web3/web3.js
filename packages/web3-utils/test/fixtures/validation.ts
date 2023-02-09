@@ -45,11 +45,29 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['latest', BigInt(1)], 1],
 	[['pending', 0], 1],
 	[['pending', BigInt(1)], 1],
+	[['safe', 'safe'], 0],
+	[['earliest', 'safe'], -1],
+	[['genesis', 'safe'], -1],
+	[['safe', 0], 1],
+	[[0, 'safe'], -1],
+	[['safe', 'pending'], -1],
+	[['pending', 'safe'], 1],
+	[['finalized', 'finalized'], 0],
+	[['earliest', 'finalized'], -1],
+	[['genesis', 'finalized'], -1],
+	[['finalized', 0], 1],
+	[['finalized', BigInt('1')], 1],
+	[['finalized', 'pending'], -1],
+	[[0, 'finalized'], -1],
+	[[BigInt('1'), 'finalized'], -1],
+	[['pending', 'finalized'], 1],
 ];
 
 export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockError][] = [
 	[['pending', 'unknown'], new InvalidBlockError('unknown')],
 	[['', 'pending'], new InvalidBlockError('')],
+	[[22, 'safe'], new InvalidBlockError('Cannot compare safe tag with 22')],
+	[['safe', 22], new InvalidBlockError('Cannot compare safe tag with 22')],
 ];
 
 export const isBloomValidData: [any, true][] = [
