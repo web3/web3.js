@@ -257,7 +257,7 @@ export class Web3Context<
 	 * Will return the current provider.
 	 *
 	 * @returns Returns the current provider
-	 *
+	 * @example
 	 * ```ts
 	 * const web3 = new Web3Context("http://localhost:8545");
 	 * console.log(web3.provider);
@@ -278,6 +278,7 @@ export class Web3Context<
 	 * @param provider - The provider to set
 	 *
 	 * Accepted providers are of type {@link SupportedProviders}
+	 * @example
 	 * ```ts
 	 *  const web3Context = new web3ContextContext("http://localhost:8545");
 	 * web3Context.provider = "ws://localhost:8545";
@@ -299,7 +300,7 @@ export class Web3Context<
 	 * Will return the current provider.
 	 *
 	 * @returns Returns the current provider
-	 *
+	 * @example
 	 * ```ts
 	 * const web3Context = new Web3Context("http://localhost:8545");
 	 * console.log(web3Context.provider);
@@ -318,6 +319,7 @@ export class Web3Context<
 	 *
 	 * @param provider - {@link SupportedProviders} The provider to set
 	 *
+	 * @example
 	 * ```ts
 	 *  const web3Context = new Web3Context("http://localhost:8545");
 	 * web3Context.currentProvider = "ws://localhost:8545";
@@ -381,6 +383,7 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
  * To add type support for RPC methods to the {@link Web3RequestManager},
  * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
  *
+ * @example
  * ```ts
  * type CustomRpcApi = {
  *	custom_rpc_method: () => string;
@@ -403,6 +406,7 @@ export abstract class Web3PluginBase<
  * To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
  * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
  *
+ * @example
  * ```ts
  * type CustomRpcApi = {
  *	custom_rpc_method: () => string;

@@ -44,6 +44,7 @@ export class Web3SubscriptionManager<
 	 * @param requestManager
 	 * @param registeredSubscriptions
 	 *
+	 * @example
 	 * ```ts
 	 * const requestManager = new Web3RequestManager("ws://localhost:8545");
 	 * const subscriptionManager = new Web3SubscriptionManager(requestManager, {});
