@@ -297,7 +297,7 @@ export class Web3Context<
 	}
 
 	/**
-	 * Will return the current provider.
+	 * Will return the current provider. (The same as `provider`)
 	 *
 	 * @returns Returns the current provider
 	 * @example
@@ -315,7 +315,7 @@ export class Web3Context<
 	}
 
 	/**
-	 * Will set the current provider.
+	 * Will set the current provider. (The same as `provider`)
 	 *
 	 * @param provider - {@link SupportedProviders} The provider to set
 	 *
