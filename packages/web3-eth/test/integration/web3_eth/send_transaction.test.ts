@@ -24,6 +24,7 @@ import {
 import { Wallet } from 'web3-eth-accounts';
 import { isHexStrict } from 'web3-validator';
 
+import { TransactionOutOfGasError } from 'web3-errors';
 import Web3Eth from '../../../src';
 import {
 	closeOpenConnection,
@@ -31,7 +32,6 @@ import {
 	createTempAccount,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
-import { TransactionOutOfGasError } from 'web3-errors';
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -211,17 +211,17 @@ describe('Web3Eth.sendTransaction', () => {
 
 		it('should throw out of gas error', async () => {
 			const contractFunctionCall =
-			'0xa4136862000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000023432000000000000000000000000000000000000000000000000000000000000';
+				'0xa4136862000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000023432000000000000000000000000000000000000000000000000000000000000';
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: greeterContractAddress,
 				data: contractFunctionCall,
-				gas: 34000
+				gas: 34000,
 			};
 			web3Eth.handleRevert = true;
 			const result = web3Eth.sendTransaction(transaction);
-			await expect(result).rejects.toThrowError(TransactionOutOfGasError)
-		})
+			await expect(result).rejects.toThrow(TransactionOutOfGasError);
+		});
 	});
 
 	describe('Transaction Types', () => {

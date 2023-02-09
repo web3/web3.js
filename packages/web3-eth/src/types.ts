@@ -15,7 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionError, ContractExecutionError, ResponseError, TransactionOutOfGasError, TransactionRevertError } from 'web3-errors';
+import {
+	TransactionError,
+	ContractExecutionError,
+	ResponseError,
+	TransactionOutOfGasError,
+	TransactionRevertError,
+} from 'web3-errors';
 import { Bytes, Numbers, Transaction, TransactionReceipt } from 'web3-types';
 import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
@@ -31,7 +37,10 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>> | TransactionOutOfGasError | TransactionRevertError
+	error:
+		| TransactionError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionOutOfGasError
+		| TransactionRevertError;
 	contractExecutionError: ContractExecutionError | ResponseError<any>;
 };
 
