@@ -117,20 +117,19 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 
 	// Increasing order: (genesis = earliest), safe, (finalized ~ latest), pending
 	// safe vs block-num cant be compared as block number provided can be on left or right side of safe tag, until safe tag block number is extracted and compared
-	if (blockA === blockB) {
-		return 0;
-	}
+
 	if (
-		(blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
-		(blockB === 'genesis' || blockB === 'earliest' || blockB === 0)
+		blockA === blockB ||
+		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
+			(blockB === 'genesis' || blockB === 'earliest' || blockB === 0))
 	) {
 		return 0;
 	}
-	if (blockA === 'genesis' || blockA === 'earliest' || blockA === 0) {
+	if (blockA === 'genesis' || blockA === 'earliest') {
 		// b !== a, thus a < b
 		return -1;
 	}
-	if (blockB === 'genesis' || blockB === 'earliest' || blockB === 0) {
+	if (blockB === 'genesis' || blockB === 'earliest') {
 		// b !== a, thus a > b
 		return 1;
 	}
