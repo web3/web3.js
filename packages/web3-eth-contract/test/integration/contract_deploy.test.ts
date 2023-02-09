@@ -159,12 +159,10 @@ describe('contract', () => {
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
-
 			await contract.deploy(deployOptions).send(sendOptions);
 
 			// Wait for some fraction of time to trigger the handler
 			// On http we use polling to get confirmation, so wait a bit longer
-
 			await sleep(isWs ? 500 : 2000);
 
 			// eslint-disable-next-line jest/no-standalone-expect
@@ -180,7 +178,6 @@ describe('contract', () => {
 				.on('transactionHash', handler);
 
 			// Deploy the contract
-
 			await promiEvent;
 
 			expect(handler).toHaveBeenCalled();

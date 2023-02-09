@@ -123,12 +123,12 @@ describe('contract', () => {
 				.deploy(deployOptions)
 				.send(sendOptions)
 				.on('confirmation', confirmationHandler);
+
 			// Wait for sometime to allow the transaction to be processed
 			await sleep(500);
 
 			// Deploy once again to trigger block mining to trigger confirmation
 			// We can send any other transaction as well
-
 			await contract.deploy(deployOptions).send(sendOptions);
 
 			// Wait for some fraction of time to trigger the handler
