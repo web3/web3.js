@@ -82,7 +82,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from,
 				to,
 				value,
-				times: 2 * waitConfirmations,
+				times: waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(web3Eth);

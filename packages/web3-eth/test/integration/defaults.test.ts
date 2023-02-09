@@ -354,7 +354,7 @@ describe('defaults', () => {
 				from,
 				to,
 				value,
-				times: 2 * waitConfirmations,
+				times: waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(eth);
