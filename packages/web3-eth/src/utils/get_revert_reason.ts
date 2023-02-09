@@ -14,27 +14,38 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Web3Context } from "web3-core";
-import { InvalidResponseError, TransactionOutOfGasError, TransactionRevertError } from "web3-errors";
-import { EthExecutionAPI, TransactionCall, TransactionReceipt } from "web3-types";
-import { DataFormat, DEFAULT_RETURN_FORMAT } from "web3-utils";
+import { Web3Context } from 'web3-core';
+import {
+	InvalidResponseError,
+	TransactionOutOfGasError,
+	TransactionRevertError,
+} from 'web3-errors';
+import { EthExecutionAPI, TransactionCall, TransactionReceipt } from 'web3-types';
+import { DataFormat, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 
-import { call } from "../rpc_method_wrappers";
+// eslint-disable-next-line import/no-cycle
+import { call } from '../rpc_method_wrappers';
 
 export async function getRevertReason<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context<EthExecutionAPI>,
 	transaction: TransactionCall,
-    transactionReceipt: TransactionReceipt,
+	transactionReceipt: TransactionReceipt,
 	returnFormat?: ReturnFormat,
-) {
+): Promise<TransactionOutOfGasError | TransactionRevertError | void> {
 	try {
-		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat ?? DEFAULT_RETURN_FORMAT);
-        return undefined
-	} catch (err) {
-        if (((err as InvalidResponseError).innerError as Error)?.message === 'out of gas') {
-            return new TransactionOutOfGasError(transactionReceipt);
-        }
+		await call(
+			web3Context,
+			transaction,
+			web3Context.defaultBlock,
+			returnFormat ?? DEFAULT_RETURN_FORMAT,
+		);
+		return;
+	} catch (error) {
+		const _error = (error as InvalidResponseError).innerError as Error;
+		if (_error?.message.match(/out of gas/i)) {
+			throw new TransactionOutOfGasError(transactionReceipt);
+		}
 
-		return new TransactionRevertError(err as string, undefined, transactionReceipt);
+		throw new TransactionRevertError(error as string, undefined, transactionReceipt);
 	}
 }
