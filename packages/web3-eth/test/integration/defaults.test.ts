@@ -201,7 +201,7 @@ describe('defaults', () => {
 				from: acc.address,
 				to: tempAcc2.address,
 				times: 1,
-				value: '0x174876e800',
+				value: '0x1',
 			});
 			const balance = await eth2.getBalance(acc.address);
 			const code = await eth2.getCode(contractDeployed?.options?.address as string);
@@ -353,8 +353,8 @@ describe('defaults', () => {
 				web3Eth: eth,
 				from,
 				to,
-				value: '0x174876e800',
-				times: waitConfirmations,
+				value,
+				times: 2 * waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(eth);
