@@ -16,8 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocketProvider from 'web3-providers-ws';
 import { Contract } from 'web3-eth-contract';
-import { TransactionRevertError } from 'web3-errors';
-import Web3 from '../../src/index';
+import Web3, { ContractExecutionError } from '../../src/index';
 import {
 	closeOpenConnection,
 	createTempAccount,
@@ -84,14 +83,16 @@ describe('eth', () => {
 	});
 
 	describe('handleRevert', () => {
-		// todo enable when figure out what happening in eth_call (doesn't throw error)
-		// eslint-disable-next-line jest/expect-expect
 		it('should get revert reason', async () => {
 			contract.handleRevert = true;
-			await expect(contract.methods.reverts().send({ from: accounts[0] })).rejects.toThrow(
-				new TransactionRevertError(
-					'Returned error: execution reverted: REVERTED WITH REVERT',
-				),
+			await expect(
+				contract.methods.reverts().send({ from: accounts[0] }),
+			).rejects.toThrowError(
+				new ContractExecutionError({
+					code: 3,
+					message: 'REVERTED WITH REVERT',
+					data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000145245564552544544205749544820524556455254000000000000000000000000',
+				}),
 			);
 		});
 
@@ -111,10 +112,8 @@ describe('eth', () => {
 					r: '0x1ba80b16306d1de8ff809c00f67c305e8636326096aba282828d331aa2ec30a1',
 					s: '0x39f77e0b68d5524826e4385ad4e1f01e748f32c177840184ae65d9592fdfe5c',
 				}),
-			).rejects.toThrow(
-				new TransactionRevertError(
-					'Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes',
-				),
+			).rejects.toThrowError(
+				'Returned error: invalid argument 0: json: cannot unmarshal invalid hex string into Go struct field TransactionArgs.data of type hexutil.Bytes',
 			);
 		});
 
