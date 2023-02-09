@@ -70,6 +70,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, transactionIndex = "0x0"', [BlockTags.LATEST, '0x0']],
 	['blockNumber = BlockTags.EARLIEST, transactionIndex = "0x0"', [BlockTags.EARLIEST, '0x0']],
 	['blockNumber = BlockTags.PENDING, transactionIndex = "0x0"', [BlockTags.PENDING, '0x0']],
+	['blockNumber = BlockTags.SAFE, transactionIndex = "0x0"', [BlockTags.SAFE, '0x0']],
+	['blockNumber = BlockTags.FINALIZED, transactionIndex = "0x0"', [BlockTags.FINALIZED, '0x0']],
 	// blockNumber = Numbers, transactionIndex = HexString
 	['blockNumber = "0x4b7", transactionIndex = "0x0"', ['0x4b7', '0x0']],
 	['blockNumber = 1207, transactionIndex = "0x0"', [1207, '0x0']],
@@ -100,6 +102,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, transactionIndex = 0', [BlockTags.LATEST, 0]],
 	['blockNumber = BlockTags.EARLIEST, transactionIndex = 0', [BlockTags.EARLIEST, 0]],
 	['blockNumber = BlockTags.PENDING, transactionIndex = 0', [BlockTags.PENDING, 0]],
+	['blockNumber = BlockTags.SAFE, transactionIndex = "0x0"', [BlockTags.SAFE, 0]],
+	['blockNumber = BlockTags.FINALIZED, transactionIndex = "0x0"', [BlockTags.FINALIZED, 0]],
 	// blockNumber = Numbers, transactionIndex = number
 	['blockNumber = "0x4b7"', ['0x4b7, transactionIndex = 0', 0]],
 	['blockNumber = 1207, transactionIndex = 0', [1207, 0]],
@@ -130,6 +134,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, transactionIndex = "0"', [BlockTags.LATEST, '0']],
 	['blockNumber = BlockTags.EARLIEST, transactionIndex = "0"', [BlockTags.EARLIEST, '0']],
 	['blockNumber = BlockTags.PENDING, transactionIndex = "0"', [BlockTags.PENDING, '0']],
+	['blockNumber = BlockTags.SAFE, transactionIndex = "0x0"', [BlockTags.SAFE, '0']],
+	['blockNumber = BlockTags.FINALIZED, transactionIndex = "0x0"', [BlockTags.FINALIZED, '0']],
 	// blockNumber = Numbers, transactionIndex = NumberString
 	['blockNumber = "0x4b7", transactionIndex = "0"', ['0x4b7', '0']],
 	['blockNumber = 1207, transactionIndex = "0"', [1207, '0']],
@@ -168,6 +174,14 @@ export const testData: TestData[] = [
 	[
 		'blockNumber = BlockTags.PENDING, transactionIndex = BigInt("0x0")',
 		[BlockTags.PENDING, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.SAFE, transactionIndex = BigInt("0x0")',
+		[BlockTags.SAFE, BigInt('0x0')],
+	],
+	[
+		'blockNumber = BlockTags.FINALIZED, transactionIndex = BigInt("0x0")',
+		[BlockTags.FINALIZED, BigInt('0x0')],
 	],
 	// blockNumber = Numbers, transactionIndex = BigInt
 	['blockNumber = "0x4b7", transactionIndex = BigInt("0x0")', ['0x4b7', BigInt('0x0')]],

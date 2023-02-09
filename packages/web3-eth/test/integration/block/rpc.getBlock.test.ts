@@ -114,7 +114,7 @@ describe('rpc with block', () => {
 				hydrated: boolean;
 				format: string;
 			}>({
-				block: ['earliest', 'latest', 'blockHash', 'blockNumber'],
+				block: ['earliest', 'latest', 'safe', 'finalized', 'blockHash', 'blockNumber'],
 				hydrated: [true, false],
 				format: Object.values(FMT_NUMBER),
 			}),
