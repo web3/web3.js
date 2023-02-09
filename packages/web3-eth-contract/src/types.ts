@@ -152,6 +152,10 @@ export interface ContractInitOptions {
 	readonly data?: Bytes;
 	readonly gasLimit?: Uint;
 	readonly provider?: SupportedProviders<EthExecutionAPI> | string;
+	/**
+	 * If `true`, the defaults of the contract instance will be updated automatically based on the changes of the context used to instantiate the contract.
+	 */
+	readonly syncWithContext?: boolean;
 }
 
 export interface NonPayableCallOptions {

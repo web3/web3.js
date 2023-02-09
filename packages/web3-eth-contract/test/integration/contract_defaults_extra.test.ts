@@ -26,6 +26,7 @@ import {
 	describeIf,
 	isWs,
 	isHttp,
+	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
 type Resolve = (value?: unknown) => void;
@@ -48,17 +49,6 @@ describe('contract defaults (extra)', () => {
 	let acc: { address: string; privateKey: string };
 
 	beforeEach(async () => {
-		Contract.defaultCommon = undefined;
-		Contract.transactionBlockTimeout = undefined;
-		Contract.blockHeaderTimeout = undefined;
-		Contract.transactionConfirmationBlocks = undefined;
-		Contract.transactionPollingTimeout = undefined;
-		Contract.transactionPollingInterval = undefined;
-		Contract.handleRevert = undefined;
-
-		contract = new Contract(GreeterAbi, undefined, {
-			provider: getSystemTestProvider(),
-		});
 		acc = await createTempAccount();
 
 		deployOptions = {
@@ -69,66 +59,52 @@ describe('contract defaults (extra)', () => {
 		sendOptions = { from: acc.address, gas: '1000000' };
 	});
 
-	describe('defaultHardfork', () => {
-		it('should use "defaultHardfork" on "Contract" level', async () => {
-			const hardfork = 'berlin';
+	afterEach(async () => {
+		await closeOpenConnection(contract);
+	});
 
-			Contract.defaultHardfork = hardfork;
+	it('should use "defaultHardfork" on "instance" level', async () => {
+		const hardfork = 'berlin';
 
-			// const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(contract.defaultHardfork).toBe(hardfork);
-
-			await contract.methods.greet().call();
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			// todo investigate. this fails, too
-			// expect(sendTransactionSpy).toHaveBeenCalledWith(
-			// 	expect.objectContaining({
-			// 		_config: expect.objectContaining({ defaultHardfork: hardfork }),
-			// 	}),
-			// 	expect.any(Object),
-			// 	expect.any(Object),
-			// );
+		contract = new Contract(GreeterAbi, undefined, {
+			provider: getSystemTestProvider(),
 		});
 
-		it('should use "defaultHardfork" on "instance" level', async () => {
-			const hardfork = 'berlin';
-			contract.defaultHardfork = hardfork;
+		contract = await contract.deploy(deployOptions).send(sendOptions);
+		contract.defaultHardfork = hardfork;
 
-			contract = await contract.deploy(deployOptions).send(sendOptions);
+		await contract.methods.setGreeting('New Greeting').send(sendOptions);
+		await contract.methods.greet().send(sendOptions);
 
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-			await contract.methods.greet().send(sendOptions);
+		expect(contract.defaultHardfork).toBe(hardfork);
+		const callSpy = jest.spyOn(Web3Eth, 'call');
 
-			expect(contract.defaultHardfork).toBe(hardfork);
-			const callSpy = jest.spyOn(Web3Eth, 'call');
+		await contract.methods.greet().call();
 
-			await contract.methods.greet().call();
-
-			expect(callSpy).toHaveBeenLastCalledWith(
-				expect.objectContaining({
-					_config: expect.objectContaining({ defaultHardfork: hardfork }),
-				}),
-				expect.any(Object),
-				undefined,
-				expect.any(Object),
-			);
-		});
+		expect(callSpy).toHaveBeenLastCalledWith(
+			expect.objectContaining({
+				_config: expect.objectContaining({ defaultHardfork: hardfork }),
+			}),
+			expect.any(Object),
+			undefined,
+			expect.any(Object),
+		);
 	});
 
 	describe('defaultChain', () => {
 		it('should use "defaultChain" on "instance" level', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+
+			contract = await contract.deploy(deployOptions).send(sendOptions);
+
 			expect(contract.defaultChain).toBe('mainnet');
 
 			const defaultChain = 'ropsten';
 			contract.defaultChain = defaultChain;
-			expect(contract.defaultChain).toBe(defaultChain);
 
-			contract = await contract.deploy(deployOptions).send(sendOptions);
+			expect(contract.defaultChain).toBe(defaultChain);
 
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
@@ -156,14 +132,6 @@ describe('contract defaults (extra)', () => {
 		};
 
 		beforeEach(async () => {
-			Contract.defaultCommon = undefined;
-			Contract.transactionBlockTimeout = undefined;
-			Contract.blockHeaderTimeout = undefined;
-			Contract.transactionConfirmationBlocks = undefined;
-			Contract.transactionPollingTimeout = undefined;
-			Contract.transactionPollingInterval = undefined;
-			Contract.handleRevert = undefined;
-
 			contract = new Contract(GreeterAbi, undefined, {
 				provider: getSystemTestProvider(),
 			});
@@ -178,25 +146,6 @@ describe('contract defaults (extra)', () => {
 
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 		});
-
-		// todo this test fails, seems like a bug. any thoughts?
-		// it('should use "defaultCommon" on "Contract" level', async () => {
-		// 	Contract.defaultCommon = common;
-
-		// 	const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-		// 	expect(contract.defaultCommon).toMatchObject(common);
-
-		// 	await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-		// 	expect(sendTransactionSpy).toHaveBeenLastCalledWith(
-		// 		expect.objectContaining({
-		// 			_config: expect.objectContaining({ defaultCommon: common }),
-		// 		}),
-		// 		expect.any(Object),
-		// 		expect.any(Object),
-		// 	);
-		// });
 
 		it('should use "defaultCommon" on "instance" level', async () => {
 			contract.defaultCommon = common;
@@ -214,10 +163,15 @@ describe('contract defaults (extra)', () => {
 			);
 		});
 	});
+
 	describeIf(isWs)('transactionBlockTimeout', () => {
 		it('should use "transactionBlockTimeout" on "instance" level', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
+			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 			expect(contract.transactionBlockTimeout).toBe(50);
 
 			contract.transactionBlockTimeout = 32;
@@ -225,9 +179,20 @@ describe('contract defaults (extra)', () => {
 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 			await contract.methods.setGreeting('New Greeting').send(sendOptions);
+
+			expect(sendTransactionSpy).toHaveBeenLastCalledWith(
+				expect.objectContaining({
+					_config: expect.objectContaining({ transactionBlockTimeout: 32 }),
+				}),
+				expect.any(Object),
+				expect.any(Object),
+			);
 		});
 
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			// Make the test run faster by casing the polling to start after 2 blocks
@@ -275,18 +240,11 @@ describe('contract defaults (extra)', () => {
 	});
 
 	describeIf(isWs)('blockHeaderTimeout', () => {
-		it('should use "blockHeaderTimeout" on "Contract" level', async () => {
-			expect(Contract.blockHeaderTimeout).toBeUndefined();
-			const blockHeaderTimeout = 100;
-			Contract.blockHeaderTimeout = blockHeaderTimeout;
-
-			expect(Contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(contract.blockHeaderTimeout).toBe(blockHeaderTimeout);
-		});
-
 		it('should use "blockHeaderTimout" on "instance" level', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.blockHeaderTimeout).toBe(10);
@@ -329,18 +287,11 @@ describe('contract defaults (extra)', () => {
 	});
 
 	describeIf(isHttp)('transactionPollingInterval', () => {
-		it('should use "transactionPollingInterval" on "Contract" level', async () => {
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(Contract.transactionPollingInterval).toBeUndefined();
-
-			const transactionPollingInterval = 500;
-			Contract.transactionPollingInterval = transactionPollingInterval;
-
-			expect(contract.transactionPollingInterval).toBe(transactionPollingInterval);
-		});
-
 		it('should use "transactionPollingTimeout" on "instance" level', async () => {
+			contract = new Contract(GreeterAbi, undefined, {
+				provider: getSystemTestProvider(),
+			});
+
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			const transactionPollingInterval = 500;
@@ -350,41 +301,24 @@ describe('contract defaults (extra)', () => {
 		});
 	});
 
-	describe('handleRevert', () => {
-		it('should use "handleRevert" on "Contract" level', async () => {
-			contract = await contract.deploy(deployOptions).send(sendOptions);
-
-			expect(Contract.handleRevert).toBeUndefined();
-
-			expect(contract.handleRevert).toBeFalsy();
-
-			const handleRevert = true;
-			Contract.handleRevert = handleRevert;
-
-			expect(contract.handleRevert).toBe(handleRevert);
-
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
-
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
-
-			expect(sendTransactionSpy).toHaveBeenCalled();
+	it('should use "handleRevert" on "instance" level', async () => {
+		contract = new Contract(GreeterAbi, undefined, {
+			provider: getSystemTestProvider(),
 		});
 
-		it('should use "handleRevert" on "instance" level', async () => {
-			contract = await contract.deploy(deployOptions).send(sendOptions);
+		contract = await contract.deploy(deployOptions).send(sendOptions);
 
-			expect(contract.handleRevert).toBeFalsy();
+		expect(contract.handleRevert).toBeFalsy();
 
-			const handleRevert = true;
-			contract.handleRevert = handleRevert;
+		const handleRevert = true;
+		contract.handleRevert = handleRevert;
 
-			expect(contract.handleRevert).toBe(handleRevert);
+		expect(contract.handleRevert).toBe(handleRevert);
 
-			const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
+		const sendTransactionSpy = jest.spyOn(Web3Eth, 'sendTransaction');
 
-			await contract.methods.setGreeting('New Greeting').send(sendOptions);
+		await contract.methods.setGreeting('New Greeting').send(sendOptions);
 
-			expect(sendTransactionSpy).toHaveBeenCalled();
-		});
+		expect(sendTransactionSpy).toHaveBeenCalled();
 	});
 });
