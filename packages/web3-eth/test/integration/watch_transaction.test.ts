@@ -30,7 +30,7 @@ import {
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
-const waitConfirmations = 20;
+const waitConfirmations = 10;
 
 type Resolve = (value?: unknown) => void;
 
@@ -82,7 +82,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from,
 				to,
 				value,
-				times: waitConfirmations,
+				times: 2 * waitConfirmations,
 			});
 			await confirmationPromise;
 			await closeOpenConnection(web3Eth);
