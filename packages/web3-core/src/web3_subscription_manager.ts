@@ -64,6 +64,8 @@ export class Web3SubscriptionManager<
 	}
 
 	/**
+	 * Will create a new subscription
+	 *
 	 * @param name - The subscription you want to subscribe to
 	 * @param args (optional) - Optional additional parameters, depending on the subscription type
 	 * @param returnFormat ({@link DataFormat} defaults to {@link DEFAULT_RETURN_FORMAT}) - Specifies how the return data from the call should be formatted.
@@ -106,7 +108,7 @@ export class Web3SubscriptionManager<
 	 *
 	 * Adds an instance of {@link Web3Subscription} and subscribes to it
 	 *
-	 * @param sub - A {@link Web3Subscription} objects
+	 * @param sub - A {@link Web3Subscription} object
 	 */
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (!this.supportsSubscriptions()) {
@@ -125,6 +127,11 @@ export class Web3SubscriptionManager<
 
 		this._subscriptions.set(sub.id, sub);
 	}
+	/**
+	 * Will clear a subscription
+	 *
+	 * @param id - The subscription of type {@link Web3Subscription}  to remove
+	 */
 
 	public async removeSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (isNullish(sub.id)) {
@@ -145,6 +152,7 @@ export class Web3SubscriptionManager<
 	}
 	/**
 	 * Will unsubscribe all subscriptions that fulfill the condition
+	 *
 	 * @param condition - A function that access and `id` and a `subscription` and return `true` or `false`
 	 * @returns An array of all the un-subscribed subscriptions
 	 */
