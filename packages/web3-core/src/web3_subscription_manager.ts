@@ -103,9 +103,9 @@ export class Web3SubscriptionManager<
 
 	/**
 	 *
-	 * @param sub A {@link Web3Subscription} objects
-	 *
 	 * Adds an instance of {@link Web3Subscription} and subscribes to it
+	 *
+	 * @param sub - A {@link Web3Subscription} objects
 	 */
 	public async addSubscription(sub: InstanceType<RegisteredSubs[keyof RegisteredSubs]>) {
 		if (!this.supportsSubscriptions()) {
