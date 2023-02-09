@@ -254,6 +254,8 @@ export class Web3Context<
 	}
 
 	/**
+	 * Will return the current provider.
+	 *
 	 * @returns Returns the current provider
 	 *
 	 * ```ts
@@ -272,6 +274,8 @@ export class Web3Context<
 
 	/**
 	 * Will set the current provider.
+	 *
+	 * @param provider - The provider to set
 	 *
 	 * Accepted providers are of type {@link SupportedProviders}
 	 * ```ts
@@ -292,6 +296,8 @@ export class Web3Context<
 	}
 
 	/**
+	 * Will return the current provider.
+	 *
 	 * @returns Returns the current provider
 	 *
 	 * ```ts
@@ -310,7 +316,8 @@ export class Web3Context<
 	/**
 	 * Will set the current provider.
 	 *
-	 * Accepted providers are of type {@link SupportedProviders}
+	 * @param provider - {@link SupportedProviders} The provider to set
+	 *
 	 * ```ts
 	 *  const web3Context = new Web3Context("http://localhost:8545");
 	 * web3Context.currentProvider = "ws://localhost:8545";
@@ -336,12 +343,19 @@ export class Web3Context<
 	public get givenProvider() {
 		return Web3Context.givenProvider;
 	}
-
+	/**
+	 * Will set the provider.
+	 *
+	 * @param provider - {@link SupportedProviders} The provider to set
+	 * @returns Returns true if the provider was set
+	 */
 	public setProvider(provider?: SupportedProviders<API> | string): boolean {
 		this.provider = provider;
 		return true;
 	}
-
+	/**
+	 * Will return the {@link Web3BatchRequest} constructor.
+	 */
 	public get BatchRequest(): new () => Web3BatchRequest {
 		return Web3BatchRequest.bind(
 			undefined,

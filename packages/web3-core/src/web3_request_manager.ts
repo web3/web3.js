@@ -95,6 +95,8 @@ export class Web3RequestManager<
 	}
 
 	/**
+	 * Will return the current provider.
+	 *
 	 * @returns Returns the current provider
 	 */
 	public get provider() {
@@ -112,6 +114,8 @@ export class Web3RequestManager<
 	/**
 	 * Use to set provider. Provider can be a provider instance or a string.
 	 * To set IPC provider as a string please use the IPC socket file which name ends with .ipc
+	 *
+	 * @param provider - The provider to set
 	 */
 	public setProvider(provider?: SupportedProviders<API> | string, net?: Socket): boolean {
 		let newProvider: SupportedProviders<API> | undefined;
@@ -150,7 +154,9 @@ export class Web3RequestManager<
 	/**
 	 *
 	 * Will execute a request
-	 * @param request of type {@link Web3APIRequest}
+	 *
+	 * @param request - {@link Web3APIRequest} The request to send
+	 *
 	 * @returns The response of the request {@link ResponseType}. If there is error
 	 * in the response, will throw an error
 	 */
@@ -169,7 +175,8 @@ export class Web3RequestManager<
 
 	/**
 	 * Same as send, but, will execute a batch of requests
-	 * @param request {@link JsonRpcBatchRequest}
+	 *
+	 * @param request {@link JsonRpcBatchRequest} The batch request to send
 	 */
 	public async sendBatch(request: JsonRpcBatchRequest): Promise<JsonRpcBatchResponse<unknown>> {
 		const response = await this._sendRequest<never, never>(request);
