@@ -5,18 +5,19 @@ ORIGARGS=("$@")
 . scripts/env.sh
 
 helpFunction() {
-	echo "Usage: $0 <geth | ganache> <http | ws> [node | electron | firefox | chrome]"
+	echo "Usage: $0 <geth | ganache> <http | ws> [node | electron | firefox | chrome] [coverage]"
 	exit 1 # Exit script after printing help
 }
-
 BACKEND=${ORIGARGS[0]}
 MODE=${ORIGARGS[1]}
 ENGINE=${ORIGARGS[2]}
+TEST_OPTION=${ORIGARGS[3]}
 
 SUPPORTED_BACKENDS=("geth" "ganache")
 SUPPORTED_MODE=("http" "ws" "ipc")
 # if you will add a new browser please also add it in the system_test_utils.ts => isBrowser
 SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
+SUPPORTED_TEST_OPTIONS=("coverage" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
 	helpFunction
@@ -27,6 +28,10 @@ if [[ ! " ${SUPPORTED_MODE[*]} " =~ " ${MODE} " ]]; then
 fi
 
 if [[ ! " ${SUPPORTED_ENGINES[*]} " =~ " ${ENGINE} " ]]; then
+	helpFunction
+fi
+
+if [[ ! " ${SUPPORTED_TEST_OPTIONS[*]} " =~ " ${TEST_OPTION} " ]]; then
 	helpFunction
 fi
 
@@ -45,7 +50,11 @@ if [[ $MODE == "ipc" ]]; then
 fi
 
 if [[ $ENGINE == "node" ]] || [[ $ENGINE == "" ]]; then
-	TEST_COMMAND="test:integration"
+	if [[ $TEST_OPTION == "coverage" ]]; then
+		TEST_COMMAND="test:coverage:integration"
+	else
+		TEST_COMMAND="test:integration"
+	fi
 else
 	TEST_COMMAND="lerna run test:e2e:$ENGINE --stream"
 fi
