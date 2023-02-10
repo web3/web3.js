@@ -186,7 +186,7 @@ describe('contract', () => {
 
 	describeIf(isWs)('getPastEvents', () => {
 		// TODO: Debug why this tests is hanging the websocket
-		it('should return all past events', async () => {
+		it('should return all past events using earliest and latest options', async () => {
 			await contractDeployed.methods
 				.firesMultiValueEvent('New Greeting 1', 11, true)
 				.send(sendOptions);
@@ -198,6 +198,51 @@ describe('contract', () => {
 				await contractDeployed.getPastEvents('MultiValueEvent', {
 					fromBlock: 'earliest',
 					toBlock: 'latest',
+				}),
+			).toHaveLength(2);
+		});
+		it('should return all past events using number options', async () => {
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 1', 11, true)
+				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 2', 12, true)
+				.send(sendOptions);
+
+			expect(
+				await contractDeployed.getPastEvents('MultiValueEvent', {
+					fromBlock: 0,
+					toBlock: 1000,
+				}),
+			).toHaveLength(2);
+		});
+		it('should return all past events using string options', async () => {
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 1', 11, true)
+				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 2', 12, true)
+				.send(sendOptions);
+
+			expect(
+				await contractDeployed.getPastEvents('MultiValueEvent', {
+					fromBlock: '0',
+					toBlock: '1000',
+				}),
+			).toHaveLength(2);
+		});
+		it('should return all past events using bigint options', async () => {
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 1', 11, true)
+				.send(sendOptions);
+			await contractDeployed.methods
+				.firesMultiValueEvent('New Greeting 2', 12, true)
+				.send(sendOptions);
+
+			expect(
+				await contractDeployed.getPastEvents('MultiValueEvent', {
+					fromBlock: BigInt(0),
+					toBlock: BigInt(1000),
 				}),
 			).toHaveLength(2);
 		});

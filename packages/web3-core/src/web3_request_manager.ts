@@ -186,7 +186,6 @@ export class Web3RequestManager<
 				// Check if the provider throw an error instead of reject with error
 				response = error as JsonRpcResponse<ResponseType>;
 			}
-
 			return this._processJsonRpcResponse(payload, response, { legacy: false, error: false });
 		}
 
