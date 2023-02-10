@@ -45,8 +45,8 @@ export enum BlockTags {
 	EARLIEST = 'earliest',
 	LATEST = 'latest',
 	PENDING = 'pending',
-	SAFE = `safe`,
-	FINALIZED = `finalized`,
+	SAFE = 'safe',
+	FINALIZED = 'finalized',
 }
 export type BlockTag = `${BlockTags}`;
 
