@@ -22,11 +22,12 @@
 		"lint:fix": "eslint --fix --ext .js,.ts .",
 		"format": "prettier --write '**/*'",
 		"test": "jest --config=./test/unit/jest.config.js",
-		"test:coverage": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
+		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
 		"test:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit",
+		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --runInBand --forceExit --coverage=true --coverage-reporters=text",
 		"test:e2e:electron": "npx cypress run --headless --browser electron",
 		"test:e2e:chrome": "npx cypress run --headless --browser chrome",
 		"test:e2e:firefox": "npx cypress run --headless --browser firefox"
