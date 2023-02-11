@@ -31,57 +31,67 @@ describe('Web3 object', () => {
 			httpProviderOptions: undefined,
 		});
 	});
-	it('should be able to create a Contract object from Web3 -> eth.Contract', () => {
+	describe('creating a Contract object with the constructor at Web3 -> eth.Contract', () => {
 		const Web3Contract = new Web3().eth.Contract;
 		const abi = [{ name: 'any', type: 'function' }];
 		const address = '0x0000000000000000000000000000000000000000';
 		const options = { gas: '100' };
 
-		const contract1 = new Web3Contract(abi, undefined, undefined);
-		expect(contract1).toBeInstanceOf(Contract);
-		expect(contract1.options.address).toBeUndefined();
-		expect(contract1.options.gas).toBeUndefined();
-
-		const contract2 = new Web3Contract(abi);
-		expect(contract2).toBeInstanceOf(Contract);
-		expect(contract2.options.address).toBeUndefined();
-		expect(contract2.options.gas).toBeUndefined();
-
-		const contract3 = new Web3Contract(abi, undefined as unknown as string, options);
-		expect(contract3).toBeInstanceOf(Contract);
-		expect(contract3.options.address).toBeUndefined();
-		expect(contract3.options.gas).toEqual(options.gas);
-
-		const contract4 = new Web3Contract(abi, '', options);
-		expect(contract4).toBeInstanceOf(Contract);
-		expect(contract4.options.address).toBe('');
-		expect(contract4.options.gas).toEqual(options.gas);
-
-		const contract5 = new Web3Contract(abi, address);
-		expect(contract5).toBeInstanceOf(Contract);
-		expect(contract5.options.address).toEqual(address);
-		expect(contract5.options.gas).toBeUndefined();
-
-		const contract6 = new Web3Contract(abi, {});
-		expect(contract6).toBeInstanceOf(Contract);
-		expect(contract6.options.address).toBeUndefined();
-		expect(contract6.options.gas).toBeUndefined();
-
-		const contract7 = new Web3Contract(abi, address, options);
-		expect(contract7).toBeInstanceOf(Contract);
-		expect(contract7.options.address).toEqual(address);
-		expect(contract7.options.gas).toEqual(options.gas);
-
-		expect(() => {
-			// eslint-disable-next-line no-new
-			new Web3Contract(abi, options as unknown as string, options);
-		}).toThrow();
-
-		expect(() => {
-			// eslint-disable-next-line no-new
-			new Web3Contract(abi, (() => {
-				/* nothing */
-			}) as ContractInitOptions);
-		}).toThrow();
+		it('should work when `address`=`undefined` and `options`=`undefined`', () => {
+			const contract1 = new Web3Contract(abi, undefined, undefined);
+			expect(contract1).toBeInstanceOf(Contract);
+			expect(contract1.options.address).toBeUndefined();
+			expect(contract1.options.gas).toBeUndefined();
+		});
+		it('should accept when not passing `address` or `options`', () => {
+			const contract2 = new Web3Contract(abi);
+			expect(contract2).toBeInstanceOf(Contract);
+			expect(contract2.options.address).toBeUndefined();
+			expect(contract2.options.gas).toBeUndefined();
+		});
+		it('should work when `address`=`undefined` and `options` is an object', () => {
+			const contract3 = new Web3Contract(abi, undefined, options);
+			expect(contract3).toBeInstanceOf(Contract);
+			expect(contract3.options.address).toBeUndefined();
+			expect(contract3.options.gas).toEqual(options.gas);
+		});
+		it('should work when `address` is an empty string and `options` is an object', () => {
+			const contract4 = new Web3Contract(abi, '', options);
+			expect(contract4).toBeInstanceOf(Contract);
+			expect(contract4.options.address).toBe('');
+			expect(contract4.options.gas).toEqual(options.gas);
+		});
+		it('should work when `address` is a string and `options` is not passed', () => {
+			const contract5 = new Web3Contract(abi, address);
+			expect(contract5).toBeInstanceOf(Contract);
+			expect(contract5.options.address).toEqual(address);
+			expect(contract5.options.gas).toBeUndefined();
+		});
+		it('should work when second parameter is an `options` object', () => {
+			const contract6 = new Web3Contract(abi, options);
+			expect(contract6).toBeInstanceOf(Contract);
+			expect(contract6.options.address).toBeUndefined();
+			expect(contract6.options.gas).toEqual(options.gas);
+		});
+		it('should work when `address` is a string and `options` is an object', () => {
+			const contract7 = new Web3Contract(abi, address, options);
+			expect(contract7).toBeInstanceOf(Contract);
+			expect(contract7.options.address).toEqual(address);
+			expect(contract7.options.gas).toEqual(options.gas);
+		});
+		it('should throw if the second and the third parameters are both options', () => {
+			expect(() => {
+				// eslint-disable-next-line no-new
+				new Web3Contract(abi, options as unknown as string, options);
+			}).toThrow();
+		});
+		it('should throw if `options` is a function', () => {
+			expect(() => {
+				// eslint-disable-next-line no-new
+				new Web3Contract(abi, (() => {
+					/* nothing */
+				}) as ContractInitOptions);
+			}).toThrow();
+		});
 	});
 });

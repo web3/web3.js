@@ -721,7 +721,6 @@ export class Contract<Abi extends ContractAbi>
 			this.options,
 			abi,
 			filter ?? {},
-			returnFormat,
 		);
 
 		const logs = await getLogs(this, { fromBlock, toBlock, topics, address }, returnFormat);
