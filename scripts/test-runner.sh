@@ -5,7 +5,7 @@ ORIGARGS=("$@")
 . scripts/env.sh
 
 helpFunction() {
-	echo "Usage: $0 <geth | ganache> <http | ws> [node | electron | firefox | chrome] [coverage]"
+	echo "Usage: $0 <geth | ganache> <http | ws> [node | electron | firefox | chrome] [coverage | sync]"
 	exit 1 # Exit script after printing help
 }
 BACKEND=${ORIGARGS[0]}
@@ -17,7 +17,7 @@ SUPPORTED_BACKENDS=("geth" "ganache")
 SUPPORTED_MODE=("http" "ws" "ipc")
 # if you will add a new browser please also add it in the system_test_utils.ts => isBrowser
 SUPPORTED_ENGINES=("node" "electron" "firefox" "chrome" "")
-SUPPORTED_TEST_OPTIONS=("coverage" "")
+SUPPORTED_TEST_OPTIONS=("coverage" "sync" "")
 
 if [[ ! " ${SUPPORTED_BACKENDS[*]} " =~ " ${BACKEND} " ]]; then
 	helpFunction
@@ -60,4 +60,9 @@ else
 fi
 
 
-yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
+if [[ $TEST_OPTION == "sync" ]]; then
+    yarn "geth-binary:sync:start" && yarn test:sync:integration && yarn "geth-binary:sync:stop"
+else
+    yarn "$BACKEND:start:background" && yarn generate:accounts && yarn $TEST_COMMAND && yarn "$BACKEND:stop"
+fi
+
