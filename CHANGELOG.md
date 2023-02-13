@@ -1145,10 +1145,23 @@ should use 4.0.1-alpha.0 for testing.
 -   Add named exports for all objects which are the default-exported-object in their packages (#5771)
 -   Export all packages' objects organized by namespaces (#5771)
 -   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
+-   Fix few issues with `new Web3().eth.contract` (#5824)
 
 #### web3-core
 
 -   Added rpc exception codes following eip-1474 as an experimental feature (if `useRpcCallSpecification` at `enableExperimentalFeatures` is `true`) (#5525)
+
+#### web3-errors
+
+-   Added error class `InvalidMethodParamsError` and error code `ERR_INVALID_METHOD_PARAMS = 207` (#5824)
+
+#### web3-eth
+
+-   Added `createAccessList` functionality ( #5780 )
+
+#### web3-eth-contract
+
+-   Added functionality of `createAccessList` for contracts ( #5780 )
 
 #### web3-providers-http
 
@@ -1161,6 +1174,10 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-providers-ws
 
 -   Added named export for `WebSocketProvider` (#5771)
+
+#### web3-rpc-methods
+
+-   Added `createAccessList` functionality ( #5780 )
 
 #### web3-types
 
@@ -1202,3 +1219,9 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-validator
 
 -   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-utils`) (#5771)
+
+### Fixed
+
+#### web3-eth-contract
+
+-   Fix contract defaults (#5756)
