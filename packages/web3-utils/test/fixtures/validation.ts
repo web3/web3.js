@@ -50,18 +50,16 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['finalized', 'finalized'], 0],
 	[['earliest', 'finalized'], -1],
 	[['finalized', 0], 1],
-	[['finalized', BigInt('1')], 1],
 	[['finalized', 'pending'], -1],
 	[[0, 'finalized'], -1],
-	[[BigInt('1'), 'finalized'], -1],
 	[['pending', 'finalized'], 1],
 ];
 
 export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockError][] = [
 	[['pending', 'unknown'], new InvalidBlockError('unknown')],
 	[['', 'pending'], new InvalidBlockError('')],
-	[[22, 'safe'], new InvalidBlockError('Cannot compare safe tag with 22')],
-	[['safe', 22], new InvalidBlockError('Cannot compare safe tag with 22')],
+	[[22, 'finalized'], new InvalidBlockError('Cannot compare finalized tag with 22')],
+	[['finalized', 22], new InvalidBlockError('Cannot compare finalized tag with 22')],
 	[['genesis', 'finalized'], new InvalidBlockError('Genesis tag not supported')],
 ];
 
