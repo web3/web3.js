@@ -33,6 +33,7 @@
 		"test": "jest --config=./test/unit/jest.config.js",
 		"test:coverage:unit": "jest --config=./test/unit/jest.config.js --coverage=true --coverage-reporters=text",
 		"test:coverage:integration": "jest --config=./test/integration/jest.config.js --forceExit --coverage=true --coverage-reporters=text",
+		"test:sync:integration": "jest --config=./test/integration/jest.config.js ./test/integration/sync.test.ts",
 		"test:ci": "jest --coverage=true --coverage-reporters=json --verbose",
 		"test:watch": "npm test -- --watch",
 		"test:unit": "jest --config=./test/unit/jest.config.js",
