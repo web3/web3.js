@@ -25,6 +25,7 @@ import Net from 'web3-net';
 import * as utils from 'web3-utils';
 import { isNullish } from 'web3-utils';
 import { Address, ContractAbi, EthExecutionAPI, SupportedProviders } from 'web3-types';
+import { InvalidMethodParamsError } from 'web3-errors';
 import abi from './abi';
 import { initAccountsForContext } from './accounts';
 import { Web3EthInterface } from './types';
@@ -76,16 +77,19 @@ export class Web3 extends Web3Context<EthExecutionAPI> {
 				addressOrOptions?: Address | ContractInitOptions,
 				options?: ContractInitOptions,
 			) {
-				if (typeof addressOrOptions === 'string') {
-					super(jsonInterface, addressOrOptions, self.getContextObject());
+				if (typeof addressOrOptions === 'object' && typeof options === 'object') {
+					throw new InvalidMethodParamsError(
+						'Should not provide options at both 2nd and 3rd parameters',
+					);
+				}
+				if (isNullish(addressOrOptions)) {
+					super(jsonInterface, options, self.getContextObject());
 				} else if (typeof addressOrOptions === 'object') {
 					super(jsonInterface, addressOrOptions, self.getContextObject());
-				} else if (!isNullish(addressOrOptions) && isNullish(options)) {
-					super(jsonInterface, addressOrOptions ?? {}, self.getContextObject());
-				} else if (isNullish(addressOrOptions) && !isNullish(options)) {
-					super(jsonInterface, options ?? {}, self.getContextObject());
+				} else if (typeof addressOrOptions === 'string') {
+					super(jsonInterface, addressOrOptions, options ?? {}, self.getContextObject());
 				} else {
-					super(jsonInterface, self.getContextObject());
+					throw new InvalidMethodParamsError();
 				}
 
 				super.subscribeToContextEvents(self);
