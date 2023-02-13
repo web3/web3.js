@@ -110,26 +110,25 @@ export const isTopicInBloom = isTopicInBloomValidator;
  */
 export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	// string validation
-	if (typeof blockA === 'string' && !(isBlockTag(blockA) || blockA === 'genesis'))
-		throw new InvalidBlockError(blockA);
-	if (typeof blockB === 'string' && !(isBlockTag(blockB) || blockB === 'genesis'))
-		throw new InvalidBlockError(blockB);
+	if (blockA === 'genesis' || blockB === 'genesis')
+		throw new InvalidBlockError('Genesis tag not supported'); // for more specific error message
+	if (typeof blockA === 'string' && !isBlockTag(blockA)) throw new InvalidBlockError(blockA);
+	if (typeof blockB === 'string' && !isBlockTag(blockB)) throw new InvalidBlockError(blockB);
 
-	// Increasing order: (genesis = earliest), safe, (finalized ~ latest), pending
+	// Increasing order:  earliest, safe, (finalized ~ latest), pending
 	// safe vs block-num cant be compared as block number provided can be on left or right side of safe tag, until safe tag block number is extracted and compared
 
 	if (
 		blockA === blockB ||
-		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
-			(blockB === 'genesis' || blockB === 'earliest' || blockB === 0))
+		((blockA === 'earliest' || blockA === 0) && (blockB === 'earliest' || blockB === 0))
 	) {
 		return 0;
 	}
-	if (blockA === 'genesis' || blockA === 'earliest') {
+	if (blockA === 'earliest') {
 		// b !== a, thus a < b
 		return -1;
 	}
-	if (blockB === 'genesis' || blockB === 'earliest') {
+	if (blockB === 'earliest') {
 		// b !== a, thus a > b
 		return 1;
 	}
