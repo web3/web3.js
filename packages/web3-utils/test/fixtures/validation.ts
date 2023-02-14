@@ -53,6 +53,8 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['finalized', 'pending'], -1],
 	[[0, 'finalized'], -1],
 	[['pending', 'finalized'], 1],
+	[['safe', 'latest'], -1],
+	[['latest', 'safe'], 1],
 ];
 
 export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockError][] = [

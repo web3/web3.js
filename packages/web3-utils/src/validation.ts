@@ -133,14 +133,14 @@ export const compareBlockNumbers = (blockA: BlockNumberOrTag, blockB: BlockNumbe
 		return 1;
 	}
 	if (blockA === 'latest' || blockA === 'safe') {
-		if (blockB === 'pending') {
+		if (blockB === 'pending' || blockB === 'latest') {
 			return -1;
 		}
 		// b !== ("pending" OR "latest"), thus a > b
 		return 1;
 	}
 	if (blockB === 'latest' || blockB === 'safe') {
-		if (blockA === 'pending') {
+		if (blockA === 'pending' || blockA === 'latest') {
 			return 1;
 		}
 		// b !== ("pending" OR "latest"), thus a > b
