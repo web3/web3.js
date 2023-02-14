@@ -98,3 +98,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   Added `createAccessList` functionality ( #5780 )
+-   Added support of `safe` and `finalized` block tags (#5823)

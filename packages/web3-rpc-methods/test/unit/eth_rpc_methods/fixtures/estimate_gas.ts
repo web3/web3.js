@@ -53,5 +53,10 @@ export const testData: TestData[] = [
 		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.PENDING`,
 		[transaction, BlockTags.PENDING],
 	],
+	[`${JSON.stringify(transaction)}\nblockNumber = BlockTags.SAFE`, [transaction, BlockTags.SAFE]],
+	[
+		`${JSON.stringify(transaction)}\nblockNumber = BlockTags.FINALIZED`,
+		[transaction, BlockTags.FINALIZED],
+	],
 	[`${JSON.stringify(transaction)}\nblockNumber = "0x4b7"`, [transaction, '0x4b7']],
 ];

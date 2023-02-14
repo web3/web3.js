@@ -61,7 +61,7 @@ export interface ContractEventOptions {
 	 */
 	filter?: Record<string, unknown>;
 	/**
-	 * The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as `earliest`, `latest` and `pending` can also be used. For specific range use {@link Contract.getPastEvents}.
+	 * The block number (greater than or equal to) from which to get events on. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized` can also be used. For specific range use {@link Contract.getPastEvents}.
 	 */
 	fromBlock?: BlockNumberOrTag;
 	/**
@@ -236,7 +236,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * ```
 	 *
 	 * @param tx - The options used for calling.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 
@@ -355,7 +355,7 @@ export interface NonPayableMethodObject<Inputs = unknown[], Outputs = unknown[]>
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
 	 *
 	 * @param options - The options used for createAccessList.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
 	 *
 	 *  ```ts
@@ -426,7 +426,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * ```
 	 *
 	 * @param tx - The options used for calling.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns - The return value(s) of the smart contract method. If it returns a single value, it’s returned as is. If it has multiple return values they are returned as an object with properties and indices.
 	 */
 	call<SpecialOutput = Outputs>(
@@ -544,7 +544,7 @@ export interface PayableMethodObject<Inputs = unknown[], Outputs = unknown[]> {
 	 * This method generates an access list for a transaction. You must specify a `from` address and `gas` if it’s not specified in options.
 	 *
 	 * @param options - The options used for createAccessList.
-	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, and `pending` can also be used. Useful for requesting data from or replaying transactions in past blocks.
+	 * @param block - If you pass this parameter it will not use the default block set with contract.defaultBlock. Pre-defined block numbers as `earliest`, `latest`, `pending`, `safe` or `finalized can also be used. Useful for requesting data from or replaying transactions in past blocks.
 	 * @returns The returned data of the createAccessList,  e.g. The generated access list for transaction.
 	 *
 	 *  ```ts

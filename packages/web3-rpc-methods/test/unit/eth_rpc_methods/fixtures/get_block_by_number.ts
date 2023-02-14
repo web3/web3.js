@@ -34,5 +34,7 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST', [BlockTags.LATEST, true]],
 	['blockNumber = BlockTags.EARLIEST', [BlockTags.EARLIEST, true]],
 	['blockNumber = BlockTags.PENDING', [BlockTags.PENDING, true]],
+	['blockNumber = BlockTags.SAFE', [BlockTags.SAFE, true]],
+	['blockNumber = BlockTags.FINALIZED', [BlockTags.FINALIZED, true]],
 	['blockNumber = "0x4b7"', ['0x4b7', true]],
 ];

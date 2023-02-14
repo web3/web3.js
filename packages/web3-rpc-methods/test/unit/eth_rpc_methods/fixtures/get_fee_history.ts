@@ -42,5 +42,10 @@ export const testData: TestData[] = [
 		'blockCount = "0x88df016", newestBlock = BlockTags.PENDING',
 		['0x88df016', BlockTags.PENDING, []],
 	],
+	['blockCount = "0x88df016", newestBlock = BlockTags.SAFE', ['0x88df016', BlockTags.SAFE, []]],
+	[
+		'blockCount = "0x88df016", newestBlock = BlockTags.FINALIZED',
+		['0x88df016', BlockTags.FINALIZED, []],
+	],
 	['blockCount = "0x88df016", newestBlock = "0x4b7"', ['0x88df016', '0x4b7', []]],
 ];

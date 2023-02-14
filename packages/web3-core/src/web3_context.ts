@@ -165,6 +165,9 @@ export class Web3Context<
 		return this._requestManager;
 	}
 
+	/**
+	 * Will return the current subscriptionManager ({@link Web3SubscriptionManager})
+	 */
 	public get subscriptionManager() {
 		return this._subscriptionManager;
 	}
@@ -250,32 +253,111 @@ export class Web3Context<
 		Object.assign(this, _pluginObject);
 	}
 
+	/**
+	 * Will return the current provider.
+	 *
+	 * @returns Returns the current provider
+	 * @example
+	 * ```ts
+	 * const web3 = new Web3Context("http://localhost:8545");
+	 * console.log(web3.provider);
+	 * > HttpProvider {
+	 * 	clientUrl: 'http://localhost:8545',
+	 * 	httpProviderOptions: undefined
+	 *  }
+	 * ```
+	 */
+
 	public get provider(): SupportedProviders<API> | string | undefined {
 		return this.requestManager.provider;
 	}
+
+	/**
+	 * Will set the current provider.
+	 *
+	 * @param provider - The provider to set
+	 *
+	 * Accepted providers are of type {@link SupportedProviders}
+	 * @example
+	 * ```ts
+	 *  const web3Context = new web3ContextContext("http://localhost:8545");
+	 * web3Context.provider = "ws://localhost:8545";
+	 * console.log(web3Context.provider);
+	 * > WebSocketProvider {
+	 * _eventEmitter: EventEmitter {
+	 * _events: [Object: null prototype] {},
+	 * _eventsCount: 0,
+	 * ...
+	 * }
+	 * ```
+	 */
 
 	public set provider(provider: SupportedProviders<API> | string | undefined) {
 		this.requestManager.setProvider(provider);
 	}
 
+	/**
+	 * Will return the current provider. (The same as `provider`)
+	 *
+	 * @returns Returns the current provider
+	 * @example
+	 * ```ts
+	 * const web3Context = new Web3Context("http://localhost:8545");
+	 * console.log(web3Context.provider);
+	 * > HttpProvider {
+	 * 	clientUrl: 'http://localhost:8545',
+	 * 	httpProviderOptions: undefined
+	 *  }
+	 * ```
+	 */
 	public get currentProvider(): SupportedProviders<API> | string | undefined {
 		return this.requestManager.provider;
 	}
 
+	/**
+	 * Will set the current provider. (The same as `provider`)
+	 *
+	 * @param provider - {@link SupportedProviders} The provider to set
+	 *
+	 * @example
+	 * ```ts
+	 *  const web3Context = new Web3Context("http://localhost:8545");
+	 * web3Context.currentProvider = "ws://localhost:8545";
+	 * console.log(web3Context.provider);
+	 * > WebSocketProvider {
+	 * _eventEmitter: EventEmitter {
+	 * _events: [Object: null prototype] {},
+	 * _eventsCount: 0,
+	 * ...
+	 * }
+	 * ```
+	 */
 	public set currentProvider(provider: SupportedProviders<API> | string | undefined) {
 		this.requestManager.setProvider(provider);
 	}
 
+	/**
+	 * Will return the givenProvider if available.
+	 *
+	 * When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser. Will return the given provider by the (browser) environment, otherwise `undefined`.
+	 */
 	// eslint-disable-next-line class-methods-use-this
 	public get givenProvider() {
 		return Web3Context.givenProvider;
 	}
-
+	/**
+	 * Will set the provider.
+	 *
+	 * @param provider - {@link SupportedProviders} The provider to set
+	 * @returns Returns true if the provider was set
+	 */
 	public setProvider(provider?: SupportedProviders<API> | string): boolean {
 		this.provider = provider;
 		return true;
 	}
-
+	/**
+	 * Will return the {@link Web3BatchRequest} constructor.
+	 */
 	public get BatchRequest(): new () => Web3BatchRequest {
 		return Web3BatchRequest.bind(
 			undefined,
@@ -301,6 +383,7 @@ export type TransactionBuilder<API extends Web3APISpec = unknown> = <
  * To add type support for RPC methods to the {@link Web3RequestManager},
  * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
  *
+ * @example
  * ```ts
  * type CustomRpcApi = {
  *	custom_rpc_method: () => string;
@@ -323,6 +406,7 @@ export abstract class Web3PluginBase<
  * To add type support for RPC methods to the {@link Web3RequestManager} (in addition to {@link EthExecutionAPI}),
  * define a {@link Web3APISpec} and pass it as a generic to Web3PluginBase like so:
  *
+ * @example
  * ```ts
  * type CustomRpcApi = {
  *	custom_rpc_method: () => string;

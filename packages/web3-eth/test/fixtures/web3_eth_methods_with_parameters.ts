@@ -58,6 +58,14 @@ export const getBalanceValidData: [
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+	],
 	// Undefined blockNumber, returnType = DEFAULT_RETURN_FORMAT
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', undefined, DEFAULT_RETURN_FORMAT],
@@ -75,6 +83,14 @@ export const getBalanceValidData: [
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
 	],
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x4b7', DEFAULT_RETURN_FORMAT],
@@ -115,6 +131,30 @@ export const getBalanceValidData: [
 		[
 			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR },
 		],
 	],
@@ -183,6 +223,30 @@ export const getBalanceValidData: [
 	[
 		[
 			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 			BlockTags.PENDING,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER },
 		],
@@ -239,6 +303,30 @@ export const getBalanceValidData: [
 		[
 			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
 			BlockTags.EARLIEST,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.SAFE,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+	],
+	[
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
+			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
+		],
+		[
+			'0x407d73d8a49eeb85d32cf465507dd71d507100c1',
+			BlockTags.FINALIZED,
 			{ ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT },
 		],
 	],
@@ -304,6 +392,14 @@ export const getBlockValidData: [
 		[BlockTags.EARLIEST, false, DEFAULT_RETURN_FORMAT],
 	],
 	[
+		[BlockTags.SAFE, undefined, undefined],
+		[BlockTags.SAFE, false, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, undefined, undefined],
+		[BlockTags.FINALIZED, false, DEFAULT_RETURN_FORMAT],
+	],
+	[
 		[BlockTags.PENDING, undefined, undefined],
 		[BlockTags.PENDING, false, DEFAULT_RETURN_FORMAT],
 	],
@@ -320,6 +416,14 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, undefined],
 		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, true, undefined],
+		[BlockTags.SAFE, true, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, true, undefined],
+		[BlockTags.FINALIZED, true, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block, hydrated = false, and undefined returnType
 	[
 		[BlockTags.LATEST, false, undefined],
@@ -332,6 +436,14 @@ export const getBlockValidData: [
 	[
 		[BlockTags.PENDING, false, undefined],
 		[BlockTags.PENDING, false, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.SAFE, false, undefined],
+		[BlockTags.SAFE, false, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, false, undefined],
+		[BlockTags.FINALIZED, false, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, hydrated = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
@@ -346,6 +458,14 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 		[BlockTags.PENDING, true, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, true, DEFAULT_RETURN_FORMAT],
+		[BlockTags.SAFE, true, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, true, DEFAULT_RETURN_FORMAT],
+		[BlockTags.FINALIZED, true, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
 		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
@@ -358,6 +478,14 @@ export const getBlockValidData: [
 	[
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+	],
+	[
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+	],
+	[
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 	],
 	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
@@ -372,6 +500,14 @@ export const getBlockValidData: [
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 	],
+	[
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+	],
+	[
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+	],
 	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
 		[BlockTags.LATEST, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
@@ -384,6 +520,14 @@ export const getBlockValidData: [
 	[
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		[BlockTags.PENDING, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+	],
+	[
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+		[BlockTags.SAFE, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+	],
+	[
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+		[BlockTags.FINALIZED, true, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 	],
 ];
 
@@ -421,6 +565,14 @@ export const getBlockTransactionCountValidData: [
 		[BlockTags.PENDING, undefined],
 		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, undefined],
+		[BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, undefined],
+		[BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
@@ -434,6 +586,14 @@ export const getBlockTransactionCountValidData: [
 		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+		[BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+		[BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR}
 	[
 		[BlockTags.LATEST, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
@@ -446,6 +606,14 @@ export const getBlockTransactionCountValidData: [
 	[
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+	],
+	[
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+	],
+	[
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.STR }],
 	],
 	// Defined block, hydrated = true, and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER}
 	[
@@ -472,6 +640,14 @@ export const getBlockTransactionCountValidData: [
 	[
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+	],
+	[
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+	],
+	[
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT }],
 	],
 ];
 
@@ -509,6 +685,14 @@ export const getBlockUncleCountValidData: [
 		[BlockTags.PENDING, undefined],
 		[BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, undefined],
+		[BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, undefined],
+		[BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[BlockTags.LATEST, DEFAULT_RETURN_FORMAT],
@@ -547,6 +731,14 @@ export const getBlockUncleCountValidData: [
 	[
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 		[BlockTags.PENDING, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+	],
+	[
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+		[BlockTags.SAFE, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+	],
+	[
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
+		[BlockTags.FINALIZED, { ...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.NUMBER }],
 	],
 	// Defined block and returnType = {...DEFAULT_RETURN_FORMAT, number: FMT_NUMBER.BIGINT}
 	[
@@ -593,6 +785,14 @@ export const getUncleValidData: [
 	[
 		[BlockTags.EARLIEST, '0x0', undefined],
 		[BlockTags.EARLIEST, '0x0', DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.SAFE, '0x0', undefined],
+		[BlockTags.SAFE, '0x0', DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, '0x0', undefined],
+		[BlockTags.FINALIZED, '0x0', DEFAULT_RETURN_FORMAT],
 	],
 	[
 		[BlockTags.PENDING, '0x0', undefined],
@@ -778,6 +978,14 @@ export const getTransactionFromBlockValidData: [
 		[BlockTags.PENDING, '0x0', undefined],
 		[BlockTags.PENDING, '0x0', DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[BlockTags.SAFE, '0x0', undefined],
+		[BlockTags.SAFE, '0x0', DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[BlockTags.FINALIZED, '0x0', undefined],
+		[BlockTags.FINALIZED, '0x0', DEFAULT_RETURN_FORMAT],
+	],
 	// Defined block, uncleIndex = true, and returnType = DEFAULT_RETURN_FORMAT
 	[
 		[BlockTags.LATEST, '0x0', DEFAULT_RETURN_FORMAT],
@@ -933,6 +1141,14 @@ export const getTransactionCountValidData: [
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, undefined],
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, undefined],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
 	],
 	// Defined block, uncleIndex = and undefined returnType
 	[
@@ -1120,6 +1336,14 @@ export const estimateGasValidData: [
 		[transactionWithSender, BlockTags.PENDING, undefined],
 		[transactionWithSender, BlockTags.PENDING, DEFAULT_RETURN_FORMAT],
 	],
+	[
+		[transactionWithSender, BlockTags.SAFE, undefined],
+		[transactionWithSender, BlockTags.SAFE, DEFAULT_RETURN_FORMAT],
+	],
+	[
+		[transactionWithSender, BlockTags.FINALIZED, undefined],
+		[transactionWithSender, BlockTags.FINALIZED, DEFAULT_RETURN_FORMAT],
+	],
 	// Defined transaction and block number, undefined returnType
 	[
 		[transactionWithSender, BlockTags.LATEST, undefined],
@@ -1300,6 +1524,14 @@ export const getFeeHistoryValidData: [
 		['0x4', BlockTags.PENDING, [], undefined],
 		['0x4', BlockTags.PENDING, [], DEFAULT_RETURN_FORMAT],
 	],
+	[
+		['0x4', BlockTags.SAFE, [], undefined],
+		['0x4', BlockTags.SAFE, [], DEFAULT_RETURN_FORMAT],
+	],
+	[
+		['0x4', BlockTags.FINALIZED, [], undefined],
+		['0x4', BlockTags.FINALIZED, [], DEFAULT_RETURN_FORMAT],
+	],
 	// Defined transaction and block number, undefined returnType
 	[
 		['0x4', BlockTags.LATEST, [], undefined],
@@ -1394,6 +1626,14 @@ export const getStorageAtValidData: [
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.PENDING],
 	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.SAFE],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.SAFE],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.FINALIZED],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x0', BlockTags.FINALIZED],
+	],
 ];
 
 /**
@@ -1422,6 +1662,14 @@ export const getCodeValidData: [
 	[
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
 		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.PENDING],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.SAFE],
+	],
+	[
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED],
+		['0x407d73d8a49eeb85d32cf465507dd71d507100c1', BlockTags.FINALIZED],
 	],
 ];
 
@@ -1513,6 +1761,26 @@ export const getPastLogsValidData: [Filter, Filter][] = [
 		{
 			fromBlock: BlockTags.EARLIEST,
 			toBlock: BlockTags.EARLIEST,
+		},
+	],
+	[
+		{
+			fromBlock: BlockTags.SAFE,
+			toBlock: BlockTags.SAFE,
+		},
+		{
+			fromBlock: BlockTags.SAFE,
+			toBlock: BlockTags.SAFE,
+		},
+	],
+	[
+		{
+			fromBlock: BlockTags.FINALIZED,
+			toBlock: BlockTags.FINALIZED,
+		},
+		{
+			fromBlock: BlockTags.FINALIZED,
+			toBlock: BlockTags.FINALIZED,
 		},
 	],
 ];
@@ -1609,6 +1877,34 @@ export const getProofValidData: [
 			'0x1234567890123456789012345678901234567890',
 			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
 			BlockTags.PENDING,
+			DEFAULT_RETURN_FORMAT,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
+			BlockTags.SAFE,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
+			BlockTags.SAFE,
+			DEFAULT_RETURN_FORMAT,
+		],
+	],
+	[
+		[
+			'0x1234567890123456789012345678901234567890',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
+			BlockTags.FINALIZED,
+			undefined,
+		],
+		[
+			'0x1234567890123456789012345678901234567890',
+			['0x295a70b2de5e3953354a6a8344e616ed314d7251'],
+			BlockTags.FINALIZED,
 			DEFAULT_RETURN_FORMAT,
 		],
 	],
