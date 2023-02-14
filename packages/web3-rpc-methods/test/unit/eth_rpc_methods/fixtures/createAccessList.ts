@@ -46,5 +46,10 @@ export const testData: TestData[] = [
 	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.LATEST`, [callObj, BlockTags.LATEST]],
 	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.EARLIEST`, [callObj, BlockTags.EARLIEST]],
 	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.PENDING`, [callObj, BlockTags.PENDING]],
+	[`${JSON.stringify(callObj)}\nblockNumber = BlockTags.SAFE`, [callObj, BlockTags.SAFE]],
+	[
+		`${JSON.stringify(callObj)}\nblockNumber = BlockTags.FINALIZED`,
+		[callObj, BlockTags.FINALIZED],
+	],
 	[`${JSON.stringify(callObj)}\nblockNumber = "0x4b7"`, [callObj, '0x4b7']],
 ];

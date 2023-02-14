@@ -28,16 +28,12 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[[1, BigInt(1)], 0],
 	[[1, BigInt(2)], -1],
 	[[2, BigInt(1)], 1],
-	[['genesis', 'earliest'], 0],
-	[['genesis', 0], 0],
+
 	[['earliest', 0], 0],
 	[['pending', 'pending'], 0],
 	[['latest', 'latest'], 0],
 	[['earliest', 2], -1],
 	[['earliest', 'pending'], -1],
-	[['genesis', 2], -1],
-	[['genesis', 'latest'], -1],
-	[['genesis', 'pending'], -1],
 	[[BigInt('9007199254740992'), BigInt('9007199254740991')], 1],
 	[[13532346, 13532300], 1],
 	[['pending', 'latest'], 1],
@@ -45,11 +41,28 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['latest', BigInt(1)], 1],
 	[['pending', 0], 1],
 	[['pending', BigInt(1)], 1],
+	[['safe', 'safe'], 0],
+	[['earliest', 'safe'], -1],
+	[['safe', 0], 1],
+	[[0, 'safe'], -1],
+	[['safe', 'pending'], -1],
+	[['pending', 'safe'], 1],
+	[['finalized', 'finalized'], 0],
+	[['earliest', 'finalized'], -1],
+	[['finalized', 0], 1],
+	[['finalized', 'pending'], -1],
+	[[0, 'finalized'], -1],
+	[['pending', 'finalized'], 1],
+	[['safe', 'latest'], -1],
+	[['latest', 'safe'], 1],
 ];
 
 export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockError][] = [
 	[['pending', 'unknown'], new InvalidBlockError('unknown')],
 	[['', 'pending'], new InvalidBlockError('')],
+	[[22, 'finalized'], new InvalidBlockError('Cannot compare finalized tag with 22')],
+	[['finalized', 22], new InvalidBlockError('Cannot compare finalized tag with 22')],
+	[['genesis', 'finalized'], new InvalidBlockError('Genesis tag not supported')],
 ];
 
 export const isBloomValidData: [any, true][] = [

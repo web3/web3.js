@@ -228,3 +228,4 @@ const transactionHash = receipt.transactionHash;
 ### Added
 
 -   Added functionality of `createAccessList` for contracts ( #5780 )
+-   Added support of `safe` and `finalized` block tags (#5823)

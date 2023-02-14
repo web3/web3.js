@@ -76,3 +76,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added types from `web3-eth-abi` and `TypedArray` from (#5771)
 -   Added `TypedArray` from `web3-utils` and `web3-validator` (it was defined twice) (#5771)
+-   Added `safe` and `finalized` block tags in `BlockTags` and `BlockTag` types (#5823)

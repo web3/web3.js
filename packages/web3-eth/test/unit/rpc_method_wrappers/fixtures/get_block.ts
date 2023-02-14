@@ -103,6 +103,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, hydrated = false', [BlockTags.LATEST, false]],
 	['blockNumber = BlockTags.EARLIEST, hydrated = false', [BlockTags.EARLIEST, false]],
 	['blockNumber = BlockTags.PENDING, hydrated = false', [BlockTags.PENDING, false]],
+	['blockNumber = BlockTags.SAFE, hydrated = false', [BlockTags.SAFE, false]],
+	['blockNumber = BlockTags.FINALIZED, hydrated = false', [BlockTags.FINALIZED, false]],
 	// blockNumber = Numbers
 	['blockNumber = "0x4b7", hydrated = false', ['0x4b7', false]],
 	['blockNumber = 1207, hydrated = false', [1207, false]],
