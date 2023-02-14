@@ -81,6 +81,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, uncleIndex = "0x0"', [BlockTags.LATEST, '0x0']],
 	['blockNumber = BlockTags.EARLIEST, uncleIndex = "0x0"', [BlockTags.EARLIEST, '0x0']],
 	['blockNumber = BlockTags.PENDING, uncleIndex = "0x0"', [BlockTags.PENDING, '0x0']],
+	['blockNumber = BlockTags.SAFE, uncleIndex = "0x0"', [BlockTags.SAFE, '0x0']],
+	['blockNumber = BlockTags.FINALIZED, uncleIndex = "0x0"', [BlockTags.FINALIZED, '0x0']],
 	// blockNumber = Numbers, uncleIndex = HexString
 	['blockNumber = "0x4b7", uncleIndex = "0x0"', ['0x4b7', '0x0']],
 	['blockNumber = 1207, uncleIndex = "0x0"', [1207, '0x0']],
@@ -111,6 +113,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, uncleIndex = 0', [BlockTags.LATEST, 0]],
 	['blockNumber = BlockTags.EARLIEST, uncleIndex = 0', [BlockTags.EARLIEST, 0]],
 	['blockNumber = BlockTags.PENDING, uncleIndex = 0', [BlockTags.PENDING, 0]],
+	['blockNumber = BlockTags.SAFE, uncleIndex = 0', [BlockTags.SAFE, 0]],
+	['blockNumber = BlockTags.FINALIZED, uncleIndex = 0', [BlockTags.FINALIZED, 0]],
 	// blockNumber = Numbers, uncleIndex = number
 	['blockNumber = "0x4b7"', ['0x4b7, uncleIndex = 0', 0]],
 	['blockNumber = 1207, uncleIndex = 0', [1207, 0]],
@@ -141,6 +145,8 @@ export const testData: TestData[] = [
 	['blockNumber = BlockTags.LATEST, uncleIndex = "0"', [BlockTags.LATEST, '0']],
 	['blockNumber = BlockTags.EARLIEST, uncleIndex = "0"', [BlockTags.EARLIEST, '0']],
 	['blockNumber = BlockTags.PENDING, uncleIndex = "0"', [BlockTags.PENDING, '0']],
+	['blockNumber = BlockTags.SAFE, uncleIndex = "0"', [BlockTags.SAFE, '0']],
+	['blockNumber = BlockTags.FINALIZED, uncleIndex = "0"', [BlockTags.FINALIZED, '0']],
 	// blockNumber = Numbers, uncleIndex = NumberString
 	['blockNumber = "0x4b7", uncleIndex = "0"', ['0x4b7', '0']],
 	['blockNumber = 1207, uncleIndex = "0"', [1207, '0']],
@@ -179,6 +185,11 @@ export const testData: TestData[] = [
 	[
 		'blockNumber = BlockTags.PENDING, uncleIndex = BigInt("0x0")',
 		[BlockTags.PENDING, BigInt('0x0')],
+	],
+	['blockNumber = BlockTags.SAFE, uncleIndex = BigInt("0x0")', [BlockTags.SAFE, BigInt('0x0')]],
+	[
+		'blockNumber = BlockTags.FINALIZED, uncleIndex = BigInt("0x0")',
+		[BlockTags.FINALIZED, BigInt('0x0')],
 	],
 	// blockNumber = Numbers, uncleIndex = BigInt
 	['blockNumber = "0x4b7", uncleIndex = BigInt("0x0")', ['0x4b7', BigInt('0x0')]],

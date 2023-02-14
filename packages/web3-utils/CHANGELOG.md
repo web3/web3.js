@@ -77,3 +77,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Moved `TypedArray` to `web3-types` (was also duplicated at `web3-validator`) (#5771)
+-   Removed support of `genesis` tag in `compareBlockNumbers` function (#5823)
+
+### Added
+
+-   Added support of `safe` and `finalized` block tags (#5823)
+

@@ -266,7 +266,7 @@ export class Contract<Abi extends ContractAbi>
 	);
 	public constructor(
 		jsonInterface: Abi,
-		address: Address,
+		address?: Address,
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
 	);
@@ -278,7 +278,7 @@ export class Contract<Abi extends ContractAbi>
 	);
 	public constructor(
 		jsonInterface: Abi,
-		address: Address,
+		address: Address | undefined,
 		options: ContractInitOptions,
 		contextOrReturnFormat?: Web3ContractContext | DataFormat,
 		returnFormat?: DataFormat,
