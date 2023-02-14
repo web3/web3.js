@@ -75,6 +75,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-#### web3-errors
-
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+
+### Added
+
+-   Added error class `InvalidMethodParamsError` and error code `ERR_INVALID_METHOD_PARAMS = 207` (#5824)
