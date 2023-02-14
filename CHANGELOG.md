@@ -1162,6 +1162,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-eth-contract
 
 -   Added functionality of `createAccessList` for contracts ( #5780 )
+-   An instance of `Contract` will `subscribeToContextEvents` upon instantiation if `syncWithContext` is set to `true` and the constructor is passed an instance of `Web3Context` (#5833)
 
 #### web3-providers-http
 

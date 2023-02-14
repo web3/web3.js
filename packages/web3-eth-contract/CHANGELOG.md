@@ -227,3 +227,4 @@ const transactionHash = receipt.transactionHash;
 ### Added
 
 -   Added functionality of `createAccessList` for contracts ( #5780 )
+-   An instance of `Contract` will `subscribeToContextEvents` upon instantiation if `syncWithContext` is set to `true` and the constructor is passed an instance of `Web3Context` (#5833)
