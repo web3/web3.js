@@ -76,9 +76,9 @@ describe('contract', () => {
 		it('should subscribe to provided context upon instantiation', () => {
 			const web3Context = new Web3Context('http://127.0.0.1:8545');
 			const _contract = new Contract([], { syncWithContext: true }, web3Context);
+			expect(_contract.defaultBlock).toBe('latest');
 
 			web3Context.defaultBlock = 'earliest';
-
 			expect(_contract.defaultBlock).toBe('earliest');
 		});
 
