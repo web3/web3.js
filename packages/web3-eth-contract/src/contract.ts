@@ -261,33 +261,41 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public constructor(
 		jsonInterface: Abi,
-		context?: Web3ContractContext,
+		context?: Web3ContractContext | Web3Context,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address?: Address,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		options?: ContractInitOptions,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address: Address | undefined,
 		options: ContractInitOptions,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
-		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext,
-		optionsOrContextOrReturnFormat?: ContractInitOptions | Web3ContractContext | DataFormat,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		addressOrOptionsOrContext?:
+			| Address
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context,
+		optionsOrContextOrReturnFormat?:
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context
+			| DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	) {
 		let contractContext;
@@ -361,6 +369,9 @@ export class Contract<Abi extends ContractAbi>
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
+		if (contractContext instanceof Web3Context) {
+			this.subscribeToContextEvents(contractContext);
+		}
 
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
