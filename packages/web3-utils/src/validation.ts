@@ -28,8 +28,9 @@ import {
 	isTopicInBloom as isTopicInBloomValidator,
 	isUserEthereumAddressInBloom as isUserEthereumAddressInBloomValidator,
 	isNullish as isNullishValidator,
+	isBlockTag,
 } from 'web3-validator';
-import { Numbers } from 'web3-types';
+import { BlockNumberOrTag } from 'web3-types';
 
 /**
  * @deprecated Will be removed in next release. Please use `web3-validator` package instead.
@@ -107,49 +108,39 @@ export const isTopicInBloom = isTopicInBloomValidator;
  * Compares between block A and block B
  * Returns -1 if a \< b, returns 1 if a \> b and returns 0 if a == b
  */
-export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
+export const compareBlockNumbers = (blockA: BlockNumberOrTag, blockB: BlockNumberOrTag) => {
 	// string validation
-	if (
-		typeof blockA === 'string' &&
-		!(
-			blockA === 'genesis' ||
-			blockA === 'earliest' ||
-			blockA === 'pending' ||
-			blockA === 'latest'
-		)
-	)
-		throw new InvalidBlockError(blockA);
-	if (
-		typeof blockB === 'string' &&
-		!(
-			blockB === 'genesis' ||
-			blockB === 'earliest' ||
-			blockB === 'pending' ||
-			blockB === 'latest'
-		)
-	)
-		throw new InvalidBlockError(blockB);
+	if (blockA === 'genesis' || blockB === 'genesis')
+		throw new InvalidBlockError('Genesis tag not supported'); // for more specific error message
+	if (typeof blockA === 'string' && !isBlockTag(blockA)) throw new InvalidBlockError(blockA);
+	if (typeof blockB === 'string' && !isBlockTag(blockB)) throw new InvalidBlockError(blockB);
+
+	// Increasing order:  earliest, finalized , safe, latest, pending
+	// safe vs block-num cant be compared as block number provided can be on left or right side of safe tag, until safe tag block number is extracted and compared
+
 	if (
 		blockA === blockB ||
-		((blockA === 'genesis' || blockA === 'earliest' || blockA === 0) &&
-			(blockB === 'genesis' || blockB === 'earliest' || blockB === 0))
-	)
+		((blockA === 'earliest' || blockA === 0) && (blockB === 'earliest' || blockB === 0))
+	) {
 		return 0;
-
-	// b !== a, thus a < b
-	if (blockA === 'genesis' || blockA === 'earliest') return -1;
-
-	// b !== a, thus a > b
-	if (blockB === 'genesis' || blockB === 'earliest') return 1;
-
-	if (blockA === 'latest') {
-		if (blockB === 'pending') {
-			return -1;
-		} // b !== ("pending" OR "latest"), thus a > b
+	}
+	if (blockA === 'earliest' || blockA === 0) {
+		// b !== a, thus a < b
+		return -1;
+	}
+	if (blockB === 'earliest' || blockB === 0) {
+		// b !== a, thus a > b
 		return 1;
 	}
-	if (blockB === 'latest') {
-		if (blockA === 'pending') {
+	if (blockA === 'latest' || blockA === 'safe') {
+		if (blockB === 'pending' || blockB === 'latest') {
+			return -1;
+		}
+		// b !== ("pending" OR "latest"), thus a > b
+		return 1;
+	}
+	if (blockB === 'latest' || blockB === 'safe') {
+		if (blockA === 'pending' || blockA === 'latest') {
 			return 1;
 		}
 		// b !== ("pending" OR "latest"), thus a > b
@@ -162,8 +153,17 @@ export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	if (blockB === 'pending') {
 		return -1;
 	}
+
+	if (blockA === 'finalized' || blockB === 'finalized') {
+		// either a or b is "finalized" and the other one did not fall into any of the conditions above, so the other one is a number
+		throw new InvalidBlockError(
+			`Cannot compare finalized tag with ${blockA === 'finalized' ? blockB : blockA}`,
+		);
+	}
+
 	const bigIntA = BigInt(blockA);
 	const bigIntB = BigInt(blockB);
+
 	if (bigIntA < bigIntB) {
 		return -1;
 	}
