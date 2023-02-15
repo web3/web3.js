@@ -201,6 +201,8 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:coverage:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
 
   coverage-tests-integration:
     name: Coverage Tests - Integration
