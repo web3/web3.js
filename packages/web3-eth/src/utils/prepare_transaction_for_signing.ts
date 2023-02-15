@@ -15,8 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import Common from '@ethereumjs/common';
-import { TransactionFactory, TxOptions } from '@ethereumjs/tx';
+import { TransactionFactory, TxOptions } from 'web3-utils';
+import Common from 'web3-utils/src/common';
 import {
 	EthExecutionAPI,
 	HexString,

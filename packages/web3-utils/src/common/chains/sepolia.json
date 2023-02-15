@@ -1,0 +1,106 @@
+{
+  "name": "sepolia",
+  "chainId": 11155111,
+  "networkId": 11155111,
+  "defaultHardfork": "istanbul",
+  "consensus": {
+    "type": "pow",
+    "algorithm": "ethash",
+    "ethash": {}
+  },
+  "comment": "PoW test network to replace Ropsten",
+  "url": "https://github.com/ethereum/go-ethereum/pull/23730",
+  "genesis": {
+    "hash": "0x25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9",
+    "timestamp": "0x6159af19",
+    "gasLimit": 30000000,
+    "difficulty": 131072,
+    "nonce": "0x0000000000000000",
+    "extraData": "0x5365706f6c69612c20417468656e732c204174746963612c2047726565636521",
+    "stateRoot": "0x5eb6e371a698b8d68f665192350ffcecbbbf322916f4b51bd79bb6887da3f494"
+  },
+  "hardforks": [
+    {
+      "name": "chainstart",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "homestead",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "tangerineWhistle",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "spuriousDragon",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "byzantium",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "constantinople",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "petersburg",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "istanbul",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "muirGlacier",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "berlin",
+      "block": 0,
+      "forkHash": "0xfe3366e7"
+    }, 
+    {
+      "name": "london",
+      "block": 0, 
+      "forkHash": "0xfe3366e7"
+    },
+    {
+      "name": "merge",
+      "block": null,
+      "forkHash": null
+    },
+    {
+      "name": "shanghai",
+      "block": null,
+      "forkHash": null
+    }
+  ],
+  "bootstrapNodes": [
+    {
+      "ip": "18.168.182.86",
+      "port": 30303,
+      "id": "9246d00bc8fd1742e5ad2428b80fc4dc45d786283e05ef6edbd9002cbc335d40998444732fbe921cb88e1d2c73d1b1de53bae6a2237996e9bfe14f871baf7066",
+      "location": "",
+      "comment": "geth"
+    },
+    {
+      "ip": "52.14.151.177",
+      "port": 30303,
+      "id": "ec66ddcf1a974950bd4c782789a7e04f8aa7110a72569b6e65fcd51e937e74eed303b1ea734e4d19cfaec9fbff9b6ee65bf31dcb50ba79acce9dd63a6aca61c7",
+      "location": "",
+      "comment": "besu"
+    }
+  ],
+  "dnsNetworks": []
+}

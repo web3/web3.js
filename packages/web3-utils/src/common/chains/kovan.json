@@ -1,0 +1,114 @@
+{
+  "name": "kovan",
+  "chainId": 42,
+  "networkId": 42,
+  "defaultHardfork": "istanbul",
+  "consensus": {
+    "type": "poa",
+    "algorithm": "aura",
+    "aura": {}
+  },
+  "comment": "Parity PoA test network",
+  "url": "https://kovan-testnet.github.io/website/",
+  "genesis": {
+    "hash": "0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9",
+    "timestamp": null,
+    "gasLimit": 6000000,
+    "difficulty": 131072,
+    "nonce": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "extraData": "0x",
+    "stateRoot": "0x2480155b48a1cea17d67dbfdfaafe821c1d19cdd478c5358e8ec56dec24502b2"
+  },
+  "hardforks": [
+    {
+      "name": "chainstart",
+      "block": 0,
+      "forkHash": "0x010ffe56"
+    },
+    {
+      "name": "homestead",
+      "block": 0,
+      "forkHash": "0x010ffe56"
+    },
+    {
+      "name": "tangerineWhistle",
+      "block": 0,
+      "forkHash": "0x010ffe56"
+    },
+    {
+      "name": "spuriousDragon",
+      "block": 0,
+      "forkHash": "0x010ffe56"
+    },
+    {
+      "name": "byzantium",
+      "block": 5067000,
+      "forkHash": "0x7f83c620"
+    },
+    {
+      "name": "constantinople",
+      "block": 9200000,
+      "forkHash": "0xa94e3dc4"
+    },
+    {
+      "name": "petersburg",
+      "block": 10255201,
+      "forkHash": "0x186874aa"
+    },
+    {
+      "name": "istanbul",
+      "block": 14111141,
+      "forkHash": "0x7f6599a6"
+    },
+    {
+      "name": "berlin",
+      "block": 24770900,
+      "forkHash": "0x1a0f10d9"
+    }, 
+    {
+      "name": "london",
+      "block": 26741100,
+      "forkHash": "0x1ed20b71"
+    },
+    {
+      "name": "merge",
+      "block": null,
+      "forkHash": null
+    },
+    {
+      "name": "shanghai",
+      "block": null,
+      "forkHash": null
+    }
+  ],
+  "bootstrapNodes": [
+    {
+      "ip": "116.203.116.241",
+      "port": 30303,
+      "id": "16898006ba2cd4fa8bf9a3dfe32684c178fa861df144bfc21fe800dc4838a03e342056951fa9fd533dcb0be1219e306106442ff2cf1f7e9f8faa5f2fc1a3aa45",
+      "location": "",
+      "comment": "1"
+    },
+    {
+      "ip": "3.217.96.11",
+      "port": 30303,
+      "id": "2909846f78c37510cc0e306f185323b83bb2209e5ff4fdd279d93c60e3f365e3c6e62ad1d2133ff11f9fd6d23ad9c3dad73bb974d53a22f7d1ac5b7dea79d0b0",
+      "location": "",
+      "comment": "2"
+    },
+    {
+      "ip": "108.61.170.124",
+      "port": 30303,
+      "id": "740e1c8ea64e71762c71a463a04e2046070a0c9394fcab5891d41301dc473c0cff00ebab5a9bc87fbcb610ab98ac18225ff897bc8b7b38def5975d5ceb0a7d7c",
+      "location": "",
+      "comment": "3"
+    },
+    {
+      "ip": "157.230.31.163",
+      "port": 30303,
+      "id": "2909846f78c37510cc0e306f185323b83bb2209e5ff4fdd279d93c60e3f365e3c6e62ad1d2133ff11f9fd6d23ad9c3dad73bb974d53a22f7d1ac5b7dea79d0b0",
+      "location": "",
+      "comment": "4"
+    }
+  ]
+}

@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionFactory } from '@ethereumjs/tx';
+import { TransactionFactory } from 'web3-utils';
 import { HexStringBytes, SignedTransactionInfoAPI, TransactionSignedAPI } from 'web3-types';
 import { bytesToHex, DataFormat, format, hexToBytes, keccak256 } from 'web3-utils';
 import { detectRawTransactionType } from './detect_transaction_type';

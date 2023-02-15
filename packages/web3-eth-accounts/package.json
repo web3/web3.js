@@ -45,7 +45,6 @@
 		"typescript": "^4.7.4"
 	},
 	"dependencies": {
-		"@ethereumjs/tx": "^3.5.2",
 		"ethereum-cryptography": "^1.1.2",
 		"web3-errors": "^0.1.1-alpha.4",
 		"web3-types": "^0.1.1-alpha.4",

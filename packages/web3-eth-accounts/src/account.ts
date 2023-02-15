@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TransactionFactory, TypedTransaction } from '@ethereumjs/tx';
+import { TransactionFactory, TypedTransaction } from 'web3-utils';
 import { decrypt as createDecipheriv, encrypt as createCipheriv } from 'ethereum-cryptography/aes';
 import { pbkdf2Sync } from 'ethereum-cryptography/pbkdf2';
 import { scryptSync } from 'ethereum-cryptography/scrypt';
