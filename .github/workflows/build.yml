@@ -83,6 +83,11 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: unittests
 
   integration:
     name: Integration
@@ -201,11 +206,6 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:coverage:unit
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
 
   coverage-tests-integration:
     name: Coverage Tests - Integration
