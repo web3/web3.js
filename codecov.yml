@@ -3,6 +3,13 @@ coverage:
     project:
       default:
         target: 80%
+      web3:
+        flags: web3
+      web3-core:
+        flags: web3-core
+      web3-eth:
+        flags: web3-eth
+    patch: off
 
 comment:
   layout: 'reach, diff, flags, files'
