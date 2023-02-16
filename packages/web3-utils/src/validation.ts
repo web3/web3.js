@@ -105,7 +105,19 @@ export const isTopicInBloom = isTopicInBloomValidator;
 
 /**
  * Compares between block A and block B
- * Returns -1 if a \< b, returns 1 if a \> b and returns 0 if a == b
+ * @param blockA - Block number or string
+ * @param blockB - Block number or string
+ *
+ * @returns - Returns -1 if a \< b, returns 1 if a \> b and returns 0 if a == b
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.compareBlockNumbers('latest', 'pending'));
+ * > -1
+ *
+ * console.log(web3.utils.compareBlockNumbers(12, 11));
+ * > 1
+ * ```
  */
 export const compareBlockNumbers = (blockA: Numbers, blockB: Numbers) => {
 	// string validation
