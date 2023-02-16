@@ -233,9 +233,6 @@ var hexToNumber = function (value) {
     if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
-    if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'BN') {
-        throw new Error('Given value "'+value+'" is not a valid string, number or BN.');
-    }
 
     const n = toBN(value);
     if(n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
@@ -536,7 +533,7 @@ var sha3Raw = function(value) {
  *
  * @method toNumber
  * @param {String|Number|BN} value
- * @return {Number}
+ * @return {Number|String}
  */
 var toNumber = function(value) {
     return typeof value === 'number' ? value : hexToNumber(toHex(value));
