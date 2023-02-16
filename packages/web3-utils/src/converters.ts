@@ -71,14 +71,14 @@ export const ethUnitMap = {
 
 export type EtherUnits = keyof typeof ethUnitMap;
 /**
- * Convert a value from buffer to Buffer
+ * Convert a value from bytes to Buffer
  * @param data - Data to be converted
  * @returns - The Buffer representation of the input data
  *
  * @example
  * ```ts
- * console.log(web3.utils.bytesToBuffer("0x9c12"));
- * > <Buffer 9c 12>
+ * console.log(web3.utils.bytesToBuffer(new Uint8Array([72, 12])));
+ * > <Buffer 48 0c>
  * ```
  */
 export const bytesToBuffer = (data: Bytes): Buffer | never => {
@@ -308,7 +308,7 @@ export const toAscii = hexToAscii;
  *
  * console.log(web3.utils.toHex('0x123', true));
  * > bytes
- *
+ *```
  */
 export const toHex = (
 	value: Numbers | Bytes | Address | boolean | object,
