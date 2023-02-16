@@ -47,6 +47,8 @@ export const compareBlockNumbersValidData: [[Numbers, Numbers], number][] = [
 	[['pending', 'finalized'], 1],
 	[['safe', 'latest'], -1],
 	[['latest', 'safe'], 1],
+	[['earliest', 2], -1],
+	[[2, 'earliest'], 1],
 ];
 
 const errorObj = new InvalidBlockError('Cannot compare blocktag with provided non-blocktag input.');
@@ -55,8 +57,6 @@ export const compareBlockNumbersInvalidData: [[Numbers, Numbers], InvalidBlockEr
 	[['', 'pending'], errorObj],
 	[[22, 'finalized'], errorObj],
 	[['finalized', 22], errorObj],
-	[['earliest', 2], errorObj],
-	[[2, 'earliest'], errorObj],
 	[['latest', 110], errorObj],
 	[[222, 'latest'], errorObj],
 	[['pending', 230], errorObj],

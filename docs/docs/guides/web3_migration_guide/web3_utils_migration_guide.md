@@ -65,7 +65,7 @@ isHexStrict('-0x'); // in 1.x used to return `true`. But changed in 4.x to retur
 
 ## Other functions
 
-`compareBlockNumbers` now accepts either both block tags or both block numbers for comparison as parameters. The only exception is comparison of block tag `earliest` with 0.
+`compareBlockNumbers` now accepts either both block tags or both block numbers for comparison as parameters. The only exception is comparison of block tag `earliest` with numbers.
 
 ```ts
 compareBlockNumbers('earliest', 'safe'); // its valid comparison, and it will return `-1`
