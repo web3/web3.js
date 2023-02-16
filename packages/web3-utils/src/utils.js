@@ -233,8 +233,12 @@ var hexToNumber = function (value) {
     if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
+    if (typeof value !== 'string' && typeof value !== 'number' && typeof value !== 'BN') {
+        throw new Error('Given value "'+value+'" is not a valid string, number or BN.');
+    }
+
     const n = toBN(value);
-    if(n > Number.MAX_SAFE_INTEGER) {
+    if(n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
         return n.toString();
     }
     return n.toNumber();
