@@ -87,7 +87,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
         if: ${{ matrix.node == 16 }}
 
   integration:
