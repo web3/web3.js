@@ -222,8 +222,8 @@ var hexToUtf8 = function(hex) {
  * However, if the value is larger than the maximum safe integer, returns the value as a string.
  *
  * @method hexToNumber
- * @param { String | Number | BN} value
- * @return { Number | string}
+ * @param {String|Number|BN} value
+ * @return {Number|String}
  */
 var hexToNumber = function (value) {
     if (!value) {
