@@ -48,12 +48,7 @@ import {
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import {
-	SignatureError,
-	TransactionError,
-	TransactionRevertError,
-	ContractExecutionError,
-} from 'web3-errors';
+import { SignatureError, TransactionError, ContractExecutionError } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
@@ -82,6 +77,8 @@ import { trySendTransaction } from './utils/try_send_transaction';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
+import { getRevertReason } from './utils/get_revert_reason';
 
 /**
  *
@@ -1086,7 +1083,6 @@ export function sendTransaction<
 							await getRevertReason(
 								web3Context,
 								transactionFormatted as TransactionCall,
-								returnFormat,
 							);
 						}
 
@@ -1925,22 +1921,6 @@ export async function getFeeHistory<ReturnFormat extends DataFormat>(
 	);
 
 	return format(feeHistorySchema, response as unknown as FeeHistory, returnFormat);
-}
-/**
- *
- * @param web3Context
- * @param transaction
- */
-async function getRevertReason<ReturnFormat extends DataFormat>(
-	web3Context: Web3Context<EthExecutionAPI>,
-	transaction: TransactionCall,
-	returnFormat: ReturnFormat,
-) {
-	try {
-		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
-	} catch (err) {
-		throw new TransactionRevertError((err as Error).message);
-	}
 }
 
 /**
