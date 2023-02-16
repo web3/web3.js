@@ -3,6 +3,9 @@ coverage:
     project:
       default:
         target: 80%
+comment:
+  layout: 'reach, diff, flags'
+
 flags:
   web3:
     paths:
@@ -54,4 +57,4 @@ flags:
       - /packages/web3-utils/src
   web3-validator:
     paths:
-      - /packages/web3-validator
+      - /packages/web3-validator/src
