@@ -218,11 +218,12 @@ var hexToUtf8 = function(hex) {
 
 
 /**
- * Converts value to it's number representation
+ * Converts value to it's number representation. 
+ * However, if the value is larger than the maximum safe integer, returns the value as a string.
  *
  * @method hexToNumber
- * @param {String|Number|BN} value
- * @return {String}
+ * @param { String | Number | BN} value
+ * @return { Number | string}
  */
 var hexToNumber = function (value) {
     if (!value) {
@@ -232,8 +233,11 @@ var hexToNumber = function (value) {
     if (typeof value === 'string' && !isHexStrict(value)) {
         throw new Error('Given value "'+value+'" is not a valid hex string.');
     }
-
-    return toBN(value).toNumber();
+    const n = toBN(value);
+    if(n > Number.MAX_SAFE_INTEGER) {
+        return n.toString();
+    }
+    return n.toNumber();
 };
 
 /**

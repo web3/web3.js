@@ -86,7 +86,7 @@ export function fromDecimal(value: string | number): string;
 export function fromUtf8(string: string): string;
 export function fromWei(value: string | BN, unit?: Unit): string;
 export function hexToBytes(hex: Hex): number[];
-export function hexToNumber(hex: Hex): number;
+export function hexToNumber(hex: Hex): number | string;
 export function hexToNumberString(hex: Hex): string;
 export function hexToString(hex: Hex): string;
 export function hexToUtf8(string: string): string;
@@ -144,7 +144,7 @@ export interface Utils {
     fromUtf8(string: string): string;
     fromWei(value: string | BN, unit?: Unit): string;
     hexToBytes(hex: Hex): number[];
-    hexToNumber(hex: Hex): number;
+    hexToNumber(hex: Hex): number | string;
     hexToNumberString(hex: Hex): string;
     hexToString(hex: Hex): string;
     hexToUtf8(string: string): string;
