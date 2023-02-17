@@ -62,3 +62,15 @@ isHex('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `fal
 isHexStrict('-0x'); // in 1.x used to return `true`. But changed in 4.x to return `false`
 // `false`
 ```
+
+## Other functions
+
+`compareBlockNumbers` now accepts either both block tags or both block numbers for comparison as parameters. The only exception is comparison of block tag `earliest` with numbers.
+
+```ts
+compareBlockNumbers('earliest', 'safe'); // its valid comparison, and it will return `-1`
+
+compareBlockNumbers(8692, 2); // its valid comparison, and it will return `1`
+
+compareBlockNumbers('latest', 500); // in 1.x it used to return `1`, but now it will throw error InvalidBlockError
+```
