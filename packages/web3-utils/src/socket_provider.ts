@@ -39,7 +39,6 @@ import {
 	InvalidClientError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
-	ResponseError,
 	Web3WSProviderError,
 } from 'web3-errors';
 import { Eip1193Provider } from './web3_eip1193_provider';
