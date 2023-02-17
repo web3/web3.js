@@ -45,7 +45,7 @@ describe('lib/utils/utils', function () {
         tests.forEach(function (test) {
             if (test.error) {
                 it('should error with message', function () {
-                    try {                        
+                    try {
                         utils.toNumber(test.value)
                         assert.fail();
                     } catch(err){

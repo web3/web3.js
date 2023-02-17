@@ -218,7 +218,7 @@ var hexToUtf8 = function(hex) {
 
 
 /**
- * Converts value to it's number representation. 
+ * Converts value to it's number representation.
  * However, if the value is larger than the maximum safe integer, returns the value as a string.
  *
  * @method hexToNumber

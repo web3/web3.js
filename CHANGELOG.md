@@ -646,3 +646,8 @@ Released with 1.0.0-beta.37 code base.
 
   - Fixed skipped ws-ganache tests (#5759)
   - Fixed "provider started to reconnect error" in web3-provider-ws (#5820)
+  - Fixed Error: Number can only safely store up to 53 bits (#5845)
+
+### Changed
+
+  - utils.toNumber and utils.hexToNumber can now return the decimal number as a string when it is too large than the max safe number (#5845)
