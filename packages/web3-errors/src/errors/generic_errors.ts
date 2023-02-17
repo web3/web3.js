@@ -25,6 +25,7 @@ import {
 	ERR_OPERATION_TIMEOUT,
 	ERR_PARAM,
 	ERR_EXISTING_PLUGIN_NAMESPACE,
+	ERR_INVALID_METHOD_PARAMS,
 } from '../error_codes';
 import { BaseWeb3Error } from '../web3_error_base';
 
@@ -41,6 +42,21 @@ export class InvalidNumberOfParamsError extends BaseWeb3Error {
 			got: this.got,
 			expected: this.expected,
 			method: this.method,
+		};
+	}
+}
+
+export class InvalidMethodParamsError extends BaseWeb3Error {
+	public code = ERR_INVALID_METHOD_PARAMS;
+
+	public constructor(public hint?: string) {
+		super(`Invalid parameters passed. "${typeof hint !== 'undefined' ? hint : ''}"`);
+	}
+
+	public toJSON() {
+		return {
+			...super.toJSON(),
+			hint: this.hint,
 		};
 	}
 }

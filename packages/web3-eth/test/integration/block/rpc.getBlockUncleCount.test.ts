@@ -39,6 +39,8 @@ describe('rpc with block', () => {
 		earliest: 'earliest';
 		latest: 'latest';
 		pending: 'pending';
+		finalized: 'finalized';
+		safe: 'safe';
 		blockNumber: number | bigint;
 		blockHash: string;
 		transactionHash: string;
@@ -82,6 +84,8 @@ describe('rpc with block', () => {
 			pending: 'pending',
 			latest: 'latest',
 			earliest: 'earliest',
+			finalized: 'finalized',
+			safe: 'safe',
 			blockNumber: Number(receipt.blockNumber),
 			blockHash: String(receipt.blockHash),
 			transactionHash: String(receipt.transactionHash),
@@ -96,9 +100,24 @@ describe('rpc with block', () => {
 	describe('methods', () => {
 		it.each(
 			toAllVariants<{
-				block: 'earliest' | 'latest' | 'pending' | 'blockHash' | 'blockNumber';
+				block:
+					| 'earliest'
+					| 'latest'
+					| 'pending'
+					| 'finalized'
+					| 'safe'
+					| 'blockHash'
+					| 'blockNumber';
 			}>({
-				block: ['earliest', 'latest', 'pending', 'blockHash', 'blockNumber'],
+				block: [
+					'earliest',
+					'latest',
+					'pending',
+					'finalized',
+					'safe',
+					'blockHash',
+					'blockNumber',
+				],
 			}),
 		)('getBlockUncleCount', async ({ block }) => {
 			const res = await web3Eth.getBlockUncleCount(blockData[block]);

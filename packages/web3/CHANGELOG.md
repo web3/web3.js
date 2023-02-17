@@ -73,6 +73,7 @@ web3.currentProvider.disconnect();
 -   Add named exports for all objects which are the default-exported-object in their packages (#5771)
 -   Export all packages' objects organized by namespaces (#5771)
 -   Add Additional flat exports for all types and constants from `web3-types`, `web3-errors` and `web3`. (#5771)
+-   Fix few issues with `new Web3().eth.contract` (#5824)
 
 ### Changed
 
