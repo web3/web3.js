@@ -93,6 +93,14 @@ export const testData: TestData[] = [
 		'blockNumber = BlockTags.PENDING',
 		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.PENDING],
 	],
+	[
+		'blockNumber = BlockTags.SAFE',
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.SAFE],
+	],
+	[
+		'blockNumber = BlockTags.FINALIZED',
+		[address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], BlockTags.FINALIZED],
+	],
 	// blockNumber = Numbers
 	['blockNumber = "0x4b7"', [address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], '0x4b7']],
 	['blockNumber = 1207', [address, ['0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8'], 1207]],

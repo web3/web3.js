@@ -16,6 +16,8 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Web3BaseProvider } from 'web3-types';
+import { Web3Context } from 'web3-core';
+
 import { Contract } from '../../src';
 import { GreeterBytecode, GreeterAbi } from '../shared_fixtures/build/Greeter';
 import { getSystemTestProvider, createTempAccount } from '../fixtures/system_test_utils';
@@ -69,6 +71,15 @@ describe('contract', () => {
 			contract = await contract.deploy(deployOptions).send(sendOptions);
 
 			expect(contract.syncWithContext).toBeTruthy();
+		});
+
+		it('should subscribe to provided context upon instantiation', () => {
+			const web3Context = new Web3Context('http://127.0.0.1:8545');
+			const _contract = new Contract([], { syncWithContext: true }, web3Context);
+			expect(_contract.defaultBlock).toBe('latest');
+
+			web3Context.defaultBlock = 'earliest';
+			expect(_contract.defaultBlock).toBe('earliest');
 		});
 
 		describe('defaultBlock', () => {
