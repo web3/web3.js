@@ -108,28 +108,5 @@ describe('WebSocketProvider', () => {
 				expect(messageSpy).toHaveBeenCalledWith(undefined, jsonRpcResponse);
 			});
 		});
-
-		describe('error response', () => {
-			it('should reject with response', async () => {
-				// Set `error` attribute to reject from mock
-				const payload = { ...jsonRpcPayload, error: 'my-error' };
-
-				await expect(wsProvider.request(payload)).rejects.toThrow(
-					new ResponseError(payload as unknown as JsonRpcResponse<any>),
-				);
-			});
-
-			it('should emit message with response as error', async () => {
-				// Set `error` attribute to reject from mock
-				const payload = { ...jsonRpcPayload, error: 'my-error' };
-
-				const messageSpy = jest.fn();
-				wsProvider.on('message', messageSpy);
-
-				await expect(wsProvider.request(payload)).rejects.toThrow();
-
-				expect(messageSpy).toHaveBeenCalledWith(payload, undefined);
-			});
-		});
 	});
 });

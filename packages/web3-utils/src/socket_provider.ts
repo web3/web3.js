@@ -39,6 +39,7 @@ import {
 	InvalidClientError,
 	PendingRequestsOnReconnectingError,
 	RequestAlreadySentError,
+	ResponseError,
 	Web3WSProviderError,
 } from 'web3-errors';
 import { Eip1193Provider } from './web3_eip1193_provider';
@@ -332,12 +333,13 @@ export abstract class SocketProvider<
 				return;
 			}
 
-			if (jsonRpc.isBatchResponse(response) || jsonRpc.isResponseWithResult(response)) {
+			if (
+				jsonRpc.isBatchResponse(response) ||
+				jsonRpc.isResponseWithResult(response) ||
+				jsonRpc.isResponseWithError(response)
+			) {
 				this._eventEmitter.emit('message', undefined, response);
 				requestItem.deferredPromise.resolve(response);
-			} else {
-				this._eventEmitter.emit('message', response, undefined);
-				requestItem?.deferredPromise.reject(response);
 			}
 
 			this._sentRequestsQueue.delete(requestId);
