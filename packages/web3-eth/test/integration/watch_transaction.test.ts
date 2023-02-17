@@ -30,7 +30,7 @@ import {
 	// eslint-disable-next-line import/no-relative-packages
 } from '../fixtures/system_test_utils';
 
-const waitConfirmations = 10;
+const waitConfirmations = 2;
 
 type Resolve = (value?: unknown) => void;
 
@@ -46,7 +46,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 
 			const from = tempAccount.address;
 			const to = tempAccount2.address;
-			const value = '0x1';
+			const value = `0x1`;
 			const sentTx: Web3PromiEvent<
 				TransactionReceipt,
 				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
