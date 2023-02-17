@@ -39,7 +39,7 @@ export async function getRevertReason<
 	transaction: TransactionCall,
 	contractAbi?: ContractAbi,
 	returnFormat: ReturnFormat = DEFAULT_RETURN_FORMAT as ReturnFormat,
-): Promise<undefined | RevertReason | RevertReasonWithCustomError | string | unknown> {
+): Promise<undefined | RevertReason | RevertReasonWithCustomError | string> {
 	try {
 		await call(web3Context, transaction, web3Context.defaultBlock, returnFormat);
 		return undefined;
@@ -79,6 +79,6 @@ export async function getRevertReason<
 			return error.innerError.message;
 		}
 
-		return error instanceof Error ? error.message : error;
+		throw error;
 	}
 }
