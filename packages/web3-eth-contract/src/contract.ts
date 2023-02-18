@@ -29,6 +29,7 @@ import {
 import {
 	encodeEventSignature,
 	encodeFunctionSignature,
+	decodeContractErrorData,
 	isAbiErrorFragment,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
@@ -74,13 +75,7 @@ import {
 	Web3ValidationErrorObject,
 } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
-import {
-	decodeEventABI,
-	decodeMethodReturn,
-	encodeEventABI,
-	encodeMethodABI,
-	decodeErrorData,
-} from './encoding';
+import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { LogsSubscription } from './log_subscription';
 import {
 	ContractAbiWithSignature,
@@ -999,7 +994,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 			throw error;
 		}
@@ -1029,7 +1024,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 			throw error;
 		}
@@ -1061,7 +1056,7 @@ export class Contract<Abi extends ContractAbi>
 		void transactionToSend.on('contractExecutionError', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 		});
 
