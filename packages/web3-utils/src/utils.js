@@ -223,9 +223,10 @@ var hexToUtf8 = function(hex) {
  *
  * @method hexToNumber
  * @param {String|Number|BN} value
+ * @param {Boolean} bigIntOnOverflow - if true, return the hex value in case of overflow
  * @return {Number|String}
  */
-var hexToNumber = function (value) {
+var hexToNumber = function (value, bigIntOnOverflow) {
     if (!value) {
         return value;
     }
@@ -235,8 +236,8 @@ var hexToNumber = function (value) {
     }
 
     const n = toBN(value);
-    if(n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
-        return n.toString();
+    if (bigIntOnOverflow && (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER)) {
+        return BigInt(n);
     }
     return n.toNumber();
 };
@@ -533,10 +534,11 @@ var sha3Raw = function(value) {
  *
  * @method toNumber
  * @param {String|Number|BN} value
+ * @param {Boolean} bigIntOnOverflow - if true, return the hex value in case of overflow
  * @return {Number|String}
  */
-var toNumber = function(value) {
-    return typeof value === 'number' ? value : hexToNumber(toHex(value));
+var toNumber = function (value, bigIntOnOverflow) {
+    return typeof value === 'number' ? value : hexToNumber(toHex(value), bigIntOnOverflow);
 }
 
 // 1.x currently accepts 0x... strings, bn.js after update doesn't. it would be a breaking change

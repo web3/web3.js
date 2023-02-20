@@ -30,7 +30,7 @@ hexToNumber(232);
 // $ExpectType string | number
 hexToNumber('0x1fffffffffffff'); // the max safe number 2 ^ 53
 // $ExpectType string | number
-hexToNumber('0x20000000000000'); // larger than the 2 ^ 53 (unsafe)
+hexToNumber('0x20000000000000', true); // larger than the 2 ^ 53 (unsafe)
 
 // $ExpectError
 hexToNumber(new BN(3));
