@@ -6,13 +6,6 @@ coverage:
         threshold: 1%
     patch: off
 
-comment:
-  layout: 'header, diff, flags, components'
-  require_changes: false  
-  require_base: yes
-  require_head: yes       
-  branches: null
-
 component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
@@ -70,3 +63,6 @@ component_management:
     - component_id: "web3-validator"
       paths:
           - /packages/web3-validator/src/
+
+comment:
+  layout: 'header, diff, flags, components'
