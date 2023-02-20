@@ -164,7 +164,7 @@ Method.prototype.formatOutput = function (result) {
 
     if (Array.isArray(result)) {
         return result.map(function (res) {
-            return _this.outputFormatter && res ? _this.outputFormatter(res, this.hexFormat) : res;
+            return _this.outputFormatter && res ? _this.outputFormatter(res, this?.hexFormat) : res;
         });
     } else {
         return this.outputFormatter && result ? this.outputFormatter(result, this.hexFormat) : result;
