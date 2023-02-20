@@ -141,7 +141,7 @@ export const hexToBytes = (bytes: HexString): Buffer => bytesToBuffer(bytes);
 
 /**
  * Converts value to it's number representation
- * @param value - Value to be converted
+ * @param value - Hex string to be converted
  * @returns - The number representation of the input value
  *
  * @example
@@ -189,7 +189,7 @@ export const fromDecimal = numberToHex;
 
 /**
  * Converts value to it's decimal representation in string
- * @param value - Value to be converted
+ * @param value - Hex string to be converted
  * @returns - The decimal representation of the input value
  *
  * @example

@@ -54,10 +54,10 @@ const SHA3_EMPTY_BYTES = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfa
  *
  * @example
  * ```ts
- * console.loog(web3.utils.sha3('web3.js'));
+ * console.log(web3.utils.sha3('web3.js'));
  * > 0x63667efb1961039c9bb0d6ea7a5abdd223a3aca7daa5044ad894226e1f83919a
  *
- * console.loog(web3.utils.sha3(''));
+ * console.log(web3.utils.sha3(''));
  * > undefined
  * ```
  */
