@@ -31,6 +31,7 @@ import {
 	isIpc,
 	closeOpenConnection,
 	isSocket,
+	describeIf,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
@@ -40,7 +41,7 @@ import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecod
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
-describe('ens', () => {
+describeIf(isSocket)('ens', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
 	let nameWrapper: Contract<typeof NameWrapperAbi>;
@@ -151,7 +152,7 @@ describe('ens', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
-	it('ApprovalForAll event', async () => {
+	test('ApprovalForAll event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const event = ens.events.ApprovalForAll();
@@ -166,7 +167,7 @@ describe('ens', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
-	it('NewTTl event', async () => {
+	test('NewTTl event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const event = ens.events.NewTTL();

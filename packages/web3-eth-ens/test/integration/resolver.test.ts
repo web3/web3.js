@@ -31,6 +31,7 @@ import {
 	isIpc,
 	closeOpenConnection,
 	isSocket,
+	itIf,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
@@ -198,7 +199,7 @@ describe('ens', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect
-	it('ContenthasChanged event', async () => {
+	itIf(isSocket)('ContenthasChanged event', async () => {
 		// eslint-disable-next-line no-console, @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const resolver2 = await ens.getResolver('resolver'); // .on('ContenthashChanged', (node, hash) => {});
