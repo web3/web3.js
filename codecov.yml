@@ -66,3 +66,7 @@ component_management:
 
 comment:
   layout: 'header, diff, flags, components'
+  behavior: 'default'
+  require_changes: false
+  require_base: no
+  require_head: no       
