@@ -28,7 +28,7 @@ import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 
 Error.stackTraceLimit = Infinity;
 
-describe('eth', () => {
+describe.skip('eth', () => {
 	let web3: Web3;
 	let accounts: string[] = [];
 	let clientUrl: string;

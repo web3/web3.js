@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TransactionError, ContractExecutionError, ResponseError } from 'web3-errors';
-import { Bytes, Numbers, Transaction, TransactionReceipt } from 'web3-types';
+import { Bytes, HexString, Numbers, Transaction, TransactionReceipt } from 'web3-types';
 import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
@@ -56,4 +56,16 @@ export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
+}
+
+export interface RevertReason {
+	reason: string;
+	signature?: HexString;
+	data?: HexString;
+}
+
+export interface RevertReasonWithCustomError extends RevertReason {
+	customErrorName: string;
+	customErrorDecodedSignature: string;
+	customErrorArguments: Record<string, unknown>;
 }

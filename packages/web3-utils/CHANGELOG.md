@@ -86,3 +86,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   `compareBlockNumbers` function now only supports comparison of both blocktags params ( except `earliest` vs number) or both block number params (#5842)
+-   `SocketProvider` abstract class now resolves JSON RPC response errors instead of rejecting them (#5844)
