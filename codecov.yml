@@ -4,11 +4,56 @@ coverage:
       default:
         target: 80%
       web3:
-        flags: web3
+        flags: 
+            - web3
       web3-core:
-        flags: web3-core
+        flags: 
+            - web3-core
+      web3-errors:
+        flags: 
+            - web3-errors
       web3-eth:
-        flags: web3-eth
+        flags: 
+            - web3-eth
+      web3-eth-abi:
+        flags: 
+            - web3-eth-abi
+      web3-eth-accounts:
+        flags: 
+            - web3-eth-accounts
+      web3-eth-contract:
+        flags: 
+            - web3-eth-contract
+      web3-eth-ens:
+        flags: 
+            - web3-eth-ens
+      web3-eth-iban:
+        flags: 
+            - web3-eth-iban
+      web3-eth-personal:
+        flags: 
+            - web3-eth-personal
+      web3-net:
+        flags: 
+            - web3-net
+      web3-providers-http:
+        flags: 
+            - web3-providers-http
+      web3-providers-ipc:
+        flags: 
+            - web3-providers-ipc
+      web3-providers-ws:
+        flags: 
+            - web3-providers-ws
+      web3-rpc-methods:
+        flags: 
+            - web3-rpc-methods
+      web3-utils:
+        flags: 
+            - web3-utils
+      web3-validator:
+        flags: 
+            - web3-validator
     patch: off
 
 comment:
