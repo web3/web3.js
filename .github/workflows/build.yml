@@ -14,7 +14,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node: [ 16] # [14, 16]
+        node: [14, 16]
     name: Build Packages
     runs-on: ubuntu-latest
     steps:
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16] #[14, 16]
+        node: [14, 16]
     steps:
       - uses: actions/download-artifact@v3
         with:
