@@ -320,6 +320,13 @@ export const encodePacked = (...values: Sha3Input[]): string => {
  * returns a hash string, or null if input is empty
  * @param values - the input to return the tightly packed values
  * @returns - the keccack246 of the tightly packed values
+ *
+ * @example
+ * ```ts
+ *  console.log([{ type: 'string', value: '31323334' }]);
+ * console.log(web3.utils.soliditySha3({ type: "string", value: "31323334" }));
+ * > 0xf15f8da2ad27e486d632dc37d24912f634398918d6f9913a0a0ff84e388be62b
+ * ```
  */
 export const soliditySha3 = (...values: Sha3Input[]): string | undefined =>
 	sha3(encodePacked(...values));
@@ -329,6 +336,12 @@ export const soliditySha3 = (...values: Sha3Input[]): string | undefined =>
  * returns a hash string, if input is empty will return `0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470`
  * @param values - the input to return the tightly packed values
  * @returns - the keccack246 of the tightly packed values
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.soliditySha3Raw({ type: "string", value: "helloworld" }))
+ * > 0xfa26db7ca85ead399216e7c6316bc50ed24393c3122b582735e7f3b0f91b93f0
+ * ```
  */
 export const soliditySha3Raw = (...values: TypedObject[] | TypedObjectAbbreviated[]): string =>
 	sha3Raw(encodePacked(...values));
