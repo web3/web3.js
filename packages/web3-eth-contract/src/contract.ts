@@ -298,9 +298,12 @@ export class Contract<Abi extends ContractAbi>
 			contractContext = addressOrOptionsOrContext;
 		} else if (isWeb3ContractContext(optionsOrContextOrReturnFormat)) {
 			contractContext = optionsOrContextOrReturnFormat;
-		} else {
+		} else if (isWeb3ContractContext(contextOrReturnFormat)){
 			contractContext = contextOrReturnFormat;
 		}
+        else {
+            contractContext = context;
+        }
 
 		let provider;
 		if (
