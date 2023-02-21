@@ -650,5 +650,5 @@ Released with 1.0.0-beta.37 code base.
 
 ### Changed
 
-  - utils.toNumber and utils.hexToNumber can now return the decimal number as a string when it is too large than the max safe number (#5845)
-  - Add optional `hexFormat` param to `getTransaction` and `getBlock` that accept the value `'hex'` (#5845)
+  - Add optional `hexFormat` param to `getTransaction` and `getBlock` that accepts the value `'hex'` (#5845)
+  - `utils.toNumber` and `utils.hexToNumber` can now return the large usafe numbers as `BigInt`, if `true` was passed to a new optional parameter called `bigIntOnOverflow` (#5845)
