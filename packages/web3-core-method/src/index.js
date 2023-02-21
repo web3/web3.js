@@ -167,7 +167,7 @@ Method.prototype.formatOutput = function (result) {
             return _this.outputFormatter && res ? _this.outputFormatter(res, this?.hexFormat) : res;
         });
     } else {
-        return this.outputFormatter && result ? this.outputFormatter(result, this.hexFormat) : result;
+        return this.outputFormatter && result ? this.outputFormatter(result, this?.hexFormat) : result;
     }
 };
 
