@@ -207,7 +207,7 @@ var hexToUtf8 = function(hex) {
     var l = hex.length;
 
     for (var i=0; i < l; i+=2) {
-        code = parseInt(hex.substr(i, 2), 16);
+        code = parseInt(hex.slice(i, i + 2), 16);
         // if (code !== 0) {
         str += String.fromCharCode(code);
         // }
@@ -273,7 +273,7 @@ var numberToHex = function (value) {
     var number = toBN(value);
     var result = number.toString(16);
 
-    return number.lt(new BN(0)) ? '-0x' + result.substr(1) : '0x' + result;
+    return number.lt(new BN(0)) ? '-0x' + result.slice(1) : '0x' + result;
 };
 
 
@@ -315,7 +315,7 @@ var hexToBytes = function(hex) {
     hex = hex.replace(/^0x/i,'');
 
     for (var bytes = [], c = 0; c < hex.length; c += 2)
-        bytes.push(parseInt(hex.substr(c, 2), 16));
+        bytes.push(parseInt(hex.slice(c, c + 2), 16));
     return bytes;
 };
 
@@ -534,8 +534,22 @@ var toNumber = function(value) {
     return typeof value === 'number' ? value : hexToNumber(toHex(value));
 }
 
+// 1.x currently accepts 0x... strings, bn.js after update doesn't. it would be a breaking change
+var BNwrapped = function (value) {
+    // check negative
+    if (typeof value == "string" && value.includes("0x")) {
+        const [negative, hexValue] = value.toLocaleLowerCase().startsWith('-') ? ["-", value.slice(3)] : ["", value.slice(2)];
+        return new BN(negative + hexValue, 16);
+    }
+    else {
+        return new BN(value);
+    } 
+};
+Object.setPrototypeOf(BNwrapped, BN);
+Object.setPrototypeOf(BNwrapped.prototype, BN.prototype);
+
 module.exports = {
-    BN: BN,
+    BN: BNwrapped,
     isBN: isBN,
     isBigNumber: isBigNumber,
     toBN: toBN,

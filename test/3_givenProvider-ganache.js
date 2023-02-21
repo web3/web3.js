@@ -1,5 +1,5 @@
 var assert = require('assert');
-var ganache = require('ganache-cli');
+var ganache = require('ganache');
 var Web3 = require('../packages/web3');
 var Basic = require('./sources/Basic');
 
@@ -16,18 +16,18 @@ describe('web.providers.givenProvider (ganache)', function(){
     };
 
     before(async function(){
-        provider = ganache.provider();
+        provider = ganache.provider()
         web3 = new Web3(provider);
         accounts = await web3.eth.getAccounts();
         basic = new web3.eth.Contract(Basic.abi, basicOptions);
     })
 
-    after(function(done){
-        provider.close(done);
+    after(function(){
+        provider.disconnect();
     })
 
     it('requestManager attaches 4 listeners', async function(){
-        assert.equal(1, web3.currentProvider.listenerCount('data'))
+        assert.equal(1, web3.currentProvider.listenerCount('message'))
         assert.equal(1, web3.currentProvider.listenerCount('connect'))
         assert.equal(1, web3.currentProvider.listenerCount('error'))
         // TODO: Remove close once the standard allows it
@@ -37,7 +37,7 @@ describe('web.providers.givenProvider (ganache)', function(){
     });
 
     it('deploys a contract', async function(){
-        var instance = await basic.deploy().send({from: accounts[0]})
+        var instance = await basic.deploy().send({from: accounts[0],maxFeePerGas: 875000000})
         assert(web3.utils.isAddress(instance.options.address));
     });
 

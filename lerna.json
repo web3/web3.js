@@ -1,6 +1,5 @@
 {
-  "version": "1.7.1",
-  "lerna": "2.0.0",
+  "version": "1.8.2",
   "command": {
     "init": {
       "exact": true
@@ -12,5 +11,6 @@
   },
   "packages": [
     "packages/*"
-  ]
+  ],
+  "useNx": false
 }

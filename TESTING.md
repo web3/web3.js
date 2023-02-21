@@ -3,7 +3,7 @@
 Web3 is used in Node.js and browser contexts to interact with a wide variety of clients. Its tests
 try to cover as much of this domain as possible.
 
-If you're looking for a fixture, test pattern or common execution context to validate a change, you should be able find it in the existing test suite. (Caveats include Parity / Quorum clients and MetaMask specific tests.)
+If you're looking for a fixture, test pattern or common execution context to validate a change, you should be able to find it in the existing test suite. (Caveats include Parity / Quorum clients and MetaMask specific tests.)
 
 ## Required Tests
 
@@ -12,8 +12,8 @@ These should pass for PRs to merge:
 | Test type | npm command | Example | Description | CI Only |
 | --------- | --------------- | ------ | ----------- | ----- |
 | unit | test | [eth.accounts.sign.js][1] | For discrete pieces of logic |
-| integration | test:e2e:clients | [e2e.contract.events.js][2] | Tests using geth and ganache-cli, (insta-mining and interval mining.) Easy to write and good for modeling complex use-cases |
-| browser | test:e2e:browsers | | The integration tests run in a headless browser using web3.min.js (browserified, vs. ganache-cli) |
+| integration | test:e2e:clients | [e2e.contract.events.js][2] | Tests using geth and ganache, (insta-mining and interval mining.) Easy to write and good for modeling complex use-cases |
+| browser | test:e2e:browsers | | The integration tests run in a headless browser using web3.min.js (browserified, vs. ganache) |
 | typescript | dtslint | -- | TS type definitions tests |
 | dependencies  | depcheck | -- | Verifies every dependency is listed correctly in the module package |
 | bundle | test:e2e:min | [e2e.minified.js][3] | Verifies minified bundle loads in a headless browser *without* being webpacked / browserified | :white_check_mark: |
@@ -23,7 +23,7 @@ These should pass for PRs to merge:
 
 ## Optional Tests
 
-CI also has tests that install Web3's state at an arbitrary commit in an external real-world project and run *their* unit tests with it. This strategy is borrowed from ethereum/solidity which checks latest Solidity against OpenZeppelin and others to keep abreast of how local changes might affect critical projects downstream from them.
+CI also has tests that install Web3's state at an arbitrary commit in an external real-world project and run *their* unit tests with it. This strategy is borrowed from ethereum/solidity which checks the latest Solidity against OpenZeppelin and others to keep abreast of how local changes might affect critical projects downstream from them.
 
 Examples include:
 + [e2e.mosaic.sh][8]: ~300 unit tests for [a Solidity project built with Buidler & @truffle/contract][9]
@@ -45,7 +45,7 @@ CI job.
 
 The npm script `test:e2e:clients` greps all tests with an `[ @E2E ]` tag
 in their mocha test description and runs them against:
-+ ganache-cli
++ ganache
 + geth stable (POA, single instance, instamining)
 + geth stable (POA, single instance, mining at 2s intervals)
 
@@ -63,7 +63,7 @@ npm registry which is spun up in CI using [verdaccio][14]. (Implementation detai
 be seen in [scripts/e2e.npm.publish.sh][15])
 
 The real world target is then cloned and npm or yarn are used to replace its existing
-Web3 version with the version published to the the private registry. A simple example can be seen at
+Web3 version with the version published to the private registry. A simple example can be seen at
 [scripts/e2e.ganache.core.sh][10].
 
 In practice, complex projects can have many versions of Web3 nested in their dependency tree.

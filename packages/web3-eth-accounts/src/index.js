@@ -25,7 +25,7 @@
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var Account = require('eth-lib/lib/account');
-var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
+var cryp = require('crypto');
 var scrypt = require('scrypt-js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
@@ -397,7 +397,12 @@ function _handleTxPricing(_this, tx) {
             ) {
                 // Legacy transaction, return provided gasPrice
                 resolve({ gasPrice: tx.gasPrice })
-            } else {
+            } 
+            else if (tx.type === '0x2' && tx.maxFeePerGas && tx.maxPriorityFeePerGas) {
+                // EIP-1559 transaction, return provided maxFeePerGas and maxPriorityFeePerGas
+                resolve({ maxFeePerGas: tx.maxFeePerGas, maxPriorityFeePerGas: tx.maxPriorityFeePerGas })
+            }
+            else {
                 Promise.all([
                     _this._ethereumCall.getBlockByNumber(),
                     _this._ethereumCall.getGasPrice()
@@ -433,7 +438,9 @@ function _handleTxPricing(_this, tx) {
                             throw Error("Network doesn't support eip-1559")
                         resolve({ gasPrice });
                     }
-                })
+                }).catch((error) => {
+                    reject(error);
+                });
             }
         } catch (error) {
             reject(error)
@@ -678,8 +685,10 @@ Wallet.prototype.remove = function(addressOrIndex) {
         this[account.address].privateKey = null;
         delete this[account.address];
         // address lowercase
-        this[account.address.toLowerCase()].privateKey = null;
-        delete this[account.address.toLowerCase()];
+        if (this[account.address.toLowerCase()]) {
+            this[account.address.toLowerCase()].privateKey = null;
+            delete this[account.address.toLowerCase()];
+        }
         // index
         this[account.index].privateKey = null;
         delete this[account.index];

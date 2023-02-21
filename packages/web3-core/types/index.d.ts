@@ -242,6 +242,7 @@ export interface Log {
     transactionHash: string;
     blockHash: string;
     blockNumber: number;
+    removed: boolean;
 }
 
 // had to move `web3-net` due to other modules in `1.x` not referencing
@@ -433,7 +434,7 @@ export interface LogsOptions {
     topics?: Array<string | string[] | null>;
 }
 
-export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis';
+export type BlockNumber = string | number | BN | BigNumber | 'latest' | 'pending' | 'earliest' | 'genesis' | 'finalized' | 'safe';
 
 export interface RequestArguments {
     method: string;
@@ -442,8 +443,8 @@ export interface RequestArguments {
 }
 
 export interface AbstractProvider {
-    sendAsync(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
-    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void): void;
+    sendAsync(payload: JsonRpcPayload, callback?: (error: Error | null, result?: JsonRpcResponse) => Promise<unknown> | void): void;
+    send?(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => unknown): void;
     request?(args: RequestArguments): Promise<any>;
     connected?: boolean;
   }
