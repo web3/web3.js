@@ -29,6 +29,7 @@ import {
 import {
 	encodeEventSignature,
 	encodeFunctionSignature,
+	decodeContractErrorData,
 	isAbiErrorFragment,
 	isAbiEventFragment,
 	isAbiFunctionFragment,
@@ -74,13 +75,7 @@ import {
 	Web3ValidationErrorObject,
 } from 'web3-validator';
 import { ALL_EVENTS_ABI } from './constants';
-import {
-	decodeEventABI,
-	decodeMethodReturn,
-	encodeEventABI,
-	encodeMethodABI,
-	decodeErrorData,
-} from './encoding';
+import { decodeEventABI, decodeMethodReturn, encodeEventABI, encodeMethodABI } from './encoding';
 import { LogsSubscription } from './log_subscription';
 import {
 	ContractAbiWithSignature,
@@ -261,33 +256,41 @@ export class Contract<Abi extends ContractAbi>
 	 */
 	public constructor(
 		jsonInterface: Abi,
-		context?: Web3ContractContext,
+		context?: Web3ContractContext | Web3Context,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address?: Address,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		options?: ContractInitOptions,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
 		address: Address | undefined,
 		options: ContractInitOptions,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	);
 	public constructor(
 		jsonInterface: Abi,
-		addressOrOptionsOrContext?: Address | ContractInitOptions | Web3ContractContext,
-		optionsOrContextOrReturnFormat?: ContractInitOptions | Web3ContractContext | DataFormat,
-		contextOrReturnFormat?: Web3ContractContext | DataFormat,
+		addressOrOptionsOrContext?:
+			| Address
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context,
+		optionsOrContextOrReturnFormat?:
+			| ContractInitOptions
+			| Web3ContractContext
+			| Web3Context
+			| DataFormat,
+		contextOrReturnFormat?: Web3ContractContext | Web3Context | DataFormat,
 		returnFormat?: DataFormat,
 	) {
 		let contractContext;
@@ -361,6 +364,9 @@ export class Contract<Abi extends ContractAbi>
 		};
 
 		this.syncWithContext = (options as ContractInitOptions)?.syncWithContext ?? false;
+		if (contractContext instanceof Web3Context) {
+			this.subscribeToContextEvents(contractContext);
+		}
 
 		Object.defineProperty(this.options, 'address', {
 			set: (value: Address) => this._parseAndSetAddress(value, returnDataFormat),
@@ -988,7 +994,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 			throw error;
 		}
@@ -1018,7 +1024,7 @@ export class Contract<Abi extends ContractAbi>
 		} catch (error: unknown) {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 			throw error;
 		}
@@ -1050,7 +1056,7 @@ export class Contract<Abi extends ContractAbi>
 		void transactionToSend.on('contractExecutionError', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
-				decodeErrorData(errorsAbi, error.innerError);
+				decodeContractErrorData(errorsAbi, error.innerError);
 			}
 		});
 

@@ -83,3 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 -   Moved all types and interfaces to `web3-types` (#5771)
+
+### Added
+
+-   `decodeErrorData` from `web3-eth-contract` is now exported from this package and was renamed to `decodeContractErrorData` (#5844)

@@ -26,7 +26,6 @@ import {
 
 import {
 	AbiConstructorFragment,
-	AbiErrorFragment,
 	AbiEventFragment,
 	AbiFunctionFragment,
 	LogsInput,
@@ -40,7 +39,6 @@ import {
 import {
 	decodeLog,
 	decodeParameters,
-	encodeErrorSignature,
 	encodeEventSignature,
 	encodeFunctionSignature,
 	encodeParameter,
@@ -51,7 +49,7 @@ import {
 
 import { blockSchema, logSchema } from 'web3-eth';
 
-import { Eip838ExecutionError, Web3ContractError } from 'web3-errors';
+import { Web3ContractError } from 'web3-errors';
 // eslint-disable-next-line import/no-cycle
 import { ContractAbiWithSignature, ContractOptions, EventLog } from './types';
 
@@ -255,28 +253,4 @@ export const decodeMethodReturn = (abi: AbiFunctionFragment, returnValues?: HexS
 	}
 
 	return result;
-};
-
-export const decodeErrorData = (errorsAbi: AbiErrorFragment[], error: Eip838ExecutionError) => {
-	if (error?.data) {
-		let errorName: string | undefined;
-		let errorSignature: string | undefined;
-		let errorArgs: { [K in string]: unknown } | undefined;
-		try {
-			const errorSha = error.data.slice(0, 10);
-			const errorAbi = errorsAbi.find(abi => encodeErrorSignature(abi).startsWith(errorSha));
-
-			if (errorAbi?.inputs) {
-				errorName = errorAbi.name;
-				errorSignature = jsonInterfaceMethodToString(errorAbi);
-				// decode abi.inputs according to EIP-838
-				errorArgs = decodeParameters([...errorAbi.inputs], error.data.substring(10));
-			}
-		} catch (err) {
-			console.error(err);
-		}
-		if (errorName) {
-			error.setDecodedProperties(errorName, errorSignature, errorArgs);
-		}
-	}
 };

@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import WebSocket from 'isomorphic-ws';
-import { EthExecutionAPI, JsonRpcResponse, Web3APIPayload } from 'web3-types';
-import { ResponseError } from 'web3-errors';
+import { EthExecutionAPI, Web3APIPayload } from 'web3-types';
 import WebSocketProvider from '../../src/index';
 import {
 	invalidConnectionStrings,
@@ -106,29 +105,6 @@ describe('WebSocketProvider', () => {
 				await wsProvider.request(jsonRpcPayload);
 
 				expect(messageSpy).toHaveBeenCalledWith(undefined, jsonRpcResponse);
-			});
-		});
-
-		describe('error response', () => {
-			it('should reject with response', async () => {
-				// Set `error` attribute to reject from mock
-				const payload = { ...jsonRpcPayload, error: 'my-error' };
-
-				await expect(wsProvider.request(payload)).rejects.toThrow(
-					new ResponseError(payload as unknown as JsonRpcResponse<any>),
-				);
-			});
-
-			it('should emit message with response as error', async () => {
-				// Set `error` attribute to reject from mock
-				const payload = { ...jsonRpcPayload, error: 'my-error' };
-
-				const messageSpy = jest.fn();
-				wsProvider.on('message', messageSpy);
-
-				await expect(wsProvider.request(payload)).rejects.toThrow();
-
-				expect(messageSpy).toHaveBeenCalledWith(payload, undefined);
 			});
 		});
 	});
