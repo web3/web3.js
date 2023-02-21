@@ -32,3 +32,5 @@ export interface Method {
     abiCoder?: any;
     handleRevert?: boolean;
 }
+
+export default Method

@@ -36,3 +36,5 @@ export interface SignatureObject {
     s: string;
     v: string;
 }
+
+export default Accounts

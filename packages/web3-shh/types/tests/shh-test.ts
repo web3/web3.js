@@ -17,7 +17,10 @@
  * @date 2018
  */
 
-import { Info, Notification, Shh } from 'web3-shh';
+import ShhDefault, { Info, Notification, Shh } from 'web3-shh';
+
+// $ExpectType Shh
+const shh_default_empty = new ShhDefault();
 
 // $ExpectType Shh
 const shh_empty = new Shh();

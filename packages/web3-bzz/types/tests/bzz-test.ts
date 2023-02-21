@@ -17,7 +17,10 @@
  * @date 2018
  */
 
-import { Bzz } from 'web3-bzz';
+import BzzDefault, { Bzz } from 'web3-bzz';
+
+// $ExpectType Bzz
+const bzz_default_empty = new BzzDefault();
 
 // $ExpectType Bzz
 const bzz_empty = new Bzz();

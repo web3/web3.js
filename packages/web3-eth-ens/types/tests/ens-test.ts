@@ -20,9 +20,13 @@
 import { TransactionRevertInstructionError } from 'web3-core-helpers';
 import { TransactionReceipt } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
-import { Ens, ContentHash } from 'web3-eth-ens';
+import EnsDefault, { Ens, ContentHash } from 'web3-eth-ens';
 import { Eth } from 'web3-eth';
 
+// $ExpectType Ens
+const ens_default = new EnsDefault(new Eth('http://localhost:8545'));
+
+// $ExpectType Ens
 const ens = new Ens(new Eth('http://localhost:8545'));
 
 // $ExpectType string | null

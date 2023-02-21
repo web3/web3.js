@@ -63,3 +63,5 @@ export class HttpProvider extends HttpProviderBase {
     disconnect(): boolean;
     supportsSubscriptions(): boolean;
 }
+
+export default HttpProvider

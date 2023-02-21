@@ -19,7 +19,7 @@
  */
 
 import {Log} from 'web3-core';
-import {
+import EthDefault, {
     BlockTransactionObject,
     BlockTransactionString,
     BlockHeader,
@@ -37,6 +37,9 @@ import {
 } from 'web3-eth';
 import BN = require('bn.js');
 import BigNumber from 'bignumber.js';
+
+// $ExpectType Eth
+const eth_default_empty = new EthDefault();
 
 // $ExpectType Eth
 const eth_empty = new Eth();

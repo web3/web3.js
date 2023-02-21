@@ -18,8 +18,12 @@
  * @date 2018
  */
 
-import { Contract } from 'web3-eth-contract';
+import ContractDefault, { Contract } from 'web3-eth-contract';
 
+// $ExpectType Contract
+const contract_default = new ContractDefault([]);
+
+// $ExpectType Contract
 const contract = new Contract([]);
 
 // $ExpectType string | null

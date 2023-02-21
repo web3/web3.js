@@ -16,7 +16,10 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-import { Accounts, SignedTransaction } from 'web3-eth-accounts';
+import AccountsDefault, { Accounts, SignedTransaction } from 'web3-eth-accounts';
+
+// $ExpectType Accounts
+const accounts_default_empty = new AccountsDefault();
 
 // $ExpectType Accounts
 const accounts_empty = new Accounts();
