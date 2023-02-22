@@ -143,7 +143,6 @@ export interface Transaction {
     v?: string;
     r?: string;
     s?: string;
-
 }
 
 export interface TransactionConfig {

@@ -453,7 +453,6 @@ export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
 }
 
-
 export interface CreateAccessList {
     accessList: AccessTuple[];
     error?: string;
