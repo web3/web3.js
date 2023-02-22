@@ -461,3 +461,5 @@ export interface AccessTuple {
     address: string;
     storageKeys: string[];
 }
+
+export type AccessList = AccessTuple[];
