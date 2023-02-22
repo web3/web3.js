@@ -216,11 +216,12 @@ export abstract class SocketProvider<
 	 * @param data - The data to be sent to the server
 	 */
 	public disconnect(code?: number, data?: string): void {
+		const disconnectCode = code ?? 1000;
 		this._removeSocketListeners();
 		if (this.getStatus() !== 'disconnected') {
-			this._closeSocketConnection(code, data);
+			this._closeSocketConnection(disconnectCode, data);
 		}
-		this._onDisconnect(code, data);
+		this._onDisconnect(disconnectCode, data);
 	}
 
 	/**
