@@ -36,7 +36,8 @@ import {
     chain,
     BlockNumber,
     LogsOptions,
-    PastLogsOptions
+    PastLogsOptions,
+    AccessTuple
 } from 'web3-core';
 import {Subscription} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
@@ -452,10 +453,6 @@ export interface BlockTransactionString extends BlockTransactionBase {
     transactions: string[];
 }
 
-export interface AccessTuple {
-    address: string;
-    storageKeys: string[];
-}
 
 export interface CreateAccessList {
     accessList: AccessTuple[];

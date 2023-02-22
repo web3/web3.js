@@ -456,3 +456,8 @@ export type provider =
     | AbstractProvider
     | string
     | null;
+
+export interface AccessTuple {
+    address: string;
+    storageKeys: string[];
+}
