@@ -138,6 +138,12 @@ export interface Transaction {
     maxFeePerGas?: number | string | BN;
     gas: number;
     input: string;
+    chainId?: string;
+    accessList?: AccessList;
+    v?: string;
+    r?: string;
+    s?: string;
+
 }
 
 export interface TransactionConfig {
