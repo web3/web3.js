@@ -355,4 +355,94 @@ describe('Web3Eth.sendTransaction', () => {
 			// expect.assertions(1);
 		});
 	});
+
+	describe('Transaction Error Scenarios', () => {
+		it('Should throw because gas too low', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt(1),
+				gas: 1,
+			};
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'InvalidResponseError',
+				code: 101,
+				message: expect.any(String),
+				innerError: expect.any(Object),
+				data: undefined,
+				request: {
+					jsonrpc: '2.0',
+					id: expect.any(String),
+					method: 'eth_sendTransaction',
+					params: [
+						{
+							from: tempAcc.address,
+							gas: '0x1',
+							gasPrice: expect.any(String),
+							maxFeePerGas: undefined,
+							maxPriorityFeePerGas: undefined,
+							to: '0x0000000000000000000000000000000000000000',
+							value: '0x1',
+						},
+					],
+				},
+			});
+		});
+
+		it('Should throw because insufficient funds', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: '0x0000000000000000000000000000000000000000',
+				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
+			};
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'InvalidResponseError',
+				code: 101,
+				message: expect.any(String),
+				innerError: expect.any(Object),
+				data: undefined,
+				request: {
+					jsonrpc: '2.0',
+					id: expect.any(String),
+					method: 'eth_sendTransaction',
+					params: [
+						{
+							from: tempAcc.address,
+							gasPrice: expect.any(String),
+							maxFeePerGas: undefined,
+							maxPriorityFeePerGas: undefined,
+							to: '0x0000000000000000000000000000000000000000',
+							value: '0x28c87cb5c89a2571ebfdcb54864ada8349ffffffffffffff',
+						},
+					],
+				},
+			});
+		});
+
+		it('Should throw because of unknown account', async () => {
+			const transaction: Transaction = {
+				from: '0x0000000000000000000000000000000000000000',
+				to: '0x0000000000000000000000000000000000000000',
+			};
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'InvalidResponseError',
+				code: 101,
+				message: expect.any(String),
+				innerError: expect.any(Object),
+				data: undefined,
+				request: {
+					jsonrpc: '2.0',
+					id: expect.any(String),
+					method: 'eth_sendTransaction',
+					params: [
+						{
+							from: '0x0000000000000000000000000000000000000000',
+							to: '0x0000000000000000000000000000000000000000',
+							gasPrice: expect.any(String),
+						},
+					],
+				},
+			});
+		});
+	});
 });
