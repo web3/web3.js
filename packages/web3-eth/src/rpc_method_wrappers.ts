@@ -48,7 +48,10 @@ import {
 import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
-import { SignatureError, TransactionError, ContractExecutionError } from 'web3-errors';
+import {
+	SignatureError,
+	TransactionError,
+} from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
@@ -77,8 +80,7 @@ import { trySendTransaction } from './utils/try_send_transaction';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
-// eslint-disable-next-line import/no-cycle
-import { getRevertReason } from './utils/get_revert_reason';
+import { getTransactionError } from './utils/get_transaction_error';
 
 /**
  *
@@ -1078,14 +1080,6 @@ export function sendTransaction<
 							ETH_DATA_FORMAT,
 						);
 
-						if (web3Context.handleRevert) {
-							// eslint-disable-next-line no-use-before-define
-							await getRevertReason(
-								web3Context,
-								transactionFormatted as TransactionCall,
-							);
-						}
-
 						if (
 							!options?.ignoreGasPricing &&
 							isNullish(transactionFormatted.gasPrice) &&
@@ -1177,17 +1171,17 @@ export function sendTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							const error = await getTransactionError<ReturnFormat>(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								transactionReceiptFormatted,
+							);
+
 							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit(
-									'error',
-									new TransactionError(
-										'Transaction failed',
-										transactionReceiptFormatted,
-									),
-								);
+								promiEvent.emit('error', error);
 							}
-							reject(transactionReceiptFormatted as unknown as ResolveType);
-							return;
+
+							reject(error);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
@@ -1206,17 +1200,18 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
-						if (error instanceof ContractExecutionError) {
-							promiEvent.emit('contractExecutionError', error);
-						}
+						const _error = await getTransactionError<ReturnFormat>(
+							web3Context,
+							undefined,
+							undefined,
+							error
+						);
+
 						if (promiEvent.listenerCount('error') > 0) {
-							promiEvent.emit(
-								'error',
-								new TransactionError((error as Error).message),
-							);
+							promiEvent.emit('error', _error);
 						}
 
-						reject(error);
+						reject(_error);
 					}
 				})() as unknown;
 			});

@@ -57,6 +57,7 @@ import {
 	ERR_TX_UNABLE_TO_POPULATE_NONCE,
 	ERR_TX_UNSUPPORTED_EIP_1559,
 	ERR_TX_UNSUPPORTED_TYPE,
+	ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR,
 } from '../error_codes';
 import { InvalidValueError, BaseWeb3Error } from '../web3_error_base';
 
@@ -84,17 +85,16 @@ export class RevertInstructionError extends BaseWeb3Error {
 	}
 }
 
-export class TransactionRevertError extends BaseWeb3Error {
+export class TransactionRevertError<ReceiptType = TransactionReceipt> extends BaseWeb3Error {
 	public code = ERR_TX_REVERT_TRANSACTION;
 
 	public constructor(
 		public reason: string,
 		public signature?: string,
-		public receipt?: TransactionReceipt,
+		public receipt?: ReceiptType,
+		public data?: string,
 	) {
-		super(
-			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
-		);
+		super(reason);
 	}
 
 	public toJSON() {
@@ -103,6 +103,36 @@ export class TransactionRevertError extends BaseWeb3Error {
 			reason: this.reason,
 			signature: this.signature,
 			receipt: this.receipt,
+			data: this.data
+		};
+	}
+}
+
+export class TransactionRevertWithCustomError<ReceiptType = TransactionReceipt> extends TransactionRevertError<ReceiptType> {
+	public code = ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR;
+
+	public constructor(
+		public reason: string,
+		public customErrorName: string,
+		public customErrorDecodedSignature: string,
+		public customErrorArguments: Record<string, unknown>,
+		public signature?: string,
+		public receipt?: ReceiptType,
+		public data?: string,
+	) {
+		super(reason);
+	}
+
+	public toJSON() {
+		return {
+			...super.toJSON(),
+			reason: this.reason,
+			customErrorName: this.customErrorName,
+			customErrorDecodedSignature: this.customErrorDecodedSignature,
+			customErrorArguments: this.customErrorArguments,
+			signature: this.signature,
+			receipt: this.receipt,
+			data: this.data
 		};
 	}
 }
@@ -125,10 +155,10 @@ export class ContractCodeNotStoredError extends TransactionError {
 	}
 }
 
-export class TransactionRevertedWithoutReasonError extends TransactionError {
-	public constructor(receipt: TransactionReceipt) {
+export class TransactionRevertedWithoutReasonError<ReceiptType = TransactionReceipt> extends TransactionError<ReceiptType> {
+	public constructor(receipt?: ReceiptType) {
 		super(
-			`Transaction has been reverted by the EVM:\n ${JSON.stringify(receipt, undefined, 2)}`,
+			`Transaction has been reverted by the EVM${receipt === undefined ? '' : `:\n ${JSON.stringify(receipt, undefined, 2)}`}`,
 			receipt,
 		);
 		this.code = ERR_TX_REVERT_WITHOUT_REASON;
