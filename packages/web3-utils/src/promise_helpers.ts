@@ -45,6 +45,9 @@ export function waitWithTimeout<T>(
 /**
  * Wait for a promise but interrupt it if it did not resolve within a given timeout.
  * If the timeout reached, before the promise code resolve, either throw an error if an error object was provided, or return `undefined`.
+ * @param awaitable - The promise or function to wait for.
+ * @param timeout - The timeout in milliseconds.
+ * @param error - (Optional) The error to throw if the timeout reached.
  */
 export async function waitWithTimeout<T>(
 	awaitable: Promise<T> | AsyncFunction<T>,
@@ -66,7 +69,12 @@ export async function waitWithTimeout<T>(
 	}
 	return result;
 }
-
+/**
+ * Repeatedly calls an async function with a given interval until the result of the function is defined (not undefined or null),
+ * or until a timeout is reached.
+ * @param func - The function to call.
+ * @param interval - The interval in milliseconds.
+ */
 export async function pollTillDefined<T>(
 	func: AsyncFunction<T>,
 	interval: number,
@@ -103,7 +111,17 @@ export async function pollTillDefined<T>(
 
 	return polledRes;
 }
-
+/**
+ * Enforce a timeout on a promise, so that it can be rejected if it takes too long to complete
+ * @param timeout - The timeout to enforced in milliseconds.
+ * @param error - The error to throw if the timeout is reached.
+ * @returns A tuple of the timeout id and the promise that will be rejected if the timeout is reached.
+ *
+ * @example
+ * ```ts
+ * const [timerId, promise] = web3.utils.rejectIfTimeout(100, new Error('time out'));
+ * ```
+ */
 export function rejectIfTimeout(timeout: number, error: Error): [NodeJS.Timer, Promise<never>] {
 	let timeoutId: NodeJS.Timer | undefined;
 	const rejectOnTimeout = new Promise<never>((_, reject) => {
@@ -113,7 +131,13 @@ export function rejectIfTimeout(timeout: number, error: Error): [NodeJS.Timer, P
 	});
 	return [timeoutId as unknown as NodeJS.Timer, rejectOnTimeout];
 }
-
+/**
+ * Sets an interval that repeatedly executes the given cond function with the specified interval between each call.
+ * If the condition is met, the interval is cleared and a Promise that rejects with the returned value is returned.
+ * @param cond - The function/confition to call.
+ * @param interval - The interval in milliseconds.
+ * @returns - an array with the interval ID and the Promise.
+ */
 export function rejectIfConditionAtInterval<T>(
 	cond: AsyncFunction<T | undefined>,
 	interval: number,

@@ -22,6 +22,17 @@ import { numberToHex, toHex, toNumber } from './converters';
 
 /**
  * Adds a padding on the left of a string, if value is a integer or bigInt will be converted to a hex string.
+ * @param value - The value to be padded.
+ * @param characterAmount - The amount of characters the string should have.
+ * @param sign - The sign to be added (default is 0).
+ * @returns The padded string.
+ *
+ * @example
+ * ```ts
+ *
+ * console.log(web3.utils.padLeft('0x123', 10));
+ * >0x0000000123
+ * ```
  */
 export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): string => {
 	// To avoid duplicate code and circular dependency we will
@@ -38,6 +49,19 @@ export const padLeft = (value: Numbers, characterAmount: number, sign = '0'): st
 
 /**
  * Adds a padding on the right of a string, if value is a integer or bigInt will be converted to a hex string.
+ * @param value - The value to be padded.
+ * @param characterAmount - The amount of characters the string should have.
+ * @param sign - The sign to be added (default is 0).
+ * @returns The padded string.
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.padRight('0x123', 10));
+ * > 0x1230000000
+ *
+ * console.log(web3.utils.padRight('0x123', 10, '1'));
+ * > 0x1231111111
+ * ```
  */
 export const padRight = (value: Numbers, characterAmount: number, sign = '0'): string => {
 	if (typeof value === 'string' && !isHexStrict(value)) {
@@ -64,6 +88,22 @@ export const leftPad = padLeft;
 
 /**
  * Converts a negative number into the two’s complement and return a hexstring of 64 nibbles.
+ * @param value - The value to be converted.
+ * @param nibbleWidth - The nibble width of the hex string (default is 64).
+ *
+ * @returns The hex string of the two’s complement.
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.toTwosComplement(13, 32));
+ * > 0x0000000000000000000000000000000d
+ *
+ * console.log(web3.utils.toTwosComplement('-0x1', 32));
+ * > 0xffffffffffffffffffffffffffffffff
+ *
+ * console.log(web3.utils.toTwosComplement(BigInt('9007199254740992'), 32));
+ * > 0x00000000000000000020000000000000
+ * ```
  */
 export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 	validator.validate(['int'], [value]);
@@ -85,6 +125,18 @@ export const toTwosComplement = (value: Numbers, nibbleWidth = 64): string => {
 
 /**
  * Converts the twos complement into a decimal number or big int.
+ * @param value - The value to be converted.
+ * @param nibbleWidth - The nibble width of the hex string (default is 64).
+ * @returns The decimal number or big int.
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.fromTwosComplement(''0x0000000000000000000000000000000d', 32'));
+ * > 13
+ *
+ * console.log(web3.utils.fromTwosComplement('0x00000000000000000020000000000000', 32));
+ * > 9007199254740992n
+ * ```
  */
 export const fromTwosComplement = (value: Numbers, nibbleWidth = 64): number | bigint => {
 	validator.validate(['int'], [value]);
