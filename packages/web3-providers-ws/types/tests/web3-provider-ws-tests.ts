@@ -21,7 +21,7 @@
  */
 
 import { WebsocketProviderOptions, JsonRpcResponse } from 'web3-core-helpers';
-import { WebsocketProvider } from 'web3-providers';
+import WebsocketProviderDefault, { WebsocketProvider } from 'web3-providers';
 
 const options: WebsocketProviderOptions = {
     timeout: 30000,
@@ -30,6 +30,10 @@ const options: WebsocketProviderOptions = {
     }
 };
 
+// $ExpectType WebsocketProvider
+const ws_provider_default = new WebsocketProviderDefault('ws://localhost:8545', options);
+
+// $ExpectType WebsocketProvider
 const wsProvider = new WebsocketProvider('ws://localhost:8545', options);
 
 // $ExpectType boolean

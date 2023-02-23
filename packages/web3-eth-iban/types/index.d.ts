@@ -58,3 +58,5 @@ export interface IndirectOptions {
     institution: string;
     identifier: string;
 }
+
+export default Iban

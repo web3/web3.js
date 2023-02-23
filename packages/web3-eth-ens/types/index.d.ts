@@ -402,3 +402,5 @@ export class Registry {
         callback?: (error: Error | TransactionRevertInstructionError, receipt: TransactionReceipt) => void
     ): PromiEvent<TransactionReceipt | TransactionRevertInstructionError>
 }
+
+export default Ens

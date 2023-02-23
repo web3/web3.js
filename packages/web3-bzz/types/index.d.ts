@@ -38,3 +38,5 @@ export interface Pick {
     directory: () => Promise<any>;
     data: () => Promise<any>;
 }
+
+export default Bzz

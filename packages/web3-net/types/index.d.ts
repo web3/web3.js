@@ -20,3 +20,5 @@
 import { NetworkBase } from 'web3-core';
 
 export class Network extends NetworkBase {}
+
+export default Network
