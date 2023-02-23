@@ -226,7 +226,7 @@ var hexToUtf8 = function(hex) {
  * @param {Boolean} bigIntOnOverflow - if true, return the hex value in case of overflow
  * @return {Number|String}
  */
-var hexToNumber = function (value, bigIntOnOverflow) {
+var hexToNumber = function (value, bigIntOnOverflow = false) {
     if (!value) {
         return value;
     }
@@ -537,7 +537,7 @@ var sha3Raw = function(value) {
  * @param {Boolean} bigIntOnOverflow - if true, return the hex value in case of overflow
  * @return {Number|String}
  */
-var toNumber = function (value, bigIntOnOverflow) {
+var toNumber = function (value, bigIntOnOverflow = false) {
     return typeof value === 'number' ? value : hexToNumber(toHex(value), bigIntOnOverflow);
 }
 
