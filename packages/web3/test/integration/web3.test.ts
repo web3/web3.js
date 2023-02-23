@@ -19,7 +19,7 @@ import { JsonRpcOptionalRequest, Web3BaseProvider, SupportedProviders } from 'we
 import Contract from 'web3-eth-contract';
 import HttpProvider from 'web3-providers-http';
 import IpcProvider from 'web3-providers-ipc';
-import WebsocketProvider from 'web3-providers-ws';
+import WebSocketProvider from 'web3-providers-ws';
 import Web3 from '../../src/index';
 import { BasicAbi } from '../shared_fixtures/Basic';
 import { validEncodeParametersData } from '../shared_fixtures/data';
@@ -32,6 +32,7 @@ import {
 	isIpc,
 	isWs,
 	waitForOpenConnection,
+	isSocket,
 } from '../shared_fixtures/system_tests_utils';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
@@ -73,6 +74,18 @@ describe('Web3 instance', () => {
 
 	it('should be able to create web3 object without provider', () => {
 		expect(() => new Web3()).not.toThrow();
+	});
+
+	it('check disconnect function', async () => {
+		const web3Instance = new Web3(clientUrl);
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		if (isSocket) {
+			web3Instance.currentProvider?.disconnect();
+		}
 	});
 
 	it('should be able use "utils" without provider', () => {
@@ -179,7 +192,7 @@ describe('Web3 instance', () => {
 			const res = Web3.providers;
 
 			expect(Web3.providers.HttpProvider).toBe(HttpProvider);
-			expect(res.WebsocketProvider).toBe(WebsocketProvider);
+			expect(res.WebsocketProvider).toBe(WebSocketProvider);
 			expect(res.IpcProvider).toBe(IpcProvider);
 		});
 
