@@ -22,6 +22,7 @@ import {
 	TransactionRevertedWithoutReasonError,
 	TransactionRevertError,
 	TransactionRevertWithCustomError,
+	InvalidResponseError,
 } from 'web3-errors';
 import { Bytes, HexString, Numbers, Transaction, TransactionReceipt } from 'web3-types';
 import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
@@ -41,7 +42,8 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 	error:
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>
-		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>;
+		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
+		| InvalidResponseError;
 };
 
 export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {

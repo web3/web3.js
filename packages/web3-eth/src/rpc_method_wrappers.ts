@@ -49,6 +49,7 @@ import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
+	InvalidResponseError,
 	SignatureError,
 	TransactionError,
 } from 'web3-errors';
@@ -1200,18 +1201,13 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
-						const _error = await getTransactionError<ReturnFormat>(
-							web3Context,
-							undefined,
-							undefined,
-							error
-						);
-
-						if (promiEvent.listenerCount('error') > 0) {
-							promiEvent.emit('error', _error);
+						if (error instanceof InvalidResponseError &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', error);
 						}
 
-						reject(_error);
+						reject(error);
 					}
 				})() as unknown;
 			});
