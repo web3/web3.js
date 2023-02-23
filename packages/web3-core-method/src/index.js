@@ -164,10 +164,10 @@ Method.prototype.formatOutput = function (result) {
 
     if (Array.isArray(result)) {
         return result.map(function (res) {
-            return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
+            return _this.outputFormatter && res ? _this.outputFormatter(res, this?.hexFormat) : res;
         });
     } else {
-        return this.outputFormatter && result ? this.outputFormatter(result) : result;
+        return this.outputFormatter && result ? this.outputFormatter(result, this?.hexFormat) : result;
     }
 };
 
@@ -637,7 +637,9 @@ Method.prototype.buildCall = function () {
             payload = method.toPayload(args);
 
         method.hexFormat = false;
-        if(method.call === 'eth_getTransactionReceipt'){
+        if (method.call === 'eth_getTransactionReceipt'
+            || method.call === 'eth_getTransactionByHash'
+            || method.name === 'getBlock') {
             method.hexFormat = (payload.params.length  < args.length && args[args.length - 1] === 'hex')
         }
         // CALLBACK function

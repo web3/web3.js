@@ -235,21 +235,23 @@ var inputSignFormatter = function (data) {
  * @param {Object} tx
  * @returns {Object}
  */
-var outputTransactionFormatter = function (tx) {
-    if (tx.blockNumber !== null)
-        tx.blockNumber = utils.hexToNumber(tx.blockNumber);
-    if (tx.transactionIndex !== null)
-        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
-    tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
+var outputTransactionFormatter = function (tx, hexFormat) {
+    if (!hexFormat) {
+        if (tx.blockNumber !== null)
+            tx.blockNumber = utils.hexToNumber(tx.blockNumber);
+        if (tx.transactionIndex !== null)
+            tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
+        tx.nonce = utils.hexToNumber(tx.nonce);
+        tx.gas = utils.hexToNumber(tx.gas);
+        if (tx.type)
+            tx.type = utils.hexToNumber(tx.type);
+    }
     if (tx.gasPrice)
         tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     if (tx.maxFeePerGas)
         tx.maxFeePerGas = outputBigNumberFormatter(tx.maxFeePerGas);
     if (tx.maxPriorityFeePerGas)
         tx.maxPriorityFeePerGas = outputBigNumberFormatter(tx.maxPriorityFeePerGas);
-    if (tx.type)
-        tx.type = utils.hexToNumber(tx.type);
     tx.value = outputBigNumberFormatter(tx.value);
 
     if (tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
@@ -310,15 +312,17 @@ var outputTransactionReceiptFormatter = function (receipt) {
  * @param {Object} block
  * @returns {Object}
  */
-var outputBlockFormatter = function (block) {
+var outputBlockFormatter = function (block, hexFormat) {
 
-    // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = utils.hexToNumber(block.size);
-    block.timestamp = utils.hexToNumber(block.timestamp);
-    if (block.number !== null)
-        block.number = utils.hexToNumber(block.number);
+    if (!hexFormat) {
+        // transform to number
+        block.gasLimit = utils.hexToNumber(block.gasLimit);
+        block.gasUsed = utils.hexToNumber(block.gasUsed);
+        block.size = utils.hexToNumber(block.size);
+        block.timestamp = utils.hexToNumber(block.timestamp);
+        if (block.number !== null)
+            block.number = utils.hexToNumber(block.number);
+    }
 
     if (block.difficulty)
         block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -328,7 +332,7 @@ var outputBlockFormatter = function (block) {
     if (Array.isArray(block.transactions)) {
         block.transactions.forEach(function (item) {
             if (!(typeof item === 'string'))
-                return outputTransactionFormatter(item);
+                return outputTransactionFormatter(item, hexFormat);
         });
     }
 
