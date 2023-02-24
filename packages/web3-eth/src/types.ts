@@ -24,7 +24,14 @@ import {
 	TransactionRevertWithCustomError,
 	InvalidResponseError,
 } from 'web3-errors';
-import { Bytes, HexString, Numbers, Transaction, TransactionReceipt } from 'web3-types';
+import {
+	Bytes,
+	ContractAbi,
+	HexString,
+	Numbers,
+	Transaction,
+	TransactionReceipt,
+} from 'web3-types';
 import { DataFormat, ETH_DATA_FORMAT, FormatType } from 'web3-utils';
 
 export type InternalTransaction = FormatType<Transaction, typeof ETH_DATA_FORMAT>;
@@ -43,7 +50,8 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
-		| InvalidResponseError;
+		| InvalidResponseError
+		| ContractExecutionError;
 };
 
 export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
@@ -63,6 +71,7 @@ export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
+	contractAbi?: ContractAbi;
 }
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
