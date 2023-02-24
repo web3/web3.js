@@ -32,8 +32,11 @@ import {
 	isIpc,
 	isWs,
 	waitForOpenConnection,
+	itIf,
 } from '../shared_fixtures/system_tests_utils';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
+
+/* eslint-disable jest/no-standalone-expect */
 
 describe('Web3 instance', () => {
 	let clientUrl: string;
@@ -77,6 +80,33 @@ describe('Web3 instance', () => {
 
 	it('check disconnect function', async () => {
 		const web3Instance = new Web3(clientUrl);
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		web3Instance.currentProvider?.disconnect();
+	});
+	itIf(isWs)('check disconnect function for WebSocket provider', async () => {
+		const web3Instance = new Web3(new WebSocketProvider(clientUrl));
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		web3Instance.currentProvider?.disconnect();
+	});
+	itIf(isIpc)('check disconnect function for ipc provider', async () => {
+		const web3Instance = new Web3(new IpcProvider(clientUrl));
+		await web3Instance.eth.getBlockNumber();
+		expect(typeof web3Instance.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
+		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
+		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
+		web3Instance.currentProvider?.disconnect();
+	});
+	itIf(isHttp)('check disconnect function for http provider', async () => {
+		const web3Instance = new Web3(new HttpProvider(clientUrl));
 		await web3Instance.eth.getBlockNumber();
 		expect(typeof web3Instance.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
