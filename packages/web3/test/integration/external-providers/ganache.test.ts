@@ -44,7 +44,6 @@ describe ('ganache tests', () => {
 
 	
 	describe ('WebSocketProvider - ganache', () => {
-		let server: Server;
 
 		afterEach(async () => {
 			// try {
@@ -60,7 +59,7 @@ describe ('ganache tests', () => {
 
 			const port = 7545;
 			const host = `ws://localhost:${port}`;
-			server = ganache.server();
+			const server = ganache.server();
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
 		
@@ -82,7 +81,7 @@ describe ('ganache tests', () => {
 			
 			const port = 7545;
 			const host = `ws://localhost:${port}`;
-			server = ganache.server();
+			const server = ganache.server();
 			await server.listen(port);
 
 			const mockConnectCallBack = jest.fn();

@@ -1,0 +1,21 @@
+remove mine flag
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch 5634/alex
+# Your branch is behind 'origin/5634/alex' by 5 commits, and can be fast-forwarded.
+#   (use "git pull" to update your local branch)
+#
+# Changes to be committed:
+#	modified:   scripts/geth.sh
+#
+# Changes not staged for commit:
+#	modified:   packages/web3-eth-contract/test/integration/contract_deploy.test.ts
+#	modified:   packages/web3-eth-contract/test/integration/local_account/contract_deploy.test.ts
+#	modified:   packages/web3-providers-ws/package.json
+#	modified:   packages/web3-providers-ws/test/integration/web_socket_provider_integration.test.ts
+#	modified:   yarn.lock
+#
+# Untracked files:
+#	packages/web3-providers-ws/test/integration/ganache-ws.test.ts
+#
