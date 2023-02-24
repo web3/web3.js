@@ -21,9 +21,10 @@ import {
 	TransactionRevertError,
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
-import { TransactionCall, TransactionReceipt } from 'web3-types';
+import { ContractAbi, TransactionCall, TransactionReceipt } from 'web3-types';
 import { DataFormat, FormatType } from 'web3-utils';
 import { RevertReason, RevertReasonWithCustomError } from '../types';
+// eslint-disable-next-line import/no-cycle
 import { getRevertReason, parseTransactionError } from './get_revert_reason';
 
 // TODO Add support for passing contract ABI to getRevertReason?
@@ -31,14 +32,15 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context,
 	transactionFormatted?: TransactionCall,
 	transactionReceiptFormatted?: FormatType<TransactionReceipt, ReturnFormat>,
-	receivedError?: unknown
+	receivedError?: unknown,
+	contractAbi?: ContractAbi,
 ) {
 	let reason: string | RevertReason | RevertReasonWithCustomError | undefined;
 
 	if (receivedError !== undefined) {
 		reason = parseTransactionError(receivedError);
 	} else if (web3Context.handleRevert && transactionFormatted !== undefined) {
-		reason = await getRevertReason(web3Context, transactionFormatted);
+		reason = await getRevertReason(web3Context, transactionFormatted, contractAbi);
 	}
 
 	let error:
@@ -49,38 +51,34 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 		error = new TransactionRevertedWithoutReasonError<
 			FormatType<TransactionReceipt, ReturnFormat>
 		>(transactionReceiptFormatted);
+	} else if (typeof reason === 'string') {
+		error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
+			reason,
+			undefined,
+			transactionReceiptFormatted,
+		);
+	} else if (
+		(reason as RevertReasonWithCustomError).customErrorName !== undefined &&
+		(reason as RevertReasonWithCustomError).customErrorDecodedSignature !== undefined &&
+		(reason as RevertReasonWithCustomError).customErrorArguments !== undefined
+	) {
+		const _reason: RevertReasonWithCustomError = reason as RevertReasonWithCustomError;
+		error = new TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>(
+			_reason.reason,
+			_reason.customErrorName,
+			_reason.customErrorDecodedSignature,
+			_reason.customErrorArguments,
+			_reason.signature,
+			transactionReceiptFormatted,
+			_reason.data,
+		);
 	} else {
-		if (typeof reason === 'string') {
-			error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
-				reason,
-				undefined,
-				transactionReceiptFormatted,
-			);
-		} else if (
-			(reason as RevertReasonWithCustomError).customErrorName !== undefined &&
-			(reason as RevertReasonWithCustomError).customErrorDecodedSignature !== undefined &&
-			(reason as RevertReasonWithCustomError).customErrorArguments !== undefined
-		) {
-			const _reason: RevertReasonWithCustomError = reason as RevertReasonWithCustomError;
-			error = new TransactionRevertWithCustomError<
-				FormatType<TransactionReceipt, ReturnFormat>
-			>(
-				_reason.reason,
-				_reason.customErrorName,
-				_reason.customErrorDecodedSignature,
-				_reason.customErrorArguments,
-				_reason.signature,
-				transactionReceiptFormatted,
-				_reason.data,
-			);
-		} else {
-			error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
-				reason.reason,
-				reason.signature,
-				transactionReceiptFormatted,
-				reason.data,
-			);
-		}
+		error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
+			reason.reason,
+			reason.signature,
+			transactionReceiptFormatted,
+			reason.data,
+		);
 	}
 
 	return error;
