@@ -1053,7 +1053,7 @@ export class Contract<Abi extends ContractAbi>
 		const transactionToSend = sendTransaction(this, tx, DEFAULT_RETURN_FORMAT);
 
 		// eslint-disable-next-line no-void
-		void transactionToSend.on('contractExecutionError', (error: unknown) => {
+		void transactionToSend.on('error', (error: unknown) => {
 			if (error instanceof ContractExecutionError) {
 				// this will parse the error data by trying to decode the ABI error inputs according to EIP-838
 				decodeContractErrorData(errorsAbi, error.innerError);
