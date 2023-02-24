@@ -32,7 +32,6 @@ import {
 	isIpc,
 	isWs,
 	waitForOpenConnection,
-	isSocket,
 } from '../shared_fixtures/system_tests_utils';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
@@ -83,9 +82,7 @@ describe('Web3 instance', () => {
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
-		if (isSocket) {
-			web3Instance.currentProvider?.disconnect();
-		}
+		web3Instance.currentProvider?.disconnect();
 	});
 
 	it('should be able use "utils" without provider', () => {

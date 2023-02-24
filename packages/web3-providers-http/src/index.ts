@@ -112,7 +112,7 @@ export default class HttpProvider<
 
 	/* eslint-disable class-methods-use-this */
 	public disconnect() {
-		throw new MethodNotImplementedError();
+		// NO OP
 	}
 
 	/* eslint-disable class-methods-use-this */
