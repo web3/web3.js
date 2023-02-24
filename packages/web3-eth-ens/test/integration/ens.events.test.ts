@@ -167,7 +167,7 @@ describeIf(isSocket)('ens', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
-	test('NewTTl event', async () => {
+	test('NewTTL event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const event = ens.events.NewTTL();
