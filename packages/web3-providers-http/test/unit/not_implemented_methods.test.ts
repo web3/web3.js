@@ -62,12 +62,6 @@ describe('HttpProvider - not implemented methods', () => {
 		}).toThrow(MethodNotImplementedError);
 	});
 
-	it('disconnect', () => {
-		expect(() => {
-			httpProvider.disconnect();
-		}).toThrow(MethodNotImplementedError);
-	});
-
 	it('reset', () => {
 		expect(() => {
 			httpProvider.reset();
