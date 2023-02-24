@@ -103,12 +103,14 @@ export class TransactionRevertError<ReceiptType = TransactionReceipt> extends Ba
 			reason: this.reason,
 			signature: this.signature,
 			receipt: this.receipt,
-			data: this.data
+			data: this.data,
 		};
 	}
 }
 
-export class TransactionRevertWithCustomError<ReceiptType = TransactionReceipt> extends TransactionRevertError<ReceiptType> {
+export class TransactionRevertWithCustomError<
+	ReceiptType = TransactionReceipt,
+> extends TransactionRevertError<ReceiptType> {
 	public code = ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR;
 
 	public constructor(
@@ -132,7 +134,7 @@ export class TransactionRevertWithCustomError<ReceiptType = TransactionReceipt> 
 			customErrorArguments: this.customErrorArguments,
 			signature: this.signature,
 			receipt: this.receipt,
-			data: this.data
+			data: this.data,
 		};
 	}
 }
@@ -155,10 +157,14 @@ export class ContractCodeNotStoredError extends TransactionError {
 	}
 }
 
-export class TransactionRevertedWithoutReasonError<ReceiptType = TransactionReceipt> extends TransactionError<ReceiptType> {
+export class TransactionRevertedWithoutReasonError<
+	ReceiptType = TransactionReceipt,
+> extends TransactionError<ReceiptType> {
 	public constructor(receipt?: ReceiptType) {
 		super(
-			`Transaction has been reverted by the EVM${receipt === undefined ? '' : `:\n ${JSON.stringify(receipt, undefined, 2)}`}`,
+			`Transaction has been reverted by the EVM${
+				receipt === undefined ? '' : `:\n ${BaseWeb3Error.convertToString(receipt)}`
+			}`,
 			receipt,
 		);
 		this.code = ERR_TX_REVERT_WITHOUT_REASON;
