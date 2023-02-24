@@ -225,7 +225,7 @@ describe('contract', () => {
 		it('should fail with errors on "intrinsic gas too low" OOG', async () => {
 			await expect(
 				contract.deploy(deployOptions).send({ ...sendOptions, gas: '100' }),
-			).rejects.toThrow('Returned error: intrinsic gas too low');
+			).rejects.toThrow('intrinsic gas too low');
 		});
 
 		it('should fail with errors deploying a zero length bytecode', () => {
