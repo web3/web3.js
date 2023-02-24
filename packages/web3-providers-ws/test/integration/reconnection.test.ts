@@ -85,37 +85,42 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 			expect(!!(await disconnectPromise)).toBe(true);
 		});
 		it('should connect, disconnect and reconnect', async () => {
+			// eslint-disable-next-line no-console
+			console.log('1');
 			const server = await createProxy(18546, getSystemTestProvider());
+			// eslint-disable-next-line no-console
+			console.log('2');
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
-
+			// eslint-disable-next-line no-console
+			console.log('3');
 			expect(!!(await waitForEvent(web3Provider, 'connect'))).toBe(true);
-
-			// @ts-expect-error-next-line
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			web3Provider._onCloseHandler = (_: CloseEvent) => {
-				// @ts-expect-error-next-line
-				web3Provider._onCloseEvent({ code: 1002 });
-			};
-			// @ts-expect-error-next-line
-			web3Provider._removeSocketListeners();
-			// @ts-expect-error-next-line
-			web3Provider._addSocketListeners();
+			// eslint-disable-next-line no-console
+			console.log('4');
+			web3Provider.disconnect(1002);
+			// eslint-disable-next-line no-console
+			console.log('5');
 			await server.close();
+			// eslint-disable-next-line no-console
+			console.log('6');
 			const connectEvent = waitForEvent(web3Provider, 'connect');
+			// eslint-disable-next-line no-console
+			console.log('7');
 			const server2 = await createProxy(18546, getSystemTestProvider());
+			// eslint-disable-next-line no-console
+			console.log('8');
 			expect(!!(await connectEvent)).toBe(true);
-			// @ts-expect-error-next-line
-			web3Provider._onCloseHandler = (event: CloseEvent) => {
-				// @ts-expect-error-next-line
-				web3Provider._onCloseEvent(event);
-			};
-			// @ts-expect-error-next-line
-			web3Provider._removeSocketListeners();
-			// @ts-expect-error-next-line
-			web3Provider._addSocketListeners();
-			web3Provider.disconnect(1000, 'test');
+			// eslint-disable-next-line no-console
+			console.log('9');
+
+			web3Provider.disconnect();
+			// eslint-disable-next-line no-console
+			console.log('10');
 			await waitForEvent(web3Provider, 'disconnect');
+			// eslint-disable-next-line no-console
+			console.log('11');
 			await server2.close();
+			// eslint-disable-next-line no-console
+			console.log('12');
 		});
 		it('should connect, disconnect, try reconnect and reach max attempts', async () => {
 			const server = await createProxy(18547, getSystemTestProvider());
