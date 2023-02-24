@@ -49,6 +49,7 @@ import { Web3Context, Web3PromiEvent } from 'web3-core';
 import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
+	ContractExecutionError,
 	InvalidResponseError,
 	SignatureError,
 	TransactionError,
@@ -81,6 +82,7 @@ import { trySendTransaction } from './utils/try_send_transaction';
 import { waitForTransactionReceipt } from './utils/wait_for_transaction_receipt';
 import { watchTransactionForConfirmations } from './utils/watch_transaction_for_confirmations';
 import { NUMBER_DATA_FORMAT } from './constants';
+// eslint-disable-next-line import/no-cycle
 import { getTransactionError } from './utils/get_transaction_error';
 
 /**
@@ -1176,6 +1178,8 @@ export function sendTransaction<
 								web3Context,
 								transactionFormatted as TransactionCall,
 								transactionReceiptFormatted,
+								undefined,
+								options?.contractAbi,
 							);
 
 							if (promiEvent.listenerCount('error') > 0) {
@@ -1201,7 +1205,9 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
-						if (error instanceof InvalidResponseError &&
+						if (
+							(error instanceof InvalidResponseError ||
+								error instanceof ContractExecutionError) &&
 							promiEvent.listenerCount('error') > 0
 						) {
 							promiEvent.emit('error', error);
