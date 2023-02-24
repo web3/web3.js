@@ -359,7 +359,7 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	describe('Transaction Error Scenarios', () => {
-		it('Should throw because gas too low', async () => {
+		it('Should throw InvalidResponseError because gas too low', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
@@ -391,43 +391,37 @@ describe('Web3Eth.sendTransaction', () => {
 			});
 		});
 
-		it.only('Should throw because insufficient funds', async () => {
+		it('Should throw InvalidResponseError because insufficient funds', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
 			};
-			try {
-				await web3Eth.sendTransaction(transaction).on('error', error => console.log(error));
-			} catch (error) {
-				// @ts-ignore
-				console.log(error);
-			}
-			// await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
-			// 	name: 'InvalidResponseError',
-			// 	code: 101,
-			// 	message: expect.any(String),
-			// 	innerError: expect.any(Object),
-			// 	data: undefined,
-			// 	request: {
-			// 		jsonrpc: '2.0',
-			// 		id: expect.any(String),
-			// 		method: 'eth_sendTransaction',
-			// 		params: [
-			// 			{
-			// 				from: tempAcc.address,
-			// 				gasPrice: expect.any(String),
-			// 				maxFeePerGas: undefined,
-			// 				maxPriorityFeePerGas: undefined,
-			// 				to: '0x0000000000000000000000000000000000000000',
-			// 				value: '0x28c87cb5c89a2571ebfdcb54864ada8349ffffffffffffff',
-			// 			},
-			// 		],
-			// 	},
-			// });
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'InvalidResponseError',
+				code: 101,
+				message: expect.any(String),
+				innerError: expect.any(Object),
+				data: undefined,
+				request: {
+					jsonrpc: '2.0',
+					id: expect.any(String),
+					method: 'eth_sendTransaction',
+					params: [
+						{
+							from: tempAcc.address,
+							gasPrice: expect.any(String),
+							maxFeePerGas: undefined,
+							maxPriorityFeePerGas: undefined,
+							to: '0x0000000000000000000000000000000000000000',
+							value: '0x28c87cb5c89a2571ebfdcb54864ada8349ffffffffffffff',
+						},
+					],
+				},
+			});
 		});
 
-		it('Should throw because of unknown account', async () => {
+		it('Should throw InvalidResponseError because of unknown account', async () => {
 			const transaction: Transaction = {
 				from: '0x0000000000000000000000000000000000000000',
 				to: '0x0000000000000000000000000000000000000000',
@@ -453,7 +447,7 @@ describe('Web3Eth.sendTransaction', () => {
 			});
 		});
 
-		it('Should throw because of contract revert', async () => {
+		it('Should throw TransactionRevertError because of contract revert and return revert reason', async () => {
 			const simpleRevertDeployTransaction: Transaction = {
 				from: tempAcc.address,
 				data: SimpleRevertDeploymentData,
@@ -470,32 +464,74 @@ describe('Web3Eth.sendTransaction', () => {
 				to: simpleRevertContractAddress,
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
 			};
+
 			web3Eth.handleRevert = true;
-			try {
-				await web3Eth.sendTransaction(transaction).on('error', error => console.log(error));
-			} catch (error) {
-				// @ts-ignore
-				console.log(error);
-			}
-			// await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
-			// 	name: 'InvalidResponseError',
-			// 	code: 101,
-			// 	message: expect.any(String),
-			// 	innerError: expect.any(Object),
-			// 	data: undefined,
-			// 	request: {
-			// 		jsonrpc: '2.0',
-			// 		id: expect.any(String),
-			// 		method: 'eth_sendTransaction',
-			// 		params: [
-			// 			{
-			// 				from: '0x0000000000000000000000000000000000000000',
-			// 				to: '0x0000000000000000000000000000000000000000',
-			// 				gasPrice: expect.any(String),
-			// 			},
-			// 		],
-			// 	},
-			// });
+
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'TransactionRevertError',
+				code: 402,
+				reason: 'VM Exception while processing transaction: revert This is a send revert',
+				signature: '0x08c379a0',
+				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+				receipt: {
+					transactionHash: expect.any(String),
+					transactionIndex: BigInt(0),
+					blockNumber: expect.any(BigInt),
+					blockHash: expect.any(String),
+					from: tempAcc.address,
+					to: simpleRevertContractAddress,
+					cumulativeGasUsed: BigInt(23605),
+					gasUsed: BigInt(23605),
+					logs: [],
+					logsBloom:
+						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+					status: BigInt(0),
+					effectiveGasPrice: BigInt(2000000000),
+					type: BigInt(0),
+				},
+			});
+		});
+
+		it('Should throw TransactionRevertedWithoutReasonError because of contract revert', async () => {
+			const simpleRevertDeployTransaction: Transaction = {
+				from: tempAcc.address,
+				data: SimpleRevertDeploymentData,
+			};
+			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
+				simpleRevertDeployTransaction,
+			);
+			const simpleRevertContractAddress = (
+				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
+			).contractAddress as Address;
+
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
+			};
+
+			web3Eth.handleRevert = false;
+
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+				name: 'TransactionRevertedWithoutReasonError',
+				code: 405,
+				receipt: {
+					transactionHash: expect.any(String),
+					transactionIndex: BigInt(0),
+					blockNumber: expect.any(BigInt),
+					blockHash: expect.any(String),
+					from: tempAcc.address,
+					to: simpleRevertContractAddress,
+					cumulativeGasUsed: BigInt(23605),
+					gasUsed: BigInt(23605),
+					logs: [],
+					logsBloom:
+						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+					status: BigInt(0),
+					effectiveGasPrice: BigInt(2000000000),
+					type: BigInt(0),
+				},
+			});
 		});
 	});
 });
