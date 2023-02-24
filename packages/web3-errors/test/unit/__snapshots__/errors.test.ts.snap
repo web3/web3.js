@@ -170,8 +170,9 @@ Object {
     },
     "message": "error message",
   },
-  "message": "Returned error: error message",
+  "message": "error message",
   "name": "InvalidResponseError",
+  "request": undefined,
 }
 `;
 
@@ -227,8 +228,9 @@ Object {
     "b": "20",
   },
   "innerError": undefined,
-  "message": "Returned error: error message",
+  "message": "error message",
   "name": "ResponseError",
+  "request": undefined,
 }
 `;
 
@@ -237,8 +239,9 @@ Object {
   "code": 100,
   "data": undefined,
   "innerError": undefined,
-  "message": "Returned error: error message",
+  "message": "error message",
   "name": "ResponseError",
+  "request": undefined,
 }
 `;
 
@@ -283,11 +286,9 @@ Object {
 exports[`errors TransactionRevertError should have valid json structure 1`] = `
 Object {
   "code": 402,
+  "data": undefined,
   "innerError": undefined,
-  "message": "Transaction has been reverted by the EVM:
- {
-  \\"attr1\\": \\"attr1\\"
-}",
+  "message": "message",
   "name": "TransactionRevertError",
   "reason": "message",
   "receipt": Object {
@@ -302,9 +303,7 @@ Object {
   "code": 405,
   "innerError": undefined,
   "message": "Transaction has been reverted by the EVM:
- {
-  \\"attr1\\": \\"attr1\\"
-}",
+ {\\"attr1\\":\\"attr1\\"}",
   "name": "TransactionRevertedWithoutReasonError",
   "receipt": Object {
     "attr1": "attr1",
