@@ -36,8 +36,6 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
-	isIpc,
-	isWs,
 } from '../../fixtures/system_test_utils';
 import { SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
@@ -492,10 +490,7 @@ describe('Web3Eth.sendTransaction', () => {
 							signature: '0x08c379a0',
 							data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
 							receipt: {
-								transactionHash: expect.any(String),
 								transactionIndex: BigInt(0),
-								blockNumber: expect.any(BigInt),
-								blockHash: expect.any(String),
 								from: tempAcc.address,
 								to: simpleRevertContractAddress,
 								cumulativeGasUsed: BigInt(23605),
@@ -510,7 +505,7 @@ describe('Web3Eth.sendTransaction', () => {
 					  };
 
 			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				isWs || isIpc ? [expectedErrorObject] : expectedErrorObject,
+				expectedErrorObject,
 			);
 		});
 
@@ -549,10 +544,7 @@ describe('Web3Eth.sendTransaction', () => {
 							name: 'TransactionRevertedWithoutReasonError',
 							code: 405,
 							receipt: {
-								transactionHash: expect.any(String),
 								transactionIndex: BigInt(0),
-								blockNumber: expect.any(BigInt),
-								blockHash: expect.any(String),
 								from: tempAcc.address,
 								to: simpleRevertContractAddress,
 								cumulativeGasUsed: BigInt(23605),
@@ -567,7 +559,7 @@ describe('Web3Eth.sendTransaction', () => {
 					  };
 
 			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				isWs || isIpc ? [expectedErrorObject] : expectedErrorObject,
+				expectedErrorObject,
 			);
 		});
 	});
