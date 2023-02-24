@@ -36,6 +36,8 @@ import {
 	createTempAccount,
 	getSystemTestBackend,
 	getSystemTestProvider,
+	isIpc,
+	isWs,
 } from '../../fixtures/system_test_utils';
 import { SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
@@ -508,7 +510,7 @@ describe('Web3Eth.sendTransaction', () => {
 					  };
 
 			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				expectedErrorObject,
+				isWs || isIpc ? [expectedErrorObject] : expectedErrorObject,
 			);
 		});
 
@@ -565,7 +567,7 @@ describe('Web3Eth.sendTransaction', () => {
 					  };
 
 			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				expectedErrorObject,
+				isWs || isIpc ? [expectedErrorObject] : expectedErrorObject,
 			);
 		});
 	});
