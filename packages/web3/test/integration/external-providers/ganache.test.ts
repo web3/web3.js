@@ -22,7 +22,13 @@ import WebSocketProvider from 'web3-providers-ws';
 import { performBasicRpcCalls } from './helper';
 
 import { getSystemTestMnemonic } from '../../shared_fixtures/system_tests_utils';
-
+export const sleep = async (ms: number) =>
+	new Promise(resolve => {
+		const id = setTimeout(() => {
+			clearTimeout(id);
+			resolve(true);
+		}, ms);
+	});
 describe ('ganache tests', () => {
 	describe('compatibility with `ganache` provider', () => {
 		it('should initialize Web3, get accounts & block number and send a transaction', async () => {
@@ -41,31 +47,76 @@ describe ('ganache tests', () => {
 		let server: Server;
 
 		afterEach(async () => {
-			try {
-				await server.close();
-			} catch (error) {
-				console.log(error)
-			}
+			// try {
+			// 	await server.close();
+			// } catch (error) {
+			// 	console.log(error)
+			// }
 		});
 
 		// const ganacheOptions = { Chain: {hardfork: 'muirGlacier'}, server: { ws: true } };
 
-		const port = 7545;
-		const host = `ws://localhost:${port}`;
-			server = ganache.server();
-			await server.listen(port);
-			// test connection to server
-			const webSocketProvider = new WebSocketProvider(host);
-			expect(webSocketProvider).toBeDefined();
-
-		});
-
 		it('"error" handler fires if the client closes unilaterally', async () => {
 
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
 			server = ganache.server();
 			await server.listen(port);
 			const webSocketProvider = new WebSocketProvider(host);
-			expect(webSocketProvider).toBeDefined();
+		
+			const mockCallback = jest.fn();
+			const prom = new Promise((resolve) =>{
+				webSocketProvider.on("error", () => {
+					mockCallback();
+					resolve(true);
+				})
+			})
+			webSocketProvider.disconnect();
+			await prom;
+			expect(mockCallback).toHaveBeenCalled();
+			await server.close();
 
 		});
+
+		it('can connect after being disconnected', async () => {
+			
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
+			server = ganache.server();
+			await server.listen(port);
+
+			const mockConnectCallBack = jest.fn();
+
+			const webSocketProvider = new WebSocketProvider(host);
+			const connectPromise = new Promise((resolve) => {
+				webSocketProvider.once('connect', () => {
+					console.log("connect")
+					mockConnectCallBack();
+					resolve(true);
+				})
+			})
+			await connectPromise;
+
+			webSocketProvider.disconnect();
+			const prom = new Promise((resolve) =>{
+				webSocketProvider.on("disconnect", () => {
+					resolve(true);
+				})
+			})
+			await prom;
+			webSocketProvider.connect();
+			const promise2 = new Promise((resolve) => {
+				webSocketProvider.once('connect', () => {
+					mockConnectCallBack();
+					resolve(true);
+				})
+			})
+			
+			await promise2;
+			expect(mockConnectCallBack).toHaveBeenCalledTimes(2);
+			await server.close();
+
+		});
+
 	});
+});
