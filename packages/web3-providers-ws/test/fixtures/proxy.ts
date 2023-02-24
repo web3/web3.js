@@ -49,6 +49,8 @@ export const createProxy = async (
 		closeFunc = async () => {
 			await new Promise(resolve => {
 				const timeOut = setTimeout(() => {
+					// eslint-disable-next-line no-console
+					console.log('timeout1');
 					resolve(true);
 				}, 2000);
 				ws.on('close', () => {
@@ -60,6 +62,8 @@ export const createProxy = async (
 			});
 			await new Promise(resolve => {
 				const timeOut = setTimeout(() => {
+					// eslint-disable-next-line no-console
+					console.log('timeout2');
 					resolve(true);
 				}, 2000);
 				originWs.on('close', () => {
