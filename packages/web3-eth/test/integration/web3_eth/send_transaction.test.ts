@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO Seems to be an issue with linter falsely reporting this
+// error for Transaction Error Scenarios tests
+/* eslint-disable jest/no-conditional-expect */
+
 import {
 	Transaction,
 	TransactionWithFromLocalWalletIndex,
@@ -30,6 +34,7 @@ import {
 	closeOpenConnection,
 	createAccountProvider,
 	createTempAccount,
+	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
 import { SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
@@ -467,29 +472,44 @@ describe('Web3Eth.sendTransaction', () => {
 
 			web3Eth.handleRevert = true;
 
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
-				name: 'TransactionRevertError',
-				code: 402,
-				reason: 'VM Exception while processing transaction: revert This is a send revert',
-				signature: '0x08c379a0',
-				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
-				receipt: {
-					transactionHash: expect.any(String),
-					transactionIndex: BigInt(0),
-					blockNumber: expect.any(BigInt),
-					blockHash: expect.any(String),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(23605),
-					gasUsed: BigInt(23605),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
-			});
+			const expectedErrorObject =
+				getSystemTestBackend() === 'geth'
+					? {
+							name: 'ContractExecutionError',
+							code: 310,
+							innerError: {
+								name: 'Eip838ExecutionError',
+								code: 3,
+								data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+							},
+					  }
+					: {
+							name: 'TransactionRevertError',
+							code: 402,
+							reason: 'VM Exception while processing transaction: revert This is a send revert',
+							signature: '0x08c379a0',
+							data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+							receipt: {
+								transactionHash: expect.any(String),
+								transactionIndex: BigInt(0),
+								blockNumber: expect.any(BigInt),
+								blockHash: expect.any(String),
+								from: tempAcc.address,
+								to: simpleRevertContractAddress,
+								cumulativeGasUsed: BigInt(23605),
+								gasUsed: BigInt(23605),
+								logs: [],
+								logsBloom:
+									'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+								status: BigInt(0),
+								effectiveGasPrice: BigInt(2000000000),
+								type: BigInt(0),
+							},
+					  };
+
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
+				expectedErrorObject,
+			);
 		});
 
 		it('Should throw TransactionRevertedWithoutReasonError because of contract revert', async () => {
@@ -512,26 +532,41 @@ describe('Web3Eth.sendTransaction', () => {
 
 			web3Eth.handleRevert = false;
 
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
-				name: 'TransactionRevertedWithoutReasonError',
-				code: 405,
-				receipt: {
-					transactionHash: expect.any(String),
-					transactionIndex: BigInt(0),
-					blockNumber: expect.any(BigInt),
-					blockHash: expect.any(String),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(23605),
-					gasUsed: BigInt(23605),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
-			});
+			const expectedErrorObject =
+				getSystemTestBackend() === 'geth'
+					? {
+							name: 'ContractExecutionError',
+							code: 310,
+							innerError: {
+								name: 'Eip838ExecutionError',
+								code: 3,
+								data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+							},
+					  }
+					: {
+							name: 'TransactionRevertedWithoutReasonError',
+							code: 405,
+							receipt: {
+								transactionHash: expect.any(String),
+								transactionIndex: BigInt(0),
+								blockNumber: expect.any(BigInt),
+								blockHash: expect.any(String),
+								from: tempAcc.address,
+								to: simpleRevertContractAddress,
+								cumulativeGasUsed: BigInt(23605),
+								gasUsed: BigInt(23605),
+								logs: [],
+								logsBloom:
+									'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+								status: BigInt(0),
+								effectiveGasPrice: BigInt(2000000000),
+								type: BigInt(0),
+							},
+					  };
+
+			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
+				expectedErrorObject,
+			);
 		});
 	});
 });
