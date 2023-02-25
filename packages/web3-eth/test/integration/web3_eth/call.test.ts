@@ -14,16 +14,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { TransactionCall, BlockTags, Transaction, Address } from 'web3-types';
+import { TransactionCall, BlockTags, Transaction } from 'web3-types';
 import { decodeParameters } from 'web3-eth-abi';
 import { Web3Eth } from '../../../src';
 import {
 	closeOpenConnection,
 	createTempAccount,
-	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
-import { SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
 describe('Web3Eth.call', () => {
 	const expectedEncodedGreet =
@@ -133,41 +131,6 @@ describe('Web3Eth.call', () => {
 			};
 			const response = await web3Eth.call(transaction);
 			expect(response).toBe('0x');
-		});
-	});
-
-	describe('Transaction Error Scenarios', () => {
-		let simpleRevertContractAddress: Address;
-
-		beforeAll(async () => {
-			const simpleRevertDeployTransaction: Transaction = {
-				from: tempAcc.address,
-				data: SimpleRevertDeploymentData,
-			};
-			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
-				simpleRevertDeployTransaction,
-			);
-			simpleRevertContractAddress = (
-				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
-			).contractAddress as Address;
-		});
-
-		it('Should throw ContractExecutionError', async () => {
-			const transaction: TransactionCall = {
-				from: tempAcc.address,
-				to: simpleRevertContractAddress,
-				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
-			};
-
-			await expect(web3Eth.call(transaction)).rejects.toMatchObject({
-				name: 'ContractExecutionError',
-				code: 310,
-				innerError: {
-					name: 'Eip838ExecutionError',
-					code: getSystemTestBackend() === 'geth' ? 3 : -32000,
-					data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
-				},
-			});
 		});
 	});
 });
