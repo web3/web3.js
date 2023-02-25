@@ -37,7 +37,7 @@ import {
 	getSystemTestBackend,
 	getSystemTestProvider,
 } from '../../fixtures/system_test_utils';
-import { SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
+import { SimpleRevertAbi, SimpleRevertDeploymentData } from '../../fixtures/simple_revert';
 
 describe('Web3Eth.sendTransaction', () => {
 	let web3Eth: Web3Eth;
@@ -386,7 +386,8 @@ describe('Web3Eth.sendTransaction', () => {
 				value: BigInt(1),
 				gas: 1,
 			};
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+
+			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
 				message: expect.any(String),
@@ -408,7 +409,13 @@ describe('Web3Eth.sendTransaction', () => {
 						},
 					],
 				},
-			});
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 
 		it('Should throw InvalidResponseError because insufficient funds', async () => {
@@ -417,7 +424,8 @@ describe('Web3Eth.sendTransaction', () => {
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
 			};
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+
+			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
 				message: expect.any(String),
@@ -438,7 +446,13 @@ describe('Web3Eth.sendTransaction', () => {
 						},
 					],
 				},
-			});
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 
 		it('Should throw InvalidResponseError because of unknown account', async () => {
@@ -446,7 +460,8 @@ describe('Web3Eth.sendTransaction', () => {
 				from: '0x0000000000000000000000000000000000000000',
 				to: '0x0000000000000000000000000000000000000000',
 			};
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject({
+
+			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
 				message: expect.any(String),
@@ -464,7 +479,13 @@ describe('Web3Eth.sendTransaction', () => {
 						},
 					],
 				},
-			});
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 
 		it('Should throw TransactionRevertInstructionError because of contract revert and return revert reason', async () => {
@@ -476,24 +497,19 @@ describe('Web3Eth.sendTransaction', () => {
 
 			web3Eth.handleRevert = true;
 
-			const expectedErrorObject =
-				getSystemTestBackend() === 'geth'
-					? {
-							name: 'ContractExecutionError',
-							code: 310,
-							innerError: {
-								name: 'Eip838ExecutionError',
-								code: 3,
-								data: '0x08c379a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
-							},
-					  }
-					: {
-							name: 'TransactionRevertInstructionError',
-							code: 402,
-							reason: 'VM Exception while processing transaction: revert This is a send revert',
-							signature: '0x08c379a0',
-							data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
-							receipt: {
+			const expectedThrownError = {
+				name: 'TransactionRevertInstructionError',
+				code: 402,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted: This is a send revert'
+						: 'VM Exception while processing transaction: revert This is a send revert',
+				signature: '0x08c379a0',
+				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+				receipt:
+					getSystemTestBackend() === 'geth'
+						? undefined
+						: {
 								transactionIndex: BigInt(0),
 								from: tempAcc.address,
 								to: simpleRevertContractAddress,
@@ -505,12 +521,108 @@ describe('Web3Eth.sendTransaction', () => {
 								status: BigInt(0),
 								effectiveGasPrice: BigInt(2000000000),
 								type: BigInt(0),
-							},
-					  };
+						  },
+			};
 
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				expectedErrorObject,
-			);
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertWithCustomError because of contract revert and return custom error ErrorWithNoParams', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0x3ebf4d9c',
+			};
+
+			web3Eth.handleRevert = true;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertWithCustomError',
+				code: 438,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted'
+						: 'VM Exception while processing transaction: revert',
+				signature: '0x72090e4d',
+				customErrorName: 'ErrorWithNoParams',
+				customErrorDecodedSignature: 'ErrorWithNoParams()',
+				customErrorArguments: {},
+				receipt:
+					getSystemTestBackend() === 'geth'
+						? undefined
+						: {
+								transactionIndex: BigInt(0),
+								from: tempAcc.address,
+								to: simpleRevertContractAddress,
+								cumulativeGasUsed: BigInt(21222),
+								gasUsed: BigInt(21222),
+								logs: [],
+								logsBloom:
+									'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+								status: BigInt(0),
+								effectiveGasPrice: BigInt(2000000000),
+								type: BigInt(0),
+						  },
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction, undefined, { contractAbi: SimpleRevertAbi })
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
+		});
+
+		it('Should throw TransactionRevertWithCustomError because of contract revert and return custom error ErrorWithParams', async () => {
+			const transaction: Transaction = {
+				from: tempAcc.address,
+				to: simpleRevertContractAddress,
+				data: '0x819f48fe',
+			};
+
+			web3Eth.handleRevert = true;
+
+			const expectedThrownError = {
+				name: 'TransactionRevertWithCustomError',
+				code: 438,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted: This is a send revert'
+						: 'VM Exception while processing transaction: revert',
+				signature: '0xc85bda60',
+				data: '000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000001c5468697320697320616e206572726f72207769746820706172616d7300000000',
+				customErrorName: 'ErrorWithParams',
+				customErrorDecodedSignature: 'ErrorWithParams(uint256,string)',
+				customErrorArguments: {
+					code: BigInt(42),
+					message: 'This is an error with params',
+				},
+				receipt:
+					getSystemTestBackend() === 'geth'
+						? undefined
+						: {
+								transactionIndex: BigInt(0),
+								from: tempAcc.address,
+								to: simpleRevertContractAddress,
+								cumulativeGasUsed: BigInt(21730),
+								gasUsed: BigInt(21730),
+								logs: [],
+								logsBloom:
+									'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+								status: BigInt(0),
+								effectiveGasPrice: BigInt(2000000000),
+								type: BigInt(0),
+						  },
+			};
+
+			await expect(
+				web3Eth
+					.sendTransaction(transaction, undefined, { contractAbi: SimpleRevertAbi })
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 
 		it('Should throw TransactionRevertedWithoutReasonError because of contract revert', async () => {
@@ -522,7 +634,7 @@ describe('Web3Eth.sendTransaction', () => {
 
 			web3Eth.handleRevert = false;
 
-			const expectedErrorObject =
+			const expectedThrownError =
 				getSystemTestBackend() === 'geth'
 					? {
 							name: 'ContractExecutionError',
@@ -551,9 +663,11 @@ describe('Web3Eth.sendTransaction', () => {
 							},
 					  };
 
-			await expect(web3Eth.sendTransaction(transaction)).rejects.toMatchObject(
-				expectedErrorObject,
-			);
+			await expect(
+				web3Eth
+					.sendTransaction(transaction)
+					.on('error', error => expect(error).toMatchObject(expectedThrownError)),
+			).rejects.toMatchObject(expectedThrownError);
 		});
 	});
 });
