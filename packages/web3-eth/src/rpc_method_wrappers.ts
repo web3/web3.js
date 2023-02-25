@@ -53,6 +53,9 @@ import {
 	InvalidResponseError,
 	SignatureError,
 	TransactionError,
+	TransactionRevertedWithoutReasonError,
+	TransactionRevertInstructionError,
+	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
@@ -1073,34 +1076,34 @@ export function sendTransaction<
 		(resolve, reject) => {
 			setImmediate(() => {
 				(async () => {
+					let transactionFormatted = formatTransaction(
+						{
+							...transaction,
+							from: getTransactionFromOrToAttr('from', web3Context, transaction),
+							to: getTransactionFromOrToAttr('to', web3Context, transaction),
+						},
+						ETH_DATA_FORMAT,
+					);
+
+					if (
+						!options?.ignoreGasPricing &&
+						isNullish(transactionFormatted.gasPrice) &&
+						(isNullish(transaction.maxPriorityFeePerGas) ||
+							isNullish(transaction.maxFeePerGas))
+					) {
+						transactionFormatted = {
+							...transactionFormatted,
+							// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
+							// should not be included if undefined, but currently are
+							...(await getTransactionGasPricing(
+								transactionFormatted,
+								web3Context,
+								ETH_DATA_FORMAT,
+							)),
+						};
+					}
+
 					try {
-						let transactionFormatted = formatTransaction(
-							{
-								...transaction,
-								from: getTransactionFromOrToAttr('from', web3Context, transaction),
-								to: getTransactionFromOrToAttr('to', web3Context, transaction),
-							},
-							ETH_DATA_FORMAT,
-						);
-
-						if (
-							!options?.ignoreGasPricing &&
-							isNullish(transactionFormatted.gasPrice) &&
-							(isNullish(transaction.maxPriorityFeePerGas) ||
-								isNullish(transaction.maxFeePerGas))
-						) {
-							transactionFormatted = {
-								...transactionFormatted,
-								// TODO gasPrice, maxPriorityFeePerGas, maxFeePerGas
-								// should not be included if undefined, but currently are
-								...(await getTransactionGasPricing(
-									transactionFormatted,
-									web3Context,
-									ETH_DATA_FORMAT,
-								)),
-							};
-						}
-
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', transactionFormatted);
 						}
@@ -1205,15 +1208,30 @@ export function sendTransaction<
 							);
 						}
 					} catch (error) {
-						if (
-							(error instanceof InvalidResponseError ||
-								error instanceof ContractExecutionError) &&
-							promiEvent.listenerCount('error') > 0
-						) {
-							promiEvent.emit('error', error);
+						let _error = error;
+
+						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
+							_error = await getTransactionError(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								undefined,
+								undefined,
+								options?.contractAbi,
+							);
 						}
 
-						reject(error);
+						if (
+							(_error instanceof InvalidResponseError ||
+								_error instanceof ContractExecutionError ||
+								_error instanceof TransactionRevertWithCustomError ||
+								_error instanceof TransactionRevertedWithoutReasonError ||
+								_error instanceof TransactionRevertInstructionError) &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', _error);
+						}
+
+						reject(_error);
 					}
 				})() as unknown;
 			});
