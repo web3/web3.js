@@ -364,6 +364,21 @@ describe('Web3Eth.sendTransaction', () => {
 	});
 
 	describe('Transaction Error Scenarios', () => {
+		let simpleRevertContractAddress: Address;
+
+		beforeAll(async () => {
+			const simpleRevertDeployTransaction: Transaction = {
+				from: tempAcc.address,
+				data: SimpleRevertDeploymentData,
+			};
+			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
+				simpleRevertDeployTransaction,
+			);
+			simpleRevertContractAddress = (
+				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
+			).contractAddress as Address;
+		});
+
 		it('Should throw InvalidResponseError because gas too low', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
@@ -453,17 +468,6 @@ describe('Web3Eth.sendTransaction', () => {
 		});
 
 		it('Should throw TransactionRevertInstructionError because of contract revert and return revert reason', async () => {
-			const simpleRevertDeployTransaction: Transaction = {
-				from: tempAcc.address,
-				data: SimpleRevertDeploymentData,
-			};
-			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
-				simpleRevertDeployTransaction,
-			);
-			const simpleRevertContractAddress = (
-				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
-			).contractAddress as Address;
-
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
@@ -510,17 +514,6 @@ describe('Web3Eth.sendTransaction', () => {
 		});
 
 		it('Should throw TransactionRevertedWithoutReasonError because of contract revert', async () => {
-			const simpleRevertDeployTransaction: Transaction = {
-				from: tempAcc.address,
-				data: SimpleRevertDeploymentData,
-			};
-			simpleRevertDeployTransaction.gas = await web3Eth.estimateGas(
-				simpleRevertDeployTransaction,
-			);
-			const simpleRevertContractAddress = (
-				await web3Eth.sendTransaction(simpleRevertDeployTransaction)
-			).contractAddress as Address;
-
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
