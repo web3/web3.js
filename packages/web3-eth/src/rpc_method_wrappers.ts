@@ -46,18 +46,27 @@ import {
 	AccessListResult,
 } from 'web3-types';
 import { Web3Context, Web3PromiEvent } from 'web3-core';
-import { ETH_DATA_FORMAT, FormatType, DataFormat, DEFAULT_RETURN_FORMAT, format } from 'web3-utils';
+import {
+	ETH_DATA_FORMAT,
+	FormatType,
+	DataFormat,
+	DEFAULT_RETURN_FORMAT,
+	format,
+	hexToBytes,
+	bytesToBuffer,
+} from 'web3-utils';
 import { isBlockTag, isBytes, isNullish, isString } from 'web3-validator';
 import {
 	ContractExecutionError,
 	InvalidResponseError,
 	SignatureError,
-	TransactionError,
 	TransactionRevertedWithoutReasonError,
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ethRpcMethods } from 'web3-rpc-methods';
+import { TransactionFactory } from '@ethereumjs/tx';
+
 import { decodeSignedTransaction } from './utils/decode_signed_transaction';
 import {
 	accountSchema,
@@ -1340,22 +1349,17 @@ export function sendSignedTransaction<
 		(resolve, reject) => {
 			setImmediate(() => {
 				(async () => {
-					try {
-						// Formatting signedTransaction to be send to RPC endpoint
-						const signedTransactionFormattedHex = format(
-							{ eth: 'bytes' },
-							signedTransaction,
-							ETH_DATA_FORMAT,
-						);
+					// Formatting signedTransaction to be send to RPC endpoint
+					const signedTransactionFormattedHex = format(
+						{ eth: 'bytes' },
+						signedTransaction,
+						ETH_DATA_FORMAT,
+					);
 
+					try {
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
-						// todo enable handleRevert for sendSignedTransaction when we have a function to decode transactions
-						// importing a package for this would increase the size of the library
-						// if (web3Context.handleRevert) {
-						// 	await getRevertReason(web3Context, transaction, returnFormat);
-						// }
 
 						const transactionHash = await trySendTransaction(
 							web3Context,
@@ -1403,17 +1407,22 @@ export function sendSignedTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
+							const unSerializedTransaction = TransactionFactory.fromSerializedData(
+								bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
+							).toJSON();
+							const error = await getTransactionError<ReturnFormat>(
+								web3Context,
+								unSerializedTransaction as TransactionCall,
+								transactionReceiptFormatted,
+								undefined,
+								options?.contractAbi,
+							);
+
 							if (promiEvent.listenerCount('error') > 0) {
-								promiEvent.emit(
-									'error',
-									new TransactionError(
-										'Transaction failed',
-										transactionReceiptFormatted,
-									),
-								);
+								promiEvent.emit('error', error);
 							}
-							reject(transactionReceiptFormatted as unknown as ResolveType);
-							return;
+
+							reject(error);
 						} else {
 							resolve(transactionReceiptFormatted as unknown as ResolveType);
 						}
@@ -1432,13 +1441,34 @@ export function sendSignedTransaction<
 							);
 						}
 					} catch (error) {
-						if (promiEvent.listenerCount('error') > 0) {
-							promiEvent.emit(
-								'error',
-								new TransactionError((error as Error).message),
+						const unSerializedTransaction = TransactionFactory.fromSerializedData(
+							bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
+						).toJSON();
+
+						let _error = error;
+
+						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
+							_error = await getTransactionError(
+								web3Context,
+								unSerializedTransaction as TransactionCall,
+								undefined,
+								undefined,
+								options?.contractAbi,
 							);
 						}
-						reject(error);
+
+						if (
+							(_error instanceof InvalidResponseError ||
+								_error instanceof ContractExecutionError ||
+								_error instanceof TransactionRevertWithCustomError ||
+								_error instanceof TransactionRevertedWithoutReasonError ||
+								_error instanceof TransactionRevertInstructionError) &&
+							promiEvent.listenerCount('error') > 0
+						) {
+							promiEvent.emit('error', _error);
+						}
+
+						reject(_error);
 					}
 				})() as unknown;
 			});

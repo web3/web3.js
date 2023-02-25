@@ -16,9 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {
-	TransactionError,
 	ContractExecutionError,
-	ResponseError,
 	TransactionRevertedWithoutReasonError,
 	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
@@ -64,8 +62,12 @@ export type SendSignedTransactionEvents<ReturnFormat extends DataFormat> = {
 		receipt: FormatType<TransactionReceipt, ReturnFormat>;
 		latestBlockHash: FormatType<Bytes, ReturnFormat>;
 	};
-	error: TransactionError<FormatType<TransactionReceipt, ReturnFormat>>;
-	contractExecutionError: ContractExecutionError | ResponseError<any>;
+	error:
+		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
+		| InvalidResponseError
+		| ContractExecutionError;
 };
 
 export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
@@ -76,6 +78,7 @@ export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
+	contractAbi?: ContractAbi;
 }
 
 export interface RevertReason {
