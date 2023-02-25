@@ -37,7 +37,6 @@ import {
 	Bytes,
 	Web3BaseProvider,
 	Transaction,
-	Receipt,
 	KeyStore,
 	ProviderConnectInfo,
 	Web3ProviderEventCallback,
@@ -335,7 +334,7 @@ export const signTxAndSendEIP1559 = async (
 	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
-): Promise<Receipt> => {
+) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
@@ -351,7 +350,7 @@ export const signTxAndSendEIP2930 = async (
 	provider: unknown,
 	tx: Record<string, unknown>,
 	privateKey: string,
-): Promise<Receipt> => {
+) => {
 	const web3 = new Web3(provider as Web3BaseProvider);
 	const acc = web3.eth.accounts.privateKeyToAccount(privateKey);
 	const signedTx = await acc.signTransaction({
