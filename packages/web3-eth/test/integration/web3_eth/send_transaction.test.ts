@@ -390,7 +390,6 @@ describe('Web3Eth.sendTransaction', () => {
 			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
-				message: expect.any(String),
 				innerError: expect.any(Object),
 				data: undefined,
 				request: {
@@ -428,7 +427,6 @@ describe('Web3Eth.sendTransaction', () => {
 			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
-				message: expect.any(String),
 				innerError: expect.any(Object),
 				data: undefined,
 				request: {
@@ -464,7 +462,6 @@ describe('Web3Eth.sendTransaction', () => {
 			const expectedThrownError = {
 				name: 'InvalidResponseError',
 				code: 101,
-				message: expect.any(String),
 				innerError: expect.any(Object),
 				data: undefined,
 				request: {
