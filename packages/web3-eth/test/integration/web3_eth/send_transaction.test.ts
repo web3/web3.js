@@ -452,7 +452,7 @@ describe('Web3Eth.sendTransaction', () => {
 			});
 		});
 
-		it('Should throw TransactionRevertError because of contract revert and return revert reason', async () => {
+		it('Should throw TransactionRevertInstructionError because of contract revert and return revert reason', async () => {
 			const simpleRevertDeployTransaction: Transaction = {
 				from: tempAcc.address,
 				data: SimpleRevertDeploymentData,
@@ -484,7 +484,7 @@ describe('Web3Eth.sendTransaction', () => {
 							},
 					  }
 					: {
-							name: 'TransactionRevertError',
+							name: 'TransactionRevertInstructionError',
 							code: 402,
 							reason: 'VM Exception while processing transaction: revert This is a send revert',
 							signature: '0x08c379a0',

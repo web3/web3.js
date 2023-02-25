@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 import { Web3Context } from 'web3-core';
 import {
 	TransactionRevertedWithoutReasonError,
-	TransactionRevertError,
+	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 } from 'web3-errors';
 import { ContractAbi, TransactionCall, TransactionReceipt } from 'web3-types';
@@ -45,14 +45,14 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 
 	let error:
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
-		| TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>;
 	if (reason === undefined) {
 		error = new TransactionRevertedWithoutReasonError<
 			FormatType<TransactionReceipt, ReturnFormat>
 		>(transactionReceiptFormatted);
 	} else if (typeof reason === 'string') {
-		error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
+		error = new TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>(
 			reason,
 			undefined,
 			transactionReceiptFormatted,
@@ -73,7 +73,7 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 			_reason.data,
 		);
 	} else {
-		error = new TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>(
+		error = new TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>(
 			reason.reason,
 			reason.signature,
 			transactionReceiptFormatted,

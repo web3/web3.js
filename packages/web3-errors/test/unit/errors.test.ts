@@ -162,10 +162,10 @@ describe('errors', () => {
 		});
 	});
 
-	describe('TransactionRevertError', () => {
+	describe('TransactionRevertInstructionError', () => {
 		it('should have valid json structure', () => {
 			expect(
-				new transactionErrors.TransactionRevertError('message', 'signature', {
+				new transactionErrors.TransactionRevertInstructionError('message', 'signature', {
 					attr1: 'attr1',
 				} as any).toJSON(),
 			).toMatchSnapshot();

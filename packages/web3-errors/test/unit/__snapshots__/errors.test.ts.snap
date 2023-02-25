@@ -283,13 +283,14 @@ Object {
 }
 `;
 
-exports[`errors TransactionRevertError should have valid json structure 1`] = `
+exports[`errors TransactionRevertInstructionError should have valid json structure 1`] = `
 Object {
   "code": 402,
   "data": undefined,
   "innerError": undefined,
-  "message": "message",
-  "name": "TransactionRevertError",
+  "message": "Transaction has been reverted by the EVM:
+ {\\"attr1\\":\\"attr1\\"}",
+  "name": "TransactionRevertInstructionError",
   "reason": "message",
   "receipt": Object {
     "attr1": "attr1",

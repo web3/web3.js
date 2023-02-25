@@ -20,7 +20,7 @@ import {
 	ContractExecutionError,
 	ResponseError,
 	TransactionRevertedWithoutReasonError,
-	TransactionRevertError,
+	TransactionRevertInstructionError,
 	TransactionRevertWithCustomError,
 	InvalidResponseError,
 } from 'web3-errors';
@@ -48,7 +48,7 @@ export type SendTransactionEvents<ReturnFormat extends DataFormat> = {
 	};
 	error:
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
-		| TransactionRevertError<FormatType<TransactionReceipt, ReturnFormat>>
+		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>
 		| InvalidResponseError
 		| ContractExecutionError;

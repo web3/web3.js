@@ -85,7 +85,9 @@ export class RevertInstructionError extends BaseWeb3Error {
 	}
 }
 
-export class TransactionRevertError<ReceiptType = TransactionReceipt> extends BaseWeb3Error {
+export class TransactionRevertInstructionError<
+	ReceiptType = TransactionReceipt,
+> extends BaseWeb3Error {
 	public code = ERR_TX_REVERT_TRANSACTION;
 
 	public constructor(
@@ -94,7 +96,11 @@ export class TransactionRevertError<ReceiptType = TransactionReceipt> extends Ba
 		public receipt?: ReceiptType,
 		public data?: string,
 	) {
-		super(reason);
+		super(
+			`Transaction has been reverted by the EVM${
+				receipt === undefined ? '' : `:\n ${BaseWeb3Error.convertToString(receipt)}`
+			}`,
+		);
 	}
 
 	public toJSON() {
@@ -110,7 +116,7 @@ export class TransactionRevertError<ReceiptType = TransactionReceipt> extends Ba
 
 export class TransactionRevertWithCustomError<
 	ReceiptType = TransactionReceipt,
-> extends TransactionRevertError<ReceiptType> {
+> extends TransactionRevertInstructionError<ReceiptType> {
 	public code = ERR_TX_REVERT_TRANSACTION_CUSTOM_ERROR;
 
 	public constructor(
