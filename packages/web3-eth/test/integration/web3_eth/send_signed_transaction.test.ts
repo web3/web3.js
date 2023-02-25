@@ -352,9 +352,9 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
 				gasPrice: 1,
+				gas: 21000,
 				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
-			transaction.gas = await web3Eth.estimateGas(transaction);
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
 				bytes: FMT_BYTES.BUFFER,
@@ -387,6 +387,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
 				gasPrice: 2000000000,
 				gas: 23605,
+				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
@@ -436,6 +437,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				data: '0x3ebf4d9c',
 				gasPrice: 2000000000,
 				gas: 21222,
+				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
@@ -489,6 +491,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				data: '0x819f48fe',
 				gasPrice: 2000000000,
 				gas: 21730,
+				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
@@ -546,6 +549,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				data: '0xba57a511000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000067265766572740000000000000000000000000000000000000000000000000000',
 				gasPrice: 2000000000,
 				gas: 23605,
+				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
