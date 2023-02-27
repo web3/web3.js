@@ -52,7 +52,7 @@ Batch.prototype.execute = function () {
     this.requestManager.sendBatch(requests, function (err, results) {
         results = sortResponses(results);
         requests.map(function (request, index) {
-            return results[index] || {};
+            return results[index] || { error: err };
         }).forEach(function (result, index) {
             if (requests[index].callback) {
                 if (result && result.error) {
@@ -74,7 +74,7 @@ Batch.prototype.execute = function () {
 };
 
 // Sort responses
-Batch.prototype._sortResponses = function (responses) {    
+Batch.prototype._sortResponses = function (responses) {
     return (responses || []).sort((a, b) => a.id - b.id);
 }
 
