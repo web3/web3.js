@@ -21,3 +21,4 @@ export * from './api/functions_api';
 export * from './api/logs_api';
 export * from './api/parameters_api';
 export * from './utils';
+export * from './decode_contract_error_data';
