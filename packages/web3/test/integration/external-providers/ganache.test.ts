@@ -18,6 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 // eslint-disable-next-line import/no-extraneous-dependencies
 import ganache from 'ganache';
 import WebSocketProvider from 'web3-providers-ws';
+import Web3 from '../../../src/index';
 import { performBasicRpcCalls } from './helper';
 import { getSystemTestMnemonic } from '../../shared_fixtures/system_tests_utils';
 
@@ -42,7 +43,7 @@ describe ('ganache tests', () => {
 			// try {
 			// 	await server.close();
 			// } catch (error) {
-			// 	console.log(error)
+				
 			// }
 		});
 
@@ -128,5 +129,57 @@ describe ('ganache tests', () => {
 
 		});
 		
+		it('"end" handler fires with close event object if Web3 disconnects', async () => {
+
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const webSocketProvider = new WebSocketProvider(host);
+
+			const pr = new Promise((resolve) => {
+				webSocketProvider.once('disconnect', () => {
+					resolve(true);
+				})
+			})
+			webSocketProvider.disconnect(1000);
+			const result = await pr;
+			expect(result).toBe(true); 
+
+			await server.close();
+
+
+		});
+
+		it('errors when requests continue after socket closed', async () => {
+
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const webSocketProvider = new WebSocketProvider(host);
+			const web3 = new Web3(webSocketProvider);
+
+			await server.close();
+			const pr = new Promise((resolve) => {
+				webSocketProvider.once('disconnect', () => {
+					// try to send a request now that socket is closed
+					resolve(true);
+				})
+			})
+			webSocketProvider.disconnect(1000);
+			const result = await pr;
+
+			try {
+				await web3.eth.getBlockNumber();
+			} catch (error) {
+				console.log(error)
+				expect(error).toBeDefined();
+			}
+			expect(result).toBe(true); 
+
+
+
+		});
 	});
 });
