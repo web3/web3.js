@@ -21,9 +21,16 @@
  */
 
 import * as net from 'net';
-import { IpcProvider } from 'web3-providers';
+import IpcProviderDefault, { IpcProvider } from 'web3-providers';
 import { JsonRpcResponse } from 'web3-core-helpers';
 
+// $ExpectType IpcProvider
+const ipc_provider_default = new IpcProviderDefault(
+    '/Users/myuser/Library/Ethereum/geth.ipc',
+    new net.Server()
+);
+
+// $ExpectType IpcProvider
 const ipcProvider = new IpcProvider(
     '/Users/myuser/Library/Ethereum/geth.ipc',
     new net.Server()

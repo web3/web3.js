@@ -647,6 +647,7 @@ Released with 1.0.0-beta.37 code base.
   - Fixed skipped ws-ganache tests (#5759)
   - Fixed "provider started to reconnect error" in web3-provider-ws (#5820)
   - Fixed Error: Number can only safely store up to 53 bits (#5845)
+  - Fixed types for packages which have default exports but not declared default export in .d.ts (#5866)
 
 ### Changed
 
