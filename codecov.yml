@@ -4,12 +4,17 @@ coverage:
       default:
         target: 90%
         threshold: 1%
-    patch: off
+    patch:
+      default:
+        target: auto
+        threshold: 5%
 
 component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
       - type: project
+        target: 99%
+      - type: patch
         target: 99%
 
   individual_components:
