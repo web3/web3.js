@@ -10,6 +10,7 @@ component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
       - type: project
+        target: 99%
 
   individual_components:
     - component_id: "web3"
