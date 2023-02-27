@@ -16,19 +16,12 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import ganache, {Server} from 'ganache';
+import ganache from 'ganache';
 import WebSocketProvider from 'web3-providers-ws';
-
 import { performBasicRpcCalls } from './helper';
-
 import { getSystemTestMnemonic } from '../../shared_fixtures/system_tests_utils';
-export const sleep = async (ms: number) =>
-	new Promise(resolve => {
-		const id = setTimeout(() => {
-			clearTimeout(id);
-			resolve(true);
-		}, ms);
-	});
+
+
 describe ('ganache tests', () => {
 	describe('compatibility with `ganache` provider', () => {
 		it('should initialize Web3, get accounts & block number and send a transaction', async () => {
@@ -116,6 +109,24 @@ describe ('ganache tests', () => {
 			await server.close();
 
 		});
+		it('"error" handler *DOES NOT* fire if disconnection is clean', async () => {
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+			const webSocketProvider = new WebSocketProvider(host);
 
+			const pr = new Promise((resolve, reject) => {
+				webSocketProvider.once('error', () => {
+					reject() // should not error
+				})
+				resolve(true);
+			})
+			webSocketProvider.disconnect();
+			const result = await pr;
+			expect(result).toBe(true);
+
+			await server.close();
+		});
 	});
 });
