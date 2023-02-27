@@ -53,7 +53,6 @@ export const createProxy = async (
 				}, 2000);
 				ws.on('close', () => {
 					ws.removeAllListeners();
-					clearTimeout(timeOut);
 					resolve(true);
 				});
 				ws.terminate();
@@ -63,7 +62,6 @@ export const createProxy = async (
 					resolve(true);
 				}, 2000);
 				originWs.on('close', () => {
-					clearTimeout(timeOut);
 					originWs.removeAllListeners();
 					resolve(true);
 				});
