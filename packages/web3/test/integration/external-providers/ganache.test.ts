@@ -69,46 +69,6 @@ describe ('ganache tests', () => {
 			await server.close();
 
 		});
-
-		it('can connect after being disconnected', async () => {
-			
-			const port = 7545;
-			const host = `ws://localhost:${port}`;
-			const server = ganache.server();
-			await server.listen(port);
-
-			const mockConnectCallBack = jest.fn();
-
-			const webSocketProvider = new WebSocketProvider(host);
-			const connectPromise = new Promise((resolve) => {
-				webSocketProvider.once('connect', () => {
-					console.log("connect")
-					mockConnectCallBack();
-					resolve(true);
-				})
-			})
-			await connectPromise;
-
-			webSocketProvider.disconnect();
-			const prom = new Promise((resolve) =>{
-				webSocketProvider.on("disconnect", () => {
-					resolve(true);
-				})
-			})
-			await prom;
-			webSocketProvider.connect();
-			const promise2 = new Promise((resolve) => {
-				webSocketProvider.once('connect', () => {
-					mockConnectCallBack();
-					resolve(true);
-				})
-			})
-			
-			await promise2;
-			expect(mockConnectCallBack).toHaveBeenCalledTimes(2);
-			await server.close();
-
-		});
 		it('"error" handler *DOES NOT* fire if disconnection is clean', async () => {
 			const port = 7545;
 			const host = `ws://localhost:${port}`;
@@ -128,5 +88,45 @@ describe ('ganache tests', () => {
 
 			await server.close();
 		});
+		it('can connect after being disconnected', async () => {
+			
+			const port = 7545;
+			const host = `ws://localhost:${port}`;
+			const server = ganache.server();
+			await server.listen(port);
+
+			const mockConnectCallBack = jest.fn();
+
+			const webSocketProvider = new WebSocketProvider(host);
+			const connectPromise = new Promise((resolve) => {
+				webSocketProvider.once('connect', () => {
+					console.log("connect")
+					mockConnectCallBack();
+					resolve(true);
+				})
+			})
+			await connectPromise;
+			
+			const prom = new Promise((resolve) =>{
+				webSocketProvider.on("disconnect", () => {
+					resolve(true);
+				})
+			})
+			webSocketProvider.disconnect();
+			await prom;
+			webSocketProvider.connect();
+			const promise2 = new Promise((resolve) => {
+				webSocketProvider.once('connect', () => {
+					mockConnectCallBack();
+					resolve(true);
+				})
+			})
+			
+			await promise2;
+			expect(mockConnectCallBack).toHaveBeenCalledTimes(2);
+			await server.close();
+
+		});
+		
 	});
 });
