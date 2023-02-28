@@ -83,6 +83,12 @@ jobs:
           path: /tmp
       - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
       - run: yarn test:unit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: UnitTests
+          token: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ matrix.node == 16 }}
 
   integration:
     name: Integration
@@ -186,62 +192,3 @@ jobs:
                 path: /tmp
         -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
         -   run: yarn build:docs
-
-  coverage-tests-unit:
-    name: Coverage Tests - Unit
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [16]
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:coverage:unit
-
-  coverage-tests-integration:
-    name: Coverage Tests - Integration
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [16]
-        backend: ['geth', 'ganache']
-        mode: ['http', 'ws']
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: web3-${{ matrix.node }}.js.tar.gz
-          path: /tmp
-      - run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      - run: yarn test:coverage:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-        shell: bash
-
-  coverage-tests-ipc:
-    name: Coverage Tests - Integration IPC
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      INFURA_GOERLI_HTTP: ${{ secrets.INFURA_GOERLI_HTTP }}
-      INFURA_GOERLI_WS: ${{ secrets.INFURA_GOERLI_WS }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node: [ 16 ]
-        backend: [ 'geth' ]
-        mode: [ 'ipc' ]
-    steps:
-      -   uses: actions/download-artifact@v3
-          with:
-            name: web3-${{ matrix.node }}.js.tar.gz
-            path: /tmp
-      -   run: tar -xf /tmp/web3-${{ matrix.node }}.js.tar.gz -C ./
-      -   run: yarn test:coverage:e2e:${{ matrix.backend }}:${{ matrix.mode }}
-          shell: bash
