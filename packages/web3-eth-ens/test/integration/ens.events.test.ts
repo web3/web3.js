@@ -193,10 +193,6 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			event.on('error', () => {
-				resolve();
-			});
-
 			await ens.setResolver(
 				domain,
 				resolver.options.address as string,
