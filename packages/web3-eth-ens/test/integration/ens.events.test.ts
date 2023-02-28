@@ -21,7 +21,6 @@ import { sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { getBlock } from 'web3-eth';
 
 import { Address, Bytes } from 'web3-types';
-import { send } from 'process';
 import { ENS } from '../../src';
 import { namehash } from '../../src/utils';
 

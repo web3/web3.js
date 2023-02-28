@@ -1,0 +1,78 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+    patch:
+      default:
+        target: auto
+        threshold: 5%
+
+component_management:
+  default_rules:  # default rules that will be inherited by all components
+    statuses:
+      - type: project
+        target: 80%
+      - type: patch
+        target: 80%
+
+  individual_components:
+    - component_id: "web3"
+      paths:
+          - /packages/web3/src/
+    - component_id: "web3-core"
+      paths:
+          - /packages/web3-core/src/
+    - component_id: "web3-errors"
+      paths:
+          - /packages/web3-errors/src/
+    - component_id: "web3-eth"
+      paths:
+          - /packages/web3-eth/src/
+    - component_id: "web3-eth-abi"
+      paths:
+          - /packages/web3-eth-abi/src/
+    - component_id: "web3-eth-accounts"
+      paths:
+          - /packages/web3-eth-accounts/src/
+    - component_id: "web3-eth-contract"
+      paths:
+          - /packages/web3-eth-contract/src/
+    - component_id: "web3-eth-ens"
+      paths:
+          - /packages/web3-eth-ens/src/
+    - component_id: "web3-eth-iban"
+      paths:
+          - /packages/web3-eth-iban/src/
+    - component_id: "web3-eth-personal"
+      paths:
+          - /packages/web3-eth-personal/src/
+    - component_id: "web3-net"
+      paths:
+          - /packages/web3-net/src/
+    - component_id: "web3-providers-http"
+      paths:
+          - /packages/web3-providers-http/src/
+    - component_id: "web3-providers-ipc"
+      paths:
+          - /packages/web3-providers-ipc/src/
+    - component_id: "web3-providers-ws"
+      paths:
+          - /packages/web3-providers-ws/src/
+    - component_id: "web3-rpc-methods"
+      paths:
+          - /packages/web3-rpc-methods/src/
+    - component_id: "web3-utils"
+      paths:
+          - /packages/web3-utils/src/
+    - component_id: "web3-validator"
+      paths:
+          - /packages/web3-validator/src/
+
+comment:
+  layout: 'header, diff, flags, components'
+  behavior: 'default'
+  require_changes: false
+  require_base: no
+  require_head: no       
