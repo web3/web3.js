@@ -177,3 +177,5 @@ export interface EventData {
     blockNumber: number;
     address: string;
 }
+
+export default Contract

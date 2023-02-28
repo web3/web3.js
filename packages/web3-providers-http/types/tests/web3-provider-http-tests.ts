@@ -22,9 +22,16 @@
 
 import * as http from 'http';
 import * as https from 'https';
-import { HttpProvider } from 'web3-providers';
+import HttpProviderDefault, { HttpProvider } from 'web3-providers';
 import { JsonRpcResponse } from 'web3-core-helpers';
 
+// $ExpectType HttpProvider
+const http_provider_default_empty = new HttpProviderDefault();
+
+// $ExpectType HttpProvider
+const http_provider_empty = new HttpProvider();
+
+// $ExpectType HttpProvider
 const httpProvider = new HttpProvider('http://localhost:8545', {
     timeout: 20000,
     headers: [

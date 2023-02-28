@@ -23,3 +23,5 @@
 import { WebsocketProviderBase } from 'web3-core-helpers';
 
 export class WebsocketProvider extends WebsocketProviderBase { }
+
+export default WebsocketProvider

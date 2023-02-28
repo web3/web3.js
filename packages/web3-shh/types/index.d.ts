@@ -197,3 +197,5 @@ export interface Subscribe {
 
     on(type: 'error', handler: (data: Error) => void): void;
 }
+
+export default Shh

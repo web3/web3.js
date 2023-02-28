@@ -93,3 +93,5 @@ export class Personal {
         callback?: (error: Error, result: string) => void
     ): Promise<string>;
 }
+
+export default Personal

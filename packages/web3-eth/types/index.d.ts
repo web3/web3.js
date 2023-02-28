@@ -481,3 +481,5 @@ export interface FeeHistoryResult {
     oldestBlock: number;
     reward: string[][];
 }
+
+export default Eth
