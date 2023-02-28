@@ -38,25 +38,26 @@ export const sendFewTxes = async ({
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
+		// @TODO: Investigate why we need timeout here #5730
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise<void>(resolve => {
+			setTimeout(resolve, 500);
+		});
+
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
 			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-		> = new Promise((resolve: Resolve) => {
-			resolve(
-				web3Eth.sendTransaction({
-					to,
-					value,
-					from,
-				}),
-			);
+			// eslint-disable-next-line no-await-in-loop
+		> = await web3Eth.sendTransaction({
+			to,
+			value,
+			from,
 		});
-		// eslint-disable-next-line no-await-in-loop
-		await tx;
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
 			(await new Promise((resolve: Resolve, reject) => {
 				// tx promise is handled separately
-				// eslint-disable-next-line no-void, @typescript-eslint/no-unsafe-call
+				// eslint-disable-next-line no-void
 				void tx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve(params);
@@ -86,17 +87,19 @@ export const sendFewTxesWithoutReceipt = async ({
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>[] = [];
 	for (let i = 0; i < times; i += 1) {
+		// @TODO: Investigate why we need timeout here #5730
 		// eslint-disable-next-line no-await-in-loop
-		await new Promise(resolve => {
-			res.push(
-				web3Eth.sendTransaction({
-					to,
-					value,
-					from,
-				}),
-			);
-			resolve(true);
+		await new Promise<void>(resolve => {
+			setTimeout(resolve, 500);
 		});
+
+		res.push(
+			web3Eth.sendTransaction({
+				to,
+				value,
+				from,
+			}),
+		);
 	}
 
 	return res;
