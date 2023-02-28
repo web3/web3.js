@@ -112,14 +112,16 @@ describe('defaults', () => {
 			'should fail if transaction was not mined within `transactionBlockTimeout` blocks - when subscription is used',
 			async () => {
 				const eth = new Web3Eth(clientUrl);
+				console.log("1")
 				await waitForOpenConnection(eth);
+				console.log("2")
 				// using subscription to get the new blocks and fire `TransactionBlockTimeoutError` is currently supported only
 				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
 				eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
 
 				const tempAcc1 = await createTempAccount();
 				const tempAcc2 = await createTempAccount();
-
+				console.log("3")
 				// Make the test run faster by casing the polling to start after 2 blocks
 				eth.transactionBlockTimeout = 2;
 
@@ -133,6 +135,7 @@ describe('defaults', () => {
 				const value = `0x0`;
 
 				try {
+					console.log("4")
 					// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
 					const sentTx: Web3PromiEvent<
 						TransactionReceipt,
@@ -145,7 +148,7 @@ describe('defaults', () => {
 						// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
 						nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
 					});
-
+					console.log("5")
 					// Some providers (mostly used for development) will make blocks only when there are new transactions
 					// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 					// eslint-disable-next-line no-void
@@ -156,8 +159,9 @@ describe('defaults', () => {
 						times: 2,
 						value: '0x1',
 					});
-
+					console.log("6")
 					await sentTx;
+					console.log("7")
 					throw new Error(
 						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
 					);
