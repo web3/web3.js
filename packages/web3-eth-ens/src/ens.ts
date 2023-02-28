@@ -293,4 +293,8 @@ export class ENS extends Web3Context<EthExecutionAPI & Web3NetAPI> {
 	public async supportsInterface(ENSName: string, interfaceId: string) {
 		return this._resolver.supportsInterface(ENSName, interfaceId);
 	}
+
+	public get events() {
+		return this._registry.events;
+	}
 }
