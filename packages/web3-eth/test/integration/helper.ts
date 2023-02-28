@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
+import { FMT_NUMBER } from 'web3-utils';
 import { Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 
@@ -56,7 +57,7 @@ export const sendFewTxesWithoutReceipt = async ({
 	from,
 	times = 3,
 }: SendFewTxParams) => {
-	const res = [];
+	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
 		// @TODO: Investigate why we need timeout here #5730
 		res.push(
