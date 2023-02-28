@@ -88,13 +88,9 @@ export const sendFewTxesWithoutReceipt = async ({
 	>[] = [];
 	for (let i = 0; i < times; i += 1) {
 		// @TODO: Investigate why we need timeout here #5730
-		// eslint-disable-next-line no-await-in-loop
-		await new Promise<void>(resolve => {
-			setTimeout(resolve, 500);
-		});
-
 		res.push(
-			web3Eth.sendTransaction({
+			// eslint-disable-next-line no-await-in-loop
+			await web3Eth.sendTransaction({
 				to,
 				value,
 				from,
