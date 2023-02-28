@@ -41,11 +41,17 @@ export const sendFewTxes = async ({
 		const tx: Web3PromiEvent<
 			TransactionReceipt,
 			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-		> = web3Eth.sendTransaction({
-			to,
-			value,
-			from,
+		> = new Promise((resolve: Resolve) => {
+			resolve(
+				web3Eth.sendTransaction({
+					to,
+					value,
+					from,
+				}),
+			);
 		});
+		// eslint-disable-next-line no-await-in-loop
+		await tx;
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
 			(await new Promise((resolve: Resolve, reject) => {
