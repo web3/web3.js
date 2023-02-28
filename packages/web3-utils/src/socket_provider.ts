@@ -55,6 +55,8 @@ type ReconnectOptions = {
 
 type EventType = 'message' | 'connect' | 'disconnect' | 'chainChanged' | 'accountsChanged' | string;
 
+const NORMAL_CLOSE_CODE = 1000; // https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close
+
 export abstract class SocketProvider<
 	MessageEvent,
 	CloseEvent,
@@ -216,11 +218,12 @@ export abstract class SocketProvider<
 	 * @param data - The data to be sent to the server
 	 */
 	public disconnect(code?: number, data?: string): void {
+		const disconnectCode = code ?? NORMAL_CLOSE_CODE;
 		this._removeSocketListeners();
 		if (this.getStatus() !== 'disconnected') {
-			this._closeSocketConnection(code, data);
+			this._closeSocketConnection(disconnectCode, data);
 		}
-		this._onDisconnect(code, data);
+		this._onDisconnect(disconnectCode, data);
 	}
 
 	/**
