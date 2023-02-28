@@ -41,7 +41,7 @@ import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecod
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
-describeIf(isSocket)('ens', () => {
+describeIf(isSocket)('ens events', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
 	let nameWrapper: Contract<typeof NameWrapperAbi>;
@@ -132,16 +132,14 @@ describeIf(isSocket)('ens', () => {
 	});
 
 	afterAll(async () => {
-		if (isSocket) {
-			await closeOpenConnection(ens);
-			// @ts-expect-error @typescript-eslint/ban-ts-comment
-			await closeOpenConnection(ens?._registry?.contract);
-			await closeOpenConnection(getEnsResolver);
-			await closeOpenConnection(setEnsResolver);
-			await closeOpenConnection(registry);
-			await closeOpenConnection(resolver);
-			await closeOpenConnection(nameWrapper);
-		}
+		await closeOpenConnection(ens);
+		// @ts-expect-error @typescript-eslint/ban-ts-comment
+		await closeOpenConnection(ens?._registry?.contract);
+		await closeOpenConnection(getEnsResolver);
+		await closeOpenConnection(setEnsResolver);
+		await closeOpenConnection(registry);
+		await closeOpenConnection(resolver);
+		await closeOpenConnection(nameWrapper);
 	});
 
 	beforeEach(async () => {
@@ -151,8 +149,8 @@ describeIf(isSocket)('ens', () => {
 			.send(sendOptions);
 	});
 
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
-	test('ApprovalForAll event', async () => {
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
+	it('ApprovalForAll event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const event = ens.events.ApprovalForAll();
@@ -181,6 +179,23 @@ describeIf(isSocket)('ens', () => {
 			});
 
 			await ens.setTTL(web3jsName, ttl, sendOptions);
+		});
+	});
+
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
+	it('NewResolver event', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
+		await new Promise<void>(async resolve => {
+			const mockAddress = '0x0000000000000000000000000000000000000000';
+			const ENS_NAME = 'web3js.eth';
+			const event = ens.events.NewResolver();
+
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			event.on('data', () => {
+				resolve();
+			});
+
+			await ens.setResolver(ENS_NAME, mockAddress, sendOptions);
 		});
 	});
 });

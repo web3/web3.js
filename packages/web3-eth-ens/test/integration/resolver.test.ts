@@ -199,10 +199,10 @@ describe('ens', () => {
 	});
 
 	// eslint-disable-next-line jest/expect-expect
-	itIf(isSocket)('ContenthasChanged event', async () => {
-		// eslint-disable-next-line no-console, @typescript-eslint/no-misused-promises, no-async-promise-executor
+	itIf(isSocket)('ContenthashChanged event', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
-			const resolver2 = await ens.getResolver('resolver'); // .on('ContenthashChanged', (node, hash) => {});
+			const resolver2 = await ens.getResolver('resolver');
 			const event = resolver2.events.ContenthashChanged();
 
 			event.on('data', () => {
