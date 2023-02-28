@@ -543,8 +543,7 @@ describe('defaults', () => {
 			// It will cause providers that does not support subscriptions (like http) to throw exception when subscribing.
 			// This case is tested to ensure that even if an error happen at subscription,
 			//	polling will still get the data from next blocks.
-			(tempEth.provider as Web3BaseProvider<Record<string, never>>).supportsSubscriptions =
-				() => true;
+			(tempEth.provider as Web3BaseProvider).supportsSubscriptions = () => true;
 
 			// Cause the events to take a long time (more than blockHeaderTimeout),
 			//	to ensure that polling of new blocks works in such cases.
@@ -552,7 +551,7 @@ describe('defaults', () => {
 			// 	to never return data through listening to new events
 
 			// eslint-disable-next-line @typescript-eslint/no-misused-promises
-			(tempEth.provider as Web3BaseProvider<Record<string, never>>).on = async () => {
+			(tempEth.provider as Web3BaseProvider).on = async () => {
 				await new Promise(res => {
 					setTimeout(res, 1000000);
 				});
