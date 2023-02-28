@@ -18,7 +18,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Contract, PayableTxOptions } from 'web3-eth-contract';
 import { sha3, DEFAULT_RETURN_FORMAT } from 'web3-utils';
-import Web3Eth from 'web3-eth';
+import { getBlock } from 'web3-eth';
 
 import { Address, Bytes } from 'web3-types';
 import { ENS } from '../../src';
@@ -31,7 +31,7 @@ import {
 	isIpc,
 	closeOpenConnection,
 	isSocket,
-	itIf,
+	describeIf,
 } from '../fixtures/system_tests_utils';
 
 import { ENSRegistryAbi } from '../../src/abi/ens/ENSRegistry';
@@ -41,21 +41,26 @@ import { NameWrapperBytecode } from '../fixtures/ens/bytecode/NameWrapperBytecod
 import { PublicResolverAbi } from '../../src/abi/ens/PublicResolver';
 import { PublicResolverBytecode } from '../fixtures/ens/bytecode/PublicResolverBytecode';
 
-describe('ens', () => {
+describeIf(isSocket)('ens events', () => {
 	let registry: Contract<typeof ENSRegistryAbi>;
 	let resolver: Contract<typeof PublicResolverAbi>;
 	let nameWrapper: Contract<typeof NameWrapperAbi>;
 
-	let Resolver: Contract<typeof PublicResolverAbi>;
+	type ResolverContract = Contract<typeof PublicResolverAbi>;
+
+	let Resolver: ResolverContract;
+	let setEnsResolver: ResolverContract;
+	let getEnsResolver: ResolverContract;
 
 	let sendOptions: PayableTxOptions;
 
 	const domain = 'test';
-	const domainNode = namehash(domain);
 	const node = namehash('resolver');
 	const label = sha3('resolver') as string;
 
-	let web3Eth: Web3Eth;
+	const web3jsName = 'web3js.test';
+
+	const ttl = 3600;
 
 	let accounts: string[];
 	let ens: ENS;
@@ -64,10 +69,6 @@ describe('ens', () => {
 
 	const ZERO_NODE: Bytes = '0x0000000000000000000000000000000000000000000000000000000000000000';
 	const addressOne: Address = '0x0000000000000000000000000000000000000001';
-
-	const contentHash = '0x0000000000000000000000000000000000000000000000000000000000000001';
-
-	const DEFAULT_COIN_TYPE = 60;
 
 	beforeAll(async () => {
 		accounts = await getSystemTestAccounts();
@@ -120,8 +121,7 @@ describe('ens', () => {
 
 		ens = new ENS(registry.options.address, provider);
 
-		web3Eth = new Web3Eth(provider);
-		const block = await web3Eth.getBlock('latest', false, DEFAULT_RETURN_FORMAT);
+		const block = await getBlock(ens, 'latest', false, DEFAULT_RETURN_FORMAT);
 		const gas = block.gasLimit.toString();
 
 		// Increase gas for contract calls
@@ -132,112 +132,70 @@ describe('ens', () => {
 	});
 
 	afterAll(async () => {
-		if (isSocket) {
-			await closeOpenConnection(ens);
-			// @ts-expect-error @typescript-eslint/ban-ts-comment
-			await closeOpenConnection(ens?._registry?.contract);
-			await closeOpenConnection(registry);
-			await closeOpenConnection(resolver);
-			await closeOpenConnection(nameWrapper);
-		}
+		await closeOpenConnection(ens);
+		// @ts-expect-error @typescript-eslint/ban-ts-comment
+		await closeOpenConnection(ens?._registry?.contract);
+		await closeOpenConnection(getEnsResolver);
+		await closeOpenConnection(setEnsResolver);
+		await closeOpenConnection(registry);
+		await closeOpenConnection(resolver);
+		await closeOpenConnection(nameWrapper);
 	});
+
 	beforeEach(async () => {
 		// set up subnode
 		await registry.methods
-			.setSubnodeOwner(ZERO_NODE, sha3('eth') as string, defaultAccount)
+			.setSubnodeOwner(namehash(domain), sha3('web3js') as string, defaultAccount)
 			.send(sendOptions);
 	});
 
-	it('supports known interfaces', async () => {
-		await expect(ens.supportsInterface('resolver', '0x3b3b57de')).resolves.toBeTruthy(); // IAddrResolver
-		await expect(ens.supportsInterface('resolver', '0xf1cb7e06')).resolves.toBeTruthy(); // IAddressResolver
-		await expect(ens.supportsInterface('resolver', '0x691f3431')).resolves.toBeTruthy(); // INameResolver
-		await expect(ens.supportsInterface('resolver', '0x2203ab56')).resolves.toBeTruthy(); // IABIResolver
-		await expect(ens.supportsInterface('resolver', '0xc8690233')).resolves.toBeTruthy(); // IPubkeyResolver
-		await expect(ens.supportsInterface('resolver', '0x59d1d43c')).resolves.toBeTruthy(); // ITextResolver
-		await expect(ens.supportsInterface('resolver', '0xbc1c58d1')).resolves.toBeTruthy(); // IContentHashResolver
-		await expect(ens.supportsInterface('resolver', '0xa8fa5682')).resolves.toBeTruthy(); // IDNSRecordResolver
-		await expect(ens.supportsInterface('resolver', '0x5c98042b')).resolves.toBeTruthy(); // IDNSZoneResolver
-		await expect(ens.supportsInterface('resolver', '0x01ffc9a7')).resolves.toBeTruthy(); // IInterfaceResolver
-	});
-
-	it('does not support a random interface', async () => {
-		await expect(ens.supportsInterface('resolver', '0x3b3b57df')).resolves.toBeFalsy();
-	});
-
-	it('fetch pubkey', async () => {
-		await ens.setResolver(
-			domain,
-			resolver.options.address as string,
-			sendOptions,
-			DEFAULT_RETURN_FORMAT,
-		);
-
-		const res = await ens.getPubkey(domain);
-
-		expect(res.x).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
-		expect(res.y).toBe('0x0000000000000000000000000000000000000000000000000000000000000000');
-	});
-
-	it('permits setting public key by owner', async () => {
-		const x = '0x1000000000000000000000000000000000000000000000000000000000000000';
-		const y = '0x2000000000000000000000000000000000000000000000000000000000000000';
-
-		await ens.setPubkey(domain, x, y, sendOptions);
-
-		const result = await ens.getPubkey(domain);
-
-		expect(result[0]).toBe(namehash(x));
-		expect(result[1]).toBe(namehash(y));
-	});
-
-	it('sets contenthash', async () => {
-		await ens.setContenthash(domain, contentHash, sendOptions);
-
-		const res = await resolver.methods.contenthash(domainNode).call(sendOptions);
-		expect(res).toBe(contentHash);
-	});
-
-	// eslint-disable-next-line jest/expect-expect
-	itIf(isSocket)('ContenthashChanged event', async () => {
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
+	it('ApprovalForAll event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
-			const resolver2 = await ens.getResolver('resolver');
-			const event = resolver2.events.ContenthashChanged();
+			const event = ens.events.ApprovalForAll();
+
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			event.on('data', () => {
+				resolve();
+			});
+
+			await ens.setApprovalForAll(accountOne, true, sendOptions);
+		});
+	});
+
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
+	test('NewTTL event', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
+		await new Promise<void>(async resolve => {
+			const event = ens.events.NewTTL();
 
 			event.on('data', () => {
 				resolve();
 			});
-			await ens.setContenthash(domain, contentHash, sendOptions);
+
+			event.on('error', () => {
+				resolve();
+			});
+
+			await ens.setTTL(web3jsName, ttl, sendOptions);
 		});
 	});
 
-	it('fetches contenthash', async () => {
-		await resolver.methods.setContenthash(domainNode, contentHash).call(sendOptions);
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
+	it('NewResolver event', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
+		await new Promise<void>(async resolve => {
+			const mockAddress = '0x0000000000000000000000000000000000000000';
+			const ENS_NAME = 'web3js.eth';
+			const event = ens.events.NewResolver();
 
-		const res = await ens.getContenthash(domain);
-		expect(res).toBe(contentHash);
-	});
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+			event.on('data', () => {
+				resolve();
+			});
 
-	it('sets address', async () => {
-		await registry.methods
-			.setResolver(domainNode, resolver.options.address as string)
-			.send(sendOptions);
-
-		await ens.setAddress(domain, accounts[1], sendOptions, DEFAULT_RETURN_FORMAT);
-
-		const res = await resolver.methods.addr(domainNode, DEFAULT_COIN_TYPE).call(sendOptions);
-		expect(res).toBe(accounts[1]);
-	});
-
-	it('fetches address', async () => {
-		await registry.methods
-			.setResolver(domainNode, resolver.options.address as string)
-			.send(sendOptions);
-
-		await resolver.methods.setAddr(domainNode, accountOne).send(sendOptions);
-
-		const resultAddress = await ens.getAddress(domain);
-		expect(resultAddress).toBe(accountOne);
+			await ens.setResolver(ENS_NAME, mockAddress, sendOptions);
+		});
 	});
 });

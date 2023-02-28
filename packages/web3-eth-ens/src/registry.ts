@@ -234,4 +234,7 @@ export class Registry {
 			throw new Error(); // TODO: TransactionRevertError Needs to be added after web3-eth call method is implemented
 		}
 	}
+	public get events() {
+		return this.contract.events;
+	}
 }
