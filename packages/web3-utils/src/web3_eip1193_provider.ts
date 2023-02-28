@@ -25,6 +25,9 @@ import {
 import { EventEmitter } from 'events';
 import { toPayload } from './json_rpc';
 
+/**
+ * This is an abstract class, which extends {@link Web3BaseProvider} class. This class is used to implement a provider that adheres to the EIP-1193 standard for Ethereum providers.
+ */
 export abstract class Eip1193Provider<
 	API extends Web3APISpec = EthExecutionAPI,
 > extends Web3BaseProvider<API> {

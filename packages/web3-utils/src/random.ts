@@ -19,6 +19,14 @@ import { randomBytes as cryptoRandomBytes } from 'crypto';
 
 /**
  * Returns a random byte array by the given bytes size
+ * @param byteSize - The size of the random byte array returned
+ * @returns - random byte array
+ *
+ * @example
+ * ```ts
+ * console.log(web3.utils.randomBytes(32));
+ * > <Buffer a9 a2 70 ff 00 9d 0b c9 2f 9e 5f 0e 40 a4 da 4a f9 1c 6f 23 41 59 46 a6 b5 8b 99 49 72 01 68 99>
+ * ```
  */
 export const randomBytes = (byteSize: number): Buffer => {
 	const randomValues =
@@ -30,5 +38,12 @@ export const randomBytes = (byteSize: number): Buffer => {
 
 /**
  * Returns a random hex string by the given bytes size
+ * @param byteSize - The size of the random hex string returned
+ * @returns - random hex string
+ *
+ * ```ts
+ * console.log(web3.utils.randomHex(32));
+ * > 0x139f5b88b72a25eab053d3b57fe1f8a9dbc62a526b1cb1774d0d7db1c3e7ce9e
+ * ```
  */
 export const randomHex = (byteSize: number): string => `0x${randomBytes(byteSize).toString('hex')}`;
