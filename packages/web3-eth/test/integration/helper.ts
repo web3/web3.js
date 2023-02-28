@@ -56,13 +56,13 @@ export const sendFewTxes = async ({
 			// eslint-disable-next-line no-await-in-loop
 			(await new Promise((resolve: Resolve, reject) => {
 				// tx promise is handled separately
-				// eslint-disable-next-line no-void
+				// eslint-disable-next-line no-void, @typescript-eslint/no-unsafe-call
 				void tx.on('receipt', (params: TransactionReceipt) => {
 					expect(params.status).toBe(BigInt(1));
 					resolve(params);
 				});
 				// eslint-disable-next-line no-void
-				void tx.on('error', error => {
+				void tx.on('error', (error: any) => {
 					reject(error);
 				});
 			})) as TransactionReceipt,
@@ -86,13 +86,17 @@ export const sendFewTxesWithoutReceipt = async ({
 		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
 	>[] = [];
 	for (let i = 0; i < times; i += 1) {
-		res.push(
-			web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			}),
-		);
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise(resolve => {
+			res.push(
+				web3Eth.sendTransaction({
+					to,
+					value,
+					from,
+				}),
+			);
+			resolve(true);
+		});
 	}
 
 	return res;
