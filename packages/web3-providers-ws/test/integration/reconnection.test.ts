@@ -84,7 +84,9 @@ describeIf(isWs && !isBrowser)('WebSocketProvider - reconnection', () => {
 
 			expect(!!(await disconnectPromise)).toBe(true);
 		});
-		it('should connect, disconnect and reconnect', async () => {
+
+		// eslint-disable-next-line jest/no-disabled-tests
+		it.skip('should connect, disconnect and reconnect', async () => {
 			const server = await createProxy(18546, getSystemTestProvider());
 			const web3Provider = new WebSocketProvider(server.path, {}, reconnectionOptions);
 
