@@ -68,30 +68,31 @@ describe('defaults', () => {
 			const value = `0x0`;
 
 			// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-			const sentTx: Web3PromiEvent<
-				TransactionReceipt,
-				SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-			> = eth.sendTransaction({
-				to,
-				value,
-				from,
-				// Give a high nonce so the transaction stuck forever.
-				// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-				nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-			});
-
-			// Some providers (mostly used for development) will make blocks only when there are new transactions
-			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
-			// eslint-disable-next-line no-void
-			void sendFewTxesWithoutReceipt({
-				web3Eth: eth,
-				from: tempAcc2.address,
-				to: tempAcc1.address,
-				times: 2,
-				value: '0x1',
-			});
 
 			try {
+				const sentTx: Web3PromiEvent<
+					TransactionReceipt,
+					SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+				> = eth.sendTransaction({
+					to,
+					value,
+					from,
+					// Give a high nonce so the transaction stuck forever.
+					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
+					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+				});
+
+				// Some providers (mostly used for development) will make blocks only when there are new transactions
+				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
+				// eslint-disable-next-line no-void
+				void sendFewTxesWithoutReceipt({
+					web3Eth: eth,
+					from: tempAcc2.address,
+					to: tempAcc1.address,
+					times: 2,
+					value: '0x1',
+				});
+
 				await sentTx;
 				throw new Error(
 					'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
@@ -131,31 +132,31 @@ describe('defaults', () => {
 				const to = tempAcc2.address;
 				const value = `0x0`;
 
-				// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
-				const sentTx: Web3PromiEvent<
-					TransactionReceipt,
-					SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-				> = eth.sendTransaction({
-					to,
-					value,
-					from,
-					// Give a high nonce so the transaction stuck forever.
-					// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
-					nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
-				});
-
-				// Some providers (mostly used for development) will make blocks only when there are new transactions
-				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
-				// eslint-disable-next-line no-void
-				void sendFewTxesWithoutReceipt({
-					web3Eth: eth,
-					from: tempAcc2.address,
-					to: tempAcc1.address,
-					times: 2,
-					value: '0x1',
-				});
-
 				try {
+					// Setting a high `nonce` when sending a transaction, to cause the RPC call to stuck at the Node
+					const sentTx: Web3PromiEvent<
+						TransactionReceipt,
+						SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+					> = eth.sendTransaction({
+						to,
+						value,
+						from,
+						// Give a high nonce so the transaction stuck forever.
+						// However, make this random to be able to run the test many times without receiving an error that indicate submitting the same transaction twice.
+						nonce: Number.MAX_SAFE_INTEGER - Math.floor(Math.random() * 100000000),
+					});
+
+					// Some providers (mostly used for development) will make blocks only when there are new transactions
+					// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
+					// eslint-disable-next-line no-void
+					void sendFewTxesWithoutReceipt({
+						web3Eth: eth,
+						from: tempAcc2.address,
+						to: tempAcc1.address,
+						times: 2,
+						value: '0x1',
+					});
+
 					await sentTx;
 					throw new Error(
 						'The test should fail if there is no exception when sending a transaction that could not be mined within transactionBlockTimeout',
