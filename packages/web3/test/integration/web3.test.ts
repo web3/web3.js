@@ -33,6 +33,7 @@ import {
 	isWs,
 	waitForOpenConnection,
 	itIf,
+	isSocket,
 } from '../shared_fixtures/system_tests_utils';
 import { GreeterAbi, GreeterBytecode } from '../shared_fixtures/build/Greeter';
 
@@ -85,7 +86,9 @@ describe('Web3 instance', () => {
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
-		web3Instance.currentProvider?.disconnect();
+		if (isSocket) {
+			web3Instance.currentProvider?.disconnect();
+		}
 	});
 	itIf(isWs)('check disconnect function for WebSocket provider', async () => {
 		const web3Instance = new Web3(new WebSocketProvider(clientUrl));
@@ -112,7 +115,6 @@ describe('Web3 instance', () => {
 		expect(typeof web3Instance.eth.provider?.disconnect).toBe('function');
 		expect(typeof web3Instance.currentProvider?.disconnect).toBe('function');
 		expect(typeof web3Instance.eth.currentProvider?.disconnect).toBe('function');
-		web3Instance.currentProvider?.disconnect();
 	});
 
 	it('should be able use "utils" without provider', () => {

@@ -57,9 +57,6 @@ describe('HttpProvider - implemented methods', () => {
 				mockGetBalanceResponse,
 			);
 		});
-		it('disconnect', () => {
-			expect(httpProvider.disconnect()).toBeUndefined();
-		});
 
 		it('should return ResponseError', async () => {
 			fetchMock.mockResponseOnce(JSON.stringify(mockGetBalanceResponse), { status: 400 });
