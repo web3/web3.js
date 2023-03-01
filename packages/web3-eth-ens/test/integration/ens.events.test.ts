@@ -164,8 +164,8 @@ describeIf(isSocket)('ens events', () => {
 		});
 	});
 
-	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback
-	test('NewTTL event', async () => {
+	// eslint-disable-next-line jest/expect-expect, jest/no-done-callback, jest/consistent-test-it
+	it('NewTTL event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
 			const event = ens.events.NewTTL();
@@ -186,8 +186,6 @@ describeIf(isSocket)('ens events', () => {
 	it('NewResolver event', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-misused-promises, no-async-promise-executor
 		await new Promise<void>(async resolve => {
-			const mockAddress = '0x0000000000000000000000000000000000000000';
-			const ENS_NAME = 'web3js.eth';
 			const event = ens.events.NewResolver();
 
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -195,7 +193,12 @@ describeIf(isSocket)('ens events', () => {
 				resolve();
 			});
 
-			await ens.setResolver(ENS_NAME, mockAddress, sendOptions);
+			await ens.setResolver(
+				domain,
+				resolver.options.address as string,
+				sendOptions,
+				DEFAULT_RETURN_FORMAT,
+			);
 		});
 	});
 });
