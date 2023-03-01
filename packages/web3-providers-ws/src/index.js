@@ -63,7 +63,7 @@ var WebsocketProvider = function WebsocketProvider(url, options) {
     this.responseQueue = new Map();
     this.reconnectAttempts = 0;
     this.reconnecting = false;
-
+    this.connectFailedDescription = null;
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
@@ -160,6 +160,10 @@ WebsocketProvider.prototype._onConnect = function () {
     }
 };
 
+WebsocketProvider.prototype._onConnectFailed = function (event) {
+    this.connectFailedDescription = event.toString().split('\n')[0];
+    console.log("connectFailedDesction", this.connectFailedDescription);
+}
 /**
  * Listener for the `close` event of the underlying WebSocket object
  *
@@ -176,6 +180,14 @@ WebsocketProvider.prototype._onClose = function (event) {
         return;
     }
 
+    // console.log("888888888",event)
+    console.log("connectFailedDesction222", this.connectFailedDescription)
+    if (this.connectFailedDescription) {
+        console.log("Inside if")
+        event.description = this.connectFailedDescription;
+        this.connectFailedDescription = null;
+    }
+    
     this.emit(this.CLOSE, event);
 
     if (this.requestQueue.size > 0) {
@@ -207,7 +219,13 @@ WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('message', this._onMessage.bind(this));
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
-};
+    this.connection._client.removeAllListeners('connectFailed'); //Override the internal listeners, so they don't trigger a `close` event. We want to trigger `_onClose` manually with a description.
+    console.log("00000000000000")
+    console.log(this.connection._client.listeners('connectFailed'));
+    console.log("00000000000000")
+    // this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
+    // this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
+}
 
 /**
  * Will remove all socket listeners
@@ -220,6 +238,7 @@ WebsocketProvider.prototype._removeSocketListeners = function () {
     this.connection.removeEventListener('message', this._onMessage);
     this.connection.removeEventListener('open', this._onConnect);
     this.connection.removeEventListener('close', this._onClose);
+    // this.connection._client.removeListener('connectFailed',this._onConnectFailed);
 };
 
 /**
