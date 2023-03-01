@@ -1412,7 +1412,12 @@ export function sendSignedTransaction<
 							).toJSON();
 							const error = await getTransactionError<ReturnFormat>(
 								web3Context,
-								unSerializedTransaction as TransactionCall,
+								{
+									...unSerializedTransaction,
+									// Some providers will default from to address(0) causing the error
+									// reported from eth_call to not be the reason the user's tx failed
+									from: transactionReceipt.from,
+								} as TransactionCall,
 								transactionReceiptFormatted,
 								undefined,
 								options?.contractAbi,
