@@ -23,6 +23,7 @@ import { SendTransactionEvents, Web3Eth } from '../../src';
 
 import {
 	closeOpenConnection,
+	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
 	isSocket,
@@ -30,7 +31,7 @@ import {
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-import { sendFewTxesWithoutReceipt } from './helper';
+import { sendFewTxes } from './helper';
 
 const MAX_32_SIGNED_INTEGER = 2147483647;
 /* eslint-disable jest/no-standalone-expect */
@@ -52,7 +53,10 @@ describe('defaults', () => {
 	describe('defaults', () => {
 		it('should fail if transaction was not mined within `transactionBlockTimeout` blocks', async () => {
 			const eth = new Web3Eth(clientUrl);
-			const tempAcc1 = await createTempAccount();
+			const tempAcc1 = await createNewAccount({
+				unlock: true,
+				refill: true,
+			});
 			const tempAcc2 = await createTempAccount();
 
 			// Make the test run faster by casing the polling to start after 2 blocks
@@ -83,11 +87,11 @@ describe('defaults', () => {
 			// Some providers (mostly used for development) will make blocks only when there are new transactions
 			// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 			// eslint-disable-next-line no-void
-			void sendFewTxesWithoutReceipt({
+			void sendFewTxes({
 				web3Eth: eth,
 				from: tempAcc2.address,
 				to: tempAcc1.address,
-				times: 2,
+				times: 3,
 				value: '0x1',
 			});
 
@@ -116,7 +120,11 @@ describe('defaults', () => {
 				//	with `enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout` equal true.
 				eth.enableExperimentalFeatures.useSubscriptionWhenCheckingBlockTimeout = true;
 
-				const tempAcc1 = await createTempAccount();
+				const tempAcc1 = await createNewAccount({
+					unlock: true,
+					refill: true,
+				});
+
 				const tempAcc2 = await createTempAccount();
 
 				// Make the test run faster by casing the polling to start after 2 blocks
@@ -147,11 +155,11 @@ describe('defaults', () => {
 				// Some providers (mostly used for development) will make blocks only when there are new transactions
 				// So, send 2 transactions, one after another, because in this test `transactionBlockTimeout = 2`.
 				// eslint-disable-next-line no-void
-				void sendFewTxesWithoutReceipt({
+				void sendFewTxes({
 					web3Eth: eth,
 					from: tempAcc2.address,
 					to: tempAcc1.address,
-					times: 2,
+					times: 3,
 					value: '0x1',
 				});
 
