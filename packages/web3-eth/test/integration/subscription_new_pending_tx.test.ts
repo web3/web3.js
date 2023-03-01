@@ -21,14 +21,13 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
-	isIpc,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 2;
+const checkTxCount = 3;
 
-describeIf(isSocket && !isIpc)('subscription', () => {
+describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
 		it(`wait ${checkTxCount} transaction - %s`, async () => {
 			const web3Eth = new Web3Eth(getSystemTestProvider());
@@ -79,7 +78,7 @@ describeIf(isSocket && !isIpc)('subscription', () => {
 							from,
 							to,
 							value,
-							times: isIpc ? checkTxCount * 3 : checkTxCount,
+							times: checkTxCount,
 						})
 					).map(r => String(r?.transactionHash));
 					if (receipts.length > 0 && waitList.length > 0) {

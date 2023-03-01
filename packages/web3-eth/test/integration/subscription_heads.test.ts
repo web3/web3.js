@@ -16,7 +16,7 @@ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { BlockHeaderOutput } from 'web3-types';
 import { Web3Eth, NewHeadsSubscription } from '../../src';
-import { Resolve, sendFewTxesWithoutReceipt } from './helper';
+import { Resolve, sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
 	createTempAccount,
@@ -26,7 +26,7 @@ import {
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 3;
+const checkTxCount = 2;
 
 describeIf(isSocket)('subscription', () => {
 	let clientUrl: string;
@@ -55,9 +55,6 @@ describeIf(isSocket)('subscription', () => {
 					}
 					expect(times).toBeGreaterThanOrEqual(times);
 					if (times >= checkTxCount) {
-						// sub.off('data', () => {
-						// 	no need to do anything
-						// });
 						resolve();
 					}
 				});
@@ -65,7 +62,7 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			await sendFewTxesWithoutReceipt({
+			await sendFewTxes({
 				web3Eth,
 				from,
 				to,
