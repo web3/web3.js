@@ -23,6 +23,7 @@ import {
 	SupportedProviders,
 	HexString,
 	EthExecutionAPI,
+	Web3BaseProvider,
 } from 'web3-types';
 import { isNullish } from 'web3-utils';
 import { ExistingPluginNamespaceError } from 'web3-errors';
@@ -268,8 +269,8 @@ export class Web3Context<
 	 * ```
 	 */
 
-	public get provider(): SupportedProviders<API> | string | undefined {
-		return this.requestManager.provider;
+	public get provider(): Web3BaseProvider<API> | undefined {
+		return this.currentProvider;
 	}
 
 	/**
@@ -310,8 +311,8 @@ export class Web3Context<
 	 *  }
 	 * ```
 	 */
-	public get currentProvider(): SupportedProviders<API> | string | undefined {
-		return this.requestManager.provider;
+	public get currentProvider(): Web3BaseProvider<API> | undefined {
+		return this.requestManager.provider as Web3BaseProvider<API>;
 	}
 
 	/**
