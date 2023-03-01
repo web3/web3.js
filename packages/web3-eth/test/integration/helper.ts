@@ -15,8 +15,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
-import { FMT_NUMBER } from 'web3-utils';
-import { Web3Eth } from '../../src';
+import { DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
+import { Web3PromiEvent } from 'web3-core';
+import { SendTransactionEvents, Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 
 type SendFewTxParams = {
@@ -37,13 +38,34 @@ export const sendFewTxes = async ({
 }: SendFewTxParams): Promise<TransactionReceipt[]> => {
 	const res: TransactionReceipt[] = [];
 	for (let i = 0; i < times; i += 1) {
+		// @TODO: Investigate why we need timeout here #5730
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise<void>(resolve => {
+			setTimeout(resolve, 500);
+		});
+
+		const tx: Web3PromiEvent<
+			TransactionReceipt,
+			SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+		> = web3Eth.sendTransaction({
+			to,
+			value,
+			from,
+		});
 		res.push(
 			// eslint-disable-next-line no-await-in-loop
-			await web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-			}),
+			(await new Promise((resolve: Resolve, reject) => {
+				// tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void tx.on('receipt', (params: TransactionReceipt) => {
+					expect(params.status).toBe(BigInt(1));
+					resolve(params);
+				});
+				// eslint-disable-next-line no-void
+				void tx.on('error', error => {
+					reject(error);
+				});
+			})) as TransactionReceipt,
 		);
 	}
 
@@ -56,13 +78,22 @@ export const sendFewTxesWithoutReceipt = async ({
 	value,
 	from,
 	times = 3,
-}: SendFewTxParams) => {
-	const res: TransactionReceipt[] = [];
+}: SendFewTxParams): Promise<
+	Web3PromiEvent<TransactionReceipt, SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>>[]
+> => {
+	const res: Web3PromiEvent<
+		TransactionReceipt,
+		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
+	>[] = [];
 	for (let i = 0; i < times; i += 1) {
 		// @TODO: Investigate why we need timeout here #5730
+		// eslint-disable-next-line no-await-in-loop
+		await new Promise<void>(resolve => {
+			setTimeout(resolve, 500);
+		});
+
 		res.push(
-			// eslint-disable-next-line no-await-in-loop
-			await web3Eth.sendTransaction({
+			web3Eth.sendTransaction({
 				to,
 				value,
 				from,
