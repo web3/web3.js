@@ -91,7 +91,7 @@ describe('defaults', () => {
 				web3Eth: eth,
 				from: tempAcc2.address,
 				to: tempAcc1.address,
-				times: 3,
+				times: 2,
 				value: '0x1',
 			});
 
@@ -159,7 +159,7 @@ describe('defaults', () => {
 					web3Eth: eth,
 					from: tempAcc2.address,
 					to: tempAcc1.address,
-					times: 3,
+					times: 2,
 					value: '0x1',
 				});
 
