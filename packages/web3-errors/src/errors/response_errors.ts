@@ -53,7 +53,7 @@ export class ResponseError<ErrorType = unknown, RequestType = unknown> extends B
 	) {
 		super(
 			message ??
-				`${
+				`Returned error: ${
 					Array.isArray(response)
 						? response.map(r => buildErrorMessage(r)).join(',')
 						: buildErrorMessage(response)
