@@ -19,6 +19,7 @@ import { Web3Eth, NewHeadsSubscription } from '../../src';
 import { Resolve, sendFewTxes } from './helper';
 import {
 	closeOpenConnection,
+	createNewAccount,
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
@@ -42,7 +43,10 @@ describeIf(isSocket)('subscription', () => {
 		it(`wait for ${checkTxCount} newHeads`, async () => {
 			const web3Eth = new Web3Eth(clientUrl);
 			const sub: NewHeadsSubscription = await web3Eth.subscribe('newHeads');
-			const tempAccForEachTest = await createTempAccount();
+			const tempAccForEachTest = await createNewAccount({
+				unlock: true,
+				refill: true,
+			});
 			const from = tempAccForEachTest.address;
 			const to = tempAcc2.address;
 			const value = `0x1`;
@@ -67,7 +71,7 @@ describeIf(isSocket)('subscription', () => {
 				from,
 				to,
 				value,
-				times: checkTxCount,
+				times: checkTxCount + 1,
 			});
 
 			await pr;

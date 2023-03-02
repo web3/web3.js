@@ -24,6 +24,7 @@ import {
 	getSystemTestProvider,
 	createTempAccount,
 	closeOpenConnection,
+	createNewAccount,
 } from '../../fixtures/system_test_utils';
 import { BasicAbi, BasicBytecode } from '../../shared_fixtures/build/Basic';
 import { toAllVariants } from '../../shared_fixtures/utils';
@@ -70,7 +71,10 @@ describe('rpc with block', () => {
 		};
 	});
 	beforeAll(async () => {
-		tempAcc = await createTempAccount();
+		tempAcc = await createNewAccount({
+			unlock: true,
+			refill: true,
+		});
 		tempAcc2 = await createTempAccount();
 		sendOptions = { from: tempAcc.address, gas: '1000000' };
 
