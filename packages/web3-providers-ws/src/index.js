@@ -162,13 +162,39 @@ WebsocketProvider.prototype._onConnect = function () {
 
 WebsocketProvider.prototype._onConnectFailed = function (event) {
     this.connectFailedDescription = event.toString().split('\n')[0];
+    console.log("The description of the error is: " + this.connectFailedDescription);
+    var _this = this;
+    if (this.connectFailedDescription) {
+        event.description = this.connectFailedDescription;
+        this.connectFailedDescription = null; // clean the message, so it won't be used in the next connection
+    }
+
+    if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
+        this.reconnect();
+
+        return;
+    }
+
+    this.emit(this.ERROR, event);
+    if (this.requestQueue.size > 0) {
+        this.requestQueue.forEach(function (request, key) {
+            request.callback(errors.ConnectionNotOpenError(event));
+            _this.requestQueue.delete(key);
+        });
+    }
+
+    if (this.responseQueue.size > 0) {
+        this.responseQueue.forEach(function (request, key) {
+            request.callback(errors.InvalidConnection('on WS', event));
+            _this.responseQueue.delete(key);
+        });
+    }
+
     //clean connection on our own
     if(this.connection._connection)
         this.connection._connection.removeAllListeners();
     this.connection._client.removeAllListeners();
     this.connection._readyState = 3; // set readyState to CLOSED
-    this._onClose(event);
-
 }
 /**
  * Listener for the `close` event of the underlying WebSocket object
@@ -179,13 +205,6 @@ WebsocketProvider.prototype._onConnectFailed = function (event) {
  */
 WebsocketProvider.prototype._onClose = function (event) {
     var _this = this;
-
-    if (this.connectFailedDescription) {
-        event.description = this.connectFailedDescription;
-        this.connectFailedDescription = null;
-    }
-
-    this.connectFailedDescription = null; // clean the message, so it won't be used in the next connection
 
     if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
         this.reconnect();
