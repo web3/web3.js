@@ -65,7 +65,9 @@ describe('getTransactionError', () => {
 	});
 
 	it('should call getRevertReason to get error from transactionFormatted without contractAbi', async () => {
-		const getRevertReasonSpy = jest.spyOn(GetRevertReasonUtils, 'getRevertReason');
+		const getRevertReasonSpy = jest
+			.spyOn(GetRevertReasonUtils, 'getRevertReason')
+			.mockImplementation();
 
 		const transaction = {
 			from: '0x4fec0a51024b13030d26e70904b066c6d41157a5',
@@ -82,7 +84,9 @@ describe('getTransactionError', () => {
 	});
 
 	it('should call getRevertReason to get error from transactionFormatted with contractAbi', async () => {
-		const getRevertReasonSpy = jest.spyOn(GetRevertReasonUtils, 'getRevertReason');
+		const getRevertReasonSpy = jest
+			.spyOn(GetRevertReasonUtils, 'getRevertReason')
+			.mockImplementation();
 
 		const transaction = {
 			from: '0x4fec0a51024b13030d26e70904b066c6d41157a5',
