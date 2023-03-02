@@ -8,7 +8,7 @@ For full description about the providers, their priorities and their types, you 
 
 ### Provider Options Changes
 
-There are differences in the objects that could be passed in the Provider constructors between version 1.x and 4.x. Bellow, you will find the difference for every Provider object type.
+There are differences in the objects that could be passed in the Provider constructors between version 1.x and 4.x. Below, you will find the difference for every Provider object type.
 
 #### HttpProvider
 
