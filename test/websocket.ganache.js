@@ -184,6 +184,18 @@ describe('WebsocketProvider (ganache)', function () {
             web3.currentProvider.disconnect(1000);
         })
     })
+    
+    it('"end" handler fires with close event object if Web3 disconnects', async function(){
+        this.timeout(5000);
+        server = ganache.server({ server: { ws: false, http: true } });
+        await server.listen(port);
+
+        const web3 = new Web3(new Web3.providers.WebsocketProvider(host + port));
+
+        web3.currentProvider.on('error',(err)=>{
+            assert(err.description.includes('Server responded with a non-101 status'));
+        })
+    })
 
     // Here, the first error (try/caught) is fired by the request queue checker in
     // the onClose handler. The second error is fired by the readyState check in .send
