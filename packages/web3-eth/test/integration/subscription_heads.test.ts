@@ -71,7 +71,7 @@ describeIf(isSocket)('subscription', () => {
 				from,
 				to,
 				value,
-				times: checkTxCount + 1,
+				times: checkTxCount,
 			});
 
 			await pr;

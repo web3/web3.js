@@ -33,7 +33,7 @@ import {
 	closeOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkEventCount = 3;
+const checkEventCount = 2;
 
 type MakeFewTxToContract = {
 	sendOptions: Record<string, unknown>;

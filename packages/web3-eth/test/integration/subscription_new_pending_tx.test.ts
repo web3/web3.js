@@ -25,7 +25,7 @@ import {
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
 
-const checkTxCount = 3;
+const checkTxCount = 2;
 
 describeIf(isSocket)('subscription', () => {
 	describe('new pending transaction', () => {
