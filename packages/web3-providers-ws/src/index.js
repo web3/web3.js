@@ -162,12 +162,14 @@ WebsocketProvider.prototype._onConnect = function () {
 
 WebsocketProvider.prototype._onConnectFailed = function (event) {
     this.connectFailedDescription = event.toString().split('\n')[0];
-    console.log("The description of the error is: " + this.connectFailedDescription);
     var _this = this;
     if (this.connectFailedDescription) {
         event.description = this.connectFailedDescription;
         this.connectFailedDescription = null; // clean the message, so it won't be used in the next connection
     }
+
+    event.code = 1006;
+    event.reason = 'connection failed';
 
     if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
         this.reconnect();
@@ -195,6 +197,8 @@ WebsocketProvider.prototype._onConnectFailed = function (event) {
         this.connection._connection.removeAllListeners();
     this.connection._client.removeAllListeners();
     this.connection._readyState = 3; // set readyState to CLOSED
+
+    this.emit(this.CLOSE, event);
 }
 /**
  * Listener for the `close` event of the underlying WebSocket object
