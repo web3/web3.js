@@ -27,7 +27,6 @@ import { RevertReason, RevertReasonWithCustomError } from '../types';
 // eslint-disable-next-line import/no-cycle
 import { getRevertReason, parseTransactionError } from './get_revert_reason';
 
-// TODO Add support for passing contract ABI to getRevertReason?
 export async function getTransactionError<ReturnFormat extends DataFormat>(
 	web3Context: Web3Context,
 	transactionFormatted?: TransactionCall,
