@@ -1215,7 +1215,7 @@ should use 4.0.1-alpha.0 for testing.
 #### web3-errors
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
--   Renamed TransactionRevertError to TransactionRevertInstructionError to remain consistent with 1.x
+-   Renamed `TransactionRevertError` to `TransactionRevertInstructionError` to remain consistent with `1.x` (#5854)
 
 #### web3-eth
 
