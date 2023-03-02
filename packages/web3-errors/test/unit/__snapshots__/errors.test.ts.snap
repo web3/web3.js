@@ -170,7 +170,7 @@ Object {
     },
     "message": "error message",
   },
-  "message": "error message",
+  "message": "Returned error: error message",
   "name": "InvalidResponseError",
   "request": undefined,
 }
@@ -228,7 +228,7 @@ Object {
     "b": "20",
   },
   "innerError": undefined,
-  "message": "error message",
+  "message": "Returned error: error message",
   "name": "ResponseError",
   "request": undefined,
 }
@@ -239,7 +239,7 @@ Object {
   "code": 100,
   "data": undefined,
   "innerError": undefined,
-  "message": "error message",
+  "message": "Returned error: error message",
   "name": "ResponseError",
   "request": undefined,
 }
@@ -292,6 +292,26 @@ Object {
  {\\"attr1\\":\\"attr1\\"}",
   "name": "TransactionRevertInstructionError",
   "reason": "message",
+  "receipt": Object {
+    "attr1": "attr1",
+  },
+  "signature": "signature",
+}
+`;
+
+exports[`errors TransactionRevertWithCustomError should have valid json structure 1`] = `
+Object {
+  "code": 438,
+  "customErrorArguments": Object {
+    "customErrorArgument": "customErrorArgument",
+  },
+  "customErrorDecodedSignature": "customErrorDecodedSignature",
+  "customErrorName": "customErrorName",
+  "data": "data",
+  "innerError": undefined,
+  "message": "Transaction has been reverted by the EVM",
+  "name": "TransactionRevertWithCustomError",
+  "reason": "reason",
   "receipt": Object {
     "attr1": "attr1",
   },

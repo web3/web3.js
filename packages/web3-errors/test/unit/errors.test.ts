@@ -172,6 +172,24 @@ describe('errors', () => {
 		});
 	});
 
+	describe('TransactionRevertWithCustomError', () => {
+		it('should have valid json structure', () => {
+			expect(
+				new transactionErrors.TransactionRevertWithCustomError(
+					'reason',
+					'customErrorName',
+					'customErrorDecodedSignature',
+					{ customErrorArgument: 'customErrorArgument' },
+					'signature',
+					{
+						attr1: 'attr1',
+					} as any,
+					'data',
+				).toJSON(),
+			).toMatchSnapshot();
+		});
+	});
+
 	describe('NoContractAddressFoundError', () => {
 		it('should have valid json structure', () => {
 			expect(

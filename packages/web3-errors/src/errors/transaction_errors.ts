@@ -114,6 +114,11 @@ export class TransactionRevertInstructionError<
 	}
 }
 
+/**
+ * This error is used when a transaction to a smart contract fails and
+ * a custom user error (https://blog.soliditylang.org/2021/04/21/custom-errors/)
+ * is able to be parsed from the revert reason
+ */
 export class TransactionRevertWithCustomError<
 	ReceiptType = TransactionReceipt,
 > extends TransactionRevertInstructionError<ReceiptType> {
