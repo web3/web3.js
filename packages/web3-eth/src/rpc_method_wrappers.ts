@@ -1414,8 +1414,11 @@ export function sendSignedTransaction<
 								web3Context,
 								{
 									...unSerializedTransaction,
-									// Some providers will default from to address(0) causing the error
-									// reported from eth_call to not be the reason the user's tx failed
+									// Some providers will default `from` to address(0) causing the error
+									// reported from `eth_call` to not be the reason the user's tx failed
+									// e.g. `eth_call` will return an Out of Gas error for a failed
+									// smart contract execution contract, because the sender, address(0),
+									// has no balance to pay for the gas of the transaction execution
 									from: transactionReceipt.from,
 								} as TransactionCall,
 								transactionReceiptFormatted,
