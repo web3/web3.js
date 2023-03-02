@@ -4,78 +4,11 @@ sidebar_position: 2
 sidebar_label: web3.providers
 ---
 
-There are multiple ways to set the provider.
+For full description about the providers, their priorities and their types, you can check [web3.js Providers Guide](/docs/guides/web3_providers_guide/).
 
-```ts title='Setting a provider'
-web3.setProvider(myProvider);
-web3.eth.setProvider(myProvider);
-web3.Contract.setProvider(myProvider);
-contractInstance.setProvider(myProvider);
-```
+### Provider Options Changes
 
-The key rule for setting provider is as follows:
-
-1. Any provider set on the higher level will be applied to all lower levels. e.g. Any provider set using `web3.setProvider` will also be applied to `web3.eth` object.
-2. For contracts `web3.Contract.setProvider` can be used to set provider for **all instances** of contracts created by `web3.eth.Contract`.
-
-:::tip
-A provider can be either type `string` or [`SupportedProviders`](/api/web3-core#SupportedProviders).
-:::
-
-## Examples
-
-### Local Geth Node
-
-```ts
-const Web3 = require('web3');
-const web3 = new Web3('http://localhost:8545');
-// or
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-
-// change provider
-web3.setProvider('ws://localhost:8546');
-// or
-web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
-
-// Using the IPC provider in node.js
-const net = require('net');
-const web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
-// or
-const web3 = new Web3(
-	new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net),
-); // mac os path
-// on windows the path is: "\\\\.\\pipe\\geth.ipc"
-// on linux the path is: "/users/myuser/.ethereum/geth.ipc"
-```
-
-### Remote Node Provider
-
-```ts
-// Using a remote node provider, like Alchemy (https://www.alchemyapi.io/supernode), is simple.
-const Web3 = require('web3');
-const web3 = new Web3('https://eth-mainnet.alchemyapi.io/v2/your-api-key');
-```
-
-### Injected providers
-
-The Injected provider should be in compliance with [EIP1193](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md).
-
-The web3.js 4.x Provider specifications are defined in [web3 base provider](https://github.com/ChainSafe/web3.js/blob/4.x/packages/web3-types/src/web3_base_provider.ts) for Injected Providers.
-
-```ts
-const Web3 = require('web3');
-// Using an EIP1193 provider like MetaMask can be injected
-
-if (window.ethereum) {
-	// Check if ethereum object exists
-	await window.ethereum.request();
-	window.web3 = new Web3(window.ethereum); // inject provider
-}
-```
-
-### Provider Options
-
-There are differences in the objects that could be passed in the Provider constructors.
+There are differences in the objects that could be passed in the Provider constructors between version 1.x and 4.x. Bellow, you will find the difference for every Provider object type.
 
 #### HttpProvider
 
@@ -147,7 +80,7 @@ let httpOptions = {
 };
 ```
 
-#### WebsocketProvider
+#### WebSocketProvider
 
 In 1.x, options passed in the constructor should be of type [`WebsocketProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L192). The `WebsocketProviderOptions` interface consists of:
 
