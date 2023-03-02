@@ -15,9 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import { AbiEventFragment, Block, TransactionInfo, TransactionReceipt } from 'web3-types';
-import { DEFAULT_RETURN_FORMAT, FMT_NUMBER } from 'web3-utils';
-import { Web3PromiEvent } from 'web3-core';
-import { SendTransactionEvents, Web3Eth } from '../../src';
+import { FMT_NUMBER } from 'web3-utils';
+import { Web3Eth } from '../../src';
 import { BasicAbi } from '../shared_fixtures/build/Basic';
 
 type SendFewTxParams = {
@@ -45,35 +44,6 @@ export const sendFewTxes = async ({
 			from,
 		});
 		res.push(tx);
-	}
-
-	return res;
-};
-
-export const sendFewTxesWithoutReceipt = async ({
-	web3Eth,
-	to,
-	value,
-	from,
-	times = 3,
-}: SendFewTxParams): Promise<
-	Web3PromiEvent<TransactionReceipt, SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>>[]
-> => {
-	const res: Web3PromiEvent<
-		TransactionReceipt,
-		SendTransactionEvents<typeof DEFAULT_RETURN_FORMAT>
-	>[] = [];
-
-	const nonce = Number(await web3Eth.getTransactionCount(from));
-	for (let i = 0; i < times; i += 1) {
-		res.push(
-			web3Eth.sendTransaction({
-				to,
-				value,
-				from,
-				nonce: nonce + i,
-			}),
-		);
 	}
 
 	return res;

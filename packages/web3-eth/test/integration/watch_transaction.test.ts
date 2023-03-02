@@ -18,7 +18,7 @@ import { DEFAULT_RETURN_FORMAT } from 'web3-utils';
 import { TransactionReceipt } from 'web3-types';
 import { Web3PromiEvent } from 'web3-core';
 import { Web3Eth, SendTransactionEvents } from '../../src';
-import { sendFewTxesWithoutReceipt } from './helper';
+import { sendFewTxes } from './helper';
 
 import {
 	getSystemTestProvider,
@@ -56,14 +56,6 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from,
 			});
 
-			const receiptPromise = new Promise((resolve: Resolve) => {
-				// Tx promise is handled separately
-				// eslint-disable-next-line no-void
-				void sentTx.on('receipt', (params: TransactionReceipt) => {
-					expect(params.status).toBe(BigInt(1));
-					resolve();
-				});
-			});
 			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -76,8 +68,8 @@ describeIf(isSocket)('watch subscription transaction', () => {
 					}
 				});
 			});
-			await receiptPromise;
-			await sendFewTxesWithoutReceipt({
+			await sentTx;
+			await sendFewTxes({
 				web3Eth,
 				from,
 				to,

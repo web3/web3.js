@@ -42,7 +42,7 @@ import {
 import { BasicAbi, BasicBytecode } from '../shared_fixtures/build/Basic';
 import { MsgSenderAbi, MsgSenderBytecode } from '../shared_fixtures/build/MsgSender';
 import { getTransactionGasPricing } from '../../src/utils/get_transaction_gas_pricing';
-import { Resolve, sendFewTxes, sendFewTxesWithoutReceipt } from './helper';
+import { Resolve, sendFewTxes } from './helper';
 
 describe('defaults', () => {
 	let web3Eth: Web3Eth;
@@ -359,7 +359,7 @@ describe('defaults', () => {
 			});
 			await sentTx;
 			await receiptPromise;
-			await sendFewTxesWithoutReceipt({
+			await sendFewTxes({
 				web3Eth: eth,
 				from,
 				to,
