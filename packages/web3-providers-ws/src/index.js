@@ -162,7 +162,13 @@ WebsocketProvider.prototype._onConnect = function () {
 
 WebsocketProvider.prototype._onConnectFailed = function (event) {
     this.connectFailedDescription = event.toString().split('\n')[0];
-    console.log("connectFailedDesction", this.connectFailedDescription);
+    //clean connection on our own
+    if(this.connection._connection)
+        this.connection._connection.removeAllListeners();
+    this.connection._client.removeAllListeners();
+    this.connection._readyState = 3; // set readyState to CLOSED
+    this._onClose(event);
+
 }
 /**
  * Listener for the `close` event of the underlying WebSocket object
@@ -174,22 +180,20 @@ WebsocketProvider.prototype._onConnectFailed = function (event) {
 WebsocketProvider.prototype._onClose = function (event) {
     var _this = this;
 
+    if (this.connectFailedDescription) {
+        event.description = this.connectFailedDescription;
+        this.connectFailedDescription = null;
+    }
+
+    this.connectFailedDescription = null; // clean the message, so it won't be used in the next connection
+
     if (this.reconnectOptions.auto && (![1000, 1001].includes(event.code) || event.wasClean === false)) {
         this.reconnect();
 
         return;
     }
 
-    // console.log("888888888",event)
-    console.log("connectFailedDesction222", this.connectFailedDescription)
-    if (this.connectFailedDescription) {
-        console.log("Inside if")
-        event.description = this.connectFailedDescription;
-        this.connectFailedDescription = null;
-    }
-    
-    this.emit(this.CLOSE, event);
-
+        this.emit(this.CLOSE, event);
     if (this.requestQueue.size > 0) {
         this.requestQueue.forEach(function (request, key) {
             request.callback(errors.ConnectionNotOpenError(event));
@@ -220,11 +224,7 @@ WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
     this.connection._client.removeAllListeners('connectFailed'); //Override the internal listeners, so they don't trigger a `close` event. We want to trigger `_onClose` manually with a description.
-    console.log("00000000000000")
-    console.log(this.connection._client.listeners('connectFailed'));
-    console.log("00000000000000")
-    // this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
-    // this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
+    this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
 }
 
 /**
@@ -238,7 +238,7 @@ WebsocketProvider.prototype._removeSocketListeners = function () {
     this.connection.removeEventListener('message', this._onMessage);
     this.connection.removeEventListener('open', this._onConnect);
     this.connection.removeEventListener('close', this._onClose);
-    // this.connection._client.removeListener('connectFailed',this._onConnectFailed);
+    this.connection._client.removeListener('connectFailed',this._onConnectFailed);
 };
 
 /**
