@@ -260,7 +260,7 @@ const walletsOnWorker = 20;
 if (tempAccountList.length === 0) {
 	tempAccountList = accountsString;
 }
-let currentIndex = Math.floor(Math.random() * tempAccountList.length);
+let currentIndex = 0; // Math.floor(Math.random() * tempAccountList.length);
 export const createTempAccount = async (
 	config: {
 		unlock?: boolean;
