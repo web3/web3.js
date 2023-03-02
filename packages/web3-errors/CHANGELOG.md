@@ -76,7 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   The abstract class `Web3Error` is renamed to `BaseWeb3Error` (#5771)
+-   Renamed TransactionRevertError to TransactionRevertInstructionError to remain consistent with 1.x
 
 ### Added
 
 -   Added error class `InvalidMethodParamsError` and error code `ERR_INVALID_METHOD_PARAMS = 207` (#5824)
+-   `request` property to `ResponseError` (#5854)
+-   `data` property to `TransactionRevertInstructionError` (#5854)
+-   `TransactionRevertWithCustomError` was added to handle custom solidity errors (#5854)
