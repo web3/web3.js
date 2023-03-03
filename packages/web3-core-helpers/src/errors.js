@@ -73,7 +73,6 @@ module.exports = {
         if (event) {
             error.code = event.code;
             error.reason = event.reason;
-            console.log("the event description", event.description)
             if(event.description) {
                 error.description = event.description;
             }
