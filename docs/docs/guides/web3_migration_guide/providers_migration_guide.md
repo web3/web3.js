@@ -105,12 +105,9 @@ export interface ReconnectOptions {
 }
 ```
 
-In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See
-Regarding `RequestInit` see [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
+In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`. See [here](https://microsoft.github.io/PowerBI-JavaScript/interfaces/_node_modules__types_node_http_d_._http_.clientrequestargs.html) for `ClientRequestArgs` and [here](https://github.com/websockets/ws) for `ClientOptions`.
 
-In 4.x a second option parameter can be given regarding reconnecting.
-
-The interface:
+In 4.x a second option parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here is its type:
 
 ```ts
 export type ReconnectOptions = {
