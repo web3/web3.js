@@ -33,50 +33,54 @@ export async function getTransactionError<ReturnFormat extends DataFormat>(
 	transactionReceiptFormatted?: FormatType<TransactionReceipt, ReturnFormat>,
 	receivedError?: unknown,
 	contractAbi?: ContractAbi,
+	knownReason?: string | RevertReason | RevertReasonWithCustomError,
 ) {
-	let reason: string | RevertReason | RevertReasonWithCustomError | undefined;
+	let _reason: string | RevertReason | RevertReasonWithCustomError | undefined = knownReason;
 
-	if (receivedError !== undefined) {
-		reason = parseTransactionError(receivedError);
-	} else if (web3Context.handleRevert && transactionFormatted !== undefined) {
-		reason = await getRevertReason(web3Context, transactionFormatted, contractAbi);
+	if (_reason === undefined) {
+		if (receivedError !== undefined) {
+			_reason = parseTransactionError(receivedError);
+		} else if (web3Context.handleRevert && transactionFormatted !== undefined) {
+			_reason = await getRevertReason(web3Context, transactionFormatted, contractAbi);
+		}
 	}
 
 	let error:
 		| TransactionRevertedWithoutReasonError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>
 		| TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>;
-	if (reason === undefined) {
+	if (_reason === undefined) {
 		error = new TransactionRevertedWithoutReasonError<
 			FormatType<TransactionReceipt, ReturnFormat>
 		>(transactionReceiptFormatted);
-	} else if (typeof reason === 'string') {
+	} else if (typeof _reason === 'string') {
 		error = new TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>(
-			reason,
+			_reason,
 			undefined,
 			transactionReceiptFormatted,
 		);
 	} else if (
-		(reason as RevertReasonWithCustomError).customErrorName !== undefined &&
-		(reason as RevertReasonWithCustomError).customErrorDecodedSignature !== undefined &&
-		(reason as RevertReasonWithCustomError).customErrorArguments !== undefined
+		(_reason as RevertReasonWithCustomError).customErrorName !== undefined &&
+		(_reason as RevertReasonWithCustomError).customErrorDecodedSignature !== undefined &&
+		(_reason as RevertReasonWithCustomError).customErrorArguments !== undefined
 	) {
-		const _reason: RevertReasonWithCustomError = reason as RevertReasonWithCustomError;
+		const reasonWithCustomError: RevertReasonWithCustomError =
+			knownReason as RevertReasonWithCustomError;
 		error = new TransactionRevertWithCustomError<FormatType<TransactionReceipt, ReturnFormat>>(
-			_reason.reason,
-			_reason.customErrorName,
-			_reason.customErrorDecodedSignature,
-			_reason.customErrorArguments,
-			_reason.signature,
+			reasonWithCustomError.reason,
+			reasonWithCustomError.customErrorName,
+			reasonWithCustomError.customErrorDecodedSignature,
+			reasonWithCustomError.customErrorArguments,
+			reasonWithCustomError.signature,
 			transactionReceiptFormatted,
-			_reason.data,
+			reasonWithCustomError.data,
 		);
 	} else {
 		error = new TransactionRevertInstructionError<FormatType<TransactionReceipt, ReturnFormat>>(
-			reason.reason,
-			reason.signature,
+			_reason.reason,
+			_reason.signature,
 			transactionReceiptFormatted,
-			reason.data,
+			_reason.data,
 		);
 	}
 

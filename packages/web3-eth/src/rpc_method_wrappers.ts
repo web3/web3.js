@@ -96,6 +96,8 @@ import { watchTransactionForConfirmations } from './utils/watch_transaction_for_
 import { NUMBER_DATA_FORMAT } from './constants';
 // eslint-disable-next-line import/no-cycle
 import { getTransactionError } from './utils/get_transaction_error';
+// eslint-disable-next-line import/no-cycle
+import { getRevertReason } from './utils/get_revert_reason';
 
 /**
  *
@@ -1079,7 +1081,7 @@ export function sendTransaction<
 		| TransactionWithToLocalWalletIndex
 		| TransactionWithFromAndToLocalWalletIndex,
 	returnFormat: ReturnFormat,
-	options?: SendTransactionOptions<ResolveType>,
+	options: SendTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>> {
 	const promiEvent = new Web3PromiEvent<ResolveType, SendTransactionEvents<ReturnFormat>>(
 		(resolve, reject) => {
@@ -1113,6 +1115,31 @@ export function sendTransaction<
 					}
 
 					try {
+						if (options.checkRevertBeforeSending !== false) {
+							const reason = await getRevertReason(
+								web3Context,
+								transactionFormatted as TransactionCall,
+								options.contractAbi,
+							);
+							if (reason !== undefined) {
+								const error = await getTransactionError<ReturnFormat>(
+									web3Context,
+									transactionFormatted as TransactionCall,
+									undefined,
+									undefined,
+									options.contractAbi,
+									reason,
+								);
+
+								if (promiEvent.listenerCount('error') > 0) {
+									promiEvent.emit('error', error);
+								}
+
+								reject(error);
+								return;
+							}
+						}
+
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', transactionFormatted);
 						}
@@ -1341,7 +1368,7 @@ export function sendSignedTransaction<
 	web3Context: Web3Context<EthExecutionAPI>,
 	signedTransaction: Bytes,
 	returnFormat: ReturnFormat,
-	options?: SendSignedTransactionOptions<ResolveType>,
+	options: SendSignedTransactionOptions<ResolveType> = { checkRevertBeforeSending: true },
 ): Web3PromiEvent<ResolveType, SendSignedTransactionEvents<ReturnFormat>> {
 	// TODO - Promise returned in function argument where a void return was expected
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -1355,8 +1382,45 @@ export function sendSignedTransaction<
 						signedTransaction,
 						ETH_DATA_FORMAT,
 					);
+					const unSerializedTransaction = TransactionFactory.fromSerializedData(
+						bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
+					);
+					const unSerializedTransactionWithFrom = {
+						...unSerializedTransaction.toJSON(),
+						// Some providers will default `from` to address(0) causing the error
+						// reported from `eth_call` to not be the reason the user's tx failed
+						// e.g. `eth_call` will return an Out of Gas error for a failed
+						// smart contract execution contract, because the sender, address(0),
+						// has no balance to pay for the gas of the transaction execution
+						from: unSerializedTransaction.getSenderAddress().toString(),
+					};
 
 					try {
+						if (options.checkRevertBeforeSending !== false) {
+							const reason = await getRevertReason(
+								web3Context,
+								unSerializedTransactionWithFrom as TransactionCall,
+								options.contractAbi,
+							);
+							if (reason !== undefined) {
+								const error = await getTransactionError<ReturnFormat>(
+									web3Context,
+									unSerializedTransactionWithFrom as TransactionCall,
+									undefined,
+									undefined,
+									options.contractAbi,
+									reason,
+								);
+
+								if (promiEvent.listenerCount('error') > 0) {
+									promiEvent.emit('error', error);
+								}
+
+								reject(error);
+								return;
+							}
+						}
+
 						if (promiEvent.listenerCount('sending') > 0) {
 							promiEvent.emit('sending', signedTransactionFormattedHex);
 						}
@@ -1407,20 +1471,9 @@ export function sendSignedTransaction<
 								) as unknown as ResolveType,
 							);
 						} else if (transactionReceipt.status === BigInt(0)) {
-							const unSerializedTransaction = TransactionFactory.fromSerializedData(
-								bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
-							).toJSON();
 							const error = await getTransactionError<ReturnFormat>(
 								web3Context,
-								{
-									...unSerializedTransaction,
-									// Some providers will default `from` to address(0) causing the error
-									// reported from `eth_call` to not be the reason the user's tx failed
-									// e.g. `eth_call` will return an Out of Gas error for a failed
-									// smart contract execution contract, because the sender, address(0),
-									// has no balance to pay for the gas of the transaction execution
-									from: transactionReceipt.from,
-								} as TransactionCall,
+								unSerializedTransactionWithFrom as TransactionCall,
 								transactionReceiptFormatted,
 								undefined,
 								options?.contractAbi,
@@ -1449,16 +1502,12 @@ export function sendSignedTransaction<
 							);
 						}
 					} catch (error) {
-						const unSerializedTransaction = TransactionFactory.fromSerializedData(
-							bytesToBuffer(hexToBytes(signedTransactionFormattedHex)),
-						).toJSON();
-
 						let _error = error;
 
 						if (_error instanceof ContractExecutionError && web3Context.handleRevert) {
 							_error = await getTransactionError(
 								web3Context,
-								unSerializedTransaction as TransactionCall,
+								unSerializedTransactionWithFrom as TransactionCall,
 								undefined,
 								undefined,
 								options?.contractAbi,

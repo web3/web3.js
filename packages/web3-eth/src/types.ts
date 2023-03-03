@@ -74,11 +74,13 @@ export interface SendTransactionOptions<ResolveType = TransactionReceipt> {
 	ignoreGasPricing?: boolean;
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
 	contractAbi?: ContractAbi;
+	checkRevertBeforeSending?: boolean;
 }
 
 export interface SendSignedTransactionOptions<ResolveType = TransactionReceipt> {
 	transactionResolver?: (receipt: TransactionReceipt) => ResolveType;
 	contractAbi?: ContractAbi;
+	checkRevertBeforeSending?: boolean;
 }
 
 export interface RevertReason {

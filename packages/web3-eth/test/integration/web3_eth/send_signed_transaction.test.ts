@@ -15,6 +15,10 @@ You should have received a copy of the GNU Lesser General Public License
 along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// TODO Seems to be an issue with linter falsely reporting this
+// error for Transaction Error Scenarios tests
+/* eslint-disable jest/no-conditional-expect */
+
 import { Address, Bytes, SignedTransactionInfoAPI, Transaction } from 'web3-types';
 import { DEFAULT_RETURN_FORMAT, FMT_BYTES, FMT_NUMBER, format, hexToNumber } from 'web3-utils';
 import { isHexStrict } from 'web3-validator';
@@ -312,7 +316,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			).contractAddress as Address;
 		});
 
-		it('Should throw InvalidResponseError because gas too low', async () => {
+		it('Should throw TransactionRevertInstructionError because gas too low', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
@@ -327,16 +331,18 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			});
 
 			const expectedThrownError = {
-				name: 'InvalidResponseError',
-				code: 101,
-				innerError: expect.any(Object),
+				name: 'TransactionRevertInstructionError',
+				innerError: undefined,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? expect.stringContaining(
+								'err: max fee per gas less than block base fee: address 0x',
+						  )
+						: 'VM Exception while processing transaction: out of gas',
+				signature: undefined,
+				receipt: undefined,
 				data: undefined,
-				request: {
-					jsonrpc: '2.0',
-					id: expect.any(String),
-					method: 'eth_sendRawTransaction',
-					params: [expect.any(String)],
-				},
+				code: 402,
 			};
 
 			await expect(
@@ -351,27 +357,40 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				from: tempAcc.address,
 				to: '0x0000000000000000000000000000000000000000',
 				value: BigInt('999999999999999999999999999999999999999999999999999999999'),
-				gasPrice: 1,
 				gas: 21000,
 				nonce: await web3Eth.getTransactionCount(tempAcc.address),
 			};
+			transaction.gasPrice = await web3Eth.getGasPrice();
 			const signedTransaction = await web3Eth.signTransaction(transaction, {
 				number: FMT_NUMBER.BIGINT,
 				bytes: FMT_BYTES.BUFFER,
 			});
 
-			const expectedThrownError = {
-				name: 'InvalidResponseError',
-				code: 101,
-				innerError: expect.any(Object),
-				data: undefined,
-				request: {
-					jsonrpc: '2.0',
-					id: expect.any(String),
-					method: 'eth_sendRawTransaction',
-					params: [expect.any(String)],
-				},
-			};
+			const expectedThrownError =
+				getSystemTestBackend() === 'geth'
+					? {
+							name: 'TransactionRevertInstructionError',
+							innerError: undefined,
+							reason: expect.stringContaining(
+								'err: insufficient funds for gas * price + value: address 0x',
+							),
+							signature: undefined,
+							receipt: undefined,
+							data: undefined,
+							code: 402,
+					  }
+					: {
+							name: 'InvalidResponseError',
+							code: 101,
+							innerError: expect.any(Object),
+							data: undefined,
+							request: {
+								jsonrpc: '2.0',
+								id: expect.any(String),
+								method: 'eth_sendRawTransaction',
+								params: [expect.any(String)],
+							},
+					  };
 
 			await expect(
 				web3Eth
@@ -405,19 +424,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 						: 'VM Exception while processing transaction: revert This is a send revert',
 				signature: '0x08c379a0',
 				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
-				receipt: {
-					transactionIndex: BigInt(0),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(23605),
-					gasUsed: BigInt(23605),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
+				receipt: undefined,
 			};
 
 			await expect(
@@ -454,19 +461,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 				customErrorName: 'ErrorWithNoParams',
 				customErrorDecodedSignature: 'ErrorWithNoParams()',
 				customErrorArguments: {},
-				receipt: {
-					transactionIndex: BigInt(0),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(21222),
-					gasUsed: BigInt(21222),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
+				receipt: undefined,
 			};
 
 			await expect(
@@ -509,19 +504,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 					code: BigInt(42),
 					message: 'This is an error with params',
 				},
-				receipt: {
-					transactionIndex: BigInt(0),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(21730),
-					gasUsed: BigInt(21730),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
+				receipt: undefined,
 			};
 
 			await expect(
@@ -533,7 +516,7 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			).rejects.toMatchObject(expectedThrownError);
 		});
 
-		it('Should throw TransactionRevertedWithoutReasonError because of contract revert', async () => {
+		it('Should throw TransactionRevertInstructionError because of contract revert', async () => {
 			const transaction: Transaction = {
 				from: tempAcc.address,
 				to: simpleRevertContractAddress,
@@ -550,21 +533,16 @@ describe('Web3Eth.sendSignedTransaction', () => {
 			web3Eth.handleRevert = false;
 
 			const expectedThrownError = {
-				name: 'TransactionRevertedWithoutReasonError',
-				code: 405,
-				receipt: {
-					transactionIndex: BigInt(0),
-					from: tempAcc.address,
-					to: simpleRevertContractAddress,
-					cumulativeGasUsed: BigInt(23605),
-					gasUsed: BigInt(23605),
-					logs: [],
-					logsBloom:
-						'0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-					status: BigInt(0),
-					effectiveGasPrice: BigInt(2000000000),
-					type: BigInt(0),
-				},
+				name: 'TransactionRevertInstructionError',
+				innerError: undefined,
+				reason:
+					getSystemTestBackend() === 'geth'
+						? 'execution reverted: This is a send revert'
+						: 'VM Exception while processing transaction: revert This is a send revert',
+				signature: '0x08c379a0',
+				receipt: undefined,
+				data: '000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000155468697320697320612073656e64207265766572740000000000000000000000',
+				code: 402,
 			};
 
 			await expect(
