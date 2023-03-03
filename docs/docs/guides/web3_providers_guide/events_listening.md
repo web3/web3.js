@@ -45,6 +45,13 @@ web3.provider.on('chainChanged',()=>{
   // ...
 })
 
+// it is possible to catch errors that could happen in the underlying connection Socket with the `error` event
+// and it is also used to catch the error when max connection attempts exceeded
+//  as in section: /docs/guides/web3_providers_guide/#error-message
+web3.provider.on('error',()=>{
+  // ...
+}
+
 // ...
 
 // for every event above `once` could be used to register to the event only once

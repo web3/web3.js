@@ -147,14 +147,30 @@ The options object is of type `ClientRequestArgs` or of `ClientOptions`. See [he
 The second option parameter can be given regarding reconnecting. And here is its type:
 
 ```ts
-export type ReconnectOptions = {
+type ReconnectOptions = {
 	autoReconnect: boolean;
 	delay: number;
 	maxAttempts: number;
 };
 ```
 
-For example:
+:::info
+Here is how to catch the error if max attempts reached when the auto reconnecting:
+
+```ts
+provider.on('error', errorMessage => {
+	if (errorMessage.startsWith('Max connection attempts exceeded')) {
+		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
+		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
+	}
+});
+```
+
+:::
+
+##### Options example
+
+Below is an example for the passed options:
 
 ```ts
 let clientOptions: ClientOptions = {
@@ -170,4 +186,21 @@ const reconnectOptions: ReconnectOptions = {
 	delay: 5000,
 	maxAttempts: 5,
 };
+```
+
+##### Error message
+
+The error message (not wrapped in an Error object) will contain the value of the variable `maxAttempts` as follows:
+
+`` `Max connection attempts exceeded (${maxAttempts})` ``
+
+And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
+
+```ts
+provider.on('error', errorMessage => {
+	if (errorMessage.startsWith('Max connection attempts exceeded')) {
+		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
+		// the `maxAttempts` is equal to the provided value by the user or the default `5`.
+	}
+});
 ```

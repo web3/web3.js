@@ -15,7 +15,7 @@ There are differences in the objects that could be passed in the Provider constr
 In 1.x, options passed in the constructor should be of type [`HttpProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L173). The `HttpProviderOptions` interface consists of:
 
 ```ts
-export interface HttpProviderOptions {
+interface HttpProviderOptions {
 	keepAlive?: boolean;
 	timeout?: number;
 	headers?: HttpHeader[];
@@ -23,13 +23,13 @@ export interface HttpProviderOptions {
 	agent?: HttpAgent;
 }
 
-export interface HttpAgent {
+interface HttpAgent {
 	http?: http.Agent;
 	https?: https.Agent;
 	baseUrl?: string;
 }
 
-export interface HttpHeader {
+interface HttpHeader {
 	name: string;
 	value: string;
 }
@@ -85,7 +85,7 @@ let httpOptions = {
 In 1.x, options passed in the constructor should be of type [`WebsocketProviderOptions`](https://github.com/web3/web3.js/blob/1.x/packages/web3-core-helpers/types/index.d.ts#L192). The `WebsocketProviderOptions` interface consists of:
 
 ```ts
-export interface WebsocketProviderOptions {
+interface WebsocketProviderOptions {
 	host?: string;
 	timeout?: number;
 	reconnectDelay?: number;
@@ -97,7 +97,7 @@ export interface WebsocketProviderOptions {
 	reconnect?: ReconnectOptions;
 }
 
-export interface ReconnectOptions {
+interface ReconnectOptions {
 	auto?: boolean;
 	delay?: number;
 	maxAttempts?: number;
@@ -110,14 +110,16 @@ In 4.x, the options object is of type `ClientRequestArgs` or of `ClientOptions`.
 In 4.x a second option parameter can be given regarding auto-reconnecting, delay and max tries attempts. And here is its type:
 
 ```ts
-export type ReconnectOptions = {
-	autoReconnect: boolean;
-	delay: number;
-	maxAttempts: number;
+type ReconnectOptions = {
+	autoReconnect: boolean; // default: `true`
+	delay: number; // default: `5000`
+	maxAttempts: number; // default: `5`
 };
 ```
 
-For example:
+##### Options examples
+
+Below is an example for the passed options for each version:
 
 ```ts
 // in 1.x
@@ -161,4 +163,24 @@ const reconnectOptions: ReconnectOptions = {
 	delay: 5000,
 	maxAttempts: 5,
 };
+```
+
+##### Error message
+
+The error in, version 1.x, was an Error object that contains the message:
+`'Maximum number of reconnect attempts reached!'`
+
+However, the error, in version 4.x, is just an error message (not wrapped in an Error object). And the error message will contain the value of the variable `maxAttempts` as follows:
+
+`` `Max connection attempts exceeded (${maxAttempts})` ``
+
+And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
+
+```ts
+provider.on('error', errorMessage => {
+	if (errorMessage.startsWith('Max connection attempts exceeded')) {
+		// the `errorMessage` will be `Max connection attempts exceeded (${maxAttempts})`
+		// the `maxAttempts` is equal to the provided value by the user, or the default value `5`.
+	}
+});
 ```
