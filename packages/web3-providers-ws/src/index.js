@@ -247,7 +247,7 @@ WebsocketProvider.prototype._addSocketListeners = function () {
     this.connection.addEventListener('message', this._onMessage.bind(this));
     this.connection.addEventListener('open', this._onConnect.bind(this));
     this.connection.addEventListener('close', this._onClose.bind(this));
-    if(this.connection._connection){
+    if(this.connection._client){
         this.connection._client.removeAllListeners('connectFailed'); //Override the internal listeners, so they don't trigger a `close` event. We want to trigger `_onClose` manually with a description.
         this.connection._client.on('connectFailed',this._onConnectFailed.bind(this));
     }
