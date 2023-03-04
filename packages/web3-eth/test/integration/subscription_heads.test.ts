@@ -66,7 +66,8 @@ describeIf(isSocket)('subscription', () => {
 					reject(error);
 				});
 			});
-			await sendFewTxes({
+			// eslint-disable-next-line no-void
+			void sendFewTxes({
 				web3Eth,
 				from,
 				to,
