@@ -20,6 +20,7 @@ import { Web3Eth } from '../../src';
 
 import {
 	closeOpenConnection,
+	createNewAccount,
 	createTempAccount,
 	getSystemTestProvider,
 } from '../fixtures/system_test_utils';
@@ -40,7 +41,10 @@ describe('defaults', () => {
 		await closeOpenConnection(eth2);
 	});
 	beforeEach(async () => {
-		tempAcc = await createTempAccount();
+		tempAcc = await createNewAccount({
+			unlock: true,
+			refill: true,
+		});
 	});
 
 	describe('defaults', () => {

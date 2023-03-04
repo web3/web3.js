@@ -21,6 +21,7 @@ import {
 	createTempAccount,
 	describeIf,
 	getSystemTestProvider,
+	isIpc,
 	isSocket,
 	waitForOpenConnection,
 } from '../fixtures/system_test_utils';
@@ -78,7 +79,7 @@ describeIf(isSocket)('subscription', () => {
 							from,
 							to,
 							value,
-							times: checkTxCount,
+							times: isIpc ? checkTxCount * 3 : checkTxCount,
 						})
 					).map(r => String(r?.transactionHash));
 					if (receipts.length > 0 && waitList.length > 0) {
