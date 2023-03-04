@@ -188,13 +188,13 @@ const reconnectOptions: ReconnectOptions = {
 };
 ```
 
-##### Error message
+##### Error message for reconnect attempts
 
-The error message (not wrapped in an Error object) will contain the value of the variable `maxAttempts` as follows:
+The error message (not wrapped in an Error object) for the max reconnect attempts, will contain the value of the variable `maxAttempts` as follows:
 
 `` `Max connection attempts exceeded (${maxAttempts})` ``
 
-And here is how to catch the error, in version 4.x, if max attempts reached when there is auto reconnecting:
+And here is how to catch the error, if max attempts reached when there is auto reconnecting:
 
 ```ts
 provider.on('error', errorMessage => {

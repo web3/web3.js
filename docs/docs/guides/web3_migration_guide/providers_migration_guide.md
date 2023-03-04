@@ -165,7 +165,7 @@ const reconnectOptions: ReconnectOptions = {
 };
 ```
 
-##### Error message
+##### Error message for reconnect attempts
 
 The error in, version 1.x, was an Error object that contains the message:
 `'Maximum number of reconnect attempts reached!'`
