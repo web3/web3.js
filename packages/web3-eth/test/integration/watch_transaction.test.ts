@@ -56,6 +56,15 @@ describeIf(isSocket)('watch subscription transaction', () => {
 				from,
 			});
 
+			const receiptPromise = new Promise((resolve: Resolve) => {
+				// Tx promise is handled separately
+				// eslint-disable-next-line no-void
+				void sentTx.on('receipt', (params: TransactionReceipt) => {
+					expect(params.status).toBe(BigInt(1));
+					resolve();
+				});
+			});
+
 			let shouldBe = 1;
 			const confirmationPromise = new Promise((resolve: Resolve) => {
 				// Tx promise is handled separately
@@ -68,7 +77,7 @@ describeIf(isSocket)('watch subscription transaction', () => {
 					}
 				});
 			});
-			await sentTx;
+			await receiptPromise;
 			await sendFewTxes({
 				web3Eth,
 				from,
