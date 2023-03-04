@@ -35,9 +35,6 @@ export default class IpcProvider<API extends Web3APISpec = EthExecutionAPI> exte
 > {
 	// Message handlers. Due to bounding of `this` and removing the listeners we have to keep it's reference.
 	protected _socketConnection?: Socket;
-	public get SocketConnection() {
-		return this._socketConnection;
-	}
 
 	public getStatus(): Web3ProviderStatus {
 		if (this._socketConnection?.connecting) {

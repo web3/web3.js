@@ -37,9 +37,6 @@ export default class WebSocketProvider<
 	protected readonly _providerOptions?: ClientOptions | ClientRequestArgs;
 
 	protected _socketConnection?: WebSocket;
-	public get SocketConnection() {
-		return this._socketConnection;
-	}
 
 	// eslint-disable-next-line class-methods-use-this
 	protected _validateProviderPath(providerUrl: string): boolean {
