@@ -201,7 +201,7 @@ export abstract class SocketProvider<
 	/**
 	 *  Removes a listener for the specified event type.
 	 * @param type - The event type to remove the listener for
-	 * @param callback - The callback to be exetuted
+	 * @param callback - The callback to be executed
 	 */
 	public removeListener(type: EventType, callback: Web3ProviderEventCallback): void {
 		this._eventEmitter.removeListener(type, callback);
